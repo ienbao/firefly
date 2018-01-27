@@ -14,6 +14,7 @@
         <module>dap-gui</module>
         <module>dap-core</module>
         <module>dap-sdk</module>
+        <module>dap-plugins</module>
     </modules>
 
     <properties>
