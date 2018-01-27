@@ -9,3 +9,21 @@
     -fx-border-insets: 5;
     -fx-background-insets: 5;
 }
+
+.top-logo {
+    -fx-background-image: url('../images/logo_16.png');
+}
+.window-button-minimize {
+    -fx-background-image: url('../images/top_minimize_normal.png');
+}
+
+.window-button-maximize {
+    -fx-background-image: url('../images/top_full_screen_normal.png');
+}
+
+.window-button-close {
+    -fx-background-image: url('../images/top_close_normal.png');
+}
+.window-button-close:hover {
+    -fx-background-image: url('../images/top_close_over.png');
+}

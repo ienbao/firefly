@@ -1102,4 +1102,9 @@
 }
 
 
+.menu-bar {
+    -fx-use-system-menu-bar: true;
+    -fx-background-color:null;
+}
+
 
