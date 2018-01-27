@@ -12,7 +12,7 @@
 
     <artifactId>dap-gui</artifactId>
     <packaging>jar</packaging>
-    <name>DAP :: Graphical User Interface (GUI)</name>
+    <name>Firefly-DAP :: Graphical User Interface (GUI)</name>
 
     <dependencies>
         <dependency>

@@ -12,7 +12,7 @@
 
     <artifactId>dap-spc</artifactId>
     <packaging>jar</packaging>
-    <name>DAP :: SPC</name>
+    <name>Firefly-DAP-Plugin :: SPC</name>
 
 
 </project>

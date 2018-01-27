@@ -8,7 +8,7 @@
     <artifactId>firefly</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
-    <name>DAP :: Data Analysis Platform (DAP)</name>
+    <name>Firefly-DAP :: Data Analysis Platform (DAP)</name>
 
     <modules>
         <module>dap-gui</module>

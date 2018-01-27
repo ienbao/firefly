@@ -12,7 +12,7 @@
 
     <artifactId>dap-plugins</artifactId>
     <packaging>pom</packaging>
-    <name>DAP :: Plugins</name>
+    <name>Firefly-DAP :: Plugins</name>
 
  <modules>
         <module>dap-spc</module>
