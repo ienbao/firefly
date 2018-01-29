@@ -45,27 +45,12 @@ public interface TemplateService {
      * if value 1, cannot find template to rename
      * if value 2, new name duplicated with other templates
      */
-    int renameTemplateByName(String oldName, String newName);
-
-    /**
-     * rename template name
-     *
-     * @param id template id
-     * @param newName new name
-     */
-    void renameTemplateById(Long id, String newName);
+    int renameTemplate(String oldName, String newName);
 
     /**
      * delete template
      *
      * @param templateName template name
      */
-    void deleteTemplateByName(String templateName);
-
-    /**
-     * delete template
-     *
-     * @param id template id
-     */
-    void deleteTemplateById(Long id);
+    void deleteTemplate(String templateName);
 }
