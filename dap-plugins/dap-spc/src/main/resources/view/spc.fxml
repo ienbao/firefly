@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="704.0" prefWidth="1280.0" style="-fx-background-color: #ffffff;" stylesheets="@../css/redfall/main.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <SplitPane dividerPositions="0.8622848200312989" prefHeight="704.0" prefWidth="1280.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="704.0" prefWidth="1099.0">
+               <children>
+                  <SplitPane dividerPositions="0.5593471810089021" layoutY="28.0" orientation="VERTICAL" prefHeight="676.0" prefWidth="1099.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="376.0" prefWidth="1099.0">
+                           <children>
+                              <TabPane prefHeight="376.0" prefWidth="1099.0" tabClosingPolicy="UNAVAILABLE" >
+                                <tabs>
+                                  <Tab text="Statistical Result">
+                                    <content>
+                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                    </content>
+                                  </Tab>
+                                </tabs>
+                              </TabPane>
+                           </children>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="1099.0">
+                           <children>
+                              <SplitPane dividerPositions="0.5050136736554239" prefHeight="300.0" prefWidth="1099.0">
+                                <items>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="550.0">
+                                       <children>
+                                          <TabPane prefHeight="300.0" prefWidth="550.0" tabClosingPolicy="UNAVAILABLE">
+                                            <tabs>
+                                              <Tab text="Analysis Result">
+                                                <content>
+                                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                                </content>
+                                              </Tab>
+                                            </tabs>
+                                          </TabPane>
+                                       </children></AnchorPane>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="548.0">
+                                       <children>
+                                          <TabPane prefHeight="300.0" prefWidth="548.0" tabClosingPolicy="UNAVAILABLE">
+                                            <tabs>
+                                              <Tab text=" View Data">
+                                                <content>
+                                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="275.0" prefWidth="554.0" />
+                                                </content>
+                                              </Tab>
+                                            </tabs>
+                                          </TabPane>
+                                       </children></AnchorPane>
+                                </items>
+                              </SplitPane>
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
+               </children></AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="704.0" prefWidth="180.0">
+               <children>
+                  <SplitPane dividerPositions="0.39941262848751835" orientation="VERTICAL" prefHeight="683.0" prefWidth="180.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="267.0" prefWidth="180.0">
+                           <children>
+                              <TabPane prefHeight="267.0" prefWidth="180.0" tabClosingPolicy="UNAVAILABLE">
+                                <tabs>
+                                  <Tab text="A">
+                                    <content>
+                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                    </content>
+                                  </Tab>
+                                  <Tab text="B">
+                                    <content>
+                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                    </content>
+                                  </Tab>
+                                    <Tab text="C">
+                                      <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                      </content>
+                                    </Tab>
+                                </tabs>
+                              </TabPane>
+                           </children>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="415.0" prefWidth="180.0">
+                           <children>
+                              <TabPane layoutX="-6.0" prefHeight="415.0" prefWidth="180.0" tabClosingPolicy="UNAVAILABLE">
+                                <tabs>
+                                  <Tab text="A">
+                                    <content>
+                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                    </content>
+                                  </Tab>
+                                  <Tab text="B">
+                                    <content>
+                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                    </content>
+                                  </Tab>
+                                </tabs>
+                              </TabPane>
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
+               </children></AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
