@@ -1,14 +1,15 @@
 package com.dmsoft.firefly.gui;
 
+import com.dmsoft.firefly.gui.view.WindowPane;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class GuiApplication extends Application{
+public class GuiApplication extends Application {
 
     static {
         System.getProperties().put("javafx.pseudoClassOverrideEnabled", "true");
@@ -18,14 +19,17 @@ public class GuiApplication extends Application{
     public void start(Stage primaryStage) throws Exception {
 
         //Parent root = FXMLLoader.load(getClass().getResource("view/main.fxml"));
-        Parent root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/main.fxml"));
-        //root.getStylesheets().add("/main.css");
+        Pane root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/main_menu.fxml"));
 
-        Scene scene = new Scene(root,1000,600);
-//        scene.setFill(Color.TRANSPARENT);
+        WindowPane windowPane = new WindowPane(primaryStage, root, null);
+
+        Scene scene = new Scene(windowPane, 1000, 600);
+        scene.setFill(Color.TRANSPARENT);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/demo.css").toExternalForm());
-//        primaryStage.initStyle(StageStyle.TRANSPARENT);
+        primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setScene(scene);
+
+        windowPane.initEvent();
         primaryStage.show();
     }
 

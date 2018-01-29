@@ -21,9 +21,54 @@
     -fx-background-image: url('../images/top_full_screen_normal.png');
 }
 
+.window-button-restore {
+    -fx-background-image: url('../images/top_adaptive_normal.png');
+}
+
 .window-button-close {
     -fx-background-image: url('../images/top_close_normal.png');
 }
 .window-button-close:hover {
     -fx-background-image: url('../images/top_close_over.png');
+}
+
+
+
+
+.mac-button-minimize {
+    -fx-background-size: 12;
+    -fx-background-image: url('../images/top_mac_minimize_normal.png');
+}
+.mac-button-minimize:hover {
+    -fx-background-size: 12;
+    -fx-background-image: url('../images/top_mac_minimize_over.png');
+}
+.mac-button-maximize {
+    -fx-background-size: 12;
+    -fx-background-image: url('../images/top_mac_full_screen_normal.png');
+}
+.mac-button-maximize:hover {
+    -fx-background-size: 12;
+    -fx-background-image: url('../images/top_mac_full_screen_over.png');
+}
+
+.mac-button-restore {
+    -fx-background-size: 12;
+    -fx-background-image: url('../images/top_mac_adaptive_normal.png');
+}
+.mac-button-restore:hover {
+    -fx-background-size: 12;
+    -fx-background-image: url('../images/top_mac_adaptive_over.png');
+}
+
+.mac-button-close {
+    -fx-background-size: 12;
+    -fx-background-image: url('../images/top_mac_close_normal.png');
+}
+.mac-button-close:hover {
+    -fx-background-image: url('../images/top_mac_close_over.png');
+}
+.s-menu-bar {
+    -fx-use-system-menu-bar: true;
+    -fx-background-color:null;
 }
