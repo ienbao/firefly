@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin id="com.dmsoft.dap.SpcPlugin" name="spc" version="1.0.0" author="Can Guan" scanPath="com.intelligent.ispc.tool.spc" pluginClassName="com.intelligent.ispc.tool.spc.SpcPlugin">
+    <runtime path="com.dmsoft.dap.SpcPlugin.jar"></runtime>
+</plugin>
