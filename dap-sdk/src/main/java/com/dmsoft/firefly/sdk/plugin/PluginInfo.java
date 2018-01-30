@@ -21,7 +21,7 @@ public class PluginInfo {
     private Map<String, String> config;
     //plugin root folder path
     private String folderPath;
-    private PluginInfoStatus status;
+    private PluginStatus status;
     private Plugin pluginObject;
 
     public String getId() {
@@ -112,11 +112,11 @@ public class PluginInfo {
         this.folderPath = folderPath;
     }
 
-    public PluginInfoStatus getStatus() {
+    public PluginStatus getStatus() {
         return status;
     }
 
-    public void setStatus(PluginInfoStatus status) {
+    public void setStatus(PluginStatus status) {
         this.status = status;
     }
 

@@ -5,7 +5,7 @@ package com.dmsoft.firefly.sdk.plugin;
  *
  * @author Li Guang, Can Guan
  */
-public interface PluginProxyFactory {
+public interface PluginProxyMethodFactory {
 
     /**
      * proxy method for target method name

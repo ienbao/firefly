@@ -15,5 +15,5 @@ public interface PluginProxyMethod {
      * @param <T>         class
      * @return result class
      */
-    <T> T doSomethond(Class<T> resultClass, Object... args);
+    <T> T doSomething(Class<T> resultClass, Object... args);
 }

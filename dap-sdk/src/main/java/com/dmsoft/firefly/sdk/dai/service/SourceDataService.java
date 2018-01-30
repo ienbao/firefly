@@ -12,6 +12,11 @@ import java.util.List;
  */
 public interface SourceDataService {
 
+    /**
+     * method to save project
+     *
+     * @param projectDto project dto
+     */
     void saveProject(ProjectDto projectDto);
 
     /**
@@ -21,6 +26,11 @@ public interface SourceDataService {
      */
     void saveProject(List<ProjectDto> projectDtos);
 
+    /**
+     * method to save test item
+     *
+     * @param testItemDto test item dto
+     */
     void saveTestItem(TestItemDto testItemDto);
 
     /**
@@ -63,7 +73,7 @@ public interface SourceDataService {
     /**
      * find test item by item name
      *
-     * @param itemName item name
+     * @param itemName     item name
      * @param templateName template names
      * @return item dto
      */

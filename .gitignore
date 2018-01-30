@@ -23,6 +23,6 @@ hs_err_pid*
 export/*
 .gradle/*
 
-!/ispc-tool-core/src/main/resources/Plugins/Spc/libs/ispc-tool-plugin-test-2.5.0-SNAPSHOT.jar
-!/ispc-tool-core/src/main/resources/Plugins/Spc/libs/jcommon-1.0.23.jar
-!/ispc-tool-core/src/main/resources/Plugins/Spc/libs/jfreechart-1.0.19.jar
+!/dap-core/src/main/resources/plugins/Spc/libs/jcommon-1.0.23.jar
+!/dap-core/src/main/resources/plugins/Spc/libs/jfreechart-1.0.19.jar
+!/dap-core/src/main/resources/plugins/Spc/libs/dap-spc-1.0.0.jar

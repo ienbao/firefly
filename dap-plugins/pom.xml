@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
     <name>Firefly-DAP :: Plugins</name>
 
- <modules>
+    <modules>
         <module>dap-spc</module>
     </modules>
 

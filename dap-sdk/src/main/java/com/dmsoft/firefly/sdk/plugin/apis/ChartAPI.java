@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.sdk.chart;
+package com.dmsoft.firefly.sdk.plugin.apis;
 
 import com.dmsoft.firefly.sdk.chart.dto.AbstractChartAlarmDto;
 import com.dmsoft.firefly.sdk.chart.dto.AbstractChartDto;

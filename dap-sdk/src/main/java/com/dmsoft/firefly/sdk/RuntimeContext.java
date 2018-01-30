@@ -38,6 +38,21 @@ public class RuntimeContext {
     }
 
     /**
+     * method to register bean
+     *
+     * @param clazz    class
+     * @param instance bean instance
+     * @param <T>      class
+     * @return object
+     */
+    public static <T> T registerBean(Class<T> clazz, T instance) {
+        if (instance == null) {
+            return null;
+        }
+        return (T) SERVICE_MAPPING.put(getSimpleBeanName(clazz.getName()), instance);
+    }
+
+    /**
      * method to get bean
      *
      * @param beanName bean name
@@ -96,6 +111,6 @@ public class RuntimeContext {
      * @return bean name
      */
     public static String getSimpleBeanName(String className) {
-        return className.substring(className.lastIndexOf("."));
+        return className.substring(className.lastIndexOf(".") + 1);
     }
 }

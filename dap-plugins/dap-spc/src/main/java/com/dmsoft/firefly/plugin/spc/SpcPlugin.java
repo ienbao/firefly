@@ -16,7 +16,7 @@ import com.dmsoft.firefly.sdk.utils.enums.InitModel;
 public class SpcPlugin extends Plugin {
     @Override
     public void initialize(InitModel model) {
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.SpcPlugin", "com.intelligent.ispc.tool.spc.SpcService", new SpcService());
+        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.SpcPlugin", "com.dmsoft.firefly.plugin.spc.SpcService", new SpcService());
         System.out.println("SPC Initialized!!!!!!");
     }
 
