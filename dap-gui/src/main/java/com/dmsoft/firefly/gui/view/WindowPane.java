@@ -648,6 +648,7 @@ class WindowPaneController {
             stage.setWidth(visualBounds.getWidth());
             stage.setHeight(visualBounds.getHeight());
             if (windowPane.getMaximizeBtn() != null) {
+                windowPane.getMaximizeBtn().getStyleClass().remove(WindowPane.maximizeBtnStyleClass);
                 windowPane.getMaximizeBtn().getStyleClass().add(WindowPane.restoreBtnStyleClass);
             }
         } else {
@@ -655,6 +656,7 @@ class WindowPaneController {
             restoreSavedBounds();
             shadowProperty.set(true);
             if (windowPane.getMaximizeBtn() != null) {
+                windowPane.getMaximizeBtn().getStyleClass().remove(WindowPane.restoreBtnStyleClass);
                 windowPane.getMaximizeBtn().getStyleClass().add(WindowPane.maximizeBtnStyleClass);
             }
         }
