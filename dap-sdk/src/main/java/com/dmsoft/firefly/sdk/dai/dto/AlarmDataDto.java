@@ -12,10 +12,19 @@ public class AlarmDataDto {
     private String lowerLimit;
     private String upperLimit;
 
+    /**
+     * constructor
+     */
     public AlarmDataDto() {
 
     }
 
+    /**
+     * constructor
+     *
+     * @param lowerLimit lower limit
+     * @param upperLimit upper limit
+     */
     public AlarmDataDto(String lowerLimit, String upperLimit) {
         this.lowerLimit = lowerLimit;
         this.upperLimit = upperLimit;

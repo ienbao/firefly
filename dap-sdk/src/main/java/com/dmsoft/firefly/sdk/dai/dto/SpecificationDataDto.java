@@ -4,6 +4,8 @@
 
 package com.dmsoft.firefly.sdk.dai.dto;
 
+import static sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl.ThreadStateMap.Byte1.other;
+
 /**
  * Created by Eligi.Ran on 2017/6/6.
  */
@@ -44,14 +46,6 @@ public class SpecificationDataDto {
 
     public void setUslPass(String uslPass) {
         this.uslPass = uslPass;
-    }
-
-    public boolean compareWith(SpecificationDataDto other) {
-        if (other == null) {
-            return false;
-        }
-        return testItemName.equals(other.testItemName) && dataType.equals(other.dataType)
-                && lslFail.equals(other.lslFail) && uslPass.equals(other.uslPass);
     }
 }
 

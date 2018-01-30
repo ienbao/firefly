@@ -13,9 +13,6 @@ public class LineDataDto implements Serializable {
     private Boolean lineUsed = true;
     private Map<String, Object> testData;
 
-    public final static  String FIELD_LINE_NO = "lineNo";
-    public final static  String FIELD_LINE_USED = "lineUsed";
-
     public String getProjectName() {
         return projectName;
     }

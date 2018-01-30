@@ -31,13 +31,12 @@ public class PluginUIContextImpl implements PluginUIContext {
 
     @Override
     public Set<String> getAllMenuLocations() {
-        this.menuMap.keySet();
-        return null;
+        return this.menuMap.keySet();
     }
 
     @Override
     public Action getMenuAction(String menuLocation) {
-        return null;
+        return menuMap.get(menuLocation);
     }
 
     @Override

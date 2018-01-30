@@ -17,7 +17,7 @@ public interface UserPreferenceService {
      *
      * @param code   code
      * @param userId user id
-     * @return
+     * @return preference string
      */
     String findPreferenceByUserId(String code, Long userId);
 
