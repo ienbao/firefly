@@ -47,9 +47,9 @@
                                                     <RowConstraints maxHeight="28.0" minHeight="28.0" prefHeight="28.0" vgrow="SOMETIMES" />
                                                   </rowConstraints>
                                                    <children>
-                                                      <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-icon" text="Button" GridPane.columnIndex="5" />
-                                                      <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-icon" text="Button" GridPane.columnIndex="4" />
-                                                      <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-icon" text="Button" GridPane.columnIndex="3" />
+                                                      <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" style="-fx-background-image: url('images/btn_choose_test_items_normal.png'); -fx-background-size: 16;" styleClass="btn-icon" text="Button" GridPane.columnIndex="5" />
+                                                      <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" style="-fx-background-image: url('images/btn_bound_normal.png'); -fx-background-size: 16;" styleClass="btn-icon" text="Button" GridPane.columnIndex="4" />
+                                                      <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" style="-fx-background-image: url('images/btn_analsis_normal.png'); -fx-background-size: 16;" styleClass="btn-icon" text="Button" GridPane.columnIndex="3" />
                                                       <CheckBox mnemonicParsing="false" text="%UNSELECTED_CHECKBOX" GridPane.columnIndex="2" />
                                                       <TextField maxWidth="300.0" minWidth="300.0" prefWidth="300.0" GridPane.columnIndex="1" />
                                                    </children>
@@ -124,8 +124,8 @@
                                                                <children>
                                                                   <TextField maxWidth="200.0" minWidth="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
                                                                   <CheckBox mnemonicParsing="false" text="%UNSELECTED_CHECKBOX" GridPane.columnIndex="2" />
-                                                                  <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-icon" text="Button" GridPane.columnIndex="3" />
-                                                                  <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-icon" text="Button" GridPane.columnIndex="4" />
+                                                                  <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" style="-fx-background-image: url('images/btn_clear_filter_normal.png'); -fx-background-size: 16;" styleClass="btn-icon" text="Button" GridPane.columnIndex="3" />
+                                                                  <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" style="-fx-background-image: url('images/btn_choose_test_items_normal.png'); -fx-background-size: 16;" styleClass="btn-icon" text="Button" GridPane.columnIndex="4" />
                                                                </children>
                                                             </GridPane>
                                                          </top>
@@ -185,7 +185,7 @@
                            <center>
                               <TabPane prefHeight="267.0" prefWidth="180.0" tabClosingPolicy="UNAVAILABLE">
                                 <tabs>
-                                  <Tab style="-fx-background-image: url('images/btn_datasource_normal.png'); -fx-background-size: 16;">
+                                  <Tab style="-fx-background-image: url('images/btn_datasource_normal.png'); -fx-background-size: 16; -fx-pref-width: 36;">
                                     <content>
                                       <BorderPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <top>
@@ -205,7 +205,7 @@
                                              </center></BorderPane>
                                     </content>
                                   </Tab>
-                                  <Tab style="-fx-background-image: url('images/btn_config_normal.png'); -fx-background-size: 16;">
+                                  <Tab style="-fx-background-image: url('images/btn_config_normal.png'); -fx-background-size: 16; -fx-pref-width: 36;">
                                     <content>
                                       <BorderPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <center>
@@ -246,7 +246,7 @@
                                              </center></BorderPane>
                                     </content>
                                   </Tab>
-                                    <Tab style="-fx-background-image: url('images/btn_timer_normal.png'); -fx-background-size: 16;">
+                                    <Tab style="-fx-background-image: url('images/btn_timer_normal.png'); -fx-background-size: 16; -fx-pref-width: 36;">
                                       <content>
                                         <BorderPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <center>
@@ -289,7 +289,7 @@
                            <center>
                               <TabPane layoutX="-6.0" prefHeight="415.0" prefWidth="180.0" tabClosingPolicy="UNAVAILABLE">
                                 <tabs>
-                                  <Tab style="-fx-background-image: url('images/btn_basic_search_normal.png'); -fx-background-size: 16;">
+                                  <Tab style="-fx-background-image: url('images/btn_basic_search_normal.png'); -fx-background-size: 16; -fx-pref-width: 36;">
                                     <content>
                                       <BorderPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <top>
@@ -315,7 +315,7 @@
                                              </top></BorderPane>
                                     </content>
                                   </Tab>
-                                  <Tab style="-fx-background-image: url('images/btn_advance_search_normal.png'); -fx-background-size: 16;">
+                                  <Tab style="-fx-background-image: url('images/btn_advance_search_normal.png'); -fx-background-size: 16; -fx-pref-width: 36;">
                                     <content>
                                       <BorderPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <top>

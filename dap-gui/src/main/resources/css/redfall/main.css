@@ -776,6 +776,7 @@
     -fx-border-color: #dcdcdc #dcdcdc #dcdcdc #dcdcdc;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
+    -fx-cursor: hand;
 }
 
 .tab-pane > .tab-header-area > .headers-region > .tab:hover > {
