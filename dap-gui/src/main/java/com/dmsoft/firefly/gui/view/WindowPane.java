@@ -9,6 +9,7 @@ import javafx.geometry.BoundingBox;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.BlurType;
@@ -77,7 +78,7 @@ public class WindowPane extends GridPane {
         this.bodyPane = body;
         controller = new WindowPaneController(this);
         initContentPane();
-        initTitlePane(title);
+        initTitlePane(new Label(title));
         initBodyPane();
 
         this.contentPane.setStyle("-fx-background-color: white");
@@ -149,60 +150,17 @@ public class WindowPane extends GridPane {
         this.contentPane.add(titlePane, 0, 0);
     }
 
-    private void initTitlePane(String title) {
+    private void initTitlePane(Node title) {
         this.titlePane = new GridPane();
         RowConstraints r0 = new RowConstraints();
         r0.setVgrow(Priority.NEVER);
         this.titlePane.getRowConstraints().add(r0);
 
-
-        Label label = new Label(title);
-        if (Platforms.IS_MAC_OSX) {
-            ColumnConstraints c0 = new ColumnConstraints();
-            c0.setHgrow(Priority.NEVER);
-            c0.setPrefWidth(15);
-            c0.setMaxWidth(TITLE_LEFT_PADDING_MAC);
-            c0.setMinWidth(TITLE_LEFT_PADDING_MAC);
-
-            ColumnConstraints c1 = new ColumnConstraints();
-            c1.setHgrow(Priority.NEVER);
-            ColumnConstraints c2 = new ColumnConstraints();
-            c2.setHgrow(Priority.ALWAYS);
-            this.titlePane.getColumnConstraints().addAll(c0, c1, c2);
-
-            this.titlePane.add(buildWindowBtn(), 0, 0);
-            this.titlePane.add(label, 1, 0);
-
-        } else {
-            ColumnConstraints c0 = new ColumnConstraints();
-            c0.setHgrow(Priority.NEVER);
-            c0.setPrefWidth(TITLE_LEFT_PADDING_WIN);
-            c0.setMaxWidth(TITLE_LEFT_PADDING_WIN);
-            c0.setMinWidth(TITLE_LEFT_PADDING_WIN);
-
-            ColumnConstraints c1 = new ColumnConstraints();
-            c1.setHgrow(Priority.ALWAYS);
-            ColumnConstraints c2 = new ColumnConstraints();
-            c2.setHgrow(Priority.NEVER);
-            this.titlePane.getColumnConstraints().addAll(c0, c1, c2);
-
-            this.titlePane.add(label, 1, 0);
-            this.titlePane.add(buildWindowBtn(), 2, 0);
-        }
-
-        this.contentPane.add(titlePane, 0, 0);
-    }
-
-    private void initTitlePane(Pane title) {
-        this.titlePane = new GridPane();
-        RowConstraints r0 = new RowConstraints();
-        r0.setVgrow(Priority.NEVER);
-        this.titlePane.getRowConstraints().add(r0);
+        ColumnConstraints c0 = new ColumnConstraints();
+        c0.setHgrow(Priority.NEVER);
 
         if (Platforms.IS_MAC_OSX) {
-            ColumnConstraints c0 = new ColumnConstraints();
-            c0.setHgrow(Priority.NEVER);
-            c0.setPrefWidth(15);
+            c0.setPrefWidth(TITLE_LEFT_PADDING_MAC);
             c0.setMaxWidth(TITLE_LEFT_PADDING_MAC);
             c0.setMinWidth(TITLE_LEFT_PADDING_MAC);
 
@@ -216,8 +174,6 @@ public class WindowPane extends GridPane {
             this.titlePane.add(title, 2, 0);
 
         } else {
-            ColumnConstraints c0 = new ColumnConstraints();
-            c0.setHgrow(Priority.NEVER);
             c0.setPrefWidth(TITLE_LEFT_PADDING_WIN);
             c0.setMaxWidth(TITLE_LEFT_PADDING_WIN);
             c0.setMinWidth(TITLE_LEFT_PADDING_WIN);

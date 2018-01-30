@@ -15,7 +15,6 @@ public class MainController {
     @FXML
     private MenuBar mnuSystem;
 
-
     @FXML
     private void initialize() {
         buildSystemMenu();
