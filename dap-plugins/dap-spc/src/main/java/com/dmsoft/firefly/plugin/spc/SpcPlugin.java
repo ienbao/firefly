@@ -8,6 +8,7 @@ package com.dmsoft.firefly.plugin.spc;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.Plugin;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
+import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
 
 /**
