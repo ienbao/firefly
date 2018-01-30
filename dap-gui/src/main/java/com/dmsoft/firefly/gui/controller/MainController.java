@@ -25,11 +25,15 @@ public class MainController {
     private void buildSystemMenu() {
         if (Platforms.IS_MAC_OSX) {
             Properties properties = PropertiesUtil.loadFromFile("classpath://application.properties");
-
             MenuToolkit tk = MenuToolkit.toolkit();
             Menu defaultApplicationMenu = tk.createDefaultApplicationMenu(properties.get(PropertiesResource.PROJECT_NAME).toString());
             tk.setApplicationMenu(defaultApplicationMenu);
+
+            mnuSystem.setUseSystemMenuBar(true);
+            mnuSystem.setPrefWidth(0);
+            mnuSystem.setMinWidth(0);
+            mnuSystem.setMaxWidth(0);
         }
-        mnuSystem.setUseSystemMenuBar(true);
+
     }
 }
