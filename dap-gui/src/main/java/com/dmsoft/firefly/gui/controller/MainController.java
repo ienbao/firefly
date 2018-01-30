@@ -1,13 +1,15 @@
 package com.dmsoft.firefly.gui.controller;
 
-import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.gui.component.ContentStackPane;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+
+import java.util.Set;
 
 public class MainController {
 
@@ -27,34 +29,22 @@ public class MainController {
     }
 
     private void initToolBar() {
-        Button btnSpc = new Button("SPC");
-        btnSpc.getStyleClass().add("btn-txt");
 
-        btnSpc.setOnAction(event -> {
-            try {
-                Pane spc = FXMLLoader.load(MainController.class.getClassLoader().getResource("view/spc.fxml"));
-                spc.setId("spc");
-                contentStackPane.add(spc);
-                contentStackPane.navTo("spc");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
+        PluginUIContext pc = RuntimeContext.getBean(PluginUIContext.class);
+        Set<String> names = pc.getAllMainBodyNames();
 
-        Button btnGrr = new Button("GRR");
-        btnGrr.getStyleClass().add("btn-txt");
-        btnGrr.setOnAction(event -> {
-            try {
-                Pane grr = FXMLLoader.load(MainController.class.getClassLoader().getResource("view/grr.fxml"));
-                grr.setId("grr");
-                contentStackPane.add(grr);
-                contentStackPane.navTo("grr");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+        names.forEach(name -> {
+            Pane pane = pc.getMainBodyPane(name).getNewPane();
+            Button btn = new Button(name);
+            btn.getStyleClass().add("btn-txt");
+            btn.setOnAction(event -> {
+                pane.setId("spc");
+                contentStackPane.add(pane);
+                contentStackPane.navTo(name);
+                System.out.println(name);
+            });
+            tbaSystem.getItems().add(btn);
         });
-        tbaSystem.getItems().add(btnSpc);
-        tbaSystem.getItems().add(btnGrr);
     }
 
 

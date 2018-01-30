@@ -28,8 +28,8 @@ public class ContentStackPane extends StackPane {
                     .filter(page -> id.equals(page.getId()))
                     .findFirst()
                     .ifPresent(page -> {
-                        remove(pages.indexOf(page));
-                    }
+                                remove(pages.indexOf(page));
+                            }
                     );
         }
         pages.add(node);
