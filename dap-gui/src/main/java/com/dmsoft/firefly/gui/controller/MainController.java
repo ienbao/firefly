@@ -1,38 +1,65 @@
 package com.dmsoft.firefly.gui.controller;
 
-import com.dmsoft.bamboo.common.utils.base.Platforms;
-import com.dmsoft.bamboo.common.utils.base.PropertiesUtil;
-import com.dmsoft.firefly.gui.utils.PropertiesResource;
-import de.codecentric.centerdevice.MenuToolkit;
+import com.dmsoft.firefly.gui.GuiApplication;
+import com.dmsoft.firefly.gui.component.ContentStackPane;
 import javafx.fxml.FXML;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-
-import java.util.Properties;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
+import javafx.scene.control.ToolBar;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 
 public class MainController {
 
     @FXML
-    private MenuBar mnuSystem;
+    private GridPane grpContent;
+
+    @FXML
+    private ToolBar tbaSystem;
+
+    private ContentStackPane contentStackPane;
 
     @FXML
     private void initialize() {
-        buildSystemMenu();
-
+        contentStackPane = new ContentStackPane();
+        grpContent.add(contentStackPane, 0, 1);
+        initToolBar();
     }
 
-    private void buildSystemMenu() {
-        if (Platforms.IS_MAC_OSX) {
-            Properties properties = PropertiesUtil.loadFromFile("classpath://application.properties");
-            MenuToolkit tk = MenuToolkit.toolkit();
-            Menu defaultApplicationMenu = tk.createDefaultApplicationMenu(properties.get(PropertiesResource.PROJECT_NAME).toString());
-            tk.setApplicationMenu(defaultApplicationMenu);
+    private void initToolBar() {
+        Button btnSpc = new Button("SPC");
+        btnSpc.getStyleClass().add("btn-txt");
 
-            mnuSystem.setUseSystemMenuBar(true);
-            mnuSystem.setPrefWidth(0);
-            mnuSystem.setMinWidth(0);
-            mnuSystem.setMaxWidth(0);
-        }
+        btnSpc.setOnAction(event -> {
+            try {
+                Pane spc = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/spc.fxml"));
+                spc.setId("spc");
+                contentStackPane.add(spc);
+                contentStackPane.navTo("spc");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        Button btnGrr = new Button("GRR");
+        btnGrr.getStyleClass().add("btn-txt");
+        btnGrr.setOnAction(event -> {
+            try {
+                Pane grr = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/grr.fxml"));
+                grr.setId("grr");
+                contentStackPane.add(grr);
+                contentStackPane.navTo("grr");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        tbaSystem.getItems().add(btnSpc);
+        tbaSystem.getItems().add(btnGrr);
+    }
+
+
+
+    public static void changeContent() {
 
     }
 }

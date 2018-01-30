@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.gui.view;
+package com.dmsoft.firefly.gui.component;
 
 import com.dmsoft.bamboo.common.utils.base.Platforms;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -25,12 +25,10 @@ import javafx.stage.WindowEvent;
 
 
 public class WindowPane extends GridPane {
-
     private Stage stage;
     private GridPane titlePane;
     private Pane bodyPane;
     private GridPane contentPane;
-    private Pane customTitlePane;
 
     private Button minimizeBtn;
     private Button maximizeBtn;
@@ -51,8 +49,6 @@ public class WindowPane extends GridPane {
 
     protected static final int DRAG_PADDING = 10;
     protected static final int WINDOW_BUTTON_WIDTH = 30;
-
-    private boolean normalTitle = true;
 
     private Effect shadowEffect = new DropShadow(BlurType.TWO_PASS_BOX, new Color(0, 0, 0, 0.2),
             10, 0, 0, 0);
@@ -88,7 +84,6 @@ public class WindowPane extends GridPane {
     public WindowPane(Stage stage, Pane title, Pane body) {
         this.stage = stage;
         this.bodyPane = body;
-        this.customTitlePane = title;
         controller = new WindowPaneController(this);
         initContentPane();
         initTitlePane(title);
@@ -191,7 +186,6 @@ public class WindowPane extends GridPane {
         this.contentPane.add(titlePane, 0, 0);
     }
 
-
     private Pane buildWindowBtn() {
         if (Platforms.IS_MAC_OSX) {
             return buildMacBtn();
@@ -229,14 +223,14 @@ public class WindowPane extends GridPane {
         HBox btnHbox = new HBox();
         btnHbox.setAlignment(Pos.CENTER_LEFT);
         btnHbox.setSpacing(8);
-
+        final int btnPreSize = 12;
         closeBtn = new Button();
         closeBtn.setFocusTraversable(false);
-        closeBtn.setPrefSize(12, 12);
+        closeBtn.setPrefSize(btnPreSize, btnPreSize);
         closeBtn.getStyleClass().add(windowButtonClass);
         closeBtn.getStyleClass().add(closeBtnStyleClass);
         closeBtn.setOnAction(event -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST)));
-        closeBtn.setOnMouseMoved(event -> btnHoverState(true));
+        closeBtn.setOnMouseEntered(event -> btnHoverState(true));
         closeBtn.setOnMouseExited(event -> btnHoverState(false));
         btnHbox.getChildren().add(closeBtn);
 
@@ -245,21 +239,21 @@ public class WindowPane extends GridPane {
             minimizeBtn.setFocusTraversable(false);
             minimizeBtn.getStyleClass().add(windowButtonClass);
             minimizeBtn.getStyleClass().add(minimizeBtnStyleClass);
-            minimizeBtn.setPrefSize(12, 12);
+            minimizeBtn.setPrefSize(btnPreSize, btnPreSize);
             minimizeBtn.setOnAction(event -> stage.setIconified(true));
 
-            minimizeBtn.setOnMouseMoved(event -> btnHoverState(true));
+            minimizeBtn.setOnMouseEntered(event -> btnHoverState(true));
             minimizeBtn.setOnMouseExited(event -> btnHoverState(false));
             btnHbox.getChildren().add(minimizeBtn);
         }
         if (stage.isResizable()) {
             maximizeBtn = new Button();
             maximizeBtn.setFocusTraversable(false);
-            maximizeBtn.setPrefSize(12, 12);
+            maximizeBtn.setPrefSize(btnPreSize, btnPreSize);
             maximizeBtn.getStyleClass().add(windowButtonClass);
             maximizeBtn.getStyleClass().add(maximizeBtnStyleClass);
             maximizeBtn.setOnAction(event -> controller.maximizePropertyProperty().set(!controller.maximizePropertyProperty().get()));
-            maximizeBtn.setOnMouseMoved(event -> btnHoverState(true));
+            maximizeBtn.setOnMouseEntered(event -> btnHoverState(true));
             maximizeBtn.setOnMouseExited(event -> btnHoverState(false));
             btnHbox.getChildren().add(maximizeBtn);
         }
@@ -307,6 +301,12 @@ public class WindowPane extends GridPane {
         }
     }
 
+
+    public void setBodyPane(Pane bodyPane) {
+        this.bodyPane = bodyPane;
+
+    }
+
     public void initEvent() {
         if (this.titlePane != null) {
             controller.setStageDraggable();
@@ -342,10 +342,6 @@ public class WindowPane extends GridPane {
 
     public WindowPaneController getController() {
         return controller;
-    }
-
-    public Pane getCustomTitlePane() {
-        return customTitlePane;
     }
 }
 
@@ -399,9 +395,6 @@ class WindowPaneController {
             }
         });
 
-        if (windowPane.getCustomTitlePane() != null) {
-            windowPane.getCustomTitlePane().setOnMouseDragged(getDragEvent());
-        }
         windowPane.getTitlePane().setOnMouseDragged(getDragEvent());
     }
 

@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.gui;
 
-import com.dmsoft.firefly.gui.view.WindowPane;
+import com.dmsoft.firefly.gui.component.WindowPane;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -19,9 +19,10 @@ public class GuiApplication extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         //Parent root = FXMLLoader.load(getClass().getResource("view/main.fxml"));
-        Pane root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/main_menu.fxml"));
+        Pane root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/app_menu.fxml"));
+        Pane main = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/main.fxml"));
 
-        WindowPane windowPane = new WindowPane(primaryStage, root, null);
+        WindowPane windowPane = new WindowPane(primaryStage, root, main);
 
         Scene scene = new Scene(windowPane, 1000, 600);
         scene.setFill(Color.TRANSPARENT);
