@@ -8,9 +8,11 @@ import java.util.List;
 
 
 /**
+ * chart api
+ * {@link com.dmsoft.firefly.sdk.plugin.annotation.Chart}
  * Created by GuangLi on 2018/1/26.
  */
-public interface ChartAPI {
+public interface IChart {
 
     /**
      * init all chart data
@@ -33,10 +35,26 @@ public interface ChartAPI {
      */
     void removeChartData(List<AbstractChartDto> chartDtos);
 
+    /**
+     * set alarm data in chart
+     *
+     * @param chartAlarmDtos chart alarm dto
+     */
     void setAlarmChartData(List<AbstractChartAlarmDto> chartAlarmDtos);
 
+    /**
+     * add alarm data in chart
+     *
+     * @param chartAlarmDtos chart alarm dto
+     */
     void addAlarmChartData(List<AbstractChartAlarmDto> chartAlarmDtos);
 
+    /**
+     * remove alarm data in chart
+     *
+     * @param chartType chart type
+     * @param alarmType alarm type
+     */
     void removeAlarmChartData(String chartType, List<String> alarmType);
 
     /**

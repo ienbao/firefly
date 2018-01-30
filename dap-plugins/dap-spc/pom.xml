@@ -20,6 +20,16 @@
             <groupId>com.dmsoft</groupId>
             <artifactId>dap-sdk</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+
         <!--for test-->
         <dependency>
             <groupId>org.jfree</groupId>

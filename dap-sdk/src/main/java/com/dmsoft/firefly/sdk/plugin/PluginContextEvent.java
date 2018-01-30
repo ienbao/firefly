@@ -10,6 +10,9 @@ import java.util.List;
  * Plugin Context Event
  */
 public class PluginContextEvent {
+    /**
+     * enum class for plugin context event type
+     */
     public enum EventType {
         INSTALL, UNINSTALL, ENABLE, DISABLE
     }

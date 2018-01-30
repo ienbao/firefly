@@ -150,8 +150,8 @@ public class PluginImageContextImpl implements PluginImageContext, PluginContext
                 classType = PluginClassType.CHART;
             } else if (c.getAnnotation(DataOutput.class) != null) {
                 classType = PluginClassType.DATA_OUTPUT;
-            } else if (c.getAnnotation(RDA.class) != null) {
-                classType = PluginClassType.RDA;
+            } else if (c.getAnnotation(RDAProtocol.class) != null) {
+                classType = PluginClassType.RDA_PROTOCOL;
             }
             PluginClass pluginClass = new PluginClass();
             pluginClass.setClassName(c.getName());

@@ -3,7 +3,7 @@ package com.dmsoft.firefly.sdk.plugin.annotation;
 import java.lang.annotation.*;
 
 /**
- * Annotation for open api, application will scan and register in context.
+ * Annotation for open api, application will scan the annotated class and register in context.
  * All public method will be register except the {@link ExcludeMethod}
  *
  * @author Can Guan

@@ -3,7 +3,9 @@ package com.dmsoft.firefly.sdk.plugin.annotation;
 import java.lang.annotation.*;
 
 /**
- * annotation class for chart
+ * annotation class for chart, runtime will scan the annotated class and register as chart class
+ *
+ * @author Can Guan
  */
 @OpenService
 @Target({ElementType.TYPE})

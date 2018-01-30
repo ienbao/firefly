@@ -41,14 +41,14 @@ public interface PluginUIContext {
      * @param name name
      * @param pane pane
      */
-    void registerMainBody(String name, Pane pane);
+    void registerMainBody(String name, IMainBodyPane pane);
 
     /**
      * method to get all main body names
      *
      * @return list of context name
      */
-    List<String> getAllMainBodyNames();
+    Set<String> getAllMainBodyNames();
 
     /**
      * method to get main body pane
@@ -56,6 +56,5 @@ public interface PluginUIContext {
      * @param name main body name
      * @return main body pane
      */
-    Pane getMainBodyPane(String name);
-
+    IMainBodyPane getMainBodyPane(String name);
 }
