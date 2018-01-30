@@ -1,6 +1,10 @@
 package com.dmsoft.firefly.gui;
 
+import com.dmsoft.firefly.core.DAPApplication;
 import com.dmsoft.firefly.gui.component.WindowPane;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
+import com.google.common.collect.Lists;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -8,6 +12,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import java.util.AbstractList;
 
 public class GuiApplication extends Application {
 
@@ -17,6 +23,7 @@ public class GuiApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        DAPApplication.run(Lists.newArrayList("com.dmsoft.dap.SpcPlugin"));
 
         //Parent root = FXMLLoader.load(getClass().getResource("view/main.fxml"));
         Pane root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/app_menu.fxml"));
@@ -26,7 +33,7 @@ public class GuiApplication extends Application {
 
         Scene scene = new Scene(windowPane, 1000, 600);
         scene.setFill(Color.TRANSPARENT);
-        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/demo.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/app.css").toExternalForm());
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setScene(scene);
 

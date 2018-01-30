@@ -8,15 +8,17 @@
     <property name="PROJECT_NAME" value="Firefly-DAP-Core"/>
     <property name="LOG_HOME" value="log"/>
 
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
+
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} %thread |-%-5level in %F:%L - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_HOME}/cs.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/DAP.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
 
@@ -41,6 +43,6 @@
 
     <root level="debug">
         <appender-ref ref="console"/>
-        <appender-ref ref="FILE"/>
+        <appender-ref ref="file"/>
     </root>
 </configuration>

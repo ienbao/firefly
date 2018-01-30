@@ -128,6 +128,8 @@
     -fx-border-color: COLORFUL_PRIMARY_RED;
     -fx-background-color: COLORFUL_PRIMARY_RED;
     -fx-border-insets: 1;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
 }
 
 .btn-primary:hover {
@@ -682,19 +684,35 @@
     -fx-background-color: #ffffff;
 }
 
-.list-cell:focused {
-    -fx-background-color: #0096ff;
-}
-
-.list-cell:hover {
-    -fx-background-color: #0096ff;
-}
-
 .combo-box > .list-cell {
     -fx-background: transparent;
     -fx-background-color: transparent;
     -fx-text-fill: -fx-text-base-color;
-    -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em; /* 4 8 4 8 */
+    -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em;
+}
+.combo-box-popup > .list-view {
+    -fx-background-color: #ffffff;
+    -fx-background-insets: 0, 1;
+    -fx-effect: null;
+    -fx-border-color: #dcdcdc;
+    -fx-padding: 1,1,1,1;
+    -fx-translate-y: 3;
+}
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
+    -fx-padding: 4 0 4 5;
+    /* No alternate highlighting */
+    -fx-background: -fx-control-inner-background;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: #0096ff;
+}
+.combo-box-popup  > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
+.combo-box-popup  > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: #0096ff;
+    -fx-background-insets: 0, 1, 2;
 }
 
 /*******************************************************************************
@@ -757,10 +775,11 @@
     -fx-border-insets: 0 0 0 0;
     -fx-border-width: 1 0 1 1;
     -fx-border-color: #dcdcdc #dcdcdc #dcdcdc #dcdcdc;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
 }
 
 .tab-pane > .tab-header-area > .headers-region > .tab:hover > {
-    -fx-padding: 0 0 0 0;
     -fx-background-color: #ffffff;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
@@ -770,7 +789,6 @@
 }
 
 .tab-pane > .tab-header-area > .headers-region > .tab:selected {
-    -fx-padding: 0 0 0 0;
     -fx-background-color: #ffffff;
     -fx-border-width: 1 0 1 1;
     -fx-border-color: #dcdcdc #dcdcdc #ffffff #dcdcdc;

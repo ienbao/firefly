@@ -28,7 +28,6 @@ public class ContentStackPane extends StackPane {
                     .filter(page -> id.equals(page.getId()))
                     .findFirst()
                     .ifPresent(page -> {
-                        System.out.println(pages.indexOf(page));
                         remove(pages.indexOf(page));
                     }
                     );

@@ -22,9 +22,23 @@
         </dependency>
 
         <dependency>
+            <groupId>com.dmsoft</groupId>
+            <artifactId>dap-core</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>de.codecentric.centerdevice</groupId>
             <artifactId>centerdevice-nsmenufx</artifactId>
             <version>2.1.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
         </dependency>
     </dependencies>
 
