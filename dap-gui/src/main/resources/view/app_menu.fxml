@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.MainController">
+<AnchorPane maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.AppController">
    <children>
       <GridPane layoutX="-39.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -40,7 +40,7 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <MenuButton mnemonicParsing="false" text="MenuButton" GridPane.columnIndex="2">
+            <MenuButton mnemonicParsing="false" text="admin" GridPane.columnIndex="2">
               <items>
                 <MenuItem mnemonicParsing="false" text="Action 1" />
                 <MenuItem mnemonicParsing="false" text="Action 2" />

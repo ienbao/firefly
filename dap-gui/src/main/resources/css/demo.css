@@ -88,3 +88,13 @@
     -fx-use-system-menu-bar: true;
     -fx-background-color:null;
 }
+
+.tool-bar {
+    -fx-background-color: white;
+}
+
+.app-status-bar {
+    -fx-background-color: white;
+    -fx-border-width: 1 0 0 0;
+    -fx-border-color: #DCDCDC;
+}
