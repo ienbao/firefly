@@ -74,6 +74,7 @@ public class DAPApplication {
                 e.printStackTrace();
             }
         }
+        pluginInfoContextImpl.startPlugin("com.dmsoft.dap.SpcPlugin");
         return pluginInfoContextImpl;
     }
 

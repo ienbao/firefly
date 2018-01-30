@@ -245,7 +245,7 @@ public class PluginContextImpl implements PluginContext, PluginContextListener {
     @Override
     public void startPlugin(String pluginId) {
         PluginInfo pluginInfo = this.pluginInfoMap.get(pluginId);
-        if (pluginInfo != null && pluginInfo.getPluginObject() != null) {
+        if (pluginInfo != null && PluginStatus.ACTIVE.equals(pluginInfo.getStatus()) && pluginInfo.getPluginObject() != null) {
             pluginInfo.getPluginObject().start();
         }
     }
