@@ -4,18 +4,18 @@
 
 package com.dmsoft.firefly.core;
 
-import com.dmsoft.firefly.core.plugin.PluginContextImpl;
-import com.dmsoft.firefly.core.plugin.PluginImageContextImpl;
-import com.dmsoft.firefly.core.plugin.PluginProxyMethodFactoryImpl;
+import com.dmsoft.firefly.core.sdkimpl.PluginContextImpl;
+import com.dmsoft.firefly.core.sdkimpl.PluginImageContextImpl;
+import com.dmsoft.firefly.core.sdkimpl.PluginProxyMethodFactoryImpl;
+import com.dmsoft.firefly.core.sdkimpl.PluginUIContextImpl;
 import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
 import com.dmsoft.firefly.core.utils.PluginScanner;
 import com.dmsoft.firefly.core.utils.PropertiesUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.*;
+import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
 import com.google.common.collect.Lists;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -29,7 +29,6 @@ import java.util.Properties;
  * @author Can Guan
  */
 public class DAPApplication {
-    static Logger logger = LoggerFactory.getLogger(DAPApplication.class);
     /**
      * method to start application
      *
@@ -37,14 +36,17 @@ public class DAPApplication {
      * @return plugin context
      */
     public static PluginContextImpl run(List<String> activePlugins) {
-        logger.info("run.");
+        // prepare env start
         PluginContextImpl pluginInfoContextImpl = new PluginContextImpl(InitModel.INIT_WITH_UI);
         PluginImageContextImpl pluginImageContext = new PluginImageContextImpl();
         pluginInfoContextImpl.addListener(pluginImageContext);
         PluginProxyMethodFactoryImpl pluginProxy = new PluginProxyMethodFactoryImpl();
+        PluginUIContextImpl pluginUIContext = new PluginUIContextImpl();
         RuntimeContext.registerBean(PluginContext.class, pluginInfoContextImpl);
         RuntimeContext.registerBean(PluginImageContext.class, pluginImageContext);
         RuntimeContext.registerBean(PluginProxyMethodFactory.class, pluginProxy);
+        RuntimeContext.registerBean(PluginUIContext.class, pluginUIContext);
+        // prepare env done
         String propertiesURL = ApplicationPathUtil.getPath("resources", "application.properties");
         InputStream inputStream = null;
         try {
@@ -53,12 +55,12 @@ public class DAPApplication {
             properties.load(inputStream);
             String pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
             List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath);
-            pluginInfoContextImpl.installPlugin(scannedPlugins);
-            pluginInfoContextImpl.enablePlugin(activePlugins);
-            DAPClassLoader loader = pluginInfoContextImpl.getDAPClassLoader("com.dmsoft.dap.SpcPlugin");
+            RuntimeContext.getBean(PluginContext.class).installPlugin(scannedPlugins);
+            RuntimeContext.getBean(PluginContext.class).enablePlugin(activePlugins);
+            DAPClassLoader loader = RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.SpcPlugin");
             Class c = loader.loadClass("com.dmsoft.firefly.plugin.spc.SpcService");
             System.out.println(c);
-            PluginProxyMethod method = pluginProxy.proxyMethod("com.dmsoft.dap.SpcPlugin", "com.dmsoft.firefly.plugin.spc.SpcService", "say");
+            PluginProxyMethod method = RuntimeContext.getBean(PluginProxyMethodFactory.class).proxyMethod("com.dmsoft.dap.SpcPlugin", "com.dmsoft.firefly.plugin.spc.SpcService", "say");
             method.doSomething(null, "AA");
             System.out.println("SADF");
         } catch (Exception e) {
@@ -72,6 +74,7 @@ public class DAPApplication {
                 e.printStackTrace();
             }
         }
+        pluginInfoContextImpl.startPlugin("com.dmsoft.dap.SpcPlugin");
         return pluginInfoContextImpl;
     }
 

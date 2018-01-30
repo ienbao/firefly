@@ -129,4 +129,18 @@ public interface PluginContext {
      * @param listener listener
      */
     void removeListener(PluginContextListener listener);
+
+    /**
+     * method to start plugin
+     *
+     * @param pluginId plugin Id
+     */
+    void startPlugin(String pluginId);
+
+    /**
+     * method to start plugin
+     *
+     * @param pluginIdList plugin Id List
+     */
+    void startPlugin(List<String> pluginIdList);
 }

@@ -19,7 +19,7 @@ public interface EnvService {
     /**
      * get user id
      *
-     * @return
+     * @return user id
      */
     Long getUserId();
 
@@ -45,23 +45,10 @@ public interface EnvService {
     List<String> findActivatedPluginName();
 
     /**
-     * update activated project names
+     * method to find preference
      *
-     * @param projectNames project names
+     * @param code code
+     * @return preference
      */
-    void updateActivatedProject(List<String> projectNames);
-
-    /**
-     * update activated template names
-     *
-     * @param templateName template name
-     */
-    void updateActivatedTemplate(String templateName);
-
-    /**
-     * update activated plugin names
-     *
-     * @param pluginNames plugin names
-     */
-    void updateActivatedPlugin(List<String> pluginNames);
+    String findPreference(String code);
 }

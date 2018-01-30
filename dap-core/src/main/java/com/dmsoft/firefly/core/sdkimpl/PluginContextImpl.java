@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.core.plugin;
+package com.dmsoft.firefly.core.sdkimpl;
 
 import com.dmsoft.firefly.core.utils.VersionUtils;
 import com.dmsoft.firefly.sdk.plugin.*;
@@ -240,6 +240,24 @@ public class PluginContextImpl implements PluginContext, PluginContextListener {
     @Override
     public void contextChange(PluginContextEvent event) {
         validatePlugin();
+    }
+
+    @Override
+    public void startPlugin(String pluginId) {
+        PluginInfo pluginInfo = this.pluginInfoMap.get(pluginId);
+        if (pluginInfo != null && PluginStatus.ACTIVE.equals(pluginInfo.getStatus()) && pluginInfo.getPluginObject() != null) {
+            pluginInfo.getPluginObject().start();
+        }
+    }
+
+    @Override
+    public void startPlugin(List<String> pluginIdList) {
+        if (pluginIdList == null) {
+            return;
+        }
+        for (String pluginId : pluginIdList) {
+            startPlugin(pluginId);
+        }
     }
 
     private boolean privateEnablePlugin(String pluginId) {
