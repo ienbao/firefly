@@ -1,7 +1,5 @@
 package com.dmsoft.firefly.sdk.plugin;
 
-import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,10 +8,7 @@ import java.util.Map;
 public class PluginImage {
     //plugin id
     private String pluginId;
-    //all class in this map(key: class name, value: class instance)
-    private Map<String, Object> pluginInstanceMap;
-    //all open api in this map(key: classname + '!@#' + methodName, key : method)
-    private Map<String, List<Method>> methodMap;
+    private Map<String, PluginClass> pluginClassMap;
 
     public String getPluginId() {
         return pluginId;
@@ -23,19 +18,11 @@ public class PluginImage {
         this.pluginId = pluginId;
     }
 
-    public Map<String, Object> getPluginInstanceMap() {
-        return pluginInstanceMap;
+    public Map<String, PluginClass> getPluginClassMap() {
+        return pluginClassMap;
     }
 
-    public void setPluginInstanceMap(Map<String, Object> pluginInstanceMap) {
-        this.pluginInstanceMap = pluginInstanceMap;
-    }
-
-    public Map<String, List<Method>> getMethodMap() {
-        return methodMap;
-    }
-
-    public void setMethodMap(Map<String, List<Method>> methodMap) {
-        this.methodMap = methodMap;
+    public void setPluginClassMap(Map<String, PluginClass> pluginClassMap) {
+        this.pluginClassMap = pluginClassMap;
     }
 }

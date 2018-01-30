@@ -21,7 +21,8 @@ public class SpcService {
      */
     public void say(String s) {
         System.out.println("Hello " + s + "!");
-        JFreeChart chart = ChartFactory.createBarChart(null, null, null, null);
+        JFreeChart chart = ChartFactory.createBarChart("Chart", null, null, null);
+        System.out.println(chart.getTitle());
     }
 
     /**
