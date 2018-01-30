@@ -40,7 +40,7 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <MenuButton mnemonicParsing="false" text="MenuButton" GridPane.columnIndex="2">
+            <MenuButton mnemonicParsing="false" text="admin" GridPane.columnIndex="2">
               <items>
                 <MenuItem mnemonicParsing="false" text="Action 1" />
                 <MenuItem mnemonicParsing="false" text="Action 2" />

@@ -19,7 +19,7 @@
         </rowConstraints>
          <children>
             <ToolBar fx:id="tbaSystem" minHeight="30.0" prefHeight="30.0" prefWidth="200.0" />
-            <GridPane style="-fx-background-color: red;" GridPane.rowIndex="2">
+            <GridPane styleClass="app-status-bar" GridPane.rowIndex="2">
               <columnConstraints>
                 <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="180.0" prefWidth="180.0" />

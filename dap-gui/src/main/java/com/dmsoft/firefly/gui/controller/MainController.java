@@ -32,7 +32,7 @@ public class MainController {
 
         btnSpc.setOnAction(event -> {
             try {
-                Pane spc = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/spc.fxml"));
+                Pane spc = FXMLLoader.load(MainController.class.getClassLoader().getResource("view/spc.fxml"));
                 spc.setId("spc");
                 contentStackPane.add(spc);
                 contentStackPane.navTo("spc");
@@ -45,7 +45,7 @@ public class MainController {
         btnGrr.getStyleClass().add("btn-txt");
         btnGrr.setOnAction(event -> {
             try {
-                Pane grr = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/grr.fxml"));
+                Pane grr = FXMLLoader.load(MainController.class.getClassLoader().getResource("view/grr.fxml"));
                 grr.setId("grr");
                 contentStackPane.add(grr);
                 contentStackPane.navTo("grr");
@@ -58,8 +58,4 @@ public class MainController {
     }
 
 
-
-    public static void changeContent() {
-
-    }
 }
