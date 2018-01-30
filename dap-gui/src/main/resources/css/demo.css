@@ -34,39 +34,55 @@
 
 
 
-
-.mac-button-minimize {
+.mac-window-button {
+    -fx-min-height: 12;
+    -fx-min-width: 12;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    /*-fx-background-position: center;*/
+    -fx-background-color: null;
+    /*-fx-background-repeat: no-repeat;*/
     -fx-background-size: 12;
+}
+.mac-button-minimize {
     -fx-background-image: url('../images/top_mac_minimize_normal.png');
 }
 .mac-button-minimize:hover {
-    -fx-background-size: 12;
     -fx-background-image: url('../images/top_mac_minimize_over.png');
 }
+.mac-button-minimize:pressed {
+    -fx-background-color: null;
+    -fx-background-image: url('../images/top_mac_minimize_click.png');
+}
 .mac-button-maximize {
-    -fx-background-size: 12;
     -fx-background-image: url('../images/top_mac_full_screen_normal.png');
 }
 .mac-button-maximize:hover {
-    -fx-background-size: 12;
     -fx-background-image: url('../images/top_mac_full_screen_over.png');
 }
-
+.mac-button-maximize:pressed {
+    -fx-background-color: null;
+    -fx-background-image: url('../images/top_mac_full_screen_click.png');
+}
 .mac-button-restore {
-    -fx-background-size: 12;
     -fx-background-image: url('../images/top_mac_adaptive_normal.png');
 }
 .mac-button-restore:hover {
-    -fx-background-size: 12;
     -fx-background-image: url('../images/top_mac_adaptive_over.png');
 }
-
+.mac-button-restore:pressed {
+    -fx-background-color: null;
+    -fx-background-image: url('../images/top_mac_adaptive_click.png');
+}
 .mac-button-close {
-    -fx-background-size: 12;
     -fx-background-image: url('../images/top_mac_close_normal.png');
 }
 .mac-button-close:hover {
     -fx-background-image: url('../images/top_mac_close_over.png');
+}
+.mac-button-close:pressed {
+    -fx-background-color: null;
+    -fx-background-image: url('../images/top_mac_close_click.png');
 }
 .s-menu-bar {
     -fx-use-system-menu-bar: true;

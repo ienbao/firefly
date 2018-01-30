@@ -3,8 +3,11 @@ package com.dmsoft.firefly.gui.view;
 import com.dmsoft.bamboo.common.utils.base.Platforms;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.event.EventHandler;
-import javafx.geometry.*;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -34,12 +37,11 @@ public class WindowPane extends GridPane {
 
     private WindowPaneController controller;
 
-    protected static String btnIcon = "btn-icon";
-    protected static String minimizeBtnStyleClass = "window-button-minimize";
-    protected static String maximizeBtnStyleClass = "window-button-maximize";
-    protected static String restoreBtnStyleClass = "window-button-restore";
-    protected static String closeBtnStyleClass = "window-button-close";
-    protected static String titleLabelStyleClass = "window-label-title";
+    protected static String windowButtonClass = "";
+    protected static String minimizeBtnStyleClass = "";
+    protected static String maximizeBtnStyleClass = "";
+    protected static String restoreBtnStyleClass = "";
+    protected static String closeBtnStyleClass = "";
 
     protected static final int TITLE_LEFT_PADDING_WIN = 10;
     protected static final int TITLE_LEFT_PADDING_MAC = 15;
@@ -54,6 +56,21 @@ public class WindowPane extends GridPane {
     private Effect shadowEffect = new DropShadow(BlurType.TWO_PASS_BOX, new Color(0, 0, 0, 0.2),
             10, 0, 0, 0);
 
+    static {
+        if (Platforms.IS_MAC_OSX || Platforms.IS_MAC) {
+            windowButtonClass = "mac-window-button";
+            minimizeBtnStyleClass = "mac-button-minimize";
+            maximizeBtnStyleClass = "mac-button-maximize";
+            restoreBtnStyleClass = "mac-button-restore";
+            closeBtnStyleClass = "mac-button-close";
+        } else {
+            windowButtonClass = "btn-icon";
+            minimizeBtnStyleClass = "window-button-minimize";
+            maximizeBtnStyleClass = "window-button-maximize";
+            restoreBtnStyleClass = "window-button-restore";
+            closeBtnStyleClass = "window-button-close";
+        }
+    }
 
     public WindowPane(Stage stage, String title, Pane body) {
         this.stage = stage;
@@ -137,7 +154,6 @@ public class WindowPane extends GridPane {
         RowConstraints r0 = new RowConstraints();
         r0.setVgrow(Priority.NEVER);
         this.titlePane.getRowConstraints().add(r0);
-
 
 
         Label label = new Label(title);
@@ -229,7 +245,7 @@ public class WindowPane extends GridPane {
         btnHbox.setAlignment(Pos.CENTER_LEFT);
         if (!Modality.APPLICATION_MODAL.equals(stage.getModality())) {
             minimizeBtn = new Button();
-            minimizeBtn.getStyleClass().add(btnIcon);
+            minimizeBtn.getStyleClass().add(windowButtonClass);
             minimizeBtn.getStyleClass().add(minimizeBtnStyleClass);
             minimizeBtn.setPrefSize(WINDOW_BUTTON_WIDTH, WINDOW_BUTTON_WIDTH);
             minimizeBtn.setOnAction(event -> stage.setIconified(true));
@@ -238,14 +254,14 @@ public class WindowPane extends GridPane {
         if (stage.isResizable()) {
             maximizeBtn = new Button();
             maximizeBtn.setPrefSize(WINDOW_BUTTON_WIDTH, WINDOW_BUTTON_WIDTH);
-            maximizeBtn.getStyleClass().add(btnIcon);
+            maximizeBtn.getStyleClass().add(windowButtonClass);
             maximizeBtn.getStyleClass().add(maximizeBtnStyleClass);
             maximizeBtn.setOnAction(event -> controller.maximizePropertyProperty().set(!controller.maximizePropertyProperty().get()));
             btnHbox.getChildren().add(maximizeBtn);
         }
         closeBtn = new Button();
         closeBtn.setPrefSize(WINDOW_BUTTON_WIDTH, WINDOW_BUTTON_WIDTH);
-        closeBtn.getStyleClass().add(WindowPane.btnIcon);
+        closeBtn.getStyleClass().add(WindowPane.windowButtonClass);
         closeBtn.getStyleClass().add(WindowPane.closeBtnStyleClass);
         closeBtn.setOnAction(event -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST)));
         btnHbox.getChildren().add(closeBtn);
@@ -253,10 +269,7 @@ public class WindowPane extends GridPane {
     }
 
     private Pane buildMacBtn() {
-        minimizeBtnStyleClass = "mac-button-minimize";
-        maximizeBtnStyleClass = "mac-button-maximize";
-        restoreBtnStyleClass = "mac-button-restore";
-        closeBtnStyleClass = "mac-button-close";
+
         HBox btnHbox = new HBox();
         btnHbox.setAlignment(Pos.CENTER_LEFT);
         btnHbox.setSpacing(8);
@@ -264,33 +277,45 @@ public class WindowPane extends GridPane {
         closeBtn = new Button();
         closeBtn.setFocusTraversable(false);
         closeBtn.setPrefSize(12, 12);
-        closeBtn.getStyleClass().add(WindowPane.btnIcon);
-        closeBtn.getStyleClass().add(WindowPane.closeBtnStyleClass);
+        closeBtn.getStyleClass().add(windowButtonClass);
+        closeBtn.getStyleClass().add(closeBtnStyleClass);
         closeBtn.setOnAction(event -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST)));
+        closeBtn.setOnMouseMoved(event -> btnHoverState(true));
+        closeBtn.setOnMouseExited(event -> btnHoverState(false));
         btnHbox.getChildren().add(closeBtn);
 
         if (!Modality.APPLICATION_MODAL.equals(stage.getModality())) {
             minimizeBtn = new Button();
             minimizeBtn.setFocusTraversable(false);
-            minimizeBtn.getStyleClass().add(btnIcon);
+            minimizeBtn.getStyleClass().add(windowButtonClass);
             minimizeBtn.getStyleClass().add(minimizeBtnStyleClass);
             minimizeBtn.setPrefSize(12, 12);
             minimizeBtn.setOnAction(event -> stage.setIconified(true));
+
+            minimizeBtn.setOnMouseMoved(event -> btnHoverState(true));
+            minimizeBtn.setOnMouseExited(event -> btnHoverState(false));
             btnHbox.getChildren().add(minimizeBtn);
         }
         if (stage.isResizable()) {
             maximizeBtn = new Button();
             maximizeBtn.setFocusTraversable(false);
             maximizeBtn.setPrefSize(12, 12);
-            maximizeBtn.getStyleClass().add(btnIcon);
+            maximizeBtn.getStyleClass().add(windowButtonClass);
             maximizeBtn.getStyleClass().add(maximizeBtnStyleClass);
             maximizeBtn.setOnAction(event -> controller.maximizePropertyProperty().set(!controller.maximizePropertyProperty().get()));
+            maximizeBtn.setOnMouseMoved(event -> btnHoverState(true));
+            maximizeBtn.setOnMouseExited(event -> btnHoverState(false));
             btnHbox.getChildren().add(maximizeBtn);
         }
 
         return btnHbox;
     }
 
+    private void btnHoverState(boolean hover) {
+        closeBtn.pseudoClassStateChanged(PseudoClass.getPseudoClass("hover"), hover);
+        maximizeBtn.pseudoClassStateChanged(PseudoClass.getPseudoClass("hover"), hover);
+        minimizeBtn.pseudoClassStateChanged(PseudoClass.getPseudoClass("hover"), hover);
+    }
 
     private void initBodyPane() {
         if (bodyPane != null) {
