@@ -14,6 +14,8 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.*;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
 import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -27,6 +29,7 @@ import java.util.Properties;
  * @author Can Guan
  */
 public class DAPApplication {
+    static Logger logger = LoggerFactory.getLogger(DAPApplication.class);
     /**
      * method to start application
      *
@@ -34,6 +37,7 @@ public class DAPApplication {
      * @return plugin context
      */
     public static PluginContextImpl run(List<String> activePlugins) {
+        logger.info("run.");
         PluginContextImpl pluginInfoContextImpl = new PluginContextImpl(InitModel.INIT_WITH_UI);
         PluginImageContextImpl pluginImageContext = new PluginImageContextImpl();
         pluginInfoContextImpl.addListener(pluginImageContext);

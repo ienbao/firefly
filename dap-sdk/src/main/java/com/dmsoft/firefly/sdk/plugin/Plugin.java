@@ -25,7 +25,7 @@ public abstract class Plugin {
     /**
      * start method will be called after all initialize method is done.
      */
-    public abstract void start();
+    public abstract void start() throws Exception;
 
     /**
      * destroy method will be called when this plugin is disable.
