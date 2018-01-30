@@ -8,6 +8,8 @@
     <property name="PROJECT_NAME" value="Firefly-DAP-GUI"/>
     <property name="LOG_HOME" value="log"/>
 
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
+
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} %thread |-%-5level in %F:%L - %msg%n</pattern>
