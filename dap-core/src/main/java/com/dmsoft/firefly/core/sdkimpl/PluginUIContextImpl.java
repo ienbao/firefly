@@ -1,11 +1,10 @@
 package com.dmsoft.firefly.core.sdkimpl;
 
 import com.dmsoft.firefly.sdk.ui.Action;
+import com.dmsoft.firefly.sdk.ui.IMainBodyPane;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.google.common.collect.Maps;
-import javafx.scene.layout.Pane;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,12 +15,14 @@ import java.util.Set;
  */
 public class PluginUIContextImpl implements PluginUIContext {
     private Map<String, Action> menuMap;
+    private Map<String, IMainBodyPane> paneMap;
 
     /**
      * constructor
      */
     public PluginUIContextImpl() {
         this.menuMap = Maps.newHashMap();
+        this.paneMap = Maps.newHashMap();
     }
 
     @Override
@@ -40,17 +41,17 @@ public class PluginUIContextImpl implements PluginUIContext {
     }
 
     @Override
-    public void registerMainBody(String name, Pane pane) {
-
+    public void registerMainBody(String name, IMainBodyPane pane) {
+        this.paneMap.put(name, pane);
     }
 
     @Override
-    public List<String> getAllMainBodyNames() {
-        return null;
+    public Set<String> getAllMainBodyNames() {
+        return this.paneMap.keySet();
     }
 
     @Override
-    public Pane getMainBodyPane(String name) {
-        return null;
+    public IMainBodyPane getMainBodyPane(String name) {
+        return this.paneMap.get(name);
     }
 }

@@ -8,5 +8,5 @@ import com.dmsoft.firefly.sdk.plugin.annotation.RDAProtocol;
  *
  * @author Can Guan
  */
-public interface RDAProtocolAPI {
+public interface IRDAProtocol {
 }

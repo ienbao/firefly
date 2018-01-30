@@ -6,5 +6,5 @@ package com.dmsoft.firefly.sdk.plugin.apis;
  *
  * @author Can Guan
  */
-public interface DataOutPutAPI {
+public interface IDataOutPut {
 }

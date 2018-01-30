@@ -46,6 +46,12 @@ public class AlarmDataDto {
         this.upperLimit = upperLimit;
     }
 
+    /**
+     * compare with other alarm data dto
+     *
+     * @param other alarm data dto
+     * @return true : equal, false : not equal
+     */
     public boolean compareWith(AlarmDataDto other) {
         if (other == null) {
             return false;

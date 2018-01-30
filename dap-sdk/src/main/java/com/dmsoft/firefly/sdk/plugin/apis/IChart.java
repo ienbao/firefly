@@ -12,7 +12,7 @@ import java.util.List;
  * {@link com.dmsoft.firefly.sdk.plugin.annotation.Chart}
  * Created by GuangLi on 2018/1/26.
  */
-public interface ChartAPI {
+public interface IChart {
 
     /**
      * init all chart data

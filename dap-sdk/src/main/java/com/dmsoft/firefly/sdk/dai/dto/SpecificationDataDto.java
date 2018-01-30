@@ -4,8 +4,6 @@
 
 package com.dmsoft.firefly.sdk.dai.dto;
 
-import static sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl.ThreadStateMap.Byte1.other;
-
 /**
  * Created by Eligi.Ran on 2017/6/6.
  */
