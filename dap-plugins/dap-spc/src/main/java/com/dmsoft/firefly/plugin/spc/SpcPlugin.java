@@ -16,6 +16,8 @@ import javafx.scene.layout.Pane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ResourceBundle;
+
 /**
  * spc plugin
  */
@@ -35,7 +37,7 @@ public class SpcPlugin extends Plugin {
             public Pane getNewPane() {
                 Pane root = null;
                 try {
-                    root = FXMLLoader.load(getClass().getClassLoader().getResource("view/spc.fxml"));
+                    root = FXMLLoader.load(getClass().getClassLoader().getResource("view/spc.fxml"),ResourceBundle.getBundle("i18n.message_en_US"));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
