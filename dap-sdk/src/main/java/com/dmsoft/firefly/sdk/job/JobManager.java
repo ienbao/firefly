@@ -5,4 +5,16 @@ package com.dmsoft.firefly.sdk.job;
  * @author Can Guan
  */
 public interface JobManager {
+
+    void createJob(String jobName);
+
+    void doJob(String jobName, Object object);
+
+    void registerHandler(String jobName, Handler handler);
+
+    void registerHandlerFirst(String jobName, Handler handler);
+
+    void registerHandlerNextIndex(String jobName, int index, Handler handler);
+
+
 }
