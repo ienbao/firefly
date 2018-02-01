@@ -7,6 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Created by Lucien.Chen on 2018/1/30.
@@ -14,8 +18,15 @@ import java.util.List;
 public class JobManagerImpl implements JobManager {
     private static Logger logger = LoggerFactory.getLogger(JobManagerImpl.class);
 
-    List<Job> jobList = Lists.newArrayList();
+    private List<Job> jobList;
 
+    private ExecutorService pool;
+
+    public JobManagerImpl() {
+        jobList = Lists.newArrayList();
+        //创建线程池
+        pool = Executors.newFixedThreadPool(5);
+    }
 
     @Override
     public void createJob(String name) {
@@ -24,12 +35,26 @@ public class JobManagerImpl implements JobManager {
     }
 
     @Override
-    public void doJob(String jobName,Object o) {
+    public Object doJob(String jobName, Object o) {
         Job job = findJob(jobName);
         if (job == null) {
             logger.debug("Don't find the job");
-        } else {
-            job.startPipeInThread(o);
+            return null;
+        } else {//开启线程
+            Callable c = new Callable() {
+                @Override
+                public Object call() throws Exception {
+                    return job.getPipe().start(o);
+                }
+
+            };
+            job.setCallable(c);
+            Future future = pool.submit(c);
+            try {
+                return future.get();
+            }catch (Exception e){
+                return null;
+            }
         }
     }
 
@@ -61,7 +86,7 @@ public class JobManagerImpl implements JobManager {
         if (job == null) {
             logger.debug("Don't find the job");
         } else {
-            job.getPipe().addNext(index,handler);
+            job.getPipe().addNext(index, handler);
         }
 
     }
@@ -73,7 +98,7 @@ public class JobManagerImpl implements JobManager {
         }
         Job result = null;
         for (Job job : jobList) {
-            if (jobName.equals(job.name)) {
+            if (jobName.equals(job.getName())) {
                 result = job;
             }
         }

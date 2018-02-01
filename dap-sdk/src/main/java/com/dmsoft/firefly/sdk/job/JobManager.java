@@ -8,7 +8,7 @@ public interface JobManager {
 
     void createJob(String jobName);
 
-    void doJob(String jobName, Object object);
+    Object doJob(String jobName, Object object);
 
     void registerHandler(String jobName, Handler handler);
 
