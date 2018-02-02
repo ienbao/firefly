@@ -22,7 +22,4 @@ hs_err_pid*
 *.iml
 export/*
 .gradle/*
-
-!/dap-core/src/main/resources/plugins/Spc/libs/jcommon-1.0.23.jar
-!/dap-core/src/main/resources/plugins/Spc/libs/jfreechart-1.0.19.jar
-!/dap-core/src/main/resources/plugins/Spc/libs/dap-spc-1.0.0.jar
+log/*

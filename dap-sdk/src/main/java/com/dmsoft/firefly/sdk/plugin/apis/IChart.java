@@ -1,7 +1,7 @@
 package com.dmsoft.firefly.sdk.plugin.apis;
 
-import com.dmsoft.firefly.sdk.chart.dto.AbstractChartAlarmDto;
-import com.dmsoft.firefly.sdk.chart.dto.AbstractChartDto;
+import com.dmsoft.firefly.sdk.dto.AbstractChartAlarmDto;
+import com.dmsoft.firefly.sdk.dto.AbstractChartDto;
 
 import java.awt.*;
 import java.util.List;

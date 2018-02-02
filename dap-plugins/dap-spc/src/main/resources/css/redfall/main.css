@@ -1,3 +1,11 @@
+.region-b {
+    -fx-background-color: transparent;
+    -fx-border-color: #e9e9e9;
+    -fx-border-width: 1;
+    -fx-padding: 10;
+    -fx-border-insets: 5;
+    -fx-background-insets: 5;
+}
 .root {
     -fx-text-fill: #222222;
 
@@ -726,20 +734,17 @@
  *                                                                             *
  ******************************************************************************/
 
-.tab-pane {
-    -fx-tab-min-height: 22; /* 22 */
-    -fx-tab-max-height: 22; /* 22 */
-}
-
 /* FLOATING TABS CUSTOMISATION */
 .tab-pane {
     -fx-tab-min-height: 22; /* 22 */
     -fx-tab-max-height: 22; /* 22 */
+    -fx-border-width: 1 0 0 0;
+    -fx-border-color: #dcdcdc;
 }
 
 .tab-pane > .tab-header-area > .tab-header-background {
     -fx-background-color: #f0f0f0;
-    -fx-border-width: 1 1 1 1;
+    -fx-border-width: 0 0 1 1;
     -fx-border-color: #dcdcdc;
 }
 
@@ -752,7 +757,7 @@
     -fx-background-color: #ffffff;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
-    -fx-border-width: 0 1 1 1;
+    -fx-border-width: 0 0 0 0;
     -fx-border-color: #dcdcdc;
     -fx-padding: 0;
 }
@@ -775,7 +780,7 @@
     -fx-background-radius: 0;
     -fx-border-radius: 0;
     -fx-border-insets: 0 0 0 0;
-    -fx-border-width: 1 0 1 1;
+    -fx-border-width: 0 1 1 0;
     -fx-border-color: #dcdcdc #dcdcdc #dcdcdc #dcdcdc;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
@@ -787,13 +792,11 @@
     -fx-background-insets: 0;
     -fx-background-radius: 0;
     -fx-border-radius: 0;
-    -fx-border-width: 1 0 1 1;
     -fx-border-color: #dcdcdc #dcdcdc #dcdcdc #dcdcdc;
 }
 
 .tab-pane > .tab-header-area > .headers-region > .tab:selected {
     -fx-background-color: #ffffff;
-    -fx-border-width: 1 0 1 1;
     -fx-border-color: #dcdcdc #dcdcdc #ffffff #dcdcdc;
 }
 
@@ -1231,7 +1234,7 @@
 .check-menu-item:checked > .left-container > .check,
 .radio-menu-item:checked > .left-container > .radio {
     -fx-background-color: transparent;
-    -fx-background-image: url('../images/icon_choose_one_gray.png');
+    -fx-background-image: url('/images/icon_choose_one_gray.png');
     -fx-background-size: 16;
     -fx-pref-height: 16;
     -fx-pref-width: 16;
@@ -1244,7 +1247,7 @@
     -fx-pref-height: 16;
     -fx-pref-width: 16;
     -fx-background-size: 16;
-    -fx-background-image: url('../images/icon_choose_one_white.png');
+    -fx-background-image: url('/images/icon_choose_one_white.png');
     -fx-shape: null;
     -fx-padding: 0 20 0 0 ;
 }
@@ -1277,3 +1280,70 @@
     -fx-padding: 0.5;
 }
 
+/*******************************************************************************
+ *                                                                             *
+ * ToolBar                                                                     *
+ *                                                                             *
+ ******************************************************************************/
+.tool-bar:vertical { /* left */
+    -fx-background-color: White;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-alignment: TOP_LEFT;
+}
+.tool-bar { /* top */
+    -fx-max-height: 25;
+    -fx-min-height: 25;
+    -fx-pref-height: 25;
+    -fx-background-color: White;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.tool-bar .button {
+    -fx-max-height: 25;
+    -fx-min-height: 25;
+    -fx-pref-height: 25;
+    -fx-padding: 0 12 3 16;
+    -fx-background-insets: 0 -4 3 0;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.tool-bar .button:hover {
+    -fx-text-fill: COLOR_LIGHT_FF;
+    -fx-highlight-fill: COLORFUL_PRIMARY_RED;
+    -fx-border-color: COLORFUL_PRIMARY_RED;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.tool-bar .button:focused {
+    -fx-text-fill: COLOR_LIGHT_FF;
+    -fx-highlight-fill: COLORFUL_PRIMARY_RED;
+    -fx-border-color: COLORFUL_PRIMARY_RED;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.tool-bar .button:hover:focused {
+    -fx-highlight-fill: COLORFUL_PRIMARY_RED_LIGHT;
+    -fx-border-color: COLORFUL_PRIMARY_RED_LIGHT;
+    -fx-background-color: COLORFUL_PRIMARY_RED_LIGHT;
+}
+
+.tool-bar .button:pressed {
+    -fx-highlight-fill: COLORFUL_PRIMARY_RED_DARK;
+    -fx-border-color: COLORFUL_PRIMARY_RED_DARK;
+    -fx-background-color: COLORFUL_PRIMARY_RED_DARK;
+}
+
+.tool-bar .button:pressed:focused {
+    -fx-highlight-fill: COLORFUL_PRIMARY_RED_DARK;
+    -fx-border-color: COLORFUL_PRIMARY_RED_DARK;
+    -fx-background-color: COLORFUL_PRIMARY_RED_DARK;
+}

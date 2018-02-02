@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>com.dmsoft</groupId>
-        <artifactId>firefly</artifactId>
+        <artifactId>dap-plugins</artifactId>
         <version>1.0.0</version>
     </parent>
 
@@ -32,7 +32,6 @@
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>distro-assembly</id>
@@ -42,7 +41,7 @@
                         </goals>
                         <configuration>
                             <descriptors>
-                                <descriptor>src/assembly/bin.xml</descriptor>
+                                <descriptor>bin.xml</descriptor>
                             </descriptors>
                         </configuration>
                     </execution>
