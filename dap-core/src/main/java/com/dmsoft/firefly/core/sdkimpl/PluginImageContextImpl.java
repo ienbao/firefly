@@ -46,6 +46,9 @@ public class PluginImageContextImpl implements PluginImageContext, PluginContext
         if (pluginInfo != null) {
             Map<String, PluginClass> openClasses = privateScanClass(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader(pluginInfo.getId()),
                     pluginInfo.getScanPath(), OpenService.class);
+            for (PluginClass pc : openClasses.values()) {
+                pc.setPluginId(pluginId);
+            }
             PluginImage pluginImage = new PluginImage();
             pluginImage.setPluginId(pluginId);
             if (this.pluginImageMap.get(pluginId) != null) {
@@ -95,6 +98,7 @@ public class PluginImageContextImpl implements PluginImageContext, PluginContext
         }
         if (this.pluginImageMap.get(pluginId).getPluginClassMap().get(className) == null) {
             PluginClass pluginClass = new PluginClass();
+            pluginClass.setPluginId(pluginId);
             this.pluginImageMap.get(pluginId).getPluginClassMap().put(className, pluginClass);
         }
         this.pluginImageMap.get(pluginId).getPluginClassMap().get(className).setInstance(o);
@@ -131,6 +135,21 @@ public class PluginImageContextImpl implements PluginImageContext, PluginContext
             }
         }
         return null;
+    }
+
+    @Override
+    public List<PluginClass> getPluginClassByType(PluginClassType type) {
+        List<PluginClass> result = Lists.newArrayList();
+        for (PluginImage pluginImage : this.pluginImageMap.values()) {
+            if (pluginImage.getPluginClassMap() != null) {
+                for (PluginClass pluginClass : pluginImage.getPluginClassMap().values()) {
+                    if (type.equals(pluginClass.getType())) {
+                        result.add(pluginClass);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     private Map<String, PluginClass> privateScanClass(ClassLoader classLoader, String scanPath, Class<? extends Annotation> annotation) {
@@ -189,6 +208,9 @@ public class PluginImageContextImpl implements PluginImageContext, PluginContext
                 if (entry.getValue().getInstance() != null) {
                     pluginClass.setInstance(entry.getValue().getInstance());
                 }
+                if (entry.getValue().getPluginId() != null) {
+                    pluginClass.setPluginId(entry.getValue().getPluginId());
+                }
                 if (entry.getValue().getMethodSet() != null) {
                     if (pluginClass.getMethodSet() != null) {
                         pluginClass.getMethodSet().addAll(entry.getValue().getMethodSet());
@@ -196,6 +218,7 @@ public class PluginImageContextImpl implements PluginImageContext, PluginContext
                         pluginClass.getMethodSet().addAll(Sets.newHashSet(entry.getValue().getMethodSet()));
                     }
                 }
+
             } else {
                 result.put(entry.getKey(), entry.getValue());
             }

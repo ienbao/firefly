@@ -8,6 +8,7 @@ import java.util.Set;
  */
 public class PluginClass {
     private PluginClassType type;
+    private String pluginId;
     private String className;
     private Object instance;
     private Set<Method> methodSet;
@@ -18,6 +19,14 @@ public class PluginClass {
 
     public void setType(PluginClassType type) {
         this.type = type;
+    }
+
+    public String getPluginId() {
+        return pluginId;
+    }
+
+    public void setPluginId(String pluginId) {
+        this.pluginId = pluginId;
     }
 
     public String getClassName() {

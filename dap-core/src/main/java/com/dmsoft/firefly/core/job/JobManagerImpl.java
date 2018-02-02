@@ -22,10 +22,13 @@ public class JobManagerImpl implements JobManager {
 
     private ExecutorService pool;
 
+    /**
+     * constructor
+     */
     public JobManagerImpl() {
         jobList = Lists.newArrayList();
         //创建线程池
-        pool = Executors.newFixedThreadPool(5);
+        pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() + 1);
     }
 
     @Override
@@ -40,7 +43,8 @@ public class JobManagerImpl implements JobManager {
         if (job == null) {
             logger.debug("Don't find the job");
             return null;
-        } else {//开启线程
+        } else {
+            //开启线程
             Callable c = new Callable() {
                 @Override
                 public Object call() throws Exception {
@@ -52,7 +56,7 @@ public class JobManagerImpl implements JobManager {
             Future future = pool.submit(c);
             try {
                 return future.get();
-            }catch (Exception e){
+            } catch (Exception e) {
                 return null;
             }
         }

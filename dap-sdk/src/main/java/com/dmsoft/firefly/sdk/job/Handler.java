@@ -5,7 +5,16 @@ package com.dmsoft.firefly.sdk.job;
  */
 public interface Handler {
 
+    /**
+     * active
+     *
+     * @param o object
+     * @return result
+     */
     Object active(Object o);
 
+    /**
+     * throw exception
+     */
     void throwException();
 }
