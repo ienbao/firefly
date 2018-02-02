@@ -24,7 +24,7 @@ public class TestApplication extends Application {
         //root.getStylesheets().add("/main.css");
 
         Scene scene = new Scene(root,1280,704);
-//        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/main.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
     }
