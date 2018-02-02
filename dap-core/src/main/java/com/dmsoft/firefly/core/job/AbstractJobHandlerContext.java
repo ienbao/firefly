@@ -110,6 +110,8 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
             handler().exceptionCaught(this, cause);
         } catch (Exception e) {
             logger.error("handler exception Caught method error. ");
+        } finally {
+            jobPipeline.returnValue(null);
         }
     }
 
