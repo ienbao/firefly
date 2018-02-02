@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcMainController">
     <children>
         <SplitPane dividerPositions="0.82" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -38,21 +38,20 @@
                                     <Insets left="10.0"/>
                                 </padding>
                             </Label>
-                            <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false"
+                            <Button fx:id="resetBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false"
                                     prefHeight="22.0" prefWidth="22.0"
-                                    style="-fx-background-image: url('images/btn_reset_normal.png'); -fx-background-size: 16;"
-                                    styleClass="btn-icon" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                            <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false"
+                                    styleClass="btn-icon" text="" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                            <Button fx:id="printBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false"
                                     prefHeight="22.0" prefWidth="22.0"
                                     style="-fx-background-image: url('images/btn_print_normal.png'); -fx-background-size: 16;"
                                     styleClass="btn-icon" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                            <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false"
+                            <Button fx:id="exportBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false"
                                     prefHeight="22.0" prefWidth="22.0"
                                     style="-fx-background-image: url('images/btn_export_normal.png'); -fx-background-size: 16;"
                                     styleClass="btn-icon" text="Button" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
-                            <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false"
+                            <Button fx:id="chooseBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false"
                                     prefHeight="22.0" prefWidth="22.0"
-                                    style="-fx-background-image: url('images/btn_refresh_normal.png'); -fx-background-size: 16;"
+                                    style="-fx-background-image: url('images/icon_choose_one_white.png'); -fx-background-size: 16;"
                                     styleClass="btn-primary" text="Button" GridPane.columnIndex="4"
                                     GridPane.rowIndex="1"/>
                         </children>
