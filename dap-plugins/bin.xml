@@ -35,8 +35,6 @@
                     </fileSet>
                 </fileSets>
             </sources>
-
-
         </moduleSet>
     </moduleSets>
 </assembly>
