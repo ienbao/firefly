@@ -9,5 +9,12 @@ package com.dmsoft.firefly.sdk.job;
  */
 public interface JobInboundHandler extends JobHandler {
 
+    /**
+     * doJob
+     *
+     * @param context context
+     * @param in      in
+     * @throws Exception Exception
+     */
     void doJob(JobHandlerContext context, Object in) throws Exception;
 }

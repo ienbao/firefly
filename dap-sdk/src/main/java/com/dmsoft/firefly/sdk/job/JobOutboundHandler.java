@@ -9,5 +9,11 @@ package com.dmsoft.firefly.sdk.job;
  */
 public interface JobOutboundHandler extends JobHandler {
 
+    /**
+     * returnValue
+     *
+     * @param context     context
+     * @param returnValue returnValue
+     */
     void returnValue(JobHandlerContext context, Object returnValue);
 }

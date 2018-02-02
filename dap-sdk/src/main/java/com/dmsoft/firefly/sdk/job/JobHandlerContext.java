@@ -9,13 +9,39 @@ package com.dmsoft.firefly.sdk.job;
  */
 public interface JobHandlerContext {
 
+    /**
+     * fireDoJob
+     *
+     * @param param param
+     * @return JobHandlerContext
+     */
     JobHandlerContext fireDoJob(Object param);
 
+    /**
+     * returnValue
+     *
+     * @param returnValue returnValue
+     */
     void returnValue(Object returnValue);
 
+    /**
+     * pipeline
+     *
+     * @return
+     */
     JobPipeline pipeline();
 
+    /**
+     * handler
+     *
+     * @return
+     */
     JobHandler handler();
 
+    /**
+     * name
+     *
+     * @return
+     */
     String name();
 }

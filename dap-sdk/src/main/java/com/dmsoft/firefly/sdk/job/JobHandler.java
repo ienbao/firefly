@@ -9,6 +9,13 @@ package com.dmsoft.firefly.sdk.job;
  */
 public interface JobHandler {
 
+    /**
+     * exceptionCaught
+     *
+     * @param context context
+     * @param cause   cause
+     * @throws Exception Exception
+     */
     void exceptionCaught(JobHandlerContext context, Throwable cause) throws Exception;
 
 }

@@ -9,5 +9,10 @@ package com.dmsoft.firefly.sdk.job;
  */
 public interface JobDoComplete {
 
+    /**
+     * doComplete event
+     *
+     * @param returnValue returnValue
+     */
     void doComplete(Object returnValue);
 }

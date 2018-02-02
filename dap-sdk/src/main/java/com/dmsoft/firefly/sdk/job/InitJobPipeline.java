@@ -9,7 +9,18 @@ package com.dmsoft.firefly.sdk.job;
  */
 public interface InitJobPipeline {
 
+    /**
+     * initJobPipeline
+     *
+     * @return JobPipeline
+     */
     JobPipeline initJobPipeline();
 
+    /**
+     * initJobPipeline
+     *
+     * @param complete complete
+     * @return JobPipeline
+     */
     JobPipeline initJobPipeline(JobDoComplete complete);
 }
