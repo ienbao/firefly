@@ -14,9 +14,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -39,6 +37,35 @@ public class DefaultJobManager implements JobManager {
             return;
         }
         jobMap.put(jobName, pipeline);
+    }
+
+    @Override
+    public Object doJobSyn(String jobName, Object object, long timeout, TimeUnit unit) {
+        if (StringUtils.isBlank(jobName)) {
+            logger.error("jobName is empty.");
+            return null;
+        }
+        if (!jobMap.containsKey(jobName)) {
+            logger.error("jobName is not exist.");
+            return null;
+        }
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        final List returnFinal = Lists.newArrayList();
+        JobDoComplete complete = new JobDoComplete() {
+            @Override
+            public void doComplete(Object returnValue) {
+                returnFinal.add(returnValue);
+                countDownLatch.countDown();
+            }
+        };
+        doJobASyn(jobName, object, complete);
+        try {
+            countDownLatch.await(timeout, unit);
+        } catch (InterruptedException e) {
+
+        }
+        return returnFinal.get(0);
+
     }
 
     @Override
@@ -90,7 +117,7 @@ public class DefaultJobManager implements JobManager {
 
     }
 
-    public ExecutorService getService() {
+    public ExecutorService getExecutorService() {
         return service;
     }
 }

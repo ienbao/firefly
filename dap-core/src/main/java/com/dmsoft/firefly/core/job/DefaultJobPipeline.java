@@ -149,9 +149,6 @@ public class DefaultJobPipeline implements JobPipeline {
     @Override
     public JobPipeline fireDoJob(Object param) {
         head.fireDoJob(param);
-//        if (this.getResult() == null) {
-//            head.returnValue(null);
-//        }
         return this;
     }
 
