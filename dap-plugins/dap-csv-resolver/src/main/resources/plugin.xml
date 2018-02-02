@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin id="com.dmsoft.dap.SpcPlugin" name="spc" version="1.0.0" author="Can Guan"
+        scanPath="com.dmsoft.firefly.plugin.csvresolver" pluginClassName="com.dmsoft.firefly.plugin.csvresolver.CsvResolverService">
+    <runtime path="com.dmsoft.dap.CsvResolverPlugin.jar"></runtime>
+</plugin>

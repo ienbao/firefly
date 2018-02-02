@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.sdk.chart.dto;
+package com.dmsoft.firefly.sdk.dto;
 
 import java.util.List;
 

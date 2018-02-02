@@ -16,6 +16,7 @@
 
     <modules>
         <module>dap-spc</module>
+        <module>dap-csv-resolver</module>
         <module>distribution</module>
     </modules>
 
