@@ -4,7 +4,7 @@
 
 package com.dmsoft.firefly.core;
 
-import com.dmsoft.firefly.core.job.JobManagerImpl;
+import com.dmsoft.firefly.core.job.DefaultJobManager;
 import com.dmsoft.firefly.core.sdkimpl.PluginContextImpl;
 import com.dmsoft.firefly.core.sdkimpl.PluginImageContextImpl;
 import com.dmsoft.firefly.core.sdkimpl.PluginProxyMethodFactoryImpl;
@@ -44,7 +44,7 @@ public class DAPApplication {
         pluginInfoContextImpl.addListener(pluginImageContext);
         PluginProxyMethodFactoryImpl pluginProxy = new PluginProxyMethodFactoryImpl();
         PluginUIContextImpl pluginUIContext = new PluginUIContextImpl();
-        JobManagerImpl jobManager = new JobManagerImpl();
+        DefaultJobManager jobManager = new DefaultJobManager();
         RuntimeContext.registerBean(PluginContext.class, pluginInfoContextImpl);
         RuntimeContext.registerBean(PluginImageContext.class, pluginImageContext);
         RuntimeContext.registerBean(PluginProxyMethodFactory.class, pluginProxy);
