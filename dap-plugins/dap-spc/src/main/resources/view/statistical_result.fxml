@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane minHeight="110.0" minWidth="180.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane minHeight="110.0" minWidth="180.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
@@ -27,16 +27,12 @@
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="310.0" minWidth="310.0" prefWidth="310.0" />
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" />
                                 </columnConstraints>
                                 <rowConstraints>
                                     <RowConstraints maxHeight="28.0" minHeight="28.0" prefHeight="28.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                 <children>
-                                    <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" style="-fx-background-image: url('images/btn_choose_test_items_normal.png'); -fx-background-size: 16;" styleClass="btn-icon" text="Button" GridPane.columnIndex="5" />
-                                    <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" style="-fx-background-image: url('images/btn_bound_normal.png'); -fx-background-size: 16;" styleClass="btn-icon" text="Button" GridPane.columnIndex="4" />
-                                    <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" style="-fx-background-image: url('images/btn_analsis_normal.png'); -fx-background-size: 16;" styleClass="btn-icon" text="Button" GridPane.columnIndex="3" />
+                                    <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" style="-fx-background-image: url('images/btn_choose_test_items_normal.png'); -fx-background-size: 16;" styleClass="btn-icon" text="Button" GridPane.columnIndex="3" />
                                     <CheckBox mnemonicParsing="false" text="%UNSELECTED_CHECKBOX" GridPane.columnIndex="2" />
                                     <TextField maxWidth="300.0" minWidth="300.0" prefWidth="300.0" GridPane.columnIndex="1" />
                                 </children>

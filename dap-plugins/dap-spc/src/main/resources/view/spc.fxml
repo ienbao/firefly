@@ -13,7 +13,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <SplitPane dividerPositions="0.8084656084656084" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+        <SplitPane dividerPositions="0.82" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
                 <VBox>
@@ -76,9 +76,9 @@
                         </items>
                     </SplitPane>
                 </VBox>
-                <AnchorPane minWidth="180.0" prefWidth="180.0">
-                    <children></children>
-                </AnchorPane>
+                <VBox minWidth="180.0" prefWidth="180.0">
+                    <fx:include fx:id="test_item" source="spc_item.fxml"/>
+                </VBox>
             </items>
         </SplitPane>
     </children>
