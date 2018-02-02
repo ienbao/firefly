@@ -4,6 +4,7 @@
 
 package com.dmsoft.firefly.core;
 
+import com.dmsoft.firefly.core.job.JobManagerImpl;
 import com.dmsoft.firefly.core.sdkimpl.PluginContextImpl;
 import com.dmsoft.firefly.core.sdkimpl.PluginImageContextImpl;
 import com.dmsoft.firefly.core.sdkimpl.PluginProxyMethodFactoryImpl;
@@ -12,6 +13,7 @@ import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
 import com.dmsoft.firefly.core.utils.PluginScanner;
 import com.dmsoft.firefly.core.utils.PropertiesUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.job.JobManager;
 import com.dmsoft.firefly.sdk.plugin.*;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
@@ -42,10 +44,12 @@ public class DAPApplication {
         pluginInfoContextImpl.addListener(pluginImageContext);
         PluginProxyMethodFactoryImpl pluginProxy = new PluginProxyMethodFactoryImpl();
         PluginUIContextImpl pluginUIContext = new PluginUIContextImpl();
+        JobManagerImpl jobManager = new JobManagerImpl();
         RuntimeContext.registerBean(PluginContext.class, pluginInfoContextImpl);
         RuntimeContext.registerBean(PluginImageContext.class, pluginImageContext);
         RuntimeContext.registerBean(PluginProxyMethodFactory.class, pluginProxy);
         RuntimeContext.registerBean(PluginUIContext.class, pluginUIContext);
+        RuntimeContext.registerBean(JobManager.class, jobManager);
         // prepare env done
         String propertiesURL = ApplicationPathUtil.getPath("resources", "application.properties");
         InputStream inputStream = null;

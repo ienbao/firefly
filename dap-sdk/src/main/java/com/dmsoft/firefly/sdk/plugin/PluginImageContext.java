@@ -68,4 +68,12 @@ public interface PluginImageContext {
      * @return list of methods
      */
     List<Method> getRegisterAPI(String pluginId, String className, String methodName);
+
+    /**
+     * method to get plugin class by type
+     *
+     * @param type plugin class type
+     * @return list of plugin class
+     */
+    List<PluginClass> getPluginClassByType(PluginClassType type);
 }
