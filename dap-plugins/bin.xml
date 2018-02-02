@@ -1,0 +1,43 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+    <id>bin</id>
+    <formats>
+        <format>dir</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <moduleSets>
+        <moduleSet>
+            <!-- Enable access to all projects in the current multimodule build! -->
+            <useAllReactorProjects>true</useAllReactorProjects>
+
+            <!-- Now, select which projects to include in this module-set. -->
+            <includes>
+                <include>com.dmsoft:dap-spc</include>
+            </includes>
+            <binaries>
+                <outputDirectory>Plugins/Spc/libs</outputDirectory>
+                <!--<outputFileNameMapping>${module.artifactId}-${module.version}-${module.classifier}.${module.extension}</outputFileNameMapping>-->
+                <unpack>false</unpack>
+                <excludes>
+                    <exclude>com.dmsoft:dap-sdk</exclude>
+                </excludes>
+            </binaries>
+
+            <sources>
+                <includeModuleDirectory>false</includeModuleDirectory>
+                <fileSets>
+                    <fileSet>
+                        <directory>${project.basedir}/src/main/resources/</directory>
+                        <outputDirectory>/Plugins/Spc/</outputDirectory>
+                        <includes>
+                            <include>plugin.xml</include>
+                        </includes>
+                    </fileSet>
+                </fileSets>
+            </sources>
+
+
+        </moduleSet>
+    </moduleSets>
+</assembly>

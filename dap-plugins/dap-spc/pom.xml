@@ -19,15 +19,13 @@
         <dependency>
             <groupId>com.dmsoft</groupId>
             <artifactId>dap-sdk</artifactId>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <!--for test-->
@@ -60,6 +58,10 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
             </plugin>
+
+
         </plugins>
     </build>
+
+
 </project>
