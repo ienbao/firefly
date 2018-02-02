@@ -734,20 +734,17 @@
  *                                                                             *
  ******************************************************************************/
 
-.tab-pane {
-    -fx-tab-min-height: 22; /* 22 */
-    -fx-tab-max-height: 22; /* 22 */
-}
-
 /* FLOATING TABS CUSTOMISATION */
 .tab-pane {
     -fx-tab-min-height: 22; /* 22 */
     -fx-tab-max-height: 22; /* 22 */
+    -fx-border-width: 1 0 0 0;
+    -fx-border-color: #dcdcdc;
 }
 
 .tab-pane > .tab-header-area > .tab-header-background {
     -fx-background-color: #f0f0f0;
-    -fx-border-width: 1 0 1 1;
+    -fx-border-width: 0 0 1 1;
     -fx-border-color: #dcdcdc;
 }
 
@@ -783,7 +780,7 @@
     -fx-background-radius: 0;
     -fx-border-radius: 0;
     -fx-border-insets: 0 0 0 0;
-    -fx-border-width: 1 1 1 0;
+    -fx-border-width: 0 1 1 0;
     -fx-border-color: #dcdcdc #dcdcdc #dcdcdc #dcdcdc;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
@@ -795,13 +792,11 @@
     -fx-background-insets: 0;
     -fx-background-radius: 0;
     -fx-border-radius: 0;
-    -fx-border-width: 1 1 1 0;
     -fx-border-color: #dcdcdc #dcdcdc #dcdcdc #dcdcdc;
 }
 
 .tab-pane > .tab-header-area > .headers-region > .tab:selected {
     -fx-background-color: #ffffff;
-    -fx-border-width: 1 1 1 0;
     -fx-border-color: #dcdcdc #dcdcdc #ffffff #dcdcdc;
 }
 

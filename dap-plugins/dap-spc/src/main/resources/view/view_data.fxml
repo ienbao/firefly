@@ -14,52 +14,35 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane minHeight="110.0" minWidth="180.0" xmlns="http://javafx.com/javafx/8.0.141"
-            xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane minHeight="110.0" minWidth="180.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                 AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <TabPane style="-fx-border-width: 0 0 0 0;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
                 <Tab text="%VIEW_DATA">
                     <content>
                         <VBox minHeight="0.0" minWidth="0.0">
-                            <GridPane AnchorPane.bottomAnchor="242.0" AnchorPane.rightAnchor="0.0"
-                                      AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
+                            <GridPane AnchorPane.bottomAnchor="242.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
                                 <columnConstraints>
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="210.0" minWidth="210.0"
-                                                       prefWidth="210.0"/>
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="90.0" minWidth="90.0"
-                                                       prefWidth="90.0"/>
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0"
-                                                       prefWidth="25.0"/>
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0"
-                                                       prefWidth="25.0"/>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="210.0" minWidth="210.0" prefWidth="210.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" />
                                 </columnConstraints>
                                 <rowConstraints>
-                                    <RowConstraints maxHeight="28.0" minHeight="28.0" prefHeight="28.0"
-                                                    vgrow="SOMETIMES"/>
+                                    <RowConstraints maxHeight="28.0" minHeight="28.0" prefHeight="28.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                 <children>
-                                    <TextField maxWidth="200.0" minWidth="200.0" prefWidth="200.0"
-                                               GridPane.columnIndex="1"/>
-                                    <CheckBox mnemonicParsing="false" text="%UNSELECTED_CHECKBOX"
-                                              GridPane.columnIndex="2"/>
-                                    <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false"
-                                            prefHeight="22.0" prefWidth="22.0"
-                                            style="-fx-background-image: url('images/btn_clear_filter_normal.png'); -fx-background-size: 16;"
-                                            styleClass="btn-icon" text="Button" GridPane.columnIndex="3"/>
-                                    <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false"
-                                            prefHeight="22.0" prefWidth="22.0"
-                                            style="-fx-background-image: url('images/btn_choose_test_items_normal.png'); -fx-background-size: 16;"
-                                            styleClass="btn-icon" text="Button" GridPane.columnIndex="4"/>
+                                    <TextField maxWidth="200.0" minWidth="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                                    <CheckBox mnemonicParsing="false" text="%UNSELECTED_CHECKBOX" GridPane.columnIndex="2" />
+                                    <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" style="-fx-background-image: url('images/btn_clear_filter_normal.png'); -fx-background-size: 16;" styleClass="btn-icon" text="Button" GridPane.columnIndex="3" />
+                                    <Button maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" style="-fx-background-image: url('images/btn_choose_test_items_normal.png'); -fx-background-size: 16;" styleClass="btn-icon" text="Button" GridPane.columnIndex="4" />
                                 </children>
                             </GridPane>
-                            <TableView style="-fx-border-width: 1 0 0 0;" BorderPane.alignment="CENTER"
-                                       VBox.vgrow="ALWAYS">
+                            <TableView style="-fx-border-width: 1 0 0 0;" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
                                 <columns>
-                                    <TableColumn prefWidth="75.0" text="C1"/>
-                                    <TableColumn prefWidth="75.0" text="C2"/>
+                                    <TableColumn prefWidth="75.0" text="C1" />
+                                    <TableColumn prefWidth="75.0" text="C2" />
                                 </columns>
                             </TableView>
                         </VBox>
