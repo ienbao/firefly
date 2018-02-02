@@ -15,7 +15,7 @@ public class JobInboundHandler2 implements JobInboundHandler {
     @Override
     public void doJob(JobHandlerContext context, Object in) throws Exception {
         StringBuffer param = new StringBuffer();
-        param.append(in.toString() + " handler2");
+        param.append(in.toString() + " inbound handler2");
         context.fireDoJob(param.toString());
     }
 

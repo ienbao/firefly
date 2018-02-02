@@ -4,9 +4,7 @@
 
 package com.dmsoft.firefly.core.job;
 
-import com.dmsoft.firefly.core.job.handler.JobInboundHandler1;
-import com.dmsoft.firefly.core.job.handler.JobInboundHandler2;
-import com.dmsoft.firefly.core.job.handler.JobInboundHandler3;
+import com.dmsoft.firefly.core.job.handler.*;
 import com.dmsoft.firefly.sdk.job.InitJobPipeline;
 import com.dmsoft.firefly.sdk.job.JobDoComplete;
 import com.dmsoft.firefly.sdk.job.JobManager;
@@ -27,9 +25,12 @@ public class JobTest {
             @Override
             public JobPipeline initJobPipeline(JobDoComplete complete) {
                 DefaultJobPipeline pipeline = new DefaultJobPipeline(complete, jobManager.getService());
+                pipeline.addLast("test4", new JobOutboundHandler1());
+                pipeline.addLast("test5", new JobOutboundHandler2());
                 pipeline.addLast("test1", new JobInboundHandler1());
                 pipeline.addLast("test2", new JobInboundHandler2());
                 pipeline.addLast("test3", new JobInboundHandler3());
+
                 return pipeline;
             }
         });

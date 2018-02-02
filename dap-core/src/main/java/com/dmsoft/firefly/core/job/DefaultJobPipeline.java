@@ -253,6 +253,10 @@ public class DefaultJobPipeline implements JobPipeline {
 
         }
 
+        @Override
+        public void returnValue(JobHandlerContext context, Object returnValue) {
+            context.returnValue(returnValue);
+        }
     }
 
     public Object getResult() {

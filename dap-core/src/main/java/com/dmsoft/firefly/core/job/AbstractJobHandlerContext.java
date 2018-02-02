@@ -87,7 +87,7 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
 
     private void invokeReturnValue(Object returnValue) {
         try {
-            ((JobOutboundHandler) handler()).returnValue(returnValue);
+            ((JobOutboundHandler) handler()).returnValue(this, returnValue);
         } catch (Exception e) {
             notifyHandlerException(e);
         }

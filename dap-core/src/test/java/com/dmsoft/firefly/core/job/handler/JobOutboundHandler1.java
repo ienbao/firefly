@@ -5,17 +5,17 @@
 package com.dmsoft.firefly.core.job.handler;
 
 import com.dmsoft.firefly.sdk.job.JobHandlerContext;
-import com.dmsoft.firefly.sdk.job.JobInboundHandler;
+import com.dmsoft.firefly.sdk.job.JobOutboundHandler;
 
 /**
  * Created by Garen.Pang on 2018/2/2.
  */
-public class JobInboundHandler3 implements JobInboundHandler {
+public class JobOutboundHandler1 implements JobOutboundHandler {
 
     @Override
-    public void doJob(JobHandlerContext context, Object in) throws Exception {
+    public void returnValue(JobHandlerContext context, Object returnValue) {
         StringBuffer param = new StringBuffer();
-        param.append(in.toString() + " inbound handler3");
+        param.append(returnValue.toString() + " outbound handler1");
         context.returnValue(param.toString());
     }
 
