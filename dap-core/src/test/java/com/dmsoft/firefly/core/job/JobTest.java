@@ -26,7 +26,7 @@ public class JobTest {
         jobManager.createJob("test1", new InitJobPipelineAdapter() {
             @Override
             public JobPipeline initJobPipeline(JobDoComplete complete) {
-                DefaultJobPipeline pipeline = new DefaultJobPipeline(complete);
+                DefaultJobPipeline pipeline = new DefaultJobPipeline(complete, jobManager.getService());
                 pipeline.addLast("test1", new JobInboundHandler1());
                 pipeline.addLast("test2", new JobInboundHandler2());
                 pipeline.addLast("test3", new JobInboundHandler3());

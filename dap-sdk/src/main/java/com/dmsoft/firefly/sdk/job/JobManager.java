@@ -1,5 +1,7 @@
 package com.dmsoft.firefly.sdk.job;
 
+import java.util.concurrent.ExecutorService;
+
 /**
  * basic class for job manager
  *
@@ -12,5 +14,7 @@ public interface JobManager {
     Object doJobSyn(String jobName, Object object);
 
     void doJobASyn(String jobName, Object object, JobDoComplete complete);
+
+    ExecutorService getService();
 
 }

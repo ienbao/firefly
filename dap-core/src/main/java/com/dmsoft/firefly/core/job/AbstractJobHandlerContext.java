@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by Garen.Pang on 2018/2/2.
@@ -24,26 +23,46 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
     private final boolean inbound;
     private final boolean outbound;
     private final String name;
+    private ExecutorService executorService;
+    private volatile boolean doNextInbound;
+    private volatile boolean doNextOutbound;
 
-    public AbstractJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, boolean inbound, boolean outbound, String name) {
+//    public AbstractJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, boolean inbound, boolean outbound, String name) {
+//        this.jobPipeline = jobPipeline;
+//        this.jobDoComplete = jobDoComplete;
+//        this.inbound = inbound;
+//        this.outbound = outbound;
+//        this.name = name;
+//    }
+
+    public AbstractJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, boolean inbound, boolean outbound, String name, ExecutorService executorService) {
         this.jobPipeline = jobPipeline;
         this.jobDoComplete = jobDoComplete;
         this.inbound = inbound;
         this.outbound = outbound;
         this.name = name;
+        this.executorService = executorService;
     }
-
 
     @Override
     public JobHandlerContext fireDoJob(Object param) {
         AbstractJobHandlerContext next = findContextInbound();
-        next.invokeDoJob(param);
+        doNextInbound = true;
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                next.invokeDoJob(param);
+            }
+        });
         return this;
     }
 
     private void invokeDoJob(Object param) {
         try {
             ((JobInboundHandler) handler()).doJob(this, param);
+            if (!doNextInbound && !doNextOutbound) {
+                jobPipeline.returnValue(null);
+            }
         } catch (Exception e) {
             notifyHandlerException(e);
         }
@@ -57,7 +76,13 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
             return;
         }
         AbstractJobHandlerContext next = findContextOutbound();
-        next.invokeReturnValue(returnValue);
+        doNextOutbound = true;
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                next.invokeReturnValue(returnValue);
+            }
+        });
     }
 
     private void invokeReturnValue(Object returnValue) {

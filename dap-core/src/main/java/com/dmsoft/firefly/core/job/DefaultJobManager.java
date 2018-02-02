@@ -89,4 +89,8 @@ public class DefaultJobManager implements JobManager {
         });
 
     }
+
+    public ExecutorService getService() {
+        return service;
+    }
 }

@@ -48,6 +48,8 @@ public interface JobPipeline {
 
     JobPipeline fireDoJob(Object param);
 
+    void returnValue(Object returnValue);
+
     Object getResult();
 
     void setResult(Object result);

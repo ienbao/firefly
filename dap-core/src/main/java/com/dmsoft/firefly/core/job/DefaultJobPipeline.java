@@ -7,6 +7,7 @@ package com.dmsoft.firefly.core.job;
 import com.dmsoft.firefly.sdk.job.*;
 
 import java.util.NoSuchElementException;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Created by Garen.Pang on 2018/2/2.
@@ -17,9 +18,11 @@ public class DefaultJobPipeline implements JobPipeline {
     final AbstractJobHandlerContext tail;
     final JobDoComplete doComplete;
     private Object result;
+    private final ExecutorService executorService;
 
-    public DefaultJobPipeline(JobDoComplete doComplete) {
+    public DefaultJobPipeline(JobDoComplete doComplete, ExecutorService executorService) {
         this.doComplete = doComplete;
+        this.executorService = executorService;
         head = new HeadContext(this, doComplete);
         tail = new TailContext(this, doComplete);
 
@@ -146,10 +149,15 @@ public class DefaultJobPipeline implements JobPipeline {
     @Override
     public JobPipeline fireDoJob(Object param) {
         head.fireDoJob(param);
-        if (this.getResult() == null) {
-            head.returnValue(null);
-        }
+//        if (this.getResult() == null) {
+//            head.returnValue(null);
+//        }
         return this;
+    }
+
+    @Override
+    public void returnValue(Object returnValue) {
+        head.returnValue(returnValue);
     }
 
     private void addFirst0(AbstractJobHandlerContext newCtx) {
@@ -203,13 +211,13 @@ public class DefaultJobPipeline implements JobPipeline {
     }
 
     private AbstractJobHandlerContext newContext(String name, JobHandler handler) {
-        return new DefaultJobHandlerContext(this, doComplete, name, handler);
+        return new DefaultJobHandlerContext(this, doComplete, name, executorService, handler);
     }
 
-    static final class TailContext extends AbstractJobHandlerContext implements JobInboundHandler {
+    final class TailContext extends AbstractJobHandlerContext implements JobInboundHandler {
 
         public TailContext(JobPipeline jobPipeline, JobDoComplete complete) {
-            super(jobPipeline, complete, true, false, "TailContext");
+            super(jobPipeline, complete, true, false, "TailContext", executorService);
         }
 
         @Override
@@ -229,10 +237,10 @@ public class DefaultJobPipeline implements JobPipeline {
         }
     }
 
-    static final class HeadContext extends AbstractJobHandlerContext implements JobOutboundHandler {
+    final class HeadContext extends AbstractJobHandlerContext implements JobOutboundHandler {
 
         public HeadContext(JobPipeline jobPipeline, JobDoComplete complete) {
-            super(jobPipeline, complete, false, true, "HeadContext");
+            super(jobPipeline, complete, false, true, "HeadContext", executorService);
         }
 
         @Override
