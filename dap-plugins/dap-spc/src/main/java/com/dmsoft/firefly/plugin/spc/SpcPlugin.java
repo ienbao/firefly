@@ -37,7 +37,7 @@ public class SpcPlugin extends Plugin {
             public Pane getNewPane() {
                 Pane root = null;
                 try {
-                    root = FXMLLoader.load(getClass().getClassLoader().getResource("view/spc.fxml"),ResourceBundle.getBundle("i18n.message_en_US"));
+                    root = FXMLLoader.load(getClass().getClassLoader().getResource("view/spc.fxml"), ResourceBundle.getBundle("i18n.message_en_US"));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
