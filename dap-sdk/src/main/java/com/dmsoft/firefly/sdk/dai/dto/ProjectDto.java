@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class ProjectDto {
     private String projectName;
+    private String path;
     private List<String> itemNames;
 
     public String getProjectName() {
@@ -15,6 +16,14 @@ public class ProjectDto {
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public List<String> getItemNames() {

@@ -1,5 +1,8 @@
 package com.dmsoft.firefly.sdk.job;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
+
 /**
  * basic class for job manager
  *
@@ -8,43 +11,47 @@ package com.dmsoft.firefly.sdk.job;
 public interface JobManager {
 
     /**
-     * create job
+     * createJob
      *
-     * @param jobName job name
+     * @param jobName  jobName
+     * @param pipeline pipeline
      */
-    void createJob(String jobName);
+    void createJob(String jobName, InitJobPipeline pipeline);
 
     /**
-     * do job
+     * doJobSyn
      *
-     * @param jobName job name
-     * @param object  first param
-     * @return result
+     * @param jobName jobName
+     * @param object  object
+     * @return Object
      */
-    Object doJob(String jobName, Object object);
+    Object doJobSyn(String jobName, Object object);
 
     /**
-     * method to register handler
+     * doJobSyn
      *
-     * @param jobName job
-     * @param handler handler
+     * @param jobName jobName
+     * @param object  object
+     * @param timeout timeout
+     * @param unit    unit
+     * @return Object
      */
-    void registerHandler(String jobName, Handler handler);
+    Object doJobSyn(String jobName, Object object, long timeout, TimeUnit unit);
 
     /**
-     * method to register handler at first
+     * doJobASyn
      *
-     * @param jobName job name
-     * @param handler handler
+     * @param jobName  jobName
+     * @param object   object
+     * @param complete complete
      */
-    void registerHandlerFirst(String jobName, Handler handler);
+    void doJobASyn(String jobName, Object object, JobDoComplete complete);
 
     /**
-     * method to register handler at next
+     * getExecutorService
      *
-     * @param jobName job name
-     * @param index   index
-     * @param handler handler
+     * @return
      */
-    void registerHandlerNextIndex(String jobName, int index, Handler handler);
+    ExecutorService getExecutorService();
+
 }
