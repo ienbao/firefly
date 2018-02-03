@@ -224,6 +224,11 @@ public class PluginContextImpl implements PluginContext, PluginContextListener {
 
     @Override
     public DAPClassLoader getDAPClassLoader(String pluginId) {
+        return this.getDAPClassLoader(Lists.newArrayList(pluginId));
+    }
+
+    @Override
+    public DAPClassLoader getDAPClassLoaderWithoutParent(String pluginId) {
         if (pluginId == null) {
             return AccessController.doPrivileged(new PrivilegedAction<DAPClassLoader>() {
                 @Override
@@ -254,11 +259,6 @@ public class PluginContextImpl implements PluginContext, PluginContextListener {
                 return new DAPClassLoader(pclList);
             }
         });
-    }
-
-    @Override
-    public DAPClassLoader getDAPClassLoaderWithoutParent(String pluginId) {
-        return null;
     }
 
     @Override
