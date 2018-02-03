@@ -117,6 +117,14 @@ public interface PluginContext {
     DAPClassLoader getDAPClassLoader(String pluginId);
 
     /**
+     * method to get dap class loader without parent
+     *
+     * @param pluginId plugin info id
+     * @return dap class loader
+     */
+    DAPClassLoader getDAPClassLoaderWithoutParent(String pluginId);
+
+    /**
      * method to add listener for plugin context
      *
      * @param listener listener

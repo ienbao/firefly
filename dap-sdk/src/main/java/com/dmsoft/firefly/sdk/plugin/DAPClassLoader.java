@@ -34,6 +34,14 @@ public class DAPClassLoader extends ClassLoader {
         }
     }
 
+    /**
+     * constructor
+     *
+     * @param pluginClassLoaders plugin class loader collection
+     */
+    public DAPClassLoader(List<PluginClassLoader> pluginClassLoaders) {
+        this.pluginClassLoaders = pluginClassLoaders;
+    }
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
