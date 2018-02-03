@@ -12,15 +12,10 @@ public interface InitJobPipeline {
     /**
      * initJobPipeline
      *
+     * @param pipeline pipeline
      * @return JobPipeline
      */
-    JobPipeline initJobPipeline();
+    JobPipeline initJobPipeline(JobPipeline pipeline);
 
-    /**
-     * initJobPipeline
-     *
-     * @param complete complete
-     * @return JobPipeline
-     */
-    JobPipeline initJobPipeline(JobDoComplete complete);
+
 }

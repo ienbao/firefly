@@ -15,7 +15,7 @@ public class JobOutboundHandler2 implements JobOutboundHandler {
     @Override
     public void returnValue(JobHandlerContext context, Object returnValue) {
         StringBuffer param = new StringBuffer();
-        param.append(returnValue.toString() + " outbound handler2");
+        param.append(returnValue.toString() + " \n " + Thread.currentThread().getName() + " outbound handler2");
         context.returnValue(param.toString());
     }
 
