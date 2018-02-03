@@ -224,7 +224,41 @@ public class PluginContextImpl implements PluginContext, PluginContextListener {
 
     @Override
     public DAPClassLoader getDAPClassLoader(String pluginId) {
-        return this.getDAPClassLoader(Lists.newArrayList(pluginId));
+        if (pluginId == null) {
+            return AccessController.doPrivileged(new PrivilegedAction<DAPClassLoader>() {
+                @Override
+                public DAPClassLoader run() {
+                    return new DAPClassLoader(null, null);
+                }
+            });
+        }
+        List<PluginClassLoader> pclList = Lists.newArrayList();
+        if (this.pluginInfoMap.containsKey(pluginId)) {
+            PluginInfo pluginInfo = this.pluginInfoMap.get(pluginId);
+            if (PluginStatus.ACTIVE.equals(pluginInfo.getStatus())) {
+                if (!this.pluginClassLoaderMap.containsKey(pluginId)) {
+                    PluginClassLoader pcl = AccessController.doPrivileged(new PrivilegedAction<PluginClassLoader>() {
+                        @Override
+                        public PluginClassLoader run() {
+                            return new PluginClassLoader(null, pluginInfo);
+                        }
+                    });
+                    this.pluginClassLoaderMap.put(pluginId, pcl);
+                }
+            }
+            pclList.add(this.pluginClassLoaderMap.get(pluginId));
+        }
+        return AccessController.doPrivileged(new PrivilegedAction<DAPClassLoader>() {
+            @Override
+            public DAPClassLoader run() {
+                return new DAPClassLoader(pclList);
+            }
+        });
+    }
+
+    @Override
+    public DAPClassLoader getDAPClassLoaderWithoutParent(String pluginId) {
+        return null;
     }
 
     @Override
