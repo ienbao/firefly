@@ -15,7 +15,7 @@ public class JobInboundHandler3 implements JobInboundHandler {
     @Override
     public void doJob(JobHandlerContext context, Object in) throws Exception {
         StringBuffer param = new StringBuffer();
-        param.append(in.toString() + " inbound handler3");
+        param.append(in.toString() + " \n " + Thread.currentThread().getName() + " inbound handler3");
         context.returnValue(param.toString());
     }
 
