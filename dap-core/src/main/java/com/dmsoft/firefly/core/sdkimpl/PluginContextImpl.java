@@ -233,7 +233,7 @@ public class PluginContextImpl implements PluginContext, PluginContextListener {
             return AccessController.doPrivileged(new PrivilegedAction<DAPClassLoader>() {
                 @Override
                 public DAPClassLoader run() {
-                    return new DAPClassLoader(null, null);
+                    return new DAPClassLoader(parentClassLoader.getParent(), null);
                 }
             });
         }
@@ -256,7 +256,7 @@ public class PluginContextImpl implements PluginContext, PluginContextListener {
         return AccessController.doPrivileged(new PrivilegedAction<DAPClassLoader>() {
             @Override
             public DAPClassLoader run() {
-                return new DAPClassLoader(pclList);
+                return new DAPClassLoader(parentClassLoader.getParent(), pclList);
             }
         });
     }
