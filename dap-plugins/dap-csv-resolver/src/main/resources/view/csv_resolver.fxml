@@ -18,15 +18,15 @@
                         <Insets />
                      </opaqueInsets>
                      <HBox.margin>
-                        <Insets bottom="10.0" left="20.0" right="10.0" top="20.0" />
+                        <Insets bottom="10.0" left="20.0" right="10.0" top="23.0" />
                      </HBox.margin>
                   </Label>
-                   <TextField prefWidth="250.0" promptText="Test Item" BorderPane.alignment="CENTER">
+                   <TextField id="path" prefWidth="250.0" promptText="Test Item" BorderPane.alignment="CENTER">
                        <HBox.margin>
                            <Insets bottom="10.0" left="10.0" top="20.0" />
                        </HBox.margin>
                    </TextField>
-                  <Button mnemonicParsing="false" text="Browse">
+                  <Button id="browse" mnemonicParsing="false" text="Browse">
                      <HBox.margin>
                         <Insets bottom="10.0" top="20.0" />
                      </HBox.margin>
@@ -35,14 +35,22 @@
             </HBox>
          </top>
          <center>
-            <TableView prefHeight="220.0" prefWidth="760.0" BorderPane.alignment="CENTER">
+            <TableView id="rowTable" prefHeight="220.0" prefWidth="760.0" BorderPane.alignment="CENTER">
               <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                <TableColumn id="columnO" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" text="C1" />
+                <TableColumn id="columnTo" maxWidth="230.0" minWidth="230.0" prefWidth="230.0" text="C2">
+                     <columns>
+                        <TableColumn prefWidth="75.0" text="C2" />
+                     </columns></TableColumn>
+                  <TableColumn id="columnTh" maxWidth="130.0" minWidth="130.0" prefWidth="130.0" text="C2" />
+                  <TableColumn id="columnF" maxWidth="330.0" minWidth="330.0" prefWidth="330.0" text="C2" />
               </columns>
                <BorderPane.margin>
                   <Insets left="20.0" right="20.0" />
                </BorderPane.margin>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
             </TableView>
          </center>
          <bottom>
@@ -71,28 +79,28 @@
                   <Label text="LSL" GridPane.columnIndex="3" />
                   <Label text="Measure Unit" GridPane.rowIndex="2" />
                   <Label text="Test Data" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <ComboBox prefWidth="160.0" GridPane.rowIndex="1" />
-                  <ComboBox prefWidth="160.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <ComboBox id="header" prefWidth="160.0" GridPane.rowIndex="1" />
+                  <ComboBox id="item" prefWidth="160.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
                   </ComboBox>
-                  <ComboBox prefWidth="160.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <ComboBox id="usl" prefWidth="160.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
                   </ComboBox>
-                  <ComboBox prefWidth="160.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                  <ComboBox id="lsl" prefWidth="160.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
                   </ComboBox>
-                  <ComboBox prefWidth="160.0" GridPane.rowIndex="3">
+                  <ComboBox id="unit" prefWidth="160.0" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
                   </ComboBox>
-                  <ComboBox prefWidth="160.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <ComboBox id="data" prefWidth="160.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
@@ -114,9 +122,9 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" prefWidth="80.0" text="OK" GridPane.columnIndex="1" />
-            <Button mnemonicParsing="false" prefWidth="80.0" text="Cancel" GridPane.columnIndex="2" />
-            <Button mnemonicParsing="false" prefWidth="80.0" text="Apply" GridPane.columnIndex="3" />
+            <Button id="ok" mnemonicParsing="false" prefWidth="80.0" text="OK" GridPane.columnIndex="1" />
+            <Button id="cancel" mnemonicParsing="false" prefWidth="80.0" text="Cancel" GridPane.columnIndex="2" />
+            <Button id="apply" mnemonicParsing="false" prefWidth="80.0" text="Apply" GridPane.columnIndex="3" />
          </children>
       </GridPane>
    </bottom>
