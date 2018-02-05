@@ -9,12 +9,10 @@ import com.dmsoft.firefly.plugin.csvresolver.model.RowDataModel;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.util.List;
@@ -43,7 +41,7 @@ public class CsvResolverController {
     @FXML
     private TableColumn<RowDataModel, String> columnF;
 
-    @Autowired
+//    @Autowired
     private CsvResolverService service;
 
     private ObservableList<RowDataModel> rowDataList = FXCollections.observableArrayList();
@@ -119,6 +117,6 @@ public class CsvResolverController {
         csvTemplateDto.setUnit(Integer.valueOf(unit.getValue().toString()));
         csvTemplateDto.setData(Integer.valueOf(data.getValue().toString()));
 
-        service.saveCsvTemplate(csvTemplateDto);
+//        service.saveCsvTemplate(csvTemplateDto);
     }
 }
