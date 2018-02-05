@@ -37,5 +37,33 @@
                 </fileSets>
             </sources>
         </moduleSet>
+        <moduleSet>
+            <useAllReactorProjects>true</useAllReactorProjects>
+
+            <includes>
+                <include>com.dmsoft:dap-csv-resolver</include>
+            </includes>
+            <binaries>
+                <outputDirectory>Plugins/${module.artifactId}/libs</outputDirectory>
+                <!--<outputFileNameMapping>${module.artifactId}-${module.version}-${module.classifier}.${module.extension}</outputFileNameMapping>-->
+                <unpack>false</unpack>
+                <excludes>
+                    <exclude>com.dmsoft:dap-sdk</exclude>
+                </excludes>
+            </binaries>
+
+            <sources>
+                <includeModuleDirectory>false</includeModuleDirectory>
+                <fileSets>
+                    <fileSet>
+                        <directory>${project.basedir}/src/main/resources/</directory>
+                        <outputDirectory>/Plugins/${module.artifactId}/</outputDirectory>
+                        <includes>
+                            <include>plugin.xml</include>
+                        </includes>
+                    </fileSet>
+                </fileSets>
+            </sources>
+        </moduleSet>
     </moduleSets>
 </assembly>
