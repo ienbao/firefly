@@ -61,11 +61,12 @@ public class DAPApplication {
             List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath);
             RuntimeContext.getBean(PluginContext.class).installPlugin(scannedPlugins);
             RuntimeContext.getBean(PluginContext.class).enablePlugin(activePlugins);
-            DAPClassLoader loader = RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.SpcPlugin");
+
+           /* DAPClassLoader loader = RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.SpcPlugin");
             Class c = loader.loadClass("com.dmsoft.firefly.plugin.spc.SpcService");
             System.out.println(c);
             PluginProxyMethod method = RuntimeContext.getBean(PluginProxyMethodFactory.class).proxyMethod("com.dmsoft.dap.SpcPlugin", "com.dmsoft.firefly.plugin.spc.SpcService", "say");
-            method.doSomething(null, "AA");
+            method.doSomething(null, "AA");*/
             System.out.println("SADF");
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,6 +80,7 @@ public class DAPApplication {
             }
         }
         pluginInfoContextImpl.startPlugin("com.dmsoft.dap.SpcPlugin");
+        pluginInfoContextImpl.startPlugin("com.dmsoft.dap.GrrPlugin");
         return pluginInfoContextImpl;
     }
 
@@ -88,6 +90,6 @@ public class DAPApplication {
      * @param args arguments
      */
     public static void main(String[] args) {
-        run(Lists.newArrayList("com.dmsoft.dap.SpcPlugin"));
+        run(Lists.newArrayList("com.dmsoft.dap.SpcPlugin", "com.dmsoft.dap.GrrPlugin"));
     }
 }

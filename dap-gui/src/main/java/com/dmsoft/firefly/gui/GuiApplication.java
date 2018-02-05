@@ -23,7 +23,7 @@ public class GuiApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        DAPApplication.run(Lists.newArrayList("com.dmsoft.dap.SpcPlugin"));
+        DAPApplication.run(Lists.newArrayList("com.dmsoft.dap.SpcPlugin",  "com.dmsoft.dap.GrrPlugin"));
 
         //Parent root = FXMLLoader.load(getClass().getResource("view/main.fxml"));
         Pane root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/app_menu.fxml"));

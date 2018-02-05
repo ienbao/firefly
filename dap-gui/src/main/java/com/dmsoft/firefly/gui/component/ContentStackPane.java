@@ -2,6 +2,7 @@ package com.dmsoft.firefly.gui.component;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
@@ -9,16 +10,16 @@ import java.util.Stack;
 
 public class ContentStackPane extends StackPane {
     private static final int UNDEFINED = -1;
-    private ObservableList<Pane> pages = FXCollections.observableArrayList();
+    private ObservableList<Node> pages = FXCollections.observableArrayList();
     private Stack<Integer> history = new Stack<>();
     protected int curPageIdx = UNDEFINED;
 
-    public ContentStackPane(Pane... nodes) {
+    public ContentStackPane(Node... nodes) {
         pages.addAll(nodes);
         navTo(0);
     }
 
-    public void add(Pane node) {
+    public void add(Node node) {
         if (node == null) {
             return;
         }
@@ -59,7 +60,7 @@ public class ContentStackPane extends StackPane {
             }
         }
 
-        Pane nextPage = pages.get(nextPageIndex);
+        Node nextPage = pages.get(nextPageIndex);
         curPageIdx = nextPageIndex;
         getChildren().clear();
         getChildren().add(nextPage);
