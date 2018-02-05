@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.List;
@@ -41,8 +42,7 @@ public class CsvResolverController {
     @FXML
     private TableColumn<RowDataModel, String> columnF;
 
-//    @Autowired
-    private CsvResolverService service;
+    private CsvResolverService service = new CsvResolverService();
 
     private ObservableList<RowDataModel> rowDataList = FXCollections.observableArrayList();
     private ObservableList<String> options =
@@ -64,12 +64,15 @@ public class CsvResolverController {
         columnTo.setCellValueFactory(cellData -> cellData.getValue().col1Property());
         columnTh.setCellValueFactory(cellData -> cellData.getValue().col2Property());
         columnF.setCellValueFactory(cellData -> cellData.getValue().col3Property());
+        initData();
         browse.setOnAction(event -> {
+            String str = System.getProperty("user.home");
+            if (!StringUtils.isEmpty(path.getText())) {
+                str = path.getText();
+            }
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Csv Choose");
-            fileChooser.setInitialDirectory(
-                    new File(System.getProperty("user.home"))
-            );
+            fileChooser.setInitialDirectory(new File(str));
             fileChooser.getExtensionFilters().addAll(
                     new FileChooser.ExtensionFilter("CSV", "*.csv")
             );
@@ -90,7 +93,6 @@ public class CsvResolverController {
         apply.setOnAction(event -> {
             save();
         });
-        initData();
     }
 
     private void initData() {
@@ -117,6 +119,6 @@ public class CsvResolverController {
         csvTemplateDto.setUnit(Integer.valueOf(unit.getValue().toString()));
         csvTemplateDto.setData(Integer.valueOf(data.getValue().toString()));
 
-//        service.saveCsvTemplate(csvTemplateDto);
+        service.saveCsvTemplate(csvTemplateDto);
     }
 }
