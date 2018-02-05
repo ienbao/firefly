@@ -40,19 +40,16 @@
                             </Label>
                             <Button fx:id="resetBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false"
                                     prefHeight="22.0" prefWidth="22.0"
-                                    styleClass="btn-icon" text="" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                    styleClass="btn-icon"  GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                             <Button fx:id="printBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false"
                                     prefHeight="22.0" prefWidth="22.0"
-                                    style="-fx-background-image: url('images/btn_print_normal.png'); -fx-background-size: 16;"
-                                    styleClass="btn-icon" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                                    styleClass="btn-icon"  GridPane.columnIndex="2" GridPane.rowIndex="1"/>
                             <Button fx:id="exportBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false"
                                     prefHeight="22.0" prefWidth="22.0"
-                                    style="-fx-background-image: url('images/btn_export_normal.png'); -fx-background-size: 16;"
-                                    styleClass="btn-icon" text="Button" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                                    styleClass="btn-icon"  GridPane.columnIndex="3" GridPane.rowIndex="1"/>
                             <Button fx:id="chooseBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false"
                                     prefHeight="22.0" prefWidth="22.0"
-                                    style="-fx-background-image: url('images/icon_choose_one_white.png'); -fx-background-size: 16;"
-                                    styleClass="btn-primary" text="Button" GridPane.columnIndex="4"
+                                    styleClass="btn-primary"  GridPane.columnIndex="4"
                                     GridPane.rowIndex="1"/>
                         </children>
                     </GridPane>

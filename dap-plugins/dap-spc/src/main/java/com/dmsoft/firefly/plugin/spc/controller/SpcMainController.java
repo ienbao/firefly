@@ -3,13 +3,9 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
 
 /**
  * Created by Ethan.Yang on 2018/2/2.
@@ -31,9 +27,9 @@ public class SpcMainController {
     }
 
     private void initBtnIcon(){
-        ImageView imageReset = new ImageView(new Image(getClass().getResourceAsStream("/images/btn_reset_normal.png")));
-        imageReset.setFitHeight(16);
-        imageReset.setFitWidth(16);
-        resetBtn.setGraphic(imageReset);
+        resetBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_reset_normal.png")));
+        printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_print_normal.png")));
+        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_export_normal.png")));
+        chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
     }
 }
