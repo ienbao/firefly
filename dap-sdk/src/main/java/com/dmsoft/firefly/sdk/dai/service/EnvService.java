@@ -4,6 +4,7 @@
 package com.dmsoft.firefly.sdk.dai.service;
 
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
+import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 
 import java.util.List;
 
@@ -51,4 +52,18 @@ public interface EnvService {
      * @return preference
      */
     String findPreference(String code);
+
+    /**
+     * method to get language type
+     *
+     * @return language type
+     */
+    LanguageType getLanguageType();
+
+    /**
+     * method to set language type
+     *
+     * @param languageType language type
+     */
+    void setLanguageType(LanguageType languageType);
 }
