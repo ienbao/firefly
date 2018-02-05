@@ -26,6 +26,11 @@
             <artifactId>dap-spc</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.dmsoft</groupId>
+            <artifactId>dap-csv-resolver</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>

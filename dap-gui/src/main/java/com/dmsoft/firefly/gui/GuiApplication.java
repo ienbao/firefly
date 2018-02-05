@@ -23,7 +23,7 @@ public class GuiApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        DAPApplication.run(Lists.newArrayList("com.dmsoft.dap.SpcPlugin"));
+        DAPApplication.run(Lists.newArrayList("com.dmsoft.dap.SpcPlugin", "com.dmsoft.dap.CsvResolverPlugin"));
 
         //Parent root = FXMLLoader.load(getClass().getResource("view/main.fxml"));
         Pane root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/app_menu.fxml"));
@@ -31,7 +31,7 @@ public class GuiApplication extends Application {
 
         WindowPane windowPane = new WindowPane(primaryStage, root, main);
 
-        Scene scene = new Scene(windowPane, 1000, 600);
+        Scene scene = new Scene(windowPane, 1280, 800);
         scene.setFill(Color.TRANSPARENT);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/app.css").toExternalForm());
         primaryStage.initStyle(StageStyle.TRANSPARENT);
