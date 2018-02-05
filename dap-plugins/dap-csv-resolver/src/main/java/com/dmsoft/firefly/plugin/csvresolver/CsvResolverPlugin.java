@@ -7,12 +7,14 @@ package com.dmsoft.firefly.plugin.csvresolver;
 
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.Plugin;
+import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.ui.IMainBodyPane;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +39,10 @@ public class CsvResolverPlugin extends Plugin {
             public Pane getNewPane() {
                 Pane root = null;
                 try {
-                    root = FXMLLoader.load(getClass().getClassLoader().getResource("view/csv_resolver.fxml"), ResourceBundle.getBundle("i18n.message_en_US"));
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("view/csv_resolver.fxml"), ResourceBundle.getBundle("i18n.message_en_US"));
+                    fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.CsvResolverPlugin"));
+                    root = fxmlLoader.load();
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -58,4 +63,6 @@ public class CsvResolverPlugin extends Plugin {
     public void destroy() {
         System.out.println("Plugin-CsvResolver Destroyed.");
     }
+
+    private Stage stage;
 }
