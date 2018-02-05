@@ -11,6 +11,8 @@ import com.dmsoft.firefly.sdk.dai.dto.LineDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.ProjectDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.plugin.PluginContext;
+import com.dmsoft.firefly.sdk.plugin.PluginInfo;
 import com.dmsoft.firefly.sdk.plugin.annotation.DataParser;
 import com.dmsoft.firefly.sdk.plugin.annotation.ExcludeMethod;
 import com.dmsoft.firefly.sdk.plugin.apis.IDataParser;
@@ -33,10 +35,14 @@ public class CsvResolverService implements IDataParser {
     private final Logger logger = LoggerFactory.getLogger(CsvResolverService.class);
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
 
-    private String path = System.getProperty("user.dir");
+//    private String path = System.getProperty("user.dir");
+    private PluginContext pluginContext = RuntimeContext.getBean(PluginContext.class);
+
+//    private String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.CsvResolverPlugin").getFolderPath();
+
     private String fileName = "csvTemplate.txt";
 
-    private JsonMapper jsonMapper;
+    private JsonMapper jsonMapper = new JsonMapper();
 
     private CsvReader csvReader;
 
@@ -166,6 +172,7 @@ public class CsvResolverService implements IDataParser {
     public void saveCsvTemplate(CsvTemplateDto csvTemplateDto) {
         FileOutputStream fos = null;
         String text = jsonMapper.toJson(csvTemplateDto);
+        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.CsvResolverPlugin").getFolderPath();
         File tempFile = new File(path);
         if (!tempFile.exists()) {
             tempFile.mkdirs();
@@ -202,7 +209,7 @@ public class CsvResolverService implements IDataParser {
         BufferedReader reader = null;
         String text = "";
         try {
-            FileInputStream fileInputStream = new FileInputStream(path + File.separator + fileName);
+            FileInputStream fileInputStream = new FileInputStream(".." + File.separator + fileName);
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
             reader = new BufferedReader(inputStreamReader);
             String tempString = null;
@@ -252,7 +259,18 @@ public class CsvResolverService implements IDataParser {
         return csvList;
     }
 
-    public static void main(String[] args) {
-        System.out.println("ASFDA");
-    }
+//    public static void main(String[] args) {
+//        System.out.println("ASFDA");
+//        CsvResolverService service = new CsvResolverService();
+//        CsvTemplateDto csvTemplateDto = new CsvTemplateDto();
+//        csvTemplateDto.setData(1);
+//        csvTemplateDto.setItem(1);
+//        csvTemplateDto.setHeader(1);
+//        csvTemplateDto.setLsl(1);
+//        csvTemplateDto.setUsl(1);
+//        csvTemplateDto.setUnit(1);
+//
+//        service.saveCsvTemplate(csvTemplateDto);
+//        System.out.println(service.findCsvTemplate());
+//    }
 }
