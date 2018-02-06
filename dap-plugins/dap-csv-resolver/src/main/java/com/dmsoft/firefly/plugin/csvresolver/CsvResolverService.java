@@ -35,10 +35,7 @@ public class CsvResolverService implements IDataParser {
     private final Logger logger = LoggerFactory.getLogger(CsvResolverService.class);
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
 
-//    private String path = System.getProperty("user.dir");
     private PluginContext pluginContext = RuntimeContext.getBean(PluginContext.class);
-
-//    private String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.CsvResolverPlugin").getFolderPath();
 
     private String fileName = "csvTemplate.txt";
 
@@ -46,9 +43,8 @@ public class CsvResolverService implements IDataParser {
 
     private CsvReader csvReader;
 
-    public Long importCsv(String csvPath, String importTemplate) {
+    public void importCsv(String csvPath, String importTemplate) {
         logger.info("Start csv importing.");
-        Long insertedId = 0L;
         File csvFile = new File(csvPath);
         Boolean importSucc = false;
         String logStr = null;
@@ -66,7 +62,7 @@ public class CsvResolverService implements IDataParser {
             logger.debug("Parsing <" + csvPath + ">.");
             CsvTemplateDto fileFormat = findCsvTemplate();
             if (fileFormat == null) {
-                return null;
+                return;
             }
             String[] items = null;
             int rowNumber = 0;
@@ -119,7 +115,6 @@ public class CsvResolverService implements IDataParser {
             }
         }
         logger.info("End csv importing.");
-        return insertedId;
     }
 
     private void saveProject(File file, CsvTemplateDto csvTemplateDto, List<String[]> value) {
@@ -244,8 +239,13 @@ public class CsvResolverService implements IDataParser {
         try {
             csvReader = new CsvReader(path, ',', Charset.forName("UTF-8"));
             logger.debug("Parsing <" + path + ">.");
-            for (int i = 0; i < 10; i++) {
-                csvList.add(csvReader.getValues());
+            int i = 0;
+            while (csvReader.readRecord()) {
+                if (i >= 10) {
+                    break;
+                }
+                csvList.add(Arrays.copyOfRange(csvReader.getValues(), 0, 3));
+                i++;
             }
 //            while (csvReader.readRecord()) {
 //                csvList.add(csvReader.getValues());

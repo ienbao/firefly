@@ -20,7 +20,7 @@ public class TestApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         //Parent root = FXMLLoader.load(getClass().getResource("view/main.fxml"));
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("view/spc.fxml"),ResourceBundle.getBundle("i18n.message_en_US"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("view/csv_resolver.fxml"),ResourceBundle.getBundle("i18n.message_en_US"));
         //root.getStylesheets().add("/main.css");
 
         Scene scene = new Scene(root,1280,704);

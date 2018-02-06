@@ -15,5 +15,5 @@ public interface IDataParser {
      * @param importTemplate csv import template name
      * @return the id of the csv imported file
      */
-    Long importCsv(String csvPath, String importTemplate);
+    void importCsv(String csvPath, String importTemplate);
 }
