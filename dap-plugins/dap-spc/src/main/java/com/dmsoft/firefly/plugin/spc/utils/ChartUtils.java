@@ -10,7 +10,7 @@ import javafx.scene.input.MouseEvent;
  *
  * @author Can Guan
  */
-public class ExpandableChartUtils {
+public class ChartUtils {
     private XYChart chart;
     private ValueAxis xAxis;
     private ValueAxis yAxis;
@@ -31,7 +31,7 @@ public class ExpandableChartUtils {
      *
      * @param chart xy chart
      */
-    public ExpandableChartUtils(XYChart chart) {
+    public ChartUtils(XYChart chart) {
         this(chart, 4);
     }
 
@@ -39,9 +39,9 @@ public class ExpandableChartUtils {
      * constructor
      *
      * @param chart   xy chart
-     * @param maxRate maxRate
+     * @param maxRate maxRate : maxRate to expand
      */
-    public ExpandableChartUtils(XYChart chart, double maxRate) {
+    public ChartUtils(XYChart chart, double maxRate) {
         this.chart = chart;
         this.maxRate = maxRate;
         xAxis = (ValueAxis) chart.getXAxis();
@@ -78,6 +78,7 @@ public class ExpandableChartUtils {
             xAxis.setLowerBound(originalXLower);
             yAxis.setUpperBound(originalYUpper);
             yAxis.setLowerBound(originalYLower);
+            currentRate = 1;
             return;
         }
         double currentXUpper = xAxis.getUpperBound();
@@ -155,8 +156,9 @@ public class ExpandableChartUtils {
     }
 
     private void drag(MouseEvent event) {
-        if (!dragging || currentRate == 1)
+        if (!dragging || currentRate == 1) {
             return;
+        }
 
         double dX = (event.getX() - lastX) / -xAxis.getScale();
         double newUpperX = xAxis.getUpperBound() + dX;
@@ -196,8 +198,9 @@ public class ExpandableChartUtils {
     }
 
     private void release(MouseEvent event) {
-        if (!dragging)
+        if (!dragging) {
             return;
+        }
         dragging = false;
         xAxis.setAnimated(wasXAnimated);
         yAxis.setAnimated(wasYAnimated);

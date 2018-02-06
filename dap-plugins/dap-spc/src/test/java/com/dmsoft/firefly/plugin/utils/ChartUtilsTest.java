@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.plugin.utils;
 
-import com.dmsoft.firefly.plugin.spc.utils.ExpandableChartUtils;
+import com.dmsoft.firefly.plugin.spc.utils.ChartUtils;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,7 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 
-public class ExpandableChartUtilsTest extends Application {
+public class ChartUtilsTest extends Application {
     private StackedAreaChart chart;
     private NumberAxis xAxis;
     private NumberAxis yAxis;
@@ -59,7 +59,7 @@ public class ExpandableChartUtilsTest extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         XYChart chart = createContent();
-        ExpandableChartUtils utils = new ExpandableChartUtils(chart);
+        ChartUtils utils = new ChartUtils(chart);
         utils.activeChartDraggable();
         Button btn = new Button();
         btn.setText("+");
