@@ -3,7 +3,9 @@ package com.dmsoft.firefly.sdk.dai.service;
 
 import com.dmsoft.firefly.sdk.dai.dto.LineDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.ProjectDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.entity.CellData;
 
 import java.util.List;
 
@@ -25,27 +27,28 @@ public interface SourceDataService {
      * @param projectDtos project
      */
     void saveProject(List<ProjectDto> projectDtos);
-
-    /**
-     * method to save test item
-     *
-     * @param testItemDto test item dto
-     */
-    void saveTestItem(TestItemDto testItemDto);
+//
+//    /**
+//     * method to save test item
+//     *
+//     * @param testItemDto test item dto
+//     */
+//    void saveTestItem(TestItemDto testItemDto);
 
     /**
      * save test item
      *
-     * @param testItemDtos test item
+     * @param projectName   project name
+     * @param testItemNames testItem names
      */
-    void saveTestItem(List<TestItemDto> testItemDtos);
+    void saveTestItem(String projectName, List<String> testItemNames);
 
     /**
      * save project line data
      *
-     * @param lineDataDtos line data
+     * @param testDataDtos TestDataDto
      */
-    void saveProjectData(List<LineDataDto> lineDataDtos);
+    void saveProjectData(List<TestDataDto> testDataDtos);
 
     /**
      * find all project
@@ -96,25 +99,24 @@ public interface SourceDataService {
      * @param templateName template names
      * @return list of lineDataDto
      */
-    List<LineDataDto> findDataByCondition(List<String> projectNames, List<String> itemNames, List<String> conditions, String templateName);
+    List<TestDataDto> findDataByCondition(List<String> projectNames, List<String> itemNames, List<String> conditions, String templateName);
 
     /**
      * find data by line number
      *
-     * @param projectName project name
-     * @param lineNum     line number
+     * @param projectName  project name
+     * @param testItemName test item name
      * @return line data
      */
-    LineDataDto findDataByLineNum(String projectName, String lineNum);
+    TestDataDto findDataByItemName(String projectName, String testItemName);
 
     /**
      * update line data isUsed
      *
      * @param projectName peoject name
-     * @param lineNum     line number
-     * @param used        isUsed
+     * @param lineUsedData     lineUsed data
      */
-    void updateLineDataUsed(String projectName, String lineNum, Boolean used);
+    void updateLineDataUsed(String projectName, List<CellData> lineUsedData);
 
     /**
      * delete data by project name

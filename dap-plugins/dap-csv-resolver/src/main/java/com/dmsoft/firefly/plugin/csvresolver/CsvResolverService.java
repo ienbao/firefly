@@ -100,7 +100,7 @@ public class CsvResolverService implements IDataParser {
                 lineDataDto.setTestData(itemDatas);
                 lineDataDtos.add(lineDataDto);
             }
-            sourceDataService.saveProjectData(lineDataDtos);
+//            sourceDataService.saveProjectData(lineDataDtos);
             importSucc = true;
             csvReader.close();
 
@@ -154,7 +154,7 @@ public class CsvResolverService implements IDataParser {
             testItemDto.setUnit(unitRow[i]);
             itemDtos.add(testItemDto);
         }
-        sourceDataService.saveTestItem(itemDtos);
+//        sourceDataService.saveTestItem(itemDtos);
 
     }
 

@@ -14,6 +14,18 @@
     <packaging>jar</packaging>
     <name>Firefly-DAP :: Soft Development Kit (SDK)</name>
 
+    <properties>
+        <mongodb-driver.version>3.6.1</mongodb-driver.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver</artifactId>
+            <version>${mongodb-driver.version}</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <pluginManagement>
             <plugins>
