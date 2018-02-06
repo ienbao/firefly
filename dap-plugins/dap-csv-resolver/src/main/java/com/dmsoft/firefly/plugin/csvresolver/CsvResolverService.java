@@ -9,7 +9,9 @@ import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.LineDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.ProjectDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.entity.CellData;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
@@ -66,15 +68,8 @@ public class CsvResolverService implements IDataParser {
                 return;
             }
             String[] items = null;
-            int rowNumber = 0;
             while (csvReader.readRecord()) {
                 csvList.add(csvReader.getValues());
-                if (rowNumber == fileFormat.getData() - 1) {
-                    //save project and item
-                    items = csvList.get(fileFormat.getItem() - 1);
-                    saveProject(csvFile, fileFormat, csvList);
-                }
-                rowNumber++;
             }
             logger.debug("Parsing <" + csvPath + "> done.");
 
@@ -86,22 +81,68 @@ public class CsvResolverService implements IDataParser {
 //                pushErrorMsg(logStr, csvPath);
 //                throw new ApplicationException(exceptionNumber, logStr);
             }
+            ProjectDto projectDto = new ProjectDto();
+            projectDto.setProjectName(csvFile.getName());
+            projectDto.setPath(csvFile.getPath());
+            sourceDataService.saveProject(projectDto);
 
-            //save data
-            List<LineDataDto> lineDataDtos = Lists.newArrayList();
-            for (int i = fileFormat.getData() - 1; i < csvList.size(); i++) {
-                List<String> data = Arrays.asList(csvList.get(i));
-                LineDataDto lineDataDto = new LineDataDto();
-                lineDataDto.setLineNo(String.valueOf(i));
-                lineDataDto.setProjectName(csvFile.getName());
-                Map<String, Object> itemDatas = Maps.newHashMap();
-                for (int j = 0; j < data.size(); j++) {
-                    itemDatas.put(items[j], data.get(i));
-                }
-                lineDataDto.setTestData(itemDatas);
-                lineDataDtos.add(lineDataDto);
+            items = csvList.get(fileFormat.getItem() - 1);
+            sourceDataService.saveTestItem(csvFile.getName(), Arrays.asList(items));
+
+            String[] lslRow = null, uslRow = null, unitRow = null;
+
+            if (fileFormat.getHeader() != null && fileFormat.getHeader() > 0) {
+                csvList.set(fileFormat.getHeader() - 1, null);
             }
+            if (fileFormat.getLsl() != null && fileFormat.getLsl() > 0) {
+                lslRow = csvList.get(fileFormat.getLsl() - 1);
+                csvList.set(fileFormat.getLsl() - 1, null);
+            }
+            if (fileFormat.getUsl() != null && fileFormat.getUsl() > 0) {
+                uslRow = csvList.get(fileFormat.getUsl() - 1);
+                csvList.set(fileFormat.getUsl() - 1, null);
+            }
+            if (fileFormat.getUnit() != null && fileFormat.getUnit() > 0) {
+                unitRow = csvList.get(fileFormat.getUnit());
+                csvList.set(fileFormat.getUnit(), null);
+            }
+            //save line data
+//            List<LineDataDto> lineDataDtos = Lists.newArrayList();
+//            for (int i = fileFormat.getData() - 1; i < csvList.size(); i++) {
+//                List<String> data = Arrays.asList(csvList.get(i));
+//                LineDataDto lineDataDto = new LineDataDto();
+//                lineDataDto.setLineNo(String.valueOf(i));
+//                lineDataDto.setProjectName(csvFile.getName());
+//                Map<String, Object> itemDatas = Maps.newHashMap();
+//                for (int j = 0; j < data.size(); j++) {
+//                    itemDatas.put(items[j], data.get(i));
+//                }
+//                lineDataDto.setTestData(itemDatas);
+//                lineDataDtos.add(lineDataDto);
+//            }
 //            sourceDataService.saveProjectData(lineDataDtos);
+            //save column data
+            List<TestDataDto> testDataDtos = Lists.newArrayList();
+            for (int i = 0; i < items.length; i++) {
+                TestDataDto testDataDto = new TestDataDto();
+                testDataDto.setProjectName(csvFile.getName());
+                testDataDto.setItemName(items[i]);
+                testDataDto.setUsl(uslRow[i]);
+                testDataDto.setLsl(lslRow[i]);
+                testDataDto.setUnit(unitRow[i]);
+
+                List<CellData> cellDatas = Lists.newArrayList();
+                for (int j = fileFormat.getData() - 1; j < csvList.size(); j++) {
+                    CellData cellData = new CellData();
+                    cellData.setLineNo(j);
+                    cellData.setValue(csvList.get(j)[i]);
+                    cellDatas.add(cellData);
+                }
+                testDataDto.setData(cellDatas);
+                testDataDtos.add(testDataDto);
+            }
+            sourceDataService.saveProjectData(testDataDtos);
+
             importSucc = true;
             csvReader.close();
 
