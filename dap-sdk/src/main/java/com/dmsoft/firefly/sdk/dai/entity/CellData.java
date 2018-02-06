@@ -3,7 +3,7 @@ package com.dmsoft.firefly.sdk.dai.entity;
 public class CellData {
 
     private int lineNo;
-    private double value;
+    private Object value;
 
     public CellData() {
 
@@ -17,11 +17,11 @@ public class CellData {
         this.lineNo = lineNo;
     }
 
-    public double getValue() {
+    public Object getValue() {
         return value;
     }
 
-    public void setValue(double value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 }

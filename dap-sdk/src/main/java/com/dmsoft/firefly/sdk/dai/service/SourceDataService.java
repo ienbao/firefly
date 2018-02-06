@@ -110,11 +110,21 @@ public interface SourceDataService {
      */
     TestDataDto findDataByItemName(String projectName, String testItemName);
 
+
+    /**
+     * find data by line number
+     *
+     * @param projectName  project name
+     * @param testItemName test item name
+     * @return line data
+     */
+    TestDataDto findDataByItemNameAndLineNo(String projectName, String testItemName, List<String> LineNo);
+
     /**
      * update line data isUsed
      *
-     * @param projectName peoject name
-     * @param lineUsedData     lineUsed data
+     * @param projectName  peoject name
+     * @param lineUsedData lineUsed data
      */
     void updateLineDataUsed(String projectName, List<CellData> lineUsedData);
 
