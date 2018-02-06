@@ -22,7 +22,7 @@ public class TestApplication extends Application {
     public void start(Stage primaryStage) throws Exception {
         //Parent root = FXMLLoader.load(getClass().getResource("view/main.fxml"));
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getClassLoader().getResource("view/quick_search.fxml"));
+        loader.setLocation(getClass().getClassLoader().getResource("view/spc.fxml"));
         loader.setResources(ResourceBundle.getBundle("i18n.message_en_US"));
 //        loader.setController(new SpcMainController());
 //        loader.setClassLoader(cl);
