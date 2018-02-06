@@ -22,6 +22,12 @@ public class RowDataModel {
         this.col3 = new SimpleStringProperty(data[2]);
     }
 
+    public void setData(String[] data) {
+        setCol1(data[0]);
+        setCol2(data[1]);
+        setCol3(data[2]);
+    }
+
     public String getRow() {
         return row.get();
     }

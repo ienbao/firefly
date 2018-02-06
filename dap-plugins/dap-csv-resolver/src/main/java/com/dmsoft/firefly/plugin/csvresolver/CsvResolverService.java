@@ -18,6 +18,7 @@ import com.dmsoft.firefly.sdk.plugin.annotation.ExcludeMethod;
 import com.dmsoft.firefly.sdk.plugin.apis.IDataParser;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -200,11 +201,17 @@ public class CsvResolverService implements IDataParser {
      */
     @ExcludeMethod
     public CsvTemplateDto findCsvTemplate() {
-        CsvTemplateDto csvTemplateDto = new CsvTemplateDto();
+        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.CsvResolverPlugin").getFolderPath() + File.separator + fileName;
+        File file = new File(path);
+        if (!file.exists()) {
+            return null;
+        }
+
+        CsvTemplateDto csvTemplateDto = null;
         BufferedReader reader = null;
         String text = "";
         try {
-            FileInputStream fileInputStream = new FileInputStream(".." + File.separator + fileName);
+            FileInputStream fileInputStream = new FileInputStream(path);
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
             reader = new BufferedReader(inputStreamReader);
             String tempString = null;
@@ -223,7 +230,9 @@ public class CsvResolverService implements IDataParser {
                 }
             }
         }
-        csvTemplateDto = jsonMapper.fromJson(text, CsvTemplateDto.class);
+        if (!StringUtils.isEmpty(text)) {
+            csvTemplateDto = jsonMapper.fromJson(text, CsvTemplateDto.class);
+        }
         return csvTemplateDto;
     }
 

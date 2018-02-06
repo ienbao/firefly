@@ -64,5 +64,4 @@ public class CsvResolverPlugin extends Plugin {
         System.out.println("Plugin-CsvResolver Destroyed.");
     }
 
-    private Stage stage;
 }
