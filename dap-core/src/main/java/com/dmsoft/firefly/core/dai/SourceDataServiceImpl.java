@@ -160,10 +160,10 @@ public class SourceDataServiceImpl implements SourceDataService {
         BasicDBObject basicDBObject = new BasicDBObject();
         basicDBObject.append("itemName", new BasicDBObject("$in", testItemNames));
         MongoCursor<TestData> mongoCursor = mongoCollection.find(basicDBObject).iterator();
-        while (mongoCursor.hasNext()){
+        while (mongoCursor.hasNext()) {
             TestData testData = mongoCursor.next();
             TestDataDto testDataDto = new TestDataDto();
-            BeanUtils.copyProperties(testData,testDataDto);
+            BeanUtils.copyProperties(testData, testDataDto);
             result.add(testDataDto);
         }
 
@@ -178,13 +178,13 @@ public class SourceDataServiceImpl implements SourceDataService {
         BasicDBObject basicDBObject = new BasicDBObject();
         basicDBObject.append("itemName", new BasicDBObject("$in", testItemNames));
         MongoCursor<TestData> mongoCursor = mongoCollection.find(basicDBObject).iterator();
-        while (mongoCursor.hasNext()){
+        while (mongoCursor.hasNext()) {
             TestData testData = mongoCursor.next();
             TestDataDto testDataDto = new TestDataDto();
-            BeanUtils.copyProperties(testData,testDataDto);
+            BeanUtils.copyProperties(testData, testDataDto);
             List<CellData> cellDatas = Lists.newArrayList();
             testData.getData().forEach(cellData -> {
-                if(lineNo.contains(cellData.getLineNo())){
+                if (lineNo.contains(cellData.getLineNo())) {
                     cellDatas.add(cellData);
                 }
             });
@@ -197,11 +197,21 @@ public class SourceDataServiceImpl implements SourceDataService {
 
     @Override
     public void updateLineDataUsed(String projectName, List<CellData> lineUsedData) {
-
+        MongoCollection<TestData> mongoCollection = MongoUtil.getCollection(projectName, TestData.class);
+        BasicDBObject whereObject = new BasicDBObject("itemName", "lineNo");
+        BasicDBObject setObject = new BasicDBObject("$set", new BasicDBObject("data", lineUsedData));
+        mongoCollection.updateOne(whereObject,setObject);
     }
 
     @Override
     public void deleteProject(String projectName) {
+        MongoCollection projectCollection = MongoUtil.getCollection("project", Project.class);
+        projectCollection.deleteOne(new BasicDBObject("projectName",projectName));
 
+        MongoCollection<TestItem> testItemCollection = MongoUtil.getCollection("testItem", TestItem.class);
+        testItemCollection.deleteOne(new BasicDBObject("projectName",projectName));
+
+        MongoCollection<TestData> testDataCollection = MongoUtil.getCollection("TestData", TestItem.class);
+        testDataCollection.drop();
     }
 }
