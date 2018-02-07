@@ -46,10 +46,8 @@ public class CsvResolverController {
     private CsvResolverService service = new CsvResolverService();
 
     private ObservableList<RowDataModel> rowDataList = FXCollections.observableArrayList();
-    private ObservableList<String> options =
-            FXCollections.observableArrayList(
-                    "", "Row1", "Row2", "Row3", "Row4", "Row5", "Row6", "Row7", "Row8", "Row9", "Row10"
-            );
+    private ObservableList<String> options = FXCollections.observableArrayList(
+                    "", "Row1", "Row2", "Row3", "Row4", "Row5", "Row6", "Row7", "Row8", "Row9", "Row10");
     private List<String[]> rowData = Lists.newArrayList();
     private String[] row = {"Row1", "Row2", "Row3", "Row4", "Row5", "Row6", "Row7", "Row8", "Row9", "Row10"};
 
@@ -62,11 +60,17 @@ public class CsvResolverController {
         unit.setItems(options);
         data.setItems(options);
 
+        initComponentEvent();
+
         columnO.setCellValueFactory(cellData -> cellData.getValue().rowProperty());
         columnTo.setCellValueFactory(cellData -> cellData.getValue().col1Property());
         columnTh.setCellValueFactory(cellData -> cellData.getValue().col2Property());
         columnF.setCellValueFactory(cellData -> cellData.getValue().col3Property());
         initData();
+
+    }
+
+    private void initComponentEvent(){
         browse.setOnAction(event -> {
             String str = System.getProperty("user.home");
             if (!StringUtils.isEmpty(path.getText())) {

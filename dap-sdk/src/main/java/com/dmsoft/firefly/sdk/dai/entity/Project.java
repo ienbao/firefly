@@ -2,20 +2,15 @@ package com.dmsoft.firefly.sdk.dai.entity;
 
 import org.bson.types.ObjectId;
 
-import java.util.List;
-
 /**
- * Created by cherry on 2018/1/16.
+ * Created by Lucien.Chen on 2018/2/6.
  */
-public class TestItem {
+public class Project {
+
     private ObjectId id;
 
-    String projectName;
-
-    private List<String> itemNames;
-
-    public TestItem() {
-    }
+    private String projectName;
+    private String path;
 
     public ObjectId getId() {
         return id;
@@ -33,11 +28,11 @@ public class TestItem {
         this.projectName = projectName;
     }
 
-    public List<String> getItemNames() {
-        return itemNames;
+    public String getPath() {
+        return path;
     }
 
-    public void setItemNames(List<String> itemNames) {
-        this.itemNames = itemNames;
+    public void setPath(String path) {
+        this.path = path;
     }
 }

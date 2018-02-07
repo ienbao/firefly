@@ -4,6 +4,7 @@
 
 package com.dmsoft.firefly.core;
 
+import com.dmsoft.firefly.core.dai.SourceDataServiceImpl;
 import com.dmsoft.firefly.core.job.DefaultJobManager;
 import com.dmsoft.firefly.core.sdkimpl.PluginContextImpl;
 import com.dmsoft.firefly.core.sdkimpl.PluginImageContextImpl;
@@ -13,6 +14,7 @@ import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
 import com.dmsoft.firefly.core.utils.PluginScanner;
 import com.dmsoft.firefly.core.utils.PropertiesUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.job.JobManager;
 import com.dmsoft.firefly.sdk.plugin.*;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
@@ -45,11 +47,14 @@ public class DAPApplication {
         PluginProxyMethodFactoryImpl pluginProxy = new PluginProxyMethodFactoryImpl();
         PluginUIContextImpl pluginUIContext = new PluginUIContextImpl();
         DefaultJobManager jobManager = new DefaultJobManager();
+        SourceDataServiceImpl sourceDataService = new SourceDataServiceImpl();
         RuntimeContext.registerBean(PluginContext.class, pluginInfoContextImpl);
         RuntimeContext.registerBean(PluginImageContext.class, pluginImageContext);
         RuntimeContext.registerBean(PluginProxyMethodFactory.class, pluginProxy);
         RuntimeContext.registerBean(PluginUIContext.class, pluginUIContext);
         RuntimeContext.registerBean(JobManager.class, jobManager);
+        RuntimeContext.registerBean(SourceDataService.class, sourceDataService);
+
         // prepare env done
         String propertiesURL = ApplicationPathUtil.getPath("resources", "application.properties");
         InputStream inputStream = null;

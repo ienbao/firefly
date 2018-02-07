@@ -3,27 +3,26 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultDto;
 import com.dmsoft.firefly.plugin.spc.model.StatisticalTableRowData;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import org.apache.commons.lang3.StringUtils;
 
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import static java.util.Arrays.asList;
 
 /**
  * Created by Ethan.Yang on 2018/2/2.
  */
-public class StatisticalResultController {
+public class StatisticalResultController implements Initializable {
     @FXML
     private Button chooseColumnBtn;
     @FXML
@@ -32,8 +31,8 @@ public class StatisticalResultController {
     @FXML
     private TableView statisticalResultTb;
 
-    @FXML
-    private void initialize() {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         this.initStatisticalResultHeader();
         this.initBtnIcon();
         this.initComponentEvent();
@@ -49,17 +48,7 @@ public class StatisticalResultController {
         }
     }
 
-    public void initStatisticalResultTableData(List<SpcStatisticalResultDto> spcStatisticalResultDtoList) {
-        if (spcStatisticalResultDtoList == null) {
-            return;
-        }
-        ObservableList<StatisticalTableRowData> observableList = FXCollections.observableArrayList();
-        for(SpcStatisticalResultDto statisticalResultDto : spcStatisticalResultDtoList){
-            StatisticalTableRowData statisticalTableRowData = new StatisticalTableRowData(statisticalResultDto);
-            observableList.add(statisticalTableRowData);
-        }
-        statisticalResultTb.setItems(observableList);
-    }
+
 
     private void initComponentEvent() {
         chooseColumnBtn.setOnAction(event -> getChooseColumnBtnEvent());

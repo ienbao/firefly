@@ -134,7 +134,7 @@ public class CsvResolverService implements IDataParser {
                 List<CellData> cellDatas = Lists.newArrayList();
                 for (int j = fileFormat.getData() - 1; j < csvList.size(); j++) {
                     CellData cellData = new CellData();
-                    cellData.setLineNo(j);
+                    cellData.setLineNo(String.valueOf(j));
                     cellData.setValue(csvList.get(j)[i]);
                     cellDatas.add(cellData);
                 }

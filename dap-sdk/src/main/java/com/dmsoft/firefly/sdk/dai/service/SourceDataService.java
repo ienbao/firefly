@@ -46,6 +46,13 @@ public interface SourceDataService {
     /**
      * save project line data
      *
+     * @param testDataDto TestDataDto
+     */
+    void saveOneProjectData(TestDataDto testDataDto);
+
+    /**
+     * save project line data
+     *
      * @param testDataDtos TestDataDto
      */
     void saveProjectData(List<TestDataDto> testDataDtos);
@@ -63,24 +70,6 @@ public interface SourceDataService {
      * @return list of project name
      */
     List<String> findAllProjectNames();
-
-    /**
-     * find all test items by project names
-     *
-     * @param projectNames project names
-     * @param templateName template names
-     * @return list of item dto
-     */
-    List<TestItemDto> findTestItems(List<String> projectNames, String templateName);
-
-    /**
-     * find test item by item name
-     *
-     * @param itemName     item name
-     * @param templateName template names
-     * @return item dto
-     */
-    TestItemDto findTestItemByItemName(String itemName, String templateName);
 
     /**
      * find all item names by project names
@@ -106,19 +95,19 @@ public interface SourceDataService {
      *
      * @param projectName  project name
      * @param testItemName test item name
-     * @return line data
+     * @return item datas
      */
-    TestDataDto findDataByItemName(String projectName, String testItemName);
+    List<TestDataDto> findDataByItemName(String projectName, List<String> testItemName);
 
 
     /**
      * find data by line number
      *
      * @param projectName  project name
-     * @param testItemName test item name
+     * @param testItemNames test item name
      * @return line data
      */
-    TestDataDto findDataByItemNameAndLineNo(String projectName, String testItemName, List<String> LineNo);
+    List<TestDataDto> findDataByItemNamesAndLineNo(String projectName, List<String> testItemNames, List<String> lineNo);
 
     /**
      * update line data isUsed
