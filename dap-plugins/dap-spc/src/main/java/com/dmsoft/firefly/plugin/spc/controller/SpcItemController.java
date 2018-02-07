@@ -10,9 +10,11 @@ import com.dmsoft.firefly.plugin.spc.model.StatisticalTableRowData;
 import com.dmsoft.firefly.plugin.spc.service.SpcServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcService;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.dmsoft.firefly.sdk.ui.Action;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -57,7 +59,7 @@ public class SpcItemController implements Initializable {
     }
 
 
-    private void initBtnIcon(){
+    private void initBtnIcon() {
         analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
         importBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_load_script_normal.png")));
         saveBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_save_normal.png")));
@@ -66,24 +68,24 @@ public class SpcItemController implements Initializable {
         timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
     }
 
-    private void initComponentEvent(){
+    private void initComponentEvent() {
         analysisBtn.setOnAction(event -> getAnalysisBtnEvent());
     }
 
-    private void getAnalysisBtnEvent(){
+    private void getAnalysisBtnEvent() {
         //todo find spc statistical Result from service
 //        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
 //        SpcSearchConfigDto spcSearchConfigDto = new SpcSearchConfigDto();
 //        List<SpcStatisticalResultDto> spcStatisticalResultDtoList = spcService.findStatisticalResult(searchConditionDtoList,spcSearchConfigDto);
         List<SpcStatisticalResultDto> spcStatisticalResultDtoList = initData();
         VBox statisticalPane = (VBox) testItemPane.getParent().getParent().getParent().lookup("#statisticalPane");
-        TableView statisticalResultTb = (TableView)statisticalPane.lookup("#statisticalResultTb");
+        TableView statisticalResultTb = (TableView) statisticalPane.lookup("#statisticalResultTb");
 
         if (spcStatisticalResultDtoList == null) {
             return;
         }
         ObservableList<StatisticalTableRowData> observableList = FXCollections.observableArrayList();
-        for(SpcStatisticalResultDto statisticalResultDto : spcStatisticalResultDtoList){
+        for (SpcStatisticalResultDto statisticalResultDto : spcStatisticalResultDtoList) {
             StatisticalTableRowData statisticalTableRowData = new StatisticalTableRowData(statisticalResultDto);
             observableList.add(statisticalTableRowData);
         }
@@ -91,11 +93,10 @@ public class SpcItemController implements Initializable {
     }
 
 
-
     @Deprecated
-    private List<SpcStatisticalResultDto> initData(){
+    private List<SpcStatisticalResultDto> initData() {
         List<SpcStatisticalResultDto> spcStatisticalResultDtoList = Lists.newArrayList();
-        for(int i = 0 ;i<100;i++){
+        for (int i = 0; i < 100; i++) {
             SpcStatisticalResultDto statisticalResultDto = new SpcStatisticalResultDto();
             statisticalResultDto.setItemName("itemName");
             statisticalResultDto.setCondition("itemName > 22");
@@ -127,7 +128,6 @@ public class SpcItemController implements Initializable {
         }
         return spcStatisticalResultDtoList;
     }
-
 
 
 }

@@ -27,7 +27,7 @@ public class GuiApplication extends Application {
 
         WindowPane windowPane = new WindowPane(primaryStage, root, main);
 
-        Scene scene = new Scene(windowPane, 1280, 800);
+        Scene scene = new Scene(windowPane, 1300, 820);
         scene.setFill(Color.TRANSPARENT);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/app.css").toExternalForm());
         primaryStage.initStyle(StageStyle.TRANSPARENT);
