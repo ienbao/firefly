@@ -6,21 +6,31 @@ package com.dmsoft.firefly.plugin.spc.controller;
 import com.dmsoft.firefly.plugin.spc.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcSearchConfigDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultDto;
+import com.dmsoft.firefly.plugin.spc.model.StatisticalTableRowData;
 import com.dmsoft.firefly.plugin.spc.service.SpcServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcService;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.google.common.collect.Lists;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.control.Tab;
+import javafx.scene.layout.GridPane;
 
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 
 
 /**
  * Created by Ethan.Yang on 2018/2/6.
  */
-public class SpcItemController {
+public class SpcItemController implements Initializable {
     @FXML
     private Button analysisBtn;
     @FXML
@@ -36,11 +46,15 @@ public class SpcItemController {
     private SpcService spcService = new SpcServiceImpl();
 
     @FXML
-    private void initialize(){
+    private GridPane testItemPane;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         initBtnIcon();
         this.initComponentEvent();
 
     }
+
 
     private void initBtnIcon(){
         analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
@@ -56,10 +70,63 @@ public class SpcItemController {
     }
 
     private void getAnalysisBtnEvent(){
-        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
-        SpcSearchConfigDto spcSearchConfigDto = new SpcSearchConfigDto();
-        List<SpcStatisticalResultDto> spcStatisticalResultDtoList = spcService.findStatisticalResult(searchConditionDtoList, spcSearchConfigDto);
+        //todo find spc statistical Result from service
+//        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
+//        SpcSearchConfigDto spcSearchConfigDto = new SpcSearchConfigDto();
+//        List<SpcStatisticalResultDto> spcStatisticalResultDtoList = spcService.findStatisticalResult(searchConditionDtoList,spcSearchConfigDto);
+        List<SpcStatisticalResultDto> spcStatisticalResultDtoList = initData();
+        AnchorPane statisticalPane = (AnchorPane) testItemPane.getParent().getParent().getParent().lookup("#statisticalPane");
+        TableView statisticalResultTb = (TableView)statisticalPane.lookup("#statisticalResultTb");
+
+        if (spcStatisticalResultDtoList == null) {
+            return;
+        }
+        ObservableList<StatisticalTableRowData> observableList = FXCollections.observableArrayList();
+        for(SpcStatisticalResultDto statisticalResultDto : spcStatisticalResultDtoList){
+            StatisticalTableRowData statisticalTableRowData = new StatisticalTableRowData(statisticalResultDto);
+            observableList.add(statisticalTableRowData);
+        }
+        statisticalResultTb.setItems(observableList);
     }
+
+
+
+    @Deprecated
+    private List<SpcStatisticalResultDto> initData(){
+        List<SpcStatisticalResultDto> spcStatisticalResultDtoList = Lists.newArrayList();
+        for(int i = 0 ;i<100;i++){
+            SpcStatisticalResultDto statisticalResultDto = new SpcStatisticalResultDto();
+            statisticalResultDto.setItemName("itemName");
+            statisticalResultDto.setCondition("itemName > 22");
+            statisticalResultDto.setSamples("343.2");
+            statisticalResultDto.setAvg("32.2");
+            statisticalResultDto.setMax("312");
+            statisticalResultDto.setMin("34");
+            statisticalResultDto.setStDev("124");
+            statisticalResultDto.setLsl("35");
+            statisticalResultDto.setUsl("21");
+            statisticalResultDto.setCenter("53");
+            statisticalResultDto.setRange("13");
+            statisticalResultDto.setLcl("452");
+            statisticalResultDto.setUcl("323");
+            statisticalResultDto.setKurtosis("234");
+            statisticalResultDto.setCpk("234");
+            statisticalResultDto.setSkewness("6");
+            statisticalResultDto.setCa("43.5");
+            statisticalResultDto.setCp("35.76");
+            statisticalResultDto.setCpl("34.7");
+            statisticalResultDto.setCpu("324.67");
+            statisticalResultDto.setWithinPPM("324.6");
+            statisticalResultDto.setOverallPPM("343.65");
+            statisticalResultDto.setPp("342.76");
+            statisticalResultDto.setPpk("34.5");
+            statisticalResultDto.setPpl("343.5");
+            statisticalResultDto.setPpu("324.87");
+            spcStatisticalResultDtoList.add(statisticalResultDto);
+        }
+        return spcStatisticalResultDtoList;
+    }
+
 
 
 }

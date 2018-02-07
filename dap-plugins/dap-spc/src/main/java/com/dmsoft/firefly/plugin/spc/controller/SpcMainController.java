@@ -5,12 +5,18 @@ package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Created by Ethan.Yang on 2018/2/2.
  */
-public class SpcMainController {
+public class SpcMainController implements Initializable {
 
     @FXML
     private Button resetBtn;
@@ -21,9 +27,9 @@ public class SpcMainController {
     @FXML
     private Button chooseBtn;
 
-    @FXML
-    private void initialize(){
-        this.initBtnIcon();
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.initBtnIcon() ;
         this.initComponentEvent();
     }
 
