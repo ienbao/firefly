@@ -73,7 +73,7 @@
                     </SplitPane>
                 </VBox>
                 <VBox minWidth="180.0" prefWidth="180.0">
-                    <fx:include fx:id="testItemPane" source="spc_item.fxml"/>
+                    <fx:include fx:id="testItemPane" source="spc_item.fxml" VBox.vgrow="ALWAYS"/>
                 </VBox>
             </items>
         </SplitPane>
