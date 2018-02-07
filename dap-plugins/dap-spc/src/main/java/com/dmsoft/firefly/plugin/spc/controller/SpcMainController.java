@@ -23,7 +23,31 @@ public class SpcMainController {
 
     @FXML
     private void initialize(){
-        initBtnIcon();
+        this.initBtnIcon();
+        this.initComponentEvent();
+    }
+
+    private void initComponentEvent(){
+        resetBtn.setOnAction(event -> getResetBtnEvent());
+        printBtn.setOnAction(event -> getPrintBtnEvent());
+        exportBtn.setOnAction(event -> getExportBtnEvent());
+        exportBtn.setOnAction(event -> getChooseBtnEvent());
+    }
+
+    private void getResetBtnEvent(){
+
+    }
+
+    private void getPrintBtnEvent(){
+
+    }
+
+    private void getExportBtnEvent(){
+
+    }
+
+    private void getChooseBtnEvent(){
+
     }
 
     private void initBtnIcon(){

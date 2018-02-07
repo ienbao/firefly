@@ -22,7 +22,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane minHeight="100.0" minWidth="185.0" prefHeight="705.0" prefWidth="185.0" style="-fx-background-color: #ffffff;" stylesheets="@../css/redfall/main.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane minHeight="100.0" minWidth="185.0" prefHeight="705.0" prefWidth="185.0" style="-fx-background-color: #ffffff;" stylesheets="@../css/redfall/main.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcItemController">
    <bottom>
       <GridPane style="-fx-background-color: #ffffff; -fx-border-width: 1 0 0 0; -fx-border-color: #DCDCDC;" BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -38,7 +38,7 @@
          <children>
             <Button maxHeight="20.0" maxWidth="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" style="-fx-background-image: url('images/btn_save_normal.png'); -fx-background-size: 16;" styleClass="btn-icon" text="Button" GridPane.columnIndex="3" GridPane.halignment="LEFT" />
             <Button maxHeight="20.0" maxWidth="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" style="-fx-background-image: url('images/btn_load_script_normal.png'); -fx-background-size: 16;" styleClass="btn-icon" text="Button" GridPane.columnIndex="2" />
-            <Button maxHeight="20.0" maxWidth="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" style="-fx-background-image: url('images/btn_analsis_white_normal.png'); -fx-background-size: 16;" styleClass="btn-primary" text="Button" GridPane.halignment="RIGHT" />
+            <Button fx:id="analysisBtn" maxHeight="20.0" maxWidth="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" style="-fx-background-image: url('images/btn_analsis_white_normal.png'); -fx-background-size: 16;" styleClass="btn-primary" text="Button" GridPane.halignment="RIGHT" />
          </children>
       </GridPane>
    </bottom>
