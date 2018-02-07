@@ -24,7 +24,7 @@
           <RowConstraints maxHeight="48.0" minHeight="28.0" prefHeight="28.0" valignment="CENTER" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <MenuBar fx:id="mnuSystem" maxWidth="150.0" prefHeight="29.0" prefWidth="138.0" style="-fx-background-color: transparent;" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
+            <MenuBar fx:id="mnuSystem" maxWidth="179.0" prefHeight="32.0" prefWidth="174.0" style="-fx-background-color: transparent;" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
