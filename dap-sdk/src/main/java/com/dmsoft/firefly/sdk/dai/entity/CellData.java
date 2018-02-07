@@ -2,18 +2,18 @@ package com.dmsoft.firefly.sdk.dai.entity;
 
 public class CellData {
 
-    private int lineNo;
+    private String lineNo;
     private Object value;
 
     public CellData() {
 
     }
 
-    public int getLineNo() {
+    public String getLineNo() {
         return lineNo;
     }
 
-    public void setLineNo(int lineNo) {
+    public void setLineNo(String lineNo) {
         this.lineNo = lineNo;
     }
 
