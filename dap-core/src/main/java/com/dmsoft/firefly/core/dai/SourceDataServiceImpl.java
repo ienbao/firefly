@@ -1,22 +1,22 @@
 package com.dmsoft.firefly.core.dai;
 
-import com.dmsoft.bamboo.common.utils.mapper.BeanMapper;
+import com.dmsoft.firefly.core.utils.FilterConditionUtil;
 import com.dmsoft.firefly.core.utils.MongoUtil;
+import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.ProjectDto;
+import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestDataDto;
-import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.entity.CellData;
 import com.dmsoft.firefly.sdk.dai.entity.Project;
 import com.dmsoft.firefly.sdk.dai.entity.TestData;
 import com.dmsoft.firefly.sdk.dai.entity.TestItem;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 
+import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.google.common.collect.Lists;
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import org.bson.Document;
 
 import org.springframework.beans.BeanUtils;
 
@@ -26,6 +26,8 @@ import java.util.List;
  * Created by Lucien.Chen on 2018/2/6.
  */
 public class SourceDataServiceImpl implements SourceDataService {
+    private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
+
 
     @Override
     public void saveProject(ProjectDto projectDto) {
@@ -112,10 +114,10 @@ public class SourceDataServiceImpl implements SourceDataService {
         BasicDBObject basicDBObject = new BasicDBObject();
 //        BasicDBList values = new BasicDBList();
 //        values.addAll(projectNames);
-        basicDBObject.append("itemName", new BasicDBObject("$in", projectNames));
+        basicDBObject.append("projectName", new BasicDBObject("$in", projectNames));
         MongoCursor<TestItem> mongoCursor = mongoCollection.find(basicDBObject).iterator();
         while (mongoCursor.hasNext()) {
-            List<String>  testItemNames =  mongoCursor.next().getItemNames();
+            List<String> testItemNames = mongoCursor.next().getItemNames();
             testItemNames.removeAll(result);
             result.addAll(testItemNames);
         }
@@ -124,17 +126,72 @@ public class SourceDataServiceImpl implements SourceDataService {
 
     @Override
     public List<TestDataDto> findDataByCondition(List<String> projectNames, List<String> itemNames, List<String> conditions, String templateName) {
-        return null;
+        List<TestDataDto> result = Lists.newArrayList();
+
+        FilterConditionUtil filterConditionUtil = new FilterConditionUtil();
+        TemplateSettingDto templateSettingDto = templateService.findAnalysisTemplate(templateName);
+        filterConditionUtil.setTimeKeys(templateSettingDto.getTimePatternDto().getTimeKeys());
+        filterConditionUtil.setTimePattern(templateSettingDto.getTimePatternDto().getPattern());
+
+        conditions.forEach(condition -> {
+            List<String> conditionItems = Lists.newArrayList();
+            conditionItems.addAll(filterConditionUtil.parseItemNameFromConditions(condition));
+            projectNames.forEach(projectName -> {
+
+                List<TestDataDto> conditionData = findDataByItemName(projectName, conditionItems);
+
+                List<String> lineNoList = filterConditionUtil.filterCondition(condition, conditionData);
+
+                List<TestDataDto> partData = findDataByItemNamesAndLineNo(projectName, itemNames, lineNoList);
+                result.addAll(partData);
+            });
+
+        });
+
+
+        return result;
     }
 
     @Override
     public List<TestDataDto> findDataByItemName(String projectName, List<String> testItemNames) {
-        return null;
+        MongoCollection<TestData> mongoCollection = MongoUtil.getCollection(projectName, TestData.class);
+        List<TestDataDto> result = Lists.newArrayList();
+
+        BasicDBObject basicDBObject = new BasicDBObject();
+        basicDBObject.append("itemName", new BasicDBObject("$in", testItemNames));
+        MongoCursor<TestData> mongoCursor = mongoCollection.find(basicDBObject).iterator();
+        while (mongoCursor.hasNext()){
+            TestData testData = mongoCursor.next();
+            TestDataDto testDataDto = new TestDataDto();
+            BeanUtils.copyProperties(testData,testDataDto);
+            result.add(testDataDto);
+        }
+
+        return result;
     }
 
     @Override
-    public List<TestDataDto> findDataByItemNamesAndLineNo(String projectName, List<String> testItemName, List<String> LineNo) {
-        return null;
+    public List<TestDataDto> findDataByItemNamesAndLineNo(String projectName, List<String> testItemNames, List<String> lineNo) {
+        MongoCollection<TestData> mongoCollection = MongoUtil.getCollection(projectName, TestData.class);
+        List<TestDataDto> result = Lists.newArrayList();
+
+        BasicDBObject basicDBObject = new BasicDBObject();
+        basicDBObject.append("itemName", new BasicDBObject("$in", testItemNames));
+        MongoCursor<TestData> mongoCursor = mongoCollection.find(basicDBObject).iterator();
+        while (mongoCursor.hasNext()){
+            TestData testData = mongoCursor.next();
+            TestDataDto testDataDto = new TestDataDto();
+            BeanUtils.copyProperties(testData,testDataDto);
+            List<CellData> cellDatas = Lists.newArrayList();
+            testData.getData().forEach(cellData -> {
+                if(lineNo.contains(cellData.getLineNo())){
+                    cellDatas.add(cellData);
+                }
+            });
+            testDataDto.setData(cellDatas);
+            result.add(testDataDto);
+        }
+        return result;
     }
 
 

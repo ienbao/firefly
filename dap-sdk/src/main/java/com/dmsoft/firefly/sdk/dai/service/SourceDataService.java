@@ -104,10 +104,10 @@ public interface SourceDataService {
      * find data by line number
      *
      * @param projectName  project name
-     * @param testItemName test item name
+     * @param testItemNames test item name
      * @return line data
      */
-    List<TestDataDto> findDataByItemNamesAndLineNo(String projectName, List<String> testItemName, List<String> LineNo);
+    List<TestDataDto> findDataByItemNamesAndLineNo(String projectName, List<String> testItemNames, List<String> lineNo);
 
     /**
      * update line data isUsed
