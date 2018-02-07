@@ -6,9 +6,8 @@
 
 package com.dmsoft.firefly.core.utils.parser;
 
-
-import com.example.define.spcmongo.utils.parser.gen.SEPBaseVisitor;
-import com.example.define.spcmongo.utils.parser.gen.SEPParser;
+import com.dmsoft.firefly.core.utils.parser.gen.SEPBaseVisitor;
+import com.dmsoft.firefly.core.utils.parser.gen.SEPParser;
 
 /**
  * Created by Peter on 2016/8/29.

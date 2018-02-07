@@ -7,7 +7,7 @@
 package com.dmsoft.firefly.core.utils.parser;
 
 import com.google.common.collect.Lists;
-import com.intelligent.ispc.common.utils.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 

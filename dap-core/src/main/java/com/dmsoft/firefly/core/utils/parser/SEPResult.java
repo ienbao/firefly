@@ -6,7 +6,7 @@
 
 package com.dmsoft.firefly.core.utils.parser;
 
-import com.intelligent.ispc.common.dto.AbstractValueObject;
+import com.dmsoft.bamboo.common.dto.AbstractValueObject;
 
 /**
  * Created by Peter on 2016/8/26.
