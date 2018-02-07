@@ -21,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.List;
@@ -46,7 +47,7 @@ public class SpcItemController implements Initializable {
     private SpcService spcService = new SpcServiceImpl();
 
     @FXML
-    private GridPane testItemPane;
+    private VBox testItemPane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -75,7 +76,7 @@ public class SpcItemController implements Initializable {
 //        SpcSearchConfigDto spcSearchConfigDto = new SpcSearchConfigDto();
 //        List<SpcStatisticalResultDto> spcStatisticalResultDtoList = spcService.findStatisticalResult(searchConditionDtoList,spcSearchConfigDto);
         List<SpcStatisticalResultDto> spcStatisticalResultDtoList = initData();
-        AnchorPane statisticalPane = (AnchorPane) testItemPane.getParent().getParent().getParent().lookup("#statisticalPane");
+        VBox statisticalPane = (VBox) testItemPane.getParent().getParent().getParent().lookup("#statisticalPane");
         TableView statisticalResultTb = (TableView)statisticalPane.lookup("#statisticalResultTb");
 
         if (spcStatisticalResultDtoList == null) {
