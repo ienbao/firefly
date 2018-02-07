@@ -5,20 +5,24 @@ package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Created by Ethan.Yang on 2018/2/2.
  */
-public class ViewDataController {
+public class ViewDataController implements Initializable {
     @FXML
     private Button clearFilterBtn;
     @FXML
     private Button chooseItemBtn;
 
-    @FXML
-    private void initialize(){
-        initBtnIcon();
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.initBtnIcon();
     }
 
     private void initBtnIcon(){

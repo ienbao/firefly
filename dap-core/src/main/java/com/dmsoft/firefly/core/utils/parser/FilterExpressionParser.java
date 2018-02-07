@@ -6,8 +6,8 @@
 
 package com.dmsoft.firefly.core.utils.parser;
 
-import com.example.define.spcmongo.utils.parser.gen.SEPLexer;
-import com.example.define.spcmongo.utils.parser.gen.SEPParser;
+import com.dmsoft.firefly.core.utils.parser.gen.SEPLexer;
+import com.dmsoft.firefly.core.utils.parser.gen.SEPParser;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;

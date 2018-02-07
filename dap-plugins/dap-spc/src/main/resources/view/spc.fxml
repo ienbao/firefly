@@ -56,15 +56,15 @@
                     <SplitPane dividerPositions="0.5593471810089021" layoutY="28.0" orientation="VERTICAL"
                                VBox.vgrow="ALWAYS">
                         <items>
-                            <fx:include fx:id="statistical" source="statistical_result.fxml"/>
+                            <fx:include fx:id="statisticalPane" source="statistical_result.fxml"/>
                             <AnchorPane prefHeight="300.0">
                                 <children>
                                     <SplitPane dividerPositions="0.5050136736554239" AnchorPane.bottomAnchor="0.0"
                                                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                                                AnchorPane.topAnchor="0.0">
                                         <items>
-                                            <fx:include fx:id="chart" source="chart_result.fxml"/>
-                                            <fx:include fx:id="view_data" source="view_data.fxml"/>
+                                            <fx:include fx:id="chartPane" source="chart_result.fxml"/>
+                                            <fx:include fx:id="viewDataPane" source="view_data.fxml"/>
                                         </items>
                                     </SplitPane>
                                 </children>
@@ -73,7 +73,7 @@
                     </SplitPane>
                 </VBox>
                 <VBox minWidth="180.0" prefWidth="180.0">
-                    <fx:include fx:id="test_item" source="spc_item.fxml"/>
+                    <fx:include fx:id="testItemPane" source="spc_item.fxml"/>
                 </VBox>
             </items>
         </SplitPane>
