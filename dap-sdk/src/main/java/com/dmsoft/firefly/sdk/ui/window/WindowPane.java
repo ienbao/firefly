@@ -12,6 +12,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
@@ -111,6 +112,7 @@ public class WindowPane extends GridPane {
         ColumnConstraints c2 = new ColumnConstraints(SHADOW_WIDTH, SHADOW_WIDTH, SHADOW_WIDTH);
         c2.setHgrow(Priority.NEVER);
         getColumnConstraints().addAll(c0, c1, c2);
+        Menu menu = new Menu();
 
         this.contentPane = new GridPane();
         RowConstraints cr0 = new RowConstraints();
