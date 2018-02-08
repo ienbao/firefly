@@ -11,7 +11,7 @@ import java.util.List;
 public class TestDataDto {
 
     private ObjectId id;
-    private String projectName;
+    private String codition;
     private String itemName;
     private String usl;
     private String lsl;
@@ -26,12 +26,12 @@ public class TestDataDto {
         this.id = id;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public String getCodition() {
+        return codition;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public void setCodition(String codition) {
+        this.codition = codition;
     }
 
     public String getItemName() {
