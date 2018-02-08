@@ -20,6 +20,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.dmsoft</groupId>
+            <artifactId>bamboo</artifactId>
+            <version>${bamboo.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver</artifactId>
             <version>${mongodb-driver.version}</version>

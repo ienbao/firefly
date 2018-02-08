@@ -1,9 +1,7 @@
 package com.dmsoft.firefly.gui;
 
 import com.dmsoft.firefly.core.DAPApplication;
-import com.dmsoft.firefly.gui.component.WindowPane;
-import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
+import com.dmsoft.firefly.sdk.ui.window.WindowPane;
 import com.google.common.collect.Lists;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,8 +10,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
-import java.util.AbstractList;
 
 public class GuiApplication extends Application {
 
@@ -31,7 +27,7 @@ public class GuiApplication extends Application {
 
         WindowPane windowPane = new WindowPane(primaryStage, root, main);
 
-        Scene scene = new Scene(windowPane, 1280, 800);
+        Scene scene = new Scene(windowPane, 1300, 820);
         scene.setFill(Color.TRANSPARENT);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/app.css").toExternalForm());
         primaryStage.initStyle(StageStyle.TRANSPARENT);

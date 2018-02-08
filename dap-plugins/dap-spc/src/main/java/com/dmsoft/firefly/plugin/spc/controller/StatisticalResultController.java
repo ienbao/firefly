@@ -12,6 +12,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.StringConverter;
 
 import java.net.URL;
 import java.util.List;
@@ -31,6 +35,10 @@ public class StatisticalResultController implements Initializable {
     @FXML
     private TableView statisticalResultTb;
 
+    @FXML
+    private TableColumn<StatisticalTableRowData,Boolean> checkBoxColumn;
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initStatisticalResultHeader();
@@ -39,12 +47,31 @@ public class StatisticalResultController implements Initializable {
     }
 
     private void initStatisticalResultHeader(){
+        checkBoxColumn.setCellFactory(p -> new CheckBoxTableCell<>());
+        checkBoxColumn.setCellValueFactory(cellData -> cellData.getValue().selectorProperty());
+        checkBoxColumn.setCellFactory(CheckBoxTableCell.forTableColumn(checkBoxColumn));
         List<String> colName = asList(UIConstant.SPC_SR_ALL);
+        StringConverter<String> sc = new StringConverter<String>() {
+            @Override
+            public String toString(String t) {
+                return t == null ? null : t.toString();
+            }
+
+            @Override
+            public String fromString(String string) {
+                return string;
+            }
+        };
         for(String columnN : colName){
             TableColumn<StatisticalTableRowData, String> col = new TableColumn();
             col.setText(columnN);
             col.setCellValueFactory(cellData -> cellData.getValue().getRowDataMap().get(columnN));
             statisticalResultTb.getColumns().add(col);
+
+            if(columnN.equals("LSL") || columnN.equals("USL")){
+                col.setEditable(true);
+                col.setCellFactory(TextFieldTableCell.forTableColumn(sc));
+            }
         }
     }
 

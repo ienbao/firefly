@@ -3,24 +3,23 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.plugin.spc.dto.SearchConditionDto;
-import com.dmsoft.firefly.plugin.spc.dto.SpcSearchConfigDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultDto;
+import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.model.StatisticalTableRowData;
 import com.dmsoft.firefly.plugin.spc.service.SpcServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcService;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.control.Tab;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.List;
@@ -43,20 +42,30 @@ public class SpcItemController implements Initializable {
     private Tab configTab;
     @FXML
     private Tab timeTab;
-    private SpcService spcService = new SpcServiceImpl();
-
     @FXML
-    private GridPane testItemPane;
+    private TableColumn<ItemTableModel, CheckBox> select;
+    @FXML
+    private TableColumn<ItemTableModel, String> item;
+    @FXML
+    private TableView itemTable;
+    private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
+
+    private SpcService spcService = new SpcServiceImpl();
+    @FXML
+    private VBox testItemPane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initBtnIcon();
         this.initComponentEvent();
 
+//        select.setCellFactory(CheckBoxTableCell.forTableColumn(select));
+        select.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
+        item.setCellValueFactory(cellData -> cellData.getValue().itemProperty());
+        initItemData();
     }
 
-
-    private void initBtnIcon(){
+    private void initBtnIcon() {
         analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
         importBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_load_script_normal.png")));
         saveBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_save_normal.png")));
@@ -65,24 +74,43 @@ public class SpcItemController implements Initializable {
         timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
     }
 
-    private void initComponentEvent(){
+    private void initComponentEvent() {
         analysisBtn.setOnAction(event -> getAnalysisBtnEvent());
     }
 
-    private void getAnalysisBtnEvent(){
+    private void initItemData() {
+//        EnvService envService = RuntimeContext.getBean(EnvService.class);
+//        List<TestItemDto> itemDtos = envService.findTestItem();
+        List<TestItemDto> itemDtos = Lists.newArrayList();
+        for (int i = 0; i < 10; i++) {
+            TestItemDto dto = new TestItemDto();
+            dto.setItemName("lsls");
+            itemDtos.add(dto);
+        }
+        if (itemDtos != null) {
+            for (TestItemDto dto : itemDtos) {
+                ItemTableModel tableModel = new ItemTableModel(dto);
+                items.add(tableModel);
+            }
+            itemTable.setItems(items);
+        }
+
+    }
+
+    private void getAnalysisBtnEvent() {
         //todo find spc statistical Result from service
 //        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
 //        SpcSearchConfigDto spcSearchConfigDto = new SpcSearchConfigDto();
 //        List<SpcStatisticalResultDto> spcStatisticalResultDtoList = spcService.findStatisticalResult(searchConditionDtoList,spcSearchConfigDto);
         List<SpcStatisticalResultDto> spcStatisticalResultDtoList = initData();
-        AnchorPane statisticalPane = (AnchorPane) testItemPane.getParent().getParent().getParent().lookup("#statisticalPane");
-        TableView statisticalResultTb = (TableView)statisticalPane.lookup("#statisticalResultTb");
+        VBox statisticalPane = (VBox) testItemPane.getParent().getParent().getParent().lookup("#statisticalPane");
+        TableView statisticalResultTb = (TableView) statisticalPane.lookup("#statisticalResultTb");
 
         if (spcStatisticalResultDtoList == null) {
             return;
         }
         ObservableList<StatisticalTableRowData> observableList = FXCollections.observableArrayList();
-        for(SpcStatisticalResultDto statisticalResultDto : spcStatisticalResultDtoList){
+        for (SpcStatisticalResultDto statisticalResultDto : spcStatisticalResultDtoList) {
             StatisticalTableRowData statisticalTableRowData = new StatisticalTableRowData(statisticalResultDto);
             observableList.add(statisticalTableRowData);
         }
@@ -90,11 +118,10 @@ public class SpcItemController implements Initializable {
     }
 
 
-
     @Deprecated
-    private List<SpcStatisticalResultDto> initData(){
+    private List<SpcStatisticalResultDto> initData() {
         List<SpcStatisticalResultDto> spcStatisticalResultDtoList = Lists.newArrayList();
-        for(int i = 0 ;i<100;i++){
+        for (int i = 0; i < 100; i++) {
             SpcStatisticalResultDto statisticalResultDto = new SpcStatisticalResultDto();
             statisticalResultDto.setItemName("itemName");
             statisticalResultDto.setCondition("itemName > 22");
@@ -126,7 +153,6 @@ public class SpcItemController implements Initializable {
         }
         return spcStatisticalResultDtoList;
     }
-
 
 
 }
