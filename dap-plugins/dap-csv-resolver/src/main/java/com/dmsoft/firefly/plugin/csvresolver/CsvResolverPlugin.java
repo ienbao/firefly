@@ -55,6 +55,8 @@ public class CsvResolverPlugin extends Plugin {
                     WindowPane windowPane = new WindowPane(dialog, "CSV-Resolver", root);
 
                     Scene scene =  new Scene(windowPane, 845, 565);
+                    windowPane.setMinWidth(845);
+                    windowPane.setMinHeight(565);
                     scene.setFill(Color.TRANSPARENT);
                     scene.getStylesheets().add(getClass().getClassLoader().getResource("css/app.css").toExternalForm());
 
