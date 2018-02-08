@@ -1,16 +1,9 @@
 package com.dmsoft.firefly.sdk.ui;
 
-import com.dmsoft.firefly.sdk.utils.enums.MenuType;
-
 /**
  * menu component for menu
  */
 public interface MenuComponent {
-    /**
-     * method to get menu type
-     * @return menu or menu item
-     */
-    MenuType getMenuType();
 
     /**
      * method to get location

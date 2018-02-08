@@ -26,8 +26,8 @@ public class PluginUIContextImpl implements PluginUIContext {
     }
 
     @Override
-    public void registerMenu(String menuLocation, MenuComponent menu) {
-        this.menuMap.put(menuLocation, menu);
+    public void registerMenu(MenuComponent menu) {
+        this.menuMap.put(menu.getLocation(), menu);
     }
 
     @Override
