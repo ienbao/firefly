@@ -6,6 +6,7 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.ProjectDto;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestDataDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.entity.CellData;
 import com.dmsoft.firefly.sdk.dai.entity.Project;
 import com.dmsoft.firefly.sdk.dai.entity.TestData;
@@ -122,6 +123,11 @@ public class SourceDataServiceImpl implements SourceDataService {
             result.addAll(testItemNames);
         }
         return result;
+    }
+
+    @Override
+    public List<TestItemDto> findItemNames(List<String> projectNames, String template) {
+        return null;
     }
 
     @Override

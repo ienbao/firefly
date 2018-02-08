@@ -6,6 +6,7 @@ package com.dmsoft.firefly.sdk.dai.dto;
 public class TestItemDto {
     private String projectName;
     private String itemName;
+    private Boolean isNumeric;
     private String lsl;
     private String usl;
     private String unit;
@@ -24,6 +25,14 @@ public class TestItemDto {
 
     public void setItemName(String itemName) {
         this.itemName = itemName;
+    }
+
+    public Boolean getNumeric() {
+        return isNumeric;
+    }
+
+    public void setNumeric(Boolean numeric) {
+        isNumeric = numeric;
     }
 
     public String getLsl() {

@@ -80,6 +80,15 @@ public interface SourceDataService {
     List<String> findItemNames(List<String> projectNames);
 
     /**
+     * find all item names by project names
+     *
+     * @param projectNames project names
+     * @param template     template names
+     * @return list of TestItemDto
+     */
+    List<TestItemDto> findItemNames(List<String> projectNames, String template);
+
+    /**
      * find data by search condition
      *
      * @param projectNames project names
@@ -103,7 +112,7 @@ public interface SourceDataService {
     /**
      * find data by line number
      *
-     * @param projectName  project name
+     * @param projectName   project name
      * @param testItemNames test item name
      * @return line data
      */
