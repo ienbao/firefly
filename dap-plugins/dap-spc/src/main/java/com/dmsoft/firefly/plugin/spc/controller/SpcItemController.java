@@ -82,9 +82,9 @@ public class SpcItemController implements Initializable {
 //        EnvService envService = RuntimeContext.getBean(EnvService.class);
 //        List<TestItemDto> itemDtos = envService.findTestItem();
         List<TestItemDto> itemDtos = Lists.newArrayList();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 40; i++) {
             TestItemDto dto = new TestItemDto();
-            dto.setItemName("lsls");
+            dto.setItemName("item" + i);
             itemDtos.add(dto);
         }
         if (itemDtos != null) {
