@@ -6,6 +6,7 @@ package com.dmsoft.firefly.plugin.spc.model;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultDto;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.google.common.collect.Maps;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.Map;
  * Created by Ethan.Yang on 2018/2/6.
  */
 public class StatisticalTableRowData {
+    private SimpleBooleanProperty selector;
 
     private Map<String,SimpleStringProperty> rowDataMap = Maps.newHashMap();
     private static final String[] STATISTICAL_TITLE = UIConstant.SPC_SR_ALL;
@@ -22,6 +24,7 @@ public class StatisticalTableRowData {
         if(statisticalResultDto == null){
             return;
         }
+        selector = new SimpleBooleanProperty(true);
         rowDataMap.put(STATISTICAL_TITLE[0],new SimpleStringProperty(statisticalResultDto.getItemName()));
         rowDataMap.put(STATISTICAL_TITLE[1],new SimpleStringProperty(statisticalResultDto.getCondition()));
         rowDataMap.put(STATISTICAL_TITLE[2],new SimpleStringProperty(statisticalResultDto.getSamples()));
@@ -55,5 +58,13 @@ public class StatisticalTableRowData {
 
     public Map<String, SimpleStringProperty> getRowDataMap() {
         return rowDataMap;
+    }
+
+    public boolean isSelector() {
+        return selector.get();
+    }
+
+    public SimpleBooleanProperty selectorProperty() {
+        return selector;
     }
 }

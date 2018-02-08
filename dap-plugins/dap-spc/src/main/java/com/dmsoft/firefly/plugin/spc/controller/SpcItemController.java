@@ -3,26 +3,22 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.plugin.spc.dto.SearchConditionDto;
-import com.dmsoft.firefly.plugin.spc.dto.SpcSearchConfigDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultDto;
+import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.model.StatisticalTableRowData;
 import com.dmsoft.firefly.plugin.spc.service.SpcServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcService;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
-import com.dmsoft.firefly.sdk.ui.Action;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.control.Tab;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
@@ -46,8 +42,15 @@ public class SpcItemController implements Initializable {
     private Tab configTab;
     @FXML
     private Tab timeTab;
-    private SpcService spcService = new SpcServiceImpl();
+    @FXML
+    private TableColumn<ItemTableModel, CheckBox> select;
+    @FXML
+    private TableColumn<ItemTableModel, String> item;
+    @FXML
+    private TableView itemTable;
+    private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
 
+    private SpcService spcService = new SpcServiceImpl();
     @FXML
     private VBox testItemPane;
 
@@ -56,8 +59,11 @@ public class SpcItemController implements Initializable {
         initBtnIcon();
         this.initComponentEvent();
 
+//        select.setCellFactory(CheckBoxTableCell.forTableColumn(select));
+        select.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
+        item.setCellValueFactory(cellData -> cellData.getValue().itemProperty());
+        initItemData();
     }
-
 
     private void initBtnIcon() {
         analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
@@ -70,6 +76,25 @@ public class SpcItemController implements Initializable {
 
     private void initComponentEvent() {
         analysisBtn.setOnAction(event -> getAnalysisBtnEvent());
+    }
+
+    private void initItemData() {
+//        EnvService envService = RuntimeContext.getBean(EnvService.class);
+//        List<TestItemDto> itemDtos = envService.findTestItem();
+        List<TestItemDto> itemDtos = Lists.newArrayList();
+        for (int i = 0; i < 10; i++) {
+            TestItemDto dto = new TestItemDto();
+            dto.setItemName("lsls");
+            itemDtos.add(dto);
+        }
+        if (itemDtos != null) {
+            for (TestItemDto dto : itemDtos) {
+                ItemTableModel tableModel = new ItemTableModel(dto);
+                items.add(tableModel);
+            }
+            itemTable.setItems(items);
+        }
+
     }
 
     private void getAnalysisBtnEvent() {
