@@ -16,9 +16,9 @@ public interface PluginUIContext {
      * method to register menu
      *
      * @param menuLocation ui location
-     * @param action       action
+     * @param menu         menu
      */
-    void registerMenu(String menuLocation, Action action);
+    void registerMenu(String menuLocation, MenuComponent menu);
 
     /**
      * method to get all menu locations
@@ -28,12 +28,12 @@ public interface PluginUIContext {
     Set<String> getAllMenuLocations();
 
     /**
-     * method to get menu action
+     * method to get menu
      *
      * @param menuLocation menu location
-     * @return action
+     * @return menu
      */
-    Action getMenuAction(String menuLocation);
+    MenuComponent getMenu(String menuLocation);
 
     /**
      * method to register main body
