@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="testItemPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="testItemPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcItemController">
    <children>
       <SplitPane dividerPositions="0.4698085419734904" orientation="VERTICAL" style="-fx-border-width: 0 0 0 0;" VBox.vgrow="ALWAYS">
          <items>
