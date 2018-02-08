@@ -8,6 +8,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.entity.CellData;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by GuangLi on 2018/1/24.
@@ -97,16 +98,16 @@ public interface SourceDataService {
      * @param templateName template names
      * @return list of lineDataDto
      */
-    List<TestDataDto> findDataByCondition(List<String> projectNames, List<String> itemNames, List<String> conditions, String templateName);
+    List<TestDataDto> findDataByCondition(List<String> projectNames, List<String> itemNames, List<String> conditions, String templateName, Boolean lineUsedValid);
 
     /**
      * find data by line number
      *
-     * @param projectName  project name
-     * @param testItemName test item name
+     * @param projectName   project name
+     * @param testItemNames test item name
      * @return item datas
      */
-    List<TestDataDto> findDataByItemName(String projectName, List<String> testItemName);
+    List<TestDataDto> findDataByItemNames(String projectName, List<String> testItemNames);
 
 
     /**
@@ -125,6 +126,13 @@ public interface SourceDataService {
      * @param lineUsedData lineUsed data
      */
     void updateLineDataUsed(String projectName, List<CellData> lineUsedData);
+
+    /**
+     * update line data isUsed
+     *
+     * @param projectName peoject name
+     */
+    List<String> findLineDataUsed(String projectName);
 
     /**
      * delete data by project name

@@ -19,9 +19,13 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
+import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Lucien.Chen on 2018/2/6.
@@ -29,6 +33,7 @@ import java.util.List;
 public class SourceDataServiceImpl implements SourceDataService {
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
 
+    private List<TestData> testDataCache = Lists.newArrayList();
 
     @Override
     public void saveProject(ProjectDto projectDto) {
@@ -131,45 +136,108 @@ public class SourceDataServiceImpl implements SourceDataService {
     }
 
     @Override
-    public List<TestDataDto> findDataByCondition(List<String> projectNames, List<String> itemNames, List<String> conditions, String templateName) {
+    public List<TestDataDto> findDataByCondition(List<String> projectNames, List<String> itemNames, List<String> conditions, String templateName, Boolean lineUsedValid) {
         List<TestDataDto> result = Lists.newArrayList();
-
         FilterConditionUtil filterConditionUtil = new FilterConditionUtil();
         TemplateSettingDto templateSettingDto = templateService.findAnalysisTemplate(templateName);
         filterConditionUtil.setTimeKeys(templateSettingDto.getTimePatternDto().getTimeKeys());
         filterConditionUtil.setTimePattern(templateSettingDto.getTimePatternDto().getPattern());
 
-        conditions.forEach(condition -> {
-            List<String> conditionItems = Lists.newArrayList();
-            conditionItems.addAll(filterConditionUtil.parseItemNameFromConditions(condition));
-            projectNames.forEach(projectName -> {
+        projectNames.forEach(projectName -> {
+            List<TestDataDto> projectData = Lists.newArrayList();
+            if (conditions == null || conditions.isEmpty()) {
+                if (lineUsedValid) {
+                    List<String> lineUsedList = findLineDataUsed(projectName);
+                    List<TestDataDto> partData = findDataByItemNamesAndLineNo(projectName, itemNames, lineUsedList);
+                    partData.forEach(testDataDto -> {
+                        testDataDto.setCodition("");
+                    });
+                    projectData.addAll(partData);
+                } else {
+                    List<TestDataDto> partData = findDataByItemNames(projectName, itemNames);
+                    partData.forEach(testDataDto -> {
+                        testDataDto.setCodition("");
+                    });
+                    projectData.addAll(partData);
+                }
+            } else {
+                conditions.forEach(condition -> {
+                    List<String> conditionItems = Lists.newArrayList();
+                    conditionItems.addAll(filterConditionUtil.parseItemNameFromConditions(condition));
+                    List<TestDataDto> conditionData = findDataByItemNames(projectName, conditionItems);
 
-                List<TestDataDto> conditionData = findDataByItemName(projectName, conditionItems);
+                    List<String> lineNoList = filterConditionUtil.filterCondition(condition, conditionData);
 
-                List<String> lineNoList = filterConditionUtil.filterCondition(condition, conditionData);
+                    if (lineUsedValid) {
+                        List<String> lineUsedList = findLineDataUsed(projectName);
+                        lineNoList.retainAll(lineUsedList);
+                    }
 
-                List<TestDataDto> partData = findDataByItemNamesAndLineNo(projectName, itemNames, lineNoList);
-                result.addAll(partData);
-            });
+                    List<String> searchItems = Lists.newArrayList();
+                    searchItems.addAll(itemNames);
+                    conditionItems.removeAll(searchItems);
+                    searchItems.addAll(conditionItems);
+                    List<TestDataDto> partData = findDataByItemNamesAndLineNo(projectName, searchItems, lineNoList);
+                    partData.forEach(testDataDto -> {
+                        testDataDto.setCodition(condition);
+                    });
+                    projectData.addAll(partData);
+                });
+                if (result != null && !result.isEmpty()) {
+                    projectData.forEach(testDataDto -> {
+                        Boolean isExist = false;
+                        for (TestDataDto resultData : result) {
+                            if (testDataDto.getCodition().equals(resultData.getCodition()) && testDataDto.getItemName().equals(resultData.getItemName())) {
+                                resultData.getData().addAll(testDataDto.getData());
+                                isExist = true;
+                                break;
+                            }
+                        }
+                        if(!isExist){
+                            result.add(testDataDto);
+                        }
+                    });
+                } else {
+                    result.addAll(projectData);
+                }
 
+            }
         });
-
 
         return result;
     }
 
     @Override
-    public List<TestDataDto> findDataByItemName(String projectName, List<String> testItemNames) {
+    public List<TestDataDto> findDataByItemNames(String projectName, List<String> testItemNames) {
         MongoCollection<TestData> mongoCollection = MongoUtil.getCollection(projectName, TestData.class);
         List<TestDataDto> result = Lists.newArrayList();
+
+        List<String> searchItemNames = Lists.newArrayList();
+        testItemNames.forEach(itemName -> {
+            TestData testData = findCache(projectName, itemName);
+            if (testData != null) {
+                TestDataDto testDataDto = new TestDataDto();
+                BeanUtils.copyProperties(testData, testDataDto);
+                List<CellData> cellDatas = Lists.newArrayList();
+                cellDatas.addAll(testData.getData());
+                testDataDto.setData(cellDatas);
+                result.add(testDataDto);
+            } else {
+                searchItemNames.add(itemName);
+            }
+        });
 
         BasicDBObject basicDBObject = new BasicDBObject();
         basicDBObject.append("itemName", new BasicDBObject("$in", testItemNames));
         MongoCursor<TestData> mongoCursor = mongoCollection.find(basicDBObject).iterator();
-        while (mongoCursor.hasNext()){
+        while (mongoCursor.hasNext()) {
             TestData testData = mongoCursor.next();
+            addCache(testData);
             TestDataDto testDataDto = new TestDataDto();
-            BeanUtils.copyProperties(testData,testDataDto);
+            BeanUtils.copyProperties(testData, testDataDto);
+            List<CellData> cellDatas = Lists.newArrayList();
+            cellDatas.addAll(testData.getData());
+            testDataDto.setData(cellDatas);
             result.add(testDataDto);
         }
 
@@ -181,16 +249,36 @@ public class SourceDataServiceImpl implements SourceDataService {
         MongoCollection<TestData> mongoCollection = MongoUtil.getCollection(projectName, TestData.class);
         List<TestDataDto> result = Lists.newArrayList();
 
+        List<String> searchItemNames = Lists.newArrayList();
+        testItemNames.forEach(itemName -> {
+            TestData testData = findCache(projectName, itemName);
+            if (testData != null) {
+                TestDataDto testDataDto = new TestDataDto();
+                BeanUtils.copyProperties(testData, testDataDto);
+                List<CellData> cellDatas = Lists.newArrayList();
+                testData.getData().forEach(cellData -> {
+                    if (lineNo.contains(cellData.getLineNo())) {
+                        cellDatas.add(cellData);
+                    }
+                });
+                testDataDto.setData(cellDatas);
+                result.add(testDataDto);
+            } else {
+                searchItemNames.add(itemName);
+            }
+        });
+
         BasicDBObject basicDBObject = new BasicDBObject();
         basicDBObject.append("itemName", new BasicDBObject("$in", testItemNames));
         MongoCursor<TestData> mongoCursor = mongoCollection.find(basicDBObject).iterator();
-        while (mongoCursor.hasNext()){
+        while (mongoCursor.hasNext()) {
             TestData testData = mongoCursor.next();
+            addCache(testData);
             TestDataDto testDataDto = new TestDataDto();
-            BeanUtils.copyProperties(testData,testDataDto);
+            BeanUtils.copyProperties(testData, testDataDto);
             List<CellData> cellDatas = Lists.newArrayList();
             testData.getData().forEach(cellData -> {
-                if(lineNo.contains(cellData.getLineNo())){
+                if (lineNo.contains(cellData.getLineNo())) {
                     cellDatas.add(cellData);
                 }
             });
@@ -203,11 +291,59 @@ public class SourceDataServiceImpl implements SourceDataService {
 
     @Override
     public void updateLineDataUsed(String projectName, List<CellData> lineUsedData) {
+        MongoCollection<TestData> mongoCollection = MongoUtil.getCollection(projectName, TestData.class);
+        BasicDBObject whereObject = new BasicDBObject("itemName", "lineNo");
+        BasicDBObject setObject = new BasicDBObject("$set", new BasicDBObject("data", lineUsedData));
+        mongoCollection.updateOne(whereObject, setObject);
+    }
 
+    @Override
+    public List<String> findLineDataUsed(String projectName) {
+        MongoCollection<TestData> mongoCollection = MongoUtil.getCollection(projectName, TestData.class);
+        List<String> lineUsedList = Lists.newArrayList();
+        BasicDBObject whereObject = new BasicDBObject("itemName", "lineNo");
+        MongoCursor<TestData> mongoCursor = mongoCollection.find(whereObject).iterator();
+        if (mongoCursor.hasNext()) {
+            TestData testData = mongoCursor.next();
+            testData.getData().forEach(cellData -> {
+                if ((Boolean) cellData.getValue()) {
+                    lineUsedList.add(cellData.getLineNo());
+                }
+            });
+        }
+        return null;
     }
 
     @Override
     public void deleteProject(String projectName) {
+        MongoCollection projectCollection = MongoUtil.getCollection("project", Project.class);
+        projectCollection.deleteOne(new BasicDBObject("projectName", projectName));
 
+        MongoCollection<TestItem> testItemCollection = MongoUtil.getCollection("testItem", TestItem.class);
+        testItemCollection.deleteOne(new BasicDBObject("projectName", projectName));
+
+        MongoCollection<TestData> testDataCollection = MongoUtil.getCollection("TestData", TestItem.class);
+        testDataCollection.drop();
+    }
+
+    private TestData findCache(String projectName, String itemName) {
+
+        for (TestData testData : testDataCache) {
+            if (testData.getProjectName().equals(projectName) && testData.getItemName().equals(itemName)) {
+                return testData;
+            }
+        }
+        return null;
+    }
+
+    private void addCache(TestData testData) {
+        if (findCache(testData.getProjectName(), testData.getItemName()) == null) {
+            if (testDataCache.size() <= 100) {
+                testDataCache.add(testData);
+            } else {
+                testDataCache.remove(0);
+                testDataCache.add(testData);
+            }
+        }
     }
 }
