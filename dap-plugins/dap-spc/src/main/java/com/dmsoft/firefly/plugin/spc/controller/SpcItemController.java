@@ -17,8 +17,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
@@ -59,7 +61,15 @@ public class SpcItemController implements Initializable {
         initBtnIcon();
         this.initComponentEvent();
 
-//        select.setCellFactory(CheckBoxTableCell.forTableColumn(select));
+        CheckBox box = new CheckBox();
+        box.setOnAction(event -> {
+            if (items != null){
+                for (ItemTableModel model : items){
+                    model.getSelector().setValue(box.isSelected());
+                }
+            }
+        });
+        select.setGraphic(box);
         select.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
         item.setCellValueFactory(cellData -> cellData.getValue().itemProperty());
         initItemData();
@@ -103,7 +113,7 @@ public class SpcItemController implements Initializable {
 //        SpcSearchConfigDto spcSearchConfigDto = new SpcSearchConfigDto();
 //        List<SpcStatisticalResultDto> spcStatisticalResultDtoList = spcService.findStatisticalResult(searchConditionDtoList,spcSearchConfigDto);
         List<SpcStatisticalResultDto> spcStatisticalResultDtoList = initData();
-        VBox statisticalPane = (VBox) testItemPane.getParent().getParent().getParent().lookup("#statisticalPane");
+        AnchorPane statisticalPane = (AnchorPane) testItemPane.getParent().getParent().getParent().lookup("#statisticalPane");
         TableView statisticalResultTb = (TableView) statisticalPane.lookup("#statisticalResultTb");
 
         if (spcStatisticalResultDtoList == null) {

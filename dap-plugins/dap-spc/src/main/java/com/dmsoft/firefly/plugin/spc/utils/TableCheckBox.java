@@ -43,4 +43,8 @@ public class TableCheckBox {
     public Boolean isSelected() {
         return checkbox.isSelected();
     }
+
+    public void setValue(Boolean select){
+        checkbox.setSelected(select);
+    }
 }
