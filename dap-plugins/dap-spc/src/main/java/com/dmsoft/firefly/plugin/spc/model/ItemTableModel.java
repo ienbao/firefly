@@ -9,7 +9,7 @@ import javafx.beans.property.StringProperty;
 /**
  * Created by GuangLi on 2018/2/8.
  */
-public class ItemTableModel {
+public class ItemTableModel  implements Comparable<TestItemDto> {
     private TableCheckBox selector = new TableCheckBox();
     private TestItemDto itemDto;
     private StringProperty item;
@@ -45,5 +45,10 @@ public class ItemTableModel {
 
     public void setItemDto(TestItemDto itemDto) {
         this.itemDto = itemDto;
+    }
+
+    @Override
+    public int compareTo(TestItemDto o) {
+        return item.get().compareToIgnoreCase(o.getItemName());
     }
 }
