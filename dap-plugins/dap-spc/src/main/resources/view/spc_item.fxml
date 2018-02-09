@@ -33,12 +33,12 @@
                                  </columnResizePolicy>
                                  <columns>
                                     <TableColumn fx:id="select" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" sortType="DESCENDING" sortable="false" />
-                                    <TableColumn fx:id="item" prefWidth="62.0" text="Test Item" />
+                                    <TableColumn fx:id="item" prefWidth="62.0" />
                                  </columns>
                               </TableView>
                            </center>
                            <top>
-                              <TextField promptText="Test Item" BorderPane.alignment="CENTER">
+                              <TextField fx:id="itemFilter" promptText="Test Item" BorderPane.alignment="CENTER">
                                  <BorderPane.margin>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </BorderPane.margin>
