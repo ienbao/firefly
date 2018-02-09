@@ -98,7 +98,7 @@ public interface SourceDataService {
      * @param templateName template names
      * @return list of lineDataDto
      */
-    List<TestDataDto> findDataByCondition(List<String> projectNames, List<String> itemNames, String conditions, String templateName, Boolean lineUsedValid);
+    List<TestDataDto> findDataByCondition(List<String> projectNames, List<String> itemNames, List<String> conditions, String templateName, Boolean lineUsedValid);
 
     /**
      * find data by line number
