@@ -10,21 +10,12 @@ import java.util.List;
  */
 public class TestDataDto {
 
-    private ObjectId id;
     private String codition;
     private String itemName;
     private String usl;
     private String lsl;
     private String unit;
     private List<CellData> data;
-
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
 
     public String getCodition() {
         return codition;
