@@ -178,7 +178,7 @@ public class CsvResolverService implements IDataParser {
         ProjectDto projectDto = new ProjectDto();
         projectDto.setProjectName(file.getName());
         projectDto.setPath(file.getPath());
-        projectDto.setItemNames(Arrays.asList(items));
+        //projectDto.setItemNames(Arrays.asList(items));
         sourceDataService.saveProject(projectDto);
 
         //save teat item
