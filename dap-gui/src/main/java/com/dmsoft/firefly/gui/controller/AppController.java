@@ -2,11 +2,12 @@ package com.dmsoft.firefly.gui.controller;
 
 import com.dmsoft.bamboo.common.utils.base.Platforms;
 import com.dmsoft.bamboo.common.utils.base.PropertiesUtil;
+import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.gui.utils.PropertiesResource;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.ui.MenuComponent;
+import com.dmsoft.firefly.sdk.ui.IMenu;
+import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
-import com.dmsoft.firefly.sdk.utils.enums.MenuType;
 import com.google.common.collect.Lists;
 import de.codecentric.centerdevice.MenuToolkit;
 import javafx.collections.ObservableList;
@@ -18,6 +19,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.dmsoft.firefly.sdk.ui.MenuBuilder.MenuType;
 
 public class AppController {
     private final Logger logger = LoggerFactory.getLogger(AppController.class);
@@ -49,49 +52,59 @@ public class AppController {
         PluginUIContext pc = RuntimeContext.getBean(PluginUIContext.class);
         Set<String> names = pc.getAllMenuLocations();
         List<String> secondNames = Lists.newLinkedList();
+        List<String> thirdNames = Lists.newLinkedList();
         names.forEach(name -> {
-            MenuComponent menu = pc.getMenu(name);
-            String parentLocation = menu.getParentLocation();
-            if (StringUtils.isBlank(parentLocation)) {
+            IMenu menu = pc.getMenu(name);
+            String pluginId = menu.getPluginId();
+            String parentLocation = pluginId + "_" + menu.getParentLocation();
+            if (parentLocation.equals(MenuFactory.getParentMenuId())) {
                 if (MenuType.MENU.equals(menu.getMenuType())) {
                     mnuSystem.getMenus().add(menu.getMenu());
                 } else {
                     logger.debug("TMenu bar can not set menu item, only set menu.");
                 }
             } else {
-                secondNames.add(name);
+                if (MenuType.MENU.equals(menu.getMenuType())) {
+                    List<Menu> menus = mnuSystem.getMenus();
+                    boolean result1 = false;
+                    for (Menu menu1 : menus) {
+                         boolean result = updateMenu(menu, menu1);
+                        if (result) {
+                            result1 = true;
+                            break;
+                        }
+                    }
+                    if (!result1) {
+                        secondNames.add(name);
+                    }
+                } else {
+                    secondNames.add(name);
+                }
             }
         });
-        List<String> thirdNames = Lists.newLinkedList();
         secondNames.forEach(name -> {
-            MenuComponent menu = pc.getMenu(name);
-            String parentLocation = menu.getParentLocation();
-            MenuComponent parentMenuComponent = pc.getMenu(parentLocation);
-            if (parentMenuComponent == null) {
-                logger.debug(" The parent menu does not exist .");
-            } else if (MenuType.MENU.equals(menu.getMenuType())) {
-                List<Menu> menus = mnuSystem.getMenus();
-                for (Menu menu1 : menus) {
-                    boolean result = updateMenu(parentLocation, menu, menu1);
-                    if (result) {
-                        break;
+            IMenu menu = pc.getMenu(name);
+            if (isHasParentMenu(menu, pc)) {
+                if (MenuType.MENU.equals(menu.getMenuType())) {
+                    List<Menu> menus = mnuSystem.getMenus();
+                    for (Menu menu1 : menus) {
+                        boolean result = updateMenu(menu, menu1);
+                        if (result) {
+                            break;
+                        }
                     }
+                } else {
+                    thirdNames.add(name);
                 }
-            } else {
-                thirdNames.add(name);
-            }
+           }
         });
 
         thirdNames.forEach(name -> {
-            MenuComponent menu = pc.getMenu(name);
-            String parentLocation = menu.getParentLocation();
-            MenuComponent parentMenuComponent = pc.getMenu(parentLocation);
-            if (parentMenuComponent == null) {
-                logger.debug(" The parent menu does not exist .");
-            }  else {
+            IMenu menu = pc.getMenu(name);
+            if (isHasParentMenu(menu, pc)) {
                 List<Menu> menus = mnuSystem.getMenus();
                 for (Menu menu1 : menus) {
-                    boolean result = updateMenu(parentLocation, menu, menu1);
+                    boolean result = updateMenu(menu, menu1);
                     if (result) {
                         break;
                     }
@@ -101,9 +114,12 @@ public class AppController {
     }
 
 
-    private boolean updateMenu(String location, MenuComponent menuComponent, Menu menu) {
+    private boolean updateMenu(IMenu menuComponent, Menu menu) {
+        String parentLocation = menuComponent.getPluginId() + "_" + menuComponent.getParentLocation();
+        String PlatformParentLocation = MenuFactory.PLATFORM_ID + "_" + menuComponent.getParentLocation();
+
         AtomicBoolean result = new AtomicBoolean(false);
-        if (StringUtils.isNotBlank(menu.getId()) && menu.getId().equals(location)) {
+        if (StringUtils.isNotBlank(menu.getId()) && (menu.getId().equals(parentLocation) || (menu.getId().equals(PlatformParentLocation)))) {
             menu.getItems().add(menuComponent.getMenu());
             result.set(true);
         } else {
@@ -111,14 +127,28 @@ public class AppController {
             for (MenuItem menuItem : dd) {
                 if (menuItem instanceof Menu) {
                     Menu menu2 = (Menu) menuItem;
-                    if (StringUtils.isNotBlank(menu2.getId()) && menu2.getId().equals(location)) {
-                        menu2.getItems().add(menuComponent.getMenu());
-                        result.set(true);
-                    }
+                    this.updateMenu(menuComponent, menu2);
                 }
             }
         }
         return result.get();
+    }
+
+    private boolean isHasParentMenu(IMenu menu, PluginUIContext pc) {
+        String parentLocation = menu.getPluginId() + "_" + menu.getParentLocation();
+        IMenu parentMenuComponent = pc.getMenu(parentLocation);
+        if (parentMenuComponent == null) {
+            parentLocation = MenuFactory.PLATFORM_ID + "_" + menu.getParentLocation();
+            parentMenuComponent = pc.getMenu(parentLocation);
+            if (parentMenuComponent == null) {
+                logger.debug(" The parent menu does not exist. parentLocation={}", parentLocation);
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
     }
 
 }
