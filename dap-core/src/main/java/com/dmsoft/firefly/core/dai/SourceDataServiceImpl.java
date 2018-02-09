@@ -138,7 +138,7 @@ public class SourceDataServiceImpl implements SourceDataService {
     }
 
     @Override
-    public List<TestDataDto> findDataByCondition(List<String> projectNames, List<String> itemNames, List<String> conditions, String templateName, Boolean lineUsedValid) {
+    public List<TestDataDto> findDataByCondition(List<String> projectNames, List<String> itemNames, String condition, String templateName, Boolean lineUsedValid) {
         List<TestDataDto> result = Lists.newArrayList();
         FilterConditionUtil filterConditionUtil = new FilterConditionUtil();
         TemplateSettingDto templateSettingDto = templateService.findAnalysisTemplate(templateName);
@@ -147,7 +147,7 @@ public class SourceDataServiceImpl implements SourceDataService {
 
         projectNames.forEach(projectName -> {
             List<TestDataDto> projectData = Lists.newArrayList();
-            if (conditions == null || conditions.isEmpty()) {
+            if (condition == null || condition.isEmpty()) {
                 if (lineUsedValid) {
                     List<String> lineUsedList = findLineDataUsed(projectName);
                     List<TestDataDto> partData = findDataByItemNamesAndLineNo(projectName, itemNames, lineUsedList);
@@ -163,47 +163,45 @@ public class SourceDataServiceImpl implements SourceDataService {
                     projectData.addAll(partData);
                 }
             } else {
-                conditions.forEach(condition -> {
-                    List<String> conditionItems = Lists.newArrayList();
-                    conditionItems.addAll(filterConditionUtil.parseItemNameFromConditions(condition));
-                    List<TestDataDto> conditionData = findDataByItemNames(projectName, conditionItems);
+                List<String> conditionItems = Lists.newArrayList();
+                conditionItems.addAll(filterConditionUtil.parseItemNameFromConditions(condition));
+                List<TestDataDto> conditionData = findDataByItemNames(projectName, conditionItems);
 
-                    List<String> lineNoList = filterConditionUtil.filterCondition(condition, conditionData);
+                List<String> lineNoList = filterConditionUtil.filterCondition(condition, conditionData);
 
-                    if (lineUsedValid) {
-                        List<String> lineUsedList = findLineDataUsed(projectName);
-                        lineNoList.retainAll(lineUsedList);
-                    }
-
-                    List<String> searchItems = Lists.newArrayList();
-                    searchItems.addAll(itemNames);
-                    conditionItems.removeAll(searchItems);
-                    searchItems.addAll(conditionItems);
-                    List<TestDataDto> partData = findDataByItemNamesAndLineNo(projectName, searchItems, lineNoList);
-                    partData.forEach(testDataDto -> {
-                        testDataDto.setCodition(condition);
-                    });
-                    projectData.addAll(partData);
-                });
-                if (result != null && !result.isEmpty()) {
-                    projectData.forEach(testDataDto -> {
-                        Boolean isExist = false;
-                        for (TestDataDto resultData : result) {
-                            if (testDataDto.getCodition().equals(resultData.getCodition()) && testDataDto.getItemName().equals(resultData.getItemName())) {
-                                resultData.getData().addAll(testDataDto.getData());
-                                isExist = true;
-                                break;
-                            }
-                        }
-                        if (!isExist) {
-                            result.add(testDataDto);
-                        }
-                    });
-                } else {
-                    result.addAll(projectData);
+                if (lineUsedValid) {
+                    List<String> lineUsedList = findLineDataUsed(projectName);
+                    lineNoList.retainAll(lineUsedList);
                 }
 
+                List<String> searchItems = Lists.newArrayList();
+                searchItems.addAll(itemNames);
+                conditionItems.removeAll(searchItems);
+                searchItems.addAll(conditionItems);
+                List<TestDataDto> partData = findDataByItemNamesAndLineNo(projectName, searchItems, lineNoList);
+                partData.forEach(testDataDto -> {
+                    testDataDto.setCodition(condition);
+                });
+                projectData.addAll(partData);
             }
+            if (result != null && !result.isEmpty()) {
+                projectData.forEach(testDataDto -> {
+                    Boolean isExist = false;
+                    for (TestDataDto resultData : result) {
+                        if (testDataDto.getCodition().equals(resultData.getCodition()) && testDataDto.getItemName().equals(resultData.getItemName())) {
+                            resultData.getData().addAll(testDataDto.getData());
+                            isExist = true;
+                            break;
+                        }
+                    }
+                    if (!isExist) {
+                        result.add(testDataDto);
+                    }
+                });
+            } else {
+                result.addAll(projectData);
+            }
+
         });
 
         return result;
