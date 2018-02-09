@@ -1,8 +1,5 @@
 package com.dmsoft.firefly.sdk.ui;
 
-import javafx.scene.layout.Pane;
-
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -15,10 +12,9 @@ public interface PluginUIContext {
     /**
      * method to register menu
      *
-     * @param menuLocation ui location
      * @param menu         menu
      */
-    void registerMenu(String menuLocation, MenuComponent menu);
+    void registerMenu(MenuComponent menu);
 
     /**
      * method to get all menu locations

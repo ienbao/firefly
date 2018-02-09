@@ -11,13 +11,16 @@ import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.ui.Action;
 import com.dmsoft.firefly.sdk.ui.IMainBodyPane;
+import com.dmsoft.firefly.sdk.ui.MenuComponent;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.ui.window.WindowPane;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
+import com.dmsoft.firefly.sdk.utils.enums.MenuType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -42,37 +45,47 @@ public class CsvResolverPlugin extends Plugin {
 
     @Override
     public void start() {
-        RuntimeContext.getBean(PluginUIContext.class).registerMenu("csvresolver", new Action() {
+        RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuComponent() {
+            @Override
+            public String getLocation() {
+                return "CsvResolver";
+            }
 
             @Override
-            public void handleEvent(ActionEvent event) {
-                Pane root = null;
-                try {
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("view/csv_resolver.fxml"), ResourceBundle.getBundle("i18n.message_en_US"));
-                    fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.CsvResolverPlugin"));
-                    root = fxmlLoader.load();
-                    Stage dialog = new Stage();
-                    WindowPane windowPane = new WindowPane(dialog, "CSV-Resolver", root);
-
-                    Scene scene =  new Scene(windowPane, 845, 565);
-                    windowPane.setMinWidth(845);
-                    windowPane.setMinHeight(565);
-                    scene.setFill(Color.TRANSPARENT);
-                    scene.getStylesheets().add(getClass().getClassLoader().getResource("css/app.css").toExternalForm());
-
-                    dialog.initStyle(StageStyle.TRANSPARENT);
-                    dialog.setScene(scene);
-                    windowPane.initEvent();
-                    dialog.show();
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+            public <T> T getMenu() {
+                MenuItem menuItem = new MenuItem("CsvResolver");
+                menuItem.setOnAction(event -> build());
+                return (T) menuItem;
             }
         });
         logger.debug("Plugin-CsvResolver UI register done.");
 
         logger.info("Plugin-CsvResolver started.");
+    }
+
+    private void build(){
+        Pane root = null;
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("view/csv_resolver.fxml"), ResourceBundle.getBundle("i18n.message_en_US"));
+            fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.CsvResolverPlugin"));
+            root = fxmlLoader.load();
+            Stage dialog = new Stage();
+            WindowPane windowPane = new WindowPane(dialog, "CSV-Resolver", root);
+
+            Scene scene =  new Scene(windowPane, 845, 565);
+            windowPane.setMinWidth(845);
+            windowPane.setMinHeight(565);
+            scene.setFill(Color.TRANSPARENT);
+            scene.getStylesheets().add(getClass().getClassLoader().getResource("css/app.css").toExternalForm());
+
+            dialog.initStyle(StageStyle.TRANSPARENT);
+            dialog.setScene(scene);
+            windowPane.initEvent();
+            dialog.show();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override

@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
@@ -88,10 +83,10 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
                <columns>
-                  <TableColumn fx:id="columnO" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" text="C1" />
-                  <TableColumn fx:id="columnTo" maxWidth="236.0" minWidth="236.0" prefWidth="236.0" text="C2" />
-                  <TableColumn fx:id="columnTh" maxWidth="130.0" minWidth="130.0" prefWidth="130.0" text="C3" />
-                  <TableColumn fx:id="columnF" maxWidth="330.0" minWidth="330.0" prefWidth="330.0" text="C4" />
+                  <TableColumn fx:id="columnO" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" sortable="false" text="C1" />
+                  <TableColumn fx:id="columnTo" maxWidth="236.0" minWidth="236.0" prefWidth="236.0" sortable="false" text="C2" />
+                  <TableColumn fx:id="columnTh" maxWidth="130.0" minWidth="130.0" prefWidth="130.0" sortable="false" text="C3" />
+                  <TableColumn fx:id="columnF" maxWidth="330.0" minWidth="330.0" prefWidth="330.0" sortable="false" text="C4" />
                </columns>
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
