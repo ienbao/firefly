@@ -125,7 +125,7 @@ public class CsvResolverService implements IDataParser {
             List<TestDataDto> testDataDtos = Lists.newArrayList();
             for (int i = 0; i < items.length; i++) {
                 TestDataDto testDataDto = new TestDataDto();
-                testDataDto.setProjectName(csvFile.getName());
+//                testDataDto.setProjectName(csvFile.getName());
                 testDataDto.setItemName(items[i]);
                 testDataDto.setUsl(uslRow[i]);
                 testDataDto.setLsl(lslRow[i]);
@@ -141,7 +141,7 @@ public class CsvResolverService implements IDataParser {
                 testDataDto.setData(cellDatas);
                 testDataDtos.add(testDataDto);
             }
-            sourceDataService.saveProjectData(testDataDtos);
+            sourceDataService.saveProjectData(csvFile.getName(), testDataDtos);
 
             importSucc = true;
             csvReader.close();
