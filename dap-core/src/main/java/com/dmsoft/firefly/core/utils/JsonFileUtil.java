@@ -14,7 +14,7 @@ public class JsonFileUtil {
     /**
      * 生成.json格式文件
      */
-    public static boolean createJsonFile(JSONObject jsonObject, String fileParentPath, String fileName) {
+    public static boolean writeJsonFile(JSONObject jsonObject, String fileParentPath, String fileName) {
         // 标记文件生成是否成功
         boolean flag = true;
 

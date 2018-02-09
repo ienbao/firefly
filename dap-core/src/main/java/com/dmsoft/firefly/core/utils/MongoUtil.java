@@ -20,10 +20,9 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
  * Created by Lucien.Chen on 2018/2/6.
  */
 public class MongoUtil {
-    private static String host = "localhost";
-    private static int port = 27017;
-
-    private static String dbName = "test";
+    private static final String host = "localhost";
+    private static final int port = 27017;
+    private static final String dbName = "test";
 
     private static MongoClient mongoClient;
     private static MongoDatabase database;
