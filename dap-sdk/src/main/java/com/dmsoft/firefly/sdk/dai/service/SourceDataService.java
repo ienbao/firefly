@@ -87,7 +87,7 @@ public interface SourceDataService {
      * @param template     template names
      * @return list of TestItemDto
      */
-    List<TestItemDto> findItemNames(List<String> projectNames, String template);
+    List<TestItemDto> findItems(List<String> projectNames, String template);
 
     /**
      * find data by search condition

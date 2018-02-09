@@ -3,10 +3,7 @@ package com.dmsoft.firefly.core.dai;
 import com.dmsoft.firefly.core.utils.FilterConditionUtil;
 import com.dmsoft.firefly.core.utils.MongoUtil;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.ProjectDto;
-import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
-import com.dmsoft.firefly.sdk.dai.dto.TestDataDto;
-import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.dto.*;
 import com.dmsoft.firefly.sdk.dai.entity.CellData;
 import com.dmsoft.firefly.sdk.dai.entity.Project;
 import com.dmsoft.firefly.sdk.dai.entity.TestData;
@@ -22,15 +19,25 @@ import com.mongodb.client.MongoCursor;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.logging.Logger;
 
 /**
  * Created by Lucien.Chen on 2018/2/6.
  */
 public class SourceDataServiceImpl implements SourceDataService {
+    static org.slf4j.Logger logger = LoggerFactory.getLogger(SourceDataServiceImpl.class);
+
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
 
     private List<TestData> testDataCache = Lists.newArrayList();
@@ -133,8 +140,47 @@ public class SourceDataServiceImpl implements SourceDataService {
     }
 
     @Override
-    public List<TestItemDto> findItemNames(List<String> projectNames, String template) {
-        return null;
+    public List<TestItemDto> findItems(List<String> projectNames, String template) {
+        List<TestItemDto> result = Lists.newArrayList();
+        TemplateSettingDto templateSettingDto = templateService.findAnalysisTemplate(template);
+
+
+        projectNames.forEach(projectName -> {
+            MongoCollection<TestData> mongoCollection = MongoUtil.getCollection(projectName, TestData.class);
+            BasicDBObject basicDBObject = new BasicDBObject();
+            basicDBObject.append("data", 0);
+            MongoCursor<TestData> mongoCursor = mongoCollection.find().projection(basicDBObject).iterator();
+            while (mongoCursor.hasNext()) {
+                TestData testData = mongoCursor.next();
+                Boolean isExit = Boolean.FALSE;
+                for (TestItemDto testItemDto : result) {
+                    if (testItemDto.getItemName().equals(testData.getItemName())) {
+                        isExit = true;
+                        break;
+                    }
+                }
+                if (!isExit) {
+                    TestItemDto testItemDto = new TestItemDto();
+                    BeanUtils.copyProperties(testData, testItemDto);
+                    testItemDto.setNumeric(Boolean.TRUE);
+                    result.add(testItemDto);
+                }
+            }
+        });
+        LinkedHashMap<String, SpecificationDataDto> map = templateSettingDto.getSpecificationDatas();
+        for (Map.Entry<String, SpecificationDataDto> entry : map.entrySet()) {
+            String itemName = entry.getValue().getTestItemName();
+            for (TestItemDto testItemDto : result) {
+                if (testItemDto.getItemName().equals(itemName)) {
+                    testItemDto.setLsl(entry.getValue().getLslFail());
+                    testItemDto.setUsl(entry.getValue().getUslPass());
+                    //如果数据类型为A,就将isNumeric设置为False
+                    testItemDto.setNumeric("Attribute".equals(entry.getValue().getDataType()) ? false : true);
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     @Override
@@ -228,21 +274,64 @@ public class SourceDataServiceImpl implements SourceDataService {
             }
         });
 
-        BasicDBObject basicDBObject = new BasicDBObject();
-        basicDBObject.append("itemName", new BasicDBObject("$in", testItemNames));
-        MongoCursor<TestData> mongoCursor = mongoCollection.find(basicDBObject).iterator();
-        while (mongoCursor.hasNext()) {
-            TestData testData = mongoCursor.next();
-            addCache(testData);
-            TestDataDto testDataDto = new TestDataDto();
-            BeanUtils.copyProperties(testData, testDataDto);
-            List<CellData> cellDatas = Lists.newArrayList();
-            cellDatas.addAll(testData.getData());
-            testDataDto.setData(cellDatas);
-            result.add(testDataDto);
+        List<List<String>> searchItemNamesList = Lists.newArrayList();
+        if (searchItemNames.size() > 1000) {
+            List<String> itemNames = null;
+            for (int index = 0; index < searchItemNames.size(); index++) {
+                if (index % 1000 == 0) {
+                    itemNames = Lists.newArrayList();
+                    itemNames.add(searchItemNames.get(index));
+                    searchItemNamesList.add(itemNames);
+                } else {
+                    itemNames.add(searchItemNames.get(index));
+                }
+            }
+        } else {
+            searchItemNamesList.add(searchItemNames);
+        }
+
+        //创建线程池
+        ExecutorService pool = Executors.newFixedThreadPool(5);
+        // 创建多个有返回值的任务
+        List<Future> futureList = new ArrayList<Future>();
+        searchItemNamesList.forEach(itemNameList -> {
+            Callable callable = new Callable() {
+                @Override
+                public Object call() throws Exception {
+                    List<TestDataDto> dataList = Lists.newArrayList();
+                    BasicDBObject basicDBObject = new BasicDBObject();
+                    basicDBObject.append("itemName", new BasicDBObject("$in", itemNameList));
+                    MongoCursor<TestData> mongoCursor = mongoCollection.find(basicDBObject).iterator();
+                    while (mongoCursor.hasNext()) {
+
+                        TestData testData = mongoCursor.next();
+                        addCache(testData);
+                        TestDataDto testDataDto = new TestDataDto();
+                        BeanUtils.copyProperties(testData, testDataDto);
+                        List<CellData> cellDatas = Lists.newArrayList();
+                        cellDatas.addAll(testData.getData());
+                        testDataDto.setData(cellDatas);
+                        dataList.add(testDataDto);
+                    }
+                    return result;
+                }
+            };
+
+            Future future = pool.submit(callable);
+            futureList.add(future);
+        });
+        //等线程结束后关闭线程池
+        pool.shutdown();
+        for (int i = 0; i < futureList.size(); i++) {
+            try {
+                result.addAll((List<TestDataDto>) (futureList.get(i).get()));
+            } catch (Exception e) {
+                logger.debug("Search error");
+            }
         }
 
         return result;
+
     }
 
     @Override
@@ -269,23 +358,66 @@ public class SourceDataServiceImpl implements SourceDataService {
             }
         });
 
-        BasicDBObject basicDBObject = new BasicDBObject();
-        basicDBObject.append("itemName", new BasicDBObject("$in", testItemNames));
-        MongoCursor<TestData> mongoCursor = mongoCollection.find(basicDBObject).iterator();
-        while (mongoCursor.hasNext()) {
-            TestData testData = mongoCursor.next();
-            addCache(testData);
-            TestDataDto testDataDto = new TestDataDto();
-            BeanUtils.copyProperties(testData, testDataDto);
-            List<CellData> cellDatas = Lists.newArrayList();
-            testData.getData().forEach(cellData -> {
-                if (lineNo.contains(cellData.getLineNo())) {
-                    cellDatas.add(cellData);
+        List<List<String>> searchItemNamesList = Lists.newArrayList();
+        if (searchItemNames.size() > 1000) {
+            List<String> itemNames = null;
+            for (int index = 0; index < searchItemNames.size(); index++) {
+                if (index % 1000 == 0) {
+                    itemNames = Lists.newArrayList();
+                    itemNames.add(searchItemNames.get(index));
+                    searchItemNamesList.add(itemNames);
+                } else {
+                    itemNames.add(searchItemNames.get(index));
                 }
-            });
-            testDataDto.setData(cellDatas);
-            result.add(testDataDto);
+            }
+        } else {
+            searchItemNamesList.add(searchItemNames);
         }
+
+        //创建线程池
+        ExecutorService pool = Executors.newFixedThreadPool(5);
+        // 创建多个有返回值的任务
+        List<Future> futureList = new ArrayList<Future>();
+        searchItemNamesList.forEach(itemNameList -> {
+            Callable callable = new Callable() {
+                @Override
+                public Object call() throws Exception {
+                    List<TestDataDto> dataList = Lists.newArrayList();
+                    BasicDBObject basicDBObject = new BasicDBObject();
+                    basicDBObject.append("itemName", new BasicDBObject("$in", itemNameList));
+                    MongoCursor<TestData> mongoCursor = mongoCollection.find(basicDBObject).iterator();
+                    while (mongoCursor.hasNext()) {
+
+                        TestData testData = mongoCursor.next();
+                        addCache(testData);
+                        TestDataDto testDataDto = new TestDataDto();
+                        BeanUtils.copyProperties(testData, testDataDto);
+                        List<CellData> cellDatas = Lists.newArrayList();
+                        testData.getData().forEach(cellData -> {
+                            if (lineNo.contains(cellData.getLineNo())) {
+                                cellDatas.add(cellData);
+                            }
+                        });
+                        testDataDto.setData(cellDatas);
+                        dataList.add(testDataDto);
+                    }
+                    return result;
+                }
+            };
+
+            Future future = pool.submit(callable);
+            futureList.add(future);
+        });
+        //等线程结束后关闭线程池
+        pool.shutdown();
+        for (int i = 0; i < futureList.size(); i++) {
+            try {
+                result.addAll((List<TestDataDto>) (futureList.get(i).get()));
+            } catch (Exception e) {
+                logger.debug("Search error");
+            }
+        }
+
         return result;
     }
 
@@ -338,13 +470,11 @@ public class SourceDataServiceImpl implements SourceDataService {
     }
 
     private void addCache(TestData testData) {
-        if (findCache(testData.getProjectName(), testData.getItemName()) == null) {
-            if (testDataCache.size() <= 100) {
-                testDataCache.add(testData);
-            } else {
-                testDataCache.remove(0);
-                testDataCache.add(testData);
-            }
+        if (testDataCache.size() <= 100) {
+            testDataCache.add(testData);
+        } else {
+            testDataCache.remove(0);
+            testDataCache.add(testData);
         }
     }
 }
