@@ -7,19 +7,16 @@ package com.dmsoft.firefly.plugin.csvresolver;
 import com.csvreader.CsvReader;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.LineDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.ProjectDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.entity.CellData;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
-import com.dmsoft.firefly.sdk.plugin.PluginInfo;
 import com.dmsoft.firefly.sdk.plugin.annotation.DataParser;
 import com.dmsoft.firefly.sdk.plugin.annotation.ExcludeMethod;
 import com.dmsoft.firefly.sdk.plugin.apis.IDataParser;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +25,6 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * spc service
@@ -125,7 +121,7 @@ public class CsvResolverService implements IDataParser {
             List<TestDataDto> testDataDtos = Lists.newArrayList();
             for (int i = 0; i < items.length; i++) {
                 TestDataDto testDataDto = new TestDataDto();
-                //testDataDto.setProjectName(csvFile.getName());
+//                testDataDto.setProjectName(csvFile.getName());
                 testDataDto.setItemName(items[i]);
                 testDataDto.setUsl(uslRow[i]);
                 testDataDto.setLsl(lslRow[i]);
@@ -141,7 +137,7 @@ public class CsvResolverService implements IDataParser {
                 testDataDto.setData(cellDatas);
                 testDataDtos.add(testDataDto);
             }
-            sourceDataService.saveProjectData(testDataDtos);
+            sourceDataService.saveProjectData(csvFile.getName(), testDataDtos);
 
             importSucc = true;
             csvReader.close();

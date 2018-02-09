@@ -9,7 +9,7 @@ import java.io.*;
 /**
  * Created by Lucien.Chen on 2018/2/7.
  */
-public class JasonFileUtil {
+public class JsonFileUtil {
 
     /**
      * 生成.json格式文件
@@ -19,7 +19,7 @@ public class JasonFileUtil {
         boolean flag = true;
 
         // 拼接文件完整路径
-        String fullPath = fileParentPath + File.separator + fileName;
+        String fullPath = fileParentPath + File.separator + fileName + ".json";
 
         // 生成json格式文件
         try {
@@ -54,7 +54,7 @@ public class JasonFileUtil {
         JSONObject jsonObject = null;
 
         // 拼接文件完整路径
-        String fullPath = fileParentPath + File.separator + fileName;
+        String fullPath = fileParentPath + File.separator + fileName + ".json";
         try {
             File file = new File(fullPath);
             InputStream inputStream = new FileInputStream(file);

@@ -67,20 +67,22 @@ public class SourceDataServiceImpl implements SourceDataService {
     }
 
     @Override
-    public void saveOneProjectData(TestDataDto testDataDto) {
-        MongoCollection<TestData> mongoCollection = MongoUtil.getCollection("testData", TestData.class);
+    public void saveOneProjectData(String projectName, TestDataDto testDataDto) {
+        MongoCollection<TestData> mongoCollection = MongoUtil.getCollection(projectName, TestData.class);
 
         TestData testData = new TestData();
         BeanUtils.copyProperties(testDataDto, testData);
+        testData.setProjectName(projectName);
         mongoCollection.insertOne(testData);
     }
 
     @Override
-    public void saveProjectData(List<TestDataDto> testDataDtos) {
-        MongoCollection<TestData> mongoCollection = MongoUtil.getCollection("testData", TestData.class);
+    public void saveProjectData(String projectName, List<TestDataDto> testDataDtos) {
+        MongoCollection<TestData> mongoCollection = MongoUtil.getCollection(projectName, TestData.class);
         testDataDtos.forEach(testDataDto -> {
             TestData testData = new TestData();
             BeanUtils.copyProperties(testDataDto, testData);
+            testData.setProjectName(projectName);
             mongoCollection.insertOne(testData);
         });
     }
@@ -183,24 +185,23 @@ public class SourceDataServiceImpl implements SourceDataService {
                     });
                     projectData.addAll(partData);
                 });
-                if (result != null && !result.isEmpty()) {
-                    projectData.forEach(testDataDto -> {
-                        Boolean isExist = false;
-                        for (TestDataDto resultData : result) {
-                            if (testDataDto.getCodition().equals(resultData.getCodition()) && testDataDto.getItemName().equals(resultData.getItemName())) {
-                                resultData.getData().addAll(testDataDto.getData());
-                                isExist = true;
-                                break;
-                            }
+            }
+            if (result != null && !result.isEmpty()) {
+                projectData.forEach(testDataDto -> {
+                    Boolean isExist = false;
+                    for (TestDataDto resultData : result) {
+                        if (testDataDto.getCodition().equals(resultData.getCodition()) && testDataDto.getItemName().equals(resultData.getItemName())) {
+                            resultData.getData().addAll(testDataDto.getData());
+                            isExist = true;
+                            break;
                         }
-                        if(!isExist){
-                            result.add(testDataDto);
-                        }
-                    });
-                } else {
-                    result.addAll(projectData);
-                }
-
+                    }
+                    if (!isExist) {
+                        result.add(testDataDto);
+                    }
+                });
+            } else {
+                result.addAll(projectData);
             }
         });
 

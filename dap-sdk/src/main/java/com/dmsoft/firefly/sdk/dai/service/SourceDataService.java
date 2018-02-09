@@ -49,14 +49,14 @@ public interface SourceDataService {
      *
      * @param testDataDto TestDataDto
      */
-    void saveOneProjectData(TestDataDto testDataDto);
+    void saveOneProjectData(String projectName, TestDataDto testDataDto);
 
     /**
      * save project line data
      *
      * @param testDataDtos TestDataDto
      */
-    void saveProjectData(List<TestDataDto> testDataDtos);
+    void saveProjectData(String projectName, List<TestDataDto> testDataDtos);
 
     /**
      * find all project

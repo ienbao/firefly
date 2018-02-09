@@ -38,4 +38,12 @@ public class ItemTableModel {
     public void setItem(String item) {
         this.item.set(item);
     }
+
+    public TestItemDto getItemDto() {
+        return itemDto;
+    }
+
+    public void setItemDto(TestItemDto itemDto) {
+        this.itemDto = itemDto;
+    }
 }
