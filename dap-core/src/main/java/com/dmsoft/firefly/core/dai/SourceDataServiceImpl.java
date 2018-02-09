@@ -67,20 +67,22 @@ public class SourceDataServiceImpl implements SourceDataService {
     }
 
     @Override
-    public void saveOneProjectData(String projectName,TestDataDto testDataDto) {
+    public void saveOneProjectData(String projectName, TestDataDto testDataDto) {
         MongoCollection<TestData> mongoCollection = MongoUtil.getCollection(projectName, TestData.class);
 
         TestData testData = new TestData();
         BeanUtils.copyProperties(testDataDto, testData);
+        testData.setProjectName(projectName);
         mongoCollection.insertOne(testData);
     }
 
     @Override
-    public void saveProjectData(String projectName,List<TestDataDto> testDataDtos) {
+    public void saveProjectData(String projectName, List<TestDataDto> testDataDtos) {
         MongoCollection<TestData> mongoCollection = MongoUtil.getCollection(projectName, TestData.class);
         testDataDtos.forEach(testDataDto -> {
             TestData testData = new TestData();
             BeanUtils.copyProperties(testDataDto, testData);
+            testData.setProjectName(projectName);
             mongoCollection.insertOne(testData);
         });
     }
@@ -193,7 +195,7 @@ public class SourceDataServiceImpl implements SourceDataService {
                                 break;
                             }
                         }
-                        if(!isExist){
+                        if (!isExist) {
                             result.add(testDataDto);
                         }
                     });
