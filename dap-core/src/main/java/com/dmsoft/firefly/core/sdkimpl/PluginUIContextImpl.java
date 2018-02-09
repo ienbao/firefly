@@ -21,8 +21,8 @@ public class PluginUIContextImpl implements PluginUIContext {
      * constructor
      */
     public PluginUIContextImpl() {
-        this.menuMap = Maps.newHashMap();
-        this.paneMap = Maps.newHashMap();
+        this.menuMap = Maps.newLinkedHashMap();
+        this.paneMap = Maps.newLinkedHashMap();
     }
 
     @Override

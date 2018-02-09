@@ -9,21 +9,16 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.Plugin;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
-import com.dmsoft.firefly.sdk.ui.Action;
-import com.dmsoft.firefly.sdk.ui.IMainBodyPane;
 import com.dmsoft.firefly.sdk.ui.MenuComponent;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.ui.window.WindowPane;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
 import com.dmsoft.firefly.sdk.utils.enums.MenuType;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.slf4j.Logger;
@@ -46,14 +41,26 @@ public class CsvResolverPlugin extends Plugin {
     @Override
     public void start() {
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuComponent() {
+
+            @Override
+            public MenuType getMenuType() {
+                return MenuType.MENU_ITEM;
+            }
+
             @Override
             public String getLocation() {
-                return "CsvResolver";
+                return "csvResolver";
+            }
+
+            @Override
+            public String getParentLocation() {
+                return "resolver";
             }
 
             @Override
             public <T> T getMenu() {
                 MenuItem menuItem = new MenuItem("CsvResolver");
+                menuItem.setId("csvResolver");
                 menuItem.setOnAction(event -> build());
                 return (T) menuItem;
             }

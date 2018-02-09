@@ -4,26 +4,26 @@ import com.dmsoft.bamboo.common.utils.base.Platforms;
 import com.dmsoft.bamboo.common.utils.base.PropertiesUtil;
 import com.dmsoft.firefly.gui.utils.PropertiesResource;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.ui.Action;
+import com.dmsoft.firefly.sdk.ui.MenuComponent;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
+import com.dmsoft.firefly.sdk.utils.enums.MenuType;
+import com.google.common.collect.Lists;
 import de.codecentric.centerdevice.MenuToolkit;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AppController {
+    private final Logger logger = LoggerFactory.getLogger(AppController.class);
 
     @FXML
     private MenuBar mnuSystem;
-    @FXML
-    private Menu edit;
 
     @FXML
     private void initialize() {
@@ -42,20 +42,83 @@ public class AppController {
             mnuSystem.setMinWidth(0);
             mnuSystem.setMaxWidth(0);
         }
-        initToolBar();
+        initMenuBar();
     }
 
-    private void initToolBar() {
-
+    private void initMenuBar() {
         PluginUIContext pc = RuntimeContext.getBean(PluginUIContext.class);
         Set<String> names = pc.getAllMenuLocations();
-
+        List<String> secondNames = Lists.newLinkedList();
         names.forEach(name -> {
-            Action action = pc.getMenuAction(name);
-            String[] s = name.split(",");
-            MenuItem menuItem = new MenuItem(s[0]);
-            menuItem.setOnAction(event -> action.handleEvent(event));
-            edit.getItems().add(menuItem);
+            MenuComponent menu = pc.getMenu(name);
+            String parentLocation = menu.getParentLocation();
+            if (StringUtils.isBlank(parentLocation)) {
+                if (MenuType.MENU.equals(menu.getMenuType())) {
+                    mnuSystem.getMenus().add(menu.getMenu());
+                } else {
+                    logger.debug("TMenu bar can not set menu item, only set menu.");
+                }
+            } else {
+                secondNames.add(name);
+            }
+        });
+        List<String> thirdNames = Lists.newLinkedList();
+        secondNames.forEach(name -> {
+            MenuComponent menu = pc.getMenu(name);
+            String parentLocation = menu.getParentLocation();
+            MenuComponent parentMenuComponent = pc.getMenu(parentLocation);
+            if (parentMenuComponent == null) {
+                logger.debug(" The parent menu does not exist .");
+            } else if (MenuType.MENU.equals(menu.getMenuType())) {
+                List<Menu> menus = mnuSystem.getMenus();
+                for (Menu menu1 : menus) {
+                    boolean result = updateMenu(parentLocation, menu, menu1);
+                    if (result) {
+                        break;
+                    }
+                }
+            } else {
+                thirdNames.add(name);
+            }
+        });
+
+        thirdNames.forEach(name -> {
+            MenuComponent menu = pc.getMenu(name);
+            String parentLocation = menu.getParentLocation();
+            MenuComponent parentMenuComponent = pc.getMenu(parentLocation);
+            if (parentMenuComponent == null) {
+                logger.debug(" The parent menu does not exist .");
+            }  else {
+                List<Menu> menus = mnuSystem.getMenus();
+                for (Menu menu1 : menus) {
+                    boolean result = updateMenu(parentLocation, menu, menu1);
+                    if (result) {
+                        break;
+                    }
+                }
+            }
         });
     }
+
+
+    private boolean updateMenu(String location, MenuComponent menuComponent, Menu menu) {
+        AtomicBoolean result = new AtomicBoolean(false);
+        if (StringUtils.isNotBlank(menu.getId()) && menu.getId().equals(location)) {
+            menu.getItems().add(menuComponent.getMenu());
+            result.set(true);
+        } else {
+            ObservableList<MenuItem> dd = menu.getItems();
+            for (MenuItem menuItem : dd) {
+                if (menuItem instanceof Menu) {
+                    Menu menu2 = (Menu) menuItem;
+                    if (StringUtils.isNotBlank(menu2.getId()) && menu2.getId().equals(location)) {
+                        menu2.getItems().add(menuComponent.getMenu());
+                        result.set(true);
+                    }
+                }
+            }
+        }
+        return result.get();
+    }
+
 }
