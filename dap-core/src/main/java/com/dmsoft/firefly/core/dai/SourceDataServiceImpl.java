@@ -16,9 +16,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang3.StringUtils;
-import org.bson.types.ObjectId;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
@@ -30,13 +28,12 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.logging.Logger;
 
 /**
  * Created by Lucien.Chen on 2018/2/6.
  */
 public class SourceDataServiceImpl implements SourceDataService {
-    static org.slf4j.Logger logger = LoggerFactory.getLogger(SourceDataServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(SourceDataServiceImpl.class);
 
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
 
@@ -144,7 +141,6 @@ public class SourceDataServiceImpl implements SourceDataService {
         List<TestItemDto> result = Lists.newArrayList();
         TemplateSettingDto templateSettingDto = templateService.findAnalysisTemplate(template);
 
-
         projectNames.forEach(projectName -> {
             MongoCollection<TestData> mongoCollection = MongoUtil.getCollection(projectName, TestData.class);
             BasicDBObject basicDBObject = new BasicDBObject();
@@ -191,22 +187,46 @@ public class SourceDataServiceImpl implements SourceDataService {
         filterConditionUtil.setTimeKeys(templateSettingDto.getTimePatternDto().getTimeKeys());
         filterConditionUtil.setTimePattern(templateSettingDto.getTimePatternDto().getPattern());
 
+        List<String> searchItems = Lists.newArrayList();
+        searchItems.addAll(itemNames);
+        if (conditions != null && !conditions.isEmpty()) {
+            conditions.forEach(condition -> {
+                java.util.Set<String> items = filterConditionUtil.parseItemNameFromConditions(condition);
+                items.removeAll(searchItems);
+                searchItems.addAll(items);
+            });
+        }
+        searchItems.forEach(itemName -> {
+            if (conditions != null && !conditions.isEmpty()) {
+                conditions.forEach(condition -> {
+                    TestDataDto testDataDto = new TestDataDto();
+                    testDataDto.setItemName(itemName);
+                    testDataDto.setCodition(condition);
+                    result.add(testDataDto);
+                });
+            } else {
+                TestDataDto testDataDto = new TestDataDto();
+                testDataDto.setItemName(itemName);
+                testDataDto.setCodition("");
+                result.add(testDataDto);
+            }
+        });
+
         projectNames.forEach(projectName -> {
-            List<TestDataDto> projectData = Lists.newArrayList();
             if (conditions == null || conditions.isEmpty()) {
                 if (lineUsedValid) {
                     List<String> lineUsedList = findLineDataUsed(projectName);
-                    List<TestDataDto> partData = findDataByItemNamesAndLineNo(projectName, itemNames, lineUsedList);
+                    List<TestDataDto> partData = findDataByItemNamesAndLineNo(projectName, searchItems, lineUsedList);
                     partData.forEach(testDataDto -> {
                         testDataDto.setCodition("");
                     });
-                    projectData.addAll(partData);
+                    addPartToResult(partData, result, lineUsedList.size());
                 } else {
-                    List<TestDataDto> partData = findDataByItemNames(projectName, itemNames);
+                    List<TestDataDto> partData = findDataByItemNames(projectName, searchItems);
                     partData.forEach(testDataDto -> {
                         testDataDto.setCodition("");
                     });
-                    projectData.addAll(partData);
+                    addPartToResult(partData, result, partData.get(0).getData().size());
                 }
             } else {
                 conditions.forEach(condition -> {
@@ -221,35 +241,27 @@ public class SourceDataServiceImpl implements SourceDataService {
                         lineNoList.retainAll(lineUsedList);
                     }
 
-                    List<String> searchItems = Lists.newArrayList();
-                    searchItems.addAll(itemNames);
-                    conditionItems.removeAll(searchItems);
-                    searchItems.addAll(conditionItems);
                     List<TestDataDto> partData = findDataByItemNamesAndLineNo(projectName, searchItems, lineNoList);
                     partData.forEach(testDataDto -> {
                         testDataDto.setCodition(condition);
                     });
-                    projectData.addAll(partData);
+                    addPartToResult(partData, result, lineNoList.size());
                 });
             }
-            if (result != null && !result.isEmpty()) {
-                projectData.forEach(testDataDto -> {
-                    Boolean isExist = false;
-                    for (TestDataDto resultData : result) {
-                        if (testDataDto.getCodition().equals(resultData.getCodition()) && testDataDto.getItemName().equals(resultData.getItemName())) {
-                            resultData.getData().addAll(testDataDto.getData());
-                            isExist = true;
-                            break;
-                        }
-                    }
-                    if (!isExist) {
-                        result.add(testDataDto);
-                    }
-                });
-            } else {
-                result.addAll(projectData);
-            }
+            limitCache();
         });
+
+//        LinkedHashMap<String, SpecificationDataDto> map = templateSettingDto.getSpecificationDatas();
+//        result.forEach(testDataDto -> {
+//            for (Map.Entry<String, SpecificationDataDto> entry : map.entrySet()) {
+//                String itemName = entry.getValue().getTestItemName();
+//                if (testDataDto.getItemName().equals(itemName)) {
+//                    testDataDto.setLsl(entry.getValue().getLslFail());
+//                    testDataDto.setUsl(entry.getValue().getUslPass());
+//                    break;
+//                }
+//            }
+//        });
 
         return result;
     }
@@ -470,11 +482,35 @@ public class SourceDataServiceImpl implements SourceDataService {
     }
 
     private void addCache(TestData testData) {
-        if (testDataCache.size() <= 100) {
-            testDataCache.add(testData);
-        } else {
+//        if (testDataCache.size() <= 100) {
+        testDataCache.add(testData);
+//        } else {
+//            testDataCache.remove(0);
+//            testDataCache.add(testData);
+//        }
+    }
+
+    private void limitCache() {
+        while (testDataCache.size() > 100) {
             testDataCache.remove(0);
-            testDataCache.add(testData);
         }
+    }
+
+    private void addPartToResult(List<TestDataDto> part, List<TestDataDto> result, int size) {
+        result.forEach(resultDto -> {
+            Boolean isExist = Boolean.FALSE;
+            for (TestDataDto dto : part) {
+                if (resultDto.getItemName().equals(dto.getItemName()) && resultDto.getCodition().equals(dto.getCodition())) {
+                    resultDto.getData().addAll(dto.getData());
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                for (int i = 0; i < size; i++) {
+                    resultDto.getData().add(null);
+                }
+            }
+        });
     }
 }

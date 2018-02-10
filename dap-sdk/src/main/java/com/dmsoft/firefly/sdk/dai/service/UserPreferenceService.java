@@ -16,10 +16,10 @@ public interface UserPreferenceService {
      * find SPC chart line
      *
      * @param code   code
-     * @param userId user id
+     * @param  userName user name
      * @return preference string
      */
-    String findPreferenceByUserId(String code, Long userId);
+    String findPreferenceByUserId(String code,String userName);
 
     /**
      * Update user preference
@@ -29,8 +29,8 @@ public interface UserPreferenceService {
     void updatePreference(UserPreferenceDto userPreferenceDto);
 
     /**
-     * @param userId user id
+     * @param userName user name
      * @param code   code
      */
-    void deletePreference(Long userId, String code);
+    void deletePreference(String userName, String code);
 }

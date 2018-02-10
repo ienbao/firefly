@@ -1,11 +1,24 @@
 package com.dmsoft.firefly.gui.utils;
 
+import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
+import com.dmsoft.firefly.sdk.ui.window.WindowPane;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+import java.util.ResourceBundle;
+
+import static com.google.common.io.Resources.getResource;
 
 public class MenuFactory {
 
@@ -69,6 +82,7 @@ public class MenuFactory {
         Menu menu = new Menu("Analyze(A)");
         menu.setId(MenuBuilder.MENU_ANALYSE);
         MenuItem analysisMenuItem = new MenuItem("Analysis Templete(A)");
+        analysisMenuItem.setOnAction(event -> buildTemplateDia());
         menu.getItems().add(analysisMenuItem);
         return getParentMenuBuilder().setParentLocation(ROOT_MENU).addMenu(menu);
     }
@@ -98,5 +112,27 @@ public class MenuFactory {
         menu.getItems().add(dapMenuItem);
         menu.getItems().add(updateMenuItem);
         return getParentMenuBuilder().setParentLocation(ROOT_MENU).addMenu(menu);
+    }
+
+    private static void buildTemplateDia(){
+        Pane root = null;
+        try {
+            root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/template.fxml"));
+            Stage dialog = new Stage();
+            WindowPane windowPane = new WindowPane(dialog, "Analysis Template", root);
+
+            Scene scene =  new Scene(windowPane, 825, 595);
+            windowPane.setMinSize(825, 595);
+            scene.setFill(Color.TRANSPARENT);
+            scene.getStylesheets().add(getResource("css/app.css").toExternalForm());
+
+            dialog.initStyle(StageStyle.TRANSPARENT);
+            dialog.setScene(scene);
+            windowPane.initEvent();
+            dialog.show();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

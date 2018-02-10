@@ -2,6 +2,7 @@ package com.dmsoft.firefly.core.utils;
 
 
 import net.sf.json.JSON;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import java.io.*;
@@ -14,7 +15,7 @@ public class JsonFileUtil {
     /**
      * 生成.json格式文件
      */
-    public static boolean createJsonFile(JSONObject jsonObject, String fileParentPath, String fileName) {
+    public static boolean writeJsonFile(JSONArray jsonArray, String fileParentPath, String fileName) {
         // 标记文件生成是否成功
         boolean flag = true;
 
@@ -35,7 +36,7 @@ public class JsonFileUtil {
 
             // 将格式化后的字符串写入文件
             Writer write = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
-            write.write(jsonObject.toString());
+            write.write(jsonArray.toString());
             write.flush();
             write.close();
         } catch (IOException e) {
@@ -50,8 +51,8 @@ public class JsonFileUtil {
     /**
      * 读取.json格式文件
      */
-    public static JSONObject readJsonFile(String fileParentPath, String fileName) {
-        JSONObject jsonObject = null;
+    public static JSONArray readJsonFile(String fileParentPath, String fileName) {
+        JSONArray jsonArray = null;
 
         // 拼接文件完整路径
         String fullPath = fileParentPath + File.separator + fileName + ".json";
@@ -65,18 +66,12 @@ public class JsonFileUtil {
                 result.write(buffer, 0, length);
             }
             String json = result.toString("UTF-8");
-            jsonObject = JSONObject.fromObject(json);
+            jsonArray = JSONArray.fromObject(json);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return jsonObject;
+        return jsonArray;
     }
 
-    ;
-
-    public static JSONObject objectToJson(Object obj) {
-        JSONObject jsonObject = JSONObject.fromObject(obj);
-        return jsonObject;
-    }
 }
