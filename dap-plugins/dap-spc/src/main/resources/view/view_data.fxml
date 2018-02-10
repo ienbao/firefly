@@ -34,16 +34,19 @@
                                     <RowConstraints maxHeight="28.0" minHeight="28.0" prefHeight="28.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                 <children>
-                                    <TextField maxWidth="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+                                    <TextField fx:id="filterTf" maxWidth="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                               <GridPane.margin>
                                  <Insets right="10.0" />
                               </GridPane.margin></TextField>
-                                    <CheckBox mnemonicParsing="false" text="%UNSELECTED_CHECKBOX" GridPane.columnIndex="2" />
+                                    <CheckBox fx:id="unSelectedCheckBox" mnemonicParsing="false" text="%UNSELECTED_CHECKBOX" GridPane.columnIndex="2" />
                                     <Button fx:id="clearFilterBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" style="-fx-background-image: url('images/btn_clear_filter_normal.png'); -fx-background-size: 16;" styleClass="btn-icon"  GridPane.columnIndex="3" />
                                     <Button fx:id="chooseItemBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" style="-fx-background-image: url('images/btn_choose_test_items_normal.png'); -fx-background-size: 16;" styleClass="btn-icon"  GridPane.columnIndex="4" />
                                 </children>
                             </GridPane>
                             <TableView fx:id="viewDataTable" style="-fx-border-width: 1 0 0 0;" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
+                                <columns>
+                                    <TableColumn fx:id="checkBoxColumn" maxWidth="30.0" minWidth="30.0" prefWidth="30" resizable="false" sortable="false" />
+                                </columns>
                             </TableView>
                         </VBox>
                     </content>

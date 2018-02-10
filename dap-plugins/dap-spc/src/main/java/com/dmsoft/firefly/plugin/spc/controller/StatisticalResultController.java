@@ -75,6 +75,7 @@ public class StatisticalResultController implements Initializable {
 
     public void setStatisticalResultTableData(List<SpcStatisticalResultDto> list) {
         statisticalTableRowDataObservableList.clear();
+        allCheckBox.setSelected(false);
         list.forEach(dto -> {
             statisticalTableRowDataObservableList.add(new StatisticalTableRowData(dto));
         });
@@ -156,7 +157,6 @@ public class StatisticalResultController implements Initializable {
     }
 
     private void getAllSelectEvent(){
-        SortedList<StatisticalTableRowData> statisticalTableRowDataSortedList = (SortedList<StatisticalTableRowData>)statisticalResultTb.getItems();
         if (statisticalTableRowDataSortedList != null) {
             for (StatisticalTableRowData rowData : statisticalTableRowDataSortedList) {
                 rowData.getSelector().setValue(allCheckBox.isSelected());
