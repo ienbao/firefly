@@ -114,14 +114,14 @@ public class MenuFactory {
         return getParentMenuBuilder().setParentLocation(ROOT_MENU).addMenu(menu);
     }
 
-    private static void buildTemplateDia(){
+    private static void buildTemplateDia() {
         Pane root = null;
         try {
-            root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/template.fxml"));
+            root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
             Stage dialog = new Stage();
-            WindowPane windowPane = new WindowPane(dialog, "Analysis Template", root);
+            WindowPane windowPane = new WindowPane(dialog, ResourceBundleUtils.getString(ResourceMassages.TEMPLATE), root);
 
-            Scene scene =  new Scene(windowPane, 825, 595);
+            Scene scene = new Scene(windowPane, 825, 595);
             windowPane.setMinSize(825, 595);
             scene.setFill(Color.TRANSPARENT);
             scene.getStylesheets().add(getResource("css/app.css").toExternalForm());

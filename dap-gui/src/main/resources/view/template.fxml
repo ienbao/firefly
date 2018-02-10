@@ -5,11 +5,11 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="575.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.TemplateController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="535.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.TemplateController">
    <children>
-      <HBox prefHeight="525.0" prefWidth="800.0" style="-fx-border-color: #DCDCDC; -fx-border-width: 1 1 1 1;" VBox.vgrow="ALWAYS">
+      <HBox prefHeight="490.0" prefWidth="800.0" style="-fx-border-color: #DCDCDC; -fx-border-width: 1 1 1 1;" VBox.vgrow="ALWAYS">
          <children>
-            <VBox prefHeight="520.0" prefWidth="160.0" style="-fx-border-color: #DCDCDC; -fx-border-width: 0 1 0 0;">
+            <VBox prefHeight="490.0" prefWidth="160.0" style="-fx-border-color: #DCDCDC; -fx-border-width: 0 1 0 0;">
                <children>
                   <TextField>
                      <VBox.margin>
@@ -35,7 +35,7 @@
                   </HBox>
                </children>
             </VBox>
-            <VBox prefHeight="520.0" prefWidth="620.0" HBox.hgrow="ALWAYS">
+            <VBox prefHeight="490.0" prefWidth="620.0" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -76,8 +76,8 @@
                            </HBox.margin>
                         </Label>
                         <ComboBox prefWidth="160.0" />
-                        <Button fx:id="deleteTime" mnemonicParsing="false" prefWidth="22.0" />
-                        <Button fx:id="addTime" mnemonicParsing="false" prefWidth="22.0">
+                        <Button fx:id="deleteTime" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefWidth="22.0" />
+                        <Button fx:id="addTime" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefWidth="22.0">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -123,7 +123,7 @@
                               <Insets />
                            </HBox.margin>
                         </TextField>
-                        <Button fx:id="addRow" mnemonicParsing="false" prefWidth="22.0">
+                        <Button fx:id="addRow" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefWidth="22.0">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
