@@ -2,7 +2,6 @@ package com.dmsoft.firefly.gui.utils;
 
 import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.ui.window.WindowPane;
@@ -128,7 +127,7 @@ public class MenuFactory {
 
             dialog.initStyle(StageStyle.TRANSPARENT);
             dialog.setScene(scene);
-            windowPane.initEvent();
+            windowPane.init();
             dialog.show();
 
         } catch (Exception ex) {

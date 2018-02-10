@@ -35,6 +35,8 @@ public class WindowPane extends GridPane {
     private Button maximizeBtn;
     private Button closeBtn;
 
+    private Object cusTitle;
+
     private WindowPaneController controller;
 
     protected static String windowButtonClass = "";
@@ -53,6 +55,10 @@ public class WindowPane extends GridPane {
 
     private Effect shadowEffect = new DropShadow(BlurType.TWO_PASS_BOX, new Color(0, 0, 0, 0.2),
             10, 0, 0, 0);
+
+    public static final int WINDOW_MODEL_FULL = 1;
+    public static final int WINDOW_MODEL_X = 2;
+    private static int WINDOW_MODEL = WINDOW_MODEL_FULL;
 
     static {
         if (Platforms.IS_MAC_OSX || Platforms.IS_MAC) {
@@ -73,27 +79,27 @@ public class WindowPane extends GridPane {
     public WindowPane(Stage stage, String title, Pane body) {
         this.stage = stage;
         this.bodyPane = body;
-        controller = new WindowPaneController(this);
-        initContentPane();
-        initTitlePane(new Label(title));
-        initBodyPane();
-
-        this.contentPane.setStyle("-fx-background-color: white");
-        this.setStyle("-fx-background-color: transparent");
+        this.cusTitle = title;
     }
 
     public WindowPane(Stage stage, Pane title, Pane body) {
         this.stage = stage;
         this.bodyPane = body;
-        controller = new WindowPaneController(this);
-        initContentPane();
-        initTitlePane(title);
-        initBodyPane();
-
-        this.contentPane.setStyle("-fx-background-color: white");
-        this.setStyle("-fx-background-color: transparent");
+        this.cusTitle = title;
     }
 
+    public WindowPane(Pane title, Pane body) {
+        this(null, title, body);
+    }
+
+    public WindowPane(String title, Pane body) {
+        this(null, title, body);
+    }
+
+
+    public void setWindowsModel(int model) {
+        WINDOW_MODEL = model;
+    }
 
     private void initContentPane() {
         RowConstraints r0 = new RowConstraints(SHADOW_WIDTH, SHADOW_WIDTH, SHADOW_WIDTH);
@@ -151,6 +157,9 @@ public class WindowPane extends GridPane {
         this.titlePane = new GridPane();
         RowConstraints r0 = new RowConstraints();
         r0.setVgrow(Priority.NEVER);
+        r0.setPrefHeight(30);
+        r0.setMaxHeight(30);
+        r0.setMinHeight(30);
         this.titlePane.getRowConstraints().add(r0);
 
         ColumnConstraints c0 = new ColumnConstraints();
@@ -195,7 +204,7 @@ public class WindowPane extends GridPane {
 
         HBox btnHbox = new HBox();
         btnHbox.setAlignment(Pos.CENTER_LEFT);
-        if (!Modality.APPLICATION_MODAL.equals(stage.getModality())) {
+        if (!Modality.APPLICATION_MODAL.equals(stage.getModality()) && (WINDOW_MODEL == WINDOW_MODEL_FULL)) {
             minimizeBtn = new Button();
             minimizeBtn.getStyleClass().add(windowButtonClass);
             minimizeBtn.getStyleClass().add(minimizeBtnStyleClass);
@@ -203,7 +212,7 @@ public class WindowPane extends GridPane {
             minimizeBtn.setOnAction(event -> stage.setIconified(true));
             btnHbox.getChildren().add(minimizeBtn);
         }
-        if (stage.isResizable()) {
+        if (stage.isResizable() && (WINDOW_MODEL == WINDOW_MODEL_FULL)) {
             maximizeBtn = new Button();
             maximizeBtn.setPrefSize(WINDOW_BUTTON_WIDTH, WINDOW_BUTTON_WIDTH);
             maximizeBtn.getStyleClass().add(windowButtonClass);
@@ -236,7 +245,7 @@ public class WindowPane extends GridPane {
         closeBtn.setOnMouseExited(event -> btnHoverState(false));
         btnHbox.getChildren().add(closeBtn);
 
-        if (!Modality.APPLICATION_MODAL.equals(stage.getModality())) {
+        if (!Modality.APPLICATION_MODAL.equals(stage.getModality()) && (WINDOW_MODEL == WINDOW_MODEL_FULL)) {
             minimizeBtn = new Button();
             minimizeBtn.setFocusTraversable(false);
             minimizeBtn.getStyleClass().add(windowButtonClass);
@@ -248,7 +257,7 @@ public class WindowPane extends GridPane {
             minimizeBtn.setOnMouseExited(event -> btnHoverState(false));
             btnHbox.getChildren().add(minimizeBtn);
         }
-        if (stage.isResizable()) {
+        if (stage.isResizable() && (WINDOW_MODEL == WINDOW_MODEL_FULL)) {
             maximizeBtn = new Button();
             maximizeBtn.setFocusTraversable(false);
             maximizeBtn.setPrefSize(btnPreSize, btnPreSize);
@@ -265,8 +274,12 @@ public class WindowPane extends GridPane {
 
     private void btnHoverState(boolean hover) {
         closeBtn.pseudoClassStateChanged(PseudoClass.getPseudoClass("hover"), hover);
-        maximizeBtn.pseudoClassStateChanged(PseudoClass.getPseudoClass("hover"), hover);
-        minimizeBtn.pseudoClassStateChanged(PseudoClass.getPseudoClass("hover"), hover);
+        if (maximizeBtn != null) {
+            maximizeBtn.pseudoClassStateChanged(PseudoClass.getPseudoClass("hover"), hover);
+        }
+        if (minimizeBtn != null) {
+            minimizeBtn.pseudoClassStateChanged(PseudoClass.getPseudoClass("hover"), hover);
+        }
     }
 
     private void initBodyPane() {
@@ -309,7 +322,25 @@ public class WindowPane extends GridPane {
 
     }
 
-    public void initEvent() {
+    public void init() {
+        initContentPane();
+        if (cusTitle instanceof String) {
+            Label label = new Label((String) cusTitle);
+            label.setStyle("-fx-border-insets: 0 0 0 10");
+            label.setStyle("-fx-background-insets: 0 0 0 10");
+            initTitlePane(label);
+
+        } else {
+            initTitlePane((Pane) cusTitle);
+        }
+
+        initBodyPane();
+
+        this.contentPane.setStyle("-fx-background-color: white");
+        this.setStyle("-fx-background-color: transparent");
+
+        controller = new WindowPaneController(this);
+//        init();
         if (this.titlePane != null) {
             controller.setStageDraggable();
         }
@@ -344,6 +375,10 @@ public class WindowPane extends GridPane {
 
     public WindowPaneController getController() {
         return controller;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 }
 

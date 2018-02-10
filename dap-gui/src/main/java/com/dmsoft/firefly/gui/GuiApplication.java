@@ -37,7 +37,7 @@ public class GuiApplication extends Application {
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setScene(scene);
 
-        windowPane.initEvent();
+        windowPane.init();
         primaryStage.show();
     }
 

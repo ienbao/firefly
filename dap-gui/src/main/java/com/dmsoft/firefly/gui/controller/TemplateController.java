@@ -65,7 +65,7 @@ public class TemplateController {
 
             dialog.initStyle(StageStyle.TRANSPARENT);
             dialog.setScene(scene);
-            windowPane.initEvent();
+            windowPane.init();
             dialog.show();
 
         } catch (Exception ex) {

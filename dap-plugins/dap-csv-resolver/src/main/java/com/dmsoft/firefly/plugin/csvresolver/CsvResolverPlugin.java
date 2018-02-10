@@ -12,7 +12,9 @@ import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.ui.IMenu;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
+import com.dmsoft.firefly.sdk.ui.window.WindowFactory;
 import com.dmsoft.firefly.sdk.ui.window.WindowPane;
+import com.dmsoft.firefly.sdk.utils.StageMap;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -56,20 +58,25 @@ public class CsvResolverPlugin extends Plugin {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("view/csv_resolver.fxml"), ResourceBundle.getBundle("i18n.message_en_US"));
             fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.CsvResolverPlugin"));
+
             root = fxmlLoader.load();
-            Stage dialog = new Stage();
-            WindowPane windowPane = new WindowPane(dialog, "CSV-Resolver", root);
 
-            Scene scene =  new Scene(windowPane, 845, 565);
-            windowPane.setMinWidth(845);
-            windowPane.setMinHeight(565);
-            scene.setFill(Color.TRANSPARENT);
-            scene.getStylesheets().add(getClass().getClassLoader().getResource("css/app.css").toExternalForm());
 
-            dialog.initStyle(StageStyle.TRANSPARENT);
-            dialog.setScene(scene);
-            windowPane.initEvent();
-            dialog.show();
+            WindowFactory.createSimpleWindowAsModel("abc", "CSV-Resolver", root, getClass().getClassLoader().getResource("css/app.css").toExternalForm());
+            StageMap.showStage("abc");
+//            Stage dialog = new Stage();
+//            WindowPane windowPane = new WindowPane(dialog, "CSV-Resolver", root);
+//
+//            Scene scene =  new Scene(windowPane, 845, 565);
+//            windowPane.setMinWidth(845);
+//            windowPane.setMinHeight(565);
+//            scene.setFill(Color.TRANSPARENT);
+//            scene.getStylesheets().add(getClass().getClassLoader().getResource("css/app.css").toExternalForm());
+//
+//            dialog.initStyle(StageStyle.TRANSPARENT);
+//            dialog.setScene(scene);
+//            windowPane.init();
+//            dialog.show();
 
         } catch (Exception ex) {
             ex.printStackTrace();
