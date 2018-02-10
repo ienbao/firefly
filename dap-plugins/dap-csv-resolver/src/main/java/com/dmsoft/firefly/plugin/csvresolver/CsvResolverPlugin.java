@@ -9,13 +9,14 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.Plugin;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
-import com.dmsoft.firefly.sdk.ui.MenuComponent;
+import com.dmsoft.firefly.sdk.ui.IMenu;
+import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.ui.window.WindowPane;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
-import com.dmsoft.firefly.sdk.utils.enums.MenuType;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -40,33 +41,34 @@ public class CsvResolverPlugin extends Plugin {
 
     @Override
     public void start() {
-        RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuComponent() {
+        MenuItem menuItem = new MenuItem("CsvResolver");
+        menuItem.setId("csvResolver");
+        menuItem.setOnAction(event -> build());
 
-            @Override
-            public MenuType getMenuType() {
-                return MenuType.MENU_ITEM;
-            }
+        RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.CsvResolverPlugin",
+                MenuBuilder.MenuType.MENU_ITEM, "csvResolver", MenuBuilder.MENU_DATASOURCE_RESOLVER).addMenu(menuItem));
 
-            @Override
-            public String getLocation() {
-                return "csvResolver";
-            }
+      /*  Menu menuItem = new Menu("CsvResolver");
+        menuItem.setId("csvResolver");
+        menuItem.setOnAction(event -> build());
 
-            @Override
-            public String getParentLocation() {
-                return "resolver";
-            }
+        RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.CsvResolverPlugin",
+                MenuBuilder.MenuType.MENU, "csvResolver", MenuBuilder.MENU_DATASOURCE_RESOLVER).addMenu(menuItem));
 
-            @Override
-            public <T> T getMenu() {
-                MenuItem menuItem = new MenuItem("CsvResolver");
-                menuItem.setId("csvResolver");
-                menuItem.setOnAction(event -> build());
-                return (T) menuItem;
-            }
-        });
+        Menu menu = new Menu("test");
+        menu.setId("test");
+        menu.setOnAction(event -> build());
+
+        RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.CsvResolverPlugin",
+                MenuBuilder.MenuType.MENU, "test", "csvResolver").addMenu(menu));
+
+        MenuItem menuItem1 = new MenuItem("test1");
+        menuItem1.setId("test1");
+        menuItem1.setOnAction(event -> build());
+        RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.CsvResolverPlugin",
+                MenuBuilder.MenuType.MENU_ITEM, "test1", "test").addMenu(menuItem1));*/
+
         logger.debug("Plugin-CsvResolver UI register done.");
-
         logger.info("Plugin-CsvResolver started.");
     }
 

@@ -1,11 +1,17 @@
 package com.dmsoft.firefly.sdk.ui;
 
-import com.dmsoft.firefly.sdk.utils.enums.MenuType;
+import static com.dmsoft.firefly.sdk.ui.MenuBuilder.MenuType;
 
 /**
  * menu component for menu
  */
-public interface MenuComponent {
+public interface IMenu {
+
+    /**
+     * method to get plugin id
+     * @return pluginId
+     */
+    String getPluginId();
 
     /**
      * method to get menu type
@@ -27,7 +33,6 @@ public interface MenuComponent {
 
     /**
      *method to get menu
-     * @param <T> menu class
      * @return instance
      */
     <T> T getMenu();

@@ -9,18 +9,22 @@ import com.dmsoft.firefly.plugin.spc.model.StatisticalTableRowData;
 import com.dmsoft.firefly.plugin.spc.service.SpcServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcService;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
-import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
-import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
@@ -32,6 +36,8 @@ import java.util.ResourceBundle;
  * Created by Ethan.Yang on 2018/2/6.
  */
 public class SpcItemController implements Initializable {
+    @FXML
+    private TextField itemFilter;
     @FXML
     private Button analysisBtn;
     @FXML
@@ -51,6 +57,8 @@ public class SpcItemController implements Initializable {
     @FXML
     private TableView itemTable;
     private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
+    private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
+    private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
 
     private SpcService spcService = new SpcServiceImpl();
     @FXML
@@ -59,18 +67,48 @@ public class SpcItemController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initBtnIcon();
+        itemFilter.textProperty().addListener((observable, oldValue, newValue) ->
+                filteredList.setPredicate(p -> p.getItem().contains(itemFilter.getText()))
+        );
         this.initComponentEvent();
-
+        itemTable.setOnMouseEntered(event -> {
+            itemTable.focusModelProperty();
+        });
         CheckBox box = new CheckBox();
         box.setOnAction(event -> {
-            if (items != null){
-                for (ItemTableModel model : items){
+            if (items != null) {
+                for (ItemTableModel model : items) {
                     model.getSelector().setValue(box.isSelected());
                 }
             }
         });
         select.setGraphic(box);
         select.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
+//        Label label = new Label("Test Item");
+        Button is = new Button();
+        is.setPrefSize(22, 22);
+        is.setMinSize(22, 22);
+        is.setMaxSize(22, 22);
+        is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
+        is.setOnMousePressed(event -> createPopMenu(is, event));
+//        is.setContextMenu(createPopMenu());
+//        ComboBox comboBox = new ComboBox();
+//        comboBox.setItems(FXCollections.observableArrayList("All Test Items", "Test Items with USL/LSL"));
+//        comboBox.setPrefSize(30, 16);
+//        comboBox.setMaxSize(30, 16);
+//        comboBox.setOnAction(event -> {
+//            if (comboBox.getValue().equals("All Test Items")) {
+//                filteredList.setPredicate(p -> p.getItem().startsWith(""));
+//            } else {
+//                filteredList.setPredicate(p -> p.getItemDto().getLsl() != null || p.getItemDto().getUsl() != null);
+//            }
+//        });
+        Label label = new Label("Test Item");
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER_RIGHT);
+        hBox.getChildren().addAll(label, is);
+
+        item.setGraphic(hBox);
         item.setCellValueFactory(cellData -> cellData.getValue().itemProperty());
         initItemData();
     }
@@ -82,6 +120,17 @@ public class SpcItemController implements Initializable {
         itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_datasource_normal.png")));
         configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_config_normal.png")));
         timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
+    }
+
+    private ContextMenu createPopMenu(Button is, MouseEvent e) {
+        ContextMenu pop = new ContextMenu();
+        MenuItem all = new MenuItem("All Test Items");
+        all.setOnAction(event -> filteredList.setPredicate(p -> p.getItem().startsWith("")));
+        MenuItem show = new MenuItem("Test Items with USL/LSL");
+        show.setOnAction(event -> filteredList.setPredicate(p -> p.getItemDto().getLsl() != null || p.getItemDto().getUsl() != null));
+        pop.getItems().addAll(all, show);
+        pop.show(is, e.getScreenX(), e.getScreenY());
+        return pop;
     }
 
     private void initComponentEvent() {
@@ -102,7 +151,8 @@ public class SpcItemController implements Initializable {
                 ItemTableModel tableModel = new ItemTableModel(dto);
                 items.add(tableModel);
             }
-            itemTable.setItems(items);
+            itemTable.setItems(personSortedList);
+            personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
         }
 
     }

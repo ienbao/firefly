@@ -1,7 +1,7 @@
 package com.dmsoft.firefly.core.sdkimpl;
 
 import com.dmsoft.firefly.sdk.ui.IMainBodyPane;
-import com.dmsoft.firefly.sdk.ui.MenuComponent;
+import com.dmsoft.firefly.sdk.ui.IMenu;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.google.common.collect.Maps;
 
@@ -14,7 +14,7 @@ import java.util.Set;
  * @author Can Guan
  */
 public class PluginUIContextImpl implements PluginUIContext {
-    private Map<String, MenuComponent> menuMap;
+    private Map<String, IMenu> menuMap;
     private Map<String, IMainBodyPane> paneMap;
 
     /**
@@ -26,7 +26,7 @@ public class PluginUIContextImpl implements PluginUIContext {
     }
 
     @Override
-    public void registerMenu(MenuComponent menu) {
+    public void registerMenu(IMenu menu) {
         this.menuMap.put(menu.getLocation(), menu);
     }
 
@@ -36,7 +36,7 @@ public class PluginUIContextImpl implements PluginUIContext {
     }
 
     @Override
-    public MenuComponent getMenu(String menuLocation) {
+    public IMenu getMenu(String menuLocation) {
         return this.menuMap.get(menuLocation);
     }
 

@@ -1,11 +1,7 @@
 package com.dmsoft.firefly.gui;
 
 import com.dmsoft.firefly.core.DAPApplication;
-import com.dmsoft.firefly.gui.component.Menu.MenuDataSourceImpl;
-import com.dmsoft.firefly.gui.component.Menu.MenuFileImpl;
-import com.dmsoft.firefly.gui.utils.MenuHelper;
-import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.ui.PluginUIContext;
+import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.sdk.ui.window.WindowPane;
 import com.google.common.collect.Lists;
 import javafx.application.Application;
@@ -26,7 +22,7 @@ public class GuiApplication extends Application {
     public void start(Stage primaryStage) throws Exception {
         DAPApplication.run(Lists.newArrayList("com.dmsoft.dap.SpcPlugin", "com.dmsoft.dap.GrrPlugin", "com.dmsoft.dap.CsvResolverPlugin"));
 
-        MenuHelper.initMenu();
+        MenuFactory.initMenu();
 
         //Parent root = FXMLLoader.load(getClass().getResource("view/main.fxml"));
         Pane root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/app_menu.fxml"));
