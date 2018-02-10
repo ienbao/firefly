@@ -16,14 +16,14 @@ public interface EnvService {
     /**
      * set user id
      */
-    void setUserId();
+    void setUserName();
 
     /**
      * get user id
      *
      * @return user id
      */
-    Long getUserId();
+    String getUserName();
 
     /**
      * find activated template setting

@@ -31,7 +31,7 @@ public class UserPreferenceServiceImpl implements UserPreferenceService {
         if (json == null) {
             logger.debug("Don`t find " + fileName);
             list = Lists.newArrayList();
-        }else {
+        } else {
             list = (List<UserPreferenceDto>) JSONArray.toCollection(json, UserPreferenceDto.class);
         }
         list.add(userPreferenceDto);
@@ -40,16 +40,16 @@ public class UserPreferenceServiceImpl implements UserPreferenceService {
     }
 
     @Override
-    public String findPreferenceByUserId(String code,String userName) {
+    public String findPreferenceByUserId(String code, String userName) {
         JSONArray json = JsonFileUtil.readJsonFile(parentPath, fileName);
         if (json == null) {
             logger.debug("Don`t find " + fileName);
             return null;
         }
-        List<UserPreferenceDto> list = (List<UserPreferenceDto>) JSONArray.toCollection(json,UserPreferenceDto.class);
+        List<UserPreferenceDto> list = (List<UserPreferenceDto>) JSONArray.toCollection(json, UserPreferenceDto.class);
         String result = null;
         for (UserPreferenceDto userPreferenceDto : list) {
-            if (userPreferenceDto.getCode().equals(code) && userPreferenceDto.getUserName().equals(userName)){
+            if (userPreferenceDto.getCode().equals(code) && userPreferenceDto.getUserName().equals(userName)) {
                 result = userPreferenceDto.getValue().toString();
                 break;
             }
@@ -64,18 +64,18 @@ public class UserPreferenceServiceImpl implements UserPreferenceService {
         if (json == null) {
             logger.debug("Don`t find " + fileName);
             list = Lists.newArrayList();
-        }else {
+        } else {
             list = (List<UserPreferenceDto>) JSONArray.toCollection(json, UserPreferenceDto.class);
         }
         Boolean isExist = Boolean.FALSE;
         for (UserPreferenceDto dto : list) {
-            if (dto.getCode().equals(userPreferenceDto.getCode()) && dto.getUserName().equals(userPreferenceDto.getUserName())){
+            if (dto.getCode().equals(userPreferenceDto.getCode()) && dto.getUserName().equals(userPreferenceDto.getUserName())) {
                 dto.setValue(userPreferenceDto.getValue());
                 isExist = true;
                 break;
             }
         }
-        if(!isExist){
+        if (!isExist) {
             list.add(userPreferenceDto);
         }
         JsonFileUtil.writeJsonFile(JSONArray.fromObject(list), parentPath, fileName);
@@ -87,18 +87,18 @@ public class UserPreferenceServiceImpl implements UserPreferenceService {
         JSONArray json = JsonFileUtil.readJsonFile(parentPath, fileName);
         if (json == null) {
             logger.debug("Don`t find " + fileName);
-            return ;
+            return;
         }
-        List<UserPreferenceDto> list = (List<UserPreferenceDto>) JSONArray.toCollection(json,UserPreferenceDto.class);
+        List<UserPreferenceDto> list = (List<UserPreferenceDto>) JSONArray.toCollection(json, UserPreferenceDto.class);
         Boolean isExist = Boolean.FALSE;
         for (UserPreferenceDto dto : list) {
-            if (dto.getCode().equals(code) && dto.getUserName().equals(userName)){
+            if (dto.getCode().equals(code) && dto.getUserName().equals(userName)) {
                 list.remove(dto);
                 isExist = true;
                 break;
             }
         }
-        if(isExist){
+        if (isExist) {
             JsonFileUtil.writeJsonFile(JSONArray.fromObject(list), parentPath, fileName);
         }
 

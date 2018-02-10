@@ -75,7 +75,7 @@ public class TemplateServiceImpl implements TemplateService {
         if (json == null) {
             logger.debug("Don`t find " + fileName);
             list = Lists.newArrayList();
-        }else {
+        } else {
             list = (List<TemplateSettingDto>) JSONArray.toCollection(json, TemplateSettingDto.class);
         }
         Boolean isExst = Boolean.FALSE;
