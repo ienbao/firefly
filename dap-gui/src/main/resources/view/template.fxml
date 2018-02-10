@@ -95,12 +95,15 @@
                            </HBox.margin>
                         </Label>
                         <TextField prefWidth="200.0" promptText="yyy/MM/dd HH:mm:ss SSSSSS" />
-                        <Label prefHeight="22.0" text="Label">
+                        <Button fx:id="pattern" mnemonicParsing="false" prefWidth="22.0">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
-                        </Label>
+                        </Button>
                      </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
                      <padding>
                         <Insets left="20.0" />
                      </padding>

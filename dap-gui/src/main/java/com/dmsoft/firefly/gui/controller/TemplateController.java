@@ -12,7 +12,7 @@ import javafx.scene.control.Button;
  */
 public class TemplateController {
     @FXML
-    private Button rename, add, copy, delete, deleteTime, addTime, addRow, ok, cancel, apply;
+    private Button rename, add, copy, delete, deleteTime, addTime, pattern, addRow, ok, cancel, apply;
 
     @FXML
     private void initialize() {
@@ -26,6 +26,7 @@ public class TemplateController {
         delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
         deleteTime.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_delete_normal.png")));
         addTime.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
+//        pattern.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
         addRow.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
 
     }
