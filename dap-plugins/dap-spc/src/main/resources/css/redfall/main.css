@@ -816,7 +816,7 @@
     -fx-background-color: null;
     -fx-shape: null;
     -fx-scale-shape: false;
-    -fx-background-image: url('../images/btn_del_gray.png');
+    -fx-background-image: url('../../images/btn_del_gray.png');
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
     -fx-pref-height: 22;

@@ -20,13 +20,23 @@ public class ViewDataController implements Initializable {
     @FXML
     private Button chooseItemBtn;
 
+    private SpcMainController spcMainController;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initBtnIcon();
     }
 
+    public void init(SpcMainController spcMainController) {
+        this.spcMainController = spcMainController;
+    }
+
     private void initBtnIcon(){
         clearFilterBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_clear_filter_normal.png")));
         chooseItemBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
+    }
+
+    private void initViewDataTableData(){
+
     }
 }

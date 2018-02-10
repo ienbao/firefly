@@ -31,14 +31,24 @@ public class SpcMainController implements Initializable {
     private SpcItemController spcItemController;
     @FXML
     private StatisticalResultController statisticalResultController;
+    @FXML
+    private ViewDataController viewDataController;
+    @FXML
+    private ChartResultController chartResultController;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.spcItemController.init(this);
         this.statisticalResultController.init(this);
+        this.viewDataController.init(this);
+        this.chartResultController.init(this);
         this.initBtnIcon() ;
         this.initComponentEvent();
+    }
+
+    public void setStatisticalResultData(List<SpcStatisticalResultDto> list) {
+        statisticalResultController.setStatisticalResultTableData(list);
     }
 
     private void initComponentEvent(){
@@ -71,7 +81,5 @@ public class SpcMainController implements Initializable {
         chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
     }
 
-    public void refreshStatisticalResultData(List<SpcStatisticalResultDto> list) {
-        statisticalResultController.refreshData(list);
-    }
+
 }

@@ -13,9 +13,14 @@ import java.util.ResourceBundle;
  */
 public class ChartResultController implements Initializable {
 
+    private SpcMainController spcMainController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+    }
+
+    public void init(SpcMainController spcMainController) {
+        this.spcMainController = spcMainController;
     }
 }

@@ -167,20 +167,10 @@ public class SpcItemController implements Initializable {
 //        SpcSearchConfigDto spcSearchConfigDto = new SpcSearchConfigDto();
 //        List<SpcStatisticalResultDto> spcStatisticalResultDtoList = spcService.findStatisticalResult(searchConditionDtoList,spcSearchConfigDto);
         List<SpcStatisticalResultDto> spcStatisticalResultDtoList = initData();
-        Pane pane = UiUtils.getPane(ViewResource.SPC_VIEW_ID);
-        //AnchorPane statisticalPane = (AnchorPane) testItemPane.getParent().getParent().getParent().lookup("#statisticalPane");
-        TableView statisticalResultTb = (TableView) pane.lookup("#statisticalResultTb");
-
-
         if (spcStatisticalResultDtoList == null) {
             return;
         }
-      /*  ObservableList<StatisticalTableRowData> observableList = FXCollections.observableArrayList();
-        for (SpcStatisticalResultDto statisticalResultDto : spcStatisticalResultDtoList) {
-            StatisticalTableRowData statisticalTableRowData = new StatisticalTableRowData(statisticalResultDto);
-            observableList.add(statisticalTableRowData);
-        }*/
-        spcMainController.refreshStatisticalResultData(spcStatisticalResultDtoList);
+        spcMainController.setStatisticalResultData(spcStatisticalResultDtoList);
     }
 
 
@@ -189,7 +179,7 @@ public class SpcItemController implements Initializable {
         List<SpcStatisticalResultDto> spcStatisticalResultDtoList = Lists.newArrayList();
         for (int i = 0; i < 100; i++) {
             SpcStatisticalResultDto statisticalResultDto = new SpcStatisticalResultDto();
-            statisticalResultDto.setItemName("itemName");
+            statisticalResultDto.setItemName("itemName"+i);
             statisticalResultDto.setCondition("itemName > 22");
             statisticalResultDto.setSamples("343.2");
             statisticalResultDto.setAvg("32.2");

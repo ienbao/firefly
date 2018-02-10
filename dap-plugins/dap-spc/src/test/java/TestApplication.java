@@ -2,14 +2,12 @@
  * Copyright (c) 2017. For Intelligent Group.
  */
 
-import com.dmsoft.firefly.plugin.spc.controller.SpcMainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
