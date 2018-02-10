@@ -216,18 +216,17 @@ public class SourceDataServiceImpl implements SourceDataService {
             if (conditions == null || conditions.isEmpty()) {
                 if (lineUsedValid) {
                     List<String> lineUsedList = findLineDataUsed(projectName);
-                    List<TestDataDto> partData = findDataByItemNamesAndLineNo(projectName, itemNames, lineUsedList);
+                    List<TestDataDto> partData = findDataByItemNamesAndLineNo(projectName, searchItems, lineUsedList);
                     partData.forEach(testDataDto -> {
                         testDataDto.setCodition("");
                     });
                     addPartToResult(partData, result, lineUsedList.size());
                 } else {
-                    List<TestDataDto> partData = findDataByItemNames(projectName, itemNames);
+                    List<TestDataDto> partData = findDataByItemNames(projectName, searchItems);
                     partData.forEach(testDataDto -> {
                         testDataDto.setCodition("");
                     });
                     addPartToResult(partData, result, partData.get(0).getData().size());
-
                 }
             } else {
                 conditions.forEach(condition -> {
@@ -249,8 +248,20 @@ public class SourceDataServiceImpl implements SourceDataService {
                     addPartToResult(partData, result, lineNoList.size());
                 });
             }
-
+            limitCache();
         });
+
+//        LinkedHashMap<String, SpecificationDataDto> map = templateSettingDto.getSpecificationDatas();
+//        result.forEach(testDataDto -> {
+//            for (Map.Entry<String, SpecificationDataDto> entry : map.entrySet()) {
+//                String itemName = entry.getValue().getTestItemName();
+//                if (testDataDto.getItemName().equals(itemName)) {
+//                    testDataDto.setLsl(entry.getValue().getLslFail());
+//                    testDataDto.setUsl(entry.getValue().getUslPass());
+//                    break;
+//                }
+//            }
+//        });
 
         return result;
     }
@@ -471,11 +482,17 @@ public class SourceDataServiceImpl implements SourceDataService {
     }
 
     private void addCache(TestData testData) {
-        if (testDataCache.size() <= 100) {
-            testDataCache.add(testData);
-        } else {
+//        if (testDataCache.size() <= 100) {
+        testDataCache.add(testData);
+//        } else {
+//            testDataCache.remove(0);
+//            testDataCache.add(testData);
+//        }
+    }
+
+    private void limitCache() {
+        while (testDataCache.size() > 100) {
             testDataCache.remove(0);
-            testDataCache.add(testData);
         }
     }
 

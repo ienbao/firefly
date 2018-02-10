@@ -4,6 +4,7 @@ import com.dmsoft.firefly.core.utils.JsonFileUtil;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserDto;
 import com.dmsoft.firefly.sdk.dai.service.UserService;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,29 +22,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto validateUser(String userName, String password) {
-        JSONObject jsonObject = JsonFileUtil.readJsonFile(parentPath, fileName);
-        if (jsonObject == null) {
-            logger.debug("Don`t find user");
+        JSONArray json = JsonFileUtil.readJsonFile(parentPath, fileName);
+        if (json == null) {
+            logger.debug("Don`t find " + fileName);
             return null;
         }
-        List<UserDto> list = (List<UserDto>) JSONObject.toBean(jsonObject);
+        List<UserDto> list = (List<UserDto>) JSONArray.toCollection(json, UserDto.class);
         for (UserDto userDto : list) {
             if (userDto.getName().equals(userName) && userDto.getPassword().equals(password)) {
                 return userDto;
             }
         }
-
         return null;
     }
 
     @Override
     public void updatePassword(String userName, String oldPwd, String newPwd) {
-        JSONObject jsonObject = JsonFileUtil.readJsonFile(parentPath, fileName);
-        if (jsonObject == null) {
-            logger.debug("Don`t find user");
+        JSONArray json = JsonFileUtil.readJsonFile(parentPath, fileName);
+        if (json == null) {
+            logger.debug("Don`t find " + fileName);
             return;
         }
-        List<UserDto> list = (List<UserDto>) JSONObject.toBean(jsonObject);
+        List<UserDto> list = (List<UserDto>) JSONArray.toCollection(json, UserDto.class);
         Boolean isExist = Boolean.FALSE;
         for (UserDto userDto : list) {
             if (userDto.getName().equals(userName) && userDto.getPassword().equals(oldPwd)) {
@@ -52,8 +52,8 @@ public class UserServiceImpl implements UserService {
                 break;
             }
         }
-        if(isExist) {
-            JsonFileUtil.writeJsonFile(JSONObject.fromObject(list), parentPath, fileName);
+        if (isExist) {
+            JsonFileUtil.writeJsonFile(JSONArray.fromObject(list), parentPath, fileName);
         }
     }
 }

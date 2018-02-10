@@ -9,7 +9,6 @@ package com.dmsoft.firefly.sdk.dai.dto;
  */
 public class UserDto {
 
-    private Long id;
     private String name;
     private String loginName;
     private String salt;
@@ -17,14 +16,6 @@ public class UserDto {
     private String email;
 
 //    private List<Role> roles;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
