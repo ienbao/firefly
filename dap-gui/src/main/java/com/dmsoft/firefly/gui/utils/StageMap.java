@@ -11,11 +11,11 @@ import java.util.HashMap;
 
 public final class StageMap {
 
-//    private static StageMap instance;
+//    private static UiUtils instance;
 //
-//    public static StageMap getInstance() {
+//    public static UiUtils getInstance() {
 //        if (instance == null) {
-//            instance = new StageMap();
+//            instance = new UiUtils();
 //        }
 //        return instance;
 //    }

@@ -5,11 +5,12 @@ package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultDto;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
-import com.dmsoft.firefly.plugin.spc.model.StatisticalTableRowData;
 import com.dmsoft.firefly.plugin.spc.service.SpcServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcService;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.ViewResource;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.utils.UiUtils;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,9 +24,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
 
 import java.net.URL;
 import java.util.List;
@@ -61,8 +61,12 @@ public class SpcItemController implements Initializable {
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
 
     private SpcService spcService = new SpcServiceImpl();
-    @FXML
-    private VBox testItemPane;
+
+    private SpcMainController spcMainController;
+
+    public void init(SpcMainController spcMainController) {
+        this.spcMainController = spcMainController;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -163,18 +167,20 @@ public class SpcItemController implements Initializable {
 //        SpcSearchConfigDto spcSearchConfigDto = new SpcSearchConfigDto();
 //        List<SpcStatisticalResultDto> spcStatisticalResultDtoList = spcService.findStatisticalResult(searchConditionDtoList,spcSearchConfigDto);
         List<SpcStatisticalResultDto> spcStatisticalResultDtoList = initData();
-        AnchorPane statisticalPane = (AnchorPane) testItemPane.getParent().getParent().getParent().lookup("#statisticalPane");
-        TableView statisticalResultTb = (TableView) statisticalPane.lookup("#statisticalResultTb");
+        Pane pane = UiUtils.getPane(ViewResource.SPC_VIEW_ID);
+        //AnchorPane statisticalPane = (AnchorPane) testItemPane.getParent().getParent().getParent().lookup("#statisticalPane");
+        TableView statisticalResultTb = (TableView) pane.lookup("#statisticalResultTb");
+
 
         if (spcStatisticalResultDtoList == null) {
             return;
         }
-        ObservableList<StatisticalTableRowData> observableList = FXCollections.observableArrayList();
+      /*  ObservableList<StatisticalTableRowData> observableList = FXCollections.observableArrayList();
         for (SpcStatisticalResultDto statisticalResultDto : spcStatisticalResultDtoList) {
             StatisticalTableRowData statisticalTableRowData = new StatisticalTableRowData(statisticalResultDto);
             observableList.add(statisticalTableRowData);
-        }
-        statisticalResultTb.setItems(observableList);
+        }*/
+        spcMainController.refreshStatisticalResultData(spcStatisticalResultDtoList);
     }
 
 

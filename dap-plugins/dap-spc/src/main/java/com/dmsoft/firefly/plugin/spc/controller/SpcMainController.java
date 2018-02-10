@@ -3,14 +3,14 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultDto;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -27,8 +27,16 @@ public class SpcMainController implements Initializable {
     @FXML
     private Button chooseBtn;
 
+    @FXML
+    private SpcItemController spcItemController;
+    @FXML
+    private StatisticalResultController statisticalResultController;
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.spcItemController.init(this);
+        this.statisticalResultController.init(this);
         this.initBtnIcon() ;
         this.initComponentEvent();
     }
@@ -61,5 +69,9 @@ public class SpcMainController implements Initializable {
         printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_print_normal.png")));
         exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_export_normal.png")));
         chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
+    }
+
+    public void refreshStatisticalResultData(List<SpcStatisticalResultDto> list) {
+        statisticalResultController.refreshData(list);
     }
 }
