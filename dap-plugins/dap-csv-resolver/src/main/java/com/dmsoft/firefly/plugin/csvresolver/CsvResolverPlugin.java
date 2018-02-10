@@ -47,27 +47,6 @@ public class CsvResolverPlugin extends Plugin {
 
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.CsvResolverPlugin",
                 MenuBuilder.MenuType.MENU_ITEM, "csvResolver", MenuBuilder.MENU_DATASOURCE_RESOLVER).addMenu(menuItem));
-
-      /*  Menu menuItem = new Menu("CsvResolver");
-        menuItem.setId("csvResolver");
-        menuItem.setOnAction(event -> build());
-
-        RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.CsvResolverPlugin",
-                MenuBuilder.MenuType.MENU, "csvResolver", MenuBuilder.MENU_DATASOURCE_RESOLVER).addMenu(menuItem));
-
-        Menu menu = new Menu("test");
-        menu.setId("test");
-        menu.setOnAction(event -> build());
-
-        RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.CsvResolverPlugin",
-                MenuBuilder.MenuType.MENU, "test", "csvResolver").addMenu(menu));
-
-        MenuItem menuItem1 = new MenuItem("test1");
-        menuItem1.setId("test1");
-        menuItem1.setOnAction(event -> build());
-        RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.CsvResolverPlugin",
-                MenuBuilder.MenuType.MENU_ITEM, "test1", "test").addMenu(menuItem1));*/
-
         logger.debug("Plugin-CsvResolver UI register done.");
         logger.info("Plugin-CsvResolver started.");
     }
