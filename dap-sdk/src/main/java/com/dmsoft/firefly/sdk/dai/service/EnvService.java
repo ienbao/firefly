@@ -14,16 +14,23 @@ import java.util.List;
  */
 public interface EnvService {
     /**
-     * set user id
+     * set user name
      */
-    void setUserName();
+    void setUserName(String userName);
 
     /**
-     * get user id
+     * get user name
      *
-     * @return user id
+     * @return user name
      */
     String getUserName();
+
+    /**
+     * method to set activated template name
+     *
+     * @param templateName activated template name
+     */
+    void setActivatedTemplate(String templateName);
 
     /**
      * find activated template setting
@@ -40,11 +47,25 @@ public interface EnvService {
     List<String> findActivatedProjectName();
 
     /**
+     * method to set activated project name
+     *
+     * @param activatedProjectName activated project name
+     */
+    void setActivatedProjectName(List<String> activatedProjectName);
+
+    /**
      * find list of activated plugin names
      *
      * @return list of project names
      */
     List<String> findActivatedPluginName();
+
+    /**
+     * method to set activated plugin name
+     *
+     * @param activatedPluginName activated plugin name
+     */
+    void setActivatedPluginName(List<String> activatedPluginName);
 
     /**
      * method to find preference
@@ -59,7 +80,14 @@ public interface EnvService {
      *
      * @return list of test item
      */
-    List<TestItemDto> findTestItem();
+    List<TestItemDto> findTestItems();
+
+    /**
+     * method to set TestItemDto list
+     *
+     * @param testItems TestItemDto list
+     */
+    void setTestItems(List<TestItemDto> testItems);
 
     /**
      * method to get language type
