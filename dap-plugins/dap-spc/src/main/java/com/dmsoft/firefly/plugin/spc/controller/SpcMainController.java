@@ -4,13 +4,17 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcViewDataDto;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -31,21 +35,31 @@ public class SpcMainController implements Initializable {
     private SpcItemController spcItemController;
     @FXML
     private StatisticalResultController statisticalResultController;
+    @FXML
+    private ViewDataController viewDataController;
+    @FXML
+    private ChartResultController chartResultController;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.spcItemController.init(this);
         this.statisticalResultController.init(this);
+        this.viewDataController.init(this);
+        this.chartResultController.init(this);
         this.initBtnIcon() ;
         this.initComponentEvent();
+    }
+
+    public void setStatisticalResultData(List<SpcStatisticalResultDto> list) {
+        statisticalResultController.setStatisticalResultTableData(list);
     }
 
     private void initComponentEvent(){
         resetBtn.setOnAction(event -> getResetBtnEvent());
         printBtn.setOnAction(event -> getPrintBtnEvent());
         exportBtn.setOnAction(event -> getExportBtnEvent());
-        exportBtn.setOnAction(event -> getChooseBtnEvent());
+        chooseBtn.setOnAction(event -> getChooseBtnEvent());
     }
 
     private void getResetBtnEvent(){
@@ -61,7 +75,7 @@ public class SpcMainController implements Initializable {
     }
 
     private void getChooseBtnEvent(){
-
+        viewDataController.setViewData(initData());
     }
 
     private void initBtnIcon(){
@@ -71,7 +85,19 @@ public class SpcMainController implements Initializable {
         chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
     }
 
-    public void refreshStatisticalResultData(List<SpcStatisticalResultDto> list) {
-        statisticalResultController.refreshData(list);
+    @Deprecated
+    private List<SpcViewDataDto> initData() {
+        List<SpcViewDataDto> spcViewDataDtoList = Lists.newArrayList();
+        for (int i = 0; i < 100; i++) {
+            SpcViewDataDto spcViewDataDto = new SpcViewDataDto();
+            Map<String,Object> map = Maps.newHashMap();
+            for(int j = 0;j<10;j++){
+                map.put("itemName"+j,"value"+i+j);
+            }
+            spcViewDataDto.setTestData(map);
+            spcViewDataDtoList.add(spcViewDataDto);
+        }
+        return spcViewDataDtoList;
     }
+
 }

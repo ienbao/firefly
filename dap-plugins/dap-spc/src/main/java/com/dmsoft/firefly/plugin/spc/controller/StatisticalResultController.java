@@ -4,21 +4,34 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultDto;
+import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.model.StatisticalTableRowData;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.plugin.PluginContext;
+import com.dmsoft.firefly.sdk.ui.window.WindowPane;
+import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -38,29 +51,66 @@ public class StatisticalResultController implements Initializable {
     private TableView statisticalResultTb;
 
     @FXML
-    private TableColumn<StatisticalTableRowData,Boolean> checkBoxColumn;
+    private TableColumn<StatisticalTableRowData,CheckBox> checkBoxColumn;
 
-    private ObservableList<StatisticalTableRowData> observableList;
+    private ObservableList<StatisticalTableRowData> statisticalTableRowDataObservableList;
+    private FilteredList<StatisticalTableRowData> statisticalTableRowDataFilteredList;
+    private SortedList<StatisticalTableRowData> statisticalTableRowDataSortedList;
 
 
     private SpcMainController spcMainController;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.buildChooseColumnDialog();
+        this.initStatisticalResultTable();
+        this.initBtnIcon();
+        this.initComponentEvent();
+    }
 
     public void init(SpcMainController spcMainController) {
         this.spcMainController = spcMainController;
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        this.initStatisticalResultHeader();
-        this.initBtnIcon();
-        this.initComponentEvent();
-        this.initData();
+
+    public void setStatisticalResultTableData(List<SpcStatisticalResultDto> list) {
+        statisticalTableRowDataObservableList.clear();
+        allCheckBox.setSelected(false);
+        list.forEach(dto -> {
+            statisticalTableRowDataObservableList.add(new StatisticalTableRowData(dto));
+        });
     }
 
-    private void initStatisticalResultHeader(){
-        checkBoxColumn.setCellFactory(p -> new CheckBoxTableCell<>());
-        checkBoxColumn.setCellValueFactory(cellData -> cellData.getValue().selectorProperty());
-        checkBoxColumn.setCellFactory(CheckBoxTableCell.forTableColumn(checkBoxColumn));
+    private void buildChooseColumnDialog(){
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("view/choose_statistical_result.fxml"), ResourceBundle.getBundle("i18n.message_en_US"));
+//        fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.CsvResolverPlugin"));
+        Pane root = null;
+        try {
+            root = fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        chooseDialog = new Stage();
+        WindowPane windowPane = new WindowPane(chooseDialog, "Choose Statistical Results", root);
+
+        Scene scene =  new Scene(windowPane, 430, 370);
+        scene.setFill(Color.TRANSPARENT);
+        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/app.css").toExternalForm());
+
+        chooseDialog.initStyle(StageStyle.TRANSPARENT);
+        chooseDialog.setScene(scene);
+//        chooseDialog.setAlwaysOnTop(true);
+        chooseDialog.setResizable(false);
+        windowPane.initEvent();
+
+    }
+
+    private void initStatisticalResultTable(){
+//        checkBoxColumn.setCellFactory(p -> new CheckBoxTableCell<>());
+        checkBoxColumn.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
+        allCheckBox = new CheckBox();
+        checkBoxColumn.setGraphic(allCheckBox);
+//        checkBoxColumn.setCellFactory(CheckBoxTableCell.forTableColumn(checkBoxColumn));
         List<String> colName = asList(UIConstant.SPC_SR_ALL);
         StringConverter<String> sc = new StringConverter<String>() {
             @Override
@@ -84,44 +134,41 @@ public class StatisticalResultController implements Initializable {
                 col.setCellFactory(TextFieldTableCell.forTableColumn(sc));
             }
         }
-    }
 
-    private void initData() {
-        observableList = FXCollections.observableArrayList();
-        statisticalResultTb.setItems(observableList);
-    }
-
-    public void refreshData(List<SpcStatisticalResultDto> list) {
-        list.forEach(dto -> {
-            observableList.add(new StatisticalTableRowData(dto));
-        });
+        statisticalTableRowDataObservableList = FXCollections.observableArrayList();
+        statisticalTableRowDataFilteredList = statisticalTableRowDataObservableList.filtered(p -> true);
+        statisticalTableRowDataSortedList = new SortedList<>(statisticalTableRowDataFilteredList);
+        statisticalResultTb.setItems(statisticalTableRowDataSortedList);
+        statisticalTableRowDataSortedList.comparatorProperty().bind(statisticalResultTb.comparatorProperty());
     }
 
     private void initComponentEvent() {
         chooseColumnBtn.setOnAction(event -> getChooseColumnBtnEvent());
-        filterTestItemTf.setOnAction(event -> getFilterTestItemTfEvent());
+        filterTestItemTf.textProperty().addListener((observable, oldValue, newValue) -> getFilterTestItemTfEvent());
+        allCheckBox.setOnAction(event -> getAllSelectEvent());
     }
 
     private void getChooseColumnBtnEvent() {
-
+        chooseDialog.show();
     }
 
     private void getFilterTestItemTfEvent() {
-
+        statisticalTableRowDataFilteredList.setPredicate(p -> p.getRowDataMap().get(UIConstant.TEST_ITEM).getValue().contains(filterTestItemTf.getText()));
     }
 
-    public ObservableList<StatisticalTableRowData> getObservableList() {
-        return observableList;
+    private void getAllSelectEvent(){
+        if (statisticalTableRowDataSortedList != null) {
+            for (StatisticalTableRowData rowData : statisticalTableRowDataSortedList) {
+                rowData.getSelector().setValue(allCheckBox.isSelected());
+            }
+        }
     }
 
-    public void setObservableList(ObservableList<StatisticalTableRowData> observableList) {
-        this.observableList = observableList;
-    }
 
     private void initBtnIcon() {
         chooseColumnBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
     }
 
-
+    private Stage chooseDialog;
+    private CheckBox allCheckBox;
 }
-
