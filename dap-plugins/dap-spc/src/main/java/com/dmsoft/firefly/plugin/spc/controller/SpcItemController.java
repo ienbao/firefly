@@ -3,13 +3,11 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultDto;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.service.SpcServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcService;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
-import com.dmsoft.firefly.plugin.spc.utils.ViewResource;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
@@ -25,7 +23,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 
 import java.net.URL;
 import java.util.List;
@@ -64,6 +61,11 @@ public class SpcItemController implements Initializable {
 
     private SpcMainController spcMainController;
 
+    /**
+     * init main controller
+     *
+     * @param spcMainController main controller
+     */
     public void init(SpcMainController spcMainController) {
         this.spcMainController = spcMainController;
     }
@@ -179,7 +181,7 @@ public class SpcItemController implements Initializable {
         List<SpcStatisticalResultDto> spcStatisticalResultDtoList = Lists.newArrayList();
         for (int i = 0; i < 100; i++) {
             SpcStatisticalResultDto statisticalResultDto = new SpcStatisticalResultDto();
-            statisticalResultDto.setItemName("itemName"+i);
+            statisticalResultDto.setItemName("itemName" + i);
             statisticalResultDto.setCondition("itemName > 22");
             statisticalResultDto.setSamples("343.2");
             statisticalResultDto.setAvg("32.2");
