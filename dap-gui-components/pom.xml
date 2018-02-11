@@ -10,6 +10,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>dap-gui-components</artifactId>
-
-
+    <dependencies>
+        <dependency>
+            <groupId>com.dmsoft</groupId>
+            <artifactId>bamboo</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
 </project>

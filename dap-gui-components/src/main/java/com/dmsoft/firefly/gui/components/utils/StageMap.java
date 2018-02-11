@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.sdk.utils;
+package com.dmsoft.firefly.gui.components.utils;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -26,7 +26,7 @@ public final class StageMap {
     private static HashMap<String, Stage> stages = new HashMap<String, Stage>();
 
     //建立一个专门存储Pane的Map，全部用于存放Pane对象
-    private static HashMap<String, Node> nodes = new HashMap<>();
+    private static HashMap<String, Node> nodes = new HashMap<String, Node>();
 
     /**
      * 将加载好的Pane放到Map中进行管理

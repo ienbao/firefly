@@ -23,6 +23,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.dmsoft</groupId>
+            <artifactId>dap-gui-components</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <optional>true</optional>

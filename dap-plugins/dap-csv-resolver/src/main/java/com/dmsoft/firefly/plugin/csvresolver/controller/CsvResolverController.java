@@ -3,10 +3,10 @@
  */
 package com.dmsoft.firefly.plugin.csvresolver.controller;
 
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.plugin.csvresolver.CsvResolverService;
 import com.dmsoft.firefly.plugin.csvresolver.CsvTemplateDto;
 import com.dmsoft.firefly.plugin.csvresolver.model.RowDataModel;
-import com.dmsoft.firefly.sdk.utils.StageMap;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

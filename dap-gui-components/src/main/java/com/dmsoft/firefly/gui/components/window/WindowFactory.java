@@ -1,6 +1,6 @@
-package com.dmsoft.firefly.sdk.ui.window;
+package com.dmsoft.firefly.gui.components.window;
 
-import com.dmsoft.firefly.sdk.utils.StageMap;
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;

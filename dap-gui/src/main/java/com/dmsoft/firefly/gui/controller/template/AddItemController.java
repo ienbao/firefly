@@ -3,7 +3,7 @@
  */
 package com.dmsoft.firefly.gui.controller.template;
 
-import com.dmsoft.firefly.sdk.utils.StageMap;
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 

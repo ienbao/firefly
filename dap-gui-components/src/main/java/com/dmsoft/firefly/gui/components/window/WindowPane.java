@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.sdk.ui.window;
+package com.dmsoft.firefly.gui.components.window;
 
 import com.dmsoft.bamboo.common.utils.base.Platforms;
 import javafx.beans.property.SimpleBooleanProperty;
