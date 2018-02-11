@@ -6,6 +6,7 @@ package com.dmsoft.firefly.plugin.csvresolver.controller;
 import com.dmsoft.firefly.plugin.csvresolver.CsvResolverService;
 import com.dmsoft.firefly.plugin.csvresolver.CsvTemplateDto;
 import com.dmsoft.firefly.plugin.csvresolver.model.RowDataModel;
+import com.dmsoft.firefly.sdk.utils.StageMap;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -93,9 +94,10 @@ public class CsvResolverController {
         });
         ok.setOnAction(event -> {
             save();
+            StageMap.closeStage("csv");
         });
         cancel.setOnAction(event -> {
-
+            StageMap.closeStage("csv");
         });
         apply.setOnAction(event -> save());
     }
@@ -148,12 +150,12 @@ public class CsvResolverController {
     private void save() {
         CsvTemplateDto csvTemplateDto = new CsvTemplateDto();
         csvTemplateDto.setFilePath(path.getText());
-        csvTemplateDto.setHeader(Integer.valueOf(header.getValue() == null ? "" : header.getValue().toString().substring(3, 4)));
-        csvTemplateDto.setItem(Integer.valueOf(item.getValue() == null ? "" : item.getValue().toString().substring(3, 4)));
-        csvTemplateDto.setUsl(Integer.valueOf(usl.getValue() == null ? "" : usl.getValue().toString().substring(3, 4)));
-        csvTemplateDto.setLsl(Integer.valueOf(lsl.getValue() == null ? "" : lsl.getValue().toString().substring(3, 4)));
-        csvTemplateDto.setUnit(Integer.valueOf(unit.getValue() == null ? "" : unit.getValue().toString().substring(3, 4)));
-        csvTemplateDto.setData(Integer.valueOf(data.getValue() == null ? "" : data.getValue().toString().substring(3, 4)));
+        csvTemplateDto.setHeader(header.getValue() == null ? null : Integer.valueOf(header.getValue().toString().substring(3, 4)));
+        csvTemplateDto.setItem(item.getValue() == null ? null : Integer.valueOf(item.getValue().toString().substring(3, 4)));
+        csvTemplateDto.setUsl(usl.getValue() == null ? null : Integer.valueOf(usl.getValue().toString().substring(3, 4)));
+        csvTemplateDto.setLsl(lsl.getValue() == null ? null : Integer.valueOf(lsl.getValue().toString().substring(3, 4)));
+        csvTemplateDto.setUnit(unit.getValue() == null ? null : Integer.valueOf(unit.getValue().toString().substring(3, 4)));
+        csvTemplateDto.setData(data.getValue() == null ? null : Integer.valueOf(data.getValue().toString().substring(3, 4)));
 
         service.saveCsvTemplate(csvTemplateDto);
     }

@@ -7,7 +7,9 @@ import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.gui.utils.ImageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceBundleUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
+import com.dmsoft.firefly.sdk.ui.window.WindowFactory;
 import com.dmsoft.firefly.sdk.ui.window.WindowPane;
+import com.dmsoft.firefly.sdk.utils.StageMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -51,17 +53,14 @@ public class TemplateController {
         pattern.setOnAction(event -> buildPatternDia());
         add.setOnAction(event -> buildAddItemDia());
         ok.setOnAction(event -> {
-            if (dialog != null && dialog.isShowing()) {
-                dialog.close();
-            }
+            StageMap.closeStage("template");
+
         });
         apply.setOnAction(event -> {
 
         });
         cancel.setOnAction(event -> {
-            if (dialog != null && dialog.isShowing()) {
-                dialog.close();
-            }
+            StageMap.closeStage("template");
         });
     }
 
@@ -69,18 +68,8 @@ public class TemplateController {
         Pane root = null;
         try {
             root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/pattern.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-            dialog = new Stage();
-            WindowPane windowPane = new WindowPane(dialog, ResourceBundleUtils.getString(ResourceMassages.TIME_PATTERN), root);
-
-            Scene scene = new Scene(windowPane, 430, 380);
-            windowPane.setMinSize(430, 380);
-            scene.setFill(Color.TRANSPARENT);
-            scene.getStylesheets().add(getResource("css/app.css").toExternalForm());
-
-            dialog.initStyle(StageStyle.TRANSPARENT);
-            dialog.setScene(scene);
-            windowPane.init();
-            dialog.show();
+            WindowFactory.createSimpleWindowAsModel("pattern", ResourceBundleUtils.getString(ResourceMassages.TIME_PATTERN), root, getResource("css/app.css").toExternalForm());
+            StageMap.showStage("pattern");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -90,18 +79,9 @@ public class TemplateController {
         Pane root = null;
         try {
             root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/additem.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-            dialog = new Stage();
-            WindowPane windowPane = new WindowPane(dialog, ResourceBundleUtils.getString(ResourceMassages.ADD_ITEM), root);
 
-            Scene scene = new Scene(windowPane, 430, 380);
-            windowPane.setMinSize(430, 380);
-            scene.setFill(Color.TRANSPARENT);
-            scene.getStylesheets().add(getResource("css/app.css").toExternalForm());
-
-            dialog.initStyle(StageStyle.TRANSPARENT);
-            dialog.setScene(scene);
-            windowPane.init();
-            dialog.show();
+            WindowFactory.createSimpleWindowAsModel("addItem", ResourceBundleUtils.getString(ResourceMassages.ADD_ITEM), root, getResource("css/app.css").toExternalForm());
+            StageMap.showStage("addItem");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
