@@ -14,6 +14,9 @@ import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * calendar chooser pane
+ */
 public class CalendarChooser extends GridPane {
     private Calendar calendar = Calendar.getInstance();
     private int year, month, day, hour, minute, second;
@@ -32,12 +35,27 @@ public class CalendarChooser extends GridPane {
     private String redBtnClass = "btn-primary";
     private String normalBtnClass = "btn-txt";
 
+    /**
+     * constructor
+     *
+     * @param title     title
+     * @param xOnScreen x on screen to show
+     * @param yOnScreen y on screen to show
+     * @param date      date
+     */
     public CalendarChooser(String title, int xOnScreen, int yOnScreen, Date date) {
         this.calendar.setTime(date);
         initComponents();
     }
 
 
+    /**
+     * constructor
+     *
+     * @param title     title
+     * @param xOnScreen x on screen to show
+     * @param yOnScreen y on screen to show
+     */
     public CalendarChooser(String title, int xOnScreen, int yOnScreen) {
         initComponents();
     }
@@ -226,6 +244,7 @@ public class CalendarChooser extends GridPane {
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         } while (calendar.get(Calendar.MONTH) == month2);
         dayPane.getStyleClass().add("day-pane");
+//        dayPane.setStyle("-fx-padding: 10; -fx-border-color: #ccc; -fx-border-width: 1");
         this.calendar.add(Calendar.MONTH, -1);
         this.calendar.set(Calendar.DAY_OF_MONTH, this.day);
         this.pane.getChildren().addAll(weekPane, dayPane);
