@@ -5,6 +5,7 @@
 package com.dmsoft.firefly.plugin.spc;
 
 
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.plugin.spc.controller.SpcMainController;
 import com.dmsoft.firefly.plugin.spc.service.SpcServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.ViewResource;
@@ -14,7 +15,6 @@ import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.ui.IMainBodyPane;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
-import com.dmsoft.firefly.sdk.utils.UiUtils;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
@@ -47,7 +47,6 @@ public class SpcPlugin extends Plugin {
                     fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.SpcPlugin"));
 
                     root = fxmlLoader.load();
-                    UiUtils.addPane(ViewResource.SPC_VIEW_ID, root);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

@@ -3,6 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultDto;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.service.SpcServiceImpl;
@@ -10,7 +11,6 @@ import com.dmsoft.firefly.plugin.spc.service.impl.SpcService;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ViewResource;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
-import com.dmsoft.firefly.sdk.utils.UiUtils;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
