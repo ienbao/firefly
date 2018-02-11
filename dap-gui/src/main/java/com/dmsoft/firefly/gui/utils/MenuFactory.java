@@ -10,6 +10,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.util.ResourceBundle;
 
@@ -113,9 +114,8 @@ public class MenuFactory {
         Pane root = null;
         try {
             root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-
-            WindowFactory.createSimpleWindowAsModel("template", ResourceBundleUtils.getString(ResourceMassages.TEMPLATE), root, getResource("css/app.css").toExternalForm());
-            StageMap.showStage("template");
+            Stage stage = WindowFactory.createSimpleWindowAsModel("template", ResourceBundleUtils.getString(ResourceMassages.TEMPLATE), root, getResource("css/app.css").toExternalForm());
+            stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
