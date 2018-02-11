@@ -8,6 +8,7 @@ import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultDto;
 import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
 import com.dmsoft.firefly.plugin.spc.model.StatisticalTableRowData;
+import com.dmsoft.firefly.plugin.spc.utils.FXMLLoaderUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.google.common.collect.Lists;
@@ -71,7 +72,7 @@ public class StatisticalResultController implements Initializable {
     }
 
     private void buildChooseColumnDialog() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("view/choose_dialog.fxml"), ResourceBundle.getBundle("i18n.message_en_US"));
+        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXMLPane("view/choose_dialog.fxml");
         Pane root = null;
         try {
             root = fxmlLoader.load();
