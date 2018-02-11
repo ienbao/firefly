@@ -21,7 +21,7 @@ public final class ViewResource {
 
 
     public final static String  SPC_CHOOSE_STATISTICAL_VIEW_ID = "spc_choose_statistical";
-    public final static String  SPC_CHOOSE_STATISTICAL_VIEW_RES = PRE_VIEW + "choose_statistical_result.fxml";
+    public final static String  SPC_CHOOSE_STATISTICAL_VIEW_RES = PRE_VIEW + "choose_dialog.fxml";
 
 
     public final static String  SPC_QUICK_SEARCH_VIEW_ID = "spc_quick_search";

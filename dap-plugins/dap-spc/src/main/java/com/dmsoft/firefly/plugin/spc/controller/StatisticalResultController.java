@@ -3,11 +3,14 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.gui.components.window.WindowPane;
+import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultDto;
+import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
 import com.dmsoft.firefly.plugin.spc.model.StatisticalTableRowData;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
+import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -15,13 +18,9 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
@@ -39,20 +38,17 @@ public class StatisticalResultController implements Initializable {
     private Button chooseColumnBtn;
     @FXML
     private TextField filterTestItemTf;
-
     @FXML
     private TableView statisticalResultTb;
-
     @FXML
-    private TableColumn<StatisticalTableRowData,CheckBox> checkBoxColumn;
-
+    private TableColumn<StatisticalTableRowData, CheckBox> checkBoxColumn;
+    private CheckBox allCheckBox;
     private ObservableList<StatisticalTableRowData> statisticalTableRowDataObservableList;
     private FilteredList<StatisticalTableRowData> statisticalTableRowDataFilteredList;
     private SortedList<StatisticalTableRowData> statisticalTableRowDataSortedList;
-
-
     private SpcMainController spcMainController;
 
+    private ChooseDialogController chooseDialogController;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.buildChooseColumnDialog();
@@ -74,31 +70,31 @@ public class StatisticalResultController implements Initializable {
         });
     }
 
-    private void buildChooseColumnDialog(){
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("view/choose_statistical_result.fxml"), ResourceBundle.getBundle("i18n.message_en_US"));
-//        fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.CsvResolverPlugin"));
+    private void buildChooseColumnDialog() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("view/choose_dialog.fxml"), ResourceBundle.getBundle("i18n.message_en_US"));
         Pane root = null;
         try {
             root = fxmlLoader.load();
+            chooseDialogController = fxmlLoader.getController();
+            chooseDialogController.setValueColumnText("Statistical Result");
+            this.initChooseStatisticalResultTableData();
+            WindowFactory.createSimpleWindowAsModel("spcStatisticalResult", "Choose Statistical Results", root, getClass().getClassLoader().getResource("css/app.css").toExternalForm());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        chooseDialog = new Stage();
-        WindowPane windowPane = new WindowPane(chooseDialog, "Choose Statistical Results", root);
-
-        Scene scene =  new Scene(windowPane, 430, 370);
-        scene.setFill(Color.TRANSPARENT);
-        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/app.css").toExternalForm());
-
-        chooseDialog.initStyle(StageStyle.TRANSPARENT);
-        chooseDialog.setScene(scene);
-//        chooseDialog.setAlwaysOnTop(true);
-        chooseDialog.setResizable(false);
-        windowPane.init();
-
     }
 
-    private void initStatisticalResultTable(){
+    private void initChooseStatisticalResultTableData(){
+        List<String> value = asList(UIConstant.SPC_CHOOSE_RESULT);
+        List<ChooseTableRowData> chooseTableRowDataList = Lists.newArrayList();
+        value.forEach(v ->{
+            ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false,v);
+            chooseTableRowDataList.add(chooseTableRowData);
+        });
+        chooseDialogController.setTableData(chooseTableRowDataList);
+    }
+
+    private void initStatisticalResultTable() {
 //        checkBoxColumn.setCellFactory(p -> new CheckBoxTableCell<>());
         checkBoxColumn.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
         allCheckBox = new CheckBox();
@@ -116,13 +112,13 @@ public class StatisticalResultController implements Initializable {
                 return string;
             }
         };
-        for(String columnN : colName){
+        for (String columnN : colName) {
             TableColumn<StatisticalTableRowData, String> col = new TableColumn();
             col.setText(columnN);
             col.setCellValueFactory(cellData -> cellData.getValue().getRowDataMap().get(columnN));
             statisticalResultTb.getColumns().add(col);
 
-            if(columnN.equals("LSL") || columnN.equals("USL")){
+            if (columnN.equals("LSL") || columnN.equals("USL")) {
                 col.setEditable(true);
                 col.setCellFactory(TextFieldTableCell.forTableColumn(sc));
             }
@@ -142,14 +138,14 @@ public class StatisticalResultController implements Initializable {
     }
 
     private void getChooseColumnBtnEvent() {
-        chooseDialog.show();
+        StageMap.showStage("spcStatisticalResult");
     }
 
     private void getFilterTestItemTfEvent() {
         statisticalTableRowDataFilteredList.setPredicate(p -> p.getRowDataMap().get(UIConstant.TEST_ITEM).getValue().contains(filterTestItemTf.getText()));
     }
 
-    private void getAllSelectEvent(){
+    private void getAllSelectEvent() {
         if (statisticalTableRowDataSortedList != null) {
             for (StatisticalTableRowData rowData : statisticalTableRowDataSortedList) {
                 rowData.getSelector().setValue(allCheckBox.isSelected());
@@ -162,6 +158,4 @@ public class StatisticalResultController implements Initializable {
         chooseColumnBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
     }
 
-    private Stage chooseDialog;
-    private CheckBox allCheckBox;
 }
