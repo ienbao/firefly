@@ -3,6 +3,7 @@
  */
 
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.plugin.spc.utils.FXMLLoaderUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,6 +17,9 @@ import java.util.ResourceBundle;
  */
 public class TestApplication extends Application {
 
+    static {
+        FXMLLoaderUtils.isDebug = true;
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
