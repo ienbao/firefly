@@ -62,7 +62,7 @@ public class WindowPane extends GridPane {
 
     public static final int WINDOW_MODEL_FULL = 1;
     public static final int WINDOW_MODEL_X = 2;
-    private static int WINDOW_MODEL = WINDOW_MODEL_FULL;
+    private int WINDOW_MODEL = WINDOW_MODEL_FULL;
 
     static {
         if (Platforms.IS_MAC_OSX || Platforms.IS_MAC) {
