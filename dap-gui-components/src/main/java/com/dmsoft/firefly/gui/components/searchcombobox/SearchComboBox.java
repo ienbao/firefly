@@ -13,7 +13,7 @@ import javafx.scene.layout.RowConstraints;
 /**
  * search combo box
  */
-public class SearchComboBox extends GridPane implements ISearchComboBox {
+public class SearchComboBox extends GridPane {
     private ISearchComboBoxController searchComboBoxController;
     private ComboBox<String> testItemBox;
     private ComboBox<String> operatorBox;
@@ -147,39 +147,65 @@ public class SearchComboBox extends GridPane implements ISearchComboBox {
         this.add(this.closeBtn, 2, 0, 1, 2);
     }
 
-    @Override
+    /**
+     * method to get condition
+     *
+     * @return condition
+     */
     public String getCondition() {
-        //TODO
-        return null;
+        StringBuilder result = new StringBuilder();
+        if (!isNotBlank(getTestItem()) && !isNotBlank(getOperator())
+                && !isNotBlank(getValue())) {
+            result.append("\"").append(getTestItem()).append("\"").append(getOperator())
+                    .append("\"").append(getValue()).append("\"");
+        }
+        return result.toString();
     }
 
-    @Override
     public String getTestItem() {
         return this.testItemBox.getValue();
     }
 
-    @Override
     public String getOperator() {
         return this.operatorBox.getValue();
     }
 
-    @Override
     public String getValue() {
         return this.valueBox.getValue();
     }
 
-    @Override
-    public void setCondition(String condition) {
-        //TODO
-    }
-
-    @Override
+    /**
+     * method to set test item
+     *
+     * @param testItem test item
+     */
     public void setTestItem(String testItem) {
-        //TODO
+        this.testItemBox.setValue(testItem);
     }
 
-    @Override
+    /**
+     * method to set value
+     *
+     * @param value value
+     */
     public void setValue(String value) {
-        //TODO
+        this.valueBox.setValue(value);
+    }
+
+    /**
+     * method to set operator
+     *
+     * @param operator operator
+     */
+    public void setOperator(String operator) {
+        this.operatorBox.setValue(operator);
+    }
+
+    public Button getCloseBtn() {
+        return closeBtn;
+    }
+
+    private boolean isNotBlank(String s) {
+        return !(s == null || s.length() == 0);
     }
 }
