@@ -50,6 +50,7 @@ public class StatisticalResultController implements Initializable {
     private SpcMainController spcMainController;
 
     private ChooseDialogController chooseDialogController;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.buildChooseColumnDialog();
@@ -58,11 +59,19 @@ public class StatisticalResultController implements Initializable {
         this.initComponentEvent();
     }
 
+    /**
+     * init main controller
+     *
+     * @param spcMainController main controller
+     */
     public void init(SpcMainController spcMainController) {
         this.spcMainController = spcMainController;
     }
 
-
+    /**
+     * set statistical result table data
+     * @param list the data list
+     */
     public void setStatisticalResultTableData(List<SpcStatisticalResultDto> list) {
         statisticalTableRowDataObservableList.clear();
         allCheckBox.setSelected(false);
@@ -85,11 +94,11 @@ public class StatisticalResultController implements Initializable {
         }
     }
 
-    private void initChooseStatisticalResultTableData(){
+    private void initChooseStatisticalResultTableData() {
         List<String> value = asList(UIConstant.SPC_CHOOSE_RESULT);
         List<ChooseTableRowData> chooseTableRowDataList = Lists.newArrayList();
-        value.forEach(v ->{
-            ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false,v);
+        value.forEach(v -> {
+            ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, v);
             chooseTableRowDataList.add(chooseTableRowData);
         });
         chooseDialogController.setTableData(chooseTableRowDataList);

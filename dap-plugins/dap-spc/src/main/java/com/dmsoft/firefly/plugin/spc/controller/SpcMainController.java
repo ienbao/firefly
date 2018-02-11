@@ -47,38 +47,42 @@ public class SpcMainController implements Initializable {
         this.statisticalResultController.init(this);
         this.viewDataController.init(this);
         this.chartResultController.init(this);
-        this.initBtnIcon() ;
+        this.initBtnIcon();
         this.initComponentEvent();
     }
 
+    /**
+     * set statistical result data
+     * @param list the data list
+     */
     public void setStatisticalResultData(List<SpcStatisticalResultDto> list) {
         statisticalResultController.setStatisticalResultTableData(list);
     }
 
-    private void initComponentEvent(){
+    private void initComponentEvent() {
         resetBtn.setOnAction(event -> getResetBtnEvent());
         printBtn.setOnAction(event -> getPrintBtnEvent());
         exportBtn.setOnAction(event -> getExportBtnEvent());
         chooseBtn.setOnAction(event -> getChooseBtnEvent());
     }
 
-    private void getResetBtnEvent(){
+    private void getResetBtnEvent() {
 
     }
 
-    private void getPrintBtnEvent(){
+    private void getPrintBtnEvent() {
 
     }
 
-    private void getExportBtnEvent(){
+    private void getExportBtnEvent() {
 
     }
 
-    private void getChooseBtnEvent(){
+    private void getChooseBtnEvent() {
         viewDataController.setViewData(initData());
     }
 
-    private void initBtnIcon(){
+    private void initBtnIcon() {
         resetBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_reset_normal.png")));
         printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_print_normal.png")));
         exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_export_normal.png")));
@@ -90,9 +94,9 @@ public class SpcMainController implements Initializable {
         List<SpcViewDataDto> spcViewDataDtoList = Lists.newArrayList();
         for (int i = 0; i < 100; i++) {
             SpcViewDataDto spcViewDataDto = new SpcViewDataDto();
-            Map<String,Object> map = Maps.newHashMap();
-            for(int j = 0;j<10;j++){
-                map.put("itemName"+j,"value"+i+j);
+            Map<String, Object> map = Maps.newHashMap();
+            for (int j = 0; j < 10; j++) {
+                map.put("itemName" + j, "value" + i + j);
             }
             spcViewDataDto.setTestData(map);
             spcViewDataDtoList.add(spcViewDataDto);

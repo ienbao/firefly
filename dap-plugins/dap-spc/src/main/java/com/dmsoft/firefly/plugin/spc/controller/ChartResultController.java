@@ -19,7 +19,11 @@ public class ChartResultController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
     }
-
+    /**
+     * init main controller
+     *
+     * @param spcMainController main controller
+     */
     public void init(SpcMainController spcMainController) {
         this.spcMainController = spcMainController;
     }

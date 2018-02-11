@@ -20,7 +20,7 @@ public class FXMLLoaderUtils {
 
     public FXMLLoader getLoaderFXMLPane(String res){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(res), ResourceBundle.getBundle("i18n.message_en_US"));
-        fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.SpcPlugin"));
+//        fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.SpcPlugin"));
         return fxmlLoader;
     }
 }

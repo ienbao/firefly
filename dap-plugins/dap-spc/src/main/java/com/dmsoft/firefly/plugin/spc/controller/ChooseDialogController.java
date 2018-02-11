@@ -30,9 +30,9 @@ public class ChooseDialogController implements Initializable {
     @FXML
     private TableView chooseColumnTable;
     @FXML
-    private TableColumn<ChooseTableRowData,CheckBox> chooseCheckBoxColumn;
+    private TableColumn<ChooseTableRowData, CheckBox> chooseCheckBoxColumn;
     @FXML
-    private TableColumn<ChooseTableRowData,String> chooseValueColumn;
+    private TableColumn<ChooseTableRowData, String> chooseValueColumn;
     @FXML
     private Button chooseOkButton;
     private CheckBox allCheckBox;
@@ -47,16 +47,24 @@ public class ChooseDialogController implements Initializable {
         this.initComponentEvent();
     }
 
-    public void setTableData(List<ChooseTableRowData> chooseTableRowDataList){
+    /**
+     * set table data
+     * @param chooseTableRowDataList the data list
+     */
+    public void setTableData(List<ChooseTableRowData> chooseTableRowDataList) {
         chooseTableRowDataObservableList.clear();
         chooseTableRowDataObservableList.addAll(chooseTableRowDataList);
     }
 
-    public void setValueColumnText(String text){
+    /**
+     * set the column of value header text
+     * @param text the header title
+     */
+    public void setValueColumnText(String text) {
         chooseValueColumn.setText(text);
     }
 
-    private void initTable(){
+    private void initTable() {
         allCheckBox = new CheckBox();
         chooseCheckBoxColumn.setGraphic(allCheckBox);
 
@@ -76,7 +84,7 @@ public class ChooseDialogController implements Initializable {
         allCheckBox.setOnAction(event -> getAllSelectEvent());
     }
 
-    private void getFilterValueEvent(){
+    private void getFilterValueEvent() {
         chooseTableRowDataFilteredList.setPredicate(p ->
                 p.getValue().contains(chooseFilterTf.getText())
         );
