@@ -58,12 +58,9 @@ public class CsvResolverPlugin extends Plugin {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("view/csv_resolver.fxml"), ResourceBundle.getBundle("i18n.message_en_US"));
             fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.CsvResolverPlugin"));
-
             root = fxmlLoader.load();
-
-
-            WindowFactory.createSimpleWindowAsModel("csv", "CSV-Resolver", root, getClass().getClassLoader().getResource("css/app.css").toExternalForm());
-            StageMap.showStage("csv");
+            Stage stage = WindowFactory.createSimpleWindowAsModel("csv", "CSV-Resolver", root, getClass().getClassLoader().getResource("css/app.css").toExternalForm());
+            stage.show();
 
         } catch (Exception ex) {
             ex.printStackTrace();

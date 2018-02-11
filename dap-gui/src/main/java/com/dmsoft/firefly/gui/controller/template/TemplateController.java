@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016. For Intelligent Group.
  */
-package com.dmsoft.firefly.gui.controller;
+package com.dmsoft.firefly.gui.controller.template;
 
 import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.gui.utils.ImageUtils;
@@ -68,8 +68,8 @@ public class TemplateController {
         Pane root = null;
         try {
             root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/pattern.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-            WindowFactory.createSimpleWindowAsModel("pattern", ResourceBundleUtils.getString(ResourceMassages.TIME_PATTERN), root, getResource("css/app.css").toExternalForm());
-            StageMap.showStage("pattern");
+            Stage stage = WindowFactory.createSimpleWindowAsModel("pattern", ResourceBundleUtils.getString(ResourceMassages.TIME_PATTERN), root, getResource("css/app.css").toExternalForm());
+            stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -79,9 +79,9 @@ public class TemplateController {
         Pane root = null;
         try {
             root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/additem.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+            Stage stage = WindowFactory.createSimpleWindowAsModel("addItem", ResourceBundleUtils.getString(ResourceMassages.ADD_ITEM), root, getResource("css/app.css").toExternalForm());
+            stage.show();
 
-            WindowFactory.createSimpleWindowAsModel("addItem", ResourceBundleUtils.getString(ResourceMassages.ADD_ITEM), root, getResource("css/app.css").toExternalForm());
-            StageMap.showStage("addItem");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
