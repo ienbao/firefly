@@ -11,7 +11,7 @@ public class WindowFactory {
     public static void createFullWindow(String name, String title, Pane bodyPane, String style) {
         WindowPane windowPane = new WindowPane(title, bodyPane);
 
-        if (StageMap.loadStage(name, windowPane, style, StageStyle.TRANSPARENT)) {
+        if (StageMap.loadStage(name, windowPane, false, style, StageStyle.TRANSPARENT)) {
 //            Stage stage = StageMap.getStage(name);
             windowPane.setStage(StageMap.getStage(name));
             windowPane.init();
@@ -22,7 +22,7 @@ public class WindowFactory {
     public static void createFullWindow(String name, Pane title, Pane bodyPane, String style) {
         WindowPane windowPane = new WindowPane(title, bodyPane);
 
-        if (StageMap.loadStage(name, windowPane, style, StageStyle.TRANSPARENT)) {
+        if (StageMap.loadStage(name, windowPane, false, style, StageStyle.TRANSPARENT)) {
             Stage stage = StageMap.getStage(name);
             windowPane.setStage(stage);
             windowPane.init();
@@ -34,9 +34,8 @@ public class WindowFactory {
     public static void createFullWindowAsModel(String name, String title, Pane bodyPane, String style) {
         WindowPane windowPane = new WindowPane(title, bodyPane);
 
-        if (StageMap.loadStage(name, windowPane, style, StageStyle.TRANSPARENT)) {
+        if (StageMap.loadStage(name, windowPane, true, style, StageStyle.TRANSPARENT)) {
             Stage stage = StageMap.getStage(name);
-            stage.initModality(Modality.APPLICATION_MODAL);
             windowPane.setStage(stage);
             windowPane.init();
         }
@@ -45,9 +44,8 @@ public class WindowFactory {
 
     public static void createFullWindowAsModel(String name, Pane title, Pane bodyPane, String style) {
         WindowPane windowPane = new WindowPane(title, bodyPane);
-        if (StageMap.loadStage(name, windowPane, style, StageStyle.TRANSPARENT)) {
+        if (StageMap.loadStage(name, windowPane, true, style, StageStyle.TRANSPARENT)) {
             Stage stage = StageMap.getStage(name);
-            stage.initModality(Modality.APPLICATION_MODAL);
             windowPane.setStage(stage);
             windowPane.init();
         }
@@ -58,9 +56,8 @@ public class WindowFactory {
         WindowPane windowPane = new WindowPane(title, bodyPane);
         windowPane.setWindowsModel(WindowPane.WINDOW_MODEL_X);
 
-        if (StageMap.loadStage(name, windowPane, style, StageStyle.TRANSPARENT)) {
+        if (StageMap.loadStage(name, windowPane, true, style, StageStyle.TRANSPARENT)) {
             Stage stage = StageMap.getStage(name);
-            stage.initModality(Modality.APPLICATION_MODAL);
             windowPane.setStage(stage);
             windowPane.init();
         }
@@ -71,9 +68,8 @@ public class WindowFactory {
         WindowPane windowPane = new WindowPane(title, bodyPane);
         windowPane.setWindowsModel(WindowPane.WINDOW_MODEL_X);
 
-        if (StageMap.loadStage(name, windowPane, style, StageStyle.TRANSPARENT)) {
+        if (StageMap.loadStage(name, windowPane, true, style, StageStyle.TRANSPARENT)) {
             Stage stage = StageMap.getStage(name);
-            stage.initModality(Modality.APPLICATION_MODAL);
             windowPane.setStage(stage);
             windowPane.init();
         }

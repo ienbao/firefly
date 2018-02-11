@@ -37,7 +37,6 @@ public class MainController {
     }
 
     private void initToolBar() {
-
         PluginUIContext pc = RuntimeContext.getBean(PluginUIContext.class);
         Set<String> names = pc.getAllMainBodyNames();
 

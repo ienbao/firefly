@@ -47,11 +47,15 @@ public class WindowPane extends GridPane {
 
     protected static final int TITLE_LEFT_PADDING_WIN = 10;
     protected static final int TITLE_LEFT_PADDING_MAC = 15;
+
+    protected static final int STANDARD_MARGIN = 10;
+
     protected static final int SHADOW_WIDTH = 10;
     protected static final int BORDER_TITLE_HEIGHT = 30;
 
     protected static final int DRAG_PADDING = 10;
     protected static final int WINDOW_BUTTON_WIDTH = 30;
+    protected static final int WINDOW_TITLE_HEIGHT = 30;
 
     private Effect shadowEffect = new DropShadow(BlurType.TWO_PASS_BOX, new Color(0, 0, 0, 0.2),
             10, 0, 0, 0);
@@ -141,6 +145,9 @@ public class WindowPane extends GridPane {
         this.titlePane = new GridPane();
         RowConstraints r0 = new RowConstraints();
         r0.setVgrow(Priority.NEVER);
+        r0.setPrefHeight(WINDOW_TITLE_HEIGHT);
+        r0.setMaxHeight(WINDOW_TITLE_HEIGHT);
+        r0.setMinHeight(WINDOW_TITLE_HEIGHT);
         this.titlePane.getRowConstraints().add(r0);
 
         ColumnConstraints c0 = new ColumnConstraints();
@@ -157,9 +164,9 @@ public class WindowPane extends GridPane {
         this.titlePane = new GridPane();
         RowConstraints r0 = new RowConstraints();
         r0.setVgrow(Priority.NEVER);
-        r0.setPrefHeight(30);
-        r0.setMaxHeight(30);
-        r0.setMinHeight(30);
+        r0.setPrefHeight(WINDOW_TITLE_HEIGHT);
+        r0.setMaxHeight(WINDOW_TITLE_HEIGHT);
+        r0.setMinHeight(WINDOW_TITLE_HEIGHT);
         this.titlePane.getRowConstraints().add(r0);
 
         ColumnConstraints c0 = new ColumnConstraints();
@@ -173,11 +180,17 @@ public class WindowPane extends GridPane {
             ColumnConstraints c1 = new ColumnConstraints();
             c1.setHgrow(Priority.NEVER);
             ColumnConstraints c2 = new ColumnConstraints();
-            c2.setHgrow(Priority.ALWAYS);
-            this.titlePane.getColumnConstraints().addAll(c0, c1, c2);
+            c2.setHgrow(Priority.NEVER);
+            c2.setPrefWidth(STANDARD_MARGIN);
+            c2.setMaxWidth(STANDARD_MARGIN);
+            c2.setMinWidth(STANDARD_MARGIN);
+
+            ColumnConstraints c3 = new ColumnConstraints();
+            c3.setHgrow(Priority.ALWAYS);
+            this.titlePane.getColumnConstraints().addAll(c0, c1, c2, c3);
 
             this.titlePane.add(buildWindowBtn(), 1, 0);
-            this.titlePane.add(title, 2, 0);
+            this.titlePane.add(title, 3, 0);
 
         } else {
             c0.setPrefWidth(TITLE_LEFT_PADDING_WIN);
@@ -188,10 +201,17 @@ public class WindowPane extends GridPane {
             c1.setHgrow(Priority.ALWAYS);
             ColumnConstraints c2 = new ColumnConstraints();
             c2.setHgrow(Priority.NEVER);
-            this.titlePane.getColumnConstraints().addAll(c0, c1, c2);
+            c2.setPrefWidth(STANDARD_MARGIN);
+            c2.setMaxWidth(STANDARD_MARGIN);
+            c2.setMinWidth(STANDARD_MARGIN);
+
+            ColumnConstraints c3 = new ColumnConstraints();
+            c2.setHgrow(Priority.NEVER);
+
+            this.titlePane.getColumnConstraints().addAll(c0, c1, c2, c3);
 
             this.titlePane.add(title, 1, 0);
-            this.titlePane.add(buildWindowBtn(), 2, 0);
+            this.titlePane.add(buildWindowBtn(), 3, 0);
         }
 
         this.contentPane.add(titlePane, 0, 0);
@@ -234,6 +254,7 @@ public class WindowPane extends GridPane {
         HBox btnHbox = new HBox();
         btnHbox.setAlignment(Pos.CENTER_LEFT);
         btnHbox.setSpacing(8);
+
         final int btnPreSize = 12;
         closeBtn = new Button();
         closeBtn.setFocusTraversable(false);
@@ -329,7 +350,6 @@ public class WindowPane extends GridPane {
             label.setStyle("-fx-border-insets: 0 0 0 10");
             label.setStyle("-fx-background-insets: 0 0 0 10");
             initTitlePane(label);
-
         } else {
             initTitlePane((Pane) cusTitle);
         }
@@ -340,7 +360,6 @@ public class WindowPane extends GridPane {
         this.setStyle("-fx-background-color: transparent");
 
         controller = new WindowPaneController(this);
-//        init();
         if (this.titlePane != null) {
             controller.setStageDraggable();
         }
@@ -414,13 +433,6 @@ class WindowPaneController {
             }
         });
 
-
-        windowPane.getTitlePane().setOnMouseClicked(event -> {
-            if (stage.isResizable() && event.getClickCount() > 1) {
-                maximizeProperty.set(!maximizeProperty.get());
-                event.consume();
-            }
-        });
         windowPane.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown()) {
                 initX = event.getScreenX();
@@ -502,6 +514,7 @@ class WindowPaneController {
             }
         });
         stage.getScene().addEventFilter(MouseEvent.MOUSE_DRAGGED, event -> {
+            System.out.println("int dragged.");
             if (!event.isPrimaryButtonDown() || (initX == -1 && initY == -1)) {
                 return;
             }
