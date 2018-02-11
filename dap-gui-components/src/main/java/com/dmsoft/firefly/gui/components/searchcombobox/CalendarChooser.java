@@ -225,7 +225,7 @@ public class CalendarChooser extends GridPane {
             }
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         } while (calendar.get(Calendar.MONTH) == month2);
-        dayPane.setStyle("-fx-padding: 10; -fx-border-color: #ccc; -fx-border-width: 1");
+        dayPane.getStyleClass().add("day-pane");
         this.calendar.add(Calendar.MONTH, -1);
         this.calendar.set(Calendar.DAY_OF_MONTH, this.day);
         this.pane.getChildren().addAll(weekPane, dayPane);

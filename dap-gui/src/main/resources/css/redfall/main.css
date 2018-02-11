@@ -1708,3 +1708,10 @@
     -fx-background-insets: 0;
     -fx-max-width: 0;
     -fx-pref-width: 0;
+}
+
+.day-pane {
+    -fx-padding: 10;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1
+}
