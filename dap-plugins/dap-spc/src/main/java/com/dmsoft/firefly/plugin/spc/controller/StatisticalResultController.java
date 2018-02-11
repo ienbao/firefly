@@ -101,7 +101,7 @@ public class StatisticalResultController implements Initializable {
         chooseDialog.setScene(scene);
 //        chooseDialog.setAlwaysOnTop(true);
         chooseDialog.setResizable(false);
-        windowPane.initEvent();
+        windowPane.init();
 
     }
 

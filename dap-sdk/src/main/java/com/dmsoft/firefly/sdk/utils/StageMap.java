@@ -5,6 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -30,7 +31,7 @@ public final class StageMap {
     /**
      * 将加载好的Pane放到Map中进行管理
      *
-     * @param name  设定Pane的名称
+     * @param name 设定Pane的名称
      */
     public static void addNode(String name, Node node) {
         nodes.put(name, node);
@@ -123,28 +124,26 @@ public final class StageMap {
         }
     }
 
-    public static boolean loadStage(String name, Pane resources, String s, StageStyle... styles) {
+    public static boolean loadStage(String name, Pane resources, boolean modality, String style, StageStyle... styles) {
         try {
             if (stages.containsKey(name)) {
                 return true;
             }
-            //加载FXML资源文件
-//            FXMLLoader loader = new FXMLLoader(StageMap.class.getClassLoader().getResource(resources));
-//            Pane tempPane = (Pane) loader.load();
-            resources.getStylesheets().add(s);
-            //通过Loader获取FXML对应的ViewCtr，并将本StageController注入到ViewCtr中
-//            ControlledStage controlledStage = (ControlledStage) loader.getController();
-//            controlledStage.setStageMap(this);
+            resources.getStylesheets().add(style);
 
             //构造对应的Stage
             Scene tempScene = new Scene(resources);
             tempScene.setFill(Color.TRANSPARENT);
 
             Stage tempStage = new Stage();
+            if (modality) {
+                tempStage.initModality(Modality.APPLICATION_MODAL);
+            }
             tempStage.setScene(tempScene);
+
             //配置initStyle
-            for (StageStyle style : styles) {
-                tempStage.initStyle(style);
+            for (StageStyle s : styles) {
+                tempStage.initStyle(s);
             }
 
             //将设置好的Stage放到HashMap中
@@ -203,8 +202,8 @@ public final class StageMap {
     /**
      * 加载FXML资源文件到Pane容器
      *
-     * @param name      注册好的pane窗口的文件
-     * @param node      node
+     * @param name 注册好的pane窗口的文件
+     * @param node node
      * @return Node
      */
     public static Node loadPane(String name, Node node) {
