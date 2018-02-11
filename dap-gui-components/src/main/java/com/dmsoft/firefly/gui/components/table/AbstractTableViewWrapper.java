@@ -4,6 +4,7 @@ import javafx.scene.control.TableView;
 
 /**
  * interface for build table view
+ * @author Can Guan
  */
 public abstract class AbstractTableViewWrapper {
     protected TableView<String> tableView;

@@ -5,6 +5,11 @@ import javafx.scene.layout.StackPane;
 
 import static com.dmsoft.firefly.gui.components.searchcombobox.BasicArrowButton.Direction.UP;
 
+/**
+ * basic arrow button class to create an arrow button
+ *
+ * @author Can Guan
+ */
 public class BasicArrowButton extends StackPane {
     public enum Direction {
         UP {
@@ -32,6 +37,11 @@ public class BasicArrowButton extends StackPane {
         abstract String getStyleClass();
     }
 
+    /**
+     * constructor
+     *
+     * @param direction which direction arrow button to create
+     */
     public BasicArrowButton(Direction direction) {
         Direction dir = direction == null ? UP : direction;
         Region arrow = new Region();
