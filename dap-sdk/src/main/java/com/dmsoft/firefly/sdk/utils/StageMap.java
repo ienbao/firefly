@@ -168,6 +168,17 @@ public final class StageMap {
         return true;
     }
 
+    /**
+     * 隐藏任何Stage
+     *
+     * @param name 需要关闭的窗口的名称
+     * @return 是否关闭成功
+     */
+    public static boolean closeStage(String name) {
+        getStage(name).close();
+        return true;
+    }
+
 
     /**
      * 显示Stage并隐藏对应的窗口
