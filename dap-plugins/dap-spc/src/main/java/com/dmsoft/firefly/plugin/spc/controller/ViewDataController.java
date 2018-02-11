@@ -9,6 +9,7 @@ import com.dmsoft.firefly.plugin.spc.dto.SpcViewDataDto;
 import com.dmsoft.firefly.plugin.spc.model.ViewDataRowData;
 import com.dmsoft.firefly.plugin.spc.utils.FXMLLoaderUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.ViewResource;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -107,24 +108,24 @@ public class ViewDataController implements Initializable {
     }
 
     private void buildQuickSearchDialog() {
-        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML("view/quick_search.fxml");
+        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML(ViewResource.SPC_QUICK_SEARCH_VIEW_RES);
         Pane root = null;
         try {
             root = fxmlLoader.load();
             quickSearchController = fxmlLoader.getController();
-            WindowFactory.createSimpleWindowAsModel("spcQuickSearch", "Quick Search", root, getClass().getClassLoader().getResource("css/app.css").toExternalForm());
+            WindowFactory.createSimpleWindowAsModel("spcQuickSearch", "Quick Search", root, ViewResource.SPC_CSS_PATH);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void buildChooseColumnDialog() {
-        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML("view/choose_dialog.fxml");
+        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML(ViewResource.SPC_CHOOSE_STATISTICAL_VIEW_RES);
         Pane root = null;
         try {
             root = fxmlLoader.load();
             chooseDialogController = fxmlLoader.getController();
-            WindowFactory.createSimpleWindowAsModel("spcViewDataColumn", "Choose Test Items", root, getClass().getClassLoader().getResource("css/app.css").toExternalForm());
+            WindowFactory.createSimpleWindowAsModel("spcViewDataColumn", "Choose Test Items", root, ViewResource.SPC_CSS_PATH);
         } catch (IOException e) {
             e.printStackTrace();
         }
