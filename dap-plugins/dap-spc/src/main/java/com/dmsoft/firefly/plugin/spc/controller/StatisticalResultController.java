@@ -8,6 +8,7 @@ import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultDto;
 import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
 import com.dmsoft.firefly.plugin.spc.model.StatisticalTableRowData;
+import com.dmsoft.firefly.plugin.spc.utils.FXMLLoaderUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.google.common.collect.Lists;
@@ -49,6 +50,7 @@ public class StatisticalResultController implements Initializable {
     private SpcMainController spcMainController;
 
     private ChooseDialogController chooseDialogController;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.buildChooseColumnDialog();
@@ -57,11 +59,19 @@ public class StatisticalResultController implements Initializable {
         this.initComponentEvent();
     }
 
+    /**
+     * init main controller
+     *
+     * @param spcMainController main controller
+     */
     public void init(SpcMainController spcMainController) {
         this.spcMainController = spcMainController;
     }
 
-
+    /**
+     * set statistical result table data
+     * @param list the data list
+     */
     public void setStatisticalResultTableData(List<SpcStatisticalResultDto> list) {
         statisticalTableRowDataObservableList.clear();
         allCheckBox.setSelected(false);
@@ -71,7 +81,7 @@ public class StatisticalResultController implements Initializable {
     }
 
     private void buildChooseColumnDialog() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("view/choose_dialog.fxml"), ResourceBundle.getBundle("i18n.message_en_US"));
+        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML("view/choose_dialog.fxml");
         Pane root = null;
         try {
             root = fxmlLoader.load();
@@ -84,11 +94,11 @@ public class StatisticalResultController implements Initializable {
         }
     }
 
-    private void initChooseStatisticalResultTableData(){
+    private void initChooseStatisticalResultTableData() {
         List<String> value = asList(UIConstant.SPC_CHOOSE_RESULT);
         List<ChooseTableRowData> chooseTableRowDataList = Lists.newArrayList();
-        value.forEach(v ->{
-            ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false,v);
+        value.forEach(v -> {
+            ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, v);
             chooseTableRowDataList.add(chooseTableRowData);
         });
         chooseDialogController.setTableData(chooseTableRowDataList);

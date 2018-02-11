@@ -8,6 +8,7 @@ package com.dmsoft.firefly.plugin.spc;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.plugin.spc.controller.SpcMainController;
 import com.dmsoft.firefly.plugin.spc.service.SpcServiceImpl;
+import com.dmsoft.firefly.plugin.spc.utils.FXMLLoaderUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ViewResource;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.Plugin;
@@ -40,12 +41,9 @@ public class SpcPlugin extends Plugin {
         RuntimeContext.getBean(PluginUIContext.class).registerMainBody("spc", new IMainBodyPane() {
             @Override
             public Pane getNewPane() {
+                FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML("view/spc.fxml");
                 Pane root = null;
                 try {
-
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("view/spc.fxml"), ResourceBundle.getBundle("i18n.message_en_US"));
-                    fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.SpcPlugin"));
-
                     root = fxmlLoader.load();
                 } catch (Exception ex) {
                     ex.printStackTrace();

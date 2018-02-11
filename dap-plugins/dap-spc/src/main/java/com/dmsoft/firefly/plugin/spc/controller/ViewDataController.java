@@ -7,6 +7,7 @@ import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.dto.SpcViewDataDto;
 import com.dmsoft.firefly.plugin.spc.model.ViewDataRowData;
+import com.dmsoft.firefly.plugin.spc.utils.FXMLLoaderUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,7 +16,9 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
@@ -49,6 +52,7 @@ public class ViewDataController implements Initializable {
 
     private QuickSearchController quickSearchController;
     private ChooseDialogController chooseDialogController;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.buildQuickSearchDialog();
@@ -58,6 +62,10 @@ public class ViewDataController implements Initializable {
         this.initComponentEvent();
     }
 
+    /**
+     * set view data table dataList
+     * @param spcViewDataDtoList the data list
+     */
     public void setViewData(List<SpcViewDataDto> spcViewDataDtoList) {
         if (spcViewDataDtoList == null) {
             return;
@@ -65,11 +73,8 @@ public class ViewDataController implements Initializable {
         this.clearViewDataTable();
         if (spcViewDataDtoList.get(0) != null) {
             Map<String, Object> data = spcViewDataDtoList.get(0).getTestData();
-            data.forEach((String, Object) -> {
-                TableColumn<ViewDataRowData, String> col = new TableColumn();
-                col.setText(String);
-                col.setCellValueFactory(cellData -> cellData.getValue().getRowDataMap().get(String));
-                viewDataTable.getColumns().add(col);
+            data.forEach((string, object) -> {
+                this.buildViewDataColumn(string);
             });
         }
         spcViewDataDtoList.forEach(dto -> {
@@ -77,14 +82,32 @@ public class ViewDataController implements Initializable {
         });
     }
 
+    /**
+     * clear view data Table
+     */
     public void clearViewDataTable() {
         viewDataTable.getColumns().remove(1, viewDataTable.getColumns().size());
         viewDataRowDataObservableList.clear();
         allCheckBox.setSelected(false);
     }
 
+    private void buildViewDataColumn(String title) {
+        TableColumn<ViewDataRowData, String> col = new TableColumn();
+        Label label = new Label(title);
+        Button filterButton = new Button();
+        filterButton.setPrefSize(20, 20);
+        filterButton.setOnAction(event -> getFilterBtnEvent());
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        hBox.getChildren().addAll(label, filterButton);
+        col.setGraphic(hBox);
+//        col.setText(title);
+        col.setCellValueFactory(cellData -> cellData.getValue().getRowDataMap().get(title));
+        viewDataTable.getColumns().add(col);
+    }
+
     private void buildQuickSearchDialog() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("view/quick_search.fxml"), ResourceBundle.getBundle("i18n.message_en_US"));
+        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML("view/quick_search.fxml");
         Pane root = null;
         try {
             root = fxmlLoader.load();
@@ -96,7 +119,7 @@ public class ViewDataController implements Initializable {
     }
 
     private void buildChooseColumnDialog() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("view/choose_dialog.fxml"), ResourceBundle.getBundle("i18n.message_en_US"));
+        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML("view/choose_dialog.fxml");
         Pane root = null;
         try {
             root = fxmlLoader.load();
@@ -125,6 +148,7 @@ public class ViewDataController implements Initializable {
         chooseItemBtn.setOnAction(event -> getChooseColumnBtnEvent());
         unSelectedCheckBox.setOnAction(event -> getUnSelectedCheckBoxEvent());
         allCheckBox.setOnAction(event -> getAllSelectEvent());
+        quickSearchController.getCancelBtn().setOnAction(event -> closeQuickSearchDialogEvent());
     }
 
     private void getClearFilterBtnEvent() {
@@ -139,6 +163,10 @@ public class ViewDataController implements Initializable {
 
     private void getChooseColumnBtnEvent() {
         StageMap.showStage("spcViewDataColumn");
+    }
+
+    private void closeQuickSearchDialogEvent(){
+        StageMap.closeStage("spcQuickSearch");
     }
 
     private void getUnSelectedCheckBoxEvent() {
@@ -157,6 +185,15 @@ public class ViewDataController implements Initializable {
         }
     }
 
+    private void getFilterBtnEvent() {
+        StageMap.showStage("spcQuickSearch");
+    }
+
+    /**
+     * init main controller
+     *
+     * @param spcMainController main controller
+     */
     public void init(SpcMainController spcMainController) {
         this.spcMainController = spcMainController;
     }

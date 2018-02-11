@@ -12,6 +12,7 @@ import javafx.scene.layout.RowConstraints;
 
 /**
  * search combo box
+ * @author Can Guan
  */
 public class SearchComboBox extends GridPane {
     private ISearchComboBoxController searchComboBoxController;

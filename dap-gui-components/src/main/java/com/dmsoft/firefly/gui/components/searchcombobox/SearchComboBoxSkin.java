@@ -5,6 +5,7 @@ import javafx.scene.control.ComboBox;
 
 /**
  * skin combo box to set calendar
+ * @author Can Guan
  *
  * @param <T> string
  */

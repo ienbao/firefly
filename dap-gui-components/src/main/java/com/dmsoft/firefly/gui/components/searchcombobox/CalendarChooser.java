@@ -15,7 +15,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * calendar chooser pane
+ * calendar chooser pane, refer to CalendarChooser by peter
+ * @author Can Guan, Peter Li
  */
 public class CalendarChooser extends GridPane {
     private Calendar calendar = Calendar.getInstance();
