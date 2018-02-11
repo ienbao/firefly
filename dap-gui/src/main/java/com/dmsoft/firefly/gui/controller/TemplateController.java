@@ -27,6 +27,7 @@ import static com.google.common.io.Resources.getResource;
 public class TemplateController {
     @FXML
     private Button rename, add, copy, delete, deleteTime, addTime, pattern, addRow, ok, cancel, apply;
+    private Stage dialog;
 
     @FXML
     private void initialize() {
@@ -48,13 +49,26 @@ public class TemplateController {
 
     private void initEvent() {
         pattern.setOnAction(event -> buildPatternDia());
+        add.setOnAction(event -> buildAddItemDia());
+        ok.setOnAction(event -> {
+            if (dialog != null && dialog.isShowing()) {
+                dialog.close();
+            }
+        });
+        apply.setOnAction(event -> {
+
+        });
+        cancel.setOnAction(event -> {
+            if (dialog != null && dialog.isShowing()) {
+                dialog.close();
+            }
+        });
     }
 
     private void buildPatternDia() {
         Pane root = null;
         try {
             root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/pattern.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-            Stage dialog;
             dialog = new Stage();
             WindowPane windowPane = new WindowPane(dialog, ResourceBundleUtils.getString(ResourceMassages.TIME_PATTERN), root);
 
@@ -67,7 +81,27 @@ public class TemplateController {
             dialog.setScene(scene);
             windowPane.init();
             dialog.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
+    private void buildAddItemDia() {
+        Pane root = null;
+        try {
+            root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/additem.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+            dialog = new Stage();
+            WindowPane windowPane = new WindowPane(dialog, ResourceBundleUtils.getString(ResourceMassages.ADD_ITEM), root);
+
+            Scene scene = new Scene(windowPane, 430, 380);
+            windowPane.setMinSize(430, 380);
+            scene.setFill(Color.TRANSPARENT);
+            scene.getStylesheets().add(getResource("css/app.css").toExternalForm());
+
+            dialog.initStyle(StageStyle.TRANSPARENT);
+            dialog.setScene(scene);
+            windowPane.init();
+            dialog.show();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
