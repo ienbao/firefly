@@ -4,7 +4,9 @@ import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
+import com.dmsoft.firefly.sdk.ui.window.WindowFactory;
 import com.dmsoft.firefly.sdk.ui.window.WindowPane;
+import com.dmsoft.firefly.sdk.utils.StageMap;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
@@ -117,19 +119,9 @@ public class MenuFactory {
         Pane root = null;
         try {
             root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-            Stage dialog = new Stage();
-            WindowPane windowPane = new WindowPane(dialog, ResourceBundleUtils.getString(ResourceMassages.TEMPLATE), root);
 
-            Scene scene = new Scene(windowPane, 825, 595);
-            windowPane.setMinSize(825, 595);
-            scene.setFill(Color.TRANSPARENT);
-            scene.getStylesheets().add(getResource("css/app.css").toExternalForm());
-
-            dialog.initStyle(StageStyle.TRANSPARENT);
-            dialog.setScene(scene);
-            windowPane.init();
-            dialog.show();
-
+            WindowFactory.createSimpleWindowAsModel("template", ResourceBundleUtils.getString(ResourceMassages.TEMPLATE), root, getResource("css/app.css").toExternalForm());
+            StageMap.showStage("template");
         } catch (Exception ex) {
             ex.printStackTrace();
         }

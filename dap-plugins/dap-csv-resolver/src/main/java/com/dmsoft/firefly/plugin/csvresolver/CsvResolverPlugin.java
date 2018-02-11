@@ -62,21 +62,8 @@ public class CsvResolverPlugin extends Plugin {
             root = fxmlLoader.load();
 
 
-            WindowFactory.createSimpleWindowAsModel("abc", "CSV-Resolver", root, getClass().getClassLoader().getResource("css/app.css").toExternalForm());
-            StageMap.showStage("abc");
-//            Stage dialog = new Stage();
-//            WindowPane windowPane = new WindowPane(dialog, "CSV-Resolver", root);
-//
-//            Scene scene =  new Scene(windowPane, 845, 565);
-//            windowPane.setMinWidth(845);
-//            windowPane.setMinHeight(565);
-//            scene.setFill(Color.TRANSPARENT);
-//            scene.getStylesheets().add(getClass().getClassLoader().getResource("css/app.css").toExternalForm());
-//
-//            dialog.initStyle(StageStyle.TRANSPARENT);
-//            dialog.setScene(scene);
-//            windowPane.init();
-//            dialog.show();
+            WindowFactory.createSimpleWindowAsModel("csv", "CSV-Resolver", root, getClass().getClassLoader().getResource("css/app.css").toExternalForm());
+            StageMap.showStage("csv");
 
         } catch (Exception ex) {
             ex.printStackTrace();
