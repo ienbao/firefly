@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="410.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
+         <VBox.margin>
+            <Insets left="10.0" right="10.0" />
+         </VBox.margin>
+         <children>
+            <Label prefHeight="30.0" prefWidth="190.0" text="%CHOOSE_ITEM" />
+            <Label prefHeight="30.0" prefWidth="170.0" text="%CUSTOMIZE_ITEM">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
+            <Button fx:id="q" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefWidth="22.0" text="Button" />
+         </children>
+      </HBox>
+      <HBox prefHeight="255.0" prefWidth="410.0" style="-fx-border-width: 0 0 0 0;" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets left="10.0" right="10.0" />
+         </VBox.margin>
+         <children>
+            <VBox prefHeight="200.0" prefWidth="190.0" style="-fx-border-color: #DCDCDC; -fx-border-width: 1 1 1 1;">
+               <children>
+                  <TextField fx:id="filter" promptText="Test Item">
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <TableView prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                      <TableColumn maxWidth="30.0" minWidth="30.0" prefWidth="30.0" sortable="false" text="C1" />
+                      <TableColumn prefWidth="75.0" sortable="false" text="Test Item" />
+                    </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+               </children>
+            </VBox>
+            <TextArea fx:id="ok" prefHeight="200.0" prefWidth="190.0" promptText="Please input test item">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </TextArea>
+         </children>
+      </HBox>
+      <Button mnemonicParsing="false" prefWidth="80.0" text="OK">
+         <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </VBox.margin>
+      </Button>
+   </children>
+</VBox>

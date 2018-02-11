@@ -8,6 +8,7 @@ package com.dmsoft.firefly.gui.utils;
  */
 public class ResourceMassages {
     public static final String TIME_PATTERN = "TIME_PATTERN";
+    public static final String ADD_ITEM = "ADD_ITEM";
 
     public static final String TEMPLATE = "TEMPLATE";
 }
