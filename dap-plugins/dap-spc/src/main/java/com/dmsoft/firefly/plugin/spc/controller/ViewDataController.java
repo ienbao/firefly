@@ -20,7 +20,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -53,6 +52,7 @@ public class ViewDataController implements Initializable {
 
     private QuickSearchController quickSearchController;
     private ChooseDialogController chooseDialogController;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.buildQuickSearchDialog();
@@ -62,6 +62,10 @@ public class ViewDataController implements Initializable {
         this.initComponentEvent();
     }
 
+    /**
+     * set view data table dataList
+     * @param spcViewDataDtoList the data list
+     */
     public void setViewData(List<SpcViewDataDto> spcViewDataDtoList) {
         if (spcViewDataDtoList == null) {
             return;
@@ -69,8 +73,8 @@ public class ViewDataController implements Initializable {
         this.clearViewDataTable();
         if (spcViewDataDtoList.get(0) != null) {
             Map<String, Object> data = spcViewDataDtoList.get(0).getTestData();
-            data.forEach((String, Object) -> {
-                this.buildViewDataColumn(String);
+            data.forEach((string, object) -> {
+                this.buildViewDataColumn(string);
             });
         }
         spcViewDataDtoList.forEach(dto -> {
@@ -78,17 +82,20 @@ public class ViewDataController implements Initializable {
         });
     }
 
+    /**
+     * clear view data Table
+     */
     public void clearViewDataTable() {
         viewDataTable.getColumns().remove(1, viewDataTable.getColumns().size());
         viewDataRowDataObservableList.clear();
         allCheckBox.setSelected(false);
     }
 
-    private void buildViewDataColumn(String title){
+    private void buildViewDataColumn(String title) {
         TableColumn<ViewDataRowData, String> col = new TableColumn();
         Label label = new Label(title);
         Button filterButton = new Button();
-        filterButton.setPrefSize(20,20);
+        filterButton.setPrefSize(20, 20);
         filterButton.setOnAction(event -> getFilterBtnEvent());
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
@@ -100,7 +107,7 @@ public class ViewDataController implements Initializable {
     }
 
     private void buildQuickSearchDialog() {
-        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXMLPane("view/quick_search.fxml");
+        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML("view/quick_search.fxml");
         Pane root = null;
         try {
             root = fxmlLoader.load();
@@ -112,7 +119,7 @@ public class ViewDataController implements Initializable {
     }
 
     private void buildChooseColumnDialog() {
-        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXMLPane("view/choose_dialog.fxml");
+        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML("view/choose_dialog.fxml");
         Pane root = null;
         try {
             root = fxmlLoader.load();
@@ -141,6 +148,7 @@ public class ViewDataController implements Initializable {
         chooseItemBtn.setOnAction(event -> getChooseColumnBtnEvent());
         unSelectedCheckBox.setOnAction(event -> getUnSelectedCheckBoxEvent());
         allCheckBox.setOnAction(event -> getAllSelectEvent());
+        quickSearchController.getCancelBtn().setOnAction(event -> closeQuickSearchDialogEvent());
     }
 
     private void getClearFilterBtnEvent() {
@@ -155,6 +163,10 @@ public class ViewDataController implements Initializable {
 
     private void getChooseColumnBtnEvent() {
         StageMap.showStage("spcViewDataColumn");
+    }
+
+    private void closeQuickSearchDialogEvent(){
+        StageMap.closeStage("spcQuickSearch");
     }
 
     private void getUnSelectedCheckBoxEvent() {
@@ -173,10 +185,15 @@ public class ViewDataController implements Initializable {
         }
     }
 
-    private void getFilterBtnEvent(){
+    private void getFilterBtnEvent() {
         StageMap.showStage("spcQuickSearch");
     }
 
+    /**
+     * init main controller
+     *
+     * @param spcMainController main controller
+     */
     public void init(SpcMainController spcMainController) {
         this.spcMainController = spcMainController;
     }
