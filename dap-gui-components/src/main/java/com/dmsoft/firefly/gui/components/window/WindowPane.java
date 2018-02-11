@@ -426,25 +426,17 @@ class WindowPaneController {
     }
 
     protected void setStageDraggable() {
-        windowPane.getTitlePane().setOnMouseClicked(event -> {
-            if (stage.isResizable() && event.getClickCount() > 1) {
-                maximizeProperty.set(!maximizeProperty.get());
-                event.consume();
-            }
-        });
-
-        windowPane.setOnMousePressed(event -> {
+        stage.getScene().addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
             if (event.isPrimaryButtonDown()) {
                 initX = event.getScreenX();
                 initY = event.getScreenY();
-                event.consume();
             } else {
                 initX = -1;
                 initY = -1;
             }
         });
 
-        windowPane.getTitlePane().setOnMouseDragged(getDragEvent());
+        windowPane.getTitlePane().addEventFilter(MouseEvent.MOUSE_DRAGGED, getDragEvent());
     }
 
     protected EventHandler getDragEvent() {
@@ -514,7 +506,6 @@ class WindowPaneController {
             }
         });
         stage.getScene().addEventFilter(MouseEvent.MOUSE_DRAGGED, event -> {
-            System.out.println("int dragged.");
             if (!event.isPrimaryButtonDown() || (initX == -1 && initY == -1)) {
                 return;
             }
