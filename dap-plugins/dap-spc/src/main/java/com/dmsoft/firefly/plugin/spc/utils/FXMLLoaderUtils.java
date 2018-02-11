@@ -18,9 +18,14 @@ public class FXMLLoaderUtils {
         return fxmlLoaderUtils;
     }
 
-    public FXMLLoader getLoaderFXMLPane(String res){
+    /**
+     * get loaderFxml
+     * @param res the path of fxml
+     * @return loader
+     */
+    public FXMLLoader getLoaderFXML(String res){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(res), ResourceBundle.getBundle("i18n.message_en_US"));
-//        fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.SpcPlugin"));
+        fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.SpcPlugin"));
         return fxmlLoader;
     }
 }

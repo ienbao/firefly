@@ -41,7 +41,7 @@ public class SpcPlugin extends Plugin {
         RuntimeContext.getBean(PluginUIContext.class).registerMainBody("spc", new IMainBodyPane() {
             @Override
             public Pane getNewPane() {
-                FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXMLPane("view/spc.fxml");
+                FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML("view/spc.fxml");
                 Pane root = null;
                 try {
                     root = fxmlLoader.load();

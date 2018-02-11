@@ -107,7 +107,7 @@ public class ViewDataController implements Initializable {
     }
 
     private void buildQuickSearchDialog() {
-        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXMLPane("view/quick_search.fxml");
+        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML("view/quick_search.fxml");
         Pane root = null;
         try {
             root = fxmlLoader.load();
@@ -119,7 +119,7 @@ public class ViewDataController implements Initializable {
     }
 
     private void buildChooseColumnDialog() {
-        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXMLPane("view/choose_dialog.fxml");
+        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML("view/choose_dialog.fxml");
         Pane root = null;
         try {
             root = fxmlLoader.load();
