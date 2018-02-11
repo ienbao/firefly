@@ -89,7 +89,7 @@ public class StatisticalResultController implements Initializable {
             chooseDialogController = fxmlLoader.getController();
             chooseDialogController.setValueColumnText("Statistical Result");
             this.initChooseStatisticalResultTableData();
-            WindowFactory.createSimpleWindowAsModel("spcStatisticalResult", "Choose Statistical Results", root, ViewResource.SPC_CSS_PATH);
+            WindowFactory.createSimpleWindowAsModel("spcStatisticalResult", "Choose Statistical Results", root);
         } catch (IOException e) {
             e.printStackTrace();
         }

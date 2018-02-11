@@ -113,7 +113,7 @@ public class ViewDataController implements Initializable {
         try {
             root = fxmlLoader.load();
             quickSearchController = fxmlLoader.getController();
-            WindowFactory.createSimpleWindowAsModel("spcQuickSearch", "Quick Search", root, ViewResource.SPC_CSS_PATH);
+            WindowFactory.createSimpleWindowAsModel("spcQuickSearch", "Quick Search", root);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -125,7 +125,7 @@ public class ViewDataController implements Initializable {
         try {
             root = fxmlLoader.load();
             chooseDialogController = fxmlLoader.getController();
-            WindowFactory.createSimpleWindowAsModel("spcViewDataColumn", "Choose Test Items", root, ViewResource.SPC_CSS_PATH);
+            WindowFactory.createSimpleWindowAsModel("spcViewDataColumn", "Choose Test Items", root);
         } catch (IOException e) {
             e.printStackTrace();
         }
