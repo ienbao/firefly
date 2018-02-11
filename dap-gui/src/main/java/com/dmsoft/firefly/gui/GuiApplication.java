@@ -1,18 +1,13 @@
 package com.dmsoft.firefly.gui;
 
 import com.dmsoft.firefly.core.DAPApplication;
-import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.gui.components.window.WindowPane;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.google.common.collect.Lists;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class GuiApplication extends Application {
 
