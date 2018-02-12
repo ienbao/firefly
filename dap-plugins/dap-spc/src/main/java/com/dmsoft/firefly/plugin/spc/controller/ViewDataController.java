@@ -17,8 +17,12 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
@@ -65,6 +69,7 @@ public class ViewDataController implements Initializable {
 
     /**
      * set view data table dataList
+     *
      * @param spcViewDataDtoList the data list
      */
     public void setViewData(List<SpcViewDataDto> spcViewDataDtoList) {
@@ -96,15 +101,23 @@ public class ViewDataController implements Initializable {
         TableColumn<ViewDataRowData, String> col = new TableColumn();
         Label label = new Label(title);
         Button filterButton = new Button();
-        filterButton.setPrefSize(20, 20);
         filterButton.setOnAction(event -> getFilterBtnEvent());
+        filterButton.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
+        filterButton.getStyleClass().add("table-filter-btn");
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.getChildren().addAll(label, filterButton);
+        hBox.getChildren().add(label);
         col.setGraphic(hBox);
-//        col.setText(title);
+
         col.setCellValueFactory(cellData -> cellData.getValue().getRowDataMap().get(title));
         viewDataTable.getColumns().add(col);
+        hBox.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+            hBox.getChildren().add(filterButton);
+        });
+        hBox.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+            hBox.getChildren().remove(filterButton);
+        });
+
     }
 
     private void buildQuickSearchDialog() {
@@ -166,7 +179,7 @@ public class ViewDataController implements Initializable {
         StageMap.showStage("spcViewDataColumn");
     }
 
-    private void closeQuickSearchDialogEvent(){
+    private void closeQuickSearchDialogEvent() {
         StageMap.closeStage("spcQuickSearch");
     }
 
