@@ -22,7 +22,7 @@ public abstract class AbstractTableViewWrapper {
     }
 
     /**
-     * method to get wrapped table
+     * method to get wrapped table (and reset table)
      *
      * @return table view
      */
