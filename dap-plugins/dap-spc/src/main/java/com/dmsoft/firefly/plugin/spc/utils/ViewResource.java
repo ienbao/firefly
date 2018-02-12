@@ -1,6 +1,8 @@
 package com.dmsoft.firefly.plugin.spc.utils;
 
+
 public final class ViewResource {
+    public static final String SPC_CSS_PATH = ViewResource.class.getClassLoader().getResource("css/spc_app.css").toExternalForm();
 
     public final static String PRE_VIEW = "view/";
 

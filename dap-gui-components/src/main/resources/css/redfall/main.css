@@ -832,7 +832,7 @@
     -fx-background-color: null;
     -fx-shape: null;
     -fx-scale-shape: false;
-    -fx-background-image: url('../images/btn_del_gray.png');
+    -fx-background-image: url('/images/btn_del_gray.png');
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
     -fx-pref-height: 22;
@@ -1370,25 +1370,25 @@
  *                                                                             *
  ******************************************************************************/
 .top-logo {
-    -fx-background-image: url('../images/logo_16.png');
+    -fx-background-image: url('/images/logo_16.png');
 }
 .window-button-minimize {
-    -fx-background-image: url('../images/top_minimize_normal.png');
+    -fx-background-image: url('/images/top_minimize_normal.png');
 }
 
 .window-button-maximize {
-    -fx-background-image: url('../images/top_full_screen_normal.png');
+    -fx-background-image: url('/images/top_full_screen_normal.png');
 }
 
 .window-button-restore {
-    -fx-background-image: url('../images/top_adaptive_normal.png');
+    -fx-background-image: url('/images/top_adaptive_normal.png');
 }
 
 .window-button-close {
-    -fx-background-image: url('../images/top_close_normal.png');
+    -fx-background-image: url('/images/top_close_normal.png');
 }
 .window-button-close:hover {
-    -fx-background-image: url('../images/top_close_over.png');
+    -fx-background-image: url('/images/top_close_over.png');
 }
 /*******************************************************************************
  *                                                                             *
@@ -1407,44 +1407,44 @@
     -fx-background-size: 12;
 }
 .mac-button-minimize {
-    -fx-background-image: url('../images/top_mac_minimize_normal.png');
+    -fx-background-image: url('/images/top_mac_minimize_normal.png');
 }
 .mac-button-minimize:hover {
-    -fx-background-image: url('../images/top_mac_minimize_over.png');
+    -fx-background-image: url('/images/top_mac_minimize_over.png');
 }
 .mac-button-minimize:pressed {
     -fx-background-color: null;
-    -fx-background-image: url('../images/top_mac_minimize_click.png');
+    -fx-background-image: url('/images/top_mac_minimize_click.png');
 }
 .mac-button-maximize {
-    -fx-background-image: url('../images/top_mac_full_screen_normal.png');
+    -fx-background-image: url('/images/top_mac_full_screen_normal.png');
 }
 .mac-button-maximize:hover {
-    -fx-background-image: url('../images/top_mac_full_screen_over.png');
+    -fx-background-image: url('/images/top_mac_full_screen_over.png');
 }
 .mac-button-maximize:pressed {
     -fx-background-color: null;
-    -fx-background-image: url('../images/top_mac_full_screen_click.png');
+    -fx-background-image: url('/images/top_mac_full_screen_click.png');
 }
 .mac-button-restore {
-    -fx-background-image: url('../images/top_mac_adaptive_normal.png');
+    -fx-background-image: url('/images/top_mac_adaptive_normal.png');
 }
 .mac-button-restore:hover {
-    -fx-background-image: url('../images/top_mac_adaptive_over.png');
+    -fx-background-image: url('/images/top_mac_adaptive_over.png');
 }
 .mac-button-restore:pressed {
     -fx-background-color: null;
-    -fx-background-image: url('../images/top_mac_adaptive_click.png');
+    -fx-background-image: url('/images/top_mac_adaptive_click.png');
 }
 .mac-button-close {
-    -fx-background-image: url('../images/top_mac_close_normal.png');
+    -fx-background-image: url('/images/top_mac_close_normal.png');
 }
 .mac-button-close:hover {
-    -fx-background-image: url('../images/top_mac_close_over.png');
+    -fx-background-image: url('/images/top_mac_close_over.png');
 }
 .mac-button-close:pressed {
     -fx-background-color: null;
-    -fx-background-image: url('../images/top_mac_close_click.png');
+    -fx-background-image: url('/images/top_mac_close_click.png');
 }
 
 /*******************************************************************************
@@ -1456,4 +1456,262 @@
     -fx-background-color: white;
     -fx-border-width: 1 0 0 0;
     -fx-border-color: #DCDCDC;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Search Component                                                            *
+ *                                                                             *
+ ******************************************************************************/
+.search-component {
+    -fx-border-color: red;
+}
+
+.search-component .test-item {
+    -fx-border-width: 1 1 0 1;
+    -fx-font-size: 12;
+}
+
+.search-component .test-item .arrow {
+    -fx-pref-width: 9;
+    -fx-min-width: 9;
+    -fx-min-height: 5;
+    -fx-pref-height: 5;
+}
+
+.search-component .test-item .text-field, .search-component .value .text-field {
+    -fx-padding: 0 0 0 5;
+}
+
+.search-component .value {
+    -fx-border-width: 1 1 1 0;
+    -fx-skin: "com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBoxSkin";
+}
+
+.search-component .value .arrow-calendar-button .arrow {
+    -fx-shape: "M 0 0 Z";
+}
+
+.search-component .value .arrow-calendar-button {
+    -fx-background-image: url('/images/btn_calendar_normal.png');
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.search-component .operator {
+    -fx-font-size: 12;
+    -fx-border-insets: 0;
+}
+
+.search-component .operator .arrow {
+    -fx-background-color: black;
+    -fx-shape: "M 0 0 Z";
+}
+
+.search-component .operator .cell {
+    -fx-padding: 0 0 0 6;
+}
+
+.search-component .operator .list-view {
+    -fx-pref-height: 165;
+    -fx-pref-width: 40;
+    -fx-padding: 0;
+}
+
+.search-component .operator .arrow-button {
+    -fx-background-color: black;
+    -fx-shape: "M 6 14 L 1 19 L 6 19 Z";
+    -fx-position-shape: false;
+    -fx-scale-shape: false;
+    -fx-border-insets: 0;
+    -fx-padding: 0;
+}
+
+.search-component .close {
+    -fx-border-width: 1 1 1 0;
+    -fx-background-image: url('/images/btn_delete_normal.png');
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Basic Arrow Button                                                          *
+ *                                                                             *
+ ******************************************************************************/
+.up-arrow-button, .down-arrow-button, .left-arrow-button, .right-arrow-button {
+    -fx-min-height: 22;
+    -fx-min-width: 22;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-highlight-fill: COLOR_GRAY_CC;
+    -fx-border-color: COLOR_GRAY_CC;
+    -fx-background-color: COLOR_GRAY_F5;
+    -fx-cursor: hand;
+}
+
+.up-arrow-button:hover, .down-arrow-button:hover, .left-arrow-button:hover, .right-arrow-button:hover {
+    -fx-background-color: COLOR_LIGHT_FF;
+}
+
+.up-arrow-button:pressed, .down-arrow-button:pressed, .left-arrow-button:pressed, .right-arrow-button:pressed {
+    -fx-border-color: COLOR_GRAY_CC;
+    -fx-background-color: COLOR_GRAY_DC;
+}
+
+.up-arrow-button:focused, .down-arrow-button:focused, .left-arrow-button:focused, .right-arrow-button:focused {
+    -fx-border-color: COLORFUL_AUXILIARY_BLUE;
+    -fx-border-style: solid;
+}
+
+.up-arrow-button:focused:hover, .down-arrow-button:focused:hover, .left-arrow-button:focused:hover, .right-arrow-button:hover {
+    -fx-border-color: COLORFUL_AUXILIARY_BLUE;
+    -fx-border-style: solid;
+}
+
+.up-arrow-button .arrow {
+    -fx-background-color: black;
+    -fx-background-insets: 0;
+    -fx-pref-width: 8;
+    -fx-pref-height: 3;
+    -fx-shape: "M 0 4 h 7 l -3.5 -4 z";
+}
+
+.down-arrow-button .arrow {
+    -fx-background-color: black;
+    -fx-background-insets: 0;
+    -fx-pref-width: 8;
+    -fx-pref-height: 3;
+    -fx-shape: "M 0 0 h 7 l -3.5 4 z";
+}
+
+.right-arrow-button .arrow {
+    -fx-background-color: black;
+    -fx-background-insets: 0;
+    -fx-pref-width: 5;
+    -fx-pref-height: 8;
+    -fx-shape: "M 0 0 v 7 l 3.5 -4 z";
+}
+
+.left-arrow-button .arrow {
+    -fx-background-color: black;
+    -fx-background-insets: 0;
+    -fx-pref-width: 5;
+    -fx-pref-height: 8;
+    -fx-shape: "M 4 0 v 7 l -4 -3.5 z";
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Spinner                                                                     *
+ *                                                                             *
+ ******************************************************************************/
+.spinner {
+    -fx-pref-height: 22;
+    -fx-min-height: 22;
+    -fx-max-height: 22;
+    -fx-border-width: 0;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: FONT_DARK;
+    -fx-cursor: hand;
+}
+
+.spinner.time-spinner .text-field:hover {
+    -fx-border-color: COLOR_GRAY_CC;
+    -fx-background-color: #ffffff;
+    -fx-cursor: hand;
+}
+
+.spinner.time-spinner .text-field:pressed {
+    -fx-border-color: COLOR_GRAY_CC;
+    -fx-background-color: #dcdcdc;
+}
+
+.spinner.time-spinner .text-field:focused {
+    -fx-border-color: COLORFUL_AUXILIARY_BLUE;
+}
+
+.spinner.time-spinner .text-field:focused:hover {
+    -fx-border-color: COLORFUL_AUXILIARY_BLUE;
+}
+
+.spinner.time-spinner .text-field:showing {
+    -fx-background-color: COLOR_GRAY_DC;
+}
+
+.spinner.time-spinner .text-field:showing:hover {
+    -fx-background-color: COLOR_GRAY_ED;
+}
+
+.spinner.time-spinner .text-field:hover:pressed, .spinner:focused:hover:pressed {
+    -fx-background-color: COLOR_GRAY_DC;
+}
+
+.spinner.time-spinner .text-field {
+    -fx-padding: 0;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0 2 0 0;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-border-width: 1;
+    -fx-border-color: COLOR_GRAY_CC;
+}
+
+.spinner.time-spinner .increment-arrow-button, .spinner.time-spinner .decrement-arrow-button {
+    -fx-background-insets: 0;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-border-width: 1;
+    -fx-background-color: COLOR_GRAY_F5;
+    -fx-border-color: COLOR_GRAY_CC;
+}
+
+.spinner.time-spinner .increment-arrow-button:hover, .spinner.time-spinner .decrement-arrow-button:hover {
+    -fx-background-color: COLOR_LIGHT_FF;
+}
+
+.spinner.time-spinner .increment-arrow-button:pressed, .spinner.time-spinner .decrement-arrow-button:pressed {
+    -fx-background-color: COLOR_GRAY_DC;
+}
+
+.spinner.time-spinner .increment-arrow-button {
+    -fx-border-insets: 0 0 1 0;
+}
+
+.spinner.time-spinner .increment-arrow-button .increment-arrow {
+    -fx-background-insets: 0 1 2 1;
+}
+
+.spinner.time-spinner .decrement-arrow-button .decrement-arrow {
+    -fx-background-insets: 1 1 1 1;
+}
+
+.spinner.time-spinner .decrement-arrow-button {
+    -fx-border-insets: 1 0 0 0;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Calendar                                                                    *
+ *                                                                             *
+ ******************************************************************************/
+.combo-box-base.monthcmb .arrow-button {
+    -fx-padding: 0 8 0 8;
+}
+
+.combo-box-base.monthcmb .cell {
+    -fx-padding: 0 0 0 6;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-max-width: 0;
+    -fx-pref-width: 0;
+}
+
+.day-pane {
+    -fx-padding: 10;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1
 }

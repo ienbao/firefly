@@ -2,6 +2,8 @@
  * Copyright (c) 2017. For Intelligent Group.
  */
 
+import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.plugin.spc.utils.FXMLLoaderUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,21 +17,21 @@ import java.util.ResourceBundle;
  */
 public class TestApplication extends Application {
 
+    static {
+        FXMLLoaderUtils.isDebug = true;
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        //Parent root = FXMLLoader.load(getClass().getResource("view/main.fxml"));
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("view/spc.fxml"));
         loader.setResources(ResourceBundle.getBundle("i18n.message_en_US"));
-//        loader.setController(new SpcMainController());
-//        loader.setClassLoader(cl);
         Parent root = loader.load();
-//        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("view/spc.fxml"),ResourceBundle.getBundle("i18n.message_en_US"));
-        //root.getStylesheets().add("/main.css");
+
 
         Scene scene = new Scene(root,1280,704);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
     }

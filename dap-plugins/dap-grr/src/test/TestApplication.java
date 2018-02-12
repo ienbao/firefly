@@ -19,12 +19,15 @@ public class TestApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        //Parent root = FXMLLoader.load(getClass().getResource("view/main.fxml"));
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("view/grr.fxml"),ResourceBundle.getBundle("i18n.message_en_US"));
-        //root.getStylesheets().add("/main.css");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getClassLoader().getResource("view/grr.fxml"));
+        loader.setResources(ResourceBundle.getBundle("i18n.message_en_US"));
+        Parent root = loader.load();
+
 
         Scene scene = new Scene(root,1280,704);
-//        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/main.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
     }

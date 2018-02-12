@@ -11,6 +11,7 @@ import com.dmsoft.firefly.plugin.spc.model.StatisticalTableRowData;
 import com.dmsoft.firefly.plugin.spc.utils.FXMLLoaderUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
+import com.dmsoft.firefly.plugin.spc.utils.ViewResource;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -81,14 +82,14 @@ public class StatisticalResultController implements Initializable {
     }
 
     private void buildChooseColumnDialog() {
-        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML("view/choose_dialog.fxml");
+        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML(ViewResource.SPC_CHOOSE_STATISTICAL_VIEW_RES);
         Pane root = null;
         try {
             root = fxmlLoader.load();
             chooseDialogController = fxmlLoader.getController();
             chooseDialogController.setValueColumnText("Statistical Result");
             this.initChooseStatisticalResultTableData();
-            WindowFactory.createSimpleWindowAsModel("spcStatisticalResult", "Choose Statistical Results", root, getClass().getClassLoader().getResource("css/app.css").toExternalForm());
+            WindowFactory.createSimpleWindowAsModel("spcStatisticalResult", "Choose Statistical Results", root);
         } catch (IOException e) {
             e.printStackTrace();
         }

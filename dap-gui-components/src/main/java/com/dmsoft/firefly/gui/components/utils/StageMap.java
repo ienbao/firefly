@@ -1,7 +1,6 @@
 package com.dmsoft.firefly.gui.components.utils;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -12,6 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class StageMap {
     private static final Logger logger = LoggerFactory.getLogger(StageMap.class);
@@ -102,16 +105,23 @@ public final class StageMap {
      * @param styles styles
      * @return Whether to load stage success or not
      */
-    public static boolean loadStage(String name, Pane resources, boolean modality, String style, StageStyle... styles) {
+    public static boolean loadStage(String name, Pane resources, boolean modality, List<String> cusStyles, StageStyle... styles) {
         try {
             if (stages.containsKey(name)) {
                 return true;
             }
-            resources.getStylesheets().add(style);
+//            resources.getStylesheets().add(style);
 
             //The corresponding Stage
             Scene tempScene = new Scene(resources);
+            if (cusStyles != null && !cusStyles.isEmpty()) {
+                cusStyles.forEach(s -> {
+                    tempScene.getStylesheets().add(s);
+                });
+            }
+
             tempScene.setFill(Color.TRANSPARENT);
+
 
             Stage tempStage = new Stage();
             if (modality) {
@@ -184,5 +194,14 @@ public final class StageMap {
             logger.debug("Stage removal success.");
             return true;
         }
+    }
+
+    /**
+     * method to get all stage
+     *
+     * @return all stage name
+     */
+    public static Set<String> getAllStage() {
+        return stages.keySet();
     }
 }
