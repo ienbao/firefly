@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.plugin.spc.utils;
+package com.dmsoft.firefly.gui.components.chart;
 
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;

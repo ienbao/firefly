@@ -1,6 +1,6 @@
-package com.dmsoft.firefly.plugin.utils;
+package com.dmsoft.firefly.gui.components.chart;
 
-import com.dmsoft.firefly.plugin.spc.utils.ChartUtils;
+import com.dmsoft.firefly.gui.components.chart.ChartUtils;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
