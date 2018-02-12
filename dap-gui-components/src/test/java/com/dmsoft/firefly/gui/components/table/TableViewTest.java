@@ -9,10 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 public class TableViewTest extends Application {
@@ -125,6 +122,9 @@ public class TableViewTest extends Application {
         tableModel.getRowKeyArray().add("GG");
 
         TableViewWrapper wrapper = new TableViewWrapper(tableView, tableModel);
+        List<String> addStyleClass = new ArrayList<>();
+        addStyleClass.add("edited");
+        wrapper.addEditedCellStyleClass(addStyleClass);
         Scene scene = new Scene(wrapper.getWrappedTable());
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/main.css").toExternalForm());
         primaryStage.setScene(scene);

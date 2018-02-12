@@ -12,10 +12,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * table wrapper class
@@ -24,6 +21,10 @@ import java.util.Map;
  */
 public class TableViewWrapper extends AbstractTableViewWrapper {
     private Map<String, TableColumn<String, ?>> columnMap;
+    private static final String SEPARATOR = "!@#";
+    private List<String> editedStyleClass;
+    private Map<String, List<String>> customStyleClassMap;
+    private Set<String> addedStyleClass;
 
     /**
      * constructor
@@ -33,7 +34,9 @@ public class TableViewWrapper extends AbstractTableViewWrapper {
      */
     public TableViewWrapper(TableView<String> tableView, TableModel tableModel) {
         super(tableView, tableModel);
-
+        editedStyleClass = new ArrayList<>();
+        this.customStyleClassMap = new HashMap<>();
+        this.addedStyleClass = new HashSet<>();
     }
 
     private void init() {
@@ -41,6 +44,7 @@ public class TableViewWrapper extends AbstractTableViewWrapper {
         for (String s : tableModel.getHeaderArray()) {
             columnMap.put(s, initColumn(s));
         }
+        // add listener for column list removed, added or permuted
         this.tableModel.getHeaderArray().addListener((ListChangeListener<String>) c -> {
             Platform.runLater(() -> {
                         while (c.next()) {
@@ -74,6 +78,7 @@ public class TableViewWrapper extends AbstractTableViewWrapper {
             );
         });
 
+        // add listener for row key list removed, added or permuted
         this.tableModel.getRowKeyArray().addListener((ListChangeListener<String>) c -> {
             Platform.runLater(() -> {
                         while (c.next()) {
@@ -98,24 +103,68 @@ public class TableViewWrapper extends AbstractTableViewWrapper {
         return this.tableView;
     }
 
+    @Override
+    public void addEditedCellStyleClass(List<String> styleClass) {
+        this.editedStyleClass.clear();
+        this.editedStyleClass.addAll(styleClass);
+        this.addedStyleClass.addAll(styleClass);
+    }
+
+    @Override
+    public void addCustomCellStyleClass(String rowKey, String columnName, List<String> styleClass) {
+        this.customStyleClassMap.put(rowKey + SEPARATOR + columnName, styleClass);
+        this.addedStyleClass.addAll(styleClass);
+    }
+
+    @Override
+    public void removeCustomCellStyleClass(String rowKey, List<String> columnName) {
+        this.customStyleClassMap.remove(rowKey + SEPARATOR + columnName);
+    }
+
+    @Override
+    public void addCustomRowStyleClass(String rowKey, List<String> styleClass) {
+        this.customStyleClassMap.put(rowKey, styleClass);
+        this.addedStyleClass.addAll(styleClass);
+    }
+
+    @Override
+    public void removeCustomRowStyleClass(String rowKey) {
+        this.customStyleClassMap.remove(rowKey);
+    }
+
+    @Override
+    public void addCustomColumnStyleClass(String columnName, List<String> styleClass) {
+        this.customStyleClassMap.put(columnName, styleClass);
+        this.addedStyleClass.addAll(styleClass);
+    }
+
+    @Override
+    public void removeCustomColumnStyleClass(String columnName) {
+        this.customStyleClassMap.remove(columnName);
+    }
+
+    // method to init column
     private TableColumn<String, ?> initColumn(String columnName) {
         if (tableModel.isEditableTextField(columnName)) {
             TableColumn<String, String> column = new TableColumn<>(columnName);
-            setColumnEditable(column);
+            decorateTextFieldColumn(column);
             return column;
         } else if (tableModel.isCheckBox(columnName)) {
             TableColumn<String, CheckBox> column = new TableColumn<>(columnName);
-            setColumnCheckable(column);
+            decorateCheckboxColumn(column);
             return column;
         } else {
             TableColumn<String, String> column = new TableColumn<>(columnName);
-            column.setCellValueFactory(cell -> tableModel.getCellData(cell.getValue(), cell.getTableColumn().getText()));
+            decorateDefaultColumn(column);
             return column;
         }
     }
 
-    private void setColumnEditable(TableColumn<String, String> column) {
+    private void decorateTextFieldColumn(TableColumn<String, String> column) {
+        // init text field value and combine event and value
         column.setCellValueFactory(cell -> tableModel.getCellData(cell.getValue(), cell.getTableColumn().getText()));
+
+        // decorate style class
         column.setCellFactory(new Callback<TableColumn<String, String>, TableCell<String, String>>() {
             @Override
             public TableCell<String, String> call(TableColumn<String, String> param) {
@@ -123,11 +172,13 @@ public class TableViewWrapper extends AbstractTableViewWrapper {
                     @Override
                     public void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
-                        if (getIndex() > -1 && getIndex() < getTableView().getItems().size() && tableModel.isModified(getTableView().getItems().get(getIndex()),
-                                getTableColumn().getText(), item)) {
-                            setStyle("-fx-background-color: yellow");
-                        } else {
-                            setStyle("-fx-background-color: red");
+                        getStyleClass().removeAll(addedStyleClass);
+                        if (getIndex() > -1 && getIndex() < getTableView().getItems().size()) {
+                            getStyleClass().setAll(getNewStyleClass(getStyleClass(), getTableView().getItems().get(getIndex()),
+                                    getTableColumn().getText()));
+                            if (tableModel.isModified(getTableView().getItems().get(getIndex()), getTableColumn().getText(), item)) {
+                                getStyleClass().addAll(editedStyleClass);
+                            }
                         }
                     }
                 };
@@ -135,7 +186,8 @@ public class TableViewWrapper extends AbstractTableViewWrapper {
         });
     }
 
-    private void setColumnCheckable(TableColumn<String, CheckBox> column) {
+    private void decorateCheckboxColumn(TableColumn<String, CheckBox> column) {
+        // set column header graphic with check box, and combine event and value
         CheckBox allCheckBox = new CheckBox();
         allCheckBox.selectedProperty().setValue(tableModel.getAllCheckValue(column.getText()).getValue());
         allCheckBox.setOnMouseClicked(event -> {
@@ -149,6 +201,7 @@ public class TableViewWrapper extends AbstractTableViewWrapper {
         });
         column.setGraphic(allCheckBox);
 
+        // init cell check box and combine event and value
         column.setCellValueFactory(cell -> {
             ObjectProperty<Boolean> b = tableModel.getCheckValue(cell.getValue(), cell.getTableColumn().getText());
             CheckBox checkBox = new CheckBox();
@@ -166,6 +219,74 @@ public class TableViewWrapper extends AbstractTableViewWrapper {
             return new SimpleObjectProperty<>(checkBox);
         });
 
+        // decorate style class
+        column.setCellFactory(new Callback<TableColumn<String, CheckBox>, TableCell<String, CheckBox>>() {
+            @Override
+            public TableCell<String, CheckBox> call(TableColumn<String, CheckBox> param) {
+                return new TableCell<String, CheckBox>() {
+                    @Override
+                    protected void updateItem(CheckBox item, boolean empty) {
+                        if (item != null && item.equals(getItem())) {
+                            return;
+                        }
+                        super.updateItem(item, empty);
+                        if (item == null) {
+                            super.setText(null);
+                            super.setGraphic(null);
+                        } else {
+                            super.setText(null);
+                            super.setGraphic(item);
+                        }
+                        getStyleClass().removeAll(addedStyleClass);
+                        if (getIndex() > -1 && getIndex() < getTableView().getItems().size()) {
+                            getStyleClass().setAll(getNewStyleClass(getStyleClass(), getTableView().getItems().get(getIndex()),
+                                    getTableColumn().getText()));
+                        }
+                    }
+                };
+            }
+        });
     }
 
+    private void decorateDefaultColumn(TableColumn<String, String> column) {
+        // init cell value and combine event and value
+        column.setCellValueFactory(cell -> tableModel.getCellData(cell.getValue(), cell.getTableColumn().getText()));
+
+        // decorate style class
+        column.setCellFactory(param -> new TableCell<String, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                if (item != null && item.equals(getItem())) {
+                    return;
+                }
+
+                super.updateItem(item, empty);
+
+                if (item == null) {
+                    super.setText(null);
+                    super.setGraphic(null);
+                } else {
+                    super.setText(item);
+                    super.setGraphic(null);
+                }
+                getStyleClass().removeAll(addedStyleClass);
+                if (getIndex() > -1 && getIndex() < getTableView().getItems().size()) {
+                    getStyleClass().setAll(getNewStyleClass(getStyleClass(), getTableView().getItems().get(getIndex()),
+                            getTableColumn().getText()));
+                }
+            }
+        });
+    }
+
+    // method to get new style class
+    private List<String> getNewStyleClass(List<String> oldStyleClass, String rowKey, String columnName) {
+        List<String> result = new ArrayList<>();
+        if (oldStyleClass != null) {
+            result.addAll(oldStyleClass);
+        }
+        result.addAll(customStyleClassMap.get(rowKey + SEPARATOR + columnName));
+        result.addAll(customStyleClassMap.get(rowKey));
+        result.addAll(customStyleClassMap.get(columnName));
+        return result;
+    }
 }
