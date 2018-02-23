@@ -9,21 +9,17 @@ import com.dmsoft.firefly.sdk.dai.entity.Project;
 import com.dmsoft.firefly.sdk.dai.entity.TestData;
 import com.dmsoft.firefly.sdk.dai.entity.TestItem;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
-
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -41,7 +37,7 @@ public class SourceDataServiceImpl implements SourceDataService {
 
     @Override
     public void saveProject(ProjectDto projectDto) {
-        MongoCollection mongoCollection = MongoUtil.getCollection("project", Project.class);
+        MongoCollection<Project> mongoCollection = MongoUtil.getCollection("project", Project.class);
         Project project = new Project();
         project.setProjectName(projectDto.getProjectName());
         project.setPath(projectDto.getPath());
@@ -51,7 +47,7 @@ public class SourceDataServiceImpl implements SourceDataService {
     @Override
     public void saveProject(List<ProjectDto> projectDtos) {
 
-        MongoCollection mongoCollection = MongoUtil.getCollection("project", Project.class);
+        MongoCollection<Project> mongoCollection = MongoUtil.getCollection("project", Project.class);
         projectDtos.forEach(projectDto -> {
             Project project = new Project();
             project.setProjectName(projectDto.getProjectName());
@@ -93,47 +89,43 @@ public class SourceDataServiceImpl implements SourceDataService {
 
     @Override
     public List<ProjectDto> findAllProjects() {
-        MongoCollection mongoCollection = MongoUtil.getCollection("project", Project.class);
+        MongoCollection<Project> mongoCollection = MongoUtil.getCollection("project", Project.class);
         List<ProjectDto> result = Lists.newArrayList();
         MongoCursor<Project> mongoCursor = mongoCollection.find().iterator();
-        while (mongoCursor.hasNext()) {
+        mongoCursor.forEachRemaining(m -> {
             ProjectDto projectDto = new ProjectDto();
-            Project project = mongoCursor.next();
-            BeanUtils.copyProperties(project, projectDto);
+            BeanUtils.copyProperties(m, projectDto);
             result.add(projectDto);
-        }
-
+        });
         return result;
     }
 
     @Override
     public List<String> findAllProjectNames() {
-        MongoCollection mongoCollection = MongoUtil.getCollection("project", Project.class);
+        MongoCollection<Project> mongoCollection = MongoUtil.getCollection("project", Project.class);
         List<String> result = Lists.newArrayList();
         MongoCursor<Project> mongoCursor = mongoCollection.find().iterator();
-        while (mongoCursor.hasNext()) {
-            result.add(mongoCursor.next().getProjectName());
-        }
-        ;
-        return null;
+        mongoCursor.forEachRemaining(m -> result.add(m.getProjectName()));
+        return result;
     }
 
     @Override
     public List<String> findItemNames(List<String> projectNames) {
         MongoCollection<TestItem> mongoCollection = MongoUtil.getCollection("testItem", TestItem.class);
-        List<String> result = Lists.newArrayList();
+        Set<String> result = Sets.newLinkedHashSet();
 
         BasicDBObject basicDBObject = new BasicDBObject();
 //        BasicDBList values = new BasicDBList();
 //        values.addAll(projectNames);
         basicDBObject.append("projectName", new BasicDBObject("$in", projectNames));
         MongoCursor<TestItem> mongoCursor = mongoCollection.find(basicDBObject).iterator();
+        mongoCursor.forEachRemaining(m -> result.addAll(m.getItemNames()));
         while (mongoCursor.hasNext()) {
             List<String> testItemNames = mongoCursor.next().getItemNames();
             testItemNames.removeAll(result);
             result.addAll(testItemNames);
         }
-        return result;
+        return Lists.newArrayList(result);
     }
 
     @Override
@@ -146,22 +138,21 @@ public class SourceDataServiceImpl implements SourceDataService {
             BasicDBObject basicDBObject = new BasicDBObject();
             basicDBObject.append("data", 0);
             MongoCursor<TestData> mongoCursor = mongoCollection.find().projection(basicDBObject).iterator();
-            while (mongoCursor.hasNext()) {
-                TestData testData = mongoCursor.next();
+            mongoCursor.forEachRemaining(m -> {
                 Boolean isExit = Boolean.FALSE;
                 for (TestItemDto testItemDto : result) {
-                    if (testItemDto.getItemName().equals(testData.getItemName())) {
+                    if (testItemDto.getItemName().equals(m.getItemName())) {
                         isExit = true;
                         break;
                     }
                 }
                 if (!isExit) {
                     TestItemDto testItemDto = new TestItemDto();
-                    BeanUtils.copyProperties(testData, testItemDto);
+                    BeanUtils.copyProperties(m, testItemDto);
                     testItemDto.setNumeric(Boolean.TRUE);
                     result.add(testItemDto);
                 }
-            }
+            });
         });
         LinkedHashMap<String, SpecificationDataDto> map = templateSettingDto.getSpecificationDatas();
         for (Map.Entry<String, SpecificationDataDto> entry : map.entrySet()) {
@@ -171,7 +162,7 @@ public class SourceDataServiceImpl implements SourceDataService {
                     testItemDto.setLsl(entry.getValue().getLslFail());
                     testItemDto.setUsl(entry.getValue().getUslPass());
                     //如果数据类型为A,就将isNumeric设置为False
-                    testItemDto.setNumeric("Attribute".equals(entry.getValue().getDataType()) ? false : true);
+                    testItemDto.setNumeric(!"Attribute".equals(entry.getValue().getDataType()));
                     break;
                 }
             }
@@ -216,7 +207,7 @@ public class SourceDataServiceImpl implements SourceDataService {
             if (conditions == null || conditions.isEmpty()) {
                 if (lineUsedValid) {
                     List<String> lineUsedList = findLineDataUsed(projectName);
-                    List<TestDataDto> partData = findDataByItemNamesAndLineNo(projectName, searchItems, lineUsedList);
+                    List<TestDataDto> partData = findDataByItemNamesAndRowKey(projectName, searchItems, lineUsedList);
                     partData.forEach(testDataDto -> {
                         testDataDto.setCodition("");
                     });
@@ -234,18 +225,18 @@ public class SourceDataServiceImpl implements SourceDataService {
                     conditionItems.addAll(filterConditionUtil.parseItemNameFromConditions(condition));
                     List<TestDataDto> conditionData = findDataByItemNames(projectName, conditionItems);
 
-                    List<String> lineNoList = filterConditionUtil.filterCondition(condition, conditionData);
+                    List<String> lineRowKeys = filterConditionUtil.filterCondition(condition, conditionData);
 
                     if (lineUsedValid) {
                         List<String> lineUsedList = findLineDataUsed(projectName);
-                        lineNoList.retainAll(lineUsedList);
+                        lineRowKeys.retainAll(lineUsedList);
                     }
 
-                    List<TestDataDto> partData = findDataByItemNamesAndLineNo(projectName, searchItems, lineNoList);
+                    List<TestDataDto> partData = findDataByItemNamesAndRowKey(projectName, searchItems, lineRowKeys);
                     partData.forEach(testDataDto -> {
                         testDataDto.setCodition(condition);
                     });
-                    addPartToResult(partData, result, lineNoList.size());
+                    addPartToResult(partData, result, lineRowKeys.size());
                 });
             }
             limitCache();
@@ -347,7 +338,7 @@ public class SourceDataServiceImpl implements SourceDataService {
     }
 
     @Override
-    public List<TestDataDto> findDataByItemNamesAndLineNo(String projectName, List<String> testItemNames, List<String> lineNo) {
+    public List<TestDataDto> findDataByItemNamesAndRowKey(String projectName, List<String> testItemNames, List<String> rowKeys) {
         MongoCollection<TestData> mongoCollection = MongoUtil.getCollection(projectName, TestData.class);
         List<TestDataDto> result = Lists.newArrayList();
 
@@ -359,7 +350,7 @@ public class SourceDataServiceImpl implements SourceDataService {
                 BeanUtils.copyProperties(testData, testDataDto);
                 List<CellData> cellDatas = Lists.newArrayList();
                 testData.getData().forEach(cellData -> {
-                    if (lineNo.contains(cellData.getLineNo())) {
+                    if (rowKeys.contains(cellData.getRowKey())) {
                         cellDatas.add(cellData);
                     }
                 });
@@ -406,7 +397,7 @@ public class SourceDataServiceImpl implements SourceDataService {
                         BeanUtils.copyProperties(testData, testDataDto);
                         List<CellData> cellDatas = Lists.newArrayList();
                         testData.getData().forEach(cellData -> {
-                            if (lineNo.contains(cellData.getLineNo())) {
+                            if (rowKeys.contains(cellData.getRowKey())) {
                                 cellDatas.add(cellData);
                             }
                         });
@@ -437,7 +428,7 @@ public class SourceDataServiceImpl implements SourceDataService {
     @Override
     public void updateLineDataUsed(String projectName, List<CellData> lineUsedData) {
         MongoCollection<TestData> mongoCollection = MongoUtil.getCollection(projectName, TestData.class);
-        BasicDBObject whereObject = new BasicDBObject("itemName", "lineNo");
+        BasicDBObject whereObject = new BasicDBObject("itemName", "rowKey");
         BasicDBObject setObject = new BasicDBObject("$set", new BasicDBObject("data", lineUsedData));
         mongoCollection.updateOne(whereObject, setObject);
     }
@@ -446,13 +437,13 @@ public class SourceDataServiceImpl implements SourceDataService {
     public List<String> findLineDataUsed(String projectName) {
         MongoCollection<TestData> mongoCollection = MongoUtil.getCollection(projectName, TestData.class);
         List<String> lineUsedList = Lists.newArrayList();
-        BasicDBObject whereObject = new BasicDBObject("itemName", "lineNo");
+        BasicDBObject whereObject = new BasicDBObject("itemName", "rowKey");
         MongoCursor<TestData> mongoCursor = mongoCollection.find(whereObject).iterator();
         if (mongoCursor.hasNext()) {
             TestData testData = mongoCursor.next();
             testData.getData().forEach(cellData -> {
                 if ((Boolean) cellData.getValue()) {
-                    lineUsedList.add(cellData.getLineNo());
+                    lineUsedList.add(cellData.getRowKey());
                 }
             });
         }
@@ -467,7 +458,7 @@ public class SourceDataServiceImpl implements SourceDataService {
         MongoCollection<TestItem> testItemCollection = MongoUtil.getCollection("testItem", TestItem.class);
         testItemCollection.deleteOne(new BasicDBObject("projectName", projectName));
 
-        MongoCollection<TestData> testDataCollection = MongoUtil.getCollection("TestData", TestItem.class);
+        MongoCollection<TestData> testDataCollection = MongoUtil.getCollection("TestData", TestData.class);
         testDataCollection.drop();
     }
 

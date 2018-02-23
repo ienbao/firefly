@@ -9,7 +9,7 @@ import java.util.Map;
 public class LineDataDto implements Serializable {
 
     private String projectName;
-    private String lineNo;
+    private String rowKeys;
     private Boolean lineUsed = true;
     private Map<String, Object> testData;
 
@@ -21,12 +21,12 @@ public class LineDataDto implements Serializable {
         this.projectName = projectName;
     }
 
-    public String getLineNo() {
-        return lineNo;
+    public String getRowKeys() {
+        return rowKeys;
     }
 
-    public void setLineNo(String lineNo) {
-        this.lineNo = lineNo;
+    public void setRowKeys(String rowKeys) {
+        this.rowKeys = rowKeys;
     }
 
     public Boolean getLineUsed() {

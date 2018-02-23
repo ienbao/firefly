@@ -46,7 +46,7 @@ public class MongoUtil {
         return database.getCollection(collectionName);
     }
 
-    public static MongoCollection getCollection(String collectionName, Class document) {
+    public static <T> MongoCollection<T> getCollection(String collectionName, Class<T> document) {
 
         return database.getCollection(collectionName, document);
     }

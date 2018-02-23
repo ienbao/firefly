@@ -2,19 +2,19 @@ package com.dmsoft.firefly.sdk.dai.entity;
 
 public class CellData {
 
-    private String lineNo;
+    private String rowKey;
     private Object value;
 
     public CellData() {
 
     }
 
-    public String getLineNo() {
-        return lineNo;
+    public String getRowKey() {
+        return rowKey;
     }
 
-    public void setLineNo(String lineNo) {
-        this.lineNo = lineNo;
+    public void setRowKey(String rowKey) {
+        this.rowKey = rowKey;
     }
 
     public Object getValue() {

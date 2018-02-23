@@ -107,7 +107,7 @@ public class CsvResolverService implements IDataParser {
 //            for (int i = fileFormat.getData() - 1; i < csvList.size(); i++) {
 //                List<String> data = Arrays.asList(csvList.get(i));
 //                LineDataDto lineDataDto = new LineDataDto();
-//                lineDataDto.setLineNo(String.valueOf(i));
+//                lineDataDto.setRowKey(String.valueOf(i));
 //                lineDataDto.setProjectName(csvFile.getName());
 //                Map<String, Object> itemDatas = Maps.newHashMap();
 //                for (int j = 0; j < data.size(); j++) {
@@ -130,7 +130,7 @@ public class CsvResolverService implements IDataParser {
                 List<CellData> cellDatas = Lists.newArrayList();
                 for (int j = fileFormat.getData() - 1; j < csvList.size(); j++) {
                     CellData cellData = new CellData();
-                    cellData.setLineNo(String.valueOf(j));
+                    cellData.setRowKey(String.valueOf(j));
                     cellData.setValue(csvList.get(j)[i]);
                     cellDatas.add(cellData);
                 }

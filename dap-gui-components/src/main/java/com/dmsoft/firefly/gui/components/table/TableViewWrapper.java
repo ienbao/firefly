@@ -284,9 +284,15 @@ public class TableViewWrapper extends AbstractTableViewWrapper {
         if (oldStyleClass != null) {
             result.addAll(oldStyleClass);
         }
-        result.addAll(customStyleClassMap.get(rowKey + SEPARATOR + columnName));
-        result.addAll(customStyleClassMap.get(rowKey));
-        result.addAll(customStyleClassMap.get(columnName));
+        if (customStyleClassMap.containsKey(rowKey + SEPARATOR + columnName)) {
+            result.addAll(customStyleClassMap.get(rowKey + SEPARATOR + columnName));
+        }
+        if (customStyleClassMap.containsKey(rowKey)) {
+            result.addAll(customStyleClassMap.get(rowKey));
+        }
+        if (customStyleClassMap.containsKey(columnName)) {
+            result.addAll(customStyleClassMap.get(columnName));
+        }
         return result;
     }
 }

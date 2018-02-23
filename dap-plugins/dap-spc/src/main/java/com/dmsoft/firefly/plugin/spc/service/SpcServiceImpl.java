@@ -9,12 +9,10 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestDataDto;
 import com.dmsoft.firefly.sdk.dai.entity.CellData;
-import com.dmsoft.firefly.sdk.dai.entity.TestData;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.omg.CORBA.portable.ApplicationException;
 
 import java.util.List;
 import java.util.Map;
@@ -100,7 +98,7 @@ public class SpcServiceImpl implements SpcService {
             data.forEach(d ->{
                 SpcViewDataDto spcViewDataDto = new SpcViewDataDto();
                 Map<String,Object> testData = Maps.newHashMap();
-                spcViewDataDto.setLineKey(d.getLineNo());
+                spcViewDataDto.setLineKey(d.getRowKey());
 
                 testData.put(testDataDto.getItemName(),d.getValue());
                 spcViewDataDto.setTestData(testData);

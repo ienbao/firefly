@@ -1,14 +1,12 @@
 package com.dmsoft.firefly.sdk.dai.service;
 
 
-import com.dmsoft.firefly.sdk.dai.dto.LineDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.ProjectDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.entity.CellData;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by GuangLi on 2018/1/24.
@@ -96,6 +94,7 @@ public interface SourceDataService {
      * @param itemNames    item names
      * @param conditions   conditions
      * @param templateName template names
+     * @param lineUsedValid line in used or not
      * @return list of lineDataDto
      */
     List<TestDataDto> findDataByCondition(List<String> projectNames, List<String> itemNames, List<String> conditions, String templateName, Boolean lineUsedValid);
@@ -115,9 +114,10 @@ public interface SourceDataService {
      *
      * @param projectName   project name
      * @param testItemNames test item name
+     * @param rowKeys row key list
      * @return line data
      */
-    List<TestDataDto> findDataByItemNamesAndLineNo(String projectName, List<String> testItemNames, List<String> lineNo);
+    List<TestDataDto> findDataByItemNamesAndRowKey(String projectName, List<String> testItemNames, List<String> rowKeys);
 
     /**
      * update line data isUsed

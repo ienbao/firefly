@@ -14,8 +14,6 @@ import com.dmsoft.firefly.sdk.dai.dto.TestDataDto;
 import com.dmsoft.firefly.sdk.dai.entity.CellData;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.google.common.collect.Lists;
-import com.mongodb.BasicDBObject;
-import com.mongodb.QueryOperators;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.slf4j.Logger;
@@ -23,9 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 /**
  * Created by Lucien.Chen on 2018/1/24.
@@ -111,6 +107,7 @@ public class FilterConditionUtil {
      * Filter the data.
      *
      * @param condition search condition
+     * @param testDataDtoList testDataDtoList
      * @return true, exist; false, not exist
      */
     public List<String> filterCondition(String condition, List<TestDataDto> testDataDtoList) {
@@ -120,11 +117,11 @@ public class FilterConditionUtil {
         try {
             FilterExpressionParser fep = new FilterExpressionParser();
             SEPResult result = fep.doParser(condition);
-            List<String> lineNos = parseSepResult(result, testDataDtoList);
+            List<String> rowKeys = parseSepResult(result, testDataDtoList);
 //            if (validateResult == null || validateResult.isEmpty()) {
 //                isExist = false;
 //            }
-            return lineNos;
+            return rowKeys;
         } catch (Exception e) {
             logger.debug("Search condition parse error! condition = {}", condition);
             return Lists.newArrayList();
@@ -163,15 +160,15 @@ public class FilterConditionUtil {
     }
 
     private List<String> parseBaseData(SEPResult result, List<TestDataDto> testDataDtoList) {
-        List<String> lineNoList = Lists.newArrayList();
-        if (filterBaseData((String) result.getLeftExpr(), (String) result.getRightExpr(), result.getToken(), lineNoList, testDataDtoList)) {
-            return lineNoList;
+        List<String> rowKeys = Lists.newArrayList();
+        if (filterBaseData((String) result.getLeftExpr(), (String) result.getRightExpr(), result.getToken(), rowKeys, testDataDtoList)) {
+            return rowKeys;
         } else {
             return null;
         }
     }
 
-    private boolean filterBaseData(String name, String value, String token, List<String> lineNoList, List<TestDataDto> testDataDtoList) {
+    private boolean filterBaseData(String name, String value, String token, List<String> rowKeys, List<TestDataDto> testDataDtoList) {
         boolean isExist = true;
         TestDataDto itemData = null;
         for (TestDataDto testDataDto : testDataDtoList) {
@@ -192,14 +189,14 @@ public class FilterConditionUtil {
                         itemNames.forEach(cellData -> {
                             if (StringUtils.isNumeric(cellData.getValue().toString())) {
                                 if (num == Double.valueOf(cellData.getValue().toString())) {
-                                    lineNoList.add(cellData.getLineNo());
+                                    rowKeys.add(cellData.getRowKey());
                                 }
                             }
                         });
                     } else {
                         itemNames.forEach(cellData -> {
                             if (value.equals(cellData.getValue())) {
-                                lineNoList.add(cellData.getLineNo());
+                                rowKeys.add(cellData.getRowKey());
                             }
                         });
                     }
@@ -207,7 +204,7 @@ public class FilterConditionUtil {
                 case LIKE:
                     itemNames.forEach(cellData -> {
                         if (cellData.getValue().toString().contains(value)) {
-                            lineNoList.add(cellData.getLineNo());
+                            rowKeys.add(cellData.getRowKey());
                         }
                     });
                     break;
@@ -217,7 +214,7 @@ public class FilterConditionUtil {
                         itemNames.forEach(cellData -> {
                             if (StringUtils.isNumeric(cellData.getValue().toString())) {
                                 if (Double.valueOf(cellData.getValue().toString()) > num) {
-                                    lineNoList.add(cellData.getLineNo());
+                                    rowKeys.add(cellData.getRowKey());
                                 }
                             }
                         });
@@ -226,7 +223,7 @@ public class FilterConditionUtil {
                         itemNames.forEach(cellData -> {
                             Long realTimeValue = getTime(cellData.getValue().toString());
                             if (timeValue != null && realTimeValue != null && realTimeValue > timeValue) {
-                                lineNoList.add(cellData.getLineNo());
+                                rowKeys.add(cellData.getRowKey());
                             }
                         });
                     } else {
@@ -239,7 +236,7 @@ public class FilterConditionUtil {
                         itemNames.forEach(cellData -> {
                             if (StringUtils.isNumeric(cellData.getValue().toString())) {
                                 if (Double.valueOf(cellData.getValue().toString()) >= num) {
-                                    lineNoList.add(cellData.getLineNo());
+                                    rowKeys.add(cellData.getRowKey());
                                 }
                             }
                         });
@@ -248,7 +245,7 @@ public class FilterConditionUtil {
                         itemNames.forEach(cellData -> {
                             Long realTimeValue = getTime(cellData.getValue().toString());
                             if (timeValue != null && realTimeValue != null && realTimeValue >= timeValue) {
-                                lineNoList.add(cellData.getLineNo());
+                                rowKeys.add(cellData.getRowKey());
                             }
                         });
                     } else {
@@ -261,7 +258,7 @@ public class FilterConditionUtil {
                         itemNames.forEach(cellData -> {
                             if (StringUtils.isNumeric(cellData.getValue().toString())) {
                                 if (Double.valueOf(cellData.getValue().toString()) < num) {
-                                    lineNoList.add(cellData.getLineNo());
+                                    rowKeys.add(cellData.getRowKey());
                                 }
                             }
                         });
@@ -270,7 +267,7 @@ public class FilterConditionUtil {
                         itemNames.forEach(cellData -> {
                             Long realTimeValue = getTime(cellData.getValue().toString());
                             if (timeValue != null && realTimeValue != null && realTimeValue < timeValue) {
-                                lineNoList.add(cellData.getLineNo());
+                                rowKeys.add(cellData.getRowKey());
                             }
                         });
                     } else {
@@ -283,7 +280,7 @@ public class FilterConditionUtil {
                         itemNames.forEach(cellData -> {
                             if (StringUtils.isNumeric(cellData.getValue().toString())) {
                                 if (Double.valueOf(cellData.getValue().toString()) <= num) {
-                                    lineNoList.add(cellData.getLineNo());
+                                    rowKeys.add(cellData.getRowKey());
                                 }
                             }
                         });
@@ -292,7 +289,7 @@ public class FilterConditionUtil {
                         itemNames.forEach(cellData -> {
                             Long realTimeValue = getTime(cellData.getValue().toString());
                             if (timeValue != null && realTimeValue != null && realTimeValue <= timeValue) {
-                                lineNoList.add(cellData.getLineNo());
+                                rowKeys.add(cellData.getRowKey());
                             }
                         });
                     } else {
@@ -305,14 +302,14 @@ public class FilterConditionUtil {
                         itemNames.forEach(cellData -> {
                             if (StringUtils.isNumeric(cellData.getValue().toString())) {
                                 if (num != Double.valueOf(cellData.getValue().toString())) {
-                                    lineNoList.add(cellData.getLineNo());
+                                    rowKeys.add(cellData.getRowKey());
                                 }
                             }
                         });
                     } else {
                         itemNames.forEach(cellData -> {
                             if (!value.equals(cellData.getValue())) {
-                                lineNoList.add(cellData.getLineNo());
+                                rowKeys.add(cellData.getRowKey());
                             }
                         });
                     }

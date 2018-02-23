@@ -123,8 +123,11 @@ public class TableViewTest extends Application {
 
         TableViewWrapper wrapper = new TableViewWrapper(tableView, tableModel);
         List<String> addStyleClass = new ArrayList<>();
+        List<String> errorStyleClass = new ArrayList<>();
+        errorStyleClass.add("error");
         addStyleClass.add("edited");
         wrapper.addEditedCellStyleClass(addStyleClass);
+        wrapper.addCustomCellStyleClass("GG", "HH", errorStyleClass);
         Scene scene = new Scene(wrapper.getWrappedTable());
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/main.css").toExternalForm());
         primaryStage.setScene(scene);
