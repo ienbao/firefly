@@ -192,13 +192,13 @@ public class SourceDataServiceImpl implements SourceDataService {
                 conditions.forEach(condition -> {
                     TestDataDto testDataDto = new TestDataDto();
                     testDataDto.setItemName(itemName);
-                    testDataDto.setCodition(condition);
+                    testDataDto.setCondition(condition);
                     result.add(testDataDto);
                 });
             } else {
                 TestDataDto testDataDto = new TestDataDto();
                 testDataDto.setItemName(itemName);
-                testDataDto.setCodition("");
+                testDataDto.setCondition("");
                 result.add(testDataDto);
             }
         });
@@ -209,13 +209,13 @@ public class SourceDataServiceImpl implements SourceDataService {
                     List<String> lineUsedList = findLineDataUsed(projectName);
                     List<TestDataDto> partData = findDataByItemNamesAndRowKey(projectName, searchItems, lineUsedList);
                     partData.forEach(testDataDto -> {
-                        testDataDto.setCodition("");
+                        testDataDto.setCondition("");
                     });
                     addPartToResult(partData, result, lineUsedList.size());
                 } else {
                     List<TestDataDto> partData = findDataByItemNames(projectName, searchItems);
                     partData.forEach(testDataDto -> {
-                        testDataDto.setCodition("");
+                        testDataDto.setCondition("");
                     });
                     addPartToResult(partData, result, partData.get(0).getData().size());
                 }
@@ -234,7 +234,7 @@ public class SourceDataServiceImpl implements SourceDataService {
 
                     List<TestDataDto> partData = findDataByItemNamesAndRowKey(projectName, searchItems, lineRowKeys);
                     partData.forEach(testDataDto -> {
-                        testDataDto.setCodition(condition);
+                        testDataDto.setCondition(condition);
                     });
                     addPartToResult(partData, result, lineRowKeys.size());
                 });
@@ -491,7 +491,7 @@ public class SourceDataServiceImpl implements SourceDataService {
         result.forEach(resultDto -> {
             Boolean isExist = Boolean.FALSE;
             for (TestDataDto dto : part) {
-                if (resultDto.getItemName().equals(dto.getItemName()) && resultDto.getCodition().equals(dto.getCodition())) {
+                if (resultDto.getItemName().equals(dto.getItemName()) && resultDto.getCondition().equals(dto.getCondition())) {
                     resultDto.getData().addAll(dto.getData());
                     isExist = true;
                     break;

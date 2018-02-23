@@ -1,7 +1,6 @@
 package com.dmsoft.firefly.sdk.dai.dto;
 
 import com.dmsoft.firefly.sdk.dai.entity.CellData;
-import org.bson.types.ObjectId;
 
 import java.util.List;
 
@@ -10,19 +9,19 @@ import java.util.List;
  */
 public class TestDataDto {
 
-    private String codition;
+    private String condition;
     private String itemName;
     private String usl;
     private String lsl;
     private String unit;
     private List<CellData> data;
 
-    public String getCodition() {
-        return codition;
+    public String getCondition() {
+        return condition;
     }
 
-    public void setCodition(String codition) {
-        this.codition = codition;
+    public void setCondition(String condition) {
+        this.condition = condition;
     }
 
     public String getItemName() {
