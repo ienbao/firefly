@@ -957,6 +957,11 @@
     -fx-border-color: #dcdcdc;
 }
 
+.table-context-menu {
+    -fx-min-width: 160;
+    -fx-pref-width: 160;
+}
+
 /*******************************************************************************
  *                                                                             *
  * ScrollBar                                                                   *

@@ -24,7 +24,12 @@ public abstract class AbstractTableViewWrapper {
     }
 
     /**
-     * method to get wrapped table (and reset table)
+     * method to update settings
+     */
+    public abstract void update();
+
+    /**
+     * method to get wrapped table (and reset table), for safety, please call this method at last
      *
      * @return table view
      */
@@ -83,4 +88,25 @@ public abstract class AbstractTableViewWrapper {
      * @param columnName style class
      */
     public abstract void removeCustomColumnStyleClass(String columnName);
+
+    /**
+     * method to add table row event
+     *
+     * @param rowEvent row event
+     */
+    public abstract void addTableRowEvent(TableMenuRowEvent rowEvent);
+
+    /**
+     * method to remove table row event
+     *
+     * @param rowEvent row event
+     */
+    public abstract void removeTableRowEvent(TableMenuRowEvent rowEvent);
+
+    /**
+     * method to remove table row event by row event name
+     *
+     * @param rowEventName row event name
+     */
+    public abstract void removeTableRowEvent(String rowEventName);
 }

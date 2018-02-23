@@ -5,6 +5,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
@@ -121,16 +122,32 @@ public class TableViewTest extends Application {
         tableModel.getRowKeyArray().remove("CC");
         tableModel.getRowKeyArray().add("GG");
 
+        TableMenuRowEvent rowEvent = new TableMenuRowEvent() {
+            @Override
+            public String getMenuName() {
+                return "Print";
+            }
+
+            @Override
+            public void handleAction(String rowKey, ActionEvent event) {
+                System.out.println(rowKey);
+            }
+        };
+
         TableViewWrapper wrapper = new TableViewWrapper(tableView, tableModel);
+        wrapper.addTableRowEvent(rowEvent);
         List<String> addStyleClass = new ArrayList<>();
         List<String> errorStyleClass = new ArrayList<>();
         errorStyleClass.add("error");
         addStyleClass.add("edited");
         wrapper.addEditedCellStyleClass(addStyleClass);
-        wrapper.addCustomCellStyleClass("GG", "HH", errorStyleClass);
+
         Scene scene = new Scene(wrapper.getWrappedTable());
-        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/main.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
+        wrapper.addCustomCellStyleClass("GG", "HH", errorStyleClass);
+        wrapper.update();
+        System.out.println("ASF");
     }
 }

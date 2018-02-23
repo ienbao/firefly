@@ -4,10 +4,7 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
@@ -25,6 +22,8 @@ public class TableViewWrapper extends AbstractTableViewWrapper {
     private List<String> editedStyleClass;
     private Map<String, List<String>> customStyleClassMap;
     private Set<String> addedStyleClass;
+    private List<TableMenuRowEvent> rowEvents;
+    private ContextMenu menu;
 
     /**
      * constructor
@@ -37,9 +36,23 @@ public class TableViewWrapper extends AbstractTableViewWrapper {
         editedStyleClass = new ArrayList<>();
         this.customStyleClassMap = new HashMap<>();
         this.addedStyleClass = new HashSet<>();
+        this.rowEvents = new ArrayList<>();
     }
 
-    private void init() {
+    @Override
+    public void update() {
+        this.updateContextMenu();
+        if (!this.rowEvents.isEmpty()) {
+            this.tableView.setRowFactory(tv -> {
+                TableRow<String> row = new TableRow<>();
+                row.setOnMouseClicked(event -> {
+                    if (!row.isEmpty()) {
+                        row.setContextMenu(menu);
+                    }
+                });
+                return row;
+            });
+        }
         this.columnMap = new LinkedHashMap<>();
         for (String s : tableModel.getHeaderArray()) {
             columnMap.put(s, initColumn(s));
@@ -99,7 +112,7 @@ public class TableViewWrapper extends AbstractTableViewWrapper {
 
     @Override
     public TableView getWrappedTable() {
-        init();
+        update();
         return this.tableView;
     }
 
@@ -141,6 +154,37 @@ public class TableViewWrapper extends AbstractTableViewWrapper {
     @Override
     public void removeCustomColumnStyleClass(String columnName) {
         this.customStyleClassMap.remove(columnName);
+    }
+
+    @Override
+    public void addTableRowEvent(TableMenuRowEvent rowEvent) {
+        String rowEventName = rowEvent.getMenuName();
+        if (rowEventName == null) {
+            return;
+        }
+        for (TableMenuRowEvent event : rowEvents) {
+            if (rowEventName.equals(event.getMenuName())) {
+                return;
+            }
+        }
+        this.rowEvents.add(rowEvent);
+    }
+
+    @Override
+    public void removeTableRowEvent(TableMenuRowEvent rowEvent) {
+        this.rowEvents.remove(rowEvent);
+    }
+
+    @Override
+    public void removeTableRowEvent(String rowEventName) {
+        if (rowEventName == null) {
+            return;
+        }
+        for (TableMenuRowEvent event : rowEvents) {
+            if (rowEventName.equals(event.getMenuName())) {
+                rowEvents.remove(event);
+            }
+        }
     }
 
     // method to init column
@@ -294,5 +338,19 @@ public class TableViewWrapper extends AbstractTableViewWrapper {
             result.addAll(customStyleClassMap.get(columnName));
         }
         return result;
+    }
+
+    // method to update context menu
+    private void updateContextMenu() {
+        this.menu = new ContextMenu();
+        this.menu.getStyleClass().add("table-context-menu");
+        for (TableMenuRowEvent event : rowEvents) {
+            MenuItem menuItem = new MenuItem(event.getMenuName());
+            menuItem.setOnAction(event1 -> {
+                String rowKey = tableView.getSelectionModel().getSelectedItem();
+                event.handleAction(rowKey, event1);
+            });
+            this.menu.getItems().add(menuItem);
+        }
     }
 }
