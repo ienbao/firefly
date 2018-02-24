@@ -5,12 +5,11 @@
 package com.dmsoft.firefly.core.job;
 
 import com.dmsoft.firefly.core.job.handler.*;
-import com.dmsoft.firefly.sdk.job.InitJobPipeline;
-import com.dmsoft.firefly.sdk.job.JobDoComplete;
-import com.dmsoft.firefly.sdk.job.JobManager;
-import com.dmsoft.firefly.sdk.job.JobPipeline;
-
-import java.util.List;
+import com.dmsoft.firefly.sdk.job.*;
+import com.dmsoft.firefly.sdk.job.core.InitJobPipeline;
+import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
+import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.job.core.JobPipeline;
 
 /**
  * Created by Garen.Pang on 2018/2/2.
@@ -22,7 +21,7 @@ public class JobTest {
         JobManager jobManager = new DefaultJobManager();
         jobManager.createJob("test1", new InitJobPipeline() {
             @Override
-            public JobPipeline initJobPipeline(JobPipeline pipeline) {
+            public void initJobPipeline(JobPipeline pipeline) {
 
                 //注意 ： 1.Inbound是add的顺序执行 2.Outbound 是add逆序执行
                 //3.在handler中执行returnValue后，后面的handler都不会执行，包括outbound 和 inbound
@@ -31,7 +30,6 @@ public class JobTest {
                 pipeline.addLast("test1", new JobInboundHandler1());
                 pipeline.addLast("test2", new JobInboundHandler2());
                 pipeline.addLast("test3", new JobInboundHandler3());
-                return pipeline;
             }
         });
 

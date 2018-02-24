@@ -2,9 +2,9 @@
  * Copyright (c) 2017. For Intelligent Group.
  */
 
-package com.dmsoft.firefly.core.job;
+package com.dmsoft.firefly.sdk.job;
 
-import com.dmsoft.firefly.sdk.job.*;
+import com.dmsoft.firefly.sdk.job.core.*;
 
 import java.util.concurrent.ExecutorService;
 

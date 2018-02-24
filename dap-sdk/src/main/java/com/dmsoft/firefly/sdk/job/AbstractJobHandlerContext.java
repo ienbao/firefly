@@ -2,9 +2,9 @@
  * Copyright (c) 2017. For Intelligent Group.
  */
 
-package com.dmsoft.firefly.core.job;
+package com.dmsoft.firefly.sdk.job;
 
-import com.dmsoft.firefly.sdk.job.*;
+import com.dmsoft.firefly.sdk.job.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

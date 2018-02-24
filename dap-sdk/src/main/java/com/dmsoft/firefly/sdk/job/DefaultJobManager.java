@@ -1,8 +1,12 @@
-package com.dmsoft.firefly.core.job;
+/*
+ * Copyright (c) 2017. For Intelligent Group.
+ */
 
-import com.dmsoft.firefly.sdk.job.InitJobPipeline;
-import com.dmsoft.firefly.sdk.job.JobDoComplete;
-import com.dmsoft.firefly.sdk.job.JobManager;
+package com.dmsoft.firefly.sdk.job;
+
+import com.dmsoft.firefly.sdk.job.core.InitJobPipeline;
+import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
+import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;

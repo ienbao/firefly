@@ -4,8 +4,8 @@
 
 package com.dmsoft.firefly.core.job.handler;
 
-import com.dmsoft.firefly.sdk.job.JobHandlerContext;
-import com.dmsoft.firefly.sdk.job.JobInboundHandler;
+import com.dmsoft.firefly.sdk.job.core.JobHandlerContext;
+import com.dmsoft.firefly.sdk.job.core.JobInboundHandler;
 
 /**
  * Created by Garen.Pang on 2018/2/2.

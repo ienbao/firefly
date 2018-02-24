@@ -5,7 +5,7 @@
 package com.dmsoft.firefly.core;
 
 import com.dmsoft.firefly.core.dai.*;
-import com.dmsoft.firefly.core.job.DefaultJobManager;
+import com.dmsoft.firefly.sdk.job.DefaultJobManager;
 import com.dmsoft.firefly.core.sdkimpl.PluginContextImpl;
 import com.dmsoft.firefly.core.sdkimpl.PluginImageContextImpl;
 import com.dmsoft.firefly.core.sdkimpl.PluginProxyMethodFactoryImpl;
@@ -15,7 +15,7 @@ import com.dmsoft.firefly.core.utils.PluginScanner;
 import com.dmsoft.firefly.core.utils.PropertiesUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.*;
-import com.dmsoft.firefly.sdk.job.JobManager;
+import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.plugin.*;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;

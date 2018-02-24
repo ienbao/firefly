@@ -1,4 +1,8 @@
-package com.dmsoft.firefly.sdk.job;
+/*
+ * Copyright (c) 2017. For Intelligent Group.
+ */
+
+package com.dmsoft.firefly.sdk.job.core;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
