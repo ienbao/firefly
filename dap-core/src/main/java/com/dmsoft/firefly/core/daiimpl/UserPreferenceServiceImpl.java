@@ -1,12 +1,10 @@
-package com.dmsoft.firefly.core.dai;
+package com.dmsoft.firefly.core.daiimpl;
 
 import com.dmsoft.firefly.core.utils.JsonFileUtil;
-import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.google.common.collect.Lists;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

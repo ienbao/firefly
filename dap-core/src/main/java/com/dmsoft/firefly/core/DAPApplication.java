@@ -4,28 +4,32 @@
 
 package com.dmsoft.firefly.core;
 
-import com.dmsoft.firefly.core.dai.*;
-import com.dmsoft.firefly.sdk.job.DefaultJobManager;
-import com.dmsoft.firefly.core.sdkimpl.PluginContextImpl;
-import com.dmsoft.firefly.core.sdkimpl.PluginImageContextImpl;
-import com.dmsoft.firefly.core.sdkimpl.PluginProxyMethodFactoryImpl;
-import com.dmsoft.firefly.core.sdkimpl.PluginUIContextImpl;
+import com.dmsoft.firefly.core.daiimpl.*;
+import com.dmsoft.firefly.core.sdkimpl.*;
 import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
 import com.dmsoft.firefly.core.utils.PluginScanner;
 import com.dmsoft.firefly.core.utils.PropertiesUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.*;
+import com.dmsoft.firefly.sdk.event.EventContext;
+import com.dmsoft.firefly.sdk.job.DefaultJobManager;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
-import com.dmsoft.firefly.sdk.plugin.*;
+import com.dmsoft.firefly.sdk.plugin.PluginContext;
+import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
+import com.dmsoft.firefly.sdk.plugin.PluginInfo;
+import com.dmsoft.firefly.sdk.plugin.PluginProxyMethodFactory;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
 import com.google.common.collect.Lists;
+import com.mongodb.MongoClient;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
+
 
 /**
  * DAP Application starter include basic flows.
@@ -52,6 +56,11 @@ public class DAPApplication {
         UserPreferenceServiceImpl userPreferenceService = new UserPreferenceServiceImpl();
         UserServiceImpl userService = new UserServiceImpl();
         EnvServiceImpl envService = new EnvServiceImpl();
+        EventContextImpl eventContext = new EventContextImpl();
+//        CodecRegistry pojoCodecRegistry = CodecRegistries.fromRegistries(MongoClient.getDefaultCodecRegistry(),
+//                CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+        MongoClient mongoClient = new MongoClient("localhost");
+        MongoTemplate mongoTemplate = new MongoTemplate(mongoClient, "test");
 
         RuntimeContext.registerBean(PluginContext.class, pluginInfoContextImpl);
         RuntimeContext.registerBean(PluginImageContext.class, pluginImageContext);
@@ -63,6 +72,8 @@ public class DAPApplication {
         RuntimeContext.registerBean(UserPreferenceService.class, userPreferenceService);
         RuntimeContext.registerBean(UserService.class, userService);
         RuntimeContext.registerBean(EnvService.class, envService);
+        RuntimeContext.registerBean(EventContext.class, eventContext);
+        RuntimeContext.registerBean(MongoTemplate.class, mongoTemplate);
 
 
         // prepare env done

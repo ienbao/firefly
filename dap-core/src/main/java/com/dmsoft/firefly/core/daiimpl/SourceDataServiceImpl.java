@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.core.dai;
+package com.dmsoft.firefly.core.daiimpl;
 
 import com.dmsoft.firefly.core.utils.FilterConditionUtil;
 import com.dmsoft.firefly.core.utils.MongoUtil;

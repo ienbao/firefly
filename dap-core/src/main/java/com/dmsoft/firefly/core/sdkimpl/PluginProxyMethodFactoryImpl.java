@@ -12,6 +12,8 @@ import java.util.List;
 
 /**
  * Impl class for plugin proxy method factory
+ *
+ * @author Li Guang, Can Guan
  */
 public class PluginProxyMethodFactoryImpl implements PluginProxyMethodFactory {
     @Override
