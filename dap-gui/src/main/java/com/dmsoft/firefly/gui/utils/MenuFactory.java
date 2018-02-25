@@ -64,6 +64,9 @@ public class MenuFactory {
         menu.setId(MenuBuilder.MENU_DATASOURCE);
         MenuItem menuItem = new MenuItem("Select Data Source(S)");
         menuItem.setId("selectDataSource");
+        menuItem.setOnAction(event -> {
+            buildDataSourceDialog();
+        });
         menu.getItems().add(menuItem);
         return getParentMenuBuilder().setParentLocation(ROOT_MENU).addMenu(menu);
     }
@@ -115,6 +118,18 @@ public class MenuFactory {
         try {
             root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
             Stage stage = WindowFactory.createSimpleWindowAsModel("template", ResourceBundleUtils.getString(ResourceMassages.TEMPLATE), root, getResource("css/platform_app.css").toExternalForm());
+            stage.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private static void buildDataSourceDialog() {
+        Pane root = null;
+        try {
+            root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/data_source.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+            Stage stage = WindowFactory.createSimpleWindowAsModel("dataSource", ResourceBundleUtils.getString(ResourceMassages.DATASOURCE), root, getResource("css/platform_app.css").toExternalForm());
+            stage.setResizable(false);
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();

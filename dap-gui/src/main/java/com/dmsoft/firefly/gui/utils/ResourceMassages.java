@@ -11,4 +11,5 @@ public class ResourceMassages {
     public static final String ADD_ITEM = "ADD_ITEM";
 
     public static final String TEMPLATE = "TEMPLATE";
+    public static final String DATASOURCE = "DATASOURCE";
 }
