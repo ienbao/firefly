@@ -7,12 +7,9 @@ import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcService;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
-import com.dmsoft.firefly.sdk.dai.dto.TestDataDto;
-import com.dmsoft.firefly.sdk.dai.entity.CellData;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import java.util.List;
 import java.util.Map;
@@ -43,7 +40,8 @@ public class SpcServiceImpl implements SpcService {
         //3.Get analysis data from SourceDataService
         List<String> projectNames = spcSearchConfigDto.getProjectNames();
         //todo get testData from SourceDataService
-        List<TestDataDto> testDataDtoList = sourceDataService.findDataByCondition(projectNames, testItemNames, conditions, templateName, true);
+        //TODO can
+//        List<TestDataDto> testDataDtoList = sourceDataService.findDataByCondition(projectNames, testItemNames, conditions, templateName, true);
 //        Map<String,List<TestDataDto>> testItemConditionMap = Maps.newHashMap();
 
 //        Map<String,Map<String,TestDataDto>> dataMap = Maps.newHashMap();
@@ -82,30 +80,33 @@ public class SpcServiceImpl implements SpcService {
         String templateName = spcSearchConfigDto.getTemplateName();
         List<String> projectNames = spcSearchConfigDto.getProjectNames();
         //todo get testData from SourceDataService
-        Map<String, TestDataDto> testDataDtoMap = Maps.newHashMap();
+        //TODO can
+//        Map<String, TestDataDto> testDataDtoMap = Maps.newHashMap();
 
         searchConditionDtoList.forEach(v -> {
-            List<TestDataDto> testDataDtoList = sourceDataService.findDataByCondition(projectNames, Lists.newArrayList(v.getItemName()), Lists.newArrayList(v.getCondition()), templateName, true);
-            testDataDtoMap.put(v.getKey(),testDataDtoList.get(0));
+            //TODO can
+//            List<TestDataDto> testDataDtoList = sourceDataService.findDataByCondition(projectNames, Lists.newArrayList(v.getItemName()), Lists.newArrayList(v.getCondition()), templateName, true);
+//            testDataDtoMap.put(v.getKey(),testDataDtoList.get(0));
         });
         // todo from R
 
         //todo get view data
         List<SpcViewDataDto> spcViewDataDtoList = Lists.newArrayList();
-        for(Map.Entry<String,TestDataDto> entry : testDataDtoMap.entrySet()){
-            TestDataDto testDataDto = entry.getValue();
-            List<CellData> data = testDataDto.getData();
-            data.forEach(d ->{
-                SpcViewDataDto spcViewDataDto = new SpcViewDataDto();
-                Map<String,Object> testData = Maps.newHashMap();
-                spcViewDataDto.setLineKey(d.getRowKey());
-
-                testData.put(testDataDto.getItemName(),d.getValue());
-                spcViewDataDto.setTestData(testData);
-                spcViewDataDtoList.add(spcViewDataDto);
-
-            });
-        }
+        //TODO can
+//        for (Map.Entry<String, TestDataDto> entry : testDataDtoMap.entrySet()) {
+//            TestDataDto testDataDto = entry.getValue();
+//            List<CellData> data = testDataDto.getData();
+//            data.forEach(d -> {
+//                SpcViewDataDto spcViewDataDto = new SpcViewDataDto();
+//                Map<String, Object> testData = Maps.newHashMap();
+//                spcViewDataDto.setLineKey(d.getRowKey());
+//
+//                testData.put(testDataDto.getItemName(), d.getValue());
+//                spcViewDataDto.setTestData(testData);
+//                spcViewDataDtoList.add(spcViewDataDto);
+//
+//            });
+//        }
 
         return null;
     }
@@ -119,16 +120,18 @@ public class SpcServiceImpl implements SpcService {
         List<String> projectNames = spcSearchConfigDto.getProjectNames();
         String templateName = spcSearchConfigDto.getTemplateName();
         //todo get testData from SourceDataService
-        Map<String, TestDataDto> testDataDtoMap = Maps.newHashMap();
+        //TODO can
+//        Map<String, TestDataDto> testDataDtoMap = Maps.newHashMap();
         searchConditionDtoList.forEach(v -> {
-            List<TestDataDto> testDataDtoList = sourceDataService.findDataByCondition(projectNames, Lists.newArrayList(v.getItemName()), Lists.newArrayList(v.getCondition()), templateName, true);
-            TestDataDto testDataDto = testDataDtoList.get(0);
-            if(testDataDto != null) {
-                //set fix usl and lsl
-                testDataDto.setLsl(v.getCusLsl());
-                testDataDto.setUsl(v.getCusUsl());
-                testDataDtoMap.put(v.getKey(), testDataDto);
-            }
+            //TODO can
+//            List<TestDataDto> testDataDtoList = sourceDataService.findDataByCondition(projectNames, Lists.newArrayList(v.getItemName()), Lists.newArrayList(v.getCondition()), templateName, true);
+//            TestDataDto testDataDto = testDataDtoList.get(0);
+//            if (testDataDto != null) {
+//                //set fix usl and lsl
+//                testDataDto.setLsl(v.getCusLsl());
+//                testDataDto.setUsl(v.getCusUsl());
+//                testDataDtoMap.put(v.getKey(), testDataDto);
+//            }
         });
         // todo from R
         List<SpcStatisticalResultDto> spcStatisticalResultDtoList = Lists.newArrayList();

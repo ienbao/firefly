@@ -149,7 +149,7 @@ public class SpcItemController implements Initializable {
         List<TestItemDto> itemDtos = Lists.newArrayList();
         for (int i = 0; i < 40; i++) {
             TestItemDto dto = new TestItemDto();
-            dto.setItemName("item" + i);
+            dto.setTestItemName("item" + i);
             itemDtos.add(dto);
         }
         if (itemDtos != null) {

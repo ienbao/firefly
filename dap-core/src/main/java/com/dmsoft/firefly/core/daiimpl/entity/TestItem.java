@@ -1,20 +1,15 @@
-package com.dmsoft.firefly.sdk.dai.dto;
-
-import com.dmsoft.bamboo.common.dto.AbstractValueObject;
-import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
+package com.dmsoft.firefly.core.daiimpl.entity;
 
 /**
- * Test item dto
+ * entity class for test item
  *
  * @author Can Guan
  */
-public class TestItemDto extends AbstractValueObject {
+public class TestItem {
     private String testItemName;
-    private TestItemType itemType;
     private String usl;
     private String lsl;
     private String unit;
-
 
     public String getTestItemName() {
         return testItemName;
@@ -22,14 +17,6 @@ public class TestItemDto extends AbstractValueObject {
 
     public void setTestItemName(String testItemName) {
         this.testItemName = testItemName;
-    }
-
-    public TestItemType getItemType() {
-        return itemType;
-    }
-
-    public void setItemType(TestItemType itemType) {
-        this.itemType = itemType;
     }
 
     public String getUsl() {

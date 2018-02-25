@@ -1,143 +1,155 @@
 package com.dmsoft.firefly.sdk.dai.service;
 
-
-import com.dmsoft.firefly.sdk.dai.dto.ProjectDto;
-import com.dmsoft.firefly.sdk.dai.dto.TestDataDto;
+import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
-import com.dmsoft.firefly.sdk.dai.entity.CellData;
 
 import java.util.List;
+import java.util.Map;
 
 /**
- * Created by GuangLi on 2018/1/24.
+ * interface for source data service
+ *
+ * @author Can Guan
  */
 public interface SourceDataService {
 
     /**
-     * method to save project
-     *
-     * @param projectDto project dto
-     */
-    void saveProject(ProjectDto projectDto);
-
-    /**
-     * save project message
-     *
-     * @param projectDtos project
-     */
-    void saveProject(List<ProjectDto> projectDtos);
-//
-//    /**
-//     * method to save test item
-//     *
-//     * @param testItemDto test item dto
-//     */
-//    void saveTestItem(TestItemDto testItemDto);
-
-    /**
-     * save test item
-     *
-     * @param projectName   project name
-     * @param testItemNames testItem names
-     */
-    void saveTestItem(String projectName, List<String> testItemNames);
-
-    /**
-     * save project line data
-     *
-     * @param testDataDto TestDataDto
-     */
-    void saveOneProjectData(String projectName, TestDataDto testDataDto);
-
-    /**
-     * save project line data
-     *
-     * @param testDataDtos TestDataDto
-     */
-    void saveProjectData(String projectName, List<TestDataDto> testDataDtos);
-
-    /**
-     * find all project
-     *
-     * @return project dto
-     */
-    List<ProjectDto> findAllProjects();
-
-    /**
-     * find all project names
-     *
-     * @return list of project name
-     */
-    List<String> findAllProjectNames();
-
-    /**
-     * find all item names by project names
-     *
-     * @param projectNames project names
-     * @return list of item name
-     */
-    List<String> findItemNames(List<String> projectNames);
-
-    /**
-     * find all item names by project names
-     *
-     * @param projectNames project names
-     * @param template     template names
-     * @return list of TestItemDto
-     */
-    List<TestItemDto> findItems(List<String> projectNames, String template);
-
-    /**
-     * find data by search condition
-     *
-     * @param projectNames project names
-     * @param itemNames    item names
-     * @param conditions   conditions
-     * @param templateName template names
-     * @param lineUsedValid line in used or not
-     * @return list of lineDataDto
-     */
-    List<TestDataDto> findDataByCondition(List<String> projectNames, List<String> itemNames, List<String> conditions, String templateName, Boolean lineUsedValid);
-
-    /**
-     * find data by line number
-     *
-     * @param projectName   project name
-     * @param testItemNames test item name
-     * @return item datas
-     */
-    List<TestDataDto> findDataByItemNames(String projectName, List<String> testItemNames);
-
-
-    /**
-     * find data by line number
-     *
-     * @param projectName   project name
-     * @param testItemNames test item name
-     * @param rowKeys row key list
-     * @return line data
-     */
-    List<TestDataDto> findDataByItemNamesAndRowKey(String projectName, List<String> testItemNames, List<String> rowKeys);
-
-    /**
-     * update line data isUsed
-     *
-     * @param projectName  peoject name
-     * @param lineUsedData lineUsed data
-     */
-    void updateLineDataUsed(String projectName, List<CellData> lineUsedData);
-
-    /**
-     * update line data isUsed
-     *
-     * @param projectName peoject name
-     */
-    List<String> findLineDataUsed(String projectName);
-
-    /**
-     * delete data by project name
+     * method to save project.
      *
      * @param projectName project name
      */
-    void deleteProject(String projectName);
+    void saveProject(String projectName);
+
+    /**
+     * method to save & update test item.
+     *
+     * @param projectName     project name
+     * @param testItemDtoList list of test item dto
+     */
+    void saveTestItem(String projectName, List<TestItemDto> testItemDtoList);
+
+    /**
+     * method to save test data, will be appended with same row key.
+     *
+     * @param projectName    project name
+     * @param rowDataDtoList list of row data dto
+     */
+    void saveTestData(String projectName, List<RowDataDto> rowDataDtoList);
+
+    /**
+     * method to save test data, will be append with same row key.
+     *
+     * @param projectName project name
+     * @param rowKey      row key
+     * @param rowData     row data
+     */
+    void saveTestData(String projectName, String rowKey, Map<String, String> rowData);
+
+    /**
+     * method to save test data, will be replaced with same row key.
+     *
+     * @param projectName project name
+     * @param rowKey      row key
+     * @param rowData     row data
+     */
+    void replaceTestData(String projectName, String rowKey, Map<String, String> rowData);
+
+    /**
+     * method to find all project name.
+     *
+     * @return list of project name
+     */
+    List<String> findAllProjectName();
+
+    /**
+     * method to judge project exist or not by project name.
+     *
+     * @param projectName project name
+     * @return true : exist, false : not exist
+     */
+    boolean isProjectExist(String projectName);
+
+    /**
+     * method to judge test item exist or not by project name and test item name.
+     *
+     * @param projectName  project name
+     * @param testItemName test item name
+     * @return true : exist, false : not exist
+     */
+    boolean isTestItemExist(String projectName, String testItemName);
+
+    /**
+     * method to judge row key exist or not by project name and test item name.
+     *
+     * @param rowKey row key
+     * @return is row key exist or not
+     */
+    boolean isRowKeyExist(String rowKey);
+
+    /**
+     * method to find all test item names by project name.
+     *
+     * @param projectNameList list of project name
+     * @return list of test item names
+     */
+    List<String> findAllTestItemName(List<String> projectNameList);
+
+    /**
+     * method to find all test item.
+     *
+     * @param projectNameList list of project names
+     * @return list of test item dtos
+     */
+    Map<String, TestItemDto> findAllTestItem(List<String> projectNameList);
+
+    /**
+     * method to find test item by project name list and test item name.
+     *
+     * @param projectNameList list of project name
+     * @param testItemName    test item name
+     * @return test item dto
+     */
+    TestItemDto findTestItem(List<String> projectNameList, String testItemName);
+
+    /**
+     * method to find test data by project name and test item name.
+     *
+     * @param projectNameList  project name list
+     * @param testItemNameList test item name list
+     * @return project data
+     */
+    List<RowDataDto> findTestData(List<String> projectNameList, List<String> testItemNameList);
+
+    /**
+     * method to find test data by project name and test item name.
+     *
+     * @param projectNameList  project name list
+     * @param testItemNameList test item name list
+     * @param inUsedFlag       in used or not or all(null)
+     * @return project data
+     */
+    List<RowDataDto> findTestData(List<String> projectNameList, List<String> testItemNameList, Boolean inUsedFlag);
+
+    /**
+     * method to find project data by row key.
+     *
+     * @param rowKey row key
+     * @return row data
+     */
+    RowDataDto findTestData(String rowKey);
+
+    /**
+     * method to chang row data in used status by row key.
+     *
+     * @param rowKeyList list of row key
+     * @param inUsed     in use status
+     */
+    void changeRowDataInUsed(List<String> rowKeyList, boolean inUsed);
+
+    /**
+     * method to delete project by project name list.
+     *
+     * @param projectNameList project name list
+     */
+    void deleteProject(List<String> projectNameList);
 }
