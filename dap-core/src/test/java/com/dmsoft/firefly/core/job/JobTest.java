@@ -19,9 +19,7 @@ public class JobTest {
     public static void main(String[] args) {
 
         JobManager jobManager = new DefaultJobManager();
-        jobManager.createJob("test1", new InitJobPipeline() {
-            @Override
-            public void initJobPipeline(JobPipeline pipeline) {
+        jobManager.createJob("test1", (pipeline) -> {
 
                 //注意 ： 1.Inbound是add的顺序执行 2.Outbound 是add逆序执行
                 //3.在handler中执行returnValue后，后面的handler都不会执行，包括outbound 和 inbound
@@ -30,7 +28,10 @@ public class JobTest {
                 pipeline.addLast("test1", new JobInboundHandler1());
                 pipeline.addLast("test2", new JobInboundHandler2());
                 pipeline.addLast("test3", new JobInboundHandler3());
-            }
+        });
+
+        jobManager.addJobEventListener("test1", event -> {
+            System.out.println(event.getEventId() + " " + event.getObject().toString());
         });
 
 //        for (int i = 0; i < 100; i++) {

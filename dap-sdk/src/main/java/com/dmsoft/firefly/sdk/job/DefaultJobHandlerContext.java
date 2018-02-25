@@ -6,6 +6,7 @@ package com.dmsoft.firefly.sdk.job;
 
 import com.dmsoft.firefly.sdk.job.core.*;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -23,8 +24,8 @@ public class DefaultJobHandlerContext extends AbstractJobHandlerContext {
 //        this.handler = handler;
 //    }
 
-    public DefaultJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, String name, ExecutorService executorService, JobHandler handler) {
-        super(jobPipeline, jobDoComplete, isInbound(handler), isOutbound(handler), name, executorService);
+    public DefaultJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, String name, ExecutorService executorService, JobHandler handler, List<JobEventListener> eventListeners) {
+        super(jobPipeline, jobDoComplete, isInbound(handler), isOutbound(handler), name, executorService, eventListeners);
         this.handler = handler;
     }
 

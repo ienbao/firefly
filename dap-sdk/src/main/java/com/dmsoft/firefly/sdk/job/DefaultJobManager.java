@@ -6,6 +6,7 @@ package com.dmsoft.firefly.sdk.job;
 
 import com.dmsoft.firefly.sdk.job.core.InitJobPipeline;
 import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
+import com.dmsoft.firefly.sdk.job.core.JobEventListener;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -27,11 +28,12 @@ import java.util.concurrent.TimeUnit;
 public class DefaultJobManager implements JobManager {
 
     private Map<String, InitJobPipeline> jobMap = Maps.newConcurrentMap();
+    private Map<String, List<JobEventListener>> jobEvent = Maps.newConcurrentMap();
     private Logger logger = LoggerFactory.getLogger(DefaultJobManager.class);
     private ExecutorService service = Executors.newFixedThreadPool(5);
 
     @Override
-    public void createJob(String jobName, InitJobPipeline pipeline) {
+    public synchronized void createJob(String jobName, InitJobPipeline pipeline) {
         if (StringUtils.isBlank(jobName)) {
             logger.error("jobName is empty.");
             return;
@@ -44,7 +46,27 @@ public class DefaultJobManager implements JobManager {
     }
 
     @Override
-    public Object doJobSyn(String jobName, Object object, long timeout, TimeUnit unit) {
+    public synchronized void addJobEventListener(String jobName, JobEventListener listener) {
+        if (jobEvent.containsKey(jobName)) {
+            List<JobEventListener> listenerList = jobEvent.get(jobName);
+            listenerList.add(listener);
+        } else {
+            List<JobEventListener> listenerList = Lists.newArrayList();
+            listenerList.add(listener);
+            jobEvent.put(jobName, listenerList);
+        }
+    }
+
+    @Override
+    public synchronized void removeJobEventListener(String jobName, JobEventListener listener) {
+        if (jobEvent.containsKey(jobName)) {
+            List<JobEventListener> listenerList = jobEvent.get(jobName);
+            listenerList.remove(listener);
+        }
+    }
+
+    @Override
+    public synchronized Object doJobSyn(String jobName, Object object, long timeout, TimeUnit unit) {
         if (StringUtils.isBlank(jobName)) {
             logger.error("jobName is empty.");
             return null;
@@ -73,7 +95,7 @@ public class DefaultJobManager implements JobManager {
     }
 
     @Override
-    public Object doJobSyn(String jobName, Object object) {
+    public synchronized Object doJobSyn(String jobName, Object object) {
         if (StringUtils.isBlank(jobName)) {
             logger.error("jobName is empty.");
             return null;
@@ -102,7 +124,7 @@ public class DefaultJobManager implements JobManager {
     }
 
     @Override
-    public void doJobASyn(String jobName, Object object, JobDoComplete complete) {
+    public synchronized void doJobASyn(String jobName, Object object, JobDoComplete complete) {
         if (StringUtils.isBlank(jobName)) {
             logger.error("jobName is empty.");
             return;
@@ -114,7 +136,7 @@ public class DefaultJobManager implements JobManager {
         service.execute(new Runnable() {
             @Override
             public void run() {
-                DefaultJobPipeline defaultJobPipeline = new DefaultJobPipeline(complete, service);
+                DefaultJobPipeline defaultJobPipeline = new DefaultJobPipeline(complete, service, jobEvent.containsKey(jobName) ? jobEvent.get(jobName) : Lists.newArrayList());
                 jobMap.get(jobName).initJobPipeline(defaultJobPipeline);
                 defaultJobPipeline.fireDoJob(object);
             }

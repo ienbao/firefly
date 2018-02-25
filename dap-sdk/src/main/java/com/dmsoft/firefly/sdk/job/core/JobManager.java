@@ -22,6 +22,9 @@ public interface JobManager {
      */
     void createJob(String jobName, InitJobPipeline pipeline);
 
+    void addJobEventListener(String jobName, JobEventListener listener);
+
+    void removeJobEventListener(String jobName, JobEventListener listener);
     /**
      * doJobSyn
      *

@@ -8,6 +8,7 @@ import com.dmsoft.firefly.sdk.job.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -26,6 +27,7 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
     private ExecutorService executorService;
     private volatile boolean doNextInbound;
     private volatile boolean doNextOutbound;
+    private final List<JobEventListener> eventListeners;
 
 //    public AbstractJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, boolean inbound, boolean outbound, String name) {
 //        this.jobPipeline = jobPipeline;
@@ -35,13 +37,14 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
 //        this.name = name;
 //    }
 
-    public AbstractJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, boolean inbound, boolean outbound, String name, ExecutorService executorService) {
+    public AbstractJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, boolean inbound, boolean outbound, String name, ExecutorService executorService, List<JobEventListener> eventListeners) {
         this.jobPipeline = jobPipeline;
         this.jobDoComplete = jobDoComplete;
         this.inbound = inbound;
         this.outbound = outbound;
         this.name = name;
         this.executorService = executorService;
+        this.eventListeners = eventListeners;
     }
 
     @Override
@@ -101,6 +104,13 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
     @Override
     public String name() {
         return name;
+    }
+
+    @Override
+    public void fireJobEvent(JobEvent event) {
+        eventListeners.forEach(v -> {
+            v.eventNotify(event);
+        });
     }
 
     public abstract JobHandler handler();

@@ -4,6 +4,8 @@
 
 package com.dmsoft.firefly.sdk.job.core;
 
+import com.dmsoft.firefly.sdk.job.JobEvent;
+
 /**
  * Created by Garen.Pang on 2018/2/2.
  */
@@ -44,4 +46,6 @@ public interface JobHandlerContext {
      * @return
      */
     String name();
+
+    void fireJobEvent(JobEvent event);
 }
