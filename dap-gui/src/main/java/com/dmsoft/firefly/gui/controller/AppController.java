@@ -1,15 +1,10 @@
 package com.dmsoft.firefly.gui.controller;
 
-import com.dmsoft.bamboo.common.utils.base.Platforms;
-import com.dmsoft.bamboo.common.utils.base.PropertiesUtil;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
-import com.dmsoft.firefly.gui.utils.PropertiesResource;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.ui.IMenu;
-import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.google.common.collect.Lists;
-import de.codecentric.centerdevice.MenuToolkit;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

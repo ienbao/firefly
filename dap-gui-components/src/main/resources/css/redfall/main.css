@@ -79,6 +79,42 @@
     FONT_MID: COLOR_GRAY_CC;
 }
 
+.top-title-logo {
+    -fx-background-image: url('/images/top_title_logo.png');
+}
+
+.btn-edit-normal {
+    -fx-border-width: 1 1 1 0;
+    -fx-background-image: url('/images/btn_edit_normal.png');
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.btn-edit-unable {
+    -fx-border-width: 1 1 1 0;
+    -fx-background-image: url('/images/btn_edit_unable.png');
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.btn_template_normal {
+    -fx-border-width: 1 1 1 0;
+    -fx-background-image: url('/images/btn_template_normal.png');
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.btn_template_unable {
+    -fx-border-width: 1 1 1 0;
+    -fx-background-image: url('/images/btn_template_unable.png');
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
 /*******************************************************************************
  *                                                                             *
  * Button                                                                      *

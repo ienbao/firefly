@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -21,13 +25,66 @@
             <ToolBar fx:id="tbaSystem" minHeight="30.0" prefHeight="30.0" prefWidth="200.0" />
             <GridPane styleClass="app-status-bar" GridPane.rowIndex="2">
               <columnConstraints>
-                <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="ALWAYS" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                  <ColumnConstraints hgrow="ALWAYS" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" />
+                  <ColumnConstraints hgrow="ALWAYS" maxWidth="22.0" minWidth="22.0" prefWidth="22.0" />
+                  <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
+                  <ColumnConstraints hgrow="ALWAYS" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" />
+                  <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="32.0" prefWidth="22.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="180.0" prefWidth="180.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="180.0" prefWidth="180.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
+               <children>
+                  <Label text="File: ">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="dataSourceLbl" text="---" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin></Label>
+                  <Button fx:id="dataSourceBtn" maxHeight="22.0" maxWidth="22.0" minHeight="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" GridPane.columnIndex="2">
+                     <styleClass>
+                        <String fx:value="btn-icon" />
+                        <String fx:value="btn-edit-normal" />
+                     </styleClass></Button>
+                  <Label text="Analyze By:" GridPane.columnIndex="3">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="templateLbl" text="---" GridPane.columnIndex="4">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin></Label>
+                  <Button fx:id="templateBtn" maxHeight="22.0" maxWidth="22.0" minHeight="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" GridPane.columnIndex="5">
+                     <styleClass>
+                        <String fx:value="btn-icon" />
+                        <String fx:value="btn_template_normal" />
+                     </styleClass></Button>
+                  <Label text="v2.5.0.201802251020 " GridPane.columnIndex="7">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label maxHeight="30.0" maxWidth="179.0" minHeight="30.0" minWidth="179.0" prefHeight="30.0" prefWidth="179.0" style="-fx-border-color: #ededed; -fx-border-width: 0 1 0 1;" text="Memory" GridPane.columnIndex="6">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+                  <ProgressBar maxHeight="10.0" maxWidth="100.0" minHeight="10.0" minWidth="100.0" prefHeight="10.0" prefWidth="100.0" progress="0.0" GridPane.columnIndex="6">
+                     <GridPane.margin>
+                        <Insets left="69.0" />
+                     </GridPane.margin>
+                  </ProgressBar>
+               </children>
             </GridPane>
          </children>
       </GridPane>

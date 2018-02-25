@@ -4,23 +4,38 @@ import com.dmsoft.firefly.gui.component.ContentStackPane;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import javafx.fxml.FXML;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
 public class MainController {
+
+    private final Logger logger = LoggerFactory.getLogger(MainController.class);
 
     @FXML
     private GridPane grpContent;
 
     @FXML
     private ToolBar tbaSystem;
+
+    @FXML
+    private Button dataSourceBtn;
+
+    @FXML
+    private Button templateBtn;
+
+    @FXML
+    private Label dataSourceLbl;
+
+    @FXML
+    private Label templateLbl;
 
     private ContentStackPane contentStackPane;
     private TabPane tabPane;
@@ -31,10 +46,12 @@ public class MainController {
         tabPane = new TabPane();
         contentStackPane = new ContentStackPane();
         grpContent.add(contentStackPane, 0, 1);
-        initToolBar();
+        this.initToolBar();
+        this.initComponentEvent();
         System.out.println("init");
-
     }
+
+
 
     private void initToolBar() {
         PluginUIContext pc = RuntimeContext.getBean(PluginUIContext.class);
@@ -51,7 +68,6 @@ public class MainController {
                 tabPane = new TabPane();
                 tabPane.setId(name);
             }
-            System.out.println(tabPane.getId() +"---------fdsdf");
             initTab(name, pane, tabPane);
             contentStackPane.add(tabPane);
             btn.setOnAction(event -> {
@@ -73,5 +89,53 @@ public class MainController {
         }
     }
 
+    private void initComponentEvent() {
+        dataSourceBtn.setOnAction(event -> this.getDataSourceBtnEvent());
+        templateBtn.setOnAction(event -> this.getTemplateBtnEvent());
+        dataSourceLbl.setOnMouseEntered(event -> this.getDataSourceLblEvent());
+        templateLbl.setOnMouseEntered(event -> this.getTemplateLblEvent());
+    }
+
+    private void getDataSourceBtnEvent(){
+        logger.debug("Data source btn event.");
+    }
+
+    private void getDataSourceLblEvent(){
+        logger.debug("Data source lbl event.");
+        if (!dataSourceLbl.isDisable()) {
+
+        }
+    }
+
+    private void getTemplateBtnEvent(){
+        logger.debug("Template btn event.");
+    }
+
+    private void getTemplateLblEvent(){
+        logger.debug("Template lbl event.");
+        if (!templateLbl.isDisable()) {
+
+        }
+    }
+
+    /**
+     * disable state bar False
+     */
+    public void disableStateBarFalse() {
+        dataSourceBtn.setDisable(false);
+        dataSourceLbl.setDisable(false);
+        templateBtn.setDisable(false);
+        templateLbl.setDisable(false);
+    }
+
+    /**
+     * disable state bar True
+     */
+    public void disableStateBarTrue() {
+        dataSourceBtn.setDisable(true);
+        dataSourceLbl.setDisable(true);
+        templateBtn.setDisable(true);
+        templateLbl.setDisable(true);
+    }
 
 }
