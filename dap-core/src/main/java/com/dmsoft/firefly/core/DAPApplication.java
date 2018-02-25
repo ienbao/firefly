@@ -4,13 +4,19 @@
 
 package com.dmsoft.firefly.core;
 
-import com.dmsoft.firefly.core.daiimpl.*;
+import com.dmsoft.firefly.core.daiimpl.EnvServiceImpl;
+import com.dmsoft.firefly.core.daiimpl.TemplateServiceImpl;
+import com.dmsoft.firefly.core.daiimpl.UserPreferenceServiceImpl;
+import com.dmsoft.firefly.core.daiimpl.UserServiceImpl;
 import com.dmsoft.firefly.core.sdkimpl.*;
 import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
 import com.dmsoft.firefly.core.utils.PluginScanner;
 import com.dmsoft.firefly.core.utils.PropertiesUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.service.*;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.TemplateService;
+import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
+import com.dmsoft.firefly.sdk.dai.service.UserService;
 import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.job.DefaultJobManager;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
@@ -51,7 +57,6 @@ public class DAPApplication {
         PluginProxyMethodFactoryImpl pluginProxy = new PluginProxyMethodFactoryImpl();
         PluginUIContextImpl pluginUIContext = new PluginUIContextImpl();
         DefaultJobManager jobManager = new DefaultJobManager();
-        SourceDataServiceImpl sourceDataService = new SourceDataServiceImpl();
         TemplateServiceImpl templateService = new TemplateServiceImpl();
         UserPreferenceServiceImpl userPreferenceService = new UserPreferenceServiceImpl();
         UserServiceImpl userService = new UserServiceImpl();
@@ -67,7 +72,6 @@ public class DAPApplication {
         RuntimeContext.registerBean(PluginProxyMethodFactory.class, pluginProxy);
         RuntimeContext.registerBean(PluginUIContext.class, pluginUIContext);
         RuntimeContext.registerBean(JobManager.class, jobManager);
-        RuntimeContext.registerBean(SourceDataService.class, sourceDataService);
         RuntimeContext.registerBean(TemplateService.class, templateService);
         RuntimeContext.registerBean(UserPreferenceService.class, userPreferenceService);
         RuntimeContext.registerBean(UserService.class, userService);

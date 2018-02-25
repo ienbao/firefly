@@ -7,16 +7,16 @@ package com.dmsoft.firefly.plugin.csvresolver;
 import com.csvreader.CsvReader;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.ProjectDto;
-import com.dmsoft.firefly.sdk.dai.dto.TestDataDto;
+import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
-import com.dmsoft.firefly.sdk.dai.entity.CellData;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.annotation.DataParser;
 import com.dmsoft.firefly.sdk.plugin.annotation.ExcludeMethod;
 import com.dmsoft.firefly.sdk.plugin.apis.IDataParser;
+import com.dmsoft.firefly.utils.DoubleIdUtils;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +25,13 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
- * spc service
+ * csv resolver service
+ * update by Can Guan on 2018/2/25 for updating dai api
+ *
+ * @author Li Guang
  */
 @DataParser
 public class CsvResolverService implements IDataParser {
@@ -42,6 +46,12 @@ public class CsvResolverService implements IDataParser {
 
     private CsvReader csvReader;
 
+    /**
+     * method to import csv
+     *
+     * @param csvPath        the path of csv file
+     * @param importTemplate csv import template name
+     */
     public void importCsv(String csvPath, String importTemplate) {
         logger.info("Start csv importing.");
         File csvFile = new File(csvPath);
@@ -63,7 +73,7 @@ public class CsvResolverService implements IDataParser {
             if (fileFormat == null) {
                 return;
             }
-            String[] items = null;
+
             while (csvReader.readRecord()) {
                 csvList.add(csvReader.getValues());
             }
@@ -77,14 +87,9 @@ public class CsvResolverService implements IDataParser {
 //                pushErrorMsg(logStr, csvPath);
 //                throw new ApplicationException(exceptionNumber, logStr);
             }
-            ProjectDto projectDto = new ProjectDto();
-            projectDto.setProjectName(csvFile.getName());
-            projectDto.setPath(csvFile.getPath());
-            sourceDataService.saveProject(projectDto);
+            sourceDataService.saveProject(csvFile.getName());
 
-            items = csvList.get(fileFormat.getItem() - 1);
-            sourceDataService.saveTestItem(csvFile.getName(), Arrays.asList(items));
-
+            String[] items = csvList.get(fileFormat.getItem() - 1);
             String[] lslRow = null, uslRow = null, unitRow = null;
 
             if (fileFormat.getHeader() != null && fileFormat.getHeader() > 0) {
@@ -102,42 +107,57 @@ public class CsvResolverService implements IDataParser {
                 unitRow = csvList.get(fileFormat.getUnit());
                 csvList.set(fileFormat.getUnit(), null);
             }
-            //save line data
-//            List<LineDataDto> lineDataDtos = Lists.newArrayList();
-//            for (int i = fileFormat.getData() - 1; i < csvList.size(); i++) {
-//                List<String> data = Arrays.asList(csvList.get(i));
-//                LineDataDto lineDataDto = new LineDataDto();
-//                lineDataDto.setRowKey(String.valueOf(i));
-//                lineDataDto.setProjectName(csvFile.getName());
-//                Map<String, Object> itemDatas = Maps.newHashMap();
-//                for (int j = 0; j < data.size(); j++) {
-//                    itemDatas.put(items[j], data.get(i));
-//                }
-//                lineDataDto.setTestData(itemDatas);
-//                lineDataDtos.add(lineDataDto);
-//            }
-//            sourceDataService.saveProjectData(lineDataDtos);
-            //save column data
-            List<TestDataDto> testDataDtos = Lists.newArrayList();
+            List<TestItemDto> testItemDtoList = Lists.newArrayList();
             for (int i = 0; i < items.length; i++) {
-                TestDataDto testDataDto = new TestDataDto();
-//                testDataDto.setProjectName(csvFile.getName());
-                testDataDto.setItemName(items[i]);
-                testDataDto.setUsl(uslRow[i]);
-                testDataDto.setLsl(lslRow[i]);
-                testDataDto.setUnit(unitRow[i]);
-
-                List<CellData> cellDatas = Lists.newArrayList();
-                for (int j = fileFormat.getData() - 1; j < csvList.size(); j++) {
-                    CellData cellData = new CellData();
-                    cellData.setRowKey(String.valueOf(j));
-                    cellData.setValue(csvList.get(j)[i]);
-                    cellDatas.add(cellData);
+                TestItemDto testItemDto = new TestItemDto();
+                testItemDto.setTestItemName(items[i]);
+                if (lslRow != null) {
+                    testItemDto.setLsl(lslRow[i]);
                 }
-                testDataDto.setData(cellDatas);
-                testDataDtos.add(testDataDto);
+                if (uslRow != null) {
+                    testItemDto.setUsl(uslRow[i]);
+                }
+                if (unitRow != null) {
+                    testItemDto.setUnit(unitRow[i]);
+                }
+                testItemDtoList.add(testItemDto);
             }
-            sourceDataService.saveProjectData(csvFile.getName(), testDataDtos);
+            sourceDataService.saveTestItem(csvFile.getName(), testItemDtoList);
+            //save line data
+            List<RowDataDto> rowDataDtos = Lists.newArrayList();
+            for (int i = fileFormat.getData() - 1; i < csvList.size(); i++) {
+                List<String> data = Arrays.asList(csvList.get(i));
+                RowDataDto rowDataDto = new RowDataDto();
+                rowDataDto.setRowKey(DoubleIdUtils.combineIds(csvFile.getName(), i));
+                Map<String, String> itemDatas = Maps.newLinkedHashMap();
+                for (int j = 0; j < data.size(); j++) {
+                    itemDatas.put(items[j], data.get(i));
+                }
+                rowDataDto.setData(itemDatas);
+                rowDataDtos.add(rowDataDto);
+            }
+            sourceDataService.saveTestData(csvFile.getName(), rowDataDtos);
+            //save column data
+//            List<TestDataDto> testDataDtos = Lists.newArrayList();
+//            for (int i = 0; i < items.length; i++) {
+//                TestDataDto testDataDto = new TestDataDto();
+////                testDataDto.setProjectName(csvFile.getName());
+//                testDataDto.setItemName(items[i]);
+//                testDataDto.setUsl(uslRow[i]);
+//                testDataDto.setLsl(lslRow[i]);
+//                testDataDto.setUnit(unitRow[i]);
+//
+//                List<CellData> cellDatas = Lists.newArrayList();
+//                for (int j = fileFormat.getData() - 1; j < csvList.size(); j++) {
+//                    CellData cellData = new CellData();
+//                    cellData.setRowKey(String.valueOf(j));
+//                    cellData.setValue(csvList.get(j)[i]);
+//                    cellDatas.add(cellData);
+//                }
+//                testDataDto.setData(cellDatas);
+//                testDataDtos.add(testDataDto);
+//            }
+//            sourceDataService.saveProjectData(csvFile.getName(), testDataDtos);
 
             importSucc = true;
             csvReader.close();
@@ -149,7 +169,7 @@ public class CsvResolverService implements IDataParser {
 //            throw new ApplicationException(exceptionNumber, e.getMessage());
         } finally {
             if (!importSucc) {
-                sourceDataService.deleteProject(csvFile.getName());
+                sourceDataService.deleteProject(Lists.newArrayList(csvFile.getName()));
             }
         }
         logger.info("End csv importing.");
@@ -175,18 +195,14 @@ public class CsvResolverService implements IDataParser {
         }
         //save project
         String[] items = value.get(csvTemplateDto.getItem() - 1);
-        ProjectDto projectDto = new ProjectDto();
-        projectDto.setProjectName(file.getName());
-        projectDto.setPath(file.getPath());
         //projectDto.setItemNames(Arrays.asList(items));
-        sourceDataService.saveProject(projectDto);
+        sourceDataService.saveProject(file.getName());
 
         //save teat item
         List<TestItemDto> itemDtos = Lists.newArrayList();
         for (int i = 0; i < items.length; i++) {
             TestItemDto testItemDto = new TestItemDto();
-            testItemDto.setProjectName(file.getName());
-            testItemDto.setItemName(items[i]);
+            testItemDto.setTestItemName(items[i]);
             testItemDto.setUsl(uslRow[i]);
             testItemDto.setLsl(lslRow[i]);
             testItemDto.setUnit(unitRow[i]);
@@ -234,7 +250,7 @@ public class CsvResolverService implements IDataParser {
     /**
      * find csv template setting
      *
-     * @return
+     * @return csv template dto
      */
     @ExcludeMethod
     public CsvTemplateDto findCsvTemplate() {

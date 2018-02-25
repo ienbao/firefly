@@ -2,7 +2,12 @@ package com.dmsoft.firefly.sdk.dai.dto;
 
 import java.util.Map;
 
-public class NewRowDataDto {
+/**
+ * dto class for row data
+ *
+ * @author Can Guan
+ */
+public class RowDataDto {
     private String rowKey;
     private Boolean inUsed;
     private Map<String, String> data;

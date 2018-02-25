@@ -1,16 +1,19 @@
-package com.dmsoft.firefly.sdk.dai.entity;
+package com.dmsoft.firefly.core.daiimpl.entity;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Map;
 
 /**
- * Created by Lucien.Chen on 2018/2/6.
+ * entity class for project
+ *
+ * @author Can Guan
  */
 public class Project {
-
     private ObjectId id;
-
     private String projectName;
-    private String path;
+    private Map<String, TestItem> testItems;
 
     public ObjectId getId() {
         return id;
@@ -28,11 +31,11 @@ public class Project {
         this.projectName = projectName;
     }
 
-    public String getPath() {
-        return path;
+    public Map<String, TestItem> getTestItems() {
+        return testItems;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setTestItems(Map<String, TestItem> testItems) {
+        this.testItems = testItems;
     }
 }

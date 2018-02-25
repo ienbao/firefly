@@ -14,16 +14,18 @@ import java.util.List;
  */
 public interface EnvService {
     /**
-     * set user name
-     */
-    void setUserName(String userName);
-
-    /**
      * get user name
      *
      * @return user name
      */
     String getUserName();
+
+    /**
+     * set user name
+     *
+     * @param userName user name
+     */
+    void setUserName(String userName);
 
     /**
      * method to set activated template name
