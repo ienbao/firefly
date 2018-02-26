@@ -18,6 +18,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -190,6 +191,7 @@ public class SpcItemController implements Initializable {
                 }
             });
             if (basicSearch.getChildren().size() > 0) {
+                basicSearchCom.setPadding(new Insets(0, 10, 10, 10));
                 basicSearch.getChildren().add(basicSearch.getChildren().size() - 1, basicSearchCom);
             }
         });
