@@ -60,6 +60,7 @@ public class SpcItemController implements Initializable {
     private SpcService spcService = new SpcServiceImpl();
 
     private SpcMainController spcMainController;
+    private ContextMenu pop;
 
     /**
      * init main controller
@@ -90,30 +91,23 @@ public class SpcItemController implements Initializable {
         });
         select.setGraphic(box);
         select.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
-//        Label label = new Label("Test Item");
         Button is = new Button();
         is.setPrefSize(22, 22);
         is.setMinSize(22, 22);
         is.setMaxSize(22, 22);
         is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
         is.setOnMousePressed(event -> createPopMenu(is, event));
-//        is.setContextMenu(createPopMenu());
-//        ComboBox comboBox = new ComboBox();
-//        comboBox.setItems(FXCollections.observableArrayList("All Test Items", "Test Items with USL/LSL"));
-//        comboBox.setPrefSize(30, 16);
-//        comboBox.setMaxSize(30, 16);
-//        comboBox.setOnAction(event -> {
-//            if (comboBox.getValue().equals("All Test Items")) {
-//                filteredList.setPredicate(p -> p.getItem().startsWith(""));
-//            } else {
-//                filteredList.setPredicate(p -> p.getItemDto().getLsl() != null || p.getItemDto().getUsl() != null);
-//            }
-//        });
+
         Label label = new Label("Test Item");
         HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER_RIGHT);
-        hBox.getChildren().addAll(label, is);
-
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        hBox.getChildren().addAll(label);
+        hBox.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+            hBox.getChildren().add(is);
+        });
+        hBox.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+            hBox.getChildren().remove(is);
+        });
         item.setGraphic(hBox);
         item.setCellValueFactory(cellData -> cellData.getValue().itemProperty());
         initItemData();
@@ -129,12 +123,14 @@ public class SpcItemController implements Initializable {
     }
 
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
-        ContextMenu pop = new ContextMenu();
+        if (pop == null) {
+            pop = new ContextMenu();
         MenuItem all = new MenuItem("All Test Items");
         all.setOnAction(event -> filteredList.setPredicate(p -> p.getItem().startsWith("")));
         MenuItem show = new MenuItem("Test Items with USL/LSL");
         show.setOnAction(event -> filteredList.setPredicate(p -> p.getItemDto().getLsl() != null || p.getItemDto().getUsl() != null));
         pop.getItems().addAll(all, show);
+        }
         pop.show(is, e.getScreenX(), e.getScreenY());
         return pop;
     }
