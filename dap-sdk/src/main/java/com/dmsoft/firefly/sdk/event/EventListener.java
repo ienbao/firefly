@@ -10,5 +10,5 @@ public interface EventListener {
     /**
      * @param event platform event
      */
-    void eventChanged(PlatformEvent event);
+    void eventNotify(PlatformEvent event);
 }
