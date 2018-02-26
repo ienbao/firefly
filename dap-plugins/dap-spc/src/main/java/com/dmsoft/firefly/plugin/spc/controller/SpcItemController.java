@@ -3,6 +3,8 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.firefly.gui.components.searchcombobox.ISearchComboBoxController;
+import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultDto;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.service.SpcServiceImpl;
@@ -26,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -58,6 +61,8 @@ public class SpcItemController implements Initializable {
     private Tab basicTab;
     @FXML
     private Tab advanceTab;
+    @FXML
+    private Button addSearch;
     @FXML
     private VBox basicSearch;
 
@@ -130,23 +135,64 @@ public class SpcItemController implements Initializable {
         timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
         basicTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
         advanceTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_advance_search_normal.png")));
-
+        addSearch.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
     }
 
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
         if (pop == null) {
             pop = new ContextMenu();
-        MenuItem all = new MenuItem("All Test Items");
-        all.setOnAction(event -> filteredList.setPredicate(p -> p.getItem().startsWith("")));
-        MenuItem show = new MenuItem("Test Items with USL/LSL");
-        show.setOnAction(event -> filteredList.setPredicate(p -> p.getItemDto().getLsl() != null || p.getItemDto().getUsl() != null));
-        pop.getItems().addAll(all, show);
+            MenuItem all = new MenuItem("All Test Items");
+            all.setOnAction(event -> filteredList.setPredicate(p -> p.getItem().startsWith("")));
+            MenuItem show = new MenuItem("Test Items with USL/LSL");
+            show.setOnAction(event -> filteredList.setPredicate(p -> p.getItemDto().getLsl() != null || p.getItemDto().getUsl() != null));
+            pop.getItems().addAll(all, show);
         }
         pop.show(is, e.getScreenX(), e.getScreenY());
         return pop;
     }
 
     private void initComponentEvent() {
+        addSearch.setOnAction(event -> {
+            SearchComboBox basicSearchCom = new SearchComboBox(new ISearchComboBoxController() {
+                @Override
+                public ObservableList<String> getValueForTestItem(String testItem) {
+                    if ("AA".equals(testItem)) {
+                        List<String> testList = new ArrayList<>();
+                        testList.add("132");
+                        testList.add("2456");
+                        testList.add("<A");
+                        return FXCollections.observableArrayList(testList);
+                    }
+                    return FXCollections.observableArrayList();
+                }
+
+                @Override
+                public ObservableList<String> getTestItems() {
+                    List<String> s = new ArrayList<>();
+                    s.add("AA");
+                    s.add("BA");
+                    s.add("BAB!");
+                    s.add("<");
+                    return FXCollections.observableArrayList(s);
+                }
+
+                @Override
+                public boolean isTimeKey(String testItem) {
+                    if (testItem != null && testItem.contains("A")) {
+                        return true;
+                    }
+                    return false;
+                }
+
+                @Override
+                public String getTimePattern() {
+                    return null;
+                }
+            });
+            if (basicSearch.getChildren().size() > 0) {
+                basicSearch.getChildren().add(basicSearch.getChildren().size() - 1, basicSearchCom);
+            }
+        });
         analysisBtn.setOnAction(event -> getAnalysisBtnEvent());
     }
 
