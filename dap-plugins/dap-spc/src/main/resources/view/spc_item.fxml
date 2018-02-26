@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
@@ -17,7 +21,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="testItemPane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcItemController">
+<VBox fx:id="testItemPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcItemController">
    <children>
       <SplitPane dividerPositions="0.4698085419734904" orientation="VERTICAL" style="-fx-border-width: 0 0 0 0;" VBox.vgrow="ALWAYS">
          <items>
@@ -127,7 +131,57 @@
                   </Tab>
                </tabs>
             </TabPane>
-            <BorderPane minHeight="100.0" minWidth="180.0" prefHeight="415.0" prefWidth="180.0" style="-fx-background-color: #FFFFFF;" />
+            <TabPane minHeight="155.0" minWidth="180.0" prefHeight="415.0" prefWidth="180.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab style="-fx-pref-width: 45;">
+                  <content>
+                    <AnchorPane fx:id="Condition" minHeight="0.0" minWidth="180.0" prefHeight="180.0" prefWidth="180.0" />
+                  </content>
+                </Tab>
+                <Tab style="-fx-pref-width: 45;">
+                     <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="180.0">
+                                 <children>
+                                    <Label prefHeight="30.0" prefWidth="140.0" text="Advance Search">
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <Button minHeight="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" text="Button">
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <TextArea prefHeight="100.0" prefWidth="160.0">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" />
+                                 </VBox.margin>
+                              </TextArea>
+                              <Label prefHeight="30.0" prefWidth="160.0" text="Auto Divide By">
+                                 <VBox.margin>
+                                    <Insets left="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <ComboBox prefWidth="160.0">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" />
+                                 </VBox.margin>
+                              </ComboBox>
+                              <ComboBox prefWidth="160.0">
+                                 <VBox.margin>
+                                    <Insets left="10.0" />
+                                 </VBox.margin>
+                              </ComboBox>
+                           </children>
+                        </VBox>
+                     </content>
+                </Tab>
+              </tabs>
+            </TabPane>
          </items>
       </SplitPane>
       <GridPane style="-fx-background-color: #ffffff; -fx-border-width: 1 0 0 0; -fx-border-color: #DCDCDC;">
