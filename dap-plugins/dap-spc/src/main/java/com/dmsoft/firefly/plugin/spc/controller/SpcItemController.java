@@ -23,6 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.List;
@@ -53,6 +54,13 @@ public class SpcItemController implements Initializable {
     private TableColumn<ItemTableModel, String> item;
     @FXML
     private TableView itemTable;
+    @FXML
+    private Tab basicTab;
+    @FXML
+    private Tab advanceTab;
+    @FXML
+    private VBox basicSearch;
+
     private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
@@ -120,6 +128,9 @@ public class SpcItemController implements Initializable {
         itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_datasource_normal.png")));
         configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_config_normal.png")));
         timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
+        basicTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
+        advanceTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_advance_search_normal.png")));
+
     }
 
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
