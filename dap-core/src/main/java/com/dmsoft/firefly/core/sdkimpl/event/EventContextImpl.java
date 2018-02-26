@@ -18,7 +18,7 @@ public class EventContextImpl implements EventContext {
     @Override
     public void pushEvent(PlatformEvent event) {
         for (EventListener listener : listeners) {
-            listener.eventChanged(event);
+            listener.eventNotify(event);
         }
     }
 

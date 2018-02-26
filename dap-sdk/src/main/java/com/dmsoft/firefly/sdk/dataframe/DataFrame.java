@@ -30,6 +30,14 @@ public interface DataFrame {
     List<TestItemDto> getAllTestItemDto();
 
     /**
+     * method to get test item dto
+     *
+     * @param testItemName test item name
+     * @return test item dto
+     */
+    TestItemDto getTestItemDto(String testItemName);
+
+    /**
      * method to update test item, e.g. usl or lsl
      *
      * @param testItemDto test item dto

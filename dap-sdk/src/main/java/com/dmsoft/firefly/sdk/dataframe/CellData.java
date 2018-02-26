@@ -21,16 +21,16 @@ public interface CellData {
     String getValue();
 
     /**
-     * method to judge this data cell is in used or not
+     * method to get inUsed
      *
-     * @return true : in used, false : not in used
+     * @return in used value
      */
-    boolean isInUsed();
+    Boolean getInUsed();
 
     /**
-     * method to juedge this data cell is pass or not
+     * method to get test item name
      *
-     * @return true : pass, false : failed
+     * @return test item name
      */
-    boolean isPassed();
+    String getTestItemName();
 }
