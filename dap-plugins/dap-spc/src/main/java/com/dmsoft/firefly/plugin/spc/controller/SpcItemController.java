@@ -191,7 +191,7 @@ public class SpcItemController implements Initializable {
                 }
             });
             if (basicSearch.getChildren().size() > 0) {
-                basicSearchCom.setPadding(new Insets(0, 10, 10, 10));
+                basicSearchCom.setPadding(new Insets(10, 10, 0, 10));
                 basicSearch.getChildren().add(basicSearch.getChildren().size() - 1, basicSearchCom);
             }
         });
