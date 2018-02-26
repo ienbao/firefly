@@ -97,6 +97,10 @@ public class DataSourceController implements Initializable {
             );
             Stage fileStage = null;
             File file = fileChooser.showOpenDialog(fileStage);
+            if (file != null) {
+                //TODO
+                //1.像表中添加记录并存储
+            }
         });
     }
 
