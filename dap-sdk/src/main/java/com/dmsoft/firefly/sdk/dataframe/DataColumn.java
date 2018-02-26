@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.sdk.dataframe;
 
-import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public interface DataColumn {
      *
      * @return data column info
      */
-    TestItemDto getTestItemDto();
+    TestItemWithTypeDto getTestItemWithTypeDto();
 
     /**
      * method to get data string array.

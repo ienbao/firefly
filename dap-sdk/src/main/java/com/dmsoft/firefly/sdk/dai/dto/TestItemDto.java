@@ -1,7 +1,6 @@
 package com.dmsoft.firefly.sdk.dai.dto;
 
 import com.dmsoft.bamboo.common.dto.AbstractValueObject;
-import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 
 /**
  * Test item dto
@@ -10,7 +9,6 @@ import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
  */
 public class TestItemDto extends AbstractValueObject {
     private String testItemName;
-    private TestItemType itemType;
     private String usl;
     private String lsl;
     private String unit;
@@ -22,14 +20,6 @@ public class TestItemDto extends AbstractValueObject {
 
     public void setTestItemName(String testItemName) {
         this.testItemName = testItemName;
-    }
-
-    public TestItemType getItemType() {
-        return itemType;
-    }
-
-    public void setItemType(TestItemType itemType) {
-        this.itemType = itemType;
     }
 
     public String getUsl() {

@@ -1505,7 +1505,6 @@
  *                                                                             *
  ******************************************************************************/
 .search-component {
-    -fx-border-color: red;
 }
 
 .search-component .test-item {

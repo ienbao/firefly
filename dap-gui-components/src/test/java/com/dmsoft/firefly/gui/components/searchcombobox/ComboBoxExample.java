@@ -48,8 +48,9 @@ public class ComboBoxExample extends Application {
                 return null;
             }
         });
+//        Scene scene = new Scene(comboBox, 300, 300);
         Scene scene = new Scene(comboBox, 300, 300);
-        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/main.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
     }

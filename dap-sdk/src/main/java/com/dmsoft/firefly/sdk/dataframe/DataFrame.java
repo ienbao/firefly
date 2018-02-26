@@ -1,7 +1,7 @@
 package com.dmsoft.firefly.sdk.dataframe;
 
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
-import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 
 import java.util.List;
 import java.util.Map;
@@ -27,7 +27,7 @@ public interface DataFrame {
      *
      * @return test item dto array
      */
-    List<TestItemDto> getAllTestItemDto();
+    List<TestItemWithTypeDto> getAllTestItemWithTypeDto();
 
     /**
      * method to get test item dto
@@ -35,14 +35,14 @@ public interface DataFrame {
      * @param testItemName test item name
      * @return test item dto
      */
-    TestItemDto getTestItemDto(String testItemName);
+    TestItemWithTypeDto getTestItemWithTypeDto(String testItemName);
 
     /**
      * method to update test item, e.g. usl or lsl
      *
-     * @param testItemDto test item dto
+     * @param testItemWithTypeDto test item dto
      */
-    void updateTestItem(TestItemDto testItemDto);
+    void updateTestItem(TestItemWithTypeDto testItemWithTypeDto);
 
     /**
      * method to judge test item exist in this data frame or not
@@ -65,20 +65,45 @@ public interface DataFrame {
     /**
      * method to get data column by column name and search condition.
      *
-     * @param searchCondition search condition
      * @param testItemName    column name
+     * @param searchCondition search condition
      * @return data column
      */
-    DataColumn getDataColumn(String searchCondition, String testItemName);
+    DataColumn getDataColumn(String testItemName, String searchCondition);
+
+    /**
+     * method to get data column by names
+     *
+     * @param testItemNames list of test item name
+     * @return list of data column
+     */
+    List<DataColumn> getDataColumn(List<String> testItemNames);
 
     /**
      * method to get data column by column name and search condition.
      *
-     * @param searchCondition search condition
      * @param testItemNames   column name
+     * @param searchCondition search condition
      * @return data column
      */
-    List<DataColumn> getDataColumn(String searchCondition, List<String> testItemNames);
+    List<DataColumn> getDataColumn(List<String> testItemNames, String searchCondition);
+
+    /**
+     * method to get column data
+     *
+     * @param testItemName test item name
+     * @return list of string value
+     */
+    List<String> getDataValue(String testItemName);
+
+    /**
+     * method to get data value by test item name and list of row key
+     *
+     * @param testItemName test item name
+     * @param rowKeyList   list of row keys
+     * @return list of test data value
+     */
+    List<String> getDataValue(String testItemName, List<String> rowKeyList);
 
     /**
      * method to get all data column array
@@ -88,11 +113,26 @@ public interface DataFrame {
     List<DataColumn> getAllDataColumn();
 
     /**
+     * method to remove columns by test item names
+     *
+     * @param testItemNameList list of test item name
+     */
+    void removeColumns(List<String> testItemNameList);
+
+    /**
      * method to append columns at last
      *
      * @param dataColumnList list of data column
      */
     void appendColumns(List<DataColumn> dataColumnList);
+
+    /**
+     * method to judge row key exist or not
+     *
+     * @param rowKey row key
+     * @return true : exist; false : not exsit
+     */
+    boolean isRowKeyExist(String rowKey);
 
     /**
      * method to get data row by row id.
@@ -103,12 +143,20 @@ public interface DataFrame {
     RowDataDto getDataRow(String rowKey);
 
     /**
+     * method to get data map
+     *
+     * @param rowKey row key
+     * @return data map
+     */
+    Map<String, String> getDataMap(String rowKey);
+
+    /**
      * method to get data row by row ids
      *
-     * @param rowKeys row ids
+     * @param rowKeyList row ids
      * @return row data list
      */
-    List<RowDataDto> getDataRowArray(List<String> rowKeys);
+    List<RowDataDto> getDataRowArray(List<String> rowKeyList);
 
     /**
      * method to get data row by search conditions
@@ -128,9 +176,9 @@ public interface DataFrame {
     /**
      * method to remove rows by row keys
      *
-     * @param rowKeys row keys
+     * @param rowKeyList row keys
      */
-    void removeRows(List<String> rowKeys);
+    void removeRows(List<String> rowKeyList);
 
     /**
      * method to replace row
@@ -186,7 +234,7 @@ public interface DataFrame {
      *
      * @param rowKey       row key
      * @param testItemName test item name
-     * @return is pass or not, null for skip depend on policy or unable to check
+     * @return is pass or not, null for skip depend on policy or unable to check or no exist
      */
     Boolean isPass(String rowKey, String testItemName);
 
@@ -217,18 +265,21 @@ public interface DataFrame {
     //Search Operation
 
     /**
-     * method to search condition
+     * method to get searched row key
      *
-     * @param searchConditionList search condition
+     * @param searchConditionList list of search condition
+     * @return list of row key
      */
-    void search(List<String> searchConditionList);
+    List<String> getSearchedRowKey(List<String> searchConditionList);
 
     //Shrink Operation
 
     /**
      * method to shrink, remove redundant rows (which do not belong to any search condition)
+     *
+     * @param searchConditionList list of search condition
      */
-    void shrink();
+    void shrink(List<String> searchConditionList);
 
     /**
      * get sub data frame by row keys
