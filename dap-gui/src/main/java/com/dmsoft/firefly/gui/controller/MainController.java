@@ -1,19 +1,28 @@
 package com.dmsoft.firefly.gui.controller;
 
+import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.gui.component.ContentStackPane;
+import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.utils.ResourceBundleUtils;
+import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ResourceBundle;
 import java.util.Set;
+
+import static com.google.common.io.Resources.getResource;
 
 public class MainController {
 
@@ -97,6 +106,7 @@ public class MainController {
     }
 
     private void getDataSourceBtnEvent(){
+        buildDataSourceDialog();
         logger.debug("Data source btn event.");
     }
 
@@ -136,6 +146,18 @@ public class MainController {
         dataSourceLbl.setDisable(true);
         templateBtn.setDisable(true);
         templateLbl.setDisable(true);
+    }
+
+    private void buildDataSourceDialog() {
+        Pane root = null;
+        try {
+            root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/data_source.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+            Stage stage = WindowFactory.createSimpleWindowAsModel("dataSource", ResourceBundleUtils.getString(ResourceMassages.DATASOURCE), root, getResource("css/platform_app.css").toExternalForm());
+            stage.setResizable(false);
+            stage.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 }
