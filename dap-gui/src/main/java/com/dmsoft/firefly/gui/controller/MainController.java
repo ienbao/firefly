@@ -174,6 +174,12 @@ public class MainController {
     private void getDataSourceBtnEvent(){
         buildDataSourceDialog();
         logger.debug("Data source btn event.");
+        if (templatePopup.isShowing()) {
+            templatePopup.hide();
+        }
+        if (dataSourcePopup.isShowing()) {
+            dataSourcePopup.hide();
+        }
     }
 
     private void getDataSourceLblEvent(){
@@ -283,6 +289,12 @@ public class MainController {
 
     private void getTemplateBtnEvent(){
         logger.debug("Template btn event.");
+        if (templatePopup.isShowing()) {
+            templatePopup.hide();
+        }
+        if (dataSourcePopup.isShowing()) {
+            dataSourcePopup.hide();
+        }
     }
 
     private void getTemplateLblEvent(){
