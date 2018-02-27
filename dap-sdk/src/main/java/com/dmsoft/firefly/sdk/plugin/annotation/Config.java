@@ -7,7 +7,6 @@ import java.lang.annotation.*;
  *
  * @author Can Guan
  */
-@OpenService
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
