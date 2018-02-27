@@ -19,7 +19,7 @@ public class TimeSpinnerExample extends Application {
 
         StackPane root = new StackPane(spinner);
         Scene scene = new Scene(root, 350, 120);
-        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/main.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
     }

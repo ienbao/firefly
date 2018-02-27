@@ -11,4 +11,6 @@ public class ResourceMassages {
     public static final String STATISTICAL_RESULT = "STATISTICAL_RESULT";
     public static final String VIEW_DATA = "VIEW_DATA";
     public static final String CHOOSE_STATISTICAL_RESULTS = "CHOOSE_STATISTICAL_RESULTS";
+    public static final String ADVANCE = "ADVANCE";
+
 }

@@ -5,11 +5,13 @@ package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.gui.components.searchcombobox.ISearchComboBoxController;
 import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
+import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultDto;
+import com.dmsoft.firefly.plugin.spc.model.AdvanceHelpModel;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.service.SpcServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcService;
-import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
@@ -17,21 +19,28 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import static com.google.common.io.Resources.getResource;
 
 
 /**
@@ -66,6 +75,10 @@ public class SpcItemController implements Initializable {
     private Button addSearch;
     @FXML
     private VBox basicSearch;
+    @FXML
+    private TextArea advanceText;
+    @FXML
+    private Button help;
 
     private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
@@ -192,11 +205,13 @@ public class SpcItemController implements Initializable {
             });
             basicSearchCom.getCloseBtn().setOnAction(e -> basicSearch.getChildren().remove(basicSearchCom));
             if (basicSearch.getChildren().size() > 0) {
-                basicSearchCom.setPadding(new Insets(10, 10, 0, 10));
+                basicSearchCom.setPadding(new Insets(10, 10, 0, 8));
                 basicSearch.getChildren().add(basicSearch.getChildren().size() - 1, basicSearchCom);
+                VBox.setVgrow(basicSearchCom, Priority.ALWAYS);
             }
         });
         analysisBtn.setOnAction(event -> getAnalysisBtnEvent());
+        help.setOnAction(event -> buildAdvanceHelpDia());
     }
 
     private void initItemData() {
@@ -216,7 +231,6 @@ public class SpcItemController implements Initializable {
             itemTable.setItems(personSortedList);
             personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
         }
-
     }
 
     private void getAnalysisBtnEvent() {
@@ -268,5 +282,41 @@ public class SpcItemController implements Initializable {
         return spcStatisticalResultDtoList;
     }
 
+    private void buildAdvanceHelpDia() {
+        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML(ViewResource.SPC_ADVANCE_SEARCH_VIEW_RES);
+        Pane root = null;
+        try {
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createSimpleWindowAsModel(ViewResource.SPC_ADVANCE_SEARCH_VIEW_ID, ResourceBundleUtils.getString(ResourceMassages.ADVANCE), root, getResource("css/platform_app.css").toExternalForm());
+            stage.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
+    public List<String> getSelectedItem() {
+        List<String> selectItems = Lists.newArrayList();
+        if (items != null) {
+            for (ItemTableModel model : items) {
+                if (model.getSelector().isSelected()) {
+                    selectItems.add(model.getItem());
+                }
+            }
+        }
+        return selectItems;
+    }
+
+    public List<String> getSearch() {
+        List<String> search = Lists.newArrayList();
+        if (basicSearch.getChildren().size() > 0) {
+            for (Node node : basicSearch.getChildren()) {
+                if (node instanceof SearchComboBox) {
+                    search.add(((SearchComboBox) node).getCondition());
+                }
+            }
+        }
+        //todo
+        String advance = advanceText.getText();
+        return search;
+    }
 }
