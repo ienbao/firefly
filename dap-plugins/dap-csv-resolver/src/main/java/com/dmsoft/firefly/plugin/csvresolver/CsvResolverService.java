@@ -50,9 +50,8 @@ public class CsvResolverService implements IDataParser {
      * method to import csv
      *
      * @param csvPath        the path of csv file
-     * @param importTemplate csv import template name
      */
-    public void importCsv(String csvPath, String importTemplate) {
+    public void importFile(String csvPath) {
         logger.info("Start csv importing.");
         File csvFile = new File(csvPath);
         Boolean importSucc = false;
