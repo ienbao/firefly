@@ -15,4 +15,10 @@ public interface IDataParser {
      * @return the id of the csv imported file
      */
     void importFile(String csvPath);
+
+    /**
+     *
+     * @return
+     */
+    String getName();
 }

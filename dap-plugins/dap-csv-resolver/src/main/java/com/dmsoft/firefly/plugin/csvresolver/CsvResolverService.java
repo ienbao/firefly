@@ -174,6 +174,11 @@ public class CsvResolverService implements IDataParser {
         logger.info("End csv importing.");
     }
 
+    @Override
+    public String getName() {
+        return "Csv resolver";
+    }
+
     private void saveProject(File file, CsvTemplateDto csvTemplateDto, List<String[]> value) {
         String[] lslRow = null, uslRow = null, unitRow = null;
 
