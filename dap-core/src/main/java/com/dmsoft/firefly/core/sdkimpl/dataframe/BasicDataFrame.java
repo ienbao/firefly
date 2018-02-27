@@ -1,23 +1,13 @@
 package com.dmsoft.firefly.core.sdkimpl.dataframe;
 
-import com.dmsoft.firefly.core.utils.FilterUtils;
-import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
-import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
-import com.dmsoft.firefly.sdk.dataframe.DataFrame;
-import com.dmsoft.firefly.sdk.dataframe.PassPolicy;
-import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
-import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -25,21 +15,16 @@ import java.util.function.Function;
  *
  * @author Can Guan
  */
-public class BasicDataFrame extends AbstractDataFrame {
+public class BasicDataFrame extends AbstractBasicDataFrame {
     //Column
-    private List<String> testItemNames;
-    private List<TestItemWithTypeDto> testItemDtoList;
+    protected List<String> testItemNames;
+    protected List<TestItemWithTypeDto> testItemDtoList;
     //Row
-    private List<String> rowKeys;
-    private List<Boolean> inUsedList;
-    //outside list index is same with the rowKeys index
-    private List<Set<String>> rowSearchConditionResultList;
+    protected List<String> rowKeys;
+    protected List<Boolean> inUsedList;
     //Column & Row
     //outside list index is same with the rowKeys index, inside list index is same with the testItemNames index
-    private List<List<String>> cellValues;
-    //Additional
-    private Set<String> searchConditions;
-    private FilterUtils filterUtils;
+    protected List<List<String>> cellValues;
 
     /**
      * constructor
@@ -53,11 +38,6 @@ public class BasicDataFrame extends AbstractDataFrame {
         this.testItemDtoList = Lists.newArrayList(testItemDtoList);
         this.inUsedList = Lists.newArrayList();
         this.cellValues = Lists.newArrayList();
-        this.rowSearchConditionResultList = Lists.newArrayList();
-        this.searchConditions = Sets.newLinkedHashSet();
-        List<String> timeKeys = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getTimePatternDto().getTimeKeys();
-        String timePattern = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getTimePatternDto().getPattern();
-        this.filterUtils = new FilterUtils(timeKeys, timePattern);
         for (TestItemWithTypeDto testItemDto : this.testItemDtoList) {
             if (!this.testItemNames.contains(testItemDto.getTestItemName()) && testItemDto.getTestItemName() != null) {
                 this.testItemNames.add(testItemDto.getTestItemName());
@@ -72,7 +52,6 @@ public class BasicDataFrame extends AbstractDataFrame {
                     values.add(rowDataDto.getData().get(testItemName));
                 }
                 this.cellValues.add(values);
-                this.rowSearchConditionResultList.add(Sets.newHashSet());
             }
         }
     }
@@ -124,34 +103,10 @@ public class BasicDataFrame extends AbstractDataFrame {
     }
 
     @Override
-    public DataColumn getDataColumn(String testItemName, String searchCondition) {
-        if (isTestItemExist(testItemName)) {
-            TestItemWithTypeDto testItemDto = getTestItemWithTypeDto(testItemName);
-            List<String> rowKeyList = getSearchedRowKey(searchCondition);
-            List<String> valueList = getDataValue(testItemName, rowKeyList);
-            List<Boolean> inUsed = Lists.newArrayList();
-            for (String rowKey : rowKeyList) {
-                inUsed.add(isInUsed(rowKey));
-            }
-            return new BasicDataColumn(testItemDto, rowKeyList, valueList, inUsed);
-        }
-        return null;
-    }
-
-    @Override
     public List<DataColumn> getDataColumn(List<String> testItemNames) {
         List<DataColumn> dataColumns = Lists.newArrayList();
         for (String testItemName : testItemNames) {
             dataColumns.add(getDataColumn(testItemName));
-        }
-        return dataColumns;
-    }
-
-    @Override
-    public List<DataColumn> getDataColumn(List<String> testItemNames, String searchCondition) {
-        List<DataColumn> dataColumns = Lists.newArrayList();
-        for (String testItemName : testItemNames) {
-            dataColumns.add(getDataColumn(testItemName, searchCondition));
         }
         return dataColumns;
     }
@@ -267,20 +222,6 @@ public class BasicDataFrame extends AbstractDataFrame {
     }
 
     @Override
-    public List<RowDataDto> getDataRowArray(String searchCondition) {
-        if (!this.searchConditions.contains(searchCondition) && filterUtils.isLegal(searchCondition)) {
-            search(searchCondition);
-        }
-        List<RowDataDto> result = Lists.newArrayList();
-        for (int i = 0; i < this.rowKeys.size(); i++) {
-            if (this.rowSearchConditionResultList.get(i).contains(searchCondition)) {
-                result.add(getDataRow(this.rowKeys.get(i)));
-            }
-        }
-        return result;
-    }
-
-    @Override
     public List<RowDataDto> getAllDataRow() {
         List<RowDataDto> result = Lists.newArrayList();
         for (String rowKey : this.rowKeys) {
@@ -315,8 +256,6 @@ public class BasicDataFrame extends AbstractDataFrame {
                 data.add(rowDataDto.getData().get(testItemName));
             }
             this.cellValues.add(targetRowIndex, data);
-            this.rowSearchConditionResultList.remove(targetRowIndex);
-            this.rowSearchConditionResultList.add(targetRowIndex, getSearchConditions(rowDataDto.getData()));
         }
     }
 
@@ -347,145 +286,5 @@ public class BasicDataFrame extends AbstractDataFrame {
             return this.cellValues.get(targetRowIndex).get(targetColumnIndex);
         }
         return null;
-    }
-
-    @Override
-    public Boolean isPass(String rowKey, String testItemName) {
-        if (PassPolicy.NONE.equals(getPassPolicy())) {
-            return null;
-        }
-        if (isRowKeyExist(rowKey) && isTestItemExist(testItemName)) {
-            Boolean result = null;
-            TestItemWithTypeDto testItemDto = getTestItemWithTypeDto(testItemName);
-            String usl = testItemDto.getUsl();
-            String lsl = testItemDto.getLsl();
-            String valueStr = getCellValue(rowKey, testItemName);
-            if (TestItemType.VARIABLE.equals(testItemDto.getTestItemType())) {
-                Double uslValue = null;
-                Double lslValue = null;
-                Double value = null;
-                if (DAPStringUtils.isNumeric(usl)) {
-                    uslValue = Double.valueOf(usl);
-                }
-                if (DAPStringUtils.isNumeric(lsl)) {
-                    lslValue = Double.valueOf(lsl);
-                }
-                if (DAPStringUtils.isNumeric(valueStr)) {
-                    value = Double.valueOf(valueStr);
-                }
-                if (value != null) {
-                    result = !(uslValue != null && value > uslValue) && !(lslValue != null && value < lslValue);
-                }
-            } else {
-                if (StringUtils.isNotBlank(usl)) {
-                    if (usl.equals(valueStr)) {
-                        result = true;
-                    }
-                }
-                if (StringUtils.isNotBlank(lsl)) {
-                    if (lsl.equals(valueStr)) {
-                        result = false;
-                    }
-                }
-            }
-            return result;
-        }
-        return null;
-    }
-
-    @Override
-    public void addSearchCondition(List<String> searchConditionList) {
-        for (String s : searchConditionList) {
-            if (filterUtils.isLegal(s) && !this.searchConditions.contains(s)) {
-                search(s);
-                this.searchConditions.add(s);
-            }
-        }
-    }
-
-    @Override
-    public List<String> getSearchConditionList() {
-        return Lists.newArrayList(this.searchConditions);
-    }
-
-    @Override
-    public void removeSearchCondition(String searchCondition) {
-        if (this.searchConditions.contains(searchCondition)) {
-            this.searchConditions.remove(searchCondition);
-            for (Set<String> searchResult : this.rowSearchConditionResultList) {
-                searchResult.remove(searchCondition);
-            }
-        }
-    }
-
-    @Override
-    public void clearSearchConditions() {
-        this.searchConditions.clear();
-        for (Set<String> rowSearch : this.rowSearchConditionResultList) {
-            rowSearch.clear();
-        }
-    }
-
-    @Override
-    public List<String> getSearchedRowKey() {
-        List<String> result = Lists.newArrayList();
-        for (int i = 0; i < this.rowSearchConditionResultList.size(); i++) {
-            if (!this.rowSearchConditionResultList.get(i).isEmpty()) {
-                result.add(this.rowKeys.get(i));
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public List<String> getSearchedRowKey(String searchCondition) {
-        if (this.searchConditions.contains(searchCondition)) {
-            List<String> result = Lists.newArrayList();
-            for (int i = 0; i < this.rowSearchConditionResultList.size(); i++) {
-                if (this.rowSearchConditionResultList.get(i).contains(searchCondition)) {
-                    result.add(this.rowKeys.get(i));
-                }
-            }
-            return result;
-        }
-        return null;
-    }
-
-    @Override
-    public void shrink() {
-        List<String> rowKeyToBeRemoved = Lists.newArrayList();
-        for (int i = 0; i < this.rowSearchConditionResultList.size(); i++) {
-            if (this.rowSearchConditionResultList.get(i).isEmpty()) {
-                rowKeyToBeRemoved.add(this.rowKeys.get(i));
-            }
-        }
-        if (!rowKeyToBeRemoved.isEmpty()) {
-            removeRows(rowKeyToBeRemoved);
-        }
-    }
-
-    @Override
-    public DataFrame subDataFrame(List<String> rowKeys) {
-        List<TestItemWithTypeDto> typeDtoList = Lists.newArrayList(this.testItemDtoList);
-        List<RowDataDto> rowDataDtoList = getDataRowArray(rowKeys);
-        return new BasicDataFrame(typeDtoList, rowDataDtoList);
-    }
-
-    private void search(String searchCondition) {
-        for (int i = 0; i < this.rowKeys.size(); i++) {
-            if (filterUtils.filterData(searchCondition, getDataMap(this.rowKeys.get(i)))) {
-                this.rowSearchConditionResultList.get(i).add(searchCondition);
-            }
-        }
-    }
-
-    private Set<String> getSearchConditions(Map<String, String> data) {
-        Set<String> result = Sets.newLinkedHashSet();
-        for (String searchCondition : this.searchConditions) {
-            if (filterUtils.filterData(searchCondition, data)) {
-                result.add(searchCondition);
-            }
-        }
-        return result;
     }
 }

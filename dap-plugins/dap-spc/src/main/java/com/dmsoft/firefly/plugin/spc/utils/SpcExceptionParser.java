@@ -1,11 +1,11 @@
-package com.dmsoft.firefly.core.utils;
+package com.dmsoft.firefly.plugin.spc.utils;
 
 /**
  * i18n parser
  *
  * @author Can Guan
  */
-public class I18nParser {
+public class SpcExceptionParser {
     /**
      * parser message from i18n depend on code
      *

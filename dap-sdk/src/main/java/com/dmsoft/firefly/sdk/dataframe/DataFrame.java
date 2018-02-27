@@ -18,14 +18,14 @@ public interface DataFrame {
     /**
      * method to get data column name array.
      *
-     * @return data column name array
+     * @return data column name list
      */
     List<String> getAllTestItemName();
 
     /**
      * method to get test item dto array.
      *
-     * @return test item dto array
+     * @return test item dto list
      */
     List<TestItemWithTypeDto> getAllTestItemWithTypeDto();
 
@@ -63,30 +63,12 @@ public interface DataFrame {
     DataColumn getDataColumn(String testItemName);
 
     /**
-     * method to get data column by column name and search condition.
-     *
-     * @param testItemName    column name
-     * @param searchCondition search condition
-     * @return data column
-     */
-    DataColumn getDataColumn(String testItemName, String searchCondition);
-
-    /**
      * method to get data column by names
      *
      * @param testItemNames list of test item name
      * @return list of data column
      */
     List<DataColumn> getDataColumn(List<String> testItemNames);
-
-    /**
-     * method to get data column by column name and search condition.
-     *
-     * @param testItemNames   column name
-     * @param searchCondition search condition
-     * @return data column
-     */
-    List<DataColumn> getDataColumn(List<String> testItemNames, String searchCondition);
 
     /**
      * method to get column data
@@ -161,14 +143,6 @@ public interface DataFrame {
     List<RowDataDto> getDataRowArray(List<String> rowKeyList);
 
     /**
-     * method to get data row by search conditions
-     *
-     * @param searchCondition search condition
-     * @return row data list
-     */
-    List<RowDataDto> getDataRowArray(String searchCondition);
-
-    /**
      * method to get all data row
      *
      * @return row data list
@@ -198,6 +172,7 @@ public interface DataFrame {
      */
     List<String> filterRowKey(Function<Map<String, String>, Boolean> filterFunction);
 
+
     /**
      * method to get in used status
      *
@@ -217,36 +192,13 @@ public interface DataFrame {
      */
     String getCellValue(String rowKey, String testItemName);
 
-    /**
-     * method to get pass policy
-     *
-     * @return pass policy
-     */
-    PassPolicy getPassPolicy();
-
-    /**
-     * method to set pass policy
-     *
-     * @param passPolicy pass policy
-     */
-    void setPassPolicy(PassPolicy passPolicy);
-
-    /**
-     * method to judge is pass or not
-     *
-     * @param rowKey       row key
-     * @param testItemName test item name
-     * @return is pass or not, null for skip depend on policy or unable to check or no exist
-     */
-    Boolean isPass(String rowKey, String testItemName);
-
 
     /**
      * method to get cell result function
      *
      * @return cell result function
      */
-    Function<String, Boolean> getCellResultFunction();
+    Function<String, Object> getCellResultFunction();
 
     /**
      * method to set cell result function
@@ -254,7 +206,7 @@ public interface DataFrame {
      *
      * @param cellResultFunction cell value judge function, the param in call back is the cell value
      */
-    void setCellResultFunction(Function<String, Boolean> cellResultFunction);
+    void setCellResultFunction(Function<String, Object> cellResultFunction);
 
     /**
      * method to get cell result function
@@ -262,63 +214,5 @@ public interface DataFrame {
      * @param rowKey       row key
      * @param testItemName test item name
      */
-    Boolean getCellResult(String rowKey, String testItemName);
-
-    //Search Operation
-
-    /**
-     * method add search condition in data frame
-     *
-     * @param searchConditionList search condition list
-     */
-    void addSearchCondition(List<String> searchConditionList);
-
-    /**
-     * method to get all search condition list
-     *
-     * @return list of search condition
-     */
-    List<String> getSearchConditionList();
-
-    /**
-     * method to remove search condition
-     *
-     * @param searchCondition search condition
-     */
-    void removeSearchCondition(String searchCondition);
-
-    /**
-     * method to clear all search conditions
-     */
-    void clearSearchConditions();
-
-    /**
-     * method to get searched row key (search conditon is the all added search condition)
-     *
-     * @return list of row key
-     */
-    List<String> getSearchedRowKey();
-
-    /**
-     * method to get row key by condition
-     *
-     * @param searchCondition search condition
-     * @return list of row key
-     */
-    List<String> getSearchedRowKey(String searchCondition);
-
-    //Shrink Operation
-
-    /**
-     * method to shrink, remove redundant rows (which do not belong to any search condition)
-     */
-    void shrink();
-
-    /**
-     * get sub data frame by row keys
-     *
-     * @param rowKeys row keys
-     * @return sub data frame
-     */
-    DataFrame subDataFrame(List<String> rowKeys);
+    Object getCellResult(String rowKey, String testItemName);
 }

@@ -22,7 +22,7 @@ public class SpcServiceImpl implements SpcService {
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
 
     @Override
-    public List<SpcStatisticalResultDto> findStatisticalResult(List<String> testItemNames, List<String> conditions, SpcSearchConfigDto spcSearchConfigDto) {
+    public List<SpcServiceStatsResultDto> findStatisticalResult(List<String> testItemNames, List<String> conditions, SpcSearchConfigDto spcSearchConfigDto) {
         /*
         1.Verify the validity of the parameters
         2.Find template setting and global setting, change config dto
@@ -57,8 +57,8 @@ public class SpcServiceImpl implements SpcService {
 
         //4.Get analysis statistical result from R
         // todo from R
-        List<SpcStatisticalResultDto> spcStatisticalResultDtoList = Lists.newArrayList();
-        return spcStatisticalResultDtoList;
+        List<SpcServiceStatsResultDto> spcServiceStatsResultDtoList = Lists.newArrayList();
+        return spcServiceStatsResultDtoList;
     }
 
     @Override
@@ -112,7 +112,7 @@ public class SpcServiceImpl implements SpcService {
     }
 
     @Override
-    public List<SpcStatisticalResultDto> refreshStatisticalResult(List<SearchConditionDto> searchConditionDtoList, SpcSearchConfigDto spcSearchConfigDto) {
+    public List<SpcServiceStatsResultDto> refreshStatisticalResult(List<SearchConditionDto> searchConditionDtoList, SpcSearchConfigDto spcSearchConfigDto) {
         if (spcSearchConfigDto == null || searchConditionDtoList == null) {
             //todo throw Exception throw new ApplicationException();
         }
@@ -134,8 +134,8 @@ public class SpcServiceImpl implements SpcService {
 //            }
         });
         // todo from R
-        List<SpcStatisticalResultDto> spcStatisticalResultDtoList = Lists.newArrayList();
-        return spcStatisticalResultDtoList;
+        List<SpcServiceStatsResultDto> spcServiceStatsResultDtoList = Lists.newArrayList();
+        return spcServiceStatsResultDtoList;
     }
 
     @Override
