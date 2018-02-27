@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<plugin id="com.dmsoft.dap.CsvResolverPlugin" name="csvresolver" version="1.0.0" author="Guang Li"
+<plugin id="com.dmsoft.dap.CsvResolverPlugin" name="Csv resolver" version="1.0.0" author="Guang Li"
         scanPath="com.dmsoft.firefly.plugin.csvresolver" pluginClassName="com.dmsoft.firefly.plugin.csvresolver.CsvResolverPlugin">
     <runtime path="com.dmsoft.dap.CsvResolverPlugin.jar"></runtime>
 </plugin>
