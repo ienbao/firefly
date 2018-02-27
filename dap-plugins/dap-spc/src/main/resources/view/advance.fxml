@@ -6,11 +6,16 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="325.0" prefWidth="410.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.PatternDiaController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="325.0" prefWidth="410.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.AdvanceDiaController">
    <children>
-      <TableView fx:id="patternHelp" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+      <Label prefHeight="50.0" prefWidth="390.0" text="%ADVANCE_TEXT">
+         <VBox.margin>
+            <Insets left="10.0" right="10.0" />
+         </VBox.margin>
+      </Label>
+      <TableView fx:id="helpTable" prefHeight="135.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
         <columns>
-          <TableColumn fx:id="character" maxWidth="115.0" minWidth="115.0" prefWidth="115.0" sortable="false" text="%CHARACTER" />
+          <TableColumn fx:id="operator" maxWidth="115.0" minWidth="115.0" prefWidth="115.0" sortable="false" text="%OPERATOR" />
           <TableColumn fx:id="description" prefWidth="75.0" sortable="false" text="%DESCRIPTION" />
         </columns>
          <columnResizePolicy>
@@ -20,12 +25,12 @@
             <Insets left="10.0" right="10.0" />
          </VBox.margin>
       </TableView>
-      <Label prefHeight="60.0" prefWidth="410.0" text="%TIME_PATTERN_PS">
+      <Label prefHeight="22.0" prefWidth="410.0" text="%ADVANCE_PS">
          <VBox.margin>
             <Insets left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
       </Label>
-      <Label prefHeight="100.0" prefWidth="410.0" text="%TIME_PATTERN_EG">
+      <Label prefHeight="110.0" prefWidth="410.0" text="%ADVANCE_EG">
          <VBox.margin>
             <Insets left="10.0" right="10.0" />
          </VBox.margin>
