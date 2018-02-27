@@ -5,6 +5,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.DataFrame;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
+import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -18,6 +19,16 @@ public class BasicDataFrameFactoryImpl implements DataFrameFactory {
     @Override
     public DataFrame createDataFrame(List<TestItemWithTypeDto> testItemWithTypeDtoList, List<RowDataDto> rowDataDtoList) {
         return new BasicDataFrame(testItemWithTypeDtoList, rowDataDtoList);
+    }
+
+    @Override
+    public SearchDataFrame createSearchDataFrame(List<TestItemWithTypeDto> testItemWithTypeDtoList, List<RowDataDto> rowDataDtoList) {
+        return new BasicSearchDataFrame(testItemWithTypeDtoList, rowDataDtoList);
+    }
+
+    @Override
+    public SearchDataFrame createDataFrame(DataFrame dataFrame) {
+        return new BasicSearchDataFrame(dataFrame.getAllTestItemWithTypeDto(), dataFrame.getAllDataRow());
     }
 
     @Override

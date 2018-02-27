@@ -3,14 +3,12 @@
  */
 package com.dmsoft.firefly.plugin.spc.dto;
 
-import com.dmsoft.bamboo.common.dto.AbstractValueObject;
-
 import java.util.List;
 
 /**
  * Created by Ethan.Yang on 2018/2/6.
  */
-public class SpcSearchConfigDto extends AbstractValueObject {
+public class SpcSearchConfigDto extends SpcAnalysisConfigDto {
 
     private List<String> projectNames;
     private String templateName;

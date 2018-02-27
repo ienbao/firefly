@@ -3,8 +3,9 @@ package com.dmsoft.firefly.core.sdkimpl.dai;
 import com.dmsoft.firefly.core.sdkimpl.dai.entity.Project;
 import com.dmsoft.firefly.core.sdkimpl.dai.entity.RowData;
 import com.dmsoft.firefly.core.sdkimpl.dai.entity.TestItem;
+import com.dmsoft.firefly.core.utils.CoreExceptionCode;
 import com.dmsoft.firefly.core.utils.DoubleIdUtils;
-import com.dmsoft.firefly.core.utils.I18nParser;
+import com.dmsoft.firefly.core.utils.CoreExceptionParser;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
@@ -52,11 +53,11 @@ public class SourceDataServiceImpl implements SourceDataService {
                 logger.info("Save project = {} done.", projectName);
             } catch (Exception e) {
                 logger.error("Save project = {} error! Exception = {}", projectName, e.getMessage());
-                throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_20001), e);
+                throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
             }
         } else {
             logger.error("Save project = {} error! Exception = {}", "Project already exist!");
-            throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_11001));
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_11001));
         }
     }
 
@@ -70,7 +71,7 @@ public class SourceDataServiceImpl implements SourceDataService {
             //project may be null, do not believe idea
             if (project == null) {
                 logger.error("Save test item in project = {} error! Exception = {}", projectName, "Project doesn't exist!");
-                throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_11002));
+                throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_11002));
             }
             if (project.getTestItems() == null) {
                 project.setTestItems(Maps.newLinkedHashMap());
@@ -89,7 +90,7 @@ public class SourceDataServiceImpl implements SourceDataService {
             throw ex;
         } catch (Exception e) {
             logger.error("Save test item in project = {} error! Exception = {}", projectName, e.getMessage());
-            throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_20001), e);
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
         }
     }
 
@@ -104,11 +105,11 @@ public class SourceDataServiceImpl implements SourceDataService {
                 logger.info("Save test data project = {} done.", projectName);
             } catch (Exception e) {
                 logger.error("Save test data in project = {} error! Exception = {}", projectName, e.getMessage());
-                throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_20001), e);
+                throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
             }
         } else {
             logger.error("Save test data in project = {} error! Exception = {}", projectName, "Project doesn't exist!");
-            throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_11002));
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_11002));
         }
     }
 
@@ -121,11 +122,11 @@ public class SourceDataServiceImpl implements SourceDataService {
                 logger.info("Save test data (rowKey = {}) in project = {} done.", rowKey, projectName);
             } catch (Exception e) {
                 logger.error("Save test data (rowKey = {}) in project = {} error! Exception = {}", rowKey, projectName, e.getMessage());
-                throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_20001), e);
+                throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
             }
         } else {
             logger.error("Save test data (rowKey = {}) in project = {} error! Exception = {}", rowKey, projectName, "Project doesn't exist!");
-            throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_11002));
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_11002));
         }
     }
 
@@ -138,11 +139,11 @@ public class SourceDataServiceImpl implements SourceDataService {
                 logger.info("Append test data (rowKey = {}) in project = {} done.", rowKey, projectName);
             } catch (Exception e) {
                 logger.error("Append test data (rowKey = {}) in project = {} error! Exception = {}", rowKey, projectName, e.getMessage());
-                throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_20001), e);
+                throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
             }
         } else {
             logger.error("Append test data (rowKey = {}) in project = {} error! Exception = {}", rowKey, projectName, "Project doesn't exist!");
-            throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_11002));
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_11002));
         }
     }
 
@@ -160,7 +161,7 @@ public class SourceDataServiceImpl implements SourceDataService {
             }
         } catch (Exception e) {
             logger.error("Find all projectNames error! Exception = {}", e.getMessage());
-            throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_11002));
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_11002));
         }
         return result;
     }
@@ -174,7 +175,7 @@ public class SourceDataServiceImpl implements SourceDataService {
             return flag;
         } catch (Exception e) {
             logger.error("Find project exist or not by project name = {} error! Exception = {}", projectName, e.getMessage());
-            throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_20001), e);
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
         }
     }
 
@@ -187,7 +188,7 @@ public class SourceDataServiceImpl implements SourceDataService {
             return flag;
         } catch (Exception e) {
             logger.error("Find test item exist or not by project name = {} and test item name = {} error! Exception = {}", projectName, testItemName, e.getMessage());
-            throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_20001), e);
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
         }
     }
 
@@ -201,7 +202,7 @@ public class SourceDataServiceImpl implements SourceDataService {
             return flag;
         } catch (Exception e) {
             logger.error("Find row key exist or not by row key = {} error! Exception = {}", rowKey, e.getMessage());
-            throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_20001), e);
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
         }
     }
 
@@ -224,7 +225,7 @@ public class SourceDataServiceImpl implements SourceDataService {
             logger.info("Find all test item name by project names = {} done.", StringUtils.join(projectNameList, ','));
         } catch (Exception e) {
             logger.error("Find all test item name by project names = {} error! Exception = {}", StringUtils.join(projectNameList, ','), e.getMessage());
-            throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_20001), e);
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
         }
         return result;
     }
@@ -250,7 +251,7 @@ public class SourceDataServiceImpl implements SourceDataService {
             logger.info("Find all test item by project names = {} done.", StringUtils.join(projectNameList, ','));
         } catch (Exception e) {
             logger.error("Find all test item by project names = {} error! Exception = {}", StringUtils.join(projectNameList, ','), e.getMessage());
-            throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_20001), e);
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
         }
         return result;
     }
@@ -273,7 +274,7 @@ public class SourceDataServiceImpl implements SourceDataService {
             logger.info("Find test item by project names = {} and test item name = {} done.", StringUtils.join(projectNameList, ','), testItemName);
         } catch (Exception e) {
             logger.error("Find test item by project names = {} and test item name = {} error! Exception = {}", StringUtils.join(projectNameList, ','), testItemName, e.getMessage());
-            throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_20001), e);
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
         }
         return testItemDto.getTestItemName() == null ? null : testItemDto;
     }
@@ -310,7 +311,7 @@ public class SourceDataServiceImpl implements SourceDataService {
             logger.info("Find Test Data done.");
         } catch (Exception e) {
             logger.error("Find Test Data error! Exception = {}", e.getMessage());
-            throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_20001), e);
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
         }
         return rowDataDtoList;
     }
@@ -327,7 +328,7 @@ public class SourceDataServiceImpl implements SourceDataService {
             }
         } catch (Exception e) {
             logger.error("Find Test Data by row key = {} error! Exception = {}", rowKey, e.getMessage());
-            throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_20001), e);
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
         }
         return rowDataDto.getRowKey() == null ? null : rowDataDto;
     }
@@ -347,7 +348,7 @@ public class SourceDataServiceImpl implements SourceDataService {
             logger.info("Change row data in used done.");
         } catch (Exception e) {
             logger.error("Change row data in used value error! Exception = {}", e.getMessage());
-            throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_20001), e);
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
         }
     }
 
@@ -362,7 +363,7 @@ public class SourceDataServiceImpl implements SourceDataService {
             }
         } catch (Exception e) {
             logger.error("Delete project error! Exception = {}", e.getMessage());
-            throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_20001), e);
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
         }
     }
 

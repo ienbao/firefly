@@ -6,11 +6,8 @@ package com.dmsoft.firefly.plugin.spc.controller;
 import com.dmsoft.firefly.gui.components.searchcombobox.ISearchComboBoxController;
 import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultDto;
-import com.dmsoft.firefly.plugin.spc.model.AdvanceHelpModel;
+import com.dmsoft.firefly.plugin.spc.dto.SpcServiceStatsResultDto;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
-import com.dmsoft.firefly.plugin.spc.service.SpcServiceImpl;
-import com.dmsoft.firefly.plugin.spc.service.impl.SpcService;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.google.common.collect.Lists;
@@ -84,7 +81,6 @@ public class SpcItemController implements Initializable {
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
 
-    private SpcService spcService = new SpcServiceImpl();
 
     private SpcMainController spcMainController;
     private ContextMenu pop;
@@ -237,20 +233,20 @@ public class SpcItemController implements Initializable {
         //todo find spc statistical Result from service
 //        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
 //        SpcSearchConfigDto spcSearchConfigDto = new SpcSearchConfigDto();
-//        List<SpcStatisticalResultDto> spcStatisticalResultDtoList = spcService.findStatisticalResult(searchConditionDtoList,spcSearchConfigDto);
-        List<SpcStatisticalResultDto> spcStatisticalResultDtoList = initData();
-        if (spcStatisticalResultDtoList == null) {
+//        List<SpcServiceStatsResultDto> spcServiceStatsResultDtoList = spcService.findStatisticalResult(searchConditionDtoList,spcSearchConfigDto);
+        List<SpcServiceStatsResultDto> spcServiceStatsResultDtoList = initData();
+        if (spcServiceStatsResultDtoList == null) {
             return;
         }
-        spcMainController.setStatisticalResultData(spcStatisticalResultDtoList);
+        spcMainController.setStatisticalResultData(spcServiceStatsResultDtoList);
     }
 
 
     @Deprecated
-    private List<SpcStatisticalResultDto> initData() {
-        List<SpcStatisticalResultDto> spcStatisticalResultDtoList = Lists.newArrayList();
+    private List<SpcServiceStatsResultDto> initData() {
+        List<SpcServiceStatsResultDto> spcServiceStatsResultDtoList = Lists.newArrayList();
         for (int i = 0; i < 100; i++) {
-            SpcStatisticalResultDto statisticalResultDto = new SpcStatisticalResultDto();
+            SpcServiceStatsResultDto statisticalResultDto = new SpcServiceStatsResultDto();
             statisticalResultDto.setItemName("itemName" + i);
             statisticalResultDto.setCondition("itemName > 22");
             statisticalResultDto.setSamples("343.2");
@@ -277,9 +273,9 @@ public class SpcItemController implements Initializable {
             statisticalResultDto.setPpk("34.5");
             statisticalResultDto.setPpl("343.5");
             statisticalResultDto.setPpu("324.87");
-            spcStatisticalResultDtoList.add(statisticalResultDto);
+            spcServiceStatsResultDtoList.add(statisticalResultDto);
         }
-        return spcStatisticalResultDtoList;
+        return spcServiceStatsResultDtoList;
     }
 
     private void buildAdvanceHelpDia() {

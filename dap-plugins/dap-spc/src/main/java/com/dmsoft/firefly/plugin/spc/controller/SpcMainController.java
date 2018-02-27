@@ -3,7 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcServiceStatsResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcViewDataDto;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.google.common.collect.Lists;
@@ -55,7 +55,7 @@ public class SpcMainController implements Initializable {
      * set statistical result data
      * @param list the data list
      */
-    public void setStatisticalResultData(List<SpcStatisticalResultDto> list) {
+    public void setStatisticalResultData(List<SpcServiceStatsResultDto> list) {
         statisticalResultController.setStatisticalResultTableData(list);
     }
 
