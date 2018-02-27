@@ -124,13 +124,19 @@ public class CsvResolverService implements IDataParser {
             sourceDataService.saveTestItem(csvFile.getName(), testItemDtoList);
             //save line data
             List<RowDataDto> rowDataDtos = Lists.newArrayList();
-            for (int i = fileFormat.getData() - 1; i < csvList.size(); i++) {
+            for (int i = dataIndex; i < csvList.size(); i++) {
                 List<String> data = Arrays.asList(csvList.get(i));
                 RowDataDto rowDataDto = new RowDataDto();
                 rowDataDto.setRowKey(DoubleIdUtils.combineIds(csvFile.getName(), i));
                 Map<String, String> itemDatas = Maps.newLinkedHashMap();
-                for (int j = 0; j < data.size(); j++) {
-                    itemDatas.put(items[j], data.get(i));
+                for (int j = 0; j < items.length; j++) {
+                    String value = "";
+                    try {
+                        value = data.get(i);
+                        itemDatas.put(items[j], value);
+                    } catch (IndexOutOfBoundsException e){
+
+                    }
                 }
                 rowDataDto.setData(itemDatas);
                 rowDataDtos.add(rowDataDto);

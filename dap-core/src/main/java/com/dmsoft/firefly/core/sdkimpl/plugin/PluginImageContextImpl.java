@@ -45,7 +45,7 @@ public class PluginImageContextImpl implements PluginImageContext, PluginContext
         PluginInfo pluginInfo = RuntimeContext.getBean(PluginContext.class).getEnabledPluginInfo(pluginId);
         if (pluginInfo != null) {
             Map<String, PluginClass> openClasses = privateScanClass(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader(pluginInfo.getId()),
-                    pluginInfo.getScanPath(), OpenService.class);
+                    pluginInfo.getScanPath());
             for (PluginClass pc : openClasses.values()) {
                 pc.setPluginId(pluginId);
             }
@@ -152,13 +152,12 @@ public class PluginImageContextImpl implements PluginImageContext, PluginContext
         return result;
     }
 
-    private Map<String, PluginClass> privateScanClass(ClassLoader classLoader, String scanPath, Class<? extends Annotation> annotation) {
-        if (annotation == null) {
-            return null;
-        }
+    private Map<String, PluginClass> privateScanClass(ClassLoader classLoader, String scanPath) {
         Map<String, PluginClass> result = Maps.newHashMap();
 
-        List<Class> scanClassList = ClassScanner.scanPackage(scanPath, classLoader, annotation);
+        List<Class<? extends Annotation>> annotations = Lists.newArrayList(OpenService.class, DataParser.class,
+                Analysis.class, Chart.class, DataOutput.class, RDAProtocol.class, Config.class);
+        Set<Class> scanClassList = ClassScanner.scanPackage(scanPath, classLoader, annotations);
         for (Class c : scanClassList) {
             PluginClassType classType = PluginClassType.DEFAULT;
             if (c.getAnnotation(DataParser.class) != null) {

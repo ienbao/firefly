@@ -4,7 +4,6 @@
 
 package com.dmsoft.firefly.core.utils;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,15 +31,15 @@ import java.util.jar.JarFile;
  */
 public class ClassScanner {
     /**
-     * method to scan package class with annotation by classloader in packageName path
+     * method to scan package class with annotations by classloader in packageName path
      *
      * @param packageName package name / path
      * @param classLoader class loader
-     * @param annotation  annotation to scan
+     * @param annotations annotations to scan
      * @return class list
      */
-    public static List<Class> scanPackage(String packageName, ClassLoader classLoader, Class<? extends Annotation> annotation) {
-        List<Class> result = Lists.newArrayList();
+    public static Set<Class> scanPackage(String packageName, ClassLoader classLoader, List<Class<? extends Annotation>> annotations) {
+        Set<Class> result = Sets.newLinkedHashSet();
         if (packageName == null) {
             return result;
         }
@@ -85,8 +84,13 @@ public class ClassScanner {
                             } catch (ClassNotFoundException e) {
                                 e.printStackTrace();
                             }
-                            if (null != classes && null != classes.getAnnotation(annotation)) {
-                                result.add(classes);
+                            if (null != classes) {
+                                for (Class<? extends Annotation> annotation : annotations) {
+                                    if (null != classes.getAnnotation(annotation)) {
+                                        result.add(classes);
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }
@@ -115,7 +119,7 @@ public class ClassScanner {
                             if (endIndex > 0) {
                                 prefix = clazzName.substring(0, endIndex);
                             }
-                            result.addAll(scanPackage(prefix, classLoader, annotation));
+                            result.addAll(scanPackage(prefix, classLoader, annotations));
                         }
                         if (jarEntry.getName().endsWith(".class")) {
                             Class<?> clazz = null;
@@ -124,8 +128,13 @@ public class ClassScanner {
                             } catch (ClassNotFoundException e) {
                                 e.printStackTrace();
                             }
-                            if (null != clazz && null != clazz.getAnnotation(annotation)) {
-                                result.add(clazz);
+                            if (null != clazz) {
+                                for (Class<? extends Annotation> annotation : annotations) {
+                                    if (null != clazz.getAnnotation(annotation)) {
+                                        result.add(clazz);
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }
