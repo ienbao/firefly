@@ -28,6 +28,7 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
     private volatile boolean doNextInbound;
     private volatile boolean doNextOutbound;
     private final List<JobEventListener> eventListeners;
+    private final String sessionId;
 
 //    public AbstractJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, boolean inbound, boolean outbound, String name) {
 //        this.jobPipeline = jobPipeline;
@@ -37,7 +38,7 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
 //        this.name = name;
 //    }
 
-    public AbstractJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, boolean inbound, boolean outbound, String name, ExecutorService executorService, List<JobEventListener> eventListeners) {
+    public AbstractJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, boolean inbound, boolean outbound, String name, ExecutorService executorService, List<JobEventListener> eventListeners, String sessionId) {
         this.jobPipeline = jobPipeline;
         this.jobDoComplete = jobDoComplete;
         this.inbound = inbound;
@@ -45,10 +46,11 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
         this.name = name;
         this.executorService = executorService;
         this.eventListeners = eventListeners;
+        this.sessionId = sessionId;
     }
 
     @Override
-    public JobHandlerContext fireDoJob(Object param) {
+    public JobHandlerContext fireDoJob(Object... param) {
         AbstractJobHandlerContext next = findContextInbound();
         doNextInbound = true;
         executorService.execute(new Runnable() {
@@ -60,7 +62,7 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
         return this;
     }
 
-    private void invokeDoJob(Object param) {
+    private void invokeDoJob(Object... param) {
         try {
             ((JobInboundHandler) handler()).doJob(this, param);
             if (!doNextInbound && !doNextOutbound) {
@@ -107,10 +109,13 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
     }
 
     @Override
-    public void fireJobEvent(JobEvent event) {
-        eventListeners.forEach(v -> {
-            v.eventNotify(event);
-        });
+    public <T> void fireJobEvent(T result) {
+        if (eventListeners != null) {
+            eventListeners.forEach(v -> {
+                JobEvent event = new JobEvent(sessionId, result);
+                v.eventNotify(event);
+            });
+        }
     }
 
     public abstract JobHandler handler();

@@ -16,5 +16,5 @@ public interface JobInboundHandler extends JobHandler {
      * @param in      in
      * @throws Exception Exception
      */
-    void doJob(JobHandlerContext context, Object in) throws Exception;
+    void doJob(JobHandlerContext context, Object... in) throws Exception;
 }

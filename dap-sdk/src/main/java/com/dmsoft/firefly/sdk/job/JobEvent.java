@@ -11,20 +11,20 @@ import com.dmsoft.bamboo.common.dto.AbstractValueObject;
  */
 public class JobEvent extends AbstractValueObject {
 
-    private String eventId;
+    private String jobId;
     private Object object;
 
-    public JobEvent(String eventId, Object object) {
-        this.eventId = eventId;
+    public JobEvent(String jobId, Object object) {
+        this.jobId = jobId;
         this.object = object;
     }
 
-    public String getEventId() {
-        return eventId;
+    public String getJobId() {
+        return jobId;
     }
 
-    public void setEventId(String eventId) {
-        this.eventId = eventId;
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
     }
 
     public Object getObject() {

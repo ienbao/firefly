@@ -17,7 +17,7 @@ public interface JobHandlerContext {
      * @param param param
      * @return JobHandlerContext
      */
-    JobHandlerContext fireDoJob(Object param);
+    JobHandlerContext fireDoJob(Object... param);
 
     /**
      * returnValue
@@ -47,5 +47,5 @@ public interface JobHandlerContext {
      */
     String name();
 
-    void fireJobEvent(JobEvent event);
+    <T> void fireJobEvent(T result);
 }

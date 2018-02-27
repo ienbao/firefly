@@ -17,7 +17,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.net.URL;
@@ -101,6 +100,9 @@ public class DataSourceController implements Initializable {
                 //TODO
                 //1.像表中添加记录并存储
             }
+        });
+        dataSourceTable.setOnMouseMoved(event -> {
+
         });
     }
 

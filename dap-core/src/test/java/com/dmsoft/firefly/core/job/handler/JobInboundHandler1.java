@@ -8,18 +8,16 @@ import com.dmsoft.firefly.sdk.job.JobEvent;
 import com.dmsoft.firefly.sdk.job.core.JobHandlerContext;
 import com.dmsoft.firefly.sdk.job.core.JobInboundHandler;
 
-import java.util.UUID;
-
 /**
  * Created by Garen.Pang on 2018/2/2.
  */
 public class JobInboundHandler1 implements JobInboundHandler {
 
     @Override
-    public void doJob(JobHandlerContext context, Object in) throws Exception {
+    public void doJob(JobHandlerContext context, Object... in) throws Exception {
         StringBuffer param = new StringBuffer();
-        param.append(in.toString() + " \n " + Thread.currentThread().getName() + " inbound handler1");
-        context.fireJobEvent(new JobEvent(UUID.randomUUID().toString(), "hello 1..."));
+        param.append(in[0].toString() + " \n " + Thread.currentThread().getName() + " inbound handler1");
+        context.fireJobEvent("hello 1...");
         context.fireDoJob(param.toString());
     }
 
