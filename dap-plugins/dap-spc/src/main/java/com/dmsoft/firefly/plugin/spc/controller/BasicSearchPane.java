@@ -26,14 +26,12 @@ public class BasicSearchPane extends VBox {
     private Button addSearch;
 
     public BasicSearchPane() {
-        this.setStyle("-fx-border-color: #DCDCDC");
-        this.setStyle("-fx-border-width: 0 0 1 0");
+        this.setStyle("-fx-border-color: #DCDCDC; -fx-border-width: 0 0 1 0");
 
         addSearch = new Button();
         this.getChildren().add(addSearch);
-        VBox.setMargin(addSearch, new Insets(10, 10, 0, 8));
+        VBox.setMargin(addSearch, new Insets(10, 10, 10, 8));
         addSearch.setPrefSize(160, 22);
-        addSearch.setPadding(new Insets(10, 10, 0, 8));
 
         addSearch.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
         addSearch.setOnAction(event -> {

@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.core.sdkimpl.dai;
+package com.dmsoft.firefly.core.utils;
 
 /**
  * exception code for core module

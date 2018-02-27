@@ -11,6 +11,7 @@ import java.util.List;
  * @author Can Guan
  */
 public interface DataFrameFactory {
+
     /**
      * method to create data frame from test item dto list and row data dto list
      *
@@ -19,6 +20,23 @@ public interface DataFrameFactory {
      * @return data frame
      */
     DataFrame createDataFrame(List<TestItemWithTypeDto> testItemWithTypeDtoList, List<RowDataDto> rowDataDtoList);
+
+    /**
+     * method to create data frame from test item dto list and row data dto list
+     *
+     * @param testItemWithTypeDtoList list of test item dto
+     * @param rowDataDtoList          list of row data dto
+     * @return search data frame
+     */
+    SearchDataFrame createSearchDataFrame(List<TestItemWithTypeDto> testItemWithTypeDtoList, List<RowDataDto> rowDataDtoList);
+
+    /**
+     * method to create search data frame from data frame
+     *
+     * @param dataFrame data frame
+     * @return search data frame
+     */
+    SearchDataFrame createDataFrame(DataFrame dataFrame);
 
     /**
      * method to create data column from test item dto list and row data dto list

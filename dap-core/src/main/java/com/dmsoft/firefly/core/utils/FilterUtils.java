@@ -1,6 +1,5 @@
 package com.dmsoft.firefly.core.utils;
 
-import com.dmsoft.firefly.core.sdkimpl.dai.CoreExceptionCode;
 import com.dmsoft.firefly.core.utils.parser.FilterExpressionParser;
 import com.dmsoft.firefly.core.utils.parser.ParserToken;
 import com.dmsoft.firefly.core.utils.parser.SEPResult;
@@ -78,7 +77,7 @@ public class FilterUtils {
             }
         } catch (Exception e) {
             logger.debug("Search condition parse error! condition = {}", condition);
-            throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_12001));
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_12001));
         }
         return resultList;
     }
@@ -104,7 +103,7 @@ public class FilterUtils {
             }
         } catch (Exception e) {
             logger.debug("Search condition parse error! condition = {}", condition);
-            throw new ApplicationException(I18nParser.parser(CoreExceptionCode.ERR_12001));
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_12001));
         }
         return isExist;
     }
