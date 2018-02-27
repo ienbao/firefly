@@ -28,4 +28,8 @@ public final class ViewResource {
 
     public final static String  SPC_QUICK_SEARCH_VIEW_ID = "spc_quick_search";
     public final static String  SPC_QUICK_SEARCH_VIEW_RES = PRE_VIEW + "quick_search.fxml";
+
+    public final static String  SPC_ADVANCE_SEARCH_VIEW_ID = "advance";
+    public final static String  SPC_ADVANCE_SEARCH_VIEW_RES = PRE_VIEW + "advance.fxml";
+
 }

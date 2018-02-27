@@ -6,6 +6,7 @@
     -fx-border-insets: 5;
     -fx-background-insets: 5;
 }
+
 .root {
     -fx-font: 12 arial;
     -fx-text-fill: #222222;
@@ -511,7 +512,6 @@
     -fx-padding: 0 7 0 7;
 }
 
-
 .combo-box-base:hover {
     -fx-border-color: COLOR_GRAY_CC;
     -fx-background-color: #ffffff;
@@ -750,14 +750,16 @@
     -fx-text-fill: -fx-text-base-color;
     -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em;
 }
+
 .combo-box-popup > .list-view {
     -fx-background-color: #ffffff;
     -fx-background-insets: 0, 1;
     -fx-effect: null;
     -fx-border-color: #dcdcdc;
-    -fx-padding: 1,1,1,1;
+    -fx-padding: 1, 1, 1, 1;
     -fx-translate-y: 3;
 }
+
 .combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
     -fx-padding: 4 0 4 5;
     /* No alternate highlighting */
@@ -768,8 +770,9 @@
     -fx-background: -fx-accent;
     -fx-background-color: #0096ff;
 }
-.combo-box-popup  > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
-.combo-box-popup  > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
     -fx-background: -fx-accent;
     -fx-background-color: #0096ff;
     -fx-background-insets: 0, 1, 2;
@@ -1181,7 +1184,6 @@
     /*-fx-padding: 0.25em; !* 3px *!*/
 }
 
-
 /*******************************************************************************
  *                                                                             *
  * PopupMenu                                                                   *
@@ -1193,8 +1195,9 @@
     -fx-border-color: COLOR_GRAY_DC;
     -fx-background-insets: 0;
     -fx-padding: 1;
-    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0) , 0, 0, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0), 0, 0, 0, 0);
 }
+
 .context-menu .separator:horizontal .line {
     -fx-border-color: COLOR_GRAY_ED;
     -fx-border-insets: 0 0 0 0;
@@ -1215,6 +1218,7 @@
     -fx-min-height: 28;
     -fx-pref-height: 28;
 }
+
 .menu-button {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
@@ -1265,29 +1269,36 @@
     -fx-min-height: 22;
     -fx-pref-height: 22;
     -fx-background-color: COLOR_LIGHT_FF;
-    -fx-padding: 0 10 0 10;  /* 4 5 4 5 */
+    -fx-padding: 0 10 0 10; /* 4 5 4 5 */
     -fx-background-insets: 0;
 }
+
 .menu-item > .left-container {
     -fx-padding: 0 0 0 0;
 }
+
 .menu-item > .graphic-container {
     -fx-padding: 0em 0.333em 0em 0em;
 }
-.menu-item >.label {
+
+.menu-item > .label {
     -fx-padding: 0em 0.5em 0em 0em;
     -fx-text-fill: FONT_DARK;
 }
+
 .menu-item:focused {
     -fx-background-color: COLORFUL_AUXILIARY_BLUE;
-    -fx-text-fill:  FONT_LIGHT;
+    -fx-text-fill: FONT_LIGHT;
 }
+
 .menu-item:focused > .label {
     -fx-text-fill: FONT_LIGHT;
 }
+
 .menu-item > .right-container {
     -fx-padding: 0em 0em 0em 0.5em;
 }
+
 .check-menu-item:checked > .left-container > .check,
 .radio-menu-item:checked > .left-container > .radio {
     -fx-background-color: transparent;
@@ -1296,8 +1307,9 @@
     -fx-pref-height: 16;
     -fx-pref-width: 16;
     -fx-shape: null;
-    -fx-padding: 0 20 0 0 ;
+    -fx-padding: 0 20 0 0;
 }
+
 .check-menu-item:focused:checked > .left-container > .check,
 .radio-menu-item:focused:checked > .left-container > .radio {
     -fx-background-color: transparent;
@@ -1306,7 +1318,7 @@
     -fx-background-size: 16;
     -fx-background-image: url('/images/icon_choose_one_white.png');
     -fx-shape: null;
-    -fx-padding: 0 20 0 0 ;
+    -fx-padding: 0 20 0 0;
 }
 
 /*******************************************************************************
@@ -1330,6 +1342,7 @@
     -fx-background-insets: 0, 0 0 0 1;
     -fx-padding: 0.5;
 }
+
 /* vertical the two nodes are placed on top of each other. */
 .split-pane:vertical > .split-pane-divider {
     -fx-background-color: COLOR_GRAY_DC, COLOR_GRAY_F5;
@@ -1348,6 +1361,7 @@
     -fx-padding: 0;
     -fx-alignment: TOP_LEFT;
 }
+
 .tool-bar { /* top */
     -fx-max-height: 25;
     -fx-min-height: 25;
@@ -1413,6 +1427,7 @@
 .top-logo {
     -fx-background-image: url('/images/logo_16.png');
 }
+
 .window-button-minimize {
     -fx-background-image: url('/images/top_minimize_normal.png');
 }
@@ -1428,9 +1443,11 @@
 .window-button-close {
     -fx-background-image: url('/images/top_close_normal.png');
 }
+
 .window-button-close:hover {
     -fx-background-image: url('/images/top_close_over.png');
 }
+
 /*******************************************************************************
  *                                                                             *
  * Mac Window                                                                  *
@@ -1447,42 +1464,54 @@
     /*-fx-background-repeat: no-repeat;*/
     -fx-background-size: 12;
 }
+
 .mac-button-minimize {
     -fx-background-image: url('/images/top_mac_minimize_normal.png');
 }
+
 .mac-button-minimize:hover {
     -fx-background-image: url('/images/top_mac_minimize_over.png');
 }
+
 .mac-button-minimize:pressed {
     -fx-background-color: null;
     -fx-background-image: url('/images/top_mac_minimize_click.png');
 }
+
 .mac-button-maximize {
     -fx-background-image: url('/images/top_mac_full_screen_normal.png');
 }
+
 .mac-button-maximize:hover {
     -fx-background-image: url('/images/top_mac_full_screen_over.png');
 }
+
 .mac-button-maximize:pressed {
     -fx-background-color: null;
     -fx-background-image: url('/images/top_mac_full_screen_click.png');
 }
+
 .mac-button-restore {
     -fx-background-image: url('/images/top_mac_adaptive_normal.png');
 }
+
 .mac-button-restore:hover {
     -fx-background-image: url('/images/top_mac_adaptive_over.png');
 }
+
 .mac-button-restore:pressed {
     -fx-background-color: null;
     -fx-background-image: url('/images/top_mac_adaptive_click.png');
 }
+
 .mac-button-close {
     -fx-background-image: url('/images/top_mac_close_normal.png');
 }
+
 .mac-button-close:hover {
     -fx-background-image: url('/images/top_mac_close_over.png');
 }
+
 .mac-button-close:pressed {
     -fx-background-color: null;
     -fx-background-image: url('/images/top_mac_close_click.png');
@@ -1512,6 +1541,11 @@
     -fx-font-size: 12;
 }
 
+.search-component .test-item .arrow-button {
+    -fx-padding: 0 5 0 7;
+    -fx-background-insets: 1 0 0 1;
+}
+
 .search-component .test-item .arrow {
     -fx-pref-width: 9;
     -fx-min-width: 9;
@@ -1520,12 +1554,27 @@
 }
 
 .search-component .test-item .text-field, .search-component .value .text-field {
-    -fx-padding: 0 0 0 5;
+    -fx-padding: 0 0 0 7;
+}
+
+.search-component .test-item .list-view, .search-component .value .list-view {
+    -fx-min-height: 224;
 }
 
 .search-component .value {
     -fx-border-width: 1 1 1 0;
     -fx-skin: "com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBoxSkin";
+}
+
+.search-component .value .arrow-button {
+    -fx-padding: 0 5 0 7;
+    -fx-background-insets: 1 0 0 1;
+}
+.search-component .value .arrow {
+    -fx-pref-width: 9;
+    -fx-min-width: 9;
+    -fx-min-height: 5;
+    -fx-pref-height: 5;
 }
 
 .search-component .value .arrow-calendar-button .arrow {
@@ -1536,7 +1585,7 @@
     -fx-background-image: url('/images/btn_calendar_normal.png');
     -fx-background-size: 16;
     -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
+    -fx-background-position: 3 3;
 }
 
 .search-component .operator {
@@ -1573,7 +1622,7 @@
     -fx-background-image: url('/images/btn_delete_normal.png');
     -fx-background-size: 16;
     -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
+    -fx-background-position: -1 14;
 }
 
 /*******************************************************************************

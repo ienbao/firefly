@@ -6,12 +6,16 @@ package com.dmsoft.firefly.gui.controller.template;
 import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.model.PatternHelpModel;
 import com.dmsoft.firefly.gui.utils.ImageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceBundleUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
