@@ -69,7 +69,9 @@ public class SpcItemController implements Initializable {
     @FXML
     private Tab advanceTab;
     @FXML
-    private Button addSearch;
+    private Button groupAdd;
+    @FXML
+    private Button groupRemove;
     @FXML
     private VBox basicSearch;
     @FXML
@@ -97,6 +99,7 @@ public class SpcItemController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initBtnIcon();
+        basicSearch.getChildren().add(new BasicSearchPane());
         itemFilter.textProperty().addListener((observable, oldValue, newValue) ->
                 filteredList.setPredicate(p -> p.getItem().contains(itemFilter.getText()))
         );
@@ -145,7 +148,9 @@ public class SpcItemController implements Initializable {
         timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
         basicTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
         advanceTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_advance_search_normal.png")));
-        addSearch.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
+        groupAdd.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_new_template_normal.png")));
+        groupRemove.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_clear_all_normal.png")));
+//        addSearch.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
     }
 
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
@@ -162,50 +167,8 @@ public class SpcItemController implements Initializable {
     }
 
     private void initComponentEvent() {
-        addSearch.setOnAction(event -> {
-            SearchComboBox basicSearchCom = new SearchComboBox(new ISearchComboBoxController() {
-                @Override
-                public ObservableList<String> getValueForTestItem(String testItem) {
-                    if ("AA".equals(testItem)) {
-                        List<String> testList = new ArrayList<>();
-                        testList.add("132");
-                        testList.add("2456");
-                        testList.add("<A");
-                        return FXCollections.observableArrayList(testList);
-                    }
-                    return FXCollections.observableArrayList();
-                }
-
-                @Override
-                public ObservableList<String> getTestItems() {
-                    List<String> s = new ArrayList<>();
-                    s.add("AA");
-                    s.add("BA");
-                    s.add("BAB!");
-                    s.add("<");
-                    return FXCollections.observableArrayList(s);
-                }
-
-                @Override
-                public boolean isTimeKey(String testItem) {
-                    if (testItem != null && testItem.contains("A")) {
-                        return true;
-                    }
-                    return false;
-                }
-
-                @Override
-                public String getTimePattern() {
-                    return null;
-                }
-            });
-            basicSearchCom.getCloseBtn().setOnAction(e -> basicSearch.getChildren().remove(basicSearchCom));
-            if (basicSearch.getChildren().size() > 0) {
-                basicSearchCom.setPadding(new Insets(10, 10, 0, 8));
-                basicSearch.getChildren().add(basicSearch.getChildren().size() - 1, basicSearchCom);
-                VBox.setVgrow(basicSearchCom, Priority.ALWAYS);
-            }
-        });
+        groupAdd.setOnAction(event -> basicSearch.getChildren().add(new BasicSearchPane()));
+        groupRemove.setOnAction(event -> basicSearch.getChildren().clear());
         analysisBtn.setOnAction(event -> getAnalysisBtnEvent());
         help.setOnAction(event -> buildAdvanceHelpDia());
     }

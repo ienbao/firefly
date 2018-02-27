@@ -192,16 +192,18 @@ public class MainController {
                     preHeight = MAX_HEIGHT;
                 }
                 double screenX = dataSourceBtn.getScene().getWindow().getX() + dataSourceBtn.getScene().getX() + dataSourceBtn.localToScene(0, 0).getX();
-                double screenY = dataSourceBtn.getScene().getY() + dataSourceBtn.localToScene(0, 0).getY() + (80 - preHeight) - 20;
+                double screenY = dataSourceBtn.getScene().getWindow().getY() + dataSourceBtn.getScene().getY() + dataSourceBtn.localToScene(0, 0).getY() - preHeight - 5;
                 dataSourcePopup.show(dataSourceBtn, screenX, screenY);
             }
+        }
+        if (templatePopup.isShowing()) {
+            templatePopup.hide();
         }
     }
 
     private void initDataSourcePopup() {
         dataSourceView = new ListView<>();
-        dataSourceView.setId("dataSourceView");
-
+        dataSourceView.setFocusTraversable(true);
         dataSourceView.setItems(dataSourceList);
         dataSourcePopup = new Popup();
         dataSourcePopup.getContent().add(dataSourceView);
@@ -257,7 +259,7 @@ public class MainController {
         listView.setMinWidth(MIN_WIDTH);
         listView.setMaxHeight(MAX_HEIGHT);
         if (dataList !=  null && !dataList.isEmpty()) {
-            listView.setPrefHeight(23 * dataList.size());
+            listView.setPrefHeight(26 * dataList.size());
         } else {
             listView.setPrefHeight(0);
             listView.setPrefWidth(0);
@@ -267,7 +269,7 @@ public class MainController {
 
     public void initDataSource(){
         dataSourceList = FXCollections.observableArrayList (
-                "Single", "Double", "Suite", "Family App");
+                "Single", "fdsfsf");
     }
 
     public void initTemplate(){
@@ -308,9 +310,12 @@ public class MainController {
                     preHeight = MAX_HEIGHT;
                 }
                 double screenX = templateBtn.getScene().getWindow().getX() + templateBtn.getScene().getX() + templateBtn.localToScene(0, 0).getX();
-                double screenY = templateBtn.getScene().getY() + templateBtn.localToScene(0, 0).getY() + (80 - preHeight) - 20;
+                double screenY = templateBtn.getScene().getWindow().getY() + templateBtn.getScene().getY() + templateBtn.localToScene(0, 0).getY() - preHeight - 5;
                 templatePopup.show(templateBtn, screenX, screenY);
             }
+        }
+        if (dataSourcePopup.isShowing()) {
+            dataSourcePopup.hide();
         }
     }
 
