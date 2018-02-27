@@ -126,6 +126,8 @@ public interface DataFrame {
      */
     void appendColumns(List<DataColumn> dataColumnList);
 
+    //Row Operation
+
     /**
      * method to judge row key exist or not
      *
@@ -265,21 +267,52 @@ public interface DataFrame {
     //Search Operation
 
     /**
-     * method to get searched row key
+     * method add search condition in data frame
      *
-     * @param searchConditionList list of search condition
+     * @param searchConditionList search condition list
+     */
+    void addSearchCondition(List<String> searchConditionList);
+
+    /**
+     * method to get all search condition list
+     *
+     * @return list of search condition
+     */
+    List<String> getSearchConditionList();
+
+    /**
+     * method to remove search condition
+     *
+     * @param searchCondition search condition
+     */
+    void removeSearchCondition(String searchCondition);
+
+    /**
+     * method to clear all search conditions
+     */
+    void clearSearchConditions();
+
+    /**
+     * method to get searched row key (search conditon is the all added search condition)
+     *
      * @return list of row key
      */
-    List<String> getSearchedRowKey(List<String> searchConditionList);
+    List<String> getSearchedRowKey();
+
+    /**
+     * method to get row key by condition
+     *
+     * @param searchCondition search condition
+     * @return list of row key
+     */
+    List<String> getSearchedRowKey(String searchCondition);
 
     //Shrink Operation
 
     /**
      * method to shrink, remove redundant rows (which do not belong to any search condition)
-     *
-     * @param searchConditionList list of search condition
      */
-    void shrink(List<String> searchConditionList);
+    void shrink();
 
     /**
      * get sub data frame by row keys

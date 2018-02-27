@@ -8,6 +8,7 @@ import com.dmsoft.firefly.core.sdkimpl.dai.EnvServiceImpl;
 import com.dmsoft.firefly.core.sdkimpl.dai.TemplateServiceImpl;
 import com.dmsoft.firefly.core.sdkimpl.dai.UserPreferenceServiceImpl;
 import com.dmsoft.firefly.core.sdkimpl.dai.UserServiceImpl;
+import com.dmsoft.firefly.core.sdkimpl.dataframe.BasicDataFrameFactoryImpl;
 import com.dmsoft.firefly.core.sdkimpl.event.EventContextImpl;
 import com.dmsoft.firefly.core.sdkimpl.plugin.PluginContextImpl;
 import com.dmsoft.firefly.core.sdkimpl.plugin.PluginImageContextImpl;
@@ -21,6 +22,7 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.dai.service.UserService;
+import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.job.DefaultJobManager;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
@@ -66,8 +68,7 @@ public class DAPApplication {
         UserServiceImpl userService = new UserServiceImpl();
         EnvServiceImpl envService = new EnvServiceImpl();
         EventContextImpl eventContext = new EventContextImpl();
-//        CodecRegistry pojoCodecRegistry = CodecRegistries.fromRegistries(MongoClient.getDefaultCodecRegistry(),
-//                CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+        BasicDataFrameFactoryImpl dataFrameFactory = new BasicDataFrameFactoryImpl();
         MongoClient mongoClient = new MongoClient("localhost");
         MongoTemplate mongoTemplate = new MongoTemplate(mongoClient, "test");
 
@@ -82,6 +83,7 @@ public class DAPApplication {
         RuntimeContext.registerBean(EnvService.class, envService);
         RuntimeContext.registerBean(EventContext.class, eventContext);
         RuntimeContext.registerBean(MongoTemplate.class, mongoTemplate);
+        RuntimeContext.registerBean(DataFrameFactory.class, dataFrameFactory);
 
 
         // prepare env done
