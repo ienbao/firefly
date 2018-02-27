@@ -4,10 +4,7 @@
 
 package com.dmsoft.firefly.core;
 
-import com.dmsoft.firefly.core.sdkimpl.dai.EnvServiceImpl;
-import com.dmsoft.firefly.core.sdkimpl.dai.TemplateServiceImpl;
-import com.dmsoft.firefly.core.sdkimpl.dai.UserPreferenceServiceImpl;
-import com.dmsoft.firefly.core.sdkimpl.dai.UserServiceImpl;
+import com.dmsoft.firefly.core.sdkimpl.dai.*;
 import com.dmsoft.firefly.core.sdkimpl.dataframe.BasicDataFrameFactoryImpl;
 import com.dmsoft.firefly.core.sdkimpl.event.EventContextImpl;
 import com.dmsoft.firefly.core.sdkimpl.plugin.PluginContextImpl;
@@ -18,10 +15,7 @@ import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
 import com.dmsoft.firefly.core.utils.PluginScanner;
 import com.dmsoft.firefly.core.utils.PropertiesUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.service.EnvService;
-import com.dmsoft.firefly.sdk.dai.service.TemplateService;
-import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
-import com.dmsoft.firefly.sdk.dai.service.UserService;
+import com.dmsoft.firefly.sdk.dai.service.*;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.job.DefaultJobManager;
@@ -71,6 +65,7 @@ public class DAPApplication {
         BasicDataFrameFactoryImpl dataFrameFactory = new BasicDataFrameFactoryImpl();
         MongoClient mongoClient = new MongoClient("localhost");
         MongoTemplate mongoTemplate = new MongoTemplate(mongoClient, "test");
+        SourceDataService sourceDataService = new SourceDataServiceImpl();
 
         RuntimeContext.registerBean(PluginContext.class, pluginInfoContextImpl);
         RuntimeContext.registerBean(PluginImageContext.class, pluginImageContext);
@@ -84,7 +79,7 @@ public class DAPApplication {
         RuntimeContext.registerBean(EventContext.class, eventContext);
         RuntimeContext.registerBean(MongoTemplate.class, mongoTemplate);
         RuntimeContext.registerBean(DataFrameFactory.class, dataFrameFactory);
-
+        RuntimeContext.registerBean(SourceDataService.class, sourceDataService);
 
         // prepare env done
         String propertiesURL = ApplicationPathUtil.getPath("resources", "application.properties");

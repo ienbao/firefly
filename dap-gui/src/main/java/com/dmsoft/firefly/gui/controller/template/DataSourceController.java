@@ -7,6 +7,12 @@ package com.dmsoft.firefly.gui.controller.template;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.utils.ImageUtils;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.plugin.PluginClass;
+import com.dmsoft.firefly.sdk.plugin.PluginClassType;
+import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
+import com.dmsoft.firefly.sdk.plugin.apis.IDataParser;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +27,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -49,6 +56,9 @@ public class DataSourceController implements Initializable {
     private ObservableList<ChooseTableRowData> chooseTableRowDataObservableList;
     private FilteredList<ChooseTableRowData> chooseTableRowDataFilteredList;
     private SortedList<ChooseTableRowData> chooseTableRowDataSortedList;
+
+    private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
+
 
     private void initTable() {
         search.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
@@ -80,8 +90,17 @@ public class DataSourceController implements Initializable {
         search.setOnAction(event -> {
             getFilterTextFieldEvent();
         });
+        List<String> deleteProjects = Lists.newArrayList();
         delete.setOnAction(event -> {
-
+            Iterator<ChooseTableRowData> iterable = chooseTableRowDataObservableList.iterator();
+            while (iterable.hasNext()) {
+                ChooseTableRowData rowData = iterable.next();
+                if (rowData.getSelector().isSelected()) {
+                    deleteProjects.add(rowData.getValue());
+                    iterable.remove();
+                }
+            }
+            sourceDataService.deleteProject(deleteProjects);
         });
         addFile.setOnAction(event -> {
             String str = System.getProperty("user.home");
@@ -97,8 +116,7 @@ public class DataSourceController implements Initializable {
             Stage fileStage = null;
             File file = fileChooser.showOpenDialog(fileStage);
             if (file != null) {
-                //TODO
-                //1.像表中添加记录并存储
+                importDataSource(file.getPath(), file.getName());
             }
         });
         dataSourceTable.setOnMouseMoved(event -> {
@@ -110,7 +128,18 @@ public class DataSourceController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         initTable();
         initEvent();
-        initChooseStatisticalResultTableData();
+        initDataSourceTableData();
+    }
+
+    private void importDataSource(String filPath, String fileName) {
+        PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
+        List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.DATA_PARSER);
+//        List<PluginClass> pluginClasses = pluginImageContext.getPluginInstance("com.dmsoft.dap.CsvResolverPlugin", "CsvResolverService");
+        IDataParser service = (IDataParser) pluginClasses.get(0).getInstance();
+        service.importFile(filPath);
+
+        ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, fileName);
+        chooseTableRowDataObservableList.add(chooseTableRowData);
     }
 
     private void getAllSelectEvent() {
@@ -121,11 +150,11 @@ public class DataSourceController implements Initializable {
         }
     }
 
-    private void initChooseStatisticalResultTableData() {
-        List<String> value = Arrays.asList(new String[]{
-                "00000000000001.csv", "00000000000002.csv", "00000000000003.csv", "00000000000004.csv", "00000000000005.csv", "00000000000006.csv", "00000000000007.csv", "00000000000008.csv", "00000000000009.csv", "00000000000010.csv", "00000000000011.csv", "00000000000012.csv", "00000000000013.csv", "00000000000014.csv",
-                "00000000000015.csv", "00000000000016.csv", "00000000000017.csv", "00000000000018.csv", "00000000000019.csv", "00000000000020.csv", "00000000000021.csv", "00000000000022.csv", "00000000000023.csv", "00000000000024.csv"
-        });
+    private void initDataSourceTableData() {
+        List<String> value = Lists.newArrayList(Arrays.asList(new String[]{
+                "00000000000001.csv", "00000000000002.csv"
+        }));
+        value.addAll(sourceDataService.findAllProjectName());
         List<ChooseTableRowData> chooseTableRowDataList = Lists.newArrayList();
         value.forEach(v -> {
             ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, v);
