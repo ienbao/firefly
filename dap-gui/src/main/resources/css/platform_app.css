@@ -1,3 +1,33 @@
+.list-cell {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-base-color;
+    -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em;
+}
 
+.list-view {
+    -fx-background-color: #ffffff;
+    -fx-background-insets: 0, 1;
+    -fx-effect: null;
+    -fx-border-color: #dcdcdc;
+    -fx-padding: 1,1,1,1;
+    -fx-translate-y: 3;
+}
+.list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
+    -fx-padding: 4 0 4 5;
+    /* No alternate highlighting */
+    -fx-background: -fx-control-inner-background;
+}
+
+.list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: #0096ff;
+}
+.list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
+.list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: #0096ff;
+    -fx-background-insets: 0, 1, 2;
+}
 
 
