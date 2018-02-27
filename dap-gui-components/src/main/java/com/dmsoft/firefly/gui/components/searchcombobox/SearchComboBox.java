@@ -1,17 +1,27 @@
 package com.dmsoft.firefly.gui.components.searchcombobox;
 
+import com.google.common.collect.Lists;
 import com.sun.javafx.collections.ObservableListWrapper;
+import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 
+import java.util.List;
+
 /**
  * search combo box
+ *
  * @author Can Guan
  */
 public class SearchComboBox extends GridPane {
@@ -19,6 +29,7 @@ public class SearchComboBox extends GridPane {
     private ComboBox<String> testItemBox;
     private ComboBox<String> operatorBox;
     private ComboBox<String> valueBox;
+    private List<String> valueDatas;
     private Button closeBtn;
     private static final String SEARCH_COMPONENT_STYLE_CLASS = "search-component";
     private static final String TEST_ITEM_BOX_STYLE_CLASS = "test-item";
@@ -33,6 +44,7 @@ public class SearchComboBox extends GridPane {
      */
     public SearchComboBox(ISearchComboBoxController searchComboBoxController) {
         this.searchComboBoxController = searchComboBoxController;
+        this.valueDatas = Lists.newArrayList("");
         RowConstraints r1 = new RowConstraints(21);
         r1.setVgrow(Priority.NEVER);
         RowConstraints r2 = new RowConstraints(22);
@@ -67,15 +79,44 @@ public class SearchComboBox extends GridPane {
                 this.valueBox.setStyle("-fx-border-color: #ccc");
             }
         });
-        this.testItemBox.getEditor().textProperty().addListener((ov, s1, s2) -> {
-            String itemTxt = this.testItemBox.getEditor().getText();
-            String selected = this.testItemBox.getSelectionModel().getSelectedItem();
-            if (selected == null || !selected.equals(itemTxt)) {
-                filterItems.setPredicate(item -> item.toLowerCase().contains(itemTxt.toLowerCase()));
+
+        this.testItemBox.setOnKeyReleased(event -> {
+            int caretPos = -1;
+            if (event.getCode() == KeyCode.UP) {
+                caretPos = -1;
+                moveCaret(caretPos, this.testItemBox);
+                return;
+            } else if (event.getCode() == KeyCode.DOWN) {
+                if (!this.testItemBox.isShowing()) {
+                    this.testItemBox.show();
+                }
+                caretPos = -1;
+                moveCaret(caretPos, this.testItemBox);
+                return;
+            } else if (event.getCode() == KeyCode.BACK_SPACE || event.getCode() == KeyCode.DELETE) {
+                caretPos = this.testItemBox.getEditor().getCaretPosition();
             }
-            this.testItemBox.hide();
-            this.testItemBox.show();
+            if (event.getCode() == KeyCode.RIGHT || event.getCode() == KeyCode.LEFT
+                    || event.isControlDown() || event.getCode() == KeyCode.HOME
+                    || event.getCode() == KeyCode.END || event.getCode() == KeyCode.TAB) {
+                return;
+            }
+            ObservableList<String> list = FXCollections.observableArrayList();
+            List<String> testItems = searchComboBoxController.getTestItems();
+            for (String s : testItems) {
+                if (s.toLowerCase().contains(this.testItemBox.getEditor().getText().toLowerCase())) {
+                    list.add(s);
+                }
+            }
+            String t = this.testItemBox.getEditor().getText();
+            this.testItemBox.setItems(list);
+            this.testItemBox.getEditor().setText(t);
+            moveCaret(caretPos, this.testItemBox);
+            if (!list.isEmpty()) {
+                this.testItemBox.show();
+            }
         });
+
         this.testItemBox.valueProperty().addListener((ov, s1, s2) -> {
             if (this.searchComboBoxController.isTimeKey(s2)) {
                 if (!this.valueBox.lookup(".arrow-button").getStyleClass().contains("arrow-calendar-button")) {
@@ -84,7 +125,8 @@ public class SearchComboBox extends GridPane {
             } else {
                 this.valueBox.lookup(".arrow-button").getStyleClass().remove("arrow-calendar-button");
             }
-            ((ObservableListWrapper) filterValues.getSource()).setAll(searchComboBoxController.getValueForTestItem(s2));
+            this.valueDatas = searchComboBoxController.getValueForTestItem(s2);
+            ((ObservableListWrapper) filterValues.getSource()).setAll(valueDatas);
         });
 
         this.operatorBox = new ComboBox<>();
@@ -119,11 +161,40 @@ public class SearchComboBox extends GridPane {
                 this.valueBox.setStyle("-fx-border-color: #ccc");
             }
         });
-        this.valueBox.getEditor().textProperty().addListener((ov, s1, s2) -> {
-            String itemTxt = this.valueBox.getEditor().getText();
-            filterValues.setPredicate(item -> item.toLowerCase().contains(itemTxt.toLowerCase()));
-            this.valueBox.hide();
-            this.valueBox.show();
+        this.valueBox.setOnKeyReleased(event -> {
+            int caretPos = -1;
+            if (event.getCode() == KeyCode.UP) {
+                caretPos = -1;
+                moveCaret(caretPos, this.valueBox);
+                return;
+            } else if (event.getCode() == KeyCode.DOWN) {
+                if (!this.valueBox.isShowing()) {
+                    this.valueBox.show();
+                }
+                caretPos = -1;
+                moveCaret(caretPos, this.valueBox);
+                return;
+            } else if (event.getCode() == KeyCode.BACK_SPACE || event.getCode() == KeyCode.DELETE) {
+                caretPos = this.valueBox.getEditor().getCaretPosition();
+            }
+            if (event.getCode() == KeyCode.RIGHT || event.getCode() == KeyCode.LEFT
+                    || event.isControlDown() || event.getCode() == KeyCode.HOME
+                    || event.getCode() == KeyCode.END || event.getCode() == KeyCode.TAB) {
+                return;
+            }
+            ObservableList<String> list = FXCollections.observableArrayList();
+            for (String s : this.valueDatas) {
+                if (s.toLowerCase().contains(this.valueBox.getEditor().getText().toLowerCase())) {
+                    list.add(s);
+                }
+            }
+            String t = this.valueBox.getEditor().getText();
+            this.valueBox.setItems(list);
+            this.valueBox.getEditor().setText(t);
+            moveCaret(caretPos, this.valueBox);
+            if (!list.isEmpty()) {
+                this.valueBox.show();
+            }
         });
 
         this.closeBtn = new Button();
@@ -208,5 +279,13 @@ public class SearchComboBox extends GridPane {
 
     private boolean isNotBlank(String s) {
         return !(s == null || s.length() == 0);
+    }
+
+    private void moveCaret(int caretPos, ComboBox comboBox) {
+        if (caretPos == -1) {
+            comboBox.getEditor().positionCaret(comboBox.getEditor().getText().length());
+        } else {
+            comboBox.getEditor().positionCaret(caretPos);
+        }
     }
 }

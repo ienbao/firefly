@@ -10,10 +10,12 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
@@ -127,13 +129,78 @@
                   </Tab>
                </tabs>
             </TabPane>
-            <BorderPane minHeight="100.0" minWidth="180.0" prefHeight="415.0" prefWidth="180.0" style="-fx-background-color: #FFFFFF;" />
+            <TabPane minHeight="155.0" minWidth="180.0" prefHeight="415.0" prefWidth="180.0" style="-fx-border-width: 0 0 0 0;" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab fx:id="basicTab" style="-fx-pref-width: 45;">
+                     <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <HBox prefHeight="30.0" prefWidth="180.0" style="-fx-border-color: #DCDCDC; -fx-border-width: 0 0 1 0;">
+                                 <children>
+                                    <Label prefHeight="30.0" prefWidth="110.0" text="%BASIC_SEARCH" HBox.hgrow="ALWAYS">
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <Button fx:id="groupAdd" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="btn-txt" />
+                                    <Button fx:id="groupRemove" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="btn-txt" />
+                                 </children>
+                              </HBox>
+                              <VBox fx:id="basicSearch" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS" />
+                           </children>
+                        </VBox>
+                     </content>
+                </Tab>
+                <Tab fx:id="advanceTab" style="-fx-pref-width: 45;">
+                     <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="180.0">
+                                 <children>
+                                    <Label prefHeight="30.0" prefWidth="140.0" text="%ADVANCE_SEARCH">
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <Button fx:id="help" minHeight="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-txt" text="Button">
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <TextArea fx:id="advanceText" prefHeight="100.0" prefWidth="160.0">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" />
+                                 </VBox.margin>
+                              </TextArea>
+                              <Label prefHeight="30.0" prefWidth="160.0" text="%AUTO_DIVIDE_BY">
+                                 <VBox.margin>
+                                    <Insets left="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <ComboBox prefWidth="160.0">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" />
+                                 </VBox.margin>
+                              </ComboBox>
+                              <ComboBox prefWidth="160.0">
+                                 <VBox.margin>
+                                    <Insets left="10.0" />
+                                 </VBox.margin>
+                              </ComboBox>
+                           </children>
+                        </VBox>
+                     </content>
+                </Tab>
+              </tabs>
+            </TabPane>
          </items>
       </SplitPane>
       <GridPane style="-fx-background-color: #ffffff; -fx-border-width: 1 0 0 0; -fx-border-color: #DCDCDC;">
          <children>
-            <Button fx:id="saveBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" text="Button" GridPane.columnIndex="3" GridPane.halignment="LEFT" />
-            <Button fx:id="importBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" text="Button" GridPane.columnIndex="2" />
+            <Button fx:id="saveBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-txt" text="Button" GridPane.columnIndex="3" GridPane.halignment="LEFT" />
+            <Button fx:id="importBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-txt" text="Button" GridPane.columnIndex="2" />
             <Button fx:id="analysisBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-primary" text="Button" GridPane.halignment="RIGHT" />
          </children>
          <columnConstraints>

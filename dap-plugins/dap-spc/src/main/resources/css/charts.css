@@ -1,0 +1,161 @@
+
+.chart {
+    -fx-font-family: Tahoma;
+    -fx-font-size: 0.9em;
+    /*-fx-text-fill: #462300;*/
+}
+
+.chart-vertical-grid-lines {
+    -fx-stroke-width: 0px;
+}
+
+.chart-horizontal-grid-lines {
+    -fx-stroke-width: 0px;
+    -fx-stroke: transparent;
+}
+
+/*chart style*/
+.chart-plot-background {
+    -fx-background-color: white;
+}
+
+.axis {
+    -fx-font-size: 1.4em;
+    /*-fx-tick-label-fill: #914800;*/
+    -fx-font-family: Tahoma;
+    -fx-tick-length: 5;
+    -fx-minor-tick-length: 0;
+}
+
+.axis-label {
+    -fx-text-fill: #462300;
+}
+
+/*line*/
+.line {
+    -fx-stroke: #6fc1be;
+}
+
+.line:hover {
+    -fx-stroke-width: 2px;
+}
+
+.dashed-line {
+    -fx-stroke-dash-array: 4px;
+}
+
+.dashed-line:hover {
+    -fx-stroke-width: 2px;
+    -fx-stroke-dash-array: 1px;
+}
+
+.solid-line {
+
+}
+
+.solid-line:hover {
+    -fx-stroke-width: 2px;
+}
+
+.hidden-line {
+    -fx-stroke-width: 0px;
+}
+
+/* ====== LINE CHART =========================================================== */
+
+/*chart line style*/
+.chart-series-line {
+    -fx-stroke-width: 1px;
+}
+
+.chart-series-hidden-line {
+    -fx-stroke-width: 0px;
+}
+
+/*chart symbol */
+.chart-line-symbol {
+    -fx-padding: 4px;
+    -fx-background-insets: 1px;
+}
+
+.chart-line-symbol:hover {
+    -fx-background-insets: 0px;
+}
+
+.chart-line-hidden-symbol {
+    -fx-background-insets: 4px;
+}
+
+/* ====== CANDLE STICK CHART =========================================================== */
+.candlestick-tooltip-label {
+    -fx-font-size: 0.75em;
+    -fx-font-weight: bold;
+    -fx-text-fill: #666666;
+    -fx-padding: 2 5 2 0;
+}
+
+.candlestick-average-line {
+    -fx-stroke: #6fc1be;
+    -fx-stroke-width: 1px;
+}
+
+.candlestick-candle {
+    /*-fx-effect: dropshadow(two-pass-box, rgba(0, 0, 0, 0.4), 10, 0.0, 2, 4);*/
+}
+
+.candlestick-line {
+    -fx-stroke: #6fc1be;
+    -fx-stroke-width: 2px;
+}
+
+.candlestick-bar {
+    -fx-padding: 5;
+    -demo-bar-fill: #6fc1be;
+    -fx-background-color: linear-gradient(derive(-demo-bar-fill, -30%), derive(-demo-bar-fill, -40%)),
+    linear-gradient(derive(-demo-bar-fill, 100%), derive(-demo-bar-fill, 10%)),
+    linear-gradient(derive(-demo-bar-fill, 10%), derive(-demo-bar-fill, -10%));
+    -fx-background-insets: 0, 1, 1;
+}
+
+.candlestick-bar.close-above-open {
+    -demo-bar-fill: #6fc1be;
+}
+
+.candlestick-bar.open-above-close {
+    -demo-bar-fill: #6fc1be;
+}
+
+#chart-symbol {
+    -fx-background-color: #e92822, #e92822;
+    -fx-background-radius: 5px;
+    -fx-padding: 3px;
+}
+
+/* ====== AREA CHART =========================================================== */
+.chart-area-symbol {
+    -fx-background-color: transparent;
+    -fx-background-radius: 6px;
+    -fx-padding: 0px;
+}
+.chart-series-area-line {
+    -fx-stroke: white;
+    -fx-stroke-width: 1px;
+}
+.chart-series-area-fill {
+    -fx-fill: linear-gradient(to right, white, rgba(255,255,255,0));
+    -fx-blend-mode: OVERLAY;
+}
+
+.btn-icon {
+    -fx-background-color: #ff875c;
+}
+
+.btn-icon:hover {
+    -fx-background-color: #e92822;
+}
+
+
+
+
+
+

@@ -1,7 +1,5 @@
 package com.dmsoft.firefly.sdk.event;
 
-import com.dmsoft.firefly.sdk.utils.enums.EventType;
-
 /**
  * event for platform, used to notice user
  *
