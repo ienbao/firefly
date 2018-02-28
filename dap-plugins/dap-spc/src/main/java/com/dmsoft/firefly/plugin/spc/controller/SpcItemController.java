@@ -8,7 +8,9 @@ import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.utils.*;
+import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -166,14 +168,14 @@ public class SpcItemController implements Initializable {
     }
 
     private void initItemData() {
-//        EnvService envService = RuntimeContext.getBean(EnvService.class);
-//        List<TestItemDto> itemDtos = envService.findTestItem();
-        List<TestItemDto> itemDtos = Lists.newArrayList();
-        for (int i = 0; i < 40; i++) {
-            TestItemDto dto = new TestItemDto();
-            dto.setTestItemName("item" + i);
-            itemDtos.add(dto);
-        }
+        EnvService envService = RuntimeContext.getBean(EnvService.class);
+        List<TestItemDto> itemDtos = envService.findTestItems();
+//        List<TestItemDto> itemDtos = Lists.newArrayList();
+//        for (int i = 0; i < 40; i++) {
+//            TestItemDto dto = new TestItemDto();
+//            dto.setTestItemName("item" + i);
+//            itemDtos.add(dto);
+//        }
         if (itemDtos != null) {
             for (TestItemDto dto : itemDtos) {
                 ItemTableModel tableModel = new ItemTableModel(dto);
@@ -194,6 +196,8 @@ public class SpcItemController implements Initializable {
             return;
         }
         spcMainController.setStatisticalResultData(spcStatsDtoList);
+        getSelectedItem();
+        getSearch();
     }
 
 
