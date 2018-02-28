@@ -6,17 +6,14 @@ package com.dmsoft.firefly.gui.controller.template;
 import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.gui.model.PatternHelpModel;
 import com.dmsoft.firefly.gui.utils.ImageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceBundleUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.ResourceBundle;
@@ -28,12 +25,14 @@ import static com.google.common.io.Resources.getResource;
  */
 public class TemplateController {
     @FXML
-    private Button rename, add, copy, delete, deleteTime, addTime, pattern, addRow, ok, cancel, apply;
+    private Button rename, add, copy, delete, addTime, pattern, addRow, ok, cancel, apply;
     private Stage dialog;
-
+    @FXML
+    private VBox timeKeys;
     @FXML
     private void initialize() {
         initButton();
+        timeKeys.getChildren().add(new TimePane());
         initEvent();
     }
 
@@ -42,7 +41,7 @@ public class TemplateController {
         add.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
         copy.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_copy_normal.png")));
         delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
-        deleteTime.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_delete_normal.png")));
+//        deleteTime.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_delete_normal.png")));
         addTime.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
 //        pattern.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
         addRow.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
@@ -52,6 +51,7 @@ public class TemplateController {
     private void initEvent() {
         pattern.setOnAction(event -> buildPatternDia());
         add.setOnAction(event -> buildAddItemDia());
+        addTime.setOnAction(event -> timeKeys.getChildren().add(new TimePane()));
         ok.setOnAction(event -> {
             StageMap.closeStage("template");
 

@@ -85,6 +85,13 @@ public interface EnvService {
     List<TestItemWithTypeDto> findTestItems();
 
     /**
+     * find test item
+     *
+     * @return list of test item
+     */
+    List<String> findTestItemNames();
+
+    /**
      * method to set TestItemWithTypeDto list
      *
      * @param testItems TestItemWithTypeDto list

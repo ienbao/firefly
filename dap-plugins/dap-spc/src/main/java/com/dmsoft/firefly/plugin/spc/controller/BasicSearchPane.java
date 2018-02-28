@@ -62,12 +62,7 @@ public class BasicSearchPane extends VBox {
 
                 @Override
                 public ObservableList<String> getTestItems() {
-                    List<String> item = Lists.newArrayList();
-                    List<TestItemWithTypeDto> itemDto = envService.findTestItems();
-
-                    if (itemDto != null) {
-                        itemDto.forEach(dto -> item.add(dto.getTestItemName()));
-                    }
+                    List<String> item = envService.findTestItemNames();
                     return FXCollections.observableArrayList(item);
                 }
 
