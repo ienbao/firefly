@@ -143,7 +143,6 @@ public class SpcItemController implements Initializable {
         advanceTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_advance_search_normal.png")));
         groupAdd.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_new_template_normal.png")));
         groupRemove.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_clear_all_normal.png")));
-//        addSearch.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
     }
 
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
@@ -262,8 +261,8 @@ public class SpcItemController implements Initializable {
         List<String> search = Lists.newArrayList();
         if (basicSearch.getChildren().size() > 0) {
             for (Node node : basicSearch.getChildren()) {
-                if (node instanceof SearchComboBox) {
-                    search.add(((SearchComboBox) node).getCondition());
+                if (node instanceof BasicSearchPane) {
+                    search.add(((BasicSearchPane) node).getSearch());
                 }
             }
         }

@@ -6,24 +6,34 @@ package com.dmsoft.firefly.plugin.spc.controller;
 import com.dmsoft.firefly.gui.components.searchcombobox.ISearchComboBoxController;
 import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Guang.Li on 2018/2/27.
  */
 public class BasicSearchPane extends VBox {
     private Button addSearch;
+    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
 
     public BasicSearchPane() {
         this.setStyle("-fx-border-color: #DCDCDC; -fx-border-width: 0 0 1 0");
@@ -38,24 +48,24 @@ public class BasicSearchPane extends VBox {
             SearchComboBox basicSearchCom = new SearchComboBox(new ISearchComboBoxController() {
                 @Override
                 public ObservableList<String> getValueForTestItem(String testItem) {
-                    if ("AA".equals(testItem)) {
-                        java.util.List<String> testList = new ArrayList<>();
-                        testList.add("132");
-                        testList.add("2456");
-                        testList.add("<A");
-                        return FXCollections.observableArrayList(testList);
+                    if (StringUtils.isNotEmpty(testItem)) {
+                        Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), testItem);
+                        if (values != null && values.size() > 0) {
+                            return FXCollections.observableArrayList(values);
+                        }
                     }
                     return FXCollections.observableArrayList();
                 }
 
                 @Override
                 public ObservableList<String> getTestItems() {
-                    List<String> s = new ArrayList<>();
-                    s.add("AA");
-                    s.add("BA");
-                    s.add("BAB!");
-                    s.add("<");
-                    return FXCollections.observableArrayList(s);
+                    List<String> item = Lists.newArrayList();
+                    List<TestItemDto> itemDto = envService.findTestItems();
+
+                    if (itemDto != null) {
+                        itemDto.forEach(dto -> item.add(dto.getTestItemName()));
+                    }
+                    return FXCollections.observableArrayList(item);
                 }
 
                 @Override
@@ -83,8 +93,22 @@ public class BasicSearchPane extends VBox {
                 VBox.setVgrow(basicSearchCom, Priority.ALWAYS);
             }
         });
-//        this.setHgrow(Priority.ALWAYS);
-//        VBox.setVgrow(addSearch, Priority.ALWAYS);
     }
 
+    public String getSearch() {
+        StringBuffer search = new StringBuffer();
+        if (this.getChildren().size() > 0) {
+            for (Node node : this.getChildren()) {
+                if (node instanceof SearchComboBox) {
+                    search.append(((SearchComboBox) node).getCondition());
+                    search.append("&&");
+                }
+            }
+        }
+        if (search.length() > 2) {
+            return search.substring(0, search.length() - 2);
+        } else {
+            return "";
+        }
+    }
 }
