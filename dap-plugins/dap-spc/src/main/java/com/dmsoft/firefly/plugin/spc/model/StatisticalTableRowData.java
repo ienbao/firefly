@@ -3,7 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.model;
 
-import com.dmsoft.firefly.plugin.spc.dto.SpcServiceStatsResultDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
 import com.dmsoft.firefly.plugin.spc.utils.TableCheckBox;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.google.common.collect.Maps;
@@ -20,7 +20,7 @@ public class StatisticalTableRowData {
     private Map<String,SimpleStringProperty> rowDataMap = Maps.newHashMap();
     private static final String[] STATISTICAL_TITLE = UIConstant.SPC_SR_ALL;
 
-    public StatisticalTableRowData(SpcServiceStatsResultDto statisticalResultDto){
+    public StatisticalTableRowData(SpcStatsDto statisticalResultDto){
         if(statisticalResultDto == null){
             return;
         }

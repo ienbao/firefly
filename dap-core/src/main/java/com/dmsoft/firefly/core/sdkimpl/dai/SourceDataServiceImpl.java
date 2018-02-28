@@ -4,8 +4,8 @@ import com.dmsoft.firefly.core.sdkimpl.dai.entity.Project;
 import com.dmsoft.firefly.core.sdkimpl.dai.entity.RowData;
 import com.dmsoft.firefly.core.sdkimpl.dai.entity.TestItem;
 import com.dmsoft.firefly.core.utils.CoreExceptionCode;
-import com.dmsoft.firefly.core.utils.DoubleIdUtils;
 import com.dmsoft.firefly.core.utils.CoreExceptionParser;
+import com.dmsoft.firefly.core.utils.DoubleIdUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
@@ -24,6 +24,7 @@ import org.springframework.data.mongodb.core.query.Update;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -282,6 +283,11 @@ public class SourceDataServiceImpl implements SourceDataService {
     @Override
     public List<RowDataDto> findTestData(List<String> projectNameList, List<String> testItemNameList) {
         return findTestData(projectNameList, testItemNameList, true);
+    }
+
+    @Override
+    public Set<String> findUniqueTestData(List<String> projectNameList, String testItemName) {
+        return RuntimeContext.getBean(TestDataCacheFactory.class).findTestData(projectNameList, testItemName);
     }
 
     @Override

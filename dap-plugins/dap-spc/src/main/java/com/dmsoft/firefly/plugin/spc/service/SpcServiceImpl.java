@@ -1,150 +1,103 @@
-/*
- * Copyright (c) 2017. For Intelligent Group.
- */
 package com.dmsoft.firefly.plugin.spc.service;
 
-import com.dmsoft.firefly.plugin.spc.dto.*;
+import com.dmsoft.firefly.plugin.spc.dto.SearchConditionDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcAnalysisConfigDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
+import com.dmsoft.firefly.plugin.spc.dto.analysis.AnalysisDataDto;
+import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
+import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcService;
-import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
-import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
-import com.dmsoft.firefly.sdk.dai.service.TemplateService;
+import com.dmsoft.firefly.plugin.spc.service.impl.SpcAnalysisService;
+import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionCode;
+import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionParser;
+import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.Validate;
 
 import java.util.List;
-import java.util.Map;
 
 /**
- * Created by Ethan.Yang on 2018/2/5.
+ * impl class for spc service
+ *
+ * @author Can Guan, Ethan Yang
  */
 public class SpcServiceImpl implements SpcService {
-    private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
-    private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
+    private SpcAnalysisService analysisService;
 
     @Override
-    public List<SpcServiceStatsResultDto> findStatisticalResult(List<String> testItemNames, List<String> conditions, SpcSearchConfigDto spcSearchConfigDto) {
+    public List<SpcStatsDto> getStatisticalResult(SearchDataFrame searchDataFrame, List<String> testItemNames, List<SearchConditionDto> searchConditions, SpcAnalysisConfigDto configDto) {
         /*
         1.Verify the validity of the parameters
-        2.Find template setting and global setting, change config dto
-        3.Get analysis data from SourceDataService
-        4.Get analysis statistical result from R
-        5.build all warning rules
+        2.Get analysis statistical result from R
          */
-        //1.Verify the validity of the parameters
-        if (spcSearchConfigDto == null || testItemNames == null || conditions == null) {
-            //todo throw Exception throw new ApplicationException();
+        if (searchDataFrame == null || testItemNames == null || searchConditions == null || configDto == null) {
+            throw new ApplicationException(SpcExceptionParser.parser(SpcExceptionCode.ERR_11001));
         }
-        //2.Find template and global setting
-        String templateName = spcSearchConfigDto.getTemplateName();
-        TemplateSettingDto templateSettingDto = templateService.findAnalysisTemplate(templateName);
-        //3.Get analysis data from SourceDataService
-        List<String> projectNames = spcSearchConfigDto.getProjectNames();
-        //todo get testData from SourceDataService
-        //TODO can
-//        List<TestDataDto> testDataDtoList = sourceDataService.findDataByCondition(projectNames, testItemNames, conditions, templateName, true);
-//        Map<String,List<TestDataDto>> testItemConditionMap = Maps.newHashMap();
-
-//        Map<String,Map<String,TestDataDto>> dataMap = Maps.newHashMap();
-//        for(String testItemName : testItemNames){
-//            Map<String,TestDataDto> condtionMap = Maps.newHashMap();
-//            for(String condition : conditions){
-//                List<TestDataDto> testDataDtoList = testItemConditionMap.get(condition);
-//                if(testDataDtoList != null){
-//
-//                }
-//            }
-//        }
-
-        //4.Get analysis statistical result from R
-        // todo from R
-        List<SpcServiceStatsResultDto> spcServiceStatsResultDtoList = Lists.newArrayList();
-        return spcServiceStatsResultDtoList;
+        List<SpcStatsDto> result = Lists.newArrayList();
+        for (String testItem : testItemNames) {
+            for (SearchConditionDto searchConditionDto : searchConditions) {
+                List<String> searchRowKeys = searchDataFrame.getSearchRowKey(searchConditionDto.getCondition());
+                List<String> datas = searchDataFrame.getDataValue(testItem, searchRowKeys);
+                AnalysisDataDto analysisDataDto = new AnalysisDataDto();
+                analysisDataDto.setDataList(datas);
+                analysisDataDto.setUsl(searchConditionDto.getCusUsl());
+                analysisDataDto.setLsl(searchConditionDto.getCusLsl());
+                SpcStatsResultDto resultDto = getAnalysisService().analyzeStatsResult(analysisDataDto, configDto);
+                SpcStatsDto statsDto = new SpcStatsDto();
+                statsDto.setStatsResultDto(resultDto);
+                statsDto.setKey(searchConditionDto.getKey());
+                statsDto.setItemName(testItem);
+                statsDto.setCondition(searchConditionDto.getCondition());
+                result.add(statsDto);
+            }
+        }
+        return result;
     }
 
     @Override
-    public SpcDetailResultDto findChartDataAndViewData(List<SearchConditionDto> searchConditionDtoList, SpcSearchConfigDto spcSearchConfigDto) {
-        if (spcSearchConfigDto == null || searchConditionDtoList == null) {
-            //todo throw Exception throw new ApplicationException();
+    public List<SpcChartDto> getChartResult(SearchDataFrame searchDataFrame, List<String> testItemNames, List<SearchConditionDto> searchConditions, SpcAnalysisConfigDto configDto) {
+        /*
+        1.Verify the validity of the parameters
+        2.Get analysis chart result from R
+         */
+        if (searchDataFrame == null || testItemNames == null || searchConditions == null || configDto == null) {
+            throw new ApplicationException(SpcExceptionParser.parser(SpcExceptionCode.ERR_11001));
         }
-
-//        List<String> testItemNames = Lists.newArrayList();
-//        List<String> conditions = Lists.newArrayList();
-//        searchConditionDtoList.forEach(v -> {
-//            if (!testItemNames.contains(v.getItemName())) {
-//                testItemNames.add(v.getItemName());
-//            }
-//            if (!conditions.contains(v.getCondition())) {
-//                conditions.add(v.getCondition());
-//            }
-//        });
-        String templateName = spcSearchConfigDto.getTemplateName();
-        List<String> projectNames = spcSearchConfigDto.getProjectNames();
-        //todo get testData from SourceDataService
-        //TODO can
-//        Map<String, TestDataDto> testDataDtoMap = Maps.newHashMap();
-
-        searchConditionDtoList.forEach(v -> {
-            //TODO can
-//            List<TestDataDto> testDataDtoList = sourceDataService.findDataByCondition(projectNames, Lists.newArrayList(v.getItemName()), Lists.newArrayList(v.getCondition()), templateName, true);
-//            testDataDtoMap.put(v.getKey(),testDataDtoList.get(0));
-        });
-        // todo from R
-
-        //todo get view data
-        List<SpcViewDataDto> spcViewDataDtoList = Lists.newArrayList();
-        //TODO can
-//        for (Map.Entry<String, TestDataDto> entry : testDataDtoMap.entrySet()) {
-//            TestDataDto testDataDto = entry.getValue();
-//            List<CellData> data = testDataDto.getData();
-//            data.forEach(d -> {
-//                SpcViewDataDto spcViewDataDto = new SpcViewDataDto();
-//                Map<String, Object> testData = Maps.newHashMap();
-//                spcViewDataDto.setLineKey(d.getRowKey());
-//
-//                testData.put(testDataDto.getItemName(), d.getValue());
-//                spcViewDataDto.setTestData(testData);
-//                spcViewDataDtoList.add(spcViewDataDto);
-//
-//            });
-//        }
-
+        List<SpcChartDto> result = Lists.newArrayList();
+        for (String testItem : testItemNames) {
+            for (SearchConditionDto searchConditionDto : searchConditions) {
+                List<String> searchRowKeys = searchDataFrame.getSearchRowKey(searchConditionDto.getCondition());
+                List<String> datas = searchDataFrame.getDataValue(testItem, searchRowKeys);
+                AnalysisDataDto analysisDataDto = new AnalysisDataDto();
+                analysisDataDto.setDataList(datas);
+                analysisDataDto.setUsl(searchConditionDto.getCusUsl());
+                analysisDataDto.setLsl(searchConditionDto.getCusLsl());
+                SpcChartResultDto resultDto = getAnalysisService().analyzeSpcChartResult(analysisDataDto, configDto);
+                SpcChartDto chartDto = new SpcChartDto();
+                chartDto.setResultDto(resultDto);
+                chartDto.setKey(searchConditionDto.getKey());
+                chartDto.setItemName(testItem);
+                chartDto.setCondition(searchConditionDto.getCondition());
+                List<String> analyzedRowKeys = Lists.newArrayList();
+                for (int i = 0; i < chartDto.getResultDto().getRunCResult().getIsAnalyzed().length; i++) {
+                    if (chartDto.getResultDto().getRunCResult().getIsAnalyzed()[i]) {
+                        analyzedRowKeys.add(searchRowKeys.get(i));
+                    }
+                }
+                result.add(chartDto);
+            }
+        }
         return null;
     }
 
-    @Override
-    public List<SpcServiceStatsResultDto> refreshStatisticalResult(List<SearchConditionDto> searchConditionDtoList, SpcSearchConfigDto spcSearchConfigDto) {
-        if (spcSearchConfigDto == null || searchConditionDtoList == null) {
-            //todo throw Exception throw new ApplicationException();
-        }
-
-        List<String> projectNames = spcSearchConfigDto.getProjectNames();
-        String templateName = spcSearchConfigDto.getTemplateName();
-        //todo get testData from SourceDataService
-        //TODO can
-//        Map<String, TestDataDto> testDataDtoMap = Maps.newHashMap();
-        searchConditionDtoList.forEach(v -> {
-            //TODO can
-//            List<TestDataDto> testDataDtoList = sourceDataService.findDataByCondition(projectNames, Lists.newArrayList(v.getItemName()), Lists.newArrayList(v.getCondition()), templateName, true);
-//            TestDataDto testDataDto = testDataDtoList.get(0);
-//            if (testDataDto != null) {
-//                //set fix usl and lsl
-//                testDataDto.setLsl(v.getCusLsl());
-//                testDataDto.setUsl(v.getCusUsl());
-//                testDataDtoMap.put(v.getKey(), testDataDto);
-//            }
-        });
-        // todo from R
-        List<SpcServiceStatsResultDto> spcServiceStatsResultDtoList = Lists.newArrayList();
-        return spcServiceStatsResultDtoList;
+    private SpcAnalysisService getAnalysisService() {
+        Validate.validState(this.analysisService != null, "Analysis Service is not injected");
+        return this.analysisService;
     }
 
-    @Override
-    public SpcAnalysisResultDto refreshAllAnalysisResult(List<SearchConditionDto> searchConditionDtoList, SpcSearchConfigDto spcSearchConfigDto, Map<String, List<Long>> includeLineNo) {
-        return null;
-    }
-
-    @Override
-    public SpcViewDataDto updateViewData(List<SearchConditionDto> searchConditionDtoList, SpcSearchConfigDto spcSearchConfigDto, List<String> testItems) {
-        return null;
+    public void setAnalysisService(SpcAnalysisService analysisService) {
+        this.analysisService = analysisService;
     }
 }

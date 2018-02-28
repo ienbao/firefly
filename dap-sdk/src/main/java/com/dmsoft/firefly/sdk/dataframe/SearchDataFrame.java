@@ -11,32 +11,6 @@ import java.util.List;
  * @author Can Guan
  */
 public interface SearchDataFrame extends DataFrame {
-    //Test item Operation
-
-    /**
-     * method to get all test item dto
-     *
-     * @param searchCondition search condition
-     * @return test item dto list
-     */
-    List<TestItemWithTypeDto> getAllTestItemWithTypeDto(String searchCondition);
-
-    /**
-     * method to get test item dto
-     *
-     * @param testItemName    test item name
-     * @param searchCondition search condition
-     * @return test item dto
-     */
-    TestItemWithTypeDto getTestItemWithTypeDto(String testItemName, String searchCondition);
-
-    /**
-     * method to update test item by search condition
-     *
-     * @param testItemWithTypeDto test item dto
-     * @param searchCondition     search condition
-     */
-    void updateTestItem(TestItemWithTypeDto testItemWithTypeDto, String searchCondition);
 
     //Column Operation
 

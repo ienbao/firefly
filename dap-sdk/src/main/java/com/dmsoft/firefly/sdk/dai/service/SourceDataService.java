@@ -5,6 +5,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * interface for source data service
@@ -119,6 +120,15 @@ public interface SourceDataService {
      * @return project data
      */
     List<RowDataDto> findTestData(List<String> projectNameList, List<String> testItemNameList);
+
+    /**
+     * method to find unique test data by project name and test item name
+     *
+     * @param projectNameList project name list
+     * @param testItemName    test item name
+     * @return string list
+     */
+    Set<String> findUniqueTestData(List<String> projectNameList, String testItemName);
 
     /**
      * method to find test data by project name and test item name.

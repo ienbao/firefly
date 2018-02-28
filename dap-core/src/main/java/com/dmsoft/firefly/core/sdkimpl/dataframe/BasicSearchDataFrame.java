@@ -8,7 +8,6 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import java.util.List;
@@ -26,7 +25,6 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
     //Additional
     private Set<String> searchConditions;
     private FilterUtils filterUtils;
-    private Map<String, Map<String, TestItemWithTypeDto>> additionalTesTtems;
 
     /**
      * constructor
@@ -38,7 +36,6 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
         super(testItemDtoList, rowDataDtoList);
         this.rowSearchConditionResultList = Lists.newArrayList();
         this.searchConditions = Sets.newLinkedHashSet();
-        this.additionalTesTtems = Maps.newHashMap();
         List<String> timeKeys = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getTimePatternDto().getTimeKeys();
         String timePattern = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getTimePatternDto().getPattern();
         this.filterUtils = new FilterUtils(timeKeys, timePattern);
@@ -49,44 +46,9 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
     }
 
     @Override
-    public List<TestItemWithTypeDto> getAllTestItemWithTypeDto(String searchCondition) {
-        List<TestItemWithTypeDto> result = Lists.newArrayList();
-        for (String testItemName : this.testItemNames) {
-            if (this.additionalTesTtems.containsKey(searchCondition) && this.additionalTesTtems.get(searchCondition) != null
-                    && additionalTesTtems.get(searchCondition).containsKey(testItemName)) {
-                result.add(additionalTesTtems.get(searchCondition).get(testItemName));
-            } else {
-                result.add(this.testItemDtoList.get(this.testItemNames.indexOf(testItemName)));
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public TestItemWithTypeDto getTestItemWithTypeDto(String testItemName, String searchCondition) {
-        if (this.testItemNames.contains(testItemName)) {
-            if (this.additionalTesTtems.containsKey(searchCondition) && this.additionalTesTtems.get(searchCondition) != null
-                    && this.additionalTesTtems.get(searchCondition).get(testItemName) != null) {
-                return this.additionalTesTtems.get(searchCondition).get(testItemName);
-            } else {
-                return this.testItemDtoList.get(this.testItemNames.indexOf(testItemName));
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public void updateTestItem(TestItemWithTypeDto testItemWithTypeDto, String searchCondition) {
-        if (!this.additionalTesTtems.containsKey(searchCondition)) {
-            this.additionalTesTtems.put(searchCondition, Maps.newHashMap());
-        }
-        this.additionalTesTtems.get(searchCondition).put(testItemWithTypeDto.getTestItemName(), testItemWithTypeDto);
-    }
-
-    @Override
     public DataColumn getDataColumn(String testItemName, String searchCondition) {
         if (isTestItemExist(testItemName)) {
-            TestItemWithTypeDto testItemDto = getTestItemWithTypeDto(testItemName, searchCondition);
+            TestItemWithTypeDto testItemDto = getTestItemWithTypeDto(testItemName);
             List<String> rowKeyList = getSearchRowKey(searchCondition);
             List<String> valueList = getDataValue(testItemName, rowKeyList);
             List<Boolean> inUsed = Lists.newArrayList();
