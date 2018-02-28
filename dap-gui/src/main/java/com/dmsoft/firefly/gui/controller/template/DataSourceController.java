@@ -25,6 +25,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -97,6 +98,7 @@ public class DataSourceController implements Initializable {
                         } else {
                             HBox hBox = new HBox();
                             hBox.setSpacing(5);
+                            hBox.setAlignment(Pos.CENTER);
                             Label textField = new Label(item.getValue());
                             textField.setStyle("-fx-border-width: 0 0 0 0");
                             textField.setPrefWidth(400);
@@ -104,6 +106,10 @@ public class DataSourceController implements Initializable {
                             progressBar.setProgress(item.getProgress());
                             progressBar.setPrefWidth(70);
                             progressBar.setMinWidth(70);
+                            progressBar.setMaxHeight(5);
+                            progressBar.setPrefHeight(5);
+                            progressBar.setMinHeight(5);
+                            progressBar.setProgress(50);
                             Button rename = new Button();
                             rename.getStyleClass().add("btn-icon");
                             rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rename_normal.png")));
@@ -120,12 +126,6 @@ public class DataSourceController implements Initializable {
                             HBox.setHgrow(progressBar, Priority.NEVER);
                             HBox.setHgrow(rename, Priority.NEVER);
                             HBox.setHgrow(deleteOne, Priority.NEVER);
-
-                            this.setOnMouseMoved(event -> {
-                                rename.setVisible(true);
-                                deleteOne.setVisible(true);
-                            });
-
                             this.setGraphic(hBox);
 
                         }
