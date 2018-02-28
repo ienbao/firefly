@@ -40,6 +40,7 @@ public class BasicSearchPane extends VBox {
 
         addSearch = new Button();
         this.getChildren().add(addSearch);
+        VBox.setVgrow(addSearch, Priority.ALWAYS);
         VBox.setMargin(addSearch, new Insets(10, 10, 10, 8));
         addSearch.setPrefSize(160, 22);
 
