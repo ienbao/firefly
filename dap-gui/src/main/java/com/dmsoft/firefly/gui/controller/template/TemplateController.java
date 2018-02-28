@@ -49,8 +49,9 @@ public class TemplateController {
     }
 
     private void initEvent() {
+        add.setOnAction(event -> initData());
         pattern.setOnAction(event -> buildPatternDia());
-        add.setOnAction(event -> buildAddItemDia());
+        addRow.setOnAction(event -> buildAddItemDia());
         addTime.setOnAction(event -> timeKeys.getChildren().add(new TimePane()));
         ok.setOnAction(event -> {
             StageMap.closeStage("template");
@@ -64,6 +65,9 @@ public class TemplateController {
         });
     }
 
+    private void initData(){
+
+    }
     private void buildPatternDia() {
         Pane root = null;
         try {
