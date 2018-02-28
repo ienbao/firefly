@@ -152,7 +152,7 @@ public class DataSourceController implements Initializable {
             });
             Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(selectProject);
 
-            envService.setTestItems(new ArrayList<>(testItemDtoMap.values()));
+            envService.setTestItems(new ArrayList(testItemDtoMap.values()));
             envService.setActivatedProjectName(selectProject);
             envService.setActivatedTemplate("default");
 
@@ -240,7 +240,7 @@ public class DataSourceController implements Initializable {
         List<String> selectProject = mapper.fromJson(envService.findPreference("selectProject"), mapper.buildCollectionType(List.class, String.class));
         value.forEach(v -> {
             ChooseTableRowData chooseTableRowData = null;
-            if (selectProject != null && selectProject.equals(v)) {
+            if (selectProject != null && selectProject.contains(v)) {
                 chooseTableRowData = new ChooseTableRowData(true, v);
             } else {
                 chooseTableRowData = new ChooseTableRowData(false, v);

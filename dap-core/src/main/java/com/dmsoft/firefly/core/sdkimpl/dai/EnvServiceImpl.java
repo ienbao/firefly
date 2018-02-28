@@ -19,7 +19,7 @@ public class EnvServiceImpl implements EnvService {
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
 
-    private String userName;
+    private String userName = "admin";
     private String templateName;
     private List<TestItemWithTypeDto> testItemDtos;
     private List<String> projectNames;

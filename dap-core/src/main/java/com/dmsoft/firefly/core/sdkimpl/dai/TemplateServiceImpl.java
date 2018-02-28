@@ -1,12 +1,12 @@
 package com.dmsoft.firefly.core.sdkimpl.dai;
 
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.core.utils.JsonFileUtil;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.google.common.collect.Lists;
-import net.sf.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -19,18 +19,21 @@ import java.util.Map;
  */
 public class TemplateServiceImpl implements TemplateService {
     private Logger logger = LoggerFactory.getLogger(TemplateServiceImpl.class);
+    private JsonMapper mapper = JsonMapper.defaultMapper();
 
-    private static final String parentPath = "../config";
-    private static final String fileName = "template";
+    private final String parentPath = this.getClass().getResource("/").getPath() + "config";
+    private final String fileName = "template";
 
     @Override
 
     public List<String> findAllTemplateName() {
-        JSONArray json = JsonFileUtil.readJsonFile(parentPath, fileName);
+
+        String json = JsonFileUtil.readJsonFile(parentPath, fileName);
         if (json == null) {
             logger.debug("Don`t find " + fileName);
         }
-        List<TemplateSettingDto> list = (List<TemplateSettingDto>) JSONArray.toCollection(json, TemplateSettingDto.class);
+        List<TemplateSettingDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, TemplateSettingDto.class));
+
         List<String> result = Lists.newArrayList();
         for (TemplateSettingDto templateSettingDto : list) {
             result.add(templateSettingDto.getName());
@@ -40,12 +43,12 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     public TemplateSettingDto findAnalysisTemplateBackups() {
-        JSONArray json = JsonFileUtil.readJsonFile(parentPath, fileName);
+
+        String json = JsonFileUtil.readJsonFile(parentPath, fileName);
         if (json == null) {
             logger.debug("Don`t find " + fileName);
-            return null;
         }
-        List<TemplateSettingDto> list = (List<TemplateSettingDto>) JSONArray.toCollection(json, TemplateSettingDto.class);
+        List<TemplateSettingDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, TemplateSettingDto.class));
         for (TemplateSettingDto templateSettingDto : list) {
             if (templateSettingDto.getName().equals("default")) {
                 return templateSettingDto;
@@ -56,12 +59,13 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     public TemplateSettingDto findAnalysisTemplate(String name) {
-        JSONArray json = JsonFileUtil.readJsonFile(parentPath, fileName);
+
+        String json = JsonFileUtil.readJsonFile(parentPath, fileName);
         if (json == null) {
             logger.debug("Don`t find " + fileName);
-            return null;
         }
-        List<TemplateSettingDto> list = (List<TemplateSettingDto>) JSONArray.toCollection(json, TemplateSettingDto.class);
+        List<TemplateSettingDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, TemplateSettingDto.class));
+
         for (TemplateSettingDto templateSettingDto : list) {
             if (templateSettingDto.getName().equals(name)) {
                 return templateSettingDto;
@@ -72,14 +76,13 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     public void saveAnalysisTemplate(TemplateSettingDto templateSettingDto) {
-        JSONArray json = JsonFileUtil.readJsonFile(parentPath, fileName);
-        List<TemplateSettingDto> list = null;
+
+        String json = JsonFileUtil.readJsonFile(parentPath, fileName);
         if (json == null) {
             logger.debug("Don`t find " + fileName);
-            list = Lists.newArrayList();
-        } else {
-            list = (List<TemplateSettingDto>) JSONArray.toCollection(json, TemplateSettingDto.class);
         }
+        List<TemplateSettingDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, TemplateSettingDto.class));
+
         Boolean isExst = Boolean.FALSE;
         for (TemplateSettingDto dto : list) {
             if (dto.getName().equals(templateSettingDto.getName())) {
@@ -91,18 +94,18 @@ public class TemplateServiceImpl implements TemplateService {
         if (!isExst) {
             list.add(templateSettingDto);
         }
-        JsonFileUtil.writeJsonFile(JSONArray.fromObject(list), parentPath, fileName);
+        JsonFileUtil.writeJsonFile(list, parentPath, fileName);
     }
 
     @Override
     public int renameTemplate(String oldName, String newName) {
-        JSONArray json = JsonFileUtil.readJsonFile(parentPath, fileName);
+
+        String json = JsonFileUtil.readJsonFile(parentPath, fileName);
         if (json == null) {
             logger.debug("Don`t find " + fileName);
             return 1;
         }
-
-        List<TemplateSettingDto> list = (List<TemplateSettingDto>) JSONArray.toCollection(json, TemplateSettingDto.class);
+        List<TemplateSettingDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, TemplateSettingDto.class));
 
         for (TemplateSettingDto dto : list) {
             if (dto.getName().equals(newName)) {
@@ -119,7 +122,7 @@ public class TemplateServiceImpl implements TemplateService {
             }
         }
         if (isExist) {
-            JsonFileUtil.writeJsonFile(JSONArray.fromObject(list), parentPath, fileName);
+            JsonFileUtil.writeJsonFile(list, parentPath, fileName);
             return 0;
         } else {
             return 1;
@@ -129,12 +132,11 @@ public class TemplateServiceImpl implements TemplateService {
     @Override
     public void deleteTemplate(String templateName) {
 
-        JSONArray json = JsonFileUtil.readJsonFile(parentPath, fileName);
+        String json = JsonFileUtil.readJsonFile(parentPath, fileName);
         if (json == null) {
             logger.debug("Don`t find " + fileName);
-            return;
         }
-        List<TemplateSettingDto> list = (List<TemplateSettingDto>) JSONArray.toCollection(json, TemplateSettingDto.class);
+        List<TemplateSettingDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, TemplateSettingDto.class));
 
         Boolean isExst = Boolean.FALSE;
         for (TemplateSettingDto dto : list) {
@@ -145,7 +147,7 @@ public class TemplateServiceImpl implements TemplateService {
             }
         }
         if (isExst) {
-            JsonFileUtil.writeJsonFile(JSONArray.fromObject(list), parentPath, fileName);
+            JsonFileUtil.writeJsonFile(list, parentPath, fileName);
         }
     }
 

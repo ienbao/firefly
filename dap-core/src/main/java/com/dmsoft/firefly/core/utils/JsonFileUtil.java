@@ -1,9 +1,8 @@
 package com.dmsoft.firefly.core.utils;
 
 
-import net.sf.json.JSON;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.sdk.dai.dto.UserDto;
 
 import java.io.*;
 
@@ -12,10 +11,18 @@ import java.io.*;
  */
 public class JsonFileUtil {
 
+    private static JsonMapper mapper = JsonMapper.defaultMapper();
+
     /**
-     * 生成.json格式文件
+     * writeJsonFile
+     *
+     * @param object         object
+     * @param fileParentPath fileParentPath
+     * @param fileName       fileName
+     * @param <T>            T
+     * @return boolean
      */
-    public static boolean writeJsonFile(JSONArray jsonArray, String fileParentPath, String fileName) {
+    public static <T> boolean writeJsonFile(T object, String fileParentPath, String fileName) {
         // 标记文件生成是否成功
         boolean flag = true;
 
@@ -36,7 +43,7 @@ public class JsonFileUtil {
 
             // 将格式化后的字符串写入文件
             Writer write = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
-            write.write(jsonArray.toString());
+            write.write(mapper.toJson(object).toString());
             write.flush();
             write.close();
         } catch (IOException e) {
@@ -51,13 +58,19 @@ public class JsonFileUtil {
     /**
      * 读取.json格式文件
      */
-    public static JSONArray readJsonFile(String fileParentPath, String fileName) {
-        JSONArray jsonArray = null;
+    public static String readJsonFile(String fileParentPath, String fileName) {
+        String json = null;
 
         // 拼接文件完整路径
         String fullPath = fileParentPath + File.separator + fileName + ".json";
         try {
             File file = new File(fullPath);
+            if (!file.exists()) {
+                if (!file.getParentFile().exists()) { // 如果父目录不存在，创建父目录
+                    file.getParentFile().mkdirs();
+                }
+                file.createNewFile();
+            }
             InputStream inputStream = new FileInputStream(file);
             ByteArrayOutputStream result = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];
@@ -65,13 +78,19 @@ public class JsonFileUtil {
             while ((length = inputStream.read(buffer)) != -1) {
                 result.write(buffer, 0, length);
             }
-            String json = result.toString("UTF-8");
-            jsonArray = JSONArray.fromObject(json);
+            json = result.toString("UTF-8");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return jsonArray;
+        return json;
+    }
+
+    public static void main(String[] args) {
+        UserDto userDto = new UserDto();
+        userDto.setName("xxx");
+        userDto.setPassword("2344");
+        writeJsonFile(userDto, JsonFileUtil.class.getResource("/").getPath() + "config", "user");
     }
 
 }

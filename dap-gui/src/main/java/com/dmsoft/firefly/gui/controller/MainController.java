@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.gui.controller;
 
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.gui.component.ContentStackPane;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -7,6 +8,9 @@ import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
 import com.dmsoft.firefly.gui.utils.ResourceBundleUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,8 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.io.Resources.getResource;
 
@@ -61,7 +64,9 @@ public class MainController {
 
     private ContentStackPane contentStackPane;
     private TabPane tabPane;
-
+    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
+    private JsonMapper mapper = JsonMapper.defaultMapper();
 
     @FXML
     private void initialize() {
@@ -268,8 +273,14 @@ public class MainController {
     }
 
     public void initDataSource(){
-        dataSourceList = FXCollections.observableArrayList (
-                "Single", "fdsfsf");
+
+        List<String> projectName = mapper.fromJson(envService.findPreference("selectProject"), mapper.buildCollectionType(List.class, String.class));
+
+        Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
+        envService.setTestItems(new ArrayList(testItemDtoMap.values()));
+        envService.setActivatedProjectName(projectName);
+
+        dataSourceList = FXCollections.observableArrayList(projectName);
     }
 
     public void initTemplate(){

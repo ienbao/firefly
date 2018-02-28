@@ -1,10 +1,11 @@
 package com.dmsoft.firefly.core.sdkimpl.dai;
 
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.core.utils.JsonFileUtil;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
-import net.sf.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,39 +17,39 @@ import java.util.List;
 public class UserPreferenceServiceImpl implements UserPreferenceService {
 
     private Logger logger = LoggerFactory.getLogger(UserPreferenceServiceImpl.class);
+    private JsonMapper mapper = JsonMapper.defaultMapper();
 
-    private static final String parentPath = "../config";
-    private static final String fileName = "userPreference";
+    private final String parentPath = this.getClass().getResource("/").getPath() + "config";
+    private final String fileName = "userPreference";
 
     @Override
     public void addValueItem(UserPreferenceDto userPreferenceDto) {
 
-
-        JSONArray json = JsonFileUtil.readJsonFile(parentPath, fileName);
+        String json = JsonFileUtil.readJsonFile(parentPath, fileName);
         List<UserPreferenceDto> list = null;
-        if (json == null) {
+        if (DAPStringUtils.isEmpty(json)) {
             logger.debug("Don`t find " + fileName);
             list = Lists.newArrayList();
         } else {
-            list = (List<UserPreferenceDto>) JSONArray.toCollection(json, UserPreferenceDto.class);
+            list = mapper.fromJson(json, mapper.buildCollectionType(List.class, UserPreferenceDto.class));
         }
         list.add(userPreferenceDto);
-        JsonFileUtil.writeJsonFile(JSONArray.fromObject(list), parentPath, fileName);
+        JsonFileUtil.writeJsonFile(list, parentPath, fileName);
 
     }
 
     @Override
     public String findPreferenceByUserId(String code, String userName) {
-        JSONArray json = JsonFileUtil.readJsonFile(parentPath, fileName);
-        if (json == null) {
+        String json = JsonFileUtil.readJsonFile(parentPath, fileName);
+        if (DAPStringUtils.isEmpty(json)) {
             logger.debug("Don`t find " + fileName);
             return null;
         }
-        List<UserPreferenceDto> list = (List<UserPreferenceDto>) JSONArray.toCollection(json, UserPreferenceDto.class);
+        List<UserPreferenceDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, UserPreferenceDto.class));
         String result = null;
         for (UserPreferenceDto userPreferenceDto : list) {
             if (userPreferenceDto.getCode().equals(code) && userPreferenceDto.getUserName().equals(userName)) {
-                result = userPreferenceDto.getValue().toString();
+                result = mapper.toJson(userPreferenceDto.getValue());
                 break;
             }
         }
@@ -57,13 +58,13 @@ public class UserPreferenceServiceImpl implements UserPreferenceService {
 
     @Override
     public void updatePreference(UserPreferenceDto userPreferenceDto) {
-        JSONArray json = JsonFileUtil.readJsonFile(parentPath, fileName);
+        String json = JsonFileUtil.readJsonFile(parentPath, fileName);
         List<UserPreferenceDto> list = null;
-        if (json == null) {
+        if (DAPStringUtils.isEmpty(json)) {
             logger.debug("Don`t find " + fileName);
             list = Lists.newArrayList();
         } else {
-            list = (List<UserPreferenceDto>) JSONArray.toCollection(json, UserPreferenceDto.class);
+            list = mapper.fromJson(json, mapper.buildCollectionType(List.class, UserPreferenceDto.class));
         }
         Boolean isExist = Boolean.FALSE;
         for (UserPreferenceDto dto : list) {
@@ -76,18 +77,18 @@ public class UserPreferenceServiceImpl implements UserPreferenceService {
         if (!isExist) {
             list.add(userPreferenceDto);
         }
-        JsonFileUtil.writeJsonFile(JSONArray.fromObject(list), parentPath, fileName);
+        JsonFileUtil.writeJsonFile(list, parentPath, fileName);
 
     }
 
     @Override
     public void deletePreference(String userName, String code) {
-        JSONArray json = JsonFileUtil.readJsonFile(parentPath, fileName);
-        if (json == null) {
+        String json = JsonFileUtil.readJsonFile(parentPath, fileName);
+        if (DAPStringUtils.isEmpty(json)) {
             logger.debug("Don`t find " + fileName);
             return;
         }
-        List<UserPreferenceDto> list = (List<UserPreferenceDto>) JSONArray.toCollection(json, UserPreferenceDto.class);
+        List<UserPreferenceDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, UserPreferenceDto.class));
         Boolean isExist = Boolean.FALSE;
         for (UserPreferenceDto dto : list) {
             if (dto.getCode().equals(code) && dto.getUserName().equals(userName)) {
@@ -97,7 +98,7 @@ public class UserPreferenceServiceImpl implements UserPreferenceService {
             }
         }
         if (isExist) {
-            JsonFileUtil.writeJsonFile(JSONArray.fromObject(list), parentPath, fileName);
+            JsonFileUtil.writeJsonFile(list, parentPath, fileName);
         }
 
     }

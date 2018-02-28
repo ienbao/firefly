@@ -4,10 +4,12 @@
 
 package com.dmsoft.firefly.sdk.dai.dto;
 
+import com.dmsoft.bamboo.common.dto.AbstractValueObject;
+
 /**
  * Created by GuangLi on 2016/7/25.
  */
-public class UserDto {
+public class UserDto extends AbstractValueObject {
 
     private String name;
     private String loginName;
