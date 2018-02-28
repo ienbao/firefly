@@ -43,6 +43,7 @@ public class BasicSearchPane extends VBox {
         VBox.setVgrow(addSearch, Priority.ALWAYS);
         VBox.setMargin(addSearch, new Insets(10, 10, 10, 8));
         addSearch.setPrefSize(160, 22);
+        addSearch.setMaxWidth(Double.MAX_VALUE);
 
         addSearch.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
         addSearch.setOnAction(event -> {
