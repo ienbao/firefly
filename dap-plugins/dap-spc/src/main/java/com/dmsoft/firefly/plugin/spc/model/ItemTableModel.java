@@ -1,19 +1,19 @@
 package com.dmsoft.firefly.plugin.spc.model;
 
 import com.dmsoft.firefly.plugin.spc.utils.TableCheckBox;
-import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
  * Created by GuangLi on 2018/2/8.
  */
-public class ItemTableModel implements Comparable<TestItemDto> {
+public class ItemTableModel implements Comparable<TestItemWithTypeDto> {
     private TableCheckBox selector = new TableCheckBox();
-    private TestItemDto itemDto;
+    private TestItemWithTypeDto itemDto;
     private StringProperty item;
 
-    public ItemTableModel(TestItemDto itemDto) {
+    public ItemTableModel(TestItemWithTypeDto itemDto) {
         this.itemDto = itemDto;
         this.item = new SimpleStringProperty(itemDto.getTestItemName());
     }
@@ -38,16 +38,16 @@ public class ItemTableModel implements Comparable<TestItemDto> {
         return item;
     }
 
-    public TestItemDto getItemDto() {
+    public TestItemWithTypeDto getItemDto() {
         return itemDto;
     }
 
-    public void setItemDto(TestItemDto itemDto) {
+    public void setItemDto(TestItemWithTypeDto itemDto) {
         this.itemDto = itemDto;
     }
 
     @Override
-    public int compareTo(TestItemDto o) {
+    public int compareTo(TestItemWithTypeDto o) {
         return item.get().compareToIgnoreCase(o.getTestItemName());
     }
 }
