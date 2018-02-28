@@ -38,6 +38,14 @@ public interface DataFrame {
     TestItemWithTypeDto getTestItemWithTypeDto(String testItemName);
 
     /**
+     * method to get test item dto
+     *
+     * @param testItemNameList test item name
+     * @return test item with type dto list
+     */
+    List<TestItemWithTypeDto> getTestItemWithTypeDto(List<String> testItemNameList);
+
+    /**
      * method to update test item, e.g. usl or lsl
      *
      * @param testItemWithTypeDto test item dto
@@ -215,4 +223,17 @@ public interface DataFrame {
      * @param testItemName test item name
      */
     Object getCellResult(String rowKey, String testItemName);
+
+    /**
+     * method to get sub data frame by row keys and test item names
+     *
+     * @param rowKeyList       row key list
+     * @param testItemNameList test item name list
+     * @return data frame
+     */
+    DataFrame subDataFrame(List<String> rowKeyList, List<String> testItemNameList);
+
+    int getRowSize();
+
+    int getColumnSize();
 }

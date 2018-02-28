@@ -1,8 +1,8 @@
 package com.dmsoft.firefly.core.sdkimpl.dai;
 
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
@@ -21,18 +21,18 @@ public class EnvServiceImpl implements EnvService {
 
     private String userName;
     private String templateName;
-    private List<TestItemDto> testItemDtos;
+    private List<TestItemWithTypeDto> testItemDtos;
     private List<String> projectNames;
     private List<String> plugNames;
 
     @Override
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public String getUserName() {
+        return this.userName;
     }
 
     @Override
-    public String getUserName() {
-        return this.userName;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     @Override
@@ -79,12 +79,12 @@ public class EnvServiceImpl implements EnvService {
     }
 
     @Override
-    public List<TestItemDto> findTestItems() {
+    public List<TestItemWithTypeDto> findTestItems() {
         return testItemDtos != null ? testItemDtos : Lists.newArrayList();
     }
 
     @Override
-    public void setTestItems(List<TestItemDto> testItems) {
+    public void setTestItems(List<TestItemWithTypeDto> testItems) {
         testItemDtos = testItems;
     }
 

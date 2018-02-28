@@ -21,7 +21,7 @@ public class BasicCellData implements CellData {
      * @param value        value
      * @param inUsed       in used status
      */
-    public BasicCellData(String rowKey, String testItemName, String value, Boolean inUsed) {
+    BasicCellData(String rowKey, String testItemName, String value, Boolean inUsed) {
         this.rowKey = rowKey;
         this.testItemName = testItemName;
         this.value = value;

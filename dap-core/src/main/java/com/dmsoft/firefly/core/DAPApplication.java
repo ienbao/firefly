@@ -69,7 +69,9 @@ public class DAPApplication {
         BasicDataFrameFactoryImpl dataFrameFactory = new BasicDataFrameFactoryImpl();
         MongoClient mongoClient = new MongoClient("localhost");
         MongoTemplate mongoTemplate = new MongoTemplate(mongoClient, "test");
-        SourceDataService sourceDataService = new SourceDataServiceImpl();
+        SourceDataServiceImpl sourceDataService = new SourceDataServiceImpl();
+        TestDataCacheFactory factory = new TestDataCacheFactory();
+
 
         RuntimeContext.registerBean(PluginContext.class, pluginInfoContextImpl);
         RuntimeContext.registerBean(PluginImageContext.class, pluginImageContext);
@@ -84,6 +86,8 @@ public class DAPApplication {
         RuntimeContext.registerBean(MongoTemplate.class, mongoTemplate);
         RuntimeContext.registerBean(DataFrameFactory.class, dataFrameFactory);
         RuntimeContext.registerBean(SourceDataService.class, sourceDataService);
+        RuntimeContext.registerBean(TestDataCacheFactory.class, factory);
+
 
         // prepare env done
         String propertiesURL = ApplicationPathUtil.getPath("resources", "application.properties");

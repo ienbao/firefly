@@ -10,16 +10,25 @@ import java.util.List;
 /**
  * Created by Ethan.Yang on 2018/2/8.
  */
-public class SpcDetailResultDto extends AbstractValueObject {
+public class SpcAnalysisDto extends AbstractValueObject {
 
-    private List<SpcChartResultDto> chartResultDtoList;
+    private List<SpcStatsDto> spcStatsDtoList;
+    private List<SpcChartDto> chartResultDtoList;
     private List<SpcViewDataDto> spcViewDataDtoList;
 
-    public List<SpcChartResultDto> getChartResultDtoList() {
+    public List<SpcStatsDto> getSpcStatsDtoList() {
+        return spcStatsDtoList;
+    }
+
+    public void setSpcStatsDtoList(List<SpcStatsDto> spcStatsDtoList) {
+        this.spcStatsDtoList = spcStatsDtoList;
+    }
+
+    public List<SpcChartDto> getChartResultDtoList() {
         return chartResultDtoList;
     }
 
-    public void setChartResultDtoList(List<SpcChartResultDto> chartResultDtoList) {
+    public void setChartResultDtoList(List<SpcChartDto> chartResultDtoList) {
         this.chartResultDtoList = chartResultDtoList;
     }
 

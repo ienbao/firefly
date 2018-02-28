@@ -8,7 +8,6 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import java.util.List;
@@ -26,7 +25,6 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
     //Additional
     private Set<String> searchConditions;
     private FilterUtils filterUtils;
-    private Map<String, Map<String, TestItemWithTypeDto>> additionalTesTtems;
 
     /**
      * constructor
@@ -34,59 +32,23 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
      * @param testItemDtoList test item dto list
      * @param rowDataDtoList  row data dto list
      */
-    public BasicSearchDataFrame(List<TestItemWithTypeDto> testItemDtoList, List<RowDataDto> rowDataDtoList) {
+    BasicSearchDataFrame(List<TestItemWithTypeDto> testItemDtoList, List<RowDataDto> rowDataDtoList) {
         super(testItemDtoList, rowDataDtoList);
         this.rowSearchConditionResultList = Lists.newArrayList();
         this.searchConditions = Sets.newLinkedHashSet();
-        this.additionalTesTtems = Maps.newHashMap();
         List<String> timeKeys = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getTimePatternDto().getTimeKeys();
         String timePattern = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getTimePatternDto().getPattern();
         this.filterUtils = new FilterUtils(timeKeys, timePattern);
 
-        for (int i = 0; i < this.rowKeys.size(); i++) {
+        for (int i = 0; i < this.getRowSize(); i++) {
             this.rowSearchConditionResultList.add(Sets.newHashSet());
         }
     }
 
     @Override
-    public List<TestItemWithTypeDto> getAllTestItemWithTypeDto(String searchCondition) {
-        List<TestItemWithTypeDto> result = Lists.newArrayList();
-        for (String testItemName : this.testItemNames) {
-            if (this.additionalTesTtems.containsKey(searchCondition) && this.additionalTesTtems.get(searchCondition) != null
-                    && additionalTesTtems.get(searchCondition).containsKey(testItemName)) {
-                result.add(additionalTesTtems.get(searchCondition).get(testItemName));
-            } else {
-                result.add(this.testItemDtoList.get(this.testItemNames.indexOf(testItemName)));
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public TestItemWithTypeDto getTestItemWithTypeDto(String testItemName, String searchCondition) {
-        if (this.testItemNames.contains(testItemName)) {
-            if (this.additionalTesTtems.containsKey(searchCondition) && this.additionalTesTtems.get(searchCondition) != null
-                    && this.additionalTesTtems.get(searchCondition).get(testItemName) != null) {
-                return this.additionalTesTtems.get(searchCondition).get(testItemName);
-            } else {
-                return this.testItemDtoList.get(this.testItemNames.indexOf(testItemName));
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public void updateTestItem(TestItemWithTypeDto testItemWithTypeDto, String searchCondition) {
-        if (!this.additionalTesTtems.containsKey(searchCondition)) {
-            this.additionalTesTtems.put(searchCondition, Maps.newHashMap());
-        }
-        this.additionalTesTtems.get(searchCondition).put(testItemWithTypeDto.getTestItemName(), testItemWithTypeDto);
-    }
-
-    @Override
     public DataColumn getDataColumn(String testItemName, String searchCondition) {
         if (isTestItemExist(testItemName)) {
-            TestItemWithTypeDto testItemDto = getTestItemWithTypeDto(testItemName, searchCondition);
+            TestItemWithTypeDto testItemDto = getTestItemWithTypeDto(testItemName);
             List<String> rowKeyList = getSearchRowKey(searchCondition);
             List<String> valueList = getDataValue(testItemName, rowKeyList);
             List<Boolean> inUsed = Lists.newArrayList();
@@ -113,9 +75,9 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
             search(searchCondition);
         }
         List<RowDataDto> result = Lists.newArrayList();
-        for (int i = 0; i < this.rowKeys.size(); i++) {
+        for (int i = 0; i < this.getRowSize(); i++) {
             if (this.rowSearchConditionResultList.get(i).contains(searchCondition)) {
-                result.add(getDataRow(this.rowKeys.get(i)));
+                result.add(getDataRow(this.getRowKeys().get(i)));
             }
         }
         return result;
@@ -159,7 +121,7 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
         List<String> result = Lists.newArrayList();
         for (int i = 0; i < this.rowSearchConditionResultList.size(); i++) {
             if (!this.rowSearchConditionResultList.get(i).isEmpty()) {
-                result.add(this.rowKeys.get(i));
+                result.add(this.getRowKeys().get(i));
             }
         }
         return result;
@@ -173,7 +135,7 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
         List<String> result = Lists.newArrayList();
         for (int i = 0; i < this.rowSearchConditionResultList.size(); i++) {
             if (this.rowSearchConditionResultList.get(i).contains(searchCondition)) {
-                result.add(this.rowKeys.get(i));
+                result.add(this.getRowKeys().get(i));
             }
         }
         return result;
@@ -183,7 +145,7 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
     public void replaceRow(String targetRowKey, RowDataDto rowDataDto) {
         super.replaceRow(targetRowKey, rowDataDto);
         if (rowDataDto != null && rowDataDto.getData() != null && rowDataDto.getRowKey() != null && isRowKeyExist(targetRowKey)) {
-            int targetRowIndex = this.rowKeys.indexOf(targetRowKey);
+            int targetRowIndex = this.getRowKeys().indexOf(targetRowKey);
             this.rowSearchConditionResultList.remove(targetRowIndex);
             this.rowSearchConditionResultList.add(targetRowIndex, getSearchConditions(rowDataDto.getData()));
         }
@@ -194,7 +156,7 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
         List<String> rowKeyToBeRemoved = Lists.newArrayList();
         for (int i = 0; i < this.rowSearchConditionResultList.size(); i++) {
             if (this.rowSearchConditionResultList.get(i).isEmpty()) {
-                rowKeyToBeRemoved.add(this.rowKeys.get(i));
+                rowKeyToBeRemoved.add(this.getRowKeys().get(i));
             }
         }
         if (!rowKeyToBeRemoved.isEmpty()) {
@@ -204,8 +166,8 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
 
 
     private void search(String searchCondition) {
-        for (int i = 0; i < this.rowKeys.size(); i++) {
-            if (filterUtils.filterData(searchCondition, getDataMap(this.rowKeys.get(i)))) {
+        for (int i = 0; i < this.getRowSize(); i++) {
+            if (filterUtils.filterData(searchCondition, getDataMap(this.getRowKeys().get(i)))) {
                 this.rowSearchConditionResultList.get(i).add(searchCondition);
             }
         }

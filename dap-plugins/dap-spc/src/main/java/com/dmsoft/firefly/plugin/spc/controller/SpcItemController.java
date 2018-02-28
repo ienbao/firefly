@@ -3,13 +3,16 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.gui.components.searchcombobox.ISearchComboBoxController;
 import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.plugin.spc.dto.SpcServiceStatsResultDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.utils.*;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,24 +21,20 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import static com.google.common.io.Resources.getResource;
 
@@ -78,14 +77,19 @@ public class SpcItemController implements Initializable {
     private TextArea advanceText;
     @FXML
     private Button help;
-
+    @FXML
+    private ComboBox group1;
+    @FXML
+    private ComboBox group2;
     private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
 
-
     private SpcMainController spcMainController;
     private ContextMenu pop;
+
+    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
 
     /**
      * init main controller
@@ -174,16 +178,15 @@ public class SpcItemController implements Initializable {
     }
 
     private void initItemData() {
-//        EnvService envService = RuntimeContext.getBean(EnvService.class);
-//        List<TestItemDto> itemDtos = envService.findTestItem();
-        List<TestItemDto> itemDtos = Lists.newArrayList();
-        for (int i = 0; i < 40; i++) {
-            TestItemDto dto = new TestItemDto();
-            dto.setTestItemName("item" + i);
-            itemDtos.add(dto);
-        }
+//        List<TestItemDto> itemDtos = Lists.newArrayList();
+//        for (int i = 0; i < 40; i++) {
+//            TestItemDto dto = new TestItemDto();
+//            dto.setTestItemName("item" + i);
+//            itemDtos.add(dto);
+//        }
+        List<TestItemWithTypeDto> itemDtos = envService.findTestItems();
         if (itemDtos != null) {
-            for (TestItemDto dto : itemDtos) {
+            for (TestItemWithTypeDto dto : itemDtos) {
                 ItemTableModel tableModel = new ItemTableModel(dto);
                 items.add(tableModel);
             }
@@ -196,49 +199,49 @@ public class SpcItemController implements Initializable {
         //todo find spc statistical Result from service
 //        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
 //        SpcSearchConfigDto spcSearchConfigDto = new SpcSearchConfigDto();
-//        List<SpcServiceStatsResultDto> spcServiceStatsResultDtoList = spcService.findStatisticalResult(searchConditionDtoList,spcSearchConfigDto);
-        List<SpcServiceStatsResultDto> spcServiceStatsResultDtoList = initData();
-        if (spcServiceStatsResultDtoList == null) {
+//        List<SpcStatsDto> spcStatsDtoList = spcService.findStatisticalResult(searchConditionDtoList,spcSearchConfigDto);
+        List<SpcStatsDto> spcStatsDtoList = initData();
+        if (spcStatsDtoList == null) {
             return;
         }
-        spcMainController.setStatisticalResultData(spcServiceStatsResultDtoList);
+        spcMainController.setStatisticalResultData(spcStatsDtoList);
     }
 
 
     @Deprecated
-    private List<SpcServiceStatsResultDto> initData() {
-        List<SpcServiceStatsResultDto> spcServiceStatsResultDtoList = Lists.newArrayList();
+    private List<SpcStatsDto> initData() {
+        List<SpcStatsDto> spcStatsDtoList = Lists.newArrayList();
         for (int i = 0; i < 100; i++) {
-            SpcServiceStatsResultDto statisticalResultDto = new SpcServiceStatsResultDto();
+            SpcStatsDto statisticalResultDto = new SpcStatsDto();
             statisticalResultDto.setItemName("itemName" + i);
             statisticalResultDto.setCondition("itemName > 22");
-            statisticalResultDto.setSamples("343.2");
-            statisticalResultDto.setAvg("32.2");
-            statisticalResultDto.setMax("312");
-            statisticalResultDto.setMin("34");
-            statisticalResultDto.setStDev("124");
-            statisticalResultDto.setLsl("35");
-            statisticalResultDto.setUsl("21");
-            statisticalResultDto.setCenter("53");
-            statisticalResultDto.setRange("13");
-            statisticalResultDto.setLcl("452");
-            statisticalResultDto.setUcl("323");
-            statisticalResultDto.setKurtosis("234");
-            statisticalResultDto.setCpk("234");
-            statisticalResultDto.setSkewness("6");
-            statisticalResultDto.setCa("43.5");
-            statisticalResultDto.setCp("35.76");
-            statisticalResultDto.setCpl("34.7");
-            statisticalResultDto.setCpu("324.67");
-            statisticalResultDto.setWithinPPM("324.6");
-            statisticalResultDto.setOverallPPM("343.65");
-            statisticalResultDto.setPp("342.76");
-            statisticalResultDto.setPpk("34.5");
-            statisticalResultDto.setPpl("343.5");
-            statisticalResultDto.setPpu("324.87");
-            spcServiceStatsResultDtoList.add(statisticalResultDto);
+            statisticalResultDto.getStatsResultDto().setSamples("343.2");
+            statisticalResultDto.getStatsResultDto().setAvg("32.2");
+            statisticalResultDto.getStatsResultDto().setMax("312");
+            statisticalResultDto.getStatsResultDto().setMin("34");
+            statisticalResultDto.getStatsResultDto().setStDev("124");
+            statisticalResultDto.getStatsResultDto().setLsl("35");
+            statisticalResultDto.getStatsResultDto().setUsl("21");
+            statisticalResultDto.getStatsResultDto().setCenter("53");
+            statisticalResultDto.getStatsResultDto().setRange("13");
+            statisticalResultDto.getStatsResultDto().setLcl("452");
+            statisticalResultDto.getStatsResultDto().setUcl("323");
+            statisticalResultDto.getStatsResultDto().setKurtosis("234");
+            statisticalResultDto.getStatsResultDto().setCpk("234");
+            statisticalResultDto.getStatsResultDto().setSkewness("6");
+            statisticalResultDto.getStatsResultDto().setCa("43.5");
+            statisticalResultDto.getStatsResultDto().setCp("35.76");
+            statisticalResultDto.getStatsResultDto().setCpl("34.7");
+            statisticalResultDto.getStatsResultDto().setCpu("324.67");
+            statisticalResultDto.getStatsResultDto().setWithinPPM("324.6");
+            statisticalResultDto.getStatsResultDto().setOverallPPM("343.65");
+            statisticalResultDto.getStatsResultDto().setPp("342.76");
+            statisticalResultDto.getStatsResultDto().setPpk("34.5");
+            statisticalResultDto.getStatsResultDto().setPpl("343.5");
+            statisticalResultDto.getStatsResultDto().setPpu("324.87");
+            spcStatsDtoList.add(statisticalResultDto);
         }
-        return spcServiceStatsResultDtoList;
+        return spcStatsDtoList;
     }
 
     private void buildAdvanceHelpDia() {
@@ -267,15 +270,67 @@ public class SpcItemController implements Initializable {
 
     public List<String> getSearch() {
         List<String> search = Lists.newArrayList();
-        if (basicSearch.getChildren().size() > 0) {
-            for (Node node : basicSearch.getChildren()) {
-                if (node instanceof SearchComboBox) {
-                    search.add(((SearchComboBox) node).getCondition());
+        if (basicTab.isSelected()) {
+            if (basicSearch.getChildren().size() > 0) {
+                for (Node node : basicSearch.getChildren()) {
+                    if (node instanceof BasicSearchPane) {
+                        search.add(((BasicSearchPane) node).getSearch());
+                    }
+                }
+            }
+        } else if (advanceTab.isSelected()) {
+            //todo
+            StringBuilder advancedInput = new StringBuilder();
+            advancedInput.append(advanceText.getText());
+            List<String> autoCondition1 = Lists.newArrayList();
+            List<String> autoCondition2 = Lists.newArrayList();
+            if (!StringUtils.isBlank(group1.getValue().toString())) {
+                Set<String> valueList = dataService.findUniqueTestData(envService.findActivatedProjectName(), group1.getValue().toString());
+                if (valueList != null && !valueList.isEmpty()) {
+                    for (String value : valueList) {
+                        String condition1 = "\"" + group1.getValue().toString() + "\"" + " = " + "\"" + value + "\"";
+                        if (StringUtils.isBlank(advancedInput.toString())) {
+                            autoCondition1.add(condition1);
+                        } else {
+                            autoCondition1.add(advancedInput.toString() + " & " + condition1);
+                        }
+                    }
+                }
+            }
+            if (!StringUtils.isBlank(group2.getValue().toString())) {
+                Set<String> valueList = dataService.findUniqueTestData(envService.findActivatedProjectName(), group2.getValue().toString());
+                if (valueList != null && !valueList.isEmpty()) {
+                    if (autoCondition1.isEmpty()) {
+                        for (String value : valueList) {
+                            String condition1 = "\"" + group2.getValue().toString() + "\"" + " = " + "\"" + value + "\"";
+                            if (StringUtils.isBlank(advancedInput.toString())) {
+                                autoCondition2.add(condition1);
+                            } else {
+                                autoCondition2.add(advancedInput.toString() + " & " + condition1);
+                            }
+                        }
+                    } else {
+                        for (String condition : autoCondition1) {
+                            for (String value : valueList) {
+                                String condition1 = "\"" + group2.getValue().toString() + "\"" + " = " + "\"" + value + "\"";
+                                autoCondition2.add(condition + " & " + condition1);
+                            }
+                        }
+                    }
+                }
+            }
+            if (autoCondition1.isEmpty() && autoCondition2.isEmpty()) {
+                search.add(advancedInput.toString());
+            } else {
+                if (autoCondition1.size() > autoCondition2.size() && !autoCondition1.isEmpty()) {
+                    search.addAll(autoCondition1);
+                } else {
+                    if (!autoCondition2.isEmpty()) {
+                        search.addAll(autoCondition2);
+                    }
                 }
             }
         }
-        //todo
-        String advance = advanceText.getText();
         return search;
     }
 }

@@ -3,6 +3,7 @@ package com.dmsoft.firefly.core.sdkimpl.dataframe;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
+import com.dmsoft.firefly.sdk.dataframe.DataFrame;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -17,14 +18,14 @@ import java.util.function.Function;
  */
 public class BasicDataFrame extends AbstractBasicDataFrame {
     //Column
-    protected List<String> testItemNames;
-    protected List<TestItemWithTypeDto> testItemDtoList;
+    private List<String> testItemNames;
+    private List<TestItemWithTypeDto> testItemDtoList;
     //Row
-    protected List<String> rowKeys;
-    protected List<Boolean> inUsedList;
+    private List<String> rowKeys;
+    private List<Boolean> inUsedList;
     //Column & Row
     //outside list index is same with the rowKeys index, inside list index is same with the testItemNames index
-    protected List<List<String>> cellValues;
+    private List<List<String>> cellValues;
 
     /**
      * constructor
@@ -32,7 +33,7 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
      * @param testItemDtoList test item dto list
      * @param rowDataDtoList  row data dto list
      */
-    public BasicDataFrame(List<TestItemWithTypeDto> testItemDtoList, List<RowDataDto> rowDataDtoList) {
+    BasicDataFrame(List<TestItemWithTypeDto> testItemDtoList, List<RowDataDto> rowDataDtoList) {
         this.testItemNames = Lists.newArrayList();
         this.rowKeys = Lists.newArrayList();
         this.testItemDtoList = Lists.newArrayList(testItemDtoList);
@@ -71,6 +72,21 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
         int targetIndex = this.testItemNames.indexOf(testItemName);
         if (targetIndex > 0) {
             return this.testItemDtoList.get(targetIndex);
+        }
+        return null;
+    }
+
+    @Override
+    public List<TestItemWithTypeDto> getTestItemWithTypeDto(List<String> testItemNameList) {
+        if (testItemNameList != null) {
+            List<TestItemWithTypeDto> result = Lists.newArrayList();
+            for (String testItemName : testItemNameList) {
+                TestItemWithTypeDto testItemWithTypeDto = getTestItemWithTypeDto(testItemName);
+                if (testItemWithTypeDto != null) {
+                    result.add(testItemWithTypeDto);
+                }
+            }
+            return result;
         }
         return null;
     }
@@ -286,5 +302,42 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
             return this.cellValues.get(targetRowIndex).get(targetColumnIndex);
         }
         return null;
+    }
+
+    @Override
+    public DataFrame subDataFrame(List<String> rowKeyList, List<String> testItemNameList) {
+        List<RowDataDto> rowDataDtoList = getDataRowArray(rowKeyList);
+        List<TestItemWithTypeDto> typeDtoList = getTestItemWithTypeDto(testItemNameList);
+        return new BasicDataFrame(typeDtoList, rowDataDtoList);
+    }
+
+    @Override
+    public int getRowSize() {
+        return this.rowKeys == null ? 0 : this.rowKeys.size();
+    }
+
+    @Override
+    public int getColumnSize() {
+        return this.testItemNames == null ? 0 : this.testItemNames.size();
+    }
+
+    protected List<String> getTestItemNames() {
+        return testItemNames;
+    }
+
+    protected List<TestItemWithTypeDto> getTestItemDtoList() {
+        return testItemDtoList;
+    }
+
+    protected List<String> getRowKeys() {
+        return rowKeys;
+    }
+
+    protected List<Boolean> getInUsedList() {
+        return inUsedList;
+    }
+
+    protected List<List<String>> getCellValues() {
+        return cellValues;
     }
 }

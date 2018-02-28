@@ -3,13 +3,17 @@
  */
 package com.dmsoft.firefly.plugin.spc.dto;
 
+import com.dmsoft.bamboo.common.dto.AbstractValueObject;
+import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
+
 /**
  * Created by Ethan.Yang on 2018/2/6.
  */
-public class SpcServiceStatsResultDto extends SpcAnalysisStatsResultDto {
+public class SpcStatsDto extends AbstractValueObject {
     private String key;
     private String itemName;
     private String condition;
+    private SpcStatsResultDto statsResultDto;
 
 
     public String getKey() {
@@ -34,5 +38,13 @@ public class SpcServiceStatsResultDto extends SpcAnalysisStatsResultDto {
 
     public void setCondition(String condition) {
         this.condition = condition;
+    }
+
+    public SpcStatsResultDto getStatsResultDto() {
+        return statsResultDto;
+    }
+
+    public void setStatsResultDto(SpcStatsResultDto statsResultDto) {
+        this.statsResultDto = statsResultDto;
     }
 }

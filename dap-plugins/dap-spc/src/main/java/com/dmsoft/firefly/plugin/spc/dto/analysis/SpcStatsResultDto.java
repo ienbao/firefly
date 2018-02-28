@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.plugin.spc.dto;
+package com.dmsoft.firefly.plugin.spc.dto.analysis;
 
 import com.dmsoft.bamboo.common.dto.AbstractValueObject;
 
@@ -7,7 +7,7 @@ import com.dmsoft.bamboo.common.dto.AbstractValueObject;
  *
  * @author Can Guan
  */
-public class SpcAnalysisStatsResultDto extends AbstractValueObject {
+public class SpcStatsResultDto extends AbstractValueObject {
     private String samples;
     private String avg;
     private String max;

@@ -24,7 +24,7 @@ public class BasicDataColumn implements DataColumn {
      * @param valueList   value list
      * @param inUsed      in used status
      */
-    public BasicDataColumn(TestItemWithTypeDto testItemDto, List<String> rowKeyList, List<String> valueList, List<Boolean> inUsed) {
+    BasicDataColumn(TestItemWithTypeDto testItemDto, List<String> rowKeyList, List<String> valueList, List<Boolean> inUsed) {
         this.testItemDto = testItemDto;
         this.cellDataList = Lists.newArrayList();
         for (int i = 0; i < rowKeyList.size(); i++) {

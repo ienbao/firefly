@@ -5,7 +5,7 @@ package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.plugin.spc.dto.SpcServiceStatsResultDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
 import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
 import com.dmsoft.firefly.plugin.spc.model.StatisticalTableRowData;
 import com.dmsoft.firefly.plugin.spc.utils.FXMLLoaderUtils;
@@ -73,7 +73,7 @@ public class StatisticalResultController implements Initializable {
      * set statistical result table data
      * @param list the data list
      */
-    public void setStatisticalResultTableData(List<SpcServiceStatsResultDto> list) {
+    public void setStatisticalResultTableData(List<SpcStatsDto> list) {
         statisticalTableRowDataObservableList.clear();
         allCheckBox.setSelected(false);
         list.forEach(dto -> {
