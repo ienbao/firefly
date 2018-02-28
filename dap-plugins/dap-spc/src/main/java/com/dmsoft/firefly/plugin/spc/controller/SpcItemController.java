@@ -178,13 +178,13 @@ public class SpcItemController implements Initializable {
     }
 
     private void initItemData() {
-        List<TestItemWithTypeDto> itemDtos = envService.findTestItems();
 //        List<TestItemDto> itemDtos = Lists.newArrayList();
 //        for (int i = 0; i < 40; i++) {
 //            TestItemDto dto = new TestItemDto();
 //            dto.setTestItemName("item" + i);
 //            itemDtos.add(dto);
 //        }
+        List<TestItemWithTypeDto> itemDtos = envService.findTestItems();
         if (itemDtos != null) {
             for (TestItemWithTypeDto dto : itemDtos) {
                 ItemTableModel tableModel = new ItemTableModel(dto);
