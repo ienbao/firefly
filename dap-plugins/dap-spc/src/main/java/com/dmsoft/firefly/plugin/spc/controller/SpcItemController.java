@@ -9,6 +9,10 @@ import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,10 +29,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import static com.google.common.io.Resources.getResource;
 
@@ -71,14 +77,19 @@ public class SpcItemController implements Initializable {
     private TextArea advanceText;
     @FXML
     private Button help;
-
+    @FXML
+    private ComboBox group1;
+    @FXML
+    private ComboBox group2;
     private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
 
-
     private SpcMainController spcMainController;
     private ContextMenu pop;
+
+    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
 
     /**
      * init main controller
@@ -167,14 +178,13 @@ public class SpcItemController implements Initializable {
     }
 
     private void initItemData() {
-//        EnvService envService = RuntimeContext.getBean(EnvService.class);
-//        List<TestItemDto> itemDtos = envService.findTestItem();
-        List<TestItemWithTypeDto> itemDtos = Lists.newArrayList();
-        for (int i = 0; i < 40; i++) {
-            TestItemWithTypeDto dto = new TestItemWithTypeDto();
-            dto.setTestItemName("item" + i);
-            itemDtos.add(dto);
-        }
+//        List<TestItemDto> itemDtos = Lists.newArrayList();
+//        for (int i = 0; i < 40; i++) {
+//            TestItemDto dto = new TestItemDto();
+//            dto.setTestItemName("item" + i);
+//            itemDtos.add(dto);
+//        }
+        List<TestItemWithTypeDto> itemDtos = envService.findTestItems();
         if (itemDtos != null) {
             for (TestItemWithTypeDto dto : itemDtos) {
                 ItemTableModel tableModel = new ItemTableModel(dto);
@@ -260,15 +270,67 @@ public class SpcItemController implements Initializable {
 
     public List<String> getSearch() {
         List<String> search = Lists.newArrayList();
-        if (basicSearch.getChildren().size() > 0) {
-            for (Node node : basicSearch.getChildren()) {
-                if (node instanceof SearchComboBox) {
-                    search.add(((SearchComboBox) node).getCondition());
+        if (basicTab.isSelected()) {
+            if (basicSearch.getChildren().size() > 0) {
+                for (Node node : basicSearch.getChildren()) {
+                    if (node instanceof BasicSearchPane) {
+                        search.add(((BasicSearchPane) node).getSearch());
+                    }
+                }
+            }
+        } else if (advanceTab.isSelected()) {
+            //todo
+            StringBuilder advancedInput = new StringBuilder();
+            advancedInput.append(advanceText.getText());
+            List<String> autoCondition1 = Lists.newArrayList();
+            List<String> autoCondition2 = Lists.newArrayList();
+            if (!StringUtils.isBlank(group1.getValue().toString())) {
+                Set<String> valueList = dataService.findUniqueTestData(envService.findActivatedProjectName(), group1.getValue().toString());
+                if (valueList != null && !valueList.isEmpty()) {
+                    for (String value : valueList) {
+                        String condition1 = "\"" + group1.getValue().toString() + "\"" + " = " + "\"" + value + "\"";
+                        if (StringUtils.isBlank(advancedInput.toString())) {
+                            autoCondition1.add(condition1);
+                        } else {
+                            autoCondition1.add(advancedInput.toString() + " & " + condition1);
+                        }
+                    }
+                }
+            }
+            if (!StringUtils.isBlank(group2.getValue().toString())) {
+                Set<String> valueList = dataService.findUniqueTestData(envService.findActivatedProjectName(), group2.getValue().toString());
+                if (valueList != null && !valueList.isEmpty()) {
+                    if (autoCondition1.isEmpty()) {
+                        for (String value : valueList) {
+                            String condition1 = "\"" + group2.getValue().toString() + "\"" + " = " + "\"" + value + "\"";
+                            if (StringUtils.isBlank(advancedInput.toString())) {
+                                autoCondition2.add(condition1);
+                            } else {
+                                autoCondition2.add(advancedInput.toString() + " & " + condition1);
+                            }
+                        }
+                    } else {
+                        for (String condition : autoCondition1) {
+                            for (String value : valueList) {
+                                String condition1 = "\"" + group2.getValue().toString() + "\"" + " = " + "\"" + value + "\"";
+                                autoCondition2.add(condition + " & " + condition1);
+                            }
+                        }
+                    }
+                }
+            }
+            if (autoCondition1.isEmpty() && autoCondition2.isEmpty()) {
+                search.add(advancedInput.toString());
+            } else {
+                if (autoCondition1.size() > autoCondition2.size() && !autoCondition1.isEmpty()) {
+                    search.addAll(autoCondition1);
+                } else {
+                    if (!autoCondition2.isEmpty()) {
+                        search.addAll(autoCondition2);
+                    }
                 }
             }
         }
-        //todo
-        String advance = advanceText.getText();
         return search;
     }
 }

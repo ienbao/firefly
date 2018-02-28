@@ -8,6 +8,7 @@ import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.google.common.collect.Lists;
@@ -62,7 +63,7 @@ public class BasicSearchPane extends VBox {
                 @Override
                 public ObservableList<String> getTestItems() {
                     List<String> item = Lists.newArrayList();
-                    List<TestItemDto> itemDto = envService.findTestItems();
+                    List<TestItemWithTypeDto> itemDto = envService.findTestItems();
 
                     if (itemDto != null) {
                         itemDto.forEach(dto -> item.add(dto.getTestItemName()));
@@ -103,12 +104,13 @@ public class BasicSearchPane extends VBox {
             for (Node node : this.getChildren()) {
                 if (node instanceof SearchComboBox) {
                     search.append(((SearchComboBox) node).getCondition());
-                    search.append("&&");
+                    search.append(" & ");
                 }
             }
         }
-        if (search.length() > 2) {
-            return search.substring(0, search.length() - 2);
+        if (search.length() > 3) {
+            search.delete(search.length() - 3, search.length());
+            return search.toString();
         } else {
             return "";
         }
