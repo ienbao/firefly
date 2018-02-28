@@ -18,23 +18,21 @@ public interface SpcService {
      * method to get spc statistical result from data frame
      *
      * @param searchDataFrame  data frame
-     * @param testItemNames    list of test item names
      * @param searchConditions list of search conditions
      * @param configDto        spc analysis config dto
      * @return list of spc statistical result dto
      */
-    List<SpcStatsDto> getStatisticalResult(SearchDataFrame searchDataFrame, List<String> testItemNames,
-                                           List<SearchConditionDto> searchConditions, SpcAnalysisConfigDto configDto);
+    List<SpcStatsDto> getStatisticalResult(SearchDataFrame searchDataFrame, List<SearchConditionDto> searchConditions,
+                                           SpcAnalysisConfigDto configDto);
 
     /**
      * method to get chart result from data frame
      *
      * @param searchDataFrame  data frame
-     * @param testItemNames    list of test item names
      * @param searchConditions list of search conditions
      * @param configDto        spc analysis config dto
      * @return list of spc chart result dto
      */
-    List<SpcChartDto> getChartResult(SearchDataFrame searchDataFrame, List<String> testItemNames, List<SearchConditionDto> searchConditions,
+    List<SpcChartDto> getChartResult(SearchDataFrame searchDataFrame, List<SearchConditionDto> searchConditions,
                                      SpcAnalysisConfigDto configDto);
 }
