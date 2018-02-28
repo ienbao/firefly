@@ -33,6 +33,10 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.Properties;
 
@@ -75,7 +79,7 @@ public class DAPApplication {
         RuntimeContext.registerBean(TemplateService.class, templateService);
         RuntimeContext.registerBean(UserPreferenceService.class, userPreferenceService);
         RuntimeContext.registerBean(UserService.class, userService);
-        RuntimeContext.registerBean(EnvService.class, envService);
+        RuntimeContext.registerBean(EnvService.class, proxyClass(envService));
         RuntimeContext.registerBean(EventContext.class, eventContext);
         RuntimeContext.registerBean(MongoTemplate.class, mongoTemplate);
         RuntimeContext.registerBean(DataFrameFactory.class, dataFrameFactory);
@@ -111,6 +115,35 @@ public class DAPApplication {
         }
         pluginInfoContextImpl.startPlugin(activePlugins);
         return pluginInfoContextImpl;
+    }
+
+    private static EnvService proxyClass(EnvService envService) {
+        EnvService envServiceProxy = (EnvService) Proxy.newProxyInstance(envService.getClass().getClassLoader(), envService.getClass().getInterfaces(), new EnvServiceHandler(envService));
+        return envServiceProxy;
+    }
+
+    static class EnvServiceHandler implements InvocationHandler {
+
+        private EnvService target;
+
+        public EnvServiceHandler(EnvService target) {
+            this.target = target;
+        }
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            Field templateService = target.getClass().getDeclaredField("templateService");
+            Field userPreferenceService = target.getClass().getDeclaredField("userPreferenceService");
+            if (templateService != null) {
+                templateService.setAccessible(true);
+                templateService.set(target, RuntimeContext.getBean(TemplateService.class));
+            }
+            if (userPreferenceService != null) {
+                userPreferenceService.setAccessible(true);
+                userPreferenceService.set(target, RuntimeContext.getBean(UserPreferenceService.class));
+            }
+            return method.invoke(target, args);
+        }
     }
 
     /**

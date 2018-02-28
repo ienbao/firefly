@@ -4,16 +4,21 @@
 
 package com.dmsoft.firefly.gui.controller.template;
 
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
+import com.dmsoft.firefly.gui.model.DataAndProgress;
 import com.dmsoft.firefly.gui.utils.ImageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.plugin.PluginClass;
 import com.dmsoft.firefly.sdk.plugin.PluginClassType;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.plugin.apis.IDataParser;
 import com.google.common.collect.Lists;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -21,15 +26,16 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
+import javax.swing.*;
 import java.io.File;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 /**
@@ -50,7 +56,7 @@ public class DataSourceController implements Initializable {
     private TableColumn<ChooseTableRowData, CheckBox> chooseCheckBoxColumn;
 
     @FXML
-    private TableColumn<ChooseTableRowData, String> chooseValueColumn;
+    private TableColumn<ChooseTableRowData, DataAndProgress> chooseValueColumn;
 
     private CheckBox allCheckBox;
     private ObservableList<ChooseTableRowData> chooseTableRowDataObservableList;
@@ -58,6 +64,8 @@ public class DataSourceController implements Initializable {
     private SortedList<ChooseTableRowData> chooseTableRowDataSortedList;
 
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
+    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    private JsonMapper mapper = JsonMapper.defaultMapper();
 
 
     private void initTable() {
@@ -68,7 +76,65 @@ public class DataSourceController implements Initializable {
         chooseCheckBoxColumn.setGraphic(allCheckBox);
 
         chooseCheckBoxColumn.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
-        chooseValueColumn.setCellValueFactory(cellData -> cellData.getValue().valueProperty());
+        chooseValueColumn.setCellValueFactory(cellData -> {
+            DataAndProgress dataAndProgress = new DataAndProgress(cellData.getValue().valueProperty().getValue(), cellData.getValue().getProgress(), cellData.getValue().isSelect(), cellData.getValue().isOver());
+            return new SimpleObjectProperty<>(dataAndProgress);
+        });
+        chooseValueColumn.setCellFactory(new Callback<TableColumn<ChooseTableRowData, DataAndProgress>, TableCell<ChooseTableRowData, DataAndProgress>>() {
+            @Override
+            public TableCell<ChooseTableRowData, DataAndProgress> call(TableColumn<ChooseTableRowData, DataAndProgress> param) {
+                TableCell tableCell =  new TableCell<ChooseTableRowData, DataAndProgress>() {
+
+                    @Override
+                    protected void updateItem(DataAndProgress item, boolean empty) {
+                        if (item != null && item.equals(getItem())) {
+                            return;
+                        }
+                        super.updateItem(item, empty);
+                        if (item == null) {
+                            super.setText(null);
+                            super.setGraphic(null);
+                        } else {
+                            HBox hBox = new HBox();
+                            hBox.setSpacing(5);
+                            Label textField = new Label(item.getValue());
+                            textField.setStyle("-fx-border-width: 0 0 0 0");
+                            textField.setPrefWidth(400);
+                            ProgressBar progressBar = new ProgressBar();
+                            progressBar.setProgress(item.getProgress());
+                            progressBar.setPrefWidth(70);
+                            progressBar.setMinWidth(70);
+                            Button rename = new Button();
+                            rename.getStyleClass().add("btn-icon");
+                            rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rename_normal.png")));
+                            Button deleteOne = new Button();
+                            deleteOne.getStyleClass().add("btn-icon");
+                            deleteOne.getStyleClass().add("delete-icon");
+
+                            deleteOne.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
+                            hBox.getChildren().add(textField);
+                            hBox.getChildren().add(progressBar);
+                            hBox.getChildren().add(rename);
+                            hBox.getChildren().add(deleteOne);
+                            HBox.setHgrow(textField, Priority.ALWAYS);
+                            HBox.setHgrow(progressBar, Priority.NEVER);
+                            HBox.setHgrow(rename, Priority.NEVER);
+                            HBox.setHgrow(deleteOne, Priority.NEVER);
+
+                            this.setOnMouseMoved(event -> {
+                                rename.setVisible(true);
+                                deleteOne.setVisible(true);
+                            });
+
+                            this.setGraphic(hBox);
+
+                        }
+                    }
+
+                };
+                return tableCell;
+            }
+        });
         chooseTableRowDataObservableList = FXCollections.observableArrayList();
         chooseTableRowDataFilteredList = chooseTableRowDataObservableList.filtered(p -> true);
         chooseTableRowDataSortedList = new SortedList<>(chooseTableRowDataFilteredList);
@@ -78,8 +144,21 @@ public class DataSourceController implements Initializable {
 
     private void initEvent() {
         ok.setOnAction(event -> {
-            StageMap.closeStage("dataSource");
+            List<String> selectProject = Lists.newArrayList();
+            chooseTableRowDataObservableList.forEach(v -> {
+                if (v.getSelector().isSelected()) {
+                    selectProject.add(v.getValue());
+                }
+            });
+            Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(selectProject);
 
+            envService.setTestItems(new ArrayList<>(testItemDtoMap.values()));
+            envService.setActivatedProjectName(selectProject);
+            envService.setActivatedTemplate("default");
+
+            //TODO notify refresh event
+
+            StageMap.closeStage("dataSource");
         });
 
         cancel.setOnAction(event -> {
@@ -120,7 +199,6 @@ public class DataSourceController implements Initializable {
             }
         });
         dataSourceTable.setOnMouseMoved(event -> {
-
         });
     }
 
@@ -134,9 +212,14 @@ public class DataSourceController implements Initializable {
     private void importDataSource(String filPath, String fileName) {
         PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
         List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.DATA_PARSER);
-//        List<PluginClass> pluginClasses = pluginImageContext.getPluginInstance("com.dmsoft.dap.CsvResolverPlugin", "CsvResolverService");
         IDataParser service = (IDataParser) pluginClasses.get(0).getInstance();
-        service.importFile(filPath);
+        new SwingWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                service.importFile(filPath);
+                return null;
+            }
+        }.execute();
 
         ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, fileName);
         chooseTableRowDataObservableList.add(chooseTableRowData);
@@ -151,13 +234,17 @@ public class DataSourceController implements Initializable {
     }
 
     private void initDataSourceTableData() {
-        List<String> value = Lists.newArrayList(Arrays.asList(new String[]{
-                "00000000000001.csv", "00000000000002.csv"
-        }));
+        List<String> value = Lists.newArrayList();
         value.addAll(sourceDataService.findAllProjectName());
         List<ChooseTableRowData> chooseTableRowDataList = Lists.newArrayList();
+        List<String> selectProject = mapper.fromJson(envService.findPreference("selectProject"), mapper.buildCollectionType(List.class, String.class));
         value.forEach(v -> {
-            ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, v);
+            ChooseTableRowData chooseTableRowData = null;
+            if (selectProject != null && selectProject.equals(v)) {
+                chooseTableRowData = new ChooseTableRowData(true, v);
+            } else {
+                chooseTableRowData = new ChooseTableRowData(false, v);
+            }
             chooseTableRowDataList.add(chooseTableRowData);
         });
         setTableData(chooseTableRowDataList);

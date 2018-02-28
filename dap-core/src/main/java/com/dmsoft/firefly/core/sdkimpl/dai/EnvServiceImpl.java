@@ -54,6 +54,12 @@ public class EnvServiceImpl implements EnvService {
     @Override
     public void setActivatedProjectName(List<String> activatedProjectName) {
         this.projectNames = activatedProjectName;
+
+        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+        userPreferenceDto.setCode("selectProject");
+        userPreferenceDto.setUserName(userName);
+        userPreferenceDto.setValue(activatedProjectName);
+        userPreferenceService.updatePreference(userPreferenceDto);
     }
 
     @Override

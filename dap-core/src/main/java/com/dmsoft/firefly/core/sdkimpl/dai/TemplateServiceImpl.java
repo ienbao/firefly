@@ -18,7 +18,7 @@ public class TemplateServiceImpl implements TemplateService {
     private Logger logger = LoggerFactory.getLogger(TemplateServiceImpl.class);
 
     private static final String parentPath = "../config";
-    private static final String fileName = "tempalate";
+    private static final String fileName = "template";
 
     @Override
 
@@ -44,7 +44,7 @@ public class TemplateServiceImpl implements TemplateService {
         }
         List<TemplateSettingDto> list = (List<TemplateSettingDto>) JSONArray.toCollection(json, TemplateSettingDto.class);
         for (TemplateSettingDto templateSettingDto : list) {
-            if (templateSettingDto.getName().equals("desult")) {
+            if (templateSettingDto.getName().equals("default")) {
                 return templateSettingDto;
             }
         }

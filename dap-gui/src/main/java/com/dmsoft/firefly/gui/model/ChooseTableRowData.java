@@ -12,6 +12,33 @@ import javafx.beans.property.SimpleStringProperty;
 public class ChooseTableRowData {
     private TableCheckBox selector = new TableCheckBox();
     private SimpleStringProperty value;
+    private double progress;
+    private boolean isSelect = false;
+    private boolean isOver = false;
+
+    public boolean isSelect() {
+        return isSelect;
+    }
+
+    public void setSelect(boolean select) {
+        isSelect = select;
+    }
+
+    public boolean isOver() {
+        return isOver;
+    }
+
+    public void setOver(boolean over) {
+        isOver = over;
+    }
+
+    public double getProgress() {
+        return progress;
+    }
+
+    public void setProgress(double progress) {
+        this.progress = progress;
+    }
 
     public ChooseTableRowData(boolean isSelect, String value) {
         this.value = new SimpleStringProperty(value);

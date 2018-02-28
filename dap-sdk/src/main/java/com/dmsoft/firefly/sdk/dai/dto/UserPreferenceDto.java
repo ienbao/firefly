@@ -3,10 +3,10 @@ package com.dmsoft.firefly.sdk.dai.dto;
 /**
  * Created by GuangLi on 2017/7/25.
  */
-public class UserPreferenceDto {
+public class UserPreferenceDto<T> {
     private String userName;
     private String code;
-    private Object value;
+    private T value;
 
     public String getUserName() {
         return userName;
@@ -24,11 +24,11 @@ public class UserPreferenceDto {
         this.code = code;
     }
 
-    public Object getValue() {
+    public T getValue() {
         return value;
     }
 
-    public void setValue(Object value) {
+    public void setValue(T value) {
         this.value = value;
     }
 }
