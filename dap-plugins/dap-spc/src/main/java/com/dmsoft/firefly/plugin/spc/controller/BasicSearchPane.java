@@ -7,7 +7,6 @@ import com.dmsoft.firefly.gui.components.searchcombobox.ISearchComboBoxControlle
 import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
@@ -17,14 +16,10 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -62,12 +57,7 @@ public class BasicSearchPane extends VBox {
 
                 @Override
                 public ObservableList<String> getTestItems() {
-                    List<String> item = Lists.newArrayList();
-                    List<TestItemWithTypeDto> itemDto = envService.findTestItems();
-
-                    if (itemDto != null) {
-                        itemDto.forEach(dto -> item.add(dto.getTestItemName()));
-                    }
+                    List<String> item = envService.findTestItemNames();
                     return FXCollections.observableArrayList(item);
                 }
 

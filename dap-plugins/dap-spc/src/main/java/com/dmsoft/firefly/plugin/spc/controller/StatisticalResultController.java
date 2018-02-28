@@ -71,6 +71,7 @@ public class StatisticalResultController implements Initializable {
 
     /**
      * set statistical result table data
+     *
      * @param list the data list
      */
     public void setStatisticalResultTableData(List<SpcStatsDto> list) {

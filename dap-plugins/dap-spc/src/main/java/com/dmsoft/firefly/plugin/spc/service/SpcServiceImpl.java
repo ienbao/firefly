@@ -86,7 +86,7 @@ public class SpcServiceImpl implements SpcService {
             chartDto.setAnalyzedRowKeys(analyzedRowKeys);
             result.add(chartDto);
         }
-        return null;
+        return result;
     }
 
     private SpcAnalysisService getAnalysisService() {

@@ -52,7 +52,7 @@ public class QuickSearchController implements Initializable {
         searchBtn.setOnAction(event -> getSearchBtnEvent());
     }
 
-    private void getSearchBtnEvent(){
+    private void getSearchBtnEvent() {
 
     }
 

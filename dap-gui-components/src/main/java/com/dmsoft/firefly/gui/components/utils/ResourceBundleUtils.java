@@ -1,15 +1,14 @@
-package com.dmsoft.firefly.plugin.spc.utils;
+package com.dmsoft.firefly.gui.components.utils;
 
 /**
  * Created by ChenQiang on 2017/12/21.
  */
-
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 public class ResourceBundleUtils {
-    private static final String RES_NAME = "i18n.message_en_US";
-    private static final ResourceBundle RESB = ResourceBundle.getBundle("i18n.message_en_US");
+    private static final String RES_NAME = "i18n.message_en_US_GUI";
+    private static final ResourceBundle RESB = ResourceBundle.getBundle("i18n.message_en_US_GUI");
 
     public ResourceBundleUtils() {
     }

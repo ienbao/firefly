@@ -1805,6 +1805,12 @@
     -fx-border-width: 1
 }
 
+.calendar-chooser {
+    -fx-background-color: white;
+    -fx-border-color: #DCDCDC;
+    -fx-border-width: 1;
+}
+
 .btn-icon.delete-icon {
     -fx-padding: 0 0 0 0 !important;
 }

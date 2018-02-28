@@ -1,5 +1,7 @@
 package com.dmsoft.firefly.gui.components.searchcombobox;
 
+import com.dmsoft.firefly.gui.components.utils.ResourceBundleUtils;
+import com.dmsoft.firefly.gui.components.utils.ResourceMassages;
 import javafx.collections.FXCollections;
 import javafx.event.Event;
 import javafx.geometry.Pos;
@@ -16,6 +18,7 @@ import java.util.Date;
 
 /**
  * calendar chooser pane, refer to CalendarChooser by peter
+ *
  * @author Can Guan, Peter Li
  */
 public class CalendarChooser extends GridPane {
@@ -25,7 +28,6 @@ public class CalendarChooser extends GridPane {
     private String[] months = null;
     private int showYears = 100;
     private Label label = null;
-    private Button okBtn = null;
     private StackPane preBtn = null;
     private StackPane nextBtn = null;
     private ComboBox<String> yearCmb = null;
@@ -35,29 +37,25 @@ public class CalendarChooser extends GridPane {
     private String[] tits = {"Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat"};
     private String redBtnClass = "btn-primary";
     private String normalBtnClass = "btn-txt";
+    private String calendarChooserClass = "calendar-chooser";
 
     /**
      * constructor
      *
-     * @param title     title
-     * @param xOnScreen x on screen to show
-     * @param yOnScreen y on screen to show
-     * @param date      date
+     * @param date date
      */
-    public CalendarChooser(String title, int xOnScreen, int yOnScreen, Date date) {
-        this.calendar.setTime(date);
+    public CalendarChooser(Date date) {
+        if (date != null) {
+            this.calendar.setTime(date);
+        }
         initComponents();
     }
 
 
     /**
      * constructor
-     *
-     * @param title     title
-     * @param xOnScreen x on screen to show
-     * @param yOnScreen y on screen to show
      */
-    public CalendarChooser(String title, int xOnScreen, int yOnScreen) {
+    public CalendarChooser() {
         initComponents();
     }
 
@@ -84,15 +82,17 @@ public class CalendarChooser extends GridPane {
         ColumnConstraints c0 = new ColumnConstraints(10, 10, 10);
         ColumnConstraints c1 = new ColumnConstraints(236, 236, 236);
         ColumnConstraints c2 = new ColumnConstraints(10, 10, 10);
-        RowConstraints r0 = new RowConstraints(22, 22, 22);
-        RowConstraints r1 = new RowConstraints(10, 10, 10);
-        RowConstraints r2 = new RowConstraints(212, 212, 212);
-        RowConstraints r3 = new RowConstraints(54, 54, 54);
+        RowConstraints r0 = new RowConstraints(10, 10, 10);
+        RowConstraints r1 = new RowConstraints(22, 22, 22);
+        RowConstraints r2 = new RowConstraints(10, 10, 10);
+        RowConstraints r3 = new RowConstraints(207, 207, 207);
+        RowConstraints r4 = new RowConstraints(32, 32, 32);
         this.getColumnConstraints().addAll(c0, c1, c2);
-        this.getRowConstraints().addAll(r0, r1, r2, r3);
-        this.add(getNorthPane(), 1, 0);
-        this.add(printCalendar(), 1, 2);
-        this.add(getSouthPane(), 1, 3);
+        this.getRowConstraints().addAll(r0, r1, r2, r3, r4);
+        this.add(getNorthPane(), 1, 1);
+        this.add(printCalendar(), 1, 3);
+        this.add(getSouthPane(), 1, 4);
+        this.getStyleClass().add(calendarChooserClass);
     }
 
     private Pane getNorthPane() {
@@ -106,7 +106,7 @@ public class CalendarChooser extends GridPane {
         ColumnConstraints c6 = new ColumnConstraints(22, 22, 22);
         RowConstraints r0 = new RowConstraints(22, 22, 22);
         this.preBtn = new BasicArrowButton(BasicArrowButton.Direction.LEFT);
-        Tooltip.install(this.preBtn, new Tooltip("Previous Month"));
+        Tooltip.install(this.preBtn, new Tooltip(ResourceBundleUtils.getString(ResourceMassages.PRE_MONTH)));
         this.preBtn.addEventHandler(MouseEvent.MOUSE_RELEASED, this::preBtnHandler);
         this.preBtn.setPrefSize(22, 22);
         this.yearCmb = new ComboBox<>(FXCollections.observableArrayList(this.years));
@@ -127,7 +127,7 @@ public class CalendarChooser extends GridPane {
             this.updatePane();
         });
         this.nextBtn = new BasicArrowButton(BasicArrowButton.Direction.RIGHT);
-        Tooltip.install(this.nextBtn, new Tooltip("Next Month"));
+        Tooltip.install(this.nextBtn, new Tooltip(ResourceBundleUtils.getString(ResourceMassages.NEXT_MONTH)));
         this.nextBtn.addEventHandler(MouseEvent.MOUSE_RELEASED, this::nextBtnHandler);
         this.nextBtn.setPrefSize(22, 22);
         northPane.getColumnConstraints().addAll(c0, c1, c2, c3, c4, c5, c6);
@@ -158,21 +158,16 @@ public class CalendarChooser extends GridPane {
                     .append(formatDay(calendar.get(Calendar.SECOND)));
             setInfo(sb.toString());
         });
-        this.okBtn = new Button("OK");
-        this.okBtn.getStyleClass().add(redBtnClass);
-        this.okBtn.setPrefSize(80, 22);
         GridPane southPane = new GridPane();
         southPane.setVgap(10);
-        ColumnConstraints c0 = new ColumnConstraints(156, 156, 156);
-        ColumnConstraints c1 = new ColumnConstraints(80, 80, 80);
+        ColumnConstraints c0 = new ColumnConstraints(112, 112, 112);
+        ColumnConstraints c1 = new ColumnConstraints(124, 124, 124);
         RowConstraints r0 = new RowConstraints(22, 22, 22);
-        RowConstraints r1 = new RowConstraints(22, 22, 22);
         southPane.getColumnConstraints().addAll(c0, c1);
-        southPane.getRowConstraints().addAll(r0, r1);
+        southPane.getRowConstraints().addAll(r0);
         southPane.setAlignment(Pos.TOP_LEFT);
         southPane.add(daySpinner, 0, 0);
-        southPane.add(this.label, 0, 1);
-        southPane.add(this.okBtn, 1, 1);
+        southPane.add(this.label, 1, 0);
         return southPane;
     }
 
@@ -250,6 +245,10 @@ public class CalendarChooser extends GridPane {
         this.calendar.set(Calendar.DAY_OF_MONTH, this.day);
         this.pane.getChildren().addAll(weekPane, dayPane);
         return this.pane;
+    }
+
+    public Calendar getCalendar() {
+        return calendar;
     }
 
     private void actionPerformed(Event event) {

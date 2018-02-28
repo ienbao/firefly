@@ -17,14 +17,7 @@ import java.util.ResourceBundle;
 /**
  * Created by Guang.Li on 2018/2/27.
  */
-public class AdvanceDiaController  implements Initializable {
-    @FXML
-    private TableColumn<AdvanceHelpModel, String> operator;
-    @FXML
-    private TableColumn<AdvanceHelpModel, String> description;
-    @FXML
-    private TableView helpTable;
-
+public class AdvanceDiaController implements Initializable {
     private final ObservableList<AdvanceHelpModel> helpItems = FXCollections.observableArrayList(
             new AdvanceHelpModel(">", "Greater than"),
             new AdvanceHelpModel("<", "Less than"),
@@ -33,6 +26,12 @@ public class AdvanceDiaController  implements Initializable {
             new AdvanceHelpModel("<=", "Less then or equal to"),
             new AdvanceHelpModel("%=", "Like")
     );
+    @FXML
+    private TableColumn<AdvanceHelpModel, String> operator;
+    @FXML
+    private TableColumn<AdvanceHelpModel, String> description;
+    @FXML
+    private TableView helpTable;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

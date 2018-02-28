@@ -84,6 +84,15 @@ public class EnvServiceImpl implements EnvService {
     }
 
     @Override
+    public List<String> findTestItemNames(){
+        List<String> itemNames = Lists.newArrayList();
+        if (testItemDtos != null){
+            testItemDtos.forEach(dto -> itemNames.add(dto.getTestItemName()));
+        }
+        return itemNames;
+    }
+
+    @Override
     public void setTestItems(List<TestItemWithTypeDto> testItems) {
         testItemDtos = testItems;
     }
