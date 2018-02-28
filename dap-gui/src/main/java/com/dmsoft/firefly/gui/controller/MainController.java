@@ -12,6 +12,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
+import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -276,10 +277,13 @@ public class MainController {
 
         List<String> projectName = mapper.fromJson(envService.findPreference("selectProject"), mapper.buildCollectionType(List.class, String.class));
 
-        Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
-        envService.setTestItems(new ArrayList(testItemDtoMap.values()));
-        envService.setActivatedProjectName(projectName);
-
+        if (projectName != null) {
+            Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
+            envService.setTestItems(new ArrayList(testItemDtoMap.values()));
+            envService.setActivatedProjectName(projectName);
+        } else {
+            projectName = Lists.newArrayList();
+        }
         dataSourceList = FXCollections.observableArrayList(projectName);
     }
 
