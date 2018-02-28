@@ -99,9 +99,18 @@ public interface SourceDataService {
      * method to find all test item.
      *
      * @param projectNameList list of project names
-     * @return list of test item dtos
+     * @return map of test item dtos
      */
     Map<String, TestItemDto> findAllTestItem(List<String> projectNameList);
+
+    /**
+     * method to find test item by project name list
+     *
+     * @param projectNameList  list of project name
+     * @param testItemNameList test item name
+     * @return list of test item dto
+     */
+    Map<String, TestItemDto> findTestItem(List<String> projectNameList, List<String> testItemNameList);
 
     /**
      * method to find test item by project name list and test item name.

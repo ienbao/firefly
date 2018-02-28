@@ -258,6 +258,38 @@ public class SourceDataServiceImpl implements SourceDataService {
     }
 
     @Override
+    public Map<String, TestItemDto> findTestItem(List<String> projectNameList, List<String> testItemNameList) {
+        Map<String, TestItemDto> result = Maps.newLinkedHashMap();
+        List<String> testItemNames = Lists.newArrayList(testItemNameList);
+        try {
+            logger.debug("Finding test item by project names = {} and test item name = {}...", StringUtils.join(projectNameList, ','),
+                    StringUtils.join(testItemNameList, ','));
+            for (String projectName : projectNameList) {
+                Query query = new Query(where(PROJECT_NAME_FIELD).is(projectName));
+                for (String testItemName : testItemNames) {
+                    query.fields().include(TEST_ITEM_FIELD + "." + testItemName);
+                }
+                Project project = getMongoTemplate().findOne(query, Project.class, PROJECT_COLLECTION_NAME);
+                if (project != null && project.getTestItems() != null) {
+                    for (TestItem testItem : project.getTestItems().values()) {
+                        if (!result.containsKey(testItem.getTestItemName())) {
+                            TestItemDto testItemDto = new TestItemDto();
+                            BeanUtils.copyProperties(testItem, testItemDto);
+                            result.put(testItem.getTestItemName(), testItemDto);
+                            testItemNames.remove(testItem.getTestItemName());
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Find test item by project names = {} and test item name = {} error! Exception = {}", StringUtils.join(projectNameList, ','),
+                    StringUtils.join(testItemNameList, ','), e.getMessage());
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
+        }
+        return result;
+    }
+
+    @Override
     public TestItemDto findTestItem(List<String> projectNameList, String testItemName) {
         TestItemDto testItemDto = new TestItemDto();
         try {

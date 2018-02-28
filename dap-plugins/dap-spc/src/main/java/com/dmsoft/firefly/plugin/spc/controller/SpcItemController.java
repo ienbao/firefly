@@ -8,6 +8,7 @@ import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.utils.*;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -153,6 +154,7 @@ public class SpcItemController implements Initializable {
         advanceTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_advance_search_normal.png")));
         groupAdd.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_new_template_normal.png")));
         groupRemove.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_clear_all_normal.png")));
+//        addSearch.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
     }
 
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
@@ -176,7 +178,7 @@ public class SpcItemController implements Initializable {
     }
 
     private void initItemData() {
-        List<TestItemDto> itemDtos = envService.findTestItems();
+        List<TestItemWithTypeDto> itemDtos = envService.findTestItems();
 //        List<TestItemDto> itemDtos = Lists.newArrayList();
 //        for (int i = 0; i < 40; i++) {
 //            TestItemDto dto = new TestItemDto();
@@ -184,7 +186,7 @@ public class SpcItemController implements Initializable {
 //            itemDtos.add(dto);
 //        }
         if (itemDtos != null) {
-            for (TestItemDto dto : itemDtos) {
+            for (TestItemWithTypeDto dto : itemDtos) {
                 ItemTableModel tableModel = new ItemTableModel(dto);
                 items.add(tableModel);
             }
@@ -203,8 +205,6 @@ public class SpcItemController implements Initializable {
             return;
         }
         spcMainController.setStatisticalResultData(spcStatsDtoList);
-        getSelectedItem();
-        getSearch();
     }
 
 

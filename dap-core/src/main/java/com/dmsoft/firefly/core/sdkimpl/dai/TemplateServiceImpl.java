@@ -2,6 +2,8 @@ package com.dmsoft.firefly.core.sdkimpl.dai;
 
 import com.dmsoft.firefly.core.utils.JsonFileUtil;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.google.common.collect.Lists;
 import net.sf.json.JSONArray;
@@ -10,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Lucien.Chen on 2018/2/9.
@@ -144,5 +147,10 @@ public class TemplateServiceImpl implements TemplateService {
         if (isExst) {
             JsonFileUtil.writeJsonFile(JSONArray.fromObject(list), parentPath, fileName);
         }
+    }
+
+    @Override
+    public Map<String, TestItemWithTypeDto> assembleTemplate(Map<String, TestItemDto> testItemDtoMap, String templateName) {
+        return null;
     }
 }
