@@ -132,7 +132,7 @@ public class CsvResolverService implements IDataParser {
                 for (int j = 0; j < items.length; j++) {
                     String value = "";
                     try {
-                        value = data.get(i);
+                        value = data.get(j);
                         itemDatas.put(items[j], value);
                     } catch (IndexOutOfBoundsException e){
 
