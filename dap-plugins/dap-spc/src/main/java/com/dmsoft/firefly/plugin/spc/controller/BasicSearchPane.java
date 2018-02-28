@@ -103,12 +103,13 @@ public class BasicSearchPane extends VBox {
             for (Node node : this.getChildren()) {
                 if (node instanceof SearchComboBox) {
                     search.append(((SearchComboBox) node).getCondition());
-                    search.append("&&");
+                    search.append(" & ");
                 }
             }
         }
-        if (search.length() > 2) {
-            return search.substring(0, search.length() - 2);
+        if (search.length() > 3) {
+            search.delete(search.length() - 3, search.length());
+            return search.toString();
         } else {
             return "";
         }
