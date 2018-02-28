@@ -24,10 +24,11 @@ public class FXMLLoaderUtils {
 
     /**
      * get loaderFxml
+     *
      * @param res the path of fxml
      * @return loader
      */
-    public FXMLLoader getLoaderFXML(String res){
+    public FXMLLoader getLoaderFXML(String res) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(res), ResourceBundle.getBundle("i18n.message_en_US"));
         if (isDebug == false) {
             fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.SpcPlugin"));

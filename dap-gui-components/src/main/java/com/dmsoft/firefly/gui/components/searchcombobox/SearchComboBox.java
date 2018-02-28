@@ -2,16 +2,12 @@ package com.dmsoft.firefly.gui.components.searchcombobox;
 
 import com.google.common.collect.Lists;
 import com.sun.javafx.collections.ObservableListWrapper;
-import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -25,17 +21,17 @@ import java.util.List;
  * @author Can Guan
  */
 public class SearchComboBox extends GridPane {
+    private static final String SEARCH_COMPONENT_STYLE_CLASS = "search-component";
+    private static final String TEST_ITEM_BOX_STYLE_CLASS = "test-item";
+    private static final String OPERATOR_BOX_STYLE_CLASS = "operator";
+    private static final String VALUE_BOX_STYLE_CLASS = "value";
+    private static final String CLOSE_BTN_STYLE_CLASS = "close";
     private ISearchComboBoxController searchComboBoxController;
     private ComboBox<String> testItemBox;
     private ComboBox<String> operatorBox;
     private ComboBox<String> valueBox;
     private List<String> valueDatas;
     private Button closeBtn;
-    private static final String SEARCH_COMPONENT_STYLE_CLASS = "search-component";
-    private static final String TEST_ITEM_BOX_STYLE_CLASS = "test-item";
-    private static final String OPERATOR_BOX_STYLE_CLASS = "operator";
-    private static final String VALUE_BOX_STYLE_CLASS = "value";
-    private static final String CLOSE_BTN_STYLE_CLASS = "close";
 
     /**
      * constructor
@@ -235,15 +231,7 @@ public class SearchComboBox extends GridPane {
     }
 
     public String getTestItem() {
-        return this.testItemBox.getValue();
-    }
-
-    public String getOperator() {
-        return this.operatorBox.getValue();
-    }
-
-    public String getValue() {
-        return this.valueBox.getValue();
+        return this.testItemBox.getEditor().getText();
     }
 
     /**
@@ -255,13 +243,8 @@ public class SearchComboBox extends GridPane {
         this.testItemBox.setValue(testItem);
     }
 
-    /**
-     * method to set value
-     *
-     * @param value value
-     */
-    public void setValue(String value) {
-        this.valueBox.setValue(value);
+    public String getOperator() {
+        return this.operatorBox.getValue();
     }
 
     /**
@@ -273,8 +256,25 @@ public class SearchComboBox extends GridPane {
         this.operatorBox.setValue(operator);
     }
 
+    public String getValue() {
+        return this.valueBox.getEditor().getText();
+    }
+
+    /**
+     * method to set value
+     *
+     * @param value value
+     */
+    public void setValue(String value) {
+        this.valueBox.setValue(value);
+    }
+
     public Button getCloseBtn() {
         return closeBtn;
+    }
+
+    public ISearchComboBoxController getSearchComboBoxController() {
+        return searchComboBoxController;
     }
 
     private boolean isNotBlank(String s) {

@@ -7,11 +7,11 @@ import javafx.stage.Stage;
 public class CalendarChooserExample extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        CalendarChooser calendarChooser = new CalendarChooser(null, 0, 0);
+        CalendarChooser calendarChooser = new CalendarChooser();
         Scene scene = new Scene(calendarChooser);
-        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/main.css").toExternalForm());
-        primaryStage.setWidth(258);
-        primaryStage.setHeight(330);
+        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
+        primaryStage.setWidth(358);
+        primaryStage.setHeight(300);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

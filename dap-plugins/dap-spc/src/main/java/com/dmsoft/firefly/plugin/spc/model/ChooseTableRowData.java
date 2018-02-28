@@ -13,7 +13,7 @@ public class ChooseTableRowData {
     private TableCheckBox selector = new TableCheckBox();
     private SimpleStringProperty value;
 
-    public ChooseTableRowData(boolean isSelect,String value){
+    public ChooseTableRowData(boolean isSelect, String value) {
         this.value = new SimpleStringProperty(value);
     }
 
@@ -29,11 +29,11 @@ public class ChooseTableRowData {
         return value.get();
     }
 
-    public SimpleStringProperty valueProperty() {
-        return value;
-    }
-
     public void setValue(String value) {
         this.value.set(value);
+    }
+
+    public SimpleStringProperty valueProperty() {
+        return value;
     }
 }

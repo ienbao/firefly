@@ -5,9 +5,12 @@
 package com.dmsoft.firefly.plugin.spc;
 
 
+import com.dmsoft.firefly.plugin.spc.service.SpcAnalysisServiceImpl;
+import com.dmsoft.firefly.plugin.spc.service.SpcServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.FXMLLoaderUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.Plugin;
+import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.ui.IMainBodyPane;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
@@ -24,7 +27,14 @@ public class SpcPlugin extends Plugin {
 
     @Override
     public void initialize(InitModel model) {
-//        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.SpcPlugin", "com.dmsoft.firefly.plugin.spc.service.SpcServiceImpl", new SpcServiceImpl());
+        SpcServiceImpl spcService = new SpcServiceImpl();
+        SpcAnalysisServiceImpl spcAnalysisService = new SpcAnalysisServiceImpl();
+        spcService.setAnalysisService(spcAnalysisService);
+        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.SpcPlugin",
+                "com.dmsoft.firefly.plugin.spc.service.SpcServiceImpl", spcService);
+
+        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.SpcPlugin",
+                "com.dmsoft.firefly.plugin.spc.service.SpcAnalysisServiceImpl", spcAnalysisService);
         logger.info("Plugin-SPC Initialized.");
     }
 

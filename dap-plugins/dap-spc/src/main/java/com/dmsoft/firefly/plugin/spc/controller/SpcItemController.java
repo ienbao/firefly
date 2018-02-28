@@ -3,14 +3,12 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.utils.*;
-import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.google.common.collect.Lists;

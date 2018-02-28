@@ -17,17 +17,17 @@ import java.util.Map;
  */
 public class ViewDataRowData {
     private TableCheckBox selector = new TableCheckBox();
-    private Map<String,SimpleStringProperty> rowDataMap = Maps.newHashMap();
+    private Map<String, SimpleStringProperty> rowDataMap = Maps.newHashMap();
     private List<String> dataList;
 
-    public ViewDataRowData(SpcViewDataDto spcViewDataDto){
-        if(spcViewDataDto == null){
+    public ViewDataRowData(SpcViewDataDto spcViewDataDto) {
+        if (spcViewDataDto == null) {
             return;
         }
         dataList = Lists.newArrayList();
-        spcViewDataDto.getTestData().forEach((name,value) ->{
-            rowDataMap.put(name,new SimpleStringProperty((String)value));
-            dataList.add((String)value);
+        spcViewDataDto.getTestData().forEach((name, value) -> {
+            rowDataMap.put(name, new SimpleStringProperty((String) value));
+            dataList.add((String) value);
         });
     }
 
@@ -43,9 +43,9 @@ public class ViewDataRowData {
         return dataList;
     }
 
-    public boolean containsRex(String rex){
-        for(String value : dataList){
-            if(value.contains(rex)){
+    public boolean containsRex(String rex) {
+        for (String value : dataList) {
+            if (value.contains(rex)) {
                 return true;
             }
         }

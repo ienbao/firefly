@@ -4,16 +4,16 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.plugin.spc.charts.BoxPlotChart;
+import com.dmsoft.firefly.plugin.spc.charts.LinearChart;
 import com.dmsoft.firefly.plugin.spc.charts.NDChart;
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxAndWhiskerData;
 import com.dmsoft.firefly.plugin.spc.charts.data.RuleXYChartData;
+import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
 import com.dmsoft.firefly.plugin.spc.charts.shape.LineType;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
-import com.dmsoft.firefly.plugin.spc.charts.LinearChart;
-import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.google.common.collect.Lists;
@@ -21,11 +21,10 @@ import com.google.common.collect.Maps;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.scene.chart.*;
 import javafx.scene.control.Tab;
-
-import javafx.fxml.Initializable;
 
 import java.net.URL;
 import java.util.*;

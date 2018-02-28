@@ -22,23 +22,23 @@ public class AdvanceHelpModel {
         return operator.get();
     }
 
-    public StringProperty operatorProperty() {
-        return operator;
-    }
-
     public void setOperator(String operator) {
         this.operator.set(operator);
+    }
+
+    public StringProperty operatorProperty() {
+        return operator;
     }
 
     public String getDescription() {
         return description.get();
     }
 
-    public StringProperty descriptionProperty() {
-        return description;
-    }
-
     public void setDescription(String description) {
         this.description.set(description);
+    }
+
+    public StringProperty descriptionProperty() {
+        return description;
     }
 }

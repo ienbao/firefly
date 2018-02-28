@@ -23,14 +23,14 @@ public class UIConstant {
     public static final String SPC_CHART_RUN = "RunChart";
     public static final String SPC_CHART_XBAR = "XBarChart";
 
-//    "LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL"
-    public static final String[] SPC_CHART_XBAR_EXTERN_MENU = new String[] {"LCL", "μ", "UCL", "Point", "Connect Line"};
+    //    "LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL"
+    public static final String[] SPC_CHART_XBAR_EXTERN_MENU = new String[]{"LCL", "μ", "UCL", "Point", "Connect Line"};
     public static final String[] SPC_CHART_NDC_EXTERN_MENU = new String[]{"UCL", "USL", "2σ", "σ", "μ", "-σ", "-2σ", "LSL", "LCL", "Histogram", "Normal Curve"};
     public static final String[] SPC_CHART_RUN_EXTERN_MENU = new String[]{"LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL", "Point", "Connect Line"};
     public static final String[] SPC_CHART_BOX_EXTERN_MENU = new String[]{"CL", "Grid Line"};
 
-    public static final String[] SPC_CHART_LINE_NAME = new String[] {"LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL"};
-    public static final String[] SPC_XBARCHART_LINE_NAME = new String[] {"LCL", "μ", "UCL"};
+    public static final String[] SPC_CHART_LINE_NAME = new String[]{"LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL"};
+    public static final String[] SPC_XBARCHART_LINE_NAME = new String[]{"LCL", "μ", "UCL"};
 
     public static final String[] SPC_RULE_R = new String[]{"R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"};
 

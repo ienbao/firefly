@@ -53,6 +53,7 @@ public class SpcMainController implements Initializable {
 
     /**
      * set statistical result data
+     *
      * @param list the data list
      */
     public void setStatisticalResultData(List<SpcStatsDto> list) {

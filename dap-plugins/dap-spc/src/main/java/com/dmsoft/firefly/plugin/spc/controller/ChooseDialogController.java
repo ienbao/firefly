@@ -4,8 +4,6 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
-import com.dmsoft.firefly.plugin.spc.model.StatisticalTableRowData;
-import com.dmsoft.firefly.plugin.spc.model.ViewDataRowData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -49,6 +47,7 @@ public class ChooseDialogController implements Initializable {
 
     /**
      * set table data
+     *
      * @param chooseTableRowDataList the data list
      */
     public void setTableData(List<ChooseTableRowData> chooseTableRowDataList) {
@@ -58,6 +57,7 @@ public class ChooseDialogController implements Initializable {
 
     /**
      * set the column of value header text
+     *
      * @param text the header title
      */
     public void setValueColumnText(String text) {

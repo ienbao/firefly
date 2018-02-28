@@ -13,7 +13,7 @@ import java.util.Map;
 public class SpcViewDataDto extends AbstractValueObject {
 
     private String lineKey;
-    private Map<String,Object> testData;
+    private Map<String, Object> testData;
 
     public String getLineKey() {
         return lineKey;
