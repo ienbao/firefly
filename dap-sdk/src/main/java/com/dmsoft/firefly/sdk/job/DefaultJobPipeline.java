@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Garen.Pang on 2018/2/2.
@@ -22,13 +23,16 @@ public class DefaultJobPipeline implements JobPipeline {
     private Object result;
     private final ExecutorService executorService;
     private final List<JobEventListener> jobEventListeners;
+    private final String sessionId;
+    private AtomicInteger process = new AtomicInteger(0);
 
-    public DefaultJobPipeline(JobDoComplete doComplete, ExecutorService executorService, List<JobEventListener> jobEventListeners) {
+    public DefaultJobPipeline(JobDoComplete doComplete, ExecutorService executorService, List<JobEventListener> jobEventListeners, String sessionId) {
         this.doComplete = doComplete;
         this.executorService = executorService;
         head = new HeadContext(this, doComplete);
         tail = new TailContext(this, doComplete);
         this.jobEventListeners = jobEventListeners;
+        this.sessionId = sessionId;
 
         head.next = tail;
         tail.prev = head;
@@ -212,23 +216,18 @@ public class DefaultJobPipeline implements JobPipeline {
     }
 
     private AbstractJobHandlerContext newContext(String name, JobHandler handler) {
-        return new DefaultJobHandlerContext(this, doComplete, name, executorService, handler, jobEventListeners);
+        return new DefaultJobHandlerContext(this, doComplete, name, executorService, handler, jobEventListeners, sessionId);
     }
 
     final class TailContext extends AbstractJobHandlerContext implements JobInboundHandler {
 
         public TailContext(JobPipeline jobPipeline, JobDoComplete complete) {
-            super(jobPipeline, complete, true, false, "TailContext", executorService, Lists.newArrayList());
+            super(jobPipeline, complete, true, false, "TailContext", executorService, Lists.newArrayList(), sessionId);
         }
 
         @Override
         public JobHandler handler() {
             return this;
-        }
-
-        @Override
-        public void fireJobEvent(JobEvent event) {
-
         }
 
 
@@ -238,7 +237,7 @@ public class DefaultJobPipeline implements JobPipeline {
         }
 
         @Override
-        public void doJob(JobHandlerContext context, Object in) throws Exception {
+        public void doJob(JobHandlerContext context, Object... in) throws Exception {
             context.fireDoJob(in);
         }
     }
@@ -246,7 +245,7 @@ public class DefaultJobPipeline implements JobPipeline {
     final class HeadContext extends AbstractJobHandlerContext implements JobOutboundHandler {
 
         public HeadContext(JobPipeline jobPipeline, JobDoComplete complete) {
-            super(jobPipeline, complete, false, true, "HeadContext", executorService, Lists.newArrayList());
+            super(jobPipeline, complete, false, true, "HeadContext", executorService, Lists.newArrayList(), sessionId);
         }
 
         @Override
@@ -254,10 +253,6 @@ public class DefaultJobPipeline implements JobPipeline {
             return this;
         }
 
-        @Override
-        public void fireJobEvent(JobEvent event) {
-
-        }
 
         @Override
         public void exceptionCaught(JobHandlerContext context, Throwable cause) throws Exception {
@@ -276,5 +271,10 @@ public class DefaultJobPipeline implements JobPipeline {
 
     public void setResult(Object result) {
         this.result = result;
+    }
+
+    @Override
+    public int getCurrentProcess() {
+        return process.get();
     }
 }

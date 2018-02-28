@@ -103,8 +103,8 @@ public class CsvResolverService implements IDataParser {
                 csvList.set(fileFormat.getUsl() - 1, null);
             }
             if (fileFormat.getUnit() != null && fileFormat.getUnit() > 0) {
-                unitRow = csvList.get(fileFormat.getUnit());
-                csvList.set(fileFormat.getUnit(), null);
+                unitRow = csvList.get(fileFormat.getUnit() - 1);
+                csvList.set(fileFormat.getUnit() - 1, null);
             }
             List<TestItemDto> testItemDtoList = Lists.newArrayList();
             for (int i = 0; i < items.length; i++) {

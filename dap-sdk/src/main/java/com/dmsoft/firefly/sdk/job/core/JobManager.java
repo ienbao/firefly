@@ -4,6 +4,9 @@
 
 package com.dmsoft.firefly.sdk.job.core;
 
+import com.dmsoft.bamboo.common.monitor.ProcessMonitorListener;
+import com.dmsoft.firefly.sdk.job.Job;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -20,39 +23,45 @@ public interface JobManager {
      * @param jobName  jobName
      * @param pipeline pipeline
      */
-    void createJob(String jobName, InitJobPipeline pipeline);
+    void initializeJob(String jobName, InitJobPipeline pipeline);
 
-    void addJobEventListener(String jobName, JobEventListener listener);
+    void addJobEventListenerByName(String jobName, JobEventListener listener);
 
     void removeJobEventListener(String jobName, JobEventListener listener);
+
+    @Deprecated
+    void addJobProcessListener(String jobName, ProcessMonitorListener listener);
+
+    @Deprecated
+    void removeJobProcessListener(String jobName, ProcessMonitorListener listener);
     /**
      * doJobSyn
      *
-     * @param jobName jobName
+     * @param job job
      * @param object  object
      * @return Object
      */
-    Object doJobSyn(String jobName, Object object);
+    Object doJobSyn(Job job, Object object);
 
     /**
      * doJobSyn
      *
-     * @param jobName jobName
+     * @param job job
      * @param object  object
      * @param timeout timeout
      * @param unit    unit
      * @return Object
      */
-    Object doJobSyn(String jobName, Object object, long timeout, TimeUnit unit);
+    Object doJobSyn(Job job, Object object, long timeout, TimeUnit unit);
 
     /**
      * doJobASyn
      *
-     * @param jobName  jobName
+     * @param job  job
      * @param object   object
      * @param complete complete
      */
-    void doJobASyn(String jobName, Object object, JobDoComplete complete);
+    void doJobASyn(Job job, Object object, JobDoComplete complete);
 
     /**
      * getExecutorService

@@ -4,6 +4,7 @@
 
 package com.dmsoft.firefly.sdk.job;
 
+import com.dmsoft.bamboo.common.monitor.ProcessMonitorListener;
 import com.dmsoft.firefly.sdk.job.core.InitJobPipeline;
 import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
 import com.dmsoft.firefly.sdk.job.core.JobEventListener;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,7 +35,7 @@ public class DefaultJobManager implements JobManager {
     private ExecutorService service = Executors.newFixedThreadPool(5);
 
     @Override
-    public synchronized void createJob(String jobName, InitJobPipeline pipeline) {
+    public synchronized void initializeJob(String jobName, InitJobPipeline pipeline) {
         if (StringUtils.isBlank(jobName)) {
             logger.error("jobName is empty.");
             return;
@@ -46,7 +48,7 @@ public class DefaultJobManager implements JobManager {
     }
 
     @Override
-    public synchronized void addJobEventListener(String jobName, JobEventListener listener) {
+    public synchronized void addJobEventListenerByName(String jobName, JobEventListener listener) {
         if (jobEvent.containsKey(jobName)) {
             List<JobEventListener> listenerList = jobEvent.get(jobName);
             listenerList.add(listener);
@@ -66,12 +68,22 @@ public class DefaultJobManager implements JobManager {
     }
 
     @Override
-    public synchronized Object doJobSyn(String jobName, Object object, long timeout, TimeUnit unit) {
-        if (StringUtils.isBlank(jobName)) {
+    public void addJobProcessListener(String jobName, ProcessMonitorListener listener) {
+
+    }
+
+    @Override
+    public void removeJobProcessListener(String jobName, ProcessMonitorListener listener) {
+
+    }
+
+    @Override
+    public synchronized Object doJobSyn(Job job, Object object, long timeout, TimeUnit unit) {
+        if (StringUtils.isBlank(job.getJobName())) {
             logger.error("jobName is empty.");
             return null;
         }
-        if (!jobMap.containsKey(jobName)) {
+        if (!jobMap.containsKey(job.getJobName())) {
             logger.error("jobName is not exist.");
             return null;
         }
@@ -84,7 +96,7 @@ public class DefaultJobManager implements JobManager {
                 countDownLatch.countDown();
             }
         };
-        doJobASyn(jobName, object, complete);
+        doJobASyn(job, object, complete);
         try {
             countDownLatch.await(timeout, unit);
         } catch (InterruptedException e) {
@@ -95,12 +107,12 @@ public class DefaultJobManager implements JobManager {
     }
 
     @Override
-    public synchronized Object doJobSyn(String jobName, Object object) {
-        if (StringUtils.isBlank(jobName)) {
+    public synchronized Object doJobSyn(Job job, Object object) {
+        if (StringUtils.isBlank(job.getJobName())) {
             logger.error("jobName is empty.");
             return null;
         }
-        if (!jobMap.containsKey(jobName)) {
+        if (!jobMap.containsKey(job.getJobName())) {
             logger.error("jobName is not exist.");
             return null;
         }
@@ -113,7 +125,7 @@ public class DefaultJobManager implements JobManager {
                 countDownLatch.countDown();
             }
         };
-        doJobASyn(jobName, object, complete);
+        doJobASyn(job, object, complete);
         try {
             countDownLatch.await();
         } catch (InterruptedException e) {
@@ -124,24 +136,23 @@ public class DefaultJobManager implements JobManager {
     }
 
     @Override
-    public synchronized void doJobASyn(String jobName, Object object, JobDoComplete complete) {
-        if (StringUtils.isBlank(jobName)) {
+    public synchronized void doJobASyn(Job job, Object object, JobDoComplete complete) {
+        if (StringUtils.isBlank(job.getJobName())) {
             logger.error("jobName is empty.");
             return;
         }
-        if (!jobMap.containsKey(jobName)) {
+        if (!jobMap.containsKey(job.getJobName())) {
             logger.error("jobName is not exist.");
             return;
         }
         service.execute(new Runnable() {
             @Override
             public void run() {
-                DefaultJobPipeline defaultJobPipeline = new DefaultJobPipeline(complete, service, jobEvent.containsKey(jobName) ? jobEvent.get(jobName) : Lists.newArrayList());
-                jobMap.get(jobName).initJobPipeline(defaultJobPipeline);
+                DefaultJobPipeline defaultJobPipeline = new DefaultJobPipeline(complete, service, jobEvent.containsKey(job.getJobName()) ? jobEvent.get(job.getJobName()) : Lists.newArrayList(), job.getJobId());
+                jobMap.get(job.getJobName()).initJobPipeline(defaultJobPipeline);
                 defaultJobPipeline.fireDoJob(object);
             }
         });
-
     }
 
     public ExecutorService getExecutorService() {

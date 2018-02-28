@@ -24,8 +24,8 @@ public class DefaultJobHandlerContext extends AbstractJobHandlerContext {
 //        this.handler = handler;
 //    }
 
-    public DefaultJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, String name, ExecutorService executorService, JobHandler handler, List<JobEventListener> eventListeners) {
-        super(jobPipeline, jobDoComplete, isInbound(handler), isOutbound(handler), name, executorService, eventListeners);
+    public DefaultJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, String name, ExecutorService executorService, JobHandler handler, List<JobEventListener> eventListeners, String sessionId) {
+        super(jobPipeline, jobDoComplete, isInbound(handler), isOutbound(handler), name, executorService, eventListeners, sessionId);
         this.handler = handler;
     }
 

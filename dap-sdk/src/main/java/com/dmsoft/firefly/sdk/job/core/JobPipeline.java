@@ -193,4 +193,6 @@ public interface JobPipeline {
      * @param result result
      */
     void setResult(Object result);
+
+    int getCurrentProcess();
 }
