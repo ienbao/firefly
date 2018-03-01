@@ -1,6 +1,27 @@
 .mytext_ok {
     -fx-background-color: Red;
 }
+
+#viewDataTable .column-header .label.filter-header {
+    -fx-padding: 0 10 0 0;
+}
+
+#viewDataTable .column-header .label {
+    -fx-padding: 0 0 0 10;
+}
+
+#viewDataTable .column-header .down-arrow-button {
+    -fx-border-width: 0 0 0 1;
+    -fx-min-width: 17;
+    -fx-min-height: 20;
+}
+
+#viewDataTable .filter-hbox .button {
+    -fx-background-color: red;
+    -fx-min-width: 20;
+    -fx-min-height: 20;
+}
+
 .table-filter-btn {
     -fx-min-height: 21;
     -fx-min-width: 21;
@@ -27,7 +48,7 @@
     -fx-border-style: dotted;
 }
 
-.table-view .column-header .label .label{
+.table-view .column-header .label .label {
     -fx-padding: 0 0 0 0;
     -fx-font-weight: normal;
     -fx-alignment: center-left;

@@ -22,6 +22,8 @@ public class ChartOperateButton extends Button {
     private TableView<String> tableView;
     private CheckTableModel tableModel;
 
+    public final Double MAX_HEIGHT = 200.0;
+
     public ChartOperateButton(String[] columns, int checkBoxIndex) {
         this("", columns, checkBoxIndex, true);
     }
@@ -50,17 +52,24 @@ public class ChartOperateButton extends Button {
         popup = new Popup();
         popup.getContent().addAll(tableViewWrapper.getWrappedTable());
         popup.setAutoHide(true);
-        this.setStyle("-fx-border-width: 0px");
-        this.setMaxWidth(25);
-        this.setMinWidth(25);
-        this.setPrefWidth(25);
+        tableView.setMaxHeight(MAX_HEIGHT);
+        this.setMaxWidth(20);
+        this.setMinWidth(20);
+        this.setPrefWidth(20);
         this.setMaxHeight(20);
         this.setMinHeight(20);
         this.setPrefHeight(20);
+        this.getStyleClass().add("btn-icon-b");
         Button button = this;
         this.setOnMousePressed(event -> {
-            double x = event.getSceneX();
-            double y = event.getSceneY();
+            Double preHeight = tableView.getPrefHeight();
+            if (preHeight >= MAX_HEIGHT) {
+                preHeight = MAX_HEIGHT;
+            }
+            double x = button.getScene().getWindow().getX() +
+                    button.getScene().getX() + button.localToScene(0, 0).getX();
+            double y = button.getScene().getWindow().getY() +
+                    button.getScene().getY() + button.localToScene(0, 0).getY() - preHeight - 5;
             popup.show(button, x, y);
         });
     }

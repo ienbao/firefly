@@ -13,4 +13,7 @@ public class ResourceMassages {
     public static final String CHOOSE_STATISTICAL_RESULTS = "CHOOSE_STATISTICAL_RESULTS";
     public static final String ADVANCE = "ADVANCE";
 
+    public static final String QUICK_SEARCH= "QUICK_SEARCH";
+    public static final String CHOOSE_ITEMS_TITLE= "CHOOSE_ITEMS_TITLE";
+
 }

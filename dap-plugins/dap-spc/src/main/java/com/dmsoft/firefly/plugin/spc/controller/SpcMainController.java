@@ -4,8 +4,12 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
-import com.dmsoft.firefly.plugin.spc.dto.SpcViewDataDto;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
+import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.fxml.FXML;
@@ -91,18 +95,25 @@ public class SpcMainController implements Initializable {
     }
 
     @Deprecated
-    private List<SpcViewDataDto> initData() {
-        List<SpcViewDataDto> spcViewDataDtoList = Lists.newArrayList();
-        for (int i = 0; i < 100; i++) {
-            SpcViewDataDto spcViewDataDto = new SpcViewDataDto();
-            Map<String, Object> map = Maps.newHashMap();
-            for (int j = 0; j < 10; j++) {
-                map.put("itemName" + j, "value" + i + j);
-            }
-            spcViewDataDto.setTestData(map);
-            spcViewDataDtoList.add(spcViewDataDto);
+    private SearchDataFrame initData() {
+        List<TestItemWithTypeDto> typeDtoList = Lists.newArrayList();
+        List<RowDataDto> rowDataDtoList = Lists.newArrayList();
+        for (int i = 0; i < 10; i++) {
+            TestItemWithTypeDto typeDto = new TestItemWithTypeDto();
+            typeDto.setTestItemName("itemName" + i);
+            typeDtoList.add(typeDto);
         }
-        return spcViewDataDtoList;
+        for (int i = 0; i < 100; i++) {
+            RowDataDto rowDataDto = new RowDataDto();
+            Map<String, String> map = Maps.newHashMap();
+            rowDataDto.setRowKey(i + "");
+            for (int j = 0; j < 10; j++) {
+                map.put(typeDtoList.get(j).getTestItemName(), "value" + i + j);
+            }
+            rowDataDto.setData(map);
+            rowDataDtoList.add(rowDataDto);
+        }
+        return RuntimeContext.getBean(DataFrameFactory.class).createSearchDataFrame(typeDtoList, rowDataDtoList);
     }
 
 }

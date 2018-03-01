@@ -135,6 +135,14 @@ public interface DataFrame {
     RowDataDto getDataRow(String rowKey);
 
     /**
+     * method to get data row list
+     *
+     * @param rowKey row key
+     * @return list of values
+     */
+    List<String> getDataRowList(String rowKey);
+
+    /**
      * method to get data map
      *
      * @param rowKey row key
@@ -156,6 +164,13 @@ public interface DataFrame {
      * @return row data list
      */
     List<RowDataDto> getAllDataRow();
+
+    /**
+     * method to get all row keys
+     *
+     * @return list of string
+     */
+    List<String> getAllRowKeys();
 
     /**
      * method to remove rows by row keys
@@ -180,7 +195,6 @@ public interface DataFrame {
      */
     List<String> filterRowKey(Function<Map<String, String>, Boolean> filterFunction);
 
-
     /**
      * method to get in used status
      *
@@ -199,7 +213,6 @@ public interface DataFrame {
      * @return cell value
      */
     String getCellValue(String rowKey, String testItemName);
-
 
     /**
      * method to get cell result function
@@ -233,7 +246,17 @@ public interface DataFrame {
      */
     DataFrame subDataFrame(List<String> rowKeyList, List<String> testItemNameList);
 
+    /**
+     * method to get row size
+     *
+     * @return row size
+     */
     int getRowSize();
 
+    /**
+     * method to get column
+     *
+     * @return column size
+     */
     int getColumnSize();
 }
