@@ -1,4 +1,10 @@
 
+.table-no-header .column-header-background {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+}
+
 .chart {
     -fx-font-family: Tahoma;
     -fx-font-size: 0.9em;
@@ -86,6 +92,25 @@
     -fx-background-insets: 4px;
 }
 
+.chart-symbol-triangle { /* solid triangle */
+    /*-fx-background-radius: 0;*/
+    -fx-background-insets: -2;
+    -fx-shape: "M5,3 L10,8 L0,8 Z";
+}
+
+.chart-symbol-triangle:hover {
+    -fx-background-insets: -2;
+}
+
+/*Bar Chart*/
+.chart-bar {
+    -fx-stroke-width: 1px;
+}
+
+.chart-bar:hover {
+    -fx-border-color: #e92822;
+}
+
 /* ====== CANDLE STICK CHART =========================================================== */
 .candlestick-tooltip-label {
     -fx-font-size: 0.75em;
@@ -147,7 +172,7 @@
 }
 
 .btn-icon {
-    -fx-background-color: #ff875c;
+    -fx-background-color: white;
 }
 
 .btn-icon:hover {

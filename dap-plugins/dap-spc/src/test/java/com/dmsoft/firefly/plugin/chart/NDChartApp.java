@@ -9,6 +9,7 @@ import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -26,6 +27,8 @@ public class NDChartApp extends Application {
         initData();
         VBox vBox = new VBox();
         HBox hBox = new HBox();
+        Button saveBtn = new Button("Save as");
+        hBox.getChildren().add(saveBtn);
         vBox.getChildren().add(chart);
         vBox.getChildren().add(hBox);
         Scene scene = new Scene(vBox);

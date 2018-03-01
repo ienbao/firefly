@@ -1,7 +1,6 @@
 package com.dmsoft.firefly.plugin.chart;
 
 import com.dmsoft.firefly.plugin.spc.charts.LinearChart;
-import com.dmsoft.firefly.plugin.spc.charts.data.RuleXYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.AbnormalPointData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.BrokenLineData;
@@ -9,6 +8,7 @@ import com.dmsoft.firefly.plugin.spc.charts.data.basic.LineData;
 import com.dmsoft.firefly.plugin.spc.charts.shape.LineType;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
+import com.dmsoft.firefly.plugin.spc.dto.chart.RuleXYChartData;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -127,15 +127,15 @@ public class XYChartPanelApp extends Application {
         abnormalPointData.setVisible(true);
         abnormalPointDataMap.put("R1", abnormalPointData);
 
+        XYChartData<Double, Double> xyChartData = new XYChartData();
+        xyChartData.setX(x);
+        xyChartData.setY(y);
+        xyChartData.setIds(ids);
+        xyChartData.setColor("#5fb222");
+        xyChartData.setSeriesName(seriesName);
         ruleXYChartData = new RuleXYChartData();
-        ruleXYChartData.setX(x);
-        ruleXYChartData.setY(y);
-        ruleXYChartData.setIds(ids);
-        ruleXYChartData.setColor("#5fb222");
-        ruleXYChartData.setSeriesName(seriesName);
+        ruleXYChartData.setXyChartData(xyChartData);
         ruleXYChartData.setLineDataMap(lineDataMap);
-        ruleXYChartData.setBrokenLineDataMap(brokenLineDataMap);
-        ruleXYChartData.setAbnormalPointDataMap(abnormalPointDataMap);
     }
 
     private void initPanel() {
@@ -154,32 +154,27 @@ public class XYChartPanelApp extends Application {
 
     private void initData() {
 
-        XYChartData xyChartData = new XYChartData();
-        xyChartData.setX(ruleXYChartData.getX());
-        xyChartData.setY(ruleXYChartData.getY());
-        xyChartData.setIds(ruleXYChartData.getIds());
-        xyChartData.setColor(ruleXYChartData.getColor());
-        xyChartData.setCurrentGroupKey(seriesName);
+        XYChartData xyChartData = ruleXYChartData.getXyChartData();
         LinearChart chart = xBarChartPane.getChart();
         chart.addDataToChart(Lists.newArrayList(xyChartData), null);
 
         xBarChartPane.activeChartDragging();
 
         Map<String, LineData> lineDataMap = ruleXYChartData.getLineDataMap();
-        Map<String, BrokenLineData> brokenLineDataMap = ruleXYChartData.getBrokenLineDataMap();
-        Map<String, AbnormalPointData> abnormalPointDataMap = ruleXYChartData.getAbnormalPointDataMap();
+//        Map<String, BrokenLineData> brokenLineDataMap = ruleXYChartData.getBrokenLineDataMap();
+//        Map<String, AbnormalPointData> abnormalPointDataMap = ruleXYChartData.getAbnormalPointDataMap();
         lineDataMap.forEach((key, value) -> {
             chart.addValueMarker(value);
             operated.put(key, true);
         });
-        brokenLineDataMap.forEach((key, value) -> {
-            chart.createBrokenLineData(value);
-            operated.put(key, true);
-        });
-        abnormalPointDataMap.forEach((key, value) -> {
-            chart.createAbnormalPointData(value);
-            operated.put(key, true);
-        });
+//        brokenLineDataMap.forEach((key, value) -> {
+//            chart.createBrokenLineData(value);
+//            operated.put(key, true);
+//        });
+//        abnormalPointDataMap.forEach((key, value) -> {
+//            chart.createAbnormalPointData(value);
+//            operated.put(key, true);
+//        });
     }
 
     private void initEvent() {
@@ -215,7 +210,7 @@ public class XYChartPanelApp extends Application {
             XYChart.Series oneSeries = series.get(i);
             if (i < 1) {
                 chart.setShowAnnotation(true);
-                chart.setSeriesAnnotationEvent(oneSeries, "#5fb222", null);
+                chart.setSeriesAnnotationEvent(oneSeries, null);
             }
         }
 
