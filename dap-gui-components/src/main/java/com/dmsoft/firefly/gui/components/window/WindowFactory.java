@@ -7,8 +7,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class WindowFactory {
 
@@ -27,7 +25,6 @@ public class WindowFactory {
 
     public static Stage createFullWindow(String name, String title, Pane bodyPane, String... styles) {
         WindowPane windowPane = new WindowPane(title, bodyPane);
-        // windowPane.setWindowsModel(WindowPane.WINDOW_MODEL_FULL);
 
         if (StageMap.loadStage(name, windowPane, false, checkStyles(styles), StageStyle.TRANSPARENT)) {
             Stage stage = StageMap.getStage(name);
@@ -41,7 +38,6 @@ public class WindowFactory {
 
     public static Stage createFullWindow(String name, Pane title, Pane bodyPane, String... styles) {
         WindowPane windowPane = new WindowPane(title, bodyPane);
-        //windowPane.setWindowsModel(WindowPane.WINDOW_MODEL_FULL);
 
         if (StageMap.loadStage(name, windowPane, false, checkStyles(styles), StageStyle.TRANSPARENT)) {
             Stage stage = StageMap.getStage(name);
@@ -108,4 +104,25 @@ public class WindowFactory {
 
         return null;
     }
+
+
+    public static Stage createOrUpdateFullWindow(String name, String title, Pane bodyPane, String... styles) {
+        return StageMap.loadAndRefreshStage(name, title, bodyPane, true, false, checkStyles(styles), StageStyle.TRANSPARENT);
+    }
+
+    public static Stage createOrUpdateFullWindow(String name, Pane title, Pane bodyPane, String... styles) {
+        return StageMap.loadAndRefreshStage(name, title, bodyPane, true, false, checkStyles(styles), StageStyle.TRANSPARENT);
+    }
+
+
+    public static Stage createOrUpdateSimpleWindowAsModel(String name, String title, Pane bodyPane, String... styles) {
+        return StageMap.loadAndRefreshStage(name, title, bodyPane, true, true, checkStyles(styles), StageStyle.TRANSPARENT);
+
+    }
+
+    public static Stage createOrUpdateSimpleWindowAsModel(String name, Pane title, Pane bodyPane, String... styles) {
+        return StageMap.loadAndRefreshStage(name, title, bodyPane, true, true, checkStyles(styles), StageStyle.TRANSPARENT);
+
+    }
+
 }

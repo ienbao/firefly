@@ -32,7 +32,6 @@ public class MessageTipControl {
 
     @FXML
     private void initialize() {
-        System.out.println("------init-----" + this);
     }
 
 
@@ -53,7 +52,6 @@ public class MessageTipControl {
         contentLbl.setText(msg);
         messageTip.getStyleClass().add("message-tip-warn");
         iconLbl.getStyleClass().add("message-tip-warn-mark");
-        System.out.println("------warn-----" +titleLbl);
         return messageTip;
     }
 
@@ -64,7 +62,6 @@ public class MessageTipControl {
         contentLbl.setText(msg);
         messageTip.getStyleClass().add("message-tip-normal");
         iconLbl.getStyleClass().add("message-tip-normal-mark");
-        System.out.println("------normal-----" +titleLbl);
         return messageTip;
     }
 
