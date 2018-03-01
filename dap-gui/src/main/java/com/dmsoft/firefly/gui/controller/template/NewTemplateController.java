@@ -25,8 +25,10 @@ public class NewTemplateController {
     private void initEvent(){
         ok.setOnAction(event -> {
             if (StringUtils.isNotEmpty(name.getText())) {
-                templateController.getTemplateNames().add(name.getText());
-                templateController.initData();
+                if (!templateController.getTemplateNames().contains(name.getText())){
+                    templateController.getTemplateNames().add(name.getText());
+                    templateController.initData();
+                }
             }
             name.setText("");
             StageMap.closeStage("newTemplate");
