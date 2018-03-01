@@ -24,15 +24,15 @@ public class NewTemplateController {
 
     private void initEvent(){
         ok.setOnAction(event -> {
-            StageMap.closeStage("newTemplate");
             if (StringUtils.isNotEmpty(name.getText())) {
                 templateController.getTemplateNames().add(name.getText());
                 templateController.initData();
             }
-//            name.setText("");
+            name.setText("");
+            StageMap.closeStage("newTemplate");
         });
         cancel.setOnAction(event -> {
-//            name.setText("");
+            name.setText("");
             StageMap.closeStage("newTemplate");
         });
     }

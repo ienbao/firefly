@@ -21,13 +21,11 @@ public class RenameTemplateController {
 
     @FXML
     private void initialize() {
-        name.setText(oldName);
         initEvent();
     }
 
     private void initEvent() {
         ok.setOnAction(event -> {
-            StageMap.closeStage("renameTemplate");
             if (StringUtils.isNotEmpty(name.getText()) && !name.getText().equals(oldName)) {
                 for (int i = 0; i < names.size(); i++) {
                     if (names.get(i).equals(oldName)) {
@@ -35,16 +33,20 @@ public class RenameTemplateController {
                     }
                 }
             }
-//            name.setText("");
+            StageMap.closeStage("renameTemplate");
         });
         cancel.setOnAction(event -> {
-//            name.setText("");
             StageMap.closeStage("renameTemplate");
         });
     }
 
-    public void setName(String oldName, ObservableList<String> names) {
+    public void setName(String oldName) {
         this.oldName = oldName;
+        name.setText(oldName);
+    }
+
+    public void setNameList(ObservableList<String> names){
         this.names = names;
+
     }
 }

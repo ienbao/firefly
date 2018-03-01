@@ -40,6 +40,10 @@ public class TemplateController {
     private ObservableList<String> templateNames = FXCollections.observableArrayList();
 
     private NewTemplateController newTemplateController;
+    private Stage newStage;
+    private RenameTemplateController renameTemplateController;
+    private Stage renameStage;
+
     @FXML
     private void initialize() {
         initButton();
@@ -63,7 +67,7 @@ public class TemplateController {
     private void initEvent() {
         add.setOnAction(event -> buildNewTemplateDialog());
         rename.setOnAction(event -> {
-            if (templateName.getSelectionModel().getSelectedItem() != null){
+            if (templateName.getSelectionModel().getSelectedItem() != null) {
                 buildRenameTemplateDialog();
             }
         });
@@ -82,40 +86,50 @@ public class TemplateController {
         });
     }
 
-    public void initData(){
+    public void initData() {
 
     }
 
     private void buildNewTemplateDialog() {
-        Pane root = null;
-        try {
-            FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-            newTemplateController = new NewTemplateController();
-            newTemplateController.setTemplateController(this);
-            loader.setController(newTemplateController);
-            root = loader.load();
+        if (newStage == null) {
+            Pane root = null;
+            try {
+                FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+                newTemplateController = new NewTemplateController();
+                newTemplateController.setTemplateController(this);
+                loader.setController(newTemplateController);
+                root = loader.load();
 
-            Stage stage = WindowFactory.createSimpleWindowAsModel("newTemplate", "New Template", root);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+                newStage = WindowFactory.createSimpleWindowAsModel("newTemplate", "New Template", root);
+                newStage.setOnCloseRequest(event -> renameTemplateController.setName(""));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        newStage.show();
+
     }
+
     private void buildRenameTemplateDialog() {
-        Pane root = null;
-        try {
-            FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-            RenameTemplateController renameTemplateController = new RenameTemplateController();
-            renameTemplateController.setName(templateName.getSelectionModel().getSelectedItem().toString(), templateNames);
-            loader.setController(renameTemplateController);
-            root = loader.load();
+        if (renameStage == null) {
+            Pane root = null;
+            try {
+                FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+                renameTemplateController = new RenameTemplateController();
+                renameTemplateController.setNameList(templateNames);
+                loader.setController(renameTemplateController);
+                root = loader.load();
 
-            Stage stage = WindowFactory.createSimpleWindowAsModel("renameTemplate", "Rename Template", root);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+                renameStage = WindowFactory.createSimpleWindowAsModel("renameTemplate", "Rename Template", root);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        renameTemplateController.setName(templateName.getSelectionModel().getSelectedItem().toString());
+        renameStage.show();
     }
+
     private void buildPatternDia() {
         Pane root = null;
         try {
