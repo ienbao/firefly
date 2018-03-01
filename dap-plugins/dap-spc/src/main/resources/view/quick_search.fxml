@@ -34,31 +34,31 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
          <children>
-            <RadioButton fx:id="allDataRadioBtn" mnemonicParsing="false" selected="true" style="-fx-label-padding: 0 0 0 10;" text="All Data" textAlignment="CENTER">
+            <RadioButton fx:id="allDataRadioBtn" mnemonicParsing="false" selected="true" style="-fx-label-padding: 0 0 0 10;" text="%ALL_DATA_RADIO_TEXT" textAlignment="CENTER">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
                <toggleGroup>
                   <ToggleGroup fx:id="toggle" />
                </toggleGroup></RadioButton>
-            <RadioButton fx:id="withinRangeRadioBtn" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="Within Range" toggleGroup="$toggle" GridPane.rowIndex="1" />
-            <RadioButton fx:id="withoutRangeRadioBtn" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="Without Range" toggleGroup="$toggle" GridPane.rowIndex="2" />
-            <TextField fx:id="withinLowerTf" disable="true" promptText="Lower Limit" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <RadioButton fx:id="withinRangeRadioBtn" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%WITHIN_RANGE_RADIO_TEXT" toggleGroup="$toggle" GridPane.rowIndex="1" />
+            <RadioButton fx:id="withoutRangeRadioBtn" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%WITHOUT_RANGE_RADIO_TEXT" toggleGroup="$toggle" GridPane.rowIndex="2" />
+            <TextField fx:id="withinLowerTf" disable="true" promptText="%LOWER_LIMIT_PROMPT_TEXT" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="withoutLowerTf" disable="true" promptText="Lower Limit" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <TextField fx:id="withoutLowerTf" disable="true" promptText="%LOWER_LIMIT_PROMPT_TEXT" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="withinUpperTf" disable="true" promptText="Upper Limit" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <TextField fx:id="withoutUpperTf" disable="true" promptText="Upper Limit" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <TextField fx:id="withinUpperTf" disable="true" promptText="%UPPER_LIMIT_PROMPT_TEXT" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <TextField fx:id="withoutUpperTf" disable="true" promptText="%UPPER_LIMIT_PROMPT_TEXT" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnSpan="4" GridPane.rowIndex="4">
                <children>
-                  <Button fx:id="searchBtn" alignment="CENTER" mnemonicParsing="false" prefWidth="80.0" text="Search" />
-                  <Button fx:id="cancelBtn" alignment="CENTER" mnemonicParsing="false" prefWidth="80.0" text="Cancel" />
+                  <Button fx:id="searchBtn" alignment="CENTER" mnemonicParsing="false" prefWidth="80.0" text="%SEARCH_BTN" />
+                  <Button fx:id="cancelBtn" alignment="CENTER" mnemonicParsing="false" prefWidth="80.0" text="%CANCEL_BTN" />
                </children>
             </HBox>
          </children>

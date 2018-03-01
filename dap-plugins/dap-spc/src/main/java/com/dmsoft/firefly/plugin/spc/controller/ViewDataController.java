@@ -5,21 +5,19 @@ package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.plugin.spc.dto.SpcViewDataDto;
-import com.dmsoft.firefly.plugin.spc.model.ViewDataRowData;
-import com.dmsoft.firefly.plugin.spc.utils.FXMLLoaderUtils;
-import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
-import com.dmsoft.firefly.plugin.spc.utils.ViewResource;
+import com.dmsoft.firefly.plugin.spc.utils.*;
+import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.google.common.collect.Maps;
+import com.sun.javafx.collections.ObservableListWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
@@ -42,15 +40,17 @@ public class ViewDataController implements Initializable {
     @FXML
     private TextField filterTf;
     @FXML
-    private TableView viewDataTable;
+    private TableView<String> viewDataTable;
     @FXML
-    private TableColumn<ViewDataRowData, CheckBox> checkBoxColumn;
+    private TableColumn<String, CheckBox> checkBoxColumn;
     private CheckBox allCheckBox;
     private SpcMainController spcMainController;
 
-    private ObservableList<ViewDataRowData> viewDataRowDataObservableList;
-    private FilteredList<ViewDataRowData> viewDataRowDataFilteredList;
-    private SortedList<ViewDataRowData> viewDataRowDataSortedList;
+    private SearchDataFrame dataFrame;
+    private Map<String, TableCheckBox> checkBoxMap = Maps.newHashMap();
+    private ObservableList<String> rowKeys = FXCollections.observableArrayList();
+    private FilteredList<String> filteredList = null;
+    private Map<String, FilterSettingAndGraphic> columnFilterSetting = Maps.newHashMap();
 
     private QuickSearchController quickSearchController;
     private ChooseDialogController chooseDialogController;
@@ -67,22 +67,25 @@ public class ViewDataController implements Initializable {
     /**
      * set view data table dataList
      *
-     * @param spcViewDataDtoList the data list
+     * @param dataFrame search data frame
      */
-    public void setViewData(List<SpcViewDataDto> spcViewDataDtoList) {
-        if (spcViewDataDtoList == null) {
+    public void setViewData(SearchDataFrame dataFrame) {
+        if (dataFrame == null) {
             return;
         }
+        this.dataFrame = dataFrame;
+        this.checkBoxMap.clear();
+        this.rowKeys.clear();
         this.clearViewDataTable();
-        if (spcViewDataDtoList.get(0) != null) {
-            Map<String, Object> data = spcViewDataDtoList.get(0).getTestData();
-            data.forEach((string, object) -> {
-                this.buildViewDataColumn(string);
+        if (dataFrame.getRowSize() != 0) {
+            dataFrame.getAllTestItemName().forEach(this::buildViewDataColumn);
+            this.rowKeys = new ObservableListWrapper<>(dataFrame.getAllRowKeys());
+            this.rowKeys.forEach(s -> {
+                this.checkBoxMap.put(s, new TableCheckBox());
             });
+            this.filteredList = this.rowKeys.filtered(p -> true);
+            viewDataTable.setItems(this.filteredList);
         }
-        spcViewDataDtoList.forEach(dto -> {
-            viewDataRowDataObservableList.add(new ViewDataRowData(dto));
-        });
     }
 
     /**
@@ -90,31 +93,36 @@ public class ViewDataController implements Initializable {
      */
     public void clearViewDataTable() {
         viewDataTable.getColumns().remove(1, viewDataTable.getColumns().size());
-        viewDataRowDataObservableList.clear();
         allCheckBox.setSelected(false);
     }
 
     private void buildViewDataColumn(String title) {
-        TableColumn<ViewDataRowData, String> col = new TableColumn();
+        TableColumn<String, String> col = new TableColumn<String, String>();
         Label label = new Label(title);
-        Button filterButton = new Button();
-        filterButton.setOnAction(event -> getFilterBtnEvent());
-        filterButton.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
-        filterButton.getStyleClass().add("table-filter-btn");
+        label.getStyleClass().add("filter-header");
+        Button filterBtn = new Button();
+        filterBtn.getStyleClass().add("filter-normal");
+        FilterSettingAndGraphic fsg = new FilterSettingAndGraphic();
+        fsg.setFilterBtn(filterBtn);
+//        filterBtn.setOnAction(event -> {
+//            //TODO
+//        });
+        columnFilterSetting.put(title, fsg);
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.getChildren().add(label);
+        hBox.getChildren().add(filterBtn);
+        hBox.getStyleClass().add("filter-hbox");
         col.setGraphic(hBox);
 
-        col.setCellValueFactory(cellData -> cellData.getValue().getRowDataMap().get(title));
+        col.setCellValueFactory(cellData -> new SimpleObjectProperty<>(this.dataFrame.getCellValue(cellData.getValue(), title)));
         viewDataTable.getColumns().add(col);
-        hBox.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
-            hBox.getChildren().add(filterButton);
-        });
-        hBox.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
-            hBox.getChildren().remove(filterButton);
-        });
-
+//        hBox.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+//            hBox.getChildren().add(filterButton);
+//        });
+//        hBox.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+//            hBox.getChildren().remove(filterButton);
+//        });
     }
 
     private void buildQuickSearchDialog() {
@@ -123,7 +131,7 @@ public class ViewDataController implements Initializable {
         try {
             root = fxmlLoader.load();
             quickSearchController = fxmlLoader.getController();
-            WindowFactory.createSimpleWindowAsModel("spcQuickSearch", "Quick Search", root);
+            WindowFactory.createSimpleWindowAsModel("spcQuickSearch", ResourceBundleUtils.getString(ResourceMassages.QUICK_SEARCH), root);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -135,22 +143,17 @@ public class ViewDataController implements Initializable {
         try {
             root = fxmlLoader.load();
             chooseDialogController = fxmlLoader.getController();
-            WindowFactory.createSimpleWindowAsModel("spcViewDataColumn", "Choose Test Items", root);
+            WindowFactory.createSimpleWindowAsModel("spcViewDataColumn", ResourceBundleUtils.getString(ResourceMassages.CHOOSE_ITEMS_TITLE), root);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void initViewDataTable() {
-        checkBoxColumn.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
+        checkBoxColumn.setCellValueFactory(cellData -> this.checkBoxMap.get(cellData.getValue()).getCheckBox());
         allCheckBox = new CheckBox();
         checkBoxColumn.setGraphic(allCheckBox);
-
-        viewDataRowDataObservableList = FXCollections.observableArrayList();
-        viewDataRowDataFilteredList = viewDataRowDataObservableList.filtered(p -> true);
-        viewDataRowDataSortedList = new SortedList<>(viewDataRowDataFilteredList);
-        viewDataTable.setItems(viewDataRowDataSortedList);
-        viewDataRowDataSortedList.comparatorProperty().bind(viewDataTable.comparatorProperty());
+        viewDataTable.setItems(this.rowKeys);
     }
 
     private void initComponentEvent() {
@@ -167,9 +170,15 @@ public class ViewDataController implements Initializable {
     }
 
     private void getFilterTextFieldEvent() {
-        viewDataRowDataFilteredList.setPredicate(p ->
-                p.containsRex(filterTf.getText())
-        );
+        this.filteredList.setPredicate(p -> {
+            List<String> datas = dataFrame.getDataRowList(p);
+            for (String s : datas) {
+                if (s.contains(filterTf.getText())) {
+                    return true;
+                }
+            }
+            return false;
+        });
     }
 
     private void getChooseColumnBtnEvent() {
@@ -181,18 +190,14 @@ public class ViewDataController implements Initializable {
     }
 
     private void getUnSelectedCheckBoxEvent() {
-        if (viewDataRowDataObservableList != null) {
-            for (ViewDataRowData rowData : viewDataRowDataObservableList) {
-                rowData.getSelector().setValue(!rowData.getSelector().isSelected());
-            }
+        for (TableCheckBox checkBox : this.checkBoxMap.values()) {
+            checkBox.setValue(!checkBox.isSelected());
         }
     }
 
     private void getAllSelectEvent() {
-        if (viewDataRowDataSortedList != null) {
-            for (ViewDataRowData rowData : viewDataRowDataSortedList) {
-                rowData.getSelector().setValue(allCheckBox.isSelected());
-            }
+        for (TableCheckBox checkBox : this.checkBoxMap.values()) {
+            checkBox.setValue(allCheckBox.isSelected());
         }
     }
 
@@ -214,4 +219,73 @@ public class ViewDataController implements Initializable {
         chooseItemBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
     }
 
+    private enum FilterType {
+        ALL_DATA, WITHIN_RANGE, WITHOUT_RANGE
+    }
+
+    private class FilterSettingAndGraphic {
+        private static final String NORMAL_STYLE = "filter-normal";
+        private static final String FILTER_ACTIVE = "filter-active";
+        private FilterType type = FilterType.ALL_DATA;
+        private String withinLowerLimit;
+        private String withinUpperLimit;
+        private String withoutLowerLimit;
+        private String withoutUpperLimit;
+        private Button filterBtn;
+
+        FilterType getType() {
+            return type;
+        }
+
+        void setType(FilterType type) {
+            if (FilterType.ALL_DATA.equals(type)) {
+                filterBtn.getStyleClass().remove(FILTER_ACTIVE);
+                filterBtn.getStyleClass().add(NORMAL_STYLE);
+            } else {
+                filterBtn.getStyleClass().remove(NORMAL_STYLE);
+                filterBtn.getStyleClass().add(FILTER_ACTIVE);
+            }
+            this.type = type;
+        }
+
+        String getWithinLowerLimit() {
+            return withinLowerLimit;
+        }
+
+        void setWithinLowerLimit(String withinLowerLimit) {
+            this.withinLowerLimit = withinLowerLimit;
+        }
+
+        String getWithinUpperLimit() {
+            return withinUpperLimit;
+        }
+
+        void setWithinUpperLimit(String withinUpperLimit) {
+            this.withinUpperLimit = withinUpperLimit;
+        }
+
+        String getWithoutLowerLimit() {
+            return withoutLowerLimit;
+        }
+
+        void setWithoutLowerLimit(String withoutLowerLimit) {
+            this.withoutLowerLimit = withoutLowerLimit;
+        }
+
+        String getWithoutUpperLimit() {
+            return withoutUpperLimit;
+        }
+
+        void setWithoutUpperLimit(String withoutUpperLimit) {
+            this.withoutUpperLimit = withoutUpperLimit;
+        }
+
+        Button getFilterBtn() {
+            return filterBtn;
+        }
+
+        void setFilterBtn(Button filterBtn) {
+            this.filterBtn = filterBtn;
+        }
+    }
 }

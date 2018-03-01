@@ -1,15 +1,17 @@
 package com.dmsoft.firefly.plugin.spc.charts.view;
 
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
+import com.dmsoft.firefly.plugin.spc.charts.ClearCallBack;
+import com.dmsoft.firefly.plugin.spc.charts.SelectCallBack;
 import com.dmsoft.firefly.plugin.spc.charts.model.CheckTableModel;
 import com.dmsoft.firefly.plugin.spc.charts.model.SimpleItemCheckModel;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -28,6 +30,11 @@ public class ChartAnnotationButton extends Button {
     private ImageView imageReset;
     private ListView<SimpleItemCheckModel> dataListView;
     private ObservableList<SimpleItemCheckModel> dataModels = FXCollections.observableArrayList();
+
+    private ClearCallBack clearCallBack;
+
+    private Object currentSelectItem;
+    private boolean showAnnotation = false;
 
     private final int defaultSelectedIndex = 0;
     public final Double MAX_HEIGHT = 300.0;
@@ -93,15 +100,13 @@ public class ChartAnnotationButton extends Button {
             if (oldValue != null) {
                 oldValue.setIsChecked(false);
             }
-//            templateBtn.setText(newValue.getTemplateName());
             dataListView.refresh();
-            // to do
-            // change analyze template
+            editCurrentSelectItem(newValue.getItemName());
         });
 
         Button button = this;
-        button.setOnMousePressed(event -> {
-            Double preHeight = dataListView.getPrefHeight();
+        button.setOnMouseClicked(event -> {
+            Double preHeight = gridPane.getPrefHeight();
             if (preHeight >= MAX_HEIGHT) {
                 preHeight = MAX_HEIGHT;
             }
@@ -112,16 +117,46 @@ public class ChartAnnotationButton extends Button {
 
             popup.show(button, x, y);
         });
+
+        gridPane.setOnMouseExited(event -> {
+            if (popup.isShowing()) {
+                popup.hide();
+            }
+        });
+
+        clearBtn.setOnMouseClicked(event -> {
+            if (dataModels == null || dataModels.isEmpty()) {
+                return;
+            }
+            reset();
+        });
+
+        editBtn.setOnMouseClicked(event -> {
+            showAnnotation = false;
+        });
+    }
+
+    private void reset() {
+        dataModels.get(0).setIsChecked(true);
+        dataListView.refresh();
+        showAnnotation = false;
+        editCurrentSelectItem(dataModels.get(0).getItemName());
+        if (clearCallBack != null) {
+            clearCallBack.execute();
+        }
     }
 
     private void initRender() {
 
+        gridPane.setStyle("-fx-border-width: 1px; -fx-border-color: #cccccc; -fx-background-color: white");
         clearBtn.setGraphic(ImageUtils.getImageView(getClass()
                 .getResourceAsStream("/images/btn_remove_tracing_point_normal.png")));
         editBtn.setGraphic(ImageUtils.getImageView(getClass()
                 .getResourceAsStream("/images/btn_cancel_tracing_point_normal.png")));
         clearBtn.getStyleClass().addAll("btn-icon-b");
         editBtn.getStyleClass().addAll("btn-icon-b");
+        this.getStyleClass().addAll("btn-icon-b");
+
         clearBtn.setPrefWidth(25);
         clearBtn.setMinWidth(25);
         clearBtn.setMaxWidth(25);
@@ -129,17 +164,27 @@ public class ChartAnnotationButton extends Button {
         editBtn.setMinWidth(25);
         editBtn.setMaxWidth(25);
 
-        this.setPrefWidth(25);
-        this.setMinWidth(25);
-        this.setMaxWidth(25);
-
         imageReset.setFitHeight(16);
         imageReset.setFitWidth(16);
         itemFilter.setPromptText("Filter");
         gridPane.setPrefHeight(200);
         gridPane.setPrefWidth(100);
         gridPane.setMaxHeight(MAX_HEIGHT);
-        gridPane.setStyle("-fx-border-width: 1px; -fx-border-color: #cccccc");
+        this.setPrefWidth(20);
+        this.setMinWidth(20);
+        this.setMaxWidth(20);
+    }
+
+    private void editCurrentSelectItem(Object currentSelectItem) {
+
+        this.currentSelectItem = currentSelectItem;
+        if (DAPStringUtils.isNotBlank(this.currentSelectItem + "")) {
+            this.activeAnnotation();
+        }
+    }
+
+    private void activeAnnotation() {
+        showAnnotation = true;
     }
 
     private void initData() {
@@ -171,5 +216,15 @@ public class ChartAnnotationButton extends Button {
         return listCell;
     }
 
+    public Object getCurrentSelectItem() {
+        return currentSelectItem;
+    }
 
+    public boolean isShowAnnotation() {
+        return showAnnotation;
+    }
+
+    public void setClearCallBack(ClearCallBack clearCallBack) {
+        this.clearCallBack = clearCallBack;
+    }
 }

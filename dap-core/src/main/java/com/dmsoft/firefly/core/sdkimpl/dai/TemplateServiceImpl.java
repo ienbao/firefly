@@ -25,20 +25,28 @@ public class TemplateServiceImpl implements TemplateService {
     private final String fileName = "template";
 
     @Override
-
     public List<String> findAllTemplateName() {
 
+        List<TemplateSettingDto> list = findAllTemplate();
+
+        List<String> result = Lists.newArrayList();
+        if (list != null) {
+            for (TemplateSettingDto templateSettingDto : list) {
+                result.add(templateSettingDto.getName());
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<TemplateSettingDto> findAllTemplate() {
         String json = JsonFileUtil.readJsonFile(parentPath, fileName);
         if (json == null) {
             logger.debug("Don`t find " + fileName);
         }
         List<TemplateSettingDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, TemplateSettingDto.class));
 
-        List<String> result = Lists.newArrayList();
-        for (TemplateSettingDto templateSettingDto : list) {
-            result.add(templateSettingDto.getName());
-        }
-        return result;
+        return list;
     }
 
     @Override
@@ -83,18 +91,29 @@ public class TemplateServiceImpl implements TemplateService {
         }
         List<TemplateSettingDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, TemplateSettingDto.class));
 
-        Boolean isExst = Boolean.FALSE;
+        Boolean isExist = Boolean.FALSE;
         for (TemplateSettingDto dto : list) {
             if (dto.getName().equals(templateSettingDto.getName())) {
                 BeanUtils.copyProperties(templateSettingDto, dto);
-                isExst = true;
+                isExist = true;
                 break;
             }
         }
-        if (!isExst) {
+        if (!isExist) {
             list.add(templateSettingDto);
         }
         JsonFileUtil.writeJsonFile(list, parentPath, fileName);
+    }
+
+    @Override
+    public void saveAllAnalysisTemplate(List<TemplateSettingDto> templateSettingDto){
+
+        String json = JsonFileUtil.readJsonFile(parentPath, fileName);
+        if (json == null) {
+            logger.debug("Don`t find " + fileName);
+        }
+
+        JsonFileUtil.writeJsonFile(templateSettingDto, parentPath, fileName);
     }
 
     @Override

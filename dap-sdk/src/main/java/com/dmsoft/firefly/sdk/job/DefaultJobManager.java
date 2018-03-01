@@ -148,7 +148,7 @@ public class DefaultJobManager implements JobManager {
         service.execute(new Runnable() {
             @Override
             public void run() {
-                DefaultJobPipeline defaultJobPipeline = new DefaultJobPipeline(complete, service, jobEvent.containsKey(job.getJobName()) ? jobEvent.get(job.getJobName()) : Lists.newArrayList(), job.getJobId());
+                DefaultJobPipeline defaultJobPipeline = new DefaultJobPipeline(complete, service, jobEvent.containsKey(job.getJobName()) ? jobEvent.get(job.getJobName()) : Lists.newArrayList(), job);
                 jobMap.get(job.getJobName()).initJobPipeline(defaultJobPipeline);
                 defaultJobPipeline.fireDoJob(object);
             }
