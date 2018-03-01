@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.TemplateController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.TemplateController">
    <children>
       <HBox prefHeight="485.0" prefWidth="800.0" style="-fx-border-color: #DCDCDC; -fx-border-width: 1 1 1 1;" VBox.vgrow="ALWAYS">
          <children>
@@ -16,7 +26,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </TextField>
-                  <ListView prefHeight="460.0" prefWidth="160.0" style="-fx-border-width: 0 1 0 1; -fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
+                  <ListView fx:id="templateName" prefHeight="460.0" prefWidth="160.0" style="-fx-border-width: 0 1 0 1; -fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
                   <HBox prefHeight="22.0" prefWidth="160.0">
                      <children>
                         <Button fx:id="rename" maxWidth="32.0" minWidth="32.0" mnemonicParsing="false" prefWidth="32.0" styleClass="btn-txt">
@@ -57,7 +67,7 @@
                                     <Insets right="10.0" />
                                  </HBox.margin>
                               </Label>
-                              <ComboBox prefWidth="70.0">
+                              <ComboBox fx:id="decimal" prefWidth="70.0">
                                  <HBox.margin>
                                     <Insets />
                                  </HBox.margin>
@@ -96,7 +106,7 @@
                                     <Insets right="10.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField prefWidth="200.0" promptText="yyy/MM/dd HH:mm:ss SSSSSS" />
+                              <TextField prefWidth="200.0" text="yyy/MM/dd HH:mm:ss SSSSSS" />
                               <Button fx:id="pattern" mnemonicParsing="false" prefWidth="22.0" styleClass="btn-txt">
                                  <HBox.margin>
                                     <Insets left="10.0" />

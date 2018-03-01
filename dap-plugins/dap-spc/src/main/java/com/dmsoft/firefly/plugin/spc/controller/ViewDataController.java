@@ -7,9 +7,7 @@ import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.dto.SpcViewDataDto;
 import com.dmsoft.firefly.plugin.spc.model.ViewDataRowData;
-import com.dmsoft.firefly.plugin.spc.utils.FXMLLoaderUtils;
-import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
-import com.dmsoft.firefly.plugin.spc.utils.ViewResource;
+import com.dmsoft.firefly.plugin.spc.utils.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -123,7 +121,7 @@ public class ViewDataController implements Initializable {
         try {
             root = fxmlLoader.load();
             quickSearchController = fxmlLoader.getController();
-            WindowFactory.createSimpleWindowAsModel("spcQuickSearch", "Quick Search", root);
+            WindowFactory.createSimpleWindowAsModel("spcQuickSearch", ResourceBundleUtils.getString(ResourceMassages.QUICK_SEARCH), root);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -135,7 +133,7 @@ public class ViewDataController implements Initializable {
         try {
             root = fxmlLoader.load();
             chooseDialogController = fxmlLoader.getController();
-            WindowFactory.createSimpleWindowAsModel("spcViewDataColumn", "Choose Test Items", root);
+            WindowFactory.createSimpleWindowAsModel("spcViewDataColumn", ResourceBundleUtils.getString(ResourceMassages.CHOOSE_ITEMS_TITLE), root);
         } catch (IOException e) {
             e.printStackTrace();
         }

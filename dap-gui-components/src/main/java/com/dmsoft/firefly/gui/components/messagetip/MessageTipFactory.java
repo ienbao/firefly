@@ -1,0 +1,55 @@
+package com.dmsoft.firefly.gui.components.messagetip;
+/*
+ * Copyright (C) 2017. For Intelligent Group.
+ */
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.stage.Popup;
+
+import java.io.IOException;
+
+/**
+ * Created by Julia.Zhou on 2018/02/28.
+ */
+public class MessageTipFactory {
+    private static MessageTipControl messageTipControl;
+    private static Popup popup;
+    private static GridPane messageTipPane;
+
+    public static Popup getSuccessTip(String title, String msg) {
+        init();
+        messageTipPane = messageTipControl.initInfo(popup, title, msg);
+        return popup;
+    }
+
+    public static Popup getWarnTip(String title, String msg) {
+        init();
+        messageTipPane = messageTipControl.initWarn(popup, title, msg);
+        return popup;
+    }
+
+    public static Popup getNormalTip(String title, String msg) {
+        init();
+        messageTipPane = messageTipControl.initNormal(popup, title, msg);
+        return popup;
+    }
+
+    private static void init(){
+        try {
+            popup = new Popup();
+            FXMLLoader fxmlLoader = new FXMLLoader(MessageTipFactory.class.getClassLoader().getResource("view/message_tip.fxml"));
+            Pane pane = fxmlLoader.load();
+            pane.getStylesheets().add("/css/redfall/main.css");
+            messageTipControl = fxmlLoader.getController();
+            popup.getContent().add(pane);
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
+
+    public static GridPane getMessageTipPane() {
+        return messageTipPane;
+    }
+}
