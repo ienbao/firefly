@@ -182,15 +182,15 @@ public class SpcItemController implements Initializable {
 //            dto.setTestItemName("item" + i);
 //            itemDtos.add(dto);
 //        }
-        List<TestItemWithTypeDto> itemDtos = envService.findTestItems();
-        if (itemDtos != null) {
-            for (TestItemWithTypeDto dto : itemDtos) {
-                ItemTableModel tableModel = new ItemTableModel(dto);
-                items.add(tableModel);
-            }
-            itemTable.setItems(personSortedList);
-            personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
-        }
+//        List<TestItemWithTypeDto> itemDtos = envService.findTestItems();
+//        if (itemDtos != null) {
+//            for (TestItemWithTypeDto dto : itemDtos) {
+//                ItemTableModel tableModel = new ItemTableModel(dto);
+//                items.add(tableModel);
+//            }
+//            itemTable.setItems(personSortedList);
+//            personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
+//        }
     }
 
     private void getAnalysisBtnEvent() {

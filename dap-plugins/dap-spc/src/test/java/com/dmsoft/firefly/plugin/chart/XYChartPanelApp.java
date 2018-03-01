@@ -203,16 +203,16 @@ public class XYChartPanelApp extends Application {
             operatorChartLine(connectLine);
         });
 
-        LinearChart chart = xBarChartPane.getChart();
-        ObservableList<XYChart.Series<Number, Number>> series = chart.getData();
-
-        for (int i = 0; i < series.size(); i++) {
-            XYChart.Series oneSeries = series.get(i);
-            if (i < 1) {
-                chart.setShowAnnotation(true);
-                chart.setSeriesAnnotationEvent(oneSeries, null);
-            }
-        }
+//        LinearChart chart = xBarChartPane.getChart();
+//        ObservableList<XYChart.Series<Number, Number>> series = chart.getData();
+//
+//        for (int i = 0; i < series.size(); i++) {
+//            XYChart.Series oneSeries = series.get(i);
+//            if (i < 1) {
+//                chart.setShowAnnotation(true);
+//                chart.setSeriesAnnotationEvent(oneSeries, null);
+//            }
+//        }
 
     }
 
@@ -250,6 +250,14 @@ public class XYChartPanelApp extends Application {
         boolean hasShow = operated.get(name);
         LinearChart chart = xBarChartPane.getChart();
         ObservableList<XYChart.Series<Number, Number>> series = chart.getData();
+
+//        if (hasShow) {
+//            chart.setCreateSymbols(false);
+//            operated.put(name, false);
+//        } else {
+//            chart.setCreateSymbols(true);
+//            operated.put(name, true);
+//        }
 
         for (int i = 0; i < series.size(); i++) {
             XYChart.Series oneSeries = series.get(i);
