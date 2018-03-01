@@ -3,9 +3,8 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.plugin.spc.charts.BoxPlotChart;
-import com.dmsoft.firefly.plugin.spc.charts.LinearChart;
-import com.dmsoft.firefly.plugin.spc.charts.NDChart;
+import com.dmsoft.firefly.plugin.spc.charts.*;
+import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationFetch;
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxAndWhiskerData;
 import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
@@ -53,6 +52,10 @@ public class ChartResultController implements Initializable {
     @FXML
     private Tab mrTab;
 
+    private ChartAnnotationButton editBtn;
+
+    private String textColor = "#e92822";
+
     private ChartPanel<NDChart> ndChartPane;
     private ChartPanel<LinearChart> runChartPane;
     private ChartPanel<LinearChart> xBarChartPane;
@@ -61,6 +64,8 @@ public class ChartResultController implements Initializable {
     private ChartPanel<LinearChart> medianChartPane;
     private ChartPanel<BoxPlotChart> boxChartPane;
     private ChartPanel<LinearChart> mrChartPane;
+
+    private List<XYChart.Data> annotationData = Lists.newArrayList();
 
     private RuleXYChartData ruleXYChartData = new RuleXYChartData();
     private Function rulePointFunc = (Function<PointRule, PointStyle>) pointRule -> {
@@ -119,6 +124,7 @@ public class ChartResultController implements Initializable {
         button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
         button.setTableRowKeys(Arrays.asList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));
         button.setTableViewSize(160, 240);
+        button.getStyleClass().add("btn-icon-b");
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setTickMarkVisible(false);
@@ -135,7 +141,7 @@ public class ChartResultController implements Initializable {
         String[] itemNames = new String[] {"", "item0", "item1", "item2"};
 
         ChartOperateButton button = new ChartOperateButton(columns, checkBoxIndex);
-        ChartAnnotationButton editBtn = new ChartAnnotationButton();
+        editBtn = new ChartAnnotationButton();
         ChartOperateButton rRuleBtn = new ChartOperateButton(columns, checkBoxIndex, false);
         button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
         rRuleBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rule_normal.png")));
@@ -143,11 +149,8 @@ public class ChartResultController implements Initializable {
         button.setTableRowKeys(Arrays.asList(UIConstant.SPC_CHART_RUN_EXTERN_MENU));
         rRuleBtn.setTableRowKeys(Arrays.asList(UIConstant.SPC_RULE_R));
         editBtn.setData(Arrays.asList(itemNames));
-        button.setTableViewSize(155, 200);
+        button.setTableViewSize(155, 180);
         rRuleBtn.setTableViewSize(155, 200);
-        editBtn.getStyleClass().addAll("btn-icon-b");
-        button.getStyleClass().addAll("btn-icon-b");
-        rRuleBtn.getStyleClass().addAll("btn-icon-b");
 
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
@@ -155,11 +158,15 @@ public class ChartResultController implements Initializable {
         yAxis.setTickMarkVisible(false);
         xAxis.setMinorTickVisible(false);
         yAxis.setMinorTickVisible(false);
-        LinearChart runChart = new LinearChart<Number, Number>(xAxis, yAxis);
+        LinearChart runChart = new LinearChart(xAxis, yAxis);
         runChartPane = new ChartPanel<>(runChart);
         runChartPane.getCustomPane().getChildren().add(rRuleBtn);
         runChartPane.getCustomPane().getChildren().add(button);
         runChartPane.getCustomPane().getChildren().add(editBtn);
+
+        editBtn.setClearCallBack(() -> {
+            runChart.clearAnnotation(annotationData);
+        });
 
         button.setSelectCallBack((name, selected, selectedNames) -> {
             if (UIConstant.SPC_CHART_RUN_EXTERN_MENU[8].equalsIgnoreCase(name)) {
@@ -178,6 +185,7 @@ public class ChartResultController implements Initializable {
                 runChart.toggleValueMarker(name, selected);
             }
         });
+
         rRuleBtn.setSelectCallBack(((name, selected, selectedNames) -> {
             ObservableList<XYChart.Series> series = runChart.getData();
             series.forEach(oneSeries -> {
@@ -282,24 +290,37 @@ public class ChartResultController implements Initializable {
     private void createRunChartData() {
         this.initLineRuleData();
         XYChartData xyChartData = ruleXYChartData.getXyChartData();
-        LinearChart chart = runChartPane.getChart();
-        chart.createChartSeries(xyChartData, pointTooltipFunc);
+        LinearChart runChart = runChartPane.getChart();
+        runChart.createChartSeries(xyChartData, pointTooltipFunc);
 
         runChartPane.activeChartDragging();
 
         Map<String, LineData> lineDataMap = ruleXYChartData.getLineDataMap();
         lineDataMap.forEach((key, value) -> {
-            chart.addValueMarker(value);
+            runChart.addValueMarker(value);
         });
 
-        ObservableList<XYChart.Series<Number, Number>> series = chart.getData();
-        for (int i = 0; i < series.size(); i++) {
-            XYChart.Series oneSeries = series.get(i);
-            if (i < 1) {
-                chart.setShowAnnotation(true);
-                chart.setSeriesAnnotationEvent(oneSeries, null);
+        runChart.setSeriesAnnotationEvent(new AnnotationFetch() {
+            @Override
+            public String getValue(Object id) {
+                return "part1";
             }
-        }
+
+            @Override
+            public String getTextColor() {
+                return textColor;
+            }
+
+            @Override
+            public boolean showedAnnotation() {
+                return editBtn.isShowAnnotation();
+            }
+
+            @Override
+            public void addData(XYChart.Data data) {
+                annotationData.add(data);
+            }
+        });
     }
 
     private void createNDChartData() {

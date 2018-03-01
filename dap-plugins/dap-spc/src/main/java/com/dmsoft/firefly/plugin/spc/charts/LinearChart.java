@@ -33,21 +33,11 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
     private ValueMarker valueMarker = new ValueMarker();
 
     private Map<XYChart.Series, String> seriesColorMap = Maps.newHashMap();
-    private Map<XYChart.Data, Boolean> dataHasAnnotationMap = Maps.newHashMap();
-    private Map<XYChart.Data, AnnotationNode> dataAnnotationMap = Maps.newHashMap();
-    private ObservableList<AnnotationNode> annotationNodes = FXCollections.observableArrayList();
+//    private Map<XYChart.Data, Boolean> dataHasAnnotationMap = Maps.newHashMap();
+//    private Map<XYChart.Data, AnnotationNode> dataAnnotationMap = Maps.newHashMap();
+//    private ObservableList<AnnotationNode> annotationNodes = FXCollections.observableArrayList();
 
     private boolean showTooltip = true;
-    private boolean showAnnotation = false;
-
-    private String textColor = "#e92822";
-
-    /* This will be our update listener, to be invoked whenever the chart changes or annotations are added */
-    private final InvalidationListener listener = observable -> {
-        if (showAnnotation) {
-            update();
-        }
-    };
 
     /**
      * Construct a new LinearChart with the given axis.
@@ -58,7 +48,6 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
     public LinearChart(Axis<X> xAxis, Axis<Y> yAxis) {
 
         super(xAxis, yAxis, FXCollections.observableArrayList());
-        annotationNodes.addListener(listener);
     }
 
     /**
@@ -230,20 +219,62 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         Tooltip.install(data.getNode(), tooltip);
     }
 
-    public void setSeriesAnnotationEvent(XYChart.Series series,
-                                         AnnotationFetch fetch) {
+    public void setSeriesAnnotationEvent(AnnotationFetch fetch) {
 
-        ObservableList<Data<X, Y>> data = series.getData();
-        data.forEach(dataItem -> {
-            dataItem.getNode().setOnMouseClicked(event -> {
-
-                dataItem.getNode().getStyleClass().remove("chart-line-symbol");
-                dataItem.getNode().getStyleClass().add("chart-symbol-triangle");
-                StackPane pane = (StackPane) dataItem.getNode();
-                Text text = new Text("default");
-                text.setStyle(" -fx-fill: " + textColor);
-                pane.getChildren().add(text);
+        ObservableList<Series<X, Y>> seriesObservableList = this.getData();
+        seriesObservableList.forEach(series -> {
+            ObservableList<Data<X, Y>> data = series.getData();
+            data.forEach(dataItem -> {
+                dataItem.getNode().setOnMouseClicked(event -> {
+                    if (fetch != null && fetch.showedAnnotation()) {
+                        String value = fetch.getValue(dataItem.getExtraValue());
+                        setNodeAnnotation(dataItem, value, fetch.getTextColor());
+                        fetch.addData(dataItem);
+                    }
+                });
             });
+        });
+    }
+
+    private void setNodeAnnotation(Data<X, Y> data, String value, String textColor) {
+
+        data.getNode().getStyleClass().remove("chart-line-symbol");
+        data.getNode().getStyleClass().add("chart-symbol-triangle");
+//        data.getNode().getStyleClass().add("traingle");
+
+        StackPane pane = (StackPane) data.getNode();
+        if (!pane.getChildren().isEmpty()) {
+            for (int i = 0; i < pane.getChildren().size(); i++) {
+                Node node = pane.getChildren().get(i);
+                if (node instanceof Text) {
+                    Text oldText = (Text) node;
+                    oldText.setText(value);
+                    oldText.setStyle(" -fx-fill: " + textColor);
+                    return;
+                }
+            }
+        }
+        Text text = new Text(value);
+        text.setStyle(" -fx-fill: " + textColor);
+        pane.getChildren().add(text);
+    }
+
+    public void clearAnnotation(List<Data<X, Y>> data) {
+
+        data.forEach(dateItem -> {
+            dateItem.getNode().getStyleClass().add("chart-line-symbol");
+            dateItem.getNode().getStyleClass().remove("chart-symbol-triangle");
+            StackPane pane = (StackPane) dateItem.getNode();
+            if (pane.getChildren().isEmpty()) {
+                return;
+            }
+
+            for (int i = 0; i < pane.getChildren().size(); i++) {
+                Node node = pane.getChildren().get(i);
+                if (node instanceof Text) {
+                    pane.getChildren().remove(node);
+                }
+            }
         });
     }
 
@@ -289,68 +320,63 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
     /**
      * Invoked whenever the chart changes or annotations are added. This basically does a relayout of the annotation nodes.
      */
-    private void update() {
-        Pane pane = (Pane) this.getParent();
-        pane.getChildren().clear();
-        pane.getChildren().add(this);
-        final Axis<X> xAxis = this.getXAxis();
-        final Axis<Y> yAxis = this.getYAxis();
-        /* For each annotation, add a circle indicating the position and the custom node right next to it */
-        for (AnnotationNode annotation : annotationNodes) {
-            final double x = xAxis.localToParent(xAxis.getDisplayPosition((X) annotation.getX()), 0).getX() + this.getPadding().getLeft();
-            final double y = yAxis.localToParent(0, yAxis.getDisplayPosition((Y) annotation.getY())).getY() + this.getPadding().getTop();
-            final Node node = annotation.getNode();
-            Polygon triangle = new Polygon();
-            triangle.getPoints().addAll(x, y - 5, x - 5, y + 5, x + 5, y + 5);
-            triangle.setStyle("-fx-fill: " + annotation.getColor());
-            pane.getChildren().add(triangle);
-            pane.getChildren().add(node);
-            node.relocate(x, y - 15);
-            node.autosize();
-        }
-    }
+//    private void update() {
+//        Pane pane = (Pane) this.getParent();
+//        pane.getChildren().clear();
+//        pane.getChildren().add(this);
+//        final Axis<X> xAxis = this.getXAxis();
+//        final Axis<Y> yAxis = this.getYAxis();
+//        /* For each annotation, add a circle indicating the position and the custom node right next to it */
+//        for (AnnotationNode annotation : annotationNodes) {
+//            final double x = xAxis.localToParent(xAxis.getDisplayPosition((X) annotation.getX()), 0).getX() + this.getPadding().getLeft();
+//            final double y = yAxis.localToParent(0, yAxis.getDisplayPosition((Y) annotation.getY())).getY() + this.getPadding().getTop();
+//            final Node node = annotation.getNode();
+//            Polygon triangle = new Polygon();
+//            triangle.getPoints().addAll(x, y - 5, x - 5, y + 5, x + 5, y + 5);
+//            triangle.setStyle("-fx-fill: " + annotation.getColor());
+//            pane.getChildren().add(triangle);
+//            pane.getChildren().add(node);
+//            node.relocate(x, y - 15);
+//            node.autosize();
+//        }
+//    }
 
     /**
      * Add a new annotation for the given display coordinate.
      */
-    private void addAnnotation(XYChart.Data<X, Y> value, String text, String color) {
+//    private void addAnnotation(XYChart.Data<X, Y> value, String text, String color) {
+//
+//        final Axis<X> xAxis = this.getXAxis();
+//        final Axis<Y> yAxis = this.getYAxis();
+//        X x = value.getXValue();
+//        Y y = value.getYValue();
+//        if (xAxis.isValueOnAxis(x) && yAxis.isValueOnAxis(y)) {
+//            Label label = new Label(text);
+//            label.setStyle("-fx-text-fill: " + textColor);
+//            AnnotationNode annotationNode = new AnnotationNode(label, color, x, y);
+//            annotationNodes.add(annotationNode);
+//            dataAnnotationMap.put(value, annotationNode);
+//            dataHasAnnotationMap.put(value, true);
+//            value.getNode().getStyleClass().add("chart-line-hidden-symbol");
+//
+////            final Text dataText = new Text(text);
+////            annotationNode.getNode().parentProperty().addListener((ov, oldParent, parent) -> {
+////                Group parentGroup = (Group) parent;
+////                parentGroup.getChildren().add(dataText);
+////            });
+//
+//        }
+//    }
 
-        final Axis<X> xAxis = this.getXAxis();
-        final Axis<Y> yAxis = this.getYAxis();
-        X x = value.getXValue();
-        Y y = value.getYValue();
-        if (xAxis.isValueOnAxis(x) && yAxis.isValueOnAxis(y)) {
-            Label label = new Label(text);
-            label.setStyle("-fx-text-fill: " + textColor);
-            AnnotationNode annotationNode = new AnnotationNode(label, color, x, y);
-            annotationNodes.add(annotationNode);
-            dataAnnotationMap.put(value, annotationNode);
-            dataHasAnnotationMap.put(value, true);
-            value.getNode().getStyleClass().add("chart-line-hidden-symbol");
-
-//            final Text dataText = new Text(text);
-//            annotationNode.getNode().parentProperty().addListener((ov, oldParent, parent) -> {
-//                Group parentGroup = (Group) parent;
-//                parentGroup.getChildren().add(dataText);
-//            });
-
-        }
-    }
-
-    private void removeAnnotation(XYChart.Data<X, Y> value) {
-
-        value.getNode().getStyleClass().remove("chart-line-hidden-symbol");
-        AnnotationNode annotationNode = dataAnnotationMap.get(value);
-        dataHasAnnotationMap.put(value, false);
-        annotationNodes.remove(annotationNode);
-        dataAnnotationMap.remove(value);
-    }
-
+//    private void removeAnnotation(XYChart.Data<X, Y> value) {
+//
+//        value.getNode().getStyleClass().remove("chart-line-hidden-symbol");
+//        AnnotationNode annotationNode = dataAnnotationMap.get(value);
+//        dataHasAnnotationMap.put(value, false);
+//        annotationNodes.remove(annotationNode);
+//        dataAnnotationMap.remove(value);
+//    }
     public void setShowTooltip(boolean showTooltip) {
         this.showTooltip = showTooltip;
-    }
-
-    public void setShowAnnotation(boolean showAnnotation) {
-        this.showAnnotation = showAnnotation;
     }
 }

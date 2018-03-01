@@ -13,23 +13,14 @@ public class ChooseTableRowData {
     private TableCheckBox selector = new TableCheckBox();
     private SimpleStringProperty value;
     private double progress;
-    private boolean isSelect = false;
-    private boolean isOver = false;
+    private boolean isImport = false;
 
-    public boolean isSelect() {
-        return isSelect;
+    public boolean isImport() {
+        return isImport;
     }
 
-    public void setSelect(boolean select) {
-        isSelect = select;
-    }
-
-    public boolean isOver() {
-        return isOver;
-    }
-
-    public void setOver(boolean over) {
-        isOver = over;
+    public void setImport(boolean anImport) {
+        isImport = anImport;
     }
 
     public double getProgress() {

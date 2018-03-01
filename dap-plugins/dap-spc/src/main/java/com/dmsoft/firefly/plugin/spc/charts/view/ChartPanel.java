@@ -82,9 +82,11 @@ public class ChartPanel<T extends XYChart> extends VBox {
         commonBox.getChildren().add(zoomInBtn);
         commonBox.getChildren().add(zoomOutBtn);
         commonBox.getChildren().add(menuBar);
-//        commonBox.setPrefHeight(20);
-//        commonBox.setMaxHeight(20);
-//        commonBox.setMinHeight(20);
+        Pane blankPane = new Pane();
+        blankPane.setPrefHeight(3);
+        blankPane.setMinHeight(3);
+        blankPane.setMaxHeight(3);
+        titlePane.setTop(blankPane);
         titlePane.setLeft(legendPane);
         titlePane.setRight(commonBox);
         chartPane.getChildren().add(chart);
@@ -94,14 +96,15 @@ public class ChartPanel<T extends XYChart> extends VBox {
 
     private void initComponentRender() {
 
+        zoomInBtn.getStyleClass().addAll("btn-icon-b");
+        zoomOutBtn.getStyleClass().addAll("btn-icon-b");
+        extensionBtn.getStyleClass().addAll("btn-icon-b");
         extensionMenu.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_more_normal.png")));
         extensionBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_more_normal.png")));
         zoomInBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_zoom_normal.png")));
         zoomOutBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_narrow_normal.png")));
-        zoomInBtn.getStyleClass().addAll("btn-icon-b");
-        zoomOutBtn.getStyleClass().addAll("btn-icon-b");
-        extensionBtn.getStyleClass().addAll("btn-icon-b");
 
+//        menuBar.getStyleClass().remove("menu-bar");
         zoomInBtn.setPrefWidth(20);
         zoomInBtn.setMaxWidth(20);
         zoomInBtn.setMinWidth(20);

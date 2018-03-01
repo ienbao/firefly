@@ -110,12 +110,15 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
 
     @Override
     public DataColumn getDataColumn(String testItemName) {
-        if (isTestItemExist(testItemName)) {
-            TestItemWithTypeDto testItemDto = getTestItemWithTypeDto(testItemName);
-            List<String> valueList = getDataValue(testItemName);
-            return new BasicDataColumn(testItemDto, this.rowKeys, valueList, this.inUsedList);
+        TestItemWithTypeDto testItemDto = getTestItemWithTypeDto(testItemName);
+        if (testItemDto == null) {
+            return null;
         }
-        return null;
+        List<String> valueList = getDataValue(testItemName);
+        if (valueList == null) {
+            return null;
+        }
+        return new BasicDataColumn(testItemDto, this.rowKeys, valueList, this.inUsedList);
     }
 
     @Override
@@ -201,8 +204,9 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
         if (isRowKeyExist(rowKey)) {
             Boolean inUsed = isInUsed(rowKey);
             Map<String, String> data = Maps.newHashMap();
-            for (String testItemName : this.testItemNames) {
-                data.put(testItemName, getCellValue(rowKey, testItemName));
+            int targetRowIndex = this.rowKeys.indexOf(rowKey);
+            for (int i = 0; i < this.testItemNames.size(); i++) {
+                data.put(this.testItemNames.get(i), this.cellValues.get(targetRowIndex).get(i));
             }
             RowDataDto rowDataDto = new RowDataDto();
             rowDataDto.setInUsed(inUsed);
@@ -214,15 +218,25 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
     }
 
     @Override
-    public Map<String, String> getDataMap(String rowKey) {
+    public List<String> getDataRowList(String rowKey) {
         if (isRowKeyExist(rowKey)) {
-            Map<String, String> result = Maps.newHashMap();
-            for (String testItemName : this.testItemNames) {
-                result.put(testItemName, getCellValue(rowKey, testItemName));
+            List<String> data = Lists.newArrayList();
+            int targetRowIndex = this.rowKeys.indexOf(rowKey);
+            for (int i = 0; i < this.testItemNames.size(); i++) {
+                data.add(this.cellValues.get(targetRowIndex).get(i));
             }
-            return result;
+            return data;
         }
         return null;
+    }
+
+    @Override
+    public Map<String, String> getDataMap(String rowKey) {
+        Map<String, String> result = Maps.newHashMap();
+        for (String testItemName : this.testItemNames) {
+            result.put(testItemName, getCellValue(rowKey, testItemName));
+        }
+        return result;
     }
 
     @Override
@@ -244,6 +258,11 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
             result.add(getDataRow(rowKey));
         }
         return result;
+    }
+
+    @Override
+    public List<String> getAllRowKeys() {
+        return Lists.newArrayList(rowKeys);
     }
 
     @Override

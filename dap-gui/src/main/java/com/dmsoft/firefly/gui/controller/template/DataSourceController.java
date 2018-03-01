@@ -5,18 +5,15 @@
 package com.dmsoft.firefly.gui.controller.template;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
-import com.dmsoft.firefly.gui.model.DataAndProgress;
 import com.dmsoft.firefly.gui.utils.ImageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
-import com.dmsoft.firefly.sdk.plugin.PluginClass;
-import com.dmsoft.firefly.sdk.plugin.PluginClassType;
-import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
-import com.dmsoft.firefly.sdk.plugin.apis.IDataParser;
 import com.google.common.collect.Lists;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -24,19 +21,21 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.apache.commons.lang3.StringUtils;
 
-import javax.swing.*;
-import java.io.File;
 import java.net.URL;
 import java.util.*;
+
+import static com.google.common.io.Resources.getResource;
 
 
 /**
@@ -57,7 +56,7 @@ public class DataSourceController implements Initializable {
     private TableColumn<ChooseTableRowData, CheckBox> chooseCheckBoxColumn;
 
     @FXML
-    private TableColumn<ChooseTableRowData, DataAndProgress> chooseValueColumn;
+    private TableColumn<ChooseTableRowData, ChooseTableRowData> chooseValueColumn;
 
     private CheckBox allCheckBox;
     private ObservableList<ChooseTableRowData> chooseTableRowDataObservableList;
@@ -77,17 +76,13 @@ public class DataSourceController implements Initializable {
         chooseCheckBoxColumn.setGraphic(allCheckBox);
 
         chooseCheckBoxColumn.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
-        chooseValueColumn.setCellValueFactory(cellData -> {
-            DataAndProgress dataAndProgress = new DataAndProgress(cellData.getValue().valueProperty().getValue(), cellData.getValue().getProgress(), cellData.getValue().isSelect(), cellData.getValue().isOver());
-            return new SimpleObjectProperty<>(dataAndProgress);
-        });
-        chooseValueColumn.setCellFactory(new Callback<TableColumn<ChooseTableRowData, DataAndProgress>, TableCell<ChooseTableRowData, DataAndProgress>>() {
+        chooseValueColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue()));
+        chooseValueColumn.setCellFactory(new Callback<TableColumn<ChooseTableRowData, ChooseTableRowData>, TableCell<ChooseTableRowData, ChooseTableRowData>>() {
             @Override
-            public TableCell<ChooseTableRowData, DataAndProgress> call(TableColumn<ChooseTableRowData, DataAndProgress> param) {
-                TableCell tableCell =  new TableCell<ChooseTableRowData, DataAndProgress>() {
-
+            public TableCell<ChooseTableRowData, ChooseTableRowData> call(TableColumn<ChooseTableRowData, ChooseTableRowData> param) {
+                return new TableCell<ChooseTableRowData, ChooseTableRowData>() {
                     @Override
-                    protected void updateItem(DataAndProgress item, boolean empty) {
+                    protected void updateItem(ChooseTableRowData item, boolean empty) {
                         if (item != null && item.equals(getItem())) {
                             return;
                         }
@@ -109,13 +104,16 @@ public class DataSourceController implements Initializable {
                             progressBar.setMaxHeight(5);
                             progressBar.setPrefHeight(5);
                             progressBar.setMinHeight(5);
-                            progressBar.setProgress(50);
                             Button rename = new Button();
                             rename.getStyleClass().add("btn-icon");
                             rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rename_normal.png")));
                             Button deleteOne = new Button();
                             deleteOne.getStyleClass().add("btn-icon");
                             deleteOne.getStyleClass().add("delete-icon");
+
+                            rename.setVisible(false);
+                            deleteOne.setVisible(false);
+                            progressBar.setVisible(item.isImport());
 
                             deleteOne.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
                             hBox.getChildren().add(textField);
@@ -126,13 +124,54 @@ public class DataSourceController implements Initializable {
                             HBox.setHgrow(progressBar, Priority.NEVER);
                             HBox.setHgrow(rename, Priority.NEVER);
                             HBox.setHgrow(deleteOne, Priority.NEVER);
-                            this.setGraphic(hBox);
+                            hBox.setOnMouseEntered(event -> {
+                                rename.setVisible(true);
+                                deleteOne.setVisible(true);
+                            });
+                            hBox.setOnMouseExited(event -> {
+                                rename.setVisible(false);
+                                deleteOne.setVisible(false);
+                            });
+                            rename.setOnAction(event -> {
+                                Pane root = null;
+                                Stage renameStage = null;
+                                NewNameController renameTemplateController = null;
+                                try {
+                                    FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+                                    renameTemplateController = new NewNameController();
+                                    renameTemplateController.setPaneName("renameProject");
 
+                                    loader.setController(renameTemplateController);
+                                    root = loader.load();
+                                    NewNameController finalRenameTemplateController = renameTemplateController;
+                                    renameTemplateController.getOk().setOnAction(renameEvent -> {
+                                        TextField n = finalRenameTemplateController.getName();
+                                        if (StringUtils.isNotEmpty(n.getText()) && !n.getText().equals(item.getValue().toString())) {
+
+                                            //TODO 改变数据库里面的名字
+
+                                            item.setValue(n.getText());
+                                            dataSourceTable.refresh();
+                                        }
+                                        StageMap.closeStage("renameProject");
+                                    });
+                                    renameStage = WindowFactory.createSimpleWindowAsModel("renameProject", "Rename Project", root);
+                                } catch (Exception e) {
+
+                                }
+                                renameTemplateController.getName().setText(item.getValue());
+                                renameStage.show();
+                            });
+                            deleteOne.setOnAction(event -> {
+                                List<String> deleteProjects = Lists.newArrayList();
+                                deleteProjects.add(item.getValue());
+                                sourceDataService.deleteProject(deleteProjects);
+                                chooseTableRowDataObservableList.remove(item);
+                            });
+                            this.setGraphic(hBox);
                         }
                     }
-
                 };
-                return tableCell;
             }
         });
         chooseTableRowDataObservableList = FXCollections.observableArrayList();
@@ -182,23 +221,7 @@ public class DataSourceController implements Initializable {
             sourceDataService.deleteProject(deleteProjects);
         });
         addFile.setOnAction(event -> {
-            String str = System.getProperty("user.home");
-//            if (!StringUtils.isEmpty(path.getText())) {
-//                str = path.getText();
-//            }
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Open");
-            fileChooser.setInitialDirectory(new File(str));
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("CSV", "*.csv")
-            );
-            Stage fileStage = null;
-            File file = fileChooser.showOpenDialog(fileStage);
-            if (file != null) {
-                importDataSource(file.getPath(), file.getName());
-            }
-        });
-        dataSourceTable.setOnMouseMoved(event -> {
+            buildDataSourceDialog();
         });
     }
 
@@ -209,20 +232,18 @@ public class DataSourceController implements Initializable {
         initDataSourceTableData();
     }
 
-    private void importDataSource(String filPath, String fileName) {
-        PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
-        List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.DATA_PARSER);
-        IDataParser service = (IDataParser) pluginClasses.get(0).getInstance();
-        new SwingWorker() {
-            @Override
-            protected Object doInBackground() throws Exception {
-                service.importFile(filPath);
-                return null;
-            }
-        }.execute();
-
-        ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, fileName);
-        chooseTableRowDataObservableList.add(chooseTableRowData);
+    private void buildDataSourceDialog() {
+        Pane root = null;
+        try {
+            FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/resolver.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+            loader.setController(new ResolverSelectController(this));
+            root = loader.load();
+            Stage stage = WindowFactory.createSimpleWindowAsModel("resolver", "select Resolver", root, getResource("css/platform_app.css").toExternalForm());
+            stage.setResizable(false);
+            stage.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void getAllSelectEvent() {
@@ -259,5 +280,13 @@ public class DataSourceController implements Initializable {
         chooseTableRowDataFilteredList.setPredicate(p ->
                 p.containsRex(filterTf.getText())
         );
+    }
+
+    public TableView getDataSourceTable() {
+        return dataSourceTable;
+    }
+
+    public ObservableList<ChooseTableRowData> getChooseTableRowDataObservableList() {
+        return chooseTableRowDataObservableList;
     }
 }

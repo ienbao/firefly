@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.gui.components.utils;
 
+import com.dmsoft.firefly.gui.components.window.WindowPane;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -13,8 +14,6 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public final class StageMap {
     private static final Logger logger = LoggerFactory.getLogger(StageMap.class);
@@ -101,7 +100,7 @@ public final class StageMap {
      * @param name name
      * @param resources pane
      * @param modality true:modality
-     * @param style style
+     * @param cusStyles style
      * @param styles styles
      * @return Whether to load stage success or not
      */
@@ -110,8 +109,6 @@ public final class StageMap {
             if (stages.containsKey(name)) {
                 return true;
             }
-//            resources.getStylesheets().add(style);
-
             //The corresponding Stage
             Scene tempScene = new Scene(resources);
             if (cusStyles != null && !cusStyles.isEmpty()) {
@@ -144,6 +141,82 @@ public final class StageMap {
         }
     }
 
+    /**
+     * method to set primary stage by name
+     *
+     * @param name name
+     * @param resources pane
+     * @param modality true:modality
+     * @param cusStyles style
+     * @param styles styles
+     * @return Whether to load stage success or not
+     */
+    public static Stage loadAndRefreshStage(String name, Object title, Pane resources, boolean modality, boolean isWindowX, List<String> cusStyles, StageStyle... styles) {
+        try {
+            WindowPane windowPane = null;
+            if (title instanceof String) {
+                windowPane = new WindowPane((String) title, resources);
+
+            } else if (title instanceof Pane) {
+                windowPane = new WindowPane((Pane) title, resources);
+            }
+
+            if (isWindowX) {
+                windowPane.setWindowsModel(WindowPane.WINDOW_MODEL_X);
+            }
+            Stage tempStage = null;
+
+            if (StageMap.getStage(name) == null) {
+                //The corresponding Stage
+                Scene tempScene = new Scene(windowPane);
+                if (cusStyles != null && !cusStyles.isEmpty()) {
+                    cusStyles.forEach(s -> {
+                        tempScene.getStylesheets().add(s);
+                    });
+                }
+
+                tempScene.setFill(Color.TRANSPARENT);
+
+                tempStage = new Stage();
+                if (modality) {
+                    tempStage.initModality(Modality.APPLICATION_MODAL);
+                }
+                tempStage.setScene(tempScene);
+
+                //set initStyle
+                for (StageStyle s : styles) {
+                    tempStage.initStyle(s);
+                }
+
+                //add stage to HashMap
+                addStage(name, tempStage);
+            } else {
+                tempStage = StageMap.getStage(name);
+                Scene tempScene = tempStage.getScene();
+                tempScene.setRoot(windowPane);
+                tempScene.getStylesheets().clear();
+
+                tempScene.setFill(Color.TRANSPARENT);
+
+                if (cusStyles != null && !cusStyles.isEmpty()) {
+                    cusStyles.forEach(s -> {
+                        tempScene.getStylesheets().add(s);
+                    });
+                }
+                //Cannot set style and modality once stage has been set visible
+                /*for (StageStyle s : styles) {
+                    tempStage.initStyle(s);
+                }*/
+            }
+
+            windowPane.setStage(tempStage);
+            windowPane.init();
+            return StageMap.getStage(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return StageMap.getStage(name);
+        }
+    }
 
     /**
      * method to show stage by name
