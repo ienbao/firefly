@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
  */
 public class TemplateSettingDto {
     private String name;
-    private int decimalDigit;
+    private int decimalDigit = 6;
     private TimePatternDto timePatternDto;
     private LinkedHashMap<String, SpecificationDataDto> specificationDatas;
 

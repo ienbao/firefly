@@ -49,7 +49,7 @@
                <content>
                   <VBox prefHeight="480.0" prefWidth="620.0">
                      <children>
-                        <Label minHeight="30.0" prefHeight="30.0" prefWidth="620.0" text="Default">
+                        <Label fx:id="title" minHeight="30.0" prefHeight="30.0" prefWidth="620.0" text="Default">
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>
@@ -106,7 +106,7 @@
                                     <Insets right="10.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField prefWidth="200.0" text="yyy/MM/dd HH:mm:ss SSSSSS" />
+                              <TextField fx:id="patternText" prefWidth="200.0" text="yyy/MM/dd HH:mm:ss SSSSSS" />
                               <Button fx:id="pattern" mnemonicParsing="false" prefWidth="22.0" styleClass="btn-txt">
                                  <HBox.margin>
                                     <Insets left="10.0" />
@@ -142,7 +142,7 @@
                               </Button>
                            </children>
                         </HBox>
-                        <TableView maxWidth="580.0" minHeight="270.0" minWidth="580.0" prefHeight="270.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="itemTable" maxWidth="580.0" minHeight="270.0" minWidth="580.0" prefHeight="270.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                           <columns>
                             <TableColumn maxWidth="250.0" minWidth="250.0" prefWidth="250.0" sortable="false" text="C1" />
                             <TableColumn prefWidth="75.0" sortable="false" text="C2" />
