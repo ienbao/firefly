@@ -5,6 +5,7 @@ package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
+import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -211,6 +212,8 @@ public class SpcItemController implements Initializable {
         List<SpcStatsDto> spcStatsDtoList = Lists.newArrayList();
         for (int i = 0; i < 100; i++) {
             SpcStatsDto statisticalResultDto = new SpcStatsDto();
+            SpcStatsResultDto spcStatsResultDto = new SpcStatsResultDto();
+            statisticalResultDto.setStatsResultDto(spcStatsResultDto);
             statisticalResultDto.setItemName("itemName" + i);
             statisticalResultDto.setCondition("itemName > 22");
             statisticalResultDto.getStatsResultDto().setSamples("343.2");
