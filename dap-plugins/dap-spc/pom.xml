@@ -43,6 +43,12 @@
             <groupId>com.dmsoft</groupId>
             <artifactId>bamboo</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.dmsoft</groupId>
+            <artifactId>dap-core</artifactId>
+            <scope>test</scope>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>
