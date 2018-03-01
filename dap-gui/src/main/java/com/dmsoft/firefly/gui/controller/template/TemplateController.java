@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -22,6 +23,7 @@ import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 import static com.google.common.io.Resources.getResource;
@@ -31,8 +33,9 @@ import static com.google.common.io.Resources.getResource;
  */
 public class TemplateController {
     @FXML
+    private ComboBox<Integer> decimal;
+    @FXML
     private Button rename, add, copy, delete, addTime, pattern, addRow, ok, cancel, apply;
-    private Stage dialog;
     @FXML
     private VBox timeKeys;
     @FXML
@@ -45,9 +48,12 @@ public class TemplateController {
     private Stage renameStage;
     private NewNameController copyTemplateController;
     private Stage copyStage;
+
     @FXML
     private void initialize() {
         initButton();
+        templateNames.add("Default");
+        decimal.setItems(FXCollections.observableArrayList(Arrays.asList(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9})));
         timeKeys.getChildren().add(new TimePane());
         initEvent();
         templateName.setItems(templateNames);
@@ -102,11 +108,11 @@ public class TemplateController {
 
     }
 
-    private void copyTemplate(String template, String newTemplate){
+    private void copyTemplate(String template, String newTemplate) {
 
     }
 
-    private void removeTemplate(String template){
+    private void removeTemplate(String template) {
 
     }
 
@@ -122,7 +128,7 @@ public class TemplateController {
                 newNameController.getOk().setOnAction(event -> {
                     TextField n = newNameController.getName();
                     if (StringUtils.isNotEmpty(n.getText())) {
-                        if (!templateNames.contains(n.getText())){
+                        if (!templateNames.contains(n.getText())) {
                             templateNames.add(n.getText());
                             initData();
                         }
@@ -185,7 +191,7 @@ public class TemplateController {
                 copyTemplateController.getOk().setOnAction(event -> {
                     TextField n = copyTemplateController.getName();
                     if (StringUtils.isNotEmpty(n.getText())) {
-                        if (!templateNames.contains(n.getText())){
+                        if (!templateNames.contains(n.getText())) {
                             templateNames.add(n.getText());
                             copyTemplate(templateName.getSelectionModel().getSelectedItem().toString(), n.getText());
                         }
