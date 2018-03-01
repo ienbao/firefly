@@ -7,13 +7,13 @@ import com.dmsoft.firefly.plugin.spc.charts.BoxPlotChart;
 import com.dmsoft.firefly.plugin.spc.charts.LinearChart;
 import com.dmsoft.firefly.plugin.spc.charts.NDChart;
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxAndWhiskerData;
-import com.dmsoft.firefly.plugin.spc.charts.data.RuleXYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
 import com.dmsoft.firefly.plugin.spc.charts.shape.LineType;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
+import com.dmsoft.firefly.plugin.spc.dto.chart.RuleXYChartData;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.google.common.collect.Lists;
@@ -132,22 +132,22 @@ public class ChartResultController implements Initializable {
     private void initRunChartPane() {
         int checkBoxIndex = 0;
         String[] columns = new String[]{"1", "2"};
+        String[] itemNames = new String[] {"", "item0", "item1", "item2"};
 
         ChartOperateButton button = new ChartOperateButton(columns, checkBoxIndex);
-        ChartAnnotationButton editBtn = new ChartAnnotationButton(columns, checkBoxIndex, false);
+        ChartAnnotationButton editBtn = new ChartAnnotationButton();
         ChartOperateButton rRuleBtn = new ChartOperateButton(columns, checkBoxIndex, false);
-
         button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
         rRuleBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rule_normal.png")));
         editBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_tracing_point_normal.png")));
-
         button.setTableRowKeys(Arrays.asList(UIConstant.SPC_CHART_RUN_EXTERN_MENU));
         rRuleBtn.setTableRowKeys(Arrays.asList(UIConstant.SPC_RULE_R));
-        editBtn.setTableRowKeys(Arrays.asList(UIConstant.SPC_RULE_R));
-
+        editBtn.setData(Arrays.asList(itemNames));
         button.setTableViewSize(155, 200);
         rRuleBtn.setTableViewSize(155, 200);
-        editBtn.setTableViewSize(155, 200);
+        editBtn.getStyleClass().addAll("btn-icon-b");
+        button.getStyleClass().addAll("btn-icon-b");
+        rRuleBtn.getStyleClass().addAll("btn-icon-b");
 
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
@@ -155,7 +155,7 @@ public class ChartResultController implements Initializable {
         yAxis.setTickMarkVisible(false);
         xAxis.setMinorTickVisible(false);
         yAxis.setMinorTickVisible(false);
-        LinearChart runChart = new LinearChart<Number, Number, Number>(xAxis, yAxis);
+        LinearChart runChart = new LinearChart<Number, Number>(xAxis, yAxis);
         runChartPane = new ChartPanel<>(runChart);
         runChartPane.getCustomPane().getChildren().add(rRuleBtn);
         runChartPane.getCustomPane().getChildren().add(button);
@@ -265,50 +265,29 @@ public class ChartResultController implements Initializable {
     private void createXBarChartData() {
 
         this.initLineRuleData();
-        XYChartData xyChartData = new XYChartData();
-        xyChartData.setX(ruleXYChartData.getX());
-        xyChartData.setY(ruleXYChartData.getY());
-        xyChartData.setIds(ruleXYChartData.getIds());
-        xyChartData.setColor(ruleXYChartData.getColor());
-        xyChartData.setCurrentGroupKey(seriesName);
+        XYChartData xyChartData = ruleXYChartData.getXyChartData();
         LinearChart chart = xBarChartPane.getChart();
         chart.createChartSeries(xyChartData, pointTooltipFunc);
+        xBarChartPane.activeChartDragging();
+        Map<String, LineData> lineDataMap = ruleXYChartData.getLineDataMap();
+        lineDataMap.forEach((key, value) -> {
+            chart.addValueMarker(value);
+        });
         ObservableList<XYChart.Series> series = chart.getData();
         series.forEach(oneSeries -> {
             chart.setSeriesDataStyleByRule(oneSeries, Lists.newArrayList("R1"), rulePointFunc);
         });
-        xBarChartPane.activeChartDragging();
-
-        Map<String, LineData> lineDataMap = ruleXYChartData.getLineDataMap();
-        Map<String, BrokenLineData> brokenLineDataMap = ruleXYChartData.getBrokenLineDataMap();
-        Map<String, AbnormalPointData> abnormalPointDataMap = ruleXYChartData.getAbnormalPointDataMap();
-        lineDataMap.forEach((key, value) -> {
-            chart.addValueMarker(value);
-        });
-//        brokenLineDataMap.forEach((key, value) -> {
-//            chart.createBrokenLineData(value);
-//        });
-//        abnormalPointDataMap.forEach((key, value) -> {
-//            chart.createAbnormalPointData(value);
-//        });
     }
 
     private void createRunChartData() {
         this.initLineRuleData();
-        XYChartData xyChartData = new XYChartData();
-        xyChartData.setX(ruleXYChartData.getX());
-        xyChartData.setY(ruleXYChartData.getY());
-        xyChartData.setIds(ruleXYChartData.getIds());
-        xyChartData.setColor(ruleXYChartData.getColor());
-        xyChartData.setCurrentGroupKey(seriesName);
+        XYChartData xyChartData = ruleXYChartData.getXyChartData();
         LinearChart chart = runChartPane.getChart();
         chart.createChartSeries(xyChartData, pointTooltipFunc);
 
         runChartPane.activeChartDragging();
 
         Map<String, LineData> lineDataMap = ruleXYChartData.getLineDataMap();
-        Map<String, BrokenLineData> brokenLineDataMap = ruleXYChartData.getBrokenLineDataMap();
-        Map<String, AbnormalPointData> abnormalPointDataMap = ruleXYChartData.getAbnormalPointDataMap();
         lineDataMap.forEach((key, value) -> {
             chart.addValueMarker(value);
         });
@@ -318,7 +297,7 @@ public class ChartResultController implements Initializable {
             XYChart.Series oneSeries = series.get(i);
             if (i < 1) {
                 chart.setShowAnnotation(true);
-                chart.setSeriesAnnotationEvent(oneSeries, "#5fb222", null);
+                chart.setSeriesAnnotationEvent(oneSeries, null);
             }
         }
     }
@@ -435,30 +414,30 @@ public class ChartResultController implements Initializable {
             lineDataMap.put(lineName, lineData);
         }
 
-        BrokenLineData brokenLineData = new BrokenLineData();
-        String brokenName = "Broke Line";
-        brokenLineData.setName(brokenName);
-        brokenLineData.setColor("#e92822");
-        brokenLineData.setValue(brokenValue);
-        brokenLineDataMap.put(brokenName, brokenLineData);
+//        BrokenLineData brokenLineData = new BrokenLineData();
+//        String brokenName = "Broke Line";
+//        brokenLineData.setName(brokenName);
+//        brokenLineData.setColor("#e92822");
+//        brokenLineData.setValue(brokenValue);
+//        brokenLineDataMap.put(brokenName, brokenLineData);
+//
+//        AbnormalPointData abnormalPointData = new AbnormalPointData();
+//        abnormalPointData.setX(abnormalPointX);
+//        abnormalPointData.setY(abnormalPointY);
+//        abnormalPointData.setColor("#e92822");
+//        abnormalPointData.setName("R1");
+//        abnormalPointData.setVisible(true);
+//        abnormalPointDataMap.put("R1", abnormalPointData);
 
-        AbnormalPointData abnormalPointData = new AbnormalPointData();
-        abnormalPointData.setX(abnormalPointX);
-        abnormalPointData.setY(abnormalPointY);
-        abnormalPointData.setColor("#e92822");
-        abnormalPointData.setName("R1");
-        abnormalPointData.setVisible(true);
-        abnormalPointDataMap.put("R1", abnormalPointData);
-
+        XYChartData<Double, Double> xyChartData = new XYChartData();
+        xyChartData.setX(x);
+        xyChartData.setY(y);
+        xyChartData.setIds(ids);
+        xyChartData.setColor("#5fb222");
+        xyChartData.setSeriesName(seriesName);
         ruleXYChartData = new RuleXYChartData();
-        ruleXYChartData.setX(x);
-        ruleXYChartData.setY(y);
-        ruleXYChartData.setIds(ids);
-        ruleXYChartData.setColor("#5fb222");
-        ruleXYChartData.setSeriesName(seriesName);
+        ruleXYChartData.setXyChartData(xyChartData);
         ruleXYChartData.setLineDataMap(lineDataMap);
-        ruleXYChartData.setBrokenLineDataMap(brokenLineDataMap);
-        ruleXYChartData.setAbnormalPointDataMap(abnormalPointDataMap);
     }
 
     /**

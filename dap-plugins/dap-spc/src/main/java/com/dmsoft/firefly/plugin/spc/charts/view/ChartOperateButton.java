@@ -3,6 +3,8 @@ package com.dmsoft.firefly.plugin.spc.charts.view;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.plugin.spc.charts.SelectCallBack;
 import com.dmsoft.firefly.plugin.spc.charts.model.CheckTableModel;
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import com.sun.javafx.scene.control.skin.TableViewSkinBase;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -35,6 +37,11 @@ public class ChartOperateButton extends Button {
     public ChartOperateButton(String name, String[] columns, int checkBoxIndex, boolean selected) {
         super(name);
         tableView = new TableView<>();
+        tableView.getStyleClass().add("table-no-header");
+        tableView.skinProperty().addListener((a, b, newSkin) -> {
+            TableHeaderRow headerRow = ((TableViewSkinBase) newSkin).getTableHeaderRow();
+            headerRow.setPrefHeight(0);
+        });
         tableModel = new CheckTableModel();
         tableModel.setDefaultSelect(selected);
         tableModel.setCheckIndex(checkBoxIndex);

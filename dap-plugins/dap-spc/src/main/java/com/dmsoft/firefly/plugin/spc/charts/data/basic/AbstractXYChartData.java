@@ -34,6 +34,7 @@ public abstract class AbstractXYChartData<X, Y, Z> extends AbstractValueObject {
      * @param y y coordinates
      */
     public AbstractXYChartData(X[] x, Y[] y) {
+
         this.x = x;
         this.y = y;
     }
@@ -46,9 +47,30 @@ public abstract class AbstractXYChartData<X, Y, Z> extends AbstractValueObject {
      * @param y   y coordinates
      */
     public AbstractXYChartData(Z[] ids, X[] x, Y[] y) {
+
         this.ids = ids;
         this.x = x;
         this.y = y;
+    }
+
+    public int getLen() {
+
+        return (x == null || y == null) ? 0 : (x.length < y.length) ? x.length : y.length;
+    }
+
+    X getXValueByIndex(int index) {
+
+        return (index > 0 && index < getLen()) ? x[index] : null;
+    }
+
+    Y getYValueByIndex(int index) {
+
+        return (index > 0 && index < getLen()) ? y[index] : null;
+    }
+
+    Z getExtraValueByIndex(int index) {
+
+        return (index > 0 && index < getLen()) && (ids != null) && (ids.length > index) ? ids[index] : null;
     }
 
     public Z[] getIds() {
