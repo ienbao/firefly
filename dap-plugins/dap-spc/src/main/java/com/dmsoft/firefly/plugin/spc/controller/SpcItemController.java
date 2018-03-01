@@ -183,7 +183,7 @@ public class SpcItemController implements Initializable {
 //            dto.setTestItemName("item" + i);
 //            itemDtos.add(dto);
 //        }
-        List<TestItemWithTypeDto> itemDtos = envService.findTestItems();
+        List<TestItemWithTypeDto> itemDtos = null;
         if (itemDtos != null) {
             for (TestItemWithTypeDto dto : itemDtos) {
                 ItemTableModel tableModel = new ItemTableModel(dto);
@@ -212,6 +212,7 @@ public class SpcItemController implements Initializable {
         List<SpcStatsDto> spcStatsDtoList = Lists.newArrayList();
         for (int i = 0; i < 100; i++) {
             SpcStatsDto statisticalResultDto = new SpcStatsDto();
+            statisticalResultDto.setKey("key" + i);
             SpcStatsResultDto spcStatsResultDto = new SpcStatsResultDto();
             statisticalResultDto.setStatsResultDto(spcStatsResultDto);
             statisticalResultDto.setItemName("itemName" + i);

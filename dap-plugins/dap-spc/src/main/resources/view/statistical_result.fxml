@@ -35,9 +35,9 @@
                                 </children>
                             </GridPane>
                             <TableView fx:id="statisticalResultTb" editable="true" style="-fx-border-width: 1 0 0 0;" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
-                                <columns>
-                                    <TableColumn fx:id="checkBoxColumn" maxWidth="30.0" minWidth="30.0" prefWidth="30" resizable="false" sortable="false" />
-                                </columns>
+                                <!--<columns>-->
+                                    <!--<TableColumn fx:id="checkBoxColumn" maxWidth="30.0" minWidth="30.0" prefWidth="30" resizable="false" sortable="false" />-->
+                                <!--</columns>-->
                             </TableView>
                         </VBox>
                     </content>

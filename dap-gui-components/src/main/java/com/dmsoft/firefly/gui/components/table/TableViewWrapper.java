@@ -100,7 +100,7 @@ public class TableViewWrapper extends AbstractTableViewWrapper {
                             } else if (c.wasAdded()) {
                                 this.tableView.getItems().addAll(c.getFrom(), c.getAddedSubList());
                             } else if (c.wasRemoved()) {
-                                this.tableView.getItems().remove(c.getFrom(), c.getTo());
+                                this.tableView.getItems().removeAll(c.getRemoved());
                             }
                         }
                     }
@@ -232,6 +232,9 @@ public class TableViewWrapper extends AbstractTableViewWrapper {
 
     private void decorateCheckboxColumn(TableColumn<String, CheckBox> column) {
         // set column header graphic with check box, and combine event and value
+        column.setSortable(false);
+        column.setResizable(false);
+        column.setPrefWidth(30);
         CheckBox allCheckBox = new CheckBox();
         allCheckBox.selectedProperty().setValue(tableModel.getAllCheckValue(column.getText()).getValue());
         allCheckBox.setOnMouseClicked(event -> {
