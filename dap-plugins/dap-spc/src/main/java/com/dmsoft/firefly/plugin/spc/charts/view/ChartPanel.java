@@ -2,18 +2,22 @@ package com.dmsoft.firefly.plugin.spc.charts.view;
 
 import com.dmsoft.firefly.gui.components.chart.ChartUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.dmsoft.firefly.sdk.plugin.PluginContextEvent;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-
 /**
  * Created by cherry on 2018/2/8.
  */
 public class ChartPanel<T extends XYChart> extends VBox {
 
     private T chart;
-    private Pane chartPane;
-    private GridPane titlePane;
+    private VBox chartPane;
+    private BorderPane titlePane;
 
     private ChartUtils chartUtils;
     private boolean chartSizeChangeEnable = true;
@@ -45,12 +49,16 @@ public class ChartPanel<T extends XYChart> extends VBox {
 
     private void initComponents() {
 
-        legendPane = new HBox();
+        legendPane = new Label();
         customPane = new HBox();
-        titlePane = new GridPane();
-        chartPane = new Pane();
+        titlePane = new BorderPane();
+        chartPane = new VBox();
         zoomInBtn = new Button();
         zoomOutBtn = new Button();
+
+        extensionBtn = new Button();
+        contextMenu = new ContextMenu();
+
         menuBar = new MenuBar();
         extensionMenu = new Menu();
         copyMenuItem = new MenuItem("Save As");
@@ -65,45 +73,46 @@ public class ChartPanel<T extends XYChart> extends VBox {
         oneToOneRatioMenuItem.setToggleGroup(toggleGroup);
         ratioMenu.getItems().addAll(defaultRatioMenuItem, oneToOneRatioMenuItem);
         extensionMenu.getItems().addAll(saveMenuItem, printMenuItem, copyMenuItem, ratioMenu);
-        menuBar.getMenus().add(extensionMenu);
+        menuBar.getMenus().addAll(extensionMenu);
 
-        titlePane.add(legendPane, 0, 0, 10, 1);
-        titlePane.add(customPane, 11, 0, 1, 1);
-        titlePane.add(zoomInBtn, 12, 0, 1, 1);
-        titlePane.add(zoomOutBtn, 13, 0, 1,1);
-        titlePane.add(menuBar, 14, 0, 1,1);
+        contextMenu.getItems().addAll(saveMenuItem, printMenuItem, copyMenuItem, ratioMenu);
 
+        HBox commonBox = new HBox();
+        commonBox.getChildren().add(customPane);
+        commonBox.getChildren().add(zoomInBtn);
+        commonBox.getChildren().add(zoomOutBtn);
+        commonBox.getChildren().add(menuBar);
+//        commonBox.setPrefHeight(20);
+//        commonBox.setMaxHeight(20);
+//        commonBox.setMinHeight(20);
+        titlePane.setLeft(legendPane);
+        titlePane.setRight(commonBox);
         chartPane.getChildren().add(chart);
-
         this.getChildren().add(titlePane);
         this.getChildren().add(chartPane);
     }
 
     private void initComponentRender() {
 
-        chart.setPrefHeight(250);
-        chart.setPrefWidth(500);
-        legendPane.setPrefWidth(400);
-        zoomInBtn.setMaxWidth(25);
-        zoomInBtn.setMinWidth(25);
-        zoomInBtn.setPrefWidth(25);
-        zoomInBtn.setMaxHeight(20);
-        zoomInBtn.setMinHeight(20);
-        zoomInBtn.setPrefHeight(20);
-        zoomOutBtn.setMaxWidth(25);
-        zoomOutBtn.setMinWidth(25);
-        zoomOutBtn.setPrefWidth(25);
-        zoomOutBtn.setMaxHeight(20);
-        zoomOutBtn.setMinHeight(20);
-        zoomOutBtn.setPrefHeight(20);
         extensionMenu.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_more_normal.png")));
+        extensionBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_more_normal.png")));
         zoomInBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_zoom_normal.png")));
         zoomOutBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_narrow_normal.png")));
+        zoomInBtn.getStyleClass().addAll("btn-icon-b");
+        zoomOutBtn.getStyleClass().addAll("btn-icon-b");
+        extensionBtn.getStyleClass().addAll("btn-icon-b");
 
-        zoomInBtn.setStyle("-fx-border-width: 0px");
-        zoomOutBtn.setStyle("-fx-border-width: 0px");
-        extensionMenu.setStyle("-fx-border-width: 0px");
-        customPane.setStyle("-fx-padding: 3px 0px 0px 0px; -fx-border-width: 0px");
+        zoomInBtn.setPrefWidth(20);
+        zoomInBtn.setMaxWidth(20);
+        zoomInBtn.setMinWidth(20);
+        zoomOutBtn.setPrefWidth(20);
+        zoomOutBtn.setMaxWidth(20);
+        zoomOutBtn.setMinWidth(20);
+        extensionBtn.setPrefWidth(20);
+        extensionBtn.setMaxWidth(20);
+        extensionBtn.setMinWidth(20);
+        chart.setPrefHeight(250);
+        chart.setPrefWidth(500);
         chart.setLegendVisible(false);
     }
 
@@ -128,12 +137,25 @@ public class ChartPanel<T extends XYChart> extends VBox {
                 chartUtils.zoomOutChart();
             }
         });
+
+//        extensionBtn.setOnMouseClicked(event -> {
+//
+//            double screenX = extensionBtn.getScene().getWindow().getX() +
+//                    extensionBtn.getScene().getX() + extensionBtn.localToScene(0, 0).getX();
+//            double screenY = extensionBtn.getScene().getWindow().getY() +
+//                    extensionBtn.getScene().getY() + extensionBtn.localToScene(0, 0).getY() +
+//                    extensionBtn.getHeight();
+//            contextMenu.show(this, screenX, screenY);
+//        });
     }
 
-    private HBox legendPane;
+    private Label legendPane;
     private HBox customPane;
     private Button zoomInBtn;
     private Button zoomOutBtn;
+    private Button extensionBtn;
+    private ContextMenu contextMenu;
+
     private MenuBar menuBar;
     private Menu ratioMenu;
     private Menu extensionMenu;
@@ -151,7 +173,7 @@ public class ChartPanel<T extends XYChart> extends VBox {
         this.chart = chart;
     }
 
-    public HBox getLegendPane() {
+    public Label getLegendPane() {
         return legendPane;
     }
 

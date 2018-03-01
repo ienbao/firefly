@@ -1,26 +1,24 @@
 package com.dmsoft.firefly.plugin.spc.charts;
 
 import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationFetch;
-import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
 import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationNode;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import javafx.scene.text.Text;
 
 import java.util.List;
 import java.util.Map;
@@ -30,19 +28,14 @@ import java.util.function.Function;
 /**
  * Created by cherry on 2018/2/7.
  */
-public class LinearChart<X, Y, Z> extends LineChart<X, Y> {
+public class LinearChart<X, Y> extends LineChart<X, Y> {
 
-    public final static Orientation horizontalType = Orientation.HORIZONTAL;
-    public final static Orientation verticalType = Orientation.VERTICAL;
-    private ObservableList<AnnotationNode> annotationNodes;
-    private ObservableList<Data<X, Y>> horizontalMarkers;
-    private ObservableList<Data<X, Y>> verticalMarkers;
+    private ValueMarker valueMarker = new ValueMarker();
 
     private Map<XYChart.Series, String> seriesColorMap = Maps.newHashMap();
     private Map<XYChart.Data, Boolean> dataHasAnnotationMap = Maps.newHashMap();
     private Map<XYChart.Data, AnnotationNode> dataAnnotationMap = Maps.newHashMap();
-
-    private Map<String, Line> lineMap = Maps.newHashMap();
+    private ObservableList<AnnotationNode> annotationNodes = FXCollections.observableArrayList();
 
     private boolean showTooltip = true;
     private boolean showAnnotation = false;
@@ -50,12 +43,9 @@ public class LinearChart<X, Y, Z> extends LineChart<X, Y> {
     private String textColor = "#e92822";
 
     /* This will be our update listener, to be invoked whenever the chart changes or annotations are added */
-    private final InvalidationListener listener = new InvalidationListener() {
-        @Override
-        public void invalidated(final Observable observable) {
-            if (showAnnotation) {
-                update();
-            }
+    private final InvalidationListener listener = observable -> {
+        if (showAnnotation) {
+            update();
         }
     };
 
@@ -68,16 +58,13 @@ public class LinearChart<X, Y, Z> extends LineChart<X, Y> {
     public LinearChart(Axis<X> xAxis, Axis<Y> yAxis) {
 
         super(xAxis, yAxis, FXCollections.observableArrayList());
-        horizontalMarkers = FXCollections.observableArrayList(d -> new Observable[]{d.YValueProperty()});
-        verticalMarkers = FXCollections.observableArrayList(d -> new Observable[]{d.YValueProperty()});
-        annotationNodes = FXCollections.observableArrayList();
         annotationNodes.addListener(listener);
     }
 
     /**
      * @param xyChartData
      */
-    public void addDataToChart(List<XYChartData> xyChartData,
+    public void addDataToChart(List<IXYChartData> xyChartData,
                                Function<PointTooltip, String> pointTooltipFunction) {
 
         xyChartData.forEach(xyOneChartData -> {
@@ -91,7 +78,7 @@ public class LinearChart<X, Y, Z> extends LineChart<X, Y> {
      * @param xyOneChartData
      * @param pointTooltipFunction
      */
-    public void createChartSeries(XYChartData<X, Y, Z> xyOneChartData,
+    public void createChartSeries(IXYChartData<X, Y> xyOneChartData,
                                   Function<PointTooltip, String> pointTooltipFunction) {
 
         XYChart.Series oneSeries = this.buildSeries(xyOneChartData);
@@ -101,16 +88,20 @@ public class LinearChart<X, Y, Z> extends LineChart<X, Y> {
         this.seriesColorMap.put(oneSeries, xyOneChartData.getColor());
     }
 
-    private XYChart.Series buildSeries(XYChartData<X, Y, Z> xyOneChartData) {
+    private XYChart.Series buildSeries(IXYChartData<X, Y> xyOneChartData) {
 
         XYChart.Series oneSeries = new XYChart.Series();
-        oneSeries.setName(xyOneChartData.getCurrentGroupKey());
-        X[] x = xyOneChartData.getX();
-        Y[] y = xyOneChartData.getY();
-        Z[] ids = xyOneChartData.getIds();
-        for (int i = 0; i < x.length; i++) {
-            XYChart.Data data = new XYChart.Data<>(x[i], y[i]);
-            Object extraValue = ids != null && ids.length < i ? "" : ids[i];
+        oneSeries.setName(xyOneChartData.getSeriesName());
+        int length = xyOneChartData.getLen();
+        for (int i = 0; i < length; i++) {
+            X xValue = xyOneChartData.getXValueByIndex(i);
+            Y yValue = xyOneChartData.getYValueByIndex(i);
+            if (xValue == null || yValue == null) {
+                continue;
+            }
+            XYChart.Data data = new XYChart.Data<>(xValue, yValue);
+            Object extraValue = xyOneChartData.getExtraValueByIndex(i) != null ? "" :
+                    xyOneChartData.getExtraValueByIndex(i);
             data.setExtraValue(extraValue);
             oneSeries.getData().add(data);
         }
@@ -133,87 +124,54 @@ public class LinearChart<X, Y, Z> extends LineChart<X, Y> {
         });
     }
 
-    public void createBrokenLineData(BrokenLineData<Y> brokenLineData) {
+//    public void createBrokenLineData(BrokenLineData<Y> brokenLineData) {
+//
+//        XYChart.Series oneSeries = new XYChart.Series();
+//        String seriesName = brokenLineData.getName();
+//        oneSeries.setName(seriesName);
+//        Y[] y = brokenLineData.getValue();
+//        for (int i = 0; i < y.length; i++) {
+//            XYChart.Data data = new XYChart.Data<>(i + 1, y[i]);
+//            oneSeries.getData().add(data);
+//        }
+//        this.getData().add(oneSeries);
+//        this.setSeriesDataStyleByDefault(oneSeries, brokenLineData.getColor(), true);
+//    }
 
-        XYChart.Series oneSeries = new XYChart.Series();
-        String seriesName = brokenLineData.getName();
-        oneSeries.setName(seriesName);
-        Y[] y = brokenLineData.getValue();
-        for (int i = 0; i < y.length; i++) {
-            XYChart.Data data = new XYChart.Data<>(i + 1, y[i]);
-            oneSeries.getData().add(data);
-        }
-        this.getData().add(oneSeries);
-        this.setSeriesDataStyleByDefault(oneSeries, brokenLineData.getColor(), true);
-    }
-
-    public void createAbnormalPointData(AbnormalPointData<X, Y> abnormalPointData) {
-
-        String seriesName = abnormalPointData.getName();
-        XYChart.Series oneSeries = new XYChart.Series();
-        oneSeries.setName(seriesName);
-        X[] x = abnormalPointData.getX();
-        Y[] y = abnormalPointData.getY();
-        for (int i = 0; i < x.length; i++) {
-            XYChart.Data data = new XYChart.Data<>(x[i], y[i]);
-            oneSeries.getData().add(data);
-        }
-        this.getData().add(oneSeries);
-        this.setSeriesDataStyleByDefault(oneSeries, abnormalPointData.getColor(), false);
-    }
+//    public void createAbnormalPointData(AbnormalPointData<X, Y> abnormalPointData) {
+//
+//        String seriesName = abnormalPointData.getName();
+//        XYChart.Series oneSeries = new XYChart.Series();
+//        oneSeries.setName(seriesName);
+//        X[] x = abnormalPointData.getX();
+//        Y[] y = abnormalPointData.getY();
+//        for (int i = 0; i < x.length; i++) {
+//            XYChart.Data data = new XYChart.Data<>(x[i], y[i]);
+//            oneSeries.getData().add(data);
+//        }
+//        this.getData().add(oneSeries);
+//        this.setSeriesDataStyleByDefault(oneSeries, abnormalPointData.getColor(), false);
+//    }
 
     public void addValueMarker(LineData lineData) {
 
-        Line line = new Line();
-        Orientation orientationType = lineData.getPlotOrientation();
-        XYChart.Data marker = horizontalType == orientationType ?
-                new XYChart.Data(0, lineData.getValue()) :
-                new XYChart.Data(lineData.getValue(), 0);
-        marker.setNode(line);
+        Line line = valueMarker.buildValueMarker(lineData);
         getPlotChildren().add(line);
-        lineMap.put(lineData.getName(), line);
-
-        if (horizontalType == orientationType) {
-            horizontalMarkers.add(marker);
-        }
-        if (verticalType == orientationType) {
-            verticalMarkers.add(marker);
-        }
-        if (lineData.getLineClass() != null) {
-            line.getStyleClass().setAll("line", lineData.getLineClass());
-        }
-        if (lineData.getColor() != null) {
-            line.setStyle("-fx-stroke:" + lineData.getColor());
-        }
-
-        line.setOnMouseEntered(event -> {
-            Tooltip tooltip = new Tooltip(lineData.getTitle() + "\n"
-                    + lineData.getName() + "=" + lineData.getValue());
-            Tooltip.install(line, tooltip);
-        });
     }
 
     public void toggleValueMarker(String lineName, boolean showed) {
 
-        if (showed) {
-            showValueMarker(lineName);
-        } else {
-            hiddenValueMarker(lineName);
-        }
+        valueMarker.toggleValueMarker(lineName, showed);
     }
 
     public void hiddenValueMarker(String lineName) {
 
-        if (lineMap.containsKey(lineName)) {
-            lineMap.get(lineName).getStyleClass().add("hidden-line");
-        }
+        valueMarker.hiddenValueMarker(lineName);
     }
 
     public void showValueMarker(String lineName) {
 
-        if (lineMap.containsKey(lineName)) {
-            lineMap.get(lineName).getStyleClass().remove("hidden-line");
-        }
+        valueMarker.showValueMarker(lineName);
     }
 
     public void toggleSeriesLine(XYChart.Series<X, Y> series, boolean showed) {
@@ -237,34 +195,9 @@ public class LinearChart<X, Y, Z> extends LineChart<X, Y> {
     @Override
     protected void layoutPlotChildren() {
 
-//        Draw stroke chart
         super.layoutPlotChildren();
-
-//        Draw horizontal markers
-        for (Data<X, Y> horizontalMarker : horizontalMarkers) {
-            double lower = ((ValueAxis) getXAxis()).getLowerBound();
-            double upper = ((ValueAxis) getXAxis()).getUpperBound();
-            X lowerX = getXAxis().toRealValue(lower);
-            X upperX = getXAxis().toRealValue(upper);
-            Line line = (Line) horizontalMarker.getNode();
-            line.setStartX(getXAxis().getDisplayPosition(lowerX));
-            line.setEndX(getXAxis().getDisplayPosition(upperX));
-            line.setStartY(getYAxis().getDisplayPosition(horizontalMarker.getYValue()));
-            line.setEndY(line.getStartY());
-        }
-
-//        Draw vertical markers
-        for (Data<X, Y> verticalMarker : verticalMarkers) {
-            double lower = ((ValueAxis) getYAxis()).getLowerBound();
-            double upper = ((ValueAxis) getYAxis()).getUpperBound();
-            Y lowerY = getYAxis().toRealValue(lower);
-            Y upperY = getYAxis().toRealValue(upper);
-            Line line = (Line) verticalMarker.getNode();
-            line.setStartX(getXAxis().getDisplayPosition(verticalMarker.getXValue()));
-            line.setEndX(line.getStartX());
-            line.setStartY((getYAxis()).getDisplayPosition(lowerY));
-            line.setEndY(getYAxis().getDisplayPosition(upperY));
-        }
+//        paint line
+        valueMarker.paintValueMaker(this);
     }
 
     /**
@@ -293,26 +226,23 @@ public class LinearChart<X, Y, Z> extends LineChart<X, Y> {
 
         String seriesName = series.getName();
         Tooltip tooltip = new Tooltip(
-                seriesName + "\n(" + data.getXValue().toString() + ", " + data.getYValue() + ")");
+                seriesName + "\n(" + data.getXValue() + ", " + data.getYValue() + ")");
         Tooltip.install(data.getNode(), tooltip);
     }
 
     public void setSeriesAnnotationEvent(XYChart.Series series,
-                                         String color,
                                          AnnotationFetch fetch) {
 
         ObservableList<Data<X, Y>> data = series.getData();
         data.forEach(dataItem -> {
             dataItem.getNode().setOnMouseClicked(event -> {
-                String value = "default";
-                if (fetch != null) {
-                    fetch.getValue(dataItem.getExtraValue());
-                }
-                if (!dataHasAnnotationMap.containsKey(dataItem) || !dataHasAnnotationMap.get(dataItem)) {
-                    addAnnotation(dataItem, value, color);
-                } else {
-                    removeAnnotation(dataItem);
-                }
+
+                dataItem.getNode().getStyleClass().remove("chart-line-symbol");
+                dataItem.getNode().getStyleClass().add("chart-symbol-triangle");
+                StackPane pane = (StackPane) dataItem.getNode();
+                Text text = new Text("default");
+                text.setStyle(" -fx-fill: " + textColor);
+                pane.getChildren().add(text);
             });
         });
     }
@@ -397,6 +327,13 @@ public class LinearChart<X, Y, Z> extends LineChart<X, Y> {
             dataAnnotationMap.put(value, annotationNode);
             dataHasAnnotationMap.put(value, true);
             value.getNode().getStyleClass().add("chart-line-hidden-symbol");
+
+//            final Text dataText = new Text(text);
+//            annotationNode.getNode().parentProperty().addListener((ov, oldParent, parent) -> {
+//                Group parentGroup = (Group) parent;
+//                parentGroup.getChildren().add(dataText);
+//            });
+
         }
     }
 

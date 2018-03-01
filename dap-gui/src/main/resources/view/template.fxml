@@ -16,7 +16,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </TextField>
-                  <ListView prefHeight="460.0" prefWidth="160.0" style="-fx-border-width: 0 1 0 1; -fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
+                  <ListView fx:id="templateName" prefHeight="460.0" prefWidth="160.0" style="-fx-border-width: 0 1 0 1; -fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
                   <HBox prefHeight="22.0" prefWidth="160.0">
                      <children>
                         <Button fx:id="rename" maxWidth="32.0" minWidth="32.0" mnemonicParsing="false" prefWidth="32.0" styleClass="btn-txt">

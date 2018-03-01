@@ -1,11 +1,18 @@
 package com.dmsoft.firefly.plugin.spc.charts.view;
 
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
-import com.dmsoft.firefly.plugin.spc.charts.SelectCallBack;
 import com.dmsoft.firefly.plugin.spc.charts.model.CheckTableModel;
+import com.dmsoft.firefly.plugin.spc.charts.model.SimpleItemCheckModel;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Popup;
 
 import java.util.List;
@@ -16,8 +23,16 @@ import java.util.List;
 public class ChartAnnotationButton extends Button {
 
     private Popup popup;
-    private TextField itemFilter;
     private GridPane gridPane;
+    private TextField itemFilter;
+    private ImageView imageReset;
+    private ListView<SimpleItemCheckModel> dataListView;
+    private ObservableList<SimpleItemCheckModel> dataModels = FXCollections.observableArrayList();
+
+    private final int defaultSelectedIndex = 0;
+    public final Double MAX_HEIGHT = 300.0;
+    public final Double MAX_WIDTH = 180.0;
+
     private TableViewWrapper tableViewWrapper;
     private TableView<String> tableView;
     private CheckTableModel tableModel;
@@ -25,75 +40,136 @@ public class ChartAnnotationButton extends Button {
     private Button clearBtn;
     private Button editBtn;
 
-    public ChartAnnotationButton(String[] columns, int checkBoxIndex) {
-        this("", columns, checkBoxIndex, true);
+    public ChartAnnotationButton() {
+
+        this.initComponent();
+        this.initRender();
+        this.initEvent();
+        this.initData();
     }
 
-    public ChartAnnotationButton(String[] columns, int checkBoxIndex, boolean selected) {
-        this("", columns, checkBoxIndex, selected);
+    public void setData(List<String> data) {
+        this.setData(data, defaultSelectedIndex);
     }
 
-    public ChartAnnotationButton(String name, String[] columns, int checkBoxIndex) {
-        this(name, columns, checkBoxIndex, true);
+    public void setData(List<String> data, int selectedIndex) {
+        if (data == null) {
+            dataListView.setItems(dataModels);
+            return;
+        }
+        for (int i = 0; i < data.size(); i++) {
+            boolean selected = (selectedIndex == i);
+            dataModels.add(new SimpleItemCheckModel(data.get(i), selected));
+        }
+        dataListView.setItems(dataModels);
     }
 
-    public ChartAnnotationButton(String name, String[] columns, int checkBoxIndex, boolean selected) {
-        super(name);
-
-        itemFilter = new TextField();
-        itemFilter.setPromptText("Filter");
-        itemFilter.setPrefWidth(100);
-        tableView = new TableView<>();
-        tableModel = new CheckTableModel();
-        tableModel.setDefaultSelect(selected);
-        tableModel.setCheckIndex(checkBoxIndex);
-        tableModel.getHeaderArray().addAll(columns);
-        tableViewWrapper = new TableViewWrapper(tableView, tableModel);
-        gridPane = new GridPane();
-        editBtn = new Button();
-        clearBtn = new Button();
-        editBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_cancel_tracing_point_normal.png")));
-        clearBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_remove_tracing_point_normal.png")));
-        gridPane.add(itemFilter, 0, 0, 4, 1);
-        gridPane.add(tableViewWrapper.getWrappedTable(), 0, 2, 4, 1);
-        gridPane.add(editBtn, 2, 3, 1, 1);
-        gridPane.add(clearBtn, 3, 3, 1, 1);
+    private void initComponent() {
 
         popup = new Popup();
-        popup.getContent().addAll(gridPane);
-        popup.setAutoHide(true);
-        this.setStyle("-fx-border-width: 0px");
-        this.setMaxWidth(25);
-        this.setMinWidth(25);
-        this.setPrefWidth(25);
-        this.setMaxHeight(20);
-        this.setMinHeight(20);
-        this.setPrefHeight(20);
-        javafx.scene.control.Button button = this;
-        this.setOnMousePressed(event -> {
-            double x = event.getSceneX();
-            double y = event.getSceneY();
+        gridPane = new GridPane();
+        clearBtn = new Button();
+        editBtn = new Button();
+        itemFilter = new TextField();
+        imageReset = new ImageView(new Image("/images/icon_choose_one_gray.png"));
+        dataListView = new ListView<>();
+        dataListView.setCellFactory( e -> this.buildListCell());
+
+        HBox hBox = new HBox();
+        hBox.getChildren().addAll(editBtn, clearBtn);
+        BorderPane borderPane = new BorderPane();
+        borderPane.setRight(hBox);
+        gridPane.addRow(0, itemFilter);
+        gridPane.addRow(1, dataListView);
+        gridPane.addRow(2, borderPane);
+        popup.getContent().add(gridPane);
+    }
+
+    private void initEvent() {
+
+        dataListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        dataListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            newValue.setIsChecked(true);
+            if (oldValue != null) {
+                oldValue.setIsChecked(false);
+            }
+//            templateBtn.setText(newValue.getTemplateName());
+            dataListView.refresh();
+            // to do
+            // change analyze template
+        });
+
+        Button button = this;
+        button.setOnMousePressed(event -> {
+            Double preHeight = dataListView.getPrefHeight();
+            if (preHeight >= MAX_HEIGHT) {
+                preHeight = MAX_HEIGHT;
+            }
+            double x = button.getScene().getWindow().getX() +
+                    button.getScene().getX() + button.localToScene(0, 0).getX();
+            double y = button.getScene().getWindow().getY() +
+                    button.getScene().getY() + button.localToScene(0, 0).getY() - preHeight - 5;
+
             popup.show(button, x, y);
         });
     }
 
-    public void setTableRowKeys(List<String> rowKeys) {
-        tableModel.getRowKeyArray().addAll(rowKeys);
+    private void initRender() {
+
+        clearBtn.setGraphic(ImageUtils.getImageView(getClass()
+                .getResourceAsStream("/images/btn_remove_tracing_point_normal.png")));
+        editBtn.setGraphic(ImageUtils.getImageView(getClass()
+                .getResourceAsStream("/images/btn_cancel_tracing_point_normal.png")));
+        clearBtn.getStyleClass().addAll("btn-icon-b");
+        editBtn.getStyleClass().addAll("btn-icon-b");
+        clearBtn.setPrefWidth(25);
+        clearBtn.setMinWidth(25);
+        clearBtn.setMaxWidth(25);
+        editBtn.setPrefWidth(25);
+        editBtn.setMinWidth(25);
+        editBtn.setMaxWidth(25);
+
+        this.setPrefWidth(25);
+        this.setMinWidth(25);
+        this.setMaxWidth(25);
+
+        imageReset.setFitHeight(16);
+        imageReset.setFitWidth(16);
+        itemFilter.setPromptText("Filter");
+        gridPane.setPrefHeight(200);
+        gridPane.setPrefWidth(100);
+        gridPane.setMaxHeight(MAX_HEIGHT);
+        gridPane.setStyle("-fx-border-width: 1px; -fx-border-color: #cccccc");
     }
 
-    public void setTableViewSize(double width, double height) {
-        tableView.setPrefWidth(width);
-        tableView.setPrefHeight(height);
+    private void initData() {
+        dataListView.setItems(dataModels);
     }
 
-    public void setTableViewColumnWidth(int columnIndex, double width) {
-        if (columnIndex < tableView.getColumns().size()) {
-            TableColumn column = tableView.getColumns().get(columnIndex);
-            column.setPrefWidth(width);
-        }
+    private ListCell<SimpleItemCheckModel> buildListCell() {
+
+        ListCell<SimpleItemCheckModel> listCell = new ListCell<SimpleItemCheckModel>() {
+            @Override
+            public void updateItem(SimpleItemCheckModel item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!empty && item != null) {
+                    HBox cell;
+                    Label label = new Label(item.getItemName());
+                    if (item.isIsChecked()) {
+                        cell = new HBox(imageReset, label);
+                        dataListView.getSelectionModel().select(item);
+                    } else {
+                        Label label1 = new Label("");
+                        label1.setPrefWidth(16);
+                        label1.setPrefHeight(16);
+                        cell = new HBox(label1, label);
+                    }
+                    setGraphic(cell);
+                }
+            }
+        };
+        return listCell;
     }
 
-    public void setSelectCallBack(SelectCallBack selectCallBack) {
-        tableModel.setSelectCallBack(selectCallBack);
-    }
+
 }

@@ -1,56 +1,98 @@
 package com.dmsoft.firefly.plugin.spc.charts.data;
 
+import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
+
 /**
- * Created by cherry on 2018/2/7.
+ * Created by cherry on 2018/2/27.
  */
-public class XYChartData<X, Y, Z> {
+public class XYChartData<X, Y> implements IXYChartData {
 
-    //    Basic chart data
-    private X[] x;
-    private Y[] y;
-    private Z[] ids;
+    private X[] x = null;
+    private Y[] y = null;
+    private Object[] ids = null;
 
+    //    Series index
+    private int index;
+
+    //    Series color
     private String color;
 
-    private String currentGroupKey;
+    //    Series name
+    private String seriesName;
 
-    public X[] getX() {
-        return x;
+    public XYChartData() {
+    }
+
+    public XYChartData(X[] x, Y[] y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public XYChartData(X[] x, Y[] y, Object[] ids) {
+        this.x = x;
+        this.y = y;
+        this.ids = ids;
+    }
+
+    @Override
+    public int getLen() {
+
+        return (x == null || y == null) ? 0 : (x.length < y.length) ? x.length : y.length;
+    }
+
+    @Override
+    public Object getXValueByIndex(int index) {
+
+        return (index > 0 && index < getLen()) ? x[index] : null;
+    }
+
+    @Override
+    public Object getYValueByIndex(int index) {
+
+        return (index > 0 && index < getLen()) ? y[index] : null;
+    }
+
+    @Override
+    public Object getExtraValueByIndex(int index) {
+
+        return (index > 0 && index < getLen()) && (ids != null) && (ids.length > index) ? ids[index] : null;
+    }
+
+    @Override
+    public String getColor() {
+        return color;
+    }
+
+    @Override
+    public String getSeriesName() {
+        return seriesName;
     }
 
     public void setX(X[] x) {
         this.x = x;
     }
 
-    public Y[] getY() {
-        return y;
-    }
-
     public void setY(Y[] y) {
         this.y = y;
     }
 
-    public Z[] getIds() {
-        return ids;
-    }
-
-    public void setIds(Z[] ids) {
+    public void setIds(Object[] ids) {
         this.ids = ids;
     }
 
-    public String getColor() {
-        return color;
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     public void setColor(String color) {
         this.color = color;
     }
 
-    public String getCurrentGroupKey() {
-        return currentGroupKey;
+    public void setSeriesName(String seriesName) {
+        this.seriesName = seriesName;
     }
 
-    public void setCurrentGroupKey(String currentGroupKey) {
-        this.currentGroupKey = currentGroupKey;
+    public int getIndex() {
+        return index;
     }
 }

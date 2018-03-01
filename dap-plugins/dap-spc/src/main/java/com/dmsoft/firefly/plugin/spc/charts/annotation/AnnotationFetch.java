@@ -6,4 +6,10 @@ package com.dmsoft.firefly.plugin.spc.charts.annotation;
 public interface AnnotationFetch {
 
     String getValue(Object id);
+
+    String getOriginalStyleClass();
+
+    String getNewStyleClass();
+
+
 }
