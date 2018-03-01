@@ -7,7 +7,6 @@ package com.dmsoft.firefly.gui.controller.template;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
-import com.dmsoft.firefly.gui.model.DataAndProgress;
 import com.dmsoft.firefly.gui.utils.ImageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
@@ -57,7 +56,7 @@ public class DataSourceController implements Initializable {
     private TableColumn<ChooseTableRowData, CheckBox> chooseCheckBoxColumn;
 
     @FXML
-    private TableColumn<ChooseTableRowData, DataAndProgress> chooseValueColumn;
+    private TableColumn<ChooseTableRowData, ChooseTableRowData> chooseValueColumn;
 
     private CheckBox allCheckBox;
     private ObservableList<ChooseTableRowData> chooseTableRowDataObservableList;
@@ -77,17 +76,13 @@ public class DataSourceController implements Initializable {
         chooseCheckBoxColumn.setGraphic(allCheckBox);
 
         chooseCheckBoxColumn.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
-        chooseValueColumn.setCellValueFactory(cellData -> {
-            DataAndProgress dataAndProgress = new DataAndProgress(cellData.getValue().valueProperty().getValue(), cellData.getValue().getProgress(), cellData.getValue().isSelect(), cellData.getValue().isOver());
-            return new SimpleObjectProperty<>(dataAndProgress);
-        });
-        chooseValueColumn.setCellFactory(new Callback<TableColumn<ChooseTableRowData, DataAndProgress>, TableCell<ChooseTableRowData, DataAndProgress>>() {
+        chooseValueColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue()));
+        chooseValueColumn.setCellFactory(new Callback<TableColumn<ChooseTableRowData, ChooseTableRowData>, TableCell<ChooseTableRowData, ChooseTableRowData>>() {
             @Override
-            public TableCell<ChooseTableRowData, DataAndProgress> call(TableColumn<ChooseTableRowData, DataAndProgress> param) {
-                TableCell tableCell =  new TableCell<ChooseTableRowData, DataAndProgress>() {
-
+            public TableCell<ChooseTableRowData, ChooseTableRowData> call(TableColumn<ChooseTableRowData, ChooseTableRowData> param) {
+                return new TableCell<ChooseTableRowData, ChooseTableRowData>() {
                     @Override
-                    protected void updateItem(DataAndProgress item, boolean empty) {
+                    protected void updateItem(ChooseTableRowData item, boolean empty) {
                         if (item != null && item.equals(getItem())) {
                             return;
                         }
@@ -117,6 +112,10 @@ public class DataSourceController implements Initializable {
                             deleteOne.getStyleClass().add("btn-icon");
                             deleteOne.getStyleClass().add("delete-icon");
 
+                            rename.setVisible(false);
+                            deleteOne.setVisible(false);
+                            progressBar.setVisible(false);
+
                             deleteOne.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
                             hBox.getChildren().add(textField);
                             hBox.getChildren().add(progressBar);
@@ -126,13 +125,24 @@ public class DataSourceController implements Initializable {
                             HBox.setHgrow(progressBar, Priority.NEVER);
                             HBox.setHgrow(rename, Priority.NEVER);
                             HBox.setHgrow(deleteOne, Priority.NEVER);
+                            hBox.setOnMouseEntered(event -> {
+                                rename.setVisible(true);
+                                deleteOne.setVisible(true);
+                            });
+                            hBox.setOnMouseExited(event -> {
+                                rename.setVisible(false);
+                                deleteOne.setVisible(false);
+                            });
+                            rename.setOnAction(event -> {
+                                System.out.println("rename btn event");
+                            });
+                            deleteOne.setOnAction(event -> {
+                                System.out.println("deleteOne btn event");
+                            });
                             this.setGraphic(hBox);
-
                         }
                     }
-
                 };
-                return tableCell;
             }
         });
         chooseTableRowDataObservableList = FXCollections.observableArrayList();
@@ -197,8 +207,6 @@ public class DataSourceController implements Initializable {
             if (file != null) {
                 importDataSource(file.getPath(), file.getName());
             }
-        });
-        dataSourceTable.setOnMouseMoved(event -> {
         });
     }
 

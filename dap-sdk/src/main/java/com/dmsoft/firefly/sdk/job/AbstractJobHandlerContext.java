@@ -28,7 +28,7 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
     private volatile boolean doNextInbound;
     private volatile boolean doNextOutbound;
     private final List<JobEventListener> eventListeners;
-    private final String sessionId;
+    private final Job session;
 
 //    public AbstractJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, boolean inbound, boolean outbound, String name) {
 //        this.jobPipeline = jobPipeline;
@@ -38,7 +38,7 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
 //        this.name = name;
 //    }
 
-    public AbstractJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, boolean inbound, boolean outbound, String name, ExecutorService executorService, List<JobEventListener> eventListeners, String sessionId) {
+    public AbstractJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, boolean inbound, boolean outbound, String name, ExecutorService executorService, List<JobEventListener> eventListeners, Job session) {
         this.jobPipeline = jobPipeline;
         this.jobDoComplete = jobDoComplete;
         this.inbound = inbound;
@@ -46,7 +46,7 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
         this.name = name;
         this.executorService = executorService;
         this.eventListeners = eventListeners;
-        this.sessionId = sessionId;
+        this.session = session;
     }
 
     @Override
@@ -112,7 +112,13 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
     public <T> void fireJobEvent(T result) {
         if (eventListeners != null) {
             eventListeners.forEach(v -> {
-                JobEvent event = new JobEvent(sessionId, result);
+                JobEvent event = new JobEvent(this.session.getJobId(), result);
+                v.eventNotify(event);
+            });
+        }
+        if (session.getJobEventListeners() != null) {
+            session.getJobEventListeners().forEach(v -> {
+                JobEvent event = new JobEvent(this.session.getJobId(), result);
                 v.eventNotify(event);
             });
         }

@@ -38,6 +38,10 @@ public class Job extends AbstractValueObject {
         this.jobName = jobName;
     }
 
+    public List<JobEventListener> getJobEventListeners() {
+        return jobEventListeners;
+    }
+
     public void addJobEventListener(JobEventListener jobEventListener) {
         this.jobEventListeners.add(jobEventListener);
     }

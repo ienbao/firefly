@@ -23,16 +23,16 @@ public class DefaultJobPipeline implements JobPipeline {
     private Object result;
     private final ExecutorService executorService;
     private final List<JobEventListener> jobEventListeners;
-    private final String sessionId;
+    private final Job session;
     private AtomicInteger process = new AtomicInteger(0);
 
-    public DefaultJobPipeline(JobDoComplete doComplete, ExecutorService executorService, List<JobEventListener> jobEventListeners, String sessionId) {
+    public DefaultJobPipeline(JobDoComplete doComplete, ExecutorService executorService, List<JobEventListener> jobEventListeners, Job session) {
         this.doComplete = doComplete;
         this.executorService = executorService;
         head = new HeadContext(this, doComplete);
         tail = new TailContext(this, doComplete);
         this.jobEventListeners = jobEventListeners;
-        this.sessionId = sessionId;
+        this.session = session;
 
         head.next = tail;
         tail.prev = head;
@@ -216,13 +216,13 @@ public class DefaultJobPipeline implements JobPipeline {
     }
 
     private AbstractJobHandlerContext newContext(String name, JobHandler handler) {
-        return new DefaultJobHandlerContext(this, doComplete, name, executorService, handler, jobEventListeners, sessionId);
+        return new DefaultJobHandlerContext(this, doComplete, name, executorService, handler, jobEventListeners, session);
     }
 
     final class TailContext extends AbstractJobHandlerContext implements JobInboundHandler {
 
         public TailContext(JobPipeline jobPipeline, JobDoComplete complete) {
-            super(jobPipeline, complete, true, false, "TailContext", executorService, Lists.newArrayList(), sessionId);
+            super(jobPipeline, complete, true, false, "TailContext", executorService, Lists.newArrayList(), session);
         }
 
         @Override
@@ -245,7 +245,7 @@ public class DefaultJobPipeline implements JobPipeline {
     final class HeadContext extends AbstractJobHandlerContext implements JobOutboundHandler {
 
         public HeadContext(JobPipeline jobPipeline, JobDoComplete complete) {
-            super(jobPipeline, complete, false, true, "HeadContext", executorService, Lists.newArrayList(), sessionId);
+            super(jobPipeline, complete, false, true, "HeadContext", executorService, Lists.newArrayList(), session);
         }
 
         @Override
