@@ -9,13 +9,19 @@ import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.utils.ImageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceBundleUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
+import java.beans.EventHandler;
+import java.io.IOException;
 import java.util.ResourceBundle;
 
 import static com.google.common.io.Resources.getResource;
@@ -30,10 +36,16 @@ public class TemplateController {
     @FXML
     private VBox timeKeys;
     @FXML
+    private ListView templateName;
+    private ObservableList<String> templateNames = FXCollections.observableArrayList();
+
+    private NewTemplateController newTemplateController;
+    @FXML
     private void initialize() {
         initButton();
         timeKeys.getChildren().add(new TimePane());
         initEvent();
+        templateName.setItems(templateNames);
     }
 
     private void initButton() {
@@ -49,7 +61,12 @@ public class TemplateController {
     }
 
     private void initEvent() {
-        add.setOnAction(event -> initData());
+        add.setOnAction(event -> buildNewTemplateDialog());
+        rename.setOnAction(event -> {
+            if (templateName.getSelectionModel().getSelectedItem() != null){
+                buildRenameTemplateDialog();
+            }
+        });
         pattern.setOnAction(event -> buildPatternDia());
         addRow.setOnAction(event -> buildAddItemDia());
         addTime.setOnAction(event -> timeKeys.getChildren().add(new TimePane()));
@@ -65,8 +82,39 @@ public class TemplateController {
         });
     }
 
-    private void initData(){
+    public void initData(){
 
+    }
+
+    private void buildNewTemplateDialog() {
+        Pane root = null;
+        try {
+            FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+            newTemplateController = new NewTemplateController();
+            newTemplateController.setTemplateController(this);
+            loader.setController(newTemplateController);
+            root = loader.load();
+
+            Stage stage = WindowFactory.createSimpleWindowAsModel("newTemplate", "New Template", root);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void buildRenameTemplateDialog() {
+        Pane root = null;
+        try {
+            FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+            RenameTemplateController renameTemplateController = new RenameTemplateController();
+            renameTemplateController.setName(templateName.getSelectionModel().getSelectedItem().toString(), templateNames);
+            loader.setController(renameTemplateController);
+            root = loader.load();
+
+            Stage stage = WindowFactory.createSimpleWindowAsModel("renameTemplate", "Rename Template", root);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     private void buildPatternDia() {
         Pane root = null;
@@ -89,5 +137,9 @@ public class TemplateController {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public ObservableList<String> getTemplateNames() {
+        return templateNames;
     }
 }
