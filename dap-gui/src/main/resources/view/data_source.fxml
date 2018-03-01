@@ -32,12 +32,12 @@
                   <Insets bottom="5.0" left="10.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <Button fx:id="search" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
+            <Button fx:id="search" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-icon" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Button>
-            <Button fx:id="delete" maxHeight="22.0" maxWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" GridPane.columnIndex="3" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
+            <Button fx:id="delete" maxHeight="22.0" maxWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-icon" GridPane.columnIndex="3" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>

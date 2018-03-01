@@ -13,6 +13,15 @@ public class ChooseTableRowData {
     private TableCheckBox selector = new TableCheckBox();
     private SimpleStringProperty value;
     private double progress;
+    private boolean isImport = false;
+
+    public boolean isImport() {
+        return isImport;
+    }
+
+    public void setImport(boolean anImport) {
+        isImport = anImport;
+    }
 
     public double getProgress() {
         return progress;

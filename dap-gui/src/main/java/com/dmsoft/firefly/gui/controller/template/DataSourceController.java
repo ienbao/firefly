@@ -104,7 +104,6 @@ public class DataSourceController implements Initializable {
                             progressBar.setMaxHeight(5);
                             progressBar.setPrefHeight(5);
                             progressBar.setMinHeight(5);
-                            progressBar.setProgress(50);
                             Button rename = new Button();
                             rename.getStyleClass().add("btn-icon");
                             rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rename_normal.png")));
@@ -114,7 +113,7 @@ public class DataSourceController implements Initializable {
 
                             rename.setVisible(false);
                             deleteOne.setVisible(false);
-                            progressBar.setVisible(false);
+                            progressBar.setVisible(item.isImport());
 
                             deleteOne.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
                             hBox.getChildren().add(textField);
@@ -137,7 +136,10 @@ public class DataSourceController implements Initializable {
                                 System.out.println("rename btn event");
                             });
                             deleteOne.setOnAction(event -> {
-                                System.out.println("deleteOne btn event");
+                                List<String> deleteProjects = Lists.newArrayList();
+                                deleteProjects.add(item.getValue());
+                                sourceDataService.deleteProject(deleteProjects);
+                                chooseTableRowDataObservableList.remove(item);
                             });
                             this.setGraphic(hBox);
                         }
@@ -221,15 +223,18 @@ public class DataSourceController implements Initializable {
         PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
         List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.DATA_PARSER);
         IDataParser service = (IDataParser) pluginClasses.get(0).getInstance();
+        ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, fileName);
+        chooseTableRowData.setImport(true);
         new SwingWorker() {
             @Override
             protected Object doInBackground() throws Exception {
                 service.importFile(filPath);
+                chooseTableRowData.setImport(false);
+                dataSourceTable.refresh();
                 return null;
             }
         }.execute();
 
-        ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, fileName);
         chooseTableRowDataObservableList.add(chooseTableRowData);
     }
 
