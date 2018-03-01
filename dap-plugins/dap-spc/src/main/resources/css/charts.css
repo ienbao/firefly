@@ -1,8 +1,8 @@
 
 .table-no-header .column-header-background {
-    -fx-max-height: 0;
-    -fx-pref-height: 0;
-    -fx-min-height: 0;
+    -fx-max-height: 0px;
+    -fx-pref-height: 0px;
+    -fx-min-height: 0px;
 }
 
 .chart {
@@ -96,6 +96,8 @@
     /*-fx-background-radius: 0;*/
     -fx-background-insets: -2;
     -fx-shape: "M5,3 L10,8 L0,8 Z";
+
+
 }
 
 .chart-symbol-triangle:hover {
@@ -171,13 +173,7 @@
     -fx-blend-mode: OVERLAY;
 }
 
-.btn-icon {
-    -fx-background-color: white;
-}
 
-.btn-icon:hover {
-    -fx-background-color: #e92822;
-}
 
 
 
