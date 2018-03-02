@@ -4,6 +4,7 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
+import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -64,6 +65,41 @@ public class ChooseDialogController implements Initializable {
         chooseValueColumn.setText(text);
     }
 
+    /**
+     * get select result
+     *
+     * @return
+     */
+    public List<String> getSelectResultName() {
+        List<String> resultName = Lists.newArrayList();
+        if (chooseTableRowDataObservableList != null) {
+            for (ChooseTableRowData data : chooseTableRowDataObservableList) {
+                if (data.isSelect()) {
+                    resultName.add(data.getValue());
+                }
+            }
+        }
+        return resultName;
+    }
+
+    /**
+     * set select result name
+     *
+     * @param resultName result name
+     */
+    public void setSelectResultName(List<String> resultName) {
+        if (chooseTableRowDataObservableList != null) {
+            for (ChooseTableRowData data : chooseTableRowDataObservableList) {
+                if (resultName.contains(data.getValue())) {
+                    data.getSelector().setValue(true);
+                } else {
+                    data.getSelector().setValue(false);
+                }
+            }
+        }
+    }
+
+
     private void initTable() {
         allCheckBox = new CheckBox();
         chooseCheckBoxColumn.setGraphic(allCheckBox);
@@ -109,4 +145,5 @@ public class ChooseDialogController implements Initializable {
     public Button getChooseOkButton() {
         return chooseOkButton;
     }
+
 }

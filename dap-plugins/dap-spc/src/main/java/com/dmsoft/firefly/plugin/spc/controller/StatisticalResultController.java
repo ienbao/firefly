@@ -3,6 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -10,15 +11,13 @@ import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
 import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
 import com.dmsoft.firefly.plugin.spc.model.StatisticalTableModel;
 import com.dmsoft.firefly.plugin.spc.model.StatisticalTableRowData;
-import com.dmsoft.firefly.plugin.spc.utils.FXMLLoaderUtils;
-import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
-import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
-import com.dmsoft.firefly.plugin.spc.utils.ViewResource;
+import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -29,6 +28,8 @@ import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -44,17 +45,14 @@ public class StatisticalResultController implements Initializable {
     private TextField filterTestItemTf;
     @FXML
     private TableView statisticalResultTb;
-    @FXML
-//    private TableColumn<StatisticalTableRowData, CheckBox> checkBoxColumn;
-//    private CheckBox allCheckBox;
-//    private ObservableList<StatisticalTableRowData> statisticalTableRowDataObservableList;
-    private FilteredList<StatisticalTableRowData> statisticalTableRowDataFilteredList;
-//    private SortedList<StatisticalTableRowData> statisticalTableRowDataSortedList;
+
     private SpcMainController spcMainController;
 
     private ChooseDialogController chooseDialogController;
 
     private StatisticalTableModel statisticalTableModel;
+
+    private List<String> selectStatisticalResultName = Lists.newArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -79,11 +77,6 @@ public class StatisticalResultController implements Initializable {
      * @param list the data list
      */
     public void setStatisticalResultTableData(List<SpcStatsDto> list) {
-//        statisticalTableRowDataObservableList.clear();
-//        allCheckBox.setSelected(false);
-//        list.forEach(dto -> {
-//            statisticalTableRowDataObservableList.add(new StatisticalTableRowData(dto));
-//        });
         statisticalTableModel.initData(list);
     }
 
@@ -149,35 +142,56 @@ public class StatisticalResultController implements Initializable {
 
         statisticalTableModel = new StatisticalTableModel();
         TableViewWrapper wrapper = new TableViewWrapper(statisticalResultTb, statisticalTableModel);
+        ChooseColorMenuEvent colorMenuEvent = new ChooseColorMenuEvent();
+        wrapper.addTableRowEvent(colorMenuEvent);
+        List<String> editedStyleClass = new ArrayList<>();
+        List<String> errorStyleClass = new ArrayList<>();
+        errorStyleClass.add("error");
+        editedStyleClass.add("edited");
+        wrapper.addEditedCellStyleClass(editedStyleClass);
+        wrapper.addCustomCellStyleClass("GG", "HH", errorStyleClass);
+
         wrapper.update();
+
+        selectStatisticalResultName.addAll(Arrays.asList(UIConstant.SPC_CHOOSE_RESULT));
     }
 
     private void initComponentEvent() {
         chooseColumnBtn.setOnAction(event -> getChooseColumnBtnEvent());
         filterTestItemTf.textProperty().addListener((observable, oldValue, newValue) -> getFilterTestItemTfEvent());
-//        allCheckBox.setOnAction(event -> getAllSelectEvent());
+        chooseDialogController.getChooseOkButton().setOnAction(event -> getChooseStatisticalResultEvent());
     }
 
     private void getChooseColumnBtnEvent() {
+        chooseDialogController.setSelectResultName(selectStatisticalResultName);
         StageMap.showStage("spcStatisticalResult");
     }
 
     private void getFilterTestItemTfEvent() {
-//        statisticalTableRowDataFilteredList.setPredicate(p -> p.getRowDataMap().get(UIConstant.TEST_ITEM).getValue().contains(filterTestItemTf.getText()));
         statisticalTableModel.filterTestItem(filterTestItemTf.getText());
     }
 
-    private void getAllSelectEvent() {
-//        if (statisticalTableRowDataSortedList != null) {
-//            for (StatisticalTableRowData rowData : statisticalTableRowDataSortedList) {
-//                rowData.getSelector().setValue(allCheckBox.isSelected());
-//            }
-//        }
+    private void getChooseStatisticalResultEvent(){
+        selectStatisticalResultName = chooseDialogController.getSelectResultName();
+        statisticalTableModel.updateStatisticalResultColumn(selectStatisticalResultName);
+        StageMap.closeStage("spcStatisticalResult");
     }
-
 
     private void initBtnIcon() {
         chooseColumnBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
+    }
+
+    class ChooseColorMenuEvent implements TableMenuRowEvent{
+
+        @Override
+        public String getMenuName() {
+            return ResourceBundleUtils.getString(ResourceMassages.CHOOSE_COLOR_MENU);
+        }
+
+        @Override
+        public void handleAction(String rowKey, ActionEvent event) {
+            System.out.println("select color");
+        }
     }
 
 }

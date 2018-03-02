@@ -12,6 +12,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 
 import java.util.*;
 
@@ -29,7 +30,7 @@ public class StatisticalTableModel implements TableModel {
     private List<SpcStatsDto> spcStatsDtoList;
 
     private FilteredList<String> statisticalTableRowDataFilteredList;
-//    private SortedList<String> rowKey;
+    private SortedList<String> statisticalTableRowDataSortedList;
     private Map<String, String> keyToTestItemMap = Maps.newHashMap();
 
     /**
@@ -37,8 +38,8 @@ public class StatisticalTableModel implements TableModel {
      */
     public StatisticalTableModel() {
         columnKey.add(0, "");
-//        statisticalTableRowDataObservableListrowKey = statisticalTableRowDataObservableListrowKey.filtered(p -> true);
-//        rowKey = new SortedList<>(statisticalTableRowDataFilteredList);
+        statisticalTableRowDataFilteredList = rowKey.filtered(p -> true);
+        statisticalTableRowDataSortedList = new SortedList<>(statisticalTableRowDataFilteredList);
     }
 
     /**
@@ -65,11 +66,26 @@ public class StatisticalTableModel implements TableModel {
         valueMap.clear();
     }
 
+    /**
+     * filter testItem
+     *
+     * @param filterTf filter text
+     */
     public void filterTestItem(String filterTf) {
         statisticalTableRowDataFilteredList.setPredicate(p -> {
             String testItem = keyToTestItemMap.get(p);
             return testItem.contains(filterTf);
         });
+    }
+
+    /**
+     * update column
+     *
+     * @param result column name
+     */
+    public void updateStatisticalResultColumn(List<String> result) {
+        columnKey.remove(3, columnKey.size());
+        columnKey.addAll(result);
     }
 
     @Override
@@ -87,7 +103,7 @@ public class StatisticalTableModel implements TableModel {
 
     @Override
     public ObservableList<String> getRowKeyArray() {
-        return rowKey;
+        return statisticalTableRowDataSortedList;
     }
 
     @Override
