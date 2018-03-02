@@ -14,6 +14,9 @@ public class ChooseTableRowData {
     private SimpleStringProperty value;
 
     public ChooseTableRowData(boolean isSelect, String value) {
+        if (isSelect) {
+            selector.setValue(true);
+        }
         this.value = new SimpleStringProperty(value);
     }
 
