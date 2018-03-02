@@ -24,6 +24,10 @@ public class ChooseTableRowData {
         return selector;
     }
 
+    public boolean isSelect(){
+        return selector.isSelected();
+    }
+
     public void setSelector(TableCheckBox selector) {
         this.selector = selector;
     }

@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.gui.controller.template;
 
-import com.dmsoft.firefly.gui.utils.ImageUtils;
+import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import javafx.collections.FXCollections;

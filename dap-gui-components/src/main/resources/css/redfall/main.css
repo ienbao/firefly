@@ -505,7 +505,21 @@
     -fx-highlight-fill: #0096ff;
     -fx-highlight-text-fill: #fff;
 }
-
+.text-field-filter {
+    -fx-border-color: #ffffff;
+    -fx-background-color: #ffffff;
+    -fx-min-height: 22;
+    -fx-max-height: 22;
+    -fx-font: 12 arial;
+    -fx-padding: 0 10 1 10;
+}
+.text-field-filter:focused{
+    -fx-background-color: #fff;
+    -fx-text-fill: #222;
+    -fx-highlight-fill: #cccccc;
+    -fx-highlight-text-fill: #fff;
+    -fx-border-style: dotted;
+}
 .text-field:disabled {
     -fx-border-color: #dcdcdc;
     -fx-background-color: #fafafa;

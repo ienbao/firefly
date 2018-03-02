@@ -41,7 +41,7 @@ public interface JobManager {
      * @param object  object
      * @return Object
      */
-    Object doJobSyn(Job job, Object object);
+    Object doJobSyn(Job job, Object... object);
 
     /**
      * doJobSyn
@@ -52,7 +52,7 @@ public interface JobManager {
      * @param unit    unit
      * @return Object
      */
-    Object doJobSyn(Job job, Object object, long timeout, TimeUnit unit);
+    Object doJobSyn(Job job, long timeout, TimeUnit unit, Object... object);
 
     /**
      * doJobASyn
@@ -61,7 +61,9 @@ public interface JobManager {
      * @param object   object
      * @param complete complete
      */
-    void doJobASyn(Job job, Object object, JobDoComplete complete);
+    void doJobASyn(Job job, JobDoComplete complete, Object... object);
+
+    void doJobASyn(Job job, Object... object);
 
     /**
      * getExecutorService

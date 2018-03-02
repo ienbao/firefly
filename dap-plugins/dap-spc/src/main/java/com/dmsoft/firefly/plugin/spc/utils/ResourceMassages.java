@@ -15,5 +15,6 @@ public class ResourceMassages {
 
     public static final String QUICK_SEARCH= "QUICK_SEARCH";
     public static final String CHOOSE_ITEMS_TITLE= "CHOOSE_ITEMS_TITLE";
+    public static final String CHOOSE_COLOR_MENU= "CHOOSE_COLOR_MENU";
 
 }
