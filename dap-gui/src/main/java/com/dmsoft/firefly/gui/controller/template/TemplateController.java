@@ -58,8 +58,12 @@ public class TemplateController {
     private SortedList<TemplateItemModel> personSortedList = new SortedList<>(filteredList);
 
     @FXML
+    private TextField nameFilter;
+    @FXML
     private ListView templateName;
     private ObservableList<String> templateNames = FXCollections.observableArrayList();
+    private FilteredList<String> nameFilterList = templateNames.filtered(p -> p.startsWith(""));
+    private SortedList<String> nameSortedList = new SortedList<>(nameFilterList);
 
     private NewNameController newNameController;
     private Stage newStage;
@@ -82,7 +86,7 @@ public class TemplateController {
         personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
 
         initEvent();
-        templateName.setItems(templateNames);
+        templateName.setItems(nameSortedList);
     }
 
     private void initButton() {
@@ -116,6 +120,9 @@ public class TemplateController {
     }
 
     private void initEvent() {
+        nameFilter.textProperty().addListener((observable, oldValue, newValue) ->
+                nameFilterList.setPredicate(p -> p.contains(nameFilter.getText()))
+        );
         add.setOnAction(event -> buildNewTemplateDialog());
         rename.setOnAction(event -> {
             if (templateName.getSelectionModel().getSelectedItem() != null) {
@@ -342,8 +349,14 @@ public class TemplateController {
     private void buildAddItemDia() {
         Pane root = null;
         try {
-            root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/additem.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-            Stage stage = WindowFactory.createSimpleWindowAsModel("addItem", ResourceBundleUtils.getString(ResourceMassages.ADD_ITEM), root, getResource("css/platform_app.css").toExternalForm());
+            FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/additem.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+            AddItemController addItem = new AddItemController();
+            addItem.setItemTableData(items);
+
+            loader.setController(addItem);
+            root = loader.load();
+//            root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/additem.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("addItem", ResourceBundleUtils.getString(ResourceMassages.ADD_ITEM), root, getResource("css/platform_app.css").toExternalForm());
             stage.show();
 
         } catch (Exception ex) {

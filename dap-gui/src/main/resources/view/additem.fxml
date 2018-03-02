@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="410.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.AddItemController">
+<VBox alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="410.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
          <VBox.margin>
@@ -38,10 +38,10 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </TextField>
-                  <TableView prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                  <TableView fx:id="itemTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <columns>
-                      <TableColumn maxWidth="30.0" minWidth="30.0" prefWidth="30.0" sortable="false" text="C1" />
-                      <TableColumn prefWidth="75.0" sortable="false" text="Test Item" />
+                      <TableColumn fx:id="select" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" sortable="false" />
+                      <TableColumn fx:id="testItem" prefWidth="75.0" sortable="false" text="Test Item" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -49,7 +49,7 @@
                   </TableView>
                </children>
             </VBox>
-            <TextArea prefHeight="200.0" prefWidth="190.0" promptText="Please input test item">
+            <TextArea fx:id="customizeItem" prefHeight="200.0" prefWidth="190.0" promptText="Please input test item">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>
