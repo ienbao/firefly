@@ -64,6 +64,8 @@ public class StatisticalTableModel implements TableModel {
     public void clearTableData() {
         rowKey.clear();
         valueMap.clear();
+        checkMap.clear();
+        falseSet.clear();
     }
 
     /**
