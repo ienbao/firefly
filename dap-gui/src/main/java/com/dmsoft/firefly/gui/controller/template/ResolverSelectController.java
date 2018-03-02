@@ -4,9 +4,12 @@
 
 package com.dmsoft.firefly.gui.controller.template;
 
+import com.dmsoft.bamboo.common.monitor.ProcessResult;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.job.Job;
+import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.plugin.PluginClass;
 import com.dmsoft.firefly.sdk.plugin.PluginClassType;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
@@ -95,23 +98,23 @@ public class ResolverSelectController implements Initializable {
     }
 
     private void importDataSource(String filPath, String fileName, String resolverName) {
-        PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
-        List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.DATA_PARSER);
-        IDataParser service = null;
-        for (int i = 0; i < pluginClasses.size(); i++) {
-            if (((IDataParser) pluginClasses.get(0).getInstance()).getName().equals(resolverName)) {
-                service = (IDataParser) pluginClasses.get(0).getInstance();
-            }
-        }
+
         ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, fileName);
         chooseTableRowData.setImport(true);
-        IDataParser finalService = service;
+        JobManager manager = RuntimeContext.getBean(JobManager.class);
+        Job job = new Job("import");
+        job.addProcessMonitorListener(event -> {
+            chooseTableRowData.setProgress(event.getPoint());
+            controller.getDataSourceTable().refresh();
+        });
+
         new SwingWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                finalService.importFile(filPath);
-                chooseTableRowData.setImport(false);
-                controller.getDataSourceTable().refresh();
+                manager.doJobASyn(job, returnValue -> {
+                    chooseTableRowData.setImport(false);
+                    controller.getDataSourceTable().refresh();
+                }, filPath, resolverName);
                 return null;
             }
         }.execute();

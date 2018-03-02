@@ -4,10 +4,12 @@
 
 package com.dmsoft.firefly.sdk.dai.dto;
 
+import java.io.Serializable;
+
 /**
  * Created by Eligi.Ran on 2017/6/6.
  */
-public class SpecificationDataDto {
+public class SpecificationDataDto implements Serializable {
 
     private String testItemName;
     private String dataType;

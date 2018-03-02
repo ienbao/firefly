@@ -42,6 +42,7 @@ public class CsvResolverPlugin extends Plugin {
 
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.CsvResolverPlugin",
                 MenuBuilder.MenuType.MENU_ITEM, "csvResolver", MenuBuilder.MENU_DATASOURCE_RESOLVER).addMenu(menuItem));
+
         logger.debug("Plugin-CsvResolver UI register done.");
         logger.info("Plugin-CsvResolver started.");
     }

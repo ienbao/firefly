@@ -3,12 +3,13 @@
  */
 package com.dmsoft.firefly.sdk.dai.dto;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 
 /**
  * Created by Guang.Li on 2018/1/29.
  */
-public class TemplateSettingDto {
+public class TemplateSettingDto implements Serializable {
     private String name;
     private int decimalDigit = 6;
     private TimePatternDto timePatternDto;

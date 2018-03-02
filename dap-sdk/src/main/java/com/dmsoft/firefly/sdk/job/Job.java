@@ -5,6 +5,7 @@
 package com.dmsoft.firefly.sdk.job;
 
 import com.dmsoft.bamboo.common.dto.AbstractValueObject;
+import com.dmsoft.bamboo.common.monitor.ProcessMonitorListener;
 import com.dmsoft.firefly.sdk.job.core.JobEventListener;
 import com.google.common.collect.Lists;
 
@@ -20,6 +21,7 @@ public class Job extends AbstractValueObject {
     private String jobName;
 
     private List<JobEventListener> jobEventListeners = Lists.newArrayList();
+    private ProcessMonitorListener processMonitorListener;
 
     public Job(String jobName) {
         jobId = UUID.randomUUID().toString();
@@ -44,5 +46,13 @@ public class Job extends AbstractValueObject {
 
     public void addJobEventListener(JobEventListener jobEventListener) {
         this.jobEventListeners.add(jobEventListener);
+    }
+
+    public ProcessMonitorListener getProcessMonitorListener() {
+        return processMonitorListener;
+    }
+
+    public void addProcessMonitorListener(ProcessMonitorListener processMonitorListener) {
+        this.processMonitorListener = processMonitorListener;
     }
 }

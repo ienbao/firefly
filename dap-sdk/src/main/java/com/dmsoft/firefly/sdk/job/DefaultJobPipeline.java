@@ -155,7 +155,7 @@ public class DefaultJobPipeline implements JobPipeline {
     }
 
     @Override
-    public JobPipeline fireDoJob(Object param) {
+    public JobPipeline fireDoJob(Object... param) {
         head.fireDoJob(param);
         return this;
     }

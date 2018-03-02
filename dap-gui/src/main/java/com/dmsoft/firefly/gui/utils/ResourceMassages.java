@@ -12,4 +12,5 @@ public class ResourceMassages {
 
     public static final String TEMPLATE = "TEMPLATE";
     public static final String DATASOURCE = "DATASOURCE";
+    public static final String REMOVE_MSG = "REMOVE_MSG";
 }

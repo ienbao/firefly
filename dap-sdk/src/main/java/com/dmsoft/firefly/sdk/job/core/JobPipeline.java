@@ -171,7 +171,7 @@ public interface JobPipeline {
      * @param param param
      * @return JobPipeline
      */
-    JobPipeline fireDoJob(Object param);
+    JobPipeline fireDoJob(Object... param);
 
     /**
      * returnValue
