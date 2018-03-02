@@ -98,12 +98,11 @@ public class DataSourceController implements Initializable {
                             textField.setStyle("-fx-border-width: 0 0 0 0");
                             textField.setPrefWidth(400);
                             ProgressBar progressBar = new ProgressBar();
-                            progressBar.setProgress(item.getProgress());
                             progressBar.setPrefWidth(70);
                             progressBar.setMinWidth(70);
-                            progressBar.setMaxHeight(5);
-                            progressBar.setPrefHeight(5);
-                            progressBar.setMinHeight(5);
+                            progressBar.setMaxHeight(10);
+                            progressBar.setPrefHeight(10);
+                            progressBar.setMinHeight(10);
                             Button rename = new Button();
                             rename.getStyleClass().add("btn-icon");
                             rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rename_normal.png")));
@@ -114,7 +113,9 @@ public class DataSourceController implements Initializable {
                             rename.setVisible(false);
                             deleteOne.setVisible(false);
                             progressBar.setVisible(item.isImport());
-
+                            if (item.getProgress() != 0) {
+                                progressBar.setProgress(item.getProgress() / (double) 100);
+                            }
                             deleteOne.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
                             hBox.getChildren().add(textField);
                             hBox.getChildren().add(progressBar);

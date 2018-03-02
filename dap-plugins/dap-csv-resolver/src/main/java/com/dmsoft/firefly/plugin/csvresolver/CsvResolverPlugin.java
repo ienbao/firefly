@@ -6,7 +6,11 @@ package com.dmsoft.firefly.plugin.csvresolver;
 
 
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.plugin.csvresolver.handler.CsvImportHandler;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.job.core.InitJobPipeline;
+import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.job.core.JobPipeline;
 import com.dmsoft.firefly.sdk.plugin.Plugin;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
@@ -42,6 +46,14 @@ public class CsvResolverPlugin extends Plugin {
 
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.CsvResolverPlugin",
                 MenuBuilder.MenuType.MENU_ITEM, "csvResolver", MenuBuilder.MENU_DATASOURCE_RESOLVER).addMenu(menuItem));
+
+        JobManager manager = RuntimeContext.getBean(JobManager.class);
+        manager.initializeJob("import", new InitJobPipeline() {
+            @Override
+            public void initJobPipeline(JobPipeline pipeline) {
+                pipeline.addLast("import", new CsvImportHandler());
+            }
+        });
         logger.debug("Plugin-CsvResolver UI register done.");
         logger.info("Plugin-CsvResolver started.");
     }

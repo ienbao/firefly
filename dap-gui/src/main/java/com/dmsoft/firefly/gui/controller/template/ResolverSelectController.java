@@ -4,9 +4,12 @@
 
 package com.dmsoft.firefly.gui.controller.template;
 
+import com.dmsoft.bamboo.common.monitor.ProcessResult;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.job.Job;
+import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.plugin.PluginClass;
 import com.dmsoft.firefly.sdk.plugin.PluginClassType;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
@@ -106,10 +109,22 @@ public class ResolverSelectController implements Initializable {
         ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, fileName);
         chooseTableRowData.setImport(true);
         IDataParser finalService = service;
+
+        JobManager manager = RuntimeContext.getBean(JobManager.class);
+        Job job = new Job("import");
+        job.addJobEventListener(event -> {
+            ProcessResult result = (ProcessResult) event.getObject();
+            chooseTableRowData.setProgress(result.getPoint());
+            controller.getDataSourceTable().refresh();
+        });
+
         new SwingWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                finalService.importFile(filPath);
+
+//                finalService.importFile(filPath);
+                manager.doJobSyn(job, filPath);
+
                 chooseTableRowData.setImport(false);
                 controller.getDataSourceTable().refresh();
                 return null;
