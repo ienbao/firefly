@@ -155,7 +155,7 @@ public class DataSourceController implements Initializable {
                                         }
                                         StageMap.closeStage("renameProject");
                                     });
-                                    renameStage = WindowFactory.createSimpleWindowAsModel("renameProject", "Rename Project", root);
+                                    renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameProject", "Rename Project", root);
                                 } catch (Exception e) {
 
                                 }
