@@ -9,8 +9,10 @@ import com.dmsoft.firefly.gui.utils.ResourceBundleUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
@@ -66,6 +68,8 @@ public class MainController {
     private ContentStackPane contentStackPane;
     private TabPane tabPane;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
+
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
@@ -92,19 +96,21 @@ public class MainController {
         Set<String> names = pc.getAllMainBodyNames();
 
         names.forEach(name -> {
-            Pane pane = pc.getMainBodyPane(name).getNewPane();
             Button btn = new Button(name);
-            pane.setId(name);
-            if (StringUtils.isBlank(tabPane.getId())) {
-                tabPane = new TabPane();
-                tabPane.setId(name);
-            } else if (StringUtils.isNotBlank(tabPane.getId()) && !name.equals(tabPane.getId())) {
-                tabPane = new TabPane();
-                tabPane.setId(name);
-            }
-            initTab(name, pane, tabPane);
-            contentStackPane.add(tabPane);
+
             btn.setOnAction(event -> {
+                Pane pane = pc.getMainBodyPane(name).getNewPane();
+
+                pane.setId(name);
+                if (StringUtils.isBlank(tabPane.getId())) {
+                    tabPane = new TabPane();
+                    tabPane.setId(name);
+                } else if (StringUtils.isNotBlank(tabPane.getId()) && !name.equals(tabPane.getId())) {
+                    tabPane = new TabPane();
+                    tabPane.setId(name);
+                }
+                initTab(name, pane, tabPane);
+                contentStackPane.add(tabPane);
                 System.out.println(contentStackPane);
                 contentStackPane.navTo(name);
                 System.out.println(name);
@@ -168,7 +174,7 @@ public class MainController {
         templateView.setOnMouseExited(event -> this.getHidePopupEvent());
     }
 
-    private void getHidePopupEvent(){
+    private void getHidePopupEvent() {
         if (templatePopup.isShowing()) {
             templatePopup.hide();
         }
@@ -177,7 +183,7 @@ public class MainController {
         }
     }
 
-    private void getDataSourceBtnEvent(){
+    private void getDataSourceBtnEvent() {
         buildDataSourceDialog();
         logger.debug("Data source btn event.");
         if (templatePopup.isShowing()) {
@@ -188,7 +194,7 @@ public class MainController {
         }
     }
 
-    private void getDataSourceLblEvent(){
+    private void getDataSourceLblEvent() {
         logger.debug("Data source lbl event.");
         if (!dataSourceBtn.isDisable()) {
             if (!dataSourcePopup.isShowing()) {
@@ -221,7 +227,7 @@ public class MainController {
         imageReset.setFitHeight(16);
         imageReset.setFitWidth(16);
         templateView.setItems(templateList);
-        templateView.setCellFactory( e -> new ListCell<StateBarTemplateModel>() {
+        templateView.setCellFactory(e -> new ListCell<StateBarTemplateModel>() {
             @Override
             public void updateItem(StateBarTemplateModel item, boolean empty) {
                 super.updateItem(item, empty);
@@ -259,12 +265,12 @@ public class MainController {
         templatePopup.getContent().add(templateView);
     }
 
-    private void setListViewSize(ListView listView, ObservableList dataList){
+    private void setListViewSize(ListView listView, ObservableList dataList) {
         listView.setMaxWidth(MAX_WIDTH);
         listView.setPrefWidth(MIN_WIDTH);
         listView.setMinWidth(MIN_WIDTH);
         listView.setMaxHeight(MAX_HEIGHT);
-        if (dataList !=  null && !dataList.isEmpty()) {
+        if (dataList != null && !dataList.isEmpty()) {
             listView.setPrefHeight(26 * dataList.size());
         } else {
             listView.setPrefHeight(0);
@@ -273,13 +279,14 @@ public class MainController {
         }
     }
 
-    public void initDataSource(){
+    public void initDataSource() {
 
         List<String> projectName = mapper.fromJson(envService.findPreference("selectProject"), mapper.buildCollectionType(List.class, String.class));
 
         if (projectName != null) {
             Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
-            envService.setTestItems(new ArrayList(testItemDtoMap.values()));
+            Map<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, "Default");
+            envService.setTestItems(new ArrayList(itemWithTypeDtoMap.values()));
             envService.setActivatedProjectName(projectName);
         } else {
             projectName = Lists.newArrayList();
@@ -287,8 +294,8 @@ public class MainController {
         dataSourceList = FXCollections.observableArrayList(projectName);
     }
 
-    public void initTemplate(){
-        templateList = FXCollections.observableArrayList (
+    public void initTemplate() {
+        templateList = FXCollections.observableArrayList(
                 new StateBarTemplateModel("87", false),
                 new StateBarTemplateModel("09", false),
                 new StateBarTemplateModel("123", true),
@@ -296,15 +303,15 @@ public class MainController {
                 new StateBarTemplateModel("123", false));
     }
 
-    public void refreshDataSource(ObservableList<String> dataSourceList){
+    public void refreshDataSource(ObservableList<String> dataSourceList) {
         dataSourceView.setItems(dataSourceList);
     }
 
-    public void refreshTemplate(ObservableList<StateBarTemplateModel> templateList){
+    public void refreshTemplate(ObservableList<StateBarTemplateModel> templateList) {
         templateView.setItems(templateList);
     }
 
-    private void getTemplateBtnEvent(){
+    private void getTemplateBtnEvent() {
         logger.debug("Template btn event.");
         if (templatePopup.isShowing()) {
             templatePopup.hide();
@@ -314,7 +321,7 @@ public class MainController {
         }
     }
 
-    private void getTemplateLblEvent(){
+    private void getTemplateLblEvent() {
         logger.debug("Template lbl event.");
         if (!templateBtn.isDisable()) {
             if (!templatePopup.isShowing()) {

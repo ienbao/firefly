@@ -6,7 +6,9 @@ import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
+import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -106,7 +108,7 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
     @Override
-    public void saveAllAnalysisTemplate(List<TemplateSettingDto> templateSettingDto){
+    public void saveAllAnalysisTemplate(List<TemplateSettingDto> templateSettingDto) {
 
         String json = JsonFileUtil.readJsonFile(parentPath, fileName);
         if (json == null) {
@@ -172,6 +174,33 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     public Map<String, TestItemWithTypeDto> assembleTemplate(Map<String, TestItemDto> testItemDtoMap, String templateName) {
-        return null;
+        String json = JsonFileUtil.readJsonFile(parentPath, fileName);
+        if (json == null) {
+            logger.debug("Don`t find " + fileName);
+        }
+        List<TemplateSettingDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, TemplateSettingDto.class));
+        TemplateSettingDto curr = null;
+        for (TemplateSettingDto dto : list) {
+            if (dto.getName().equals(templateName)) {
+                curr = dto;
+            }
+        }
+        Map<String, TestItemWithTypeDto> result = Maps.newLinkedHashMap();
+
+        if (curr != null) {
+            for (String item : testItemDtoMap.keySet()) {
+                TestItemWithTypeDto testItemWithTypeDto = new TestItemWithTypeDto();
+                BeanUtils.copyProperties(testItemDtoMap.get(item), testItemWithTypeDto);
+                if (curr.getSpecificationDatas() != null && curr.getSpecificationDatas().containsKey(item)) {
+                    if (curr.getSpecificationDatas().get(item).getDataType().equals("VARIABLE")) {
+                        testItemWithTypeDto.setTestItemType(TestItemType.VARIABLE);
+                        testItemWithTypeDto.setLsl(curr.getSpecificationDatas().get(item).getLslFail());
+                        testItemWithTypeDto.setUsl(curr.getSpecificationDatas().get(item).getUslPass());
+                    }
+                }
+                result.put(item, testItemWithTypeDto);
+            }
+        }
+        return result;
     }
 }
