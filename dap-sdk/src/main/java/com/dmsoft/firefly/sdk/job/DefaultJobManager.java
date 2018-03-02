@@ -78,7 +78,7 @@ public class DefaultJobManager implements JobManager {
     }
 
     @Override
-    public synchronized Object doJobSyn(Job job, Object object, long timeout, TimeUnit unit) {
+    public synchronized Object doJobSyn(Job job, long timeout, TimeUnit unit, Object... object) {
         if (StringUtils.isBlank(job.getJobName())) {
             logger.error("jobName is empty.");
             return null;
@@ -96,7 +96,7 @@ public class DefaultJobManager implements JobManager {
                 countDownLatch.countDown();
             }
         };
-        doJobASyn(job, object, complete);
+        doJobASyn(job, complete, object);
         try {
             countDownLatch.await(timeout, unit);
         } catch (InterruptedException e) {
@@ -107,7 +107,7 @@ public class DefaultJobManager implements JobManager {
     }
 
     @Override
-    public synchronized Object doJobSyn(Job job, Object object) {
+    public synchronized Object doJobSyn(Job job, Object... object) {
         if (StringUtils.isBlank(job.getJobName())) {
             logger.error("jobName is empty.");
             return null;
@@ -125,7 +125,7 @@ public class DefaultJobManager implements JobManager {
                 countDownLatch.countDown();
             }
         };
-        doJobASyn(job, object, complete);
+        doJobASyn(job, complete, object);
         try {
             countDownLatch.await();
         } catch (InterruptedException e) {
@@ -136,7 +136,7 @@ public class DefaultJobManager implements JobManager {
     }
 
     @Override
-    public synchronized void doJobASyn(Job job, Object object, JobDoComplete complete) {
+    public synchronized void doJobASyn(Job job, JobDoComplete complete, Object... object) {
         if (StringUtils.isBlank(job.getJobName())) {
             logger.error("jobName is empty.");
             return;
@@ -149,6 +149,28 @@ public class DefaultJobManager implements JobManager {
             @Override
             public void run() {
                 DefaultJobPipeline defaultJobPipeline = new DefaultJobPipeline(complete, service, jobEvent.containsKey(job.getJobName()) ? jobEvent.get(job.getJobName()) : Lists.newArrayList(), job);
+                jobMap.get(job.getJobName()).initJobPipeline(defaultJobPipeline);
+                defaultJobPipeline.fireDoJob(object);
+            }
+        });
+    }
+
+    @Override
+    public void doJobASyn(Job job, Object... object) {
+        if (StringUtils.isBlank(job.getJobName())) {
+            logger.error("jobName is empty.");
+            return;
+        }
+        if (!jobMap.containsKey(job.getJobName())) {
+            logger.error("jobName is not exist.");
+            return;
+        }
+        service.execute(new Runnable() {
+            @Override
+            public void run() {
+                DefaultJobPipeline defaultJobPipeline = new DefaultJobPipeline(returnValue -> {
+                    logger.info(job.getJobId() + " do complete.");
+                }, service, jobEvent.containsKey(job.getJobName()) ? jobEvent.get(job.getJobName()) : Lists.newArrayList(), job);
                 jobMap.get(job.getJobName()).initJobPipeline(defaultJobPipeline);
                 defaultJobPipeline.fireDoJob(object);
             }

@@ -98,35 +98,23 @@ public class ResolverSelectController implements Initializable {
     }
 
     private void importDataSource(String filPath, String fileName, String resolverName) {
-        PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
-        List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.DATA_PARSER);
-        IDataParser service = null;
-        for (int i = 0; i < pluginClasses.size(); i++) {
-            if (((IDataParser) pluginClasses.get(0).getInstance()).getName().equals(resolverName)) {
-                service = (IDataParser) pluginClasses.get(0).getInstance();
-            }
-        }
+
         ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, fileName);
         chooseTableRowData.setImport(true);
-        IDataParser finalService = service;
-
         JobManager manager = RuntimeContext.getBean(JobManager.class);
         Job job = new Job("import");
-        job.addJobEventListener(event -> {
-            ProcessResult result = (ProcessResult) event.getObject();
-            chooseTableRowData.setProgress(result.getPoint());
+        job.addProcessMonitorListener(event -> {
+            chooseTableRowData.setProgress(event.getPoint());
             controller.getDataSourceTable().refresh();
         });
 
         new SwingWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-
-//                finalService.importFile(filPath);
-                manager.doJobSyn(job, filPath);
-
-                chooseTableRowData.setImport(false);
-                controller.getDataSourceTable().refresh();
+                manager.doJobASyn(job, returnValue -> {
+                    chooseTableRowData.setImport(false);
+                    controller.getDataSourceTable().refresh();
+                }, filPath, resolverName);
                 return null;
             }
         }.execute();

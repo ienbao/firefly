@@ -5,12 +5,12 @@
 package com.dmsoft.firefly.plugin.csvresolver;
 
 import com.csvreader.CsvReader;
-import com.dmsoft.bamboo.common.monitor.AbstractProcessMonitor;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.job.AbstractProcessMonitorAutoAdd;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.annotation.DataParser;
 import com.dmsoft.firefly.sdk.plugin.annotation.ExcludeMethod;
@@ -35,7 +35,7 @@ import java.util.Map;
  * @author Li Guang
  */
 @DataParser
-public class CsvResolverService extends AbstractProcessMonitor implements IDataParser {
+public class CsvResolverService extends AbstractProcessMonitorAutoAdd implements IDataParser {
     private final Logger logger = LoggerFactory.getLogger(CsvResolverService.class);
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
 
@@ -124,7 +124,7 @@ public class CsvResolverService extends AbstractProcessMonitor implements IDataP
                 testItemDtoList.add(testItemDto);
             }
             sourceDataService.saveTestItem(csvFile.getName(), testItemDtoList);
-            push(50);
+            push(50, 80, "", 5000);
             //save line data
             List<RowDataDto> rowDataDtos = Lists.newArrayList();
             for (int i = dataIndex; i < csvList.size(); i++) {

@@ -2,11 +2,10 @@
  * Copyright (c) 2017. For Intelligent Group.
  */
 
-package com.dmsoft.firefly.plugin.csvresolver.handler;
+package com.dmsoft.firefly.gui.handler.importcsv;
 
-import com.dmsoft.bamboo.common.monitor.AbstractProcessMonitor;
-import com.dmsoft.bamboo.common.monitor.ProcessMonitor;
-import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.job.AbstractProcessMonitorAutoAdd;
+import com.dmsoft.firefly.sdk.job.ProcessMonitorAuto;
 import com.dmsoft.firefly.sdk.job.core.JobHandlerContext;
 import com.dmsoft.firefly.sdk.job.core.JobInboundHandler;
 import com.dmsoft.firefly.sdk.plugin.apis.IDataParser;
@@ -19,12 +18,12 @@ public class CsvImportHandler implements JobInboundHandler {
     @Override
     public void doJob(JobHandlerContext context, Object... in) throws Exception {
 
-        if (in == null || !(in[0] instanceof String)) {
+        if (in == null || in.length != 2 || !(in[0] instanceof String)) {
             //throw exception.
         }
-        IDataParser parser = RuntimeContext.getBean(IDataParser.class);
-        if (parser instanceof AbstractProcessMonitor) {
-            ProcessMonitor monitor = (ProcessMonitor) parser;
+        IDataParser parser = (IDataParser) in[1];
+        if (parser instanceof AbstractProcessMonitorAutoAdd) {
+            ProcessMonitorAuto monitor = (ProcessMonitorAuto) parser;
             monitor.addProcessMonitorListener(context.getContextProcessMonitorListenerIfExists());
         }
         parser.importFile((String) in[0]);
