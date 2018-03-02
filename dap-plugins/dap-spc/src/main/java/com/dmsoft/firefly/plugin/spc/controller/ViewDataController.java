@@ -13,8 +13,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -113,7 +111,7 @@ public class ViewDataController implements Initializable {
             Stage stage = null;
             try {
                 root = fxmlLoader.load();
-                stage = WindowFactory.createSimpleWindowAsModel("spcQuickSearch", ResourceBundleUtils.getString(ResourceMassages.QUICK_SEARCH), root);
+                stage = WindowFactory.createOrUpdateSimpleWindowAsModel("spcQuickSearch", ResourceBundleUtils.getString(ResourceMassages.QUICK_SEARCH), root);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -132,6 +130,8 @@ public class ViewDataController implements Initializable {
                     quickSearchController.activeWithoutRange();
                     quickSearchController.getWithoutLowerTf().setText(columnFilterSetting.get(title).getWithoutLowerLimit());
                     quickSearchController.getWithoutUpperTf().setText(columnFilterSetting.get(title).getWithoutUpperLimit());
+                    break;
+                default:
                     break;
             }
             quickSearchController.getSearchBtn().setOnAction(event1 -> {
@@ -165,6 +165,8 @@ public class ViewDataController implements Initializable {
                             columnFilterSetting.get(title).setWithoutUpperLimit(quickSearchController.getWithoutUpperTf().getText());
                             quickSearchHandler(title);
                             quickSearchController.getStage().close();
+                            break;
+                        default:
                             break;
                     }
                 }
