@@ -4,14 +4,12 @@
 
 package com.dmsoft.firefly.sdk.job;
 
-import com.dmsoft.bamboo.common.monitor.AbstractProcessMonitorMock;
-import com.dmsoft.bamboo.common.monitor.ProcessMonitorListener;
 import com.dmsoft.bamboo.common.monitor.ThreadTask;
 
 /**
  * Created by Garen.Pang on 2018/3/2.
  */
-public abstract class AbstractProcessMonitorAutoAdd extends AbstractProcessMonitorMock implements ProcessMonitorAuto {
+public abstract class AbstractProcessMonitorAutoAdd extends AbstractProcessMonitorAuto implements ProcessMonitorAuto {
 
     @Override
     public void push(int process, int end, String msg, long allTime) {

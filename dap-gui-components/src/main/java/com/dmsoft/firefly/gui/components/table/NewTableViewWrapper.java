@@ -23,6 +23,8 @@ public class NewTableViewWrapper {
      * @param model     model
      */
     public static void decorate(TableView<String> tableView, NewTableModel model) {
+        tableView.getItems().clear();
+        tableView.getColumns().clear();
         List<TableColumn<String, ?>> columns = Lists.newArrayList();
         for (String s : model.getHeaderArray()) {
             columns.add(initColumn(s, model));
@@ -88,6 +90,7 @@ public class NewTableViewWrapper {
     private static TableColumn<String, ?> initColumn(String s, NewTableModel model) {
         if (model.isEditableTextField(s)) {
             TableColumn<String, String> column = new TableColumn<>(s);
+            column.getStyleClass().add("editable-header");
             column.setCellValueFactory(cell -> model.getCellData(cell.getValue(), s));
             column.setCellFactory(tableColumn ->
                     new TextFieldTableCell<String, String>(new DefaultStringConverter()) {
@@ -112,6 +115,7 @@ public class NewTableViewWrapper {
             model.getAllCheckValue(s).addListener((ov, b1, b2) -> {
                 allCheckBox.selectedProperty().set(b2);
             });
+            model.setAllCheckBox(allCheckBox);
             column.setGraphic(allCheckBox);
             column.setCellValueFactory(cell -> {
                 ObjectProperty<Boolean> b = model.getCheckValue(cell.getValue(), s);
@@ -175,13 +179,6 @@ public class NewTableViewWrapper {
                 }
             }
         });
-//        column.setCellFactory(tableColumn -> {
-//            TableCell<String, String> tableCell = new TableCell<>();
-//            if (tableCell.getIndex() > -1 && tableCell.getIndex() < tableCell.getTableView().getItems().size()) {
-//                return model.decorate(model.getRowKeyArray().get(tableCell.getIndex()), s, tableCell);
-//            }
-//            return tableCell;
-//        });
         return column;
     }
 }
