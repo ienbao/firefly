@@ -84,6 +84,10 @@ public class TemplateController {
         initDefault();
         itemTable.setItems(personSortedList);
         personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
+        ((TableColumn<TemplateItemModel, String>) itemTable.getColumns().get(0)).setCellValueFactory(cellData -> cellData.getValue().testItemNameProperty());
+        ((TableColumn<TemplateItemModel, String>) itemTable.getColumns().get(1)).setCellValueFactory(cellData -> cellData.getValue().dataTypeProperty());
+        ((TableColumn<TemplateItemModel, String>) itemTable.getColumns().get(2)).setCellValueFactory(cellData -> cellData.getValue().lslFailProperty());
+        ((TableColumn<TemplateItemModel, String>) itemTable.getColumns().get(3)).setCellValueFactory(cellData -> cellData.getValue().uslPassProperty());
 
         initEvent();
         templateName.setItems(nameSortedList);
