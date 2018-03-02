@@ -25,6 +25,7 @@ public interface TemplateService {
      * @return list of template
      */
     List<TemplateSettingDto> findAllTemplate();
+
     /**
      * find setting backups
      *
@@ -53,6 +54,7 @@ public interface TemplateService {
      * @param templateSettingDto all template setting dto
      */
     void saveAllAnalysisTemplate(List<TemplateSettingDto> templateSettingDto);
+
     /**
      * rename template name
      *
