@@ -78,9 +78,9 @@
     -fx-alignment: center-left;
 }
 
-.tab-pane {
--fx-skin:  "com.dmsoft.firefly.plugin.spc.utils.HTabPaneSkin";
-}
+/*.tab-pane {*/
+/*-fx-skin:  "com.dmsoft.firefly.plugin.spc.utils.HTabPaneSkin";*/
+/*}*/
 /*.tab-pane > .tab-header-area {*/
 /*-fx-background-color: #dff0cf;*/
 /*-fx-padding: 0;*/
