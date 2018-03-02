@@ -5,8 +5,13 @@ package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
 import com.dmsoft.firefly.plugin.spc.utils.*;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.beans.property.SimpleObjectProperty;
@@ -47,6 +52,8 @@ public class ViewDataController implements Initializable {
     private CheckBox allCheckBox;
     private SpcMainController spcMainController;
 
+    private List<ChooseTableRowData> chooseTableRowDataList = Lists.newArrayList();
+
     private SearchDataFrame dataFrame;
     private Map<String, TableCheckBox> checkBoxMap = Maps.newHashMap();
     private ObservableList<String> rowKeys = FXCollections.observableArrayList();
@@ -61,6 +68,11 @@ public class ViewDataController implements Initializable {
         this.initBtnIcon();
         this.initViewDataTable();
         this.initComponentEvent();
+        List<TestItemWithTypeDto> typeDtoList = RuntimeContext.getBean(EnvService.class).findTestItems();
+        for (TestItemWithTypeDto typeDto : typeDtoList) {
+            ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, typeDto.getTestItemName());
+            chooseTableRowDataList.add(chooseTableRowData);
+        }
     }
 
     /**
@@ -85,6 +97,14 @@ public class ViewDataController implements Initializable {
             this.filteredList = this.rowKeys.filtered(p -> true);
             viewDataTable.setItems(this.filteredList);
         }
+        for (ChooseTableRowData rowData : chooseTableRowDataList) {
+            if (dataFrame.isTestItemExist(rowData.getValue())) {
+                rowData.getSelector().setValue(true);
+            } else {
+                rowData.getSelector().setValue(false);
+            }
+        }
+        chooseDialogController.setTableData(chooseTableRowDataList);
     }
 
     /**

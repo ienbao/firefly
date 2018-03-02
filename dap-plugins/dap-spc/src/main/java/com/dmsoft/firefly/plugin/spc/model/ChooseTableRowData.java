@@ -14,11 +14,18 @@ public class ChooseTableRowData {
     private SimpleStringProperty value;
 
     public ChooseTableRowData(boolean isSelect, String value) {
+        if (isSelect) {
+            selector.setValue(true);
+        }
         this.value = new SimpleStringProperty(value);
     }
 
     public TableCheckBox getSelector() {
         return selector;
+    }
+
+    public boolean isSelect(){
+        return selector.isSelected();
     }
 
     public void setSelector(TableCheckBox selector) {
