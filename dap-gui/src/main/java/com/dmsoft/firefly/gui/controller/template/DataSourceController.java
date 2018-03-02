@@ -12,8 +12,10 @@ import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.utils.ImageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.google.common.collect.Lists;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -65,6 +67,8 @@ public class DataSourceController implements Initializable {
 
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
+
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
 
@@ -191,9 +195,10 @@ public class DataSourceController implements Initializable {
             });
             Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(selectProject);
 
-            envService.setTestItems(new ArrayList(testItemDtoMap.values()));
             envService.setActivatedProjectName(selectProject);
             envService.setActivatedTemplate("default");
+            Map<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, "Default");
+            envService.setTestItems(new ArrayList(itemWithTypeDtoMap.values()));
 
             //TODO notify refresh event
 

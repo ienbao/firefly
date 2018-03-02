@@ -6,7 +6,7 @@ import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
  * test item dto with test item type
  */
 public class TestItemWithTypeDto extends TestItemDto {
-    private TestItemType testItemType;
+    private TestItemType testItemType = TestItemType.ATTRIBUTE;
 
     public TestItemType getTestItemType() {
         return testItemType;
