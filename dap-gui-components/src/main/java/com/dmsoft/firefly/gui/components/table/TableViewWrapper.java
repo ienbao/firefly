@@ -219,7 +219,7 @@ public class TableViewWrapper extends AbstractTableViewWrapper {
         // set column header graphic with check box, and combine event and value
         column.setSortable(false);
         column.setResizable(false);
-        column.setPrefWidth(30);
+        column.setPrefWidth(32);
         CheckBox allCheckBox = new CheckBox();
         allCheckBox.selectedProperty().setValue(tableModel.getAllCheckValue(column.getText()).getValue());
         allCheckBox.setOnMouseClicked(event -> {
