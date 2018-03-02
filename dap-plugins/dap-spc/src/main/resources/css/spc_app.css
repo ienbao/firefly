@@ -2,15 +2,7 @@
     -fx-background-color: Red;
 }
 
-#viewDataTable .column-header .label.filter-header {
-    -fx-padding: 0 10 0 0;
-}
-
-#viewDataTable .column-header .label {
-    -fx-padding: 0 0 0 10;
-}
-
-#viewDataTable .column-header .filter-hbox .button {
+#viewDataTable .column-header.filter-header .button {
     -fx-min-width: 17;
     -fx-min-height: 21;
     -fx-border-width: 0 0 0 1;
@@ -19,31 +11,36 @@
     -fx-background-image: none;
 }
 
-#viewDataTable .column-header .filter-hbox:hover .filter-normal {
+#viewDataTable .column-header.filter-header:hover .filter-normal {
     -fx-background-image: url('/images/btn_arrow_down.png');
 }
 
-#viewDataTable .column-header .filter-hbox .filter-active {
+#viewDataTable .column-header.filter-header .filter-active {
     -fx-background-image: url('/images/btn_filter_normal.png');
     -fx-background-size: 16;
     -fx-background-repeat: no-repeat;
-    -fx-background-position: 0 2;
+    -fx-background-position: 1 2;
 }
 
-#viewDataTable .column-header .filter-hbox:hover .button {
+#viewDataTable .column-header.filter-header:hover .button {
     -fx-background-size: 16;
     -fx-background-repeat: no-repeat;
-    -fx-background-position: 0 2;
+    -fx-background-position: 1 2;
     -fx-background-color: #e5f4ff;
     -fx-border-color: #dcdcdc;
 }
 
-#viewDataTable .column-header .filter-hbox:hover .button:hover {
+#viewDataTable .column-header.filter-header:hover .button:hover {
     -fx-background-color: #ceeaff;
 }
 
-#viewDataTable .column-header .filter-hbox .button:armed {
+#viewDataTable .column-header.filter-header .button:armed {
     -fx-background-color: #c3d0d9;
+}
+
+#viewDataTable .filter-header .label {
+    -fx-content-display: right;
+    -fx-padding: 0 -10 0 10;
 }
 
 .table-filter-btn {
