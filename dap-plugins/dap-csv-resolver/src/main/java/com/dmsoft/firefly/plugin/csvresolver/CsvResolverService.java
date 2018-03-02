@@ -5,6 +5,7 @@
 package com.dmsoft.firefly.plugin.csvresolver;
 
 import com.csvreader.CsvReader;
+import com.dmsoft.bamboo.common.monitor.AbstractProcessMonitor;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
@@ -34,7 +35,7 @@ import java.util.Map;
  * @author Li Guang
  */
 @DataParser
-public class CsvResolverService implements IDataParser {
+public class CsvResolverService extends AbstractProcessMonitor implements IDataParser {
     private final Logger logger = LoggerFactory.getLogger(CsvResolverService.class);
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
 
@@ -49,7 +50,7 @@ public class CsvResolverService implements IDataParser {
     /**
      * method to import csv
      *
-     * @param csvPath        the path of csv file
+     * @param csvPath the path of csv file
      */
     public void importFile(String csvPath) {
         logger.info("Start csv importing.");
@@ -60,13 +61,14 @@ public class CsvResolverService implements IDataParser {
         try {
             logStr = "Start to import <" + csvPath + ">.";
             logger.debug(logStr);
+            push(10);
 
 //            push(new ProcessResult(0, logStr, csvPath));
 
             List<String[]> csvList = Lists.newArrayList();
             csvReader = new CsvReader(csvPath, ',', Charset.forName("UTF-8"));
 //            push(new ProcessResult(0, "paring file<" + filePath + ">.", csvPath));
-
+            push(20);
             logger.debug("Parsing <" + csvPath + ">.");
             CsvTemplateDto fileFormat = findCsvTemplate();
             if (fileFormat == null) {
@@ -77,7 +79,7 @@ public class CsvResolverService implements IDataParser {
                 csvList.add(csvReader.getValues());
             }
             logger.debug("Parsing <" + csvPath + "> done.");
-
+            push(30);
             final int rowSize = csvList.size();
             int dataIndex = fileFormat.getData() - 1;
             if (dataIndex > rowSize) {
@@ -87,7 +89,7 @@ public class CsvResolverService implements IDataParser {
 //                throw new ApplicationException(exceptionNumber, logStr);
             }
             sourceDataService.saveProject(csvFile.getName());
-
+            push(40);
             String[] items = csvList.get(fileFormat.getItem() - 1);
             String[] lslRow = null, uslRow = null, unitRow = null;
 
@@ -122,6 +124,7 @@ public class CsvResolverService implements IDataParser {
                 testItemDtoList.add(testItemDto);
             }
             sourceDataService.saveTestItem(csvFile.getName(), testItemDtoList);
+            push(50);
             //save line data
             List<RowDataDto> rowDataDtos = Lists.newArrayList();
             for (int i = dataIndex; i < csvList.size(); i++) {
@@ -134,7 +137,7 @@ public class CsvResolverService implements IDataParser {
                     try {
                         value = data.get(j);
                         itemDatas.put(items[j], value);
-                    } catch (IndexOutOfBoundsException e){
+                    } catch (IndexOutOfBoundsException e) {
 
                     }
                 }
@@ -142,6 +145,7 @@ public class CsvResolverService implements IDataParser {
                 rowDataDtos.add(rowDataDto);
             }
             sourceDataService.saveTestData(csvFile.getName(), rowDataDtos);
+            push(90);
             //save column data
 //            List<TestDataDto> testDataDtos = Lists.newArrayList();
 //            for (int i = 0; i < items.length; i++) {
@@ -178,6 +182,7 @@ public class CsvResolverService implements IDataParser {
             }
         }
         logger.info("End csv importing.");
+        push(100);
     }
 
     @Override

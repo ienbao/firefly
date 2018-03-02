@@ -4,7 +4,8 @@
 
 package com.dmsoft.firefly.sdk.job.core;
 
-import com.dmsoft.firefly.sdk.job.JobEvent;
+import com.dmsoft.bamboo.common.monitor.ProcessMonitorListener;
+import com.dmsoft.bamboo.common.monitor.ProcessResult;
 
 /**
  * Created by Garen.Pang on 2018/2/2.
@@ -48,4 +49,8 @@ public interface JobHandlerContext {
     String name();
 
     <T> void fireJobEvent(T result);
+
+    void fireProcessEvent(ProcessResult process);
+
+    ProcessMonitorListener getContextProcessMonitorListenerIfExists();
 }

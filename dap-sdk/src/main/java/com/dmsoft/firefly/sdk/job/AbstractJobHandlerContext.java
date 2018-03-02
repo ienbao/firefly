@@ -4,6 +4,8 @@
 
 package com.dmsoft.firefly.sdk.job;
 
+import com.dmsoft.bamboo.common.monitor.ProcessMonitorListener;
+import com.dmsoft.bamboo.common.monitor.ProcessResult;
 import com.dmsoft.firefly.sdk.job.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,6 +124,21 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
                 v.eventNotify(event);
             });
         }
+    }
+
+    @Override
+    public void fireProcessEvent(ProcessResult process) {
+        if (session.getProcessMonitorListener() != null) {
+            session.getProcessMonitorListener().onProcessChange(process);
+        }
+    }
+
+    @Override
+    public ProcessMonitorListener getContextProcessMonitorListenerIfExists() {
+        if (session.getProcessMonitorListener() != null) {
+            return session.getProcessMonitorListener();
+        }
+        return null;
     }
 
     public abstract JobHandler handler();
