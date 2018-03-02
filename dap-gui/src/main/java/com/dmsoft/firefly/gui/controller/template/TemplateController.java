@@ -74,7 +74,7 @@ public class TemplateController {
 
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
 
-    private Map<String, TemplateSettingDto> allTemplate = Maps.newHashMap();
+    private LinkedHashMap<String, TemplateSettingDto> allTemplate = Maps.newLinkedHashMap();
     private TemplateSettingDto currTemplate;
 
     @FXML
@@ -139,22 +139,25 @@ public class TemplateController {
             }
         });
         delete.setOnAction(event -> {
-            if (templateName.getSelectionModel().getSelectedItem() != null) {
-                templateNames.remove(templateName.getSelectionModel().getSelectedItem().toString());
-                removeTemplate(templateName.getSelectionModel().getSelectedItem().toString());
+            if (templateName.getSelectionModel().getSelectedItem() != null
+                    && !templateName.getSelectionModel().getSelectedItem().equals("Default")) {
                 allTemplate.remove(templateName.getSelectionModel().getSelectedItem().toString());
+                templateNames.remove(templateName.getSelectionModel().getSelectedItem().toString());
+//                currTemplate = null;
             }
         });
         pattern.setOnAction(event -> buildPatternDia());
         addRow.setOnAction(event -> buildAddItemDia());
         addTime.setOnAction(event -> timeKeys.getChildren().add(new TimePane()));
         ok.setOnAction(event -> {
+            saveCache();
             if (allTemplate != null) {
                 templateService.saveAllAnalysisTemplate(Lists.newArrayList(allTemplate.values()));
             }
             StageMap.closeStage("template");
         });
         apply.setOnAction(event -> {
+            saveCache();
             if (allTemplate != null) {
                 templateService.saveAllAnalysisTemplate(Lists.newArrayList(allTemplate.values()));
             }
@@ -197,11 +200,6 @@ public class TemplateController {
     private void copyTemplate(String template, String newTemplate) {
 
     }
-
-    private void removeTemplate(String template) {
-
-    }
-
     private void saveCache() {
         if (currTemplate != null) {
             currTemplate.setDecimalDigit(decimal.getValue().intValue());
@@ -242,7 +240,7 @@ public class TemplateController {
     }
 
     private void buildNewTemplateDialog() {
-        if (newStage == null) {
+//        if (newStage == null) {
             Pane root = null;
             try {
                 FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
@@ -265,18 +263,19 @@ public class TemplateController {
                     StageMap.closeStage("newTemplate");
                 });
 
-                newStage = WindowFactory.createSimpleWindowAsModel("newTemplate", "New Template", root);
+                Stage newStage = WindowFactory.createOrUpdateSimpleWindowAsModel("newTemplate", "New Template", root);
                 newStage.setOnCloseRequest(event -> newNameController.getName().setText(""));
+                newStage.show();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        newStage.show();
+//        }
 
     }
 
     private void buildRenameTemplateDialog() {
-        if (renameStage == null) {
+//        if (renameStage == null) {
             Pane root = null;
             try {
                 FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
@@ -298,18 +297,18 @@ public class TemplateController {
                     }
                     StageMap.closeStage("renameTemplate");
                 });
-                renameStage = WindowFactory.createSimpleWindowAsModel("renameTemplate", "Rename Template", root);
-
+                Stage renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameTemplate", "Rename Template", root);
+                renameTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem().toString());
+                renameStage.show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        renameTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem().toString());
-        renameStage.show();
+//        }
+
     }
 
     private void buildCopyTemplateDialog() {
-        if (copyStage == null) {
+//        if (copyStage == null) {
             Pane root = null;
             try {
                 FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
@@ -329,14 +328,14 @@ public class TemplateController {
                     n.setText("");
                     StageMap.closeStage("copyTemplate");
                 });
-                copyStage = WindowFactory.createSimpleWindowAsModel("copyTemplate", "Copy Template", root);
-
+                Stage copyStage = WindowFactory.createOrUpdateSimpleWindowAsModel("copyTemplate", "Copy Template", root);
+                copyTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem().toString());
+                copyStage.show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        copyTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem().toString());
-        copyStage.show();
+//        }
+
     }
 
     private void buildPatternDia() {
