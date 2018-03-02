@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.ColumnConstraints;
@@ -122,6 +123,11 @@ public class TableViewTest2 extends Application {
                     tableCell.setStyle("-fx-background-color: yellow");
                 }
                 return tableCell;
+            }
+
+            @Override
+            public void setAllCheckBox(CheckBox checkBox) {
+
             }
         };
 

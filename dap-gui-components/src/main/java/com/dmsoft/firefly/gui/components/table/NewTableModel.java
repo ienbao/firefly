@@ -2,6 +2,7 @@ package com.dmsoft.firefly.gui.components.table;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 
 import java.util.List;
@@ -79,11 +80,18 @@ public interface NewTableModel {
     /**
      * method to decorate table cell
      *
-     * @param <T> any type
+     * @param <T>       any type
      * @param rowKey    row key
      * @param column    column
      * @param tableCell table cell
      * @return table cell
      */
     <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell);
+
+    /**
+     * method to set all check box
+     *
+     * @param checkBox check box
+     */
+    void setAllCheckBox(CheckBox checkBox);
 }
