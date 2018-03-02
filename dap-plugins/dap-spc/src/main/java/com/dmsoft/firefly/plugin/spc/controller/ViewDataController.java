@@ -13,6 +13,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,6 +22,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -52,12 +55,10 @@ public class ViewDataController implements Initializable {
     private FilteredList<String> filteredList = null;
     private Map<String, FilterSettingAndGraphic> columnFilterSetting = Maps.newHashMap();
 
-    private QuickSearchController quickSearchController;
     private ChooseDialogController chooseDialogController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.buildQuickSearchDialog();
         this.buildChooseColumnDialog();
         this.initBtnIcon();
         this.initViewDataTable();
@@ -104,9 +105,75 @@ public class ViewDataController implements Initializable {
         filterBtn.getStyleClass().add("filter-normal");
         FilterSettingAndGraphic fsg = new FilterSettingAndGraphic();
         fsg.setFilterBtn(filterBtn);
-//        filterBtn.setOnAction(event -> {
-//            //TODO
-//        });
+        filterBtn.setOnAction(event -> {
+            QuickSearchController quickSearchController = new QuickSearchController();
+            FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML(ViewResource.SPC_QUICK_SEARCH_VIEW_RES);
+            fxmlLoader.setController(quickSearchController);
+            Pane root = null;
+            Stage stage = null;
+            try {
+                root = fxmlLoader.load();
+                stage = WindowFactory.createSimpleWindowAsModel("spcQuickSearch", ResourceBundleUtils.getString(ResourceMassages.QUICK_SEARCH), root);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            quickSearchController.setStage(stage);
+            FilterType type = columnFilterSetting.get(title).getType();
+            switch (type) {
+                case ALL_DATA:
+                    quickSearchController.activeAllData();
+                    break;
+                case WITHIN_RANGE:
+                    quickSearchController.activeWithinRange();
+                    quickSearchController.getWithinLowerTf().setText(columnFilterSetting.get(title).getWithinLowerLimit());
+                    quickSearchController.getWithinUpperTf().setText(columnFilterSetting.get(title).getWithinUpperLimit());
+                    break;
+                case WITHOUT_RANGE:
+                    quickSearchController.activeWithoutRange();
+                    quickSearchController.getWithoutLowerTf().setText(columnFilterSetting.get(title).getWithoutLowerLimit());
+                    quickSearchController.getWithoutUpperTf().setText(columnFilterSetting.get(title).getWithoutUpperLimit());
+                    break;
+            }
+            quickSearchController.getSearchBtn().setOnAction(event1 -> {
+                FilterType type1 = quickSearchController.getFilterType();
+                if (type1 != type) {
+                    columnFilterSetting.get(title).setType(type1);
+                    switch (type1) {
+                        case ALL_DATA:
+                            columnFilterSetting.get(title).setType(FilterType.ALL_DATA);
+                            columnFilterSetting.get(title).setWithinLowerLimit(null);
+                            columnFilterSetting.get(title).setWithinUpperLimit(null);
+                            columnFilterSetting.get(title).setWithoutLowerLimit(null);
+                            columnFilterSetting.get(title).setWithoutUpperLimit(null);
+                            quickSearchHandler(title);
+                            quickSearchController.getStage().close();
+                            break;
+                        case WITHIN_RANGE:
+                            columnFilterSetting.get(title).setType(FilterType.WITHIN_RANGE);
+                            columnFilterSetting.get(title).setWithinLowerLimit(quickSearchController.getWithinLowerTf().getText());
+                            columnFilterSetting.get(title).setWithinUpperLimit(quickSearchController.getWithinUpperTf().getText());
+                            columnFilterSetting.get(title).setWithoutLowerLimit(null);
+                            columnFilterSetting.get(title).setWithoutUpperLimit(null);
+                            quickSearchHandler(title);
+                            quickSearchController.getStage().close();
+                            break;
+                        case WITHOUT_RANGE:
+                            columnFilterSetting.get(title).setType(FilterType.WITHIN_RANGE);
+                            columnFilterSetting.get(title).setWithinLowerLimit(null);
+                            columnFilterSetting.get(title).setWithinUpperLimit(null);
+                            columnFilterSetting.get(title).setWithoutLowerLimit(quickSearchController.getWithoutLowerTf().getText());
+                            columnFilterSetting.get(title).setWithoutUpperLimit(quickSearchController.getWithoutUpperTf().getText());
+                            quickSearchHandler(title);
+                            quickSearchController.getStage().close();
+                            break;
+                    }
+                }
+            });
+            quickSearchController.getCancelBtn().setOnAction(event1 -> {
+                quickSearchController.getStage().close();
+            });
+            stage.show();
+        });
         columnFilterSetting.put(title, fsg);
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
@@ -117,25 +184,23 @@ public class ViewDataController implements Initializable {
 
         col.setCellValueFactory(cellData -> new SimpleObjectProperty<>(this.dataFrame.getCellValue(cellData.getValue(), title)));
         viewDataTable.getColumns().add(col);
-//        hBox.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
-//            hBox.getChildren().add(filterButton);
-//        });
-//        hBox.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
-//            hBox.getChildren().remove(filterButton);
-//        });
     }
 
-    private void buildQuickSearchDialog() {
-        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML(ViewResource.SPC_QUICK_SEARCH_VIEW_RES);
-        Pane root = null;
-        try {
-            root = fxmlLoader.load();
-            quickSearchController = fxmlLoader.getController();
-            WindowFactory.createSimpleWindowAsModel("spcQuickSearch", ResourceBundleUtils.getString(ResourceMassages.QUICK_SEARCH), root);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void quickSearchHandler(String columnName) {
+        //TODO
     }
+
+//    private void buildQuickSearchDialog() {
+//        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML(ViewResource.SPC_QUICK_SEARCH_VIEW_RES);
+//        Pane root = null;
+//        try {
+//            root = fxmlLoader.load();
+//            quickSearchController = fxmlLoader.getController();
+//            WindowFactory.createSimpleWindowAsModel("spcQuickSearch", ResourceBundleUtils.getString(ResourceMassages.QUICK_SEARCH), root);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private void buildChooseColumnDialog() {
         FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML(ViewResource.SPC_CHOOSE_STATISTICAL_VIEW_RES);
@@ -162,7 +227,6 @@ public class ViewDataController implements Initializable {
         chooseItemBtn.setOnAction(event -> getChooseColumnBtnEvent());
         unSelectedCheckBox.setOnAction(event -> getUnSelectedCheckBoxEvent());
         allCheckBox.setOnAction(event -> getAllSelectEvent());
-        quickSearchController.getCancelBtn().setOnAction(event -> closeQuickSearchDialogEvent());
     }
 
     private void getClearFilterBtnEvent() {
@@ -185,9 +249,9 @@ public class ViewDataController implements Initializable {
         StageMap.showStage("spcViewDataColumn");
     }
 
-    private void closeQuickSearchDialogEvent() {
-        StageMap.closeStage("spcQuickSearch");
-    }
+//    private void closeQuickSearchDialogEvent() {
+//        StageMap.closeStage("spcQuickSearch");
+//    }
 
     private void getUnSelectedCheckBoxEvent() {
         for (TableCheckBox checkBox : this.checkBoxMap.values()) {
@@ -201,8 +265,8 @@ public class ViewDataController implements Initializable {
         }
     }
 
-    private void getFilterBtnEvent() {
-        StageMap.showStage("spcQuickSearch");
+    private Stage getFilterStage() {
+        return StageMap.getStage("spcQuickSearch");
     }
 
     /**
@@ -219,10 +283,9 @@ public class ViewDataController implements Initializable {
         chooseItemBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
     }
 
-    private enum FilterType {
-        ALL_DATA, WITHIN_RANGE, WITHOUT_RANGE
-    }
-
+    /**
+     * inner class for filter setting and graphic
+     */
     private class FilterSettingAndGraphic {
         private static final String NORMAL_STYLE = "filter-normal";
         private static final String FILTER_ACTIVE = "filter-active";

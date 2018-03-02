@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.gui.components.table;
 
+import com.google.common.collect.Lists;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -92,20 +93,20 @@ public class TableViewWrapper extends AbstractTableViewWrapper {
         });
 
         // add listener for row key list removed, added or permuted
-        this.tableModel.getRowKeyArray().addListener((ListChangeListener<String>) c -> {
-            Platform.runLater(() -> {
-                        while (c.next()) {
-                            if (c.wasPermutated()) {
-                                this.tableView.getItems().setAll(c.getList());
-                            } else if (c.wasAdded()) {
-                                this.tableView.getItems().addAll(c.getFrom(), c.getAddedSubList());
-                            } else if (c.wasRemoved()) {
-                                this.tableView.getItems().removeAll(c.getRemoved());
-                            }
-                        }
-                    }
-            );
-        });
+//        this.tableModel.getRowKeyArray().addListener((ListChangeListener<String>) c -> {
+//            Platform.runLater(() -> {
+//                        while (c.next()) {
+//                            if (c.wasPermutated()) {
+//                                this.tableView.getItems().setAll(c.getList());
+//                            } else if (c.wasAdded()) {
+//                                this.tableView.getItems().addAll(c.getFrom(), c.getAddedSubList());
+//                            } else if (c.wasRemoved()) {
+//                                this.tableView.getItems().removeAll(c.getRemoved());
+//                            }
+//                        }
+//                    }
+//            );
+//        });
         this.tableView.getItems().setAll(tableModel.getRowKeyArray());
         this.tableView.getColumns().setAll(columnMap.values());
     }
