@@ -4,10 +4,7 @@ import com.google.common.collect.Lists;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DefaultStringConverter;
 
@@ -66,6 +63,26 @@ public class NewTableViewWrapper {
             }
         });
         tableView.setItems(model.getRowKeyArray());
+        if (model.getMenuEventList() != null && !model.getMenuEventList().isEmpty()) {
+            ContextMenu menu = new ContextMenu();
+            for (TableMenuRowEvent event : model.getMenuEventList()) {
+                MenuItem menuItem = new MenuItem(event.getMenuName());
+                menuItem.setOnAction(event1 -> {
+                    String rowKey = tableView.getSelectionModel().getSelectedItem();
+                    event.handleAction(rowKey, event1);
+                });
+                menu.getItems().add(menuItem);
+            }
+            tableView.setRowFactory(tv -> {
+                TableRow<String> row = new TableRow<>();
+                row.setOnMouseClicked(event -> {
+                    if (!row.isEmpty()) {
+                        row.setContextMenu(menu);
+                    }
+                });
+                return row;
+            });
+        }
     }
 
     private static TableColumn<String, ?> initColumn(String s, NewTableModel model) {
