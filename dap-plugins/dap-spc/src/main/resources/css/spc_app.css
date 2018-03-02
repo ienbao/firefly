@@ -16,6 +16,7 @@
     -fx-border-width: 0 0 0 1;
     -fx-background-color: transparent;
     -fx-border-color: transparent;
+    -fx-background-image: none;
 }
 
 #viewDataTable .column-header .filter-hbox:hover .filter-normal {

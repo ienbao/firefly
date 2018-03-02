@@ -63,6 +63,7 @@ public class QuickSearchController implements Initializable {
      * method to active all data radio btn
      */
     public void activeAllData() {
+        this.allDataRadioBtn.setSelected(true);
         this.setWithinRangeTextFieldDisable(allDataRadioBtn.isSelected());
         this.setWithoutRangeTextFieldDisable(allDataRadioBtn.isSelected());
     }
@@ -71,6 +72,7 @@ public class QuickSearchController implements Initializable {
      * method to active without range radio btn
      */
     public void activeWithinRange() {
+        this.withinRangeRadioBtn.setSelected(true);
         this.setWithinRangeTextFieldDisable(!withinRangeRadioBtn.isSelected());
         this.setWithoutRangeTextFieldDisable(withinRangeRadioBtn.isSelected());
     }
@@ -79,6 +81,7 @@ public class QuickSearchController implements Initializable {
      * method to active without range radio btn
      */
     public void activeWithoutRange() {
+        this.withoutRangeRadioBtn.setSelected(true);
         this.setWithinRangeTextFieldDisable(withoutRangeRadioBtn.isSelected());
         this.setWithoutRangeTextFieldDisable(!withoutRangeRadioBtn.isSelected());
     }

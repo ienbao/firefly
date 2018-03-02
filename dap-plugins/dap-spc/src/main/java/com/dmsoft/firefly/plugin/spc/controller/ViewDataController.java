@@ -137,7 +137,6 @@ public class ViewDataController implements Initializable {
             quickSearchController.getSearchBtn().setOnAction(event1 -> {
                 FilterType type1 = quickSearchController.getFilterType();
                 if (type1 != type) {
-                    columnFilterSetting.get(title).setType(type1);
                     switch (type1) {
                         case ALL_DATA:
                             columnFilterSetting.get(title).setType(FilterType.ALL_DATA);
@@ -158,7 +157,7 @@ public class ViewDataController implements Initializable {
                             quickSearchController.getStage().close();
                             break;
                         case WITHOUT_RANGE:
-                            columnFilterSetting.get(title).setType(FilterType.WITHIN_RANGE);
+                            columnFilterSetting.get(title).setType(FilterType.WITHOUT_RANGE);
                             columnFilterSetting.get(title).setWithinLowerLimit(null);
                             columnFilterSetting.get(title).setWithinUpperLimit(null);
                             columnFilterSetting.get(title).setWithoutLowerLimit(quickSearchController.getWithoutLowerTf().getText());
@@ -192,18 +191,6 @@ public class ViewDataController implements Initializable {
         //TODO
     }
 
-//    private void buildQuickSearchDialog() {
-//        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML(ViewResource.SPC_QUICK_SEARCH_VIEW_RES);
-//        Pane root = null;
-//        try {
-//            root = fxmlLoader.load();
-//            quickSearchController = fxmlLoader.getController();
-//            WindowFactory.createSimpleWindowAsModel("spcQuickSearch", ResourceBundleUtils.getString(ResourceMassages.QUICK_SEARCH), root);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     private void buildChooseColumnDialog() {
         FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML(ViewResource.SPC_CHOOSE_STATISTICAL_VIEW_RES);
         Pane root = null;
@@ -232,7 +219,14 @@ public class ViewDataController implements Initializable {
     }
 
     private void getClearFilterBtnEvent() {
-
+        for (String s : columnFilterSetting.keySet()) {
+            FilterSettingAndGraphic fsg = columnFilterSetting.get(s);
+            fsg.setType(FilterType.ALL_DATA);
+            fsg.setWithinLowerLimit(null);
+            fsg.setWithinUpperLimit(null);
+            fsg.setWithoutLowerLimit(null);
+            fsg.setWithoutUpperLimit(null);
+        }
     }
 
     private void getFilterTextFieldEvent() {
@@ -250,10 +244,6 @@ public class ViewDataController implements Initializable {
     private void getChooseColumnBtnEvent() {
         StageMap.showStage("spcViewDataColumn");
     }
-
-//    private void closeQuickSearchDialogEvent() {
-//        StageMap.closeStage("spcQuickSearch");
-//    }
 
     private void getUnSelectedCheckBoxEvent() {
         for (TableCheckBox checkBox : this.checkBoxMap.values()) {
