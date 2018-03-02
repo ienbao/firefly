@@ -46,13 +46,15 @@ public class TemplateController {
     private Label title;
     @FXML
     private TextField patternText;
+
     @FXML
     private Button rename, add, copy, delete, addTime, pattern, addRow, ok, cancel, apply;
     @FXML
     private VBox timeKeys;
     @FXML
     private TableView itemTable;
-
+    @FXML
+    private TextFieldFilter itemFilter;
     private ObservableList<TemplateItemModel> items = FXCollections.observableArrayList();
     private FilteredList<TemplateItemModel> filteredList = items.filtered(p -> p.getTestItemName().startsWith(""));
     private SortedList<TemplateItemModel> personSortedList = new SortedList<>(filteredList);
@@ -127,6 +129,9 @@ public class TemplateController {
     private void initEvent() {
         nameFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
                 nameFilterList.setPredicate(p -> p.contains(nameFilter.getTextField().getText()))
+        );
+        itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
+                filteredList.setPredicate(p -> p.getTestItemName().contains(itemFilter.getTextField().getText()))
         );
         add.setOnAction(event -> buildNewTemplateDialog());
         rename.setOnAction(event -> {
