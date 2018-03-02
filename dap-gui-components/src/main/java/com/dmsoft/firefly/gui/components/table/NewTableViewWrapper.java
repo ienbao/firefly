@@ -79,6 +79,8 @@ public class NewTableViewWrapper {
                             super.updateItem(item, empty);
                             if (this.getIndex() > -1 && this.getIndex() < this.getTableView().getItems().size()) {
                                 model.decorate(model.getRowKeyArray().get(this.getIndex()), s, this);
+                            } else {
+                                this.setStyle(null);
                             }
                         }
                     });
@@ -126,6 +128,8 @@ public class NewTableViewWrapper {
                     }
                     if (this.getIndex() > -1 && this.getIndex() < this.getTableView().getItems().size()) {
                         model.decorate(model.getRowKeyArray().get(this.getIndex()), s, this);
+                    } else {
+                        this.setStyle(null);
                     }
                 }
             });
@@ -149,6 +153,8 @@ public class NewTableViewWrapper {
                 }
                 if (this.getIndex() > -1 && this.getIndex() < this.getTableView().getItems().size()) {
                     model.decorate(model.getRowKeyArray().get(this.getIndex()), s, this);
+                } else {
+                    this.setStyle(null);
                 }
             }
         });
