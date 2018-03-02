@@ -4,13 +4,12 @@
 package com.dmsoft.firefly.gui.controller.template;
 
 import com.dmsoft.firefly.gui.GuiApplication;
+import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.model.TemplateItemModel;
-import com.dmsoft.firefly.gui.utils.DeepCopy;
-import com.dmsoft.firefly.gui.utils.ImageUtils;
-import com.dmsoft.firefly.gui.utils.ResourceBundleUtils;
-import com.dmsoft.firefly.gui.utils.ResourceMassages;
+import com.dmsoft.firefly.gui.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.SpecificationDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
@@ -31,7 +30,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -60,7 +58,7 @@ public class TemplateController {
     private SortedList<TemplateItemModel> personSortedList = new SortedList<>(filteredList);
 
     @FXML
-    private TextField nameFilter;
+    private TextFieldFilter nameFilter;
     @FXML
     private ListView templateName;
     private ObservableList<String> templateNames = FXCollections.observableArrayList();
@@ -127,8 +125,8 @@ public class TemplateController {
     }
 
     private void initEvent() {
-        nameFilter.textProperty().addListener((observable, oldValue, newValue) ->
-                nameFilterList.setPredicate(p -> p.contains(nameFilter.getText()))
+        nameFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
+                nameFilterList.setPredicate(p -> p.contains(nameFilter.getTextField().getText()))
         );
         add.setOnAction(event -> buildNewTemplateDialog());
         rename.setOnAction(event -> {

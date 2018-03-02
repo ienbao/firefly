@@ -19,6 +19,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.dmsoft.firefly.gui.components.utils.TextFieldFilter?>
 <VBox fx:id="testItemPane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcItemController">
    <children>
       <SplitPane dividerPositions="0.4698085419734904" orientation="VERTICAL" style="-fx-border-width: 0 0 0 0;" VBox.vgrow="ALWAYS">
@@ -40,11 +41,11 @@
                               </TableView>
                            </center>
                            <top>
-                              <TextField fx:id="itemFilter" promptText="Test Item" BorderPane.alignment="CENTER">
+                              <TextFieldFilter fx:id="itemFilter" BorderPane.alignment="CENTER">
                                  <BorderPane.margin>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </BorderPane.margin>
-                              </TextField>
+                              </TextFieldFilter>
                            </top>
                         </BorderPane>
                      </content>
