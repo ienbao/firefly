@@ -7,6 +7,7 @@ import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.model.TemplateItemModel;
+import com.dmsoft.firefly.gui.utils.DeepCopy;
 import com.dmsoft.firefly.gui.utils.ImageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceBundleUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
@@ -30,6 +31,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -65,12 +67,12 @@ public class TemplateController {
     private FilteredList<String> nameFilterList = templateNames.filtered(p -> p.startsWith(""));
     private SortedList<String> nameSortedList = new SortedList<>(nameFilterList);
 
-    private NewNameController newNameController;
-    private Stage newStage;
-    private NewNameController renameTemplateController;
-    private Stage renameStage;
-    private NewNameController copyTemplateController;
-    private Stage copyStage;
+//    private NewNameController newNameController;
+//    private Stage newStage;
+//    private NewNameController renameTemplateController;
+//    private Stage renameStage;
+//    private NewNameController copyTemplateController;
+//    private Stage copyStage;
 
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
 
@@ -121,6 +123,7 @@ public class TemplateController {
                 initData(newValue.toString());
             }
         });
+        templateName.getSelectionModel().select(0);
     }
 
     private void initEvent() {
@@ -197,9 +200,6 @@ public class TemplateController {
         }
     }
 
-    private void copyTemplate(String template, String newTemplate) {
-
-    }
     private void saveCache() {
         if (currTemplate != null) {
             currTemplate.setDecimalDigit(decimal.getValue().intValue());
@@ -244,7 +244,7 @@ public class TemplateController {
             Pane root = null;
             try {
                 FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-                newNameController = new NewNameController();
+                NewNameController newNameController = new NewNameController();
                 newNameController.setPaneName("newTemplate");
                 loader.setController(newNameController);
                 root = loader.load();
@@ -279,7 +279,7 @@ public class TemplateController {
             Pane root = null;
             try {
                 FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-                renameTemplateController = new NewNameController();
+                NewNameController renameTemplateController = new NewNameController();
                 renameTemplateController.setPaneName("renameTemplate");
 
                 loader.setController(renameTemplateController);
@@ -312,7 +312,7 @@ public class TemplateController {
             Pane root = null;
             try {
                 FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-                copyTemplateController = new NewNameController();
+                NewNameController copyTemplateController = new NewNameController();
                 copyTemplateController.setPaneName("copyTemplate");
 
                 loader.setController(copyTemplateController);
@@ -321,8 +321,20 @@ public class TemplateController {
                     TextField n = copyTemplateController.getName();
                     if (StringUtils.isNotEmpty(n.getText())) {
                         if (!templateNames.contains(n.getText())) {
+                            TemplateSettingDto copyDto = new TemplateSettingDto();
+                            try {
+                                copyDto = (TemplateSettingDto) DeepCopy.deepCopy(currTemplate);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
+//                            BeanUtils.copyProperties(currTemplate, copyDto);
+                            copyDto.setName(n.getText());
+                            allTemplate.put(n.getText(), copyDto);
                             templateNames.add(n.getText());
-                            copyTemplate(templateName.getSelectionModel().getSelectedItem().toString(), n.getText());
+                            templateName.getSelectionModel().select(n.getText());
+//                            currTemplate = copyDto;
                         }
                     }
                     n.setText("");
