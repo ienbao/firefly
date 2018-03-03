@@ -116,6 +116,10 @@ public class ViewDataDFModel implements NewTableModel {
         return tableCell;
     }
 
+    public CheckBox getAllCheckBox() {
+        return allCheckBox;
+    }
+
     @Override
     public void setAllCheckBox(CheckBox checkBox) {
         this.allCheckBox = checkBox;

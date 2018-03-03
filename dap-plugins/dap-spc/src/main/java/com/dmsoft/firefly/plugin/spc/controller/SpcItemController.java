@@ -3,6 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
@@ -43,7 +44,7 @@ import static com.google.common.io.Resources.getResource;
  */
 public class SpcItemController implements Initializable {
     @FXML
-    private TextField itemFilter;
+    private TextFieldFilter itemFilter;
     @FXML
     private Button analysisBtn;
     @FXML
@@ -103,8 +104,9 @@ public class SpcItemController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         initBtnIcon();
         basicSearch.getChildren().add(new BasicSearchPane());
-        itemFilter.textProperty().addListener((observable, oldValue, newValue) ->
-                filteredList.setPredicate(p -> p.getItem().contains(itemFilter.getText()))
+        itemFilter.getTextField().setPromptText("Test Item");
+        itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
+                filteredList.setPredicate(p -> p.getItem().contains(itemFilter.getTextField().getText()))
         );
         this.initComponentEvent();
         itemTable.setOnMouseEntered(event -> {
