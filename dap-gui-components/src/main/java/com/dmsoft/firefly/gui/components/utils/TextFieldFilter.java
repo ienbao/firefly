@@ -36,7 +36,7 @@ public class TextFieldFilter extends HBox {
     public void setPrefSize(double prefWidth, double prefHeight) {
         super.setPrefSize(prefWidth, prefHeight);
         label.setPrefSize(22, prefHeight);
-        textField.setPrefSize(prefWidth - 22, prefHeight);
+        textField.setPrefSize(prefWidth - 22, prefHeight - 2);
     }
 
 }
