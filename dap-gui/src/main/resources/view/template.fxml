@@ -16,18 +16,17 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<?import com.dmsoft.firefly.gui.components.utils.NumberTextField?>
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.TemplateController">
    <children>
       <HBox prefHeight="485.0" prefWidth="800.0" style="-fx-border-color: #DCDCDC; -fx-border-width: 1 1 1 1;" VBox.vgrow="ALWAYS">
          <children>
             <VBox prefHeight="485.0" prefWidth="160.0" style="-fx-border-color: #DCDCDC; -fx-border-width: 0 1 0 0;">
                <children>
-                  <NumberTextField fx:id="nameFilter" prefWidth="140.0">
+                  <TextFieldFilter fx:id="nameFilter" prefWidth="140.0">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
-                  </NumberTextField>
+                  </TextFieldFilter>
                   <ListView fx:id="templateName" prefHeight="460.0" prefWidth="160.0" style="-fx-border-width: 0 1 0 1; -fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
                   <HBox prefHeight="22.0" prefWidth="160.0">
                      <children>
