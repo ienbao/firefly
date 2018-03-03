@@ -147,39 +147,39 @@ public class ViewDataController implements Initializable {
             }
             quickSearchController.getSearchBtn().setOnAction(event1 -> {
                 FilterType type1 = quickSearchController.getFilterType();
-                if (type1 != type) {
-                    switch (type1) {
-                        case ALL_DATA:
-                            columnFilterSetting.get(tableColumn.getText()).setType(FilterType.ALL_DATA);
-                            columnFilterSetting.get(tableColumn.getText()).setWithinLowerLimit(null);
-                            columnFilterSetting.get(tableColumn.getText()).setWithinUpperLimit(null);
-                            columnFilterSetting.get(tableColumn.getText()).setWithoutLowerLimit(null);
-                            columnFilterSetting.get(tableColumn.getText()).setWithoutUpperLimit(null);
-                            quickSearchHandler(tableColumn.getText());
-                            quickSearchController.getStage().close();
-                            break;
-                        case WITHIN_RANGE:
-                            columnFilterSetting.get(tableColumn.getText()).setType(FilterType.WITHIN_RANGE);
-                            columnFilterSetting.get(tableColumn.getText()).setWithinLowerLimit(quickSearchController.getWithinLowerTf().getText());
-                            columnFilterSetting.get(tableColumn.getText()).setWithinUpperLimit(quickSearchController.getWithinUpperTf().getText());
-                            columnFilterSetting.get(tableColumn.getText()).setWithoutLowerLimit(null);
-                            columnFilterSetting.get(tableColumn.getText()).setWithoutUpperLimit(null);
-                            quickSearchHandler(tableColumn.getText());
-                            quickSearchController.getStage().close();
-                            break;
-                        case WITHOUT_RANGE:
-                            columnFilterSetting.get(tableColumn.getText()).setType(FilterType.WITHOUT_RANGE);
-                            columnFilterSetting.get(tableColumn.getText()).setWithinLowerLimit(null);
-                            columnFilterSetting.get(tableColumn.getText()).setWithinUpperLimit(null);
-                            columnFilterSetting.get(tableColumn.getText()).setWithoutLowerLimit(quickSearchController.getWithoutLowerTf().getText());
-                            columnFilterSetting.get(tableColumn.getText()).setWithoutUpperLimit(quickSearchController.getWithoutUpperTf().getText());
-                            quickSearchHandler(tableColumn.getText());
-                            quickSearchController.getStage().close();
-                            break;
-                        default:
-                            break;
-                    }
+                switch (type1) {
+                    case ALL_DATA:
+                        columnFilterSetting.get(tableColumn.getText()).setType(FilterType.ALL_DATA);
+                        columnFilterSetting.get(tableColumn.getText()).setWithinLowerLimit(null);
+                        columnFilterSetting.get(tableColumn.getText()).setWithinUpperLimit(null);
+                        columnFilterSetting.get(tableColumn.getText()).setWithoutLowerLimit(null);
+                        columnFilterSetting.get(tableColumn.getText()).setWithoutUpperLimit(null);
+                        quickSearchHandler(tableColumn.getText());
+                        quickSearchController.getStage().close();
+                        break;
+                    case WITHIN_RANGE:
+                        columnFilterSetting.get(tableColumn.getText()).setType(FilterType.WITHIN_RANGE);
+                        columnFilterSetting.get(tableColumn.getText()).setWithinLowerLimit(quickSearchController.getWithinLowerTf().getText());
+                        columnFilterSetting.get(tableColumn.getText()).setWithinUpperLimit(quickSearchController.getWithinUpperTf().getText());
+                        columnFilterSetting.get(tableColumn.getText()).setWithoutLowerLimit(null);
+                        columnFilterSetting.get(tableColumn.getText()).setWithoutUpperLimit(null);
+                        quickSearchHandler(tableColumn.getText());
+                        quickSearchController.getStage().close();
+                        break;
+                    case WITHOUT_RANGE:
+                        columnFilterSetting.get(tableColumn.getText()).setType(FilterType.WITHOUT_RANGE);
+                        columnFilterSetting.get(tableColumn.getText()).setWithinLowerLimit(null);
+                        columnFilterSetting.get(tableColumn.getText()).setWithinUpperLimit(null);
+                        columnFilterSetting.get(tableColumn.getText()).setWithoutLowerLimit(quickSearchController.getWithoutLowerTf().getText());
+                        columnFilterSetting.get(tableColumn.getText()).setWithoutUpperLimit(quickSearchController.getWithoutUpperTf().getText());
+                        quickSearchHandler(tableColumn.getText());
+                        quickSearchController.getStage().close();
+                        break;
+                    default:
+                        break;
                 }
+                filterTF();
+                filterHeaderBtn();
             });
             quickSearchController.getCancelBtn().setOnAction(event1 -> {
                 quickSearchController.getStage().close();
@@ -214,8 +214,10 @@ public class ViewDataController implements Initializable {
 
     private void initComponentEvent() {
         clearFilterBtn.setOnAction(event -> getClearFilterBtnEvent());
-        //TODO : need to refresh all filter status
-        filterTf.textProperty().addListener((observable, oldValue, newValue) -> getFilterTextFieldEvent());
+        filterTf.textProperty().addListener((observable, oldValue, newValue) -> {
+            filterTF();
+            filterHeaderBtn();
+        });
         chooseItemBtn.setOnAction(event -> getChooseColumnBtnEvent());
         unSelectedCheckBox.setOnAction(event -> getInvertCheckBoxEvent());
     }
@@ -231,7 +233,7 @@ public class ViewDataController implements Initializable {
         }
     }
 
-    private void getFilterTextFieldEvent() {
+    private void filterTF() {
         model.getRowKeyArray().clear();
         for (String s : dataFrame.getAllRowKeys()) {
             List<String> datas = dataFrame.getDataRowList(s);
@@ -239,6 +241,41 @@ public class ViewDataController implements Initializable {
                 if (data.toLowerCase().contains(filterTf.getText().toLowerCase())) {
                     model.getRowKeyArray().add(s);
                     break;
+                }
+            }
+        }
+    }
+
+    private void filterHeaderBtn() {
+        for (String testItem : model.getHeaderArray()) {
+            if (columnFilterSetting.get(testItem) != null) {
+                FilterSettingAndGraphic fsg = columnFilterSetting.get(testItem);
+                if (FilterType.ALL_DATA.equals(fsg.getType())) {
+                    break;
+                } else if (FilterType.WITHIN_RANGE.equals(fsg.getType())) {
+                    List<String> toBeRemovedList = Lists.newArrayList();
+                    for (int i = 0; i < model.getRowKeyArray().size(); i++) {
+                        String rowKey = model.getRowKeyArray().get(i);
+                        String cellData = model.getCellData(rowKey, testItem).get();
+                        String upperLimit = fsg.getWithinUpperLimit();
+                        String lowerLimit = fsg.getWithinLowerLimit();
+                        if (!RangeUtils.isWithinRange(cellData, upperLimit, lowerLimit)) {
+                            toBeRemovedList.add(rowKey);
+                        }
+                    }
+                    model.getRowKeyArray().removeAll(toBeRemovedList);
+                } else if (FilterType.WITHOUT_RANGE.equals(fsg.getType())) {
+                    List<String> toBeRemovedList = Lists.newArrayList();
+                    for (int i = 0; i < model.getRowKeyArray().size(); i++) {
+                        String rowKey = model.getRowKeyArray().get(i);
+                        String cellData = model.getCellData(rowKey, testItem).get();
+                        String upperLimit = fsg.getWithoutUpperLimit();
+                        String lowerLimit = fsg.getWithoutLowerLimit();
+                        if (!RangeUtils.isWithoutRange(cellData, upperLimit, lowerLimit)) {
+                            toBeRemovedList.add(rowKey);
+                        }
+                    }
+                    model.getRowKeyArray().removeAll(toBeRemovedList);
                 }
             }
         }
