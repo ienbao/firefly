@@ -129,6 +129,11 @@ public class TableViewTest2 extends Application {
             public void setAllCheckBox(CheckBox checkBox) {
 
             }
+
+            @Override
+            public void setTableView(TableView<String> tableView) {
+
+            }
         };
 
         GridPane pane = new GridPane();

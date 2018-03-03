@@ -5,8 +5,6 @@ package com.dmsoft.firefly.plugin.spc.charts.data.basic;
  */
 public interface IBarChartData<X, Y> {
 
-//    X getStartValue(Data data);
-
     Y getValueByIndex(int index);
 
     X getStartValueByIndex(int index);
@@ -15,11 +13,7 @@ public interface IBarChartData<X, Y> {
 
     Object getEndValueByIndex(int index);
 
-//    X getBarWidth(Data data);
-
     int getLen();
-
-//    void addBarChartData(X startValue, X width, Y value, Data data);
 
     String getColor();
 

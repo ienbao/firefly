@@ -1,6 +1,5 @@
 package com.dmsoft.firefly.gui.components.table;
 
-import com.google.common.collect.Lists;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -17,9 +16,10 @@ import java.util.*;
  *
  * @author Can Guan
  */
+@Deprecated
 public class TableViewWrapper extends AbstractTableViewWrapper {
-    private Map<String, TableColumn<String, ?>> columnMap;
     private static final String SEPARATOR = "!@#";
+    private Map<String, TableColumn<String, ?>> columnMap;
     private List<String> editedStyleClass;
     private Map<String, List<String>> customStyleClassMap;
     private Set<String> addedStyleClass;

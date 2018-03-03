@@ -72,6 +72,7 @@ public class NewTableViewWrapper {
                 menuItem.setOnAction(event1 -> {
                     String rowKey = tableView.getSelectionModel().getSelectedItem();
                     event.handleAction(rowKey, event1);
+                    tableView.impl_updatePeer();
                 });
                 menu.getItems().add(menuItem);
             }
@@ -85,6 +86,7 @@ public class NewTableViewWrapper {
                 return row;
             });
         }
+        model.setTableView(tableView);
     }
 
     private static TableColumn<String, ?> initColumn(String s, NewTableModel model) {
@@ -98,7 +100,7 @@ public class NewTableViewWrapper {
                         public void updateItem(String item, boolean empty) {
                             super.updateItem(item, empty);
                             if (this.getIndex() > -1 && this.getIndex() < this.getTableView().getItems().size()) {
-                                model.decorate(model.getRowKeyArray().get(this.getIndex()), s, this);
+                                model.decorate(this.getTableView().getItems().get(this.getIndex()), s, this);
                             } else {
                                 this.setStyle(null);
                             }
@@ -148,7 +150,7 @@ public class NewTableViewWrapper {
                         super.setGraphic(item);
                     }
                     if (this.getIndex() > -1 && this.getIndex() < this.getTableView().getItems().size()) {
-                        model.decorate(model.getRowKeyArray().get(this.getIndex()), s, this);
+                        model.decorate(this.getTableView().getItems().get(this.getIndex()), s, this);
                     } else {
                         this.setStyle(null);
                     }
@@ -173,7 +175,7 @@ public class NewTableViewWrapper {
                     super.setGraphic(null);
                 }
                 if (this.getIndex() > -1 && this.getIndex() < this.getTableView().getItems().size()) {
-                    model.decorate(model.getRowKeyArray().get(this.getIndex()), s, this);
+                    model.decorate(this.getTableView().getItems().get(this.getIndex()), s, this);
                 } else {
                     this.setStyle(null);
                 }

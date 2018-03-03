@@ -8,6 +8,7 @@ public interface IXYChartData<X, Y> {
     int getLen();
 
     X getXValueByIndex(int index);
+
     Y getYValueByIndex(int index);
 
     Object getExtraValueByIndex(int index);

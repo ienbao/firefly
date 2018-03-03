@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
  *
  * @author Can Guan
  */
+@Deprecated
 public interface TableModel {
     /**
      * method to get column header string list

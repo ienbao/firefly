@@ -19,6 +19,7 @@ import javafx.scene.control.Button;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 /**
@@ -101,14 +102,18 @@ public class SpcMainController implements Initializable {
         for (int i = 0; i < 10; i++) {
             TestItemWithTypeDto typeDto = new TestItemWithTypeDto();
             typeDto.setTestItemName("itemName" + i);
+            typeDto.setLsl("10");
+            typeDto.setUsl("30");
             typeDtoList.add(typeDto);
         }
-        for (int i = 0; i < 100; i++) {
+        Random random = new Random();
+        int k = random.nextInt(100);
+        for (int i = 0; i < k; i++) {
             RowDataDto rowDataDto = new RowDataDto();
             Map<String, String> map = Maps.newHashMap();
             rowDataDto.setRowKey(i + "");
             for (int j = 0; j < 10; j++) {
-                map.put(typeDtoList.get(j).getTestItemName(), "value" + i + j);
+                map.put(typeDtoList.get(j).getTestItemName(), i + j + "");
             }
             rowDataDto.setData(map);
             rowDataDtoList.add(rowDataDto);

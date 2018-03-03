@@ -6,8 +6,10 @@ import java.util.List;
 
 /**
  * interface for build table view
+ *
  * @author Can Guan
  */
+@Deprecated
 public abstract class AbstractTableViewWrapper {
     protected TableView<String> tableView;
     protected TableModel tableModel;

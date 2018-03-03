@@ -5,12 +5,16 @@
 package com.dmsoft.firefly.plugin.csvresolver;
 
 import com.csvreader.CsvReader;
+import com.dmsoft.bamboo.common.monitor.AbstractProcessMonitor;
+import com.dmsoft.bamboo.common.monitor.ProcessMonitor;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.job.AbstractProcessMonitorAutoAdd;
+import com.dmsoft.firefly.sdk.job.JobThread;
+import com.dmsoft.firefly.sdk.job.ProcessMonitorAuto;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.annotation.DataParser;
 import com.dmsoft.firefly.sdk.plugin.annotation.ExcludeMethod;
@@ -35,7 +39,7 @@ import java.util.Map;
  * @author Li Guang
  */
 @DataParser
-public class CsvResolverService extends AbstractProcessMonitorAutoAdd implements IDataParser {
+public class CsvResolverService implements IDataParser {
     private final Logger logger = LoggerFactory.getLogger(CsvResolverService.class);
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
 
@@ -57,18 +61,26 @@ public class CsvResolverService extends AbstractProcessMonitorAutoAdd implements
         File csvFile = new File(csvPath);
         Boolean importSucc = false;
         String logStr = null;
+        ProcessMonitorAuto processMonitor = null;
+        if (Thread.currentThread() instanceof JobThread) {
+            processMonitor = (ProcessMonitorAuto) Thread.currentThread();
+        } else {
+            processMonitor = new AbstractProcessMonitorAutoAdd() {
+            };
+        }
+
 
         try {
             logStr = "Start to import <" + csvPath + ">.";
             logger.debug(logStr);
-            push(10);
+            processMonitor.push(10);
 
 //            push(new ProcessResult(0, logStr, csvPath));
 
             List<String[]> csvList = Lists.newArrayList();
             csvReader = new CsvReader(csvPath, ',', Charset.forName("UTF-8"));
 //            push(new ProcessResult(0, "paring file<" + filePath + ">.", csvPath));
-            push(20);
+            processMonitor.push(20);
             logger.debug("Parsing <" + csvPath + ">.");
             CsvTemplateDto fileFormat = findCsvTemplate();
             if (fileFormat == null) {
@@ -79,7 +91,7 @@ public class CsvResolverService extends AbstractProcessMonitorAutoAdd implements
                 csvList.add(csvReader.getValues());
             }
             logger.debug("Parsing <" + csvPath + "> done.");
-            push(30);
+            processMonitor.push(30);
             final int rowSize = csvList.size();
             int dataIndex = fileFormat.getData() - 1;
             if (dataIndex > rowSize) {
@@ -89,7 +101,7 @@ public class CsvResolverService extends AbstractProcessMonitorAutoAdd implements
 //                throw new ApplicationException(exceptionNumber, logStr);
             }
             sourceDataService.saveProject(csvFile.getName());
-            push(40);
+            processMonitor.push(40);
             String[] items = csvList.get(fileFormat.getItem() - 1);
             String[] lslRow = null, uslRow = null, unitRow = null;
 
@@ -124,7 +136,8 @@ public class CsvResolverService extends AbstractProcessMonitorAutoAdd implements
                 testItemDtoList.add(testItemDto);
             }
             sourceDataService.saveTestItem(csvFile.getName(), testItemDtoList);
-            push(50, 80, "", 5000);
+            processMonitor.push(50, 80, "", 5000);
+//            processMonitor.push(50);
             //save line data
             List<RowDataDto> rowDataDtos = Lists.newArrayList();
             for (int i = dataIndex; i < csvList.size(); i++) {
@@ -145,7 +158,7 @@ public class CsvResolverService extends AbstractProcessMonitorAutoAdd implements
                 rowDataDtos.add(rowDataDto);
             }
             sourceDataService.saveTestData(csvFile.getName(), rowDataDtos);
-            push(90);
+            processMonitor.push(90);
             //save column data
 //            List<TestDataDto> testDataDtos = Lists.newArrayList();
 //            for (int i = 0; i < items.length; i++) {
@@ -182,7 +195,7 @@ public class CsvResolverService extends AbstractProcessMonitorAutoAdd implements
             }
         }
         logger.info("End csv importing.");
-        push(100);
+        processMonitor.push(100);
     }
 
     @Override

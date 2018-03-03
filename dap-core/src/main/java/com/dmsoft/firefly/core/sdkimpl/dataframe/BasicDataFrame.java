@@ -70,7 +70,7 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
     @Override
     public TestItemWithTypeDto getTestItemWithTypeDto(String testItemName) {
         int targetIndex = this.testItemNames.indexOf(testItemName);
-        if (targetIndex > 0) {
+        if (targetIndex > -1) {
             return this.testItemDtoList.get(targetIndex);
         }
         return null;
@@ -95,7 +95,7 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
     public void updateTestItem(TestItemWithTypeDto testItemWithTypeDto) {
         String targetTestItemName = testItemWithTypeDto.getTestItemName();
         int targetIndex = this.testItemNames.indexOf(targetTestItemName);
-        if (targetIndex > 0) {
+        if (targetIndex > -1) {
             this.testItemNames.remove(targetIndex);
             this.testItemNames.add(targetIndex, targetTestItemName);
             this.testItemDtoList.remove(targetIndex);

@@ -12,6 +12,8 @@ import com.dmsoft.firefly.plugin.spc.charts.shape.LineType;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
+import com.dmsoft.firefly.plugin.spc.dto.chart.BarCategoryData;
+import com.dmsoft.firefly.plugin.spc.dto.chart.BarChartData;
 import com.dmsoft.firefly.plugin.spc.dto.chart.RuleXYChartData;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
@@ -56,7 +58,7 @@ public class ChartResultController implements Initializable {
 
     private String textColor = "#e92822";
 
-    private ChartPanel<NDChart> ndChartPane;
+    private ChartPanel<MultipleAxisXYChart> ndChartPane;
     private ChartPanel<LinearChart> runChartPane;
     private ChartPanel<LinearChart> xBarChartPane;
     private ChartPanel<LinearChart> rangeChartPane;
@@ -64,6 +66,10 @@ public class ChartResultController implements Initializable {
     private ChartPanel<LinearChart> medianChartPane;
     private ChartPanel<BoxPlotChart> boxChartPane;
     private ChartPanel<LinearChart> mrChartPane;
+
+//    private StackPane ndChart;
+    private MultipleAxisXYChart ndChart;
+    private XYBarChart baseChart;
 
     private List<XYChart.Data> annotationData = Lists.newArrayList();
 
@@ -125,13 +131,16 @@ public class ChartResultController implements Initializable {
         button.setTableRowKeys(Arrays.asList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));
         button.setTableViewSize(160, 240);
         button.getStyleClass().add("btn-icon-b");
-        CategoryAxis xAxis = new CategoryAxis();
+        NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setTickMarkVisible(false);
         yAxis.setTickMarkVisible(false);
         yAxis.setMinorTickVisible(false);
-        NDChart ndChart = new NDChart(xAxis, yAxis);
-        ndChartPane = new ChartPanel<>(ndChart);
+
+        baseChart = new XYBarChart(xAxis, yAxis);
+        ndChart = new MultipleAxisXYChart(baseChart);
+//        ndChart.setPrefSize(500, 250);
+        ndChartPane = new ChartPanel(ndChart);
         ndChartPane.getCustomPane().getChildren().add(button);
     }
 
@@ -325,29 +334,56 @@ public class ChartResultController implements Initializable {
 
     private void createNDChartData() {
 
-        AreaChart.Series areaChartData = new AreaChart.Series("Series 1", FXCollections.observableArrayList(
-                new AreaChart.Data("0", 4),
-                new AreaChart.Data("2", 5),
-                new AreaChart.Data("4", 4),
-                new AreaChart.Data("6", 2),
-                new AreaChart.Data("8", 6),
-                new AreaChart.Data("10", 8)
-        ));
+        Double[] x = new Double[]{1D, 4D, 7D, 10D, 13D, 16D, 19D, 22D, 25D, 28D};
+        Double[] y = new Double[10];
+        Double[] barWidth = new Double[10];
 
-        ObservableList<BarChart.Series> barChartData = FXCollections.observableArrayList(
-                new BarChart.Series("Series 2", FXCollections.observableArrayList(
-                        new BarChart.Data("0", 4),
-                        new BarChart.Data("2", 5),
-                        new BarChart.Data("4", 4),
-                        new BarChart.Data("6", 2),
-                        new BarChart.Data("8", 6),
-                        new BarChart.Data("10", 8)
-                )));
+        List<BarCategoryData<Double, Double>> barCategoryData = Lists.newArrayList();
+        Random random = new Random();
+        for (int i = 0; i < 10; i++) {
+            BarCategoryData<Double, Double> barCategoryData1 = new BarCategoryData();
+            double startValue = x[i];
+            double endValue = startValue + 2;
+            double value = random.nextInt(10);
+            y[i] = value;
+            barWidth[i] = (startValue + endValue) / 2;
+            System.out.println("start value: " + startValue);
+            System.out.println("end value: " + endValue);
+            System.out.println("bar width: " + (endValue - startValue));
+            System.out.println("value: " + value);
+            barCategoryData1.setStartValue(startValue);
+            barCategoryData1.setEndValue(endValue);
+            barCategoryData1.setBarWidth(endValue - startValue);
+            barCategoryData1.setValue(value);
+            barCategoryData.add(barCategoryData1);
+        }
+        String barColor = "#5fb222";
+        String seriesName = "A1:All";
+        BarChartData<Double, Double> barChartData = new BarChartData<>(seriesName);
+        barChartData.setBarData(barCategoryData);
+        barChartData.setColor(barColor);
+        baseChart.createChartSeries(barChartData);
 
-        NDChart ndChart = ndChartPane.getChart();
-        ndChart.setData(barChartData);
-        ndChart.addAreaSeries(areaChartData);
-//        ndChartPane.activeChartDragging();
+        Double xi[] = new Double[]{1D, 4D, 7D, 10D, 13D, 16D, 19D, 22D, 25D, 28D};
+        Double yi[] = new Double[]{1D, 10D, 100D, 1000D, 2D, 20D, 30D, 40D, 200D, 2000D};
+        Double ids[] = new Double[]{1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D};
+        XYChartData<Double, Double> xyChartData = new XYChartData();
+        xyChartData.setX(xi);
+        xyChartData.setY(yi);
+        xyChartData.setIds(ids);
+        xyChartData.setColor("#5fb222");
+        xyChartData.setSeriesName(seriesName);
+
+        final XYChart.Series<Number, Number> series = new XYChart.Series<>();
+        series.setName("Series 2");
+        series.getData().addAll(
+                new XYChart.Data<Number, Number>(0, 950),
+                new XYChart.Data<Number, Number>(200, 100),
+                new XYChart.Data<Number, Number>(500, 120),
+                new XYChart.Data<Number, Number>(750, 180),
+                new XYChart.Data<Number, Number>(1000, 200));
+
+        ndChart.createBackgroundChart(FXCollections.observableArrayList(series), "#5fb222", "CurveFittedAreaChart");
     }
 
     private void createBoxChartData() {
