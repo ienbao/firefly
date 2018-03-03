@@ -36,6 +36,13 @@
                             <include>plugin.xml</include>
                         </includes>
                     </fileSet>
+                    <fileSet>
+                        <directory>${project.basedir}/src/main/resources/rscripts</directory>
+                        <outputDirectory>/Plugins/${module.artifactId}/rscripts</outputDirectory>
+                        <includes>
+                            <include>*.R</include>
+                        </includes>
+                    </fileSet>
                 </fileSets>
             </sources>
         </moduleSet>
