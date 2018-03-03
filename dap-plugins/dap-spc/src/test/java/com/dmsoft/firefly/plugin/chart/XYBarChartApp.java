@@ -49,6 +49,7 @@ public class XYBarChartApp extends Application {
             System.out.println("start value: " + startValue);
             System.out.println("end value: " + endValue);
             System.out.println("bar width: " + (endValue - startValue));
+            System.out.println("value: " + value);
             barCategoryData1.setStartValue(startValue);
             barCategoryData1.setEndValue(endValue);
             barCategoryData1.setBarWidth(endValue - startValue);
@@ -56,8 +57,8 @@ public class XYBarChartApp extends Application {
             barCategoryData.add(barCategoryData1);
         }
 
-//        String barColor = "#5fb222";
-        String barColor = "#e92822";
+        String barColor = "#5fb222";
+//        String barColor = "#e92822";
         String seriesName = "A1:All";
         BarChartData<Double, Double> barChartData = new BarChartData<>(seriesName);
         barChartData.setBarData(barCategoryData);
@@ -68,9 +69,9 @@ public class XYBarChartApp extends Application {
         xyChartData.setY(y);
         xyChartData.setColor(barColor);
 
-        XYBarChart<Double, Double> chart = new XYBarChart(xAxis, yAxis);
-        chart.createChartSeries(barChartData);
-        chart.addAreaSeries(xyChartData);
+        XYBarChart<Double, Double> chart = new XYBarChart(xAxis, yAxis, barChartData);
+//        chart.addAreaSeries(barChartData);
+//        chart.addAreaSeries(xyChartData);
 
         VBox vBox = new VBox();
         HBox hBox = new HBox();
