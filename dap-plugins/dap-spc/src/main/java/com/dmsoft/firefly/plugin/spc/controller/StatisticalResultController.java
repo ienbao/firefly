@@ -165,7 +165,7 @@ public class StatisticalResultController implements Initializable {
         statisticalTableModel.filterTestItem(filterTestItemTf.getTextField().getText());
     }
 
-    private void getChooseStatisticalResultEvent(){
+    private void getChooseStatisticalResultEvent() {
         selectStatisticalResultName = chooseDialogController.getSelectResultName();
         statisticalTableModel.updateStatisticalResultColumn(selectStatisticalResultName);
         StageMap.closeStage("spcStatisticalResult");

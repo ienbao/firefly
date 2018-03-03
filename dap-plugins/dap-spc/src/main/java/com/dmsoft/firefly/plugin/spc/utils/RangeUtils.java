@@ -1,6 +1,8 @@
 package com.dmsoft.firefly.plugin.spc.utils;
 
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 
 /**
  * util class for range judgement
@@ -23,13 +25,13 @@ public class RangeUtils {
         Double valueD = Double.valueOf(value);
         if (DAPStringUtils.isNumeric(upperLimit)) {
             Double ul = Double.valueOf(upperLimit);
-            if (valueD > ul) {
+            if (valueD >= ul) {
                 return false;
             }
         }
         if (DAPStringUtils.isNumeric(lowerLimit)) {
             Double ll = Double.valueOf(lowerLimit);
-            return valueD >= ll;
+            return valueD > ll;
         }
         return true;
     }
@@ -49,13 +51,37 @@ public class RangeUtils {
         Double valueD = Double.valueOf(value);
         if (DAPStringUtils.isNumeric(upperLimit)) {
             Double ul = Double.valueOf(upperLimit);
-            if (valueD < ul) {
-                return false;
+            if (valueD >= ul) {
+                return true;
             }
         }
         if (DAPStringUtils.isNumeric(lowerLimit)) {
             Double ll = Double.valueOf(lowerLimit);
-            return valueD < ll;
+            return valueD <= ll;
+        }
+        return false;
+    }
+
+    /**
+     * method to judge value is pass or not
+     *
+     * @param value   value
+     * @param typeDto type dto
+     * @return is or not
+     */
+    public static boolean isPass(String value, TestItemWithTypeDto typeDto) {
+        if (value != null && typeDto != null && DAPStringUtils.isNumeric(value) && TestItemType.VARIABLE.equals(typeDto.getTestItemType())) {
+            Double valueD = Double.valueOf(value);
+            if (DAPStringUtils.isNumeric(typeDto.getUsl())) {
+                Double ul = Double.valueOf(typeDto.getUsl());
+                if (valueD > ul) {
+                    return false;
+                }
+            }
+            if (DAPStringUtils.isNumeric(typeDto.getLsl())) {
+                Double ll = Double.valueOf(typeDto.getLsl());
+                return valueD >= ll;
+            }
         }
         return true;
     }

@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
+import javafx.scene.control.TableView;
 
 import java.util.List;
 
@@ -94,4 +95,10 @@ public interface NewTableModel {
      * @param checkBox check box
      */
     void setAllCheckBox(CheckBox checkBox);
+
+    /**
+     * method to set table view
+     * @param tableView table view
+     */
+    void setTableView(TableView<String> tableView);
 }

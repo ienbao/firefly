@@ -14,6 +14,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
+import javafx.scene.control.TableView;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -193,5 +194,10 @@ public class ViewDataTableModel implements NewTableModel {
                 }
             }
         });
+    }
+
+    @Override
+    public void setTableView(TableView<String> tableView) {
+
     }
 }

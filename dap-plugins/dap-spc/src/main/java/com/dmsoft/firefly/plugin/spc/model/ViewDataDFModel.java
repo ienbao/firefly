@@ -2,7 +2,9 @@ package com.dmsoft.firefly.plugin.spc.model;
 
 import com.dmsoft.firefly.gui.components.table.NewTableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
+import com.dmsoft.firefly.plugin.spc.utils.RangeUtils;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -13,6 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
+import javafx.scene.control.TableView;
 
 import java.util.List;
 import java.util.Map;
@@ -32,6 +35,7 @@ public class ViewDataDFModel implements NewTableModel {
     private List<TableMenuRowEvent> menuRowEvents;
     private Set<String> highLightRowKeys;
     private CheckBox allCheckBox;
+    private TableView<String> tableView;
 
     /**
      * constructor
@@ -60,6 +64,7 @@ public class ViewDataDFModel implements NewTableModel {
                 } else {
                     highLightRowKeys.add(rowKey);
                 }
+                tableView.refresh();
             }
         };
         this.menuRowEvents.add(highLight);
@@ -110,8 +115,15 @@ public class ViewDataDFModel implements NewTableModel {
 
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
-        if (this.highLightRowKeys.contains(rowKey)) {
+        tableCell.setStyle(null);
+        if (!RangeUtils.isPass(dataFrame.getCellValue(rowKey, column), dataFrame.getTestItemWithTypeDto(column))) {
+            tableCell.setStyle("-fx-background-color: red; -fx-text-fill: white");
+        } else if (dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column)) && this.highLightRowKeys.contains(rowKey)) {
+            tableCell.setStyle("-fx-background-color: yellow; -fx-text-fill: #aaaaaa");
+        } else if (this.highLightRowKeys.contains(rowKey)) {
             tableCell.setStyle("-fx-background-color: yellow");
+        } else if (dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column))) {
+            tableCell.setStyle("-fx-text-fill: #aaaaaa");
         }
         return tableCell;
     }
@@ -123,5 +135,10 @@ public class ViewDataDFModel implements NewTableModel {
     @Override
     public void setAllCheckBox(CheckBox checkBox) {
         this.allCheckBox = checkBox;
+    }
+
+    @Override
+    public void setTableView(TableView<String> tableView) {
+        this.tableView = tableView;
     }
 }
