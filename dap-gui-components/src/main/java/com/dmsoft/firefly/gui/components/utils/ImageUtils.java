@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2017. For Intelligent Group.
  */
-package com.dmsoft.firefly.gui.utils;
+package com.dmsoft.firefly.gui.components.utils;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

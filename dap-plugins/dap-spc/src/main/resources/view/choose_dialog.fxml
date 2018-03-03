@@ -10,13 +10,14 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.dmsoft.firefly.gui.components.utils.TextFieldFilter?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.ChooseDialogController">
    <children>
       <VBox layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
             <HBox spacing="10.0" style="-fx-border-width: 1 1 0 1; -fx-border-color: #dcdcdc;">
                <children>
-                  <TextField fx:id="chooseFilterTf" prefHeight="22.0" prefWidth="200.0" />
+                  <TextFieldFilter fx:id="chooseFilterTf" prefHeight="22.0" prefWidth="200.0" />
                   <CheckBox fx:id="chooseUnSelected" mnemonicParsing="false" prefHeight="22.0" prefWidth="100.0" style="-fx-label-padding: 0 0 0 10;" text="%UNSELECTED_CHECKBOX">
                      <opaqueInsets>
                         <Insets />
