@@ -1,9 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.charts.view;
 
-import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.plugin.spc.charts.ClearCallBack;
-import com.dmsoft.firefly.plugin.spc.charts.SelectCallBack;
-import com.dmsoft.firefly.plugin.spc.charts.model.CheckTableModel;
 import com.dmsoft.firefly.plugin.spc.charts.model.SimpleItemCheckModel;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
@@ -26,6 +23,8 @@ public class ChartAnnotationButton extends Button {
 
     private Popup popup;
     private GridPane gridPane;
+    private Button clearBtn;
+    private Button editBtn;
     private TextField itemFilter;
     private ImageView imageReset;
     private ListView<SimpleItemCheckModel> dataListView;
@@ -38,14 +37,6 @@ public class ChartAnnotationButton extends Button {
 
     private final int defaultSelectedIndex = 0;
     public final Double MAX_HEIGHT = 300.0;
-    public final Double MAX_WIDTH = 180.0;
-
-    private TableViewWrapper tableViewWrapper;
-    private TableView<String> tableView;
-    private CheckTableModel tableModel;
-
-    private Button clearBtn;
-    private Button editBtn;
 
     public ChartAnnotationButton() {
 
@@ -163,13 +154,12 @@ public class ChartAnnotationButton extends Button {
         editBtn.setPrefWidth(25);
         editBtn.setMinWidth(25);
         editBtn.setMaxWidth(25);
-
         imageReset.setFitHeight(16);
         imageReset.setFitWidth(16);
-        itemFilter.setPromptText("Filter");
         gridPane.setPrefHeight(200);
         gridPane.setPrefWidth(100);
         gridPane.setMaxHeight(MAX_HEIGHT);
+        itemFilter.setPromptText("Filter");
         this.setPrefWidth(20);
         this.setMinWidth(20);
         this.setMaxWidth(20);

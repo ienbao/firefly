@@ -5,16 +5,20 @@ package com.dmsoft.firefly.plugin.spc.model;
 
 import com.dmsoft.firefly.gui.components.table.NewTableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
+import com.dmsoft.firefly.plugin.spc.utils.ResourceBundleUtils;
+import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
-import javafx.scene.control.TableView;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -33,13 +37,17 @@ public class ViewDataTableModel implements NewTableModel {
     private SortedList<String> viewDataSortedList;
 
     private SearchDataFrame searchDataFrame;
+    private List<TableMenuRowEvent> menuRowEvents;
 
+    private Set<String> highLightRowKeys;
     /**
      * constructor
      */
     public ViewDataTableModel() {
         viewDataFilteredList = rowKey.filtered(p -> true);
         viewDataSortedList = new SortedList<>(viewDataFilteredList);
+        this.highLightRowKeys = Sets.newLinkedHashSet();
+        this.initTableMenuEvent();
     }
 
     /**
@@ -66,6 +74,7 @@ public class ViewDataTableModel implements NewTableModel {
         columnKey.clear();
         checkMap.clear();
         falseSet.clear();
+        highLightRowKeys.clear();
     }
 
     /**
@@ -160,14 +169,16 @@ public class ViewDataTableModel implements NewTableModel {
 
     @Override
     public List<TableMenuRowEvent> getMenuEventList() {
-        return null;
+        return menuRowEvents;
     }
 
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
 
-        if (rowKey.equals("1")) {
+        if (highLightRowKeys.contains(rowKey)) {
             tableCell.setStyle("-fx-background-color:#f8d251");
+        } else{
+            tableCell.setStyle("-fx-background-color:#ffffff");
         }
         String value = this.searchDataFrame.getCellValue(rowKey, column);
         if (!StringUtils.isBlank(value)) {
@@ -196,8 +207,49 @@ public class ViewDataTableModel implements NewTableModel {
         });
     }
 
-    @Override
-    public void setTableView(TableView<String> tableView) {
+    private void initTableMenuEvent(){
+        menuRowEvents = Lists.newArrayList();
+        TableMenuRowEvent highLight = new TableMenuRowEvent() {
+            @Override
+            public String getMenuName() {
+                return ResourceBundleUtils.getString(ResourceMassages.HIGH_LIGHT_TABLE_MENU);
+            }
 
+            @Override
+            public void handleAction(String rowKey, ActionEvent event) {
+                if (highLightRowKeys.contains(rowKey)) {
+                    highLightRowKeys.remove(rowKey);
+                } else {
+                    highLightRowKeys.add(rowKey);
+                }
+            }
+        };
+
+        TableMenuRowEvent detail = new TableMenuRowEvent() {
+            @Override
+            public String getMenuName() {
+                return ResourceBundleUtils.getString(ResourceMassages.DETAIL_TABLE_MENU);
+            }
+
+            @Override
+            public void handleAction(String rowKey, ActionEvent event) {
+
+            }
+        };
+
+        TableMenuRowEvent remove = new TableMenuRowEvent() {
+            @Override
+            public String getMenuName() {
+                return ResourceBundleUtils.getString(ResourceMassages.REMOVE_TABLE_MENU);
+            }
+
+            @Override
+            public void handleAction(String rowKey, ActionEvent event) {
+
+            }
+        };
+        this.menuRowEvents.add(highLight);
+        this.menuRowEvents.add(detail);
+        this.menuRowEvents.add(remove);
     }
 }

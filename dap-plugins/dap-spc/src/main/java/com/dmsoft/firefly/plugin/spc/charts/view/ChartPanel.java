@@ -1,19 +1,16 @@
 package com.dmsoft.firefly.plugin.spc.charts.view;
 
 import com.dmsoft.firefly.gui.components.chart.ChartUtils;
+import com.dmsoft.firefly.plugin.spc.charts.MultipleAxisXYChart;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
-import com.dmsoft.firefly.sdk.plugin.PluginContextEvent;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
+import javafx.scene.Node;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 /**
  * Created by cherry on 2018/2/8.
  */
-public class ChartPanel<T extends XYChart> extends VBox {
+public class ChartPanel<T extends Node> extends VBox {
 
     private T chart;
     private VBox chartPane;
@@ -40,9 +37,13 @@ public class ChartPanel<T extends XYChart> extends VBox {
     public void activeChartDragging() {
 
         if (chartUtils == null) {
-            chartUtils = new ChartUtils(chart);
+            if (chart instanceof  XYChart) {
+                chartUtils = new ChartUtils((XYChart) chart);
+            } else if (chart instanceof MultipleAxisXYChart) {
+
+            }
         }
-        if (chartDraggingEnable) {
+        if (chartDraggingEnable && chartUtils != null) {
             chartUtils.activeChartDraggable();
         }
     }
@@ -114,18 +115,29 @@ public class ChartPanel<T extends XYChart> extends VBox {
         extensionBtn.setPrefWidth(20);
         extensionBtn.setMaxWidth(20);
         extensionBtn.setMinWidth(20);
-        chart.setPrefHeight(250);
-        chart.setPrefWidth(500);
-        chart.setLegendVisible(false);
+
+        if (chart instanceof XYChart) {
+            XYChart xyChart = (XYChart) chart;
+            xyChart.setPrefHeight(250);
+            xyChart.setPrefWidth(500);
+            xyChart.setLegendVisible(false);
+        }
+
+        if (chart instanceof StackPane) {
+            ((StackPane) chart).setPrefWidth(500);
+            ((StackPane) chart).setPrefHeight(250);
+            ((StackPane) chart).setStyle("-fx-background-color: #462300");
+        }
+
     }
 
     private void initEvent() {
 
         zoomInBtn.setOnAction(event -> {
             if (chartSizeChangeEnable) {
-
                 if (chartUtils == null) {
-                    chartUtils = new ChartUtils(chart);
+                    XYChart xyChart = (XYChart) chart;
+                    chartUtils = new ChartUtils(xyChart);
                 }
                 chartUtils.zoomInChart();
             }
@@ -135,7 +147,8 @@ public class ChartPanel<T extends XYChart> extends VBox {
             if (chartSizeChangeEnable) {
 
                 if (chartUtils == null) {
-                    chartUtils = new ChartUtils(chart);
+                    XYChart xyChart = (XYChart) chart;
+                    chartUtils = new ChartUtils(xyChart);
                 }
                 chartUtils.zoomOutChart();
             }

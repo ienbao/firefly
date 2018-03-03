@@ -1,7 +1,7 @@
 package com.dmsoft.firefly.plugin.spc.charts;
 
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBarChartData;
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
+import com.dmsoft.firefly.plugin.spc.charts.data.basic.LineData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.PointTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.utils.ReflectionUtils;
 import com.dmsoft.firefly.plugin.spc.dto.chart.BarCategoryData;
@@ -14,10 +14,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.css.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.Chart;
@@ -25,121 +22,42 @@ import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Line;
 import javafx.util.Duration;
 
 import java.util.*;
 import java.util.function.Function;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Pedro
- * Date: 29-08-2013
- * Time: 15:27
- * To change this template use File | Settings | File Templates.
+ * Created by cherry on 2018/3/1.
  */
 public class XYBarChart<X, Y> extends XYChart<X, Y> {
-    // -------------- PRIVATE FIELDS -------------------------------------------
 
     private Map<Series, Map<Object, Data<X, Y>>> seriesCategoryMap = new HashMap<>();
     private Map<XYChart.Data, BarCategoryData<X, Y>> barCategoryDataMap = Maps.newHashMap();
-    private AreaSeries<X, Y> areaSeries = new AreaSeries<>();
-
-    private TreeSet categories = new TreeSet();
-
-    private boolean showTooltip = true;
-
-    private Legend legend = new Legend();
-    private boolean seriesRemove = false;
-    private final Orientation orientation;
-
-    private ValueAxis valueAxis;
-
-    private Timeline dataRemoveTimeline;
     private Data<X, Y> dataItemBeingRemoved = null;
     private Series<X, Y> seriesOfDataRemoved = null;
+
+    private ValueMarker valueMarker = new ValueMarker();
+
+    private ValueAxis valueAxis;
+    private Timeline dataRemoveTimeline;
+    private TreeSet categories = new TreeSet();
+    private Legend legend = new Legend();
+
+    private boolean showTooltip = true;
     private double bottomPos = 0;
     private static String NEGATIVE_STYLE = "negative";
-    // -------------- PUBLIC PROPERTIES ----------------------------------------
+    private final Orientation orientation;
+
 
     /**
-     * The gap to leave between bars in the same category
-     */
-    private DoubleProperty barGap = new StyleableDoubleProperty(2) {
-        @Override
-        protected void invalidated() {
-            get();
-            requestChartLayout();
-        }
-
-        public Object getBean() {
-            return XYBarChart.this;
-        }
-
-        public String getName() {
-            return "barGap";
-        }
-
-        public CssMetaData<XYBarChart<?, ?>, Number> getCssMetaData() {
-            return StyleableProperties.BAR_GAP;
-        }
-    };
-
-    public final double getBarGap() {
-        return barGap.getValue();
-    }
-
-    public final void setBarGap(double value) {
-        barGap.setValue(value);
-    }
-
-    public final DoubleProperty barGapProperty() {
-        return barGap;
-    }
-
-    /**
-     * The gap to leave between bars in separate categories
-     */
-    private DoubleProperty categoryGap = new StyleableDoubleProperty(10) {
-        @Override
-        protected void invalidated() {
-            get();
-            requestChartLayout();
-        }
-
-        @Override
-        public Object getBean() {
-            return XYBarChart.this;
-        }
-
-        @Override
-        public String getName() {
-            return "categoryGap";
-        }
-
-        public CssMetaData<XYBarChart<?, ?>, Number> getCssMetaData() {
-            return StyleableProperties.CATEGORY_GAP;
-        }
-    };
-
-    public final double getCategoryGap() {
-        return categoryGap.getValue();
-    }
-
-    public final void setCategoryGap(double value) {
-        categoryGap.setValue(value);
-    }
-
-    public final DoubleProperty categoryGapProperty() {
-        return categoryGap;
-    }
-
-    // -------------- CONSTRUCTOR ----------------------------------------------
-
-    /**
-     * Construct a new XYBarChart with the given axis.
+     * Constructs a XYChart given the two axes. The initial content for the chart
+     * plot background and plot area that includes vertical and horizontal grid
+     * lines and fills, are added.
      *
-     * @param xAxis The x axis to use
-     * @param yAxis The y axis to use
+     * @param xAxis X Axis for this XY chart
+     * @param yAxis Y Axis for this XY chart
      */
     public XYBarChart(Axis<X> xAxis, Axis<Y> yAxis) {
         super(xAxis, yAxis);
@@ -156,13 +74,6 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
         this.setLegendVisible(false);
     }
 
-    /**
-     * Construct a new XYBarChart with the given axis and data.
-     *
-     * @param xAxis        The x axis to use
-     * @param yAxis        The y axis to use
-     * @param barChartData The data to use, this is the actual list used so any changes to it will be reflected in the chart
-     */
     public XYBarChart(Axis<X> xAxis, Axis<Y> yAxis, IBarChartData<X, Y> barChartData) {
         this(xAxis, yAxis);
         this.createChartSeries(barChartData);
@@ -190,14 +101,29 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
         this.setSeriesDataTooltip(oneSeries, null);
     }
 
-    public void addAreaSeries(IXYChartData<X, Y> xyOneChartData) {
-        Group areaGroup = this.areaSeries.buildAreaGroup(xyOneChartData);
-        areaGroup.setStyle("-fx-stroke: " + xyOneChartData.getColor());
-        getPlotChildren().add(areaGroup);
+    public XYChart.Series buildSeries(IBarChartData<X, Y> barChartData) {
+        XYChart.Series oneSeries = new XYChart.Series();
+        oneSeries.setName(barChartData.getSeriesName());
+        int length = barChartData.getLen();
+        for (int i = 0; i < length; i++) {
+            X xValue = barChartData.getStartValueByIndex(i);
+            Y yValue = barChartData.getValueByIndex(i);
+            if (xValue == null || yValue == null) {
+                continue;
+            }
+            XYChart.Data data = new XYChart.Data<>(xValue, yValue);
+            data.setExtraValue(barChartData.getEndValueByIndex(i));
+            oneSeries.getData().add(data);
+            barCategoryDataMap.put(data,
+                    new BarCategoryData(xValue, barChartData.getBarWidthByIndex(i), yValue));
+        }
+        return oneSeries;
     }
 
-    private void paintAreaSeries() {
-        this.areaSeries.paintAreaSeries(this);
+    public void addValueMarker(LineData lineData) {
+
+        Line line = valueMarker.buildValueMarker(lineData);
+        getPlotChildren().add(line);
     }
 
     private void setSeriesDataStyleByDefault(XYChart.Series series, String color) {
@@ -239,27 +165,6 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
         Tooltip.install(data.getNode(), tooltip);
     }
 
-    public XYChart.Series buildSeries(IBarChartData<X, Y> barChartData) {
-        XYChart.Series oneSeries = new XYChart.Series();
-        oneSeries.setName(barChartData.getSeriesName());
-        int length = barChartData.getLen();
-        for (int i = 0; i < length; i++) {
-            X xValue = barChartData.getStartValueByIndex(i);
-            Y yValue = barChartData.getValueByIndex(i);
-            if (xValue == null || yValue == null) {
-                continue;
-            }
-            XYChart.Data data = new XYChart.Data<>(xValue, yValue);
-            data.setExtraValue(barChartData.getEndValueByIndex(i));
-            oneSeries.getData().add(data);
-            barCategoryDataMap.put(data,
-                    new BarCategoryData(xValue, barChartData.getBarWidthByIndex(i), yValue));
-        }
-        return oneSeries;
-    }
-
-    // -------------- PROTECTED METHODS ----------------------------------------
-
     @Override
     protected void dataItemAdded(Series<X, Y> series, int itemIndex, Data<X, Y> item) {
         Object category;
@@ -274,7 +179,7 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
         Map<Object, Data<X, Y>> categoryMap = seriesCategoryMap.get(series);
 
         if (categoryMap == null) {
-            categoryMap = new HashMap<Object, Data<X, Y>>();
+            categoryMap = new HashMap();
             seriesCategoryMap.put(series, categoryMap);
         }
         if (categoryMap.containsKey(category)) {
@@ -306,14 +211,14 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
     }
 
     @Override
-    protected void dataItemRemoved(final Data<X, Y> item, final Series<X, Y> series) {
+    protected void dataItemRemoved(Data<X, Y> item, Series<X, Y> series) {
         final Node bar = item.getNode();
         if (shouldAnimate()) {
             dataRemoveTimeline = createDataRemoveTimeline(item, bar, series);
             dataItemBeingRemoved = item;
             seriesOfDataRemoved = series;
             dataRemoveTimeline.setOnFinished(event -> {
-                ReflectionUtils.forceMethodCall(Data.class, "setSeries", item, new Object[]{null}); // TODO: make sure this is working as expected
+                ReflectionUtils.forceMethodCall(Data.class, "setSeries", item, new Object[]{null});
                 getPlotChildren().remove(bar);
                 removeDataItemFromDisplay(series, item);
                 dataItemBeingRemoved = null;
@@ -321,18 +226,14 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
             });
             dataRemoveTimeline.play();
         } else {
-            ReflectionUtils.forceMethodCall(Data.class, "setSeries", item, new Object[]{null}); // TODO: make sure this is working as expected
+            ReflectionUtils.forceMethodCall(Data.class, "setSeries", item, new Object[]{null});
             getPlotChildren().remove(bar);
             removeDataItemFromDisplay(series, item);
             updateMap(series, item);
         }
         barCategoryDataMap.remove(item);
-
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     protected void dataItemChanged(Data<X, Y> item) {
         double barVal;
@@ -361,8 +262,6 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
 
     @Override
     protected void seriesAdded(Series<X, Y> series, int seriesIndex) {
-        // handle any data already in series
-        // create entry in the map
         Map<Object, Data<X, Y>> categoryMap = new HashMap<Object, Data<X, Y>>();
         for (int j = 0; j < series.getData().size(); j++) {
             Data<X, Y> item = series.getData().get(j);
@@ -393,7 +292,7 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
     }
 
     @Override
-    protected void seriesRemoved(final Series<X, Y> series) {
+    protected void seriesRemoved(Series<X, Y> series) {
         updateDefaultColorIndex(series);
         // remove all symbol nodes
         if (shouldAnimate()) {
@@ -401,9 +300,9 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
             pt.setOnFinished(event -> removeSeriesFromDisplay(series));
             for (final Data<X, Y> d : series.getData()) {
                 final Node bar = d.getNode();
-                seriesRemove = true;
                 // Animate series deletion
-                if (/*getSeriesSize()*/((int) ReflectionUtils.forceMethodCall(XYChart.class, "getSeriesSize", this)) > 1) {
+                if (((int) ReflectionUtils.forceMethodCall(XYChart.class,
+                        "getSeriesSize", this)) > 1) {
                     for (int j = 0; j < series.getData().size(); j++) {
                         Data<X, Y> item = series.getData().get(j);
                         Timeline t = createDataRemoveTimeline(item, bar, series);
@@ -432,33 +331,19 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
         }
     }
 
-//    static int layoutPlotChildrenCount = 1;
-
-    /**
-     * @inheritDoc
-     */
     @Override
     protected void layoutPlotChildren() {
         this.paintBarPlot();
-        this.paintAreaSeries();
     }
 
     private void paintBarPlot() {
         double barWidth = 0;
-        double categorySize = 0;
         SortedSet categoriesOnScreen = getCategoriesOnScreen();
-        if (categoriesOnScreen == null)
+        if (categoriesOnScreen == null) {
             return;
-
-//        categorySize = calculateCategorySize(categoriesOnScreen);
-//        barWidth = calculateBarWidth(categorySize);
-
+        }
         barWidth = calculateBarWidth(categoriesOnScreen);
-
-//        if (categorySize == 0) categorySize = getData().size() / 2d;
-        if (barWidth == 0) barWidth = 0.5;
-
-        final double barOffset = -(categorySize / 2d);
+        barWidth = (barWidth == 0) ? 0.5 : barWidth;
         final double zeroPos = (valueAxis.getLowerBound() > 0) ?
                 valueAxis.getDisplayPosition(valueAxis.getLowerBound()) : valueAxis.getZeroPosition();
         int catIndex = 0;
@@ -495,12 +380,37 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
                         bar.resizeRelocate(bottom, categoryPos + (barWidth * barWidthSize + getBarGap()) * index,
                                 top - bottom, barWidth * barWidthSize);
                     }
-
                     index++;
                 }
             }
             catIndex++;
         }
+    }
+
+    private SortedSet getCategoriesOnScreen() {
+        ValueAxis categoryAxis = (ValueAxis) getXAxis();
+        Object lowestCategoryShowing = categories.higher(categoryAxis.getLowerBound());
+        if (lowestCategoryShowing == null) {
+            return null;
+        }
+        Object highestCategoryShowing = categories.lower(categoryAxis.getUpperBound());
+        if (highestCategoryShowing == null) {
+            return null;
+        }
+        if (Double.valueOf(highestCategoryShowing + "") < Double.valueOf(lowestCategoryShowing + "")) {
+            return null;
+        }
+        return categories.subSet(lowestCategoryShowing, true, highestCategoryShowing, true);
+    }
+
+    private Data<X, Y> getDataItem(Series<X, Y> series, Object category) {
+        Map<Object, Data<X, Y>> catMap = seriesCategoryMap.get(series);
+        return (catMap != null) ? catMap.get(category) : null;
+    }
+
+    private Data<X, Y> getDataItem(Series<X, Y> series, int seriesIndex, int itemIndex, Object category) {
+        Map<Object, Data<X, Y>> catMap = seriesCategoryMap.get(series);
+        return (catMap != null) ? catMap.get(category) : null;
     }
 
     private double calculateBarWidth(SortedSet categories) {
@@ -510,83 +420,20 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
         return mark;
     }
 
-    private double calculateCategorySize(SortedSet categories) {
-        double halfCategorySize = Double.POSITIVE_INFINITY;
-        ValueAxis xAxis = (ValueAxis) getXAxis();
-
-        double firstMark = xAxis.getDisplayPosition(xAxis.getLowerBound());
-        Iterator iterator = categories.iterator();
-        double secondMark = xAxis.getDisplayPosition((Number) iterator.next());
-        halfCategorySize = Math.min(secondMark - firstMark, halfCategorySize);
-        firstMark = secondMark;
-        for (; iterator.hasNext(); ) {
-            secondMark = xAxis.getDisplayPosition((Number) iterator.next());
-            halfCategorySize = Math.min((secondMark - firstMark) / 2d, halfCategorySize);
-            firstMark = secondMark;
+    private Node createBar(Series series, int seriesIndex, final Data item, int itemIndex) {
+        Node bar = item.getNode();
+        if (bar == null) {
+            bar = new StackPane();
+            item.setNode(bar);
         }
-        halfCategorySize = Math.min(xAxis.getDisplayPosition(xAxis.getUpperBound()) - xAxis.getDisplayPosition((Number) categories.last()), halfCategorySize);
+        String defaultColorStyleClassValue = (String) ReflectionUtils.forceFieldCall(Series.class,
+                "defaultColorStyleClass", series);
 
-        return halfCategorySize * 2;
-    }
-
-    private double calculateBarWidth(double categorySize) {
-        int nSeries = (int) ReflectionUtils.forceMethodCall(XYChart.class, "getSeriesSize", this);
-        double barWidth = (categorySize - (nSeries - 1) * getBarGap()) / nSeries;
-        return barWidth;
-    }
-
-    private SortedSet getCategoriesOnScreen() {
-        ValueAxis categoryAxis = (ValueAxis) getXAxis();
-        Object lowestCategoryShowing = categories.higher(categoryAxis.getLowerBound());
-        if (lowestCategoryShowing == null)
-            return null;
-
-        Object highestCategoryShowing = categories.lower(categoryAxis.getUpperBound());
-        if (highestCategoryShowing == null)
-            return null;
-
-        if (Double.valueOf(highestCategoryShowing + "") < Double.valueOf(lowestCategoryShowing + ""))
-            return null;
-
-        return categories.subSet(lowestCategoryShowing, true, highestCategoryShowing, true);
-    }
-
-    /**
-     * This is called whenever a series is added or removed and the legend needs to be updated
-     */
-    @Override
-    protected void updateLegend() {
-        legend.getItems().clear();
-        if (getData() != null) {
-            for (int seriesIndex = 0; seriesIndex < getData().size(); seriesIndex++) {
-                Series series = getData().get(seriesIndex);
-                Legend.LegendItem legenditem = new Legend.LegendItem(series.getName());
-                legenditem.getSymbol().getStyleClass().addAll("chart-bar", "series" + seriesIndex, "bar-legend-symbol",
-                        (String) ReflectionUtils.forceFieldCall(Series.class, "defaultColorStyleClass", series));
-                legend.getItems().add(legenditem);
-            }
-        }
-        if (legend.getItems().size() > 0) {
-            if (getLegend() == null) {
-                setLegend(legend);
-            }
-        } else {
-            setLegend(null);
-        }
-    }
-
-    // -------------- PRIVATE METHODS ------------------------------------------
-
-    private void updateMap(Series series, Data item) {
-        final Object category = (orientation == Orientation.VERTICAL) ? item.getXValue() :
-                item.getYValue();
-        Map<Object, Data<X, Y>> categoryMap = seriesCategoryMap.get(series);
-        if (categoryMap != null) {
-            categoryMap.remove(category);
-            categories.remove(category);
-            if (categoryMap.isEmpty()) seriesCategoryMap.remove(series);
-        }
-//        if (seriesCategoryMap.isEmpty() && categoryAxis.isAutoRanging()) categoryAxis.getCategories().clear();
+        bar.getStyleClass().addAll("chart-bar",
+                "series" + seriesIndex,
+                "data" + itemIndex,
+                defaultColorStyleClassValue);
+        return bar;
     }
 
     private void animateDataAdd(Data<X, Y> item, Node bar) {
@@ -596,36 +443,37 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
             if (barVal < 0) {
                 bar.getStyleClass().add(NEGATIVE_STYLE);
             }
-            //item.setCurrentY(getYAxis().toRealValue((barVal < 0) ? -bottomPos : bottomPos));
-            ReflectionUtils.forceMethodCall(Data.class, "setCurrentY", item, new Class[]{Object.class}, new Object[]{getYAxis().toRealValue((barVal < 0) ? -bottomPos : bottomPos)});
+            ReflectionUtils.forceMethodCall(Data.class, "setCurrentY", item,
+                    new Class[]{Object.class},
+                    new Object[]{getYAxis().toRealValue((barVal < 0) ? -bottomPos : bottomPos)});
+
             getPlotChildren().add(bar);
             item.setYValue(getYAxis().toRealValue(barVal));
-//            animate(
-//                    new KeyFrame(Duration.ZERO, new KeyValue(item.currentYProperty(),
-//                            item.getCurrentY())),
-//                    new KeyFrame(Duration.millis(700),
-//                            new KeyValue(item.currentYProperty(), item.getYValue(), Interpolator.EASE_BOTH))
-//            );
-            ReflectionUtils.forceMethodCall(Chart.class, "animate", this, new Object[]{new KeyFrame[]{
-                    new KeyFrame(Duration.ZERO, new KeyValue(/*item.currentYProperty(),*/ (ObjectProperty<Y>) ReflectionUtils.forceMethodCall(Data.class, "currentYProperty", item),
-                                     /*item.getCurrentY()*/ (Y) ReflectionUtils.forceMethodCall(Data.class, "getCurrentY", item))),
-                    new KeyFrame(Duration.millis(700),
-                            new KeyValue(/*item.currentYProperty()*/(ObjectProperty<Y>) ReflectionUtils.forceMethodCall(Data.class, "currentYProperty", item), item.getYValue(), Interpolator.EASE_BOTH))}}
+            ReflectionUtils.forceMethodCall(Chart.class, "animate", this,
+                    new Object[]{new KeyFrame[]{
+                            new KeyFrame(Duration.ZERO, new KeyValue((ObjectProperty<Y>) ReflectionUtils.forceMethodCall(Data.class, "currentYProperty", item),
+                                    (Y) ReflectionUtils.forceMethodCall(Data.class, "getCurrentY", item))),
+                            new KeyFrame(Duration.millis(700),
+                                    new KeyValue((ObjectProperty<Y>) ReflectionUtils.forceMethodCall(Data.class, "currentYProperty", item), item.getYValue(), Interpolator.EASE_BOTH))}}
             );
         } else {
             barVal = ((Number) item.getXValue()).doubleValue();
             if (barVal < 0) {
                 bar.getStyleClass().add(NEGATIVE_STYLE);
             }
-            //item.setCurrentX(getXAxis().toRealValue((barVal < 0) ? -bottomPos : bottomPos));
-            ReflectionUtils.forceMethodCall(Data.class, "setCurrentX", item, new Class[]{Object.class}, new Object[]{getXAxis().toRealValue((barVal < 0) ? -bottomPos : bottomPos)});
+            ReflectionUtils.forceMethodCall(Data.class, "setCurrentX", item,
+                    new Class[]{Object.class},
+                    new Object[]{getXAxis().toRealValue((barVal < 0) ? -bottomPos : bottomPos)});
+
             getPlotChildren().add(bar);
             item.setXValue(getXAxis().toRealValue(barVal));
             ReflectionUtils.forceMethodCall(Chart.class, "animate", this,
-                    new KeyFrame(Duration.ZERO, new KeyValue(/*item.currentXProperty(),*/(ObjectProperty<X>) ReflectionUtils.forceMethodCall(Data.class, "currentXProperty", item),
-                            /*item.getCurrentX()*/ (X) ReflectionUtils.forceMethodCall(Data.class, "getCurrentX", item))),
+                    new KeyFrame(Duration.ZERO,
+                            new KeyValue((ObjectProperty<X>) ReflectionUtils.forceMethodCall(Data.class, "currentXProperty", item),
+                            (X) ReflectionUtils.forceMethodCall(Data.class, "getCurrentX", item))),
                     new KeyFrame(Duration.millis(700),
-                            new KeyValue(/*item.currentXProperty()*/ (ObjectProperty<X>) ReflectionUtils.forceMethodCall(Data.class, "currentXProperty", item), item.getXValue(), Interpolator.EASE_BOTH))
+                            new KeyValue((ObjectProperty<X>) ReflectionUtils.forceMethodCall(Data.class, "currentXProperty", item),
+                                    item.getXValue(), Interpolator.EASE_BOTH))
             );
         }
     }
@@ -633,30 +481,26 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
     private Timeline createDataRemoveTimeline(final Data<X, Y> item, final Node bar, final Series<X, Y> series) {
         Timeline t = new Timeline();
         if (orientation == Orientation.VERTICAL) {
-            //            item.setYValue(getYAxis().toRealValue(getYAxis().getZeroPosition()));
             item.setYValue(getYAxis().toRealValue(bottomPos));
             t.getKeyFrames().addAll(new KeyFrame(Duration.ZERO,
-                            new KeyValue(/*item.currentYProperty()*/(ObjectProperty<Y>) ReflectionUtils.forceMethodCall(Data.class, "currentYProperty", item), /*item.getCurrentY()*/ (Y) ReflectionUtils.forceMethodCall(Data.class, "getCurrentY", item))),
-                    new KeyFrame(Duration.millis(700), new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
-                            getPlotChildren().remove(bar);
-                            updateMap(series, item);
-                        }
+                            new KeyValue((ObjectProperty<Y>) ReflectionUtils.forceMethodCall(Data.class, "currentYProperty", item),
+                                    (Y) ReflectionUtils.forceMethodCall(Data.class, "getCurrentY", item))),
+
+                    new KeyFrame(Duration.millis(700), actionEvent -> {
+                        getPlotChildren().remove(bar);
+                        updateMap(series, item);
                     },
-                            new KeyValue(/*item.currentYProperty()*/ (ObjectProperty<Y>) ReflectionUtils.forceMethodCall(Data.class, "currentYProperty", item), item.getYValue(),
-                                    Interpolator.EASE_BOTH)));
+                            new KeyValue((ObjectProperty<Y>) ReflectionUtils.forceMethodCall(Data.class, "currentYProperty", item),
+                                    item.getYValue(), Interpolator.EASE_BOTH)));
         } else {
             item.setXValue(getXAxis().toRealValue(getXAxis().getZeroPosition()));
-            t.getKeyFrames().addAll(new KeyFrame(Duration.ZERO, new KeyValue(/*item.currentXProperty()*/(ObjectProperty<X>) ReflectionUtils.forceMethodCall(Data.class, "currentXProperty", item), /*item.getCurrentX()*/ (X) ReflectionUtils.forceMethodCall(Data.class, "getCurrentX", item))),
-                    new KeyFrame(Duration.millis(700), new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
-                            getPlotChildren().remove(bar);
-                            updateMap(series, item);
-                        }
+            t.getKeyFrames().addAll(new KeyFrame(Duration.ZERO, new KeyValue((ObjectProperty<X>) ReflectionUtils.forceMethodCall(Data.class,
+                    "currentXProperty", item), (X) ReflectionUtils.forceMethodCall(Data.class, "getCurrentX", item))),
+                    new KeyFrame(Duration.millis(700), actionEvent -> {
+                        getPlotChildren().remove(bar);
+                        updateMap(series, item);
                     },
-                            new KeyValue(/*item.currentXProperty()*/ (ObjectProperty<X>) ReflectionUtils.forceMethodCall(Data.class, "currentXProperty", item), item.getXValue(),
+                            new KeyValue((ObjectProperty<X>) ReflectionUtils.forceMethodCall(Data.class, "currentXProperty", item), item.getXValue(),
                                     Interpolator.EASE_BOTH)));
         }
         return t;
@@ -666,13 +510,10 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
         //int clearIndex = seriesColorMap.get(series);
         Map<Series, Integer> seriesColorMapValue = (Map<Series, Integer>) ReflectionUtils.forceFieldCall(XYChart.class, "seriesColorMap", this);
         int clearIndex = seriesColorMapValue.get(series);
-
         //colorBits.clear(clearIndex);
         BitSet colorBitsValue = (BitSet) ReflectionUtils.forceFieldCall(XYChart.class, "colorBits", this);
-
         // DEFAULT_COLOR
         String DEFAULT_COLOR_VALUE = (String) ReflectionUtils.forceFieldCall(XYChart.class, "DEFAULT_COLOR", null);
-
         for (Data<X, Y> d : series.getData()) {
             final Node bar = d.getNode();
             if (bar != null) {
@@ -683,29 +524,88 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
         seriesColorMapValue.remove(series);
     }
 
-    private Node createBar(Series series, int seriesIndex, final Data item, int itemIndex) {
-        Node bar = item.getNode();
-        if (bar == null) {
-            bar = new StackPane();
-            item.setNode(bar);
+    private void updateMap(Series series, Data item) {
+        final Object category = (orientation == Orientation.VERTICAL) ? item.getXValue() :
+                item.getYValue();
+        Map<Object, Data<X, Y>> categoryMap = seriesCategoryMap.get(series);
+        if (categoryMap != null) {
+            categoryMap.remove(category);
+            categories.remove(category);
+            if (categoryMap.isEmpty()) seriesCategoryMap.remove(series);
+        }
+    }
+
+    /**
+     * The gap to leave between bars in the same category
+     */
+    private DoubleProperty barGap = new StyleableDoubleProperty(2) {
+        @Override
+        protected void invalidated() {
+            get();
+            requestChartLayout();
         }
 
-        String defaultColorStyleClassValue = (String) ReflectionUtils.forceFieldCall(Series.class, "defaultColorStyleClass", series);
-        bar.getStyleClass().addAll("chart-bar", "series" + seriesIndex, "data" + itemIndex, defaultColorStyleClassValue);
-        return bar;
+        public Object getBean() {
+            return XYBarChart.this;
+        }
+
+        public String getName() {
+            return "barGap";
+        }
+
+        public CssMetaData<XYBarChart<?, ?>, Number> getCssMetaData() {
+            return XYBarChart.StyleableProperties.BAR_GAP;
+        }
+    };
+
+    public final double getBarGap() {
+        return barGap.getValue();
     }
 
-    private Data<X, Y> getDataItem(Series<X, Y> series, Object category) {
-        Map<Object, Data<X, Y>> catmap = seriesCategoryMap.get(series);
-        return (catmap != null) ? catmap.get(category) : null;
+    public final void setBarGap(double value) {
+        barGap.setValue(value);
     }
 
-    private Data<X, Y> getDataItem(Series<X, Y> series, int seriesIndex, int itemIndex, Object category) {
-        Map<Object, Data<X, Y>> catmap = seriesCategoryMap.get(series);
-        return (catmap != null) ? catmap.get(category) : null;
+    public final DoubleProperty barGapProperty() {
+        return barGap;
     }
 
-    // -------------- STYLESHEET HANDLING ------------------------------------------------------------------------------
+    /**
+     * The gap to leave between bars in separate categories
+     */
+    private DoubleProperty categoryGap = new StyleableDoubleProperty(10) {
+        @Override
+        protected void invalidated() {
+            get();
+            requestChartLayout();
+        }
+
+        @Override
+        public Object getBean() {
+            return XYBarChart.this;
+        }
+
+        @Override
+        public String getName() {
+            return "categoryGap";
+        }
+
+        public CssMetaData<XYBarChart<?, ?>, Number> getCssMetaData() {
+            return XYBarChart.StyleableProperties.CATEGORY_GAP;
+        }
+    };
+
+    public final double getCategoryGap() {
+        return categoryGap.getValue();
+    }
+
+    public final void setCategoryGap(double value) {
+        categoryGap.setValue(value);
+    }
+
+    public final DoubleProperty categoryGapProperty() {
+        return categoryGap;
+    }
 
     /**
      * Super-lazy instantiation pattern from Bill Pugh.
@@ -761,7 +661,7 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
      * @since JavaFX 8.0
      */
     public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
-        return StyleableProperties.STYLEABLES;
+        return XYBarChart.StyleableProperties.STYLEABLES;
     }
 
     /**
@@ -785,5 +685,4 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
      */
     private static final PseudoClass HORIZONTAL_PSEUDOCLASS_STATE =
             PseudoClass.getPseudoClass("horizontal");
-
 }

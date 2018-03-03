@@ -55,12 +55,15 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
     public JobHandlerContext fireDoJob(Object... param) {
         AbstractJobHandlerContext next = findContextInbound();
         doNextInbound = true;
-        executorService.execute(new Runnable() {
+        JobThread thread = new JobThread() {
             @Override
             public void run() {
                 next.invokeDoJob(param);
             }
-        });
+        };
+        thread.addProcessMonitorListener(getContextProcessMonitorListenerIfExists());
+        thread.start();
+//        executorService.execute(thread);
         return this;
     }
 
@@ -84,12 +87,15 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
         }
         AbstractJobHandlerContext next = findContextOutbound();
         doNextOutbound = true;
-        executorService.execute(new Runnable() {
+        JobThread thread = new JobThread() {
             @Override
             public void run() {
                 next.invokeReturnValue(returnValue);
             }
-        });
+        };
+        thread.addProcessMonitorListener(getContextProcessMonitorListenerIfExists());
+        thread.start();
+//        executorService.execute(thread);
     }
 
     private void invokeReturnValue(Object returnValue) {
@@ -135,7 +141,7 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
 
     @Override
     public ProcessMonitorListener getContextProcessMonitorListenerIfExists() {
-        if (session.getProcessMonitorListener() != null) {
+        if (session != null && session.getProcessMonitorListener() != null) {
             return session.getProcessMonitorListener();
         }
         return null;
