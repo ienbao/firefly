@@ -3,6 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
@@ -23,7 +24,7 @@ import java.util.ResourceBundle;
 public class ChooseDialogController implements Initializable {
 
     @FXML
-    private TextField chooseFilterTf;
+    private TextFieldFilter chooseFilterTf;
     @FXML
     private CheckBox chooseUnSelected;
     @FXML
@@ -115,14 +116,14 @@ public class ChooseDialogController implements Initializable {
     }
 
     private void initComponentEvent() {
-        chooseFilterTf.textProperty().addListener((observable, oldValue, newValue) -> getFilterValueEvent());
+        chooseFilterTf.getTextField().textProperty().addListener((observable, oldValue, newValue) -> getFilterValueEvent());
         chooseUnSelected.setOnAction(event -> getUnSelectedCheckBoxEvent());
         allCheckBox.setOnAction(event -> getAllSelectEvent());
     }
 
     private void getFilterValueEvent() {
         chooseTableRowDataFilteredList.setPredicate(p ->
-                p.getValue().contains(chooseFilterTf.getText())
+                p.getValue().contains(chooseFilterTf.getTextField().getText())
         );
     }
 

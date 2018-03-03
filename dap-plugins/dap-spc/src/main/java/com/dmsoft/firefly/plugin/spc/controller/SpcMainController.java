@@ -108,7 +108,7 @@ public class SpcMainController implements Initializable {
             Map<String, String> map = Maps.newHashMap();
             rowDataDto.setRowKey(i + "");
             for (int j = 0; j < 10; j++) {
-                map.put(typeDtoList.get(j).getTestItemName(), "value" + i + j);
+                map.put(typeDtoList.get(j).getTestItemName(), i + j + "");
             }
             rowDataDto.setData(map);
             rowDataDtoList.add(rowDataDto);

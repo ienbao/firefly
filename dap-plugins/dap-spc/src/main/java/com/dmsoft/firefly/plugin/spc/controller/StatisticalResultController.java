@@ -6,25 +6,19 @@ package com.dmsoft.firefly.plugin.spc.controller;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
 import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
 import com.dmsoft.firefly.plugin.spc.model.StatisticalTableModel;
-import com.dmsoft.firefly.plugin.spc.model.StatisticalTableRowData;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.google.common.collect.Lists;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.Pane;
-import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.net.URL;
@@ -42,7 +36,7 @@ public class StatisticalResultController implements Initializable {
     @FXML
     private Button chooseColumnBtn;
     @FXML
-    private TextField filterTestItemTf;
+    private TextFieldFilter filterTestItemTf;
     @FXML
     private TableView statisticalResultTb;
 
@@ -56,6 +50,7 @@ public class StatisticalResultController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        filterTestItemTf.getTextField().setPromptText(ResourceBundleUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
         this.buildChooseColumnDialog();
         this.initStatisticalResultTable();
         this.initBtnIcon();
@@ -139,7 +134,6 @@ public class StatisticalResultController implements Initializable {
 //        statisticalTableRowDataSortedList = new SortedList<>(statisticalTableRowDataFilteredList);
 //        statisticalResultTb.setItems(statisticalTableRowDataSortedList);
 //        statisticalTableRowDataSortedList.comparatorProperty().bind(statisticalResultTb.comparatorProperty());
-
         statisticalTableModel = new StatisticalTableModel();
         TableViewWrapper wrapper = new TableViewWrapper(statisticalResultTb, statisticalTableModel);
         ChooseColorMenuEvent colorMenuEvent = new ChooseColorMenuEvent();
@@ -158,7 +152,7 @@ public class StatisticalResultController implements Initializable {
 
     private void initComponentEvent() {
         chooseColumnBtn.setOnAction(event -> getChooseColumnBtnEvent());
-        filterTestItemTf.textProperty().addListener((observable, oldValue, newValue) -> getFilterTestItemTfEvent());
+        filterTestItemTf.getTextField().textProperty().addListener((observable, oldValue, newValue) -> getFilterTestItemTfEvent());
         chooseDialogController.getChooseOkButton().setOnAction(event -> getChooseStatisticalResultEvent());
     }
 
@@ -168,7 +162,7 @@ public class StatisticalResultController implements Initializable {
     }
 
     private void getFilterTestItemTfEvent() {
-        statisticalTableModel.filterTestItem(filterTestItemTf.getText());
+        statisticalTableModel.filterTestItem(filterTestItemTf.getTextField().getText());
     }
 
     private void getChooseStatisticalResultEvent(){
