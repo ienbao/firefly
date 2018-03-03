@@ -8,220 +8,220 @@ import com.dmsoft.bamboo.common.dto.AbstractValueObject;
  * @author Can Guan
  */
 public class SpcStatsResultDto extends AbstractValueObject {
-    private String samples;
-    private String avg;
-    private String max;
-    private String min;
-    private String stDev;
-    private String lsl;
-    private String usl;
-    private String center;
-    private String range;
-    private String lcl;
-    private String ucl;
-    private String kurtosis;
-    private String skewness;
-    private String cpk;
-    private String ca;
-    private String cp;
-    private String cpl;
-    private String cpu;
-    private String withinPPM;
-    private String overallPPM;
-    private String pp;
-    private String ppk;
-    private String ppl;
-    private String ppu;
+    private Double samples;
+    private Double avg;
+    private Double max;
+    private Double min;
+    private Double stDev;
+    private Double lsl;
+    private Double usl;
+    private Double center;
+    private Double range;
+    private Double lcl;
+    private Double ucl;
+    private Double kurtosis;
+    private Double skewness;
+    private Double cpk;
+    private Double ca;
+    private Double cp;
+    private Double cpl;
+    private Double cpu;
+    private Double withinPPM;
+    private Double overallPPM;
+    private Double pp;
+    private Double ppk;
+    private Double ppl;
+    private Double ppu;
 
-    public String getSamples() {
+    public Double getSamples() {
         return samples;
     }
 
-    public void setSamples(String samples) {
+    public void setSamples(Double samples) {
         this.samples = samples;
     }
 
-    public String getAvg() {
+    public Double getAvg() {
         return avg;
     }
 
-    public void setAvg(String avg) {
+    public void setAvg(Double avg) {
         this.avg = avg;
     }
 
-    public String getMax() {
+    public Double getMax() {
         return max;
     }
 
-    public void setMax(String max) {
+    public void setMax(Double max) {
         this.max = max;
     }
 
-    public String getMin() {
+    public Double getMin() {
         return min;
     }
 
-    public void setMin(String min) {
+    public void setMin(Double min) {
         this.min = min;
     }
 
-    public String getStDev() {
+    public Double getStDev() {
         return stDev;
     }
 
-    public void setStDev(String stDev) {
+    public void setStDev(Double stDev) {
         this.stDev = stDev;
     }
 
-    public String getLsl() {
+    public Double getLsl() {
         return lsl;
     }
 
-    public void setLsl(String lsl) {
+    public void setLsl(Double lsl) {
         this.lsl = lsl;
     }
 
-    public String getUsl() {
+    public Double getUsl() {
         return usl;
     }
 
-    public void setUsl(String usl) {
+    public void setUsl(Double usl) {
         this.usl = usl;
     }
 
-    public String getCenter() {
+    public Double getCenter() {
         return center;
     }
 
-    public void setCenter(String center) {
+    public void setCenter(Double center) {
         this.center = center;
     }
 
-    public String getRange() {
+    public Double getRange() {
         return range;
     }
 
-    public void setRange(String range) {
+    public void setRange(Double range) {
         this.range = range;
     }
 
-    public String getLcl() {
+    public Double getLcl() {
         return lcl;
     }
 
-    public void setLcl(String lcl) {
+    public void setLcl(Double lcl) {
         this.lcl = lcl;
     }
 
-    public String getUcl() {
+    public Double getUcl() {
         return ucl;
     }
 
-    public void setUcl(String ucl) {
+    public void setUcl(Double ucl) {
         this.ucl = ucl;
     }
 
-    public String getKurtosis() {
+    public Double getKurtosis() {
         return kurtosis;
     }
 
-    public void setKurtosis(String kurtosis) {
+    public void setKurtosis(Double kurtosis) {
         this.kurtosis = kurtosis;
     }
 
-    public String getSkewness() {
+    public Double getSkewness() {
         return skewness;
     }
 
-    public void setSkewness(String skewness) {
+    public void setSkewness(Double skewness) {
         this.skewness = skewness;
     }
 
-    public String getCpk() {
+    public Double getCpk() {
         return cpk;
     }
 
-    public void setCpk(String cpk) {
+    public void setCpk(Double cpk) {
         this.cpk = cpk;
     }
 
-    public String getCa() {
+    public Double getCa() {
         return ca;
     }
 
-    public void setCa(String ca) {
+    public void setCa(Double ca) {
         this.ca = ca;
     }
 
-    public String getCp() {
+    public Double getCp() {
         return cp;
     }
 
-    public void setCp(String cp) {
+    public void setCp(Double cp) {
         this.cp = cp;
     }
 
-    public String getCpl() {
+    public Double getCpl() {
         return cpl;
     }
 
-    public void setCpl(String cpl) {
+    public void setCpl(Double cpl) {
         this.cpl = cpl;
     }
 
-    public String getCpu() {
+    public Double getCpu() {
         return cpu;
     }
 
-    public void setCpu(String cpu) {
+    public void setCpu(Double cpu) {
         this.cpu = cpu;
     }
 
-    public String getWithinPPM() {
+    public Double getWithinPPM() {
         return withinPPM;
     }
 
-    public void setWithinPPM(String withinPPM) {
+    public void setWithinPPM(Double withinPPM) {
         this.withinPPM = withinPPM;
     }
 
-    public String getOverallPPM() {
+    public Double getOverallPPM() {
         return overallPPM;
     }
 
-    public void setOverallPPM(String overallPPM) {
+    public void setOverallPPM(Double overallPPM) {
         this.overallPPM = overallPPM;
     }
 
-    public String getPp() {
+    public Double getPp() {
         return pp;
     }
 
-    public void setPp(String pp) {
+    public void setPp(Double pp) {
         this.pp = pp;
     }
 
-    public String getPpk() {
+    public Double getPpk() {
         return ppk;
     }
 
-    public void setPpk(String ppk) {
+    public void setPpk(Double ppk) {
         this.ppk = ppk;
     }
 
-    public String getPpl() {
+    public Double getPpl() {
         return ppl;
     }
 
-    public void setPpl(String ppl) {
+    public void setPpl(Double ppl) {
         this.ppl = ppl;
     }
 
-    public String getPpu() {
+    public Double getPpu() {
         return ppu;
     }
 
-    public void setPpu(String ppu) {
+    public void setPpu(Double ppu) {
         this.ppu = ppu;
     }
 }

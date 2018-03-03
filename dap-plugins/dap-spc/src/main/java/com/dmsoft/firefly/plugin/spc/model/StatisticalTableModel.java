@@ -181,53 +181,53 @@ public class StatisticalTableModel implements TableModel {
                 } else if (columnName.equals(STATISTICAL_TITLE[1])) {
                     value = spcStatsDto.getCondition();
                 } else if (columnName.equals(STATISTICAL_TITLE[2])) {
-                    value = spcStatsDto.getStatsResultDto().getSamples();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getSamples());
                 } else if (columnName.equals(STATISTICAL_TITLE[3])) {
-                    value = spcStatsDto.getStatsResultDto().getAvg();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getAvg());
                 } else if (columnName.equals(STATISTICAL_TITLE[4])) {
-                    value = spcStatsDto.getStatsResultDto().getMax();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getMax());
                 } else if (columnName.equals(STATISTICAL_TITLE[5])) {
-                    value = spcStatsDto.getStatsResultDto().getMin();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getMin());
                 } else if (columnName.equals(STATISTICAL_TITLE[6])) {
-                    value = spcStatsDto.getStatsResultDto().getStDev();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getStDev());
                 } else if (columnName.equals(STATISTICAL_TITLE[7])) {
-                    value = spcStatsDto.getStatsResultDto().getLsl();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getLsl());
                 } else if (columnName.equals(STATISTICAL_TITLE[8])) {
-                    value = spcStatsDto.getStatsResultDto().getUsl();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getUsl());
                 } else if (columnName.equals(STATISTICAL_TITLE[9])) {
-                    value = spcStatsDto.getStatsResultDto().getCenter();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getCenter());
                 } else if (columnName.equals(STATISTICAL_TITLE[10])) {
-                    value = spcStatsDto.getStatsResultDto().getRange();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getRange());
                 } else if (columnName.equals(STATISTICAL_TITLE[11])) {
-                    value = spcStatsDto.getStatsResultDto().getLcl();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getLcl());
                 } else if (columnName.equals(STATISTICAL_TITLE[12])) {
-                    value = spcStatsDto.getStatsResultDto().getUcl();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getUcl());
                 } else if (columnName.equals(STATISTICAL_TITLE[13])) {
-                    value = spcStatsDto.getStatsResultDto().getKurtosis();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getKurtosis());
                 } else if (columnName.equals(STATISTICAL_TITLE[14])) {
-                    value = spcStatsDto.getStatsResultDto().getSkewness();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getSkewness());
                 } else if (columnName.equals(STATISTICAL_TITLE[15])) {
-                    value = spcStatsDto.getStatsResultDto().getCpk();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getCpk());
                 } else if (columnName.equals(STATISTICAL_TITLE[16])) {
-                    value = spcStatsDto.getStatsResultDto().getCa();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getCa());
                 } else if (columnName.equals(STATISTICAL_TITLE[17])) {
-                    value = spcStatsDto.getStatsResultDto().getCp();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getCp());
                 } else if (columnName.equals(STATISTICAL_TITLE[18])) {
-                    value = spcStatsDto.getStatsResultDto().getCpl();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getCpl());
                 } else if (columnName.equals(STATISTICAL_TITLE[19])) {
-                    value = spcStatsDto.getStatsResultDto().getCpu();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getCpu());
                 } else if (columnName.equals(STATISTICAL_TITLE[20])) {
-                    value = spcStatsDto.getStatsResultDto().getWithinPPM();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getWithinPPM());
                 } else if (columnName.equals(STATISTICAL_TITLE[21])) {
-                    value = spcStatsDto.getStatsResultDto().getOverallPPM();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getOverallPPM());
                 } else if (columnName.equals(STATISTICAL_TITLE[22])) {
-                    value = spcStatsDto.getStatsResultDto().getPp();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getPp());
                 } else if (columnName.equals(STATISTICAL_TITLE[23])) {
-                    value = spcStatsDto.getStatsResultDto().getPpk();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getPpk());
                 } else if (columnName.equals(STATISTICAL_TITLE[24])) {
-                    value = spcStatsDto.getStatsResultDto().getPpl();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getPpl());
                 } else if (columnName.equals(STATISTICAL_TITLE[25])) {
-                    value = spcStatsDto.getStatsResultDto().getPpu();
+                    value = String.valueOf(spcStatsDto.getStatsResultDto().getPpu());
                 }
             }
         }
