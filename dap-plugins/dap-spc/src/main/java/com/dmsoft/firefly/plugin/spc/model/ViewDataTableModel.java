@@ -19,6 +19,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
+import javafx.scene.control.TableView;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -26,6 +27,7 @@ import java.util.*;
 /**
  * Created by Ethan.Yang on 2018/3/2.
  */
+@Deprecated
 public class ViewDataTableModel implements NewTableModel {
     private ObservableList<String> columnKey = FXCollections.observableArrayList();
     private ObservableList<String> rowKey = FXCollections.observableArrayList();
@@ -40,6 +42,7 @@ public class ViewDataTableModel implements NewTableModel {
     private List<TableMenuRowEvent> menuRowEvents;
 
     private Set<String> highLightRowKeys;
+
     /**
      * constructor
      */
@@ -177,7 +180,7 @@ public class ViewDataTableModel implements NewTableModel {
 
         if (highLightRowKeys.contains(rowKey)) {
             tableCell.setStyle("-fx-background-color:#f8d251");
-        } else{
+        } else {
             tableCell.setStyle("-fx-background-color:#ffffff");
         }
         String value = this.searchDataFrame.getCellValue(rowKey, column);
@@ -207,7 +210,12 @@ public class ViewDataTableModel implements NewTableModel {
         });
     }
 
-    private void initTableMenuEvent(){
+    @Override
+    public void setTableView(TableView<String> tableView) {
+
+    }
+
+    private void initTableMenuEvent() {
         menuRowEvents = Lists.newArrayList();
         TableMenuRowEvent highLight = new TableMenuRowEvent() {
             @Override

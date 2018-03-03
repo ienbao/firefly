@@ -16,6 +16,7 @@ import java.util.*;
  *
  * @author Can Guan
  */
+@Deprecated
 public class TableViewWrapper extends AbstractTableViewWrapper {
     private static final String SEPARATOR = "!@#";
     private Map<String, TableColumn<String, ?>> columnMap;
