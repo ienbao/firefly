@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 
 /**
@@ -18,7 +19,7 @@ public class TextFieldFilter extends HBox {
         textField.setPromptText("Filter");
 //        textField.setStyle("-fx-border-width: 1 1 1 1;-fx-border-style: dotted");
         textField.getStyleClass().add("text-field-filter");
-        textField.setPrefSize(160, 20);
+        textField.setPrefHeight(20);
         label = new Label("", ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
         label.setAlignment(Pos.CENTER);
         label.setPrefSize(22, 22);
@@ -26,6 +27,7 @@ public class TextFieldFilter extends HBox {
         this.setStyle("-fx-border-width: 1 1 1 1;-fx-border-color: #DCDCDC");
         this.getChildren().add(textField);
         this.getChildren().add(label);
+        HBox.setHgrow(textField, Priority.ALWAYS);
     }
 
     public TextField getTextField() {
