@@ -5,6 +5,7 @@ package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
 import com.dmsoft.firefly.plugin.spc.model.ViewDataTableModel;
@@ -42,7 +43,7 @@ public class ViewDataController implements Initializable {
     @FXML
     private CheckBox unSelectedCheckBox;
     @FXML
-    private TextField filterTf;
+    private TextFieldFilter filterTf;
     @FXML
     private TableView<String> viewDataTable;
 
@@ -59,6 +60,7 @@ public class ViewDataController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.filterTf.getTextField().setPromptText(ResourceBundleUtils.getString(ResourceMassages.FILTER_VALUE_PROMPT));
         this.buildChooseColumnDialog();
         this.initBtnIcon();
         this.initViewDataTable();
@@ -321,7 +323,7 @@ public class ViewDataController implements Initializable {
 
     private void initComponentEvent() {
         clearFilterBtn.setOnAction(event -> getClearFilterBtnEvent());
-        filterTf.textProperty().addListener((observable, oldValue, newValue) -> getFilterTextFieldEvent());
+        filterTf.getTextField().textProperty().addListener((observable, oldValue, newValue) -> getFilterTextFieldEvent());
         chooseItemBtn.setOnAction(event -> getChooseColumnBtnEvent());
         unSelectedCheckBox.setOnAction(event -> getUnSelectedCheckBoxEvent());
     }
@@ -338,7 +340,7 @@ public class ViewDataController implements Initializable {
     }
 
     private void getFilterTextFieldEvent() {
-        viewDataTableModel.filterTestItem(filterTf.getText());
+        viewDataTableModel.filterTestItem(filterTf.getTextField().getText());
     }
 
     private void getChooseColumnBtnEvent() {

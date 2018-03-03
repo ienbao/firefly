@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.dmsoft.firefly.gui.components.utils.TextFieldFilter?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -34,10 +33,13 @@
                                     <RowConstraints maxHeight="28.0" minHeight="28.0" prefHeight="28.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                 <children>
-                                    <TextField fx:id="filterTf" maxWidth="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+                                    <TextFieldFilter fx:id="filterTf" maxWidth="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                               <GridPane.margin>
-                                 <Insets right="10.0" />
-                              </GridPane.margin></TextField>
+                                 <Insets bottom="3.0" right="10.0" top="3.0" />
+                              </GridPane.margin>
+                              <opaqueInsets>
+                                 <Insets />
+                              </opaqueInsets></TextFieldFilter>
                                     <CheckBox fx:id="unSelectedCheckBox" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%UNSELECTED_CHECKBOX" GridPane.columnIndex="2" />
                                     <Button fx:id="clearFilterBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" style="-fx-background-image: url('images/btn_clear_filter_normal.png'); -fx-background-size: 16;" styleClass="btn-icon" GridPane.columnIndex="3" />
                                     <Button fx:id="chooseItemBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" style="-fx-background-image: url('images/btn_choose_test_items_normal.png'); -fx-background-size: 16;" styleClass="btn-icon" GridPane.columnIndex="4" />
