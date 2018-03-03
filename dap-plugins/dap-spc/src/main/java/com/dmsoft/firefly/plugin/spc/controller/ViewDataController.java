@@ -3,9 +3,12 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
+import com.dmsoft.firefly.plugin.spc.model.ViewDataDFModel;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -13,17 +16,13 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.sun.javafx.collections.ObservableListWrapper;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -319,7 +318,7 @@ public class ViewDataController implements Initializable {
 
     private void initComponentEvent() {
         clearFilterBtn.setOnAction(event -> getClearFilterBtnEvent());
-        filterTf.textProperty().addListener((observable, oldValue, newValue) -> {
+        filterTf.getTextField().textProperty().addListener((observable, oldValue, newValue) -> {
             filterTF();
             filterHeaderBtn();
         });
@@ -343,7 +342,7 @@ public class ViewDataController implements Initializable {
         for (String s : dataFrame.getAllRowKeys()) {
             List<String> datas = dataFrame.getDataRowList(s);
             for (String data : datas) {
-                if (data.toLowerCase().contains(filterTf.getText().toLowerCase())) {
+                if (data.toLowerCase().contains(filterTf.getTextField().getText().toLowerCase())) {
                     model.getRowKeyArray().add(s);
                     break;
                 }
