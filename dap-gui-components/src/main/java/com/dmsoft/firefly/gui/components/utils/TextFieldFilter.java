@@ -31,4 +31,12 @@ public class TextFieldFilter extends HBox {
     public TextField getTextField() {
         return textField;
     }
+
+    @Override
+    public void setPrefSize(double prefWidth, double prefHeight) {
+        super.setPrefSize(prefWidth, prefHeight);
+        label.setPrefSize(22, prefHeight);
+        textField.setPrefSize(prefWidth - 22, prefHeight);
+    }
+
 }
