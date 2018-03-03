@@ -40,6 +40,10 @@ public class ContentStackPane extends StackPane {
         pages.remove(index);
     }
 
+    public void removeAll() {
+         pages.clear();
+    }
+
     public boolean hasNextPage() {
         return (curPageIdx < pages.size() - 1);
     }

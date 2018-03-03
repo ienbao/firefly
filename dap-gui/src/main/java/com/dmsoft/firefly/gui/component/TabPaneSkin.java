@@ -23,7 +23,7 @@
  *
  */
 
-package com.dmsoft.firefly.gui.components.messagetip;
+package com.dmsoft.firefly.gui.component;
 
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 import com.sun.javafx.util.Utils;
@@ -50,24 +50,13 @@ import javafx.css.StyleableObjectProperty;
 import javafx.css.StyleableProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
-import javafx.geometry.Pos;
-import javafx.geometry.Side;
-import javafx.geometry.VPos;
+import javafx.geometry.*;
 import javafx.scene.AccessibleAction;
 import javafx.scene.AccessibleAttribute;
 import javafx.scene.AccessibleRole;
 import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.SkinBase;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.control.TabPane.TabClosingPolicy;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.Tooltip;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ContextMenuEvent;
@@ -92,10 +81,16 @@ import com.sun.javafx.scene.control.MultiplePropertyChangeListenerHandler;
 import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
 import com.sun.javafx.scene.traversal.Direction;
 import com.sun.javafx.scene.traversal.TraversalEngine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.sun.javafx.scene.control.skin.resources.ControlResources.getString;
 
 public class TabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
+    private final Logger logger = LoggerFactory.getLogger(TabPaneSkin.class);
+
+    private Button addTabBtn;
+
     private static enum TabAnimation {
         NONE,
         GROW
@@ -686,11 +681,14 @@ public class TabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
         private Rectangle headerClip;
         private StackPane headersRegion;
         private StackPane headerBackground;
+
         private TabControlButtons controlButtons;
 
         private boolean measureClosingTabs = false;
 
         private double scrollOffset;
+
+        private double addTabBtnOffset;
 
         public TabHeaderArea() {
             getStyleClass().setAll("tab-header-area");
@@ -788,7 +786,6 @@ public class TabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
             };
             headersRegion.getStyleClass().setAll("headers-region");
             headersRegion.setClip(headerClip);
-
             headerBackground = new StackPane();
             headerBackground.getStyleClass().setAll("tab-header-background");
 
@@ -802,6 +799,37 @@ public class TabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
             if (controlButtons.isVisible()) {
                 controlButtons.setVisible(true);
             }
+            ImageView imageView = new ImageView("/images/btn_add_normal.png");
+            imageView.setFitHeight(16);
+            imageView.setFitWidth(16);
+            addTabBtn = new Button();
+            addTabBtn.setGraphic(imageView);
+            addTabBtn.getStyleClass().add("btn-icon");
+            addTabBtn.setPrefWidth(20);
+            addTabBtn.setPrefHeight(20);
+            addTabBtn.setMinWidth(20);
+            addTabBtn.setMinHeight(20);
+            addTabBtn.setMaxWidth(20);
+            addTabBtn.setMaxHeight(20);
+            // PluginUIContext pc = RuntimeContext.getBean(PluginUIContext.class);
+            addTabBtn.setOnAction(event -> {
+                Tab tab0 = tabPane.getTabs().get(tabPane.getTabs().size() - 1);
+                String[] name = tab0.getText().split("_");
+                if (name != null && name.length == 2) {
+                    Node pane = tab0.getContent();
+                    Tab tab1 = new Tab();
+                    tab1.setText(name[0] + "_" + (Integer.valueOf(name[1]) + 1));
+                    tab1.setContent(pane);
+                    tabPane.getTabs().add(tab1);
+                    tabPane.getSelectionModel().select(tab1);
+                } else {
+                    logger.warn("The tab name does not accord with standard.");
+                }
+
+            });
+            headerBackground.setAlignment(Pos.BASELINE_LEFT);
+            headerBackground.getChildren().add(addTabBtn);
+
             getChildren().addAll(headerBackground, headersRegion, controlButtons);
 
             // support for mouse scroll of header area (for when the tabs exceed
@@ -846,6 +874,7 @@ public class TabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
             if (controlButtonPrefWidth > 0) {
                 controlButtonPrefWidth = controlButtonPrefWidth + SPACER;
             }
+            controlButtonPrefWidth += 12;
 
             if (headersRegion.getEffect() instanceof DropShadow) {
                 DropShadow shadow = (DropShadow)headersRegion.getEffect();
@@ -853,6 +882,7 @@ public class TabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
             }
 
             maxWidth = snapSize(getWidth()) - controlButtonPrefWidth - clipOffset;
+
             if (tabPosition.equals(Side.LEFT) || tabPosition.equals(Side.BOTTOM)) {
                 if (headersPrefWidth < maxWidth) {
                     clipWidth = headersPrefWidth + shadowRadius;
@@ -870,6 +900,10 @@ public class TabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
             headerClip.setX(x);
             headerClip.setY(y);
+            addTabBtnOffset = clipWidth;
+
+            headerBackground.setMargin(addTabBtn, new Insets(0, 0, 0, addTabBtnOffset));
+
             headerClip.setWidth(clipWidth);
             headerClip.setHeight(clipHeight);
         }
@@ -908,6 +942,7 @@ public class TabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
             double headerPrefWidth = snapSize(headersRegion.prefWidth(-1));
             double controlTabWidth = snapSize(controlButtons.prefWidth(-1));
             double visibleWidth = headerPrefWidth + controlTabWidth + firstTabIndent() + SPACER;
+
             return visibleWidth < getWidth();
         }
 
@@ -959,7 +994,6 @@ public class TabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
             double tabPaneWidth = snapSize(isHorizontal() ? getSkinnable().getWidth() : getSkinnable().getHeight());
             double controlTabWidth = snapSize(controlButtons.getWidth());
             double visibleWidth = tabPaneWidth - controlTabWidth - firstTabIndent() - SPACER;
-
             // measure the width of all tabs
             double offset = 0.0;
             for (Node node : headersRegion.getChildren()) {
@@ -1608,12 +1642,13 @@ public class TabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
             downArrowBtn = new Pane();
             downArrowBtn.getStyleClass().setAll("tab-down-button");
+
             downArrowBtn.setVisible(isShowTabsMenu());
             downArrow = new StackPane();
             downArrow.setManaged(false);
-            downArrow.getStyleClass().setAll("arrow");
+            //downArrow.getStyleClass().setAll("arrow");
             downArrow.setRotate(tabPane.getSide().equals(Side.BOTTOM) ? 180.0F : 0.0F);
-            downArrowBtn.getChildren().add(downArrow);
+            //downArrowBtn.getChildren().add(downArrow);
             downArrowBtn.setOnMouseClicked(me -> {
                 showPopupMenu();
             });

@@ -19,6 +19,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -29,7 +30,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +66,7 @@ public class MainController {
     private ObservableList<StateBarTemplateModel> templateList = FXCollections.observableArrayList();
 
     private ContentStackPane contentStackPane;
-    private TabPane tabPane;
+    private Map<String, TabPane> tabPaneMap = new LinkedHashMap<>();
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
 
@@ -75,7 +75,6 @@ public class MainController {
 
     @FXML
     private void initialize() {
-        tabPane = new TabPane();
         contentStackPane = new ContentStackPane();
         grpContent.add(contentStackPane, 0, 1);
         this.initToolBar();
@@ -94,39 +93,66 @@ public class MainController {
     private void initToolBar() {
         PluginUIContext pc = RuntimeContext.getBean(PluginUIContext.class);
         Set<String> names = pc.getAllMainBodyNames();
-
+        final int[] i = {0};
         names.forEach(name -> {
             Button btn = new Button(name);
-
+            btn.setId(name);
+            btn.setFocusTraversable(true);
             btn.setOnAction(event -> {
-                Pane pane = pc.getMainBodyPane(name).getNewPane();
-
-                pane.setId(name);
-                if (StringUtils.isBlank(tabPane.getId())) {
-                    tabPane = new TabPane();
-                    tabPane.setId(name);
-                } else if (StringUtils.isNotBlank(tabPane.getId()) && !name.equals(tabPane.getId())) {
-                    tabPane = new TabPane();
-                    tabPane.setId(name);
+                if (!tabPaneMap.containsKey(name)) {
+                    Pane pane = pc.getMainBodyPane(name).getNewPane();
+                    initTab(name, pane);
+                } else {
+                    contentStackPane.navTo(name);
                 }
-                initTab(name, pane, tabPane);
-                contentStackPane.add(tabPane);
-                System.out.println(contentStackPane);
-                contentStackPane.navTo(name);
-                System.out.println(name);
-
+                setActiveBtnStyle(btn);
             });
             tbaSystem.getItems().add(btn);
+            if (i[0] == 0) {
+                setActiveMain(name, (Button) tbaSystem.getItems().get(0), pc);
+            }
+            i[0]++;
         });
     }
 
-    private void initTab(String name, Pane pane, TabPane tabPane) {
-        if (name.equals(tabPane.getId())) {
-            Tab tab = new Tab();
-            tab.setText(name + 1);
-            tab.setContent(pane);
-            tabPane.getTabs().add(tab);
+    private void setActiveMain(String name, Button activeBtn, PluginUIContext pc) {
+        if (activeBtn.getId().equals(name)) {
+            setActiveBtnStyle(activeBtn);
+            Pane pane = pc.getMainBodyPane(name).getNewPane();
+            initTab(name, pane);
         }
+    }
+
+    private void setActiveBtnStyle(Button btn) {
+        btn.setStyle(" -fx-text-fill: #ffffff;-fx-background-color: #ea2028");
+        for (Node node : tbaSystem.getItems()) {
+            if (!node.getId().equals(btn.getId())) {
+                node.setStyle(null);
+            }
+        }
+    }
+
+    public void resetMain() {
+        grpContent.getChildren().remove(contentStackPane);
+        contentStackPane.removeAll();
+        tabPaneMap.clear();
+        tbaSystem.getItems().clear();
+        stateBar.getChildren().clear();
+        initialize();
+    }
+
+    private void initTab(String name, Pane pane) {
+        TabPane tabPane = new TabPane();
+        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
+        tabPane.setStyle("-fx-skin: 'com.dmsoft.firefly.gui.component.TabPaneSkin'");
+        tabPane.setId(name);
+        Tab tab = new Tab();
+        tab.setText(name + "_1");
+        tab.setContent(pane);
+        tabPane.getTabs().add(tab);
+        contentStackPane.add(tabPane);
+        contentStackPane.navTo(name);
+        tabPaneMap.put(name, tabPane);
     }
 
     private void initStateBar() {
