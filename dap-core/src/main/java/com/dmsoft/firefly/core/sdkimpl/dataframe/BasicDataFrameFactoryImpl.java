@@ -27,7 +27,7 @@ public class BasicDataFrameFactoryImpl implements DataFrameFactory {
     }
 
     @Override
-    public SearchDataFrame createDataFrame(DataFrame dataFrame) {
+    public SearchDataFrame createSearchDataFrame(DataFrame dataFrame) {
         return new BasicSearchDataFrame(dataFrame.getAllTestItemWithTypeDto(), dataFrame.getAllDataRow());
     }
 

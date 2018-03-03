@@ -6,6 +6,7 @@ import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
+import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -169,6 +170,10 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
         }
     }
 
+    @Override
+    public SearchDataFrame subDataFrame(List<String> rowKeyList, List<String> testItemNameList) {
+        return RuntimeContext.getBean(DataFrameFactory.class).createSearchDataFrame(super.subDataFrame(rowKeyList, testItemNameList));
+    }
 
     private void search(String searchCondition) {
         for (int i = 0; i < this.getRowSize(); i++) {

@@ -36,7 +36,7 @@ public interface DataFrameFactory {
      * @param dataFrame data frame
      * @return search data frame
      */
-    SearchDataFrame createDataFrame(DataFrame dataFrame);
+    SearchDataFrame createSearchDataFrame(DataFrame dataFrame);
 
     /**
      * method to create data column from test item dto list and row data dto list
