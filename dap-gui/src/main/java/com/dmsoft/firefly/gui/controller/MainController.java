@@ -101,6 +101,7 @@ public class MainController {
             btn.setOnAction(event -> {
                 if (!tabPaneMap.containsKey(name)) {
                     Pane pane = pc.getMainBodyPane(name).getNewPane();
+                    pane.setId(name);
                     initTab(name, pane);
                 } else {
                     contentStackPane.navTo(name);
@@ -119,6 +120,7 @@ public class MainController {
         if (activeBtn.getId().equals(name)) {
             setActiveBtnStyle(activeBtn);
             Pane pane = pc.getMainBodyPane(name).getNewPane();
+            pane.setId(name);
             initTab(name, pane);
         }
     }

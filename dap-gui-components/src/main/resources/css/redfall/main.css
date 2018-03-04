@@ -989,7 +989,7 @@
     -fx-border-insets: 0;
     -fx-background-insets: 0;
     -fx-border-image-insets: 0;
-    -fx-border-color: transpant;
+    -fx-border-color: transparent;
     -fx-spacing: 0;
 }
 
@@ -1023,7 +1023,7 @@
 
 .tab-pane > .tab-header-area > .control-buttons-tab > .container {
     -fx-padding: 0 0 0 0;
-    -fx-background-color: transpant;
+    -fx-background-color: transparent;
     -fx-border-image-insets: 0;
     -fx-spacing: 0;
     -fx-border-color: #f2f2f2;
@@ -1041,7 +1041,7 @@
     -fx-min-height: 20;
     -fx-max-height: 20;
     -fx-min-width: 20;
-    -fx-background-color: transpant;
+    -fx-background-color: transparent;
     -fx-background-position: top;
 }
 

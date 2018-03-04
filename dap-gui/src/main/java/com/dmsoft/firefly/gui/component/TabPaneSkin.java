@@ -25,6 +25,8 @@
 
 package com.dmsoft.firefly.gui.component;
 
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 import com.sun.javafx.util.Utils;
 import javafx.animation.Animation;
@@ -811,14 +813,15 @@ public class TabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
             addTabBtn.setMinHeight(20);
             addTabBtn.setMaxWidth(20);
             addTabBtn.setMaxHeight(20);
-            // PluginUIContext pc = RuntimeContext.getBean(PluginUIContext.class);
+             PluginUIContext pc = RuntimeContext.getBean(PluginUIContext.class);
             addTabBtn.setOnAction(event -> {
                 Tab tab0 = tabPane.getTabs().get(tabPane.getTabs().size() - 1);
                 String[] name = tab0.getText().split("_");
                 if (name != null && name.length == 2) {
-                    Node pane = tab0.getContent();
+                    Node pane = pc.getMainBodyPane(name[0]).getNewPane();
                     Tab tab1 = new Tab();
                     tab1.setText(name[0] + "_" + (Integer.valueOf(name[1]) + 1));
+                    pane.setId(tab1.getId());
                     tab1.setContent(pane);
                     tabPane.getTabs().add(tab1);
                     tabPane.getSelectionModel().select(tab1);
