@@ -7,7 +7,8 @@ package com.dmsoft.firefly.plugin.spc;
 
 import com.dmsoft.firefly.plugin.spc.service.SpcAnalysisServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.SpcServiceImpl;
-import com.dmsoft.firefly.plugin.spc.utils.FXMLLoaderUtils;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.ViewResource;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.Plugin;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
@@ -43,7 +44,8 @@ public class SpcPlugin extends Plugin {
         RuntimeContext.getBean(PluginUIContext.class).registerMainBody("spc", new IMainBodyPane() {
             @Override
             public Pane getNewPane() {
-                FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML("view/spc.fxml");
+                FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML(ViewResource.SPC_VIEW_RES);
+                //FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getInstance().getLoaderFXML("view/spc.fxml");
                 Pane root = null;
                 try {
                     root = fxmlLoader.load();

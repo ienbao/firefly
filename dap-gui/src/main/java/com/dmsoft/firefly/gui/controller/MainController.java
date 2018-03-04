@@ -1,11 +1,10 @@
 package com.dmsoft.firefly.gui.controller;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
-import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.gui.component.ContentStackPane;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
-import com.dmsoft.firefly.gui.utils.ResourceBundleUtils;
+import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
@@ -388,8 +387,10 @@ public class MainController {
     private void buildDataSourceDialog() {
         Pane root = null;
         try {
-            root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/data_source.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-            Stage stage = WindowFactory.createSimpleWindowAsModel("dataSource", ResourceBundleUtils.getString(ResourceMassages.DATASOURCE), root, getResource("css/platform_app.css").toExternalForm());
+//            root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/data_source.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source.fxml");
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createSimpleWindowAsModel("dataSource", GuiFxmlAndLanguageUtils.getString(ResourceMassages.DATASOURCE), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
             stage.show();
         } catch (Exception ex) {

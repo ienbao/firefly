@@ -34,7 +34,7 @@
             </Label>
          </children>
       </HBox>
-      <Label fx:id="contentLbl" maxWidth="250.0" text="hjkkjhkhjkhkjhhhfjjkdhfjskhfjkdshfsdjhfsdkjhfsdjkfhsdfhskjfhsjkdfhskd" wrapText="true" GridPane.rowIndex="1">
+      <Label fx:id="contentLbl" maxWidth="250.0" text="" wrapText="true" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="10.0" />
          </GridPane.margin>

@@ -1,18 +1,18 @@
 package com.dmsoft.firefly.gui.utils;
 
-import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
+import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
-import java.util.ResourceBundle;
 
 import static com.google.common.io.Resources.getResource;
 
@@ -87,14 +87,31 @@ public class MenuFactory {
         Menu menu = new Menu("Preference(P)");
         menu.setId(MenuBuilder.MENU_PREFERENCE);
         MenuItem importMenuItem = new MenuItem("Plugin-Manager(P)");
-        Menu language = new Menu("Language");
-        RadioMenuItem ch = new RadioMenuItem("中文");
-        RadioMenuItem en = new RadioMenuItem("English");
-        language.getItems().addAll(ch, en);
-
         menu.getItems().add(importMenuItem);
-        menu.getItems().add(language);
+        menu.getItems().add(initLanguageMenu());
         return getParentMenuBuilder().setParentLocation(ROOT_MENU).addMenu(menu);
+    }
+
+    private static Menu initLanguageMenu() {
+        Menu language = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_LANGUAGE"));
+        RadioMenuItem ch = new RadioMenuItem(GuiFxmlAndLanguageUtils.getString("LANGUAGE_ZH"));
+        RadioMenuItem en = new RadioMenuItem(GuiFxmlAndLanguageUtils.getString("LANGUAGE_EN"));
+        en.setSelected(true);
+        en.setOnAction(event -> {
+            if (en.isSelected()) {
+                RuntimeContext.getBean(EnvService.class).setLanguageType(LanguageType.EN);
+            }
+        });
+        ch.setOnAction(event -> {
+            if (ch.isSelected()) {
+                RuntimeContext.getBean(EnvService.class).setLanguageType(LanguageType.ZH);
+            }
+        });
+        ToggleGroup toggleGroup = new ToggleGroup();
+        en.setToggleGroup(toggleGroup);
+        ch.setToggleGroup(toggleGroup);
+        language.getItems().addAll(ch, en);
+        return language;
     }
 
     private static MenuBuilder createHelpMenu() {
@@ -113,9 +130,11 @@ public class MenuFactory {
     private static void buildTemplateDia() {
         Pane root = null;
         try {
-            root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("template", ResourceBundleUtils.getString(ResourceMassages.TEMPLATE), root, getResource("css/platform_app.css").toExternalForm());
-            stage.show();
+            //root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+           FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/template.fxml");
+           root = fxmlLoader.load();
+           Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("template", GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE), root, getResource("css/platform_app.css").toExternalForm());
+           stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

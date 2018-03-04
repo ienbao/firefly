@@ -10,7 +10,7 @@ import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcAnalysisService;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcService;
 import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionCode;
-import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionParser;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.google.common.collect.Lists;
@@ -33,7 +33,7 @@ public class SpcServiceImpl implements SpcService {
         2.Get analysis statistical result from R
          */
         if (searchDataFrame == null || searchConditions == null || configDto == null) {
-            throw new ApplicationException(SpcExceptionParser.parser(SpcExceptionCode.ERR_11001));
+            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11001));
         }
         List<SpcStatsDto> result = Lists.newArrayList();
         for (SearchConditionDto searchConditionDto : searchConditions) {
@@ -61,7 +61,7 @@ public class SpcServiceImpl implements SpcService {
         2.Get analysis chart result from R
          */
         if (searchDataFrame == null || searchConditions == null || configDto == null) {
-            throw new ApplicationException(SpcExceptionParser.parser(SpcExceptionCode.ERR_11001));
+            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11001));
         }
         List<SpcChartDto> result = Lists.newArrayList();
         for (SearchConditionDto searchConditionDto : searchConditions) {

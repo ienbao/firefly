@@ -4,7 +4,7 @@
 
 import com.dmsoft.firefly.core.sdkimpl.dai.EnvServiceImpl;
 import com.dmsoft.firefly.core.sdkimpl.dataframe.BasicDataFrameFactoryImpl;
-import com.dmsoft.firefly.plugin.spc.utils.FXMLLoaderUtils;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -25,7 +25,7 @@ import java.util.ResourceBundle;
 public class TestApplication extends Application {
 
     static {
-        FXMLLoaderUtils.isDebug = true;
+        SpcFxmlAndLanguageUtils.isDebug = true;
     }
 
     public static void main(String[] args) {
