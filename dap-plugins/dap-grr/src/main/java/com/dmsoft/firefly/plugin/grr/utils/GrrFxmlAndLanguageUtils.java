@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2017. For Intelligent Group.
  */
-package com.dmsoft.firefly.utils;
+package com.dmsoft.firefly.plugin.grr.utils;
 
-import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.components.utils.ModuleType;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import javafx.fxml.FXMLLoader;
-import org.apache.commons.lang3.StringUtils;
 
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
@@ -18,7 +16,7 @@ import java.util.ResourceBundle;
 /**
  * Created by Ethan.Yang on 2018/2/11.
  */
-public class CsvFxmlAndLanguageUtils {
+public class GrrFxmlAndLanguageUtils {
 
     public static boolean isDebug = false;
 
@@ -28,9 +26,10 @@ public class CsvFxmlAndLanguageUtils {
         if (languageType.equals(LanguageType.ZH)) {
             bundleKey = "i18n.message_zh_CN_";
         }
-        bundleKey = bundleKey + ModuleType.CSV.name();
-
+        bundleKey = bundleKey + ModuleType.GRR.name();
         return ResourceBundle.getBundle(bundleKey);
+
+        //return FxmlAndLanguageUtils.getBundle(ModuleType.GRR);
     }
 
     /**
@@ -40,9 +39,9 @@ public class CsvFxmlAndLanguageUtils {
      * @return loader
      */
     public static FXMLLoader getLoaderFXML(String res) {
-        FXMLLoader fxmlLoader = new FXMLLoader(CsvFxmlAndLanguageUtils.class.getClassLoader().getResource(res), getResourceBundle());
+        FXMLLoader fxmlLoader = new FXMLLoader(GrrFxmlAndLanguageUtils.class.getClassLoader().getResource(res), getResourceBundle());
         if (isDebug == false) {
-            fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.CsvResolverPlugin"));
+            fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.GrrPlugin"));
         }
 
         return fxmlLoader;

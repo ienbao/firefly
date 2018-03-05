@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @author Can Guan
  */
-public class AnalysisDataDto extends AbstractValueObject {
+public class SpcAnalysisDataDto extends AbstractValueObject {
     private List<Double> dataList;
     private String usl;
     private String lsl;

@@ -1,9 +1,9 @@
-package com.dmsoft.firefly.plugin.spc.service;
+package com.dmsoft.firefly.plugin.spc.service.impl;
 
 import com.dmsoft.firefly.plugin.spc.SpcPlugin;
 import com.dmsoft.firefly.plugin.spc.dto.SpcAnalysisConfigDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.*;
-import com.dmsoft.firefly.plugin.spc.service.impl.SpcAnalysisService;
+import com.dmsoft.firefly.plugin.spc.service.SpcAnalysisService;
 import com.dmsoft.firefly.plugin.spc.utils.REnConnector;
 import com.dmsoft.firefly.plugin.spc.utils.SpcChartType;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -24,7 +24,7 @@ import java.util.List;
 public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
 
     @Override
-    public SpcStatsResultDto analyzeStatsResult(AnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
+    public SpcStatsResultDto analyzeStatsResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
         SpcStatsResultDto resultDto = new SpcStatsResultDto();
         if (DAPStringUtils.isNumeric(dataDto.getLsl())) {
@@ -130,7 +130,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
     }
 
     @Override
-    public NDCResultDto analyzeNDCResult(AnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
+    public NDCResultDto analyzeNDCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
         if (dataDto.getNdcMax() != null) {
             connector.setInput("ndcMax", dataDto.getNdcMax());
@@ -149,7 +149,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
     }
 
     @Override
-    public RunCResultDto analyzeRunCResult(AnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
+    public RunCResultDto analyzeRunCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
         RunCResultDto resultDto = getRunCResult(connector, dataDto);
         connector.disconnect();
@@ -157,47 +157,47 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
     }
 
     @Override
-    public ControlChartDto analyzeXbarCResult(AnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
+    public SpcControlChartDto analyzeXbarCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
-        ControlChartDto result = getXbarCResult(connector);
+        SpcControlChartDto result = getXbarCResult(connector);
         connector.disconnect();
         return result;
     }
 
     @Override
-    public ControlChartDto analyzeRangeCResult(AnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
+    public SpcControlChartDto analyzeRangeCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
-        ControlChartDto result = getRangeCResult(connector);
+        SpcControlChartDto result = getRangeCResult(connector);
         connector.disconnect();
         return result;
     }
 
     @Override
-    public ControlChartDto analyzeSdCResult(AnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
+    public SpcControlChartDto analyzeSdCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
-        ControlChartDto result = getSdCResult(connector);
+        SpcControlChartDto result = getSdCResult(connector);
         connector.disconnect();
         return result;
     }
 
     @Override
-    public ControlChartDto analyzeMeCResult(AnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
+    public SpcControlChartDto analyzeMeCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
-        ControlChartDto result = getMeCResult(connector);
+        SpcControlChartDto result = getMeCResult(connector);
         connector.disconnect();
         return result;
     }
 
     @Override
-    public ControlChartDto analyzeMrCResult(AnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
+    public SpcControlChartDto analyzeMrCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
-        ControlChartDto result = getMrCResult(connector);
+        SpcControlChartDto result = getMrCResult(connector);
         connector.disconnect();
         return result;
     }
 
     @Override
-    public BoxCResultDto analyzeBoxCResult(AnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
+    public BoxCResultDto analyzeBoxCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
         BoxCResultDto result = getBoxCResult(connector);
         connector.disconnect();
@@ -205,7 +205,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
     }
 
     @Override
-    public SpcChartResultDto analyzeSpcChartResult(AnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
+    public SpcChartResultDto analyzeSpcChartResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
         SpcChartResultDto result = new SpcChartResultDto();
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
         result.setNdcResult(getNDCResult(connector, dataDto));
@@ -221,7 +221,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
     }
 
     @Override
-    public SpcChartResultDto analyzeSpcChartResult(AnalysisDataDto dataDto, List<SpcChartType> requiredCharts, SpcAnalysisConfigDto configDto) {
+    public SpcChartResultDto analyzeSpcChartResult(SpcAnalysisDataDto dataDto, List<SpcChartType> requiredCharts, SpcAnalysisConfigDto configDto) {
         SpcChartResultDto result = new SpcChartResultDto();
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
         for (SpcChartType chartType : requiredCharts) {
@@ -274,7 +274,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         return connector;
     }
 
-    private NDCResultDto getNDCResult(REnConnector connector, AnalysisDataDto dataDto) {
+    private NDCResultDto getNDCResult(REnConnector connector, SpcAnalysisDataDto dataDto) {
         connector.execEval("NDCResult <- intspc.normal.getNDCResult(x, intervalNum, Max = ndcMax, Min = ndcMin)");
         NDCResultDto result = new NDCResultDto();
         double[] ndx = connector.getOutputDoubleArray("NDCResult$Breaks");
@@ -296,7 +296,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         return result;
     }
 
-    private RunCResultDto getRunCResult(REnConnector connector, AnalysisDataDto dataDto) {
+    private RunCResultDto getRunCResult(REnConnector connector, SpcAnalysisDataDto dataDto) {
         connector.execEval("RunCResult <- intspc.normal.getRunCResult(x)");
         RunCResultDto result = new RunCResultDto();
         double[] runy = connector.getOutputDoubleArray("RunCResult$Values");
@@ -313,9 +313,9 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         return result;
     }
 
-    private ControlChartDto getXbarCResult(REnConnector connector) {
+    private SpcControlChartDto getXbarCResult(REnConnector connector) {
         connector.execEval("XBCResult <- intspc.normal.getXBCResult(x, subgroupSize)");
-        ControlChartDto result = new ControlChartDto();
+        SpcControlChartDto result = new SpcControlChartDto();
         double[] xbary = connector.getOutputDoubleArray("XBCResult$Values");
         double xbarcl = connector.getOutputDouble("XBCResult$CenterLine");
         double[] xbarucl = connector.getOutputDoubleArray("XBCResult$UCL");
@@ -328,9 +328,9 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         return result;
     }
 
-    private ControlChartDto getRangeCResult(REnConnector connector) {
+    private SpcControlChartDto getRangeCResult(REnConnector connector) {
         connector.execEval("RangeCResult <- intspc.normal.getRangeCResult(x, subgroupSize)");
-        ControlChartDto result = new ControlChartDto();
+        SpcControlChartDto result = new SpcControlChartDto();
         double[] rangey = connector.getOutputDoubleArray("RangeCResult$Values");
         double rangecl = connector.getOutputDouble("RangeCResult$CenterLine");
         double[] rangeucl = connector.getOutputDoubleArray("RangeCResult$UCL");
@@ -343,9 +343,9 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         return result;
     }
 
-    private ControlChartDto getSdCResult(REnConnector connector) {
+    private SpcControlChartDto getSdCResult(REnConnector connector) {
         connector.execEval("SDCResult <- intspc.normal.getSDCResult(x, subgroupSize)");
-        ControlChartDto result = new ControlChartDto();
+        SpcControlChartDto result = new SpcControlChartDto();
         double[] sdy = connector.getOutputDoubleArray("SDCResult$Values");
         double sdcl = connector.getOutputDouble("SDCResult$CenterLine");
         double[] sducl = connector.getOutputDoubleArray("SDCResult$UCL");
@@ -358,9 +358,9 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         return result;
     }
 
-    private ControlChartDto getMeCResult(REnConnector connector) {
+    private SpcControlChartDto getMeCResult(REnConnector connector) {
         connector.execEval("MECResult <- intspc.normal.getMECResult(x, subgroupSize)");
-        ControlChartDto result = new ControlChartDto();
+        SpcControlChartDto result = new SpcControlChartDto();
         double[] mey = connector.getOutputDoubleArray("MECResult$Values");
         double mecl = connector.getOutputDouble("MECResult$CenterLine");
         double[] melcl = connector.getOutputDoubleArray("MECResult$LCL");
@@ -373,9 +373,9 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         return result;
     }
 
-    private ControlChartDto getMrCResult(REnConnector connector) {
+    private SpcControlChartDto getMrCResult(REnConnector connector) {
         connector.execEval("MECResult <- intspc.normal.getMECResult(x, subgroupSize)");
-        ControlChartDto result = new ControlChartDto();
+        SpcControlChartDto result = new SpcControlChartDto();
         double[] mey = connector.getOutputDoubleArray("MECResult$Values");
         double mecl = connector.getOutputDouble("MECResult$CenterLine");
         double[] melcl = connector.getOutputDoubleArray("MECResult$LCL");

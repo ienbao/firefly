@@ -1,14 +1,14 @@
-package com.dmsoft.firefly.plugin.spc.service;
+package com.dmsoft.firefly.plugin.spc.service.impl;
 
 import com.dmsoft.firefly.plugin.spc.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcAnalysisConfigDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
-import com.dmsoft.firefly.plugin.spc.dto.analysis.AnalysisDataDto;
+import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcAnalysisDataDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
-import com.dmsoft.firefly.plugin.spc.service.impl.SpcAnalysisService;
-import com.dmsoft.firefly.plugin.spc.service.impl.SpcService;
+import com.dmsoft.firefly.plugin.spc.service.SpcAnalysisService;
+import com.dmsoft.firefly.plugin.spc.service.SpcService;
 import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionCode;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
@@ -37,9 +37,9 @@ public class SpcServiceImpl implements SpcService {
             throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11001));
         }
         List<SpcStatsDto> result = Lists.newArrayList();
-        List<AnalysisDataDto> analysisDataDtoList = Lists.newArrayList();
+        List<SpcAnalysisDataDto> spcAnalysisDataDtoList = Lists.newArrayList();
         for (SearchConditionDto searchConditionDto : searchConditions) {
-            AnalysisDataDto analysisDataDto = new AnalysisDataDto();
+            SpcAnalysisDataDto spcAnalysisDataDto = new SpcAnalysisDataDto();
             List<String> searchRowKeys = searchDataFrame.getSearchRowKey(searchConditionDto.getCondition());
             List<String> datas = searchDataFrame.getDataValue(searchConditionDto.getItemName(), searchRowKeys);
             List<Double> doubleList = Lists.newArrayList();
@@ -48,13 +48,21 @@ public class SpcServiceImpl implements SpcService {
                     doubleList.add(Double.valueOf(s));
                 }
             }
-            analysisDataDto.setLsl(searchConditionDto.getCusLsl());
-            analysisDataDto.setUsl(searchConditionDto.getCusUsl());
-            analysisDataDto.setDataList(doubleList);
-            analysisDataDtoList.add(analysisDataDto);
+            if (searchConditionDto.getCusLsl() != null) {
+                spcAnalysisDataDto.setLsl(searchConditionDto.getCusLsl());
+            } else {
+                spcAnalysisDataDto.setLsl(searchDataFrame.getTestItemWithTypeDto(searchConditionDto.getItemName()).getLsl());
+            }
+            if (searchConditionDto.getCusUsl() != null) {
+                spcAnalysisDataDto.setUsl(searchConditionDto.getCusUsl());
+            } else {
+                spcAnalysisDataDto.setUsl(searchDataFrame.getTestItemWithTypeDto(searchConditionDto.getItemName()).getUsl());
+            }
+            spcAnalysisDataDto.setDataList(doubleList);
+            spcAnalysisDataDtoList.add(spcAnalysisDataDto);
         }
-        for (int i = 0; i < analysisDataDtoList.size(); i++) {
-            SpcStatsResultDto resultDto = getAnalysisService().analyzeStatsResult(analysisDataDtoList.get(i), configDto);
+        for (int i = 0; i < spcAnalysisDataDtoList.size(); i++) {
+            SpcStatsResultDto resultDto = getAnalysisService().analyzeStatsResult(spcAnalysisDataDtoList.get(i), configDto);
             SpcStatsDto statsDto = new SpcStatsDto();
             statsDto.setStatsResultDto(resultDto);
             statsDto.setKey(searchConditions.get(i).getKey());
@@ -75,12 +83,12 @@ public class SpcServiceImpl implements SpcService {
             throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11001));
         }
         List<SpcChartDto> result = Lists.newArrayList();
-        List<AnalysisDataDto> analysisDataDtoList = Lists.newArrayList();
+        List<SpcAnalysisDataDto> spcAnalysisDataDtoList = Lists.newArrayList();
         List<List<String>> analyzedRowKeys = Lists.newArrayList();
         Double ndcMax = Double.NEGATIVE_INFINITY;
         Double ndcMin = Double.POSITIVE_INFINITY;
         for (SearchConditionDto searchConditionDto : searchConditions) {
-            AnalysisDataDto analysisDataDto = new AnalysisDataDto();
+            SpcAnalysisDataDto spcAnalysisDataDto = new SpcAnalysisDataDto();
             List<String> searchRowKeys = searchDataFrame.getSearchRowKey(searchConditionDto.getCondition());
             List<String> datas = searchDataFrame.getDataValue(searchConditionDto.getItemName(), searchRowKeys);
             List<String> rowKeys = Lists.newArrayList();
@@ -99,20 +107,28 @@ public class SpcServiceImpl implements SpcService {
                 }
             }
             analyzedRowKeys.add(rowKeys);
-            analysisDataDto.setLsl(searchConditionDto.getCusLsl());
-            analysisDataDto.setUsl(searchConditionDto.getCusUsl());
-            analysisDataDto.setDataList(doubleList);
-            analysisDataDtoList.add(analysisDataDto);
+            if (searchConditionDto.getCusLsl() != null) {
+                spcAnalysisDataDto.setLsl(searchConditionDto.getCusLsl());
+            } else {
+                spcAnalysisDataDto.setLsl(searchDataFrame.getTestItemWithTypeDto(searchConditionDto.getItemName()).getLsl());
+            }
+            if (searchConditionDto.getCusUsl() != null) {
+                spcAnalysisDataDto.setUsl(searchConditionDto.getCusUsl());
+            } else {
+                spcAnalysisDataDto.setUsl(searchDataFrame.getTestItemWithTypeDto(searchConditionDto.getItemName()).getUsl());
+            }
+            spcAnalysisDataDto.setDataList(doubleList);
+            spcAnalysisDataDtoList.add(spcAnalysisDataDto);
         }
-        for (int i = 0; i < analysisDataDtoList.size(); i++) {
-            AnalysisDataDto analysisDataDto = analysisDataDtoList.get(i);
+        for (int i = 0; i < spcAnalysisDataDtoList.size(); i++) {
+            SpcAnalysisDataDto spcAnalysisDataDto = spcAnalysisDataDtoList.get(i);
             if (ndcMax != Double.NEGATIVE_INFINITY) {
-                analysisDataDto.setNdcMax(ndcMax);
+                spcAnalysisDataDto.setNdcMax(ndcMax);
             }
             if (ndcMin != Double.POSITIVE_INFINITY) {
-                analysisDataDto.setNdcMin(ndcMin);
+                spcAnalysisDataDto.setNdcMin(ndcMin);
             }
-            SpcChartResultDto chartResultDto = getAnalysisService().analyzeSpcChartResult(analysisDataDto, configDto);
+            SpcChartResultDto chartResultDto = getAnalysisService().analyzeSpcChartResult(spcAnalysisDataDto, configDto);
             SpcChartDto chartDto = new SpcChartDto();
             chartDto.setResultDto(chartResultDto);
             chartDto.setKey(searchConditions.get(i).getKey());

@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.utils;
+package com.dmsoft.firefly.plugin.grr.utils;
 
 /**
  * util class for double id

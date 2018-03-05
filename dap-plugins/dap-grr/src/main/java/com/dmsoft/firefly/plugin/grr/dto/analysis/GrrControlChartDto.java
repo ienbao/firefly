@@ -1,15 +1,13 @@
-package com.dmsoft.firefly.plugin.spc.dto.analysis;
+package com.dmsoft.firefly.plugin.grr.dto.analysis;
 
 /**
- * control chart dto for service
- *
- * @author Can Guan
+ * grr control
  */
-public class ControlChartDto {
+public class GrrControlChartDto {
     private Double[] x;
     private Double[] y;
-    private Double[] ucl;
-    private Double[] lcl;
+    private Double ucl;
+    private Double lcl;
     private Double cl;
 
     public Double[] getX() {
@@ -28,19 +26,19 @@ public class ControlChartDto {
         this.y = y;
     }
 
-    public Double[] getUcl() {
+    public Double getUcl() {
         return ucl;
     }
 
-    public void setUcl(Double[] ucl) {
+    public void setUcl(Double ucl) {
         this.ucl = ucl;
     }
 
-    public Double[] getLcl() {
+    public Double getLcl() {
         return lcl;
     }
 
-    public void setLcl(Double[] lcl) {
+    public void setLcl(Double lcl) {
         this.lcl = lcl;
     }
 
