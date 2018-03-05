@@ -1,8 +1,8 @@
 package com.dmsoft.firefly.core.sdkimpl.dai;
 
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
-import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -25,6 +25,7 @@ public class EnvServiceImpl implements EnvService {
     private List<TestItemWithTypeDto> testItemDtos;
     private List<String> projectNames;
     private List<String> plugNames;
+    private JsonMapper mapper = JsonMapper.defaultMapper();
 
     @Override
     public String getUserName() {
@@ -103,7 +104,7 @@ public class EnvServiceImpl implements EnvService {
     @Override
     public LanguageType getLanguageType() {
         String languageType = userPreferenceService.findPreferenceByUserId("languageType", userName);
-        return LanguageType.valueOf(languageType);
+        return LanguageType.valueOf(mapper.fromJson(languageType, String.class));
 
     }
 
