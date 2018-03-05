@@ -21,7 +21,13 @@ public class AppController {
     private final Logger logger = LoggerFactory.getLogger(AppController.class);
 
     @FXML
-    private MenuBar mnuSystem;
+    private MenuBar menuSystem;
+
+    @FXML
+    private MenuItem menuLoginOut;
+
+    @FXML
+    private MenuItem menuChangePassword;
 
     @FXML
     private void initialize() {
@@ -35,12 +41,21 @@ public class AppController {
 //            Menu defaultApplicationMenu = tk.createDefaultApplicationMenu(properties.get(PropertiesResource.PROJECT_NAME).toString());
 //            tk.setApplicationMenu(defaultApplicationMenu);
 //
-//            mnuSystem.setUseSystemMenuBar(true);
-//            mnuSystem.setPrefWidth(0);
-//            mnuSystem.setMinWidth(0);
-//            mnuSystem.setMaxWidth(0);
+//            menuSystem.setUseSystemMenuBar(true);
+//            menuSystem.setPrefWidth(0);
+//            menuSystem.setMinWidth(0);
+//            menuSystem.setMaxWidth(0);
 //        }
         initMenuBar();
+    }
+
+    private void initEvent() {
+        menuChangePassword.setOnAction(event -> {
+
+        });
+        menuLoginOut.setOnAction(event -> {
+
+        });
     }
 
     private void initMenuBar() {
@@ -54,13 +69,13 @@ public class AppController {
             String parentLocation = pluginId + "_" + menu.getParentLocation();
             if (parentLocation.equals(MenuFactory.getParentMenuId())) {
                 if (MenuType.MENU.equals(menu.getMenuType())) {
-                    mnuSystem.getMenus().add(menu.getMenu());
+                    menuSystem.getMenus().add(menu.getMenu());
                 } else {
                     logger.debug("TMenu bar can not set menu item, only set menu.");
                 }
             } else {
                 if (MenuType.MENU.equals(menu.getMenuType())) {
-                    List<Menu> menus = mnuSystem.getMenus();
+                    List<Menu> menus = menuSystem.getMenus();
                     boolean result1 = false;
                     for (Menu menu1 : menus) {
                          boolean result = updateMenu(menu, menu1);
@@ -81,7 +96,7 @@ public class AppController {
             IMenu menu = pc.getMenu(name);
             if (isHasParentMenu(menu, pc)) {
                 if (MenuType.MENU.equals(menu.getMenuType())) {
-                    List<Menu> menus = mnuSystem.getMenus();
+                    List<Menu> menus = menuSystem.getMenus();
                     for (Menu menu1 : menus) {
                         boolean result = updateMenu(menu, menu1);
                         if (result) {
@@ -97,7 +112,7 @@ public class AppController {
         thirdNames.forEach(name -> {
             IMenu menu = pc.getMenu(name);
             if (isHasParentMenu(menu, pc)) {
-                List<Menu> menus = mnuSystem.getMenus();
+                List<Menu> menus = menuSystem.getMenus();
                 for (Menu menu1 : menus) {
                     boolean result = updateMenu(menu, menu1);
                     if (result) {
@@ -144,6 +159,21 @@ public class AppController {
         } else {
             return true;
         }
+    }
+
+    private void buildChangePasswordDialog() {
+//        if (renameStage == null) {
+      /*  Pane root = null;
+        try {
+            FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/change_password.fxml"), GuiFxmlAndLanguageUtils.getLanguageType());
+            root = loader.load();
+            Stage renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameTemplate", "Rename Template", root);
+            renameStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+//        }
+
     }
 
 }

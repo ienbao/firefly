@@ -5,8 +5,8 @@ package com.dmsoft.firefly.plugin.spc.model;
 
 import com.dmsoft.firefly.gui.components.table.NewTableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
-import com.dmsoft.firefly.plugin.spc.utils.ResourceBundleUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -220,7 +220,7 @@ public class ViewDataTableModel implements NewTableModel {
         TableMenuRowEvent highLight = new TableMenuRowEvent() {
             @Override
             public String getMenuName() {
-                return ResourceBundleUtils.getString(ResourceMassages.HIGH_LIGHT_TABLE_MENU);
+                return SpcFxmlAndLanguageUtils.getString(ResourceMassages.HIGH_LIGHT_TABLE_MENU);
             }
 
             @Override
@@ -236,7 +236,7 @@ public class ViewDataTableModel implements NewTableModel {
         TableMenuRowEvent detail = new TableMenuRowEvent() {
             @Override
             public String getMenuName() {
-                return ResourceBundleUtils.getString(ResourceMassages.DETAIL_TABLE_MENU);
+                return SpcFxmlAndLanguageUtils.getString(ResourceMassages.DETAIL_TABLE_MENU);
             }
 
             @Override
@@ -248,7 +248,7 @@ public class ViewDataTableModel implements NewTableModel {
         TableMenuRowEvent remove = new TableMenuRowEvent() {
             @Override
             public String getMenuName() {
-                return ResourceBundleUtils.getString(ResourceMassages.REMOVE_TABLE_MENU);
+                return SpcFxmlAndLanguageUtils.getString(ResourceMassages.REMOVE_TABLE_MENU);
             }
 
             @Override

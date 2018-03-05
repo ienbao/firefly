@@ -16,5 +16,9 @@
             <artifactId>bamboo</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.dmsoft</groupId>
+            <artifactId>dap-sdk</artifactId>
+        </dependency>
     </dependencies>
 </project>

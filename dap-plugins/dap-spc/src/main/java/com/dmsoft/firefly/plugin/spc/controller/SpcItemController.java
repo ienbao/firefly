@@ -250,11 +250,11 @@ public class SpcItemController implements Initializable {
     }
 
     private void buildAdvanceHelpDia() {
-        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML(ViewResource.SPC_ADVANCE_SEARCH_VIEW_RES);
+        FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML(ViewResource.SPC_ADVANCE_SEARCH_VIEW_RES);
         Pane root = null;
         try {
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createSimpleWindowAsModel(ViewResource.SPC_ADVANCE_SEARCH_VIEW_ID, ResourceBundleUtils.getString(ResourceMassages.ADVANCE), root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createSimpleWindowAsModel(ViewResource.SPC_ADVANCE_SEARCH_VIEW_ID, SpcFxmlAndLanguageUtils.getString(ResourceMassages.ADVANCE), root, getResource("css/platform_app.css").toExternalForm());
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();

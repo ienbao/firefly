@@ -59,7 +59,7 @@ public class ViewDataController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.filterTf.getTextField().setPromptText(ResourceBundleUtils.getString(ResourceMassages.FILTER_VALUE_PROMPT));
+        this.filterTf.getTextField().setPromptText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_VALUE_PROMPT));
         this.buildChooseColumnDialog();
         this.initBtnIcon();
         this.initComponentEvent();
@@ -110,13 +110,13 @@ public class ViewDataController implements Initializable {
         fsg.setFilterBtn(filterBtn);
         filterBtn.setOnAction(event -> {
             QuickSearchController quickSearchController = new QuickSearchController();
-            FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML(ViewResource.SPC_QUICK_SEARCH_VIEW_RES);
+            FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML(ViewResource.SPC_QUICK_SEARCH_VIEW_RES);
             fxmlLoader.setController(quickSearchController);
             Pane root = null;
             Stage stage = null;
             try {
                 root = fxmlLoader.load();
-                stage = WindowFactory.createOrUpdateSimpleWindowAsModel("spcQuickSearch", ResourceBundleUtils.getString(ResourceMassages.QUICK_SEARCH), root);
+                stage = WindowFactory.createOrUpdateSimpleWindowAsModel("spcQuickSearch", SpcFxmlAndLanguageUtils.getString(ResourceMassages.QUICK_SEARCH), root);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -186,12 +186,12 @@ public class ViewDataController implements Initializable {
 
 
     private void buildChooseColumnDialog() {
-        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML(ViewResource.SPC_CHOOSE_STATISTICAL_VIEW_RES);
+        FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML(ViewResource.SPC_CHOOSE_STATISTICAL_VIEW_RES);
         Pane root = null;
         try {
             root = fxmlLoader.load();
             chooseDialogController = fxmlLoader.getController();
-            WindowFactory.createSimpleWindowAsModel("spcViewDataColumn", ResourceBundleUtils.getString(ResourceMassages.CHOOSE_ITEMS_TITLE), root);
+            WindowFactory.createSimpleWindowAsModel("spcViewDataColumn", SpcFxmlAndLanguageUtils.getString(ResourceMassages.CHOOSE_ITEMS_TITLE), root);
         } catch (IOException e) {
             e.printStackTrace();
         }

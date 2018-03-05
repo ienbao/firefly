@@ -3,6 +3,7 @@ package com.dmsoft.firefly.gui.components.messagetip;
  * Copyright (C) 2017. For Intelligent Group.
  */
 
+import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -39,7 +40,8 @@ public class MessageTipFactory {
     private static void init(){
         try {
             popup = new Popup();
-            FXMLLoader fxmlLoader = new FXMLLoader(MessageTipFactory.class.getClassLoader().getResource("view/message_tip.fxml"));
+            //FXMLLoader fxmlLoader = new FXMLLoader(MessageTipFactory.class.getClassLoader().getResource("view/message_tip.fxml"));
+            FXMLLoader fxmlLoader = FxmlAndLanguageUtils.getLoaderFXML("view/message_tip.fxml");
             Pane pane = fxmlLoader.load();
             pane.getStylesheets().add("/css/redfall/main.css");
             messageTipControl = fxmlLoader.getController();

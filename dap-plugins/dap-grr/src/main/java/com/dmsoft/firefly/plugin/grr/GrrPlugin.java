@@ -11,6 +11,7 @@ import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.ui.IMainBodyPane;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
+import com.dmsoft.firefly.utils.GrrFxmlAndLanguageUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import org.slf4j.Logger;
@@ -37,7 +38,11 @@ public class GrrPlugin extends Plugin {
             public Pane getNewPane() {
                 Pane root = null;
                 try {
+                    FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr.fxml");
+                    root = fxmlLoader.load();
+/*
                     root = FXMLLoader.load(getClass().getClassLoader().getResource("view/grr.fxml"), ResourceBundle.getBundle("i18n.message_en_US"));
+*/
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

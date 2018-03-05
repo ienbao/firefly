@@ -50,7 +50,7 @@ public class StatisticalResultController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        filterTestItemTf.getTextField().setPromptText(ResourceBundleUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
+        filterTestItemTf.getTextField().setPromptText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
         this.buildChooseColumnDialog();
         this.initStatisticalResultTable();
         this.initBtnIcon();
@@ -76,7 +76,7 @@ public class StatisticalResultController implements Initializable {
     }
 
     private void buildChooseColumnDialog() {
-        FXMLLoader fxmlLoader = FXMLLoaderUtils.getInstance().getLoaderFXML(ViewResource.SPC_CHOOSE_STATISTICAL_VIEW_RES);
+        FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML(ViewResource.SPC_CHOOSE_STATISTICAL_VIEW_RES);
         Pane root = null;
         try {
             root = fxmlLoader.load();
@@ -179,7 +179,7 @@ public class StatisticalResultController implements Initializable {
 
         @Override
         public String getMenuName() {
-            return ResourceBundleUtils.getString(ResourceMassages.CHOOSE_COLOR_MENU);
+            return SpcFxmlAndLanguageUtils.getString(ResourceMassages.CHOOSE_COLOR_MENU);
         }
 
         @Override

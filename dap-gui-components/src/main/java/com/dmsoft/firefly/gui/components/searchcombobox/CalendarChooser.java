@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.gui.components.searchcombobox;
 
-import com.dmsoft.firefly.gui.components.utils.ResourceBundleUtils;
+import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.components.utils.ResourceMassages;
 import javafx.collections.FXCollections;
 import javafx.event.Event;
@@ -106,7 +106,7 @@ public class CalendarChooser extends GridPane {
         ColumnConstraints c6 = new ColumnConstraints(22, 22, 22);
         RowConstraints r0 = new RowConstraints(22, 22, 22);
         this.preBtn = new BasicArrowButton(BasicArrowButton.Direction.LEFT);
-        Tooltip.install(this.preBtn, new Tooltip(ResourceBundleUtils.getString(ResourceMassages.PRE_MONTH)));
+        Tooltip.install(this.preBtn, new Tooltip(FxmlAndLanguageUtils.getString(ResourceMassages.PRE_MONTH)));
         this.preBtn.addEventHandler(MouseEvent.MOUSE_RELEASED, this::preBtnHandler);
         this.preBtn.setPrefSize(22, 22);
         this.yearCmb = new ComboBox<>(FXCollections.observableArrayList(this.years));
@@ -127,7 +127,7 @@ public class CalendarChooser extends GridPane {
             this.updatePane();
         });
         this.nextBtn = new BasicArrowButton(BasicArrowButton.Direction.RIGHT);
-        Tooltip.install(this.nextBtn, new Tooltip(ResourceBundleUtils.getString(ResourceMassages.NEXT_MONTH)));
+        Tooltip.install(this.nextBtn, new Tooltip(FxmlAndLanguageUtils.getString(ResourceMassages.NEXT_MONTH)));
         this.nextBtn.addEventHandler(MouseEvent.MOUSE_RELEASED, this::nextBtnHandler);
         this.nextBtn.setPrefSize(22, 22);
         northPane.getColumnConstraints().addAll(c0, c1, c2, c3, c4, c5, c6);

@@ -14,11 +14,11 @@
           <RowConstraints maxHeight="48.0" minHeight="28.0" prefHeight="28.0" valignment="CENTER" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <MenuBar fx:id="mnuSystem" maxWidth="1.7976931348623157E308" style="-fx-background-color: transparent;" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER" />
+            <MenuBar fx:id="menuSystem" maxWidth="1.7976931348623157E308" style="-fx-background-color: transparent;" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER" />
             <MenuButton mnemonicParsing="false" text="admin" GridPane.columnIndex="1">
               <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
-                <MenuItem mnemonicParsing="false" text="Action 2" />
+                <MenuItem fx:id="menuChangePassword" mnemonicParsing="false" text="%MENU_CHANGE_PASSWORD" />
+                <MenuItem fx:id="menuLoginOut" mnemonicParsing="false" text="%MENU_LOGIN_OUT" />
               </items>
             </MenuButton>
          </children>

@@ -1,7 +1,7 @@
 package com.dmsoft.firefly.plugin.spc.handler;
 
 import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionCode;
-import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionParser;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -24,7 +24,7 @@ public class DataFrameHandler implements JobInboundHandler {
     @SuppressWarnings("unchecked")
     public void doJob(JobHandlerContext context, Object... in) throws Exception {
         if (in == null || !(in[0] instanceof Map)) {
-            throw new ApplicationException(SpcExceptionParser.parser(SpcExceptionCode.ERR_11001));
+            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11001));
         }
         Map<String, Object> param = (Map) in[0];
         List<RowDataDto> rowDataDtoList = (List<RowDataDto>) param.remove(ParamKeys.ROW_DATA_DTO_LIST);

@@ -5,13 +5,16 @@ import com.dmsoft.firefly.gui.components.utils.NodeMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.handler.importcsv.CsvImportHandler;
 import com.dmsoft.firefly.gui.handler.importcsv.ResolverSelectHandler;
+import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.gui.utils.MessageManagerFactory;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.job.core.InitJobPipeline;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.job.core.JobPipeline;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
+import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import com.google.common.collect.Lists;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -29,10 +32,16 @@ public class GuiApplication extends Application {
         DAPApplication.run(Lists.newArrayList("com.dmsoft.dap.SpcPlugin", "com.dmsoft.dap.GrrPlugin", "com.dmsoft.dap.CsvResolverPlugin"));
         RuntimeContext.registerBean(IMessageManager.class, new MessageManagerFactory());
 
-        MenuFactory.initMenu();
+        RuntimeContext.getBean(EnvService.class).setLanguageType(LanguageType.EN);
 
-        Pane root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/app_menu.fxml"));
-        Pane main = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/main.fxml"));
+        MenuFactory.initMenu();
+       /* FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("view/app_menu.fxml"), ResourceBundleUtils.getLanguageType());
+        FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getClassLoader().getResource("view/main.fxml"), ResourceBundleUtils.getLanguageType());*/
+        FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/app_menu.fxml");
+        FXMLLoader fxmlLoader1 = GuiFxmlAndLanguageUtils.getLoaderFXML("view/main.fxml");
+
+        Pane root = fxmlLoader.load();
+        Pane main = fxmlLoader1.load();
         primaryStage = WindowFactory.createFullWindow("platform_gui", root, main, getClass().getClassLoader().getResource("css/platform_app.css").toExternalForm());
         primaryStage.show();
         initJob();
