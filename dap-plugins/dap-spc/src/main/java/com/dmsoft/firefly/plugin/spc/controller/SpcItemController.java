@@ -13,7 +13,9 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -21,14 +23,14 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
@@ -60,7 +62,7 @@ public class SpcItemController implements Initializable {
     @FXML
     private TableColumn<ItemTableModel, CheckBox> select;
     @FXML
-    private TableColumn<ItemTableModel, String> item;
+    private TableColumn<ItemTableModel, TestItemWithTypeDto> item;
     @FXML
     private TableView itemTable;
     @FXML
@@ -133,7 +135,7 @@ public class SpcItemController implements Initializable {
         item.setText("Test Item");
         item.setGraphic(is);
         item.getStyleClass().add("filter-header");
-        item.setCellValueFactory(cellData -> cellData.getValue().itemProperty());
+        item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
         initItemData();
     }
 
@@ -174,6 +176,31 @@ public class SpcItemController implements Initializable {
         });
         exportBtn.setOnAction(event -> {
 
+        });
+        item.setCellFactory(new Callback<TableColumn<ItemTableModel, TestItemWithTypeDto>, TableCell<ItemTableModel, TestItemWithTypeDto>>() {
+            public TableCell call(TableColumn<ItemTableModel, TestItemWithTypeDto> param) {
+                return new TableCell<ItemTableModel, TestItemWithTypeDto>() {
+                    private ObservableValue ov;
+
+                    @Override
+                    public void updateItem(TestItemWithTypeDto item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!isEmpty()) {
+
+                            if (getTableRow() != null && item.getTestItemType().equals(TestItemType.ATTRIBUTE)) {
+                                this.setStyle("-fx-text-fill: #009bff");
+                            }
+                            if (getTableRow() != null && StringUtils.isNotEmpty(itemFilter.getTextField().getText()) && item.getTestItemName().contains(itemFilter.getTextField().getText())) {
+                                this.setStyle("-fx-text-fill: red");
+                            }
+                            // Get fancy and change color based on data
+                            setText(item.getTestItemName());
+                        } else {
+                            setText(null);
+                        }
+                    }
+                };
+            }
         });
     }
 
