@@ -10,11 +10,11 @@ import com.dmsoft.bamboo.common.dto.AbstractValueObject;
 public class SpcChartResultDto extends AbstractValueObject {
     private NDCResultDto ndcResult;
     private RunCResultDto runCResult;
-    private ControlChartDto xbarCResult;
-    private ControlChartDto rangeCResult;
-    private ControlChartDto sdCResult;
-    private ControlChartDto medianCResult;
-    private ControlChartDto mrCResult;
+    private SpcControlChartDto xbarCResult;
+    private SpcControlChartDto rangeCResult;
+    private SpcControlChartDto sdCResult;
+    private SpcControlChartDto medianCResult;
+    private SpcControlChartDto mrCResult;
     private BoxCResultDto boxCResult;
 
     public NDCResultDto getNdcResult() {
@@ -33,43 +33,43 @@ public class SpcChartResultDto extends AbstractValueObject {
         this.runCResult = runCResult;
     }
 
-    public ControlChartDto getXbarCResult() {
+    public SpcControlChartDto getXbarCResult() {
         return xbarCResult;
     }
 
-    public void setXbarCResult(ControlChartDto xbarCResult) {
+    public void setXbarCResult(SpcControlChartDto xbarCResult) {
         this.xbarCResult = xbarCResult;
     }
 
-    public ControlChartDto getRangeCResult() {
+    public SpcControlChartDto getRangeCResult() {
         return rangeCResult;
     }
 
-    public void setRangeCResult(ControlChartDto rangeCResult) {
+    public void setRangeCResult(SpcControlChartDto rangeCResult) {
         this.rangeCResult = rangeCResult;
     }
 
-    public ControlChartDto getSdCResult() {
+    public SpcControlChartDto getSdCResult() {
         return sdCResult;
     }
 
-    public void setSdCResult(ControlChartDto sdCResult) {
+    public void setSdCResult(SpcControlChartDto sdCResult) {
         this.sdCResult = sdCResult;
     }
 
-    public ControlChartDto getMedianCResult() {
+    public SpcControlChartDto getMedianCResult() {
         return medianCResult;
     }
 
-    public void setMedianCResult(ControlChartDto medianCResult) {
+    public void setMedianCResult(SpcControlChartDto medianCResult) {
         this.medianCResult = medianCResult;
     }
 
-    public ControlChartDto getMrCResult() {
+    public SpcControlChartDto getMrCResult() {
         return mrCResult;
     }
 
-    public void setMrCResult(ControlChartDto mrCResult) {
+    public void setMrCResult(SpcControlChartDto mrCResult) {
         this.mrCResult = mrCResult;
     }
 

@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.spc.charts.data;
 
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
+import javafx.scene.paint.Color;
 
 /**
  * Created by cherry on 2018/2/27.
@@ -15,7 +16,7 @@ public class XYChartData<X, Y> implements IXYChartData {
     private int index;
 
     //    Series color
-    private String color;
+    private Color color;
 
     //    Series name
     private String seriesName;
@@ -43,23 +44,23 @@ public class XYChartData<X, Y> implements IXYChartData {
     @Override
     public Object getXValueByIndex(int index) {
 
-        return (index > 0 && index < getLen()) ? x[index] : null;
+        return (index >= 0 && index < getLen()) ? x[index] : null;
     }
 
     @Override
     public Object getYValueByIndex(int index) {
 
-        return (index > 0 && index < getLen()) ? y[index] : null;
+        return (index >= 0 && index < getLen()) ? y[index] : null;
     }
 
     @Override
     public Object getExtraValueByIndex(int index) {
 
-        return (index > 0 && index < getLen()) && (ids != null) && (ids.length > index) ? ids[index] : null;
+        return (index >= 0 && index < getLen()) && (ids != null) && (ids.length > index) ? ids[index] : null;
     }
 
     @Override
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 
@@ -84,7 +85,7 @@ public class XYChartData<X, Y> implements IXYChartData {
         this.index = index;
     }
 
-    public void setColor(String color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 

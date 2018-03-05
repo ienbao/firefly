@@ -6,6 +6,7 @@ import com.dmsoft.firefly.plugin.spc.charts.data.basic.AbnormalPointData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.BrokenLineData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.LineData;
 import com.dmsoft.firefly.plugin.spc.charts.shape.LineType;
+import com.dmsoft.firefly.plugin.spc.charts.utils.ColorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
 import com.dmsoft.firefly.plugin.spc.dto.chart.RuleXYChartData;
@@ -21,6 +22,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.Arrays;
@@ -105,7 +107,7 @@ public class XYChartPanelApp extends Application {
             String lineClass = lineType == LineType.SOLID ? "solid-line" : "dashed-line";
             lineData.setTitle(seriesName);
             lineData.setName(lineName);
-            lineData.setColor("#5fb222");
+            lineData.setColor(Color.color(220, 220, 220));
             lineData.setLineClass(lineClass);
             lineData.setLineType(lineType);
             lineData.setValue(rand.nextInt(2000));
@@ -115,14 +117,14 @@ public class XYChartPanelApp extends Application {
         BrokenLineData brokenLineData = new BrokenLineData();
         String brokenName = "Broke Line";
         brokenLineData.setName(brokenName);
-        brokenLineData.setColor("#e92822");
+        brokenLineData.setColor(Color.RED);
         brokenLineData.setValue(brokenValue);
         brokenLineDataMap.put(brokenName, brokenLineData);
 
         AbnormalPointData abnormalPointData = new AbnormalPointData();
         abnormalPointData.setX(abnormalPointX);
         abnormalPointData.setY(abnormalPointY);
-        abnormalPointData.setColor("#e92822");
+        abnormalPointData.setColor(Color.RED);
         abnormalPointData.setName("R1");
         abnormalPointData.setVisible(true);
         abnormalPointDataMap.put("R1", abnormalPointData);
@@ -131,7 +133,7 @@ public class XYChartPanelApp extends Application {
         xyChartData.setX(x);
         xyChartData.setY(y);
         xyChartData.setIds(ids);
-        xyChartData.setColor("#5fb222");
+        xyChartData.setColor(Color.color(200, 200, 200));
         xyChartData.setSeriesName(seriesName);
         ruleXYChartData = new RuleXYChartData();
         ruleXYChartData.setXyChartData(xyChartData);

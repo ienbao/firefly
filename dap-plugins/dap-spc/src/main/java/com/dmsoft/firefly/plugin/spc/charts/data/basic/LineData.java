@@ -3,6 +3,7 @@ package com.dmsoft.firefly.plugin.spc.charts.data.basic;
 import com.dmsoft.bamboo.common.dto.AbstractValueObject;
 import com.dmsoft.firefly.plugin.spc.charts.shape.LineType;
 import javafx.geometry.Orientation;
+import javafx.scene.paint.Color;
 
 /**
  * Created by cherry on 2018/2/10.
@@ -12,7 +13,7 @@ public class LineData extends AbstractValueObject {
     private Number value;
     private String name;
     private String title;
-    private String color;
+    private Color color;
     private String lineClass;
     private LineType lineType;
     private Orientation plotOrientation;
@@ -40,7 +41,7 @@ public class LineData extends AbstractValueObject {
     public LineData(Number value,
                     String name,
                     String title,
-                    String color,
+                    Color color,
                     Orientation plotOrientation) {
         this.name = name;
         this.title = title;
@@ -73,11 +74,11 @@ public class LineData extends AbstractValueObject {
         this.value = value;
     }
 
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 

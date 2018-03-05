@@ -12,7 +12,7 @@ import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
-import com.dmsoft.firefly.utils.CsvFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.grr.utils.CsvFxmlAndLanguageUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;

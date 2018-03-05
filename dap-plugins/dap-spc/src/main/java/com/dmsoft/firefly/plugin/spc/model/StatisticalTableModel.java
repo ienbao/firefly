@@ -8,8 +8,10 @@ import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
 import com.dmsoft.firefly.plugin.spc.utils.Colur;
+import com.dmsoft.firefly.plugin.spc.utils.SourceObjectProperty;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
+import com.dmsoft.firefly.sdk.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.beans.property.ObjectProperty;
@@ -21,7 +23,6 @@ import javafx.collections.transformation.SortedList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
-import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
 import java.util.*;
@@ -34,7 +35,7 @@ public class StatisticalTableModel implements NewTableModel {
     private static final String[] STATISTICAL_TITLE = UIConstant.SPC_SR_ALL;
     private ObservableList<String> columnKey = FXCollections.observableArrayList(Arrays.asList(STATISTICAL_TITLE));
     private ObservableList<String> rowKey = FXCollections.observableArrayList();
-    private Map<String, SimpleObjectProperty<String>> valueMap = new HashMap<>();
+    private Map<String, SourceObjectProperty<String>> valueMap = new HashMap<>();
     private Map<String, SimpleObjectProperty<Boolean>> checkMap = new HashMap<>();
     private ObjectProperty<Boolean> allChecked = new SimpleObjectProperty<>(false);
     private Set<String> falseSet = new HashSet<>();
@@ -51,6 +52,8 @@ public class StatisticalTableModel implements NewTableModel {
     private Set<String> emptyResultKeys = new HashSet<>();
 
     private Map<String, Color> colorCache = Maps.newHashMap();
+
+    private Set<String> editorCell = new HashSet<>();
 
     /**
      * constructor
@@ -78,11 +81,10 @@ public class StatisticalTableModel implements NewTableModel {
                 if (this.isEmptyResult(dto.getStatsResultDto())) {
                     emptyResultKeys.add(dto.getKey());
                 } else {
-                    colorCache.put(dto.getKey(), ColorUtils.getTransparentColor(Colur.RAW_VALUES[m % 10], 0.6));
+                    colorCache.put(dto.getKey(), ColorUtils.getTransparentColor(Colur.RAW_VALUES[m % 10], 1));
                     m++;
                 }
-            }
-            ;
+            };
         }
     }
 
@@ -96,6 +98,7 @@ public class StatisticalTableModel implements NewTableModel {
         falseSet.clear();
         colorCache.clear();
         emptyResultKeys.clear();
+        editorCell.clear();
     }
 
     /**
@@ -200,11 +203,14 @@ public class StatisticalTableModel implements NewTableModel {
                 tableCell.getStyleClass().add("error");
             }
         }
+        if (editorCell.contains(rowKey + "-" + column)) {
+            tableCell.setStyle(";-fx-text-fill: #f38400");
+        }
         if (column.equals("CPK")) {
             SimpleObjectProperty<String> stringSimpleObjectProperty = this.valueMap.get(rowKey + "-" + column);
             if (stringSimpleObjectProperty != null && stringSimpleObjectProperty.getValue() != null) {
                 String value = stringSimpleObjectProperty.getValue();
-                if (StringUtils.isNumeric(value) && Double.valueOf(value) > 2000) {
+                if (StringUtils.isNumeric(value) && Double.valueOf(value) > 60) {
                     tableCell.setStyle("-fx-background-color:#ea2028;-fx-text-fill: #ffffff");
                 } else {
                     tableCell.setStyle("-fx-background-color:#51b511;-fx-text-fill: #ffffff");
@@ -305,7 +311,21 @@ public class StatisticalTableModel implements NewTableModel {
                 }
             }
         }
-        valueMap.put(rowKey + "-" + columnName, new SimpleObjectProperty<>(value));
+        SourceObjectProperty valueProperty = new SourceObjectProperty<>(value);
+        if (columnName.equals(STATISTICAL_TITLE[6]) || columnName.equals(STATISTICAL_TITLE[7])) {
+            valueProperty.addListener((ov, b1, b2) -> {
+                if (!StringUtils.isNumeric((String) b2)) {
+                    valueProperty.set(b1);
+                    return;
+                }
+                if (!valueProperty.getSourceValue().equals(b2)) {
+                    editorCell.add(rowKey + "-" + columnName);
+                } else {
+                    editorCell.remove(rowKey + "-" + columnName);
+                }
+            });
+        }
+        valueMap.put(rowKey + "-" + columnName, valueProperty);
     }
 
     public SortedList<String> getStatisticalTableRowDataSortedList() {

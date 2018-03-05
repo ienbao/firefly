@@ -72,7 +72,12 @@ public class ChartUtils {
         }
     }
 
-    private void zoom(double newRate) {
+    /**
+     * method to zoom chart
+     *
+     * @param newRate new rate to be zoomed
+     */
+    public void zoom(double newRate) {
         if (newRate == 1) {
             xAxis.setUpperBound(originalXUpper);
             xAxis.setLowerBound(originalXLower);

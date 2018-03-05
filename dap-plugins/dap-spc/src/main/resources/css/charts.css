@@ -8,7 +8,6 @@
 .chart {
     -fx-font-family: Tahoma;
     -fx-font-size: 0.9em;
-    /*-fx-text-fill: #462300;*/
 }
 
 .chart-vertical-grid-lines {
@@ -121,9 +120,9 @@
     -fx-stroke-width: 1px;
 }
 
-.chart-series-area-fill {
-    /*-fx-fill: linear-gradient(to right, #ff875c, rgba(255, 255, 255, 0));*/
-    -fx-opacity: 0.2;
+.chart-fill-area-line {
+    /*-fx-stroke: transparent;*/
+    -fx-opacity: 0.5;
 }
 
 /*Bar Chart*/
@@ -135,6 +134,11 @@
     -fx-border-color: #e92822;
 }
 
+.chart-hidden-bar {
+    -fx-background-color: transparent;
+    -fx-border-width: 0px;
+}
+
 /* ====== CANDLE STICK CHART =========================================================== */
 .candlestick-tooltip-label {
     -fx-font-size: 0.75em;
@@ -144,7 +148,6 @@
 }
 
 .candlestick-average-line {
-    -fx-stroke: #6fc1be;
     -fx-stroke-width: 1px;
 }
 

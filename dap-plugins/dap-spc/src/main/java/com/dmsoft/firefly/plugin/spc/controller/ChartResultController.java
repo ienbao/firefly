@@ -9,6 +9,7 @@ import com.dmsoft.firefly.plugin.spc.charts.data.BoxAndWhiskerData;
 import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
 import com.dmsoft.firefly.plugin.spc.charts.shape.LineType;
+import com.dmsoft.firefly.plugin.spc.charts.utils.ColorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
@@ -26,6 +27,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.scene.chart.*;
 import javafx.scene.control.Tab;
+import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.*;
@@ -58,7 +60,7 @@ public class ChartResultController implements Initializable {
 
     private String textColor = "#e92822";
 
-    private ChartPanel<MultipleAxisXYChart> ndChartPane;
+    private ChartPanel<NDChart> ndChartPane;
     private ChartPanel<LinearChart> runChartPane;
     private ChartPanel<LinearChart> xBarChartPane;
     private ChartPanel<LinearChart> rangeChartPane;
@@ -67,19 +69,15 @@ public class ChartResultController implements Initializable {
     private ChartPanel<BoxPlotChart> boxChartPane;
     private ChartPanel<LinearChart> mrChartPane;
 
-//    private StackPane ndChart;
-    private MultipleAxisXYChart ndChart;
-    private XYBarChart baseChart;
-
     private List<XYChart.Data> annotationData = Lists.newArrayList();
 
     private RuleXYChartData ruleXYChartData = new RuleXYChartData();
     private Function rulePointFunc = (Function<PointRule, PointStyle>) pointRule -> {
         PointStyle pointStyle = new PointStyle();
         Double value = (Double) pointRule.getData().getYValue();
-        String color = pointRule.getNormalColor();
-        color = (value > 300) && pointRule.getActiveRule().contains("R1") ? "#e92822" : color;
-        pointStyle.setStyle("-fx-background-color: " + color);
+        Color color = pointRule.getNormalColor();
+        color = (value > 300) && pointRule.getActiveRule().contains("R1") ? Color.RED : color;
+        pointStyle.setStyle("-fx-background-color: " + ColorUtils.toRGBCode(color));
         return pointStyle;
     };
     private Function pointTooltipFunc = (Function<PointTooltip, String>) pointTooltip ->
@@ -137,9 +135,20 @@ public class ChartResultController implements Initializable {
         yAxis.setTickMarkVisible(false);
         yAxis.setMinorTickVisible(false);
 
-        baseChart = new XYBarChart(xAxis, yAxis);
-        ndChart = new MultipleAxisXYChart(baseChart);
-//        ndChart.setPrefSize(500, 250);
+        button.setSelectCallBack((name, selected, selectedNames) -> {
+            if (UIConstant.SPC_CHART_NDC_EXTERN_MENU[9].equalsIgnoreCase(name)) {
+                ObservableList<XYChart.Series> series = ndChartPane.getChart().getData();
+                series.forEach(oneSeries -> {
+                    ndChartPane.getChart().toggleBarSeries(oneSeries, selected);
+                });
+            } else if (UIConstant.SPC_CHART_NDC_EXTERN_MENU[10].equalsIgnoreCase(name)) {
+                ndChartPane.getChart().toggleAreaSeries(selected);
+            } else {
+                ndChartPane.getChart().toggleValueMarker(name, selected);
+            }
+        });
+
+        NDChart<Double, Double> ndChart = new NDChart(xAxis, yAxis);
         ndChartPane = new ChartPanel(ndChart);
         ndChartPane.getCustomPane().getChildren().add(button);
     }
@@ -347,43 +356,43 @@ public class ChartResultController implements Initializable {
             double value = random.nextInt(10);
             y[i] = value;
             barWidth[i] = (startValue + endValue) / 2;
-            System.out.println("start value: " + startValue);
-            System.out.println("end value: " + endValue);
-            System.out.println("bar width: " + (endValue - startValue));
-            System.out.println("value: " + value);
             barCategoryData1.setStartValue(startValue);
             barCategoryData1.setEndValue(endValue);
             barCategoryData1.setBarWidth(endValue - startValue);
             barCategoryData1.setValue(value);
             barCategoryData.add(barCategoryData1);
         }
-        String barColor = "#5fb222";
+        Color barColor = Color.BLUE;
         String seriesName = "A1:All";
         BarChartData<Double, Double> barChartData = new BarChartData<>(seriesName);
         barChartData.setBarData(barCategoryData);
         barChartData.setColor(barColor);
-        baseChart.createChartSeries(barChartData);
+        ndChartPane.getChart().createChartSeries(barChartData);
 
-        Double xi[] = new Double[]{1D, 4D, 7D, 10D, 13D, 16D, 19D, 22D, 25D, 28D};
-        Double yi[] = new Double[]{1D, 10D, 100D, 1000D, 2D, 20D, 30D, 40D, 200D, 2000D};
-        Double ids[] = new Double[]{1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D};
         XYChartData<Double, Double> xyChartData = new XYChartData();
-        xyChartData.setX(xi);
-        xyChartData.setY(yi);
-        xyChartData.setIds(ids);
-        xyChartData.setColor("#5fb222");
+        xyChartData.setX(x);
+        xyChartData.setY(y);
+        xyChartData.setColor(barColor);
         xyChartData.setSeriesName(seriesName);
+        ndChartPane.getChart().addAreaSeries(xyChartData);
 
-        final XYChart.Series<Number, Number> series = new XYChart.Series<>();
-        series.setName("Series 2");
-        series.getData().addAll(
-                new XYChart.Data<Number, Number>(0, 950),
-                new XYChart.Data<Number, Number>(200, 100),
-                new XYChart.Data<Number, Number>(500, 120),
-                new XYChart.Data<Number, Number>(750, 180),
-                new XYChart.Data<Number, Number>(1000, 200));
-
-        ndChart.createBackgroundChart(FXCollections.observableArrayList(series), "#5fb222", "CurveFittedAreaChart");
+        String[] lineNames = UIConstant.SPC_NDCCHART_LINE_NAME;
+        Random rand = new Random();
+        for (String lineName : lineNames) {
+            LineData lineData = new LineData();
+            lineData.setPlotOrientation(Orientation.VERTICAL);
+            LineType lineType = UIConstant.SPC_NDCCHART_LINE_NAME[4].equalsIgnoreCase(lineName) ?
+                    LineType.SOLID : LineType.DASHED;
+            String lineClass = lineType == LineType.SOLID ? "solid-line" : "dashed-line";
+            lineData.setTitle(seriesName);
+            lineData.setName(lineName);
+            lineData.setColor(Color.GREEN);
+            lineData.setLineClass(lineClass);
+            lineData.setLineType(lineType);
+            lineData.setValue(rand.nextInt(28));
+            ndChartPane.getChart().addValueMarker(lineData);
+        }
+        ndChartPane.activeChartDragging();
     }
 
     private void createBoxChartData() {
@@ -464,7 +473,7 @@ public class ChartResultController implements Initializable {
             String lineClass = lineType == LineType.SOLID ? "solid-line" : "dashed-line";
             lineData.setTitle(seriesName);
             lineData.setName(lineName);
-            lineData.setColor("#5fb222");
+            lineData.setColor(Color.GREEN);
             lineData.setLineClass(lineClass);
             lineData.setLineType(lineType);
             lineData.setValue(rand.nextInt(2000));
@@ -490,7 +499,7 @@ public class ChartResultController implements Initializable {
         xyChartData.setX(x);
         xyChartData.setY(y);
         xyChartData.setIds(ids);
-        xyChartData.setColor("#5fb222");
+        xyChartData.setColor(Color.GREEN);
         xyChartData.setSeriesName(seriesName);
         ruleXYChartData = new RuleXYChartData();
         ruleXYChartData.setXyChartData(xyChartData);
