@@ -18,6 +18,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -171,30 +172,29 @@ public class StatisticalTableModel implements NewTableModel {
 
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
-//        if (StringUtils.isBlank(column)) {
-//            String color = keyToColor.get(rowKey);
-//            if (!StringUtils.isBlank(color)) {
-//                tableCell.setStyle("-fx-background-color:#0f387d");
-//            }
-//            if (rowKey.contains("1")) {
-//                tableCell.getStyleClass().remove("error");
-//                tableCell.getStyleClass().add("error");
-//            }
-//        }
-//        SimpleObjectProperty<String> stringSimpleObjectProperty = this.valueMap.get(rowKey + "-" + column);
-//        if (stringSimpleObjectProperty != null) {
-//            String value = stringSimpleObjectProperty.getValue();
-//            if (value.equals("itemName2")) {
-//                tableCell.setStyle("-fx-background-color:#ea2028;-fx-text-fill: #ffffff");
-//            }
-////            if (value.equals("itemName2")) {
-////                tableCell.setStyle("-fx-text-fill: #4B910E");
-////            }
-//        }
-
-        if (rowKey.equals("key1") && column.equals("TestItem")) {
-            tableCell.setStyle("-fx-background-color:#ea2028;-fx-text-fill: #ffffff");
+        tableCell.setStyle(null);
+        tableCell.getStyleClass().remove("error");
+        if (StringUtils.isBlank(column)) {
+            String color = keyToColor.get(rowKey);
+            if (!StringUtils.isBlank(color)) {
+                tableCell.setStyle("-fx-background-color:#0f387d");
+            }
+            if (rowKey.contains("1")) {
+                tableCell.getStyleClass().remove("error");
+                tableCell.getStyleClass().add("error");
+            }
         }
+        SimpleObjectProperty<String> stringSimpleObjectProperty = this.valueMap.get(rowKey + "-" + column);
+        if (stringSimpleObjectProperty != null) {
+            String value = stringSimpleObjectProperty.getValue();
+            if (value.equals("itemName2")) {
+                tableCell.setStyle("-fx-background-color:#ea2028;-fx-text-fill: #ffffff");
+            }
+            if (value.contains("itemName1")) {
+                tableCell.setStyle("-fx-text-fill: #4B910E");
+            }
+        }
+
         return tableCell;
     }
 
