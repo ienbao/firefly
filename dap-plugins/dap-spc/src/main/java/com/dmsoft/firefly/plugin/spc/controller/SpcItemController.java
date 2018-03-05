@@ -3,11 +3,16 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.plugin.spc.dto.BasicSearchDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcLeftConfigDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
+import com.dmsoft.firefly.plugin.spc.service.impl.SpcLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -15,6 +20,7 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,11 +35,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.File;
 import java.net.URL;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -84,6 +93,11 @@ public class SpcItemController implements Initializable {
     private ComboBox group1;
     @FXML
     private ComboBox group2;
+    @FXML
+    private TextField subGroup;
+    @FXML
+    private TextField ndGroup;
+    private CheckBox box;
     private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
@@ -93,6 +107,7 @@ public class SpcItemController implements Initializable {
 
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
+    private SpcLeftConfigServiceImpl leftConfigService = new SpcLeftConfigServiceImpl();
 
     /**
      * init main controller
@@ -106,7 +121,7 @@ public class SpcItemController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initBtnIcon();
-        basicSearch.getChildren().add(new BasicSearchPane());
+        basicSearch.getChildren().add(new BasicSearchPane("Group1"));
         itemFilter.getTextField().setPromptText("Test Item");
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
                 filteredList.setPredicate(p -> p.getItem().contains(itemFilter.getTextField().getText()))
@@ -115,7 +130,7 @@ public class SpcItemController implements Initializable {
         itemTable.setOnMouseEntered(event -> {
             itemTable.focusModelProperty();
         });
-        CheckBox box = new CheckBox();
+        box = new CheckBox();
         box.setOnAction(event -> {
             if (items != null) {
                 for (ItemTableModel model : items) {
@@ -168,16 +183,12 @@ public class SpcItemController implements Initializable {
     }
 
     private void initComponentEvent() {
-        groupAdd.setOnAction(event -> basicSearch.getChildren().add(new BasicSearchPane()));
+        groupAdd.setOnAction(event -> basicSearch.getChildren().add(new BasicSearchPane("Group" + (basicSearch.getChildren().size() + 1))));
         groupRemove.setOnAction(event -> basicSearch.getChildren().clear());
         analysisBtn.setOnAction(event -> getAnalysisBtnEvent());
         help.setOnAction(event -> buildAdvanceHelpDia());
-        importBtn.setOnAction(event -> {
-
-        });
-        exportBtn.setOnAction(event -> {
-
-        });
+        importBtn.setOnAction(event -> importLeftConfig());
+        exportBtn.setOnAction(event -> exportLeftConfig());
         item.setCellFactory(new Callback<TableColumn<ItemTableModel, TestItemWithTypeDto>, TableCell<ItemTableModel, TestItemWithTypeDto>>() {
             public TableCell call(TableColumn<ItemTableModel, TestItemWithTypeDto> param) {
                 return new TableCell<ItemTableModel, TestItemWithTypeDto>() {
@@ -294,6 +305,11 @@ public class SpcItemController implements Initializable {
         }
     }
 
+    /**
+     * get selected test items
+     *
+     * @return test items
+     */
     public List<String> getSelectedItem() {
         List<String> selectItems = Lists.newArrayList();
         if (items != null) {
@@ -306,6 +322,11 @@ public class SpcItemController implements Initializable {
         return selectItems;
     }
 
+    /**
+     * get searchs
+     *
+     * @return list of search
+     */
     public List<String> getSearch() {
         List<String> search = Lists.newArrayList();
         if (basicTab.isSelected()) {
@@ -370,5 +391,116 @@ public class SpcItemController implements Initializable {
             }
         }
         return search;
+    }
+
+    private void importLeftConfig() {
+        String str = System.getProperty("user.home");
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Spc config import");
+        fileChooser.setInitialDirectory(new File(str));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JSON", "*.json")
+        );
+        Stage fileStage = null;
+        File file = fileChooser.showOpenDialog(fileStage);
+
+        if (file != null) {
+            clearLeftConfig();
+            SpcLeftConfigDto spcLeftConfigDto = leftConfigService.importSpcConfig(file);
+            if (spcLeftConfigDto != null) {
+                if (spcLeftConfigDto.getItems() != null && spcLeftConfigDto.getItems().size() > 0) {
+                    items.forEach(testItem -> {
+                        if (spcLeftConfigDto.getItems().contains(testItem.getItem())) {
+                            testItem.getSelector().setValue(true);
+                        }
+                    });
+                }
+                if (spcLeftConfigDto.getBasicSearchs() != null && spcLeftConfigDto.getBasicSearchs().size() > 0) {
+                    for (String title : spcLeftConfigDto.getBasicSearchs().keySet()) {
+                        List<BasicSearchDto> basicSearchDtos = spcLeftConfigDto.getBasicSearchs().get(title);
+                        BasicSearchPane basicSearchPane = new BasicSearchPane(title);
+                        if (basicSearchDtos != null && basicSearchDtos.size() > 0) {
+                            basicSearchDtos.forEach(basicSearchDto -> {
+                                basicSearchPane.setSearch(basicSearchDto.getTestItem(), basicSearchDto.getOperator(), basicSearchDto.getValue());
+                            });
+                        }
+                        basicSearch.getChildren().add(basicSearchPane);
+                    }
+                }
+                ndGroup.setText(spcLeftConfigDto.getNdNumber());
+                subGroup.setText(spcLeftConfigDto.getSubGroup());
+                advanceText.setText(spcLeftConfigDto.getAdvanceSearch());
+                group1.setValue(spcLeftConfigDto.getAutoGroup1());
+                group2.setValue(spcLeftConfigDto.getAutoGroup2());
+            }
+
+        }
+    }
+
+    private void exportLeftConfig() {
+        SpcLeftConfigDto leftConfigDto = new SpcLeftConfigDto();
+        leftConfigDto.setItems(getSelectedItem());
+        if (basicSearch.getChildren().size() > 0) {
+            LinkedHashMap<String, List<BasicSearchDto>> basicSearchDtos = Maps.newLinkedHashMap();
+
+            for (Node node : basicSearch.getChildren()) {
+                if (node instanceof BasicSearchPane) {
+                    BasicSearchPane basicSearchPane = ((BasicSearchPane) node);
+                    if (basicSearchPane.getChildren().size() > 0) {
+                        List<BasicSearchDto> dtos = Lists.newArrayList();
+                        for (Node n : basicSearchPane.getChildren()) {
+                            if (n instanceof SearchComboBox) {
+                                BasicSearchDto basicSearchDto = new BasicSearchDto();
+                                basicSearchDto.setTestItem(((SearchComboBox) n).getTestItem());
+                                basicSearchDto.setOperator(((SearchComboBox) n).getOperator());
+                                basicSearchDto.setValue(((SearchComboBox) n).getValue());
+                                dtos.add(basicSearchDto);
+                            }
+                        }
+                        basicSearchDtos.put(basicSearchPane.getTitle(), dtos);
+                    }
+                }
+            }
+            leftConfigDto.setBasicSearchs(basicSearchDtos);
+        }
+        if (advanceText.getText() != null) {
+            leftConfigDto.setAdvanceSearch(advanceText.getText().toString());
+        }
+        leftConfigDto.setNdNumber(ndGroup.getText());
+        leftConfigDto.setSubGroup(subGroup.getText());
+        if (group1.getValue() != null) {
+            leftConfigDto.setAutoGroup1(group1.getValue().toString());
+        }
+        if (group1.getValue() != null) {
+            leftConfigDto.setAutoGroup2(group2.getValue().toString());
+        }
+
+        String str = System.getProperty("user.home");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Spc Config export");
+        fileChooser.setInitialDirectory(new File(str));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JSON", "*.json")
+        );
+        Stage fileStage = null;
+        File file = fileChooser.showSaveDialog(fileStage);
+
+        if (file != null) {
+            leftConfigService.exportSpcConfig(leftConfigDto, file);
+        }
+    }
+
+    private void clearLeftConfig() {
+        box.setSelected(false);
+        for (ItemTableModel model : items) {
+            model.getSelector().setValue(false);
+        }
+        basicSearch.getChildren().clear();
+        subGroup.setText(null);
+        ndGroup.setText(null);
+        advanceText.setText(null);
+        group1.setValue(null);
+        group2.setValue(null);
     }
 }
