@@ -48,7 +48,7 @@ public class UserPreferenceServiceImpl implements UserPreferenceService {
         String result = null;
         for (UserPreferenceDto userPreferenceDto : list) {
             if (userPreferenceDto.getCode().equals(code) && userPreferenceDto.getUserName().equals(userName)) {
-                result = (String) userPreferenceDto.getValue();
+                result = mapper.toJson(userPreferenceDto.getValue());
                 break;
             }
         }
