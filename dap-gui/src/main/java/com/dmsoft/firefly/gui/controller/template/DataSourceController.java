@@ -169,8 +169,11 @@ public class DataSourceController implements Initializable {
                             });
                             deleteOne.setOnAction(event -> {
                                 List<String> deleteProjects = Lists.newArrayList();
+                                List<String> activeProject = envService.findActivatedProjectName();
+                                activeProject.remove(item.getValue());
                                 deleteProjects.add(item.getValue());
                                 sourceDataService.deleteProject(deleteProjects);
+                                envService.setActivatedProjectName(activeProject);
                                 chooseTableRowDataObservableList.remove(item);
                             });
                             this.setGraphic(hBox);
@@ -216,14 +219,17 @@ public class DataSourceController implements Initializable {
         });
         List<String> deleteProjects = Lists.newArrayList();
         delete.setOnAction(event -> {
+            List<String> activeProject = envService.findActivatedProjectName();
             Iterator<ChooseTableRowData> iterable = chooseTableRowDataObservableList.iterator();
             while (iterable.hasNext()) {
                 ChooseTableRowData rowData = iterable.next();
                 if (rowData.getSelector().isSelected()) {
+                    activeProject.remove(rowData.getValue());
                     deleteProjects.add(rowData.getValue());
                     iterable.remove();
                 }
             }
+            envService.setActivatedProjectName(activeProject);
             sourceDataService.deleteProject(deleteProjects);
         });
         addFile.setOnAction(event -> {
