@@ -50,7 +50,7 @@ public class SpcItemController implements Initializable {
     @FXML
     private Button importBtn;
     @FXML
-    private Button saveBtn;
+    private Button exportBtn;
     @FXML
     private Tab itemTab;
     @FXML
@@ -126,20 +126,13 @@ public class SpcItemController implements Initializable {
         is.setPrefSize(22, 22);
         is.setMinSize(22, 22);
         is.setMaxSize(22, 22);
-        is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
         is.setOnMousePressed(event -> createPopMenu(is, event));
+        is.getStyleClass().add("filter-normal");
+//        is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
 
-        Label label = new Label("Test Item");
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.getChildren().addAll(label);
-        hBox.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
-            hBox.getChildren().add(is);
-        });
-        hBox.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
-            hBox.getChildren().remove(is);
-        });
-        item.setGraphic(hBox);
+        item.setText("Test Item");
+        item.setGraphic(is);
+        item.getStyleClass().add("filter-header");
         item.setCellValueFactory(cellData -> cellData.getValue().itemProperty());
         initItemData();
     }
@@ -147,7 +140,7 @@ public class SpcItemController implements Initializable {
     private void initBtnIcon() {
         analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
         importBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_load_script_normal.png")));
-        saveBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_save_normal.png")));
+        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_save_normal.png")));
         itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_datasource_normal.png")));
         configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_config_normal.png")));
         timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
@@ -176,6 +169,12 @@ public class SpcItemController implements Initializable {
         groupRemove.setOnAction(event -> basicSearch.getChildren().clear());
         analysisBtn.setOnAction(event -> getAnalysisBtnEvent());
         help.setOnAction(event -> buildAdvanceHelpDia());
+        importBtn.setOnAction(event -> {
+
+        });
+        exportBtn.setOnAction(event -> {
+
+        });
     }
 
     private void initItemData() {
