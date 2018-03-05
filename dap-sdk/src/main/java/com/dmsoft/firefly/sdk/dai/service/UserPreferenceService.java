@@ -17,7 +17,7 @@ public interface UserPreferenceService {
      *
      * @param code     code
      * @param userName user name
-     * @return preference string
+     * @return preference json string, need decode by jsonMapper
      */
     String findPreferenceByUserId(String code, String userName);
 

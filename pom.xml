@@ -75,11 +75,13 @@
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
@@ -92,50 +94,12 @@
                 <version>${slf4j.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.dmsoft</groupId>
-                <artifactId>dap-gui</artifactId>
-                <version>${dap.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.dmsoft</groupId>
-                <artifactId>dap-sdk</artifactId>
-                <version>${dap.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.dmsoft</groupId>
-                <artifactId>bamboo</artifactId>
-                <version>${bamboo.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>${commons-lang3.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${commons-io.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>

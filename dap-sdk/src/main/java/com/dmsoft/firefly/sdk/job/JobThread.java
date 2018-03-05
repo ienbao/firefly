@@ -15,6 +15,9 @@ import com.dmsoft.firefly.sdk.job.core.JobWorkProcessListener;
 public class JobThread extends Thread implements ProcessMonitorAuto, JobWorkProcessListener {
 
 
+    private volatile ProcessMonitorListener listener;
+    private volatile ProcessResult processResult;
+
     public JobThread() {
     }
 
@@ -41,13 +44,9 @@ public class JobThread extends Thread implements ProcessMonitorAuto, JobWorkProc
     public JobThread(ThreadGroup group, Runnable target, String name) {
         super(group, target, name);
     }
-
     public JobThread(ThreadGroup group, Runnable target, String name, long stackSize) {
         super(group, target, name, stackSize);
     }
-
-    private volatile ProcessMonitorListener listener;
-    private volatile ProcessResult processResult;
 
     @Override
     public void push(ProcessResult processResult) {

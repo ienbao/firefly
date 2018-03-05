@@ -13,7 +13,9 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -21,14 +23,14 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
@@ -51,7 +53,7 @@ public class SpcItemController implements Initializable {
     @FXML
     private Button importBtn;
     @FXML
-    private Button saveBtn;
+    private Button exportBtn;
     @FXML
     private Tab itemTab;
     @FXML
@@ -61,7 +63,7 @@ public class SpcItemController implements Initializable {
     @FXML
     private TableColumn<ItemTableModel, CheckBox> select;
     @FXML
-    private TableColumn<ItemTableModel, String> item;
+    private TableColumn<ItemTableModel, TestItemWithTypeDto> item;
     @FXML
     private TableView itemTable;
     @FXML
@@ -127,28 +129,21 @@ public class SpcItemController implements Initializable {
         is.setPrefSize(22, 22);
         is.setMinSize(22, 22);
         is.setMaxSize(22, 22);
-        is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
         is.setOnMousePressed(event -> createPopMenu(is, event));
+        is.getStyleClass().add("filter-normal");
+//        is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
 
-        Label label = new Label("Test Item");
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.getChildren().addAll(label);
-        hBox.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
-            hBox.getChildren().add(is);
-        });
-        hBox.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
-            hBox.getChildren().remove(is);
-        });
-        item.setGraphic(hBox);
-        item.setCellValueFactory(cellData -> cellData.getValue().itemProperty());
+        item.setText("Test Item");
+        item.setGraphic(is);
+        item.getStyleClass().add("filter-header");
+        item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
         initItemData();
     }
 
     private void initBtnIcon() {
         analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
         importBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_load_script_normal.png")));
-        saveBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_save_normal.png")));
+        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_save_normal.png")));
         itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_datasource_normal.png")));
         configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_config_normal.png")));
         timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
@@ -177,8 +172,40 @@ public class SpcItemController implements Initializable {
         groupRemove.setOnAction(event -> basicSearch.getChildren().clear());
         analysisBtn.setOnAction(event -> getAnalysisBtnEvent());
         help.setOnAction(event -> buildAdvanceHelpDia());
+        importBtn.setOnAction(event -> {
+
+        });
+        exportBtn.setOnAction(event -> {
+
+        });
+        item.setCellFactory(new Callback<TableColumn<ItemTableModel, TestItemWithTypeDto>, TableCell<ItemTableModel, TestItemWithTypeDto>>() {
+            public TableCell call(TableColumn<ItemTableModel, TestItemWithTypeDto> param) {
+                return new TableCell<ItemTableModel, TestItemWithTypeDto>() {
+                    private ObservableValue ov;
+
+                    @Override
+                    public void updateItem(TestItemWithTypeDto item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!isEmpty()) {
+
+                            if (getTableRow() != null && item.getTestItemType().equals(TestItemType.VARIABLE)) {
+                                this.setStyle("-fx-text-fill: #009bff");
+                            }
+                            if (getTableRow() != null && StringUtils.isNotEmpty(itemFilter.getTextField().getText()) && item.getTestItemName().contains(itemFilter.getTextField().getText())) {
+                                this.setStyle("-fx-text-fill: red");
+                            }
+                            // Get fancy and change color based on data
+                            setText(item.getTestItemName());
+                        } else {
+                            setText(null);
+                        }
+                    }
+                };
+            }
+        });
     }
 
+    @SuppressWarnings("unchecked")
     private void initItemData() {
 //        List<TestItemDto> itemDtos = Lists.newArrayList();
 //        for (int i = 0; i < 40; i++) {

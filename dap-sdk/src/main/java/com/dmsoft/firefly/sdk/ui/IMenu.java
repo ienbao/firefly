@@ -9,30 +9,35 @@ public interface IMenu {
 
     /**
      * method to get plugin id
+     *
      * @return pluginId
      */
     String getPluginId();
 
     /**
      * method to get menu type
+     *
      * @return menu or menu item
      */
     MenuType getMenuType();
 
     /**
      * method to get location
+     *
      * @return location
      */
     String getLocation();
 
     /**
      * method to get parent location
+     *
      * @return parent location
      */
     String getParentLocation();
 
     /**
-     *method to get menu
+     * method to get menu
+     *
      * @return instance
      */
     <T> T getMenu();

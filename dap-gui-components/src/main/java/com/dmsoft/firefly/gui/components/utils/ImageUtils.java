@@ -16,7 +16,7 @@ public class ImageUtils {
     private static final double IMAGE_HEIGHT = 16;
 
 
-    public static final ImageView getImageView(InputStream url){
+    public static final ImageView getImageView(InputStream url) {
         ImageView imageReset = new ImageView(new Image(url));
         imageReset.setFitHeight(IMAGE_HEIGHT);
         imageReset.setFitWidth(IMAGE_WIDTH);

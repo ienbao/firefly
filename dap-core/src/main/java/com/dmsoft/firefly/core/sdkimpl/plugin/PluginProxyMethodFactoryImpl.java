@@ -17,6 +17,7 @@ import java.util.List;
  */
 public class PluginProxyMethodFactoryImpl implements PluginProxyMethodFactory {
     @Override
+    @SuppressWarnings("unchecked")
     public PluginProxyMethod proxyMethod(String pluginId, String className, String methodName) {
         PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
         Object o = pluginImageContext.getPluginInstance(pluginId, className);

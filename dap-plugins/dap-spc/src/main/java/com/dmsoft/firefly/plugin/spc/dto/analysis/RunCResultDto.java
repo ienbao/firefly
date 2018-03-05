@@ -11,7 +11,6 @@ public class RunCResultDto {
     private Double[] cls;
     private Double usl;
     private Double lsl;
-    private Boolean[] isAnalyzed;
 
     public Double[] getX() {
         return x;
@@ -51,13 +50,5 @@ public class RunCResultDto {
 
     public void setLsl(Double lsl) {
         this.lsl = lsl;
-    }
-
-    public Boolean[] getIsAnalyzed() {
-        return isAnalyzed;
-    }
-
-    public void setIsAnalyzed(Boolean[] isAnalyzed) {
-        this.isAnalyzed = isAnalyzed;
     }
 }

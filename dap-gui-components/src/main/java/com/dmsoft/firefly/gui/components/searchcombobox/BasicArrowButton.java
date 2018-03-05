@@ -11,6 +11,24 @@ import static com.dmsoft.firefly.gui.components.searchcombobox.BasicArrowButton.
  * @author Can Guan
  */
 public class BasicArrowButton extends StackPane {
+    /**
+     * constructor
+     *
+     * @param direction which direction arrow button to create
+     */
+    public BasicArrowButton(Direction direction) {
+        Direction dir = direction == null ? UP : direction;
+        Region arrow = new Region();
+        arrow.setFocusTraversable(false);
+        arrow.getStyleClass().setAll("arrow");
+        arrow.setMaxWidth(Region.USE_PREF_SIZE);
+        arrow.setMaxHeight(Region.USE_PREF_SIZE);
+        arrow.setMouseTransparent(true);
+        this.setFocusTraversable(false);
+        this.getStyleClass().setAll(dir.getStyleClass());
+        this.getChildren().add(arrow);
+    }
+
     public enum Direction {
         UP {
             @Override
@@ -35,23 +53,5 @@ public class BasicArrowButton extends StackPane {
         };
 
         abstract String getStyleClass();
-    }
-
-    /**
-     * constructor
-     *
-     * @param direction which direction arrow button to create
-     */
-    public BasicArrowButton(Direction direction) {
-        Direction dir = direction == null ? UP : direction;
-        Region arrow = new Region();
-        arrow.setFocusTraversable(false);
-        arrow.getStyleClass().setAll("arrow");
-        arrow.setMaxWidth(Region.USE_PREF_SIZE);
-        arrow.setMaxHeight(Region.USE_PREF_SIZE);
-        arrow.setMouseTransparent(true);
-        this.setFocusTraversable(false);
-        this.getStyleClass().setAll(dir.getStyleClass());
-        this.getChildren().add(arrow);
     }
 }

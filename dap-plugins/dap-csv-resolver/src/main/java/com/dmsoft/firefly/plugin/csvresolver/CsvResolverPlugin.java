@@ -33,6 +33,7 @@ public class CsvResolverPlugin extends Plugin {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void start() {
         MenuItem menuItem = new MenuItem("CsvResolver");
         menuItem.setId("csvResolver");

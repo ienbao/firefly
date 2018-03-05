@@ -6,6 +6,7 @@ package com.dmsoft.firefly.sdk.plugin;
 
 /**
  * enum class for plugin status
+ *
  * @author Can Guan
  */
 public enum PluginStatus {

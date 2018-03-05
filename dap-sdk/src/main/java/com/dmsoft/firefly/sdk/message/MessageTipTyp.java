@@ -6,5 +6,5 @@ package com.dmsoft.firefly.sdk.message;
  * @author Julia
  */
 public enum MessageTipTyp {
-   SUCCESS , WARN, INFO
+    SUCCESS, WARN, INFO
 }

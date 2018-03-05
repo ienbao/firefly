@@ -4,21 +4,12 @@
 package com.dmsoft.firefly.gui.components.utils;
 
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
-import javafx.scene.input.InputMethodEvent;
-import javafx.stage.Stage;
 
-import java.awt.event.TextEvent;
-import java.awt.event.TextListener;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.regex.Pattern;
 
 /**

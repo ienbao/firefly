@@ -16,6 +16,7 @@ import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.plugin.apis.IDataParser;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -107,18 +108,17 @@ public class ResolverSelectController implements Initializable {
             chooseTableRowData.setProgress(event.getPoint());
             controller.getDataSourceTable().refresh();
         });
-
-        new SwingWorker() {
-            @Override
-            protected Object doInBackground() throws Exception {
-                manager.doJobASyn(job, returnValue -> {
+        Platform.runLater(() -> {
+            manager.doJobASyn(job, returnValue -> {
+                if (returnValue != null && returnValue instanceof Throwable) {
+                    //TODO 弹出警告窗口
+                    controller.getChooseTableRowDataObservableList().remove(chooseTableRowData);
+                } else {
                     chooseTableRowData.setImport(false);
                     controller.getDataSourceTable().refresh();
-                }, filPath, resolverName);
-                return null;
-            }
-        }.execute();
-
+                }
+            }, filPath, resolverName);
+        });
         controller.getChooseTableRowDataObservableList().add(chooseTableRowData);
     }
 }

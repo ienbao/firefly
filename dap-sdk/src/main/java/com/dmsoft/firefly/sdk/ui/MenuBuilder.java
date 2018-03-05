@@ -21,15 +21,10 @@ public class MenuBuilder<T> implements IMenu {
     private String parentLocation;
     private T menu;
 
-    public enum MenuType {
-        MENU, MENU_ITEM;
-    }
-
     public MenuBuilder(String pluginId, MenuType menuType) {
         this.menuType = menuType;
         this.pluginId = pluginId;
     }
-
 
     public MenuBuilder(String pluginId, MenuType menuType, String location, String parentLocation) {
         Validate.notBlank(pluginId);
@@ -40,7 +35,6 @@ public class MenuBuilder<T> implements IMenu {
         this.location = location;
         this.parentLocation = parentLocation;
     }
-
 
     @Override
     public String getPluginId() {
@@ -62,6 +56,11 @@ public class MenuBuilder<T> implements IMenu {
         return parentLocation;
     }
 
+    public MenuBuilder setParentLocation(String parentLocation) {
+        this.parentLocation = parentLocation;
+        return this;
+    }
+
     @Override
     public <T> T getMenu() {
         return (T) this.menu;
@@ -80,8 +79,7 @@ public class MenuBuilder<T> implements IMenu {
         return this;
     }
 
-    public MenuBuilder setParentLocation(String parentLocation) {
-        this.parentLocation = parentLocation;
-        return this;
+    public enum MenuType {
+        MENU, MENU_ITEM;
     }
 }
