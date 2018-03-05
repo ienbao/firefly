@@ -2,6 +2,7 @@ package com.dmsoft.firefly.plugin.spc.model;
 
 import com.dmsoft.firefly.plugin.spc.utils.TableCheckBox;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -10,11 +11,12 @@ import javafx.beans.property.StringProperty;
  */
 public class ItemTableModel implements Comparable<TestItemWithTypeDto> {
     private TableCheckBox selector = new TableCheckBox();
-    private TestItemWithTypeDto itemDto;
+    private SimpleObjectProperty<TestItemWithTypeDto> itemDto;
     private StringProperty item;
 
     public ItemTableModel(TestItemWithTypeDto itemDto) {
-        this.itemDto = itemDto;
+
+        this.itemDto = new SimpleObjectProperty<TestItemWithTypeDto>(itemDto);
         this.item = new SimpleStringProperty(itemDto.getTestItemName());
     }
 
@@ -39,11 +41,15 @@ public class ItemTableModel implements Comparable<TestItemWithTypeDto> {
     }
 
     public TestItemWithTypeDto getItemDto() {
+        return itemDto.get();
+    }
+
+    public SimpleObjectProperty<TestItemWithTypeDto> itemDtoProperty() {
         return itemDto;
     }
 
     public void setItemDto(TestItemWithTypeDto itemDto) {
-        this.itemDto = itemDto;
+        this.itemDto.set(itemDto);
     }
 
     @Override

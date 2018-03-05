@@ -3,17 +3,25 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.plugin.spc.dto.BasicSearchDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcLeftConfigDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
+import com.dmsoft.firefly.plugin.spc.service.impl.SpcLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -21,18 +29,22 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.File;
 import java.net.URL;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -50,7 +62,7 @@ public class SpcItemController implements Initializable {
     @FXML
     private Button importBtn;
     @FXML
-    private Button saveBtn;
+    private Button exportBtn;
     @FXML
     private Tab itemTab;
     @FXML
@@ -60,7 +72,7 @@ public class SpcItemController implements Initializable {
     @FXML
     private TableColumn<ItemTableModel, CheckBox> select;
     @FXML
-    private TableColumn<ItemTableModel, String> item;
+    private TableColumn<ItemTableModel, TestItemWithTypeDto> item;
     @FXML
     private TableView itemTable;
     @FXML
@@ -81,6 +93,11 @@ public class SpcItemController implements Initializable {
     private ComboBox group1;
     @FXML
     private ComboBox group2;
+    @FXML
+    private TextField subGroup;
+    @FXML
+    private TextField ndGroup;
+    private CheckBox box;
     private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
@@ -90,6 +107,7 @@ public class SpcItemController implements Initializable {
 
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
+    private SpcLeftConfigServiceImpl leftConfigService = new SpcLeftConfigServiceImpl();
 
     /**
      * init main controller
@@ -103,7 +121,7 @@ public class SpcItemController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initBtnIcon();
-        basicSearch.getChildren().add(new BasicSearchPane());
+        basicSearch.getChildren().add(new BasicSearchPane("Group1"));
         itemFilter.getTextField().setPromptText("Test Item");
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
                 filteredList.setPredicate(p -> p.getItem().contains(itemFilter.getTextField().getText()))
@@ -112,7 +130,7 @@ public class SpcItemController implements Initializable {
         itemTable.setOnMouseEntered(event -> {
             itemTable.focusModelProperty();
         });
-        CheckBox box = new CheckBox();
+        box = new CheckBox();
         box.setOnAction(event -> {
             if (items != null) {
                 for (ItemTableModel model : items) {
@@ -126,28 +144,21 @@ public class SpcItemController implements Initializable {
         is.setPrefSize(22, 22);
         is.setMinSize(22, 22);
         is.setMaxSize(22, 22);
-        is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
         is.setOnMousePressed(event -> createPopMenu(is, event));
+        is.getStyleClass().add("filter-normal");
+//        is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
 
-        Label label = new Label("Test Item");
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.getChildren().addAll(label);
-        hBox.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
-            hBox.getChildren().add(is);
-        });
-        hBox.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
-            hBox.getChildren().remove(is);
-        });
-        item.setGraphic(hBox);
-        item.setCellValueFactory(cellData -> cellData.getValue().itemProperty());
+        item.setText("Test Item");
+        item.setGraphic(is);
+        item.getStyleClass().add("filter-header");
+        item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
         initItemData();
     }
 
     private void initBtnIcon() {
         analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
         importBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_load_script_normal.png")));
-        saveBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_save_normal.png")));
+        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_save_normal.png")));
         itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_datasource_normal.png")));
         configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_config_normal.png")));
         timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
@@ -172,10 +183,37 @@ public class SpcItemController implements Initializable {
     }
 
     private void initComponentEvent() {
-        groupAdd.setOnAction(event -> basicSearch.getChildren().add(new BasicSearchPane()));
+        groupAdd.setOnAction(event -> basicSearch.getChildren().add(new BasicSearchPane("Group" + (basicSearch.getChildren().size() + 1))));
         groupRemove.setOnAction(event -> basicSearch.getChildren().clear());
         analysisBtn.setOnAction(event -> getAnalysisBtnEvent());
         help.setOnAction(event -> buildAdvanceHelpDia());
+        importBtn.setOnAction(event -> importLeftConfig());
+        exportBtn.setOnAction(event -> exportLeftConfig());
+        item.setCellFactory(new Callback<TableColumn<ItemTableModel, TestItemWithTypeDto>, TableCell<ItemTableModel, TestItemWithTypeDto>>() {
+            public TableCell call(TableColumn<ItemTableModel, TestItemWithTypeDto> param) {
+                return new TableCell<ItemTableModel, TestItemWithTypeDto>() {
+                    private ObservableValue ov;
+
+                    @Override
+                    public void updateItem(TestItemWithTypeDto item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!isEmpty()) {
+
+                            if (getTableRow() != null && item.getTestItemType().equals(TestItemType.VARIABLE)) {
+                                this.setStyle("-fx-text-fill: #009bff");
+                            }
+                            if (getTableRow() != null && StringUtils.isNotEmpty(itemFilter.getTextField().getText()) && item.getTestItemName().contains(itemFilter.getTextField().getText())) {
+                                this.setStyle("-fx-text-fill: red");
+                            }
+                            // Get fancy and change color based on data
+                            setText(item.getTestItemName());
+                        } else {
+                            setText(null);
+                        }
+                    }
+                };
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -213,38 +251,44 @@ public class SpcItemController implements Initializable {
     @Deprecated
     private List<SpcStatsDto> initData() {
         List<SpcStatsDto> spcStatsDtoList = Lists.newArrayList();
-        for (int i = 0; i < 100; i++) {
+        Random random = new Random();
+        int k = random.nextInt(100);
+        for (int i = 0; i < k; i++) {
             SpcStatsDto statisticalResultDto = new SpcStatsDto();
             statisticalResultDto.setKey("key" + i);
-            SpcStatsResultDto spcStatsResultDto = new SpcStatsResultDto();
-            statisticalResultDto.setStatsResultDto(spcStatsResultDto);
             statisticalResultDto.setItemName("itemName" + i);
             statisticalResultDto.setCondition("itemName > 22");
-            statisticalResultDto.getStatsResultDto().setSamples(343.2);
-            statisticalResultDto.getStatsResultDto().setAvg(32.2);
-            statisticalResultDto.getStatsResultDto().setMax(312d);
-            statisticalResultDto.getStatsResultDto().setMin(34d);
-            statisticalResultDto.getStatsResultDto().setStDev(124d);
-            statisticalResultDto.getStatsResultDto().setLsl(35d);
-            statisticalResultDto.getStatsResultDto().setUsl(21d);
-            statisticalResultDto.getStatsResultDto().setCenter(53d);
-            statisticalResultDto.getStatsResultDto().setRange(13d);
-            statisticalResultDto.getStatsResultDto().setLcl(452d);
-            statisticalResultDto.getStatsResultDto().setUcl(323d);
-            statisticalResultDto.getStatsResultDto().setKurtosis(234d);
-            statisticalResultDto.getStatsResultDto().setCpk(234d);
-            statisticalResultDto.getStatsResultDto().setSkewness(6d);
-            statisticalResultDto.getStatsResultDto().setCa(43.5);
-            statisticalResultDto.getStatsResultDto().setCp(35.76);
-            statisticalResultDto.getStatsResultDto().setCpl(34.7);
-            statisticalResultDto.getStatsResultDto().setCpu(324.67);
-            statisticalResultDto.getStatsResultDto().setWithinPPM(324.6);
-            statisticalResultDto.getStatsResultDto().setOverallPPM(343.65);
-            statisticalResultDto.getStatsResultDto().setPp(342.76);
-            statisticalResultDto.getStatsResultDto().setPpk(34.5);
-            statisticalResultDto.getStatsResultDto().setPpl(343.5);
-            statisticalResultDto.getStatsResultDto().setPpu(324.87);
             spcStatsDtoList.add(statisticalResultDto);
+            SpcStatsResultDto spcStatsResultDto = new SpcStatsResultDto();
+            statisticalResultDto.setStatsResultDto(spcStatsResultDto);
+            int m = random.nextInt(k);
+            if (m > i) {
+                statisticalResultDto.getStatsResultDto().setSamples(m + 2.1);
+            }
+            statisticalResultDto.getStatsResultDto().setAvg(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setMax(m + 312.7);
+            statisticalResultDto.getStatsResultDto().setMin(m + 34.8);
+            statisticalResultDto.getStatsResultDto().setStDev(m + 124.6);
+            statisticalResultDto.getStatsResultDto().setLsl(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setUsl(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setCenter(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setRange(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setLcl(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setUcl(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setKurtosis(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setCpk(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setSkewness(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setCa(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setCp(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setCpl(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setCpu(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setWithinPPM(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setOverallPPM(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setPp(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setPpk(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setPpl(m + 32.2);
+            statisticalResultDto.getStatsResultDto().setPpu(m + 32.2);
+
         }
         return spcStatsDtoList;
     }
@@ -261,6 +305,11 @@ public class SpcItemController implements Initializable {
         }
     }
 
+    /**
+     * get selected test items
+     *
+     * @return test items
+     */
     public List<String> getSelectedItem() {
         List<String> selectItems = Lists.newArrayList();
         if (items != null) {
@@ -273,6 +322,11 @@ public class SpcItemController implements Initializable {
         return selectItems;
     }
 
+    /**
+     * get searchs
+     *
+     * @return list of search
+     */
     public List<String> getSearch() {
         List<String> search = Lists.newArrayList();
         if (basicTab.isSelected()) {
@@ -337,5 +391,116 @@ public class SpcItemController implements Initializable {
             }
         }
         return search;
+    }
+
+    private void importLeftConfig() {
+        String str = System.getProperty("user.home");
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Spc config import");
+        fileChooser.setInitialDirectory(new File(str));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JSON", "*.json")
+        );
+        Stage fileStage = null;
+        File file = fileChooser.showOpenDialog(fileStage);
+
+        if (file != null) {
+            clearLeftConfig();
+            SpcLeftConfigDto spcLeftConfigDto = leftConfigService.importSpcConfig(file);
+            if (spcLeftConfigDto != null) {
+                if (spcLeftConfigDto.getItems() != null && spcLeftConfigDto.getItems().size() > 0) {
+                    items.forEach(testItem -> {
+                        if (spcLeftConfigDto.getItems().contains(testItem.getItem())) {
+                            testItem.getSelector().setValue(true);
+                        }
+                    });
+                }
+                if (spcLeftConfigDto.getBasicSearchs() != null && spcLeftConfigDto.getBasicSearchs().size() > 0) {
+                    for (String title : spcLeftConfigDto.getBasicSearchs().keySet()) {
+                        List<BasicSearchDto> basicSearchDtos = spcLeftConfigDto.getBasicSearchs().get(title);
+                        BasicSearchPane basicSearchPane = new BasicSearchPane(title);
+                        if (basicSearchDtos != null && basicSearchDtos.size() > 0) {
+                            basicSearchDtos.forEach(basicSearchDto -> {
+                                basicSearchPane.setSearch(basicSearchDto.getTestItem(), basicSearchDto.getOperator(), basicSearchDto.getValue());
+                            });
+                        }
+                        basicSearch.getChildren().add(basicSearchPane);
+                    }
+                }
+                ndGroup.setText(spcLeftConfigDto.getNdNumber());
+                subGroup.setText(spcLeftConfigDto.getSubGroup());
+                advanceText.setText(spcLeftConfigDto.getAdvanceSearch());
+                group1.setValue(spcLeftConfigDto.getAutoGroup1());
+                group2.setValue(spcLeftConfigDto.getAutoGroup2());
+            }
+
+        }
+    }
+
+    private void exportLeftConfig() {
+        SpcLeftConfigDto leftConfigDto = new SpcLeftConfigDto();
+        leftConfigDto.setItems(getSelectedItem());
+        if (basicSearch.getChildren().size() > 0) {
+            LinkedHashMap<String, List<BasicSearchDto>> basicSearchDtos = Maps.newLinkedHashMap();
+
+            for (Node node : basicSearch.getChildren()) {
+                if (node instanceof BasicSearchPane) {
+                    BasicSearchPane basicSearchPane = ((BasicSearchPane) node);
+                    if (basicSearchPane.getChildren().size() > 0) {
+                        List<BasicSearchDto> dtos = Lists.newArrayList();
+                        for (Node n : basicSearchPane.getChildren()) {
+                            if (n instanceof SearchComboBox) {
+                                BasicSearchDto basicSearchDto = new BasicSearchDto();
+                                basicSearchDto.setTestItem(((SearchComboBox) n).getTestItem());
+                                basicSearchDto.setOperator(((SearchComboBox) n).getOperator());
+                                basicSearchDto.setValue(((SearchComboBox) n).getValue());
+                                dtos.add(basicSearchDto);
+                            }
+                        }
+                        basicSearchDtos.put(basicSearchPane.getTitle(), dtos);
+                    }
+                }
+            }
+            leftConfigDto.setBasicSearchs(basicSearchDtos);
+        }
+        if (advanceText.getText() != null) {
+            leftConfigDto.setAdvanceSearch(advanceText.getText().toString());
+        }
+        leftConfigDto.setNdNumber(ndGroup.getText());
+        leftConfigDto.setSubGroup(subGroup.getText());
+        if (group1.getValue() != null) {
+            leftConfigDto.setAutoGroup1(group1.getValue().toString());
+        }
+        if (group1.getValue() != null) {
+            leftConfigDto.setAutoGroup2(group2.getValue().toString());
+        }
+
+        String str = System.getProperty("user.home");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Spc Config export");
+        fileChooser.setInitialDirectory(new File(str));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JSON", "*.json")
+        );
+        Stage fileStage = null;
+        File file = fileChooser.showSaveDialog(fileStage);
+
+        if (file != null) {
+            leftConfigService.exportSpcConfig(leftConfigDto, file);
+        }
+    }
+
+    private void clearLeftConfig() {
+        box.setSelected(false);
+        for (ItemTableModel model : items) {
+            model.getSelector().setValue(false);
+        }
+        basicSearch.getChildren().clear();
+        subGroup.setText(null);
+        ndGroup.setText(null);
+        advanceText.setText(null);
+        group1.setValue(null);
+        group2.setValue(null);
     }
 }

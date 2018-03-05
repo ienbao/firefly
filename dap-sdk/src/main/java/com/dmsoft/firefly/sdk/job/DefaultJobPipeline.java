@@ -29,10 +29,10 @@ public class DefaultJobPipeline implements JobPipeline {
     public DefaultJobPipeline(JobDoComplete doComplete, ExecutorService executorService, List<JobEventListener> jobEventListeners, Job session) {
         this.doComplete = doComplete;
         this.executorService = executorService;
+        this.session = session;
         head = new HeadContext(this, doComplete);
         tail = new TailContext(this, doComplete);
         this.jobEventListeners = jobEventListeners;
-        this.session = session;
 
         head.next = tail;
         tail.prev = head;

@@ -19,11 +19,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 
@@ -176,6 +179,9 @@ public class StatisticalResultController implements Initializable {
         if (statisticalTableModel.getStatisticalTableRowDataSortedList() != null) {
             Map<String, SimpleObjectProperty<Boolean>> checkMap = statisticalTableModel.getCheckMap();
             for (String key : statisticalTableModel.getStatisticalTableRowDataSortedList()) {
+                if (statisticalTableModel.getEmptyResultKeys().contains(key)) {
+                    continue;
+                }
                 if (checkMap.get(key) != null) {
                     checkMap.get(key).set(statisticalTableModel.getAllCheckBox().isSelected());
                 } else {
@@ -204,8 +210,8 @@ public class StatisticalResultController implements Initializable {
 
         @Override
         public void handleAction(String rowKey, ActionEvent event) {
-            statisticalTableModel.setRowColor(rowKey, "afdafd");
-            System.out.println("select color");
+            statisticalTableModel.setRowColor(rowKey, Color.ORANGE);
+            statisticalResultTb.refresh();
         }
     }
 

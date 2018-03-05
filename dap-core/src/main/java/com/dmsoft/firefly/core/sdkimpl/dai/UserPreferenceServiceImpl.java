@@ -37,6 +37,9 @@ public class UserPreferenceServiceImpl implements UserPreferenceService {
 
     }
 
+    /*
+     * preference json string, need decode by jsonMapper
+     */
     @Override
     public String findPreferenceByUserId(String code, String userName) {
         String json = JsonFileUtil.readJsonFile(parentPath, fileName);

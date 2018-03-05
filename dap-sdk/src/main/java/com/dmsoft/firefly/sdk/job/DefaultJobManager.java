@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 
@@ -30,9 +31,9 @@ public class DefaultJobManager implements JobManager {
     private Map<String, InitJobPipeline> jobMap = Maps.newConcurrentMap();
     private Map<String, List<JobEventListener>> jobEvent = Maps.newConcurrentMap();
     private Logger logger = LoggerFactory.getLogger(DefaultJobManager.class);
-//    private ExecutorService service = new JobThreadPoolExecutor(5, 5,
-//                                      0L, TimeUnit.MILLISECONDS,
-//                                      new LinkedBlockingQueue<Runnable>(), new DefaultThreadFactory());
+    private ExecutorService service = new JobThreadPoolExecutor(5, 5,
+                                      0L, TimeUnit.MILLISECONDS,
+                                      new LinkedBlockingQueue<Runnable>(), new DefaultThreadFactory());
 
     @Override
     public synchronized void initializeJob(String jobName, InitJobPipeline pipeline) {
@@ -149,14 +150,14 @@ public class DefaultJobManager implements JobManager {
 
             @Override
             public void run() {
-                DefaultJobPipeline defaultJobPipeline = new DefaultJobPipeline(complete, null, jobEvent.containsKey(job.getJobName()) ? jobEvent.get(job.getJobName()) : Lists.newArrayList(), job);
+                DefaultJobPipeline defaultJobPipeline = new DefaultJobPipeline(complete, service, jobEvent.containsKey(job.getJobName()) ? jobEvent.get(job.getJobName()) : Lists.newArrayList(), job);
                 jobMap.get(job.getJobName()).initJobPipeline(defaultJobPipeline);
                 defaultJobPipeline.fireDoJob(object);
             }
         };
         thread.addProcessMonitorListener(job.getProcessMonitorListener());
-        thread.start();
-//        service.execute(thread);
+//        thread.start();
+        service.execute(thread);
     }
 
     @Override
@@ -175,14 +176,14 @@ public class DefaultJobManager implements JobManager {
             public void run() {
                 DefaultJobPipeline defaultJobPipeline = new DefaultJobPipeline(returnValue -> {
                     logger.info(job.getJobId() + " do complete.");
-                }, null, jobEvent.containsKey(job.getJobName()) ? jobEvent.get(job.getJobName()) : Lists.newArrayList(), job);
+                }, service, jobEvent.containsKey(job.getJobName()) ? jobEvent.get(job.getJobName()) : Lists.newArrayList(), job);
                 jobMap.get(job.getJobName()).initJobPipeline(defaultJobPipeline);
                 defaultJobPipeline.fireDoJob(object);
             }
         };
         thread.addProcessMonitorListener(job.getProcessMonitorListener());
-        thread.start();
-//        service.execute(thread);
+//        thread.start();
+        service.execute(thread);
     }
 
     public ExecutorService getExecutorService() {

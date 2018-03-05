@@ -32,16 +32,24 @@ public class GuiApplication extends Application {
         DAPApplication.run(Lists.newArrayList("com.dmsoft.dap.SpcPlugin", "com.dmsoft.dap.GrrPlugin", "com.dmsoft.dap.CsvResolverPlugin"));
         RuntimeContext.registerBean(IMessageManager.class, new MessageManagerFactory());
 
-        RuntimeContext.getBean(EnvService.class).setLanguageType(LanguageType.EN);
+        LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+        if (languageType == null) {
+            RuntimeContext.getBean(EnvService.class).setLanguageType(LanguageType.EN);
+        } else {
+            RuntimeContext.getBean(EnvService.class).setLanguageType(RuntimeContext.getBean(EnvService.class).getLanguageType());
+        }
 
         MenuFactory.initMenu();
-       /* FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("view/app_menu.fxml"), ResourceBundleUtils.getLanguageType());
-        FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getClassLoader().getResource("view/main.fxml"), ResourceBundleUtils.getLanguageType());*/
+
         FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/app_menu.fxml");
         FXMLLoader fxmlLoader1 = GuiFxmlAndLanguageUtils.getLoaderFXML("view/main.fxml");
 
         Pane root = fxmlLoader.load();
         Pane main = fxmlLoader1.load();
+
+        MenuFactory.setMainController(fxmlLoader1.getController());
+        MenuFactory.setAppController(fxmlLoader.getController());
+
         primaryStage = WindowFactory.createFullWindow("platform_gui", root, main, getClass().getClassLoader().getResource("css/platform_app.css").toExternalForm());
         primaryStage.show();
         initJob();
