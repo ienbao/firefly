@@ -3,9 +3,11 @@
  */
 package com.dmsoft.firefly.plugin.spc.model;
 
-import com.dmsoft.firefly.gui.components.table.TableModel;
+import com.dmsoft.firefly.gui.components.table.NewTableModel;
+import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -13,13 +15,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableView;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
 /**
  * Created by Ethan.Yang on 2018/2/12.
  */
-public class StatisticalTableModel implements TableModel {
+public class StatisticalTableModel implements NewTableModel {
     private static final String[] STATISTICAL_TITLE = UIConstant.SPC_SR_ALL;
     private ObservableList<String> columnKey = FXCollections.observableArrayList(Arrays.asList(STATISTICAL_TITLE));
     private ObservableList<String> rowKey = FXCollections.observableArrayList();
@@ -33,6 +39,12 @@ public class StatisticalTableModel implements TableModel {
     private SortedList<String> statisticalTableRowDataSortedList;
     private Map<String, String> keyToTestItemMap = Maps.newHashMap();
 
+    private List<TableMenuRowEvent> menuRowEvents;
+    private CheckBox allCheckBox;
+
+    private Map<String, String> keyToColor = Maps.newHashMap();
+    private TableView<String> tableView;
+
     /**
      * constructor
      */
@@ -40,6 +52,7 @@ public class StatisticalTableModel implements TableModel {
         columnKey.add(0, "");
         statisticalTableRowDataFilteredList = rowKey.filtered(p -> true);
         statisticalTableRowDataSortedList = new SortedList<>(statisticalTableRowDataFilteredList);
+        this.menuRowEvents = Lists.newArrayList();
     }
 
     /**
@@ -66,6 +79,7 @@ public class StatisticalTableModel implements TableModel {
         valueMap.clear();
         checkMap.clear();
         falseSet.clear();
+        keyToColor.clear();
     }
 
     /**
@@ -86,7 +100,6 @@ public class StatisticalTableModel implements TableModel {
      * @param result column name
      */
     public void updateStatisticalResultColumn(List<String> result) {
-        columnKey.remove(3, columnKey.size());
         columnKey.addAll(result);
     }
 
@@ -117,11 +130,6 @@ public class StatisticalTableModel implements TableModel {
     }
 
     @Override
-    public boolean isModified(String rowKey, String columnName, String value) {
-        return false;
-    }
-
-    @Override
     public boolean isCheckBox(String columnName) {
         if (columnName.isEmpty()) {
             return true;
@@ -131,45 +139,86 @@ public class StatisticalTableModel implements TableModel {
 
     @Override
     public ObjectProperty<Boolean> getCheckValue(String rowKey, String columnName) {
-        if (checkMap.get(rowKey + "-" + columnName) == null) {
+        if (checkMap.get(rowKey) == null) {
             SimpleObjectProperty<Boolean> b = new SimpleObjectProperty<>(false);
-            checkMap.put(rowKey + "-" + columnName, b);
-            falseSet.add(rowKey + "-" + columnName);
+            checkMap.put(rowKey, b);
+            falseSet.add(rowKey);
             allChecked.setValue(false);
             b.addListener((ov, b1, b2) -> {
                 if (!b2) {
-                    falseSet.add(rowKey + "-" + columnName);
+                    falseSet.add(rowKey);
                     allChecked.setValue(false);
                 } else {
-                    falseSet.remove(rowKey + "-" + columnName);
+                    falseSet.remove(rowKey);
                     if (falseSet.isEmpty()) {
                         allChecked.setValue(true);
                     }
                 }
             });
         }
-        return checkMap.get(rowKey + "-" + columnName);
+        return checkMap.get(rowKey);
     }
 
-    @Override
-    public void setAllSelected(boolean value, String columnName) {
-        for (ObjectProperty<Boolean> b : checkMap.values()) {
-            b.setValue(value);
-        }
-        if (value) {
-            falseSet.clear();
-            allChecked.setValue(true);
-        } else {
-            falseSet.addAll(checkMap.keySet());
-            if (!falseSet.isEmpty()) {
-                allChecked.setValue(false);
-            }
-        }
-    }
 
     @Override
     public ObjectProperty<Boolean> getAllCheckValue(String columnName) {
         return allChecked;
+    }
+
+    @Override
+    public List<TableMenuRowEvent> getMenuEventList() {
+        return menuRowEvents;
+    }
+
+    @Override
+    public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
+        tableCell.setStyle(null);
+        tableCell.getStyleClass().remove("error");
+        if (StringUtils.isBlank(column)) {
+            String color = keyToColor.get(rowKey);
+            if (!StringUtils.isBlank(color)) {
+                tableCell.setStyle("-fx-background-color:#0f387d");
+            }
+            if (rowKey.contains("1")) {
+                tableCell.getStyleClass().remove("error");
+                tableCell.getStyleClass().add("error");
+            }
+        }
+        SimpleObjectProperty<String> stringSimpleObjectProperty = this.valueMap.get(rowKey + "-" + column);
+        if (stringSimpleObjectProperty != null) {
+            String value = stringSimpleObjectProperty.getValue();
+            if (value.equals("itemName2")) {
+                tableCell.setStyle("-fx-background-color:#ea2028;-fx-text-fill: #ffffff");
+            }
+            if (value.contains("itemName1")) {
+                tableCell.setStyle("-fx-text-fill: #4B910E");
+            }
+        }
+
+        return tableCell;
+    }
+
+    @Override
+    public void setAllCheckBox(CheckBox checkBox) {
+        this.allCheckBox = checkBox;
+    }
+
+    @Override
+    public void setTableView(TableView<String> tableView) {
+        this.tableView = tableView;
+    }
+
+    public CheckBox getAllCheckBox() {
+        return allCheckBox;
+    }
+
+    /**
+     * add menu event
+     *
+     * @param tableMenuRowEvent event
+     */
+    public void addTableMenuEvent(TableMenuRowEvent tableMenuRowEvent) {
+        menuRowEvents.add(tableMenuRowEvent);
     }
 
     private void setValueMap(String rowKey, String columnName) {
@@ -234,4 +283,21 @@ public class StatisticalTableModel implements TableModel {
         valueMap.put(rowKey + "-" + columnName, new SimpleObjectProperty<>(value));
     }
 
+    public SortedList<String> getStatisticalTableRowDataSortedList() {
+        return statisticalTableRowDataSortedList;
+    }
+
+    public Map<String, SimpleObjectProperty<Boolean>> getCheckMap() {
+        return checkMap;
+    }
+
+    /**
+     * set row background color
+     *
+     * @param rowKey row key
+     * @param color  color
+     */
+    public void setRowColor(String rowKey, String color) {
+        keyToColor.put(rowKey, color);
+    }
 }

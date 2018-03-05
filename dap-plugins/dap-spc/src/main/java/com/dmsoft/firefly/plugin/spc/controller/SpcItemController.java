@@ -164,7 +164,7 @@ public class SpcItemController implements Initializable {
             MenuItem all = new MenuItem("All Test Items");
             all.setOnAction(event -> filteredList.setPredicate(p -> p.getItem().startsWith("")));
             MenuItem show = new MenuItem("Test Items with USL/LSL");
-            show.setOnAction(event -> filteredList.setPredicate(p -> p.getItemDto().getLsl() != null || p.getItemDto().getUsl() != null));
+            show.setOnAction(event -> filteredList.setPredicate(p -> StringUtils.isNotEmpty(p.getItemDto().getLsl()) || StringUtils.isNotEmpty(p.getItemDto().getUsl())));
             pop.getItems().addAll(all, show);
         }
         pop.show(is, e.getScreenX(), e.getScreenY());
