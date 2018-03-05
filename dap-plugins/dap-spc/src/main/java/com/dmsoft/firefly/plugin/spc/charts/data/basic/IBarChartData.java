@@ -1,5 +1,7 @@
 package com.dmsoft.firefly.plugin.spc.charts.data.basic;
 
+import javafx.scene.paint.Color;
+
 /**
  * Created by cherry on 2018/2/27.
  */
@@ -15,7 +17,7 @@ public interface IBarChartData<X, Y> {
 
     int getLen();
 
-    String getColor();
+    Color getColor();
 
     String getSeriesName();
 }

@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.spc.charts;
 
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.LineData;
+import com.dmsoft.firefly.plugin.spc.charts.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
 import javafx.beans.Observable;
@@ -79,8 +80,8 @@ public class ValueMarker<X, Y> {
         if (DAPStringUtils.isNotBlank(lineData.getLineClass())) {
             line.getStyleClass().setAll("line", lineData.getLineClass());
         }
-        if (DAPStringUtils.isNotBlank(lineData.getColor())) {
-            line.setStyle("-fx-stroke:" + lineData.getColor());
+        if (lineData.getColor() != null) {
+            line.setStyle("-fx-stroke:" + ColorUtils.toRGBCode(lineData.getColor()));
         }
 
         line.setOnMouseEntered(event -> {

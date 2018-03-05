@@ -1,32 +1,26 @@
 package com.dmsoft.firefly.plugin.chart;
 
-import com.dmsoft.firefly.plugin.spc.charts.XYBarChart;
+import com.dmsoft.firefly.plugin.spc.charts.NDChart;
 import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
 import com.dmsoft.firefly.plugin.spc.dto.chart.BarCategoryData;
 import com.dmsoft.firefly.plugin.spc.dto.chart.BarChartData;
 import com.google.common.collect.Lists;
 import javafx.application.Application;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
 /**
- * Created by cherry on 2018/2/27.
+ * Created by cherry on 2018/3/5.
  */
-public class XYBarChartApp extends Application {
-
+public class NDChartApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -47,31 +41,27 @@ public class XYBarChartApp extends Application {
             y[i] = value;
             barWidth[i] = (startValue + endValue) / 2;
             System.out.println("start value: " + startValue);
-            System.out.println("end value: " + endValue);
-            System.out.println("bar width: " + (endValue - startValue));
-            System.out.println("value: " + value);
+            System.out.println("value: " + y[i]);
             barCategoryData1.setStartValue(startValue);
             barCategoryData1.setEndValue(endValue);
             barCategoryData1.setBarWidth(endValue - startValue);
-            barCategoryData1.setValue(value);
+            barCategoryData1.setValue(y[i]);
             barCategoryData.add(barCategoryData1);
         }
 
-        String barColor = "#5fb222";
-//        String barColor = "#e92822";
+        Color barColor = Color.BLUEVIOLET;
         String seriesName = "A1:All";
         BarChartData<Double, Double> barChartData = new BarChartData<>(seriesName);
         barChartData.setBarData(barCategoryData);
         barChartData.setColor(barColor);
 
         XYChartData<Double, Double> xyChartData = new XYChartData();
-        xyChartData.setX(barWidth);
+        xyChartData.setX(x);
         xyChartData.setY(y);
         xyChartData.setColor(barColor);
 
-        XYBarChart<Double, Double> chart = new XYBarChart(xAxis, yAxis, barChartData);
-//        chart.addAreaSeries(barChartData);
-//        chart.addAreaSeries(xyChartData);
+        NDChart<Double, Double> chart = new NDChart(xAxis, yAxis, barChartData);
+        chart.addAreaSeries(xyChartData);
 
         VBox vBox = new VBox();
         HBox hBox = new HBox();
@@ -80,16 +70,6 @@ public class XYBarChartApp extends Application {
         vBox.getChildren().add(chart);
         vBox.getChildren().add(hBox);
 
-        saveBtn.setOnMouseClicked(event -> {
-            WritableImage image = chart.snapshot(new SnapshotParameters(), null);
-            try {
-                String filePath = "/Users/mac/Desktop/a.png";
-                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", new File(filePath));
-                System.out.println("保存成功!");
-            } catch (IOException ex) {
-                System.out.println("保存失败:" + ex.getMessage());
-            }
-        });
         Scene scene = new Scene(vBox, 600, 400);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/charts.css").toExternalForm());
@@ -97,6 +77,4 @@ public class XYBarChartApp extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
-
 }

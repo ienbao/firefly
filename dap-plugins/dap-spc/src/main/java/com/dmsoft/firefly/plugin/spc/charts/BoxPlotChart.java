@@ -1,7 +1,9 @@
 package com.dmsoft.firefly.plugin.spc.charts;
 
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxAndWhiskerData;
+import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBoxAndWhiskerData;
 import com.dmsoft.firefly.plugin.spc.charts.view.Candle;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import javafx.animation.FadeTransition;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -38,15 +40,19 @@ public class BoxPlotChart extends XYChart<Number, Number> {
      * @param yAxis Y Axis for this XY chart
      */
     public BoxPlotChart(Axis<Number> xAxis, Axis<Number> yAxis) {
-        this(xAxis, yAxis, FXCollections.observableArrayList());
+        this(xAxis, yAxis, null);
     }
 
     /**
      * Construct a new CandleStickChart with the given axis and data.
      */
-    public BoxPlotChart(Axis<Number> xAxis, Axis<Number> yAxis, ObservableList<Series<Number, Number>> data) {
+    public BoxPlotChart(Axis<Number> xAxis, Axis<Number> yAxis, IBoxAndWhiskerData data) {
         super(xAxis, yAxis);
-        setData(data);
+        if (data == null) {
+            setData(FXCollections.observableArrayList());
+        } else {
+            createChartSeries(data);
+        }
         setAnimated(false);
         xAxis.setAnimated(false);
         yAxis.setAnimated(false);
@@ -55,6 +61,47 @@ public class BoxPlotChart extends XYChart<Number, Number> {
     }
 
     // -------------- METHODS ------------------------------------------------------------------------------------------
+
+    public void createChartSeries(IBoxAndWhiskerData data) {
+        if (data == null) {
+            return;
+        }
+        XYChart.Series<Number, Number> series = buildSeries(data);
+        this.setSeriesDataStyleByDefault(series, data.getColor());
+        this.getData().add(series);
+    }
+
+    private Series buildSeries(IBoxAndWhiskerData data) {
+        XYChart.Series<Number, Number> series = new XYChart.Series<Number, Number>();
+        for (int i = 0; i < data.getLen(); i++) {
+            BoxAndWhiskerData boxAndWhiskerData = new BoxAndWhiskerData(
+                    data.getxPosByIndex(i),
+                    data.getQ3ByIndex(i),
+                    data.getQ1ByIndex(i),
+                    data.getMaxRegularValueByIndex(i),
+                    data.getMinRegularValueByIndex(i),
+                    data.getMedianByIndex(i));
+            series.getData().add(
+                    new XYChart.Data(
+                            data.getxPosByIndex(i),
+                            data.getQ3ByIndex(i),
+                            boxAndWhiskerData)
+            );
+        }
+        return series;
+    }
+
+    private void setSeriesDataStyleByDefault(XYChart.Series series, String color) {
+
+        ObservableList<Data<Number, Number>> data = series.getData();
+        series.getNode().getStyleClass().add("candlestick-average-line");
+        if (DAPStringUtils.isNotBlank(color)) {
+            series.getNode().setStyle("-fx-stroke: " + color);
+        }
+        data.forEach(dataItem -> {
+
+        });
+    }
 
     /**
      * Called to update and layout the content for the plot

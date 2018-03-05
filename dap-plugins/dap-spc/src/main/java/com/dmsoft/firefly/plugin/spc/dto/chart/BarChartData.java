@@ -2,6 +2,7 @@ package com.dmsoft.firefly.plugin.spc.dto.chart;
 
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBarChartData;
 import com.google.common.collect.Lists;
+import javafx.scene.paint.Color;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class BarChartData<X, Y> implements IBarChartData {
     //    Series index
     private int index;
     //    Series color
-    private String color;
+    private Color color;
     //    Series name
     private String seriesName;
 
@@ -78,7 +79,7 @@ public class BarChartData<X, Y> implements IBarChartData {
 //    }
 
     @Override
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 
@@ -95,7 +96,7 @@ public class BarChartData<X, Y> implements IBarChartData {
         this.index = index;
     }
 
-    public void setColor(String color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 

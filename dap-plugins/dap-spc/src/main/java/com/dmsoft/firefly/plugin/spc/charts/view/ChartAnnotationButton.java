@@ -6,6 +6,7 @@ import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Popup;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Created by cherry on 2018/2/27.
@@ -29,6 +31,7 @@ public class ChartAnnotationButton extends Button {
     private ImageView imageReset;
     private ListView<SimpleItemCheckModel> dataListView;
     private ObservableList<SimpleItemCheckModel> dataModels = FXCollections.observableArrayList();
+    private FilteredList<SimpleItemCheckModel> filteredData = new FilteredList(dataModels, s -> true);
 
     private ClearCallBack clearCallBack;
 
@@ -51,15 +54,13 @@ public class ChartAnnotationButton extends Button {
     }
 
     public void setData(List<String> data, int selectedIndex) {
-        if (data == null) {
-            dataListView.setItems(dataModels);
-            return;
+        if (data != null) {
+            for (int i = 0; i < data.size(); i++) {
+                boolean selected = (selectedIndex == i);
+                dataModels.add(new SimpleItemCheckModel(data.get(i), selected));
+            }
         }
-        for (int i = 0; i < data.size(); i++) {
-            boolean selected = (selectedIndex == i);
-            dataModels.add(new SimpleItemCheckModel(data.get(i), selected));
-        }
-        dataListView.setItems(dataModels);
+        dataListView.setItems(filteredData);
     }
 
     private void initComponent() {
@@ -71,7 +72,7 @@ public class ChartAnnotationButton extends Button {
         itemFilter = new TextField();
         imageReset = new ImageView(new Image("/images/icon_choose_one_gray.png"));
         dataListView = new ListView<>();
-        dataListView.setCellFactory( e -> this.buildListCell());
+        dataListView.setCellFactory(e -> this.buildListCell());
 
         HBox hBox = new HBox();
         hBox.getChildren().addAll(editBtn, clearBtn);
@@ -85,8 +86,20 @@ public class ChartAnnotationButton extends Button {
 
     private void initEvent() {
 
+        itemFilter.textProperty().addListener(obs -> {
+            String filter = itemFilter.getText();
+            if (filter == null || filter.length() == 0) {
+                filteredData.setPredicate(s -> true);
+            } else {
+                filteredData.setPredicate(s -> s.getItemName().contains(filter));
+            }
+        });
+
         dataListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         dataListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                return;
+            }
             newValue.setIsChecked(true);
             if (oldValue != null) {
                 oldValue.setIsChecked(false);
@@ -186,8 +199,12 @@ public class ChartAnnotationButton extends Button {
         ListCell<SimpleItemCheckModel> listCell = new ListCell<SimpleItemCheckModel>() {
             @Override
             public void updateItem(SimpleItemCheckModel item, boolean empty) {
+
                 super.updateItem(item, empty);
-                if (!empty && item != null) {
+                if (item == null || empty == true) {
+                    setGraphic(null);
+                    setText(null);
+                } else {
                     HBox cell;
                     Label label = new Label(item.getItemName());
                     if (item.isIsChecked()) {

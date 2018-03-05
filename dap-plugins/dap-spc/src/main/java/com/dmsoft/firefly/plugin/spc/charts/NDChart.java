@@ -1,8 +1,10 @@
 package com.dmsoft.firefly.plugin.spc.charts;
 
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBarChartData;
+import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.LineData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.PointTooltip;
+import com.dmsoft.firefly.plugin.spc.charts.utils.ColorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.utils.ReflectionUtils;
 import com.dmsoft.firefly.plugin.spc.dto.chart.BarCategoryData;
 import com.google.common.collect.Maps;
@@ -15,6 +17,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.css.*;
 import javafx.geometry.Orientation;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.Chart;
@@ -22,6 +25,7 @@ import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
 
@@ -31,8 +35,9 @@ import java.util.function.Function;
 /**
  * Created by cherry on 2018/3/1.
  */
-public class XYBarChart<X, Y> extends XYChart<X, Y> {
+public class NDChart<X, Y> extends XYChart<X, Y> {
 
+    private AreaSeriesNode<X, Y> areaSeriesNode = new AreaSeriesNode<>();
     private Map<Series, Map<Object, Data<X, Y>>> seriesCategoryMap = new HashMap<>();
     private Map<XYChart.Data, BarCategoryData<X, Y>> barCategoryDataMap = Maps.newHashMap();
     private Data<X, Y> dataItemBeingRemoved = null;
@@ -59,7 +64,7 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
      * @param xAxis X Axis for this XY chart
      * @param yAxis Y Axis for this XY chart
      */
-    public XYBarChart(Axis<X> xAxis, Axis<Y> yAxis) {
+    public NDChart(Axis<X> xAxis, Axis<Y> yAxis) {
         super(xAxis, yAxis);
         getStyleClass().add("bar-chart");
         setLegend(legend);
@@ -74,20 +79,20 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
         this.setLegendVisible(false);
     }
 
-    public XYBarChart(Axis<X> xAxis, Axis<Y> yAxis, IBarChartData<X, Y> barChartData) {
+    public NDChart(Axis<X> xAxis, Axis<Y> yAxis, IBarChartData<X, Y> barChartData) {
         this(xAxis, yAxis);
         this.createChartSeries(barChartData);
     }
 
     /**
-     * Construct a new XYBarChart with the given axis and data.
+     * Construct a new NDChart with the given axis and data.
      *
      * @param xAxis        The x axis to use
      * @param yAxis        The y axis to use
      * @param barChartData The data to use, this is the actual list used so any changes to it will be reflected in the chart
      * @param categoryGap  The gap to leave between bars in separate categories
      */
-    public XYBarChart(Axis<X> xAxis, Axis<Y> yAxis, IBarChartData<X, Y> barChartData, double categoryGap) {
+    public NDChart(Axis<X> xAxis, Axis<Y> yAxis, IBarChartData<X, Y> barChartData, double categoryGap) {
 
         this(xAxis, yAxis, barChartData);
         setCategoryGap(categoryGap);
@@ -120,17 +125,47 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
         return oneSeries;
     }
 
+    public void addAreaSeries(IXYChartData<X, Y> xyOneChartData) {
+        Group areaGroup = this.areaSeriesNode.buildAreaGroup(xyOneChartData, xyOneChartData.getColor());
+        areaGroup.setStyle("-fx-stroke: " + ColorUtils.toRGBCode(xyOneChartData.getColor()));
+        getPlotChildren().add(areaGroup);
+    }
+
+    private void paintAreaSeries() {
+        this.areaSeriesNode.paintAreaSeries(this);
+    }
+
     public void addValueMarker(LineData lineData) {
 
         Line line = valueMarker.buildValueMarker(lineData);
         getPlotChildren().add(line);
     }
 
-    private void setSeriesDataStyleByDefault(XYChart.Series series, String color) {
+    public void toggleValueMarker(String lineName, boolean showed) {
+
+        valueMarker.toggleValueMarker(lineName, showed);
+    }
+
+    public void toggleBarSeries(XYChart.Series<X, Y> series, boolean showed) {
+        series.getData().forEach(dataItem -> {
+            if (!showed) {
+                dataItem.getNode().getStyleClass().add("chart-hidden-bar");
+            } else {
+                dataItem.getNode().getStyleClass().remove("chart-hidden-bar");
+            }
+        });
+    }
+
+    public void toggleAreaSeries(boolean showed) {
+        this.areaSeriesNode.toggleAreaSeries(showed);
+    }
+
+    private void setSeriesDataStyleByDefault(XYChart.Series series, Color color) {
 
         ObservableList<Data<X, Y>> data = series.getData();
         data.forEach(dataItem -> {
-            dataItem.getNode().setStyle("-fx-background-color: " + color);
+            dataItem.getNode().getStyleClass().setAll("chart-bar");
+            dataItem.getNode().setStyle("-fx-bar-fill: " + ColorUtils.toRGBCode(color));
         });
     }
 
@@ -333,7 +368,9 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
 
     @Override
     protected void layoutPlotChildren() {
+        this.paintAreaSeries();
         this.paintBarPlot();
+        valueMarker.paintValueMaker(this);
     }
 
     private void paintBarPlot() {
@@ -470,7 +507,7 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
             ReflectionUtils.forceMethodCall(Chart.class, "animate", this,
                     new KeyFrame(Duration.ZERO,
                             new KeyValue((ObjectProperty<X>) ReflectionUtils.forceMethodCall(Data.class, "currentXProperty", item),
-                            (X) ReflectionUtils.forceMethodCall(Data.class, "getCurrentX", item))),
+                                    (X) ReflectionUtils.forceMethodCall(Data.class, "getCurrentX", item))),
                     new KeyFrame(Duration.millis(700),
                             new KeyValue((ObjectProperty<X>) ReflectionUtils.forceMethodCall(Data.class, "currentXProperty", item),
                                     item.getXValue(), Interpolator.EASE_BOTH))
@@ -546,15 +583,15 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
         }
 
         public Object getBean() {
-            return XYBarChart.this;
+            return NDChart.this;
         }
 
         public String getName() {
             return "barGap";
         }
 
-        public CssMetaData<XYBarChart<?, ?>, Number> getCssMetaData() {
-            return XYBarChart.StyleableProperties.BAR_GAP;
+        public CssMetaData<NDChart<?, ?>, Number> getCssMetaData() {
+            return NDChart.StyleableProperties.BAR_GAP;
         }
     };
 
@@ -582,7 +619,7 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
 
         @Override
         public Object getBean() {
-            return XYBarChart.this;
+            return NDChart.this;
         }
 
         @Override
@@ -590,8 +627,8 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
             return "categoryGap";
         }
 
-        public CssMetaData<XYBarChart<?, ?>, Number> getCssMetaData() {
-            return XYBarChart.StyleableProperties.CATEGORY_GAP;
+        public CssMetaData<NDChart<?, ?>, Number> getCssMetaData() {
+            return NDChart.StyleableProperties.CATEGORY_GAP;
         }
     };
 
@@ -613,32 +650,32 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
      * @treatAsPrivate implementation detail
      */
     private static class StyleableProperties {
-        private static final CssMetaData<XYBarChart<?, ?>, Number> BAR_GAP =
-                new CssMetaData<XYBarChart<?, ?>, Number>("-fx-bar-gap",
+        private static final CssMetaData<NDChart<?, ?>, Number> BAR_GAP =
+                new CssMetaData<NDChart<?, ?>, Number>("-fx-bar-gap",
                         SizeConverter.getInstance(), 4.0) {
 
                     @Override
-                    public boolean isSettable(XYBarChart<?, ?> node) {
+                    public boolean isSettable(NDChart<?, ?> node) {
                         return node.barGap == null || !node.barGap.isBound();
                     }
 
                     @Override
-                    public StyleableProperty<Number> getStyleableProperty(XYBarChart<?, ?> node) {
+                    public StyleableProperty<Number> getStyleableProperty(NDChart<?, ?> node) {
                         return (StyleableProperty<Number>) node.barGapProperty();
                     }
                 };
 
-        private static final CssMetaData<XYBarChart<?, ?>, Number> CATEGORY_GAP =
-                new CssMetaData<XYBarChart<?, ?>, Number>("-fx-category-gap",
+        private static final CssMetaData<NDChart<?, ?>, Number> CATEGORY_GAP =
+                new CssMetaData<NDChart<?, ?>, Number>("-fx-category-gap",
                         SizeConverter.getInstance(), 10.0) {
 
                     @Override
-                    public boolean isSettable(XYBarChart<?, ?> node) {
+                    public boolean isSettable(NDChart<?, ?> node) {
                         return node.categoryGap == null || !node.categoryGap.isBound();
                     }
 
                     @Override
-                    public StyleableProperty<Number> getStyleableProperty(XYBarChart<?, ?> node) {
+                    public StyleableProperty<Number> getStyleableProperty(NDChart<?, ?> node) {
                         return (StyleableProperty<Number>) node.categoryGapProperty();
                     }
                 };
@@ -661,7 +698,7 @@ public class XYBarChart<X, Y> extends XYChart<X, Y> {
      * @since JavaFX 8.0
      */
     public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
-        return XYBarChart.StyleableProperties.STYLEABLES;
+        return NDChart.StyleableProperties.STYLEABLES;
     }
 
     /**
