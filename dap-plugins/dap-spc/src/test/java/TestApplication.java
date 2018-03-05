@@ -3,11 +3,13 @@
  */
 
 import com.dmsoft.firefly.core.sdkimpl.dai.EnvServiceImpl;
+import com.dmsoft.firefly.core.sdkimpl.dai.UserPreferenceServiceImpl;
 import com.dmsoft.firefly.core.sdkimpl.dataframe.BasicDataFrameFactoryImpl;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.google.common.collect.Lists;
 import javafx.application.Application;
@@ -34,6 +36,7 @@ public class TestApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        UserPreferenceService userPreferenceService = new UserPreferenceServiceImpl();
         EnvService envService = new EnvServiceImpl();
         List<TestItemWithTypeDto> typeDtoList = Lists.newArrayList();
         for (int i = 0; i < 20; i++) {
@@ -44,10 +47,11 @@ public class TestApplication extends Application {
         envService.setTestItems(typeDtoList);
         DataFrameFactory dataFrameFactory = new BasicDataFrameFactoryImpl();
         RuntimeContext.registerBean(EnvService.class, envService);
+        RuntimeContext.registerBean(UserPreferenceService.class, userPreferenceService);
         RuntimeContext.registerBean(DataFrameFactory.class, dataFrameFactory);
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("view/spc.fxml"));
-        loader.setResources(ResourceBundle.getBundle("i18n.message_en_US"));
+        loader.setResources(ResourceBundle.getBundle("i18n.message_en_US_SPC"));
         Parent root = loader.load();
 
 
