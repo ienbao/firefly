@@ -240,7 +240,7 @@ public class SearchComboBox extends GridPane {
      * @param testItem test item
      */
     public void setTestItem(String testItem) {
-        this.testItemBox.setValue(testItem);
+        this.testItemBox.getEditor().setText(testItem);
     }
 
     public String getOperator() {

@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
  * spc plugin
  */
 public class SpcPlugin extends Plugin {
+    public static final String SPC_PLUGIN_NAME = "com.dmsoft.dap.SpcPlugin";
     private static final Logger logger = LoggerFactory.getLogger(SpcPlugin.class);
 
     @Override
@@ -31,10 +32,10 @@ public class SpcPlugin extends Plugin {
         SpcServiceImpl spcService = new SpcServiceImpl();
         SpcAnalysisServiceImpl spcAnalysisService = new SpcAnalysisServiceImpl();
         spcService.setAnalysisService(spcAnalysisService);
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.SpcPlugin",
+        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(SPC_PLUGIN_NAME,
                 "com.dmsoft.firefly.plugin.spc.service.SpcServiceImpl", spcService);
 
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.SpcPlugin",
+        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(SPC_PLUGIN_NAME,
                 "com.dmsoft.firefly.plugin.spc.service.SpcAnalysisServiceImpl", spcAnalysisService);
         logger.info("Plugin-SPC Initialized.");
     }

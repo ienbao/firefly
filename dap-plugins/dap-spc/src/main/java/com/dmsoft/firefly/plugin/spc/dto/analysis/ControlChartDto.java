@@ -10,7 +10,7 @@ public class ControlChartDto {
     private Double[] y;
     private Double[] ucl;
     private Double[] lcl;
-    private Double[] cl;
+    private Double cl;
 
     public Double[] getX() {
         return x;
@@ -44,11 +44,11 @@ public class ControlChartDto {
         this.lcl = lcl;
     }
 
-    public Double[] getCl() {
+    public Double getCl() {
         return cl;
     }
 
-    public void setCl(Double[] cl) {
+    public void setCl(Double cl) {
         this.cl = cl;
     }
 }
