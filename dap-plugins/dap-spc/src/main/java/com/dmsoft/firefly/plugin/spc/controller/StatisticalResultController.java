@@ -3,8 +3,8 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
-import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -13,6 +13,7 @@ import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
 import com.dmsoft.firefly.plugin.spc.model.StatisticalTableModel;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.google.common.collect.Lists;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,10 +23,7 @@ import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 
@@ -135,17 +133,18 @@ public class StatisticalResultController implements Initializable {
 //        statisticalResultTb.setItems(statisticalTableRowDataSortedList);
 //        statisticalTableRowDataSortedList.comparatorProperty().bind(statisticalResultTb.comparatorProperty());
         statisticalTableModel = new StatisticalTableModel();
-        TableViewWrapper wrapper = new TableViewWrapper(statisticalResultTb, statisticalTableModel);
-        ChooseColorMenuEvent colorMenuEvent = new ChooseColorMenuEvent();
-        wrapper.addTableRowEvent(colorMenuEvent);
-        List<String> editedStyleClass = new ArrayList<>();
-        List<String> errorStyleClass = new ArrayList<>();
-        errorStyleClass.add("error");
-        editedStyleClass.add("edited");
-        wrapper.addEditedCellStyleClass(editedStyleClass);
-        wrapper.addCustomCellStyleClass("GG", "HH", errorStyleClass);
+        this.initTableMenuEvent();
+        NewTableViewWrapper.decorate(statisticalResultTb, statisticalTableModel);
+//        TableViewWrapper wrapper = new TableViewWrapper(statisticalResultTb, statisticalTableModel);
 
-        wrapper.update();
+//        List<String> editedStyleClass = new ArrayList<>();
+//        List<String> errorStyleClass = new ArrayList<>();
+//        errorStyleClass.add("error");
+//        editedStyleClass.add("edited");
+//        wrapper.addEditedCellStyleClass(editedStyleClass);
+//        wrapper.addCustomCellStyleClass("GG", "HH", errorStyleClass);
+//
+//        wrapper.update();
 
         selectStatisticalResultName.addAll(Arrays.asList(UIConstant.SPC_CHOOSE_RESULT));
     }
@@ -154,6 +153,7 @@ public class StatisticalResultController implements Initializable {
         chooseColumnBtn.setOnAction(event -> getChooseColumnBtnEvent());
         filterTestItemTf.getTextField().textProperty().addListener((observable, oldValue, newValue) -> getFilterTestItemTfEvent());
         chooseDialogController.getChooseOkButton().setOnAction(event -> getChooseStatisticalResultEvent());
+        statisticalTableModel.getAllCheckBox().setOnAction(event -> getAllCheckBoxEvent());
     }
 
     private void getChooseColumnBtnEvent() {
@@ -167,15 +167,35 @@ public class StatisticalResultController implements Initializable {
 
     private void getChooseStatisticalResultEvent() {
         selectStatisticalResultName = chooseDialogController.getSelectResultName();
+        statisticalResultTb.getColumns().remove(3, statisticalResultTb.getColumns().size());
         statisticalTableModel.updateStatisticalResultColumn(selectStatisticalResultName);
         StageMap.closeStage("spcStatisticalResult");
+    }
+
+    private void getAllCheckBoxEvent() {
+        if (statisticalTableModel.getStatisticalTableRowDataSortedList() != null) {
+            Map<String, SimpleObjectProperty<Boolean>> checkMap = statisticalTableModel.getCheckMap();
+            for (String key : statisticalTableModel.getStatisticalTableRowDataSortedList()) {
+                if (checkMap.get(key) != null) {
+                    checkMap.get(key).set(statisticalTableModel.getAllCheckBox().isSelected());
+                } else {
+                    checkMap.put(key, new SimpleObjectProperty<>(statisticalTableModel.getAllCheckBox().isSelected()));
+                }
+            }
+        }
     }
 
     private void initBtnIcon() {
         chooseColumnBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
     }
 
-    class ChooseColorMenuEvent implements TableMenuRowEvent{
+    private void initTableMenuEvent() {
+        TableMenuRowEvent selectColor = new ChooseColorMenuEvent();
+        statisticalTableModel.addTableMenuEvent(selectColor);
+        statisticalResultTb.impl_updatePeer();
+    }
+
+    class ChooseColorMenuEvent implements TableMenuRowEvent {
 
         @Override
         public String getMenuName() {
@@ -184,6 +204,7 @@ public class StatisticalResultController implements Initializable {
 
         @Override
         public void handleAction(String rowKey, ActionEvent event) {
+            statisticalTableModel.setRowColor(rowKey, "afdafd");
             System.out.println("select color");
         }
     }
