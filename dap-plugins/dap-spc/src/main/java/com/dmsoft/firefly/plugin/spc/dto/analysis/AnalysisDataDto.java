@@ -10,15 +10,17 @@ import java.util.List;
  * @author Can Guan
  */
 public class AnalysisDataDto extends AbstractValueObject {
-    private List<String> dataList;
+    private List<Double> dataList;
     private String usl;
     private String lsl;
+    private Double ndcMax;
+    private Double ndcMin;
 
-    public List<String> getDataList() {
+    public List<Double> getDataList() {
         return dataList;
     }
 
-    public void setDataList(List<String> dataList) {
+    public void setDataList(List<Double> dataList) {
         this.dataList = dataList;
     }
 
@@ -36,5 +38,21 @@ public class AnalysisDataDto extends AbstractValueObject {
 
     public void setLsl(String lsl) {
         this.lsl = lsl;
+    }
+
+    public Double getNdcMax() {
+        return ndcMax;
+    }
+
+    public void setNdcMax(Double ndcMax) {
+        this.ndcMax = ndcMax;
+    }
+
+    public Double getNdcMin() {
+        return ndcMin;
+    }
+
+    public void setNdcMin(Double ndcMin) {
+        this.ndcMin = ndcMin;
     }
 }

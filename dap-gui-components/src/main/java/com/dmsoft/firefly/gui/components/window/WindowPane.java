@@ -26,43 +26,21 @@ import javafx.stage.WindowEvent;
 
 
 public class WindowPane extends GridPane {
-    private Stage stage;
-    private GridPane titlePane;
-    private Pane bodyPane;
-    private GridPane contentPane;
-
-    private Button minimizeBtn;
-    private Button maximizeBtn;
-    private Button closeBtn;
-
-    private Object cusTitle;
-
-    private WindowPaneController controller;
-
+    public static final int WINDOW_MODEL_FULL = 1;
+    public static final int WINDOW_MODEL_X = 2;
+    protected static final int TITLE_LEFT_PADDING_WIN = 10;
+    protected static final int TITLE_LEFT_PADDING_MAC = 15;
+    protected static final int STANDARD_MARGIN = 10;
+    protected static final int SHADOW_WIDTH = 10;
+    protected static final int BORDER_TITLE_HEIGHT = 30;
+    protected static final int DRAG_PADDING = 10;
+    protected static final int WINDOW_BUTTON_WIDTH = 30;
+    protected static final int WINDOW_TITLE_HEIGHT = 30;
     protected static String windowButtonClass = "";
     protected static String minimizeBtnStyleClass = "";
     protected static String maximizeBtnStyleClass = "";
     protected static String restoreBtnStyleClass = "";
     protected static String closeBtnStyleClass = "";
-
-    protected static final int TITLE_LEFT_PADDING_WIN = 10;
-    protected static final int TITLE_LEFT_PADDING_MAC = 15;
-
-    protected static final int STANDARD_MARGIN = 10;
-
-    protected static final int SHADOW_WIDTH = 10;
-    protected static final int BORDER_TITLE_HEIGHT = 30;
-
-    protected static final int DRAG_PADDING = 10;
-    protected static final int WINDOW_BUTTON_WIDTH = 30;
-    protected static final int WINDOW_TITLE_HEIGHT = 30;
-
-    private Effect shadowEffect = new DropShadow(BlurType.TWO_PASS_BOX, new Color(0, 0, 0, 0.2),
-            10, 0, 0, 0);
-
-    public static final int WINDOW_MODEL_FULL = 1;
-    public static final int WINDOW_MODEL_X = 2;
-    private int WINDOW_MODEL = WINDOW_MODEL_FULL;
 
     static {
         if (Platforms.IS_MAC_OSX || Platforms.IS_MAC) {
@@ -79,6 +57,19 @@ public class WindowPane extends GridPane {
             closeBtnStyleClass = "window-button-close";
         }
     }
+
+    private Stage stage;
+    private GridPane titlePane;
+    private Pane bodyPane;
+    private GridPane contentPane;
+    private Button minimizeBtn;
+    private Button maximizeBtn;
+    private Button closeBtn;
+    private Object cusTitle;
+    private WindowPaneController controller;
+    private Effect shadowEffect = new DropShadow(BlurType.TWO_PASS_BOX, new Color(0, 0, 0, 0.2),
+            10, 0, 0, 0);
+    private int WINDOW_MODEL = WINDOW_MODEL_FULL;
 
     public WindowPane(Stage stage, String title, Pane body) {
         this.stage = stage;
@@ -376,6 +367,10 @@ public class WindowPane extends GridPane {
         return stage;
     }
 
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
     public GridPane getTitlePane() {
         return titlePane;
     }
@@ -394,10 +389,6 @@ public class WindowPane extends GridPane {
 
     public WindowPaneController getController() {
         return controller;
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
     }
 }
 

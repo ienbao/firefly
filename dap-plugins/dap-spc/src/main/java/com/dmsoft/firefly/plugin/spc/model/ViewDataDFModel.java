@@ -119,9 +119,9 @@ public class ViewDataDFModel implements NewTableModel {
         if (!RangeUtils.isPass(dataFrame.getCellValue(rowKey, column), dataFrame.getTestItemWithTypeDto(column))) {
             tableCell.setStyle("-fx-background-color: red; -fx-text-fill: white");
         } else if (dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column)) && this.highLightRowKeys.contains(rowKey)) {
-            tableCell.setStyle("-fx-background-color: yellow; -fx-text-fill: #aaaaaa");
+            tableCell.setStyle("-fx-background-color: #f8d251; -fx-text-fill: #aaaaaa");
         } else if (this.highLightRowKeys.contains(rowKey)) {
-            tableCell.setStyle("-fx-background-color: yellow");
+            tableCell.setStyle("-fx-background-color: #f8d251");
         } else if (dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column))) {
             tableCell.setStyle("-fx-text-fill: #aaaaaa");
         }

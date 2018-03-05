@@ -34,11 +34,12 @@ public interface JobManager {
 
     @Deprecated
     void removeJobProcessListener(String jobName, ProcessMonitorListener listener);
+
     /**
      * doJobSyn
      *
-     * @param job job
-     * @param object  object
+     * @param job    job
+     * @param object object
      * @return Object
      */
     Object doJobSyn(Job job, Object... object);
@@ -46,7 +47,7 @@ public interface JobManager {
     /**
      * doJobSyn
      *
-     * @param job job
+     * @param job     job
      * @param object  object
      * @param timeout timeout
      * @param unit    unit
@@ -57,7 +58,7 @@ public interface JobManager {
     /**
      * doJobASyn
      *
-     * @param job  job
+     * @param job      job
      * @param object   object
      * @param complete complete
      */

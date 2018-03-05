@@ -12,7 +12,7 @@ public interface PluginUIContext {
     /**
      * method to register menu
      *
-     * @param menu         menu
+     * @param menu menu
      */
     void registerMenu(IMenu menu);
 

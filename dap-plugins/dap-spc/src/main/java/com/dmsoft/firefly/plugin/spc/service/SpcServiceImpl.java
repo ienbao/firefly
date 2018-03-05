@@ -13,6 +13,7 @@ import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionCode;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.Validate;
 
@@ -36,19 +37,29 @@ public class SpcServiceImpl implements SpcService {
             throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11001));
         }
         List<SpcStatsDto> result = Lists.newArrayList();
+        List<AnalysisDataDto> analysisDataDtoList = Lists.newArrayList();
         for (SearchConditionDto searchConditionDto : searchConditions) {
+            AnalysisDataDto analysisDataDto = new AnalysisDataDto();
             List<String> searchRowKeys = searchDataFrame.getSearchRowKey(searchConditionDto.getCondition());
             List<String> datas = searchDataFrame.getDataValue(searchConditionDto.getItemName(), searchRowKeys);
-            AnalysisDataDto analysisDataDto = new AnalysisDataDto();
-            analysisDataDto.setDataList(datas);
-            analysisDataDto.setUsl(searchConditionDto.getCusUsl());
+            List<Double> doubleList = Lists.newArrayList();
+            for (String s : datas) {
+                if (DAPStringUtils.isNumeric(s)) {
+                    doubleList.add(Double.valueOf(s));
+                }
+            }
             analysisDataDto.setLsl(searchConditionDto.getCusLsl());
-            SpcStatsResultDto resultDto = getAnalysisService().analyzeStatsResult(analysisDataDto, configDto);
+            analysisDataDto.setUsl(searchConditionDto.getCusUsl());
+            analysisDataDto.setDataList(doubleList);
+            analysisDataDtoList.add(analysisDataDto);
+        }
+        for (int i = 0; i < analysisDataDtoList.size(); i++) {
+            SpcStatsResultDto resultDto = getAnalysisService().analyzeStatsResult(analysisDataDtoList.get(i), configDto);
             SpcStatsDto statsDto = new SpcStatsDto();
             statsDto.setStatsResultDto(resultDto);
-            statsDto.setKey(searchConditionDto.getKey());
-            statsDto.setItemName(searchConditionDto.getItemName());
-            statsDto.setCondition(searchConditionDto.getCondition());
+            statsDto.setKey(searchConditions.get(i).getKey());
+            statsDto.setItemName(searchConditions.get(i).getItemName());
+            statsDto.setCondition(searchConditions.get(i).getCondition());
             result.add(statsDto);
         }
         return result;
@@ -64,26 +75,50 @@ public class SpcServiceImpl implements SpcService {
             throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11001));
         }
         List<SpcChartDto> result = Lists.newArrayList();
+        List<AnalysisDataDto> analysisDataDtoList = Lists.newArrayList();
+        List<List<String>> analyzedRowKeys = Lists.newArrayList();
+        Double ndcMax = Double.NEGATIVE_INFINITY;
+        Double ndcMin = Double.POSITIVE_INFINITY;
         for (SearchConditionDto searchConditionDto : searchConditions) {
+            AnalysisDataDto analysisDataDto = new AnalysisDataDto();
             List<String> searchRowKeys = searchDataFrame.getSearchRowKey(searchConditionDto.getCondition());
             List<String> datas = searchDataFrame.getDataValue(searchConditionDto.getItemName(), searchRowKeys);
-            AnalysisDataDto analysisDataDto = new AnalysisDataDto();
-            analysisDataDto.setDataList(datas);
-            analysisDataDto.setUsl(searchConditionDto.getCusUsl());
-            analysisDataDto.setLsl(searchConditionDto.getCusLsl());
-            SpcChartResultDto resultDto = getAnalysisService().analyzeSpcChartResult(analysisDataDto, configDto);
-            SpcChartDto chartDto = new SpcChartDto();
-            chartDto.setResultDto(resultDto);
-            chartDto.setKey(searchConditionDto.getKey());
-            chartDto.setItemName(searchConditionDto.getItemName());
-            chartDto.setCondition(searchConditionDto.getCondition());
-            List<String> analyzedRowKeys = Lists.newArrayList();
-            for (int i = 0; i < chartDto.getResultDto().getRunCResult().getIsAnalyzed().length; i++) {
-                if (chartDto.getResultDto().getRunCResult().getIsAnalyzed()[i]) {
-                    analyzedRowKeys.add(searchRowKeys.get(i));
+            List<String> rowKeys = Lists.newArrayList();
+            List<Double> doubleList = Lists.newArrayList();
+            for (String s : datas) {
+                if (DAPStringUtils.isNumeric(s)) {
+                    Double value = Double.valueOf(s);
+                    if (value > ndcMax) {
+                        ndcMax = value;
+                    }
+                    if (value < ndcMin) {
+                        ndcMin = value;
+                    }
+                    rowKeys.add(s);
+                    doubleList.add(value);
                 }
             }
-            chartDto.setAnalyzedRowKeys(analyzedRowKeys);
+            analyzedRowKeys.add(rowKeys);
+            analysisDataDto.setLsl(searchConditionDto.getCusLsl());
+            analysisDataDto.setUsl(searchConditionDto.getCusUsl());
+            analysisDataDto.setDataList(doubleList);
+            analysisDataDtoList.add(analysisDataDto);
+        }
+        for (int i = 0; i < analysisDataDtoList.size(); i++) {
+            AnalysisDataDto analysisDataDto = analysisDataDtoList.get(i);
+            if (ndcMax != Double.NEGATIVE_INFINITY) {
+                analysisDataDto.setNdcMax(ndcMax);
+            }
+            if (ndcMin != Double.POSITIVE_INFINITY) {
+                analysisDataDto.setNdcMin(ndcMin);
+            }
+            SpcChartResultDto chartResultDto = getAnalysisService().analyzeSpcChartResult(analysisDataDto, configDto);
+            SpcChartDto chartDto = new SpcChartDto();
+            chartDto.setResultDto(chartResultDto);
+            chartDto.setKey(searchConditions.get(i).getKey());
+            chartDto.setItemName(searchConditions.get(i).getItemName());
+            chartDto.setCondition(searchConditions.get(i).getCondition());
+            chartDto.setAnalyzedRowKeys(analyzedRowKeys.get(i));
             result.add(chartDto);
         }
         return result;

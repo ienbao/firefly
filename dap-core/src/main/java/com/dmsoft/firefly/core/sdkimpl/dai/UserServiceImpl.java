@@ -13,11 +13,10 @@ import java.util.List;
  * Created by Lucien.Chen on 2018/2/9.
  */
 public class UserServiceImpl implements UserService {
-    private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-    private JsonMapper mapper = JsonMapper.defaultMapper();
-
     private final String parentPath = this.getClass().getResource("/").getPath() + "config";
     private final String fileName = "user";
+    private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private JsonMapper mapper = JsonMapper.defaultMapper();
 
     @Override
     public UserDto validateUser(String userName, String password) {

@@ -177,6 +177,7 @@ public class SpcItemController implements Initializable {
         });
     }
 
+    @SuppressWarnings("unchecked")
     private void initItemData() {
 //        List<TestItemDto> itemDtos = Lists.newArrayList();
 //        for (int i = 0; i < 40; i++) {
@@ -218,30 +219,30 @@ public class SpcItemController implements Initializable {
             statisticalResultDto.setStatsResultDto(spcStatsResultDto);
             statisticalResultDto.setItemName("itemName" + i);
             statisticalResultDto.setCondition("itemName > 22");
-            statisticalResultDto.getStatsResultDto().setSamples("343.2");
-            statisticalResultDto.getStatsResultDto().setAvg("32.2");
-            statisticalResultDto.getStatsResultDto().setMax("312");
-            statisticalResultDto.getStatsResultDto().setMin("34");
-            statisticalResultDto.getStatsResultDto().setStDev("124");
-            statisticalResultDto.getStatsResultDto().setLsl("35");
-            statisticalResultDto.getStatsResultDto().setUsl("21");
-            statisticalResultDto.getStatsResultDto().setCenter("53");
-            statisticalResultDto.getStatsResultDto().setRange("13");
-            statisticalResultDto.getStatsResultDto().setLcl("452");
-            statisticalResultDto.getStatsResultDto().setUcl("323");
-            statisticalResultDto.getStatsResultDto().setKurtosis("234");
-            statisticalResultDto.getStatsResultDto().setCpk("234");
-            statisticalResultDto.getStatsResultDto().setSkewness("6");
-            statisticalResultDto.getStatsResultDto().setCa("43.5");
-            statisticalResultDto.getStatsResultDto().setCp("35.76");
-            statisticalResultDto.getStatsResultDto().setCpl("34.7");
-            statisticalResultDto.getStatsResultDto().setCpu("324.67");
-            statisticalResultDto.getStatsResultDto().setWithinPPM("324.6");
-            statisticalResultDto.getStatsResultDto().setOverallPPM("343.65");
-            statisticalResultDto.getStatsResultDto().setPp("342.76");
-            statisticalResultDto.getStatsResultDto().setPpk("34.5");
-            statisticalResultDto.getStatsResultDto().setPpl("343.5");
-            statisticalResultDto.getStatsResultDto().setPpu("324.87");
+            statisticalResultDto.getStatsResultDto().setSamples(343.2);
+            statisticalResultDto.getStatsResultDto().setAvg(32.2);
+            statisticalResultDto.getStatsResultDto().setMax(312d);
+            statisticalResultDto.getStatsResultDto().setMin(34d);
+            statisticalResultDto.getStatsResultDto().setStDev(124d);
+            statisticalResultDto.getStatsResultDto().setLsl(35d);
+            statisticalResultDto.getStatsResultDto().setUsl(21d);
+            statisticalResultDto.getStatsResultDto().setCenter(53d);
+            statisticalResultDto.getStatsResultDto().setRange(13d);
+            statisticalResultDto.getStatsResultDto().setLcl(452d);
+            statisticalResultDto.getStatsResultDto().setUcl(323d);
+            statisticalResultDto.getStatsResultDto().setKurtosis(234d);
+            statisticalResultDto.getStatsResultDto().setCpk(234d);
+            statisticalResultDto.getStatsResultDto().setSkewness(6d);
+            statisticalResultDto.getStatsResultDto().setCa(43.5);
+            statisticalResultDto.getStatsResultDto().setCp(35.76);
+            statisticalResultDto.getStatsResultDto().setCpl(34.7);
+            statisticalResultDto.getStatsResultDto().setCpu(324.67);
+            statisticalResultDto.getStatsResultDto().setWithinPPM(324.6);
+            statisticalResultDto.getStatsResultDto().setOverallPPM(343.65);
+            statisticalResultDto.getStatsResultDto().setPp(342.76);
+            statisticalResultDto.getStatsResultDto().setPpk(34.5);
+            statisticalResultDto.getStatsResultDto().setPpl(343.5);
+            statisticalResultDto.getStatsResultDto().setPpu(324.87);
             spcStatsDtoList.add(statisticalResultDto);
         }
         return spcStatsDtoList;
