@@ -29,16 +29,16 @@ public class DefaultJobHandlerContext extends AbstractJobHandlerContext {
         this.handler = handler;
     }
 
-    @Override
-    public JobHandler handler() {
-        return handler;
-    }
-
     private static boolean isInbound(JobHandler handler) {
         return handler instanceof JobInboundHandler;
     }
 
     private static boolean isOutbound(JobHandler handler) {
         return handler instanceof JobOutboundHandler;
+    }
+
+    @Override
+    public JobHandler handler() {
+        return handler;
     }
 }

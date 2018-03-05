@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 
 /**
  * interface class for search combo box controller
+ *
  * @author Can Guan
  */
 public interface ISearchComboBoxController {

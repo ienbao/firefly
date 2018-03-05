@@ -24,23 +24,13 @@ import java.util.jar.JarFile;
  */
 public class ResourceFinder {
     /**
-     * When to search the classpath enum.
+     * The additional search paths to search.
      */
-    public enum SearchInClasspath {
-        BEFORE_LOCAL,
-        AFTER_LOCAL,
-        NEVER
-    }
-
+    private final List<String> searchPaths;
     /**
      * When to search the classpath. Default to search before searching locally.
      */
     private SearchInClasspath searchInClasspath = SearchInClasspath.BEFORE_LOCAL;
-
-    /**
-     * The additional search paths to search.
-     */
-    private final List<String> searchPaths;
 
     /**
      * No extra paths configuration.
@@ -294,5 +284,14 @@ public class ResourceFinder {
      */
     public void setSearchInClasspath(final SearchInClasspath searchInClasspath) {
         this.searchInClasspath = searchInClasspath;
+    }
+
+    /**
+     * When to search the classpath enum.
+     */
+    public enum SearchInClasspath {
+        BEFORE_LOCAL,
+        AFTER_LOCAL,
+        NEVER
     }
 }

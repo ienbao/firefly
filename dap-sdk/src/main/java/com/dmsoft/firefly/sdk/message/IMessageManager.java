@@ -6,8 +6,8 @@ public interface IMessageManager {
      * show information
      *
      * @param title title
-     * @param msg information content
-     * @param type information type
+     * @param msg   information content
+     * @param type  information type
      */
     void showMsg(String title, String msg, MessageTipTyp type);
 
@@ -15,7 +15,7 @@ public interface IMessageManager {
      * show success info
      *
      * @param title title
-     * @param msg information content
+     * @param msg   information content
      */
     void showSuccessMsg(String title, String msg);
 
@@ -23,7 +23,7 @@ public interface IMessageManager {
      * show war info
      *
      * @param title title
-     * @param msg information content
+     * @param msg   information content
      */
     void showWarnMsg(String title, String msg);
 
@@ -31,10 +31,9 @@ public interface IMessageManager {
      * show normal info
      *
      * @param title title
-     * @param msg information content
+     * @param msg   information content
      */
     void showInfoMsg(String title, String msg);
-
 
 
 }

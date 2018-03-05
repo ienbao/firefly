@@ -20,11 +20,10 @@ import java.util.Map;
  * Created by Lucien.Chen on 2018/2/9.
  */
 public class TemplateServiceImpl implements TemplateService {
-    private Logger logger = LoggerFactory.getLogger(TemplateServiceImpl.class);
-    private JsonMapper mapper = JsonMapper.defaultMapper();
-
     private final String parentPath = this.getClass().getResource("/").getPath() + "config";
     private final String fileName = "template";
+    private Logger logger = LoggerFactory.getLogger(TemplateServiceImpl.class);
+    private JsonMapper mapper = JsonMapper.defaultMapper();
 
     @Override
     public List<String> findAllTemplateName() {
