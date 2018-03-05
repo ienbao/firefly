@@ -8,7 +8,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -16,6 +15,10 @@ import java.util.ResourceBundle;
  */
 public class TestApplication extends Application {
 
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -25,15 +28,10 @@ public class TestApplication extends Application {
         Parent root = loader.load();
 
 
-        Scene scene = new Scene(root,1280,704);
+        Scene scene = new Scene(root, 1280, 704);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
-
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }
