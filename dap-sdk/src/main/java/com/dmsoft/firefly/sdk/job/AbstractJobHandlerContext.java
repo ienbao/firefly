@@ -62,8 +62,8 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
             }
         };
         thread.addProcessMonitorListener(getContextProcessMonitorListenerIfExists());
-//        thread.start();
-        executorService.execute(thread);
+        thread.start();
+//        executorService.execute(thread);
         return this;
     }
 
@@ -94,8 +94,8 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
             }
         };
         thread.addProcessMonitorListener(getContextProcessMonitorListenerIfExists());
-//        thread.start();
-        executorService.execute(thread);
+        thread.start();
+//        executorService.execute(thread);
     }
 
     private void invokeReturnValue(Object returnValue) {
