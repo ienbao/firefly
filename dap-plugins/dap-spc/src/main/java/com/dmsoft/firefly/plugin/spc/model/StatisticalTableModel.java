@@ -332,17 +332,16 @@ public class StatisticalTableModel implements NewTableModel {
 
     private boolean isEmptyResult(SpcStatsResultDto spcStatsResultDto) {
         if (spcStatsResultDto == null || spcStatsResultDto.getSamples() == null
-                || (StringUtils.isNumeric(spcStatsResultDto.getSamples())
-                && Double.valueOf(spcStatsResultDto.getSamples()) == 0)) {
+                || spcStatsResultDto.getSamples() == 0) {
             return true;
         }
         return false;
     }
 
-    private String showValue(String value) {
-        if (StringUtils.isBlank(value)) {
+    private String showValue(Double value) {
+        if (value == null) {
             return "-";
         }
-        return value;
+        return value.toString();
     }
 }
