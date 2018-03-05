@@ -18,6 +18,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -51,7 +53,6 @@ public class MainController {
 
     @FXML
     private GridPane stateBar;
-
 
     private Button dataSourceBtn;
     private Button templateBtn;
@@ -157,6 +158,10 @@ public class MainController {
     }
 
     private void initStateBar() {
+        Label lblFile = new Label(GuiFxmlAndLanguageUtils.getString("STATE_BAR_FILE"));
+        lblFile.getStyleClass().add("state-bar-lbl");
+        stateBar.addColumn(0, lblFile);
+
         ImageView imageView = new ImageView("/images/btn_edit_unable.png");
         imageView.setFitHeight(16);
         imageView.setFitWidth(16);
@@ -166,6 +171,10 @@ public class MainController {
         dataSourceBtn.setStyle("-fx-padding: 0 3 0 5");
         stateBar.addColumn(1, dataSourceBtn);
 
+        Label lblAnalyze = new Label(GuiFxmlAndLanguageUtils.getString("STATE_BAR_ANALYZE"));
+        lblAnalyze.getStyleClass().add("state-bar-lbl");
+        stateBar.addColumn(2, lblAnalyze);
+
         ImageView imageView1 = new ImageView("/images/btn_template_unable.png");
         imageView1.setFitHeight(16);
         imageView1.setFitWidth(16);
@@ -174,6 +183,34 @@ public class MainController {
         templateBtn.getStyleClass().add("btn-icon-b");
         templateBtn.setStyle("-fx-padding: 0 3 0 5");
         stateBar.addColumn(3, templateBtn);
+
+        ProgressBar progressBar = new ProgressBar();
+        //progressBar.getStyleClass().add("state-bar-lbl");
+        progressBar.setPrefHeight(10);
+        progressBar.setMaxHeight(10);
+        progressBar.setMinHeight(10);
+        progressBar.setPrefWidth(110);
+        progressBar.setMaxWidth(110);
+        progressBar.setMinWidth(110);
+        progressBar.setPadding(new Insets(0, 0, 0, 5));
+
+        Label lblMemory = new Label(GuiFxmlAndLanguageUtils.getString("STATE_BAR_MEMORY"), progressBar);
+        lblMemory.setPrefHeight(20);
+        lblMemory.setMaxHeight(20);
+        lblMemory.setMinHeight(20);
+        lblMemory.setPrefWidth(179);
+        lblMemory.setMaxWidth(179);
+        lblMemory.setMinWidth(179);
+        lblMemory.getStyleClass().add("state-bar-lbl");
+        lblMemory.setStyle("-fx-border-width: 0 1 0 1; -fx-border-color: #ededed;");
+        lblMemory.setAlignment(Pos.BASELINE_LEFT);
+        lblMemory.setContentDisplay(ContentDisplay.RIGHT);
+        stateBar.addColumn(4, lblMemory);
+
+        Label lblVersion = new Label(GuiFxmlAndLanguageUtils.getString("STATE_BAR_VERSION"));
+        lblVersion.getStyleClass().add("state-bar-lbl");
+        stateBar.addColumn(5, lblVersion);
+
     }
 
     public void updateStateBarText(int selectedFileNumber, String selecteTemplateName) {

@@ -31,23 +31,10 @@ public class AppController {
 
     @FXML
     private void initialize() {
-        buildSystemMenu();
+        initMenuBar();
+        initEvent();
     }
 
-    private void buildSystemMenu() {
-//        if (Platforms.IS_MAC_OSX) {
-//            Properties properties = PropertiesUtil.loadFromFile("classpath://application.properties");
-//            MenuToolkit tk = MenuToolkit.toolkit();
-//            Menu defaultApplicationMenu = tk.createDefaultApplicationMenu(properties.get(PropertiesResource.PROJECT_NAME).toString());
-//            tk.setApplicationMenu(defaultApplicationMenu);
-//
-//            menuSystem.setUseSystemMenuBar(true);
-//            menuSystem.setPrefWidth(0);
-//            menuSystem.setMinWidth(0);
-//            menuSystem.setMaxWidth(0);
-//        }
-        initMenuBar();
-    }
 
     private void initEvent() {
         menuChangePassword.setOnAction(event -> {
@@ -56,6 +43,11 @@ public class AppController {
         menuLoginOut.setOnAction(event -> {
 
         });
+    }
+
+    public void resetMenu() {
+        menuSystem.getMenus().clear();
+        initialize();
     }
 
     private void initMenuBar() {

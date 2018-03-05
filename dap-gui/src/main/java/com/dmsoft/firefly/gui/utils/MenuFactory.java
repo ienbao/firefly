@@ -1,11 +1,15 @@
 package com.dmsoft.firefly.gui.utils;
 
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.controller.AppController;
+import com.dmsoft.firefly.gui.controller.MainController;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
+import com.sun.tools.doclint.Env;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -17,6 +21,9 @@ import javafx.stage.Stage;
 import static com.google.common.io.Resources.getResource;
 
 public class MenuFactory {
+    private static MainController mainController;
+    private static AppController appController;
+    private static EnvService envService = RuntimeContext.getBean(EnvService.class);
 
     public final static String ROOT_MENU = "root";
     public final static String PLATFORM_ID = "Platform";
@@ -42,14 +49,18 @@ public class MenuFactory {
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(createHelpMenu());
     }
 
+    public static void resetMenu() {
+        appController.resetMenu();
+    }
+
     private static MenuBuilder createFileMenu() {
 
-        Menu menu = new Menu("File");
+        Menu menu = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_FILE"));
         menu.setId(MenuBuilder.MENU_FILE);
-        MenuItem importMenuItem = new MenuItem("Import Settings(I)");
-        MenuItem exportMenuItem = new MenuItem("Export Setting(E)");
-        MenuItem restoreMenuItem = new MenuItem("Restore Setting(R)");
-        MenuItem exitMenuItem = new MenuItem("Exit(X)");
+        MenuItem importMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_IMPORT_SETTING"));
+        MenuItem exportMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_EXPORT_SETTING"));
+        MenuItem restoreMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_RESTORE_SETTING"));
+        MenuItem exitMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_EXIT"));
 
         menu.getItems().add(importMenuItem);
         menu.getItems().add(exportMenuItem);
@@ -94,23 +105,35 @@ public class MenuFactory {
 
     private static Menu initLanguageMenu() {
         Menu language = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_LANGUAGE"));
-        RadioMenuItem ch = new RadioMenuItem(GuiFxmlAndLanguageUtils.getString("LANGUAGE_ZH"));
+        RadioMenuItem zh = new RadioMenuItem(GuiFxmlAndLanguageUtils.getString("LANGUAGE_ZH"));
         RadioMenuItem en = new RadioMenuItem(GuiFxmlAndLanguageUtils.getString("LANGUAGE_EN"));
-        en.setSelected(true);
+        if (envService.getLanguageType().equals(LanguageType.ZH)) {
+            zh.setSelected(true);
+        } else {
+            en.setSelected(true);
+        }
         en.setOnAction(event -> {
             if (en.isSelected()) {
-                RuntimeContext.getBean(EnvService.class).setLanguageType(LanguageType.EN);
+                envService.setLanguageType(LanguageType.EN);
+                MenuFactory.mainController.resetMain();
+                initMenu();
+                resetMenu();
+                StageMap.getAllStage().clear();
             }
         });
-        ch.setOnAction(event -> {
-            if (ch.isSelected()) {
-                RuntimeContext.getBean(EnvService.class).setLanguageType(LanguageType.ZH);
+        zh.setOnAction(event -> {
+            if (zh.isSelected()) {
+                envService.setLanguageType(LanguageType.ZH);
+                MenuFactory.mainController.resetMain();
+                initMenu();
+                resetMenu();
+                StageMap.getAllStage().clear();
             }
         });
         ToggleGroup toggleGroup = new ToggleGroup();
         en.setToggleGroup(toggleGroup);
-        ch.setToggleGroup(toggleGroup);
-        language.getItems().addAll(ch, en);
+        zh.setToggleGroup(toggleGroup);
+        language.getItems().addAll(zh, en);
         return language;
     }
 
@@ -140,4 +163,11 @@ public class MenuFactory {
         }
     }
 
+    public static void setMainController(MainController mainController) {
+        MenuFactory.mainController = mainController;
+    }
+
+    public static void setAppController(AppController appController) {
+        MenuFactory.appController = appController;
+    }
 }
