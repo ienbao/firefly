@@ -10,6 +10,7 @@ import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
 import com.dmsoft.firefly.plugin.spc.utils.Colur;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
+import com.dmsoft.firefly.sdk.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.beans.property.ObjectProperty;
@@ -21,7 +22,6 @@ import javafx.collections.transformation.SortedList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
-import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
 import java.util.*;
@@ -78,7 +78,7 @@ public class StatisticalTableModel implements NewTableModel {
                 if (this.isEmptyResult(dto.getStatsResultDto())) {
                     emptyResultKeys.add(dto.getKey());
                 } else {
-                    colorCache.put(dto.getKey(), ColorUtils.getTransparentColor(Colur.RAW_VALUES[m % 10], 0.6));
+                    colorCache.put(dto.getKey(), ColorUtils.getTransparentColor(Colur.RAW_VALUES[m % 10], 1));
                     m++;
                 }
             }
@@ -204,7 +204,7 @@ public class StatisticalTableModel implements NewTableModel {
             SimpleObjectProperty<String> stringSimpleObjectProperty = this.valueMap.get(rowKey + "-" + column);
             if (stringSimpleObjectProperty != null && stringSimpleObjectProperty.getValue() != null) {
                 String value = stringSimpleObjectProperty.getValue();
-                if (StringUtils.isNumeric(value) && Double.valueOf(value) > 2000) {
+                if (StringUtils.isNumeric(value) && Double.valueOf(value) > 60) {
                     tableCell.setStyle("-fx-background-color:#ea2028;-fx-text-fill: #ffffff");
                 } else {
                     tableCell.setStyle("-fx-background-color:#51b511;-fx-text-fill: #ffffff");
