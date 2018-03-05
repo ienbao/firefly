@@ -44,6 +44,7 @@
 
     /*auxiliary color*/
     COLORFUL_AUXILIARY_BLUE: #0096ff;
+    COLORFUL_LIGHT_BLUE :#33abff;
     COLORFUL_DARK_BLUE: #487CF4;
 
     COLORFUL_BLUE_Fill_10: rgba(0, 150, 255, 0.2);
@@ -537,9 +538,27 @@
     -fx-text-fill: #222;
 }
 
-.text-field-error:focused {
+.text-field-error:hover {
     -fx-border-color: COLORFUL_PRIMARY_RED;
-    -fx-background-color: #ffffff;
+    -fx-background-color: #fef4f4;
+    -fx-text-fill: #222;
+}
+
+.text-field-error:focused {
+    -fx-border-color: COLORFUL_LIGHT_BLUE;
+    -fx-background-color: #fde8e9;
+    -fx-text-fill: #222;
+}
+
+.text-field-error:focused:hover {
+    -fx-border-color: COLORFUL_LIGHT_BLUE;
+    -fx-background-color: #fef4f4;
+    -fx-text-fill: #222;
+}
+
+.text-field-error:focused:pressed {
+    -fx-border-color: COLORFUL_LIGHT_BLUE;
+    -fx-background-color: #fef4f4;
     -fx-text-fill: #222;
 }
 
