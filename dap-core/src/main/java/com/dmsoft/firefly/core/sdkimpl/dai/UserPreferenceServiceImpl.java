@@ -16,11 +16,10 @@ import java.util.List;
  */
 public class UserPreferenceServiceImpl implements UserPreferenceService {
 
-    private Logger logger = LoggerFactory.getLogger(UserPreferenceServiceImpl.class);
-    private JsonMapper mapper = JsonMapper.defaultMapper();
-
     private final String parentPath = this.getClass().getResource("/").getPath() + "config";
     private final String fileName = "userPreference";
+    private Logger logger = LoggerFactory.getLogger(UserPreferenceServiceImpl.class);
+    private JsonMapper mapper = JsonMapper.defaultMapper();
 
     @Override
     public void addValueItem(UserPreferenceDto userPreferenceDto) {

@@ -73,11 +73,11 @@ public abstract class AbstractProcessMonitorAuto implements ProcessMonitorAuto {
         this.processMonitorListener.set(l);
     }
 
-    public void setCurrentThread(ThreadTask currentThread) {
-        this.currentThread = currentThread;
-    }
-
     public ThreadTask getCurrentThread() {
         return this.currentThread;
+    }
+
+    public void setCurrentThread(ThreadTask currentThread) {
+        this.currentThread = currentThread;
     }
 }

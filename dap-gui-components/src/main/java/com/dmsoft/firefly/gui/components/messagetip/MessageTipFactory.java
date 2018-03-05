@@ -37,7 +37,7 @@ public class MessageTipFactory {
         return popup;
     }
 
-    private static void init(){
+    private static void init() {
         try {
             popup = new Popup();
             //FXMLLoader fxmlLoader = new FXMLLoader(MessageTipFactory.class.getClassLoader().getResource("view/message_tip.fxml"));

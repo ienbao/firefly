@@ -2,7 +2,6 @@ package com.dmsoft.firefly.core.sdkimpl.dai;
 
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
-import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -85,10 +84,10 @@ public class EnvServiceImpl implements EnvService {
     }
 
     @Override
-    public List<String> findTestItemNames(){
+    public List<String> findTestItemNames() {
         List<String> itemNames = Lists.newArrayList();
-        if (testItemDtos != null){
-            for (TestItemWithTypeDto dto : testItemDtos){
+        if (testItemDtos != null) {
+            for (TestItemWithTypeDto dto : testItemDtos) {
                 itemNames.add(dto.getTestItemName());
             }
         }

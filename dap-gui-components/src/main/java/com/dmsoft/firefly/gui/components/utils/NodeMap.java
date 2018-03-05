@@ -32,7 +32,7 @@ public final class NodeMap {
      * method to get node by name
      *
      * @param name name
-     * @@return  node
+     * @@return node
      */
     public static Node getNode(String name) {
         return nodes.get(name);
@@ -42,7 +42,7 @@ public final class NodeMap {
      * method to show node by name
      *
      * @param name name
-     * @@return  boolean
+     * @@return boolean
      */
     public static boolean showNode(String name) {
         getNode(name).setVisible(true);
@@ -52,9 +52,9 @@ public final class NodeMap {
     /**
      * method to Show one node hidden another
      *
-     * @param show name
+     * @param show  name
      * @param close name
-     * @@return  boolean
+     * @@return boolean
      */
     public static boolean showNode(String show, String close) {
         getNode(close).setVisible(false);

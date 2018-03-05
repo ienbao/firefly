@@ -1,12 +1,12 @@
 package com.dmsoft.firefly.gui.components.messagetip;
 
- import javafx.fxml.FXML;
- import javafx.scene.control.Button;
- import javafx.scene.control.Label;
- import javafx.scene.layout.GridPane;
- import javafx.stage.Popup;
- import org.slf4j.Logger;
- import org.slf4j.LoggerFactory;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Popup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -35,7 +35,7 @@ public class MessageTipControl {
     }
 
 
-    public GridPane initInfo(Popup popup, String title, String msg){
+    public GridPane initInfo(Popup popup, String title, String msg) {
         clearAll();
         this.closeBtnEvent(popup);
         titleLbl.setText(title);
@@ -45,7 +45,7 @@ public class MessageTipControl {
         return messageTip;
     }
 
-    public GridPane initWarn(Popup popup, String title, String msg){
+    public GridPane initWarn(Popup popup, String title, String msg) {
         clearAll();
         this.closeBtnEvent(popup);
         titleLbl.setText(title);
@@ -55,7 +55,7 @@ public class MessageTipControl {
         return messageTip;
     }
 
-    public GridPane initNormal(Popup popup, String title, String msg){
+    public GridPane initNormal(Popup popup, String title, String msg) {
         this.clearAll();
         this.closeBtnEvent(popup);
         titleLbl.setText(title);

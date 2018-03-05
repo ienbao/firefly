@@ -126,6 +126,15 @@ public class DAPApplication {
         return envServiceProxy;
     }
 
+    /**
+     * main method
+     *
+     * @param args arguments
+     */
+    public static void main(String[] args) {
+        run(Lists.newArrayList("com.dmsoft.dap.SpcPlugin"));
+    }
+
     static class EnvServiceHandler implements InvocationHandler {
 
         private EnvService target;
@@ -148,14 +157,5 @@ public class DAPApplication {
             }
             return method.invoke(target, args);
         }
-    }
-
-    /**
-     * main method
-     *
-     * @param args arguments
-     */
-    public static void main(String[] args) {
-        run(Lists.newArrayList("com.dmsoft.dap.SpcPlugin"));
     }
 }

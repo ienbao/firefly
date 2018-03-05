@@ -18,19 +18,19 @@ import java.util.concurrent.ExecutorService;
  */
 public abstract class AbstractJobHandlerContext implements JobHandlerContext {
 
-    private Logger logger = LoggerFactory.getLogger(AbstractJobHandlerContext.class);
     private final JobPipeline jobPipeline;
     private final JobDoComplete jobDoComplete;
-    volatile AbstractJobHandlerContext next;
-    volatile AbstractJobHandlerContext prev;
     private final boolean inbound;
     private final boolean outbound;
     private final String name;
+    private final List<JobEventListener> eventListeners;
+    private final Job session;
+    volatile AbstractJobHandlerContext next;
+    volatile AbstractJobHandlerContext prev;
+    private Logger logger = LoggerFactory.getLogger(AbstractJobHandlerContext.class);
     private ExecutorService executorService;
     private volatile boolean doNextInbound;
     private volatile boolean doNextOutbound;
-    private final List<JobEventListener> eventListeners;
-    private final Job session;
 
 //    public AbstractJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, boolean inbound, boolean outbound, String name) {
 //        this.jobPipeline = jobPipeline;

@@ -98,6 +98,7 @@ public interface NewTableModel {
 
     /**
      * method to set table view
+     *
      * @param tableView table view
      */
     void setTableView(TableView<String> tableView);

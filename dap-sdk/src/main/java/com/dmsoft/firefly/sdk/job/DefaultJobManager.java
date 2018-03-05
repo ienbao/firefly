@@ -5,7 +5,10 @@
 package com.dmsoft.firefly.sdk.job;
 
 import com.dmsoft.bamboo.common.monitor.ProcessMonitorListener;
-import com.dmsoft.firefly.sdk.job.core.*;
+import com.dmsoft.firefly.sdk.job.core.InitJobPipeline;
+import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
+import com.dmsoft.firefly.sdk.job.core.JobEventListener;
+import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
@@ -14,8 +17,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -141,7 +145,7 @@ public class DefaultJobManager implements JobManager {
             logger.error("jobName is not exist.");
             return;
         }
-        JobThread thread = new JobThread(){
+        JobThread thread = new JobThread() {
 
             @Override
             public void run() {
@@ -165,7 +169,7 @@ public class DefaultJobManager implements JobManager {
             logger.error("jobName is not exist.");
             return;
         }
-        JobThread thread = new JobThread(){
+        JobThread thread = new JobThread() {
 
             @Override
             public void run() {

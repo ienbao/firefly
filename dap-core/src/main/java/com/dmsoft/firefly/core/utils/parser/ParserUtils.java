@@ -51,7 +51,7 @@ public class ParserUtils {
     /**
      * Merge string.
      *
-     * @param left string.
+     * @param left  string.
      * @param token string.
      * @param right string.
      * @return string

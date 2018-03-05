@@ -24,7 +24,7 @@ public final class StageMap {
     /**
      * method to add stage
      *
-     * @param name name
+     * @param name  name
      * @param stage stage
      */
     public static void addStage(String name, Stage stage) {
@@ -35,7 +35,7 @@ public final class StageMap {
      * method to get stage by name
      *
      * @param name name
-     * @return  stage stage
+     * @return stage stage
      */
     public static Stage getStage(String name) {
         return stages.get(name);
@@ -45,21 +45,20 @@ public final class StageMap {
      * method to set primary stage by name
      *
      * @param primaryStageName name
-     * @param primaryStage primaryStage
+     * @param primaryStage     primaryStage
      */
     public static void setPrimaryStage(String primaryStageName, Stage primaryStage) {
         addStage(primaryStageName, primaryStage);
     }
 
 
-
     /**
      * method to set primary stage by name
      *
-     * @param name name
+     * @param name      name
      * @param resources primaryStage
-     * @param style style
-     * @param styles styles
+     * @param style     style
+     * @param styles    styles
      * @return Whether to load stage success or not
      */
     public static boolean loadStage(String name, String resources, String style, StageStyle... styles) {
@@ -97,11 +96,11 @@ public final class StageMap {
     /**
      * method to set primary stage by name
      *
-     * @param name name
+     * @param name      name
      * @param resources pane
-     * @param modality true:modality
+     * @param modality  true:modality
      * @param cusStyles style
-     * @param styles styles
+     * @param styles    styles
      * @return Whether to load stage success or not
      */
     public static boolean loadStage(String name, Pane resources, boolean modality, List<String> cusStyles, StageStyle... styles) {
@@ -144,11 +143,11 @@ public final class StageMap {
     /**
      * method to set primary stage by name
      *
-     * @param name name
+     * @param name      name
      * @param resources pane
-     * @param modality true:modality
+     * @param modality  true:modality
      * @param cusStyles style
-     * @param styles styles
+     * @param styles    styles
      * @return Whether to load stage success or not
      */
     public static Stage loadAndRefreshStage(String name, Object title, Pane resources, boolean modality, boolean isWindowX, List<String> cusStyles, StageStyle... styles) {
@@ -222,7 +221,7 @@ public final class StageMap {
      * method to show stage by name
      *
      * @param name name
-     * @@return  Whether to show success or not
+     * @@return Whether to show success or not
      */
     public static boolean showStage(String name) {
         getStage(name).show();
@@ -233,7 +232,7 @@ public final class StageMap {
      * method to close one stage hidden another
      *
      * @param name name
-     * @@return  Whether to close success or not， true:success
+     * @@return Whether to close success or not， true:success
      */
     public static boolean closeStage(String name) {
         getStage(name).close();
@@ -243,9 +242,9 @@ public final class StageMap {
     /**
      * method to Show one stage hidden another
      *
-     * @param show name
+     * @param show  name
      * @param close name
-     * @@return  boolean
+     * @@return boolean
      */
     public static boolean showStage(String show, String close) {
         getStage(close).close();

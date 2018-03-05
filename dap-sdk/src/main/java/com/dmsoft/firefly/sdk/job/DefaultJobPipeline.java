@@ -20,10 +20,10 @@ public class DefaultJobPipeline implements JobPipeline {
     final AbstractJobHandlerContext head;
     final AbstractJobHandlerContext tail;
     final JobDoComplete doComplete;
-    private Object result;
     private final ExecutorService executorService;
     private final List<JobEventListener> jobEventListeners;
     private final Job session;
+    private Object result;
     private AtomicInteger process = new AtomicInteger(0);
 
     public DefaultJobPipeline(JobDoComplete doComplete, ExecutorService executorService, List<JobEventListener> jobEventListeners, Job session) {
@@ -36,6 +36,20 @@ public class DefaultJobPipeline implements JobPipeline {
 
         head.next = tail;
         tail.prev = head;
+    }
+
+    private static void addBefore0(AbstractJobHandlerContext ctx, AbstractJobHandlerContext newCtx) {
+        newCtx.prev = ctx.prev;
+        newCtx.next = ctx;
+        ctx.prev.next = newCtx;
+        ctx.prev = newCtx;
+    }
+
+    private static void addAfter0(AbstractJobHandlerContext ctx, AbstractJobHandlerContext newCtx) {
+        newCtx.prev = ctx;
+        newCtx.next = ctx.next;
+        ctx.next.prev = newCtx;
+        ctx.next = newCtx;
     }
 
     @Override
@@ -69,8 +83,6 @@ public class DefaultJobPipeline implements JobPipeline {
         }
         return this;
     }
-
-
 
     @Override
     public JobPipeline addAfter(String baseName, String name, JobHandler handler) {
@@ -201,22 +213,21 @@ public class DefaultJobPipeline implements JobPipeline {
         return null;
     }
 
-    private static void addBefore0(AbstractJobHandlerContext ctx, AbstractJobHandlerContext newCtx) {
-        newCtx.prev = ctx.prev;
-        newCtx.next = ctx;
-        ctx.prev.next = newCtx;
-        ctx.prev = newCtx;
-    }
-
-    private static void addAfter0(AbstractJobHandlerContext ctx, AbstractJobHandlerContext newCtx) {
-        newCtx.prev = ctx;
-        newCtx.next = ctx.next;
-        ctx.next.prev = newCtx;
-        ctx.next = newCtx;
-    }
-
     private AbstractJobHandlerContext newContext(String name, JobHandler handler) {
         return new DefaultJobHandlerContext(this, doComplete, name, executorService, handler, jobEventListeners, session);
+    }
+
+    public Object getResult() {
+        return result;
+    }
+
+    public void setResult(Object result) {
+        this.result = result;
+    }
+
+    @Override
+    public int getCurrentProcess() {
+        return process.get();
     }
 
     final class TailContext extends AbstractJobHandlerContext implements JobInboundHandler {
@@ -263,18 +274,5 @@ public class DefaultJobPipeline implements JobPipeline {
         public void returnValue(JobHandlerContext context, Object returnValue) {
             context.returnValue(returnValue);
         }
-    }
-
-    public Object getResult() {
-        return result;
-    }
-
-    public void setResult(Object result) {
-        this.result = result;
-    }
-
-    @Override
-    public int getCurrentProcess() {
-        return process.get();
     }
 }
