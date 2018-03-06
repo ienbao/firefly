@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.dto.analysis;
 
-import com.dmsoft.firefly.plugin.grr.utils.enums.GrrAnalysisMethod;
+import com.dmsoft.firefly.plugin.utils.enums.GrrAnalysisMethod;
 
 /**
  * analysis config dto for grr

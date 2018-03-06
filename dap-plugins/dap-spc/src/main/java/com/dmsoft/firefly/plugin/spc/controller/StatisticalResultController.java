@@ -12,7 +12,6 @@ import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
 import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
 import com.dmsoft.firefly.plugin.spc.model.StatisticalTableModel;
 import com.dmsoft.firefly.plugin.spc.utils.*;
-import com.dmsoft.firefly.sdk.event.EventType;
 import com.google.common.collect.Lists;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.*;
@@ -21,7 +20,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 import java.awt.*;
@@ -103,54 +101,9 @@ public class StatisticalResultController implements Initializable {
     }
 
     private void initStatisticalResultTable() {
-////        checkBoxColumn.setCellFactory(p -> new CheckBoxTableCell<>());
-//        checkBoxColumn.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
-//        allCheckBox = new CheckBox();
-//        checkBoxColumn.setGraphic(allCheckBox);
-////        checkBoxColumn.setCellFactory(CheckBoxTableCell.forTableColumn(checkBoxColumn));
-//        List<String> colName = asList(UIConstant.SPC_SR_ALL);
-//        StringConverter<String> sc = new StringConverter<String>() {
-//            @Override
-//            public String toString(String t) {
-//                return t == null ? null : t.toString();
-//            }
-//
-//            @Override
-//            public String fromString(String string) {
-//                return string;
-//            }
-//        };
-//        for (String columnN : colName) {
-//            TableColumn<StatisticalTableRowData, String> col = new TableColumn();
-//            col.setText(columnN);
-//            col.setCellValueFactory(cellData -> cellData.getValue().getRowDataMap().get(columnN));
-//            statisticalResultTb.getColumns().add(col);
-//
-//            if (columnN.equals("LSL") || columnN.equals("USL")) {
-//                col.setEditable(true);
-//                col.setCellFactory(TextFieldTableCell.forTableColumn(sc));
-//            }
-//        }
-//
-//        statisticalTableRowDataObservableList = FXCollections.observableArrayList();
-//        statisticalTableRowDataFilteredList = statisticalTableRowDataObservableList.filtered(p -> true);
-//        statisticalTableRowDataSortedList = new SortedList<>(statisticalTableRowDataFilteredList);
-//        statisticalResultTb.setItems(statisticalTableRowDataSortedList);
-//        statisticalTableRowDataSortedList.comparatorProperty().bind(statisticalResultTb.comparatorProperty());
         statisticalTableModel = new StatisticalTableModel();
         this.initTableMenuEvent();
         NewTableViewWrapper.decorate(statisticalResultTb, statisticalTableModel);
-//        TableViewWrapper wrapper = new TableViewWrapper(statisticalResultTb, statisticalTableModel);
-
-//        List<String> editedStyleClass = new ArrayList<>();
-//        List<String> errorStyleClass = new ArrayList<>();
-//        errorStyleClass.add("error");
-//        editedStyleClass.add("edited");
-//        wrapper.addEditedCellStyleClass(editedStyleClass);
-//        wrapper.addCustomCellStyleClass("GG", "HH", errorStyleClass);
-//
-//        wrapper.update();
-
         selectStatisticalResultName.addAll(Arrays.asList(UIConstant.SPC_CHOOSE_RESULT));
     }
 
@@ -200,7 +153,6 @@ public class StatisticalResultController implements Initializable {
     private void initTableMenuEvent() {
         TableMenuRowEvent selectColor = new ChooseColorMenuEvent();
         statisticalTableModel.addTableMenuEvent(selectColor);
-        statisticalResultTb.impl_updatePeer();
     }
 
     class ChooseColorMenuEvent implements TableMenuRowEvent {

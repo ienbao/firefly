@@ -91,7 +91,7 @@ public class TemplateController {
         personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
         itemTable.setEditable(true);
         testItem.setCellValueFactory(cellData -> cellData.getValue().testItemNameProperty());
-        type.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList("ATTRIBUTE", "VARIABLE")));
+        type.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList("VARIABLE", "ATTRIBUTE")));
         lsl.setCellFactory(TextFieldTableCell.forTableColumn());
         usl.setCellFactory(TextFieldTableCell.forTableColumn());
 
