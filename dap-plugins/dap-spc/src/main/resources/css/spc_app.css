@@ -131,3 +131,25 @@ table
     -fx-opacity: 1;
     -fx-cursor: inherit;
 }
+
+/*******************************************************************************
+ *                                                                             *
+ * ColorPicker                                                                 *
+ *                                                                             *
+ ******************************************************************************/
+.color-picker{
+    -fx-border-width: 0;
+    -fx-skin: "com.dmsoft.firefly.plugin.spc.utils.ColorPickerMenuSkin";
+}
+.color-picker:focused{
+    -fx-border-width: 0;
+}
+.color-picker > .label {
+    -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em; /* 4 8 4 8 */
+    -fx-text-fill: -fx-text-base-color;
+    -fx-background-color: #ffffff;
+}
+.color-picker > .color-picker-label > .picker-color > .picker-color-rect {
+    -fx-stroke: null;
+    -fx-opacity: 0;
+}
