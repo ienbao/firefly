@@ -202,7 +202,7 @@ public class SpcItemController implements Initializable {
                         super.updateItem(item, empty);
                         if (!isEmpty()) {
 
-                            if (getTableRow() != null && item.getTestItemType().equals(TestItemType.VARIABLE)) {
+                            if (getTableRow() != null && item.getTestItemType().equals(TestItemType.ATTRIBUTE)) {
                                 this.setStyle("-fx-text-fill: #009bff");
                             }
                             if (getTableRow() != null && StringUtils.isNotEmpty(itemFilter.getTextField().getText()) && item.getTestItemName().contains(itemFilter.getTextField().getText())) {
