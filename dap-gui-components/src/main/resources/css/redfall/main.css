@@ -509,6 +509,7 @@
     -fx-highlight-fill: #0096ff;
     -fx-highlight-text-fill: #fff;
 }
+
 .text-field-filter {
     -fx-border-color: #ffffff;
     -fx-background-color: #ffffff;
@@ -517,13 +518,15 @@
     -fx-font: 12 arial;
     -fx-padding: 0 10 1 10;
 }
-.text-field-filter:focused{
+
+.text-field-filter:focused {
     -fx-background-color: #fff;
     -fx-text-fill: #222;
     -fx-highlight-fill: #cccccc;
     -fx-highlight-text-fill: #fff;
     -fx-border-style: dotted;
 }
+
 .text-field:disabled {
     -fx-border-color: #dcdcdc;
     -fx-background-color: #fafafa;
@@ -1015,7 +1018,6 @@
     -fx-spacing: 0;
 }
 
-
 .tab-pane > .tab-header-area > .control-buttons-tab {
     -fx-padding: 0 0 0 0;
     -fx-background-color: #f2f2f2;
@@ -1049,10 +1051,10 @@
     -fx-background-position: top;
 }
 
-.tab-pane > .tab-header-area > .control-buttons-tab > .container > .tab-down-button > .arrow{
-/*    -fx-background-image: null;
-    -fx-shape: null;
-    -fx-effect: null;*/
+.tab-pane > .tab-header-area > .control-buttons-tab > .container > .tab-down-button > .arrow {
+    /*    -fx-background-image: null;
+        -fx-shape: null;
+        -fx-effect: null;*/
 }
 
 /*******************************************************************************
@@ -1143,6 +1145,13 @@
     -fx-background-insets: 0;
     -fx-border-color: transparent;
 
+}
+
+.table-cell .text-field{
+    -fx-border-insets: 0 -10 0 -10;
+    -fx-padding: 0 0 0 0;
+    -fx-background-insets: 0 -10 0 -10;
+    -fx-background-color: white;
 }
 
 .table-row-cell:hover {
