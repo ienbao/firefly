@@ -2,19 +2,32 @@
  * Copyright (c) 2017. For Intelligent Group.
  */
 
+import com.dmsoft.firefly.core.sdkimpl.dai.EnvServiceImpl;
+import com.dmsoft.firefly.core.sdkimpl.dai.UserPreferenceServiceImpl;
+import com.dmsoft.firefly.core.sdkimpl.dataframe.BasicDataFrameFactoryImpl;
+import com.dmsoft.firefly.plugin.utils.GrrFxmlAndLanguageUtils;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
+import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
+import com.google.common.collect.Lists;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
  * Created by Ethan.Yang on 2018/1/29.
  */
 public class TestApplication extends Application {
-
+    static {
+        GrrFxmlAndLanguageUtils.isDebug = true;
+    }
 
     public static void main(String[] args) {
         launch(args);
@@ -22,9 +35,22 @@ public class TestApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        UserPreferenceService userPreferenceService = new UserPreferenceServiceImpl();
+        EnvService envService = new EnvServiceImpl();
+        List<TestItemWithTypeDto> typeDtoList = Lists.newArrayList();
+        for (int i = 0; i < 20; i++) {
+            TestItemWithTypeDto testItemWithTypeDto = new TestItemWithTypeDto();
+            testItemWithTypeDto.setTestItemName("itemName" + i);
+            typeDtoList.add(testItemWithTypeDto);
+        }
+        envService.setTestItems(typeDtoList);
+        DataFrameFactory dataFrameFactory = new BasicDataFrameFactoryImpl();
+        RuntimeContext.registerBean(EnvService.class, envService);
+        RuntimeContext.registerBean(UserPreferenceService.class, userPreferenceService);
+        RuntimeContext.registerBean(DataFrameFactory.class, dataFrameFactory);
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("view/grr.fxml"));
-        loader.setResources(ResourceBundle.getBundle("i18n.message_en_US"));
+        loader.setResources(ResourceBundle.getBundle("i18n.message_en_US_GRR"));
         Parent root = loader.load();
 
 
