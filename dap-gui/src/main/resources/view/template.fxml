@@ -145,10 +145,10 @@
                         </HBox>
                         <TableView fx:id="itemTable" maxWidth="580.0" minHeight="270.0" minWidth="580.0" prefHeight="270.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                           <columns>
-                            <TableColumn maxWidth="250.0" minWidth="250.0" prefWidth="250.0" sortable="false" text="C1" />
-                            <TableColumn prefWidth="75.0" sortable="false" text="C2" />
-                              <TableColumn prefWidth="75.0" sortable="false" text="C1" />
-                              <TableColumn prefWidth="75.0" sortable="false" text="C1" />
+                            <TableColumn fx:id="testItem" editable="false" maxWidth="250.0" minWidth="250.0" prefWidth="250.0" sortable="false" />
+                            <TableColumn fx:id="type" prefWidth="75.0" sortable="false" />
+                              <TableColumn fx:id="lsl" prefWidth="75.0" sortable="false" />
+                              <TableColumn fx:id="usl" prefWidth="75.0" sortable="false" />
                           </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
