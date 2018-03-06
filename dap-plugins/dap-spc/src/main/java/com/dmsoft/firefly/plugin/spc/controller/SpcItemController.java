@@ -33,6 +33,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -83,6 +84,8 @@ public class SpcItemController implements Initializable {
     private Button groupAdd;
     @FXML
     private Button groupRemove;
+    @FXML
+    private ScrollPane scroll;
     @FXML
     private VBox basicSearch;
     @FXML
