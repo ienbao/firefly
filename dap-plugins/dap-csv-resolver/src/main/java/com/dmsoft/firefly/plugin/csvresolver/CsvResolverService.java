@@ -17,7 +17,7 @@ import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.annotation.DataParser;
 import com.dmsoft.firefly.sdk.plugin.annotation.ExcludeMethod;
 import com.dmsoft.firefly.sdk.plugin.apis.IDataParser;
-import com.dmsoft.firefly.plugin.grr.utils.DoubleIdUtils;
+import com.dmsoft.firefly.plugin.utils.DoubleIdUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;

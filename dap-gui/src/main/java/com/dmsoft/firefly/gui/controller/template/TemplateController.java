@@ -26,6 +26,8 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -54,6 +56,14 @@ public class TemplateController {
     @FXML
     private TableView itemTable;
     @FXML
+    private TableColumn<TemplateItemModel, String> testItem;
+    @FXML
+    private TableColumn<TemplateItemModel, String> type;
+    @FXML
+    private TableColumn<TemplateItemModel, String> lsl;
+    @FXML
+    private TableColumn<TemplateItemModel, String> usl;
+    @FXML
     private TextFieldFilter itemFilter;
     private ObservableList<TemplateItemModel> items = FXCollections.observableArrayList();
     private FilteredList<TemplateItemModel> filteredList = items.filtered(p -> p.getTestItemName().startsWith(""));
@@ -67,13 +77,6 @@ public class TemplateController {
     private FilteredList<String> nameFilterList = templateNames.filtered(p -> p.startsWith(""));
     private SortedList<String> nameSortedList = new SortedList<>(nameFilterList);
 
-//    private NewNameController newNameController;
-//    private Stage newStage;
-//    private NewNameController renameTemplateController;
-//    private Stage renameStage;
-//    private NewNameController copyTemplateController;
-//    private Stage copyStage;
-
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
 
     private LinkedHashMap<String, TemplateSettingDto> allTemplate = Maps.newLinkedHashMap();
@@ -86,10 +89,15 @@ public class TemplateController {
         initDefault();
         itemTable.setItems(personSortedList);
         personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
-        ((TableColumn<TemplateItemModel, String>) itemTable.getColumns().get(0)).setCellValueFactory(cellData -> cellData.getValue().testItemNameProperty());
-        ((TableColumn<TemplateItemModel, String>) itemTable.getColumns().get(1)).setCellValueFactory(cellData -> cellData.getValue().dataTypeProperty());
-        ((TableColumn<TemplateItemModel, String>) itemTable.getColumns().get(2)).setCellValueFactory(cellData -> cellData.getValue().lslFailProperty());
-        ((TableColumn<TemplateItemModel, String>) itemTable.getColumns().get(3)).setCellValueFactory(cellData -> cellData.getValue().uslPassProperty());
+        itemTable.setEditable(true);
+        testItem.setCellValueFactory(cellData -> cellData.getValue().testItemNameProperty());
+        type.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList("ATTRIBUTE", "VARIABLE")));
+        lsl.setCellFactory(TextFieldTableCell.forTableColumn());
+        usl.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        type.setCellValueFactory(cellData -> cellData.getValue().dataTypeProperty());
+        lsl.setCellValueFactory(cellData -> cellData.getValue().lslFailProperty());
+        usl.setCellValueFactory(cellData -> cellData.getValue().uslPassProperty());
 
         initEvent();
         templateName.setItems(nameSortedList);
