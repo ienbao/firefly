@@ -204,7 +204,7 @@ public class StatisticalTableModel implements NewTableModel {
             }
         }
         if (editorCell.contains(rowKey + "-" + column)) {
-            tableCell.setStyle(";-fx-text-fill: #f38400");
+            tableCell.setStyle("-fx-text-fill: #f38400");
         }
         if (column.equals("CPK")) {
             SimpleObjectProperty<String> stringSimpleObjectProperty = this.valueMap.get(rowKey + "-" + column);
@@ -311,7 +311,7 @@ public class StatisticalTableModel implements NewTableModel {
             }
         }
         SourceObjectProperty valueProperty = new SourceObjectProperty<>(value);
-        if (columnName.equals(STATISTICAL_TITLE[6]) || columnName.equals(STATISTICAL_TITLE[7])) {
+        if (columnName.equals(STATISTICAL_TITLE[7]) || columnName.equals(STATISTICAL_TITLE[8])) {
             valueProperty.addListener((ov, b1, b2) -> {
                 if (!StringUtils.isNumeric((String) b2)) {
                     valueProperty.set(b1);
