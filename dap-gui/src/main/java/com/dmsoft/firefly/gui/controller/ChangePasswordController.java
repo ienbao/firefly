@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.gui.controller;
 
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.UserService;
@@ -8,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 
 
 public class ChangePasswordController {
@@ -68,42 +68,35 @@ public class ChangePasswordController {
     }
 
     private void validate(String msg, Node node) {
-        Tooltip tooltip = new Tooltip();
         if (StringUtils.isBlank(msg)) {
             node.getStyleClass().add(errorStyle);
-            tooltip.setText(GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_VALIDATE_EMPTY"));
-            Tooltip.install(node, tooltip);
+            TooltipUtil.installWarnTooltip(node, GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_VALIDATE_EMPTY"));
         } else {
-            Tooltip.uninstall(node, tooltip);
+            TooltipUtil.uninstallWarnTooltip(node);
             node.getStyleClass().removeAll(errorStyle);
             if (StringUtils.isNotBlank(msg) && (msg.length() < 6 || msg.length() >= 13)) {
                 node.getStyleClass().add(errorStyle);
-                tooltip.setText(GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_VALIDATE_LENGTH"));
-                Tooltip.install(node, tooltip);
+                TooltipUtil.installWarnTooltip(node, GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_VALIDATE_LENGTH"));
             } else {
                 node.getStyleClass().removeAll(errorStyle);
-                Tooltip.uninstall(node, tooltip);
+                TooltipUtil.uninstallWarnTooltip(node);
             }
         }
     }
 
     private void validateConfirm(String newPassword, String confirmPassword, Node node) {
-        Tooltip tooltip = new Tooltip();
         if (StringUtils.isBlank(newPassword) && StringUtils.isBlank(confirmPassword)) {
             node.getStyleClass().add(errorStyle);
-            tooltip.setText(GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_VALIDATE_EMPTY"));
-            Tooltip.install(node, tooltip);
+            TooltipUtil.installWarnTooltip(node, GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_VALIDATE_EMPTY"));
         } else if (StringUtils.isNotBlank(newPassword) && StringUtils.isNotBlank(confirmPassword) && (newPassword.length() < 6 || newPassword.length() >= 13) && (confirmPassword.length() < 6 || confirmPassword.length() >= 13)) {
             node.getStyleClass().add(errorStyle);
-            tooltip.setText(GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_VALIDATE_LENGTH"));
-            Tooltip.install(node, tooltip);
+            TooltipUtil.installWarnTooltip(node, GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_VALIDATE_LENGTH"));
         } else if (!newPassword.equals(confirmPassword)) {
             node.getStyleClass().add(errorStyle);
-            tooltip.setText(GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_VALIDATE_CONFIRM"));
-            Tooltip.install(node, tooltip);
+            TooltipUtil.installWarnTooltip(node, GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_VALIDATE_CONFIRM"));
         }  else {
             node.getStyleClass().removeAll(errorStyle);
-            Tooltip.uninstall(node, tooltip);
+            TooltipUtil.uninstallWarnTooltip(node);
         }
     }
 }
