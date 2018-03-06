@@ -3,7 +3,6 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -33,9 +32,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -85,8 +82,6 @@ public class SpcItemController implements Initializable {
     @FXML
     private Button groupRemove;
     @FXML
-    private ScrollPane scroll;
-    @FXML
     private VBox basicSearch;
     @FXML
     private TextArea advanceText;
@@ -101,6 +96,8 @@ public class SpcItemController implements Initializable {
     @FXML
     private TextField ndGroup;
     private CheckBox box;
+    private ObservableList<String> groupItem = FXCollections.observableArrayList();
+
     private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
@@ -227,15 +224,20 @@ public class SpcItemController implements Initializable {
 //            dto.setTestItemName("item" + i);
 //            itemDtos.add(dto);
 //        }
+        groupItem.clear();
+        items.clear();
         List<TestItemWithTypeDto> itemDtos = envService.findTestItems();
         if (itemDtos != null) {
             for (TestItemWithTypeDto dto : itemDtos) {
                 ItemTableModel tableModel = new ItemTableModel(dto);
                 items.add(tableModel);
+                groupItem.add(dto.getTestItemName());
             }
             itemTable.setItems(personSortedList);
             personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
         }
+        group1.setItems(groupItem);
+        group2.setItems(groupItem);
     }
 
     private void getAnalysisBtnEvent() {

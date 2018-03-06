@@ -8,7 +8,9 @@ import com.dmsoft.firefly.gui.model.TemplateItemModel;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.SpecificationDataDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
+import com.sun.prism.PixelFormat;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -67,6 +69,7 @@ public class AddItemController {
             selectItems.forEach(item -> {
                 SpecificationDataDto dataDto = new SpecificationDataDto();
                 dataDto.setTestItemName(item);
+                dataDto.setDataType(TestItemType.VARIABLE.toString());
                 itemTableData.add(new TemplateItemModel(dataDto));
             });
             StageMap.closeStage("addItem");
