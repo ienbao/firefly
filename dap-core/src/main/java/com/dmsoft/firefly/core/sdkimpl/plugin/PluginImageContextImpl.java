@@ -3,7 +3,6 @@ package com.dmsoft.firefly.core.sdkimpl.plugin;
 import com.dmsoft.firefly.core.utils.ClassScanner;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.*;
-import com.dmsoft.firefly.sdk.plugin.annotation.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;

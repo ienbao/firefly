@@ -8,7 +8,7 @@ import com.dmsoft.firefly.plugin.grr.utils.enums.GrrAnalysisMethod;
 import com.dmsoft.firefly.plugin.grr.utils.enums.GrrResultName;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
-import com.dmsoft.firefly.sdk.plugin.annotation.Analysis;
+import com.dmsoft.firefly.sdk.plugin.apis.annotation.Analysis;
 import com.dmsoft.firefly.sdk.plugin.apis.IAnalysis;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;

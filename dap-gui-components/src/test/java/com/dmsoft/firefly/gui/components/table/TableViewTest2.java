@@ -144,6 +144,10 @@ public class TableViewTest2 extends Application {
             }
         });
 
+        tableView.skinProperty().addListener((ov, s1, s2) -> {
+            System.out.println("ASDF");
+        });
+
         GridPane pane = new GridPane();
         HBox hBox = new HBox();
         Button addRowButton = new Button("Add Row");

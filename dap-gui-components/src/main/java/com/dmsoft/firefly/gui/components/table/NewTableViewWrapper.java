@@ -2,6 +2,8 @@ package com.dmsoft.firefly.gui.components.table;
 
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import com.sun.javafx.scene.control.skin.TableViewSkin;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
@@ -219,6 +221,11 @@ public class NewTableViewWrapper {
                 return 0;
             }
         };
+
+    }
+
+    private static void decorateSkin(TableViewSkin skin, NewTableModel model) {
+        TableHeaderRow headerRow = skin.getTableHeaderRow();
 
     }
 }

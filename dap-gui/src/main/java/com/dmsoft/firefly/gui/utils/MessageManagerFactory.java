@@ -3,7 +3,7 @@ package com.dmsoft.firefly.gui.utils;
 import com.dmsoft.firefly.gui.components.messagetip.MessageTipFactory;
 import com.dmsoft.firefly.gui.components.utils.NodeMap;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
-import com.dmsoft.firefly.sdk.message.MessageTipTyp;
+import com.dmsoft.firefly.sdk.message.MessageTipType;
 import com.google.common.collect.Lists;
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -26,7 +26,7 @@ public class MessageManagerFactory implements IMessageManager{
     }
 
     @Override
-    public void showMsg(String title, String msg, MessageTipTyp type) {
+    public void showMsg(String title, String msg, MessageTipType type) {
         if (type != null) {
             switch (type) {
                 case SUCCESS:

@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.sdk.plugin.annotation;
+package com.dmsoft.firefly.sdk.plugin.apis.annotation;
 
 /**
  * Annotation to exclude the method in open api registered by {@link OpenService}
