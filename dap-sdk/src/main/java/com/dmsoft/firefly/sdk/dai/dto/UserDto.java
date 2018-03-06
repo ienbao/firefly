@@ -11,36 +11,18 @@ import com.dmsoft.bamboo.common.dto.AbstractValueObject;
  */
 public class UserDto extends AbstractValueObject {
 
-    private String name;
-    private String loginName;
-    private String salt;
+    private String userName;
     private String password;
     private String email;
+    private boolean acceptLegal;
 
-//    private List<Role> roles;
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLoginName() {
-        return loginName;
-    }
-
-    public void setLoginName(String loginName) {
-        this.loginName = loginName;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {
@@ -57,5 +39,13 @@ public class UserDto extends AbstractValueObject {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isAcceptLegal() {
+        return acceptLegal;
+    }
+
+    public void setAcceptLegal(boolean acceptLegal) {
+        this.acceptLegal = acceptLegal;
     }
 }
