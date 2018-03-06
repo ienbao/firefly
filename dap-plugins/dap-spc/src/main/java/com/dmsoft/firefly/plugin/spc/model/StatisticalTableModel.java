@@ -218,7 +218,6 @@ public class StatisticalTableModel implements NewTableModel {
             }
         }
 
-
         return tableCell;
     }
 
