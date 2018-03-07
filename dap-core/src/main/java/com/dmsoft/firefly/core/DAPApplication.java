@@ -92,14 +92,13 @@ public class DAPApplication {
      * method to start application
      *
      * @param activePlugins plugins to be excluded
-     * @return plugin context
      */
     public static void run(List<String> activePlugins) {
         // prepare env done
         String propertiesURL = ApplicationPathUtil.getPath("resources", "application.properties");
         InputStream inputStream = null;
         try {
-            inputStream = new BufferedInputStream(new FileInputStream(propertiesURL.toString()));
+            inputStream = new BufferedInputStream(new FileInputStream(propertiesURL));
             Properties properties = new Properties();
             properties.load(inputStream);
             String pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
