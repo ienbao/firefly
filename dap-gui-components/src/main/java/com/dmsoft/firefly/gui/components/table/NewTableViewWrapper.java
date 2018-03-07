@@ -8,6 +8,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.transformation.SortedList;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DefaultStringConverter;
@@ -254,19 +255,21 @@ public class NewTableViewWrapper {
                     rowHeader.getColumnHeaderFor(tableColumn).lookup(".label").getStyleClass().add("descending-label");
                 }
             });
-            tableView.getSortOrder().addListener((ListChangeListener<String>) c -> {
-                if (tableView.getSortOrder() == null || tableView.getSortOrder().isEmpty()) {
-                    if (rowHeader.getColumnHeaderFor(tableColumn).lookup(".ascending-label") != null || rowHeader.getColumnHeaderFor(tableColumn).lookup(".descending-label") != null) {
-                        rowHeader.getColumnHeaderFor(tableColumn).lookup(".label").getStyleClass().removeAll("ascending-label");
-                        rowHeader.getColumnHeaderFor(tableColumn).lookup(".label").getStyleClass().removeAll("descending-label");
-                    }
-                } else {
-                    if (tableView.getSortOrder().get(0) == tableColumn && TableColumn.SortType.ASCENDING.equals(tableColumn.getSortType())) {
-                        rowHeader.getColumnHeaderFor(tableColumn).lookup(".label").getStyleClass().add("ascending-label");
-                        rowHeader.getColumnHeaderFor(tableColumn).lookup(".label").getStyleClass().removeAll("descending-label");
-                    }
-                }
-            });
         }
+        tableView.getSortOrder().addListener((ListChangeListener<String>) c -> {
+            if (tableView.getSortOrder() == null || tableView.getSortOrder().isEmpty()) {
+                for (Node node : tableView.lookupAll(".ascending-label")) {
+                    node.getStyleClass().removeAll("ascending-label");
+                }
+                for (Node node : tableView.lookupAll(".descending-label")) {
+                    node.getStyleClass().removeAll("descending-label");
+                }
+            } else {
+                if (TableColumn.SortType.ASCENDING.equals(((TableColumn) tableView.getSortOrder().get(0)).getSortType())) {
+                    rowHeader.getColumnHeaderFor((TableColumn) tableView.getSortOrder().get(0)).lookup(".label").getStyleClass().add("ascending-label");
+                    rowHeader.getColumnHeaderFor((TableColumn) tableView.getSortOrder().get(0)).lookup(".label").getStyleClass().removeAll("descending-label");
+                }
+            }
+        });
     }
 }

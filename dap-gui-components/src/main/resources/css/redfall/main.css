@@ -1168,6 +1168,10 @@
     -fx-background-position: 50% 2;
 }
 
+.table-view .column-header .label {
+    -fx-background-image: none;
+}
+
 .table-view .filler {
     -fx-background-color: #ffffff;
     -fx-border-color: #dcdcdc;
