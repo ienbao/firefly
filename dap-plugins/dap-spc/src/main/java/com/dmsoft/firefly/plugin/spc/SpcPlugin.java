@@ -4,7 +4,8 @@
 
 package com.dmsoft.firefly.plugin.spc;
 
-
+import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
+import com.dmsoft.firefly.plugin.spc.pipeline.SpcAnalysisJobPipeline;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.service.SpcAnalysisService;
 import com.dmsoft.firefly.plugin.spc.service.SpcService;
@@ -13,6 +14,7 @@ import com.dmsoft.firefly.plugin.spc.service.impl.SpcServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ViewResource;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.plugin.Plugin;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.ui.IMainBodyPane;
@@ -31,7 +33,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SpcPlugin extends Plugin {
     public static final String SPC_PLUGIN_NAME = "com.dmsoft.dap.SpcPlugin";
-    private static final Logger logger = LoggerFactory.getLogger(SpcPlugin.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpcPlugin.class);
 
     @Override
     public void initialize(InitModel model) {
@@ -45,7 +47,7 @@ public class SpcPlugin extends Plugin {
 
         RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(SPC_PLUGIN_NAME,
                 "com.dmsoft.firefly.plugin.spc.service.impl.SpcAnalysisServiceImpl", spcAnalysisService);
-        logger.info("Plugin-SPC Initialized.");
+        LOGGER.info("Plugin-SPC Initialized.");
     }
 
     @Override
@@ -72,9 +74,11 @@ public class SpcPlugin extends Plugin {
 
             }
         });
-        logger.debug("Plugin-SPC UI register done.");
+        JobManager manager = RuntimeContext.getBean(JobManager.class);
+        manager.initializeJob(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE, new SpcAnalysisJobPipeline());
+        LOGGER.debug("Plugin-SPC UI register done.");
 
-        logger.info("Plugin-SPC started.");
+        LOGGER.info("Plugin-SPC started.");
     }
 
     @Override
