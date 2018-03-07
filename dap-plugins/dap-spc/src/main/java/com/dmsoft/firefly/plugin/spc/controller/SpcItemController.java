@@ -328,6 +328,23 @@ public class SpcItemController implements Initializable {
     }
 
     /**
+     * get selected test items
+     *
+     * @return test items
+     */
+    public List<TestItemWithTypeDto> getSelectedItemDto() {
+        List<TestItemWithTypeDto> selectItems = Lists.newArrayList();
+        if (items != null) {
+            for (ItemTableModel model : items) {
+                if (model.getSelector().isSelected()) {
+                    selectItems.add(model.getItemDto());
+                }
+            }
+        }
+        return selectItems;
+    }
+
+    /**
      * get searchs
      *
      * @return list of search
