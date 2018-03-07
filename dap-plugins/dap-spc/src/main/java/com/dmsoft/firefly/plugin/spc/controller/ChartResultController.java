@@ -13,6 +13,7 @@ import com.dmsoft.firefly.plugin.spc.charts.utils.ColorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
+import com.dmsoft.firefly.plugin.spc.charts.view.VerticalTabPane;
 import com.dmsoft.firefly.plugin.spc.dto.chart.BarCategoryData;
 import com.dmsoft.firefly.plugin.spc.dto.chart.BarChartData;
 import com.dmsoft.firefly.plugin.spc.dto.chart.RuleXYChartData;
@@ -27,6 +28,8 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.scene.chart.*;
 import javafx.scene.control.Tab;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
 import java.net.URL;
@@ -39,22 +42,11 @@ import java.util.function.Function;
 public class ChartResultController implements Initializable {
 
     private SpcMainController spcMainController;
+
     @FXML
-    private Tab runTab;
-    @FXML
-    private Tab ndcTab;
-    @FXML
-    private Tab xBarTab;
-    @FXML
-    private Tab rangeTab;
-    @FXML
-    private Tab sdTab;
-    @FXML
-    private Tab medianTab;
-    @FXML
-    private Tab boxTab;
-    @FXML
-    private Tab mrTab;
+    private Tab analysisChartTab;
+
+    private VerticalTabPane chartTabPane;
 
     private ChartAnnotationButton editBtn;
 
@@ -89,6 +81,8 @@ public class ChartResultController implements Initializable {
     private String pointName = "Point";
     private String connectLine = "Connect Line";
 
+    private String legend = "- - - LSL, USL    —— m Line    —— 6s Line";
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initChartPane();
@@ -104,14 +98,25 @@ public class ChartResultController implements Initializable {
         this.initMedianChartPane();
         this.initBoxChartPane();
         this.initMrChartPane();
-        ndcTab.setContent(ndChartPane);
-        runTab.setContent(runChartPane);
-        xBarTab.setContent(xBarChartPane);
-        rangeTab.setContent(rangeChartPane);
-        sdTab.setContent(sdChartPane);
-        medianTab.setContent(medianChartPane);
-        boxTab.setContent(boxChartPane);
-        mrTab.setContent(mrChartPane);
+        chartTabPane = new VerticalTabPane();
+        ndChartPane.setId(UIConstant.SPC_CHART_NAME[0]);
+        runChartPane.setId(UIConstant.SPC_CHART_NAME[1]);
+        xBarChartPane.setId(UIConstant.SPC_CHART_NAME[2]);
+        rangeChartPane.setId(UIConstant.SPC_CHART_NAME[3]);
+        sdChartPane.setId(UIConstant.SPC_CHART_NAME[4]);
+        medianChartPane.setId(UIConstant.SPC_CHART_NAME[5]);
+        boxChartPane.setId(UIConstant.SPC_CHART_NAME[6]);
+        mrChartPane.setId(UIConstant.SPC_CHART_NAME[7]);
+        chartTabPane.addNode(ndChartPane, 0);
+        chartTabPane.addNode(runChartPane, 1);
+        chartTabPane.addNode(xBarChartPane, 2);
+        chartTabPane.addNode(rangeChartPane, 3);
+        chartTabPane.addNode(sdChartPane, 4);
+        chartTabPane.addNode(medianChartPane, 5);
+        chartTabPane.addNode(boxChartPane, 6);
+        chartTabPane.addNode(mrChartPane, 7);
+        chartTabPane.activeTabByIndex(0);
+        analysisChartTab.setContent(chartTabPane);
     }
 
     private void initChartData() {
@@ -150,6 +155,7 @@ public class ChartResultController implements Initializable {
 
         NDChart<Double, Double> ndChart = new NDChart(xAxis, yAxis);
         ndChartPane = new ChartPanel(ndChart);
+        ndChartPane.setLegend(legend);
         ndChartPane.getCustomPane().getChildren().add(button);
     }
 
@@ -178,6 +184,7 @@ public class ChartResultController implements Initializable {
         yAxis.setMinorTickVisible(false);
         LinearChart runChart = new LinearChart(xAxis, yAxis);
         runChartPane = new ChartPanel<>(runChart);
+        runChartPane.setLegend(legend);
         runChartPane.getCustomPane().getChildren().add(rRuleBtn);
         runChartPane.getCustomPane().getChildren().add(button);
         runChartPane.getCustomPane().getChildren().add(editBtn);
@@ -249,15 +256,15 @@ public class ChartResultController implements Initializable {
     }
 
     private void initRangeChartPane() {
-
+        rangeChartPane = new ChartPanel(new LinearChart(new NumberAxis(), new NumberAxis()));
     }
 
     private void initSdChartPane() {
-
+        sdChartPane = new ChartPanel(new LinearChart(new NumberAxis(), new NumberAxis()));
     }
 
     private void initMedianChartPane() {
-
+        medianChartPane = new ChartPanel(new LinearChart(new NumberAxis(), new NumberAxis()));
     }
 
     private void initBoxChartPane() {
@@ -285,7 +292,7 @@ public class ChartResultController implements Initializable {
     }
 
     private void initMrChartPane() {
-
+        mrChartPane = new ChartPanel(new LinearChart(new NumberAxis(), new NumberAxis()));
     }
 
     private void createXBarChartData() {

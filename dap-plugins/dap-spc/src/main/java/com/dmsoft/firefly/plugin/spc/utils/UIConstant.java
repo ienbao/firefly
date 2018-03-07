@@ -23,6 +23,8 @@ public class UIConstant {
     public static final String SPC_CHART_RUN = "RunChart";
     public static final String SPC_CHART_XBAR = "XBarChart";
 
+    public static final String[] SPC_CHART_NAME = new String[] {"ND Chart", "Run Chart", "X-bar Chart", "Range Chart", "SD Chart", "Median Chart", "Box Chart", "MR Chart"};
+
     //    "LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL"
     public static final String[] SPC_CHART_XBAR_EXTERN_MENU = new String[]{"LCL", "μ", "UCL", "Point", "Connect Line"};
     public static final String[] SPC_CHART_NDC_EXTERN_MENU = new String[]{"UCL", "USL", "2σ", "σ", "μ", "-σ", "-2σ", "LSL", "LCL", "Histogram", "Normal Curve"};

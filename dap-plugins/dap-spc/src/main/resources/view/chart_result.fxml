@@ -3,50 +3,50 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane minHeight="190.0" minWidth="309.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.ChartResultController">
+<AnchorPane prefHeight="265.0" prefWidth="485.0" minHeight="190.0" minWidth="309.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.ChartResultController">
     <children>
-        <TabPane style="-fx-border-width: 0 0 0 0;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <TabPane style="-fx-border-width: 0 0 1px 0;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
             <tabs>
-                <Tab text="%ANALYSIS_RESULT">
+                <Tab text="%ANALYSIS_RESULT" fx:id="analysisChartTab">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0">
+                        <AnchorPane fx:id="chartAnchorPane" minHeight="0.0" minWidth="0.0">
                             <children>
-                                <TabPane side="LEFT" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
-                                    <tabs>
-                                        <Tab text="ND Chart" fx:id="ndcTab">
-                                            <content>
-                                            </content>
-                                        </Tab>
-                                        <Tab text="Run Chart" fx:id="runTab">
-                                            <content>
-                                            </content>
-                                        </Tab>
-                                        <Tab text="X-bar Chart" fx:id="xBarTab">
-                                            <content>
-                                            </content>
-                                        </Tab>
-                                        <Tab text="Range Chart" fx:id="rangeTab">
-                                            <content>
-                                            </content>
-                                        </Tab>
-                                        <Tab text="SD Chart" fx:id="sdTab">
-                                            <content>
-                                            </content>
-                                        </Tab>
-                                        <Tab text="Median Chart" fx:id="medianTab">
-                                            <content>
-                                            </content>
-                                        </Tab>
-                                        <Tab text="Box Chart" fx:id="boxTab">
-                                            <content>
-                                            </content>
-                                        </Tab>
-                                        <Tab text="MR Chart" fx:id="mrTab">
-                                            <content>
-                                            </content>
-                                        </Tab>
-                                    </tabs>
-                                </TabPane>
+                                <!--<TabPane side="LEFT" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">-->
+                                    <!--<tabs>-->
+                                        <!--<Tab text="ND Chart" fx:id="ndcTab">-->
+                                            <!--<content>-->
+                                            <!--</content>-->
+                                        <!--</Tab>-->
+                                        <!--<Tab text="Run Chart" fx:id="runTab">-->
+                                            <!--<content>-->
+                                            <!--</content>-->
+                                        <!--</Tab>-->
+                                        <!--<Tab text="X-bar Chart" fx:id="xBarTab">-->
+                                            <!--<content>-->
+                                            <!--</content>-->
+                                        <!--</Tab>-->
+                                        <!--<Tab text="Range Chart" fx:id="rangeTab">-->
+                                            <!--<content>-->
+                                            <!--</content>-->
+                                        <!--</Tab>-->
+                                        <!--<Tab text="SD Chart" fx:id="sdTab">-->
+                                            <!--<content>-->
+                                            <!--</content>-->
+                                        <!--</Tab>-->
+                                        <!--<Tab text="Median Chart" fx:id="medianTab">-->
+                                            <!--<content>-->
+                                            <!--</content>-->
+                                        <!--</Tab>-->
+                                        <!--<Tab text="Box Chart" fx:id="boxTab">-->
+                                            <!--<content>-->
+                                            <!--</content>-->
+                                        <!--</Tab>-->
+                                        <!--<Tab text="MR Chart" fx:id="mrTab">-->
+                                            <!--<content>-->
+                                            <!--</content>-->
+                                        <!--</Tab>-->
+                                    <!--</tabs>-->
+                                <!--</TabPane>-->
                             </children>
                         </AnchorPane>
                     </content>
