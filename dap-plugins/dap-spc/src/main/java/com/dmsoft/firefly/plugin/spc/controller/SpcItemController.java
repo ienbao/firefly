@@ -398,6 +398,14 @@ public class SpcItemController implements Initializable {
         return search;
     }
 
+    public String getSubNumber(){
+        return subGroup.getText();
+    }
+
+    public String getNdGroup(){
+        return ndGroup.getText();
+    }
+
     private void importLeftConfig() {
         String str = System.getProperty("user.home");
 
