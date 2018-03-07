@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.gui.components.table;
 
 import com.google.common.collect.Lists;
+import com.sun.javafx.scene.control.skin.TableViewSkin;
 import javafx.application.Application;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -137,15 +138,9 @@ public class TableViewTest2 extends Application {
 
             }
         };
-        tableView.addEventHandler(SortEvent.ANY, event -> {
-            if (tableView.getSortOrder() != null && !tableView.getSortOrder().isEmpty()) {
-                System.out.println(tableView.getSortOrder().get(0).getText());
-                System.out.println(tableView.getSortOrder().get(0).getSortType());
-            }
-        });
 
         tableView.skinProperty().addListener((ov, s1, s2) -> {
-            System.out.println("ASDF");
+            NewTableViewWrapper.decorateSkinForSortHeader((TableViewSkin) s2, tableView);
         });
 
         GridPane pane = new GridPane();

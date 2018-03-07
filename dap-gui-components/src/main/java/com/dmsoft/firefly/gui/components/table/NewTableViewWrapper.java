@@ -224,8 +224,44 @@ public class NewTableViewWrapper {
 
     }
 
-    private static void decorateSkin(TableViewSkin skin, NewTableModel model) {
-        TableHeaderRow headerRow = skin.getTableHeaderRow();
-
+    /**
+     * methdo to decorate skin
+     *
+     * @param skin      skin
+     * @param tableView table view
+     */
+    @SuppressWarnings("unchecked")
+    public static void decorateSkinForSortHeader(TableViewSkin skin, TableView tableView) {
+        TableHeaderRow rowHeader = skin.getTableHeaderRow();
+        for (int i = 0; i < tableView.getColumns().size(); i++) {
+            TableColumn tableColumn = (TableColumn) tableView.getColumns().get(i);
+            Button empty = new Button();
+            empty.setPrefSize(0, 0);
+            empty.setMinSize(0, 0);
+            empty.setMaxSize(0, 0);
+            tableColumn.setSortNode(empty);
+            tableColumn.sortTypeProperty().addListener((ov, t1, t2) -> {
+                if (TableColumn.SortType.DESCENDING.equals(t2)) {
+                    rowHeader.getColumnHeaderFor(tableColumn).lookup(".label").getStyleClass().removeAll("ascending-label");
+                    rowHeader.getColumnHeaderFor(tableColumn).lookup(".label").getStyleClass().add("descending-label");
+                    System.out.println(t2);
+                }
+            });
+            tableView.getSortOrder().addListener((ListChangeListener<String>) c -> {
+                if (tableView.getSortOrder() == null || tableView.getSortOrder().isEmpty()) {
+                    if (rowHeader.getColumnHeaderFor(tableColumn).lookup(".ascending-label") != null || rowHeader.getColumnHeaderFor(tableColumn).lookup(".descending-label") != null) {
+                        rowHeader.getColumnHeaderFor(tableColumn).lookup(".label").getStyleClass().removeAll("ascending-label");
+                        rowHeader.getColumnHeaderFor(tableColumn).lookup(".label").getStyleClass().removeAll("descending-label");
+                        System.out.println("empty");
+                    }
+                } else {
+                    if (tableView.getSortOrder().get(0) == tableColumn && TableColumn.SortType.ASCENDING.equals(tableColumn.getSortType())) {
+                        rowHeader.getColumnHeaderFor(tableColumn).lookup(".label").getStyleClass().add("ascending-label");
+                        rowHeader.getColumnHeaderFor(tableColumn).lookup(".label").getStyleClass().removeAll("descending-label");
+                        System.out.println(tableColumn.getSortType());
+                    }
+                }
+            });
+        }
     }
 }
