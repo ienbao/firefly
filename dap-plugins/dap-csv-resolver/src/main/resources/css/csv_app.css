@@ -4,7 +4,9 @@
     -fx-background-color: #ffffff;
     -fx-text-fill: #222222;
     -fx-border-width: 0 0 1 0;
-    -fx-border-color: transparent;
+    -fx-border-color: #DCDCDC;
+    -fx-border-style: dotted;
+    /*-fx-border-color: transparent;*/
 }
 
 #rowTable .table-cell {
@@ -12,11 +14,8 @@
     -fx-text-fill: #222222;
     -fx-alignment: center-left;
     -fx-padding: 0 10 0 10;
-    -fx-border-width: 0 0 1 0;
     -fx-border-insets: 0;
     -fx-background-insets: 0;
-    -fx-border-color: #DCDCDC;
-    -fx-border-style: dotted;
 }
 
 #rowTable .table-cell .text-field{

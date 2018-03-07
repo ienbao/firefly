@@ -81,7 +81,7 @@ public class CsvResolverController {
                     public void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
                         if (!isEmpty()) {
-                            this.setStyle("-fx-background-color: #f8f8f8; -fx-border-width: 0 1 1 0; -fx-border-color: #DCDCDC");
+                            this.setStyle("-fx-background-color: #f8f8f8; -fx-border-width: 0 1 0 0; -fx-border-color: #DCDCDC; -fx-border-style: dotted");
                             // Get fancy and change color based on data
                             setText(item);
                         } else {
