@@ -257,18 +257,15 @@ public class NewTableViewWrapper {
             });
         }
         tableView.getSortOrder().addListener((ListChangeListener<String>) c -> {
-            if (tableView.getSortOrder() == null || tableView.getSortOrder().isEmpty()) {
-                for (Node node : tableView.lookupAll(".ascending-label")) {
-                    node.getStyleClass().removeAll("ascending-label");
-                }
-                for (Node node : tableView.lookupAll(".descending-label")) {
-                    node.getStyleClass().removeAll("descending-label");
-                }
-            } else {
-                if (TableColumn.SortType.ASCENDING.equals(((TableColumn) tableView.getSortOrder().get(0)).getSortType())) {
-                    rowHeader.getColumnHeaderFor((TableColumn) tableView.getSortOrder().get(0)).lookup(".label").getStyleClass().add("ascending-label");
-                    rowHeader.getColumnHeaderFor((TableColumn) tableView.getSortOrder().get(0)).lookup(".label").getStyleClass().removeAll("descending-label");
-                }
+            for (Node node : tableView.lookupAll(".ascending-label")) {
+                node.getStyleClass().removeAll("ascending-label");
+            }
+            for (Node node : tableView.lookupAll(".descending-label")) {
+                node.getStyleClass().removeAll("descending-label");
+            }
+            if (tableView.getSortOrder() != null && !tableView.getSortOrder().isEmpty() && TableColumn.SortType.ASCENDING.equals(((TableColumn) tableView.getSortOrder().get(0)).getSortType())) {
+                rowHeader.getColumnHeaderFor((TableColumn) tableView.getSortOrder().get(0)).lookup(".label").getStyleClass().add("ascending-label");
+                rowHeader.getColumnHeaderFor((TableColumn) tableView.getSortOrder().get(0)).lookup(".label").getStyleClass().removeAll("descending-label");
             }
         });
     }
