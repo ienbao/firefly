@@ -1,13 +1,19 @@
 package com.dmsoft.firefly.gui.controller;
 
+import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
+import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.ui.IMenu;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.google.common.collect.Lists;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +22,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.dmsoft.firefly.sdk.ui.MenuBuilder.MenuType;
+import static com.google.common.io.Resources.getResource;
 
 public class AppController {
     private final Logger logger = LoggerFactory.getLogger(AppController.class);
@@ -38,7 +45,7 @@ public class AppController {
 
     private void initEvent() {
         menuChangePassword.setOnAction(event -> {
-
+            buildChangePasswordDia();
         });
         menuLoginOut.setOnAction(event -> {
 
@@ -153,19 +160,17 @@ public class AppController {
         }
     }
 
-    private void buildChangePasswordDialog() {
-//        if (renameStage == null) {
-      /*  Pane root = null;
+    private void buildChangePasswordDia() {
+        Pane root = null;
         try {
-            FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/change_password.fxml"), GuiFxmlAndLanguageUtils.getLanguageType());
-            root = loader.load();
-            Stage renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameTemplate", "Rename Template", root);
-            renameStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-//        }
-
+            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/change_password.fxml");
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("platform_gui_change_password", GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), root, getResource("css/platform_app.css").toExternalForm());
+            stage.setResizable(false);
+            stage.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 }

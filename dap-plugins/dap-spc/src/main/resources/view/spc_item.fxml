@@ -6,6 +6,7 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -61,7 +62,7 @@
                                           <Insets left="10.0" right="10.0" />
                                        </GridPane.margin>
                                     </Label>
-                                    <TextField GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                    <TextField fx:id="subGroup" GridPane.rowIndex="1" GridPane.valignment="TOP">
                                        <GridPane.margin>
                                           <Insets left="10.0" right="10.0" />
                                        </GridPane.margin>
@@ -71,7 +72,7 @@
                                           <Insets left="10.0" right="10.0" />
                                        </GridPane.margin>
                                     </Label>
-                                    <TextField GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                    <TextField fx:id="ndGroup" GridPane.rowIndex="3" GridPane.valignment="TOP">
                                        <GridPane.margin>
                                           <Insets left="10.0" right="10.0" />
                                        </GridPane.margin>
@@ -147,7 +148,11 @@
                                     <Button fx:id="groupRemove" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="btn-txt" />
                                  </children>
                               </HBox>
-                              <VBox fx:id="basicSearch" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS" />
+                              <ScrollPane fx:id="scroll" fitToWidth="true" hbarPolicy="NEVER" pannable="true" prefHeight="200.0" prefWidth="180.0" VBox.vgrow="ALWAYS">
+                                 <content>
+                                    <VBox fx:id="basicSearch" alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" />
+                                 </content>
+                              </ScrollPane>
                            </children>
                         </VBox>
                      </content>

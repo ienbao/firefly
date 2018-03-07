@@ -1,16 +1,15 @@
 package com.dmsoft.firefly.plugin.spc.charts.view;
 
 import com.dmsoft.firefly.gui.components.chart.ChartUtils;
-import com.dmsoft.firefly.plugin.spc.charts.MultipleAxisXYChart;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
-import javafx.scene.Node;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+
 /**
  * Created by cherry on 2018/2/8.
  */
-public class ChartPanel<T extends Node> extends VBox {
+public class ChartPanel<T extends XYChart> extends VBox {
 
     private T chart;
     private VBox chartPane;
@@ -37,11 +36,7 @@ public class ChartPanel<T extends Node> extends VBox {
     public void activeChartDragging() {
 
         if (chartUtils == null) {
-            if (chart instanceof  XYChart) {
-                chartUtils = new ChartUtils((XYChart) chart);
-            } else if (chart instanceof MultipleAxisXYChart) {
-
-            }
+            chartUtils = new ChartUtils(chart);
         }
         if (chartDraggingEnable && chartUtils != null) {
             chartUtils.activeChartDraggable();
@@ -116,18 +111,9 @@ public class ChartPanel<T extends Node> extends VBox {
         extensionBtn.setMaxWidth(20);
         extensionBtn.setMinWidth(20);
 
-        if (chart instanceof XYChart) {
-            XYChart xyChart = (XYChart) chart;
-            xyChart.setPrefHeight(250);
-            xyChart.setPrefWidth(500);
-            xyChart.setLegendVisible(false);
-        }
-
-        if (chart instanceof StackPane) {
-            ((StackPane) chart).setPrefWidth(500);
-            ((StackPane) chart).setPrefHeight(250);
-            ((StackPane) chart).setStyle("-fx-background-color: #462300");
-        }
+        chart.setPrefHeight(250);
+        chart.setPrefWidth(500);
+        chart.setLegendVisible(false);
 
     }
 
@@ -136,8 +122,7 @@ public class ChartPanel<T extends Node> extends VBox {
         zoomInBtn.setOnAction(event -> {
             if (chartSizeChangeEnable) {
                 if (chartUtils == null) {
-                    XYChart xyChart = (XYChart) chart;
-                    chartUtils = new ChartUtils(xyChart);
+                    chartUtils = new ChartUtils(chart);
                 }
                 chartUtils.zoomInChart();
             }
@@ -147,8 +132,7 @@ public class ChartPanel<T extends Node> extends VBox {
             if (chartSizeChangeEnable) {
 
                 if (chartUtils == null) {
-                    XYChart xyChart = (XYChart) chart;
-                    chartUtils = new ChartUtils(xyChart);
+                    chartUtils = new ChartUtils(chart);
                 }
                 chartUtils.zoomOutChart();
             }

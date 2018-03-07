@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.spc.charts.data.basic;
 
 import com.dmsoft.bamboo.common.dto.AbstractValueObject;
+import javafx.scene.paint.Color;
 
 /**
  * Created by cherry on 2018/2/12.
@@ -10,7 +11,7 @@ public class AbnormalPointData<X, Y> extends AbstractValueObject {
     private X[] x;
     private Y[] y;
     private String name;
-    private String color;
+    private Color color;
     private boolean isVisible;
 
     public X[] getX() {
@@ -37,11 +38,11 @@ public class AbnormalPointData<X, Y> extends AbstractValueObject {
         this.name = name;
     }
 
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 

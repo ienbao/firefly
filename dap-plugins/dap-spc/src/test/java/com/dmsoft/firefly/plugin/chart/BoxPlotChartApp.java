@@ -34,7 +34,6 @@ public class BoxPlotChartApp extends Application {
     private void initComponents() {
 
         NumberAxis xAxis = new NumberAxis(0, 32, 1);
-//        xAxis.setMinorTickCount(0);
         NumberAxis yAxis = new NumberAxis();
         chart = new BoxPlotChart(xAxis, yAxis);
     }
@@ -84,13 +83,9 @@ public class BoxPlotChartApp extends Application {
             );
         });
 
-        ObservableList<XYChart.Series<Number, Number>> data = chart.getData();
-        if (data == null) {
-            data = FXCollections.observableArrayList(series);
-            chart.setData(data);
-        } else {
-            chart.getData().add(series);
-        }
+        com.dmsoft.firefly.plugin.spc.dto.chart.BoxAndWhiskerData data = new com.dmsoft.firefly.plugin.spc.dto.chart.BoxAndWhiskerData();
+        data.setData(chartData);
+        chart.createChartSeries(data);
     }
 
     @Override

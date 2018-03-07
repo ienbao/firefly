@@ -2,9 +2,8 @@ package com.dmsoft.firefly.plugin.spc.charts;
 
 import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationFetch;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
-import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationNode;
+import com.dmsoft.firefly.plugin.spc.charts.utils.ColorUtils;
 import com.google.common.collect.Maps;
-import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -13,15 +12,11 @@ import javafx.scene.Node;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 
 import java.util.List;
 import java.util.Map;
@@ -36,7 +31,7 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
     private ValueMarker valueMarker = new ValueMarker();
     private boolean showTooltip = true;
 
-    private Map<XYChart.Series, String> seriesColorMap = Maps.newHashMap();
+    private Map<XYChart.Series, Color> seriesColorMap = Maps.newHashMap();
 
     /**
      * Construct a new LinearChart with the given axis.
@@ -253,7 +248,7 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         series.getData().forEach(dataItem -> {
             PointRule pointRule = new PointRule(dataItem);
             if (seriesColorMap.containsKey(series)) {
-                String color = seriesColorMap.get(series);
+                Color color = seriesColorMap.get(series);
                 pointRule.setNormalColor(color);
             }
             pointRule.setActiveRule(ruleNames);
@@ -270,16 +265,16 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         });
     }
 
-    private void setSeriesDataStyleByDefault(XYChart.Series series, String color, boolean showLined) {
+    private void setSeriesDataStyleByDefault(XYChart.Series series, Color color, boolean showLined) {
 
         ObservableList<Data<X, Y>> data = series.getData();
         String seriesClass = "chart-series-hidden-line";
         if (!showLined) {
             series.getNode().getStyleClass().add(seriesClass);
         }
-        series.getNode().setStyle("-fx-stroke: " + color);
+        series.getNode().setStyle("-fx-stroke: " + ColorUtils.toRGBCode(color));
         data.forEach(dataItem -> {
-            dataItem.getNode().setStyle("-fx-background-color: " + color);
+            dataItem.getNode().setStyle("-fx-background-color: " + ColorUtils.toRGBCode(color));
         });
     }
 

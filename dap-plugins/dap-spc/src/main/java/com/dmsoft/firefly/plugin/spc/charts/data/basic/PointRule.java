@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.spc.charts.data.basic;
 
 import javafx.scene.chart.XYChart;
+import javafx.scene.paint.Color;
 
 import java.util.List;
 
@@ -10,13 +11,13 @@ import java.util.List;
 public class PointRule {
 
     private XYChart.Data data;
-    private String normalColor;
+    private Color normalColor;
     private List<String> activeRule;
 
     public PointRule() {
     }
 
-    public PointRule(XYChart.Data data, String normalColor) {
+    public PointRule(XYChart.Data data, Color normalColor) {
         this.data = data;
         this.normalColor = normalColor;
     }
@@ -25,11 +26,11 @@ public class PointRule {
         this.data = data;
     }
 
-    public String getNormalColor() {
+    public Color getNormalColor() {
         return normalColor;
     }
 
-    public void setNormalColor(String normalColor) {
+    public void setNormalColor(Color normalColor) {
         this.normalColor = normalColor;
     }
 

@@ -2,7 +2,7 @@ package com.dmsoft.firefly.plugin.spc.handler;
 
 import com.dmsoft.firefly.plugin.spc.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcAnalysisConfigDto;
-import com.dmsoft.firefly.plugin.spc.service.impl.SpcService;
+import com.dmsoft.firefly.plugin.spc.service.SpcService;
 import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionCode;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
