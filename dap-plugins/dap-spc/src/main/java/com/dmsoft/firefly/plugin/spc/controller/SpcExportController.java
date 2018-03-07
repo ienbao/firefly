@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
@@ -153,15 +154,20 @@ public class SpcExportController {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Spc Config export");
             fileChooser.setInitialDirectory(new File(str));
-//            fileChooser.getExtensionFilters().addAll(
-//                    new FileChooser.ExtensionFilter("JSON", "*.json")
-//            );
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Excl", "*.xlsl")
+            );
             Stage fileStage = null;
             File file = fileChooser.showSaveDialog(fileStage);
 
             if (file != null) {
                 locationPath.setText(file.getPath());
             }
+        });
+
+        export.setOnAction(event -> {
+            StageMap.closeStage("spcExport");
+
         });
     }
 

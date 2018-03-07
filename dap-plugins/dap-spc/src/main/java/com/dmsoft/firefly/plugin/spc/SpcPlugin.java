@@ -75,30 +75,10 @@ public class SpcPlugin extends Plugin {
         logger.debug("Plugin-SPC UI register done.");
 
         logger.info("Plugin-SPC started.");
-        MenuItem menuItem = new MenuItem("Spc Export");
-        menuItem.setId("spcExport");
-        menuItem.setOnAction(event -> build());
-
-        RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.SpcPlugin",
-                MenuBuilder.MenuType.MENU_ITEM, "Spc Export", MenuBuilder.MENU_FILE).addMenu(menuItem));
-
     }
 
     @Override
     public void destroy() {
         System.out.println("Plugin-SPC Destroyed.");
-    }
-
-    private void build() {
-        Pane root = null;
-        try {
-            FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML("view/spc_export.fxml");
-            root = fxmlLoader.load();
-            Stage stage = WindowFactory.createSimpleWindowAsModel("spcExport", "Spc Export", root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
-            stage.show();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
     }
 }
