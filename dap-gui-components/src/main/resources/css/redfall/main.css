@@ -1154,6 +1154,20 @@
     -fx-background-color: rgba(0, 150, 255, 0.2); /*#0096ff*/
 }
 
+.table-view .column-header .label.ascending-label {
+    -fx-background-image: url('/images/icon_sort_arrow_up.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 6 3;
+    -fx-background-position: 50% 2;
+}
+
+.table-view .column-header .label.descending-label {
+    -fx-background-image: url('/images/icon_sort_arrow_down.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 6 3;
+    -fx-background-position: 50% 2;
+}
+
 .table-view .filler {
     -fx-background-color: #ffffff;
     -fx-border-color: #dcdcdc;
