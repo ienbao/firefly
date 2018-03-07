@@ -26,7 +26,10 @@ import javafx.scene.control.*;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -124,9 +127,11 @@ public class PluginManageController implements Initializable {
             });
 
             row.setOnMouseClicked(event -> {
-                PluginTableRowData pluginTableRowData = pluginTableRowDataObservableList.get(pluginTable.getSelectionModel().getSelectedIndex());
-                explain.setText(pluginTableRowData.getInfo().getDescription());
-                System.out.println(pluginTable.getSelectionModel().getSelectedIndex() + " click");
+                if (pluginTable.getSelectionModel().getSelectedIndex() != -1) {
+                    PluginTableRowData pluginTableRowData = pluginTableRowDataObservableList.get(pluginTable.getSelectionModel().getSelectedIndex());
+                    explain.setText(pluginTableRowData.getInfo().getDescription());
+                    System.out.println(pluginTable.getSelectionModel().getSelectedIndex() + " click");
+                }
             });
 
             return row;
@@ -162,10 +167,29 @@ public class PluginManageController implements Initializable {
             System.exit(0);
         });
         installPlugin.setOnAction(event -> {
-
+            String str = System.getProperty("user.home");
+//            if (!StringUtils.isEmpty(path.getText())) {
+//                str = path.getText();
+//            }
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open");
+            fileChooser.setInitialDirectory(new File(str));
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("JAR", "*.jar")
+            );
+            Stage fileStage = null;
+            File file = fileChooser.showOpenDialog(fileStage);
+            if (file != null) {
+                //TODO
+            }
         });
         unInstallPlugin.setOnAction(event -> {
-
+            if (pluginTable.getSelectionModel().getSelectedIndex() != -1) {
+                PluginTableRowData pluginTableRowData = pluginTableRowDataObservableList.get(pluginTable.getSelectionModel().getSelectedIndex());
+                PluginContext context = RuntimeContext.getBean(PluginContext.class);
+                context.uninstallPlugin(pluginTableRowData.getInfo().getId());
+                pluginTableRowDataObservableList.remove(pluginTableRowData);
+            }
         });
     }
 

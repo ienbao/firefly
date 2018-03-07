@@ -354,6 +354,13 @@ public class DataSourceController implements Initializable {
                 }
                 chooseTableRowDataList.add(chooseTableRowData);
             });
+        } else {
+            List<String> value = Lists.newArrayList();
+            value.addAll(sourceDataService.findAllProjectName());
+            value.forEach(v -> {
+                ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, v);
+                chooseTableRowDataList.add(chooseTableRowData);
+            });
         }
         setTableData(chooseTableRowDataList);
     }
