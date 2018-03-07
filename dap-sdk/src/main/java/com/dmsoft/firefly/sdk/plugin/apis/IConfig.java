@@ -19,12 +19,12 @@ public interface IConfig {
      *
      * @return config bytes
      */
-    Byte[] exportConfig();
+    byte[] exportConfig();
 
     /**
      * method to import config
      *
      * @param config config bytes
      */
-    void importConfig(Byte[] config);
+    void importConfig(byte[] config);
 }

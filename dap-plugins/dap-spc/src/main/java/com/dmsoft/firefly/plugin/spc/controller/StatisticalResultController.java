@@ -20,10 +20,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
+import com.dmsoft.firefly.sdk.utils.ColorUtils;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -159,21 +161,32 @@ public class StatisticalResultController implements Initializable {
     }
 
     class ChooseColorMenuEvent implements TableMenuRowEvent {
+        private ColorPicker colorPicker;
 
         @Override
         public String getMenuName() {
-            return SpcFxmlAndLanguageUtils.getString(ResourceMassages.CHOOSE_COLOR_MENU);
+            return null;
         }
 
         @Override
         public void handleAction(String rowKey, ActionEvent event) {
-            statisticalTableModel.setRowColor(rowKey, Color.ORANGE);
+            Color color = ColorUtils.toAwtColorFromFxColor(colorPicker.getValue());
+            statisticalTableModel.setRowColor(rowKey, color);
             statisticalResultTb.refresh();
         }
 
         @Override
         public Node getMenuNode() {
-            return null;
+            colorPicker = new ColorPicker(javafx.scene.paint.Color.RED);
+            colorPicker.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
+
+            colorPicker.getCustomColors().addAll(
+                    ColorUtils.toFxColorFromAwtColor(Colur.RAW_VALUES)
+            );
+            colorPicker.valueProperty().addListener((observable, oldValue, c) -> {
+
+            });
+            return colorPicker;
         }
     }
 
