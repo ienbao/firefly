@@ -177,12 +177,6 @@
     -demo-bar-fill: #6fc1be;
 }
 
-/*#chart-symbol {*/
-    /*-fx-background-color: #e92822, #e92822;*/
-    /*-fx-background-radius: 5px;*/
-    /*-fx-padding: 3px;*/
-/*}*/
-
 .btn-tab {
     -fx-border-width: 0px 1px 0px 0px;
     -fx-background-color: #f0f0f0;
@@ -200,7 +194,7 @@
 }
 
 .btn-tab:focused {
-    -fx-border-color: #e7e7e7;    /*f0f0f0*/
+    -fx-border-color: #e7e7e7;
     -fx-border-style: solid;
 }
 
@@ -217,6 +211,38 @@
 
 .tabPane-vertical {
     -fx-background-color: #f0f0f0;
+}
+
+.list-cell {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-base-color;
+    -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em;
+    -fx-pref-height: 22;
+}
+
+.list-view {
+    -fx-background-color: #ffffff;
+    -fx-background-insets: 0, 1;
+    -fx-effect: null;
+    -fx-border-color: #dcdcdc;
+    -fx-padding: 1,1,1,1;
+    -fx-translate-y: 3;
+}
+.list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
+    -fx-padding: 4 0 4 5;
+    -fx-background: -fx-control-inner-background;
+}
+
+.list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: #0096ff;
+}
+.list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
+.list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: #0096ff;
+    -fx-background-insets: 0, 1, 2;
 }
 
 

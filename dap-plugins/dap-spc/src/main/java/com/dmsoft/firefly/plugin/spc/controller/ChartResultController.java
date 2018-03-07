@@ -21,6 +21,7 @@ import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -28,8 +29,6 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.scene.chart.*;
 import javafx.scene.control.Tab;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
 import java.net.URL;
@@ -81,7 +80,7 @@ public class ChartResultController implements Initializable {
     private String pointName = "Point";
     private String connectLine = "Connect Line";
 
-    private String legend = "- - - LSL, USL    —— m Line    —— 6s Line";
+    private String legend = "- - - LSL, USL   —— m Line   —— 6s Line";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -116,6 +115,7 @@ public class ChartResultController implements Initializable {
         chartTabPane.addNode(boxChartPane, 6);
         chartTabPane.addNode(mrChartPane, 7);
         chartTabPane.activeTabByIndex(0);
+
         analysisChartTab.setContent(chartTabPane);
     }
 
@@ -127,12 +127,11 @@ public class ChartResultController implements Initializable {
     }
 
     private void initNDChartPane() {
-        int checkBoxIndex = 0;
-        String[] columns = new String[]{"1", "2"};
-        ChartOperateButton button = new ChartOperateButton(columns, checkBoxIndex);
+
+        ChartOperateButton button = new ChartOperateButton(true);
         button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
-        button.setTableRowKeys(Arrays.asList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));
-        button.setTableViewSize(160, 240);
+        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));
+        button.setListViewSize(140, 257);
         button.getStyleClass().add("btn-icon-b");
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
@@ -141,6 +140,7 @@ public class ChartResultController implements Initializable {
         yAxis.setMinorTickVisible(false);
 
         button.setSelectCallBack((name, selected, selectedNames) -> {
+
             if (UIConstant.SPC_CHART_NDC_EXTERN_MENU[9].equalsIgnoreCase(name)) {
                 ObservableList<XYChart.Series> series = ndChartPane.getChart().getData();
                 series.forEach(oneSeries -> {
@@ -160,21 +160,19 @@ public class ChartResultController implements Initializable {
     }
 
     private void initRunChartPane() {
-        int checkBoxIndex = 0;
-        String[] columns = new String[]{"1", "2"};
-        String[] itemNames = new String[] {"", "item0", "item1", "item2"};
 
-        ChartOperateButton button = new ChartOperateButton(columns, checkBoxIndex);
+        String[] itemNames = new String[] {"", "item0", "item1", "item2"};
+        ChartOperateButton button = new ChartOperateButton(true);
         editBtn = new ChartAnnotationButton();
-        ChartOperateButton rRuleBtn = new ChartOperateButton(columns, checkBoxIndex, false);
+        ChartOperateButton rRuleBtn = new ChartOperateButton(false, com.dmsoft.firefly.plugin.spc.charts.utils.enums.Orientation.BOTTOMLEFT);
         button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
         rRuleBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rule_normal.png")));
         editBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_tracing_point_normal.png")));
-        button.setTableRowKeys(Arrays.asList(UIConstant.SPC_CHART_RUN_EXTERN_MENU));
-        rRuleBtn.setTableRowKeys(Arrays.asList(UIConstant.SPC_RULE_R));
+        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_RUN_EXTERN_MENU));
+        rRuleBtn.setListViewData(Arrays.asList(UIConstant.SPC_RULE_R));
         editBtn.setData(Arrays.asList(itemNames));
-        button.setTableViewSize(155, 180);
-        rRuleBtn.setTableViewSize(155, 200);
+        button.setListViewSize(140, 211);
+        rRuleBtn.setListViewSize(140, 211);
 
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
@@ -220,12 +218,11 @@ public class ChartResultController implements Initializable {
     }
 
     private void initXBarChartPane() {
-        int checkBoxIndex = 0;
-        String[] columns = new String[]{"1", "2"};
-        ChartOperateButton button = new ChartOperateButton(columns, checkBoxIndex);
+
+        ChartOperateButton button = new ChartOperateButton();
         button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
-        button.setTableRowKeys(Arrays.asList(UIConstant.SPC_CHART_XBAR_EXTERN_MENU));
-        button.setTableViewSize(155, 120);
+        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_XBAR_EXTERN_MENU));
+        button.setListViewSize(140, 120);
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setTickMarkVisible(false);
@@ -269,12 +266,10 @@ public class ChartResultController implements Initializable {
 
     private void initBoxChartPane() {
 
-        int checkBoxIndex = 0;
-        String[] columns = new String[]{"1", "2"};
-        ChartOperateButton button = new ChartOperateButton(columns, checkBoxIndex);
+        ChartOperateButton button = new ChartOperateButton(true);
         button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
-        button.setTableRowKeys(Arrays.asList(UIConstant.SPC_CHART_BOX_EXTERN_MENU));
-        button.setTableViewSize(120, 100);
+        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_BOX_EXTERN_MENU));
+        button.setListViewSize(140, 50);
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setTickMarkVisible(false);

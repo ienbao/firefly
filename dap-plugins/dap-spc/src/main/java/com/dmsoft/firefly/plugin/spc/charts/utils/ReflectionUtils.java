@@ -10,7 +10,11 @@ import java.util.List;
  */
 public class ReflectionUtils {
 
-    public static Object forceMethodCall(Class classInstance, String methodName, Object source, Class[] paramTypes, Object[] params) {
+    public static Object forceMethodCall(Class classInstance,
+                                         String methodName,
+                                         Object source,
+                                         Class[] paramTypes,
+                                         Object[] params) {
         Object returnedObject = null;
         try {
             Method method = classInstance.getDeclaredMethod(methodName, paramTypes);
@@ -22,7 +26,10 @@ public class ReflectionUtils {
         return returnedObject;
     }
 
-    public static Object forceMethodCall(Class classInstance, String methodName, Object source, Object... params) {
+    public static Object forceMethodCall(Class classInstance,
+                                         String methodName,
+                                         Object source,
+                                         Object... params) {
         Class[] paramTypes = new Class[]{};
         if (params == null) {
             params = new Object[]{};
@@ -37,7 +44,9 @@ public class ReflectionUtils {
         return forceMethodCall(classInstance, methodName, source, paramTypes, params);
     }
 
-    public static Object forceFieldCall(Class classInstance, String fieldName, Object source) {
+    public static Object forceFieldCall(Class classInstance,
+                                        String fieldName,
+                                        Object source) {
 
         Object returnedObject = null;
         try {
