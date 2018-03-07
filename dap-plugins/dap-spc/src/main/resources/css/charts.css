@@ -177,10 +177,46 @@
     -demo-bar-fill: #6fc1be;
 }
 
-#chart-symbol {
-    -fx-background-color: #e92822, #e92822;
-    -fx-background-radius: 5px;
-    -fx-padding: 3px;
+/*#chart-symbol {*/
+    /*-fx-background-color: #e92822, #e92822;*/
+    /*-fx-background-radius: 5px;*/
+    /*-fx-padding: 3px;*/
+/*}*/
+
+.btn-tab {
+    -fx-border-width: 0px 1px 0px 0px;
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #e7e7e7;
+    -fx-alignment: center-left;
+}
+
+.btn-tab:hover {
+    -fx-background-color: white;
+}
+
+.btn-tab:pressed {
+    -fx-border-color: white;
+    -fx-background-color: white;
+}
+
+.btn-tab:focused {
+    -fx-border-color: #e7e7e7;    /*f0f0f0*/
+    -fx-border-style: solid;
+}
+
+.btn-tab:focused:hover {
+    -fx-border-color: #f0f0f0;
+    -fx-border-style: solid;
+}
+
+.btn-tab-active {
+    -fx-border-width: 1px 0px 1px 0px;
+    -fx-border-color: #e7e7e7;
+    -fx-background-color: white;
+}
+
+.tabPane-vertical {
+    -fx-background-color: #f0f0f0;
 }
 
 

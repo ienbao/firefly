@@ -2,10 +2,13 @@ package com.dmsoft.firefly.gui.components.table;
 
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import com.sun.javafx.scene.control.skin.TableViewSkin;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.transformation.SortedList;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DefaultStringConverter;
@@ -75,7 +78,8 @@ public class NewTableViewWrapper {
         if (model.getMenuEventList() != null && !model.getMenuEventList().isEmpty()) {
             ContextMenu menu = new ContextMenu();
             for (TableMenuRowEvent event : model.getMenuEventList()) {
-                MenuItem menuItem = new MenuItem(event.getMenuName());
+                MenuItem menuItem = new MenuItem(event.getMenuName(), event.getMenuNode());
+
                 menuItem.setOnAction(event1 -> {
                     String rowKey = tableView.getSelectionModel().getSelectedItem();
                     event.handleAction(rowKey, event1);
@@ -94,6 +98,13 @@ public class NewTableViewWrapper {
             });
         }
         model.setTableView(tableView);
+        if (tableView.getSkin() != null) {
+            decorateSkinForSortHeader((TableViewSkin) tableView.getSkin(), tableView);
+        } else {
+            tableView.skinProperty().addListener((ov, s1, s2) -> {
+                decorateSkinForSortHeader((TableViewSkin) s2, tableView);
+            });
+        }
     }
 
     private static TableColumn<String, ?> initColumn(String s, NewTableModel model) {
@@ -220,5 +231,42 @@ public class NewTableViewWrapper {
             }
         };
 
+    }
+
+    /**
+     * methdo to decorate skin
+     *
+     * @param skin      skin
+     * @param tableView table view
+     */
+    @SuppressWarnings("unchecked")
+    public static void decorateSkinForSortHeader(TableViewSkin skin, TableView tableView) {
+        TableHeaderRow rowHeader = skin.getTableHeaderRow();
+        for (int i = 0; i < tableView.getColumns().size(); i++) {
+            TableColumn tableColumn = (TableColumn) tableView.getColumns().get(i);
+            Button empty = new Button();
+            empty.setPrefSize(0, 0);
+            empty.setMinSize(0, 0);
+            empty.setMaxSize(0, 0);
+            tableColumn.setSortNode(empty);
+            tableColumn.sortTypeProperty().addListener((ov, t1, t2) -> {
+                if (TableColumn.SortType.DESCENDING.equals(t2)) {
+                    rowHeader.getColumnHeaderFor(tableColumn).lookup(".label").getStyleClass().removeAll("ascending-label");
+                    rowHeader.getColumnHeaderFor(tableColumn).lookup(".label").getStyleClass().add("descending-label");
+                }
+            });
+        }
+        tableView.getSortOrder().addListener((ListChangeListener<String>) c -> {
+            for (Node node : tableView.lookupAll(".ascending-label")) {
+                node.getStyleClass().removeAll("ascending-label");
+            }
+            for (Node node : tableView.lookupAll(".descending-label")) {
+                node.getStyleClass().removeAll("descending-label");
+            }
+            if (tableView.getSortOrder() != null && !tableView.getSortOrder().isEmpty() && TableColumn.SortType.ASCENDING.equals(((TableColumn) tableView.getSortOrder().get(0)).getSortType())) {
+                rowHeader.getColumnHeaderFor((TableColumn) tableView.getSortOrder().get(0)).lookup(".label").getStyleClass().add("ascending-label");
+                rowHeader.getColumnHeaderFor((TableColumn) tableView.getSortOrder().get(0)).lookup(".label").getStyleClass().removeAll("descending-label");
+            }
+        });
     }
 }

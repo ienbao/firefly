@@ -17,6 +17,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
+import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
@@ -231,6 +232,11 @@ public class ViewDataTableModel implements NewTableModel {
                     highLightRowKeys.add(rowKey);
                 }
             }
+
+            @Override
+            public Node getMenuNode() {
+                return null;
+            }
         };
 
         TableMenuRowEvent detail = new TableMenuRowEvent() {
@@ -243,6 +249,11 @@ public class ViewDataTableModel implements NewTableModel {
             public void handleAction(String rowKey, ActionEvent event) {
 
             }
+
+            @Override
+            public Node getMenuNode() {
+                return null;
+            }
         };
 
         TableMenuRowEvent remove = new TableMenuRowEvent() {
@@ -254,6 +265,11 @@ public class ViewDataTableModel implements NewTableModel {
             @Override
             public void handleAction(String rowKey, ActionEvent event) {
 
+            }
+
+            @Override
+            public Node getMenuNode() {
+                return null;
             }
         };
         this.menuRowEvents.add(highLight);

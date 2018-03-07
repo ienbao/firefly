@@ -14,19 +14,22 @@ import com.dmsoft.firefly.plugin.spc.model.StatisticalTableModel;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.google.common.collect.Lists;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.*;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 import static java.util.Arrays.asList;
 
@@ -166,6 +169,11 @@ public class StatisticalResultController implements Initializable {
         public void handleAction(String rowKey, ActionEvent event) {
             statisticalTableModel.setRowColor(rowKey, Color.ORANGE);
             statisticalResultTb.refresh();
+        }
+
+        @Override
+        public Node getMenuNode() {
+            return null;
         }
     }
 

@@ -1,0 +1,40 @@
+#rowTable .table-row-cell {
+    -fx-min-height: 18;
+    -fx-pref-height: 18;
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #222222;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #DCDCDC;
+    -fx-border-style: dashed;
+    /*-fx-border-color: transparent;*/
+}
+
+#rowTable .table-cell {
+    -fx-background-color: null;
+    -fx-text-fill: #222222;
+    -fx-alignment: center-left;
+    -fx-padding: 0 10 0 10;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+}
+
+#rowTable .table-cell .text-field{
+    -fx-border-insets: 0 -10 0 -10;
+    -fx-padding: 0 0 0 0;
+    -fx-background-insets: 0 -10 0 -10;
+    -fx-background-color: white;
+}
+
+/*#rowTable .table-row-cell:hover {*/
+    /*-fx-background-color: rgba(0, 150, 255, 0.1); !*#0096ff*!*/
+/*}*/
+
+/*#rowTable .table-row-cell:selected,*/
+/*#rowTable .table-row-cell:focused {*/
+    /*-fx-background-color: rgba(0, 0, 0, 0.15);*/
+/*}*/
+#rowTable .column-header-background {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+}

@@ -4,10 +4,11 @@
 package com.dmsoft.firefly.plugin.csvresolver.controller;
 
 import com.dmsoft.firefly.gui.components.utils.StageMap;
-import com.dmsoft.firefly.plugin.csvresolver.CsvResolverService;
-import com.dmsoft.firefly.plugin.csvresolver.CsvTemplateDto;
+import com.dmsoft.firefly.plugin.csvresolver.service.CsvResolverService;
+import com.dmsoft.firefly.plugin.csvresolver.dto.CsvTemplateDto;
 import com.dmsoft.firefly.plugin.csvresolver.model.RowDataModel;
 import com.google.common.collect.Lists;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,6 +16,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -68,6 +70,25 @@ public class CsvResolverController {
         columnTh.setCellValueFactory(cellData -> cellData.getValue().col2Property());
         columnF.setCellValueFactory(cellData -> cellData.getValue().col3Property());
         initData();
+        columnO.setCellFactory(new Callback<TableColumn<RowDataModel, String>, TableCell<RowDataModel, String>>() {
+            public TableCell call(TableColumn<RowDataModel, String> param) {
+                return new TableCell<RowDataModel, String>() {
+                    private ObservableValue ov;
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!isEmpty()) {
+                            this.setStyle("-fx-background-color: #f8f8f8; -fx-border-width: 0 1 0 0; -fx-border-color: #DCDCDC; -fx-border-style: dotted");
+                            // Get fancy and change color based on data
+                            setText(item);
+                        } else {
+                            setText(null);
+                        }
+                    }
+                };
+            }
+        });
 
     }
 

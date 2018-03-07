@@ -2,7 +2,7 @@ package com.dmsoft.firefly.sdk.plugin.apis;
 
 /**
  * config export and config api
- * {@link com.dmsoft.firefly.sdk.plugin.annotation.Config}
+ * {@link com.dmsoft.firefly.sdk.plugin.apis.annotation.Config}
  *
  * @author Can Guan
  */

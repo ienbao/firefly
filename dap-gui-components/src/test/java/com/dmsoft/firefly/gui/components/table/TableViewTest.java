@@ -6,8 +6,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
@@ -132,6 +132,11 @@ public class TableViewTest extends Application {
             @Override
             public void handleAction(String rowKey, ActionEvent event) {
                 System.out.println(rowKey);
+            }
+
+            @Override
+            public Node getMenuNode() {
+                return null;
             }
         };
 

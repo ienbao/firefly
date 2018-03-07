@@ -47,13 +47,11 @@ import java.util.Properties;
  * @author Can Guan
  */
 public class DAPApplication {
+
     /**
-     * method to start application
-     *
-     * @param activePlugins plugins to be excluded
-     * @return plugin context
+     * methdod to init env
      */
-    public static PluginContextImpl run(List<String> activePlugins) {
+    public static void initEnv() {
         // prepare env start
         PluginContextImpl pluginInfoContextImpl = new PluginContextImpl(InitModel.INIT_WITH_UI);
         PluginImageContextImpl pluginImageContext = new PluginImageContextImpl();
@@ -72,7 +70,6 @@ public class DAPApplication {
         SourceDataServiceImpl sourceDataService = new SourceDataServiceImpl();
         TestDataCacheFactory factory = new TestDataCacheFactory();
 
-
         RuntimeContext.registerBean(PluginContext.class, pluginInfoContextImpl);
         RuntimeContext.registerBean(PluginImageContext.class, pluginImageContext);
         RuntimeContext.registerBean(PluginProxyMethodFactory.class, pluginProxy);
@@ -87,25 +84,25 @@ public class DAPApplication {
         RuntimeContext.registerBean(DataFrameFactory.class, dataFrameFactory);
         RuntimeContext.registerBean(SourceDataService.class, sourceDataService);
         RuntimeContext.registerBean(TestDataCacheFactory.class, factory);
+    }
 
-
+    /**
+     * method to start application
+     *
+     * @param activePlugins plugins to be excluded
+     */
+    public static void startPlugin(List<String> activePlugins) {
         // prepare env done
         String propertiesURL = ApplicationPathUtil.getPath("resources", "application.properties");
         InputStream inputStream = null;
         try {
-            inputStream = new BufferedInputStream(new FileInputStream(propertiesURL.toString()));
+            inputStream = new BufferedInputStream(new FileInputStream(propertiesURL));
             Properties properties = new Properties();
             properties.load(inputStream);
             String pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
             List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath);
             RuntimeContext.getBean(PluginContext.class).installPlugin(scannedPlugins);
             RuntimeContext.getBean(PluginContext.class).enablePlugin(activePlugins);
-//            DAPClassLoader loader = RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.SpcPlugin");
-//            Class c = loader.loadClass("com.dmsoft.firefly.plugin.spc.SpcService");
-//            System.out.println(c);
-//            PluginProxyMethod method = RuntimeContext.getBean(PluginProxyMethodFactory.class).proxyMethod("com.dmsoft.dap.SpcPlugin", "com.dmsoft.firefly.plugin.spc.SpcService", "say");
-//            method.doSomething(null, "AA");
-//            System.out.println("SADF");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -117,8 +114,7 @@ public class DAPApplication {
                 e.printStackTrace();
             }
         }
-        pluginInfoContextImpl.startPlugin(activePlugins);
-        return pluginInfoContextImpl;
+        RuntimeContext.getBean(PluginContext.class).startPlugin(activePlugins);
     }
 
     private static EnvService proxyClass(EnvService envService) {
@@ -132,7 +128,8 @@ public class DAPApplication {
      * @param args arguments
      */
     public static void main(String[] args) {
-        run(Lists.newArrayList("com.dmsoft.dap.SpcPlugin"));
+        initEnv();
+        startPlugin(Lists.newArrayList("com.dmsoft.dap.SpcPlugin"));
     }
 
     static class EnvServiceHandler implements InvocationHandler {

@@ -9,7 +9,7 @@ public interface IMessageManager {
      * @param msg   information content
      * @param type  information type
      */
-    void showMsg(String title, String msg, MessageTipTyp type);
+    void showMsg(String title, String msg, MessageTipType type);
 
     /**
      * show success info
