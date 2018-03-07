@@ -15,11 +15,47 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.csvresolver.controller.CsvResolverController">
+<VBox xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.csvresolver.controller.CsvResolverController">
    <children>
-      <BorderPane prefHeight="460.0" prefWidth="800.0" style="-fx-border-width: 1 1 1 1; -fx-background-color: #ffffff; -fx-border-color: #DCDCDC;" VBox.vgrow="ALWAYS">
-         <bottom>
-            <GridPane prefHeight="180.0" prefWidth="760.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="460.0" prefWidth="800.0" style="-fx-border-color: #DCDCDC; -fx-border-width: 1 1 1 1;">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="800.0">
+               <children>
+                  <Label text="Choose File">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <HBox.margin>
+                        <Insets bottom="10.0" right="10.0" top="20.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="path" prefWidth="250.0" promptText="Test Item" BorderPane.alignment="CENTER">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" top="20.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <Button fx:id="browse" mnemonicParsing="false" text="Browse">
+                     <HBox.margin>
+                        <Insets bottom="10.0" top="20.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            <TableView fx:id="rowTable" maxHeight="182.0" minHeight="182.0" prefHeight="182.0" prefWidth="755.0">
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+               <columns>
+                  <TableColumn fx:id="columnO" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" sortable="false" text="C1" />
+                  <TableColumn fx:id="columnTo" maxWidth="236.0" minWidth="236.0" prefWidth="236.0" sortable="false" text="C2" />
+                  <TableColumn fx:id="columnTh" maxWidth="130.0" minWidth="130.0" prefWidth="130.0" sortable="false" text="C3" />
+                  <TableColumn fx:id="columnF" maxWidth="330.0" minWidth="330.0" prefWidth="330.0" sortable="false" text="C4" />
+               </columns>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </TableView>
+            <GridPane prefHeight="180.0" prefWidth="760.0">
                <children>
                   <Label text="Header" />
                   <Label text="Test Items Name" GridPane.columnIndex="1" />
@@ -72,58 +108,15 @@
                   <RowConstraints maxHeight="22.0" minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
-               <BorderPane.margin>
-                  <Insets left="20.0" right="20.0" top="20.0" />
-               </BorderPane.margin>
             </GridPane>
-         </bottom>
-         <center>
-            <TableView fx:id="rowTable" minHeight="205.0" prefHeight="205.0" prefWidth="755.0" BorderPane.alignment="CENTER">
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-               <columns>
-                  <TableColumn fx:id="columnO" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" sortable="false" text="C1" />
-                  <TableColumn fx:id="columnTo" maxWidth="236.0" minWidth="236.0" prefWidth="236.0" sortable="false" text="C2" />
-                  <TableColumn fx:id="columnTh" maxWidth="130.0" minWidth="130.0" prefWidth="130.0" sortable="false" text="C3" />
-                  <TableColumn fx:id="columnF" maxWidth="330.0" minWidth="330.0" prefWidth="330.0" sortable="false" text="C4" />
-               </columns>
-               <cursor>
-                  <Cursor fx:constant="DEFAULT" />
-               </cursor>
-               <BorderPane.margin>
-                  <Insets left="20.0" right="20.0" />
-               </BorderPane.margin>
-            </TableView>
-         </center>
-         <top>
-            <HBox prefHeight="55.0" prefWidth="800.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Label text="Choose File">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <HBox.margin>
-                        <Insets bottom="10.0" left="20.0" right="10.0" top="20.0" />
-                     </HBox.margin>
-                  </Label>
-                  <TextField fx:id="path" prefWidth="250.0" promptText="Test Item" BorderPane.alignment="CENTER">
-                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" top="20.0" />
-                     </HBox.margin>
-                  </TextField>
-                  <Button fx:id="browse" mnemonicParsing="false" text="Browse">
-                     <HBox.margin>
-                        <Insets bottom="10.0" top="20.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-            </HBox>
-         </top>
+         </children>
          <VBox.margin>
             <Insets left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
-      </BorderPane>
+         <padding>
+            <Insets left="20.0" right="20.0" />
+         </padding>
+      </VBox>
       <GridPane prefHeight="45.0" prefWidth="800.0">
          <children>
             <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="OK" GridPane.columnIndex="1" />

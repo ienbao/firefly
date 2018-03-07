@@ -26,7 +26,12 @@
             <groupId>com.dmsoft</groupId>
             <artifactId>dap-gui-components</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.dmsoft</groupId>
+            <artifactId>dap-core</artifactId>
+            <scope>test</scope>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>com.dmsoft</groupId>
             <artifactId>bamboo</artifactId>
