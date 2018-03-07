@@ -5,7 +5,7 @@
     -fx-text-fill: #222222;
     -fx-border-width: 0 0 1 0;
     -fx-border-color: #DCDCDC;
-    -fx-border-style: dotted;
+    -fx-border-style: dashed;
     /*-fx-border-color: transparent;*/
 }
 

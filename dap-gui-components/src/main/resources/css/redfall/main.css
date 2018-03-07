@@ -560,7 +560,7 @@
     -fx-text-fill: #222;
     -fx-highlight-fill: #cccccc;
     -fx-highlight-text-fill: #fff;
-    -fx-border-style: dotted;
+    -fx-border-style: dashed;
 }
 
 .text-field:disabled {
