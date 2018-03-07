@@ -21,11 +21,11 @@ public class GrrFxmlAndLanguageUtils {
     public static boolean isDebug = false;
 
     private static ResourceBundle getResourceBundle() {
-//        LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+        LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
         String bundleKey = "i18n.message_en_US_";
-//        if (languageType.equals(LanguageType.ZH)) {
-//            bundleKey = "i18n.message_zh_CN_";
-//        }
+        if (languageType.equals(LanguageType.ZH)) {
+            bundleKey = "i18n.message_zh_CN_";
+        }
         bundleKey = bundleKey + ModuleType.GRR.name();
         return ResourceBundle.getBundle(bundleKey);
 
