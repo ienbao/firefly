@@ -137,11 +137,11 @@ public class MessageManagerFactory implements IMessageManager{
             exPreHeight += d;
         }
 
-        Node node  = NodeMap.getNode("platform_main");
+        Node node  = NodeMap.getNode(GuiConst.PLARTFORM_NODE_MAIN);
         popupList.add(popup);
         double screenX = node.getScene().getWindow().getX() + node.getBoundsInLocal().getMaxX() - 240;
         double screenY = node.getScene().getWindow().getY() + node.getBoundsInLocal().getMaxY() - exPreHeight - 12;
-        popup.show(NodeMap.getNode("platform_main"), screenX, screenY);
+        popup.show(node, screenX, screenY);
     }
 
 
