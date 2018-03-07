@@ -44,6 +44,7 @@
 
     /*auxiliary color*/
     COLORFUL_AUXILIARY_BLUE: #0096ff;
+    COLORFUL_LIGHT_BLUE :#33abff;
     COLORFUL_DARK_BLUE: #487CF4;
 
     COLORFUL_BLUE_Fill_10: rgba(0, 150, 255, 0.2);
@@ -128,6 +129,41 @@
     -fx-background-position: center;
 }
 
+/*******************************************************************************
+ *                                                                             *
+ * Tooltip                                                                     *
+ *                                                                             *
+ ******************************************************************************/
+
+.tooltip {
+    -fx-text-fill: #222222;
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 5 10 5 10;
+}
+
+.tooltip-warn {
+    -fx-text-fill: #222222;
+    -fx-background-color: #fff7d0;
+    -fx-border-color: #ffab00;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0 10 0 3;
+}
+
+.tooltip-warn-svg {
+    -fx-background-position: left;
+    -fx-background-color: #F38400;
+    -fx-scale-shape: false;
+    -fx-shape: "M8,2C4.7,2,2,4.7,2,8s2.7,6,6,6s6-2.7,6-6S11.3,2,8,2z M9,12H8H7v-2h1h1V12z M9,9H8H7V4h1h1V9z";
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Message tip                                                                 *
+ *                                                                             *
+ ******************************************************************************/
 .message-tip-info {
     -fx-background-color: COLORFUL_LIGHT_GREEN;
     -fx-border-color: COLORFUL_MIDDLE_GREEN;
@@ -509,6 +545,7 @@
     -fx-highlight-fill: #0096ff;
     -fx-highlight-text-fill: #fff;
 }
+
 .text-field-filter {
     -fx-border-color: #ffffff;
     -fx-background-color: #ffffff;
@@ -517,13 +554,15 @@
     -fx-font: 12 arial;
     -fx-padding: 0 10 1 10;
 }
-.text-field-filter:focused{
+
+.text-field-filter:focused {
     -fx-background-color: #fff;
     -fx-text-fill: #222;
     -fx-highlight-fill: #cccccc;
     -fx-highlight-text-fill: #fff;
-    -fx-border-style: dotted;
+    -fx-border-style: dashed;
 }
+
 .text-field:disabled {
     -fx-border-color: #dcdcdc;
     -fx-background-color: #fafafa;
@@ -537,9 +576,27 @@
     -fx-text-fill: #222;
 }
 
-.text-field-error:focused {
+.text-field-error:hover {
     -fx-border-color: COLORFUL_PRIMARY_RED;
-    -fx-background-color: #ffffff;
+    -fx-background-color: #fef4f4;
+    -fx-text-fill: #222;
+}
+
+.text-field-error:focused {
+    -fx-border-color: COLORFUL_LIGHT_BLUE;
+    -fx-background-color: #fde8e9;
+    -fx-text-fill: #222;
+}
+
+.text-field-error:focused:hover {
+    -fx-border-color: COLORFUL_LIGHT_BLUE;
+    -fx-background-color: #fef4f4;
+    -fx-text-fill: #222;
+}
+
+.text-field-error:focused:pressed {
+    -fx-border-color: COLORFUL_LIGHT_BLUE;
+    -fx-background-color: #fef4f4;
     -fx-text-fill: #222;
 }
 
@@ -1015,7 +1072,6 @@
     -fx-spacing: 0;
 }
 
-
 .tab-pane > .tab-header-area > .control-buttons-tab {
     -fx-padding: 0 0 0 0;
     -fx-background-color: #f2f2f2;
@@ -1049,10 +1105,10 @@
     -fx-background-position: top;
 }
 
-.tab-pane > .tab-header-area > .control-buttons-tab > .container > .tab-down-button > .arrow{
-/*    -fx-background-image: null;
-    -fx-shape: null;
-    -fx-effect: null;*/
+.tab-pane > .tab-header-area > .control-buttons-tab > .container > .tab-down-button > .arrow {
+    /*    -fx-background-image: null;
+        -fx-shape: null;
+        -fx-effect: null;*/
 }
 
 /*******************************************************************************
@@ -1143,6 +1199,13 @@
     -fx-background-insets: 0;
     -fx-border-color: transparent;
 
+}
+
+.table-cell .text-field{
+    -fx-border-insets: 0 -10 0 -10;
+    -fx-padding: 0 0 0 0;
+    -fx-background-insets: 0 -10 0 -10;
+    -fx-background-color: white;
 }
 
 .table-row-cell:hover {

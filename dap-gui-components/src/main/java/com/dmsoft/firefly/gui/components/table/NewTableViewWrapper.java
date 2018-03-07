@@ -1,13 +1,16 @@
 package com.dmsoft.firefly.gui.components.table;
 
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
+import javafx.collections.transformation.SortedList;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DefaultStringConverter;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -22,6 +25,7 @@ public class NewTableViewWrapper {
      * @param tableView table view
      * @param model     model
      */
+    @SuppressWarnings("unchecked")
     public static void decorate(TableView<String> tableView, NewTableModel model) {
         tableView.getItems().clear();
         tableView.getColumns().clear();
@@ -64,7 +68,10 @@ public class NewTableViewWrapper {
                 }
             }
         });
-        tableView.setItems(model.getRowKeyArray());
+        SortedList<String> list = model.getRowKeyArray() instanceof SortedList ? (SortedList) model.getRowKeyArray() : new SortedList<>(model.getRowKeyArray());
+        list.comparatorProperty().bind(tableView.comparatorProperty());
+        tableView.setItems(list);
+
         if (model.getMenuEventList() != null && !model.getMenuEventList().isEmpty()) {
             ContextMenu menu = new ContextMenu();
             for (TableMenuRowEvent event : model.getMenuEventList()) {
@@ -106,6 +113,7 @@ public class NewTableViewWrapper {
                             }
                         }
                     });
+            column.setComparator(getComparator());
             return column;
         } else if (model.isCheckBox(s)) {
             TableColumn<String, CheckBox> column = new TableColumn<>(s);
@@ -181,6 +189,36 @@ public class NewTableViewWrapper {
                 }
             }
         });
+        column.setComparator(getComparator());
         return column;
+    }
+
+    private static Comparator<String> getComparator() {
+        return (o1, o2) -> {
+            boolean o1Flag = DAPStringUtils.isNumeric(o1);
+            boolean o2Flag = DAPStringUtils.isNumeric(o2);
+            if (o1 != null && o2 != null) {
+
+                if (o1Flag && o2Flag) {
+                    Double delta = Double.valueOf(o2) - Double.valueOf(o1);
+                    if (delta == 0) {
+                        return 0;
+                    } else if (delta > 0) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                } else if (o1Flag) {
+                    return -1;
+                } else if (o2Flag) {
+                    return 1;
+                } else {
+                    return -o2.compareTo(o1);
+                }
+            } else {
+                return 0;
+            }
+        };
+
     }
 }

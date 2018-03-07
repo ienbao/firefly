@@ -13,9 +13,11 @@ import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
+import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.google.common.collect.Lists;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -27,6 +29,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -68,8 +74,10 @@ public class DataSourceController implements Initializable {
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
+    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
 
     private JsonMapper mapper = JsonMapper.defaultMapper();
+    private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
 
 
     private void initTable() {
@@ -175,12 +183,63 @@ public class DataSourceController implements Initializable {
                                 sourceDataService.deleteProject(deleteProjects);
                                 envService.setActivatedProjectName(activeProject);
                                 chooseTableRowDataObservableList.remove(item);
+                                updateProjectOrder();
                             });
                             this.setGraphic(hBox);
                         }
                     }
                 };
             }
+        });
+        dataSourceTable.setRowFactory(tv -> {
+            TableRow<ChooseTableRowData> row = new TableRow<>();
+
+            row.setOnDragDetected(event -> {
+                if (!row.isEmpty()) {
+                    Integer index = row.getIndex();
+                    Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
+                    db.setDragView(row.snapshot(null, null));
+                    ClipboardContent cc = new ClipboardContent();
+                    cc.put(SERIALIZED_MIME_TYPE, index);
+                    db.setContent(cc);
+                    event.consume();
+                }
+            });
+
+            row.setOnDragOver(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+                    if (row.getIndex() != ((Integer) db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
+                        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                        event.consume();
+                    }
+                }
+            });
+
+            row.setOnDragDropped(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+                    int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
+                    ChooseTableRowData draggedPerson = chooseTableRowDataObservableList.remove(draggedIndex);
+                    int dropIndex;
+
+                    if (row.isEmpty()) {
+                        dropIndex = chooseTableRowDataObservableList.size();
+                    } else {
+                        dropIndex = row.getIndex();
+                    }
+
+                    chooseTableRowDataObservableList.add(dropIndex, draggedPerson);
+
+                    event.setDropCompleted(true);
+                    dataSourceTable.getSelectionModel().select(dropIndex);
+                    event.consume();
+
+                    updateProjectOrder();
+                }
+            });
+
+            return row;
         });
         chooseTableRowDataObservableList = FXCollections.observableArrayList();
         chooseTableRowDataFilteredList = chooseTableRowDataObservableList.filtered(p -> true);
@@ -192,10 +251,12 @@ public class DataSourceController implements Initializable {
     private void initEvent() {
         ok.setOnAction(event -> {
             List<String> selectProject = Lists.newArrayList();
+            List<String> projectOrder = Lists.newArrayList();
             chooseTableRowDataObservableList.forEach(v -> {
                 if (v.getSelector().isSelected()) {
                     selectProject.add(v.getValue());
                 }
+                projectOrder.add(v.getValue());
             });
             Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(selectProject);
 
@@ -231,10 +292,23 @@ public class DataSourceController implements Initializable {
             }
             envService.setActivatedProjectName(activeProject);
             sourceDataService.deleteProject(deleteProjects);
+            updateProjectOrder();
         });
         addFile.setOnAction(event -> {
             buildDataSourceDialog();
         });
+    }
+
+    private void updateProjectOrder() {
+        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+        userPreferenceDto.setUserName("admin");
+        userPreferenceDto.setCode("projectOrder");
+        List<String> order = Lists.newArrayList();
+        chooseTableRowDataObservableList.forEach(v -> {
+            order.add(v.getValue());
+        });
+        userPreferenceDto.setValue(order);
+        userPreferenceService.updatePreference(userPreferenceDto);
     }
 
     @Override
@@ -267,19 +341,22 @@ public class DataSourceController implements Initializable {
     }
 
     private void initDataSourceTableData() {
-        List<String> value = Lists.newArrayList();
-        value.addAll(sourceDataService.findAllProjectName());
+//        List<String> value = Lists.newArrayList();
+//        value.addAll(sourceDataService.findAllProjectName());
         List<ChooseTableRowData> chooseTableRowDataList = Lists.newArrayList();
         List<String> selectProject = mapper.fromJson(envService.findPreference("selectProject"), mapper.buildCollectionType(List.class, String.class));
-        value.forEach(v -> {
-            ChooseTableRowData chooseTableRowData = null;
-            if (selectProject != null && selectProject.contains(v)) {
-                chooseTableRowData = new ChooseTableRowData(true, v);
-            } else {
-                chooseTableRowData = new ChooseTableRowData(false, v);
-            }
-            chooseTableRowDataList.add(chooseTableRowData);
-        });
+        List<String> projectOrder = mapper.fromJson(envService.findPreference("projectOrder"), mapper.buildCollectionType(List.class, String.class));
+        if (projectOrder != null) {
+            projectOrder.forEach(v -> {
+                ChooseTableRowData chooseTableRowData = null;
+                if (selectProject != null && selectProject.contains(v)) {
+                    chooseTableRowData = new ChooseTableRowData(true, v);
+                } else {
+                    chooseTableRowData = new ChooseTableRowData(false, v);
+                }
+                chooseTableRowDataList.add(chooseTableRowData);
+            });
+        }
         setTableData(chooseTableRowDataList);
     }
 

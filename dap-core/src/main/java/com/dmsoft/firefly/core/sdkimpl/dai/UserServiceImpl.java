@@ -1,6 +1,8 @@
 package com.dmsoft.firefly.core.sdkimpl.dai;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.bamboo.common.utils.text.EncodeUtil;
+import com.dmsoft.bamboo.common.utils.text.HashUtil;
 import com.dmsoft.firefly.core.utils.JsonFileUtil;
 import com.dmsoft.firefly.sdk.dai.dto.UserDto;
 import com.dmsoft.firefly.sdk.dai.service.UserService;
@@ -17,6 +19,7 @@ public class UserServiceImpl implements UserService {
     private final String fileName = "user";
     private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
+    private final String salt = "uB7qbuCB";
 
     @Override
     public UserDto validateUser(String userName, String password) {
@@ -27,7 +30,7 @@ public class UserServiceImpl implements UserService {
         }
         List<UserDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, UserDto.class));
         for (UserDto userDto : list) {
-            if (userDto.getName().equals(userName) && userDto.getPassword().equals(password)) {
+            if (userDto.getUserName().equals(userName) && userDto.getPassword().equals(password)) {
                 return userDto;
             }
         }
@@ -44,8 +47,11 @@ public class UserServiceImpl implements UserService {
         List<UserDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, UserDto.class));
         Boolean isExist = Boolean.FALSE;
         for (UserDto userDto : list) {
-            if (userDto.getName().equals(userName) && userDto.getPassword().equals(oldPwd)) {
-                userDto.setPassword(newPwd);
+            String name = userDto.getUserName();
+            String resultOld = EncodeUtil.encodeBase64(HashUtil.sha1(oldPwd, salt.getBytes()));
+            String resultNew = EncodeUtil.encodeBase64(HashUtil.sha1(newPwd, salt.getBytes()));
+            if (name.equals(userName) && userDto.getPassword().equals(resultOld)) {
+                userDto.setPassword(resultNew);
                 isExist = true;
                 break;
             }

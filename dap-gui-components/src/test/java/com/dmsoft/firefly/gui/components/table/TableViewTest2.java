@@ -6,12 +6,10 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -30,8 +28,8 @@ public class TableViewTest2 extends Application {
         TableView<String> tableView = new TableView<>();
         tableView.setEditable(true);
         NewTableModel model = new NewTableModel() {
-            private ObservableList<String> header = FXCollections.observableArrayList("AA", "BB", "CC", "DD");
-            private ObservableList<String> rowKey = FXCollections.observableArrayList("1", "2", "3");
+            private ObservableList<String> header = FXCollections.observableArrayList("AA", "BB", "CC", "DD", "EE", "FF");
+            private SortedList<String> rowKey = new SortedList<>(FXCollections.observableArrayList("1", "2", "3", "4", "5").filtered(p -> true));
             private Map<String, SimpleObjectProperty<String>> valueMap = new HashMap<>();
             private Map<String, SimpleObjectProperty<Boolean>> checkMap = new HashMap<>();
             private ObjectProperty<Boolean> allChecked = new SimpleObjectProperty<>(false);
@@ -45,7 +43,11 @@ public class TableViewTest2 extends Application {
             @Override
             public ObjectProperty<String> getCellData(String rowKey, String columnName) {
                 if (valueMap.get(rowKey + "-" + columnName) == null) {
-                    valueMap.put(rowKey + "-" + columnName, new SimpleObjectProperty<>(rowKey + "-" + columnName));
+                    if (Double.valueOf(rowKey) > 3) {
+                        valueMap.put(rowKey + "-" + columnName, new SimpleObjectProperty<>(rowKey));
+                    } else {
+                        valueMap.put(rowKey + "-" + columnName, new SimpleObjectProperty<>(rowKey + "-" + columnName));
+                    }
                 }
                 return valueMap.get(rowKey + "-" + columnName);
             }
@@ -135,6 +137,12 @@ public class TableViewTest2 extends Application {
 
             }
         };
+        tableView.addEventHandler(SortEvent.ANY, event -> {
+            if (tableView.getSortOrder() != null && !tableView.getSortOrder().isEmpty()) {
+                System.out.println(tableView.getSortOrder().get(0).getText());
+                System.out.println(tableView.getSortOrder().get(0).getSortType());
+            }
+        });
 
         GridPane pane = new GridPane();
         HBox hBox = new HBox();

@@ -12,7 +12,7 @@ import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
-import com.dmsoft.firefly.plugin.grr.utils.CsvFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.utils.CsvFxmlAndLanguageUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
@@ -54,7 +54,7 @@ public class CsvResolverPlugin extends Plugin {
             fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.CsvResolverPlugin"));*/
             FXMLLoader fxmlLoader = CsvFxmlAndLanguageUtils.getLoaderFXML("view/csv_resolver.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createSimpleWindowAsModel("csv", "CSV-Resolver", root, getClass().getClassLoader().getResource("css/redfall/csv_app.css").toExternalForm());
+            Stage stage = WindowFactory.createSimpleWindowAsModel("csv", "CSV-Resolver", root, getClass().getClassLoader().getResource("css/csv_app.css").toExternalForm());
             stage.show();
 
         } catch (Exception ex) {

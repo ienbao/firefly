@@ -11,6 +11,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
+import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import com.google.common.collect.Lists;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -37,7 +38,12 @@ public class TestApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         UserPreferenceService userPreferenceService = new UserPreferenceServiceImpl();
-        EnvService envService = new EnvServiceImpl();
+        EnvService envService = new EnvServiceImpl() {
+            @Override
+            public LanguageType getLanguageType() {
+                return LanguageType.EN;
+            }
+        };
         List<TestItemWithTypeDto> typeDtoList = Lists.newArrayList();
         for (int i = 0; i < 20; i++) {
             TestItemWithTypeDto testItemWithTypeDto = new TestItemWithTypeDto();
