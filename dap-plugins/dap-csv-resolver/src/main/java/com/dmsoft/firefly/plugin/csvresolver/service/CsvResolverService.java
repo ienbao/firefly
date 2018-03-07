@@ -6,6 +6,7 @@ package com.dmsoft.firefly.plugin.csvresolver.service;
 
 import com.csvreader.CsvReader;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.gui.components.utils.JsonFileUtil;
 import com.dmsoft.firefly.plugin.csvresolver.dto.CsvTemplateDto;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
@@ -44,9 +45,9 @@ public class CsvResolverService implements IDataParser {
 
     private PluginContext pluginContext = RuntimeContext.getBean(PluginContext.class);
 
-    private String fileName = "csvTemplate.txt";
+    private String fileName = "csvTemplate";
 
-    private JsonMapper jsonMapper = new JsonMapper();
+    private JsonMapper jsonMapper = JsonMapper.defaultMapper();
 
     private CsvReader csvReader;
 
@@ -202,43 +203,6 @@ public class CsvResolverService implements IDataParser {
         return "Csv resolver";
     }
 
-    private void saveProject(File file, CsvTemplateDto csvTemplateDto, List<String[]> value) {
-        String[] lslRow = null, uslRow = null, unitRow = null;
-
-        if (csvTemplateDto.getHeader() != null && csvTemplateDto.getHeader() > 0) {
-            value.set(csvTemplateDto.getHeader() - 1, null);
-        }
-        if (csvTemplateDto.getLsl() != null && csvTemplateDto.getLsl() > 0) {
-            lslRow = value.get(csvTemplateDto.getLsl() - 1);
-            value.set(csvTemplateDto.getLsl() - 1, null);
-        }
-        if (csvTemplateDto.getUsl() != null && csvTemplateDto.getUsl() > 0) {
-            uslRow = value.get(csvTemplateDto.getUsl() - 1);
-            value.set(csvTemplateDto.getUsl() - 1, null);
-        }
-        if (csvTemplateDto.getUnit() != null && csvTemplateDto.getUnit() > 0) {
-            unitRow = value.get(csvTemplateDto.getUnit());
-            value.set(csvTemplateDto.getUnit(), null);
-        }
-        //save project
-        String[] items = value.get(csvTemplateDto.getItem() - 1);
-        //projectDto.setItemNames(Arrays.asList(items));
-        sourceDataService.saveProject(file.getName());
-
-        //save teat item
-        List<TestItemDto> itemDtos = Lists.newArrayList();
-        for (int i = 0; i < items.length; i++) {
-            TestItemDto testItemDto = new TestItemDto();
-            testItemDto.setTestItemName(items[i]);
-            testItemDto.setUsl(uslRow[i]);
-            testItemDto.setLsl(lslRow[i]);
-            testItemDto.setUnit(unitRow[i]);
-            itemDtos.add(testItemDto);
-        }
-//        sourceDataService.saveTestItem(itemDtos);
-
-    }
-
     /**
      * save csv template setting
      *
@@ -246,32 +210,13 @@ public class CsvResolverService implements IDataParser {
      */
     @ExcludeMethod
     public void saveCsvTemplate(CsvTemplateDto csvTemplateDto) {
-        FileOutputStream fos = null;
-        String text = jsonMapper.toJson(csvTemplateDto);
         String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.CsvResolverPlugin").getFolderPath();
-        File tempFile = new File(path);
-        if (!tempFile.exists()) {
-            tempFile.mkdirs();
+        String json = JsonFileUtil.readJsonFile(path, fileName);
+        if (json == null) {
+            logger.debug("Don`t find " + fileName);
         }
-        try {
-            fos = new FileOutputStream(tempFile.getPath() + File.separator + fileName);
-            fos.write(text.getBytes());
-            fos.flush();
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            // 完毕，关闭所有链接
-            try {
-                if (fos != null) {
-                    fos.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+
+        JsonFileUtil.writeJsonFile(csvTemplateDto, path, fileName);
     }
 
     /**
@@ -281,37 +226,15 @@ public class CsvResolverService implements IDataParser {
      */
     @ExcludeMethod
     public CsvTemplateDto findCsvTemplate() {
-        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.CsvResolverPlugin").getFolderPath() + File.separator + fileName;
-        File file = new File(path);
-        if (!file.exists()) {
-            return null;
+        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.CsvResolverPlugin").getFolderPath();
+        String json = JsonFileUtil.readJsonFile(path, fileName);
+        if (json == null) {
+            logger.debug("Don`t find " + fileName);
         }
 
         CsvTemplateDto csvTemplateDto = null;
-        BufferedReader reader = null;
-        String text = "";
-        try {
-            FileInputStream fileInputStream = new FileInputStream(path);
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
-            reader = new BufferedReader(inputStreamReader);
-            String tempString = null;
-            while ((tempString = reader.readLine()) != null) {
-                text += tempString;
-            }
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        if (!StringUtils.isEmpty(text)) {
-            csvTemplateDto = jsonMapper.fromJson(text, CsvTemplateDto.class);
+        if (!StringUtils.isEmpty(json)) {
+            csvTemplateDto = jsonMapper.fromJson(json, CsvTemplateDto.class);
         }
         return csvTemplateDto;
     }
@@ -336,9 +259,7 @@ public class CsvResolverService implements IDataParser {
                 csvList.add(Arrays.copyOfRange(csvReader.getValues(), 0, 3));
                 i++;
             }
-//            while (csvReader.readRecord()) {
-//                csvList.add(csvReader.getValues());
-//            }
+
             csvReader.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -348,18 +269,4 @@ public class CsvResolverService implements IDataParser {
         return csvList;
     }
 
-//    public static void main(String[] args) {
-//        System.out.println("ASFDA");
-//        CsvResolverService service = new CsvResolverService();
-//        CsvTemplateDto csvTemplateDto = new CsvTemplateDto();
-//        csvTemplateDto.setData(1);
-//        csvTemplateDto.setItem(1);
-//        csvTemplateDto.setHeader(1);
-//        csvTemplateDto.setLsl(1);
-//        csvTemplateDto.setUsl(1);
-//        csvTemplateDto.setUnit(1);
-//
-//        service.saveCsvTemplate(csvTemplateDto);
-//        System.out.println(service.findCsvTemplate());
-//    }
 }
