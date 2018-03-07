@@ -22,6 +22,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -49,6 +50,9 @@ public class ResolverSelectController implements Initializable {
 
     @FXML
     private Button nextStep;
+
+    @FXML
+    private CheckBox defaultTemplate;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

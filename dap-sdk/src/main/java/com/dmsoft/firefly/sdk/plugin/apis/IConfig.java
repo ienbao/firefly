@@ -2,7 +2,7 @@ package com.dmsoft.firefly.sdk.plugin.apis;
 
 /**
  * config export and config api
- * {@link com.dmsoft.firefly.sdk.plugin.annotation.Config}
+ * {@link com.dmsoft.firefly.sdk.plugin.apis.annotation.Config}
  *
  * @author Can Guan
  */
@@ -19,12 +19,12 @@ public interface IConfig {
      *
      * @return config bytes
      */
-    Byte[] exportConfig();
+    byte[] exportConfig();
 
     /**
      * method to import config
      *
      * @param config config bytes
      */
-    void importConfig(Byte[] config);
+    void importConfig(byte[] config);
 }

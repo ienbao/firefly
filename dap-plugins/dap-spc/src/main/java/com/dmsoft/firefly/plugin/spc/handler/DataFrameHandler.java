@@ -31,6 +31,7 @@ public class DataFrameHandler implements JobInboundHandler {
         SearchDataFrame dataFrame = RuntimeContext.getBean(DataFrameFactory.class).
                 createSearchDataFrame((List<TestItemWithTypeDto>) param.get(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST), rowDataDtoList);
         param.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
+        context.fireDoJob(param);
     }
 
     @Override

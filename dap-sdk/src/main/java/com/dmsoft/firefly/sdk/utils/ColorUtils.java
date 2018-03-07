@@ -43,17 +43,18 @@ public class ColorUtils {
 
     /**
      * method to make Color to String
+     *
      * @param color color
      * @return
      */
-    public static String toHexFromColor(Color color){
-        String r,g,b;
+    public static String toHexFromColor(Color color) {
+        String r, g, b;
         StringBuilder su = new StringBuilder();
         r = Integer.toHexString(color.getRed());
         g = Integer.toHexString(color.getGreen());
         b = Integer.toHexString(color.getBlue());
         r = r.length() == 1 ? "0" + r : r;
-        g = g.length() ==1 ? "0" +g : g;
+        g = g.length() == 1 ? "0" + g : g;
         b = b.length() == 1 ? "0" + b : b;
         r = r.toUpperCase();
         g = g.toUpperCase();
@@ -64,5 +65,61 @@ public class ColorUtils {
         su.append(b);
         //0xFF0000FF
         return su.toString();
+    }
+
+    /**
+     * toFxColorFromAwtColor
+     *
+     * @param colors awt colors
+     * @return
+     */
+    public static javafx.scene.paint.Color[] toFxColorFromAwtColor(Color[] colors) {
+        if (colors == null) {
+            return null;
+        }
+        javafx.scene.paint.Color[] paintColors = new javafx.scene.paint.Color[colors.length];
+
+        for (int i = 0; i < colors.length; i++) {
+            Color awtColor = colors[i];
+            javafx.scene.paint.Color fxColor = toFxColorFromAwtColor(awtColor);
+            paintColors[i] = fxColor;
+        }
+        return paintColors;
+    }
+
+    /**
+     * toFxColorFromAwtColor
+     *
+     * @param awtColor awt colors
+     * @return
+     */
+    public static javafx.scene.paint.Color toFxColorFromAwtColor(Color awtColor) {
+        if (awtColor == null) {
+            return null;
+        }
+        int r = awtColor.getRed();
+        int g = awtColor.getGreen();
+        int b = awtColor.getBlue();
+        int a = awtColor.getAlpha();
+        double opacity = a / 255.0;
+        javafx.scene.paint.Color fxColor = javafx.scene.paint.Color.rgb(r, g, b, opacity);
+        return fxColor;
+    }
+
+    /**
+     * toAwtColorFromFxColor
+     *
+     * @param fxColor fx color
+     * @return
+     */
+    public static Color toAwtColorFromFxColor(javafx.scene.paint.Color fxColor) {
+        if (fxColor == null) {
+            return null;
+        }
+        int r = (int) Math.round(fxColor.getRed() * 255.0);
+        int g = (int) Math.round(fxColor.getGreen() * 255.0);
+        int b = (int) Math.round(fxColor.getBlue() * 255.0);
+        int a = (int) Math.round(fxColor.getOpacity() * 255.0);
+        return new Color(r,g,b,a);
     }
 }

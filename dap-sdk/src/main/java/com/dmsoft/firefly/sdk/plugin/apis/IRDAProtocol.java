@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.sdk.plugin.apis;
 
-import com.dmsoft.firefly.sdk.plugin.annotation.RDAProtocol;
+import com.dmsoft.firefly.sdk.plugin.apis.annotation.RDAProtocol;
 
 /**
  * Remote data acquisition api

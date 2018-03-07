@@ -97,6 +97,9 @@ public class MenuFactory {
         Menu menu = new Menu("Preference(P)");
         menu.setId(MenuBuilder.MENU_PREFERENCE);
         MenuItem importMenuItem = new MenuItem("Plugin-Manager(P)");
+        importMenuItem.setOnAction(event -> {
+            buildPluginManageDialog();
+        });
         menu.getItems().add(importMenuItem);
         menu.getItems().add(initLanguageMenu());
         return getParentMenuBuilder().setParentLocation(ROOT_MENU).addMenu(menu);
@@ -157,6 +160,19 @@ public class MenuFactory {
            root = fxmlLoader.load();
            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("template", GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE), root, getResource("css/platform_app.css").toExternalForm());
            stage.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private static void buildPluginManageDialog() {
+        Pane root = null;
+        try {
+            //root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/plugin.fxml");
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("pluginManage", GuiFxmlAndLanguageUtils.getString(ResourceMassages.PLUGIN_MANAGE), root, getResource("css/platform_app.css").toExternalForm());
+            stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

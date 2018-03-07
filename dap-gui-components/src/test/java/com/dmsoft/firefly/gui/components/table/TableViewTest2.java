@@ -8,8 +8,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -109,6 +113,11 @@ public class TableViewTest2 extends Application {
                     }
 
                     @Override
+                    public Node getMenuNode() {
+                        return null;
+                    }
+
+                    @Override
                     public void handleAction(String rowKey, ActionEvent event) {
                         System.out.println(rowKey);
                     }
@@ -137,12 +146,6 @@ public class TableViewTest2 extends Application {
 
             }
         };
-        tableView.addEventHandler(SortEvent.ANY, event -> {
-            if (tableView.getSortOrder() != null && !tableView.getSortOrder().isEmpty()) {
-                System.out.println(tableView.getSortOrder().get(0).getText());
-                System.out.println(tableView.getSortOrder().get(0).getSortType());
-            }
-        });
 
         GridPane pane = new GridPane();
         HBox hBox = new HBox();

@@ -35,6 +35,7 @@ public class FindTestDataHandler implements JobInboundHandler {
         }
         List<RowDataDto> dataDtoList = RuntimeContext.getBean(SourceDataService.class).findTestData(projectNameList, testItemNames);
         param.put(ParamKeys.ROW_DATA_DTO_LIST, dataDtoList);
+        context.fireDoJob(param);
     }
 
     @Override

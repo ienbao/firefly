@@ -2,12 +2,11 @@
 
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="systemProcessBar" style="-fx-background-color: transpant;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.ChangePasswordController">
+<AnchorPane fx:id="systemProcessBar" style="-fx-background-color: transpant;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.SystemStartUpProcessorBarController">
    <children>
       <HBox alignment="CENTER" prefHeight="170.0" prefWidth="540.0" style="-fx-background-color: #ffffff;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
@@ -39,7 +38,7 @@
                         <Font name="Arial" size="22.0" />
                      </font>
                   </Label>
-                  <ProgressBar maxHeight="10.0" maxWidth="360.0" minHeight="10.0" minWidth="360.0" prefHeight="10.0" prefWidth="360.0" progress="0.0" GridPane.rowIndex="3" />
+                  <ProgressBar fx:id="progrossBar" maxHeight="10.0" maxWidth="360.0" minHeight="10.0" minWidth="360.0" prefHeight="10.0" prefWidth="360.0" progress="0.0" GridPane.rowIndex="3" />
                   <Label prefHeight="16.0" prefWidth="360.0" text="Initializing UI..." GridPane.rowIndex="4">
                      <font>
                         <Font name="Arial" size="12.0" />

@@ -2,7 +2,7 @@ package com.dmsoft.firefly.sdk.plugin.apis;
 
 /**
  * data parser api
- * {@link com.dmsoft.firefly.sdk.plugin.annotation.DataParser}
+ * {@link com.dmsoft.firefly.sdk.plugin.apis.annotation.DataParser}
  *
  * @author Can Guan
  */
