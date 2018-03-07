@@ -12,6 +12,7 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.AbstractProcessMonitorAutoAdd;
 import com.dmsoft.firefly.sdk.job.JobThread;
 import com.dmsoft.firefly.sdk.job.ProcessMonitorAuto;
@@ -192,6 +193,7 @@ public class CsvResolverService implements IDataParser {
         } finally {
             if (!importSucc) {
                 sourceDataService.deleteProject(Lists.newArrayList(csvFile.getName()));
+                throw new ApplicationException();
             }
         }
         logger.info("End csv importing.");
