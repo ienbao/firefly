@@ -62,10 +62,10 @@ public class GuiApplication extends Application {
                 plugins.add(v.getKey());
             });
         }
-        DAPApplication.run(Lists.newArrayList(plugins));
+//        DAPApplication.run(Lists.newArrayList(plugins));
         DAPApplication.initEnv();
         buildProcessorBarDialog();
-        DAPApplication.startPlugin(Lists.newArrayList("com.dmsoft.dap.SpcPlugin", "com.dmsoft.dap.GrrPlugin", "com.dmsoft.dap.CsvResolverPlugin"));
+        DAPApplication.startPlugin(Lists.newArrayList(plugins));
         RuntimeContext.registerBean(IMessageManager.class, new MessageManagerFactory());
         LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
         if (languageType == null) {
