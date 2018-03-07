@@ -4,7 +4,7 @@
  *
  */
 
-package com.dmsoft.firefly.plugin.utils;
+package com.dmsoft.firefly.plugin.grr.utils;
 
 import org.rosuda.JRI.REXP;
 import org.rosuda.JRI.Rengine;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2017. For Intelligent Group.
  */
-package com.dmsoft.firefly.plugin.utils;
+package com.dmsoft.firefly.plugin.csvresolver.utils;
 
 /**
  * Created by Ethan.Yang on 2018/1/29.

@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.plugin.utils.enums;
+package com.dmsoft.firefly.plugin.grr.utils.enums;
 
 /**
  * enum class for grr result name

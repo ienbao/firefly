@@ -2,10 +2,11 @@
  *  Copyright (c) 2018. For Intelligent Group.
  */
 
-package com.dmsoft.firefly.plugin.csvresolver;
+package com.dmsoft.firefly.plugin.csvresolver.service;
 
 import com.csvreader.CsvReader;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.plugin.csvresolver.dto.CsvTemplateDto;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
@@ -17,7 +18,7 @@ import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.apis.annotation.DataParser;
 import com.dmsoft.firefly.sdk.plugin.apis.annotation.ExcludeMethod;
 import com.dmsoft.firefly.sdk.plugin.apis.IDataParser;
-import com.dmsoft.firefly.plugin.utils.DoubleIdUtils;
+import com.dmsoft.firefly.plugin.csvresolver.utils.DoubleIdUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;

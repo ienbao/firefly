@@ -4,11 +4,9 @@
 package com.dmsoft.firefly.plugin.csvresolver.controller;
 
 import com.dmsoft.firefly.gui.components.utils.StageMap;
-import com.dmsoft.firefly.plugin.csvresolver.CsvResolverService;
-import com.dmsoft.firefly.plugin.csvresolver.CsvTemplateDto;
+import com.dmsoft.firefly.plugin.csvresolver.service.CsvResolverService;
+import com.dmsoft.firefly.plugin.csvresolver.dto.CsvTemplateDto;
 import com.dmsoft.firefly.plugin.csvresolver.model.RowDataModel;
-import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
-import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
