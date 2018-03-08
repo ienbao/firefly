@@ -6,7 +6,6 @@ import com.dmsoft.firefly.plugin.spc.charts.data.basic.AbnormalPointData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.BrokenLineData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.LineData;
 import com.dmsoft.firefly.plugin.spc.charts.shape.LineType;
-import com.dmsoft.firefly.plugin.spc.charts.utils.ColorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
 import com.dmsoft.firefly.plugin.spc.dto.chart.RuleXYChartData;

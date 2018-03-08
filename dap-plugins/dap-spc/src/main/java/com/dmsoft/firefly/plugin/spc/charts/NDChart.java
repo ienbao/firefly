@@ -4,9 +4,9 @@ import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBarChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.LineData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.PointTooltip;
-import com.dmsoft.firefly.plugin.spc.charts.utils.ColorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.utils.ReflectionUtils;
 import com.dmsoft.firefly.plugin.spc.dto.chart.BarCategoryData;
+import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.google.common.collect.Maps;
 import com.sun.javafx.charts.Legend;
 import com.sun.javafx.css.converters.SizeConverter;
@@ -127,7 +127,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
 
     public void addAreaSeries(IXYChartData<X, Y> xyOneChartData) {
         Group areaGroup = this.areaSeriesNode.buildAreaGroup(xyOneChartData, xyOneChartData.getColor());
-        areaGroup.setStyle("-fx-stroke: " + ColorUtils.toRGBCode(xyOneChartData.getColor()));
+        areaGroup.setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(xyOneChartData.getColor()));
         getPlotChildren().add(areaGroup);
     }
 
@@ -165,7 +165,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         ObservableList<Data<X, Y>> data = series.getData();
         data.forEach(dataItem -> {
             dataItem.getNode().getStyleClass().setAll("chart-bar");
-            dataItem.getNode().setStyle("-fx-bar-fill: " + ColorUtils.toRGBCode(color));
+            dataItem.getNode().setStyle("-fx-bar-fill: " + ColorUtils.toHexFromFXColor(color));
         });
     }
 

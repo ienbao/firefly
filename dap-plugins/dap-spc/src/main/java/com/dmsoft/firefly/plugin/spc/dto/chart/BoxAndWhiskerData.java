@@ -2,6 +2,7 @@ package com.dmsoft.firefly.plugin.spc.dto.chart;
 
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBoxAndWhiskerData;
 import com.google.common.collect.Lists;
+import javafx.scene.paint.Color;
 
 import java.util.List;
 
@@ -11,6 +12,8 @@ import java.util.List;
 public class BoxAndWhiskerData implements IBoxAndWhiskerData {
 
     private List<com.dmsoft.firefly.plugin.spc.charts.data.BoxAndWhiskerData> data = Lists.newArrayList();
+
+    private Color color;
 
     @Override
     public Number getxPosByIndex(int index) {
@@ -48,8 +51,8 @@ public class BoxAndWhiskerData implements IBoxAndWhiskerData {
     }
 
     @Override
-    public String getColor() {
-        return "#cccccc";
+    public Color getColor() {
+        return color;
     }
 
     @Override
@@ -59,5 +62,9 @@ public class BoxAndWhiskerData implements IBoxAndWhiskerData {
 
     public void setData(List<com.dmsoft.firefly.plugin.spc.charts.data.BoxAndWhiskerData> data) {
         this.data = data;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }
