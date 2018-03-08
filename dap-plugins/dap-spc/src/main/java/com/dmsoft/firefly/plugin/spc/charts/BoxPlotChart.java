@@ -3,7 +3,7 @@ package com.dmsoft.firefly.plugin.spc.charts;
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxAndWhiskerData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBoxAndWhiskerData;
 import com.dmsoft.firefly.plugin.spc.charts.view.Candle;
-import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import javafx.animation.FadeTransition;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -29,7 +29,9 @@ import java.util.List;
 public class BoxPlotChart extends XYChart<Number, Number> {
 
     private ObservableList<Data<Number, Number>> outliers;
+    private double candleWidth = 10;
     private boolean showLined = true;
+    private boolean candleWidthByUnit = false;
 
     /**
      * Constructs a BoxPlotChart given the two axes. The initial content for the chart
@@ -67,8 +69,8 @@ public class BoxPlotChart extends XYChart<Number, Number> {
             return;
         }
         XYChart.Series<Number, Number> series = buildSeries(data);
-        this.setSeriesDataStyleByDefault(series, data.getColor());
         this.getData().add(series);
+        this.setSeriesDataStyleByDefault(series, data.getColor());
     }
 
     private Series buildSeries(IBoxAndWhiskerData data) {
@@ -80,7 +82,8 @@ public class BoxPlotChart extends XYChart<Number, Number> {
                     data.getQ1ByIndex(i),
                     data.getMaxRegularValueByIndex(i),
                     data.getMinRegularValueByIndex(i),
-                    data.getMedianByIndex(i));
+                    data.getMedianByIndex(i),
+                    data.getColor());
             series.getData().add(
                     new XYChart.Data(
                             data.getxPosByIndex(i),
@@ -91,15 +94,16 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         return series;
     }
 
-    private void setSeriesDataStyleByDefault(XYChart.Series series, String color) {
+    private void setSeriesDataStyleByDefault(XYChart.Series series, Color color) {
 
         ObservableList<Data<Number, Number>> data = series.getData();
-        series.getNode().getStyleClass().add("candlestick-average-line");
-        if (DAPStringUtils.isNotBlank(color)) {
-            series.getNode().setStyle("-fx-stroke: " + color);
+        if (color != null) {
+            series.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
         }
         data.forEach(dataItem -> {
-
+            if (color != null) {
+                dataItem.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
+            }
         });
     }
 
@@ -283,22 +287,21 @@ public class BoxPlotChart extends XYChart<Number, Number> {
             double y) {
 
         if (itemNode instanceof Candle && extra != null) {
-            Candle candle = (Candle) itemNode;
 
+            Candle candle = (Candle) itemNode;
             double q1 = getYAxis().getDisplayPosition(extra.getQ1());
             double max = getYAxis().getDisplayPosition(extra.getMaxRegularValue());
             double min = getYAxis().getDisplayPosition(extra.getMinRegularValue());
-            // calculate candle width
-            double candleWidth = -1;
-            if (getXAxis() instanceof NumberAxis) {
-                NumberAxis xa = (NumberAxis) getXAxis();
-                candleWidth = xa.getDisplayPosition(xa.getTickUnit()) * 0.90; // use 90% width between ticks
-            }
+
+            // calculate candle width; if candleWidthByUnit, use 90% width between ticks
+            candleWidth = (getXAxis() instanceof NumberAxis && candleWidthByUnit) ?
+                    getXAxis().getDisplayPosition(((NumberAxis) getXAxis()).getTickUnit()) * 0.90 : candleWidth;
+
             // update candle
-            candle.update(q1 - y, max - y, min - y, candleWidth);
+            candle.update(q1 - y, max - y, min - y, candleWidth, extra.getColor());
             candle.updateTooltip(
                     item.getXValue().doubleValue(),
-                    item.getYValue().doubleValue(),
+                    extra.getMedian().doubleValue(),
                     extra.getMinRegularValue().doubleValue(),
                     extra.getMaxRegularValue().doubleValue(),
                     extra.getQ1().doubleValue(),
@@ -389,5 +392,9 @@ public class BoxPlotChart extends XYChart<Number, Number> {
                 ya.invalidateRange(yData);
             }
         }
+    }
+
+    public void setCandleWidthByUnit(boolean candleWidthByUnit) {
+        this.candleWidthByUnit = candleWidthByUnit;
     }
 }

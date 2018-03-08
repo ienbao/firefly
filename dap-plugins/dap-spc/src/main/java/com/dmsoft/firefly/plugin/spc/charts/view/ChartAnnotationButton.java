@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.charts.view;
 
+import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.plugin.spc.charts.ClearCallBack;
 import com.dmsoft.firefly.plugin.spc.charts.model.SimpleItemCheckModel;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
@@ -7,16 +8,15 @@ import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
-
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * Created by cherry on 2018/2/27.
@@ -24,22 +24,24 @@ import java.util.function.Predicate;
 public class ChartAnnotationButton extends Button {
 
     private Popup popup;
-    private GridPane gridPane;
+    private VBox vBox;
     private Button clearBtn;
     private Button editBtn;
-    private TextField itemFilter;
+    private TextFieldFilter itemFilter;
     private ImageView imageReset;
     private ListView<SimpleItemCheckModel> dataListView;
     private ObservableList<SimpleItemCheckModel> dataModels = FXCollections.observableArrayList();
     private FilteredList<SimpleItemCheckModel> filteredData = new FilteredList(dataModels, s -> true);
-
-    private ClearCallBack clearCallBack;
+    private ClearCallBack callBack;
 
     private Object currentSelectItem;
     private boolean showAnnotation = false;
 
     private final int defaultSelectedIndex = 0;
-    public final Double MAX_HEIGHT = 300.0;
+    public final Double MAX_HEIGHT = 275.0;
+    private final double threshold = 4;
+
+    private String listViewBorderStyle = "-fx-border-width: 1px 0px 1px 0px;";
 
     public ChartAnnotationButton() {
 
@@ -66,28 +68,34 @@ public class ChartAnnotationButton extends Button {
     private void initComponent() {
 
         popup = new Popup();
-        gridPane = new GridPane();
+        vBox = new VBox();
         clearBtn = new Button();
         editBtn = new Button();
-        itemFilter = new TextField();
+        itemFilter = new TextFieldFilter();
         imageReset = new ImageView(new Image("/images/icon_choose_one_gray.png"));
         dataListView = new ListView<>();
         dataListView.setCellFactory(e -> this.buildListCell());
-
         HBox hBox = new HBox();
-        hBox.getChildren().addAll(editBtn, clearBtn);
+        HBox blankBox = new HBox();
+        blankBox.setPrefHeight(20);
+        blankBox.setPrefWidth(20);
+        hBox.getChildren().addAll(editBtn, clearBtn, blankBox);
         BorderPane borderPane = new BorderPane();
+        borderPane.setPrefHeight(20);
+        borderPane.setMinHeight(20);
+        borderPane.setMaxHeight(20);
         borderPane.setRight(hBox);
-        gridPane.addRow(0, itemFilter);
-        gridPane.addRow(1, dataListView);
-        gridPane.addRow(2, borderPane);
-        popup.getContent().add(gridPane);
+        vBox.getChildren().add(itemFilter);
+        vBox.getChildren().add(dataListView);
+        vBox.getChildren().add(borderPane);
+        popup.getContent().add(vBox);
+        vBox.setMargin(borderPane, new Insets(2, 0, 0, 0));
     }
 
     private void initEvent() {
 
-        itemFilter.textProperty().addListener(obs -> {
-            String filter = itemFilter.getText();
+        itemFilter.getTextField().textProperty().addListener(obs -> {
+            String filter = itemFilter.getTextField().getText();
             if (filter == null || filter.length() == 0) {
                 filteredData.setPredicate(s -> true);
             } else {
@@ -110,19 +118,21 @@ public class ChartAnnotationButton extends Button {
 
         Button button = this;
         button.setOnMouseClicked(event -> {
-            Double preHeight = gridPane.getPrefHeight();
+            Double preHeight = vBox.getPrefHeight();
             if (preHeight >= MAX_HEIGHT) {
                 preHeight = MAX_HEIGHT;
             }
             double x = button.getScene().getWindow().getX() +
                     button.getScene().getX() + button.localToScene(0, 0).getX();
             double y = button.getScene().getWindow().getY() +
-                    button.getScene().getY() + button.localToScene(0, 0).getY() - preHeight - 5;
+                    button.getScene().getY() + button.localToScene(0, 0).getY() - preHeight - threshold;
+            x -= vBox.getPrefWidth();
+            x += button.getPrefWidth();
 
             popup.show(button, x, y);
         });
 
-        gridPane.setOnMouseExited(event -> {
+        vBox.setOnMouseExited(event -> {
             if (popup.isShowing()) {
                 popup.hide();
             }
@@ -145,14 +155,14 @@ public class ChartAnnotationButton extends Button {
         dataListView.refresh();
         showAnnotation = false;
         editCurrentSelectItem(dataModels.get(0).getItemName());
-        if (clearCallBack != null) {
-            clearCallBack.execute();
+        if (callBack != null) {
+            callBack.execute();
         }
     }
 
     private void initRender() {
 
-        gridPane.setStyle("-fx-border-width: 1px; -fx-border-color: #cccccc; -fx-background-color: white");
+        vBox.setStyle("-fx-border-width: 1px; -fx-border-color: #cccccc; -fx-background-color: white;");
         clearBtn.setGraphic(ImageUtils.getImageView(getClass()
                 .getResourceAsStream("/images/btn_remove_tracing_point_normal.png")));
         editBtn.setGraphic(ImageUtils.getImageView(getClass()
@@ -161,18 +171,29 @@ public class ChartAnnotationButton extends Button {
         editBtn.getStyleClass().addAll("btn-icon-b");
         this.getStyleClass().addAll("btn-icon-b");
 
+        vBox.setMargin(itemFilter, new Insets(3, 3, 2, 3));
+        dataListView.setStyle(listViewBorderStyle);
+        itemFilter.getTextField().setFocusTraversable(false);
         clearBtn.setPrefWidth(25);
         clearBtn.setMinWidth(25);
         clearBtn.setMaxWidth(25);
+        clearBtn.setPrefHeight(20);
+        clearBtn.setMinHeight(20);
+        clearBtn.setMaxHeight(20);
+        editBtn.setPrefHeight(20);
+        editBtn.setMinHeight(20);
+        editBtn.setMaxHeight(20);
         editBtn.setPrefWidth(25);
         editBtn.setMinWidth(25);
         editBtn.setMaxWidth(25);
         imageReset.setFitHeight(16);
         imageReset.setFitWidth(16);
-        gridPane.setPrefHeight(200);
-        gridPane.setPrefWidth(100);
-        gridPane.setMaxHeight(MAX_HEIGHT);
-        itemFilter.setPromptText("Filter");
+        vBox.setPrefWidth(160);
+        vBox.setPrefHeight(MAX_HEIGHT);
+        vBox.setMaxHeight(MAX_HEIGHT);
+        vBox.setMinHeight(MAX_HEIGHT);
+        dataListView.setMaxHeight(220);
+        itemFilter.getTextField().setPromptText("Filter");
         this.setPrefWidth(20);
         this.setMinWidth(20);
         this.setMaxWidth(20);
@@ -231,7 +252,7 @@ public class ChartAnnotationButton extends Button {
         return showAnnotation;
     }
 
-    public void setClearCallBack(ClearCallBack clearCallBack) {
-        this.clearCallBack = clearCallBack;
+    public void setCallBack(ClearCallBack callBack) {
+        this.callBack = callBack;
     }
 }

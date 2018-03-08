@@ -1,28 +1,34 @@
 package com.dmsoft.firefly.gui.controller;
 
-import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.gui.components.utils.JsonFileUtil;
+import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.model.UserModel;
+import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
-import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.plugin.PluginClass;
+import com.dmsoft.firefly.sdk.plugin.PluginClassType;
+import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
+import com.dmsoft.firefly.sdk.plugin.apis.IConfig;
 import com.dmsoft.firefly.sdk.ui.IMenu;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.google.common.collect.Lists;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.dmsoft.firefly.sdk.ui.MenuBuilder.MenuType;
-import static com.google.common.io.Resources.getResource;
 
 public class AppController {
     private final Logger logger = LoggerFactory.getLogger(AppController.class);
@@ -37,24 +43,39 @@ public class AppController {
     private MenuItem menuChangePassword;
 
     @FXML
+    private MenuButton loginMenuBtn;
+
+    @FXML
     private void initialize() {
+        updateLoginMenuBtn();
         initMenuBar();
         initEvent();
-    }
-
-
-    private void initEvent() {
-        menuChangePassword.setOnAction(event -> {
-            buildChangePasswordDia();
-        });
-        menuLoginOut.setOnAction(event -> {
-
-        });
     }
 
     public void resetMenu() {
         menuSystem.getMenus().clear();
         initialize();
+    }
+
+    public void updateLoginMenuBtn() {
+        loginMenuBtn.setText(GuiFxmlAndLanguageUtils.getString("MENU_PLEASE_LOGIN"));
+        UserModel userModel = UserModel.getInstance();
+        if (userModel != null && userModel.getUser() != null) {
+            loginMenuBtn.setText(userModel.getUser().getUserName());
+        }
+    }
+
+    private void initEvent() {
+        menuChangePassword.setOnAction(event -> {
+            GuiFxmlAndLanguageUtils.buildChangePasswordDia();
+        });
+        menuLoginOut.setOnAction(event -> {
+            UserModel.getInstance().setUser(null);
+            StageMap.unloadStage(GuiConst.PLARTFORM_STAGE_LOGIN);
+            GuiFxmlAndLanguageUtils.buildLoginDialog();
+            updateLoginMenuBtn();
+
+        });
     }
 
     private void initMenuBar() {
@@ -77,7 +98,7 @@ public class AppController {
                     List<Menu> menus = menuSystem.getMenus();
                     boolean result1 = false;
                     for (Menu menu1 : menus) {
-                         boolean result = updateMenu(menu, menu1);
+                        boolean result = updateMenu(menu, menu1);
                         if (result) {
                             result1 = true;
                             break;
@@ -105,7 +126,7 @@ public class AppController {
                 } else {
                     thirdNames.add(name);
                 }
-           }
+            }
         });
 
         thirdNames.forEach(name -> {
@@ -160,17 +181,33 @@ public class AppController {
         }
     }
 
-    private void buildChangePasswordDia() {
-        Pane root = null;
-        try {
-            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/change_password.fxml");
-            root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("platform_gui_change_password", GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), root, getResource("css/platform_app.css").toExternalForm());
-            stage.setResizable(false);
-            stage.show();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+
+    public void importAllConfig() {
+        String str = System.getProperty("user.home");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Spc Config export");
+        fileChooser.setInitialDirectory(new File(str));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JSON", "*.json")
+        );
+        Stage fileStage = null;
+        File file = fileChooser.showOpenDialog(fileStage);
+
+        if (file != null) {
+            String json = JsonFileUtil.readJsonFile(file);
+            JsonMapper jsonMapper = JsonMapper.defaultMapper();
+            if (StringUtils.isNotEmpty(json)) {
+                PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
+                List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.CONFIG);
+                Map<String, String> config = jsonMapper.fromJson(json, Map.class);
+                pluginClasses.forEach(v -> {
+                    IConfig service = (IConfig) v.getInstance();
+                    String name = service.getConfigName();
+                    if (StringUtils.isNotEmpty(name) && StringUtils.isNotEmpty(config.get(name))) {
+                        service.importConfig(config.get(name).getBytes());
+                    }
+                });
+            }
         }
     }
-
 }

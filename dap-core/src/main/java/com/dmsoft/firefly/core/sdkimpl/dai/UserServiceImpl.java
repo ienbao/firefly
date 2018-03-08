@@ -30,7 +30,8 @@ public class UserServiceImpl implements UserService {
         }
         List<UserDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, UserDto.class));
         for (UserDto userDto : list) {
-            if (userDto.getUserName().equals(userName) && userDto.getPassword().equals(password)) {
+            String passwordEn = EncodeUtil.encodeBase64(HashUtil.sha1(password, salt.getBytes()));
+            if (userDto.getUserName().equals(userName) && userDto.getPassword().equals(passwordEn)) {
                 return userDto;
             }
         }
@@ -59,5 +60,44 @@ public class UserServiceImpl implements UserService {
         if (isExist) {
             JsonFileUtil.writeJsonFile(list, parentPath, fileName);
         }
+    }
+
+    @Override
+    public void updateLegal(boolean acceptLegal) {
+        String json = JsonFileUtil.readJsonFile(parentPath, fileName);
+        if (json == null) {
+            logger.debug("Don`t find " + fileName);
+            return;
+        }
+        List<UserDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, UserDto.class));
+        Boolean isExist = Boolean.FALSE;
+        for (UserDto userDto : list) {
+            String name = userDto.getUserName();
+            if (name.equals("operationSystem")) {
+                userDto.setAcceptLegal(acceptLegal);
+                isExist = true;
+                break;
+            }
+        }
+        if (isExist) {
+            JsonFileUtil.writeJsonFile(list, parentPath, fileName);
+        }
+    }
+
+    @Override
+    public boolean findLegal() {
+        String json = JsonFileUtil.readJsonFile(parentPath, fileName);
+        if (json == null) {
+            logger.debug("Don`t find " + fileName);
+            return false;
+        }
+        List<UserDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, UserDto.class));
+        for (UserDto userDto : list) {
+            String name = userDto.getUserName();
+            if (name.equals("operationSystem")) {
+                return userDto.isAcceptLegal();
+            }
+        }
+        return false;
     }
 }

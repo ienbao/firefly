@@ -7,7 +7,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-
 import java.util.Arrays;
 
 /**
@@ -17,8 +16,12 @@ public class ChartOperateButtonApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        ChartOperateButton button = new ChartOperateButton("test", new String[] {"1", "2"}, 0, true);
-        button.setTableRowKeys(Arrays.asList(UIConstant.SPC_CHART_XBAR_EXTERN_MENU));
+        ChartOperateButton button = new ChartOperateButton();
+        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_XBAR_EXTERN_MENU));
+        button.setListViewSize(140, 120);
+        button.setSelectCallBack((name, selected, selectedNames) -> {
+            System.out.println(name);
+        });
 
         GridPane gridPane = new GridPane();
         gridPane.addRow(0, button);

@@ -1,5 +1,7 @@
 package com.dmsoft.firefly.plugin.spc.charts.data.basic;
 
+import javafx.scene.paint.Color;
+
 /**
  * Created by cherry on 2018/2/10.
  */
@@ -19,7 +21,7 @@ public interface IBoxAndWhiskerData {
 
     Number getMaxRegularValueByIndex(int index);
 
-    String getColor();
+    Color getColor();
 
     int getLen();
 }

@@ -6,9 +6,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.LoginController">
+<AnchorPane fx:id="loginPane" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.LoginController">
    <children>
-      <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox>
          <children>
             <GridPane>
               <columnConstraints>
@@ -17,34 +17,26 @@
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="60.0" />
               </columnConstraints>
               <rowConstraints>
-                  <RowConstraints minHeight="10.0" prefHeight="50.0" valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="50.0" valignment="CENTER" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <TextField fx:id="userNameTxt" style="-fx-pref-height: 26; -fx-min-height: 26;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="userNameTxt" style="-fx-pref-height: 26; -fx-min-height: 26;" text="admin" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Button fx:id="loginBtn" alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="230.0" styleClass="btn-primary" text="Logining" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <ImageView fitHeight="40.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
-                     <image>
-                        <Image url="@../../../../../dap-gui-components/src/main/resources/images/top_title_logo.png" />
-                     </image>
-                  </ImageView>
-                  <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <ImageView fx:id="loginImageView" fitHeight="40.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="15.0" />
+                     </GridPane.margin></ImageView>
+                  <PasswordField fx:id="passwordField" text="123456" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
                <VBox.margin>
-                  <Insets bottom="20.0" />
+                  <Insets />
                </VBox.margin>
             </GridPane>
-            <HBox alignment="CENTER_LEFT">
-               <children>
-                  <Label prefHeight="30.0" prefWidth="350.0" style="-fx-background-color: #fff7d0;" text="Login fail,please check your username and password.">
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </Label>
-               </children>
-            </HBox>
+            <HBox fx:id="loginFailHbox" alignment="CENTER_LEFT" maxWidth="350.0" minWidth="350.0" prefWidth="350.0"/>
          </children>
       </VBox>
    </children>

@@ -1,8 +1,8 @@
 package com.dmsoft.firefly.plugin.spc.charts;
 
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
-import com.dmsoft.firefly.plugin.spc.charts.utils.ColorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.utils.ReflectionUtils;
+import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.google.common.collect.Maps;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -35,10 +35,10 @@ public class AreaSeriesNode<X, Y> {
         seriesLine.setStrokeLineJoin(StrokeLineJoin.MITER);
 
         fillPath.getStyleClass().add("chart-fill-area-line");
-        fillPath.setStyle("-fx-fill: " + ColorUtils.toRGBCode(color));
+        fillPath.setStyle("-fx-fill: " + ColorUtils.toHexFromFXColor(color));
 
         seriesLine.getStyleClass().add("chart-series-area-line");
-        seriesLine.setStyle("-fx-stroke: " + ColorUtils.toRGBCode(color));
+        seriesLine.setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
         Group areaGroup = new Group(fillPath, seriesLine);
 
         this.areaSeries.add(series);
@@ -56,8 +56,8 @@ public class AreaSeriesNode<X, Y> {
             Path fillPath = ((Path) children.get(0));
             if (showed) {
                 Color color = colorMap.get(series);
-                fillPath.setStyle("-fx-fill: " + ColorUtils.toRGBCode(color));
-                seriesLine.setStyle("-fx-stroke: " + ColorUtils.toRGBCode(color));
+                fillPath.setStyle("-fx-fill: " + ColorUtils.toHexFromFXColor(color));
+                seriesLine.setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
             } else {
                 fillPath.setStyle("-fx-stroke-width: 0px;-fx-fill: transparent");
                 seriesLine.setStyle("-fx-stroke: transparent");

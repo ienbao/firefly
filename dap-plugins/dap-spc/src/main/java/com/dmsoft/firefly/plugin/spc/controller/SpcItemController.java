@@ -6,10 +6,9 @@ package com.dmsoft.firefly.plugin.spc.controller;
 import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.plugin.spc.dto.BasicSearchDto;
-import com.dmsoft.firefly.plugin.spc.dto.SpcLeftConfigDto;
-import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
+import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
+import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.*;
@@ -17,9 +16,14 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.job.Job;
+import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
+import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,11 +44,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.net.URL;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.io.Resources.getResource;
 
@@ -108,6 +108,7 @@ public class SpcItemController implements Initializable {
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
     private SpcLeftConfigServiceImpl leftConfigService = new SpcLeftConfigServiceImpl();
+    private JobManager manager = RuntimeContext.getBean(JobManager.class);
 
     /**
      * init main controller
@@ -241,15 +242,37 @@ public class SpcItemController implements Initializable {
     }
 
     private void getAnalysisBtnEvent() {
-        //todo find spc statistical Result from service
-//        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
-//        SpcSearchConfigDto spcSearchConfigDto = new SpcSearchConfigDto();
-//        List<SpcStatsDto> spcStatsDtoList = spcService.findStatisticalResult(searchConditionDtoList,spcSearchConfigDto);
-        List<SpcStatsDto> spcStatsDtoList = initData();
-        if (spcStatsDtoList == null) {
-            return;
-        }
-        spcMainController.setStatisticalResultData(spcStatsDtoList);
+        Job job = new Job(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
+        Map paramMap = Maps.newHashMap();
+
+        List<String> projectNameList = envService.findActivatedProjectName();
+        List<TestItemWithTypeDto> testItemWithTypeDtoList = this.getSelectedItemDto();
+        List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(testItemWithTypeDtoList);
+        SpcAnalysisConfigDto spcAnalysisConfigDto = this.buildSpcAnalysisConfigData();
+        List<String> testItemList = this.buildSpcAnalysisTestItem();
+
+        paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
+        paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
+        paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+        paramMap.put(ParamKeys.SPC_ANALYSIS_TEST_ITEM, testItemList);
+
+        spcMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
+        Platform.runLater(() -> {
+            manager.doJobASyn(job, paramMap, spcMainController, new JobDoComplete() {
+                @Override
+                public void doComplete(Object returnValue) {
+                    System.out.println("ASyn result = " + (returnValue == null ? "null" : returnValue));
+                    List<SpcStatsDto> spcStatsDtoList = (List<SpcStatsDto>) returnValue;
+                    if (returnValue == null) {
+                        spcStatsDtoList = initData();
+//                        return;
+                    }
+                    spcMainController.setStatisticalResultData(spcStatsDtoList);
+                }
+            });
+        });
+
     }
 
 
@@ -321,6 +344,23 @@ public class SpcItemController implements Initializable {
             for (ItemTableModel model : items) {
                 if (model.getSelector().isSelected()) {
                     selectItems.add(model.getItem());
+                }
+            }
+        }
+        return selectItems;
+    }
+
+    /**
+     * get selected test items
+     *
+     * @return test items
+     */
+    public List<TestItemWithTypeDto> getSelectedItemDto() {
+        List<TestItemWithTypeDto> selectItems = Lists.newArrayList();
+        if (items != null) {
+            for (ItemTableModel model : items) {
+                if (model.getSelector().isSelected()) {
+                    selectItems.add(model.getItemDto());
                 }
             }
         }
@@ -507,5 +547,71 @@ public class SpcItemController implements Initializable {
         advanceText.setText(null);
         group1.setValue(null);
         group2.setValue(null);
+    }
+
+    private SpcAnalysisConfigDto buildSpcAnalysisConfigData() {
+        SpcAnalysisConfigDto spcAnalysisConfigDto = new SpcAnalysisConfigDto();
+        if (StringUtils.isNumeric(subGroup.getText())) {
+            spcAnalysisConfigDto.setSubgroupSize(Integer.valueOf(subGroup.getText()));
+        }
+        if (StringUtils.isNumeric(ndGroup.getText())) {
+            spcAnalysisConfigDto.setIntervalNumber(Integer.valueOf(ndGroup.getText()));
+        }
+        return spcAnalysisConfigDto;
+    }
+
+    private List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
+        if (testItemWithTypeDtoList == null) {
+            return null;
+        }
+        List<String> conditionList = getSearch();
+        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
+        int i = 0;
+        for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtoList) {
+            if (conditionList != null) {
+                for (String condition : conditionList) {
+                    SearchConditionDto searchConditionDto = new SearchConditionDto();
+                    searchConditionDto.setKey(ParamKeys.SPC_ANALYSIS_CONDITION_KEY + i);
+                    searchConditionDto.setItemName(testItemWithTypeDto.getTestItemName());
+                    searchConditionDto.setCusLsl(testItemWithTypeDto.getLsl());
+                    searchConditionDto.setCusUsl(testItemWithTypeDto.getUsl());
+                    searchConditionDto.setCondition(condition);
+                    searchConditionDtoList.add(searchConditionDto);
+                    i++;
+                }
+            } else {
+                SearchConditionDto searchConditionDto = new SearchConditionDto();
+                searchConditionDto.setKey(ParamKeys.SPC_ANALYSIS_CONDITION_KEY + i);
+                searchConditionDto.setItemName(testItemWithTypeDto.getTestItemName());
+                searchConditionDto.setCusLsl(testItemWithTypeDto.getLsl());
+                searchConditionDto.setCusUsl(testItemWithTypeDto.getUsl());
+                searchConditionDtoList.add(searchConditionDto);
+                i++;
+            }
+        }
+        return searchConditionDtoList;
+    }
+
+    private List<String> buildSpcAnalysisTestItem() {
+        List<String> conditionList = getSearch();
+        List<String> testItemList = getSelectedItem();
+        List<String> timeKeys = Lists.newArrayList();
+        String timePattern = null;
+        try {
+            timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
+            timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
+        } catch (Exception e) {
+
+        }
+        FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
+        for (String condition : conditionList) {
+            Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);
+            for (String conditionTestItem : conditionTestItemSet) {
+                if (!testItemList.contains(conditionTestItem)) {
+                    testItemList.add(conditionTestItem);
+                }
+            }
+        }
+        return testItemList;
     }
 }

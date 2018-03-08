@@ -2,7 +2,7 @@ package com.dmsoft.firefly.plugin.spc.charts;
 
 import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationFetch;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
-import com.dmsoft.firefly.plugin.spc.charts.utils.ColorUtils;
+import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.google.common.collect.Maps;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -272,9 +272,9 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         if (!showLined) {
             series.getNode().getStyleClass().add(seriesClass);
         }
-        series.getNode().setStyle("-fx-stroke: " + ColorUtils.toRGBCode(color));
+        series.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
         data.forEach(dataItem -> {
-            dataItem.getNode().setStyle("-fx-background-color: " + ColorUtils.toRGBCode(color));
+            dataItem.getNode().setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
         });
     }
 

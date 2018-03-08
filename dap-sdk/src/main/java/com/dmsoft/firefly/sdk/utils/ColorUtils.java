@@ -7,6 +7,8 @@ import java.math.BigDecimal;
  * Created by Can.Guan on 2017/3/1.
  */
 public class ColorUtils {
+    private static final double DOUBLE_255 = 255.0;
+
     /**
      * method to get color
      *
@@ -15,11 +17,11 @@ public class ColorUtils {
      * @return new color
      */
     public static Color getColor(Color bgColor, Color fgColor) {
-        Double redDouble = bgColor.getRed() * (Double.valueOf(fgColor.getRed()) / 255);
+        Double redDouble = bgColor.getRed() * (fgColor.getRed() / DOUBLE_255);
         int red = new BigDecimal(redDouble).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
-        Double greenDouble = bgColor.getGreen() * (Double.valueOf(fgColor.getGreen()) / 255);
+        Double greenDouble = bgColor.getGreen() * (fgColor.getGreen() / DOUBLE_255);
         int green = new BigDecimal(greenDouble).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
-        Double blueDouble = bgColor.getBlue() * (Double.valueOf(fgColor.getBlue()) / 255);
+        Double blueDouble = bgColor.getBlue() * (fgColor.getBlue() / DOUBLE_255);
         int blue = new BigDecimal(blueDouble).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
         return new Color(red, green, blue, bgColor.getAlpha());
     }
@@ -45,7 +47,7 @@ public class ColorUtils {
      * method to make Color to String
      *
      * @param color color
-     * @return
+     * @return hex color
      */
     public static String toHexFromColor(Color color) {
         String r, g, b;
@@ -53,6 +55,27 @@ public class ColorUtils {
         r = Integer.toHexString(color.getRed());
         g = Integer.toHexString(color.getGreen());
         b = Integer.toHexString(color.getBlue());
+        r = r.length() == 1 ? "0" + r : r;
+        g = g.length() == 1 ? "0" + g : g;
+        b = b.length() == 1 ? "0" + b : b;
+        r = r.toUpperCase();
+        g = g.toUpperCase();
+        b = b.toUpperCase();
+        su.append("#");
+        su.append(r);
+        su.append(g);
+        su.append(b);
+        //0xFF0000FF
+        return su.toString();
+    }
+
+    public static String toHexFromFXColor(javafx.scene.paint.Color fxColor) {
+        String r, g, b;
+        Color awtColor = toAwtColorFromFxColor(fxColor);
+        StringBuilder su = new StringBuilder();
+        r = Integer.toHexString(awtColor.getRed());
+        g = Integer.toHexString(awtColor.getGreen());
+        b = Integer.toHexString(awtColor.getBlue());
         r = r.length() == 1 ? "0" + r : r;
         g = g.length() == 1 ? "0" + g : g;
         b = b.length() == 1 ? "0" + b : b;

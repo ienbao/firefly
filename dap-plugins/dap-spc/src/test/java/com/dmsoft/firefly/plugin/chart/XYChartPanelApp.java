@@ -6,7 +6,6 @@ import com.dmsoft.firefly.plugin.spc.charts.data.basic.AbnormalPointData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.BrokenLineData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.LineData;
 import com.dmsoft.firefly.plugin.spc.charts.shape.LineType;
-import com.dmsoft.firefly.plugin.spc.charts.utils.ColorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
 import com.dmsoft.firefly.plugin.spc.dto.chart.RuleXYChartData;
@@ -107,7 +106,7 @@ public class XYChartPanelApp extends Application {
             String lineClass = lineType == LineType.SOLID ? "solid-line" : "dashed-line";
             lineData.setTitle(seriesName);
             lineData.setName(lineName);
-            lineData.setColor(Color.color(220, 220, 220));
+            lineData.setColor(Color.RED);
             lineData.setLineClass(lineClass);
             lineData.setLineType(lineType);
             lineData.setValue(rand.nextInt(2000));
@@ -133,7 +132,7 @@ public class XYChartPanelApp extends Application {
         xyChartData.setX(x);
         xyChartData.setY(y);
         xyChartData.setIds(ids);
-        xyChartData.setColor(Color.color(200, 200, 200));
+        xyChartData.setColor(Color.BLUE);
         xyChartData.setSeriesName(seriesName);
         ruleXYChartData = new RuleXYChartData();
         ruleXYChartData.setXyChartData(xyChartData);
@@ -141,14 +140,14 @@ public class XYChartPanelApp extends Application {
     }
 
     private void initPanel() {
-        int checkBoxIndex = 0;
-        ChartOperateButton button = new ChartOperateButton(new String[] {"1", "2"}, checkBoxIndex);
+
+        ChartOperateButton button = new ChartOperateButton();
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setTickMarkVisible(false);
         yAxis.setTickMarkVisible(false);
-        button.setTableRowKeys(Arrays.asList(UIConstant.SPC_CHART_XBAR_EXTERN_MENU));
-        button.setTableViewSize(150, 150);
+        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_XBAR_EXTERN_MENU));
+        button.setListViewSize(140, 150);
         xBarChar = new LinearChart(xAxis, yAxis);
         xBarChartPane = new ChartPanel<>(xBarChar);
         xBarChartPane.getCustomPane().getChildren().add(button);

@@ -52,11 +52,7 @@ public class CsvResolverService implements IDataParser {
 
     private CsvReader csvReader;
 
-    /**
-     * method to import csv
-     *
-     * @param csvPath the path of csv file
-     */
+    @Override
     public void importFile(String csvPath) {
         logger.info("Start csv importing.");
         File csvFile = new File(csvPath);
@@ -160,27 +156,7 @@ public class CsvResolverService implements IDataParser {
             }
             sourceDataService.saveTestData(csvFile.getName(), rowDataDtos);
             processMonitor.push(90);
-            //save column data
-//            List<TestDataDto> testDataDtos = Lists.newArrayList();
-//            for (int i = 0; i < items.length; i++) {
-//                TestDataDto testDataDto = new TestDataDto();
-////                testDataDto.setProjectName(csvFile.getName());
-//                testDataDto.setItemName(items[i]);
-//                testDataDto.setUsl(uslRow[i]);
-//                testDataDto.setLsl(lslRow[i]);
-//                testDataDto.setUnit(unitRow[i]);
-//
-//                List<CellData> cellDatas = Lists.newArrayList();
-//                for (int j = fileFormat.getData() - 1; j < csvList.size(); j++) {
-//                    CellData cellData = new CellData();
-//                    cellData.setRowKey(String.valueOf(j));
-//                    cellData.setValue(csvList.get(j)[i]);
-//                    cellDatas.add(cellData);
-//                }
-//                testDataDto.setData(cellDatas);
-//                testDataDtos.add(testDataDto);
-//            }
-//            sourceDataService.saveProjectData(csvFile.getName(), testDataDtos);
+
 
             importSucc = true;
             csvReader.close();
@@ -212,7 +188,7 @@ public class CsvResolverService implements IDataParser {
      */
     @ExcludeMethod
     public void saveCsvTemplate(CsvTemplateDto csvTemplateDto) {
-        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.CsvResolverPlugin").getFolderPath();
+        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.CsvResolverPlugin").getFolderPath() + File.separator + "config";
         String json = JsonFileUtil.readJsonFile(path, fileName);
         if (json == null) {
             logger.debug("Don`t find " + fileName);
@@ -228,13 +204,14 @@ public class CsvResolverService implements IDataParser {
      */
     @ExcludeMethod
     public CsvTemplateDto findCsvTemplate() {
-        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.CsvResolverPlugin").getFolderPath();
+        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.CsvResolverPlugin").getFolderPath() + File.separator + "config";
+        CsvTemplateDto csvTemplateDto = null;
+
         String json = JsonFileUtil.readJsonFile(path, fileName);
         if (json == null) {
             logger.debug("Don`t find " + fileName);
         }
 
-        CsvTemplateDto csvTemplateDto = null;
         if (!StringUtils.isEmpty(json)) {
             csvTemplateDto = jsonMapper.fromJson(json, CsvTemplateDto.class);
         }

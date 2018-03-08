@@ -6,14 +6,13 @@ import com.dmsoft.firefly.gui.controller.AppController;
 import com.dmsoft.firefly.gui.controller.MainController;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.plugin.apis.IConfig;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.ToggleGroup;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -41,9 +40,6 @@ public class MenuFactory {
 
     public static void initMenu() {
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(createFileMenu());
-        RuntimeContext.getBean(PluginUIContext.class).registerMenu(createDataSourceMenu());
-        RuntimeContext.getBean(PluginUIContext.class).registerMenu(createDataSourceResolverMenu());
-        RuntimeContext.getBean(PluginUIContext.class).registerMenu(createAnalyseMenu());
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(createPreferenceMenu());
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(createHelpMenu());
     }
@@ -56,11 +52,14 @@ public class MenuFactory {
 
         Menu menu = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_FILE"));
         menu.setId(MenuBuilder.MENU_FILE);
+        MenuItem selectDataSourceMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_SELECT_DATA_SOURCE"));
         MenuItem importMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_IMPORT_SETTING"));
         MenuItem exportMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_EXPORT_SETTING"));
         MenuItem restoreMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_RESTORE_SETTING"));
         MenuItem exitMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_EXIT"));
-
+        importMenuItem.setOnAction(event -> appController.importAllConfig());
+        exportMenuItem.setOnAction(event -> buildeSettingExportDia());
+        menu.getItems().add(selectDataSourceMenuItem);
         menu.getItems().add(importMenuItem);
         menu.getItems().add(exportMenuItem);
         menu.getItems().add(restoreMenuItem);
@@ -69,38 +68,31 @@ public class MenuFactory {
         return getParentMenuBuilder().setParentLocation(ROOT_MENU).addMenu(menu);
     }
 
-    private static MenuBuilder createDataSourceMenu() {
-        Menu menu = new Menu("Data Source");
-        menu.setId(MenuBuilder.MENU_DATASOURCE);
-        MenuItem menuItem = new MenuItem("Select Data Source(S)");
-        menuItem.setId("selectDataSource");
-        menu.getItems().add(menuItem);
-        return getParentMenuBuilder().setParentLocation(ROOT_MENU).addMenu(menu);
-    }
-
-    private static MenuBuilder createDataSourceResolverMenu() {
-        Menu menu = new Menu("Resolver");
-        menu.setId(MenuBuilder.MENU_DATASOURCE_RESOLVER);
-        return getParentMenuBuilder().setParentLocation(MenuBuilder.MENU_DATASOURCE).addMenu(menu);
-    }
-
-    private static MenuBuilder createAnalyseMenu() {
-        Menu menu = new Menu("Analyze(A)");
-        menu.setId(MenuBuilder.MENU_ANALYSE);
-        MenuItem analysisMenuItem = new MenuItem("Analysis Templete(A)");
-        analysisMenuItem.setOnAction(event -> buildTemplateDia());
-        menu.getItems().add(analysisMenuItem);
-        return getParentMenuBuilder().setParentLocation(ROOT_MENU).addMenu(menu);
-    }
-
     private static MenuBuilder createPreferenceMenu() {
-        Menu menu = new Menu("Preference(P)");
+        Menu menu = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_PREFERENCE"));
         menu.setId(MenuBuilder.MENU_PREFERENCE);
-        MenuItem importMenuItem = new MenuItem("Plugin-Manager(P)");
-        importMenuItem.setOnAction(event -> {
+
+       /* Label labelIcon = new Label(GuiFxmlAndLanguageUtils.getString("MENU_DATA_SOURCE_SETTING_QUICK"));
+        labelIcon.setContentDisplay(ContentDisplay.RIGHT);
+        labelIcon.setAlignment(Pos.CENTER_RIGHT);
+        Label label = new Label();
+        label.setGraphic(labelIcon);
+        label.setText(GuiFxmlAndLanguageUtils.getString("MENU_DATA_SOURCE_SETTING"));
+        label.setContentDisplay(ContentDisplay.RIGHT);*/
+
+        MenuItem dataSourceSettingMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_DATA_SOURCE_SETTING"));
+
+        MenuItem analysisMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ANALYSIS_TEMPLATE"));
+        analysisMenuItem.setOnAction(event -> buildTemplateDia());
+
+        MenuItem pluginMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_PLUGIN_MANAGER"));
+        pluginMenuItem.setOnAction(event -> {
             buildPluginManageDialog();
         });
-        menu.getItems().add(importMenuItem);
+
+        menu.getItems().add(dataSourceSettingMenuItem);
+        menu.getItems().add(analysisMenuItem);
+        menu.getItems().add(pluginMenuItem);
         menu.getItems().add(initLanguageMenu());
         return getParentMenuBuilder().setParentLocation(ROOT_MENU).addMenu(menu);
     }
@@ -140,11 +132,14 @@ public class MenuFactory {
     }
 
     private static MenuBuilder createHelpMenu() {
-        Menu menu = new Menu("Help(H)");
+        Menu menu = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_HELP"));
         menu.setId(MenuBuilder.MENU_HELP);
-        MenuItem legalMenuItem = new MenuItem("Legal Notice");
-        MenuItem dapMenuItem = new MenuItem("About DAP");
-        MenuItem updateMenuItem = new MenuItem("Check Update");
+        MenuItem legalMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_LEGAL_NOTICE"));
+        legalMenuItem.setOnAction(event -> {
+            GuiFxmlAndLanguageUtils.buildLegalDialog();
+        });
+        MenuItem dapMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ABOUT_DAP"));
+        MenuItem updateMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_CHECK_UPDATE"));
 
         menu.getItems().add(legalMenuItem);
         menu.getItems().add(dapMenuItem);
@@ -156,10 +151,22 @@ public class MenuFactory {
         Pane root = null;
         try {
             //root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-           FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/template.fxml");
-           root = fxmlLoader.load();
-           Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("template", GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE), root, getResource("css/platform_app.css").toExternalForm());
-           stage.show();
+            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/template.fxml");
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("template", GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE), root, getResource("css/platform_app.css").toExternalForm());
+            stage.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private static void buildeSettingExportDia() {
+        Pane root = null;
+        try {
+            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/export_setting.fxml");
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("exportSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.EXPORTSETTING), root, getResource("css/platform_app.css").toExternalForm());
+            stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -184,5 +191,13 @@ public class MenuFactory {
 
     public static void setAppController(AppController appController) {
         MenuFactory.appController = appController;
+    }
+
+    public static MainController getMainController() {
+        return mainController;
+    }
+
+    public static AppController getAppController() {
+        return appController;
     }
 }

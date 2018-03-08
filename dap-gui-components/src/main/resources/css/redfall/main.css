@@ -2114,3 +2114,170 @@
     -fx-stroke: null;
     -fx-opacity: 0;
 }
+/*******************************************************************************
+ *                                                                             *
+ * ProgressBar                                                                 *
+ *                                                                             *
+ ******************************************************************************/
+.progress-bar > .bar {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-insets: 0;
+    -fx-padding: 1;
+    -fx-shape: null;
+    -fx-background-color:#ea2028;
+}
+.progress-bar:indeterminate > .bar {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: #ea2028;
+}
+.progress-bar > .track {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: #dcdcdc;
+}
+/*******************************************************************************
+ *                                                                             *
+ * ProgressBar small  red                                                      *
+ *                                                                             *
+ ******************************************************************************/
+.progress-bar-sm-red > .bar {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-insets: 0;
+    -fx-padding: 1;
+    -fx-shape: null;
+    -fx-background-color:#ea2028;
+}
+.progress-bar-sm-red:indeterminate > .bar {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: #ea2028;
+}
+.progress-bar-sm-red > .track {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: #dcdcdc;
+}
+/*******************************************************************************
+ *                                                                             *
+ * ProgressBar md  red                                                         *
+ *                                                                             *
+ ******************************************************************************/
+
+.progress-bar-md-red > .bar {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-insets: 0;
+    -fx-padding: 2;
+    -fx-shape: null;
+    -fx-background-color:#ea2028;
+}
+
+.progress-bar-md-red:indeterminate > .bar {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: #ea2028;
+}
+.progress-bar-md-red > .track {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: #ededed;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * ProgressBar md  green                                                       *
+ *                                                                             *
+ ******************************************************************************/
+
+.progress-bar-md-green > .bar {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-insets: 0;
+    -fx-padding: 2;
+    -fx-shape: null;
+    -fx-background-color:#5eb511;
+}
+.progress-bar-md-green:indeterminate > .bar {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: #5eb511;
+}
+.progress-bar-md-green > .track {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: #ededed;
+}
+/*******************************************************************************
+ *                                                                             *
+ * ProgressBar lg  red                                                         *
+ *                                                                             *
+ ******************************************************************************/
+
+.progress-bar-lg-red > .bar {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-insets: 0;
+    -fx-padding: 4;
+    -fx-shape: null;
+    -fx-background-color:#ea2028;
+}
+.progress-bar-lg-red:indeterminate > .bar {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: #ea2028;
+}
+.progress-bar-lg-red > .track {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: #ededed;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * ProgressBar lg  green                                                       *
+ *                                                                             *
+ ******************************************************************************/
+.progress-bar-lg-green > .bar {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-insets: 0;
+    -fx-padding: 4;
+    -fx-shape: null;
+    -fx-background-color:#5eb511;
+}
+.progress-bar-lg-green:indeterminate > .bar {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: #5eb511;
+}
+.progress-bar-lg-green > .track {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: #ededed;
+}
+/*******************************************************************************
+ *                                                                             *
+ * Login                                                                       *
+ *                                                                             *
+ ******************************************************************************/
+
+.login-label-lg {
+    -fx-text-fill: #ea2028;
+    -fx-font-weight: 800;
+    -fx-font: 28 arial;
+}
+
+.login-label-md {
+    -fx-text-fill: #222222;
+    -fx-font-weight: 400;
+    -fx-font: 22 arial;
+}

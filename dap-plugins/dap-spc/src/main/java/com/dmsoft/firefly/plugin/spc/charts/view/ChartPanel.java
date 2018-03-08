@@ -10,10 +10,9 @@ import javafx.scene.layout.*;
 /**
  * Created by cherry on 2018/2/8.
  */
-public class ChartPanel<T extends XYChart> extends VBox {
+public class ChartPanel<T extends XYChart> extends BorderPane {
 
     private T chart;
-    private VBox chartPane;
     private BorderPane titlePane;
 
     private ChartUtils chartUtils;
@@ -54,7 +53,6 @@ public class ChartPanel<T extends XYChart> extends VBox {
         leftHBox = new HBox();
         customPane = new HBox();
         titlePane = new BorderPane();
-        chartPane = new VBox();
         zoomInBtn = new Button();
         zoomOutBtn = new Button();
         extensionBtn = new Button();
@@ -84,13 +82,15 @@ public class ChartPanel<T extends XYChart> extends VBox {
         rightHBox.getChildren().add(zoomInBtn);
         rightHBox.getChildren().add(zoomOutBtn);
         rightHBox.getChildren().add(menuBar);
+        rightHBox.setMargin(zoomInBtn, new Insets(0, 0, 0, 5));
+        rightHBox.setMargin(zoomOutBtn, new Insets(0, 0, 0, 5));
+        rightHBox.setMargin(menuBar, new Insets(-3, 0, 0, 5));
         leftHBox.getChildren().add(legendLbl);
         titlePane.setTop(topPane);
         titlePane.setLeft(leftHBox);
         titlePane.setRight(rightHBox);
-        chartPane.getChildren().add(chart);
-        this.getChildren().add(titlePane);
-        this.getChildren().add(chartPane);
+        this.setTop(titlePane);
+        this.setCenter(chart);
     }
 
     private void initComponentRender() {
@@ -107,7 +107,11 @@ public class ChartPanel<T extends XYChart> extends VBox {
         legendBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_unfold_normal.png")));
         legendBtn.setPadding(new Insets(0, 0, 0, 3));
         legendLbl.setPadding(new Insets(3, 0, 0, 0));
-        leftHBox.setPadding(new Insets(0, 0, 0, spacing * 2));
+        leftHBox.setPadding(new Insets(0, 0, 0, spacing));
+
+//        extensionMenu.setStyle("-fx-padding: 0em 1em 0em -0.8em");
+        menuBar.getStyleClass().removeAll("menu-icon");
+        menuBar.getStyleClass().add("menu-icon");
 
         zoomInBtn.setPrefWidth(20);
         zoomInBtn.setMaxWidth(20);
@@ -160,7 +164,7 @@ public class ChartPanel<T extends XYChart> extends VBox {
 //                System.out.println("legendLabelWidth: " + legendLabelWidth);
 //                System.out.println("rightPaneWidth: " + rightPaneWidth);
 //                System.out.println("totalWidth: " + totalWidth);
-                if (titlePaneWidth <= totalWidth + spacing * 2 + threshold) {
+                if (titlePaneWidth <= totalWidth + spacing + threshold) {
                     leftHBox.getChildren().setAll(legendBtn);
                 } else {
                     leftHBox.getChildren().setAll(legendLbl);

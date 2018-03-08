@@ -9,7 +9,6 @@ import com.dmsoft.firefly.plugin.spc.charts.data.BoxAndWhiskerData;
 import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
 import com.dmsoft.firefly.plugin.spc.charts.shape.LineType;
-import com.dmsoft.firefly.plugin.spc.charts.utils.ColorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
@@ -19,17 +18,16 @@ import com.dmsoft.firefly.plugin.spc.dto.chart.BarChartData;
 import com.dmsoft.firefly.plugin.spc.dto.chart.RuleXYChartData;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
+import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.chart.*;
 import javafx.scene.control.Tab;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
 import java.net.URL;
@@ -69,7 +67,7 @@ public class ChartResultController implements Initializable {
         Double value = (Double) pointRule.getData().getYValue();
         Color color = pointRule.getNormalColor();
         color = (value > 300) && pointRule.getActiveRule().contains("R1") ? Color.RED : color;
-        pointStyle.setStyle("-fx-background-color: " + ColorUtils.toRGBCode(color));
+        pointStyle.setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
         return pointStyle;
     };
     private Function pointTooltipFunc = (Function<PointTooltip, String>) pointTooltip ->
@@ -81,7 +79,7 @@ public class ChartResultController implements Initializable {
     private String pointName = "Point";
     private String connectLine = "Connect Line";
 
-    private String legend = "- - - LSL, USL    —— m Line    —— 6s Line";
+    private String legend = "- - - LSL, USL  —— m Line   —— 6s Line";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -116,6 +114,7 @@ public class ChartResultController implements Initializable {
         chartTabPane.addNode(boxChartPane, 6);
         chartTabPane.addNode(mrChartPane, 7);
         chartTabPane.activeTabByIndex(0);
+
         analysisChartTab.setContent(chartTabPane);
     }
 
@@ -127,12 +126,11 @@ public class ChartResultController implements Initializable {
     }
 
     private void initNDChartPane() {
-        int checkBoxIndex = 0;
-        String[] columns = new String[]{"1", "2"};
-        ChartOperateButton button = new ChartOperateButton(columns, checkBoxIndex);
+
+        ChartOperateButton button = new ChartOperateButton(true);
         button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
-        button.setTableRowKeys(Arrays.asList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));
-        button.setTableViewSize(160, 240);
+        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));
+        button.setListViewSize(140, 257);
         button.getStyleClass().add("btn-icon-b");
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
@@ -141,6 +139,7 @@ public class ChartResultController implements Initializable {
         yAxis.setMinorTickVisible(false);
 
         button.setSelectCallBack((name, selected, selectedNames) -> {
+
             if (UIConstant.SPC_CHART_NDC_EXTERN_MENU[9].equalsIgnoreCase(name)) {
                 ObservableList<XYChart.Series> series = ndChartPane.getChart().getData();
                 series.forEach(oneSeries -> {
@@ -160,21 +159,19 @@ public class ChartResultController implements Initializable {
     }
 
     private void initRunChartPane() {
-        int checkBoxIndex = 0;
-        String[] columns = new String[]{"1", "2"};
-        String[] itemNames = new String[] {"", "item0", "item1", "item2"};
 
-        ChartOperateButton button = new ChartOperateButton(columns, checkBoxIndex);
+        String[] itemNames = new String[] {"", "item0", "item1", "item2"};
+        ChartOperateButton button = new ChartOperateButton(true);
         editBtn = new ChartAnnotationButton();
-        ChartOperateButton rRuleBtn = new ChartOperateButton(columns, checkBoxIndex, false);
+        ChartOperateButton rRuleBtn = new ChartOperateButton(false, com.dmsoft.firefly.plugin.spc.charts.utils.enums.Orientation.BOTTOMLEFT);
         button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
         rRuleBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rule_normal.png")));
         editBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_tracing_point_normal.png")));
-        button.setTableRowKeys(Arrays.asList(UIConstant.SPC_CHART_RUN_EXTERN_MENU));
-        rRuleBtn.setTableRowKeys(Arrays.asList(UIConstant.SPC_RULE_R));
+        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_RUN_EXTERN_MENU));
+        rRuleBtn.setListViewData(Arrays.asList(UIConstant.SPC_RULE_R));
         editBtn.setData(Arrays.asList(itemNames));
-        button.setTableViewSize(155, 180);
-        rRuleBtn.setTableViewSize(155, 200);
+        button.setListViewSize(140, 211);
+        rRuleBtn.setListViewSize(140, 211);
 
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
@@ -189,7 +186,11 @@ public class ChartResultController implements Initializable {
         runChartPane.getCustomPane().getChildren().add(button);
         runChartPane.getCustomPane().getChildren().add(editBtn);
 
-        editBtn.setClearCallBack(() -> {
+        runChartPane.getCustomPane().setMargin(editBtn, new Insets(0, 0, 0, 5));
+        runChartPane.getCustomPane().setMargin(button, new Insets(0, 0, 0, 5));
+//        runChartPane.getCustomPane().setMargin(rRuleBtn, new Insets(0, 0, 0, 5));
+
+        editBtn.setCallBack(() -> {
             runChart.clearAnnotation(annotationData);
         });
 
@@ -220,12 +221,11 @@ public class ChartResultController implements Initializable {
     }
 
     private void initXBarChartPane() {
-        int checkBoxIndex = 0;
-        String[] columns = new String[]{"1", "2"};
-        ChartOperateButton button = new ChartOperateButton(columns, checkBoxIndex);
+
+        ChartOperateButton button = new ChartOperateButton();
         button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
-        button.setTableRowKeys(Arrays.asList(UIConstant.SPC_CHART_XBAR_EXTERN_MENU));
-        button.setTableViewSize(155, 120);
+        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_XBAR_EXTERN_MENU));
+        button.setListViewSize(140, 120);
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setTickMarkVisible(false);
@@ -269,12 +269,10 @@ public class ChartResultController implements Initializable {
 
     private void initBoxChartPane() {
 
-        int checkBoxIndex = 0;
-        String[] columns = new String[]{"1", "2"};
-        ChartOperateButton button = new ChartOperateButton(columns, checkBoxIndex);
+        ChartOperateButton button = new ChartOperateButton(true);
         button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
-        button.setTableRowKeys(Arrays.asList(UIConstant.SPC_CHART_BOX_EXTERN_MENU));
-        button.setTableViewSize(120, 100);
+        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_BOX_EXTERN_MENU));
+        button.setListViewSize(140, 50);
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setTickMarkVisible(false);
@@ -437,25 +435,11 @@ public class ChartResultController implements Initializable {
         chartData.add(new BoxAndWhiskerData(30, 28, 18, 30, 12, 23.2));
         chartData.add(new BoxAndWhiskerData(31, 28, 18, 30, 12, 22));
 
-        XYChart.Series<Number, Number> series = new XYChart.Series<Number, Number>();
-        chartData.forEach(data -> {
-            series.getData().add(
-                    new XYChart.Data(
-                            data.getxPos(),
-                            data.getQ3(),
-                            data)
-            );
-        });
-
         BoxPlotChart chart = boxChartPane.getChart();
-        ObservableList<XYChart.Series<Number, Number>> data = chart.getData();
-        if (data == null) {
-            data = FXCollections.observableArrayList(series);
-            chart.setData(data);
-        } else {
-            chart.getData().add(series);
-        }
-
+        com.dmsoft.firefly.plugin.spc.dto.chart.BoxAndWhiskerData data = new com.dmsoft.firefly.plugin.spc.dto.chart.BoxAndWhiskerData();
+        data.setData(chartData);
+        data.setColor(Color.RED);
+        chart.createChartSeries(data);
         boxChartPane.activeChartDragging();
     }
 

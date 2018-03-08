@@ -43,6 +43,13 @@
                             <include>*.R</include>
                         </includes>
                     </fileSet>
+                    <fileSet>
+                        <directory>${project.basedir}/src/main/resources/config</directory>
+                        <outputDirectory>/Plugins/${module.artifactId}/config</outputDirectory>
+                        <includes>
+                            <include>*.json</include>
+                        </includes>
+                    </fileSet>
                 </fileSets>
             </sources>
         </moduleSet>

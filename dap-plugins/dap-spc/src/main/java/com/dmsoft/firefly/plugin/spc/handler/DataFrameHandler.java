@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.handler;
 
+import com.dmsoft.firefly.plugin.spc.controller.SpcMainController;
 import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionCode;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -23,7 +24,7 @@ public class DataFrameHandler implements JobInboundHandler {
     @Override
     @SuppressWarnings("unchecked")
     public void doJob(JobHandlerContext context, Object... in) throws Exception {
-        if (in == null || !(in[0] instanceof Map)) {
+        if (in == null || !(in[0] instanceof Map) || !(in[1] instanceof SpcMainController)) {
             throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11001));
         }
         Map<String, Object> param = (Map) in[0];
@@ -31,6 +32,10 @@ public class DataFrameHandler implements JobInboundHandler {
         SearchDataFrame dataFrame = RuntimeContext.getBean(DataFrameFactory.class).
                 createSearchDataFrame((List<TestItemWithTypeDto>) param.get(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST), rowDataDtoList);
         param.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
+
+        SpcMainController spcMainController = (SpcMainController) in[1];
+        spcMainController.setDataFrame(dataFrame);
+        context.fireDoJob(param);
     }
 
     @Override

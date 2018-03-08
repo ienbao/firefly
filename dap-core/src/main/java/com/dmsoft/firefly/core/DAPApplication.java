@@ -65,7 +65,7 @@ public class DAPApplication {
         EventContextImpl eventContext = new EventContextImpl();
         BasicDataFrameFactoryImpl dataFrameFactory = new BasicDataFrameFactoryImpl();
         MongoClient mongoClient = new MongoClient("localhost");
-        MongoTemplate mongoTemplate = new MongoTemplate(mongoClient, "test");
+        MongoTemplate mongoTemplate = new MongoTemplate(mongoClient, "ispc");
         SourceDataServiceImpl sourceDataService = new SourceDataServiceImpl();
         TestDataCacheFactory factory = new TestDataCacheFactory();
 
