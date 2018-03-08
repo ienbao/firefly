@@ -2,7 +2,7 @@ package com.dmsoft.firefly.plugin.chart;
 
 import com.dmsoft.firefly.plugin.spc.charts.NDChart;
 import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
-import com.dmsoft.firefly.plugin.spc.dto.chart.BarCategoryData;
+import com.dmsoft.firefly.plugin.spc.charts.data.BarCategoryData;
 import com.dmsoft.firefly.plugin.spc.dto.chart.BarChartData;
 import com.google.common.collect.Lists;
 import javafx.application.Application;
@@ -10,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;

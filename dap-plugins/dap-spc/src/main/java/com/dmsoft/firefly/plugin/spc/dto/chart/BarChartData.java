@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.dto.chart;
 
+import com.dmsoft.firefly.plugin.spc.charts.data.BarCategoryData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBarChartData;
 import com.google.common.collect.Lists;
 import javafx.scene.paint.Color;

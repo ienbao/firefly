@@ -1,7 +1,7 @@
 package com.dmsoft.firefly.plugin.spc.charts.view;
 
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
-import com.dmsoft.firefly.plugin.spc.charts.ClearCallBack;
+import com.dmsoft.firefly.plugin.spc.charts.select.ClearCallBack;
 import com.dmsoft.firefly.plugin.spc.charts.model.SimpleItemCheckModel;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;

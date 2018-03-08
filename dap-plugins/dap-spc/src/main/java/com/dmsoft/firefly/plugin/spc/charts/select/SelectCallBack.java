@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.plugin.spc.charts;
+package com.dmsoft.firefly.plugin.spc.charts.select;
 
 import java.util.Set;
 

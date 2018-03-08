@@ -1,14 +1,14 @@
-package com.dmsoft.firefly.plugin.spc.charts.data.basic;
+package com.dmsoft.firefly.plugin.spc.dto.chart;
 
-import com.dmsoft.bamboo.common.dto.AbstractValueObject;
-import com.dmsoft.firefly.plugin.spc.charts.shape.LineType;
+import com.dmsoft.firefly.plugin.spc.charts.data.basic.ILineData;
+import com.dmsoft.firefly.plugin.spc.charts.utils.enums.LineType;
 import javafx.geometry.Orientation;
 import javafx.scene.paint.Color;
 
 /**
  * Created by cherry on 2018/2/10.
  */
-public class LineData extends AbstractValueObject {
+public class LineData implements ILineData {
 
     private Number value;
     private String name;
