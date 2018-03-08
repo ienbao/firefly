@@ -1,10 +1,9 @@
-package com.dmsoft.firefly.core.utils;
+package com.dmsoft.firefly.sdk.utils;
 
-import com.dmsoft.firefly.core.utils.parser.FilterExpressionParser;
-import com.dmsoft.firefly.core.utils.parser.ParserToken;
-import com.dmsoft.firefly.core.utils.parser.SEPResult;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
-import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.dmsoft.firefly.sdk.utils.parser.FilterExpressionParser;
+import com.dmsoft.firefly.sdk.utils.parser.ParserToken;
+import com.dmsoft.firefly.sdk.utils.parser.SEPResult;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +76,6 @@ public class FilterUtils {
             }
         } catch (Exception e) {
             logger.debug("Search condition parse error! condition = {}", condition);
-            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_12001));
         }
         return resultList;
     }
@@ -103,7 +101,6 @@ public class FilterUtils {
             }
         } catch (Exception e) {
             logger.debug("Search condition parse error! condition = {}", condition);
-            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_12001));
         }
         return isExist;
     }

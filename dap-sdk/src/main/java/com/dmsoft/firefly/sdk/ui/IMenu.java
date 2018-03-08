@@ -38,6 +38,7 @@ public interface IMenu {
     /**
      * method to get menu
      *
+     * @param <T> any node
      * @return instance
      */
     <T> T getMenu();

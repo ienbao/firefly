@@ -73,6 +73,22 @@ public class ViewDataDFModel implements NewTableModel {
                 return null;
             }
         };
+        TableMenuRowEvent detail = new TableMenuRowEvent() {
+            @Override
+            public String getMenuName() {
+                return null;
+            }
+
+            @Override
+            public Node getMenuNode() {
+                return null;
+            }
+
+            @Override
+            public void handleAction(String rowKey, ActionEvent event) {
+
+            }
+        };
         this.menuRowEvents.add(highLight);
     }
 

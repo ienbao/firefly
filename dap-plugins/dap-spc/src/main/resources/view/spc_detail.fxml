@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.dmsoft.firefly.gui.components.utils.TextFieldFilter?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.*?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0"
+            prefWidth="410.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <VBox layoutX="105.0" layoutY="53.0" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #dcdcdc;"
+              AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
+              AnchorPane.topAnchor="10.0">
+            <children>
+                <TextFieldFilter id="filterTF" maxHeight="22.0" maxWidth="200.0" prefHeight="22.0" prefWidth="200.0">
+                    <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </VBox.margin>
+                </TextFieldFilter>
+                <TableView id="detailTB" prefHeight="296.0" prefWidth="388.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn minWidth="110.0" prefWidth="227.0" text="%TEST_ITEMS"/>
+                        <TableColumn minWidth="110.0" prefWidth="163.0" text="%VALUE"/>
+                    </columns>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
