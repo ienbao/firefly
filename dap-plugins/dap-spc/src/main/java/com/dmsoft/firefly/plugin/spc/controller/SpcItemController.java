@@ -259,18 +259,17 @@ public class SpcItemController implements Initializable {
 
         spcMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
         Platform.runLater(() -> {
-            manager.doJobASyn(job, paramMap, spcMainController, new JobDoComplete() {
+            manager.doJobASyn(job, new JobDoComplete() {
                 @Override
                 public void doComplete(Object returnValue) {
-                    System.out.println("ASyn result = " + (returnValue == null ? "null" : returnValue));
-                    List<SpcStatsDto> spcStatsDtoList = (List<SpcStatsDto>) returnValue;
                     if (returnValue == null) {
-                        spcStatsDtoList = initData();
-//                        return;
+                        //todo message tip
+                        return;
                     }
+                    List<SpcStatsDto> spcStatsDtoList = (List<SpcStatsDto>) returnValue;
                     spcMainController.setStatisticalResultData(spcStatsDtoList);
                 }
-            });
+            }, paramMap, spcMainController);
         });
 
     }
