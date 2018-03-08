@@ -298,6 +298,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         connector.execEval("rm(list=ls(all=TRUE))");
         String spcPathName = "rscripts/spc.R";
         String scriptPath = RuntimeContext.getBean(PluginContext.class).getEnabledPluginInfo(SpcPlugin.SPC_PLUGIN_NAME).getFolderPath() + "/" + spcPathName;
+        scriptPath = scriptPath.replace('\\', '/');
         connector.execEval("source(\"" + scriptPath + "\")");
         double[] dataArray = new double[dataList.size()];
         for (int i = 0; i < dataList.size(); i++) {

@@ -18,6 +18,7 @@ public class TableViewTest extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         TableView<String> tableView = new TableView<>();
+        Scene scene = new Scene(tableView);
         TableModel tableModel = new TableModel() {
             private ObservableList<String> list = FXCollections.observableArrayList("AA", "BB");
             private ObservableList<String> rowKey = FXCollections.observableArrayList("CC", "DD");
@@ -148,7 +149,7 @@ public class TableViewTest extends Application {
         addStyleClass.add("edited");
         wrapper.addEditedCellStyleClass(addStyleClass);
 
-        Scene scene = new Scene(wrapper.getWrappedTable());
+        wrapper.getWrappedTable();
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();

@@ -53,7 +53,7 @@ public class REnConnector {
     public void connect() {
         if (re == null) {
             logger.info("R Create!");
-            re = new Rengine(new String[]{"--slave"}, false, null);
+            re = new Rengine(new String[10], false, null);
 
             active = re.waitForR();
 

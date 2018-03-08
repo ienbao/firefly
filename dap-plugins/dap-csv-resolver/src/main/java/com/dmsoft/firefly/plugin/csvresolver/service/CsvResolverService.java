@@ -188,7 +188,7 @@ public class CsvResolverService implements IDataParser {
      */
     @ExcludeMethod
     public void saveCsvTemplate(CsvTemplateDto csvTemplateDto) {
-        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.CsvResolverPlugin").getFolderPath();
+        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.CsvResolverPlugin").getFolderPath() + File.separator + "config";
         String json = JsonFileUtil.readJsonFile(path, fileName);
         if (json == null) {
             logger.debug("Don`t find " + fileName);
@@ -204,13 +204,14 @@ public class CsvResolverService implements IDataParser {
      */
     @ExcludeMethod
     public CsvTemplateDto findCsvTemplate() {
-        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.CsvResolverPlugin").getFolderPath();
+        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.CsvResolverPlugin").getFolderPath() + File.separator + "config";
+        CsvTemplateDto csvTemplateDto = null;
+
         String json = JsonFileUtil.readJsonFile(path, fileName);
         if (json == null) {
             logger.debug("Don`t find " + fileName);
         }
 
-        CsvTemplateDto csvTemplateDto = null;
         if (!StringUtils.isEmpty(json)) {
             csvTemplateDto = jsonMapper.fromJson(json, CsvTemplateDto.class);
         }
