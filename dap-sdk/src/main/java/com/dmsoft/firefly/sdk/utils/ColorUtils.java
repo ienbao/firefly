@@ -67,6 +67,27 @@ public class ColorUtils {
         return su.toString();
     }
 
+    public static String toHexFromFXColor(javafx.scene.paint.Color fxColor) {
+        String r, g, b;
+        Color awtColor = toAwtColorFromFxColor(fxColor);
+        StringBuilder su = new StringBuilder();
+        r = Integer.toHexString(awtColor.getRed());
+        g = Integer.toHexString(awtColor.getGreen());
+        b = Integer.toHexString(awtColor.getBlue());
+        r = r.length() == 1 ? "0" + r : r;
+        g = g.length() == 1 ? "0" + g : g;
+        b = b.length() == 1 ? "0" + b : b;
+        r = r.toUpperCase();
+        g = g.toUpperCase();
+        b = b.toUpperCase();
+        su.append("#");
+        su.append(r);
+        su.append(g);
+        su.append(b);
+        //0xFF0000FF
+        return su.toString();
+    }
+
     /**
      * toFxColorFromAwtColor
      *
