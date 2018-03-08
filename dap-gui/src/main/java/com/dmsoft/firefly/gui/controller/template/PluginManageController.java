@@ -5,8 +5,11 @@
 package com.dmsoft.firefly.gui.controller.template;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
 import com.dmsoft.firefly.core.utils.DataFormat;
 import com.dmsoft.firefly.core.utils.JsonFileUtil;
+import com.dmsoft.firefly.core.utils.PropertiesUtils;
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.model.PluginTableRowData;
@@ -29,11 +32,11 @@ import javafx.scene.input.TransferMode;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 /**
@@ -64,6 +67,7 @@ public class PluginManageController implements Initializable {
     private SortedList<PluginTableRowData> pluginTableRowDataSortedList;
     private final String parentPath = this.getClass().getResource("/").getPath() + "config";
     private JsonMapper mapper = JsonMapper.defaultMapper();
+    private boolean isEdit = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -150,21 +154,25 @@ public class PluginManageController implements Initializable {
 
     private void initEvent() {
         ok.setOnAction(event -> {
-            List<KeyValueDto> activePlugin = Lists.newArrayList();
-            pluginTableRowDataObservableList.forEach(v -> {
-                activePlugin.add(new KeyValueDto(v.getInfo().getId(), v.getSelector().isSelected()));
-            });
-            JsonFileUtil.writeJsonFile(activePlugin, parentPath, "activePlugin");
-            Runtime.getRuntime().addShutdownHook(new Thread() {
-                public void run() {
-                    try {
-                        Runtime.getRuntime().exec("java -jar dap-gui-1.0.0.jar");
-                    } catch (IOException e) {
-                        System.out.println("restart failed.");
+            if (true) {
+                List<KeyValueDto> activePlugin = Lists.newArrayList();
+                pluginTableRowDataObservableList.forEach(v -> {
+                    activePlugin.add(new KeyValueDto(v.getInfo().getId(), v.getSelector().isSelected()));
+                });
+                JsonFileUtil.writeJsonFile(activePlugin, parentPath, "activePlugin");
+                Runtime.getRuntime().addShutdownHook(new Thread() {
+                    public void run() {
+                        try {
+                            Runtime.getRuntime().exec("java -jar dap-gui-1.0.0.jar");
+                        } catch (IOException e) {
+                            System.out.println("restart failed.");
+                        }
                     }
-                }
-            });
-            System.exit(0);
+                });
+                System.exit(0);
+            } else {
+                StageMap.closeStage("pluginManage");
+            }
         });
         installPlugin.setOnAction(event -> {
             String str = System.getProperty("user.home");
@@ -181,6 +189,8 @@ public class PluginManageController implements Initializable {
             File file = fileChooser.showOpenDialog(fileStage);
             if (file != null) {
                 //TODO
+                PluginContext context = RuntimeContext.getBean(PluginContext.class);
+//                context.installPlugin();
             }
         });
         unInstallPlugin.setOnAction(event -> {
@@ -190,6 +200,20 @@ public class PluginManageController implements Initializable {
                 context.uninstallPlugin(pluginTableRowData.getInfo().getId());
                 pluginTableRowDataObservableList.remove(pluginTableRowData);
             }
+            String propertiesURL = ApplicationPathUtil.getPath("resources", "application.properties");
+            InputStream inputStream = null;
+            try {
+                inputStream = new BufferedInputStream(new FileInputStream(propertiesURL));
+                Properties properties = new Properties();
+                properties.load(inputStream);
+                String pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
+                File file = new File(pluginFolderPath);
+                //TODO delete the plugin
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
         });
     }
 

@@ -93,12 +93,9 @@ public class GuiApplication extends Application {
 
     private void initJob() {
         JobManager manager = RuntimeContext.getBean(JobManager.class);
-        manager.initializeJob("import", new InitJobPipeline() {
-            @Override
-            public void initJobPipeline(JobPipeline pipeline) {
-                pipeline.addLast("resolver", new ResolverSelectHandler());
-                pipeline.addLast("import", new CsvImportHandler());
-            }
+        manager.initializeJob("import", pipeline -> {
+            pipeline.addLast("resolver", new ResolverSelectHandler());
+            pipeline.addLast("import", new CsvImportHandler());
         });
     }
 
