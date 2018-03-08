@@ -31,7 +31,7 @@ public class GetSpcStatsResultHandler implements JobInboundHandler {
         List<SearchConditionDto> searchConditionDtoList = (List<SearchConditionDto>) param.get(ParamKeys.SEARCH_CONDITION_DTO_LIST);
         SpcAnalysisConfigDto analysisConfigDto = (SpcAnalysisConfigDto) param.get(ParamKeys.SPC_ANALYSIS_CONFIG_DTO);
         //TODO progress
-        context.returnValue(RuntimeContext.getBean(SpcService.class).getStatisticalResult(dataFrame, searchConditionDtoList, analysisConfigDto));
+//        context.returnValue(RuntimeContext.getBean(SpcService.class).getStatisticalResult(dataFrame, searchConditionDtoList, analysisConfigDto));
     }
 
     @Override
