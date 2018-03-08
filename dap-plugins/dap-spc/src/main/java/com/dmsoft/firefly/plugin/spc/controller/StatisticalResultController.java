@@ -81,6 +81,14 @@ public class StatisticalResultController implements Initializable {
         statisticalTableModel.initData(list);
     }
 
+    /**
+     * get select stats data
+     * @return the list of SpcStatsDto
+     */
+    public List<SpcStatsDto> getSelectStatsData(){
+        return statisticalTableModel.getSelectData();
+    }
+
     private void buildChooseColumnDialog() {
         FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML(ViewResource.SPC_CHOOSE_STATISTICAL_VIEW_RES);
         Pane root = null;

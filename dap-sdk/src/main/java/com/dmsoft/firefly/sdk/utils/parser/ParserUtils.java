@@ -4,7 +4,7 @@
  *
  */
 
-package com.dmsoft.firefly.core.utils.parser;
+package com.dmsoft.firefly.sdk.utils.parser;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;

@@ -2,8 +2,15 @@ package com.dmsoft.firefly.plugin.spc.model;
 
 import com.dmsoft.firefly.gui.components.table.NewTableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
-import com.dmsoft.firefly.plugin.spc.utils.RangeUtils;
+import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.plugin.spc.controller.ViewDataDetailController;
+import com.dmsoft.firefly.plugin.spc.utils.*;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -13,10 +20,15 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -28,6 +40,7 @@ import java.util.Set;
  * @author Can Guan
  */
 public class ViewDataDFModel implements NewTableModel {
+    private static Logger logger = LoggerFactory.getLogger(ViewDataDFModel.class);
     private SearchDataFrame dataFrame;
     private ObservableList<String> headerArray;
     private ObservableList<String> rowKeyArray;
@@ -55,7 +68,7 @@ public class ViewDataDFModel implements NewTableModel {
         TableMenuRowEvent highLight = new TableMenuRowEvent() {
             @Override
             public String getMenuName() {
-                return "High Light";
+                return SpcFxmlAndLanguageUtils.getString(ResourceMassages.HIGH_LIGHT_TABLE_MENU);
             }
 
             @Override
@@ -73,7 +86,64 @@ public class ViewDataDFModel implements NewTableModel {
                 return null;
             }
         };
+        TableMenuRowEvent detail = new TableMenuRowEvent() {
+            @Override
+            public String getMenuName() {
+                return SpcFxmlAndLanguageUtils.getString(ResourceMassages.DETAIL_TABLE_MENU);
+            }
+
+            @Override
+            public Node getMenuNode() {
+                return null;
+            }
+
+            @Override
+            public void handleAction(String rowKey, ActionEvent event) {
+                ViewDataDetailController controller = new ViewDataDetailController();
+                controller.setRowDataDto(RuntimeContext.getBean(SourceDataService.class).findTestData(rowKey));
+                List<TestItemWithTypeDto> typeDtoList = RuntimeContext.getBean(EnvService.class).findTestItems();
+                for (TestItemWithTypeDto typeDto : typeDtoList) {
+                    if (dataFrame.getTestItemWithTypeDto(typeDto.getTestItemName()) != null) {
+                        int i = typeDtoList.indexOf(typeDto);
+                        typeDtoList.remove(i);
+                        typeDtoList.add(i, dataFrame.getTestItemWithTypeDto(typeDto.getTestItemName()));
+                    }
+                }
+                controller.setTypeDtoList(typeDtoList);
+                FXMLLoader loader = SpcFxmlAndLanguageUtils.getLoaderFXML(ViewResource.SPC_VIEW_DATA_DETAIL);
+                loader.setController(controller);
+                try {
+                    Pane root = loader.load();
+                    Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("Spc_detail",
+                            SpcFxmlAndLanguageUtils.getString(ResourceMassages.DETAIL_TABLE_MENU), root,
+                            getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+                    stage.show();
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                    throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_20001));
+                }
+            }
+        };
+        TableMenuRowEvent remove = new TableMenuRowEvent() {
+            @Override
+            public String getMenuName() {
+                return SpcFxmlAndLanguageUtils.getString(ResourceMassages.REMOVE_TABLE_MENU);
+            }
+
+            @Override
+            public Node getMenuNode() {
+                return null;
+            }
+
+            @Override
+            public void handleAction(String rowKey, ActionEvent event) {
+                //TODO notify other pane
+                RuntimeContext.getBean(SourceDataService.class).changeRowDataInUsed(Lists.newArrayList(rowKey), false);
+            }
+        };
         this.menuRowEvents.add(highLight);
+        this.menuRowEvents.add(detail);
+        this.menuRowEvents.add(remove);
     }
 
     @Override

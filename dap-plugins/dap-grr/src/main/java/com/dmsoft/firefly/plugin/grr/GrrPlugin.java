@@ -6,9 +6,11 @@ package com.dmsoft.firefly.plugin.grr;
 
 
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.Plugin;
+import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.ui.IMainBodyPane;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
@@ -29,7 +31,7 @@ public class GrrPlugin extends Plugin {
 
     @Override
     public void initialize(InitModel model) {
-//        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.GrrPlugin", "com.dmsoft.firefly.plugin.grr.GrrService", new GrrServiceImpl());
+        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.GrrPlugin", "com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl", new GrrConfigServiceImpl());
 
         logger.info("Plugin-GRR Initialized.");
     }
@@ -65,7 +67,7 @@ public class GrrPlugin extends Plugin {
         menuItem.setOnAction(event -> build());
 
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.GrrPlugin",
-                MenuBuilder.MenuType.MENU_ITEM, "Grr Settings", MenuBuilder.MENU_ANALYSE).addMenu(menuItem));
+                MenuBuilder.MenuType.MENU_ITEM, "Grr Settings", MenuBuilder.MENU_PREFERENCE).addMenu(menuItem));
 
     }
 
@@ -74,7 +76,7 @@ public class GrrPlugin extends Plugin {
         System.out.println("Plugin-GRR Destroyed.");
     }
 
-    private void build(){
+    private void build() {
         Pane root = null;
         try {
 

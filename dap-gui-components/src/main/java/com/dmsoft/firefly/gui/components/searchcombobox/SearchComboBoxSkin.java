@@ -1,7 +1,6 @@
 package com.dmsoft.firefly.gui.components.searchcombobox;
 
 import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Popup;
@@ -18,7 +17,7 @@ import java.util.Date;
  * @author Can Guan
  */
 public class SearchComboBoxSkin<T> extends ComboBoxListViewSkin<T> {
-    Popup popup;
+    private Popup popup;
 
     /**
      * constructor
@@ -46,19 +45,6 @@ public class SearchComboBoxSkin<T> extends ComboBoxListViewSkin<T> {
                 popup.setOnHiding(event1 -> {
                     comboBox.getEditor().setText(getTimeStr(calendarChooser.getCalendar(), timePattern));
                 });
-                SimpleObjectProperty<Calendar> simpleObjectProperty = new SimpleObjectProperty(calendarChooser.getCalendar());
-                simpleObjectProperty.addListener((ov, c1, c2) -> {
-                    System.out.println("ASF");
-                });
-//                WindowPane windowPane = new WindowPane(ResourceBundleUtils.getString(ResourceMassages.CHOOSE_DATE));
-//                windowPane.setWindowsModel(WindowPane.WINDOW_MODEL_X);
-//
-//                if (StageMap.loadStage(name, windowPane, true, checkStyles(styles), StageStyle.TRANSPARENT)) {
-//                    Stage stage = StageMap.getStage(name);
-//                    windowPane.setStage(stage);
-//                    windowPane.init();
-//                    return stage;
-//                }
             }
         });
     }

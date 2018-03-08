@@ -2,6 +2,8 @@ package com.dmsoft.firefly.sdk.dai.dto;
 
 /**
  * Created by GuangLi on 2017/7/25.
+ *
+ * @param <T> string or other json
  */
 public class UserPreferenceDto<T> {
     private String userName;

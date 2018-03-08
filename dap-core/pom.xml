@@ -16,7 +16,7 @@
 
     <properties>
         <mongodb-driver.version>3.6.1</mongodb-driver.version>
-        <antlr.version>4.5.3</antlr.version>
+
     </properties>
 
     <dependencies>
@@ -64,12 +64,7 @@
             <artifactId>spring-data-mongodb</artifactId>
             <version>2.0.4.RELEASE</version>
         </dependency>
-        <!--language recognizer for parser expression in this project-->
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
-            <version>${antlr.version}</version>
-        </dependency>
+
         <!--json-lib-->
         <dependency>
             <groupId>net.sf.json-lib</groupId>

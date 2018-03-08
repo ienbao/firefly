@@ -14,6 +14,7 @@ public class ArrayUtils {
      * @param <T>    class type
      * @return new combined array
      */
+    @SafeVarargs
     public static <T> T[] addAll(final T[] array1, final T... array2) {
         if (array1 == null) {
             return clone(array2);
@@ -50,7 +51,7 @@ public class ArrayUtils {
      * @param <T>   class type
      * @return cloned array
      */
-    public static <T> T[] clone(final T[] array) {
+    private static <T> T[] clone(final T[] array) {
         if (array == null) {
             return null;
         }

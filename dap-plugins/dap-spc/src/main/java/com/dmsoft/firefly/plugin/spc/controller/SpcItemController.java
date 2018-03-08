@@ -17,7 +17,9 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.job.Job;
+import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -240,34 +242,37 @@ public class SpcItemController implements Initializable {
     }
 
     private void getAnalysisBtnEvent() {
-        //todo find spc statistical Result from service
-
-
-        List<String> testItemNameList = getSelectedItem();
-        List<String> conditionList = getSearch();
-//        List<SpcStatsDto> spcStatsDtoList = spcService.findStatisticalResult(searchConditionDtoList,spcSearchConfigDto);
-
         Job job = new Job(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
         Map paramMap = Maps.newHashMap();
 
         List<String> projectNameList = envService.findActivatedProjectName();
-        List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(testItemNameList, conditionList);
-        SpcAnalysisConfigDto spcAnalysisConfigDto = this.buildSpcAnalysisConfigData();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = this.getSelectedItemDto();
+        List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(testItemWithTypeDtoList);
+        SpcAnalysisConfigDto spcAnalysisConfigDto = this.buildSpcAnalysisConfigData();
+        List<String> testItemList = this.buildSpcAnalysisTestItem();
 
         paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
         paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
         paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+        paramMap.put(ParamKeys.SPC_ANALYSIS_TEST_ITEM, testItemList);
 
+        spcMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
         Platform.runLater(() -> {
-            manager.doJobASyn(job, paramMap);
+            manager.doJobASyn(job, paramMap, spcMainController, new JobDoComplete() {
+                @Override
+                public void doComplete(Object returnValue) {
+                    System.out.println("ASyn result = " + (returnValue == null ? "null" : returnValue));
+                    List<SpcStatsDto> spcStatsDtoList = (List<SpcStatsDto>) returnValue;
+                    if (returnValue == null) {
+                        spcStatsDtoList = initData();
+//                        return;
+                    }
+                    spcMainController.setStatisticalResultData(spcStatsDtoList);
+                }
+            });
         });
-        List<SpcStatsDto> spcStatsDtoList = initData();
-        if (spcStatsDtoList == null) {
-            return;
-        }
-        spcMainController.setStatisticalResultData(spcStatsDtoList);
+
     }
 
 
@@ -555,18 +560,21 @@ public class SpcItemController implements Initializable {
         return spcAnalysisConfigDto;
     }
 
-    private List<SearchConditionDto> buildSearchConditionDataList(List<String> testItemList, List<String> conditionList) {
-        if (testItemList == null) {
+    private List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
+        if (testItemWithTypeDtoList == null) {
             return null;
         }
+        List<String> conditionList = getSearch();
         List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
         int i = 0;
-        for (String testItemName : testItemList) {
+        for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtoList) {
             if (conditionList != null) {
                 for (String condition : conditionList) {
                     SearchConditionDto searchConditionDto = new SearchConditionDto();
                     searchConditionDto.setKey(ParamKeys.SPC_ANALYSIS_CONDITION_KEY + i);
-                    searchConditionDto.setItemName(testItemName);
+                    searchConditionDto.setItemName(testItemWithTypeDto.getTestItemName());
+                    searchConditionDto.setCusLsl(testItemWithTypeDto.getLsl());
+                    searchConditionDto.setCusUsl(testItemWithTypeDto.getUsl());
                     searchConditionDto.setCondition(condition);
                     searchConditionDtoList.add(searchConditionDto);
                     i++;
@@ -574,11 +582,36 @@ public class SpcItemController implements Initializable {
             } else {
                 SearchConditionDto searchConditionDto = new SearchConditionDto();
                 searchConditionDto.setKey(ParamKeys.SPC_ANALYSIS_CONDITION_KEY + i);
-                searchConditionDto.setItemName(testItemName);
+                searchConditionDto.setItemName(testItemWithTypeDto.getTestItemName());
+                searchConditionDto.setCusLsl(testItemWithTypeDto.getLsl());
+                searchConditionDto.setCusUsl(testItemWithTypeDto.getUsl());
                 searchConditionDtoList.add(searchConditionDto);
                 i++;
             }
         }
         return searchConditionDtoList;
+    }
+
+    private List<String> buildSpcAnalysisTestItem() {
+        List<String> conditionList = getSearch();
+        List<String> testItemList = getSelectedItem();
+        List<String> timeKeys = Lists.newArrayList();
+        String timePattern = null;
+        try {
+            timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
+            timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
+        } catch (Exception e) {
+
+        }
+        FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
+        for (String condition : conditionList) {
+            Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);
+            for (String conditionTestItem : conditionTestItemSet) {
+                if (!testItemList.contains(conditionTestItem)) {
+                    testItemList.add(conditionTestItem);
+                }
+            }
+        }
+        return testItemList;
     }
 }

@@ -7,6 +7,8 @@ import java.math.BigDecimal;
  * Created by Can.Guan on 2017/3/1.
  */
 public class ColorUtils {
+    private static final double DOUBLE_255 = 255.0;
+
     /**
      * method to get color
      *
@@ -15,11 +17,11 @@ public class ColorUtils {
      * @return new color
      */
     public static Color getColor(Color bgColor, Color fgColor) {
-        Double redDouble = bgColor.getRed() * (Double.valueOf(fgColor.getRed()) / 255);
+        Double redDouble = bgColor.getRed() * (fgColor.getRed() / DOUBLE_255);
         int red = new BigDecimal(redDouble).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
-        Double greenDouble = bgColor.getGreen() * (Double.valueOf(fgColor.getGreen()) / 255);
+        Double greenDouble = bgColor.getGreen() * (fgColor.getGreen() / DOUBLE_255);
         int green = new BigDecimal(greenDouble).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
-        Double blueDouble = bgColor.getBlue() * (Double.valueOf(fgColor.getBlue()) / 255);
+        Double blueDouble = bgColor.getBlue() * (fgColor.getBlue() / DOUBLE_255);
         int blue = new BigDecimal(blueDouble).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
         return new Color(red, green, blue, bgColor.getAlpha());
     }
@@ -45,7 +47,7 @@ public class ColorUtils {
      * method to make Color to String
      *
      * @param color color
-     * @return
+     * @return hex color
      */
     public static String toHexFromColor(Color color) {
         String r, g, b;

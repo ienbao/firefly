@@ -1,5 +1,5 @@
 // Generated from /Users/Peter/projects/ispc_desktop/ispc.d.foundation/src/main/java/com/intelligent/ispc/foundation/parser/SEP.g4 by ANTLR 4.5.3
-package com.dmsoft.firefly.core.utils.parser.gen;
+package com.dmsoft.firefly.sdk.utils.parser.gen;
 
 
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
