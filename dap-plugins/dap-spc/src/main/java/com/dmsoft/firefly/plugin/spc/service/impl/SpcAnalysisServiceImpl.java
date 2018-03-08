@@ -5,11 +5,12 @@ import com.dmsoft.firefly.plugin.spc.dto.SpcAnalysisConfigDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.*;
 import com.dmsoft.firefly.plugin.spc.service.SpcAnalysisService;
 import com.dmsoft.firefly.plugin.spc.utils.REnConnector;
+import com.dmsoft.firefly.plugin.spc.utils.RUtils;
 import com.dmsoft.firefly.plugin.spc.utils.SpcChartType;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
-import com.dmsoft.firefly.sdk.plugin.apis.annotation.Analysis;
 import com.dmsoft.firefly.sdk.plugin.apis.IAnalysis;
+import com.dmsoft.firefly.sdk.plugin.apis.annotation.Analysis;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 
@@ -125,7 +126,10 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         if (!Double.isNaN(wPPM)) {
             resultDto.setWithinPPM(wPPM);
         }
-        connector.disconnect();
+        while (connector.isActive()) {
+            connector.disconnect();
+        }
+        RUtils.getSemaphore().release();
         return resultDto;
     }
 
@@ -143,7 +147,10 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
             connector.setInput("ndcMin", Double.NaN);
         }
         NDCResultDto resultDto = getNDCResult(connector, dataDto);
-        connector.disconnect();
+        while (connector.isActive()) {
+            connector.disconnect();
+        }
+        RUtils.getSemaphore().release();
         return resultDto;
 
     }
@@ -152,7 +159,10 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
     public RunCResultDto analyzeRunCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
         RunCResultDto resultDto = getRunCResult(connector, dataDto);
-        connector.disconnect();
+        while (connector.isActive()) {
+            connector.disconnect();
+        }
+        RUtils.getSemaphore().release();
         return resultDto;
     }
 
@@ -160,7 +170,10 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
     public SpcControlChartDto analyzeXbarCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
         SpcControlChartDto result = getXbarCResult(connector);
-        connector.disconnect();
+        while (connector.isActive()) {
+            connector.disconnect();
+        }
+        RUtils.getSemaphore().release();
         return result;
     }
 
@@ -168,7 +181,10 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
     public SpcControlChartDto analyzeRangeCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
         SpcControlChartDto result = getRangeCResult(connector);
-        connector.disconnect();
+        while (connector.isActive()) {
+            connector.disconnect();
+        }
+        RUtils.getSemaphore().release();
         return result;
     }
 
@@ -176,7 +192,10 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
     public SpcControlChartDto analyzeSdCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
         SpcControlChartDto result = getSdCResult(connector);
-        connector.disconnect();
+        while (connector.isActive()) {
+            connector.disconnect();
+        }
+        RUtils.getSemaphore().release();
         return result;
     }
 
@@ -184,7 +203,10 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
     public SpcControlChartDto analyzeMeCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
         SpcControlChartDto result = getMeCResult(connector);
-        connector.disconnect();
+        while (connector.isActive()) {
+            connector.disconnect();
+        }
+        RUtils.getSemaphore().release();
         return result;
     }
 
@@ -192,7 +214,10 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
     public SpcControlChartDto analyzeMrCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
         SpcControlChartDto result = getMrCResult(connector);
-        connector.disconnect();
+        while (connector.isActive()) {
+            connector.disconnect();
+        }
+        RUtils.getSemaphore().release();
         return result;
     }
 
@@ -200,7 +225,10 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
     public BoxCResultDto analyzeBoxCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
         BoxCResultDto result = getBoxCResult(connector);
-        connector.disconnect();
+        while (connector.isActive()) {
+            connector.disconnect();
+        }
+        RUtils.getSemaphore().release();
         return result;
     }
 
@@ -216,7 +244,10 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         result.setMedianCResult(getMeCResult(connector));
         result.setBoxCResult(getBoxCResult(connector));
         result.setMrCResult(getMrCResult(connector));
-        connector.disconnect();
+        while (connector.isActive()) {
+            connector.disconnect();
+        }
+        RUtils.getSemaphore().release();
         return result;
     }
 
@@ -254,14 +285,18 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
                     break;
             }
         }
-        connector.disconnect();
+        while (connector.isActive()) {
+            connector.disconnect();
+        }
+        RUtils.getSemaphore().release();
         return result;
     }
 
     private REnConnector prepareConnect(List<Double> dataList, SpcAnalysisConfigDto configDto) {
-        REnConnector connector = new REnConnector();
+        REnConnector connector = RUtils.getInstance().getConnector();
         connector.connect();
-        String spcPathName = "rscript/spc.R";
+        connector.execEval("rm(list=ls(all=TRUE))");
+        String spcPathName = "rscripts/spc.R";
         String scriptPath = RuntimeContext.getBean(PluginContext.class).getEnabledPluginInfo(SpcPlugin.SPC_PLUGIN_NAME).getFolderPath() + "/" + spcPathName;
         connector.execEval("source(\"" + scriptPath + "\")");
         double[] dataArray = new double[dataList.size()];

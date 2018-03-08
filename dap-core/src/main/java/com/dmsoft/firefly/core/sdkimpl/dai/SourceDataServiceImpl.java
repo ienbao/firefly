@@ -331,6 +331,7 @@ public class SourceDataServiceImpl implements SourceDataService {
                 criteria = where(IN_USED_FIELD).is(inUsedFlag);
             }
             Query query = new Query(criteria);
+            query.fields().include(ROW_KEY_FIELD);
             if (testItemNameList != null) {
                 for (String testItemName : testItemNameList) {
                     query.fields().include(DATA_FIELD + "." + testItemName);

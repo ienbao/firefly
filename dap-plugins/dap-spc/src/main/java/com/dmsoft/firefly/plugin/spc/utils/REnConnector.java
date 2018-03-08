@@ -11,11 +11,29 @@ import org.rosuda.JRI.Rengine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * Declare the R engine connector.
  */
 public class REnConnector {
-    private Logger logger = LoggerFactory.getLogger(REnConnector.class);
+    private Logger logger = LoggerFactory.getLogger(RUtils.class);
+    private static Lock lock = new ReentrantLock();
+
+    /**
+     * Lock R.
+     */
+    public static void lockR() {
+        lock.lock();
+    }
+
+    /**
+     * Un lock R.
+     */
+    public static void unlockR() {
+        lock.unlock();
+    }
 
     private Rengine re = null;
     private boolean active = false;

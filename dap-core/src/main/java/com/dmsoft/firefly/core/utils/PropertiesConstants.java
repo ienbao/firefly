@@ -20,6 +20,6 @@ public class PropertiesConstants {
     /**
      * default value for plugins folder name.
      */
-    public static final String VALUE_DEFAULT_PLUGINS_FOLDER_NAME = "plugins";
+    public static final String VALUE_DEFAULT_PLUGINS_FOLDER_NAME = "Plugins";
 
 }
