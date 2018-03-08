@@ -67,7 +67,7 @@ public class GrrPlugin extends Plugin {
         menuItem.setOnAction(event -> build());
 
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.GrrPlugin",
-                MenuBuilder.MenuType.MENU_ITEM, "Grr Settings", MenuBuilder.MENU_ANALYSE).addMenu(menuItem));
+                MenuBuilder.MenuType.MENU_ITEM, "Grr Settings", MenuBuilder.MENU_PREFERENCE).addMenu(menuItem));
 
     }
 
