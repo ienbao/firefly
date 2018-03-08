@@ -20,6 +20,10 @@ public class LegalNoticeController {
 
     @FXML
     private void initialize() {
+        if (userService.findLegal()) {
+            acceptCkb.setVisible(false);
+            legalOkBtn.setVisible(false);
+        }
         legalOkBtn.setDisable(true);
         acceptCkb.setOnAction(event -> {
             if (acceptCkb.isSelected()) {
