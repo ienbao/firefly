@@ -43,7 +43,7 @@ public class StatisticalTableModel implements NewTableModel {
 
     private FilteredList<String> statisticalTableRowDataFilteredList;
     private SortedList<String> statisticalTableRowDataSortedList;
-    private Map<String, String> keyToTestItemMap = Maps.newHashMap();
+    private Map<String, SpcStatsDto> keyToStatsDtoMap = Maps.newHashMap();
 
     private List<TableMenuRowEvent> menuRowEvents;
     private CheckBox allCheckBox;
@@ -77,14 +77,15 @@ public class StatisticalTableModel implements NewTableModel {
             int m = 0;
             for (SpcStatsDto dto : spcStatsDtoList) {
                 rowKey.add(dto.getKey());
-                keyToTestItemMap.put(dto.getKey(), dto.getItemName());
+                keyToStatsDtoMap.put(dto.getKey(), dto);
                 if (this.isEmptyResult(dto.getStatsResultDto())) {
                     emptyResultKeys.add(dto.getKey());
                 } else {
                     colorCache.put(dto.getKey(), ColorUtils.getTransparentColor(Colur.RAW_VALUES[m % 10], 1));
                     m++;
                 }
-            };
+            }
+            ;
         }
     }
 
@@ -108,7 +109,7 @@ public class StatisticalTableModel implements NewTableModel {
      */
     public void filterTestItem(String filterTf) {
         statisticalTableRowDataFilteredList.setPredicate(p -> {
-            String testItem = keyToTestItemMap.get(p);
+            String testItem = keyToStatsDtoMap.get(p).getItemName();
             return testItem.contains(filterTf);
         });
     }
@@ -120,6 +121,24 @@ public class StatisticalTableModel implements NewTableModel {
      */
     public void updateStatisticalResultColumn(List<String> result) {
         columnKey.addAll(result);
+    }
+
+    /**
+     * get select data
+     *
+     * @return the list of SpcStatsDto
+     */
+    public List<SpcStatsDto> getSelectData() {
+        List<SpcStatsDto> selectStatsDtoList = Lists.newArrayList();
+        for (Map.Entry<String, SimpleObjectProperty<Boolean>> entry : checkMap.entrySet()) {
+            String key = entry.getKey().toString();
+            boolean isSelect = entry.getValue().getValue();
+            if (isSelect) {
+                SpcStatsDto spcStatsDto = keyToStatsDtoMap.get(key);
+                selectStatsDtoList.add(spcStatsDto);
+            }
+        }
+        return selectStatsDtoList;
     }
 
     @Override

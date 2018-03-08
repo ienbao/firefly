@@ -4,7 +4,7 @@
  *
  */
 
-package com.dmsoft.firefly.core.utils.parser;
+package com.dmsoft.firefly.sdk.utils.parser;
 
 import com.dmsoft.bamboo.common.dto.AbstractValueObject;
 

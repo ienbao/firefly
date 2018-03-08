@@ -9,7 +9,6 @@ import com.dmsoft.firefly.plugin.spc.charts.data.BoxAndWhiskerData;
 import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
 import com.dmsoft.firefly.plugin.spc.charts.shape.LineType;
-import com.dmsoft.firefly.plugin.spc.charts.utils.ColorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
@@ -19,13 +18,13 @@ import com.dmsoft.firefly.plugin.spc.dto.chart.BarChartData;
 import com.dmsoft.firefly.plugin.spc.dto.chart.RuleXYChartData;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
+import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.chart.*;
 import javafx.scene.control.Tab;
@@ -68,7 +67,7 @@ public class ChartResultController implements Initializable {
         Double value = (Double) pointRule.getData().getYValue();
         Color color = pointRule.getNormalColor();
         color = (value > 300) && pointRule.getActiveRule().contains("R1") ? Color.RED : color;
-        pointStyle.setStyle("-fx-background-color: " + ColorUtils.toRGBCode(color));
+        pointStyle.setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
         return pointStyle;
     };
     private Function pointTooltipFunc = (Function<PointTooltip, String>) pointTooltip ->
@@ -80,7 +79,7 @@ public class ChartResultController implements Initializable {
     private String pointName = "Point";
     private String connectLine = "Connect Line";
 
-    private String legend = "- - - LSL, USL   —— m Line   —— 6s Line";
+    private String legend = "- - - LSL, USL  —— m Line   —— 6s Line";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -187,7 +186,11 @@ public class ChartResultController implements Initializable {
         runChartPane.getCustomPane().getChildren().add(button);
         runChartPane.getCustomPane().getChildren().add(editBtn);
 
-        editBtn.setClearCallBack(() -> {
+        runChartPane.getCustomPane().setMargin(editBtn, new Insets(0, 0, 0, 5));
+        runChartPane.getCustomPane().setMargin(button, new Insets(0, 0, 0, 5));
+//        runChartPane.getCustomPane().setMargin(rRuleBtn, new Insets(0, 0, 0, 5));
+
+        editBtn.setCallBack(() -> {
             runChart.clearAnnotation(annotationData);
         });
 
@@ -432,25 +435,11 @@ public class ChartResultController implements Initializable {
         chartData.add(new BoxAndWhiskerData(30, 28, 18, 30, 12, 23.2));
         chartData.add(new BoxAndWhiskerData(31, 28, 18, 30, 12, 22));
 
-        XYChart.Series<Number, Number> series = new XYChart.Series<Number, Number>();
-        chartData.forEach(data -> {
-            series.getData().add(
-                    new XYChart.Data(
-                            data.getxPos(),
-                            data.getQ3(),
-                            data)
-            );
-        });
-
         BoxPlotChart chart = boxChartPane.getChart();
-        ObservableList<XYChart.Series<Number, Number>> data = chart.getData();
-        if (data == null) {
-            data = FXCollections.observableArrayList(series);
-            chart.setData(data);
-        } else {
-            chart.getData().add(series);
-        }
-
+        com.dmsoft.firefly.plugin.spc.dto.chart.BoxAndWhiskerData data = new com.dmsoft.firefly.plugin.spc.dto.chart.BoxAndWhiskerData();
+        data.setData(chartData);
+        data.setColor(Color.RED);
+        chart.createChartSeries(data);
         boxChartPane.activeChartDragging();
     }
 

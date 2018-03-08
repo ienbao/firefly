@@ -222,8 +222,8 @@ public class SearchComboBox extends GridPane {
      */
     public String getCondition() {
         StringBuilder result = new StringBuilder();
-        if (!isNotBlank(getTestItem()) && !isNotBlank(getOperator())
-                && !isNotBlank(getValue())) {
+        if (isNotBlank(getTestItem()) && isNotBlank(getOperator())
+                && isNotBlank(getValue())) {
             result.append("\"").append(getTestItem()).append("\"").append(getOperator())
                     .append("\"").append(getValue()).append("\"");
         }

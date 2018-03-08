@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.core.utils;
+package com.dmsoft.firefly.sdk.utils;
 
 import com.dmsoft.bamboo.common.dto.AbstractValueObject;
 

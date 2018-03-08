@@ -75,12 +75,8 @@ public class DAPStringUtils extends StringUtils {
             return true;
         }
 
-        if (d.equalsIgnoreCase("N/A") || d.equalsIgnoreCase("-") || d.equalsIgnoreCase("NaN")
-                || d.equalsIgnoreCase("nil") || d.equalsIgnoreCase("_")) {
-            return true;
-        }
-
-        return false;
+        return (d.equalsIgnoreCase("N/A") || d.equalsIgnoreCase("-") || d.equalsIgnoreCase("NaN")
+                || d.equalsIgnoreCase("nil") || d.equalsIgnoreCase("_"));
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.spc.charts.data;
 
 import com.dmsoft.bamboo.common.dto.AbstractValueObject;
+import javafx.scene.paint.Color;
 
 /**
  * Created by cherry on 2018/2/10.
@@ -42,7 +43,24 @@ public class BoxAndWhiskerData extends AbstractValueObject {
      */
     private Number maxRegularValue;
 
+    private Color color;
+
     public BoxAndWhiskerData() {
+    }
+
+    public BoxAndWhiskerData(Number xPos,
+                             Number q3,
+                             Number q1,
+                             Number maxRegularValue,
+                             Number minRegularValue,
+                             Number median
+    ) {
+        this.xPos = xPos;
+        this.median = median;
+        this.q1 = q1;
+        this.q3 = q3;
+        this.minRegularValue = minRegularValue;
+        this.maxRegularValue = maxRegularValue;
     }
 
     /**
@@ -59,12 +77,14 @@ public class BoxAndWhiskerData extends AbstractValueObject {
                              Number q1,
                              Number maxRegularValue,
                              Number minRegularValue,
-                             Number median
+                             Number median,
+                             Color color
                              ) {
         this.xPos = xPos;
         this.median = median;
         this.q1 = q1;
         this.q3 = q3;
+        this.color = color;
         this.minRegularValue = minRegularValue;
         this.maxRegularValue = maxRegularValue;
     }
@@ -123,5 +143,13 @@ public class BoxAndWhiskerData extends AbstractValueObject {
 
     public void setMaxRegularValue(Number maxRegularValue) {
         this.maxRegularValue = maxRegularValue;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }

@@ -4,12 +4,13 @@ import com.dmsoft.firefly.plugin.grr.GrrPlugin;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
 import com.dmsoft.firefly.plugin.grr.service.GrrAnalysisService;
 import com.dmsoft.firefly.plugin.grr.utils.REnConnector;
+import com.dmsoft.firefly.plugin.grr.utils.RUtils;
 import com.dmsoft.firefly.plugin.grr.utils.enums.GrrAnalysisMethod;
 import com.dmsoft.firefly.plugin.grr.utils.enums.GrrResultName;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
-import com.dmsoft.firefly.sdk.plugin.apis.annotation.Analysis;
 import com.dmsoft.firefly.sdk.plugin.apis.IAnalysis;
+import com.dmsoft.firefly.sdk.plugin.apis.annotation.Analysis;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 
@@ -26,7 +27,10 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
     public GrrSummaryResultDto analyzeSummaryResult(GrrAnalysisDataDto analysisDataDto, GrrAnalysisConfigDto configDto) {
         REnConnector connector = prepareConnect(analysisDataDto, configDto);
         GrrSummaryResultDto result = getSummaryResult(connector, configDto.getMethod());
-        connector.disconnect();
+        while (connector.isActive()) {
+            connector.disconnect();
+        }
+        RUtils.getSemaphore().release();
         if (DAPStringUtils.isNumeric(analysisDataDto.getUsl())) {
             result.setUsl(Double.valueOf(analysisDataDto.getUsl()));
         }
@@ -43,15 +47,19 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
     public GrrDetailResultDto analyzeDetailResult(GrrAnalysisDataDto analysisDataDto, GrrAnalysisConfigDto configDto) {
         REnConnector connector = prepareConnect(analysisDataDto, configDto);
         GrrDetailResultDto result = getGrrDetailResult(connector, configDto);
-        connector.disconnect();
+        while (connector.isActive()) {
+            connector.disconnect();
+        }
+        RUtils.getSemaphore().release();
         return result;
     }
 
 
     private REnConnector prepareConnect(GrrAnalysisDataDto dataDto, GrrAnalysisConfigDto configDto) {
-        REnConnector connector = new REnConnector();
+        REnConnector connector = RUtils.getInstance().getConnector();
         connector.connect();
-        String spcPathName = "rscript/intgrr_";
+        connector.execEval("rm(list=ls(all=TRUE))");
+        String spcPathName = "rscripts/intgrr_";
         if (GrrAnalysisMethod.XbarAndRange.equals(configDto.getMethod())) {
             spcPathName += "xr.R";
         } else {

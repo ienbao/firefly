@@ -3,6 +3,7 @@ package com.dmsoft.firefly.plugin.grr.service.impl;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.utils.JsonFileUtil;
 import com.dmsoft.firefly.plugin.grr.dto.GrrConfigDto;
+import com.dmsoft.firefly.plugin.grr.service.GrrConfigService;
 import com.dmsoft.firefly.plugin.grr.utils.enums.GrrAnalysisMethod;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
@@ -19,7 +20,7 @@ import java.util.Arrays;
  * Created by GuangLi on 2018/3/7.
  */
 @Config
-public class GrrConfigServiceImpl implements IConfig {
+public class GrrConfigServiceImpl implements GrrConfigService, IConfig {
     private final Logger logger = LoggerFactory.getLogger(GrrConfigServiceImpl.class);
 
     private PluginContext pluginContext = RuntimeContext.getBean(PluginContext.class);
@@ -48,12 +49,8 @@ public class GrrConfigServiceImpl implements IConfig {
         saveGrrConfig(jsonMapper.fromJson(new String(config), GrrConfigDto.class));
     }
 
-    /**
-     * save grr config setting
-     *
-     * @param grrConfigDto grr config setting
-     */
     @ExcludeMethod
+    @Override
     public void saveGrrConfig(GrrConfigDto grrConfigDto) {
         String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.GrrPlugin").getFolderPath();
         String json = JsonFileUtil.readJsonFile(path, fileName);
@@ -64,12 +61,8 @@ public class GrrConfigServiceImpl implements IConfig {
         JsonFileUtil.writeJsonFile(grrConfigDto, path, fileName);
     }
 
-    /**
-     * find grr config setting
-     *
-     * @return grr config setting
-     */
     @ExcludeMethod
+    @Override
     public GrrConfigDto findGrrConfig() {
         String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.GrrPlugin").getFolderPath();
         String json = JsonFileUtil.readJsonFile(path, fileName);

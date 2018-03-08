@@ -6,14 +6,17 @@ import org.apache.commons.lang3.Validate;
 
 /**
  * menu component for menu
+ *
+ * @param <T> any type
+ * @author Julia
  */
 public class MenuBuilder<T> implements IMenu {
-    public final static String MENU_FILE = "file";
-    public final static String MENU_DATASOURCE = "dataSource";
-    public final static String MENU_DATASOURCE_RESOLVER = "dataSourceResolver";
-    public final static String MENU_ANALYSE = "analyse";
-    public final static String MENU_PREFERENCE = "preference";
-    public final static String MENU_HELP = "help";
+    public static final String MENU_FILE = "file";
+    public static final String MENU_DATASOURCE = "dataSource";
+    public static final String MENU_DATASOURCE_RESOLVER = "dataSourceResolver";
+    public static final String MENU_ANALYSE = "analyse";
+    public static final String MENU_PREFERENCE = "preference";
+    public static final String MENU_HELP = "help";
 
     private MenuType menuType;
     private String pluginId;
@@ -21,11 +24,25 @@ public class MenuBuilder<T> implements IMenu {
     private String parentLocation;
     private T menu;
 
+    /**
+     * constructor
+     *
+     * @param pluginId plugin id
+     * @param menuType menu type
+     */
     public MenuBuilder(String pluginId, MenuType menuType) {
         this.menuType = menuType;
         this.pluginId = pluginId;
     }
 
+    /**
+     * constructor
+     *
+     * @param pluginId       plugin id
+     * @param menuType       menu type
+     * @param location       location
+     * @param parentLocation parent location
+     */
     public MenuBuilder(String pluginId, MenuType menuType, String location, String parentLocation) {
         Validate.notBlank(pluginId);
         Validate.notBlank(location);
@@ -56,6 +73,12 @@ public class MenuBuilder<T> implements IMenu {
         return parentLocation;
     }
 
+    /**
+     * method to set parent location
+     *
+     * @param parentLocation parent location
+     * @return menu builder
+     */
     public MenuBuilder setParentLocation(String parentLocation) {
         this.parentLocation = parentLocation;
         return this;
@@ -66,6 +89,12 @@ public class MenuBuilder<T> implements IMenu {
         return (T) this.menu;
     }
 
+    /**
+     * method to add menu
+     *
+     * @param menu menu
+     * @return menu builder
+     */
     public MenuBuilder addMenu(T menu) {
         this.menu = menu;
         if (menu instanceof Menu) {

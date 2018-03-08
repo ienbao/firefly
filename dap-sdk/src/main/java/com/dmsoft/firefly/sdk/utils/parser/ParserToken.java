@@ -4,7 +4,7 @@
  *
  */
 
-package com.dmsoft.firefly.core.utils.parser;
+package com.dmsoft.firefly.sdk.utils.parser;
 
 /**
  * Created by Peter on 2016/8/25.

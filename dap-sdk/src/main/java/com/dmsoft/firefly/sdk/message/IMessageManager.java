@@ -1,6 +1,11 @@
 package com.dmsoft.firefly.sdk.message;
 
 
+/**
+ * interface class for message manager
+ *
+ * @author Julia
+ */
 public interface IMessageManager {
     /**
      * show information

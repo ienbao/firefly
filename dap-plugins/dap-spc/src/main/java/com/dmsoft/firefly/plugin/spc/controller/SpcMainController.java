@@ -4,7 +4,10 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.plugin.spc.dto.SearchConditionDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcAnalysisConfigDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
+import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -12,14 +15,19 @@ import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.dmsoft.firefly.sdk.job.Job;
+import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
+import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
 import java.util.List;
@@ -50,6 +58,9 @@ public class SpcMainController implements Initializable {
     @FXML
     private ChartResultController chartResultController;
 
+    private SearchDataFrame dataFrame;
+    private SpcAnalysisConfigDto analysisConfigDto;
+    private JobManager manager = RuntimeContext.getBean(JobManager.class);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -99,7 +110,32 @@ public class SpcMainController implements Initializable {
     }
 
     private void getChooseBtnEvent() {
-        viewDataController.setViewData(initData());
+        List<SearchConditionDto> searchConditionDtoList = this.buildRefreshSearchConditionData();
+        if (searchConditionDtoList.size() == 0) {
+            return;
+        }
+        Job job = new Job(ParamKeys.SPC_REFRESH_JOB_PIPELINE);
+        Map paramMap = Maps.newHashMap();
+        paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
+
+        SearchDataFrame subDataFrame = this.buildSubSearchDataFrame(searchConditionDtoList);
+        paramMap.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
+        Platform.runLater(() -> {
+            manager.doJobASyn(job, paramMap, new JobDoComplete() {
+                @Override
+                public void doComplete(Object returnValue) {
+                    System.out.println("ASyn result = " + (returnValue == null ? "null" : returnValue));
+//                    if (returnValue == null) {
+////                        spcStatsDtoList = initData();
+////                        return;
+//                    }
+                    SearchDataFrame searchDataFrame = initData();
+
+                }
+            });
+        });
+        viewDataController.setViewData(subDataFrame);
     }
 
     private void initBtnIcon() {
@@ -135,4 +171,49 @@ public class SpcMainController implements Initializable {
         return RuntimeContext.getBean(DataFrameFactory.class).createSearchDataFrame(typeDtoList, rowDataDtoList);
     }
 
+    public SearchDataFrame getDataFrame() {
+        return dataFrame;
+    }
+
+    public void setDataFrame(SearchDataFrame dataFrame) {
+        this.dataFrame = dataFrame;
+    }
+
+    public SpcAnalysisConfigDto getAnalysisConfigDto() {
+        return analysisConfigDto;
+    }
+
+    public void setAnalysisConfigDto(SpcAnalysisConfigDto analysisConfigDto) {
+        this.analysisConfigDto = analysisConfigDto;
+    }
+
+    private List<SearchConditionDto> buildRefreshSearchConditionData() {
+        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
+        List<SpcStatsDto> spcStatsDtoList = statisticalResultController.getSelectStatsData();
+        for (SpcStatsDto spcStatsDto : spcStatsDtoList) {
+            SearchConditionDto searchConditionDto = new SearchConditionDto();
+            searchConditionDto.setKey(spcStatsDto.getKey());
+            searchConditionDto.setItemName(spcStatsDto.getItemName());
+            searchConditionDto.setCondition(spcStatsDto.getCondition());
+            searchConditionDto.setCusUsl(String.valueOf(spcStatsDto.getStatsResultDto().getUsl()));
+            searchConditionDto.setCusLsl(String.valueOf(spcStatsDto.getStatsResultDto().getLsl()));
+            searchConditionDtoList.add(searchConditionDto);
+        }
+        return searchConditionDtoList;
+    }
+
+    private SearchDataFrame buildSubSearchDataFrame(List<SearchConditionDto> searchConditionDtoList) {
+        if (dataFrame == null || searchConditionDtoList == null) {
+            return null;
+        }
+        List<String> testItemNameList = Lists.newArrayList();
+        for (SearchConditionDto searchConditionDto : searchConditionDtoList) {
+            if (!testItemNameList.contains(searchConditionDto.getItemName())) {
+                testItemNameList.add(searchConditionDto.getItemName());
+            }
+        }
+        List<String> rowKeyList = Lists.newArrayList();
+        SearchDataFrame subDataFrame = dataFrame.subDataFrame(rowKeyList, testItemNameList);
+        return subDataFrame;
+    }
 }

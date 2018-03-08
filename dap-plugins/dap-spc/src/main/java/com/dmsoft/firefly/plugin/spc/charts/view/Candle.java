@@ -1,8 +1,10 @@
 package com.dmsoft.firefly.plugin.spc.charts.view;
 
+import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import javafx.scene.Group;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 /**
@@ -10,7 +12,9 @@ import javafx.scene.shape.Line;
  */
 public class Candle extends Group {
 
-    private Line highLowLine = new Line();
+    private Line mediaVerticalLine = new Line();
+    private Line topHorizontalLine = new Line();
+    private Line bottomHorizontalLine = new Line();
     private Region bar = new Region();
     private String seriesStyleClass;
     private String dataStyleClass;
@@ -19,25 +23,34 @@ public class Candle extends Group {
 
     public Candle(String seriesStyleClass, String dataStyleClass) {
         setAutoSizeChildren(false);
-        getChildren().addAll(highLowLine, bar);
+        getChildren().addAll(mediaVerticalLine, bar, topHorizontalLine, bottomHorizontalLine);
         this.seriesStyleClass = seriesStyleClass;
         this.dataStyleClass = dataStyleClass;
-        updateStyleClasses();
+        updateStyleClasses(null);
         tooltip.setGraphic(new TooltipContent());
+        tooltip.getStyleClass().setAll("candlestick-tooltip");
         Tooltip.install(bar, tooltip);
     }
 
     public void setSeriesAndDataStyleClasses(String seriesStyleClass, String dataStyleClass) {
         this.seriesStyleClass = seriesStyleClass;
         this.dataStyleClass = dataStyleClass;
-        updateStyleClasses();
+        updateStyleClasses(null);
     }
 
-    public void update(double closeOffset, double highOffset, double lowOffset, double candleWidth) {
+    public void update(double closeOffset, double highOffset, double lowOffset, double candleWidth, Color color) {
         openAboveClose = closeOffset > 0;
-        updateStyleClasses();
-        highLowLine.setStartY(highOffset);
-        highLowLine.setEndY(lowOffset);
+        updateStyleClasses(color);
+        mediaVerticalLine.setStartY(highOffset);
+        mediaVerticalLine.setEndY(lowOffset);
+        topHorizontalLine.setStartX(mediaVerticalLine.getStartX() - candleWidth / 4);
+        topHorizontalLine.setEndX(mediaVerticalLine.getEndX() + candleWidth / 4);
+        topHorizontalLine.setStartY(highOffset);
+        topHorizontalLine.setEndY(highOffset);
+        bottomHorizontalLine.setStartX(mediaVerticalLine.getStartX() - candleWidth / 4);
+        bottomHorizontalLine.setEndX(mediaVerticalLine.getEndX() + candleWidth / 4);
+        bottomHorizontalLine.setStartY(lowOffset);
+        bottomHorizontalLine.setEndY(lowOffset);
         if (candleWidth == -1) {
             candleWidth = bar.prefWidth(-1);
         }
@@ -54,10 +67,28 @@ public class Candle extends Group {
 //                    tooltip.setText("Open: "+open+"\nClose: "+close+"\nHigh: "+high+"\nLow: "+low);
     }
 
-    private void updateStyleClasses() {
+    private void updateStyleClasses(Color color) {
+        String styleColor = (color == null) ? "#6fc1be" : ColorUtils.toHexFromFXColor(color);
+        mediaVerticalLine.setStyle("-fx-stroke: " + styleColor);
+        topHorizontalLine.setStyle("-fx-stroke: " + styleColor);
+        bottomHorizontalLine.setStyle("-fx-stroke: " + styleColor);
+
+        bar.setStyle("-fx-padding: 5;-demo-bar-fill: " + styleColor + ";-fx-background-color: " +
+                "linear-gradient(derive(-demo-bar-fill, -30%), derive(-demo-bar-fill, -40%))," +
+                "linear-gradient(derive(-demo-bar-fill, 100%), derive(-demo-bar-fill, 10%))," +
+                "linear-gradient(derive(-demo-bar-fill, 10%), derive(-demo-bar-fill, -10%));" +
+                "-fx-background-insets: 0, 1, 1;");
+
         getStyleClass().setAll("candlestick-candle", seriesStyleClass, dataStyleClass);
-        highLowLine.getStyleClass().setAll("candlestick-line", seriesStyleClass, dataStyleClass,
-                openAboveClose ? "open-above-close" : "close-above-open");
+//        mediaVerticalLine.getStyleClass().setAll("candlestick-line", seriesStyleClass, dataStyleClass,
+//                openAboveClose ? "open-above-close" : "close-above-open");
+//
+//        topHorizontalLine.getStyleClass().setAll("candlestick-line", seriesStyleClass, dataStyleClass,
+//                openAboveClose ? "open-above-close" : "close-above-open");
+//
+//        bottomHorizontalLine.getStyleClass().setAll("candlestick-line", seriesStyleClass, dataStyleClass,
+//                openAboveClose ? "open-above-close" : "close-above-open");
+
         bar.getStyleClass().setAll("candlestick-bar", seriesStyleClass, dataStyleClass,
                 openAboveClose ? "open-above-close" : "close-above-open");
     }

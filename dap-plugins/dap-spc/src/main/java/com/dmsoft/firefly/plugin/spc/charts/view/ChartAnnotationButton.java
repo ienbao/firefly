@@ -32,7 +32,7 @@ public class ChartAnnotationButton extends Button {
     private ListView<SimpleItemCheckModel> dataListView;
     private ObservableList<SimpleItemCheckModel> dataModels = FXCollections.observableArrayList();
     private FilteredList<SimpleItemCheckModel> filteredData = new FilteredList(dataModels, s -> true);
-    private ClearCallBack clearCallBack;
+    private ClearCallBack callBack;
 
     private Object currentSelectItem;
     private boolean showAnnotation = false;
@@ -155,8 +155,8 @@ public class ChartAnnotationButton extends Button {
         dataListView.refresh();
         showAnnotation = false;
         editCurrentSelectItem(dataModels.get(0).getItemName());
-        if (clearCallBack != null) {
-            clearCallBack.execute();
+        if (callBack != null) {
+            callBack.execute();
         }
     }
 
@@ -252,7 +252,7 @@ public class ChartAnnotationButton extends Button {
         return showAnnotation;
     }
 
-    public void setClearCallBack(ClearCallBack clearCallBack) {
-        this.clearCallBack = clearCallBack;
+    public void setCallBack(ClearCallBack callBack) {
+        this.callBack = callBack;
     }
 }

@@ -4,10 +4,10 @@
  *
  */
 
-package com.dmsoft.firefly.core.utils.parser;
+package com.dmsoft.firefly.sdk.utils.parser;
 
-import com.dmsoft.firefly.core.utils.parser.gen.SEPBaseVisitor;
-import com.dmsoft.firefly.core.utils.parser.gen.SEPParser;
+import com.dmsoft.firefly.sdk.utils.parser.gen.SEPBaseVisitor;
+import com.dmsoft.firefly.sdk.utils.parser.gen.SEPParser;
 
 /**
  * Created by Peter on 2016/8/29.

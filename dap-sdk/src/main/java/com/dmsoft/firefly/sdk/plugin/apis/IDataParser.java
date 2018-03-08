@@ -12,12 +12,11 @@ public interface IDataParser {
      * This method is used to import csv file.
      *
      * @param csvPath the path of csv file
-     * @return the id of the csv imported file
      */
     void importFile(String csvPath);
 
     /**
-     * @return
+     * @return parser name
      */
     String getName();
 }

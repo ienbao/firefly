@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.core.sdkimpl.dataframe;
 
-import com.dmsoft.firefly.core.utils.FilterUtils;
+import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;

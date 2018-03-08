@@ -35,6 +35,7 @@
 .axis:bottom {
     -fx-border-color: #dcdcdc transparent transparent transparent;
 }
+
 .axis:left {
     -fx-border-color: transparent #dcdcdc transparent transparent;
 }
@@ -45,6 +46,7 @@
 
 /*line*/
 .line {
+    -fx-cursor: hand;
     -fx-stroke: #6fc1be;
 }
 
@@ -77,6 +79,7 @@
 
 /*chart line style*/
 .chart-series-line {
+    -fx-cursor: hand;
     -fx-stroke-width: 1px;
 }
 
@@ -87,6 +90,7 @@
 /*chart symbol */
 .chart-line-symbol {
     -fx-padding: 4px;
+    -fx-cursor: hand;
     -fx-background-insets: 1px;
 }
 
@@ -100,6 +104,7 @@
 
 /* solid triangle */
 .chart-symbol-triangle {
+    -fx-cursor: hand;
     -fx-background-insets: -2;
     -fx-shape: "M5,3 L10,8 L0,8 Z";
     -fx-scale-shape: false;
@@ -127,6 +132,7 @@
 
 /*Bar Chart*/
 .chart-bar {
+    -fx-cursor: hand;
     -fx-stroke-width: 1px;
 }
 
@@ -140,41 +146,29 @@
 }
 
 /* ====== CANDLE STICK CHART =========================================================== */
-.candlestick-tooltip-label {
-    -fx-font-size: 0.75em;
-    -fx-font-weight: bold;
-    -fx-text-fill: #666666;
-    -fx-padding: 2 5 2 0;
+.candlestick-tooltip {
+    -fx-font-size: 12px;
+    -fx-text-fill: #222222;
+    -fx-background-color: white;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 5 10 5 10;
+    -fx-border-width: 1px;
+    -fx-border-color: #DDDDDD;
 }
 
-.candlestick-average-line {
-    -fx-stroke-width: 1px;
+.candlestick-tooltip-box {
+    -fx-min-width: 80px;
+    -fx-max-width: 80px;
+    -fx-pref-width: 80px;
 }
 
-.candlestick-candle {
-    /*-fx-effect: dropshadow(two-pass-box, rgba(0, 0, 0, 0.4), 10, 0.0, 2, 4);*/
-}
-
-.candlestick-line {
-    -fx-stroke: #6fc1be;
-    -fx-stroke-width: 2px;
+.candlestick-tooltip-box > .label {
+    -fx-padding: 0 0 10 0;
 }
 
 .candlestick-bar {
-    -fx-padding: 5;
-    -demo-bar-fill: #6fc1be;
-    -fx-background-color: linear-gradient(derive(-demo-bar-fill, -30%), derive(-demo-bar-fill, -40%)),
-    linear-gradient(derive(-demo-bar-fill, 100%), derive(-demo-bar-fill, 10%)),
-    linear-gradient(derive(-demo-bar-fill, 10%), derive(-demo-bar-fill, -10%));
-    -fx-background-insets: 0, 1, 1;
-}
-
-.candlestick-bar.close-above-open {
-    -demo-bar-fill: #6fc1be;
-}
-
-.candlestick-bar.open-above-close {
-    -demo-bar-fill: #6fc1be;
+    -fx-cursor: hand;
 }
 
 .btn-tab {
@@ -226,9 +220,10 @@
     -fx-background-insets: 0, 1;
     -fx-effect: null;
     -fx-border-color: #dcdcdc;
-    -fx-padding: 1,1,1,1;
+    -fx-padding: 1, 1, 1, 1;
     -fx-translate-y: 3;
 }
+
 .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
     -fx-padding: 4 0 4 5;
     -fx-background: -fx-control-inner-background;
@@ -238,11 +233,27 @@
     -fx-background: -fx-accent;
     -fx-background-color: #0096ff;
 }
+
 .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
 .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
     -fx-background: -fx-accent;
     -fx-background-color: #0096ff;
     -fx-background-insets: 0, 1, 2;
+}
+
+.menu-button {
+    -fx-min-width: 20px;
+    -fx-max-width: 20px;
+    -fx-pref-width: 20px;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+}
+
+.menu-icon {
+}
+
+.menu-icon > .container > .menu-button {
+    -fx-padding: 0em 0em 0em -0.63em;
 }
 
 
