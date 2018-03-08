@@ -21,15 +21,17 @@ import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.chart.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.paint.Color;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.*;
@@ -80,7 +82,7 @@ public class ChartResultController implements Initializable {
     private String pointName = "Point";
     private String connectLine = "Connect Line";
 
-    private String legend = "- - - LSL, USL   —— m Line   —— 6s Line";
+    private String legend = "- - - LSL, USL  —— m Line   —— 6s Line";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -187,7 +189,11 @@ public class ChartResultController implements Initializable {
         runChartPane.getCustomPane().getChildren().add(button);
         runChartPane.getCustomPane().getChildren().add(editBtn);
 
-        editBtn.setClearCallBack(() -> {
+        runChartPane.getCustomPane().setMargin(editBtn, new Insets(0, 0, 0, 5));
+        runChartPane.getCustomPane().setMargin(button, new Insets(0, 0, 0, 5));
+//        runChartPane.getCustomPane().setMargin(rRuleBtn, new Insets(0, 0, 0, 5));
+
+        editBtn.setCallBack(() -> {
             runChart.clearAnnotation(annotationData);
         });
 

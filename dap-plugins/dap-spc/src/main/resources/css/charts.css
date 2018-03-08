@@ -35,6 +35,7 @@
 .axis:bottom {
     -fx-border-color: #dcdcdc transparent transparent transparent;
 }
+
 .axis:left {
     -fx-border-color: transparent #dcdcdc transparent transparent;
 }
@@ -226,9 +227,10 @@
     -fx-background-insets: 0, 1;
     -fx-effect: null;
     -fx-border-color: #dcdcdc;
-    -fx-padding: 1,1,1,1;
+    -fx-padding: 1, 1, 1, 1;
     -fx-translate-y: 3;
 }
+
 .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
     -fx-padding: 4 0 4 5;
     -fx-background: -fx-control-inner-background;
@@ -238,11 +240,27 @@
     -fx-background: -fx-accent;
     -fx-background-color: #0096ff;
 }
+
 .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
 .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
     -fx-background: -fx-accent;
     -fx-background-color: #0096ff;
     -fx-background-insets: 0, 1, 2;
+}
+
+.menu-button {
+    -fx-min-width: 20px;
+    -fx-max-width: 20px;
+    -fx-pref-width: 20px;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+}
+
+.menu-icon {
+}
+
+.menu-icon > .container > .menu-button {
+    -fx-padding: 0em 0em 0em -0.63em;
 }
 
 

@@ -82,6 +82,9 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
         rightHBox.getChildren().add(zoomInBtn);
         rightHBox.getChildren().add(zoomOutBtn);
         rightHBox.getChildren().add(menuBar);
+        rightHBox.setMargin(zoomInBtn, new Insets(0, 0, 0, 5));
+        rightHBox.setMargin(zoomOutBtn, new Insets(0, 0, 0, 5));
+        rightHBox.setMargin(menuBar, new Insets(-3, 0, 0, 5));
         leftHBox.getChildren().add(legendLbl);
         titlePane.setTop(topPane);
         titlePane.setLeft(leftHBox);
@@ -106,6 +109,10 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
         legendLbl.setPadding(new Insets(3, 0, 0, 0));
         leftHBox.setPadding(new Insets(0, 0, 0, spacing));
 
+//        extensionMenu.setStyle("-fx-padding: 0em 1em 0em -0.8em");
+        menuBar.getStyleClass().removeAll("menu-icon");
+        menuBar.getStyleClass().add("menu-icon");
+
         zoomInBtn.setPrefWidth(20);
         zoomInBtn.setMaxWidth(20);
         zoomInBtn.setMinWidth(20);
@@ -121,7 +128,6 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
         legendBtn.setPrefHeight(25);
         legendBtn.setMaxHeight(25);
         legendBtn.setMinHeight(25);
-        chart.setMaxHeight(800);
         chart.setLegendVisible(false);
     }
 

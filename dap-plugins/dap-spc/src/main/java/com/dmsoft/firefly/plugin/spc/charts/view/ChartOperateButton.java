@@ -28,7 +28,7 @@ public class ChartOperateButton extends Button {
 
     private final static Orientation defaultOrientation = Orientation.UPLEFT;
     private final static boolean defaultSelected = false;
-    private final double threshold = 5;
+    private final double threshold = 6;
     private Set<String> selectedSets = Sets.newHashSet();
 
     public ChartOperateButton() {
@@ -64,7 +64,9 @@ public class ChartOperateButton extends Button {
         this.setPrefHeight(20);
         this.getStyleClass().add("btn-icon-b");
         Button button = this;
-        this.setOnMousePressed(event -> showPopupForButton(button));
+        this.setOnMousePressed(event -> {
+            showPopupForButton(button);
+        });
     }
 
     private void showPopupForButton(Button button) {
