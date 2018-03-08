@@ -1,23 +1,33 @@
 package com.dmsoft.firefly.gui.controller;
 
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.gui.components.utils.JsonFileUtil;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.plugin.PluginClass;
+import com.dmsoft.firefly.sdk.plugin.PluginClassType;
+import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
+import com.dmsoft.firefly.sdk.plugin.apis.IConfig;
+import com.dmsoft.firefly.sdk.plugin.apis.IDataParser;
 import com.dmsoft.firefly.sdk.ui.IMenu;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -77,7 +87,7 @@ public class AppController {
                     List<Menu> menus = menuSystem.getMenus();
                     boolean result1 = false;
                     for (Menu menu1 : menus) {
-                         boolean result = updateMenu(menu, menu1);
+                        boolean result = updateMenu(menu, menu1);
                         if (result) {
                             result1 = true;
                             break;
@@ -105,7 +115,7 @@ public class AppController {
                 } else {
                     thirdNames.add(name);
                 }
-           }
+            }
         });
 
         thirdNames.forEach(name -> {
@@ -173,4 +183,63 @@ public class AppController {
         }
     }
 
+    public void exportAllConfig() {
+        PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
+        List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.CONFIG);
+//        List<String> name = Lists.newArrayList();
+        Map<String, String> config = Maps.newHashMap();
+        pluginClasses.forEach(v -> {
+            IConfig service = (IConfig) v.getInstance();
+//            name.add(((IConfig) v.getInstance()).getConfigName());
+            String name = service.getConfigName();
+            if (StringUtils.isNotEmpty(name)) {
+                config.put(service.getConfigName(), new String(service.exportConfig()));
+            }
+        });
+        String str = System.getProperty("user.home");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Spc Config export");
+        fileChooser.setInitialDirectory(new File(str));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JSON", "*.json")
+        );
+        Stage fileStage = null;
+        File file = fileChooser.showSaveDialog(fileStage);
+
+        if (file != null) {
+            if (config != null) {
+                JsonFileUtil.writeJsonFile(config, file);
+                logger.debug("Export success");
+            }
+        }
+    }
+
+    public void importAllConfig() {
+        String str = System.getProperty("user.home");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Spc Config export");
+        fileChooser.setInitialDirectory(new File(str));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JSON", "*.json")
+        );
+        Stage fileStage = null;
+        File file = fileChooser.showOpenDialog(fileStage);
+
+        if (file != null) {
+            String json = JsonFileUtil.readJsonFile(file);
+            JsonMapper jsonMapper = JsonMapper.defaultMapper();
+            if (StringUtils.isNotEmpty(json)) {
+                PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
+                List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.CONFIG);
+                Map<String, String> config = jsonMapper.fromJson(json, Map.class);
+                pluginClasses.forEach(v -> {
+                    IConfig service = (IConfig) v.getInstance();
+                    String name = service.getConfigName();
+                    if (StringUtils.isNotEmpty(name) && StringUtils.isNotEmpty(config.get(name))) {
+                        service.importConfig(config.get(name).getBytes());
+                    }
+                });
+            }
+        }
+    }
 }
