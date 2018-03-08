@@ -1,7 +1,7 @@
 package com.dmsoft.firefly.plugin.grr.dto.analysis;
 
 
-import com.dmsoft.firefly.plugin.utils.enums.GrrResultName;
+import com.dmsoft.firefly.plugin.grr.utils.enums.GrrResultName;
 
 /**
  * Created by GuangLi on 2017/7/21.

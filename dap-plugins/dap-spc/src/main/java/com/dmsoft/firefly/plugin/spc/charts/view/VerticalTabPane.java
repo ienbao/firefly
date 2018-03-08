@@ -19,8 +19,8 @@ public class VerticalTabPane extends AnchorPane {
     private ContentStackPane contentPane;
     private Map<Integer, String> nodeIdMap = Maps.newHashMap();
 
-    private final double LEFT_WIDTH = 90;
-    private final double RIGHT_WIDTH = 395;
+    private final double LEFT_WIDTH = 100;
+    private final double RIGHT_WIDTH = 385;
     private final double HEIGHT = 245;
     private final double BUTTON_HEIGHT = 20;
 
@@ -35,6 +35,7 @@ public class VerticalTabPane extends AnchorPane {
 
     public void initComponents() {
 
+        VBox box = new VBox();
         leftBox = new VBox();
         ndcBtn = new Button(UIConstant.SPC_CHART_NAME[0]);
         runBtn = new Button(UIConstant.SPC_CHART_NAME[1]);
@@ -52,7 +53,6 @@ public class VerticalTabPane extends AnchorPane {
         leftBox.getChildren().add(medianBtn);
         leftBox.getChildren().add(boxBtn);
         leftBox.getChildren().add(mrBtn);
-        VBox box = new VBox();
         leftBox.getChildren().add(box);
 
         contentPane = new ContentStackPane();
@@ -77,26 +77,37 @@ public class VerticalTabPane extends AnchorPane {
             return;
         } else {
             contentPane.navTo(nodeIdMap.get(index));
+            Node node = leftBox.getChildren().get(index);
+            if (node instanceof Button) {
+                node.getStyleClass().removeAll("btn-tab-active");
+                node.getStyleClass().add("btn-tab-active");
+            }
         }
     }
 
     public void initComponentsRender() {
-
         leftBox.setPrefWidth(LEFT_WIDTH);
         leftBox.setMinWidth(LEFT_WIDTH);
         leftBox.setMaxWidth(LEFT_WIDTH);
         contentPane.setPrefWidth(RIGHT_WIDTH);
         leftBox.setPrefHeight(HEIGHT);
         leftBox.setStyle("-fx-background-color: " + BACKGROUND_COLOR);
-
         for (int i = 0; i < leftBox.getChildren().size(); i++) {
             Node node = leftBox.getChildren().get(i);
             if (node instanceof Button) {
                 setButtonStyle((Button) node);
             }
             if (node instanceof VBox) {
-                ((VBox) node).setPrefHeight(500);
-                node.setStyle("-fx-border-width: 0px 1px 0px 0px; -fx-border-color: " + BORDER_COLOR);
+                setBoxStyle((VBox) node);
+            }
+        }
+    }
+
+    public void initEvent() {
+        for (int i = 0; i < leftBox.getChildren().size(); i++) {
+            Node node = leftBox.getChildren().get(i);
+            if (node instanceof Button) {
+                leftBox.getChildren().get(i).setOnMouseClicked(buttonClickEvent(i));
             }
         }
     }
@@ -113,13 +124,9 @@ public class VerticalTabPane extends AnchorPane {
         button.setMaxHeight(BUTTON_HEIGHT);
     }
 
-    public void initEvent() {
-        for (int i = 0; i < leftBox.getChildren().size(); i++) {
-            Node node = leftBox.getChildren().get(i);
-            if (node instanceof Button) {
-                leftBox.getChildren().get(i).setOnMouseClicked(buttonClickEvent(i));
-            }
-        }
+    private void setBoxStyle(VBox box) {
+        box.setPrefHeight(500);
+        box.setStyle("-fx-border-width: 0px 1px 0px 0px; -fx-border-color: " + BORDER_COLOR);
     }
 
     private EventHandler buttonClickEvent(int index) {

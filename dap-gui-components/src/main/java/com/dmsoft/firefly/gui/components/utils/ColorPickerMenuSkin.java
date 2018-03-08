@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2017. For Intelligent Group.
  */
-package com.dmsoft.firefly.plugin.spc.utils;
+package com.dmsoft.firefly.gui.components.utils;
 
 import com.sun.javafx.scene.control.skin.ColorPickerSkin;
 import javafx.scene.Node;
@@ -20,7 +20,7 @@ public class ColorPickerMenuSkin extends ColorPickerSkin {
      */
     public ColorPickerMenuSkin(ColorPicker colorPicker) {
         super(colorPicker);
-        displayNode = new Label(SpcFxmlAndLanguageUtils.getString(ResourceMassages.CHOOSE_COLOR_MENU));
+        displayNode = new Label("Select Color");
     }
 
     @Override public Node getDisplayNode() {

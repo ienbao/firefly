@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.plugin.utils;
+package com.dmsoft.firefly.plugin.grr.utils;
 
 public class GrrExceptionCode {
     //Grr

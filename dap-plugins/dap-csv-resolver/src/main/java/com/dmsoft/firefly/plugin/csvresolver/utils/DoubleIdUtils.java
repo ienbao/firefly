@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.plugin.utils;
+package com.dmsoft.firefly.plugin.csvresolver.utils;
 
 /**
  * util class for double id

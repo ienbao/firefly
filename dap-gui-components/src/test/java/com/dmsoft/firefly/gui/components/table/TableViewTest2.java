@@ -1,7 +1,6 @@
 package com.dmsoft.firefly.gui.components.table;
 
 import com.google.common.collect.Lists;
-import com.sun.javafx.scene.control.skin.TableViewSkin;
 import javafx.application.Application;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -9,8 +8,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -110,6 +113,11 @@ public class TableViewTest2 extends Application {
                     }
 
                     @Override
+                    public Node getMenuNode() {
+                        return null;
+                    }
+
+                    @Override
                     public void handleAction(String rowKey, ActionEvent event) {
                         System.out.println(rowKey);
                     }
@@ -138,10 +146,6 @@ public class TableViewTest2 extends Application {
 
             }
         };
-
-        tableView.skinProperty().addListener((ov, s1, s2) -> {
-            NewTableViewWrapper.decorateSkinForSortHeader((TableViewSkin) s2, tableView);
-        });
 
         GridPane pane = new GridPane();
         HBox hBox = new HBox();

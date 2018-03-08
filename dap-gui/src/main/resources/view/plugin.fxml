@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.dmsoft.firefly.gui.components.utils.TextFieldFilter?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<!--
+  ~ Copyright (c) 2017. For Intelligent Group.
+  -->
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.PluginManageController">
+    <children>
+        <VBox prefHeight="480.0" prefWidth="100.0">
+            <children>
+                <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" style="-fx-border-width: 1 1 0 1; -fx-border-color: #DCDCDC;">
+                    <children>
+                        <TextFieldFilter fx:id="filterTf" maxWidth="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+                     <HBox.margin>
+                        <Insets bottom="2.0" top="2.0" />
+                     </HBox.margin></TextFieldFilter>
+                    </children>
+                    <padding>
+                        <Insets left="5.0" />
+                    </padding>
+                </HBox>
+                <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <TableView fx:id="pluginTable" prefHeight="200.0" prefWidth="438.0">
+                            <columns>
+                                <TableColumn fx:id="pluginName" prefWidth="75.0" text="Name" />
+                                <TableColumn fx:id="pluginActivated" maxWidth="80.0" minWidth="80.0" text="Actived" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TableView>
+                        <TextArea fx:id="explain" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+            </children>
+            <VBox.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
+            </VBox.margin>
+        </VBox>
+        <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0">
+            <children>
+                <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Button fx:id="installPlugin" mnemonicParsing="false" prefWidth="95.0" text="Install Plug-in" />
+                        <Button fx:id="unInstallPlugin" mnemonicParsing="false" prefHeight="23.0" prefWidth="111.0" text="Uninstall Plug-in">
+                            <HBox.margin>
+                                <Insets left="10.0" />
+                            </HBox.margin>
+                        </Button>
+                    </children>
+                </HBox>
+                <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="OK" />
+                    </children>
+                </HBox>
+            </children>
+            <VBox.margin>
+                <Insets left="10.0" right="10.0" />
+            </VBox.margin>
+        </HBox>
+    </children>
+</VBox>

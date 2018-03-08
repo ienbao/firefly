@@ -1154,6 +1154,24 @@
     -fx-background-color: rgba(0, 150, 255, 0.2); /*#0096ff*/
 }
 
+.table-view .column-header .label.ascending-label {
+    -fx-background-image: url('/images/icon_sort_arrow_up.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 6 3;
+    -fx-background-position: 50% 2;
+}
+
+.table-view .column-header .label.descending-label {
+    -fx-background-image: url('/images/icon_sort_arrow_down.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 6 3;
+    -fx-background-position: 50% 2;
+}
+
+.table-view .column-header .label {
+    -fx-background-image: none;
+}
+
 .table-view .filler {
     -fx-background-color: #ffffff;
     -fx-border-color: #dcdcdc;
@@ -2057,6 +2075,47 @@
 
 /*******************************************************************************
  *                                                                             *
+ * ColorPicker                                                                 *
+ *                                                                             *
+ ******************************************************************************/
+.color-picker{
+    -fx-border-width: 0;
+    -fx-skin: "com.dmsoft.firefly.gui.components.utils.ColorPickerMenuSkin";
+    -fx-background-color: transparent;
+}
+.color-picker:hover {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+.color-picker:hover:pressed, .color-picker:focused:hover:pressed {
+    -fx-background-color: transparent;
+}
+.combo-box-base:showing {
+    -fx-background-color: transparent;
+}
+
+.combo-box-base:showing:hover {
+    -fx-background-color: transparent;
+}
+
+.combo-box-base:hover:pressed, .combo-box-base:focused:hover:pressed {
+    -fx-background-color: transparent;
+}
+.color-picker:focused{
+    -fx-border-width: 0;
+    /*-fx-background-color: #ffffff;*/
+}
+.color-picker > .label {
+    -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em; /* 4 8 4 8 */
+    -fx-text-fill: -fx-text-base-color;
+    /*-fx-background-color: #ffffff;*/
+}
+.color-picker > .color-picker-label > .picker-color > .picker-color-rect {
+    -fx-stroke: null;
+    -fx-opacity: 0;
+}
+/*******************************************************************************
+ *                                                                             *
  * ProgressBar                                                                 *
  *                                                                             *
  ******************************************************************************/
@@ -2092,7 +2151,7 @@
     -fx-padding: 1;
     -fx-shape: null;
     -fx-background-color:#ea2028;
- }
+}
 .progress-bar-sm-red:indeterminate > .bar {
     -fx-background-insets: 0;
     -fx-background-radius: 0;

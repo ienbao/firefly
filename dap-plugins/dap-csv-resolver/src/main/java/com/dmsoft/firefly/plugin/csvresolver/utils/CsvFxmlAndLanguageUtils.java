@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2017. For Intelligent Group.
  */
-package com.dmsoft.firefly.plugin.utils;
+package com.dmsoft.firefly.plugin.csvresolver.utils;
 
 import com.dmsoft.firefly.gui.components.utils.ModuleType;
 import com.dmsoft.firefly.sdk.RuntimeContext;

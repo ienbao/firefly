@@ -12,4 +12,15 @@ public class ParamKeys {
     public static final String SEARCH_DATA_FRAME = "searchDataFrame";
     public static final String SEARCH_CONDITION_DTO_LIST = "searchConditionDtoList";
     public static final String SPC_ANALYSIS_CONFIG_DTO = "spcAnalysisConfigDto";
+
+    //handler
+    public static final String FIND_TEST_DATA_HANDLER = "findTestDataHandler";
+    public static final String DATA_FRAME_HANDLER = "dataFrameHandler";
+    public static final String SPC_STATS_RESULT_HANDLER = "spcStatsResultHandler";
+
+    //pipeline
+    public static final String SPC_ANALYSIS_JOB_PIPELINE = "spcAnalysisJobPipeline";
+
+    public static final String SPC_ANALYSIS_CONDITION_KEY = "analysisKey";
+
 }

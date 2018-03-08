@@ -2,7 +2,7 @@
  * Copyright (c) 2017. For intelligent group.
  */
 
-package com.dmsoft.firefly.plugin.csvresolver;
+package com.dmsoft.firefly.plugin.csvresolver.dto;
 
 /**
  * Created by Eligi.Ran on 2017/3/1.

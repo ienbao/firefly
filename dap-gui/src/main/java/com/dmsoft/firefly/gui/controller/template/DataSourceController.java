@@ -5,6 +5,7 @@
 package com.dmsoft.firefly.gui.controller.template;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.core.utils.DataFormat;
 import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -30,7 +31,6 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
@@ -77,8 +77,6 @@ public class DataSourceController implements Initializable {
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
 
     private JsonMapper mapper = JsonMapper.defaultMapper();
-    private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
-
 
     private void initTable() {
         search.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
@@ -200,7 +198,7 @@ public class DataSourceController implements Initializable {
                     Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
                     db.setDragView(row.snapshot(null, null));
                     ClipboardContent cc = new ClipboardContent();
-                    cc.put(SERIALIZED_MIME_TYPE, index);
+                    cc.put(DataFormat.SERIALIZED_MIME_TYPE, index);
                     db.setContent(cc);
                     event.consume();
                 }
@@ -208,8 +206,8 @@ public class DataSourceController implements Initializable {
 
             row.setOnDragOver(event -> {
                 Dragboard db = event.getDragboard();
-                if (db.hasContent(SERIALIZED_MIME_TYPE)) {
-                    if (row.getIndex() != ((Integer) db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
+                if (db.hasContent(DataFormat.SERIALIZED_MIME_TYPE)) {
+                    if (row.getIndex() != ((Integer) db.getContent(DataFormat.SERIALIZED_MIME_TYPE)).intValue()) {
                         event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                         event.consume();
                     }
@@ -218,8 +216,8 @@ public class DataSourceController implements Initializable {
 
             row.setOnDragDropped(event -> {
                 Dragboard db = event.getDragboard();
-                if (db.hasContent(SERIALIZED_MIME_TYPE)) {
-                    int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
+                if (db.hasContent(DataFormat.SERIALIZED_MIME_TYPE)) {
+                    int draggedIndex = (Integer) db.getContent(DataFormat.SERIALIZED_MIME_TYPE);
                     ChooseTableRowData draggedPerson = chooseTableRowDataObservableList.remove(draggedIndex);
                     int dropIndex;
 
@@ -354,6 +352,13 @@ public class DataSourceController implements Initializable {
                 } else {
                     chooseTableRowData = new ChooseTableRowData(false, v);
                 }
+                chooseTableRowDataList.add(chooseTableRowData);
+            });
+        } else {
+            List<String> value = Lists.newArrayList();
+            value.addAll(sourceDataService.findAllProjectName());
+            value.forEach(v -> {
+                ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, v);
                 chooseTableRowDataList.add(chooseTableRowData);
             });
         }
