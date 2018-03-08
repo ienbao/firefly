@@ -27,8 +27,14 @@ import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.util.List;
 
@@ -108,9 +114,18 @@ public class GuiApplication extends Application {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/system_processor_bar.fxml");
             root = fxmlLoader.load();
             systemStartUpProcessorBarController = fxmlLoader.getController();
-            Stage stage = WindowFactory.createSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_PROCESS, GuiFxmlAndLanguageUtils.getString(ResourceMassages.DATASOURCE), root, getResource("css/platform_app.css").toExternalForm());
+            Effect shadowEffect = new DropShadow(BlurType.TWO_PASS_BOX, new Color(0, 0, 0, 0.2),
+                    10, 0, 0, 0);
+            root.setEffect(shadowEffect);
+            Scene tempScene = new Scene(root);
+            tempScene.getStylesheets().add(getResource("css/platform_app.css").toExternalForm());
+            tempScene.setFill(Color.TRANSPARENT);
+            Stage stage = new Stage();
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.setScene(tempScene);
             stage.setResizable(false);
             stage.show();
+            StageMap.addStage(GuiConst.PLARTFORM_STAGE_PROCESS, stage);
             if (stage.isShowing()) {
                 updateProcessorBar();
             }
@@ -153,12 +168,12 @@ public class GuiApplication extends Application {
                             }
                         }
                         return null;
-                    };
+                    }
                 };
             }
 
         };
-        systemStartUpProcessorBarController.getProgrossBar().progressProperty().bind(service.progressProperty());
+        systemStartUpProcessorBarController.getProgressBar().progressProperty().bind(service.progressProperty());
         service.start();
     }
 

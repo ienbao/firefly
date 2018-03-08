@@ -9,6 +9,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 
 public class LoginController {
@@ -24,6 +26,13 @@ public class LoginController {
 
     @FXML
     private void initialize() {
+        ImageView imageReset = new ImageView(new Image("/images/icon_choose_one_gray.png"));
+        imageReset.setFitHeight(16);
+        imageReset.setFitWidth(16);
+/*
+        userNameTxt.set(imageReset);
+*/
+
         loginBtn.setOnAction(event -> {
             loginBtn.getStyleClass().add("btn-primary-loading");
             if (true) {
