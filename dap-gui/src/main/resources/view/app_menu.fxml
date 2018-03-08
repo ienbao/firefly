@@ -15,7 +15,7 @@
         </rowConstraints>
          <children>
             <MenuBar fx:id="menuSystem" maxWidth="1.7976931348623157E308" style="-fx-background-color: transparent;" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER" />
-            <MenuButton mnemonicParsing="false" text="admin" GridPane.columnIndex="1">
+            <MenuButton fx:id="loginMenuBtn" mnemonicParsing="false" GridPane.columnIndex="1">
               <items>
                 <MenuItem fx:id="menuChangePassword" mnemonicParsing="false" text="%MENU_CHANGE_PASSWORD" />
                 <MenuItem fx:id="menuLoginOut" mnemonicParsing="false" text="%MENU_LOGIN_OUT" />

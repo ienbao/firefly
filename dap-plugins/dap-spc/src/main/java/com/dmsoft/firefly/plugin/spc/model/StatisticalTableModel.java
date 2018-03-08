@@ -85,7 +85,6 @@ public class StatisticalTableModel implements NewTableModel {
                     m++;
                 }
             }
-            ;
         }
     }
 

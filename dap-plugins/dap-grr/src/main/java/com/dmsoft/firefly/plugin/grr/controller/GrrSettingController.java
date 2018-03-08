@@ -2,16 +2,22 @@ package com.dmsoft.firefly.plugin.grr.controller;
 
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.grr.dto.GrrConfigDto;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
+import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.grr.utils.enums.GrrAnalysisMethod;
 import com.dmsoft.firefly.sdk.utils.StringUtils;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.util.List;
 
@@ -86,7 +92,8 @@ public class GrrSettingController {
         }
     }
 
-    private void initEvent(){
+    private void initEvent() {
+        exportBtn.setOnAction(event -> buildExportDia());
         ok.setOnAction(event -> {
             GrrConfigDto grrConfigDto = new GrrConfigDto();
             if (anova.isSelected()) {
@@ -140,4 +147,17 @@ public class GrrSettingController {
         });
     }
 
+
+    private void buildExportDia() {
+        Pane root = null;
+        try {
+            FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_export_setting.fxml");
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createSimpleWindowAsModel("grrExportSetting", GrrFxmlAndLanguageUtils.getString(ResourceMassages.GRR_EXPORT_SETTING_TITLE), root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
+            stage.show();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }
