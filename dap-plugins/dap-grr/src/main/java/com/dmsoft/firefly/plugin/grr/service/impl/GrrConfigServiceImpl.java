@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.Arrays;
 
 /**
@@ -52,7 +53,7 @@ public class GrrConfigServiceImpl implements GrrConfigService, IConfig {
     @ExcludeMethod
     @Override
     public void saveGrrConfig(GrrConfigDto grrConfigDto) {
-        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.GrrPlugin").getFolderPath();
+        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.GrrPlugin").getFolderPath() + File.separator + "config";
         String json = JsonFileUtil.readJsonFile(path, fileName);
         if (json == null) {
             logger.debug("Don`t find " + fileName);
@@ -64,7 +65,7 @@ public class GrrConfigServiceImpl implements GrrConfigService, IConfig {
     @ExcludeMethod
     @Override
     public GrrConfigDto findGrrConfig() {
-        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.GrrPlugin").getFolderPath();
+        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.GrrPlugin").getFolderPath() + File.separator + "config";
         String json = JsonFileUtil.readJsonFile(path, fileName);
         if (json == null) {
             logger.debug("Don`t find " + fileName);
@@ -73,14 +74,6 @@ public class GrrConfigServiceImpl implements GrrConfigService, IConfig {
         GrrConfigDto grrConfigDto = null;
         if (!StringUtils.isEmpty(json)) {
             grrConfigDto = jsonMapper.fromJson(json, GrrConfigDto.class);
-        }
-        if (grrConfigDto == null) {
-            grrConfigDto = new GrrConfigDto();
-            grrConfigDto.setAnalysisMethod(GrrAnalysisMethod.ANOVA);
-            grrConfigDto.setCoverage(5.15);
-            grrConfigDto.setSignLevel("0.005");
-            grrConfigDto.setSortMethod("Appraisers");
-            grrConfigDto.setAlarmSetting(Arrays.asList(new Double[]{5.0, 10.0}));
         }
         return grrConfigDto;
     }
