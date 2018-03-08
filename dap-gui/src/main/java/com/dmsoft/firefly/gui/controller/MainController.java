@@ -7,6 +7,7 @@ import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -18,7 +19,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -184,15 +184,17 @@ public class MainController {
         templateBtn.setStyle("-fx-padding: 0 3 0 5");
         stateBar.addColumn(3, templateBtn);
 
+        initStateBarText();
+
         ProgressBar progressBar = new ProgressBar();
-        //progressBar.getStyleClass().add("state-bar-lbl");
         progressBar.setPrefHeight(10);
         progressBar.setMaxHeight(10);
         progressBar.setMinHeight(10);
         progressBar.setPrefWidth(110);
         progressBar.setMaxWidth(110);
         progressBar.setMinWidth(110);
-        progressBar.setPadding(new Insets(0, 0, 0, 5));
+        progressBar.getStyleClass().setAll("progress-bar-lg-green");
+        progressBar.setProgress(0.4);
 
         Label lblMemory = new Label(GuiFxmlAndLanguageUtils.getString("STATE_BAR_MEMORY"), progressBar);
         lblMemory.setPrefHeight(20);
@@ -213,8 +215,20 @@ public class MainController {
 
     }
 
+    private void initStateBarText() {
+        List<String> activeProjectNames = envService.findActivatedProjectName();
+        if (activeProjectNames != null && !activeProjectNames.isEmpty()) {
+            dataSourceBtn.setText(activeProjectNames.size() + GuiFxmlAndLanguageUtils.getString("STATE_BAR_FILE_SELECTED"));
+        }
+
+        TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
+        if (templateSettingDto != null) {
+            templateBtn.setText(templateSettingDto.getName());
+        }
+    }
+
     public void updateStateBarText(int selectedFileNumber, String selecteTemplateName) {
-        dataSourceBtn.setText(selectedFileNumber + " CSV Selected");
+        dataSourceBtn.setText(selectedFileNumber + GuiFxmlAndLanguageUtils.getString("STATE_BAR_FILE_SELECTED"));
         templateBtn.setText(selecteTemplateName);
     }
 
@@ -424,7 +438,6 @@ public class MainController {
     private void buildDataSourceDialog() {
         Pane root = null;
         try {
-//            root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/data_source.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source.fxml");
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createSimpleWindowAsModel("dataSource", GuiFxmlAndLanguageUtils.getString(ResourceMassages.DATASOURCE), root, getResource("css/platform_app.css").toExternalForm());
@@ -434,5 +447,4 @@ public class MainController {
             ex.printStackTrace();
         }
     }
-
 }

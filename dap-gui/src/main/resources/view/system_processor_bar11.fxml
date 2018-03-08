@@ -7,9 +7,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane style="-fx-background-color: transpant; -fx-border-color: transpant;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.SystemStartUpProcessorBarController">
+<AnchorPane style="-fx-background-color: transparent; -fx-border-color: transparent;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.SystemProcessorController">
    <children>
-   <AnchorPane fx:id="systemProcessBar" maxWidth="1.7976931348623157E308" style="-fx-background-color: rgba(255, 255, 255, 0.5); -fx-border-color: transpant;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <AnchorPane fx:id="systemProcessBar" maxWidth="1.7976931348623157E308" style="-fx-background-color: rgba(255, 255, 255, 0.5); -fx-border-color: transparent;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
       <children>
          <HBox alignment="CENTER" maxWidth="520.0" minWidth="520.0" prefHeight="170.0" prefWidth="520.0" style="-fx-background-color: #ffffff;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
             <children>

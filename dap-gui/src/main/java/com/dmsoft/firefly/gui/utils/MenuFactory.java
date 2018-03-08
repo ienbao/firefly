@@ -185,4 +185,12 @@ public class MenuFactory {
     public static void setAppController(AppController appController) {
         MenuFactory.appController = appController;
     }
+
+    public static MainController getMainController() {
+        return mainController;
+    }
+
+    public static AppController getAppController() {
+        return appController;
+    }
 }

@@ -16,11 +16,24 @@ public interface UserService {
     UserDto validateUser(String userName, String password);
 
     /**
-     * validate if login information is legal.
+     * update user password.
      *
      * @param userName name of user
      * @param oldPwd   password before updating
      * @param newPwd   password after updating
      */
     void updatePassword(String userName, String oldPwd, String newPwd);
+
+    /**
+     * update user legal.
+     *
+     * @param acceptLegal   accept Legal
+     */
+    void updateLegal(boolean acceptLegal);
+
+    /**
+     * find user legal.
+     *
+     */
+    boolean findLegal();
 }

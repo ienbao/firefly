@@ -15,6 +15,7 @@ import com.dmsoft.firefly.gui.utils.MessageManagerFactory;
 import com.dmsoft.firefly.gui.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.UserService;
 import com.dmsoft.firefly.sdk.job.core.InitJobPipeline;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.job.core.JobPipeline;
@@ -44,8 +45,10 @@ import java.lang.management.ManagementFactory;
 import static com.google.common.io.Resources.getResource;
 
 public class GuiApplication extends Application {
+
+    private UserService userService;
     public static final int TOTAL_LOAD_CLASS = 6261;
-    private SystemStartUpProcessorBarController systemStartUpProcessorBarController;
+    private SystemProcessorController systemProcessorController;
 
     private final String parentPath = this.getClass().getResource("/").getPath() + "config";
     private JsonMapper mapper = JsonMapper.defaultMapper();
@@ -70,7 +73,13 @@ public class GuiApplication extends Application {
         }
 //        DAPApplication.run(Lists.newArrayList(plugins));
         DAPApplication.initEnv();
-        buildProcessorBarDialog();
+        userService = RuntimeContext.getBean(UserService.class);
+
+       buildProcessorBarDialog();
+        if (StageMap.getStage(GuiConst.PLARTFORM_STAGE_PROCESS).isShowing()) {
+            updateProcessorBar();
+        }
+
         DAPApplication.startPlugin(Lists.newArrayList(plugins));
         RuntimeContext.registerBean(IMessageManager.class, new MessageManagerFactory());
         LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
@@ -87,7 +96,6 @@ public class GuiApplication extends Application {
 
         Pane root = fxmlLoader.load();
         Pane main = fxmlLoader1.load();
-
         MenuFactory.setMainController(fxmlLoader1.getController());
         MenuFactory.setAppController(fxmlLoader.getController());
 
@@ -108,45 +116,6 @@ public class GuiApplication extends Application {
         });
     }
 
-    private void buildProcessorBarDialog() {
-        Pane root = null;
-        try {
-            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/system_processor_bar.fxml");
-            root = fxmlLoader.load();
-            systemStartUpProcessorBarController = fxmlLoader.getController();
-            Effect shadowEffect = new DropShadow(BlurType.TWO_PASS_BOX, new Color(0, 0, 0, 0.2),
-                    10, 0, 0, 0);
-            root.setEffect(shadowEffect);
-            Scene tempScene = new Scene(root);
-            tempScene.getStylesheets().add(getResource("css/platform_app.css").toExternalForm());
-            tempScene.setFill(Color.TRANSPARENT);
-            Stage stage = new Stage();
-            stage.initStyle(StageStyle.TRANSPARENT);
-            stage.setScene(tempScene);
-            stage.setResizable(false);
-            stage.show();
-            StageMap.addStage(GuiConst.PLARTFORM_STAGE_PROCESS, stage);
-            if (stage.isShowing()) {
-                updateProcessorBar();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private void buildLoginDialog() {
-        Pane root = null;
-        try {
-            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/login.fxml");
-            root = fxmlLoader.load();
-            Stage stage = WindowFactory.createSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_LOGIN, GuiFxmlAndLanguageUtils.getString(ResourceMassages.DATASOURCE), root, getResource("css/platform_app.css").toExternalForm());
-            stage.setResizable(false);
-            stage.show();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
     public void updateProcessorBar() {
         Service<Integer> service = new Service<Integer>() {
             @Override
@@ -162,7 +131,12 @@ public class GuiApplication extends Application {
                             if (process >= 100) {
                                 Platform.runLater(() -> {
                                     StageMap.getStage(GuiConst.PLARTFORM_STAGE_PROCESS).close();
-                                    buildLoginDialog();
+                                    if (!userService.findLegal()) {
+                                        GuiFxmlAndLanguageUtils.buildLegalDialog();
+                                    } else {
+                                        StageMap.showStage(GuiConst.PLARTFORM_STAGE_MAIN);
+                                        GuiFxmlAndLanguageUtils.buildLoginDialog();
+                                    }
                                 });
                                 break;
                             }
@@ -173,9 +147,34 @@ public class GuiApplication extends Application {
             }
 
         };
-        systemStartUpProcessorBarController.getProgressBar().progressProperty().bind(service.progressProperty());
+
+        systemProcessorController.getProgressBar().progressProperty().bind(service.progressProperty());
         service.start();
     }
+
+    private void buildProcessorBarDialog() {
+        Pane root = null;
+        try {
+            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/system_processor_bar.fxml");
+            root = fxmlLoader.load();
+            systemProcessorController = fxmlLoader.getController();
+            Effect shadowEffect = new DropShadow(BlurType.TWO_PASS_BOX, new Color(0, 0, 0, 0.2),
+                    10, 0, 0, 0);
+            root.setEffect(shadowEffect);
+            Scene tempScene = new Scene(root);
+            tempScene.getStylesheets().add(getResource("css/platform_app.css").toExternalForm());
+            tempScene.setFill(Color.TRANSPARENT);
+            Stage stage = new Stage();
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.setScene(tempScene);
+            stage.setResizable(false);
+            stage.show();
+            StageMap.addStage(GuiConst.PLARTFORM_STAGE_PROCESS, stage);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 
     public static void main(String[] args) {
         launch(args);
