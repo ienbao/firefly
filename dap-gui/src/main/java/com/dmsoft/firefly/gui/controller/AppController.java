@@ -5,17 +5,14 @@ import com.dmsoft.firefly.gui.components.utils.JsonFileUtil;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
-import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginClass;
 import com.dmsoft.firefly.sdk.plugin.PluginClassType;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.plugin.apis.IConfig;
-import com.dmsoft.firefly.sdk.plugin.apis.IDataParser;
 import com.dmsoft.firefly.sdk.ui.IMenu;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -180,37 +177,6 @@ public class AppController {
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
-    }
-
-    public void exportAllConfig() {
-        PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
-        List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.CONFIG);
-//        List<String> name = Lists.newArrayList();
-        Map<String, String> config = Maps.newHashMap();
-        pluginClasses.forEach(v -> {
-            IConfig service = (IConfig) v.getInstance();
-//            name.add(((IConfig) v.getInstance()).getConfigName());
-            String name = service.getConfigName();
-            if (StringUtils.isNotEmpty(name)) {
-                config.put(service.getConfigName(), new String(service.exportConfig()));
-            }
-        });
-        String str = System.getProperty("user.home");
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Spc Config export");
-        fileChooser.setInitialDirectory(new File(str));
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("JSON", "*.json")
-        );
-        Stage fileStage = null;
-        File file = fileChooser.showSaveDialog(fileStage);
-
-        if (file != null) {
-            if (config != null) {
-                JsonFileUtil.writeJsonFile(config, file);
-                logger.debug("Export success");
-            }
         }
     }
 

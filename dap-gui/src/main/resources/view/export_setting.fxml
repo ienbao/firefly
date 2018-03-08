@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="410.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.ExportSettingController">
+   <children>
+      <TableView fx:id="settingTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+        <columns>
+          <TableColumn fx:id="selector" editable="false" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" sortable="false" />
+          <TableColumn fx:id="settings" editable="false" prefWidth="75.0" sortable="false" text="Settings" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+       <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="200.0" spacing="10.0" GridPane.columnSpan="4" GridPane.rowIndex="4">
+           <children>
+               <Button fx:id="exportBtn" alignment="CENTER" mnemonicParsing="false" prefWidth="80.0" text="%EXPORT_BTN" />
+               <Button fx:id="cancelBtn" alignment="CENTER" mnemonicParsing="false" prefWidth="80.0" text="%CANCEL_BTN">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin></Button>
+           </children>
+       </HBox>
+   </children>
+   <padding>
+      <Insets left="10.0" right="10.0" top="10.0" />
+   </padding>
+</VBox>
