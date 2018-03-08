@@ -66,6 +66,7 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
             spcPathName += "anova.R";
         }
         String scriptPath = RuntimeContext.getBean(PluginContext.class).getEnabledPluginInfo(GrrPlugin.GRR_PLUGIN_ID).getFolderPath() + "/" + spcPathName;
+        scriptPath = scriptPath.replace('\\', '/');
         connector.execEval("source(\"" + scriptPath + "\")");
         double[] dataArray = new double[dataDto.getDataList().size()];
         for (int i = 0; i < dataDto.getDataList().size(); i++) {
