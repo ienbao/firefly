@@ -11,7 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-public class SimpleWindowFactoryTest extends Application{
+public class WindowMessageFactoryTest extends Application{
     static {
         FxmlAndLanguageUtils.isDebug = true;
     }
@@ -42,9 +42,6 @@ public class SimpleWindowFactoryTest extends Application{
         okAndCancelMenuItem.setOnAction(event -> {
             WindowMessageController windowMessageController = WindowMessageFactory.createWindowMessage("Message", "fdsffdsfsfsfsfsfsdfs fdsfsffdsfdf sfdsfds fsfdsfsfdsfdsfdsfsdfsfsdfsdf");
             windowMessageController.showOKAndCancel();
-            windowMessageController.getOkBtn().setOnAction(event1 -> {
-                System.out.println("fdsf");
-            });
         });
 
         MenuItem progressMenuItem = new MenuItem("Progress");
