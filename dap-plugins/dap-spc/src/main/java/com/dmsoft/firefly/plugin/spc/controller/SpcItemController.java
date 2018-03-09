@@ -140,6 +140,7 @@ public class SpcItemController implements Initializable {
         item.getStyleClass().add("filter-header");
         item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
         initItemData();
+        item.setPrefWidth(150);
     }
 
     private void initBtnIcon() {

@@ -33,7 +33,7 @@
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
                                  <columns>
-                                    <TableColumn fx:id="select" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" sortType="DESCENDING" sortable="false" />
+                                    <TableColumn fx:id="select" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" sortType="DESCENDING" sortable="false" />
                                     <TableColumn fx:id="item" prefWidth="62.0" />
                                  </columns>
                               </TableView>
