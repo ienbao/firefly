@@ -246,16 +246,15 @@ public class SpcItemController implements Initializable {
         Map paramMap = Maps.newHashMap();
 
         List<String> projectNameList = envService.findActivatedProjectName();
-        List<TestItemWithTypeDto> testItemWithTypeDtoList = this.getSelectedItemDto();
-        List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(testItemWithTypeDtoList);
+        List<TestItemWithTypeDto> selectedItemDto = this.getSelectedItemDto();
+        List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
+        List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(selectedItemDto);
         SpcAnalysisConfigDto spcAnalysisConfigDto = this.buildSpcAnalysisConfigData();
-        List<String> testItemList = this.buildSpcAnalysisTestItem();
 
         paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
         paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
         paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
-        paramMap.put(ParamKeys.SPC_ANALYSIS_TEST_ITEM, testItemList);
 
         spcMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
         Platform.runLater(() -> {
@@ -591,9 +590,23 @@ public class SpcItemController implements Initializable {
         return searchConditionDtoList;
     }
 
-    private List<String> buildSpcAnalysisTestItem() {
+    private List<TestItemWithTypeDto> buildSelectTestItemWithTypeData(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
+        List<TestItemWithTypeDto> itemWithTypeDtoList = Lists.newArrayList();
+        itemWithTypeDtoList.addAll(testItemWithTypeDtoList);
+        List<String> conditionTestItemList = getConditionTestItem();
+        if (conditionTestItemList != null) {
+            for (String testItem : conditionTestItemList) {
+                TestItemWithTypeDto testItemWithTypeDto = envService.findTestItemNameByItemName(testItem);
+                itemWithTypeDtoList.add(testItemWithTypeDto);
+            }
+        }
+        return itemWithTypeDtoList;
+    }
+
+    private List<String> getConditionTestItem() {
         List<String> conditionList = getSearch();
         List<String> testItemList = getSelectedItem();
+        List<String> conditionTestItemList = Lists.newArrayList();
         List<String> timeKeys = Lists.newArrayList();
         String timePattern = null;
         try {
@@ -606,11 +619,12 @@ public class SpcItemController implements Initializable {
         for (String condition : conditionList) {
             Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);
             for (String conditionTestItem : conditionTestItemSet) {
-                if (!testItemList.contains(conditionTestItem)) {
-                    testItemList.add(conditionTestItem);
+                if (!testItemList.contains(conditionTestItem) && !conditionTestItemList.contains(conditionTestItem)) {
+                    conditionTestItemList.add(conditionTestItem);
                 }
             }
         }
-        return testItemList;
+        return conditionTestItemList;
     }
+
 }
