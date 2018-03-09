@@ -47,7 +47,7 @@ import static com.google.common.io.Resources.getResource;
 public class GuiApplication extends Application {
 
     private UserService userService;
-    public static final int TOTAL_LOAD_CLASS = 6261;
+    public static final int TOTAL_LOAD_CLASS = 5700;
     private SystemProcessorController systemProcessorController;
 
     private final String parentPath = this.getClass().getResource("/").getPath() + "config";

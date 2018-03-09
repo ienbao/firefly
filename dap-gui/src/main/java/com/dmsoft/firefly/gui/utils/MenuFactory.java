@@ -6,12 +6,10 @@ import com.dmsoft.firefly.gui.controller.AppController;
 import com.dmsoft.firefly.gui.controller.MainController;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
-import com.dmsoft.firefly.sdk.plugin.apis.IConfig;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -42,10 +40,6 @@ public class MenuFactory {
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(createFileMenu());
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(createPreferenceMenu());
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(createHelpMenu());
-    }
-
-    public static void resetMenu() {
-        appController.resetMenu();
     }
 
     private static MenuBuilder createFileMenu() {
@@ -109,18 +103,18 @@ public class MenuFactory {
         en.setOnAction(event -> {
             if (en.isSelected()) {
                 envService.setLanguageType(LanguageType.EN);
-                MenuFactory.mainController.resetMain();
                 initMenu();
-                resetMenu();
+                appController.resetMenu();
+                mainController.resetMain();
                 StageMap.getAllStage().clear();
             }
         });
         zh.setOnAction(event -> {
             if (zh.isSelected()) {
                 envService.setLanguageType(LanguageType.ZH);
-                MenuFactory.mainController.resetMain();
                 initMenu();
-                resetMenu();
+                appController.resetMenu();
+                mainController.resetMain();
                 StageMap.getAllStage().clear();
             }
         });
@@ -175,7 +169,6 @@ public class MenuFactory {
     private static void buildPluginManageDialog() {
         Pane root = null;
         try {
-            //root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/plugin.fxml");
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("pluginManage", GuiFxmlAndLanguageUtils.getString(ResourceMassages.PLUGIN_MANAGE), root, getResource("css/platform_app.css").toExternalForm());

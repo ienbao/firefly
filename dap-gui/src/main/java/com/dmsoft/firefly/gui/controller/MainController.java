@@ -4,6 +4,7 @@ import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.component.ContentStackPane;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
+import com.dmsoft.firefly.gui.model.UserModel;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -117,11 +118,17 @@ public class MainController {
     }
 
     private void setActiveMain(String name, Button activeBtn, PluginUIContext pc) {
-        if (activeBtn.getId().equals(name)) {
-            setActiveBtnStyle(activeBtn);
-            Pane pane = pc.getMainBodyPane(name).getNewPane();
-            pane.setId(name);
-            initTab(name, pane);
+        UserModel userModel = UserModel.getInstance();
+        if (userModel != null && userModel.getUser() != null) {
+            grpContent.setDisable(false);
+            if (activeBtn.getId().equals(name)) {
+                setActiveBtnStyle(activeBtn);
+                Pane pane = pc.getMainBodyPane(name).getNewPane();
+                pane.setId(name);
+                initTab(name, pane);
+            }
+        } else {
+            grpContent.setDisable(true);
         }
     }
 
