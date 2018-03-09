@@ -363,8 +363,8 @@ public class MainController {
 
         if (projectName != null) {
             Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
-            Map<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, "Default");
-            envService.setTestItems(new ArrayList(itemWithTypeDtoMap.values()));
+            LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, "Default");
+            envService.setTestItems(itemWithTypeDtoMap);
             envService.setActivatedProjectName(projectName);
         } else {
             projectName = Lists.newArrayList();
