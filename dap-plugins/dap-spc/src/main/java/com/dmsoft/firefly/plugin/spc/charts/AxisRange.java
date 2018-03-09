@@ -3,13 +3,13 @@ package com.dmsoft.firefly.plugin.spc.charts;
 /**
  * Created by cherry on 2018/3/2.
  */
-public interface AxisRange {
+public interface AxisRange <X extends Number, Y extends Number>{
 
-    Number getXLowerBound();
+    X getXLowerBound();
 
-    Number getXUpperBound();
+    X getXUpperBound();
 
-    Number getYLowerBound();
+    Y getYLowerBound();
 
-    Number getYUpperBound();
+    Y getYUpperBound();
 }
