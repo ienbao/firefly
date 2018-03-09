@@ -11,6 +11,7 @@ import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import com.google.common.collect.Lists;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class EnvServiceImpl implements EnvService {
 
     private String userName = "admin";
     private String templateName;
-    private List<TestItemWithTypeDto> testItemDtos;
+    private LinkedHashMap<String, TestItemWithTypeDto> testItemDtos;
     private List<String> projectNames;
     private List<String> plugNames;
     private JsonMapper mapper = JsonMapper.defaultMapper();
@@ -82,22 +83,27 @@ public class EnvServiceImpl implements EnvService {
 
     @Override
     public List<TestItemWithTypeDto> findTestItems() {
-        return testItemDtos != null ? testItemDtos : Lists.newArrayList();
+        return testItemDtos != null ? Lists.newArrayList(testItemDtos.values()) : Lists.newArrayList();
     }
 
     @Override
     public List<String> findTestItemNames() {
-        List<String> itemNames = Lists.newArrayList();
         if (testItemDtos != null) {
-            for (TestItemWithTypeDto dto : testItemDtos) {
-                itemNames.add(dto.getTestItemName());
-            }
+            return Lists.newArrayList(testItemDtos.keySet());
         }
-        return itemNames;
+        return Lists.newArrayList();
     }
 
     @Override
-    public void setTestItems(List<TestItemWithTypeDto> testItems) {
+    public TestItemWithTypeDto findTestItemNameByItemName(String itemName) {
+        if (testItemDtos != null) {
+            return testItemDtos.get(itemName);
+        }
+        return null;
+    }
+
+    @Override
+    public void setTestItems(LinkedHashMap<String, TestItemWithTypeDto> testItems) {
         testItemDtos = testItems;
     }
 

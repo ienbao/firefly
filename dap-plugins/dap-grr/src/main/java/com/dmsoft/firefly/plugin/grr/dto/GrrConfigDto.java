@@ -3,6 +3,7 @@ package com.dmsoft.firefly.plugin.grr.dto;
 import com.dmsoft.firefly.plugin.grr.utils.enums.GrrAnalysisMethod;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by GuangLi on 2018/3/7.
@@ -13,7 +14,7 @@ public class GrrConfigDto {
     private String signLevel;
     private String sortMethod;
     private List<Double> alarmSetting;
-    private List<String> export;
+    private Map<String, Boolean> export;
 
     public GrrAnalysisMethod getAnalysisMethod() {
         return analysisMethod;
@@ -55,11 +56,11 @@ public class GrrConfigDto {
         this.alarmSetting = alarmSetting;
     }
 
-    public List<String> getExport() {
+    public Map<String, Boolean> getExport() {
         return export;
     }
 
-    public void setExport(List<String> export) {
+    public void setExport(Map<String, Boolean> export) {
         this.export = export;
     }
 }

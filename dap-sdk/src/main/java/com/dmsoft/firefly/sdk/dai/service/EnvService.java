@@ -7,6 +7,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -92,11 +93,19 @@ public interface EnvService {
     List<String> findTestItemNames();
 
     /**
+     * find test item by item name
+     *
+     * @param itemName name
+     * @return test item
+     */
+    TestItemWithTypeDto findTestItemNameByItemName(String itemName);
+
+    /**
      * method to set TestItemWithTypeDto list
      *
-     * @param testItems TestItemWithTypeDto list
+     * @param testItems TestItemWithTypeDto map
      */
-    void setTestItems(List<TestItemWithTypeDto> testItems);
+    void setTestItems(LinkedHashMap<String, TestItemWithTypeDto> testItems);
 
     /**
      * method to get language type

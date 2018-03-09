@@ -4,6 +4,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -80,5 +81,5 @@ public interface TemplateService {
      * @param templateName   template name
      * @return test item with type dto map
      */
-    Map<String, TestItemWithTypeDto> assembleTemplate(Map<String, TestItemDto> testItemDtoMap, String templateName);
+    LinkedHashMap<String, TestItemWithTypeDto> assembleTemplate(Map<String, TestItemDto> testItemDtoMap, String templateName);
 }

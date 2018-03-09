@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.plugin.spc.dto.chart;
+package com.dmsoft.firefly.plugin.spc.charts.data;
 
 /**
  * Created by cherry on 2018/2/27.

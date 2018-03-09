@@ -122,7 +122,7 @@ public class SpcMainController implements Initializable {
         SearchDataFrame subDataFrame = this.buildSubSearchDataFrame(searchConditionDtoList);
         paramMap.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
         Platform.runLater(() -> {
-            manager.doJobASyn(job, paramMap, new JobDoComplete() {
+            manager.doJobASyn(job, new JobDoComplete() {
                 @Override
                 public void doComplete(Object returnValue) {
                     System.out.println("ASyn result = " + (returnValue == null ? "null" : returnValue));
@@ -133,7 +133,7 @@ public class SpcMainController implements Initializable {
                     SearchDataFrame searchDataFrame = initData();
 
                 }
-            });
+            }, paramMap);
         });
         viewDataController.setViewData(subDataFrame);
     }
@@ -212,7 +212,7 @@ public class SpcMainController implements Initializable {
                 testItemNameList.add(searchConditionDto.getItemName());
             }
         }
-        List<String> rowKeyList = Lists.newArrayList();
+        List<String> rowKeyList = dataFrame.getAllRowKeys();
         SearchDataFrame subDataFrame = dataFrame.subDataFrame(rowKeyList, testItemNameList);
         return subDataFrame;
     }

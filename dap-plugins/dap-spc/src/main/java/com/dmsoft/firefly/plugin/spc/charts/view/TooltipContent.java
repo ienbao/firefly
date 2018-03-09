@@ -27,7 +27,7 @@ public class TooltipContent extends HBox {
         Label q1Lbl = new Label("Q1:");
         Label maxLbl = new Label("Max:");
         Label minLbl = new Label("Min:");
-        Label medianLbl = new Label("Median");
+        Label medianLbl = new Label("Median:");
         leftVBox.getChildren().addAll(medianLbl, minLbl, maxLbl, q1Lbl, q3Lbl);
         rightVBox.getChildren().addAll(medianVLbl, minVLbl, maxVLbl, q1VLbl, q3VLbl);
         leftVBox.getStyleClass().removeAll("candlestick-tooltip-box");

@@ -7,9 +7,9 @@ import javafx.scene.paint.Color;
  */
 public interface IBoxAndWhiskerData {
 
-    Number getxPosByIndex(int index);
+    Number getXPosByIndex(int index);
 
-    Number getMeanByIndex(int index);
+    Number getMeanByIndex(int index);   //cl
 
     Number getMedianByIndex(int index);
 

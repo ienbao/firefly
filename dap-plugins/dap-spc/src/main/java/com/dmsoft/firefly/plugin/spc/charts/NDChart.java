@@ -1,11 +1,8 @@
 package com.dmsoft.firefly.plugin.spc.charts;
 
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBarChartData;
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.LineData;
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.PointTooltip;
+import com.dmsoft.firefly.plugin.spc.charts.data.BarCategoryData;
+import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
 import com.dmsoft.firefly.plugin.spc.charts.utils.ReflectionUtils;
-import com.dmsoft.firefly.plugin.spc.dto.chart.BarCategoryData;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.google.common.collect.Maps;
 import com.sun.javafx.charts.Legend;
@@ -93,13 +90,11 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
      * @param categoryGap  The gap to leave between bars in separate categories
      */
     public NDChart(Axis<X> xAxis, Axis<Y> yAxis, IBarChartData<X, Y> barChartData, double categoryGap) {
-
         this(xAxis, yAxis, barChartData);
         setCategoryGap(categoryGap);
     }
 
     public void createChartSeries(IBarChartData<X, Y> barChartData) {
-
         XYChart.Series oneSeries = this.buildSeries(barChartData);
         this.getData().add(oneSeries);
         this.setSeriesDataStyleByDefault(oneSeries, barChartData.getColor());
@@ -135,14 +130,12 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         this.areaSeriesNode.paintAreaSeries(this);
     }
 
-    public void addValueMarker(LineData lineData) {
-
+    public void addValueMarker(ILineData lineData) {
         Line line = valueMarker.buildValueMarker(lineData);
         getPlotChildren().add(line);
     }
 
     public void toggleValueMarker(String lineName, boolean showed) {
-
         valueMarker.toggleValueMarker(lineName, showed);
     }
 

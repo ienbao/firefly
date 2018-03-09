@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.charts.view;
 
-import com.dmsoft.firefly.plugin.spc.charts.SelectCallBack;
+import com.dmsoft.firefly.plugin.spc.charts.select.SelectCallBack;
 import com.dmsoft.firefly.plugin.spc.charts.utils.enums.Orientation;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

@@ -260,8 +260,8 @@ public class DataSourceController implements Initializable {
 
             envService.setActivatedProjectName(selectProject);
             envService.setActivatedTemplate("default");
-            Map<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, "Default");
-            envService.setTestItems(new ArrayList(itemWithTypeDtoMap.values()));
+            LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, "Default");
+            envService.setTestItems(itemWithTypeDtoMap);
 
             //TODO notify refresh event
 
