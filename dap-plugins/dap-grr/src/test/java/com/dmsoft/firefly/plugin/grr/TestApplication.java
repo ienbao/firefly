@@ -12,12 +12,14 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -37,11 +39,11 @@ public class TestApplication extends Application {
     public void start(Stage primaryStage) throws Exception {
         UserPreferenceService userPreferenceService = new UserPreferenceServiceImpl();
         EnvService envService = new EnvServiceImpl();
-        List<TestItemWithTypeDto> typeDtoList = Lists.newArrayList();
+        LinkedHashMap<String, TestItemWithTypeDto> typeDtoList = Maps.newLinkedHashMap();
         for (int i = 0; i < 20; i++) {
             TestItemWithTypeDto testItemWithTypeDto = new TestItemWithTypeDto();
             testItemWithTypeDto.setTestItemName("itemName" + i);
-            typeDtoList.add(testItemWithTypeDto);
+            typeDtoList.put("itemName" + i, testItemWithTypeDto);
         }
         envService.setTestItems(typeDtoList);
         DataFrameFactory dataFrameFactory = new BasicDataFrameFactoryImpl();
