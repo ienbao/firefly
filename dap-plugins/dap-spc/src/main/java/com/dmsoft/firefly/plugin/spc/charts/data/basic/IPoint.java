@@ -7,9 +7,11 @@ import javafx.scene.paint.Color;
  */
 public interface IPoint<X, Y> {
 
-    X getX();
+    X getXByIndex(int index);
 
-    Y getY();
+    Y getYByIndex(int index);
 
-    Color getColor();
+    default Color getColor() {
+        return Color.RED;
+    }
 }

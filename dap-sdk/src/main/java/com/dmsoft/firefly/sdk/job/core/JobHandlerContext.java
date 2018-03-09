@@ -50,6 +50,7 @@ public interface JobHandlerContext {
 
     <T> void fireJobEvent(T result);
 
+    @Deprecated
     void fireProcessEvent(ProcessResult process);
 
     ProcessMonitorListener getContextProcessMonitorListenerIfExists();

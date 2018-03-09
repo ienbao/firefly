@@ -26,8 +26,11 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
 
     @Override
     public SpcStatsResultDto analyzeStatsResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
-        REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
         SpcStatsResultDto resultDto = new SpcStatsResultDto();
+        if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
+            return resultDto;
+        }
+        REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
         if (DAPStringUtils.isNumeric(dataDto.getLsl())) {
             connector.setInput("lsl", Double.valueOf(dataDto.getLsl()));
             resultDto.setLsl(Double.valueOf(dataDto.getLsl()));
@@ -135,6 +138,10 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
 
     @Override
     public NDCResultDto analyzeNDCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
+        NDCResultDto resultDto = new NDCResultDto();
+        if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
+            return resultDto;
+        }
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
         if (dataDto.getNdcMax() != null) {
             connector.setInput("ndcMax", dataDto.getNdcMax());
@@ -146,7 +153,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         } else {
             connector.setInput("ndcMin", Double.NaN);
         }
-        NDCResultDto resultDto = getNDCResult(connector, dataDto);
+        resultDto = getNDCResult(connector, dataDto);
         while (connector.isActive()) {
             connector.disconnect();
         }
@@ -157,8 +164,12 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
 
     @Override
     public RunCResultDto analyzeRunCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
+        RunCResultDto resultDto = new RunCResultDto();
+        if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
+            return resultDto;
+        }
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
-        RunCResultDto resultDto = getRunCResult(connector, dataDto);
+        resultDto = getRunCResult(connector, dataDto);
         while (connector.isActive()) {
             connector.disconnect();
         }
@@ -168,19 +179,27 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
 
     @Override
     public SpcControlChartDto analyzeXbarCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
+        SpcControlChartDto resultDto = new SpcControlChartDto();
+        if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
+            return resultDto;
+        }
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
-        SpcControlChartDto result = getXbarCResult(connector);
+        resultDto = getXbarCResult(connector);
         while (connector.isActive()) {
             connector.disconnect();
         }
         RUtils.getSemaphore().release();
-        return result;
+        return resultDto;
     }
 
     @Override
     public SpcControlChartDto analyzeRangeCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
+        SpcControlChartDto result = new SpcControlChartDto();
+        if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
+            return result;
+        }
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
-        SpcControlChartDto result = getRangeCResult(connector);
+        result = getRangeCResult(connector);
         while (connector.isActive()) {
             connector.disconnect();
         }
@@ -190,8 +209,12 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
 
     @Override
     public SpcControlChartDto analyzeSdCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
+        SpcControlChartDto result = new SpcControlChartDto();
+        if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
+            return result;
+        }
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
-        SpcControlChartDto result = getSdCResult(connector);
+        result = getSdCResult(connector);
         while (connector.isActive()) {
             connector.disconnect();
         }
@@ -201,8 +224,12 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
 
     @Override
     public SpcControlChartDto analyzeMeCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
+        SpcControlChartDto result = new SpcControlChartDto();
+        if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
+            return result;
+        }
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
-        SpcControlChartDto result = getMeCResult(connector);
+        result = getMeCResult(connector);
         while (connector.isActive()) {
             connector.disconnect();
         }
@@ -212,8 +239,12 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
 
     @Override
     public SpcControlChartDto analyzeMrCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
+        SpcControlChartDto result = new SpcControlChartDto();
+        if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
+            return result;
+        }
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
-        SpcControlChartDto result = getMrCResult(connector);
+        result = getMrCResult(connector);
         while (connector.isActive()) {
             connector.disconnect();
         }
@@ -223,8 +254,12 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
 
     @Override
     public BoxCResultDto analyzeBoxCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
+        BoxCResultDto result = new BoxCResultDto();
+        if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
+            return result;
+        }
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
-        BoxCResultDto result = getBoxCResult(connector);
+        result = getBoxCResult(connector);
         while (connector.isActive()) {
             connector.disconnect();
         }
@@ -235,7 +270,12 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
     @Override
     public SpcChartResultDto analyzeSpcChartResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
         SpcChartResultDto result = new SpcChartResultDto();
+        if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
+            return result;
+        }
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
+        connector.setInput("ndcMax", dataDto.getNdcMax());
+        connector.setInput("ndcMin", dataDto.getNdcMin());
         result.setNdcResult(getNDCResult(connector, dataDto));
         result.setRunCResult(getRunCResult(connector, dataDto));
         result.setXbarCResult(getXbarCResult(connector));
@@ -254,6 +294,9 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
     @Override
     public SpcChartResultDto analyzeSpcChartResult(SpcAnalysisDataDto dataDto, List<SpcChartType> requiredCharts, SpcAnalysisConfigDto configDto) {
         SpcChartResultDto result = new SpcChartResultDto();
+        if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
+            return result;
+        }
         REnConnector connector = prepareConnect(dataDto.getDataList(), configDto);
         for (SpcChartType chartType : requiredCharts) {
             switch (chartType) {

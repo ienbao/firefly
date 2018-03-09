@@ -12,7 +12,6 @@ public class ParamKeys {
     public static final String SEARCH_DATA_FRAME = "searchDataFrame";
     public static final String SEARCH_CONDITION_DTO_LIST = "searchConditionDtoList";
     public static final String SPC_ANALYSIS_CONFIG_DTO = "spcAnalysisConfigDto";
-    public static final String SPC_ANALYSIS_TEST_ITEM = "spcAnalysisTestItem";
 
     //handler
     public static final String FIND_TEST_DATA_HANDLER = "findTestDataHandler";

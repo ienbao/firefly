@@ -5,9 +5,12 @@
 package com.dmsoft.firefly.gui.controller.template;
 
 import com.dmsoft.bamboo.common.monitor.ProcessResult;
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
+import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.plugin.PluginClass;
@@ -54,6 +57,9 @@ public class ResolverSelectController implements Initializable {
     @FXML
     private CheckBox defaultTemplate;
 
+    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+private JsonMapper mapper = JsonMapper.defaultMapper();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initEvent();
@@ -70,7 +76,18 @@ public class ResolverSelectController implements Initializable {
         resolverData = FXCollections.observableArrayList(name);
         resolver.setItems(resolverData);
         if (name.size() > 0) {
-            resolver.getSelectionModel().select(0);
+            String defaultResolver = userPreferenceService.findPreferenceByUserId("defaultResolver", "admin");
+            String resolverName;
+            if (DAPStringUtils.isNotBlank(defaultResolver)) {
+                resolverName = mapper.fromJson(defaultResolver, String.class);
+                if (DAPStringUtils.isNotBlank(resolverName)) {
+                    resolver.getSelectionModel().select(resolverName);
+                } else {
+                    resolver.getSelectionModel().select(0);
+                }
+            } else {
+                resolver.getSelectionModel().select(0);
+            }
         }
     }
 
@@ -78,6 +95,12 @@ public class ResolverSelectController implements Initializable {
         nextStep.setOnAction(event -> {
 
             String resolverName = resolver.getSelectionModel().getSelectedItem().toString();
+
+            UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+            userPreferenceDto.setUserName("admin");
+            userPreferenceDto.setCode("defaultResolver");
+            userPreferenceDto.setValue(resolverName);
+            userPreferenceService.updatePreference(userPreferenceDto);
 
             if (DAPStringUtils.isEmpty(resolverName)) {
                 //TODO 出错交互

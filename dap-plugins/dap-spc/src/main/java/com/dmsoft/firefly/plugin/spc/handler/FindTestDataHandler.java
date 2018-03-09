@@ -5,10 +5,12 @@ import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionCode;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.core.JobHandlerContext;
 import com.dmsoft.firefly.sdk.job.core.JobInboundHandler;
+import com.google.common.collect.Lists;
 
 import java.util.List;
 import java.util.Map;
@@ -27,7 +29,11 @@ public class FindTestDataHandler implements JobInboundHandler {
         }
         Map<String, Object> param = (Map) in[0];
         List<String> projectNameList = (List<String>) param.get(ParamKeys.PROJECT_NAME_LIST);
-        List<String> testItemNames = (List<String>) param.get(ParamKeys.SPC_ANALYSIS_TEST_ITEM);
+        List<TestItemWithTypeDto> testItemWithTypeDtoList = (List<TestItemWithTypeDto>) param.get(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST);
+        List<String> testItemNames = Lists.newArrayList();
+        for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtoList) {
+            testItemNames.add(testItemWithTypeDto.getTestItemName());
+        }
 
         List<RowDataDto> dataDtoList = RuntimeContext.getBean(SourceDataService.class).findTestData(projectNameList, testItemNames);
         param.put(ParamKeys.ROW_DATA_DTO_LIST, dataDtoList);

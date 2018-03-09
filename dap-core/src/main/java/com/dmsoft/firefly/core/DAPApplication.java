@@ -62,7 +62,6 @@ public class DAPApplication {
         TemplateServiceImpl templateService = new TemplateServiceImpl();
         UserPreferenceServiceImpl userPreferenceService = new UserPreferenceServiceImpl();
         UserServiceImpl userService = new UserServiceImpl();
-        EnvServiceImpl envService = new EnvServiceImpl();
         EventContextImpl eventContext = new EventContextImpl();
         BasicDataFrameFactoryImpl dataFrameFactory = new BasicDataFrameFactoryImpl();
         MongoClient mongoClient = new MongoClient("localhost");
@@ -78,7 +77,10 @@ public class DAPApplication {
         RuntimeContext.registerBean(TemplateService.class, templateService);
         RuntimeContext.registerBean(UserPreferenceService.class, userPreferenceService);
         RuntimeContext.registerBean(UserService.class, userService);
-        RuntimeContext.registerBean(EnvService.class, proxyClass(envService));
+
+        EnvServiceImpl envService = new EnvServiceImpl();
+        RuntimeContext.registerBean(EnvService.class, envService);
+
         RuntimeContext.registerBean(EventContext.class, eventContext);
         RuntimeContext.registerBean(MongoTemplate.class, mongoTemplate);
         RuntimeContext.registerBean(DataFrameFactory.class, dataFrameFactory);
@@ -117,11 +119,6 @@ public class DAPApplication {
         RuntimeContext.getBean(PluginContext.class).startPlugin(activePlugins);
     }
 
-    private static EnvService proxyClass(EnvService envService) {
-        EnvService envServiceProxy = (EnvService) Proxy.newProxyInstance(envService.getClass().getClassLoader(), envService.getClass().getInterfaces(), new EnvServiceHandler(envService));
-        return envServiceProxy;
-    }
-
     /**
      * main method
      *
@@ -132,27 +129,4 @@ public class DAPApplication {
         startPlugin(Lists.newArrayList("com.dmsoft.dap.SpcPlugin"));
     }
 
-    static class EnvServiceHandler implements InvocationHandler {
-
-        private EnvService target;
-
-        public EnvServiceHandler(EnvService target) {
-            this.target = target;
-        }
-
-        @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            Field templateService = target.getClass().getDeclaredField("templateService");
-            Field userPreferenceService = target.getClass().getDeclaredField("userPreferenceService");
-            if (templateService != null) {
-                templateService.setAccessible(true);
-                templateService.set(target, RuntimeContext.getBean(TemplateService.class));
-            }
-            if (userPreferenceService != null) {
-                userPreferenceService.setAccessible(true);
-                userPreferenceService.set(target, RuntimeContext.getBean(UserPreferenceService.class));
-            }
-            return method.invoke(target, args);
-        }
-    }
 }
