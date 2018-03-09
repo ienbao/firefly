@@ -70,17 +70,18 @@ public class NDChartApp extends Application {
         xyChartData.setY(y);
         xyChartData.setColor(barColor);
 
-        NDChart<Double, Double> chart = new NDChart(xAxis, yAxis, barChartData);
+        NDChart<Double, Double> chart = new NDChart(xAxis, yAxis);
         chart.addAreaSeries(xyChartData);
+        chart.createChartSeries(barChartData);
 
         barChartData.setSeriesName("aaaaa");
         barChartData.setBarData(_barCategoryData);
         barChartData.setColor(Color.GREEN);
 
-        chart.createChartSeries(barChartData);
-        xyChartData.setColor(Color.GREEN);
-        xyChartData.setY(y1);
-        chart.addAreaSeries(xyChartData);
+//        chart.createChartSeries(barChartData);
+//        xyChartData.setColor(Color.GREEN);
+//        xyChartData.setY(y1);
+//        chart.addAreaSeries(xyChartData);
 
         VBox vBox = new VBox();
         HBox hBox = new HBox();

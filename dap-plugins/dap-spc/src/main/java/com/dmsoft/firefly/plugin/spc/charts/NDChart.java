@@ -76,7 +76,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         this.setLegendVisible(false);
     }
 
-    public NDChart(Axis<X> xAxis, Axis<Y> yAxis, IBarChartData<X, Y> barChartData) {
+    private NDChart(Axis<X> xAxis, Axis<Y> yAxis, IBarChartData<X, Y> barChartData) {
         this(xAxis, yAxis);
         this.createChartSeries(barChartData);
     }
@@ -361,8 +361,8 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
 
     @Override
     protected void layoutPlotChildren() {
-        this.paintAreaSeries();
         this.paintBarPlot();
+        this.paintAreaSeries();
         valueMarker.paintValueMaker(this);
     }
 
