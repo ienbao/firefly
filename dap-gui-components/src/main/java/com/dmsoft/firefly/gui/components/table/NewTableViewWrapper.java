@@ -30,7 +30,6 @@ public class NewTableViewWrapper {
      */
     @SuppressWarnings("unchecked")
     public static void decorate(TableView<String> tableView, NewTableModel model) {
-        tableView.getItems().clear();
         tableView.getColumns().clear();
         List<TableColumn<String, ?>> columns = Lists.newArrayList();
         for (String s : model.getHeaderArray()) {
