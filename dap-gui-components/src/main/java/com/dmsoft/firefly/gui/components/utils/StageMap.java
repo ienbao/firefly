@@ -150,7 +150,7 @@ public final class StageMap {
      * @param styles    styles
      * @return Whether to load stage success or not
      */
-    public static Stage loadAndRefreshStage(String name, Object title, Pane resources, boolean modality, boolean isWindowX, List<String> cusStyles, StageStyle... styles) {
+    public static Stage loadAndRefreshStage(String name, Object title, Pane resources, boolean modality, int windowModel, List<String> cusStyles, StageStyle... styles) {
         try {
             WindowPane windowPane = null;
             if (title instanceof String) {
@@ -160,9 +160,7 @@ public final class StageMap {
                 windowPane = new WindowPane((Pane) title, resources);
             }
 
-            if (isWindowX) {
-                windowPane.setWindowsModel(WindowPane.WINDOW_MODEL_X);
-            }
+            windowPane.setWindowsModel(windowModel);
             Stage tempStage = null;
 
             if (StageMap.getStage(name) == null) {

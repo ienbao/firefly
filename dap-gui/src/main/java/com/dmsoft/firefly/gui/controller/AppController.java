@@ -18,6 +18,7 @@ import com.google.common.collect.Lists;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import org.apache.commons.lang3.StringUtils;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -34,45 +35,57 @@ public class AppController {
     private final Logger logger = LoggerFactory.getLogger(AppController.class);
 
     @FXML
+    private GridPane menuPane;
+    @FXML
     private MenuBar menuSystem;
 
-    @FXML
     private MenuItem menuLoginOut;
-
-    @FXML
     private MenuItem menuChangePassword;
-
-    @FXML
-    private MenuButton loginMenuBtn;
 
     @FXML
     private void initialize() {
         updateMenuSystem();
         initMenuBar();
-        initEvent();
+    }
+
+    private void initMainMenuButton() {
+        menuPane.getChildren().clear();
+        MenuButton loginMenuBtn = new MenuButton();
+        UserModel userModel = UserModel.getInstance();
+        if (userModel != null && userModel.getUser() != null) {
+            loginMenuBtn.setText(userModel.getUser().getUserName());
+            menuLoginOut = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_LOGIN_OUT"));
+            menuChangePassword = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_CHANGE_PASSWORD"));
+            loginMenuBtn.getItems().addAll(menuChangePassword, menuLoginOut);
+            menuPane.addColumn(1, loginMenuBtn);
+            initEvent();
+        }
+    }
+
+    private void initLoginMenuButton() {
+        menuPane.getChildren().clear();
+        Button loginMenuBtn = new Button();
+        loginMenuBtn.getStyleClass().add("btn-txt");
+        loginMenuBtn.setText(GuiFxmlAndLanguageUtils.getString("MENU_PLEASE_LOGIN"));
+        menuPane.addColumn(1, loginMenuBtn);
+        loginMenuBtn.setOnMouseClicked(event -> {
+            GuiFxmlAndLanguageUtils.buildLoginDialog();
+        });
     }
 
     public void resetMenu() {
         updateMenuSystem();
+        menuPane.addColumn(0, menuSystem);
     }
 
     public void updateMenuSystem() {
         UserModel userModel = UserModel.getInstance();
         if (userModel != null && userModel.getUser() != null) {
             menuSystem.setDisable(false);
-            loginMenuBtn.setText(userModel.getUser().getUserName());
-            menuChangePassword.setVisible(true);
-            menuLoginOut.setVisible(true);
+            initMainMenuButton();
         } else {
             menuSystem.setDisable(true);
-            menuChangePassword.setVisible(false);
-            menuLoginOut.setVisible(false);
-            loginMenuBtn.setText(GuiFxmlAndLanguageUtils.getString("MENU_PLEASE_LOGIN"));
-            loginMenuBtn.setOnMouseClicked(event -> {
-                if (userModel == null || userModel.getUser() == null) {
-                    GuiFxmlAndLanguageUtils.buildLoginDialog();
-                }
-            });
+            initLoginMenuButton();
         }
     }
 
@@ -152,6 +165,7 @@ public class AppController {
                 }
             }
         });
+        menuPane.addColumn(0, menuSystem);
     }
 
 

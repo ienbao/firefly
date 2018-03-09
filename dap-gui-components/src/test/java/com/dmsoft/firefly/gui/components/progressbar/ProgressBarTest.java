@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.gui.components.progressbar;
 
+import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -8,6 +9,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class ProgressBarTest extends Application {
+
+    static {
+        FxmlAndLanguageUtils.isDebug = true;
+    }
+
     @Override
     public void start(Stage primaryStage) {
         double y = 15;

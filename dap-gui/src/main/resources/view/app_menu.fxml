@@ -5,7 +5,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.AppController">
    <children>
-      <GridPane layoutX="-39.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <GridPane fx:id="menuPane" layoutX="-39.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" />
             <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="1.7976931348623157E308" />
@@ -15,12 +15,6 @@
         </rowConstraints>
          <children>
             <MenuBar fx:id="menuSystem" maxWidth="1.7976931348623157E308" style="-fx-background-color: transparent;" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER" />
-            <MenuButton fx:id="loginMenuBtn" mnemonicParsing="false" GridPane.columnIndex="1">
-              <items>
-                <MenuItem fx:id="menuChangePassword" mnemonicParsing="false" text="%MENU_CHANGE_PASSWORD" />
-                <MenuItem fx:id="menuLoginOut" mnemonicParsing="false" text="%MENU_LOGIN_OUT" />
-              </items>
-            </MenuButton>
          </children>
       </GridPane>
    </children>
