@@ -40,9 +40,6 @@ public class LoginController {
         ImageView imageReset = new ImageView(new Image("/images/icon_choose_one_gray.png"));
         imageReset.setFitHeight(16);
         imageReset.setFitWidth(16);
-/*
-        userNameTxt.set(imageReset);
-*/
         loginImageView.setImage(new Image("/images/top_title_logo.png"));
         loginBtn.setOnAction(event -> {
             loginBtn.getStyleClass().add("btn-primary-loading");
@@ -50,8 +47,8 @@ public class LoginController {
                 UserModel userModel = UserModel.getInstance();
                 if (userModel != null) {
                     StageMap.getStage(GuiConst.PLARTFORM_STAGE_LOGIN).close();
+                    MenuFactory.getAppController().resetMenu();
                     MenuFactory.getMainController().resetMain();
-                    MenuFactory.getAppController().updateLoginMenuBtn();
                 }
                 loginBtn.getStyleClass().removeAll("btn-primary-loading");
             }
