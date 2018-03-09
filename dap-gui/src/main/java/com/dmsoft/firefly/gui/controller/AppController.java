@@ -47,21 +47,32 @@ public class AppController {
 
     @FXML
     private void initialize() {
-        updateLoginMenuBtn();
+        updateMenuSystem();
         initMenuBar();
         initEvent();
     }
 
     public void resetMenu() {
-        menuSystem.getMenus().clear();
-        initialize();
+        updateMenuSystem();
     }
 
-    public void updateLoginMenuBtn() {
-        loginMenuBtn.setText(GuiFxmlAndLanguageUtils.getString("MENU_PLEASE_LOGIN"));
+    public void updateMenuSystem() {
         UserModel userModel = UserModel.getInstance();
         if (userModel != null && userModel.getUser() != null) {
+            menuSystem.setDisable(false);
             loginMenuBtn.setText(userModel.getUser().getUserName());
+            menuChangePassword.setVisible(true);
+            menuLoginOut.setVisible(true);
+        } else {
+            menuSystem.setDisable(true);
+            menuChangePassword.setVisible(false);
+            menuLoginOut.setVisible(false);
+            loginMenuBtn.setText(GuiFxmlAndLanguageUtils.getString("MENU_PLEASE_LOGIN"));
+            loginMenuBtn.setOnMouseClicked(event -> {
+                if (userModel == null || userModel.getUser() == null) {
+                    GuiFxmlAndLanguageUtils.buildLoginDialog();
+                }
+            });
         }
     }
 
@@ -72,9 +83,9 @@ public class AppController {
         menuLoginOut.setOnAction(event -> {
             UserModel.getInstance().setUser(null);
             StageMap.unloadStage(GuiConst.PLARTFORM_STAGE_LOGIN);
+            resetMenu();
+            MenuFactory.getMainController().resetMain();
             GuiFxmlAndLanguageUtils.buildLoginDialog();
-            updateLoginMenuBtn();
-
         });
     }
 

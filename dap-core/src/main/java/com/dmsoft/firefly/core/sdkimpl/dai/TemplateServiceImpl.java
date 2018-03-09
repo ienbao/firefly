@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -172,7 +173,7 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
     @Override
-    public Map<String, TestItemWithTypeDto> assembleTemplate(Map<String, TestItemDto> testItemDtoMap, String templateName) {
+    public LinkedHashMap<String, TestItemWithTypeDto> assembleTemplate(Map<String, TestItemDto> testItemDtoMap, String templateName) {
         String json = JsonFileUtil.readJsonFile(parentPath, fileName);
         if (json == null) {
             logger.debug("Don`t find " + fileName);
@@ -184,7 +185,7 @@ public class TemplateServiceImpl implements TemplateService {
                 curr = dto;
             }
         }
-        Map<String, TestItemWithTypeDto> result = Maps.newLinkedHashMap();
+        LinkedHashMap<String, TestItemWithTypeDto> result = Maps.newLinkedHashMap();
 
         if (curr != null) {
             for (String item : testItemDtoMap.keySet()) {

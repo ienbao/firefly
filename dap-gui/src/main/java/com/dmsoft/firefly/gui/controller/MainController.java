@@ -4,6 +4,7 @@ import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.component.ContentStackPane;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
+import com.dmsoft.firefly.gui.model.UserModel;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -117,11 +118,17 @@ public class MainController {
     }
 
     private void setActiveMain(String name, Button activeBtn, PluginUIContext pc) {
-        if (activeBtn.getId().equals(name)) {
-            setActiveBtnStyle(activeBtn);
-            Pane pane = pc.getMainBodyPane(name).getNewPane();
-            pane.setId(name);
-            initTab(name, pane);
+        UserModel userModel = UserModel.getInstance();
+        if (userModel != null && userModel.getUser() != null) {
+            grpContent.setDisable(false);
+            if (activeBtn.getId().equals(name)) {
+                setActiveBtnStyle(activeBtn);
+                Pane pane = pc.getMainBodyPane(name).getNewPane();
+                pane.setId(name);
+                initTab(name, pane);
+            }
+        } else {
+            grpContent.setDisable(true);
         }
     }
 
@@ -363,8 +370,8 @@ public class MainController {
 
         if (projectName != null) {
             Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
-            Map<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, "Default");
-            envService.setTestItems(new ArrayList(itemWithTypeDtoMap.values()));
+            LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, "Default");
+            envService.setTestItems(itemWithTypeDtoMap);
             envService.setActivatedProjectName(projectName);
         } else {
             projectName = Lists.newArrayList();
