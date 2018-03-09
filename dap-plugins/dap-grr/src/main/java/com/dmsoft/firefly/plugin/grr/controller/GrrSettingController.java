@@ -10,6 +10,7 @@ import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.grr.utils.enums.GrrAnalysisMethod;
 import com.dmsoft.firefly.sdk.utils.StringUtils;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -20,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by GuangLi on 2018/3/6.
@@ -56,6 +58,7 @@ public class GrrSettingController {
     private ToggleGroup group = new ToggleGroup();
 
     private GrrConfigServiceImpl grrConfigService = new GrrConfigServiceImpl();
+    private Map<String, Boolean> grrExportSetting = Maps.newHashMap();
 
     @FXML
     private void initialize() {
@@ -79,6 +82,9 @@ public class GrrSettingController {
     private void initConfigData() {
         GrrConfigDto grrConfigDto = grrConfigService.findGrrConfig();
         if (grrConfigDto != null) {
+            if (grrConfigDto.getExport() != null) {
+                grrExportSetting = grrConfigDto.getExport();
+            }
             if (grrConfigDto.getAnalysisMethod().equals(GrrAnalysisMethod.ANOVA)) {
                 anova.setSelected(true);
                 anova.requestFocus();
@@ -88,35 +94,20 @@ public class GrrSettingController {
             sort.setValue(grrConfigDto.getSortMethod());
             levelGood.setText(grrConfigDto.getAlarmSetting().get(0).toString());
             levelBad.setText(grrConfigDto.getAlarmSetting().get(1).toString());
-
         }
     }
 
     private void initEvent() {
         exportBtn.setOnAction(event -> buildExportDia());
         ok.setOnAction(event -> {
-            GrrConfigDto grrConfigDto = new GrrConfigDto();
-            if (anova.isSelected()) {
-                grrConfigDto.setAnalysisMethod(GrrAnalysisMethod.ANOVA);
-            } else {
-                grrConfigDto.setAnalysisMethod(GrrAnalysisMethod.XbarAndRange);
-            }
-            grrConfigDto.setCoverage(coverage.getValue());
-            grrConfigDto.setSignLevel(sign.getText());
-            grrConfigDto.setSortMethod(sort.getValue());
-            List<Double> alarm = Lists.newArrayList();
-            alarm.add(Double.valueOf(levelGood.getText()));
-            alarm.add(Double.valueOf(levelBad.getText()));
-            grrConfigDto.setAlarmSetting(alarm);
-
-            grrConfigService.saveGrrConfig(grrConfigDto);
+            saveGrrSetting();
             StageMap.closeStage("grrSetting");
         });
         cancel.setOnAction(event -> {
             StageMap.closeStage("grrSetting");
         });
         apply.setOnAction(event -> {
-            StageMap.closeStage("grrSetting");
+            saveGrrSetting();
         });
     }
 
@@ -147,13 +138,33 @@ public class GrrSettingController {
         });
     }
 
+    private void saveGrrSetting() {
+        GrrConfigDto grrConfigDto = new GrrConfigDto();
+        if (anova.isSelected()) {
+            grrConfigDto.setAnalysisMethod(GrrAnalysisMethod.ANOVA);
+        } else {
+            grrConfigDto.setAnalysisMethod(GrrAnalysisMethod.XbarAndRange);
+        }
+        grrConfigDto.setCoverage(coverage.getValue());
+        grrConfigDto.setSignLevel(sign.getText());
+        grrConfigDto.setSortMethod(sort.getValue());
+        List<Double> alarm = Lists.newArrayList();
+        alarm.add(Double.valueOf(levelGood.getText()));
+        alarm.add(Double.valueOf(levelBad.getText()));
+        grrConfigDto.setAlarmSetting(alarm);
+        grrConfigDto.setExport(grrExportSetting);
+        grrConfigService.saveGrrConfig(grrConfigDto);
+    }
 
     private void buildExportDia() {
         Pane root = null;
         try {
             FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_export_setting.fxml");
+            GrrExportSettingController controller = new GrrExportSettingController();
+            controller.setData(grrExportSetting);
+            fxmlLoader.setController(controller);
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createSimpleWindowAsModel("grrExportSetting", GrrFxmlAndLanguageUtils.getString(ResourceMassages.GRR_EXPORT_SETTING_TITLE), root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrExportSetting", GrrFxmlAndLanguageUtils.getString(ResourceMassages.GRR_EXPORT_SETTING_TITLE), root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
             stage.show();
 
         } catch (Exception ex) {

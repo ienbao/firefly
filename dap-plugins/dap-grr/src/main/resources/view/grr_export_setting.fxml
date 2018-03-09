@@ -7,27 +7,27 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="415.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #DCDCDC;" VBox.vgrow="ALWAYS">
+      <VBox fx:id="pane" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #DCDCDC;" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
          <children>
-            <CheckBox mnemonicParsing="false" text="%EXPORT_DETIAL">
+            <CheckBox fx:id="eds" mnemonicParsing="false" text="%EXPORT_DETIAL">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>
             </CheckBox>
-            <CheckBox mnemonicParsing="false" text="%EXPORT_SOURCE">
+            <CheckBox fx:id="esr" mnemonicParsing="false" text="%EXPORT_SOURCE">
                <VBox.margin>
                   <Insets left="30.0" top="10.0" />
                </VBox.margin>
             </CheckBox>
-            <CheckBox mnemonicParsing="false" text="%EXPORT_CHARTS">
+            <CheckBox fx:id="ec" mnemonicParsing="false" text="%EXPORT_CHARTS">
                <VBox.margin>
                   <Insets bottom="10.0" left="30.0" top="10.0" />
                </VBox.margin>
             </CheckBox>
-            <GridPane>
+            <GridPane fx:id="chartPane">
               <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" />
@@ -39,20 +39,20 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <CheckBox mnemonicParsing="false" text="%CHART_1" GridPane.columnIndex="1" />
-                  <CheckBox mnemonicParsing="false" text="%CHART_2" GridPane.columnIndex="2" />
-                  <CheckBox mnemonicParsing="false" text="%CHART_3" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <CheckBox mnemonicParsing="false" text="%CHART_4" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <CheckBox mnemonicParsing="false" text="%CHART_5" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <CheckBox mnemonicParsing="false" text="%CHART_6" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <CheckBox fx:id="rrPart" mnemonicParsing="false" text="%CHART_1" GridPane.columnIndex="1" />
+                  <CheckBox fx:id="rrAppraiser" mnemonicParsing="false" text="%CHART_2" GridPane.columnIndex="2" />
+                  <CheckBox fx:id="rc" mnemonicParsing="false" text="%CHART_3" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <CheckBox mnemonicParsing="false" text="%CHART_4" GridPane.columnIndex="2" GridPane.rowIndex="1" fx:id="xbar" />
+                  <CheckBox fx:id="pai" mnemonicParsing="false" text="%CHART_5" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <CheckBox fx:id="cov" mnemonicParsing="false" text="%CHART_6" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                </children>
             </GridPane>
-            <RadioButton mnemonicParsing="false" text="%EXPORT_TOLERANCE">
+            <RadioButton fx:id="tolerance" mnemonicParsing="false" text="%EXPORT_TOLERANCE">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </RadioButton>
-            <RadioButton mnemonicParsing="false" text="%EXPORT_SYSTEM">
+            <RadioButton fx:id="system" mnemonicParsing="false" text="%EXPORT_SYSTEM">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
