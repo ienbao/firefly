@@ -26,31 +26,28 @@ public class BrokenLineApp extends Application {
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         LinearChart chart = new LinearChart(xAxis, yAxis);
-        Double x[] = new Double[]{1D, 2D, 2D, 3D, 3D, 6D, 6D, 8D, 8D, 10D};
-        Double y[] = new Double[]{1D, 1D, 10D, 10D, 2D, 2D, 30D, 30D, 200D, 200D};
 
-        List<IPoint> points = Lists.newArrayList();
+
 //        BrokenLine brokenLine = new BrokenLine();
-        for (int i = 0; i < x.length; i++) {
-            IPoint point = new IPoint<Double, Double>() {
+        IPoint point = new IPoint<Double, Double>() {
+            Double x[] = new Double[]{1D, 2D, 2D, 3D, 3D, 6D, 6D, 8D, 8D, 10D};
+            Double y[] = new Double[]{1D, 1D, 10D, 10D, 2D, 2D, 30D, 30D, 200D, 200D};
 
-                @Override
-                public Double getXByIndex(int index) {
-                    return x[index];
-                }
+            @Override
+            public Double getXByIndex(int index) {
+                return x[index];
+            }
 
-                @Override
-                public Double getYByIndex(int index) {
-                    return y[index];
-                }
+            @Override
+            public Double getYByIndex(int index) {
+                return y[index];
+            }
 
-                @Override
-                public int getLen() {
-                    return x == null ? 0 : x.length;
-                }
-            };
-            points.add(point);
-        }
+            @Override
+            public int getLen() {
+                return x == null ? 0 : x.length;
+            }
+        };
 
         chart.getData().add(new XYChart.Series<>(FXCollections.observableArrayList(
                 new XYChart.Data<>(1D, 1D),
@@ -67,8 +64,8 @@ public class BrokenLineApp extends Application {
 
         IPathData data = new IPathData() {
             @Override
-            public List<IPoint> getPoints() {
-                return points;
+            public IPoint getPoints() {
+                return point;
             }
 
             @Override
@@ -81,15 +78,13 @@ public class BrokenLineApp extends Application {
                 return Color.BLUE;
             }
         };
-        chart.addPathMarker(data);
+        chart.addPathMarker(Lists.newArrayList(data), "");
         return chart;
     }
 
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-
 
         VBox vBox = new VBox();
         vBox.getChildren().add(createContent());

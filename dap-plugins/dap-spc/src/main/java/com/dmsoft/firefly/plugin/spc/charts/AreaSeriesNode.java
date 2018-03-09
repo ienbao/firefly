@@ -3,6 +3,7 @@ package com.dmsoft.firefly.plugin.spc.charts;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.utils.ReflectionUtils;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -25,6 +26,8 @@ import java.util.*;
 public class AreaSeriesNode<X, Y> {
 
     private ObservableList<XYChart.Series<X, Y>> areaSeries = FXCollections.observableArrayList();
+//    private Map<String, Path> fillPathMap = Maps.newHashMap();
+//    private Map<String, Path> seriesPathMap = Maps.newHashMap();
 
     private Map<XYChart.Series, Color> colorMap = Maps.newHashMap();
 
@@ -33,6 +36,8 @@ public class AreaSeriesNode<X, Y> {
         Path seriesLine = new Path();
         Path fillPath = new Path();
         seriesLine.setStrokeLineJoin(StrokeLineJoin.MITER);
+//        fillPathMap.put(unique, fillPath);
+//        seriesPathMap.put(unique, seriesLine);
 
         fillPath.getStyleClass().add("chart-fill-area-line");
         fillPath.setStyle("-fx-fill: " + ColorUtils.toHexFromFXColor(color));
@@ -45,6 +50,20 @@ public class AreaSeriesNode<X, Y> {
         colorMap.put(series, color);
         series.setNode(areaGroup);
         return areaGroup;
+    }
+
+    public void updateColor(Color color) {
+        if (color == null || DAPStringUtils.isBlank(ColorUtils.toHexFromFXColor(color))) {
+            return;
+        }
+        for (int seriesIndex = 0; seriesIndex < areaSeries.size(); seriesIndex++) {
+            XYChart.Series<X, Y> series = areaSeries.get(seriesIndex);
+            final ObservableList<Node> children = ((Group) series.getNode()).getChildren();
+            Path seriesLine = ((Path) children.get(1));
+            Path fillPath = ((Path) children.get(0));
+            fillPath.setStyle("-fx-fill: " + ColorUtils.toHexFromFXColor(color));
+            seriesLine.setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
+        }
     }
 
     public void toggleAreaSeries(boolean showed) {

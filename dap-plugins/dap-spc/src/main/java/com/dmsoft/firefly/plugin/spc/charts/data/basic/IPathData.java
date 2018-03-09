@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface IPathData {
 
-    List<IPoint> getPoints();
+    IPoint getPoints();
 
     String getPathName();
 

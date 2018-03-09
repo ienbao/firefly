@@ -35,13 +35,18 @@ import java.util.function.Function;
  */
 public class NDChart<X, Y> extends XYChart<X, Y> {
 
-    private AreaSeriesNode<X, Y> areaSeriesNode = new AreaSeriesNode<>();
+//    private AreaSeriesNode<X, Y> areaSeriesNode = new AreaSeriesNode<>();
     private Map<Series, Map<Object, Data<X, Y>>> seriesCategoryMap = new HashMap<>();
     private Map<XYChart.Data, BarCategoryData<X, Y>> barCategoryDataMap = Maps.newHashMap();
     private Data<X, Y> dataItemBeingRemoved = null;
     private Series<X, Y> seriesOfDataRemoved = null;
 
-    private ValueMarker valueMarker = new ValueMarker();
+    private Map<String, Group> groupMap = Maps.newHashMap();
+    private Map<String, XYChart.Series> seriesMap = Maps.newHashMap();
+
+    //    private ValueMarker valueMarker = new ValueMarker();
+    private Map<String, ValueMarker> valueMarkerMap = Maps.newHashMap();
+    private Map<String, AreaSeriesNode> areaSeriesNodeMap = Maps.newHashMap();
 
     private ValueAxis valueAxis;
     private Timeline dataRemoveTimeline;
@@ -95,12 +100,13 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
 //        setCategoryGap(categoryGap);
 //    }
 
-    public void createChartSeries(IBarChartData<X, Y> barChartData) {
-        createChartSeries(barChartData, null);
+    public void createChartSeries(IBarChartData<X, Y> barChartData, String unique) {
+        createChartSeries(barChartData, unique, null);
     }
 
-    public void createChartSeries(IBarChartData<X, Y> barChartData, Color color) {
+    public void createChartSeries(IBarChartData<X, Y> barChartData, String unique, Color color) {
         XYChart.Series oneSeries = this.buildSeries(barChartData);
+        this.seriesMap.put(unique, oneSeries);
         this.getData().add(oneSeries);
         this.setSeriesDataStyleByDefault(oneSeries, color);
         this.setSeriesDataTooltip(oneSeries, null);
@@ -125,23 +131,34 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         return oneSeries;
     }
 
-    public void addAreaSeries(IXYChartData<X, Y> xyOneChartData, Color color) {
-        Group areaGroup = this.areaSeriesNode.buildAreaGroup(xyOneChartData, color);
+    public void addAreaSeries(IXYChartData<X, Y> xyOneChartData, String unique, Color color) {
+        AreaSeriesNode areaSeriesNode = new AreaSeriesNode();
+        Group areaGroup = areaSeriesNode.buildAreaGroup(xyOneChartData, color);
         areaGroup.setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
+        groupMap.put(unique, areaGroup);
+        areaSeriesNodeMap.put(unique, areaSeriesNode);
         getPlotChildren().add(areaGroup);
     }
 
     private void paintAreaSeries() {
-        this.areaSeriesNode.paintAreaSeries(this);
+        for (Map.Entry<String, AreaSeriesNode> areaSeriesNodeEntry : areaSeriesNodeMap.entrySet()) {
+            areaSeriesNodeEntry.getValue().paintAreaSeries(this);
+        }
     }
 
-    public void addValueMarker(ILineData lineData) {
-        Line line = valueMarker.buildValueMarker(lineData);
-        getPlotChildren().add(line);
+    public void addValueMarker(List<ILineData> lineData, String unique) {
+        ValueMarker valueMarker = new ValueMarker();
+        lineData.forEach(oneLineData -> {
+            Line line = valueMarker.buildValueMarker(oneLineData);
+            getPlotChildren().add(line);
+        });
+        valueMarkerMap.put(unique, valueMarker);
     }
 
     public void toggleValueMarker(String lineName, boolean showed) {
-        valueMarker.toggleValueMarker(lineName, showed);
+        for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
+            valueMarkerEntry.getValue().toggleValueMarker(lineName, showed);
+        }
     }
 
     public void toggleBarSeries(XYChart.Series<X, Y> series, boolean showed) {
@@ -155,7 +172,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     }
 
     public void toggleAreaSeries(boolean showed) {
-        this.areaSeriesNode.toggleAreaSeries(showed);
+        for (Map.Entry<String, AreaSeriesNode> areaSeriesNodeEntry : areaSeriesNodeMap.entrySet()) {
+            areaSeriesNodeEntry.getValue().toggleAreaSeries(showed);
+        }
     }
 
     private void setSeriesDataStyleByDefault(XYChart.Series series, Color color) {
@@ -370,7 +389,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     protected void layoutPlotChildren() {
         this.paintBarPlot();
         this.paintAreaSeries();
-        valueMarker.paintValueMaker(this);
+        for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
+            valueMarkerEntry.getValue().paintValueMaker(this);
+        }
     }
 
     public void removeAllChildren() {
@@ -380,11 +401,31 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         clearData();
     }
 
+    public void updateChartColor(String unique, Color color) {
+//        update chart color
+        if (groupMap.containsKey(unique)) {
+            groupMap.get(unique).setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
+        }
+        if (areaSeriesNodeMap.containsKey(unique)) {
+            areaSeriesNodeMap.get(unique).updateColor(color);
+        }
+        if (seriesMap.containsKey(unique)) {
+            setSeriesDataStyleByDefault(seriesMap.get(unique), color);
+        }
+//        update value maker color
+        if (valueMarkerMap.containsKey(unique)) {
+            ValueMarker valueMarker = valueMarkerMap.get(unique);
+            valueMarker.updateAllLineColor(color);
+        }
+    }
+
     private void clearData() {
         seriesCategoryMap.clear();
         barCategoryDataMap.clear();
-        valueMarker.clear();
         categories.clear();
+        for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
+            valueMarkerEntry.getValue().clear();
+        }
     }
 
     private void paintBarPlot() {

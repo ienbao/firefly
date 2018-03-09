@@ -88,7 +88,6 @@ public class ChartResultController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initChartPane();
-//        this.initChartData();
     }
 
     private void initChartPane() {
@@ -120,13 +119,6 @@ public class ChartResultController implements Initializable {
         chartTabPane.activeTabByIndex(0);
 
         analysisChartTab.setContent(chartTabPane);
-    }
-
-    private void initChartData() {
-        this.createNDChartData();
-        this.createRunChartData();
-        this.createXBarChartData();
-        this.createBoxChartData();
     }
 
     private void initNDChartPane() {
@@ -175,7 +167,6 @@ public class ChartResultController implements Initializable {
         editBtn.setData(Arrays.asList(itemNames));
         button.setListViewSize(140, 211);
         rRuleBtn.setListViewSize(140, 211);
-
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setTickMarkVisible(false);
@@ -188,15 +179,10 @@ public class ChartResultController implements Initializable {
         runChartPane.getCustomPane().getChildren().add(rRuleBtn);
         runChartPane.getCustomPane().getChildren().add(button);
         runChartPane.getCustomPane().getChildren().add(editBtn);
-
         runChartPane.getCustomPane().setMargin(editBtn, new Insets(0, 0, 0, 5));
         runChartPane.getCustomPane().setMargin(button, new Insets(0, 0, 0, 5));
 //        runChartPane.getCustomPane().setMargin(rRuleBtn, new Insets(0, 0, 0, 5));
-
-        editBtn.setCallBack(() -> {
-            runChart.clearAnnotation(annotationData);
-        });
-
+        editBtn.setCallBack(() -> runChart.clearAnnotation(annotationData));
         button.setSelectCallBack((name, selected, selectedNames) -> {
             if (UIConstant.SPC_CHART_RUN_EXTERN_MENU[8].equalsIgnoreCase(name)) {
                 ObservableList<XYChart.Series> series = runChart.getData();
@@ -296,208 +282,7 @@ public class ChartResultController implements Initializable {
         mrChartPane = new ChartPanel(new LinearChart(new NumberAxis(), new NumberAxis()));
     }
 
-    private void createXBarChartData() {
 
-        this.initLineRuleData();
-        XYChartData xyChartData = ruleXYChartData.getXyChartData();
-        LinearChart chart = xBarChartPane.getChart();
-        chart.createChartSeries(xyChartData, pointTooltipFunc);
-        xBarChartPane.activeChartDragging();
-        Map<String, LineData> lineDataMap = ruleXYChartData.getLineDataMap();
-        lineDataMap.forEach((key, value) -> {
-            chart.addValueMarker(value);
-        });
-        ObservableList<XYChart.Series> series = chart.getData();
-        series.forEach(oneSeries -> {
-            chart.setSeriesDataStyleByRule(oneSeries, Lists.newArrayList("R1"), rulePointFunc);
-        });
-    }
-
-    private void createRunChartData() {
-        this.initLineRuleData();
-        XYChartData xyChartData = ruleXYChartData.getXyChartData();
-        LinearChart runChart = runChartPane.getChart();
-        runChart.createChartSeries(xyChartData, pointTooltipFunc);
-
-        runChartPane.activeChartDragging();
-
-        Map<String, LineData> lineDataMap = ruleXYChartData.getLineDataMap();
-        lineDataMap.forEach((key, value) -> {
-            runChart.addValueMarker(value);
-        });
-
-        runChart.setSeriesAnnotationEvent(new AnnotationFetch() {
-            @Override
-            public String getValue(Object id) {
-                return "part1";
-            }
-
-            @Override
-            public String getTextColor() {
-                return textColor;
-            }
-
-            @Override
-            public boolean showedAnnotation() {
-                return editBtn.isShowAnnotation();
-            }
-
-            @Override
-            public void addData(XYChart.Data data) {
-                annotationData.add(data);
-            }
-        });
-    }
-
-    private void createNDChartData() {
-
-        Double[] x = new Double[]{1D, 4D, 7D, 10D, 13D, 16D, 19D, 22D, 25D, 28D};
-        Double[] y = new Double[10];
-        Double[] barWidth = new Double[10];
-
-        List<BarCategoryData<Double, Double>> barCategoryData = Lists.newArrayList();
-        XYChartData<Double, Double> xyChartData = new XYChartData();
-        Random random = new Random();
-        for (int i = 0; i < 10; i++) {
-            BarCategoryData<Double, Double> barCategoryData1 = new BarCategoryData();
-            double startValue = x[i];
-            double endValue = startValue + 2;
-            double value = random.nextInt(10);
-            y[i] = value;
-            barWidth[i] = (startValue + endValue) / 2;
-            barCategoryData1.setStartValue(startValue);
-            barCategoryData1.setEndValue(endValue);
-            barCategoryData1.setBarWidth(endValue - startValue);
-            barCategoryData1.setValue(value);
-            barCategoryData.add(barCategoryData1);
-        }
-        Color barColor = Color.BLUE;
-        String seriesName = "A1:All";
-        BarChartData<Double, Double> barChartData = new BarChartData<>(seriesName);
-        barChartData.setBarData(barCategoryData);
-        barChartData.setColor(barColor);
-
-        xyChartData.setX(x);
-        xyChartData.setY(y);
-        xyChartData.setColor(barColor);
-        xyChartData.setSeriesName(seriesName);
-        ndChartPane.getChart().addAreaSeries(xyChartData, barColor);
-        ndChartPane.getChart().createChartSeries(barChartData, barColor);
-        String[] lineNames = UIConstant.SPC_NDCCHART_LINE_NAME;
-        Random rand = new Random();
-        for (String lineName : lineNames) {
-            LineData lineData = new LineData();
-            lineData.setPlotOrientation(Orientation.VERTICAL);
-            LineType lineType = UIConstant.SPC_NDCCHART_LINE_NAME[4].equalsIgnoreCase(lineName) ?
-                    LineType.SOLID : LineType.DASHED;
-            String lineClass = lineType == LineType.SOLID ? "solid-line" : "dashed-line";
-            lineData.setTitle(seriesName);
-            lineData.setName(lineName);
-            lineData.setColor(Color.GREEN);
-            lineData.setLineClass(lineClass);
-            lineData.setLineType(lineType);
-            lineData.setValue(rand.nextInt(28));
-            ndChartPane.getChart().addValueMarker(lineData);
-        }
-        ndChartPane.activeChartDragging();
-    }
-
-    private void createBoxChartData() {
-
-        List<BoxExtraData> chartData = Lists.newArrayList();
-        chartData.add(new BoxExtraData(1, 27, 25, 20, 32, 16, 20));
-        chartData.add(new BoxExtraData(2, 28, 26, 30, 33, 22, 25));
-        chartData.add(new BoxExtraData(3, 29, 30, 38, 40, 20, 32));
-        chartData.add(new BoxExtraData(4, 27, 24, 30, 34, 22, 30));
-        chartData.add(new BoxExtraData(5, 28, 26, 36, 40, 24, 32));
-        chartData.add(new BoxExtraData(6, 30, 28, 38, 45, 25, 34));
-        chartData.add(new BoxExtraData(7, 36, 36, 30, 44, 28, 39));
-        chartData.add(new BoxExtraData(8, 35, 30, 18, 36, 16, 31));
-        chartData.add(new BoxExtraData(9, 42, 40, 50, 52, 36, 41));
-        chartData.add(new BoxExtraData(10, 35, 30, 34, 38, 28, 36));
-        chartData.add(new BoxExtraData(11, 30, 24, 12, 30, 8, 32.4));
-        chartData.add(new BoxExtraData(12, 31, 28, 40, 46, 25, 31.6));
-        chartData.add(new BoxExtraData(13, 34, 28, 18, 36, 14, 32.6));
-        chartData.add(new BoxExtraData(14, 39, 38, 30, 40, 26, 30.6));
-        chartData.add(new BoxExtraData(15, 30, 28, 33, 40, 28, 30.6));
-        chartData.add(new BoxExtraData(16, 28, 25, 10, 32, 6, 30.1));
-        chartData.add(new BoxExtraData(17, 30, 26, 30, 42, 18, 27.3));
-        chartData.add(new BoxExtraData(18, 25, 20, 18, 30, 10, 21.9));
-        chartData.add(new BoxExtraData(19, 21, 20, 10, 30, 5, 21.9));
-        chartData.add(new BoxExtraData(20, 29, 26, 16, 32, 10, 17.9));
-        chartData.add(new BoxExtraData(21, 40, 38, 40, 44, 32, 18.9));
-        chartData.add(new BoxExtraData(22, 30, 26, 40, 41, 12, 18.9));
-        chartData.add(new BoxExtraData(23, 32, 30, 18, 34, 10, 18.9));
-        chartData.add(new BoxExtraData(24, 20, 12, 23, 26, 12, 18.2));
-        chartData.add(new BoxExtraData(25, 32, 30, 40, 45, 16, 18.9));
-        chartData.add(new BoxExtraData(26, 27, 25, 35, 38, 20, 21.4));
-        chartData.add(new BoxExtraData(27, 29, 24, 12, 30, 8, 19.6));
-        chartData.add(new BoxExtraData(28, 28, 23, 44, 46, 15, 22.2));
-        chartData.add(new BoxExtraData(29, 30, 28, 18, 30, 12, 23));
-        chartData.add(new BoxExtraData(30, 32, 28, 18, 30, 12, 23.2));
-        chartData.add(new BoxExtraData(31, 29, 28, 18, 30, 12, 22));
-
-        BoxPlotChart chart = boxChartPane.getChart();
-        com.dmsoft.firefly.plugin.spc.dto.chart.BoxAndWhiskerData data = new com.dmsoft.firefly.plugin.spc.dto.chart.BoxAndWhiskerData();
-        data.setData(chartData);
-        data.setColor(Color.RED);
-        chart.createChartSeries(data);
-        boxChartPane.activeChartDragging();
-    }
-
-    private void initLineRuleData() {
-
-        Double x[] = new Double[]{1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D};
-        Double y[] = new Double[]{1D, 10D, 100D, 1000D, 2D, 20D, 30D, 40D, 200D, 2000D};
-        Double ids[] = new Double[]{1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D};
-        Double abnormalPointX[] = new Double[]{2D, 5D, 6D, 8D, 10D};
-        Double abnormalPointY[] = new Double[]{20D, 50D, 600D, 800D, 1000D};
-        Double brokenValue[] = new Double[]{9D, 35D, 1000D};
-        Map<String, LineData> lineDataMap = Maps.newHashMap();
-        Map<String, BrokenLineData> brokenLineDataMap = Maps.newHashMap();
-        Map<String, AbnormalPointData> abnormalPointDataMap = Maps.newHashMap();
-        String[] lineNames = UIConstant.SPC_XBARCHART_LINE_NAME;
-        Random rand = new Random();
-        for (String lineName : lineNames) {
-            LineData lineData = new LineData();
-            lineData.setPlotOrientation(Orientation.HORIZONTAL);
-            LineType lineType = UIConstant.SPC_XBARCHART_LINE_NAME[1].equalsIgnoreCase(lineName) ?
-                    LineType.SOLID : LineType.DASHED;
-            String lineClass = lineType == LineType.SOLID ? "solid-line" : "dashed-line";
-            lineData.setTitle(seriesName);
-            lineData.setName(lineName);
-            lineData.setColor(Color.GREEN);
-            lineData.setLineClass(lineClass);
-            lineData.setLineType(lineType);
-            lineData.setValue(rand.nextInt(2000));
-            lineDataMap.put(lineName, lineData);
-        }
-
-//        BrokenLineData brokenLineData = new BrokenLineData();
-//        String brokenName = "Broke Line";
-//        brokenLineData.setName(brokenName);
-//        brokenLineData.setColor("#e92822");
-//        brokenLineData.setValue(brokenValue);
-//        brokenLineDataMap.put(brokenName, brokenLineData);
-//
-//        AbnormalPointData abnormalPointData = new AbnormalPointData();
-//        abnormalPointData.setX(abnormalPointX);
-//        abnormalPointData.setY(abnormalPointY);
-//        abnormalPointData.setColor("#e92822");
-//        abnormalPointData.setName("R1");
-//        abnormalPointData.setVisible(true);
-//        abnormalPointDataMap.put("R1", abnormalPointData);
-
-        XYChartData<Double, Double> xyChartData = new XYChartData();
-        xyChartData.setX(x);
-        xyChartData.setY(y);
-        xyChartData.setIds(ids);
-        xyChartData.setColor(Color.GREEN);
-        xyChartData.setSeriesName(seriesName);
-        ruleXYChartData = new RuleXYChartData();
-        ruleXYChartData.setXyChartData(xyChartData);
-        ruleXYChartData.setLineDataMap(lineDataMap);
-    }
 
     /**
      * init main controller
@@ -528,7 +313,7 @@ public class ChartResultController implements Initializable {
             ndcChartDataList.add(iNdcChartData);
         }
 
-        this.setNdChartData("ND chart", ndcChartDataList);
+        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
     }
 
     public void setNdChartData(String chartName, List<INdcChartData> ndChartData) {
@@ -554,22 +339,41 @@ public class ChartResultController implements Initializable {
     }
 
     public void setControlChartData(String chartName, List<IControlChartData> controlChartData) {
-
+        Object chart = getChartByName(chartName);
+        if (chart != null && chart instanceof LinearChart) {
+            LinearChart linearChart = (LinearChart) chart;
+            if (chartMap.containsKey(chartName)) {
+//            clear chart
+                linearChart.removeAllChildren();
+            } else {
+                chartMap.put(chartName, linearChart);
+            }
+            setControlChartData(linearChart, controlChartData);
+        }
     }
 
     public void setBoxChartData(String chartName, List<IBoxChartData> boxChartData) {
-
+        BoxPlotChart chart = boxChartPane.getChart();
+        if (chartMap.containsKey(chartName)) {
+//            clear chart
+            chart.removeAllChildren();
+        } else {
+            chartMap.put(chartName, chart);
+        }
+        setBoxPlotChartData(boxChartData);
     }
 
     public void clearChartData() {
 
-//        for (Map.Entry<String, XYChart> chartMap : chartMap.entrySet()) {
-//            if (chartMap.getValue() instanceof NDChart) {
-//                ((NDChart) chartMap.getValue()).removeAllChildren();
-//            } else if (chartMap.getValue() instanceof LinearChart) {
-//                ((LinearChart) chartMap.getValue()).removeAllChildren();
-//            }
-//        }
+        for (Map.Entry<String, XYChart> chartMap : chartMap.entrySet()) {
+            if (chartMap.getValue() instanceof NDChart) {
+                ((NDChart) chartMap.getValue()).removeAllChildren();
+            } else if (chartMap.getValue() instanceof LinearChart) {
+                ((LinearChart) chartMap.getValue()).removeAllChildren();
+            } else if (chartMap.getValue() instanceof BoxPlotChart) {
+                ((BoxPlotChart) chartMap.getValue()).removeAllChildren();
+            }
+        }
     }
 
     public void updateChartColor(Color color) {
@@ -583,12 +387,12 @@ public class ChartResultController implements Initializable {
             IXYChartData curveData = chartData.getCurveData();
             List<ILineData> lineData = chartData.getLineData();
 //          add area data
-            chart.addAreaSeries(curveData, Color.GREEN);
+            chart.addAreaSeries(curveData, seriesName, Color.GREEN);
 //          add bar chart data
-            chart.createChartSeries(barChartData, Color.GREEN);
+            chart.createChartSeries(barChartData, seriesName, Color.GREEN);
 //                add line data
             if (lineData != null) {
-                lineData.forEach(oneLine -> chart.addValueMarker(oneLine));
+                chart.addValueMarker(lineData, seriesName);
             }
         });
     }
@@ -598,10 +402,58 @@ public class ChartResultController implements Initializable {
         runChartData.forEach(chartData -> {
             IXYChartData xyChartData = chartData.getXYChartData();
             List<ILineData> lineData = chartData.getLineData();
-            chart.createChartSeries(xyChartData, null);
+            chart.createChartSeries(xyChartData, seriesName, null);
             if (lineData != null) {
-                lineData.forEach(oneLine -> chart.addValueMarker(oneLine));
+                chart.addValueMarker(lineData, seriesName);
             }
         });
+    }
+
+    private void setControlChartData(LinearChart chart, List<IControlChartData> controlChartData) {
+        controlChartData.forEach(chartData -> {
+            IXYChartData xyChartData = chartData.getChartData();
+            List<ILineData> lineData = chartData.getLineData();
+            List<IPathData> pathData = chartData.getBrokenLineData();
+//            add chart data
+            chart.createChartSeries(xyChartData, seriesName, null);
+            if (lineData != null) {
+                chart.addValueMarker(lineData, seriesName);
+            }
+            if (pathData != null) {
+                chart.addPathMarker(pathData, seriesName);
+            }
+        });
+    }
+
+    private void setBoxPlotChartData(List<IBoxChartData> boxPlotChartData) {
+        BoxPlotChart chart = boxChartPane.getChart();
+        boxPlotChartData.forEach(chartData -> {
+            IBoxAndWhiskerData boxAndWhiskerData = chartData.getBoxAndWhiskerData();
+            IPoint points = chartData.getPoints();
+            chart.createChartSeries(boxAndWhiskerData, seriesName);
+            chart.addPoints(points, Color.GREEN);
+        });
+    }
+
+    private Object getChartByName(String name) {
+        if (UIConstant.SPC_CHART_NAME[0].equals(name)) {
+            return ndChartPane.getChart();
+        } else if (UIConstant.SPC_CHART_NAME[1].equals(name)) {
+            return runChartPane.getChart();
+        } else if (UIConstant.SPC_CHART_NAME[2].equals(name)) {
+            return xBarChartPane.getChart();
+        } else if (UIConstant.SPC_CHART_NAME[3].equals(name)) {
+            return rangeChartPane.getChart();
+        } else if (UIConstant.SPC_CHART_NAME[4].equals(name)) {
+            return sdChartPane.getChart();
+        } else if (UIConstant.SPC_CHART_NAME[5].equals(name)) {
+            return medianChartPane.getChart();
+        } else if (UIConstant.SPC_CHART_NAME[6].equals(name)) {
+            return boxChartPane.getChart();
+        } else if (UIConstant.SPC_CHART_NAME[7].equals(name)) {
+            return mrChartPane.getChart();
+        } else {
+            return null;
+        }
     }
 }

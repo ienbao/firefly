@@ -13,5 +13,5 @@ public interface IBoxChartData extends AxisRange {
 
     IBoxAndWhiskerData getBoxAndWhiskerData();
 
-    List<IPoint> getPoints();
+    IPoint getPoints();
 }

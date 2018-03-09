@@ -11,6 +11,7 @@ import javafx.geometry.Orientation;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 import java.util.Map;
@@ -82,12 +83,7 @@ public class ValueMarker<X, Y> {
         if (DAPStringUtils.isNotBlank(lineData.getLineClass())) {
             line.getStyleClass().setAll("line", lineData.getLineClass());
         }
-
-        //Set line color
-        String color = lineData.getColor() == null || DAPStringUtils.isBlank(ColorUtils.toHexFromFXColor(lineData.getColor()))
-                ? "black" : ColorUtils.toHexFromFXColor(lineData.getColor());
-        line.setStyle("-fx-stroke:" + color);
-
+        setLineColor(line, lineData.getColor());
         line.setOnMouseEntered(event -> {
             //Set tooltip
             String content = DAPStringUtils.isBlank(lineData.getTooltipContent()) ?
@@ -96,6 +92,13 @@ public class ValueMarker<X, Y> {
             Tooltip.install(line, new Tooltip(content));
         });
         return line;
+    }
+
+    private void setLineColor(Line line, Color color) {
+        //Set line color
+        String colorStr = color == null || DAPStringUtils.isBlank(ColorUtils.toHexFromFXColor(color))
+                ? "black" : ColorUtils.toHexFromFXColor(color);
+        line.setStyle("-fx-stroke:" + colorStr);
     }
 
     public void toggleValueMarker(String lineName, boolean showed) {
@@ -118,6 +121,16 @@ public class ValueMarker<X, Y> {
 
         if (lineMap.containsKey(lineName)) {
             lineMap.get(lineName).getStyleClass().remove("hidden-line");
+        }
+    }
+
+    /**
+     * Update all line color
+     * @param color
+     */
+    public void updateAllLineColor(Color color) {
+        for (Map.Entry<String, Line> stringLineMap : lineMap.entrySet()) {
+            setLineColor(stringLineMap.getValue(), color);
         }
     }
 

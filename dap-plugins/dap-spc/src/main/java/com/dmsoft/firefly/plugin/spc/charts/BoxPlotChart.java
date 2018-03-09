@@ -2,8 +2,10 @@ package com.dmsoft.firefly.plugin.spc.charts;
 
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxExtraData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBoxAndWhiskerData;
+import com.dmsoft.firefly.plugin.spc.charts.data.basic.IPoint;
 import com.dmsoft.firefly.plugin.spc.charts.view.Candle;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
+import com.google.common.collect.Maps;
 import javafx.animation.FadeTransition;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -22,16 +24,19 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by cherry on 2018/2/10.
  */
 public class BoxPlotChart extends XYChart<Number, Number> {
 
-    private ObservableList<Data<Number, Number>> outliers;
     private double candleWidth = 10;
     private boolean showLined = true;
     private boolean candleWidthByUnit = false;
+
+    private ObservableList<Data<Number, Number>> outliers;
+    private Map<String, Series> seriesMap = Maps.newHashMap();
 
     /**
      * Constructs a BoxPlotChart given the two axes. The initial content for the chart
@@ -42,19 +47,8 @@ public class BoxPlotChart extends XYChart<Number, Number> {
      * @param yAxis Y Axis for this XY chart
      */
     public BoxPlotChart(Axis<Number> xAxis, Axis<Number> yAxis) {
-        this(xAxis, yAxis, null);
-    }
-
-    /**
-     * Construct a new CandleStickChart with the given axis and data.
-     */
-    public BoxPlotChart(Axis<Number> xAxis, Axis<Number> yAxis, IBoxAndWhiskerData data) {
         super(xAxis, yAxis);
-        if (data == null) {
-            setData(FXCollections.observableArrayList());
-        } else {
-            createChartSeries(data);
-        }
+        setData(FXCollections.observableArrayList());
         setAnimated(false);
         xAxis.setAnimated(false);
         yAxis.setAnimated(false);
@@ -64,17 +58,18 @@ public class BoxPlotChart extends XYChart<Number, Number> {
 
     // -------------- METHODS ------------------------------------------------------------------------------------------
 
-    public void createChartSeries(IBoxAndWhiskerData data) {
+    public void createChartSeries(IBoxAndWhiskerData data, String unique) {
         if (data == null) {
             return;
         }
         XYChart.Series<Number, Number> series = buildSeries(data);
+        this.seriesMap.put(unique, series);
         this.getData().add(series);
         this.setSeriesDataStyleByDefault(series, data.getColor());
     }
 
     private Series buildSeries(IBoxAndWhiskerData data) {
-        XYChart.Series<Number, Number> series = new XYChart.Series<Number, Number>();
+        XYChart.Series<Number, Number> series = new XYChart.Series();
         for (int i = 0; i < data.getLen(); i++) {
 
             BoxExtraData boxExtraData = new BoxExtraData(
@@ -156,17 +151,28 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         ObservableList<Node> nodes = getPlotChildren();
         getPlotChildren().removeAll(nodes);
         getData().setAll(FXCollections.observableArrayList());
+        seriesMap.clear();
         outliers.setAll(FXCollections.observableArrayList());
     }
 
-    public void addSymbol(Data<Number, Number> symbol) {
+    public void addSymbol(Data<Number, Number> symbol, Color color) {
         Circle circle = new Circle();
         symbol.setNode(circle);
         getPlotChildren().add(circle);
         outliers.add(symbol);
         Tooltip.install(circle, new Tooltip("x: " + symbol.getXValue() + "   y: " + symbol.getYValue()));
-        circle.setFill(Color.RED);
+        circle.setFill(color);
         circle.setCache(true);
+    }
+
+    public void addPoints(IPoint points, Color color) {
+        int len = points.getLen();
+        for (int i = 0; i < len; i++) {
+            Data<Number, Number> data = new Data<>();
+            data.setXValue((Number) points.getXByIndex(i));
+            data.setYValue((Number) points.getYByIndex(i));
+            addSymbol(data, color);
+        }
     }
 
     public void removeSymbol(Data<Number, Number> symbol) {
@@ -178,6 +184,19 @@ public class BoxPlotChart extends XYChart<Number, Number> {
             symbol.setNode(null);
         }
         outliers.remove(symbol);
+    }
+
+    public void updateChartColor(String unique, Color color) {
+        if (seriesMap.containsKey(unique)) {
+            XYChart.Series<Number, Number> series = seriesMap.get(unique);
+//            update path color
+            setSeriesDataStyleByDefault(series, color);
+//            update box color
+            series.getData().forEach(dataItem -> {
+                Candle candle = (Candle) dataItem.getNode();
+                candle.updateStyleClasses(color);
+            });
+        }
     }
 
     public void addStroke() {
@@ -332,8 +351,6 @@ public class BoxPlotChart extends XYChart<Number, Number> {
             } else {
                 seriesPath.getElements().add(new LineTo(x, getYAxis().getDisplayPosition(extra.getMean())));
             }
-//            LineTo line = new LineTo(x + candleWidth, getYAxis().getDisplayPosition(extra.getMean()));
-//            seriesPath.getElements().add(line);
         }
     }
 

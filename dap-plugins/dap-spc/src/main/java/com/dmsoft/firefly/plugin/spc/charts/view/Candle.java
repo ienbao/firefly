@@ -67,7 +67,7 @@ public class Candle extends Group {
 //                    tooltip.setText("Open: "+open+"\nClose: "+close+"\nHigh: "+high+"\nLow: "+low);
     }
 
-    private void updateStyleClasses(Color color) {
+    public void updateStyleClasses(Color color) {
         String styleColor = (color == null) ? "#6fc1be" : ColorUtils.toHexFromFXColor(color);
         mediaVerticalLine.setStyle("-fx-stroke: " + styleColor);
         topHorizontalLine.setStyle("-fx-stroke: " + styleColor);

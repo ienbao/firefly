@@ -28,9 +28,11 @@ public class BoxPlotChartApp extends Application {
     private Button removeLineBtn;
     private Button clearBtn;
     private Button addBtn;
+    private Button changeColorBtn;
     private BoxPlotChart chart;
 
     private Map<String, XYChart.Data<Number, Number>> markers = Maps.newHashMap();
+    private String seriesName = "A1";
 
     private void initComponents() {
 
@@ -87,7 +89,8 @@ public class BoxPlotChartApp extends Application {
         com.dmsoft.firefly.plugin.spc.dto.chart.BoxAndWhiskerData data = new com.dmsoft.firefly.plugin.spc.dto.chart.BoxAndWhiskerData();
         data.setData(chartData);
         data.setColor(Color.RED);
-        chart.createChartSeries(data);
+        chart.createChartSeries(data, seriesName);
+        chart.updateChartColor(seriesName, Color.YELLOW);
     }
 
     @Override
@@ -101,9 +104,10 @@ public class BoxPlotChartApp extends Application {
         removeLineBtn = new Button("Remove Line");
         clearBtn = new Button("Clear");
         addBtn = new Button("Add");
+        changeColorBtn = new Button("Change color");
         VBox vBox = new VBox();
         HBox hBox = new HBox();
-        hBox.getChildren().addAll(addPointBtn, removePointBtn, showLineBtn, removeLineBtn, clearBtn, addBtn);
+        hBox.getChildren().addAll(addPointBtn, removePointBtn, showLineBtn, removeLineBtn, clearBtn, addBtn, changeColorBtn);
         vBox.getChildren().add(chart);
         vBox.getChildren().add(hBox);
         Scene scene = new Scene(vBox);
@@ -119,7 +123,7 @@ public class BoxPlotChartApp extends Application {
         addPointBtn.setOnAction(event -> {
             XYChart.Data data = new XYChart.Data<>(5, 20);
             markers.put("Point", data);
-            chart.addSymbol(data);
+            chart.addSymbol(data, Color.RED);
         });
 
         removePointBtn.setOnAction(event -> {
@@ -141,6 +145,8 @@ public class BoxPlotChartApp extends Application {
         addBtn.setOnAction(event -> {
             initData();
         });
+
+        changeColorBtn.setOnAction(event -> chart.updateChartColor(seriesName, Color.YELLOW));
 
     }
 

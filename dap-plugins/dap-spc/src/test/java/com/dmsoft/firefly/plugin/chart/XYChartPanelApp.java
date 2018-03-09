@@ -25,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -46,6 +47,7 @@ public class XYChartPanelApp extends Application {
     private Button abnormalPointBtn;
     private Button clearBtn;
     private Button addBtn;
+    private Button changeColorBtn;
 
     private String seriesName = "A1::All";
     private String pointName = "Point";
@@ -68,8 +70,9 @@ public class XYChartPanelApp extends Application {
         abnormalPointBtn = new Button("Abnormal Point");
         clearBtn = new Button("Clear");
         addBtn = new Button("Add data");
+        changeColorBtn = new Button("Change color");
 
-        hBox.getChildren().addAll(lclBtn, uBtn, uclBtn, pointBtn, lineConnectBtn, abnormalPointBtn, clearBtn, addBtn);
+        hBox.getChildren().addAll(lclBtn, uBtn, uclBtn, pointBtn, lineConnectBtn, abnormalPointBtn, clearBtn, addBtn, changeColorBtn);
         vBox.getChildren().add(xBarChartPane);
         vBox.getChildren().add(hBox);
 
@@ -162,17 +165,20 @@ public class XYChartPanelApp extends Application {
 
         XYChartData xyChartData = ruleXYChartData.getXyChartData();
         LinearChart chart = xBarChartPane.getChart();
-        chart.addDataToChart(Lists.newArrayList(xyChartData), null);
+        chart.createChartSeries(xyChartData, seriesName, null);
 
         xBarChartPane.activeChartDragging();
 
         Map<String, LineData> lineDataMap = ruleXYChartData.getLineDataMap();
 //        Map<String, BrokenLineData> brokenLineDataMap = ruleXYChartData.getBrokenLineDataMap();
 //        Map<String, AbnormalPointData> abnormalPointDataMap = ruleXYChartData.getAbnormalPointDataMap();
-        lineDataMap.forEach((key, value) -> {
-            chart.addValueMarker(value);
-            operated.put(key, true);
-        });
+        List<LineData> lineDataList = Lists.newArrayList();
+        for (Map.Entry<String, LineData> lineDataEntry: lineDataMap.entrySet()) {
+            lineDataList.add(lineDataEntry.getValue());
+            operated.put(lineDataEntry.getKey(), true);
+        }
+        chart.addValueMarker(lineDataList, seriesName);
+
 //        brokenLineDataMap.forEach((key, value) -> {
 //            chart.createBrokenLineData(value);
 //            operated.put(key, true);
@@ -201,21 +207,11 @@ public class XYChartPanelApp extends Application {
             operatorLine(name);
         });
 
-        pointBtn.setOnAction(event -> {
-            operatorChartPoint(pointName);
-        });
-
-        lineConnectBtn.setOnAction(event -> {
-            operatorChartLine(connectLine);
-        });
-
-        clearBtn.setOnAction(event -> {
-            clearChart();
-        });
-
-        addBtn.setOnAction(event -> {
-            initData();
-        });
+        pointBtn.setOnAction(event -> operatorChartPoint(pointName));
+        lineConnectBtn.setOnAction(event -> operatorChartLine(connectLine));
+        clearBtn.setOnAction(event -> clearChart());
+        addBtn.setOnAction(event -> initData());
+        changeColorBtn.setOnAction(event -> xBarChar.updateChartColor(seriesName, Color.YELLOW));
 
 //        LinearChart chart = xBarChartPane.getChart();
 //        ObservableList<XYChart.Series<Number, Number>> series = chart.getData();

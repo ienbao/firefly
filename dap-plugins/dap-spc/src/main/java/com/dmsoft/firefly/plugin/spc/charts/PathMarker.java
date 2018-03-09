@@ -9,11 +9,11 @@ import com.google.common.collect.Maps;
 import javafx.scene.Node;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,8 +21,8 @@ import java.util.Map;
  */
 public class PathMarker {
 
-    private Map<Node, List<IPoint>> pathDataMap = Maps.newHashMap();
-    private Map<String, Node> pathMap = Maps.newHashMap();
+    private Map<Node, IPoint> pathDataMap = Maps.newHashMap();
+    private Map<String, Path> pathMap = Maps.newHashMap();
 
     /**
      * Paint path in chart
@@ -30,13 +30,14 @@ public class PathMarker {
      * @param chart chart
      */
     public void paintPathMarker(XYChart chart) {
-        for (Map.Entry<Node, List<IPoint>> pathData : pathDataMap.entrySet()) {
+        for (Map.Entry<Node, IPoint> pathData : pathDataMap.entrySet()) {
             Path path = (Path) pathData.getKey();
-            List<IPoint> points = pathData.getValue();
+            IPoint points = pathData.getValue();
             path.getElements().clear();
-            for (int i = 0; i < points.size(); i++) {
-                double x = (double) points.get(i).getXByIndex(i);
-                double y = (double) points.get(i).getYByIndex(i);
+            int len = points.getLen();
+            for (int i = 0; i < len; i++) {
+                double x = (double) points.getXByIndex(i);
+                double y = (double) points.getYByIndex(i);
                 this.layoutPath(path, x, y, chart);
             }
         }
@@ -52,9 +53,7 @@ public class PathMarker {
 
         Path path = new Path();
 //        set path style
-        String color = pathData.getColor() == null || DAPStringUtils.isBlank(ColorUtils.toHexFromFXColor(pathData.getColor()))
-                ? "black" : ColorUtils.toHexFromFXColor(pathData.getColor());
-        path.setStyle("-fx-stroke:" + color);
+        setPathColor(path, pathData.getColor());
 
         if (LineType.SOLID == pathData.getLineType()) {
             path.getStyleClass().add("solid-line");
@@ -70,10 +69,17 @@ public class PathMarker {
                 Tooltip.install(path, new Tooltip(pathData.getTooltipContent()));
             }
         });
-        List<IPoint> points = pathData.getPoints();
+        IPoint points = pathData.getPoints();
         pathDataMap.put(path, points);
         pathMap.put(pathData.getPathName(), path);
         return path;
+    }
+
+    private void setPathColor(Path path, Color color) {
+        //Set line color
+        String colorStr = color == null || DAPStringUtils.isBlank(ColorUtils.toHexFromFXColor(color))
+                ? "black" : ColorUtils.toHexFromFXColor(color);
+        path.setStyle("-fx-stroke:" + colorStr);
     }
 
     private void layoutPath(Path path, double x, double y, XYChart chart) {
@@ -116,6 +122,16 @@ public class PathMarker {
 
         if (pathMap.containsKey(pathName)) {
             pathMap.get(pathName).getStyleClass().remove("hidden-line");
+        }
+    }
+
+    /**
+     * Update all path color
+     * @param color
+     */
+    public void updateAllLineColor(Color color) {
+        for (Map.Entry<String, Path> stringPathEntry : pathMap.entrySet()) {
+            setPathColor(stringPathEntry.getValue(), color);
         }
     }
 

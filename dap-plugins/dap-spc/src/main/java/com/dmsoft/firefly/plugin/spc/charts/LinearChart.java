@@ -30,8 +30,9 @@ import java.util.function.Function;
  */
 public class LinearChart<X, Y> extends LineChart<X, Y> {
 
-    private ValueMarker valueMarker = new ValueMarker();
-    private PathMarker pathMarker = new PathMarker();
+    private Map<String, ValueMarker> valueMarkerMap = Maps.newHashMap();
+    private Map<String, PathMarker> pathMarkerMap = Maps.newHashMap();
+    private Map<String, XYChart.Series> seriesMap = Maps.newHashMap();
     private Map<XYChart.Series, Color> seriesColorMap = Maps.newHashMap();
 
     private boolean showTooltip = true;
@@ -50,13 +51,13 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
     /**
      * @param xyChartData
      */
-    public void addDataToChart(List<IXYChartData> xyChartData,
-                               Function<PointTooltip, String> pointTooltipFunction) {
-
-        xyChartData.forEach(xyOneChartData -> {
-            this.createChartSeries(xyOneChartData, pointTooltipFunction);
-        });
-    }
+//    public void addDataToChart(List<IXYChartData> xyChartData,
+//                               Function<PointTooltip, String> pointTooltipFunction) {
+//
+//        xyChartData.forEach(xyOneChartData -> {
+//            this.createChartSeries(xyOneChartData, pointTooltipFunction);
+//        });
+//    }
 
     /**
      * Create chart series
@@ -65,9 +66,11 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
      * @param pointTooltipFunction
      */
     public void createChartSeries(IXYChartData<X, Y> xyOneChartData,
+                                  String unique,
                                   Function<PointTooltip, String> pointTooltipFunction) {
 
         XYChart.Series oneSeries = this.buildSeries(xyOneChartData);
+        this.seriesMap.put(unique, oneSeries);
         this.getData().add(oneSeries);
         this.setSeriesDataStyleByDefault(oneSeries, xyOneChartData.getColor(), true);
         this.setSeriesDataTooltip(oneSeries, pointTooltipFunction);
@@ -110,38 +113,58 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         });
     }
 
-    public void addValueMarker(ILineData lineData) {
-        Line line = valueMarker.buildValueMarker(lineData);
-        getPlotChildren().add(line);
+    public void addValueMarker(List<ILineData> lineData, String unique) {
+        ValueMarker valueMarker = new ValueMarker();
+        lineData.forEach(oneLineData -> {
+            Line line = valueMarker.buildValueMarker(oneLineData);
+            getPlotChildren().add(line);
+        });
+        valueMarkerMap.put(unique, valueMarker);
     }
 
-    public void addPathMarker(IPathData pathData) {
-        Path path = pathMarker.buildPathMarker(pathData);
-        getPlotChildren().add(path);
+    public void addPathMarker(List<IPathData> pathData, String unique) {
+        PathMarker pathMarker = new PathMarker();
+        pathData.forEach(onePathData -> {
+            Path path = pathMarker.buildPathMarker(onePathData);
+            getPlotChildren().add(path);
+        });
+        pathMarkerMap.put(unique, pathMarker);
     }
 
     public void toggleValueMarker(String lineName, boolean showed) {
-        valueMarker.toggleValueMarker(lineName, showed);
+        for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
+            valueMarkerEntry.getValue().toggleValueMarker(lineName, showed);
+        }
     }
 
     public void hiddenValueMarker(String lineName) {
-        valueMarker.hiddenValueMarker(lineName);
+        for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
+            valueMarkerEntry.getValue().hiddenValueMarker(lineName);
+        }
     }
 
     public void showValueMarker(String lineName) {
-        valueMarker.showValueMarker(lineName);
+        for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
+            valueMarkerEntry.getValue().showValueMarker(lineName);
+        }
     }
 
     public void togglePathMarker(String pathName, boolean showed) {
-        pathMarker.togglePathMarker(pathName, showed);
+        for (Map.Entry<String, PathMarker> pathMarkerEntry : pathMarkerMap.entrySet()) {
+            pathMarkerEntry.getValue().togglePathMarker(pathName, showed);
+        }
     }
 
     public void hiddenPathMarker(String pathName) {
-        pathMarker.hiddenPathMarker(pathName);
+        for (Map.Entry<String, PathMarker> pathMarkerEntry : pathMarkerMap.entrySet()) {
+            pathMarkerEntry.getValue().hiddenPathMarker(pathName);
+        }
     }
 
     public void showPathMarker(String pathName) {
-        pathMarker.showPathMarker(pathName);
+        for (Map.Entry<String, PathMarker> pathMarkerEntry : pathMarkerMap.entrySet()) {
+            pathMarkerEntry.getValue().showPathMarker(pathName);
+        }
     }
 
     public void toggleSeriesLine(XYChart.Series<X, Y> series, boolean showed) {
@@ -167,9 +190,12 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
 
         super.layoutPlotChildren();
 //        paint line
-        valueMarker.paintValueMaker(this);
-
-        pathMarker.paintPathMarker(this);
+        for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
+            valueMarkerEntry.getValue().paintValueMaker(this);
+        }
+        for (Map.Entry<String, PathMarker> pathMarkerEntry : pathMarkerMap.entrySet()) {
+            pathMarkerEntry.getValue().paintPathMarker(this);
+        }
     }
 
     public void removeAllChildren() {
@@ -180,9 +206,10 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
     }
 
     private void clearData() {
-        valueMarker.clear();
-        pathMarker.clear();
+        valueMarkerMap.clear();
+        pathMarkerMap.clear();
         seriesColorMap.clear();
+        seriesMap.clear();
     }
 
     /**
@@ -311,5 +338,22 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
 
     public void setShowTooltip(boolean showTooltip) {
         this.showTooltip = showTooltip;
+    }
+
+    public void updateChartColor(String unique, Color color) {
+//        update chart color
+        if (seriesMap.containsKey(unique)) {
+            setSeriesDataStyleByDefault(seriesMap.get(unique), color, true);
+        }
+//        update value maker color
+        if (valueMarkerMap.containsKey(unique)) {
+            ValueMarker valueMarker = valueMarkerMap.get(unique);
+            valueMarker.updateAllLineColor(color);
+        }
+//        update path marker color
+        if (pathMarkerMap.containsKey(unique)) {
+            PathMarker pathMarker = pathMarkerMap.get(unique);
+            pathMarker.updateAllLineColor(color);
+        }
     }
 }
