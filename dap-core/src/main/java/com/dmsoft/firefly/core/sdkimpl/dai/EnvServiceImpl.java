@@ -18,9 +18,6 @@ import java.util.List;
  * Created by Lucien.Chen on 2018/2/10.
  */
 public class EnvServiceImpl implements EnvService {
-    private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
-    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
-
     private String userName = "admin";
     private String templateName;
     private LinkedHashMap<String, TestItemWithTypeDto> testItemDtos;
@@ -45,7 +42,7 @@ public class EnvServiceImpl implements EnvService {
 
     @Override
     public TemplateSettingDto findActivatedTemplate() {
-        return templateName != null ? templateService.findAnalysisTemplate(templateName) : null;
+        return templateName != null ? getTemplateService().findAnalysisTemplate(templateName) : null;
 
     }
 
@@ -62,7 +59,7 @@ public class EnvServiceImpl implements EnvService {
         userPreferenceDto.setCode("selectProject");
         userPreferenceDto.setUserName(userName);
         userPreferenceDto.setValue(activatedProjectName);
-        userPreferenceService.updatePreference(userPreferenceDto);
+        getUserPreferenceService().updatePreference(userPreferenceDto);
     }
 
     @Override
@@ -77,7 +74,7 @@ public class EnvServiceImpl implements EnvService {
 
     @Override
     public String findPreference(String code) {
-        String preference = userPreferenceService.findPreferenceByUserId(code, userName);
+        String preference = getUserPreferenceService().findPreferenceByUserId(code, userName);
         return preference;
     }
 
@@ -109,7 +106,7 @@ public class EnvServiceImpl implements EnvService {
 
     @Override
     public LanguageType getLanguageType() {
-        String languageType = userPreferenceService.findPreferenceByUserId("languageType", userName);
+        String languageType = RuntimeContext.getBean(UserPreferenceService.class).findPreferenceByUserId("languageType", userName);
         return LanguageType.valueOf(mapper.fromJson(languageType, String.class));
 
     }
@@ -120,6 +117,14 @@ public class EnvServiceImpl implements EnvService {
         userPreferenceDto.setCode("languageType");
         userPreferenceDto.setUserName(userName);
         userPreferenceDto.setValue(languageType);
-        userPreferenceService.updatePreference(userPreferenceDto);
+        getUserPreferenceService().updatePreference(userPreferenceDto);
+    }
+
+    private UserPreferenceService getUserPreferenceService() {
+        return RuntimeContext.getBean(UserPreferenceService.class);
+    }
+
+    private TemplateService getTemplateService() {
+        return RuntimeContext.getBean(TemplateService.class);
     }
 }

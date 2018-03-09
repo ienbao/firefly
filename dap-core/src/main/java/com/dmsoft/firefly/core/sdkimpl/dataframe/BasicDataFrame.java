@@ -195,6 +195,20 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
     }
 
     @Override
+    public void appendColumn(int index, DataColumn dataColumn) {
+        if (dataColumn != null && dataColumn.getTestItemWithTypeDto() != null
+                && dataColumn.getTestItemWithTypeDto().getTestItemName() != null
+                && !this.testItemNames.contains(dataColumn.getTestItemWithTypeDto().getTestItemName())) {
+            this.testItemNames.add(index, dataColumn.getTestItemWithTypeDto().getTestItemName());
+            this.testItemDtoList.add(index, dataColumn.getTestItemWithTypeDto());
+            for (int i = 0; i < this.rowKeys.size(); i++) {
+                String rowKey = this.rowKeys.get(i);
+                this.cellValues.get(i).add(index, dataColumn.getDataValue(rowKey));
+            }
+        }
+    }
+
+    @Override
     public boolean isRowKeyExist(String rowKey) {
         return rowKey != null && this.rowKeys.contains(rowKey);
     }

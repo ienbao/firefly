@@ -11,8 +11,12 @@ import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
 import com.dmsoft.firefly.plugin.spc.model.ViewDataDFModel;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.dataframe.DataColumn;
+import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -54,6 +58,8 @@ public class ViewDataController implements Initializable {
     private SearchDataFrame dataFrame;
     private Map<String, FilterSettingAndGraphic> columnFilterSetting = Maps.newHashMap();
     private ViewDataDFModel model;
+    private List<TestItemWithTypeDto> typeDtoList;
+    private List<String> selectedProjectNames;
 
     private ChooseDialogController chooseDialogController;
 
@@ -63,7 +69,8 @@ public class ViewDataController implements Initializable {
         this.buildChooseColumnDialog();
         this.initBtnIcon();
         this.initComponentEvent();
-        List<TestItemWithTypeDto> typeDtoList = RuntimeContext.getBean(EnvService.class).findTestItems();
+        this.typeDtoList = RuntimeContext.getBean(EnvService.class).findTestItems();
+        this.selectedProjectNames = RuntimeContext.getBean(EnvService.class).findActivatedProjectName();
         for (TestItemWithTypeDto typeDto : typeDtoList) {
             ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, typeDto.getTestItemName());
             chooseTableRowDataList.add(chooseTableRowData);
@@ -204,8 +211,27 @@ public class ViewDataController implements Initializable {
             filterTF();
             filterHeaderBtn();
         });
-        //TODO : find test item data and refresh data frame
         chooseItemBtn.setOnAction(event -> getChooseColumnBtnEvent());
+        chooseDialogController.getChooseOkButton().setOnAction(event -> {
+            StageMap.getStage("spcViewDataColumn").close();
+            List<String> selectedTestItems = chooseDialogController.getSelectResultName();
+            int curIndex = 0;
+            for (int i = 0; i < typeDtoList.size(); i++) {
+                TestItemWithTypeDto typeDto = typeDtoList.get(i);
+                if (selectedTestItems.contains(typeDto.getTestItemName())) {
+                    if (!dataFrame.isTestItemExist(typeDto.getTestItemName())) {
+                        List<RowDataDto> rowDataDtoList = RuntimeContext.getBean(SourceDataService.class).findTestData(this.selectedProjectNames,
+                                Lists.newArrayList(typeDto.getTestItemName()));
+                        DataColumn dataColumn = RuntimeContext.getBean(DataFrameFactory.class).createDataColumn(Lists.newArrayList(typeDto), rowDataDtoList).get(0);
+                        dataFrame.appendColumn(curIndex, dataColumn);
+                    }
+                    curIndex++;
+                } else {
+                    dataFrame.removeColumns(Lists.newArrayList(typeDto.getTestItemName()));
+                }
+            }
+            setViewData(this.dataFrame);
+        });
         unSelectedCheckBox.setOnAction(event -> getInvertCheckBoxEvent());
     }
 
@@ -270,6 +296,7 @@ public class ViewDataController implements Initializable {
 
     private void getChooseColumnBtnEvent() {
         StageMap.showStage("spcViewDataColumn");
+        chooseDialogController.setSelectResultName(dataFrame.getAllTestItemName());
     }
 
     private void getInvertCheckBoxEvent() {

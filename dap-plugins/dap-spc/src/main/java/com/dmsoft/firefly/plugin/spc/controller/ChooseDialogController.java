@@ -12,7 +12,10 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 
 import java.net.URL;
 import java.util.List;
@@ -28,7 +31,7 @@ public class ChooseDialogController implements Initializable {
     @FXML
     private CheckBox chooseUnSelected;
     @FXML
-    private TableView chooseColumnTable;
+    private TableView<ChooseTableRowData> chooseColumnTable;
     @FXML
     private TableColumn<ChooseTableRowData, CheckBox> chooseCheckBoxColumn;
     @FXML
@@ -69,7 +72,7 @@ public class ChooseDialogController implements Initializable {
     /**
      * get select result
      *
-     * @return
+     * @return method to get select result name
      */
     public List<String> getSelectResultName() {
         List<String> resultName = Lists.newArrayList();
