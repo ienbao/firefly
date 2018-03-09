@@ -5,11 +5,11 @@ package com.dmsoft.firefly.plugin.spc.charts;
  */
 public interface AxisRange {
 
-    Number getXLowerBound(Number[] value);
+    Number getXLowerBound();
 
-    Number getXUpperBound(Number[] value);
+    Number getXUpperBound();
 
-    Number getYLowerBound(Number[] value);
+    Number getYLowerBound();
 
-    Number getYUpperBound(Number[] value);
+    Number getYUpperBound();
 }
