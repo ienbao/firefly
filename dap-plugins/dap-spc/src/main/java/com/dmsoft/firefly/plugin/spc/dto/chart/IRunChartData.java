@@ -1,20 +1,20 @@
 package com.dmsoft.firefly.plugin.spc.dto.chart;
 
 import com.dmsoft.firefly.plugin.spc.charts.AxisRange;
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBarChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.ILineData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
 
 import java.util.List;
+import java.util.Map;
 
 /**
- * Created by cherry on 2018/3/8.
+ * Created by cherry on 2018/3/9.
  */
-public interface INdcChartData extends AxisRange {
+public interface IRunChartData extends AxisRange {
 
-    IXYChartData getCurveData();
-
-    IBarChartData getBarData();
+    IXYChartData getXYChartData();
 
     List<ILineData> getLineData();
+
+    Map<String, double[]> getAbnormalPointData();
 }

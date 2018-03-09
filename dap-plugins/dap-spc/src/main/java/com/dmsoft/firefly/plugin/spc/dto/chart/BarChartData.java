@@ -20,8 +20,11 @@ public class BarChartData<X, Y> implements IBarChartData {
     private Color color;
     //    Series name
     private String seriesName;
-
-    public BarChartData() {
+    private Double[] x = null;
+    private Double[] y = null;
+    public BarChartData(Double[] histX, Double[] histY) {
+        this.x = histX;
+        this.y = histY;
     }
 
     public BarChartData(String seriesName) {
@@ -103,5 +106,10 @@ public class BarChartData<X, Y> implements IBarChartData {
 
     public void setSeriesName(String seriesName) {
         this.seriesName = seriesName;
+    }
+
+    @Override
+    public int getSeriesIndex() {
+        return 0;
     }
 }

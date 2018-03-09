@@ -84,9 +84,9 @@ public class ValueMarker<X, Y> {
         }
 
         //Set line color
-        if (lineData.getColor() != null) {
-            line.setStyle("-fx-stroke:" + ColorUtils.toHexFromFXColor(lineData.getColor()));
-        }
+        String color = lineData.getColor() == null || DAPStringUtils.isBlank(ColorUtils.toHexFromFXColor(lineData.getColor()))
+                ? "black" : ColorUtils.toHexFromFXColor(lineData.getColor());
+        line.setStyle("-fx-stroke:" + color);
 
         line.setOnMouseEntered(event -> {
             //Set tooltip
@@ -119,5 +119,11 @@ public class ValueMarker<X, Y> {
         if (lineMap.containsKey(lineName)) {
             lineMap.get(lineName).getStyleClass().remove("hidden-line");
         }
+    }
+
+    public void clear() {
+        lineMap.clear();
+        horizontalMarkers.setAll(FXCollections.observableArrayList());
+        verticalMarkers.setAll(FXCollections.observableArrayList());
     }
 }

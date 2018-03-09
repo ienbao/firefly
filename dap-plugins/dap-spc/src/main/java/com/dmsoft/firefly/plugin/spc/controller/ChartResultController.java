@@ -13,10 +13,8 @@ import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
 import com.dmsoft.firefly.plugin.spc.charts.view.VerticalTabPane;
-import com.dmsoft.firefly.plugin.spc.dto.chart.LineData;
+import com.dmsoft.firefly.plugin.spc.dto.chart.*;
 import com.dmsoft.firefly.plugin.spc.charts.data.BarCategoryData;
-import com.dmsoft.firefly.plugin.spc.dto.chart.BarChartData;
-import com.dmsoft.firefly.plugin.spc.dto.chart.RuleXYChartData;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
@@ -50,6 +48,8 @@ public class ChartResultController implements Initializable {
     private ChartAnnotationButton editBtn;
 
     private String textColor = "#e92822";
+
+    private Map<String, XYChart> chartMap = Maps.newHashMap();
 
     private ChartPanel<NDChart> ndChartPane;
     private ChartPanel<LinearChart> runChartPane;
@@ -152,7 +152,6 @@ public class ChartResultController implements Initializable {
                 ndChartPane.getChart().toggleValueMarker(name, selected);
             }
         });
-
         NDChart<Double, Double> ndChart = new NDChart(xAxis, yAxis);
         ndChartPane = new ChartPanel(ndChart);
         ndChartPane.setLegend(legend);
@@ -161,7 +160,7 @@ public class ChartResultController implements Initializable {
 
     private void initRunChartPane() {
 
-        String[] itemNames = new String[] {"", "item0", "item1", "item2"};
+        String[] itemNames = new String[]{"", "item0", "item1", "item2"};
         ChartOperateButton button = new ChartOperateButton(true);
         editBtn = new ChartAnnotationButton();
         ChartOperateButton rRuleBtn = new ChartOperateButton(false, com.dmsoft.firefly.plugin.spc.charts.utils.enums.Orientation.BOTTOMLEFT);
@@ -354,6 +353,7 @@ public class ChartResultController implements Initializable {
         Double[] barWidth = new Double[10];
 
         List<BarCategoryData<Double, Double>> barCategoryData = Lists.newArrayList();
+        XYChartData<Double, Double> xyChartData = new XYChartData();
         Random random = new Random();
         for (int i = 0; i < 10; i++) {
             BarCategoryData<Double, Double> barCategoryData1 = new BarCategoryData();
@@ -373,15 +373,13 @@ public class ChartResultController implements Initializable {
         BarChartData<Double, Double> barChartData = new BarChartData<>(seriesName);
         barChartData.setBarData(barCategoryData);
         barChartData.setColor(barColor);
-        ndChartPane.getChart().createChartSeries(barChartData);
 
-        XYChartData<Double, Double> xyChartData = new XYChartData();
         xyChartData.setX(x);
         xyChartData.setY(y);
         xyChartData.setColor(barColor);
         xyChartData.setSeriesName(seriesName);
         ndChartPane.getChart().addAreaSeries(xyChartData);
-
+        ndChartPane.getChart().createChartSeries(barChartData);
         String[] lineNames = UIConstant.SPC_NDCCHART_LINE_NAME;
         Random rand = new Random();
         for (String lineName : lineNames) {
@@ -404,37 +402,37 @@ public class ChartResultController implements Initializable {
     private void createBoxChartData() {
 
         List<BoxExtraData> chartData = Lists.newArrayList();
-        chartData.add(new BoxExtraData(1, 27,25, 20, 32, 16, 20));
-        chartData.add(new BoxExtraData(2, 28,26, 30, 33, 22, 25));
-        chartData.add(new BoxExtraData(3, 29,30, 38, 40, 20, 32));
-        chartData.add(new BoxExtraData(4, 27,24, 30, 34, 22, 30));
-        chartData.add(new BoxExtraData(5, 28,26, 36, 40, 24, 32));
-        chartData.add(new BoxExtraData(6, 30,28, 38, 45, 25, 34));
-        chartData.add(new BoxExtraData(7, 36,36, 30, 44, 28, 39));
-        chartData.add(new BoxExtraData(8, 35,30, 18, 36, 16, 31));
-        chartData.add(new BoxExtraData(9, 42,40, 50, 52, 36, 41));
-        chartData.add(new BoxExtraData(10, 35,30, 34, 38, 28, 36));
-        chartData.add(new BoxExtraData(11, 30,24, 12, 30, 8, 32.4));
-        chartData.add(new BoxExtraData(12, 31,28, 40, 46, 25, 31.6));
-        chartData.add(new BoxExtraData(13, 34,28, 18, 36, 14, 32.6));
-        chartData.add(new BoxExtraData(14, 39,38, 30, 40, 26, 30.6));
-        chartData.add(new BoxExtraData(15, 30,28, 33, 40, 28, 30.6));
-        chartData.add(new BoxExtraData(16, 28,25, 10, 32, 6, 30.1));
-        chartData.add(new BoxExtraData(17, 30,26, 30, 42, 18, 27.3));
-        chartData.add(new BoxExtraData(18, 25,20, 18, 30, 10, 21.9));
-        chartData.add(new BoxExtraData(19, 21,20, 10, 30, 5, 21.9));
-        chartData.add(new BoxExtraData(20, 29,26, 16, 32, 10, 17.9));
-        chartData.add(new BoxExtraData(21, 40,38, 40, 44, 32, 18.9));
-        chartData.add(new BoxExtraData(22, 30,26, 40, 41, 12, 18.9));
-        chartData.add(new BoxExtraData(23, 32,30, 18, 34, 10, 18.9));
-        chartData.add(new BoxExtraData(24, 20,12, 23, 26, 12, 18.2));
-        chartData.add(new BoxExtraData(25, 32,30, 40, 45, 16, 18.9));
-        chartData.add(new BoxExtraData(26, 27,25, 35, 38, 20, 21.4));
-        chartData.add(new BoxExtraData(27, 29,24, 12, 30, 8, 19.6));
-        chartData.add(new BoxExtraData(28, 28,23, 44, 46, 15, 22.2));
-        chartData.add(new BoxExtraData(29, 30,28, 18, 30, 12, 23));
-        chartData.add(new BoxExtraData(30, 32,28, 18, 30, 12, 23.2));
-        chartData.add(new BoxExtraData(31, 29,28, 18, 30, 12, 22));
+        chartData.add(new BoxExtraData(1, 27, 25, 20, 32, 16, 20));
+        chartData.add(new BoxExtraData(2, 28, 26, 30, 33, 22, 25));
+        chartData.add(new BoxExtraData(3, 29, 30, 38, 40, 20, 32));
+        chartData.add(new BoxExtraData(4, 27, 24, 30, 34, 22, 30));
+        chartData.add(new BoxExtraData(5, 28, 26, 36, 40, 24, 32));
+        chartData.add(new BoxExtraData(6, 30, 28, 38, 45, 25, 34));
+        chartData.add(new BoxExtraData(7, 36, 36, 30, 44, 28, 39));
+        chartData.add(new BoxExtraData(8, 35, 30, 18, 36, 16, 31));
+        chartData.add(new BoxExtraData(9, 42, 40, 50, 52, 36, 41));
+        chartData.add(new BoxExtraData(10, 35, 30, 34, 38, 28, 36));
+        chartData.add(new BoxExtraData(11, 30, 24, 12, 30, 8, 32.4));
+        chartData.add(new BoxExtraData(12, 31, 28, 40, 46, 25, 31.6));
+        chartData.add(new BoxExtraData(13, 34, 28, 18, 36, 14, 32.6));
+        chartData.add(new BoxExtraData(14, 39, 38, 30, 40, 26, 30.6));
+        chartData.add(new BoxExtraData(15, 30, 28, 33, 40, 28, 30.6));
+        chartData.add(new BoxExtraData(16, 28, 25, 10, 32, 6, 30.1));
+        chartData.add(new BoxExtraData(17, 30, 26, 30, 42, 18, 27.3));
+        chartData.add(new BoxExtraData(18, 25, 20, 18, 30, 10, 21.9));
+        chartData.add(new BoxExtraData(19, 21, 20, 10, 30, 5, 21.9));
+        chartData.add(new BoxExtraData(20, 29, 26, 16, 32, 10, 17.9));
+        chartData.add(new BoxExtraData(21, 40, 38, 40, 44, 32, 18.9));
+        chartData.add(new BoxExtraData(22, 30, 26, 40, 41, 12, 18.9));
+        chartData.add(new BoxExtraData(23, 32, 30, 18, 34, 10, 18.9));
+        chartData.add(new BoxExtraData(24, 20, 12, 23, 26, 12, 18.2));
+        chartData.add(new BoxExtraData(25, 32, 30, 40, 45, 16, 18.9));
+        chartData.add(new BoxExtraData(26, 27, 25, 35, 38, 20, 21.4));
+        chartData.add(new BoxExtraData(27, 29, 24, 12, 30, 8, 19.6));
+        chartData.add(new BoxExtraData(28, 28, 23, 44, 46, 15, 22.2));
+        chartData.add(new BoxExtraData(29, 30, 28, 18, 30, 12, 23));
+        chartData.add(new BoxExtraData(30, 32, 28, 18, 30, 12, 23.2));
+        chartData.add(new BoxExtraData(31, 29, 28, 18, 30, 12, 22));
 
         BoxPlotChart chart = boxChartPane.getChart();
         com.dmsoft.firefly.plugin.spc.dto.chart.BoxAndWhiskerData data = new com.dmsoft.firefly.plugin.spc.dto.chart.BoxAndWhiskerData();
@@ -505,5 +503,36 @@ public class ChartResultController implements Initializable {
      */
     public void init(SpcMainController spcMainController) {
         this.spcMainController = spcMainController;
+    }
+
+    public void setNdChartData(String chartName, List<INdcChartData> ndChartData) {
+
+        NDChart chart = ndChartPane.getChart();
+        if (chartMap.containsKey(chartName)) {
+            
+        } else {
+            chartMap.put(chartName, chart);
+        }
+
+    }
+
+    public void setRunChartData(String chartName, List<IRunChartData> runChartData) {
+
+    }
+
+    public void setControlChartData(String chartName, List<IControlChartData> controlChartData) {
+
+    }
+
+    public void setBoxChartData(String chartName, List<IBoxChartData> boxChartData) {
+
+    }
+
+    public void clearChartData() {
+
+    }
+
+    public void updateChartColor(Color color) {
+
     }
 }

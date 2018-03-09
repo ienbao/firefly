@@ -3,6 +3,7 @@ package com.dmsoft.firefly.plugin.spc.charts;
 import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationFetch;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,6 +17,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Path;
 import javafx.scene.text.Text;
 
 import java.util.List;
@@ -29,9 +31,10 @@ import java.util.function.Function;
 public class LinearChart<X, Y> extends LineChart<X, Y> {
 
     private ValueMarker valueMarker = new ValueMarker();
-    private boolean showTooltip = true;
-
+    private PathMarker pathMarker = new PathMarker();
     private Map<XYChart.Series, Color> seriesColorMap = Maps.newHashMap();
+
+    private boolean showTooltip = true;
 
     /**
      * Construct a new LinearChart with the given axis.
@@ -108,24 +111,37 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
     }
 
     public void addValueMarker(ILineData lineData) {
-
         Line line = valueMarker.buildValueMarker(lineData);
         getPlotChildren().add(line);
     }
 
-    public void toggleValueMarker(String lineName, boolean showed) {
+    public void addPathMarker(IPathData pathData) {
+        Path path = pathMarker.buildPathMarker(pathData);
+        getPlotChildren().add(path);
+    }
 
+    public void toggleValueMarker(String lineName, boolean showed) {
         valueMarker.toggleValueMarker(lineName, showed);
     }
 
     public void hiddenValueMarker(String lineName) {
-
         valueMarker.hiddenValueMarker(lineName);
     }
 
     public void showValueMarker(String lineName) {
-
         valueMarker.showValueMarker(lineName);
+    }
+
+    public void togglePathMarker(String pathName, boolean showed) {
+        pathMarker.togglePathMarker(pathName, showed);
+    }
+
+    public void hiddenPathMarker(String pathName) {
+        pathMarker.hiddenPathMarker(pathName);
+    }
+
+    public void showPathMarker(String pathName) {
+        pathMarker.showPathMarker(pathName);
     }
 
     public void toggleSeriesLine(XYChart.Series<X, Y> series, boolean showed) {
@@ -152,6 +168,21 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         super.layoutPlotChildren();
 //        paint line
         valueMarker.paintValueMaker(this);
+
+        pathMarker.paintPathMarker(this);
+    }
+
+    public void removeAllChildren() {
+        ObservableList<Node> nodes = getPlotChildren();
+        getPlotChildren().removeAll(nodes);
+        clearData();
+        getData().setAll(FXCollections.observableArrayList());
+    }
+
+    private void clearData() {
+        valueMarker.clear();
+        pathMarker.clear();
+        seriesColorMap.clear();
     }
 
     /**

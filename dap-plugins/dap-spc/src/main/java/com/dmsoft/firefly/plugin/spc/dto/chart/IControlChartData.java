@@ -1,20 +1,23 @@
 package com.dmsoft.firefly.plugin.spc.dto.chart;
 
 import com.dmsoft.firefly.plugin.spc.charts.AxisRange;
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBarChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.ILineData;
+import com.dmsoft.firefly.plugin.spc.charts.data.basic.IPathData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
 
 import java.util.List;
 
 /**
- * Created by cherry on 2018/3/8.
+ * Created by cherry on 2018/3/9.
  */
-public interface INdcChartData extends AxisRange {
+public interface IControlChartData extends AxisRange {
 
-    IXYChartData getCurveData();
+//    chart data
+    IXYChartData getChartData();
 
-    IBarChartData getBarData();
-
+//    cl
     List<ILineData> getLineData();
+
+//    usl lsl
+    List<IPathData> getBrokenLineData();
 }

@@ -171,12 +171,12 @@ public class CsvResolverController {
     private void save() {
         CsvTemplateDto csvTemplateDto = new CsvTemplateDto();
         csvTemplateDto.setFilePath(path.getText());
-        csvTemplateDto.setHeader(header.getValue() == null ? null : Integer.valueOf(header.getValue().toString().substring(3, 4)));
-        csvTemplateDto.setItem(item.getValue() == null ? null : Integer.valueOf(item.getValue().toString().substring(3, 4)));
-        csvTemplateDto.setUsl(usl.getValue() == null ? null : Integer.valueOf(usl.getValue().toString().substring(3, 4)));
-        csvTemplateDto.setLsl(lsl.getValue() == null ? null : Integer.valueOf(lsl.getValue().toString().substring(3, 4)));
-        csvTemplateDto.setUnit(unit.getValue() == null ? null : Integer.valueOf(unit.getValue().toString().substring(3, 4)));
-        csvTemplateDto.setData(data.getValue() == null ? null : Integer.valueOf(data.getValue().toString().substring(3, 4)));
+        csvTemplateDto.setHeader(header.getValue() == null || StringUtils.isEmpty(header.getValue().toString()) ? null : Integer.valueOf(header.getValue().toString().substring(3, 4)));
+        csvTemplateDto.setItem(item.getValue() == null || StringUtils.isEmpty(item.getValue().toString()) ? null : Integer.valueOf(item.getValue().toString().substring(3, 4)));
+        csvTemplateDto.setUsl(usl.getValue() == null || StringUtils.isEmpty(usl.getValue().toString()) ? null : Integer.valueOf(usl.getValue().toString().substring(3, 4)));
+        csvTemplateDto.setLsl(lsl.getValue() == null || StringUtils.isEmpty(lsl.getValue().toString()) ? null : Integer.valueOf(lsl.getValue().toString().substring(3, 4)));
+        csvTemplateDto.setUnit(unit.getValue() == null || StringUtils.isEmpty(unit.getValue().toString()) ? null : Integer.valueOf(unit.getValue().toString().substring(3, 4)));
+        csvTemplateDto.setData(data.getValue() == null || StringUtils.isEmpty(data.getValue().toString()) ? null : Integer.valueOf(data.getValue().toString().substring(3, 4)));
 
         service.saveCsvTemplate(csvTemplateDto);
     }

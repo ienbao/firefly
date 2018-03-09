@@ -33,7 +33,7 @@ public class BasicDataFrameFactoryImpl implements DataFrameFactory {
 
     @Override
     public List<DataColumn> createDataColumn(List<TestItemWithTypeDto> testItemWithTypeDtoList, List<RowDataDto> rowDataDtoList) {
-        if (testItemWithTypeDtoList == null || rowDataDtoList == null || testItemWithTypeDtoList.size() != rowDataDtoList.size()) {
+        if (testItemWithTypeDtoList == null || rowDataDtoList == null) {
             return null;
         }
         List<DataColumn> result = Lists.newArrayList();
@@ -43,11 +43,11 @@ public class BasicDataFrameFactoryImpl implements DataFrameFactory {
                 List<String> rowKeyList = Lists.newArrayList();
                 List<String> valueList = Lists.newArrayList();
                 List<Boolean> inUsedList = Lists.newArrayList();
-                for (int j = 0; j < testItemWithTypeDtoList.size(); j++) {
-                    if (rowDataDtoList.get(i).getRowKey() != null) {
-                        rowKeyList.add(rowDataDtoList.get(i).getRowKey());
-                        valueList.add(rowDataDtoList.get(i).getData().get(testItemWithTypeDto.getTestItemName()));
-                        inUsedList.add(rowDataDtoList.get(i).getInUsed());
+                for (int j = 0; j < rowDataDtoList.size(); j++) {
+                    if (rowDataDtoList.get(j).getRowKey() != null) {
+                        rowKeyList.add(rowDataDtoList.get(j).getRowKey());
+                        valueList.add(rowDataDtoList.get(j).getData().get(testItemWithTypeDto.getTestItemName()));
+                        inUsedList.add(rowDataDtoList.get(j).getInUsed());
                     }
                 }
                 DataColumn dataColumn = new BasicDataColumn(testItemWithTypeDto, rowKeyList, valueList, inUsedList);

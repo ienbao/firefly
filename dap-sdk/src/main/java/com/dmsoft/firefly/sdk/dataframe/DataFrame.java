@@ -116,6 +116,14 @@ public interface DataFrame {
      */
     void appendColumns(List<DataColumn> dataColumnList);
 
+    /**
+     * method to append column at index
+     *
+     * @param index      index
+     * @param dataColumn data column
+     */
+    void appendColumn(int index, DataColumn dataColumn);
+
     //Row Operation
 
     /**

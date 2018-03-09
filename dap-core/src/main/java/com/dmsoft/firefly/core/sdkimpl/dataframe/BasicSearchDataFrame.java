@@ -172,7 +172,18 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
 
     @Override
     public SearchDataFrame subDataFrame(List<String> rowKeyList, List<String> testItemNameList) {
-        return RuntimeContext.getBean(DataFrameFactory.class).createSearchDataFrame(super.subDataFrame(rowKeyList, testItemNameList));
+        SearchDataFrame dataFrame = RuntimeContext.getBean(DataFrameFactory.class).createSearchDataFrame(super.subDataFrame(rowKeyList, testItemNameList));
+        if (dataFrame instanceof BasicSearchDataFrame) {
+            ((BasicSearchDataFrame) dataFrame).setFilterUtils(filterUtils);
+            ((BasicSearchDataFrame) dataFrame).setSearchConditions(searchConditions);
+            List<Set<String>> searchConditionRowList = Lists.newArrayList();
+            for (String rowKey : rowKeyList) {
+                Set<String> searchConditon = this.rowSearchConditionResultList.get(getRowKeys().indexOf(rowKey));
+                searchConditionRowList.add(searchConditon);
+            }
+            ((BasicSearchDataFrame) dataFrame).setRowSearchConditionResultList(searchConditionRowList);
+        }
+        return dataFrame;
     }
 
     private void search(String searchCondition) {
@@ -191,5 +202,17 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
             }
         }
         return result;
+    }
+
+    private void setRowSearchConditionResultList(List<Set<String>> rowSearchConditionResultList) {
+        this.rowSearchConditionResultList = rowSearchConditionResultList;
+    }
+
+    private void setSearchConditions(Set<String> searchConditions) {
+        this.searchConditions = searchConditions;
+    }
+
+    private void setFilterUtils(FilterUtils filterUtils) {
+        this.filterUtils = filterUtils;
     }
 }

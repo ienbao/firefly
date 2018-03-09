@@ -97,7 +97,8 @@ public class StatisticalResultController implements Initializable {
             chooseDialogController = fxmlLoader.getController();
             chooseDialogController.setValueColumnText("Statistical Result");
             this.initChooseStatisticalResultTableData();
-            WindowFactory.createSimpleWindowAsModel("spcStatisticalResult", "Choose Statistical Results", root);
+            WindowFactory.createSimpleWindowAsModel("spcStatisticalResult", "Choose Statistical Results", root,
+                    getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
         } catch (IOException e) {
             e.printStackTrace();
         }

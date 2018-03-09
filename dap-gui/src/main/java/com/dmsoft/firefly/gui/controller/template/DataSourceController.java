@@ -344,7 +344,7 @@ public class DataSourceController implements Initializable {
         List<ChooseTableRowData> chooseTableRowDataList = Lists.newArrayList();
         List<String> selectProject = mapper.fromJson(envService.findPreference("selectProject"), mapper.buildCollectionType(List.class, String.class));
         List<String> projectOrder = mapper.fromJson(envService.findPreference("projectOrder"), mapper.buildCollectionType(List.class, String.class));
-        if (projectOrder != null) {
+        if (projectOrder != null && projectOrder.size() != 0) {
             projectOrder.forEach(v -> {
                 ChooseTableRowData chooseTableRowData = null;
                 if (selectProject != null && selectProject.contains(v)) {

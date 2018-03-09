@@ -13,6 +13,7 @@ import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionCode;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
+import com.dmsoft.firefly.sdk.job.ProcessMonitorAuto;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.Validate;
@@ -38,6 +39,8 @@ public class SpcServiceImpl implements SpcService {
         }
         List<SpcStatsDto> result = Lists.newArrayList();
         List<SpcAnalysisDataDto> spcAnalysisDataDtoList = Lists.newArrayList();
+        int n = 0;
+        int len = searchConditions.size() * 3;
         for (SearchConditionDto searchConditionDto : searchConditions) {
             SpcAnalysisDataDto spcAnalysisDataDto = new SpcAnalysisDataDto();
             List<String> searchRowKeys = searchDataFrame.getSearchRowKey(searchConditionDto.getCondition());
@@ -60,6 +63,8 @@ public class SpcServiceImpl implements SpcService {
             }
             spcAnalysisDataDto.setDataList(doubleList);
             spcAnalysisDataDtoList.add(spcAnalysisDataDto);
+            n++;
+            pushProgress(n / len);
         }
         for (int i = 0; i < spcAnalysisDataDtoList.size(); i++) {
             SpcStatsResultDto resultDto = getAnalysisService().analyzeStatsResult(spcAnalysisDataDtoList.get(i), configDto);
@@ -69,7 +74,10 @@ public class SpcServiceImpl implements SpcService {
             statsDto.setItemName(searchConditions.get(i).getItemName());
             statsDto.setCondition(searchConditions.get(i).getCondition());
             result.add(statsDto);
+            n = n + 2;
+            pushProgress(n / len);
         }
+        pushProgress(100);
         return result;
     }
 
@@ -87,6 +95,8 @@ public class SpcServiceImpl implements SpcService {
         List<List<String>> analyzedRowKeys = Lists.newArrayList();
         Double ndcMax = Double.NEGATIVE_INFINITY;
         Double ndcMin = Double.POSITIVE_INFINITY;
+        int n = 0;
+        int len = searchConditions.size() * 3;
         for (SearchConditionDto searchConditionDto : searchConditions) {
             SpcAnalysisDataDto spcAnalysisDataDto = new SpcAnalysisDataDto();
             List<String> searchRowKeys = searchDataFrame.getSearchRowKey(searchConditionDto.getCondition());
@@ -119,6 +129,8 @@ public class SpcServiceImpl implements SpcService {
             }
             spcAnalysisDataDto.setDataList(doubleList);
             spcAnalysisDataDtoList.add(spcAnalysisDataDto);
+            n++;
+            pushProgress(n / len);
         }
         for (int i = 0; i < spcAnalysisDataDtoList.size(); i++) {
             SpcAnalysisDataDto spcAnalysisDataDto = spcAnalysisDataDtoList.get(i);
@@ -136,8 +148,17 @@ public class SpcServiceImpl implements SpcService {
             chartDto.setCondition(searchConditions.get(i).getCondition());
             chartDto.setAnalyzedRowKeys(analyzedRowKeys.get(i));
             result.add(chartDto);
+            n = n + 2;
+            pushProgress(n / len);
         }
+        pushProgress(100);
         return result;
+    }
+
+    private void pushProgress(int progress) {
+        if (Thread.currentThread() instanceof ProcessMonitorAuto) {
+            ((ProcessMonitorAuto) Thread.currentThread()).push(progress);
+        }
     }
 
     private SpcAnalysisService getAnalysisService() {
