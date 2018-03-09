@@ -4,6 +4,7 @@ import com.dmsoft.firefly.plugin.spc.charts.data.BarCategoryData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
 import com.dmsoft.firefly.plugin.spc.charts.utils.ReflectionUtils;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
 import com.sun.javafx.charts.Legend;
 import com.sun.javafx.css.converters.SizeConverter;
@@ -76,32 +77,36 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         this.setLegendVisible(false);
     }
 
-    private NDChart(Axis<X> xAxis, Axis<Y> yAxis, IBarChartData<X, Y> barChartData) {
-        this(xAxis, yAxis);
-        this.createChartSeries(barChartData);
-    }
+//    private NDChart(Axis<X> xAxis, Axis<Y> yAxis, IBarChartData<X, Y> barChartData) {
+//        this(xAxis, yAxis);
+//        this.createChartSeries(barChartData);
+//    }
 
-    /**
-     * Construct a new NDChart with the given axis and data.
-     *
-     * @param xAxis        The x axis to use
-     * @param yAxis        The y axis to use
-     * @param barChartData The data to use, this is the actual list used so any changes to it will be reflected in the chart
-     * @param categoryGap  The gap to leave between bars in separate categories
-     */
-    public NDChart(Axis<X> xAxis, Axis<Y> yAxis, IBarChartData<X, Y> barChartData, double categoryGap) {
-        this(xAxis, yAxis, barChartData);
-        setCategoryGap(categoryGap);
-    }
+//    /**
+//     * Construct a new NDChart with the given axis and data.
+//     *
+//     * @param xAxis        The x axis to use
+//     * @param yAxis        The y axis to use
+//     * @param barChartData The data to use, this is the actual list used so any changes to it will be reflected in the chart
+//     * @param categoryGap  The gap to leave between bars in separate categories
+//     */
+//    public NDChart(Axis<X> xAxis, Axis<Y> yAxis, IBarChartData<X, Y> barChartData, double categoryGap) {
+//        this(xAxis, yAxis, barChartData);
+//        setCategoryGap(categoryGap);
+//    }
 
     public void createChartSeries(IBarChartData<X, Y> barChartData) {
+        createChartSeries(barChartData, null);
+    }
+
+    public void createChartSeries(IBarChartData<X, Y> barChartData, Color color) {
         XYChart.Series oneSeries = this.buildSeries(barChartData);
         this.getData().add(oneSeries);
-        this.setSeriesDataStyleByDefault(oneSeries, barChartData.getColor());
+        this.setSeriesDataStyleByDefault(oneSeries, color);
         this.setSeriesDataTooltip(oneSeries, null);
     }
 
-    public XYChart.Series buildSeries(IBarChartData<X, Y> barChartData) {
+    private XYChart.Series buildSeries(IBarChartData<X, Y> barChartData) {
         XYChart.Series oneSeries = new XYChart.Series();
         oneSeries.setName(barChartData.getSeriesName());
         int length = barChartData.getLen();
@@ -120,9 +125,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         return oneSeries;
     }
 
-    public void addAreaSeries(IXYChartData<X, Y> xyOneChartData) {
-        Group areaGroup = this.areaSeriesNode.buildAreaGroup(xyOneChartData, xyOneChartData.getColor());
-        areaGroup.setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(xyOneChartData.getColor()));
+    public void addAreaSeries(IXYChartData<X, Y> xyOneChartData, Color color) {
+        Group areaGroup = this.areaSeriesNode.buildAreaGroup(xyOneChartData, color);
+        areaGroup.setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
         getPlotChildren().add(areaGroup);
     }
 
@@ -158,7 +163,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         ObservableList<Data<X, Y>> data = series.getData();
         data.forEach(dataItem -> {
             dataItem.getNode().getStyleClass().setAll("chart-bar");
-            dataItem.getNode().setStyle("-fx-bar-fill: " + ColorUtils.toHexFromFXColor(color));
+            if (color != null && DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
+                dataItem.getNode().setStyle("-fx-bar-fill: " + ColorUtils.toHexFromFXColor(color));
+            }
         });
     }
 

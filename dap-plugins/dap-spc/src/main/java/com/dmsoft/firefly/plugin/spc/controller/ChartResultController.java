@@ -378,8 +378,8 @@ public class ChartResultController implements Initializable {
         xyChartData.setY(y);
         xyChartData.setColor(barColor);
         xyChartData.setSeriesName(seriesName);
-        ndChartPane.getChart().addAreaSeries(xyChartData);
-        ndChartPane.getChart().createChartSeries(barChartData);
+        ndChartPane.getChart().addAreaSeries(xyChartData, barColor);
+        ndChartPane.getChart().createChartSeries(barChartData, barColor);
         String[] lineNames = UIConstant.SPC_NDCCHART_LINE_NAME;
         Random rand = new Random();
         for (String lineName : lineNames) {
@@ -506,7 +506,6 @@ public class ChartResultController implements Initializable {
     }
 
     public void setNdChartData(String chartName, List<INdcChartData> ndChartData) {
-
         NDChart chart = ndChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
@@ -517,25 +516,15 @@ public class ChartResultController implements Initializable {
         setNdChartData(ndChartData);
     }
 
-    private void setNdChartData(List<INdcChartData> ndChartData) {
-        NDChart chart = ndChartPane.getChart();
-        ndChartData.forEach(chartData -> {
-            IBarChartData barChartData = chartData.getBarData();
-            IXYChartData curveData = chartData.getCurveData();
-            List<ILineData> lineData = chartData.getLineData();
-//                add bar chart data
-            chart.createChartSeries(barChartData);
-//                add area data
-            chart.addAreaSeries(curveData);
-//                add line data
-            if (lineData != null) {
-                lineData.forEach(oneLine -> chart.addValueMarker(oneLine));
-            }
-        });
-    }
-
     public void setRunChartData(String chartName, List<IRunChartData> runChartData) {
-
+        LinearChart chart = runChartPane.getChart();
+        if (chartMap.containsKey(chartName)) {
+//            clear chart
+            chart.removeAllChildren();
+        } else {
+            chartMap.put(chartName, chart);
+        }
+        setRunChartData(runChartData);
     }
 
     public void setControlChartData(String chartName, List<IControlChartData> controlChartData) {
@@ -548,9 +537,45 @@ public class ChartResultController implements Initializable {
 
     public void clearChartData() {
 
+        for (Map.Entry<String, XYChart> chartMap: chartMap.entrySet()) {
+            if (chartMap.getValue() instanceof NDChart) {
+                ((NDChart) chartMap.getValue()).removeAllChildren();
+            } else if (chartMap.getValue() instanceof LinearChart) {
+                ((LinearChart) chartMap.getValue()).removeAllChildren();
+            }
+        }
     }
 
     public void updateChartColor(Color color) {
 
+    }
+
+    private void setNdChartData(List<INdcChartData> ndChartData) {
+        NDChart chart = ndChartPane.getChart();
+        ndChartData.forEach(chartData -> {
+            IBarChartData barChartData = chartData.getBarData();
+            IXYChartData curveData = chartData.getCurveData();
+            List<ILineData> lineData = chartData.getLineData();
+//          add area data
+            chart.addAreaSeries(curveData, Color.GREEN);
+//          add bar chart data
+            chart.createChartSeries(barChartData, Color.GREEN);
+//                add line data
+            if (lineData != null) {
+                lineData.forEach(oneLine -> chart.addValueMarker(oneLine));
+            }
+        });
+    }
+
+    private void setRunChartData(List<IRunChartData> runChartData) {
+        LinearChart chart = runChartPane.getChart();
+        runChartData.forEach(chartData -> {
+            IXYChartData xyChartData = chartData.getXYChartData();
+            List<ILineData> lineData = chartData.getLineData();
+            chart.createChartSeries(xyChartData, null);
+            if (lineData != null) {
+                lineData.forEach(oneLine -> chart.addValueMarker(oneLine));
+            }
+        });
     }
 }

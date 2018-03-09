@@ -21,7 +21,7 @@ public class BarChartData<X, Y> implements IBarChartData {
     //    Series name
     private String seriesName;
 
-    public BarChartData(double[] histX, double[] histY) {
+    public BarChartData(Double[] histX, Double[] histY) {
         for (int i = 0; i < histX.length; i++) {
             BarCategoryData data = new BarCategoryData();
             data.setStartValue(histX[i]);
@@ -92,8 +92,4 @@ public class BarChartData<X, Y> implements IBarChartData {
         this.seriesName = seriesName;
     }
 
-    @Override
-    public int getSeriesIndex() {
-        return 0;
-    }
 }

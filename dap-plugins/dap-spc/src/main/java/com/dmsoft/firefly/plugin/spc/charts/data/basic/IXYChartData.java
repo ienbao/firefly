@@ -15,7 +15,11 @@ public interface IXYChartData<X, Y> {
 
     Object getExtraValueByIndex(int index);
 
-    Color getColor();
+    default Color getColor() {
+        return null;
+    }
 
-    String getSeriesName();
+    default String getSeriesName() {
+        return null;
+    }
 }
