@@ -21,11 +21,10 @@ import java.util.Random;
  */
 public class NDChartApp extends Application {
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
+    private NDChart<Double, Double> chart;
 
-        NumberAxis xAxis = new NumberAxis();
-        NumberAxis yAxis = new NumberAxis();
+    private void initData() {
+
         List<BarCategoryData<Double, Double>> barCategoryData = Lists.newArrayList();
         List<BarCategoryData<Double, Double>> _barCategoryData = Lists.newArrayList();
         Double[] x = new Double[]{1D, 4D, 7D, 10D, 13D, 16D, 19D, 22D, 25D, 28D};
@@ -64,19 +63,26 @@ public class NDChartApp extends Application {
         BarChartData<Double, Double> barChartData = new BarChartData<>(seriesName);
         barChartData.setBarData(barCategoryData);
         barChartData.setColor(barColor);
-
         XYChartData<Double, Double> xyChartData = new XYChartData();
         xyChartData.setX(x);
         xyChartData.setY(y);
         xyChartData.setColor(barColor);
-
-        NDChart<Double, Double> chart = new NDChart(xAxis, yAxis);
         chart.addAreaSeries(xyChartData);
         chart.createChartSeries(barChartData);
+    }
 
-        barChartData.setSeriesName("aaaaa");
-        barChartData.setBarData(_barCategoryData);
-        barChartData.setColor(Color.GREEN);
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        chart = new NDChart(xAxis, yAxis);
+
+        initData();
+
+//        barChartData.setSeriesName("aaaaa");
+//        barChartData.setBarData(_barCategoryData);
+//        barChartData.setColor(Color.GREEN);
 
 //        chart.createChartSeries(barChartData);
 //        xyChartData.setColor(Color.GREEN);
@@ -85,10 +91,16 @@ public class NDChartApp extends Application {
 
         VBox vBox = new VBox();
         HBox hBox = new HBox();
-        Button saveBtn = new Button("Save as");
-        hBox.getChildren().add(saveBtn);
+        Button clearBtn = new Button("Clear");
+        Button addBtn = new Button("Add Data");
+        hBox.getChildren().add(clearBtn);
+        hBox.getChildren().add(addBtn);
         vBox.getChildren().add(chart);
         vBox.getChildren().add(hBox);
+//        clearBtn.setOnAction(event -> {
+//            chart.removeAllChildren();
+//        });
+//        addBtn.setOnAction(event -> initData());
 
         Scene scene = new Scene(vBox, 600, 400);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());

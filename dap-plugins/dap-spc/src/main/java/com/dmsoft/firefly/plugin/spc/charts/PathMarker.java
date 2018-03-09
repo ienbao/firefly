@@ -7,11 +7,8 @@ import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
 import javafx.scene.Node;
-import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -120,5 +117,10 @@ public class PathMarker {
         if (pathMap.containsKey(pathName)) {
             pathMap.get(pathName).getStyleClass().remove("hidden-line");
         }
+    }
+
+    public void clear() {
+        pathMap.clear();
+        pathDataMap.clear();
     }
 }

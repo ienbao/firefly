@@ -366,6 +366,20 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         valueMarker.paintValueMaker(this);
     }
 
+    public void removeAllChildren() {
+        ObservableList<Node> nodes = getPlotChildren();
+        getData().setAll(FXCollections.observableArrayList());
+        getPlotChildren().removeAll(nodes);
+        clearData();
+    }
+
+    private void clearData() {
+        seriesCategoryMap.clear();
+        barCategoryDataMap.clear();
+        valueMarker.clear();
+        categories.clear();
+    }
+
     private void paintBarPlot() {
         double barWidth = 0;
         SortedSet categoriesOnScreen = getCategoriesOnScreen();

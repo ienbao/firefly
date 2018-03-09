@@ -49,6 +49,8 @@ public class ChartResultController implements Initializable {
 
     private String textColor = "#e92822";
 
+    private Map<String, XYChart> chartMap = Maps.newHashMap();
+
     private ChartPanel<NDChart> ndChartPane;
     private ChartPanel<LinearChart> runChartPane;
     private ChartPanel<LinearChart> xBarChartPane;
@@ -504,6 +506,13 @@ public class ChartResultController implements Initializable {
     }
 
     public void setNdChartData(String chartName, List<INdcChartData> ndChartData) {
+
+        NDChart chart = ndChartPane.getChart();
+        if (chartMap.containsKey(chartName)) {
+            
+        } else {
+            chartMap.put(chartName, chart);
+        }
 
     }
 
