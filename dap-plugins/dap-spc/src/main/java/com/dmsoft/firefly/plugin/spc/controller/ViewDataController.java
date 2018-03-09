@@ -191,7 +191,8 @@ public class ViewDataController implements Initializable {
         try {
             root = fxmlLoader.load();
             chooseDialogController = fxmlLoader.getController();
-            WindowFactory.createSimpleWindowAsModel("spcViewDataColumn", SpcFxmlAndLanguageUtils.getString(ResourceMassages.CHOOSE_ITEMS_TITLE), root);
+            WindowFactory.createSimpleWindowAsModel("spcViewDataColumn", SpcFxmlAndLanguageUtils.getString(ResourceMassages.CHOOSE_ITEMS_TITLE), root,
+                    getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
         } catch (IOException e) {
             e.printStackTrace();
         }
