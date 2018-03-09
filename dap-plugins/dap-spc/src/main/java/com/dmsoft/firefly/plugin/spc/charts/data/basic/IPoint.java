@@ -11,6 +11,8 @@ public interface IPoint<X, Y> {
 
     Y getYByIndex(int index);
 
+    int getLen();
+
     default Color getColor() {
         return Color.RED;
     }

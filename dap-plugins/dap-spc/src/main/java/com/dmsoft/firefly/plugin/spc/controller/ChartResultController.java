@@ -150,7 +150,6 @@ public class ChartResultController implements Initializable {
                 ndChartPane.getChart().toggleValueMarker(name, selected);
             }
         });
-
         NDChart<Double, Double> ndChart = new NDChart(xAxis, yAxis);
         ndChartPane = new ChartPanel(ndChart);
         ndChartPane.setLegend(legend);
@@ -352,6 +351,7 @@ public class ChartResultController implements Initializable {
         Double[] barWidth = new Double[10];
 
         List<BarCategoryData<Double, Double>> barCategoryData = Lists.newArrayList();
+        XYChartData<Double, Double> xyChartData = new XYChartData();
         Random random = new Random();
         for (int i = 0; i < 10; i++) {
             BarCategoryData<Double, Double> barCategoryData1 = new BarCategoryData();
@@ -371,15 +371,13 @@ public class ChartResultController implements Initializable {
         BarChartData<Double, Double> barChartData = new BarChartData<>(seriesName);
         barChartData.setBarData(barCategoryData);
         barChartData.setColor(barColor);
-        ndChartPane.getChart().createChartSeries(barChartData);
 
-        XYChartData<Double, Double> xyChartData = new XYChartData();
         xyChartData.setX(x);
         xyChartData.setY(y);
         xyChartData.setColor(barColor);
         xyChartData.setSeriesName(seriesName);
         ndChartPane.getChart().addAreaSeries(xyChartData);
-
+        ndChartPane.getChart().createChartSeries(barChartData);
         String[] lineNames = UIConstant.SPC_NDCCHART_LINE_NAME;
         Random rand = new Random();
         for (String lineName : lineNames) {
@@ -505,23 +503,27 @@ public class ChartResultController implements Initializable {
         this.spcMainController = spcMainController;
     }
 
-    public void setNdChartData(INdcChartData ndChartData) {
+    public void setNdChartData(String chartName, List<INdcChartData> ndChartData) {
 
     }
 
-    public void setRunChartData(IRunChartData runChartData) {
+    public void setRunChartData(String chartName, List<IRunChartData> runChartData) {
 
     }
 
-    public void setControlChartData(String chartName, IControlChartData controlChartData) {
+    public void setControlChartData(String chartName, List<IControlChartData> controlChartData) {
 
     }
 
-    public void setBoxChartData(IBoxChartData boxChartData) {
+    public void setBoxChartData(String chartName, List<IBoxChartData> boxChartData) {
 
     }
 
     public void clearChartData() {
+
+    }
+
+    public void updateChartColor(Color color) {
 
     }
 }

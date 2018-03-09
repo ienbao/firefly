@@ -76,7 +76,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         this.setLegendVisible(false);
     }
 
-    public NDChart(Axis<X> xAxis, Axis<Y> yAxis, IBarChartData<X, Y> barChartData) {
+    private NDChart(Axis<X> xAxis, Axis<Y> yAxis, IBarChartData<X, Y> barChartData) {
         this(xAxis, yAxis);
         this.createChartSeries(barChartData);
     }
@@ -361,8 +361,8 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
 
     @Override
     protected void layoutPlotChildren() {
-        this.paintAreaSeries();
         this.paintBarPlot();
+        this.paintAreaSeries();
         valueMarker.paintValueMaker(this);
     }
 
@@ -378,8 +378,8 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
                 valueAxis.getDisplayPosition(valueAxis.getLowerBound()) : valueAxis.getZeroPosition();
         int catIndex = 0;
         for (Object category : categories) {
-            int index = 0;
             for (Iterator<Series<X, Y>> sit = getDisplayedSeriesIterator(); sit.hasNext(); ) {
+                int index = 0;
                 Series<X, Y> series = sit.next();
                 final Data<X, Y> item = getDataItem(series, index, catIndex, category);
                 if (item != null) {

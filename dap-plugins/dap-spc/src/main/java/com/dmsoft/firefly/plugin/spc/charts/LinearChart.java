@@ -32,8 +32,9 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
 
     private ValueMarker valueMarker = new ValueMarker();
     private PathMarker pathMarker = new PathMarker();
-    private boolean showTooltip = true;
     private Map<XYChart.Series, Color> seriesColorMap = Maps.newHashMap();
+
+    private boolean showTooltip = true;
 
     /**
      * Construct a new LinearChart with the given axis.

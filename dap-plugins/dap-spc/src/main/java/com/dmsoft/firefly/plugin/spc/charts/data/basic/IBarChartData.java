@@ -20,4 +20,6 @@ public interface IBarChartData<X, Y> {
     Color getColor();
 
     String getSeriesName();
+
+    int getSeriesIndex();
 }
