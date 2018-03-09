@@ -20,22 +20,21 @@ public class BarChartData<X, Y> implements IBarChartData {
     private Color color;
     //    Series name
     private String seriesName;
-    private Double[] x = null;
-    private Double[] y = null;
-    public BarChartData(Double[] histX, Double[] histY) {
-        this.x = histX;
-        this.y = histY;
+
+    public BarChartData(double[] histX, double[] histY) {
+        for (int i = 0; i < histX.length; i++) {
+            BarCategoryData data = new BarCategoryData();
+            data.setStartValue(histX[i]);
+            data.setEndValue(histX[i + 1]);
+            data.setBarWidth(histX[i + 1] - histX[i]);
+            data.setValue(histY[i]);
+            barData.add(data);
+        }
     }
 
     public BarChartData(String seriesName) {
         this.seriesName = seriesName;
     }
-
-//    @Override
-//    public X getStartValue(XYChart.Data data) {
-//
-//        return barCategoryDataMap.containsKey(data) ? barCategoryDataMap.get(data).getStartValue() : null;
-//    }
 
     @Override
     public Y getValueByIndex(int index) {
@@ -61,26 +60,11 @@ public class BarChartData<X, Y> implements IBarChartData {
         return (barData != null && index < getLen()) ? barData.get(index).getEndValue() : null;
     }
 
-//    @Override
-//    public X getBarWidth(XYChart.Data data) {
-//
-//        return (barData != null && index < getLen()) ? barData.get(index).getBarWidth() : null;
-//    }
-
     @Override
     public int getLen() {
 
         return barData == null ? 0 : barData.size();
     }
-
-//    @Override
-//    public void addBarChartData(Object startValue, Object width, Object value, XYChart.Data data) {
-//
-//        if (!barCategoryDataMap.containsKey(data)) {
-//            BarCategoryData barCategoryData = new BarCategoryData(startValue, width, value);
-//            barCategoryDataMap.put(data, barCategoryData);
-//        }
-//    }
 
     @Override
     public Color getColor() {

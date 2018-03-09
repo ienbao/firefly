@@ -509,11 +509,29 @@ public class ChartResultController implements Initializable {
 
         NDChart chart = ndChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
-            
+//            clear chart
+            chart.removeAllChildren();
         } else {
             chartMap.put(chartName, chart);
         }
+        setNdChartData(ndChartData);
+    }
 
+    private void setNdChartData(List<INdcChartData> ndChartData) {
+        NDChart chart = ndChartPane.getChart();
+        ndChartData.forEach(chartData -> {
+            IBarChartData barChartData = chartData.getBarData();
+            IXYChartData curveData = chartData.getCurveData();
+            List<ILineData> lineData = chartData.getLineData();
+//                add bar chart data
+            chart.createChartSeries(barChartData);
+//                add area data
+            chart.addAreaSeries(curveData);
+//                add line data
+            if (lineData != null) {
+                lineData.forEach(oneLine -> chart.addValueMarker(oneLine));
+            }
+        });
     }
 
     public void setRunChartData(String chartName, List<IRunChartData> runChartData) {
