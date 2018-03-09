@@ -26,6 +26,8 @@ public class BoxPlotChartApp extends Application {
     private Button removePointBtn;
     private Button showLineBtn;
     private Button removeLineBtn;
+    private Button clearBtn;
+    private Button addBtn;
     private BoxPlotChart chart;
 
     private Map<String, XYChart.Data<Number, Number>> markers = Maps.newHashMap();
@@ -97,9 +99,11 @@ public class BoxPlotChartApp extends Application {
         removePointBtn = new Button("Remove Point");
         showLineBtn = new Button("Show Line");
         removeLineBtn = new Button("Remove Line");
+        clearBtn = new Button("Clear");
+        addBtn = new Button("Add");
         VBox vBox = new VBox();
         HBox hBox = new HBox();
-        hBox.getChildren().addAll(addPointBtn, removePointBtn, showLineBtn, removeLineBtn);
+        hBox.getChildren().addAll(addPointBtn, removePointBtn, showLineBtn, removeLineBtn, clearBtn, addBtn);
         vBox.getChildren().add(chart);
         vBox.getChildren().add(hBox);
         Scene scene = new Scene(vBox);
@@ -128,6 +132,14 @@ public class BoxPlotChartApp extends Application {
 
         removeLineBtn.setOnAction(event -> {
             chart.removeStroke();
+        });
+
+        clearBtn.setOnAction(event -> {
+            chart.removeAllChildren();
+        });
+
+        addBtn.setOnAction(event -> {
+            initData();
         });
 
     }

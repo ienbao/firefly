@@ -31,6 +31,8 @@ public class ViewDataDetailController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         DetailDataModel model = new DetailDataModel(rowDataDto, typeDtoList);
         NewTableViewWrapper.decorate(detailTB, model);
+        detailTB.getColumns().get(0).setPrefWidth(226);
+        detailTB.getColumns().get(1).setPrefWidth(163);
     }
 
     public void setRowDataDto(RowDataDto rowDataDto) {

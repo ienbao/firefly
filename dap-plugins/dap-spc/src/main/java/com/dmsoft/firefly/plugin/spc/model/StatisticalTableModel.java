@@ -381,4 +381,8 @@ public class StatisticalTableModel implements NewTableModel {
         }
         return value.toString();
     }
+
+    public Map<String, Color> getColorCache() {
+        return colorCache;
+    }
 }

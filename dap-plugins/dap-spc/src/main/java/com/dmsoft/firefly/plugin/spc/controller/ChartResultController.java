@@ -13,8 +13,11 @@ import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
 import com.dmsoft.firefly.plugin.spc.charts.view.VerticalTabPane;
+import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
+import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.*;
 import com.dmsoft.firefly.plugin.spc.charts.data.BarCategoryData;
+import com.dmsoft.firefly.plugin.spc.model.SpcNdChartData;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
@@ -85,7 +88,7 @@ public class ChartResultController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initChartPane();
-        this.initChartData();
+//        this.initChartData();
     }
 
     private void initChartPane() {
@@ -378,8 +381,8 @@ public class ChartResultController implements Initializable {
         xyChartData.setY(y);
         xyChartData.setColor(barColor);
         xyChartData.setSeriesName(seriesName);
-        ndChartPane.getChart().addAreaSeries(xyChartData);
-        ndChartPane.getChart().createChartSeries(barChartData);
+        ndChartPane.getChart().addAreaSeries(xyChartData, barColor);
+        ndChartPane.getChart().createChartSeries(barChartData, barColor);
         String[] lineNames = UIConstant.SPC_NDCCHART_LINE_NAME;
         Random rand = new Random();
         for (String lineName : lineNames) {
@@ -505,19 +508,49 @@ public class ChartResultController implements Initializable {
         this.spcMainController = spcMainController;
     }
 
-    public void setNdChartData(String chartName, List<INdcChartData> ndChartData) {
+    /**
+     * init spc chart data
+     *
+     * @param spcChartDtoList the list of chart data
+     */
+    public void initSpcChartData(List<SpcChartDto> spcChartDtoList) {
+        Map<String, java.awt.Color> colorCache = spcMainController.getColorCache();
+        List<INdcChartData> ndcChartDataList = Lists.newArrayList();
+        for (SpcChartDto spcChartDto : spcChartDtoList) {
+            String key = spcChartDto.getKey();
+            Color color = ColorUtils.toFxColorFromAwtColor(colorCache.get(key));
+            SpcChartResultDto spcChartResultDto = spcChartDto.getResultDto();
+            if (spcChartResultDto == null) {
+                continue;
+            }
+            //nd chart
+            INdcChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
+            ndcChartDataList.add(iNdcChartData);
+        }
 
+        this.setNdChartData("ND chart", ndcChartDataList);
+    }
+
+    public void setNdChartData(String chartName, List<INdcChartData> ndChartData) {
         NDChart chart = ndChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
-            
+//            clear chart
+            chart.removeAllChildren();
         } else {
             chartMap.put(chartName, chart);
         }
-
+        setNdChartData(ndChartData);
     }
 
     public void setRunChartData(String chartName, List<IRunChartData> runChartData) {
-
+        LinearChart chart = runChartPane.getChart();
+        if (chartMap.containsKey(chartName)) {
+//            clear chart
+            chart.removeAllChildren();
+        } else {
+            chartMap.put(chartName, chart);
+        }
+        setRunChartData(runChartData);
     }
 
     public void setControlChartData(String chartName, List<IControlChartData> controlChartData) {
@@ -530,9 +563,45 @@ public class ChartResultController implements Initializable {
 
     public void clearChartData() {
 
+//        for (Map.Entry<String, XYChart> chartMap : chartMap.entrySet()) {
+//            if (chartMap.getValue() instanceof NDChart) {
+//                ((NDChart) chartMap.getValue()).removeAllChildren();
+//            } else if (chartMap.getValue() instanceof LinearChart) {
+//                ((LinearChart) chartMap.getValue()).removeAllChildren();
+//            }
+//        }
     }
 
     public void updateChartColor(Color color) {
 
+    }
+
+    private void setNdChartData(List<INdcChartData> ndChartData) {
+        NDChart chart = ndChartPane.getChart();
+        ndChartData.forEach(chartData -> {
+            IBarChartData barChartData = chartData.getBarData();
+            IXYChartData curveData = chartData.getCurveData();
+            List<ILineData> lineData = chartData.getLineData();
+//          add area data
+            chart.addAreaSeries(curveData, Color.GREEN);
+//          add bar chart data
+            chart.createChartSeries(barChartData, Color.GREEN);
+//                add line data
+            if (lineData != null) {
+                lineData.forEach(oneLine -> chart.addValueMarker(oneLine));
+            }
+        });
+    }
+
+    private void setRunChartData(List<IRunChartData> runChartData) {
+        LinearChart chart = runChartPane.getChart();
+        runChartData.forEach(chartData -> {
+            IXYChartData xyChartData = chartData.getXYChartData();
+            List<ILineData> lineData = chartData.getLineData();
+            chart.createChartSeries(xyChartData, null);
+            if (lineData != null) {
+                lineData.forEach(oneLine -> chart.addValueMarker(oneLine));
+            }
+        });
     }
 }

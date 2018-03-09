@@ -19,4 +19,7 @@ public class ResourceMassages {
     public final static String PLARTFORM_STAGE = "platform_stage_";
     public final static String PLARTFORM_STAGE_MAIN = PLARTFORM_STAGE + "main";
 
+
+    public static final String ADVANCE = "ADVANCE";
+
 }

@@ -7,19 +7,34 @@ import javafx.scene.paint.Color;
  */
 public interface IBarChartData<X, Y> {
 
+//    y value
     Y getValueByIndex(int index);
 
+//    bar start value
     X getStartValueByIndex(int index);
 
+//    bar width
     X getBarWidthByIndex(int index);
 
-    Object getEndValueByIndex(int index);
+//    bar end value
+    X getEndValueByIndex(int index);
 
+//    bar count
     int getLen();
 
-    Color getColor();
+//    bar color
+    default Color getColor() {
+        return null;
+    }
 
-    String getSeriesName();
+//    bar description
+    default String getSeriesName() {
+        return "";
+    }
 
-    int getSeriesIndex();
+    default String getTooltipContent(int index) {
+
+        return getSeriesName() + "\n" + "X[" + getStartValueByIndex(index) + ", " +
+                getEndValueByIndex(index) + "]" + "\n" + "Y = " + getValueByIndex(index);
+    }
 }

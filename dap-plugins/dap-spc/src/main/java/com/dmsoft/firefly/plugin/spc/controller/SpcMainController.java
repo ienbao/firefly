@@ -6,6 +6,7 @@ package com.dmsoft.firefly.plugin.spc.controller;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcAnalysisConfigDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
@@ -29,6 +30,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 
+import java.awt.*;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -81,6 +83,14 @@ public class SpcMainController implements Initializable {
         statisticalResultController.setStatisticalResultTableData(list);
     }
 
+    /**
+     * get Cache color
+     * @return color Cache
+     */
+    public Map<String, Color> getColorCache(){
+        return statisticalResultController.getColorCache();
+    }
+
     private void initComponentEvent() {
         resetBtn.setOnAction(event -> getResetBtnEvent());
         printBtn.setOnAction(event -> getPrintBtnEvent());
@@ -125,17 +135,16 @@ public class SpcMainController implements Initializable {
             manager.doJobASyn(job, new JobDoComplete() {
                 @Override
                 public void doComplete(Object returnValue) {
-                    System.out.println("ASyn result = " + (returnValue == null ? "null" : returnValue));
-//                    if (returnValue == null) {
-////                        spcStatsDtoList = initData();
-////                        return;
-//                    }
-                    SearchDataFrame searchDataFrame = initData();
+                    if (returnValue == null) {
+                        return;
+                    }
+                    List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
+                    chartResultController.initSpcChartData(spcChartDtoList);
 
                 }
             }, paramMap);
         });
-//        viewDataController.setViewData(subDataFrame);
+        viewDataController.setViewData(subDataFrame);
     }
 
     private void initBtnIcon() {

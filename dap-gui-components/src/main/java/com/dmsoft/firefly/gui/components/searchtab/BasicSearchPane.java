@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2016. For Intelligent Group.
  */
-package com.dmsoft.firefly.plugin.spc.controller;
+package com.dmsoft.firefly.gui.components.searchtab;
 
 import com.dmsoft.firefly.gui.components.searchcombobox.ISearchComboBoxController;
 import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
-import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
-import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;

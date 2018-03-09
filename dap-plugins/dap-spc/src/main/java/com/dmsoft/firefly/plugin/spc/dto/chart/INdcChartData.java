@@ -4,6 +4,7 @@ import com.dmsoft.firefly.plugin.spc.charts.AxisRange;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBarChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.ILineData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
+import javafx.scene.paint.Color;
 
 import java.util.List;
 
@@ -17,4 +18,8 @@ public interface INdcChartData extends AxisRange {
     IBarChartData getBarData();
 
     List<ILineData> getLineData();
+
+//    Color getColor();
+//
+//    String getUniqueKey();
 }

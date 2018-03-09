@@ -152,6 +152,13 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         }
     }
 
+    public void removeAllChildren() {
+        ObservableList<Node> nodes = getPlotChildren();
+        getPlotChildren().removeAll(nodes);
+        getData().setAll(FXCollections.observableArrayList());
+        outliers.setAll(FXCollections.observableArrayList());
+    }
+
     public void addSymbol(Data<Number, Number> symbol) {
         Circle circle = new Circle();
         symbol.setNode(circle);

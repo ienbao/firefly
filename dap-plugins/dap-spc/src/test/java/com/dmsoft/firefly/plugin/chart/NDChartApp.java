@@ -67,7 +67,7 @@ public class NDChartApp extends Application {
         xyChartData.setX(x);
         xyChartData.setY(y);
         xyChartData.setColor(barColor);
-        chart.addAreaSeries(xyChartData);
+        chart.addAreaSeries(xyChartData, barColor);
         chart.createChartSeries(barChartData);
     }
 
