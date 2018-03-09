@@ -104,4 +104,9 @@ public class BarChartData<X, Y> implements IBarChartData {
     public void setSeriesName(String seriesName) {
         this.seriesName = seriesName;
     }
+
+    @Override
+    public int getSeriesIndex() {
+        return 0;
+    }
 }

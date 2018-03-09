@@ -505,11 +505,11 @@ public class ChartResultController implements Initializable {
         this.spcMainController = spcMainController;
     }
 
-    public void setNdChartData(INdcChartData ndChartData) {
+    public void setNdChartData(String chartName, INdcChartData ndChartData) {
 
     }
 
-    public void setRunChartData(IRunChartData runChartData) {
+    public void setRunChartData(String chartName, IRunChartData runChartData) {
 
     }
 
@@ -517,7 +517,7 @@ public class ChartResultController implements Initializable {
 
     }
 
-    public void setBoxChartData(IBoxChartData boxChartData) {
+    public void setBoxChartData(String chartName, IBoxChartData boxChartData) {
 
     }
 

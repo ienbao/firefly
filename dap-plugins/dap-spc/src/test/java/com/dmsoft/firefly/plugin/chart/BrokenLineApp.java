@@ -43,6 +43,11 @@ public class BrokenLineApp extends Application {
                 public Double getYByIndex(int index) {
                     return y[index];
                 }
+
+                @Override
+                public int getLen() {
+                    return x == null ? 0 : x.length;
+                }
             };
             points.add(point);
         }

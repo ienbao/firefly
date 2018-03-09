@@ -55,9 +55,10 @@ public class PathMarker {
 
         Path path = new Path();
 //        set path style
-        if (pathData.getColor() != null) {
-            path.setStyle("-fx-stroke:" + ColorUtils.toHexFromFXColor(pathData.getColor()));
-        }
+        String color = pathData.getColor() == null || DAPStringUtils.isBlank(ColorUtils.toHexFromFXColor(pathData.getColor()))
+                ? "black" : ColorUtils.toHexFromFXColor(pathData.getColor());
+        path.setStyle("-fx-stroke:" + color);
+
         if (LineType.SOLID == pathData.getLineType()) {
             path.getStyleClass().add("solid-line");
         } else if (LineType.DASHED == pathData.getLineType()) {

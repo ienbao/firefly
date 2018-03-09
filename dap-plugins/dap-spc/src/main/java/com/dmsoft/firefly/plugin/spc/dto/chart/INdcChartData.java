@@ -11,9 +11,9 @@ import java.util.List;
  */
 public interface INdcChartData {
 
-    IXYChartData getXYChartData();
+    IXYChartData getCurveData();
 
-    IBarChartData getBarChartData();
+    IBarChartData getBarData();
 
     List<ILineData> getLineData();
 }
