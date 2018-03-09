@@ -25,6 +25,7 @@ public class DefaultJobPipeline implements JobPipeline {
     private final Job session;
     private Object result;
     private AtomicInteger process = new AtomicInteger(0);
+    private volatile int allWeight = 0;
 
     public DefaultJobPipeline(JobDoComplete doComplete, ExecutorService executorService, List<JobEventListener> jobEventListeners, Job session) {
         this.doComplete = doComplete;
@@ -58,6 +59,7 @@ public class DefaultJobPipeline implements JobPipeline {
         synchronized (this) {
             newCtx = newContext(name, handler);
             addFirst0(newCtx);
+            allWeight += handler.getWeight();
         }
         return this;
     }
@@ -68,6 +70,7 @@ public class DefaultJobPipeline implements JobPipeline {
         synchronized (this) {
             newCtx = newContext(name, handler);
             addLast0(newCtx);
+            allWeight += handler.getWeight();
         }
         return this;
     }
@@ -80,6 +83,7 @@ public class DefaultJobPipeline implements JobPipeline {
             ctx = getContext(baseName);
             newCtx = newContext(name, handler);
             addBefore0(ctx, newCtx);
+            allWeight += handler.getWeight();
         }
         return this;
     }
@@ -92,6 +96,7 @@ public class DefaultJobPipeline implements JobPipeline {
             ctx = getContext(baseName);
             newCtx = newContext(name, handler);
             addAfter0(ctx, newCtx);
+            allWeight += handler.getWeight();
         }
         return this;
     }
@@ -228,6 +233,16 @@ public class DefaultJobPipeline implements JobPipeline {
     @Override
     public int getCurrentProcess() {
         return process.get();
+    }
+
+    @Override
+    public void addProcess(int process) {
+        this.process.addAndGet(process);
+    }
+
+    @Override
+    public int getAllWeight() {
+        return allWeight;
     }
 
     final class TailContext extends AbstractJobHandlerContext implements JobInboundHandler {

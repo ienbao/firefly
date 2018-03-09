@@ -195,4 +195,8 @@ public interface JobPipeline {
     void setResult(Object result);
 
     int getCurrentProcess();
+
+    void addProcess(int process);
+
+    int getAllWeight();
 }

@@ -14,9 +14,10 @@ import com.dmsoft.firefly.sdk.job.core.JobWorkProcessListener;
  */
 public class JobThread extends Thread implements ProcessMonitorAuto, JobWorkProcessListener {
 
-
     private volatile ProcessMonitorListener listener;
     private volatile ProcessResult processResult;
+    private volatile int currentProcess;
+    private volatile int weight;
 
     public JobThread() {
     }
@@ -49,9 +50,11 @@ public class JobThread extends Thread implements ProcessMonitorAuto, JobWorkProc
     }
 
     @Override
-    public void push(ProcessResult processResult) {
+    public synchronized void push(ProcessResult processResult) {
         this.processResult = processResult;
         if (listener != null) {
+            int process = currentProcess + (weight * processResult.getPoint() / 100);
+            processResult.setPoint(process);
             listener.onProcessChange(processResult);
         }
     }
@@ -155,5 +158,13 @@ public class JobThread extends Thread implements ProcessMonitorAuto, JobWorkProc
 
     public ProcessMonitorListener getListener() {
         return listener;
+    }
+
+    public void setCurrentProcess(int currentProcess) {
+        this.currentProcess = currentProcess;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
     }
 }

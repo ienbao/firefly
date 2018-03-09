@@ -55,14 +55,18 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
     public JobHandlerContext fireDoJob(Object... param) {
         AbstractJobHandlerContext next = findContextInbound();
         doNextInbound = true;
+        jobPipeline.addProcess(handler().getWeight());
         JobThread thread = new JobThread() {
             @Override
             public void run() {
                 next.invokeDoJob(param);
             }
         };
+        thread.setCurrentProcess(jobPipeline.getCurrentProcess());
+        thread.setWeight(100 * next.handler().getWeight() / jobPipeline.getAllWeight());
         thread.addProcessMonitorListener(getContextProcessMonitorListenerIfExists());
         thread.start();
+        handler().remove();
 //        executorService.execute(thread);
         return this;
     }
@@ -71,6 +75,7 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
         try {
             ((JobInboundHandler) handler()).doJob(this, param);
             if (!doNextInbound && !doNextOutbound) {
+                handler().remove();
                 jobPipeline.returnValue(null);
             }
         } catch (Exception e) {
@@ -87,14 +92,18 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
         }
         AbstractJobHandlerContext next = findContextOutbound();
         doNextOutbound = true;
+        jobPipeline.addProcess(handler().getWeight());
         JobThread thread = new JobThread() {
             @Override
             public void run() {
                 next.invokeReturnValue(returnValue);
             }
         };
+        thread.setCurrentProcess(jobPipeline.getCurrentProcess());
+        thread.setWeight(100 * next.handler().getWeight() / jobPipeline.getAllWeight());
         thread.addProcessMonitorListener(getContextProcessMonitorListenerIfExists());
         thread.start();
+        handler().remove();
 //        executorService.execute(thread);
     }
 
