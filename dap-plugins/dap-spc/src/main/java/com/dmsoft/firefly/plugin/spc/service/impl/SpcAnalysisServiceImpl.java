@@ -487,7 +487,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
             singleBoxDataDto.setUpperWhisker(boxy[i * 5 + 4]);
             List<Double> outList = Lists.newArrayList();
             if (outs != null) {
-                while (outs[j] == i) {
+                while (j < outs.length && outs[j] == i) {
                     outList.add(outs[j + 1]);
                     j = j + 2;
                 }

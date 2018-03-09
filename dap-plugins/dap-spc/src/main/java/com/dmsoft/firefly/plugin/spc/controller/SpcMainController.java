@@ -135,7 +135,7 @@ public class SpcMainController implements Initializable {
                 }
             }, paramMap);
         });
-        viewDataController.setViewData(subDataFrame);
+//        viewDataController.setViewData(subDataFrame);
     }
 
     private void initBtnIcon() {
