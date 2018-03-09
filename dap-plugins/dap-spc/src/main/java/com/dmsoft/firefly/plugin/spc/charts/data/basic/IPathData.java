@@ -22,7 +22,9 @@ public interface IPathData {
         return "";
     }
 
-    Color getColor();
+    default Color getColor() {
+        return null;
+    }
 
     default LineType getLineType() {
         return LineType.SOLID;

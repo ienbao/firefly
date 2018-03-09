@@ -11,11 +11,15 @@ public interface ILineData {
 
     String getName();
 
-    String getTitle();
+    default String getTitle() {
+        return "";
+    }
 
     double getValue();
 
-    Color getColor();
+    default Color getColor() {
+        return null;
+    }
 
     default Orientation getPlotOrientation() {
         return Orientation.VERTICAL;

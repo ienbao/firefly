@@ -313,10 +313,10 @@ public class ChartResultController implements Initializable {
             ndcChartDataList.add(iNdcChartData);
         }
 
-        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
+        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList, null);
     }
 
-    public void setNdChartData(String chartName, List<INdcChartData> ndChartData) {
+    public void setNdChartData(String chartName, List<INdcChartData> ndChartData, AxisRange axisRange) {
         NDChart chart = ndChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
@@ -327,7 +327,7 @@ public class ChartResultController implements Initializable {
         setNdChartData(ndChartData);
     }
 
-    public void setRunChartData(String chartName, List<IRunChartData> runChartData) {
+    public void setRunChartData(String chartName, List<IRunChartData> runChartData, AxisRange axisRange) {
         LinearChart chart = runChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
@@ -338,7 +338,7 @@ public class ChartResultController implements Initializable {
         setRunChartData(runChartData);
     }
 
-    public void setControlChartData(String chartName, List<IControlChartData> controlChartData) {
+    public void setControlChartData(String chartName, List<IControlChartData> controlChartData, AxisRange axisRange) {
         Object chart = getChartByName(chartName);
         if (chart != null && chart instanceof LinearChart) {
             LinearChart linearChart = (LinearChart) chart;
@@ -352,7 +352,7 @@ public class ChartResultController implements Initializable {
         }
     }
 
-    public void setBoxChartData(String chartName, List<IBoxChartData> boxChartData) {
+    public void setBoxChartData(String chartName, List<IBoxChartData> boxChartData, AxisRange axisRange) {
         BoxPlotChart chart = boxChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
@@ -376,8 +376,14 @@ public class ChartResultController implements Initializable {
         }
     }
 
-    public void updateChartColor(Color color) {
-
+    public void updateChartColor(String unique, Color color) {
+        ndChartPane.getChart().updateChartColor(unique, color);
+        xBarChartPane.getChart().updateChartColor(unique, color);
+        rangeChartPane.getChart().updateChartColor(unique, color);
+        sdChartPane.getChart().updateChartColor(unique, color);
+        medianChartPane.getChart().updateChartColor(unique, color);
+        boxChartPane.getChart().updateChartColor(unique, color);
+        mrChartPane.getChart().updateChartColor(unique, color);
     }
 
     private void setNdChartData(List<INdcChartData> ndChartData) {

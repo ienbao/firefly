@@ -20,6 +20,6 @@ public interface IXYChartData<X, Y> {
     }
 
     default String getSeriesName() {
-        return null;
+        return "";
     }
 }

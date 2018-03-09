@@ -21,7 +21,9 @@ public interface IBoxAndWhiskerData {
 
     Number getMaxRegularValueByIndex(int index);
 
-    Color getColor();
+    default Color getColor() {
+        return null;
+    }
 
     int getLen();
 }

@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by cherry on 2018/3/8.
  */
-public interface INdcChartData extends AxisRange {
+public interface INdcChartData {
 
     IXYChartData getCurveData();
 
@@ -19,7 +19,7 @@ public interface INdcChartData extends AxisRange {
 
     List<ILineData> getLineData();
 
-//    Color getColor();
-//
-//    String getUniqueKey();
+    Color getColor();
+
+    String getUniqueKey();
 }
