@@ -1,12 +1,10 @@
 package com.dmsoft.firefly.plugin.chart;
 
 import com.dmsoft.firefly.plugin.spc.charts.BoxPlotChart;
-import com.dmsoft.firefly.plugin.spc.charts.data.BoxAndWhiskerData;
+import com.dmsoft.firefly.plugin.spc.charts.data.BoxExtraData;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -41,8 +39,9 @@ public class BoxPlotChartApp extends Application {
 
     private void initData() {
 
-        List<BoxAndWhiskerData> chartData = Lists.newArrayList();
-        chartData.add(new BoxAndWhiskerData(1, 25, 20, 32, 16, 20));
+        List<BoxExtraData> chartData = Lists.newArrayList();
+        BoxExtraData boxExtraData = new BoxExtraData(1, 27, 25, 20, 32, 16, 20);
+        chartData.add(boxExtraData);
 //        chartData.add(new BoxAndWhiskerData(2, 26, 30, 33, 22, 25));
 //        chartData.add(new BoxAndWhiskerData(3, 30, 38, 40, 20, 32));
 //        chartData.add(new BoxAndWhiskerData(4, 24, 30, 34, 22, 30));

@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 /**
  * Created by cherry on 2018/2/10.
  */
-public class BoxAndWhiskerData extends AbstractValueObject {
+public class BoxExtraData extends AbstractValueObject {
 
     /**
      * X coordinate
@@ -16,7 +16,7 @@ public class BoxAndWhiskerData extends AbstractValueObject {
     /**
      * The mean
      */
-    private Number mean;
+    private Number mean;   //cl
 
     /**
      * The median.
@@ -45,17 +45,15 @@ public class BoxAndWhiskerData extends AbstractValueObject {
 
     private Color color;
 
-    public BoxAndWhiskerData() {
-    }
-
-    public BoxAndWhiskerData(Number xPos,
-                             Number q3,
-                             Number q1,
-                             Number maxRegularValue,
-                             Number minRegularValue,
-                             Number median
-    ) {
+    public BoxExtraData(Number xPos,
+                        Number mean,
+                        Number q3,
+                        Number q1,
+                        Number maxRegularValue,
+                        Number minRegularValue,
+                        Number median) {
         this.xPos = xPos;
+        this.mean = mean;
         this.median = median;
         this.q1 = q1;
         this.q3 = q3;
@@ -72,15 +70,16 @@ public class BoxAndWhiskerData extends AbstractValueObject {
      * @param minRegularValue
      * @param maxRegularValue
      */
-    public BoxAndWhiskerData(Number xPos,
-                             Number q3,
-                             Number q1,
-                             Number maxRegularValue,
-                             Number minRegularValue,
-                             Number median,
-                             Color color
-                             ) {
+    public BoxExtraData(Number xPos,
+                        Number mean,
+                        Number q3,
+                        Number q1,
+                        Number maxRegularValue,
+                        Number minRegularValue,
+                        Number median,
+                        Color color) {
         this.xPos = xPos;
+        this.mean = mean;
         this.median = median;
         this.q1 = q1;
         this.q3 = q3;

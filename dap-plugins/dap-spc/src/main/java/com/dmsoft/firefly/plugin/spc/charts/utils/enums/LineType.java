@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.plugin.spc.charts.shape;
+package com.dmsoft.firefly.plugin.spc.charts.utils.enums;
 
 /**
  * Created by cherry on 2018/2/12.

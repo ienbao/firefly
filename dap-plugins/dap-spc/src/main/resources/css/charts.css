@@ -163,6 +163,10 @@
     -fx-pref-width: 80px;
 }
 
+.candlestick-series {
+    -fx-opacity: 0.7;
+}
+
 .candlestick-tooltip-box > .label {
     -fx-padding: 0 0 10 0;
 }

@@ -107,7 +107,7 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         });
     }
 
-    public void addValueMarker(LineData lineData) {
+    public void addValueMarker(ILineData lineData) {
 
         Line line = valueMarker.buildValueMarker(lineData);
         getPlotChildren().add(line);

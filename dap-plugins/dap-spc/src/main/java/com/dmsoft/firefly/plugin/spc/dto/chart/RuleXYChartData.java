@@ -1,7 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.dto.chart;
 
 import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.LineData;
 
 import java.util.Map;
 

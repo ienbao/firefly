@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.charts;
 
-import com.dmsoft.firefly.plugin.spc.charts.data.BoxAndWhiskerData;
+import com.dmsoft.firefly.plugin.spc.charts.data.BoxExtraData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBoxAndWhiskerData;
 import com.dmsoft.firefly.plugin.spc.charts.view.Candle;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
@@ -76,19 +76,22 @@ public class BoxPlotChart extends XYChart<Number, Number> {
     private Series buildSeries(IBoxAndWhiskerData data) {
         XYChart.Series<Number, Number> series = new XYChart.Series<Number, Number>();
         for (int i = 0; i < data.getLen(); i++) {
-            BoxAndWhiskerData boxAndWhiskerData = new BoxAndWhiskerData(
-                    data.getxPosByIndex(i),
+
+            BoxExtraData boxExtraData = new BoxExtraData(
+                    data.getXPosByIndex(i),
+                    data.getMeanByIndex(i),
                     data.getQ3ByIndex(i),
                     data.getQ1ByIndex(i),
                     data.getMaxRegularValueByIndex(i),
                     data.getMinRegularValueByIndex(i),
                     data.getMedianByIndex(i),
                     data.getColor());
+
             series.getData().add(
                     new XYChart.Data(
-                            data.getxPosByIndex(i),
+                            data.getXPosByIndex(i),
                             data.getQ3ByIndex(i),
-                            boxAndWhiskerData)
+                            boxExtraData)
             );
         }
         return series;
@@ -100,6 +103,7 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         if (color != null) {
             series.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
         }
+        series.getNode().getStyleClass().add("candlestick-series");
         data.forEach(dataItem -> {
             if (color != null) {
                 dataItem.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
@@ -129,7 +133,7 @@ public class BoxPlotChart extends XYChart<Number, Number> {
             while (iter.hasNext()) {
                 XYChart.Data<Number, Number> item = iter.next();
                 Node itemNode = item.getNode();
-                BoxAndWhiskerData extra = (BoxAndWhiskerData) item.getExtraValue();
+                BoxExtraData extra = (BoxExtraData) item.getExtraValue();
                 double x = getXAxis().getDisplayPosition(getCurrentDisplayedXValue(item));
                 double y = getYAxis().getDisplayPosition(getCurrentDisplayedYValue(item));
                 this.drawCandle(itemNode, item, extra, x, y);
@@ -185,7 +189,7 @@ public class BoxPlotChart extends XYChart<Number, Number> {
             while (iter.hasNext()) {
                 XYChart.Data<Number, Number> item = iter.next();
                 double x = getXAxis().getDisplayPosition(getCurrentDisplayedXValue(item));
-                BoxAndWhiskerData extra = (BoxAndWhiskerData) item.getExtraValue();
+                BoxExtraData extra = (BoxExtraData) item.getExtraValue();
                 if (seriesPath != null) {
                     if (seriesPath.getElements().isEmpty()) {
                         seriesPath.getElements().add(new MoveTo(x, getYAxis().getDisplayPosition(extra.getMedian())));
@@ -282,7 +286,7 @@ public class BoxPlotChart extends XYChart<Number, Number> {
     private void drawCandle(
             Node itemNode,
             XYChart.Data<Number, Number> item,
-            BoxAndWhiskerData extra,
+            BoxExtraData extra,
             double x,
             double y) {
 
@@ -314,13 +318,15 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         }
     }
 
-    private void drawSeriesPath(Path seriesPath, BoxAndWhiskerData extra, double x) {
-        if (seriesPath != null && showLined) {
+    private void drawSeriesPath(Path seriesPath, BoxExtraData extra, double x) {
+        if (seriesPath != null && showLined && extra.getMean() != null) {
             if (seriesPath.getElements().isEmpty()) {
-                seriesPath.getElements().add(new MoveTo(x, getYAxis().getDisplayPosition(extra.getMedian())));
+                seriesPath.getElements().add(new MoveTo(x, getYAxis().getDisplayPosition(extra.getMean())));
             } else {
-                seriesPath.getElements().add(new LineTo(x, getYAxis().getDisplayPosition(extra.getMedian())));
+                seriesPath.getElements().add(new LineTo(x, getYAxis().getDisplayPosition(extra.getMean())));
             }
+//            LineTo line = new LineTo(x + candleWidth, getYAxis().getDisplayPosition(extra.getMean()));
+//            seriesPath.getElements().add(line);
         }
     }
 
@@ -363,10 +369,10 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         List<Number> xData = null;
         List<Number> yData = null;
         if (xa.isAutoRanging()) {
-            xData = new ArrayList<Number>();
+            xData = new ArrayList();
         }
         if (ya.isAutoRanging()) {
-            yData = new ArrayList<Number>();
+            yData = new ArrayList();
         }
         if (xData != null || yData != null) {
             for (XYChart.Series<Number, Number> series : getData()) {
@@ -375,7 +381,7 @@ public class BoxPlotChart extends XYChart<Number, Number> {
                         xData.add(data.getXValue());
                     }
                     if (yData != null) {
-                        BoxAndWhiskerData extras = (BoxAndWhiskerData) data.getExtraValue();
+                        BoxExtraData extras = (BoxExtraData) data.getExtraValue();
                         if (extras != null) {
                             yData.add(extras.getMaxRegularValue());
                             yData.add(extras.getMinRegularValue());

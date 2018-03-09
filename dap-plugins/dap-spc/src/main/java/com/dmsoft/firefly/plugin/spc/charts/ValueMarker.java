@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.charts;
 
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.LineData;
+import com.dmsoft.firefly.plugin.spc.charts.data.basic.ILineData;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
@@ -62,7 +62,7 @@ public class ValueMarker<X, Y> {
         }
     }
 
-    public Line buildValueMarker(LineData lineData) {
+    public Line buildValueMarker(ILineData lineData) {
 
         Line line = new Line();
         Orientation orientationType = lineData.getPlotOrientation();
@@ -77,17 +77,23 @@ public class ValueMarker<X, Y> {
         if (verticalType == orientationType) {
             verticalMarkers.add(marker);
         }
+
+        //Set line style class
         if (DAPStringUtils.isNotBlank(lineData.getLineClass())) {
             line.getStyleClass().setAll("line", lineData.getLineClass());
         }
+
+        //Set line color
         if (lineData.getColor() != null) {
             line.setStyle("-fx-stroke:" + ColorUtils.toHexFromFXColor(lineData.getColor()));
         }
 
         line.setOnMouseEntered(event -> {
-            Tooltip tooltip = new Tooltip(lineData.getTitle() + "\n"
-                    + lineData.getName() + "=" + lineData.getValue());
-            Tooltip.install(line, tooltip);
+            //Set tooltip
+            String content = DAPStringUtils.isBlank(lineData.getTooltipContent()) ?
+                    lineData.getTitle() + "\n" + lineData.getName() + "="
+                            + lineData.getValue() : lineData.getTooltipContent();
+            Tooltip.install(line, new Tooltip(content));
         });
         return line;
     }
