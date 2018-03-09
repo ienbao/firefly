@@ -186,9 +186,15 @@ public class ViewDataController implements Initializable {
                 stage.show();
             }
         });
+
         columnFilterSetting.put(tableColumn.getText(), fsg);
         tableColumn.setGraphic(filterBtn);
         tableColumn.getStyleClass().add("filter-header");
+        tableColumn.widthProperty().addListener((ov, w1, w2) -> {
+            Platform.runLater(() -> {
+                filterBtn.relocate(w2.doubleValue() - 21, 0);
+            });
+        });
     }
 
 

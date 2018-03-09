@@ -13,11 +13,13 @@ import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.application.Platform;
@@ -110,32 +112,40 @@ public class SpcMainController implements Initializable {
     }
 
     private void getChooseBtnEvent() {
-        List<SearchConditionDto> searchConditionDtoList = this.buildRefreshSearchConditionData();
-        if (searchConditionDtoList.size() == 0) {
-            return;
-        }
-        Job job = new Job(ParamKeys.SPC_REFRESH_JOB_PIPELINE);
-        Map paramMap = Maps.newHashMap();
-        paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
-        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
-
-        SearchDataFrame subDataFrame = this.buildSubSearchDataFrame(searchConditionDtoList);
-        paramMap.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
-        Platform.runLater(() -> {
-            manager.doJobASyn(job, new JobDoComplete() {
-                @Override
-                public void doComplete(Object returnValue) {
-                    System.out.println("ASyn result = " + (returnValue == null ? "null" : returnValue));
-//                    if (returnValue == null) {
-////                        spcStatsDtoList = initData();
-////                        return;
-//                    }
-                    SearchDataFrame searchDataFrame = initData();
-
-                }
-            }, paramMap);
-        });
-//        viewDataController.setViewData(subDataFrame);
+//        List<SearchConditionDto> searchConditionDtoList = this.buildRefreshSearchConditionData();
+//        if (searchConditionDtoList.size() == 0) {
+//            return;
+//        }
+//        Job job = new Job(ParamKeys.SPC_REFRESH_JOB_PIPELINE);
+//        Map paramMap = Maps.newHashMap();
+//        paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+//        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
+//
+//        SearchDataFrame subDataFrame = this.buildSubSearchDataFrame(searchConditionDtoList);
+//        paramMap.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
+//        Platform.runLater(() -> {
+//            manager.doJobASyn(job, paramMap, new JobDoComplete() {
+//                @Override
+//                public void doComplete(Object returnValue) {
+//                    System.out.println("ASyn result = " + (returnValue == null ? "null" : returnValue));
+////                    if (returnValue == null) {
+//////                        spcStatsDtoList = initData();
+//////                        return;
+////                    }
+//                    SearchDataFrame searchDataFrame = initData();
+//
+//                }
+//            });
+//        });
+        List<String> projectNameList = Lists.newArrayList("Case5.csv");
+        List<String> testItemNameList = Lists.newArrayList("Site ID");
+        TestItemWithTypeDto testItemWithTypeDto = new TestItemWithTypeDto();
+        testItemWithTypeDto.setTestItemName("Site ID");
+        testItemWithTypeDto.setTestItemType(TestItemType.VARIABLE);
+        List<TestItemWithTypeDto> typeDtoList = Lists.newArrayList(testItemWithTypeDto);
+        List<RowDataDto> dataDtoList = RuntimeContext.getBean(SourceDataService.class).findTestData(projectNameList, testItemNameList);
+        SearchDataFrame subDataFrame = RuntimeContext.getBean(DataFrameFactory.class).createSearchDataFrame(typeDtoList, dataDtoList);
+        viewDataController.setViewData(subDataFrame);
     }
 
     private void initBtnIcon() {

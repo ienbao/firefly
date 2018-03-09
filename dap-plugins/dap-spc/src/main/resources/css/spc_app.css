@@ -2,6 +2,10 @@
     -fx-background-color: Red;
 }
 
+#viewDataTable {
+    -fx-skin: "com.dmsoft.firefly.plugin.spc.skin.ExpandableTableViewSkin";
+}
+
 #viewDataTable .column-header.filter-header .button {
     -fx-min-width: 17;
     -fx-min-height: 21;
@@ -18,13 +22,13 @@
     -fx-background-image: url('/images/btn_filter_normal.png');
     -fx-background-size: 16;
     -fx-background-repeat: no-repeat;
-    -fx-background-position: 1 2;
+    -fx-background-position: 2 2;
 }
 
 #viewDataTable .column-header.filter-header:hover .button {
     -fx-background-size: 16;
     -fx-background-repeat: no-repeat;
-    -fx-background-position: 1 2;
+    -fx-background-position: 2 2;
     -fx-background-color: #e5f4ff;
     -fx-border-color: #dcdcdc;
 }
@@ -39,7 +43,8 @@
 
 #viewDataTable .filter-header .label {
     -fx-content-display: right;
-    -fx-padding: 0 -10 0 10;
+    -fx-padding: 0 -4 0 10;
+    -fx-skin: "com.dmsoft.firefly.plugin.spc.skin.FilterTableHeaderLabel";
 }
 
 .column-header.filter-header .button {
@@ -57,7 +62,7 @@
 .column-header.filter-header:hover .button {
     -fx-background-size: 16;
     -fx-background-repeat: no-repeat;
-    -fx-background-position: 1 2;
+    -fx-background-position: 2 2;
     -fx-background-color: #e5f4ff;
     -fx-border-color: #dcdcdc;
 }
