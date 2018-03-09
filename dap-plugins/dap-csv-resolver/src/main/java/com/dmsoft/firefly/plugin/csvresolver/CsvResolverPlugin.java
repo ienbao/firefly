@@ -6,6 +6,7 @@ package com.dmsoft.firefly.plugin.csvresolver;
 
 
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.plugin.csvresolver.service.CsvConfigService;
 import com.dmsoft.firefly.plugin.csvresolver.service.CsvResolverService;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.Plugin;
@@ -30,6 +31,8 @@ public class CsvResolverPlugin extends Plugin {
     @Override
     public void initialize(InitModel model) {
         RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.CsvResolverPlugin", "com.dmsoft.firefly.plugin.csvresolver.service.CsvResolverService", new CsvResolverService());
+        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.CsvResolverPlugin", "com.dmsoft.firefly.plugin.csvresolver.service.CsvConfigService", new CsvConfigService());
+
         logger.info("Plugin-CsvResolver Initialized.");
     }
 
@@ -50,12 +53,9 @@ public class CsvResolverPlugin extends Plugin {
     private void build(){
         Pane root = null;
         try {
-
-            /*FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("view/csv_resolver.fxml"), ResourceBundle.getBundle("i18n.message_en_US"));
-            fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.CsvResolverPlugin"));*/
             FXMLLoader fxmlLoader = CsvFxmlAndLanguageUtils.getLoaderFXML("view/csv_resolver.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createSimpleWindowAsModel("csv", "CSV-Resolver", root, getClass().getClassLoader().getResource("css/csv_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("csv", "CSV-Resolver", root, getClass().getClassLoader().getResource("css/csv_app.css").toExternalForm());
             stage.show();
 
         } catch (Exception ex) {

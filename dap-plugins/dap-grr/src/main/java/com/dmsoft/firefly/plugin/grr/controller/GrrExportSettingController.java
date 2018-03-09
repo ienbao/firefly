@@ -15,24 +15,6 @@ import java.util.Map;
  * Created by GuangLi on 2018/3/8.
  */
 public class GrrExportSettingController {
-    //    @FXML
-//    private CheckBox eds;
-//    @FXML
-//    private CheckBox esr;
-//    @FXML
-//    private CheckBox ec;
-//    @FXML
-//    private CheckBox rrPart;
-//    @FXML
-//    private CheckBox rrAppraiser;
-//    @FXML
-//    private CheckBox rc;
-//    @FXML
-//    private CheckBox xbar;
-//    @FXML
-//    private CheckBox pai;
-//    @FXML
-//    private CheckBox cov;
     @FXML
     private RadioButton tolerance;
     @FXML
