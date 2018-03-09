@@ -104,6 +104,14 @@ public class StatisticalResultController implements Initializable {
         }
     }
 
+    /**
+     * get Cache color
+     * @return color Cache
+     */
+    public Map<String, Color> getColorCache(){
+      return statisticalTableModel.getColorCache();
+    }
+
     private void initChooseStatisticalResultTableData() {
         List<String> value = asList(UIConstant.SPC_CHOOSE_RESULT);
         List<ChooseTableRowData> chooseTableRowDataList = Lists.newArrayList();

@@ -13,8 +13,11 @@ import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
 import com.dmsoft.firefly.plugin.spc.charts.view.VerticalTabPane;
+import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
+import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.*;
 import com.dmsoft.firefly.plugin.spc.charts.data.BarCategoryData;
+import com.dmsoft.firefly.plugin.spc.model.SpcNdChartData;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
@@ -85,7 +88,7 @@ public class ChartResultController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initChartPane();
-        this.initChartData();
+//        this.initChartData();
     }
 
     private void initChartPane() {
@@ -505,6 +508,29 @@ public class ChartResultController implements Initializable {
         this.spcMainController = spcMainController;
     }
 
+    /**
+     * init spc chart data
+     *
+     * @param spcChartDtoList the list of chart data
+     */
+    public void initSpcChartData(List<SpcChartDto> spcChartDtoList) {
+        Map<String, java.awt.Color> colorCache = spcMainController.getColorCache();
+        List<INdcChartData> ndcChartDataList = Lists.newArrayList();
+        for (SpcChartDto spcChartDto : spcChartDtoList) {
+            String key = spcChartDto.getKey();
+            Color color = ColorUtils.toFxColorFromAwtColor(colorCache.get(key));
+            SpcChartResultDto spcChartResultDto = spcChartDto.getResultDto();
+            if (spcChartResultDto == null) {
+                continue;
+            }
+            //nd chart
+            INdcChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
+            ndcChartDataList.add(iNdcChartData);
+        }
+
+        this.setNdChartData("ND chart", ndcChartDataList);
+    }
+
     public void setNdChartData(String chartName, List<INdcChartData> ndChartData) {
         NDChart chart = ndChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
@@ -537,13 +563,13 @@ public class ChartResultController implements Initializable {
 
     public void clearChartData() {
 
-        for (Map.Entry<String, XYChart> chartMap: chartMap.entrySet()) {
-            if (chartMap.getValue() instanceof NDChart) {
-                ((NDChart) chartMap.getValue()).removeAllChildren();
-            } else if (chartMap.getValue() instanceof LinearChart) {
-                ((LinearChart) chartMap.getValue()).removeAllChildren();
-            }
-        }
+//        for (Map.Entry<String, XYChart> chartMap : chartMap.entrySet()) {
+//            if (chartMap.getValue() instanceof NDChart) {
+//                ((NDChart) chartMap.getValue()).removeAllChildren();
+//            } else if (chartMap.getValue() instanceof LinearChart) {
+//                ((LinearChart) chartMap.getValue()).removeAllChildren();
+//            }
+//        }
     }
 
     public void updateChartColor(Color color) {

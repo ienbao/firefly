@@ -22,7 +22,7 @@ public class BarChartData<X, Y> implements IBarChartData {
     private String seriesName;
 
     public BarChartData(Double[] histX, Double[] histY) {
-        for (int i = 0; i < histX.length; i++) {
+        for (int i = 0; i < histX.length -1; i++) {
             BarCategoryData data = new BarCategoryData();
             data.setStartValue(histX[i]);
             data.setEndValue(histX[i + 1]);
