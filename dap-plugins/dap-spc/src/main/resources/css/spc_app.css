@@ -108,7 +108,7 @@
 }
 
 .table-view:focused {
-    -fx-border-width: 0;
+    -fx-border-width: 1;
     -fx-background-color: transparent;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
