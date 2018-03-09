@@ -129,6 +129,13 @@
     -fx-background-position: center;
 }
 
+.icon_error_svg {
+    -fx-background-position: left;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
+    -fx-scale-shape: false;
+    -fx-shape: "M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M17,24.5c0,0.6-0.4,1-1,1s-1-0.4-1-1v-1c0-0.6,0.4-1,1-1s1,0.4,1,1V24.5z M17,19.5c0,0.6-0.4,1-1,1s-1-0.4-1-1v-12c0-0.6,0.4-1,1-1s1,0.4,1,1V19.5z";
+}
+
 /*******************************************************************************
  *                                                                             *
  * Tooltip                                                                     *

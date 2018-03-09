@@ -107,22 +107,25 @@ public class WindowFactory {
 
 
     public static Stage createOrUpdateFullWindow(String name, String title, Pane bodyPane, String... styles) {
-        return StageMap.loadAndRefreshStage(name, title, bodyPane, true, false, checkStyles(styles), StageStyle.TRANSPARENT);
+        return StageMap.loadAndRefreshStage(name, title, bodyPane, true, WindowPane.WINDOW_MODEL_FULL, checkStyles(styles), StageStyle.TRANSPARENT);
     }
 
     public static Stage createOrUpdateFullWindow(String name, Pane title, Pane bodyPane, String... styles) {
-        return StageMap.loadAndRefreshStage(name, title, bodyPane, true, false, checkStyles(styles), StageStyle.TRANSPARENT);
+        return StageMap.loadAndRefreshStage(name, title, bodyPane, true, WindowPane.WINDOW_MODEL_FULL, checkStyles(styles), StageStyle.TRANSPARENT);
     }
 
 
     public static Stage createOrUpdateSimpleWindowAsModel(String name, String title, Pane bodyPane, String... styles) {
-        return StageMap.loadAndRefreshStage(name, title, bodyPane, true, true, checkStyles(styles), StageStyle.TRANSPARENT);
-
+        return StageMap.loadAndRefreshStage(name, title, bodyPane, true, WindowPane.WINDOW_MODEL_X, checkStyles(styles), StageStyle.TRANSPARENT);
     }
 
     public static Stage createOrUpdateSimpleWindowAsModel(String name, Pane title, Pane bodyPane, String... styles) {
-        return StageMap.loadAndRefreshStage(name, title, bodyPane, true, true, checkStyles(styles), StageStyle.TRANSPARENT);
+        return StageMap.loadAndRefreshStage(name, title, bodyPane, true, WindowPane.WINDOW_MODEL_X, checkStyles(styles), StageStyle.TRANSPARENT);
 
+    }
+
+    public static Stage createOrUpdateWindowAsModelNoBtn(String name, String title, Pane bodyPane, String... styles) {
+        return StageMap.loadAndRefreshStage(name, title, bodyPane, true, WindowPane.WINDOW_MODEL_NONE, checkStyles(styles), StageStyle.TRANSPARENT);
     }
 
 }
