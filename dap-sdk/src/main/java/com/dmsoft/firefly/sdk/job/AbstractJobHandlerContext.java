@@ -63,7 +63,7 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
             }
         };
         thread.setCurrentProcess(jobPipeline.getCurrentProcess());
-        thread.setWeight(100 * next.handler().getWeight() / jobPipeline.getAllWeight());
+        thread.setWeight(100 * next.handler().getWeight() / (jobPipeline.getAllWeight() == 0 ? 1 : jobPipeline.getAllWeight()));
         thread.addProcessMonitorListener(getContextProcessMonitorListenerIfExists());
         thread.start();
         handler().remove();
@@ -100,7 +100,7 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
             }
         };
         thread.setCurrentProcess(jobPipeline.getCurrentProcess());
-        thread.setWeight(100 * next.handler().getWeight() / jobPipeline.getAllWeight());
+        thread.setWeight(100 * next.handler().getWeight() / (jobPipeline.getAllWeight() == 0 ? 1 : jobPipeline.getAllWeight()));
         thread.addProcessMonitorListener(getContextProcessMonitorListenerIfExists());
         thread.start();
         handler().remove();
