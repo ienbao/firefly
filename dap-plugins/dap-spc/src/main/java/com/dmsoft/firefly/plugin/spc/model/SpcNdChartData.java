@@ -8,6 +8,7 @@ import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBarChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.ILineData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.NDCResultDto;
+import com.dmsoft.firefly.plugin.spc.dto.chart.BarChartData;
 import com.dmsoft.firefly.plugin.spc.dto.chart.INdcChartData;
 
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.List;
  */
 public class SpcNdChartData implements INdcChartData {
     private NDCResultDto ndcResultDto;
+    private XYChartData xyChartData;
+    private BarChartData barChartData;
 
     /**
      * constructor
@@ -28,13 +31,25 @@ public class SpcNdChartData implements INdcChartData {
         this.initData();
     }
 
-    private void initData(){
-        XYChartData xyChartData = new XYChartData<>();
+    private void initData() {
+        if (ndcResultDto == null) {
+            return;
+        }
+        //init curve data
+        Double[] curveX = ndcResultDto.getCurveX();
+        Double[] curveY = ndcResultDto.getCurveY();
+        xyChartData = new XYChartData<>(curveX, curveY);
+
+        //init bar data
+        Double[] histX = ndcResultDto.getHistX();
+        Double[] histY = ndcResultDto.getHistY();
+        barChartData = new BarChartData(histX, histY);
     }
 
     @Override
     public IXYChartData getCurveData() {
-        return null;
+
+        return xyChartData;
     }
 
     @Override
