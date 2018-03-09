@@ -251,6 +251,9 @@ public class SpcItemController implements Initializable {
         List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(selectedItemDto);
         SpcAnalysisConfigDto spcAnalysisConfigDto = this.buildSpcAnalysisConfigData();
 
+        //todo delete
+        spcAnalysisConfigDto.setSubgroupSize(10);
+        spcAnalysisConfigDto.setIntervalNumber(8);
         paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
         paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
