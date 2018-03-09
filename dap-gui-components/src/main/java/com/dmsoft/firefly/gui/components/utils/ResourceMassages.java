@@ -16,4 +16,7 @@ public class ResourceMassages {
 
     public final static String COMPONENT_STAGE_SIMPLE_MESSAGE_TEMPLATE = COMPONENT_STAGE + "simple_message_template";
 
+
+    public static final String ADVANCE = "ADVANCE";
+
 }
