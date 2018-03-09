@@ -1,9 +1,7 @@
 package com.dmsoft.firefly.gui.utils;
 
 import com.dmsoft.firefly.gui.components.utils.StageMap;
-import com.dmsoft.firefly.gui.components.window.SimpleMessageController;
-import com.dmsoft.firefly.gui.components.window.SimpleWindowFactory;
-import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.*;
 import com.dmsoft.firefly.gui.controller.AppController;
 import com.dmsoft.firefly.gui.controller.MainController;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -15,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
 
 import static com.google.common.io.Resources.getResource;
 
@@ -132,26 +131,17 @@ public class MenuFactory {
         menu.setId(MenuBuilder.MENU_HELP);
         MenuItem legalMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_LEGAL_NOTICE"));
         legalMenuItem.setOnAction(event -> {
-            //GuiFxmlAndLanguageUtils.buildLegalDialog();
-            SimpleMessageController simpleMessageController = SimpleWindowFactory.createSimpleMessageNoBtn("Message", "fdsffdsfsfsfsfsfsdfs fdsfsffdsfdf sfdsfds fsfdsfsfdsfdsfdsfsdfsfsdfsdf");
-            simpleMessageController.showOk();
+            GuiFxmlAndLanguageUtils.buildLegalDialog();
         });
         MenuItem dapMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ABOUT_DAP"));
         MenuItem updateMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_CHECK_UPDATE"));
 
         dapMenuItem.setOnAction(event -> {
-            //GuiFxmlAndLanguageUtils.buildLegalDialog();
-            SimpleMessageController simpleMessageController = SimpleWindowFactory.createSimpleMessageNoBtn("Message", "fdsffdsfsfsfsfsfsdfs fdsfsffdsfdf sfdsfds fsfdsfsfdsfdsfdsfsdfsfsdfsdf");
-            simpleMessageController.showCancel();
+            System.out.println("dap");
         });
 
         updateMenuItem.setOnAction(event -> {
-            //GuiFxmlAndLanguageUtils.buildLegalDialog();
-            SimpleMessageController simpleMessageController = SimpleWindowFactory.createSimpleMessage("Message", "fdsffdsfsfsfsfsfsdfs fdsfsffdsfdf sfdsfds fsfdsfsfdsfdsfdsfsdfsfsdfsdf");
-            simpleMessageController.showOKAndCancel();
-            simpleMessageController.getOk().setOnAction(event1 -> {
-                System.out.println("fdsf");
-            });
+            System.out.println("update");
         });
         menu.getItems().add(legalMenuItem);
         menu.getItems().add(dapMenuItem);

@@ -1,8 +1,9 @@
 package com.dmsoft.firefly.gui.components.Window;
 
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
-import com.dmsoft.firefly.gui.components.window.SimpleMessageController;
-import com.dmsoft.firefly.gui.components.window.SimpleWindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowMessageController;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -21,35 +22,43 @@ public class SimpleWindowFactoryTest extends Application{
         menu.setId(MenuBuilder.MENU_HELP);
         MenuItem okMenuItem = new MenuItem("OK");
         okMenuItem.setOnAction(event -> {
-            SimpleMessageController simpleMessageController = SimpleWindowFactory.createSimpleMessageNoBtn("Message", "fdsffdsfsfsfsfsfsdfs fdsfsffdsfdf sfdsfds fsfdsfsfdsfdsfdsfsdfsfsdfsdf");
-            simpleMessageController.showOk();
+            WindowMessageController windowMessageController = WindowMessageFactory.createWindowMessageNoBtn("Message", "fdsffdsfsfsfsfsfsdfs fdsfsffdsfdf sfdsfds fsfdsfsfdsfdsfdsfsdfsfsdfsdf");
+            windowMessageController.showOk();
         });
         MenuItem okAndBtnMenuItem = new MenuItem("OKAndBtn");
         okAndBtnMenuItem.setOnAction(event -> {
-            SimpleMessageController simpleMessageController = SimpleWindowFactory.createSimpleMessage("Message", "fdsffdsfsfsfsfsfsdfs fdsfsffdsfdf sfdsfds fsfdsfsfdsfdsfdsfsdfsfsdfsdf");
-            simpleMessageController.showOk();
+            WindowMessageController windowMessageController = WindowMessageFactory.createWindowMessage("Message", "fdsffdsfsfsfsfsfsdfs fdsfsffdsfdf sfdsfds fsfdsfsfdsfdsfdsfsdfsfsdfsdf");
+            windowMessageController.showOk();
         });
 
         MenuItem cancelMenuItem = new MenuItem("Cancel");
         MenuItem okAndCancelMenuItem = new MenuItem("OKAndCancel");
 
         cancelMenuItem.setOnAction(event -> {
-            SimpleMessageController simpleMessageController = SimpleWindowFactory.createSimpleMessageNoBtn("Message", "fdsffdsfsfsfsfsfsdfs fdsfsffdsfdf sfdsfds fsfdsfsfdsfdsfdsfsdfsfsdfsdf");
-            simpleMessageController.showCancel();
+            WindowMessageController windowMessageController = WindowMessageFactory.createWindowMessageNoBtn("Message", "fdsffdsfsfsfsfsfsdfs fdsfsffdsfdf sfdsfds fsfdsfsfdsfdsfdsfsdfsfsdfsdf");
+            windowMessageController.showCancel();
         });
 
         okAndCancelMenuItem.setOnAction(event -> {
-            SimpleMessageController simpleMessageController = SimpleWindowFactory.createSimpleMessage("Message", "fdsffdsfsfsfsfsfsdfs fdsfsffdsfdf sfdsfds fsfdsfsfdsfdsfdsfsdfsfsdfsdf");
-            simpleMessageController.showOKAndCancel();
-            simpleMessageController.getOk().setOnAction(event1 -> {
+            WindowMessageController windowMessageController = WindowMessageFactory.createWindowMessage("Message", "fdsffdsfsfsfsfsfsdfs fdsfsffdsfdf sfdsfds fsfdsfsfdsfdsfdsfsdfsfsdfsdf");
+            windowMessageController.showOKAndCancel();
+            windowMessageController.getOkBtn().setOnAction(event1 -> {
                 System.out.println("fdsf");
             });
+        });
+
+        MenuItem progressMenuItem = new MenuItem("Progress");
+        progressMenuItem.setOnAction(event -> {
+            WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip("Running Task");
+            windowProgressTipController.refreshProgress(0.8);
         });
 
         menu.getItems().add(okMenuItem);
         menu.getItems().add(okAndBtnMenuItem);
         menu.getItems().add(cancelMenuItem);
         menu.getItems().add(okAndCancelMenuItem);
+        menu.getItems().add(progressMenuItem);
+
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().add(menu);
         Scene scene = new Scene(menuBar, 1000, 250, Color.WHITE);

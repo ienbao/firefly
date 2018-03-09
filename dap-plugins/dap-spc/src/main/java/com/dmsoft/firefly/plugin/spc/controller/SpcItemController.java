@@ -5,7 +5,10 @@ package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
+import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
@@ -242,7 +245,23 @@ public class SpcItemController implements Initializable {
     }
 
     private void getAnalysisBtnEvent() {
+        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         Job job = new Job(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
+        job.addProcessMonitorListener(event -> {
+            windowProgressTipController.refreshProgress(event.getPoint());
+        });
+        windowProgressTipController.addProcessMonitorListener(new WindowCustomListener() {
+            @Override
+            public void onCloseAndCancelCustomEvent() {
+                //to do
+                System.out.println("close");
+            }
+
+            @Override
+            public void onOkCustomEvent() {
+
+            }
+        });
         Map paramMap = Maps.newHashMap();
 
         List<String> projectNameList = envService.findActivatedProjectName();
