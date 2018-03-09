@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <GridPane fx:id="progressPane" layoutX="10.0" layoutY="10.0" maxHeight="90.0" maxWidth="390.0" minHeight="90.0" minWidth="390.0" prefHeight="90.0" prefWidth="390.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+        <columnConstraints>
+            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="23.0" minHeight="23.0" prefHeight="23.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+            <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="39.0" minHeight="39.0" prefHeight="39.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Analyzing" />
+            <ProgressBar fx:id="taskProgress" maxHeight="8.0" maxWidth="390.0" minHeight="8.0" minWidth="390.0" prefHeight="8.0" prefWidth="390.0" progress="0.0" GridPane.rowIndex="1" />
+            <Button fx:id="cancelBtn" focusTraversable="false" maxHeight="22.0" maxWidth="80.0" minHeight="22.0" minWidth="80.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="80.0" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>
