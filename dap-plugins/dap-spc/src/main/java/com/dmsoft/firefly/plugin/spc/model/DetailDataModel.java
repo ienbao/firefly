@@ -71,6 +71,7 @@ public class DetailDataModel implements NewTableModel {
             if (!valueMap.containsKey(rowKey)) {
                 valueMap.put(rowKey, new SimpleObjectProperty<>(rowDataDto.getData().get(rowKey)));
             }
+            return valueMap.get(rowKey);
         }
         return null;
     }

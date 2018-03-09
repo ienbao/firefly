@@ -2,6 +2,7 @@ package com.dmsoft.firefly.plugin.spc.model;
 
 import com.dmsoft.firefly.gui.components.table.NewTableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.controller.ViewDataDetailController;
 import com.dmsoft.firefly.plugin.spc.utils.*;
@@ -22,11 +23,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,7 +106,8 @@ public class ViewDataDFModel implements NewTableModel {
                 ViewDataDetailController controller = new ViewDataDetailController();
                 controller.setRowDataDto(RuntimeContext.getBean(SourceDataService.class).findTestData(rowKey));
                 List<TestItemWithTypeDto> typeDtoList = RuntimeContext.getBean(EnvService.class).findTestItems();
-                for (TestItemWithTypeDto typeDto : typeDtoList) {
+                for (int j = 0; j < typeDtoList.size(); j++) {
+                    TestItemWithTypeDto typeDto = typeDtoList.get(j);
                     if (dataFrame.getTestItemWithTypeDto(typeDto.getTestItemName()) != null) {
                         int i = typeDtoList.indexOf(typeDto);
                         typeDtoList.remove(i);
@@ -112,6 +117,15 @@ public class ViewDataDFModel implements NewTableModel {
                 controller.setTypeDtoList(typeDtoList);
                 FXMLLoader loader = SpcFxmlAndLanguageUtils.getLoaderFXML(ViewResource.SPC_VIEW_DATA_DETAIL);
                 loader.setController(controller);
+                if (StageMap.getStage("Spc_detail") == null) {
+                    Stage stage = new Stage();
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.setResizable(false);
+                    stage.initStyle(StageStyle.TRANSPARENT);
+                    Scene scene = new Scene(new Pane());
+                    stage.setScene(scene);
+                    StageMap.addStage("Spc_detail", stage);
+                }
                 try {
                     Pane root = loader.load();
                     Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("Spc_detail",

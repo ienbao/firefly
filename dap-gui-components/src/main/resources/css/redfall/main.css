@@ -1249,8 +1249,11 @@
 }
 
 .table-view:focused {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #dcdcdc;
+    -fx-border-width: 0;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
 }
 
 .table-context-menu {
@@ -2078,18 +2081,21 @@
  * ColorPicker                                                                 *
  *                                                                             *
  ******************************************************************************/
-.color-picker{
+.color-picker {
     -fx-border-width: 0;
     -fx-skin: "com.dmsoft.firefly.gui.components.utils.ColorPickerMenuSkin";
     -fx-background-color: transparent;
 }
+
 .color-picker:hover {
     -fx-background-color: transparent;
     -fx-cursor: hand;
 }
+
 .color-picker:hover:pressed, .color-picker:focused:hover:pressed {
     -fx-background-color: transparent;
 }
+
 .combo-box-base:showing {
     -fx-background-color: transparent;
 }
@@ -2101,19 +2107,23 @@
 .combo-box-base:hover:pressed, .combo-box-base:focused:hover:pressed {
     -fx-background-color: transparent;
 }
-.color-picker:focused{
+
+.color-picker:focused {
     -fx-border-width: 0;
     /*-fx-background-color: #ffffff;*/
 }
+
 .color-picker > .label {
     -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em; /* 4 8 4 8 */
     -fx-text-fill: -fx-text-base-color;
     /*-fx-background-color: #ffffff;*/
 }
+
 .color-picker > .color-picker-label > .picker-color > .picker-color-rect {
     -fx-stroke: null;
     -fx-opacity: 0;
 }
+
 /*******************************************************************************
  *                                                                             *
  * ProgressBar                                                                 *
@@ -2126,18 +2136,21 @@
     -fx-border-insets: 0;
     -fx-padding: 1;
     -fx-shape: null;
-    -fx-background-color:#ea2028;
+    -fx-background-color: #ea2028;
 }
+
 .progress-bar:indeterminate > .bar {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
     -fx-background-color: #ea2028;
 }
+
 .progress-bar > .track {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
     -fx-background-color: #dcdcdc;
 }
+
 /*******************************************************************************
  *                                                                             *
  * ProgressBar small  red                                                      *
@@ -2150,18 +2163,21 @@
     -fx-border-insets: 0;
     -fx-padding: 1;
     -fx-shape: null;
-    -fx-background-color:#ea2028;
+    -fx-background-color: #ea2028;
 }
+
 .progress-bar-sm-red:indeterminate > .bar {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
     -fx-background-color: #ea2028;
 }
+
 .progress-bar-sm-red > .track {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
     -fx-background-color: #dcdcdc;
 }
+
 /*******************************************************************************
  *                                                                             *
  * ProgressBar md  red                                                         *
@@ -2175,7 +2191,7 @@
     -fx-border-insets: 0;
     -fx-padding: 2;
     -fx-shape: null;
-    -fx-background-color:#ea2028;
+    -fx-background-color: #ea2028;
 }
 
 .progress-bar-md-red:indeterminate > .bar {
@@ -2183,6 +2199,7 @@
     -fx-background-radius: 0;
     -fx-background-color: #ea2028;
 }
+
 .progress-bar-md-red > .track {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
@@ -2202,18 +2219,21 @@
     -fx-border-insets: 0;
     -fx-padding: 2;
     -fx-shape: null;
-    -fx-background-color:#5eb511;
+    -fx-background-color: #5eb511;
 }
+
 .progress-bar-md-green:indeterminate > .bar {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
     -fx-background-color: #5eb511;
 }
+
 .progress-bar-md-green > .track {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
     -fx-background-color: #ededed;
 }
+
 /*******************************************************************************
  *                                                                             *
  * ProgressBar lg  red                                                         *
@@ -2227,13 +2247,15 @@
     -fx-border-insets: 0;
     -fx-padding: 4;
     -fx-shape: null;
-    -fx-background-color:#ea2028;
+    -fx-background-color: #ea2028;
 }
+
 .progress-bar-lg-red:indeterminate > .bar {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
     -fx-background-color: #ea2028;
 }
+
 .progress-bar-lg-red > .track {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
@@ -2252,13 +2274,15 @@
     -fx-border-insets: 0;
     -fx-padding: 4;
     -fx-shape: null;
-    -fx-background-color:#5eb511;
+    -fx-background-color: #5eb511;
 }
+
 .progress-bar-lg-green:indeterminate > .bar {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
     -fx-background-color: #5eb511;
 }
+
 .progress-bar-lg-green > .track {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
