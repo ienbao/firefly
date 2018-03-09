@@ -1,9 +1,8 @@
 /*
  * Copyright (c) 2016. For Intelligent Group.
  */
-package com.dmsoft.firefly.plugin.spc.controller;
+package com.dmsoft.firefly.gui.components.searchtab;
 
-import com.dmsoft.firefly.plugin.spc.model.AdvanceHelpModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

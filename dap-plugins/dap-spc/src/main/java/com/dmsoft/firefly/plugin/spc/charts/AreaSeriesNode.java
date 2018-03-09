@@ -284,4 +284,9 @@ public class AreaSeriesNode<X, Y> {
         }
         return symbol;
     }
+
+    public void clear() {
+        areaSeries.setAll(FXCollections.observableArrayList());
+        colorMap.clear();
+    }
 }

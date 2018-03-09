@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
  */
 public class FxmlAndLanguageUtils {
     private static final Logger logger = LoggerFactory.getLogger(FxmlAndLanguageUtils.class);
-
+    public static boolean isDebug = false;
     private static ResourceBundle getResourceBundle() {
         return FxmlAndLanguageUtils.getBundle(ModuleType.COM);
     }
@@ -78,7 +78,10 @@ public class FxmlAndLanguageUtils {
 
 
     public static ResourceBundle getBundle(ModuleType moduleKey) {
-        LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+        LanguageType languageType = LanguageType.EN;
+        if (isDebug == false) {
+            languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+        }
         String bundleKey = "i18n.message_en_US_";
         if (languageType.equals(LanguageType.ZH)) {
             bundleKey = "i18n.message_zh_CN_";

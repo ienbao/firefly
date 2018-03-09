@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
  */
 public class LineData implements ILineData {
 
-    private Number value;
+    private double value;
     private String name;
     private String title;
     private Color color;
@@ -26,8 +26,9 @@ public class LineData implements ILineData {
     /**
      * @param value
      */
-    public LineData(Number value) {
+    public LineData(double value, String name) {
         this();
+        this.name = name;
         this.value = value;
     }
 
@@ -38,7 +39,7 @@ public class LineData implements ILineData {
      * @param color
      * @param plotOrientation
      */
-    public LineData(Number value,
+    public LineData(double value,
                     String name,
                     String title,
                     Color color,
@@ -66,11 +67,11 @@ public class LineData implements ILineData {
         this.title = title;
     }
 
-    public Number getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(Number value) {
+    public void setValue(double value) {
         this.value = value;
     }
 

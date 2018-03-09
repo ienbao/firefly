@@ -172,6 +172,19 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         pathMarker.paintPathMarker(this);
     }
 
+    public void removeAllChildren() {
+        ObservableList<Node> nodes = getPlotChildren();
+        getPlotChildren().removeAll(nodes);
+        clearData();
+        getData().setAll(FXCollections.observableArrayList());
+    }
+
+    private void clearData() {
+        valueMarker.clear();
+        pathMarker.clear();
+        seriesColorMap.clear();
+    }
+
     /**
      * Populates the tooltip with chart
      */

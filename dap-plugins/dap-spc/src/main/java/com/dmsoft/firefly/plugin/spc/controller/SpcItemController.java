@@ -3,7 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
+import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.dto.*;
@@ -32,11 +32,9 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -74,27 +72,14 @@ public class SpcItemController implements Initializable {
     @FXML
     private TableView itemTable;
     @FXML
-    private Tab basicTab;
-    @FXML
-    private Tab advanceTab;
-    @FXML
-    private Button groupAdd;
-    @FXML
-    private Button groupRemove;
-    @FXML
-    private VBox basicSearch;
-    @FXML
-    private TextArea advanceText;
-    @FXML
-    private Button help;
-    @FXML
-    private ComboBox group1;
-    @FXML
-    private ComboBox group2;
-    @FXML
     private TextField subGroup;
     @FXML
     private TextField ndGroup;
+
+    @FXML
+    private SplitPane split;
+    private SearchTab searchTab;
+
     private CheckBox box;
     private ObservableList<String> groupItem = FXCollections.observableArrayList();
 
@@ -121,8 +106,9 @@ public class SpcItemController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        searchTab = new SearchTab();
+        split.getItems().add(searchTab);
         initBtnIcon();
-        basicSearch.getChildren().add(new BasicSearchPane("Group1"));
         itemFilter.getTextField().setPromptText("Test Item");
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
                 filteredList.setPredicate(p -> p.getItem().contains(itemFilter.getTextField().getText()))
@@ -154,6 +140,7 @@ public class SpcItemController implements Initializable {
         item.getStyleClass().add("filter-header");
         item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
         initItemData();
+        item.setPrefWidth(150);
     }
 
     private void initBtnIcon() {
@@ -163,11 +150,6 @@ public class SpcItemController implements Initializable {
         itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_datasource_normal.png")));
         configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_config_normal.png")));
         timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
-        basicTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
-        advanceTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_advance_search_normal.png")));
-        groupAdd.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_new_template_normal.png")));
-        groupRemove.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_clear_all_normal.png")));
-//        addSearch.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
     }
 
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
@@ -184,10 +166,7 @@ public class SpcItemController implements Initializable {
     }
 
     private void initComponentEvent() {
-        groupAdd.setOnAction(event -> basicSearch.getChildren().add(new BasicSearchPane("Group" + (basicSearch.getChildren().size() + 1))));
-        groupRemove.setOnAction(event -> basicSearch.getChildren().clear());
         analysisBtn.setOnAction(event -> getAnalysisBtnEvent());
-        help.setOnAction(event -> buildAdvanceHelpDia());
         importBtn.setOnAction(event -> importLeftConfig());
         exportBtn.setOnAction(event -> exportLeftConfig());
         item.setCellFactory(new Callback<TableColumn<ItemTableModel, TestItemWithTypeDto>, TableCell<ItemTableModel, TestItemWithTypeDto>>() {
@@ -219,26 +198,16 @@ public class SpcItemController implements Initializable {
 
     @SuppressWarnings("unchecked")
     private void initItemData() {
-//        List<TestItemDto> itemDtos = Lists.newArrayList();
-//        for (int i = 0; i < 40; i++) {
-//            TestItemDto dto = new TestItemDto();
-//            dto.setTestItemName("item" + i);
-//            itemDtos.add(dto);
-//        }
-        groupItem.clear();
         items.clear();
         List<TestItemWithTypeDto> itemDtos = envService.findTestItems();
         if (itemDtos != null) {
             for (TestItemWithTypeDto dto : itemDtos) {
                 ItemTableModel tableModel = new ItemTableModel(dto);
                 items.add(tableModel);
-                groupItem.add(dto.getTestItemName());
             }
             itemTable.setItems(personSortedList);
             personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
         }
-        group1.setItems(groupItem);
-        group2.setItems(groupItem);
     }
 
     private void getAnalysisBtnEvent() {
@@ -322,18 +291,6 @@ public class SpcItemController implements Initializable {
         return spcStatsDtoList;
     }
 
-    private void buildAdvanceHelpDia() {
-        FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML(ViewResource.SPC_ADVANCE_SEARCH_VIEW_RES);
-        Pane root = null;
-        try {
-            root = fxmlLoader.load();
-            Stage stage = WindowFactory.createSimpleWindowAsModel(ViewResource.SPC_ADVANCE_SEARCH_VIEW_ID, SpcFxmlAndLanguageUtils.getString(ResourceMassages.ADVANCE), root, getResource("css/platform_app.css").toExternalForm());
-            stage.show();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
     /**
      * get selected test items
      *
@@ -368,77 +325,6 @@ public class SpcItemController implements Initializable {
         return selectItems;
     }
 
-    /**
-     * get searchs
-     *
-     * @return list of search
-     */
-    public List<String> getSearch() {
-        List<String> search = Lists.newArrayList();
-        if (basicTab.isSelected()) {
-            if (basicSearch.getChildren().size() > 0) {
-                for (Node node : basicSearch.getChildren()) {
-                    if (node instanceof BasicSearchPane) {
-                        search.add(((BasicSearchPane) node).getSearch());
-                    }
-                }
-            }
-        } else if (advanceTab.isSelected()) {
-            //todo
-            StringBuilder advancedInput = new StringBuilder();
-            advancedInput.append(advanceText.getText());
-            List<String> autoCondition1 = Lists.newArrayList();
-            List<String> autoCondition2 = Lists.newArrayList();
-            if (!StringUtils.isBlank(group1.getValue().toString())) {
-                Set<String> valueList = dataService.findUniqueTestData(envService.findActivatedProjectName(), group1.getValue().toString());
-                if (valueList != null && !valueList.isEmpty()) {
-                    for (String value : valueList) {
-                        String condition1 = "\"" + group1.getValue().toString() + "\"" + " = " + "\"" + value + "\"";
-                        if (StringUtils.isBlank(advancedInput.toString())) {
-                            autoCondition1.add(condition1);
-                        } else {
-                            autoCondition1.add(advancedInput.toString() + " & " + condition1);
-                        }
-                    }
-                }
-            }
-            if (!StringUtils.isBlank(group2.getValue().toString())) {
-                Set<String> valueList = dataService.findUniqueTestData(envService.findActivatedProjectName(), group2.getValue().toString());
-                if (valueList != null && !valueList.isEmpty()) {
-                    if (autoCondition1.isEmpty()) {
-                        for (String value : valueList) {
-                            String condition1 = "\"" + group2.getValue().toString() + "\"" + " = " + "\"" + value + "\"";
-                            if (StringUtils.isBlank(advancedInput.toString())) {
-                                autoCondition2.add(condition1);
-                            } else {
-                                autoCondition2.add(advancedInput.toString() + " & " + condition1);
-                            }
-                        }
-                    } else {
-                        for (String condition : autoCondition1) {
-                            for (String value : valueList) {
-                                String condition1 = "\"" + group2.getValue().toString() + "\"" + " = " + "\"" + value + "\"";
-                                autoCondition2.add(condition + " & " + condition1);
-                            }
-                        }
-                    }
-                }
-            }
-            if (autoCondition1.isEmpty() && autoCondition2.isEmpty()) {
-                search.add(advancedInput.toString());
-            } else {
-                if (autoCondition1.size() > autoCondition2.size() && !autoCondition1.isEmpty()) {
-                    search.addAll(autoCondition1);
-                } else {
-                    if (!autoCondition2.isEmpty()) {
-                        search.addAll(autoCondition2);
-                    }
-                }
-            }
-        }
-        return search;
-    }
-
     private void importLeftConfig() {
         String str = System.getProperty("user.home");
 
@@ -463,22 +349,13 @@ public class SpcItemController implements Initializable {
                     });
                 }
                 if (spcLeftConfigDto.getBasicSearchs() != null && spcLeftConfigDto.getBasicSearchs().size() > 0) {
-                    for (String title : spcLeftConfigDto.getBasicSearchs().keySet()) {
-                        List<BasicSearchDto> basicSearchDtos = spcLeftConfigDto.getBasicSearchs().get(title);
-                        BasicSearchPane basicSearchPane = new BasicSearchPane(title);
-                        if (basicSearchDtos != null && basicSearchDtos.size() > 0) {
-                            basicSearchDtos.forEach(basicSearchDto -> {
-                                basicSearchPane.setSearch(basicSearchDto.getTestItem(), basicSearchDto.getOperator(), basicSearchDto.getValue());
-                            });
-                        }
-                        basicSearch.getChildren().add(basicSearchPane);
-                    }
+                    searchTab.setBasicSearch(spcLeftConfigDto.getBasicSearchs());
                 }
                 ndGroup.setText(spcLeftConfigDto.getNdNumber());
                 subGroup.setText(spcLeftConfigDto.getSubGroup());
-                advanceText.setText(spcLeftConfigDto.getAdvanceSearch());
-                group1.setValue(spcLeftConfigDto.getAutoGroup1());
-                group2.setValue(spcLeftConfigDto.getAutoGroup2());
+                searchTab.getAdvanceText().setText(spcLeftConfigDto.getAdvanceSearch());
+                searchTab.getGroup1().setValue(spcLeftConfigDto.getAutoGroup1());
+                searchTab.getGroup2().setValue(spcLeftConfigDto.getAutoGroup2());
             }
 
         }
@@ -487,39 +364,17 @@ public class SpcItemController implements Initializable {
     private void exportLeftConfig() {
         SpcLeftConfigDto leftConfigDto = new SpcLeftConfigDto();
         leftConfigDto.setItems(getSelectedItem());
-        if (basicSearch.getChildren().size() > 0) {
-            LinkedHashMap<String, List<BasicSearchDto>> basicSearchDtos = Maps.newLinkedHashMap();
-
-            for (Node node : basicSearch.getChildren()) {
-                if (node instanceof BasicSearchPane) {
-                    BasicSearchPane basicSearchPane = ((BasicSearchPane) node);
-                    if (basicSearchPane.getChildren().size() > 0) {
-                        List<BasicSearchDto> dtos = Lists.newArrayList();
-                        for (Node n : basicSearchPane.getChildren()) {
-                            if (n instanceof SearchComboBox) {
-                                BasicSearchDto basicSearchDto = new BasicSearchDto();
-                                basicSearchDto.setTestItem(((SearchComboBox) n).getTestItem());
-                                basicSearchDto.setOperator(((SearchComboBox) n).getOperator());
-                                basicSearchDto.setValue(((SearchComboBox) n).getValue());
-                                dtos.add(basicSearchDto);
-                            }
-                        }
-                        basicSearchDtos.put(basicSearchPane.getTitle(), dtos);
-                    }
-                }
-            }
-            leftConfigDto.setBasicSearchs(basicSearchDtos);
-        }
-        if (advanceText.getText() != null) {
-            leftConfigDto.setAdvanceSearch(advanceText.getText().toString());
+            leftConfigDto.setBasicSearchs(searchTab.getBasicSearch());
+        if (searchTab.getAdvanceText().getText() != null) {
+            leftConfigDto.setAdvanceSearch(searchTab.getAdvanceText().getText().toString());
         }
         leftConfigDto.setNdNumber(ndGroup.getText());
         leftConfigDto.setSubGroup(subGroup.getText());
-        if (group1.getValue() != null) {
-            leftConfigDto.setAutoGroup1(group1.getValue().toString());
+        if (searchTab.getGroup1().getValue() != null) {
+            leftConfigDto.setAutoGroup1(searchTab.getGroup1().getValue().toString());
         }
-        if (group1.getValue() != null) {
-            leftConfigDto.setAutoGroup2(group2.getValue().toString());
+        if (searchTab.getGroup2().getValue() != null) {
+            leftConfigDto.setAutoGroup2(searchTab.getGroup2().getValue().toString());
         }
 
         String str = System.getProperty("user.home");
@@ -542,12 +397,9 @@ public class SpcItemController implements Initializable {
         for (ItemTableModel model : items) {
             model.getSelector().setValue(false);
         }
-        basicSearch.getChildren().clear();
         subGroup.setText(null);
         ndGroup.setText(null);
-        advanceText.setText(null);
-        group1.setValue(null);
-        group2.setValue(null);
+        searchTab.clearSearchTab();
     }
 
     private SpcAnalysisConfigDto buildSpcAnalysisConfigData() {
@@ -565,7 +417,7 @@ public class SpcItemController implements Initializable {
         if (testItemWithTypeDtoList == null) {
             return null;
         }
-        List<String> conditionList = getSearch();
+        List<String> conditionList = searchTab.getSearch();
         List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
         int i = 0;
         for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtoList) {
@@ -607,7 +459,7 @@ public class SpcItemController implements Initializable {
     }
 
     private List<String> getConditionTestItem() {
-        List<String> conditionList = getSearch();
+        List<String> conditionList = searchTab.getSearch();
         List<String> testItemList = getSelectedItem();
         List<String> conditionTestItemList = Lists.newArrayList();
         List<String> timeKeys = Lists.newArrayList();

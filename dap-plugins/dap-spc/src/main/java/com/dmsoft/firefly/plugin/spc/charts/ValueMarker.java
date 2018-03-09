@@ -120,4 +120,10 @@ public class ValueMarker<X, Y> {
             lineMap.get(lineName).getStyleClass().remove("hidden-line");
         }
     }
+
+    public void clear() {
+        lineMap.clear();
+        horizontalMarkers.setAll(FXCollections.observableArrayList());
+        verticalMarkers.setAll(FXCollections.observableArrayList());
+    }
 }

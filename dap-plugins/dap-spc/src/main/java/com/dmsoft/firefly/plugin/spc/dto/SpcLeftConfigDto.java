@@ -1,5 +1,7 @@
 package com.dmsoft.firefly.plugin.spc.dto;
 
+import com.dmsoft.firefly.gui.components.searchtab.BasicSearchDto;
+
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;

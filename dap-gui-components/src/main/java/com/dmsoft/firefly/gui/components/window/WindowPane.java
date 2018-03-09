@@ -28,6 +28,8 @@ import javafx.stage.WindowEvent;
 public class WindowPane extends GridPane {
     public static final int WINDOW_MODEL_FULL = 1;
     public static final int WINDOW_MODEL_X = 2;
+    public static final int WINDOW_MODEL_NONE = 3;
+
     protected static final int TITLE_LEFT_PADDING_WIN = 10;
     protected static final int TITLE_LEFT_PADDING_MAC = 15;
     protected static final int STANDARD_MARGIN = 10;
@@ -164,9 +166,11 @@ public class WindowPane extends GridPane {
         c0.setHgrow(Priority.NEVER);
 
         if (Platforms.IS_MAC_OSX) {
-            c0.setPrefWidth(TITLE_LEFT_PADDING_MAC);
-            c0.setMaxWidth(TITLE_LEFT_PADDING_MAC);
-            c0.setMinWidth(TITLE_LEFT_PADDING_MAC);
+            if (WINDOW_MODEL != WINDOW_MODEL_NONE) {
+                c0.setPrefWidth(TITLE_LEFT_PADDING_MAC);
+                c0.setMaxWidth(TITLE_LEFT_PADDING_MAC);
+                c0.setMinWidth(TITLE_LEFT_PADDING_MAC);
+            }
 
             ColumnConstraints c1 = new ColumnConstraints();
             c1.setHgrow(Priority.NEVER);
@@ -184,9 +188,11 @@ public class WindowPane extends GridPane {
             this.titlePane.add(title, 3, 0);
 
         } else {
-            c0.setPrefWidth(TITLE_LEFT_PADDING_WIN);
-            c0.setMaxWidth(TITLE_LEFT_PADDING_WIN);
-            c0.setMinWidth(TITLE_LEFT_PADDING_WIN);
+            if (WINDOW_MODEL != WINDOW_MODEL_NONE) {
+                c0.setPrefWidth(TITLE_LEFT_PADDING_WIN);
+                c0.setMaxWidth(TITLE_LEFT_PADDING_WIN);
+                c0.setMinWidth(TITLE_LEFT_PADDING_WIN);
+            }
 
             ColumnConstraints c1 = new ColumnConstraints();
             c1.setHgrow(Priority.ALWAYS);
@@ -231,12 +237,15 @@ public class WindowPane extends GridPane {
             maximizeBtn.setOnAction(event -> controller.maximizePropertyProperty().set(!controller.maximizePropertyProperty().get()));
             btnHbox.getChildren().add(maximizeBtn);
         }
-        closeBtn = new Button();
-        closeBtn.setPrefSize(WINDOW_BUTTON_WIDTH, WINDOW_BUTTON_WIDTH);
-        closeBtn.getStyleClass().add(WindowPane.windowButtonClass);
-        closeBtn.getStyleClass().add(WindowPane.closeBtnStyleClass);
-        closeBtn.setOnAction(event -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST)));
-        btnHbox.getChildren().add(closeBtn);
+        if (WINDOW_MODEL != WINDOW_MODEL_NONE) {
+            closeBtn = new Button();
+            closeBtn.setPrefSize(WINDOW_BUTTON_WIDTH, WINDOW_BUTTON_WIDTH);
+            closeBtn.getStyleClass().add(WindowPane.windowButtonClass);
+            closeBtn.getStyleClass().add(WindowPane.closeBtnStyleClass);
+            closeBtn.setOnAction(event -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST)));
+            btnHbox.getChildren().add(closeBtn);
+        }
+
         return btnHbox;
     }
 
@@ -247,15 +256,17 @@ public class WindowPane extends GridPane {
         btnHbox.setSpacing(8);
 
         final int btnPreSize = 12;
-        closeBtn = new Button();
-        closeBtn.setFocusTraversable(false);
-        closeBtn.setPrefSize(btnPreSize, btnPreSize);
-        closeBtn.getStyleClass().add(windowButtonClass);
-        closeBtn.getStyleClass().add(closeBtnStyleClass);
-        closeBtn.setOnAction(event -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST)));
-        closeBtn.setOnMouseEntered(event -> btnHoverState(true));
-        closeBtn.setOnMouseExited(event -> btnHoverState(false));
-        btnHbox.getChildren().add(closeBtn);
+        if (WINDOW_MODEL != WINDOW_MODEL_NONE) {
+            closeBtn = new Button();
+            closeBtn.setFocusTraversable(false);
+            closeBtn.setPrefSize(btnPreSize, btnPreSize);
+            closeBtn.getStyleClass().add(windowButtonClass);
+            closeBtn.getStyleClass().add(closeBtnStyleClass);
+            closeBtn.setOnAction(event -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST)));
+            closeBtn.setOnMouseEntered(event -> btnHoverState(true));
+            closeBtn.setOnMouseExited(event -> btnHoverState(false));
+            btnHbox.getChildren().add(closeBtn);
+        }
 
         if (!Modality.APPLICATION_MODAL.equals(stage.getModality()) && (WINDOW_MODEL == WINDOW_MODEL_FULL)) {
             minimizeBtn = new Button();

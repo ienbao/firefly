@@ -13,7 +13,7 @@ public interface ILineData {
 
     String getTitle();
 
-    Number getValue();
+    double getValue();
 
     Color getColor();
 

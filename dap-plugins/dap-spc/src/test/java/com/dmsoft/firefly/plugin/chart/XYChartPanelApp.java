@@ -44,6 +44,8 @@ public class XYChartPanelApp extends Application {
     private Button pointBtn;
     private Button lineConnectBtn;
     private Button abnormalPointBtn;
+    private Button clearBtn;
+    private Button addBtn;
 
     private String seriesName = "A1::All";
     private String pointName = "Point";
@@ -64,8 +66,10 @@ public class XYChartPanelApp extends Application {
         pointBtn = new Button(lineCharts[3]);
         lineConnectBtn = new Button(lineCharts[4]);
         abnormalPointBtn = new Button("Abnormal Point");
+        clearBtn = new Button("Clear");
+        addBtn = new Button("Add data");
 
-        hBox.getChildren().addAll(lclBtn, uBtn, uclBtn, pointBtn, lineConnectBtn, abnormalPointBtn);
+        hBox.getChildren().addAll(lclBtn, uBtn, uclBtn, pointBtn, lineConnectBtn, abnormalPointBtn, clearBtn, addBtn);
         vBox.getChildren().add(xBarChartPane);
         vBox.getChildren().add(hBox);
 
@@ -149,6 +153,7 @@ public class XYChartPanelApp extends Application {
         button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_XBAR_EXTERN_MENU));
         button.setListViewSize(140, 150);
         xBarChar = new LinearChart(xAxis, yAxis);
+        xBarChar.setAnimated(false);
         xBarChartPane = new ChartPanel<>(xBarChar);
         xBarChartPane.getCustomPane().getChildren().add(button);
     }
@@ -202,6 +207,14 @@ public class XYChartPanelApp extends Application {
 
         lineConnectBtn.setOnAction(event -> {
             operatorChartLine(connectLine);
+        });
+
+        clearBtn.setOnAction(event -> {
+            clearChart();
+        });
+
+        addBtn.setOnAction(event -> {
+            initData();
         });
 
 //        LinearChart chart = xBarChartPane.getChart();
@@ -275,5 +288,10 @@ public class XYChartPanelApp extends Application {
                 });
             }
         }
+    }
+
+    private void clearChart() {
+        LinearChart chart = xBarChartPane.getChart();
+        chart.removeAllChildren();
     }
 }
