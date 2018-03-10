@@ -73,6 +73,9 @@ public class ColorUtils {
         String r, g, b;
         Color awtColor = toAwtColorFromFxColor(fxColor);
         StringBuilder su = new StringBuilder();
+        if (awtColor == null) {
+            return su.toString();
+        }
         r = Integer.toHexString(awtColor.getRed());
         g = Integer.toHexString(awtColor.getGreen());
         b = Integer.toHexString(awtColor.getBlue());
@@ -143,6 +146,6 @@ public class ColorUtils {
         int g = (int) Math.round(fxColor.getGreen() * 255.0);
         int b = (int) Math.round(fxColor.getBlue() * 255.0);
         int a = (int) Math.round(fxColor.getOpacity() * 255.0);
-        return new Color(r,g,b,a);
+        return new Color(r, g, b, a);
     }
 }

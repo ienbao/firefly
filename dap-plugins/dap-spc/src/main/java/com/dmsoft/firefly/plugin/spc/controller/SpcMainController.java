@@ -131,19 +131,13 @@ public class SpcMainController implements Initializable {
 
         SearchDataFrame subDataFrame = this.buildSubSearchDataFrame(searchConditionDtoList);
         paramMap.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
-        Platform.runLater(() -> {
-            manager.doJobASyn(job, new JobDoComplete() {
-                @Override
-                public void doComplete(Object returnValue) {
-                    if (returnValue == null) {
-                        return;
-                    }
-                    List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
-                    chartResultController.initSpcChartData(spcChartDtoList);
 
-                }
-            }, paramMap);
-        });
+        Object returnValue =  manager.doJobSyn(job, paramMap);
+        if (returnValue == null) {
+            return;
+        }
+        List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
+        chartResultController.initSpcChartData(spcChartDtoList);
         viewDataController.setViewData(subDataFrame);
     }
 

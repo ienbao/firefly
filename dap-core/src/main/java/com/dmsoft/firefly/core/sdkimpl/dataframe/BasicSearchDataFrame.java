@@ -178,8 +178,8 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
             ((BasicSearchDataFrame) dataFrame).setSearchConditions(searchConditions);
             List<Set<String>> searchConditionRowList = Lists.newArrayList();
             for (String rowKey : rowKeyList) {
-                Set<String> searchConditon = this.rowSearchConditionResultList.get(getRowKeys().indexOf(rowKey));
-                searchConditionRowList.add(searchConditon);
+                Set<String> searchCondition = this.rowSearchConditionResultList.get(getRowKeys().indexOf(rowKey));
+                searchConditionRowList.add(searchCondition);
             }
             ((BasicSearchDataFrame) dataFrame).setRowSearchConditionResultList(searchConditionRowList);
         }
