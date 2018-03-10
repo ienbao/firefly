@@ -4,6 +4,7 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
+import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -26,6 +27,7 @@ import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.sun.javafx.scene.control.skin.TableViewSkin;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -120,6 +122,13 @@ public class SpcItemController implements Initializable {
         itemTable.setOnMouseEntered(event -> {
             itemTable.focusModelProperty();
         });
+        if (itemTable.getSkin() != null) {
+            NewTableViewWrapper.decorateSkinForSortHeader((TableViewSkin) itemTable.getSkin(), itemTable);
+        } else {
+            itemTable.skinProperty().addListener((ov, s1, s2) -> {
+                NewTableViewWrapper.decorateSkinForSortHeader((TableViewSkin) s2, itemTable);
+            });
+        }
         box = new CheckBox();
         box.setOnAction(event -> {
             if (items != null) {
@@ -136,6 +145,7 @@ public class SpcItemController implements Initializable {
         is.setMaxSize(22, 22);
         is.setOnMousePressed(event -> createPopMenu(is, event));
         is.getStyleClass().add("filter-normal");
+
 //        is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
 
         item.setText("Test Item");
@@ -143,7 +153,13 @@ public class SpcItemController implements Initializable {
         item.getStyleClass().add("filter-header");
         item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
         initItemData();
-        item.setPrefWidth(150);
+        item.setPrefWidth(148);
+
+        item.widthProperty().addListener((ov, w1, w2) -> {
+            Platform.runLater(() -> {
+                is.relocate(w2.doubleValue() - 21, 0);
+            });
+        });
     }
 
     private void initBtnIcon() {
@@ -159,9 +175,19 @@ public class SpcItemController implements Initializable {
         if (pop == null) {
             pop = new ContextMenu();
             MenuItem all = new MenuItem("All Test Items");
-            all.setOnAction(event -> filteredList.setPredicate(p -> p.getItem().startsWith("")));
+            all.setOnAction(event -> {
+                filteredList.setPredicate(p -> p.getItem().startsWith(""));
+                is.getStyleClass().remove("filter-active");
+                is.getStyleClass().add("filter-normal");
+                is.setGraphic(null);
+            });
             MenuItem show = new MenuItem("Test Items with USL/LSL");
-            show.setOnAction(event -> filteredList.setPredicate(p -> StringUtils.isNotEmpty(p.getItemDto().getLsl()) || StringUtils.isNotEmpty(p.getItemDto().getUsl())));
+            show.setOnAction(event -> {
+                filteredList.setPredicate(p -> StringUtils.isNotEmpty(p.getItemDto().getLsl()) || StringUtils.isNotEmpty(p.getItemDto().getUsl()));
+                is.getStyleClass().remove("filter-normal");
+                is.getStyleClass().add("filter-active");
+                is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
+            });
             pop.getItems().addAll(all, show);
         }
         pop.show(is, e.getScreenX(), e.getScreenY());

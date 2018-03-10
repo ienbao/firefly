@@ -23,6 +23,8 @@ public class FilterTableHeaderLabel extends LabelSkin {
     @Override
     protected void layoutLabelInArea(double x, double y, double w, double h, Pos alignment) {
         super.layoutLabelInArea(x, y, w, h, alignment);
-        label.getGraphic().relocate(w - 15, 0);
+        if (label.getGraphic() != null){
+            label.getGraphic().relocate(w - 15, 0);
+        }
     }
 }

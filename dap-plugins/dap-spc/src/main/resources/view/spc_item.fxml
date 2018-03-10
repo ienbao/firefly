@@ -29,13 +29,13 @@
                         <BorderPane minHeight="250.0" minWidth="180.0" prefHeight="250.0" prefWidth="180.0">
                            <center>
                               <TableView fx:id="itemTable" minHeight="200.0" minWidth="180.0" prefHeight="200.0" prefWidth="180.0" style="-fx-border-width: 1 0 0 0;" BorderPane.alignment="CENTER">
+                                 <columns>
+                                    <TableColumn fx:id="select" maxWidth="32.0" minWidth="32.0" prefWidth="32.0" sortType="DESCENDING" sortable="false" />
+                                    <TableColumn fx:id="item" maxWidth="1.7976931348623157E308" minWidth="148.0" prefWidth="148.0" />
+                                 </columns>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
-                                 <columns>
-                                    <TableColumn fx:id="select" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" sortType="DESCENDING" sortable="false" />
-                                    <TableColumn fx:id="item" prefWidth="62.0" />
-                                 </columns>
                               </TableView>
                            </center>
                            <top>
