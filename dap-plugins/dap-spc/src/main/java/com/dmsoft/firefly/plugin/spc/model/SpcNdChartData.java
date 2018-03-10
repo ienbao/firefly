@@ -104,24 +104,13 @@ public class SpcNdChartData implements INdcChartData {
         return lineDataList;
     }
 
-
     @Override
-    public Number getXLowerBound() {
-        return minX;
+    public Color getColor() {
+        return null;
     }
 
     @Override
-    public Number getXUpperBound() {
-        return maxY;
-    }
-
-    @Override
-    public Number getYLowerBound() {
-        return minX;
-    }
-
-    @Override
-    public Number getYUpperBound() {
-        return maxX;
+    public String getUniqueKey() {
+        return null;
     }
 }

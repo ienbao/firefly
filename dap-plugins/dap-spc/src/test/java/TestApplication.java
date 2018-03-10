@@ -6,6 +6,7 @@ import com.dmsoft.firefly.core.sdkimpl.dai.EnvServiceImpl;
 import com.dmsoft.firefly.core.sdkimpl.dai.SourceDataServiceImpl;
 import com.dmsoft.firefly.core.sdkimpl.dai.UserPreferenceServiceImpl;
 import com.dmsoft.firefly.core.sdkimpl.dataframe.BasicDataFrameFactoryImpl;
+import com.dmsoft.firefly.core.sdkimpl.plugin.PluginContextImpl;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;

@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.plugin.spc.skin;
+package com.dmsoft.firefly.gui.components.skin;
 
 import com.sun.javafx.scene.control.skin.LabelSkin;
 import javafx.geometry.Pos;

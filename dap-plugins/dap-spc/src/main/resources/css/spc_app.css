@@ -3,7 +3,7 @@
 }
 
 #viewDataTable {
-    -fx-skin: "com.dmsoft.firefly.plugin.spc.skin.ExpandableTableViewSkin";
+    -fx-skin: "com.dmsoft.firefly.gui.components.skin.ExpandableTableViewSkin";
 }
 
 #viewDataTable .column-header.filter-header .button {
@@ -44,7 +44,7 @@
 #viewDataTable .filter-header .label {
     -fx-content-display: right;
     -fx-padding: 0 -4 0 10;
-    -fx-skin: "com.dmsoft.firefly.plugin.spc.skin.FilterTableHeaderLabel";
+    -fx-skin: "com.dmsoft.firefly.gui.components.skin.FilterTableHeaderLabel";
 }
 
 .column-header.filter-header .button {
