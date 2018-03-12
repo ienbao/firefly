@@ -32,30 +32,12 @@ public class WindowMessageController {
         cancelBtn.setFocusTraversable(false);
     }
 
-    public void updateSmLbl(String msg) {
+    public void updateMsgLbl(String msg) {
         smLbl.setText(msg);
     }
 
-    private void initOKBtn() {
-        okBtn.setText(FxmlAndLanguageUtils.getString("GLOBAL_BTN_OK"));
-        okBtn.setOnAction(event -> {
-            okEvent();
-        });
-    }
-
-    private void okEvent() {
-        if (windowCustomListener != null) {
-            windowCustomListener.onOkCustomEvent();
-        }
-        smLbl.setText("");
-        StageMap.closeStage(ResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE);
-    }
-
-    private void initCancelBtn() {
-        cancelBtn.setText(FxmlAndLanguageUtils.getString("GLOBAL_BTN_CANCEL"));
-        cancelBtn.setOnAction(event -> {
-            closeDialog();
-        });
+    public void updateCancelBtn(String msg) {
+        cancelBtn.setText(msg);
     }
 
     public WindowMessageController showOk() {
@@ -85,14 +67,49 @@ public class WindowMessageController {
     }
 
     public void closeDialog() {
+        boolean isOverride = false;
         if (windowCustomListener != null) {
-            windowCustomListener.onCloseAndCancelCustomEvent();
+            isOverride = windowCustomListener.onCloseAndCancelCustomEvent();
         }
-        smLbl.setText("");
-        StageMap.closeStage(ResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE);
+        if (!isOverride) {
+            smLbl.setText("");
+            StageMap.closeStage(ResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE);
+        }
     }
 
     public void addProcessMonitorListener(WindowCustomListener windowCustomListener) {
         this.windowCustomListener = windowCustomListener;
+    }
+
+    public void onShowingRequest() {
+        boolean isOverride = false;
+        if (windowCustomListener != null) {
+            isOverride = windowCustomListener.onShowCustomEvent();
+        }
+    }
+
+    private void initOKBtn() {
+        okBtn.setText(FxmlAndLanguageUtils.getString("GLOBAL_BTN_OK"));
+        okBtn.setOnAction(event -> {
+            okEvent();
+        });
+    }
+
+    private void okEvent() {
+        boolean isOverride = false;
+        if (windowCustomListener != null) {
+            isOverride = windowCustomListener.onOkCustomEvent();
+        }
+        if (!isOverride) {
+            smLbl.setText("");
+            StageMap.closeStage(ResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE);
+        }
+    }
+
+    private void initCancelBtn() {
+        cancelBtn.setText(FxmlAndLanguageUtils.getString("GLOBAL_BTN_CANCEL"));
+        cancelBtn.setOnAction(event -> {
+            closeDialog();
+        });
     }
 }

@@ -17,8 +17,45 @@ public class WindowMessageFactory {
         return buildWindowMessageDialogNoBtn(title, msg);
     }
 
+    public static WindowMessageController createWindowMessageNoBtnHasOkAndCancel(String title, String msg) {
+        WindowMessageController windowMessageController = buildWindowMessageDialogNoBtn(title, msg);
+        windowMessageController.showOKAndCancel();
+        return windowMessageController;
+    }
+
+    public static WindowMessageController createWindowMessageNoBtnHasCancel(String title, String msg) {
+        WindowMessageController windowMessageController = buildWindowMessageDialogNoBtn(title, msg);
+        windowMessageController.showCancel();
+        return windowMessageController;
+    }
+
+    public static WindowMessageController createWindowMessageNoBtnHasOk(String title, String msg) {
+        WindowMessageController windowMessageController = buildWindowMessageDialogNoBtn(title, msg);
+        windowMessageController.showOk();
+        return windowMessageController;
+    }
+
     public static WindowMessageController createWindowMessage(String title, String msg) {
         return buildWindowMessageDialog(title, msg);
+    }
+
+
+    public static WindowMessageController createWindowMessageHasOkAndCancel(String title, String msg) {
+        WindowMessageController windowMessageController = buildWindowMessageDialog(title, msg);
+        windowMessageController.showOKAndCancel();
+        return windowMessageController;
+    }
+
+    public static WindowMessageController createWindowMessageHasCancel(String title, String msg) {
+        WindowMessageController windowMessageController = buildWindowMessageDialog(title, msg);
+        windowMessageController.showCancel();
+        return windowMessageController;
+    }
+
+    public static WindowMessageController createWindowMessageHasOk(String title, String msg) {
+        WindowMessageController windowMessageController = buildWindowMessageDialog(title, msg);
+        windowMessageController.showOk();
+        return windowMessageController;
     }
 
     public static WindowProgressTipController createWindowProgressTip(String title) {
@@ -37,10 +74,13 @@ public class WindowMessageFactory {
             FXMLLoader fxmlLoader = FxmlAndLanguageUtils.getLoaderFXML("view/window_message.fxml");
             fxmlLoader.setController(windowMessageController);
             root = fxmlLoader.load();
-            windowMessageController.updateSmLbl(msg);
+            windowMessageController.updateMsgLbl(msg);
             Stage newStage = WindowFactory.createOrUpdateWindowAsModelNoBtn(ResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE, title, root);
             newStage.setResizable(false);
             newStage.show();
+            newStage.setOnShowing(event -> {
+                windowMessageController.onShowingRequest();
+            });
             newStage.setOnCloseRequest(event -> {
                 windowMessageController.closeDialog();
             });
@@ -58,9 +98,12 @@ public class WindowMessageFactory {
             FXMLLoader fxmlLoader = FxmlAndLanguageUtils.getLoaderFXML("view/window_message.fxml");
             fxmlLoader.setController(windowMessageController);
             root = fxmlLoader.load();
-            windowMessageController.updateSmLbl(msg);
+            windowMessageController.updateMsgLbl(msg);
             Stage newStage = WindowFactory.createOrUpdateSimpleWindowAsModel(ResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE, title, root);
             newStage.setResizable(false);
+            newStage.setOnShowing(event -> {
+                windowMessageController.onShowingRequest();
+            });
             newStage.show();
             newStage.setOnCloseRequest(event -> {
                 windowMessageController.closeDialog();
@@ -81,7 +124,11 @@ public class WindowMessageFactory {
             root = fxmlLoader.load();
             Stage newStage = WindowFactory.createOrUpdateSimpleWindowAsModel(ResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP, title, root);
             newStage.setResizable(false);
+            newStage.setOnShowing(event -> {
+                windowProgressTipController.onShowingRequest();
+            });
             newStage.show();
+
             newStage.setOnCloseRequest(event -> {
                 windowProgressTipController.closeDialog();
             });
