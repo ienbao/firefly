@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.DataSourceSettingController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.DataSourceSettingController">
     <children>
         <HBox prefHeight="485.0" prefWidth="800.0" style="-fx-border-color: #DCDCDC; -fx-border-width: 1 1 1 1;" VBox.vgrow="ALWAYS">
             <children>
@@ -32,10 +32,11 @@
                                         <Insets left="20.0" />
                                     </padding>
                                 </Label>
-                                <Button mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" text="Button">
-                           <HBox.margin>
-                              <Insets right="5.0" top="5.0" />
-                           </HBox.margin></Button>
+                                <Button fx:id="chooseItem" prefHeight="22.0" prefWidth="22.0" styleClass="btn-txt">
+                                    <HBox.margin>
+                                        <Insets right="5.0" top="5.0" />
+                                    </HBox.margin>
+                                </Button>
                             </children>
                             <VBox.margin>
                                 <Insets />
@@ -62,7 +63,7 @@
                     <children>
                         <TabPane prefHeight="483.0" prefWidth="172.0" tabClosingPolicy="UNAVAILABLE">
                             <tabs>
-                                <Tab style="-fx-pref-width: 45;">
+                                <Tab fx:id="basicTab" style="-fx-pref-width: 45;">
                                     <content>
                                         <VBox prefHeight="402.0" prefWidth="158.0">
                                             <children>
@@ -73,39 +74,40 @@
                                                                 <Insets right="16.0" />
                                                             </HBox.margin>
                                                         </Label>
-                                                        <Button maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" />
-                                                        <Button maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0">
+                                                        <Button fx:id= "newTemplate" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" />
+                                                        <Button fx:id= "clearAll" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0">
                                                             <HBox.margin>
                                                                 <Insets />
                                                             </HBox.margin>
                                                         </Button>
-                                                    </children></HBox>
+                                                    </children>
+                                                </HBox>
                                                 <ScrollPane prefHeight="382.0" prefWidth="158.0">
                                                     <content>
                                                         <VBox prefHeight="379.0" prefWidth="153.0" />
                                                     </content>
                                                 </ScrollPane>
-                                          <HBox prefHeight="24.0" prefWidth="158.0">
-                                              <children>
-                                                  <Button fx:id="rename" maxWidth="32.0" minWidth="32.0" mnemonicParsing="false" prefWidth="32.0" styleClass="btn-txt">
-                                                      <HBox.margin>
-                                                          <Insets left="16.0" />
-                                                      </HBox.margin>
-                                                  </Button>
-                                              </children>
-                                          </HBox>
+                                                <HBox prefHeight="24.0" prefWidth="158.0">
+                                                    <children>
+                                                        <Button fx:id="ok" maxWidth="32.0" minWidth="32.0" mnemonicParsing="false" prefWidth="32.0" styleClass="btn-txt">
+                                                            <HBox.margin>
+                                                                <Insets left="16.0" />
+                                                            </HBox.margin>
+                                                        </Button>
+                                                    </children>
+                                                </HBox>
                                             </children>
                                         </VBox>
                                     </content>
                                 </Tab>
-                                <Tab style="-fx-pref-width: 45;">
+                                <Tab fx:id="advanceTab" style="-fx-pref-width: 45;">
                                     <content>
                                         <VBox prefHeight="200.0" prefWidth="100.0">
                                             <children>
                                                 <HBox prefHeight="30.0" prefWidth="180.0">
                                                     <children>
                                                         <Label prefHeight="30.0" prefWidth="140.0" text=" %ADVANCE_SEARCH" />
-                                                        <Button maxHeight="22.0" maxWidth="22.0" minHeight="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-txt" />
+                                                        <Button fx:id="help" maxHeight="22.0" maxWidth="22.0" minHeight="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-txt" />
                                                     </children>
                                                 </HBox>
                                                 <TextArea prefHeight="100.0" prefWidth="160.0">
@@ -116,7 +118,8 @@
                                                 <Label maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="160.0" text="\%AUTO_DIVIDE_BY">
                                                     <VBox.margin>
                                                         <Insets left="10.0" right="10.0" />
-                                                    </VBox.margin></Label>
+                                                    </VBox.margin>
+                                                </Label>
                                                 <ComboBox prefWidth="150.0">
                                                     <VBox.margin>
                                                         <Insets bottom="10.0" left="10.0" right="10.0" />
@@ -129,7 +132,8 @@
                                                 </ComboBox>
                                             </children>
                                         </VBox>
-                                    </content></Tab>
+                                    </content>
+                                </Tab>
                             </tabs>
                         </TabPane>
                     </children>
@@ -140,26 +144,33 @@
             </opaqueInsets>
             <VBox.margin>
                 <Insets left="10.0" right="10.0" />
-            </VBox.margin></HBox>
+            </VBox.margin>
+        </HBox>
         <GridPane prefHeight="45.0" prefWidth="800.0">
             <columnConstraints>
-                <ColumnConstraints hgrow="ALWAYS" maxWidth="530.0" minWidth="530.0" prefWidth="530.0" />
-                <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
-                <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
+                <ColumnConstraints hgrow="ALWAYS" maxWidth="530.0" minWidth="29.0" prefWidth="29.0" />
+                <ColumnConstraints hgrow="ALWAYS" maxWidth="1001.0" minWidth="278.0" prefWidth="500.0" />
+                <ColumnConstraints maxWidth="342.0" minWidth="88.0" prefWidth="94.0" />
+                <ColumnConstraints maxWidth="105.0" minWidth="90.0" prefWidth="92.0" />
                 <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="45.0" prefHeight="45.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button fx:id="apply" mnemonicParsing="false" prefWidth="80.0" text="Apply" GridPane.columnIndex="3" />
-                <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="Cancel" GridPane.columnIndex="2" />
-                <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="OK" GridPane.columnIndex="1" />
+                <Button fx:id="apply" mnemonicParsing="false" prefWidth="80.0" text="Apply" GridPane.columnIndex="4" />
+                <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="Cancel" GridPane.columnIndex="3" />
+                <Button fx:id="oK" mnemonicParsing="false" prefWidth="80.0" text="OK" GridPane.columnIndex="2" />
                 <Button mnemonicParsing="false" prefHeight="15.0" prefWidth="15.0">
                     <GridPane.margin>
                         <Insets bottom="10.0" left="10.0" top="2.0" />
                     </GridPane.margin>
                 </Button>
+                <Label text="Failed Test Data (Greater than USL or lower than ILSL) " GridPane.columnIndex="1">
+                    <GridPane.margin>
+                        <Insets left="15.0" />
+                    </GridPane.margin>
+                </Label>
             </children>
         </GridPane>
     </children>
