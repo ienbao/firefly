@@ -10,8 +10,10 @@ import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.pipeline.SpcRefreshJobPipeline;
 import com.dmsoft.firefly.plugin.spc.service.SpcAnalysisService;
 import com.dmsoft.firefly.plugin.spc.service.SpcService;
+import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcAnalysisServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcServiceImpl;
+import com.dmsoft.firefly.plugin.spc.service.impl.SpcSettingServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ViewResource;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -40,14 +42,19 @@ public class SpcPlugin extends Plugin {
     public void initialize(InitModel model) {
         SpcServiceImpl spcService = new SpcServiceImpl();
         SpcAnalysisServiceImpl spcAnalysisService = new SpcAnalysisServiceImpl();
+        SpcSettingService spcSettingService = new SpcSettingServiceImpl();
         spcService.setAnalysisService(spcAnalysisService);
         RuntimeContext.registerBean(SpcService.class, spcService);
         RuntimeContext.registerBean(SpcAnalysisService.class, spcAnalysisService);
+        RuntimeContext.registerBean(SpcSettingService.class, spcSettingService);
         RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(SPC_PLUGIN_NAME,
                 "com.dmsoft.firefly.plugin.spc.service.impl.SpcServiceImpl", spcService);
 
         RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(SPC_PLUGIN_NAME,
                 "com.dmsoft.firefly.plugin.spc.service.impl.SpcAnalysisServiceImpl", spcAnalysisService);
+
+        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(SPC_PLUGIN_NAME,
+                "com.dmsoft.firefly.plugin.spc.service.impl.SpcSettingServiceImpl", spcSettingService);
         LOGGER.info("Plugin-SPC Initialized.");
     }
 
