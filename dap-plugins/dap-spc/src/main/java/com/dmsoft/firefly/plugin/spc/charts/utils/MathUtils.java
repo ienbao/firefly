@@ -6,17 +6,37 @@ package com.dmsoft.firefly.plugin.spc.charts.utils;
 public class MathUtils {
 
     public static Double getMax(Double[] array) {
-        Double max = array[0];
-        for (int x = 1; x < array.length; x++) {
-            max = Math.max(array[x], max);
+        if (array == null) {
+            return null;
+        }
+        Double max = null;
+        for (int x = 0; x < array.length; x++) {
+            if (array[x] == null) {
+                continue;
+            }
+            if (max == null) {
+                max = array[x];
+            } else {
+                max = Math.max(array[x], max);
+            }
         }
         return max;
     }
 
     public static Double getMin(Double[] array) {
-        double min = array[0];
+        if (array == null) {
+            return null;
+        }
+        Double min = null;
         for (int x = 1; x < array.length; x++) {
-            min = Math.min(array[x], min);
+            if (array[x] == null) {
+                continue;
+            }
+            if (min == null) {
+                min = array[x];
+            } else {
+                min = Math.min(array[x], min);
+            }
         }
         return min;
     }
@@ -25,10 +45,17 @@ public class MathUtils {
         if (array == null) {
             return null;
         }
-        Double max = array[0][0];
+        Double max = null;
         for (int i = 0; i < array.length; i++) {
-            for (int x = 1; x < array[i].length; x++) {
-                max = Math.max(array[i][x], max);
+            for (int x = 0; x < array[i].length; x++) {
+                if (array[i][x] == null) {
+                    continue;
+                }
+                if (max == null) {
+                    max = array[i][x];
+                } else {
+                    max = Math.max(array[i][x], max);
+                }
             }
         }
         return max;
@@ -38,10 +65,17 @@ public class MathUtils {
         if (array == null) {
             return null;
         }
-        Double min = array[0][0];
+        Double min = null;
         for (int i = 0; i < array.length; i++) {
-            for (int x = 1; x < array[i].length; x++) {
-                min = Math.min(array[i][x], min);
+            for (int x = 0; x < array[i].length; x++) {
+                if (array[i][x] == null) {
+                    continue;
+                }
+                if (min == null) {
+                    min = array[i][x];
+                } else {
+                    min = Math.min(array[i][x], min);
+                }
             }
         }
         return min;

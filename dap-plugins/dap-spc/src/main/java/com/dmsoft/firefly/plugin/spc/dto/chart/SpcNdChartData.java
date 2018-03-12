@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2017. For Intelligent Group.
  */
-package com.dmsoft.firefly.plugin.spc.model;
+package com.dmsoft.firefly.plugin.spc.dto.chart;
 
 import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBarChartData;
@@ -9,9 +9,6 @@ import com.dmsoft.firefly.plugin.spc.charts.data.basic.ILineData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.NDCResultDto;
-import com.dmsoft.firefly.plugin.spc.dto.chart.BarChartData;
-import com.dmsoft.firefly.plugin.spc.dto.chart.INdcChartData;
-import com.dmsoft.firefly.plugin.spc.dto.chart.LineData;
 import com.dmsoft.firefly.plugin.spc.utils.ChartDataUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.google.common.collect.Lists;
@@ -106,11 +103,31 @@ public class SpcNdChartData implements INdcChartData {
 
     @Override
     public Color getColor() {
-        return null;
+        return color;
     }
 
     @Override
     public String getUniqueKey() {
-        return null;
+        return key;
+    }
+
+    @Override
+    public Number getXLowerBound() {
+        return minX;
+    }
+
+    @Override
+    public Number getXUpperBound() {
+        return maxX;
+    }
+
+    @Override
+    public Number getYLowerBound() {
+        return minY;
+    }
+
+    @Override
+    public Number getYUpperBound() {
+        return maxY;
     }
 }

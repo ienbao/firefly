@@ -59,6 +59,13 @@
     -fx-background-image: url('/images/btn_arrow_down.png');
 }
 
+.column-header.filter-header .filter-active {
+    -fx-background-image: url('/images/btn_filter_normal.png');
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 2 2;
+}
+
 .column-header.filter-header:hover .button {
     -fx-background-size: 16;
     -fx-background-repeat: no-repeat;
@@ -77,7 +84,8 @@
 
 .filter-header .label {
     -fx-content-display: right;
-    -fx-padding: 0 -10 0 10;
+    -fx-padding: 0 -4 0 10;
+    -fx-skin: "com.dmsoft.firefly.gui.components.skin.FilterTableHeaderLabel";
 }
 
 .table-filter-btn {

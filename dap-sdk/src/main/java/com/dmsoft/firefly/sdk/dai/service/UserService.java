@@ -22,7 +22,7 @@ public interface UserService {
      * @param oldPwd   password before updating
      * @param newPwd   password after updating
      */
-    void updatePassword(String userName, String oldPwd, String newPwd);
+    boolean updatePassword(String userName, String oldPwd, String newPwd);
 
     /**
      * update user legal.

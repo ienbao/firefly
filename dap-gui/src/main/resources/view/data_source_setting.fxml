@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.DataSourceSettingController">
+    <children>
+        <HBox prefHeight="485.0" prefWidth="800.0" style="-fx-border-color: #DCDCDC; -fx-border-width: 1 1 1 1;" VBox.vgrow="ALWAYS">
+            <children>
+                <VBox prefHeight="480.0" prefWidth="620.0">
+                    <children>
+                        <HBox prefHeight="45.0" style="-fx-border-color: #DCDCDC;">
+                            <children>
+                                <Label fx:id="title" minHeight="30.0" prefHeight="30.0" prefWidth="598.0" text="All Data">
+                                    <opaqueInsets>
+                                        <Insets />
+                                    </opaqueInsets>
+                                    <padding>
+                                        <Insets left="20.0" />
+                                    </padding>
+                                </Label>
+                                <Button mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" text="Button">
+                           <HBox.margin>
+                              <Insets right="5.0" top="5.0" />
+                           </HBox.margin></Button>
+                            </children>
+                            <VBox.margin>
+                                <Insets />
+                            </VBox.margin>
+                        </HBox>
+                        <ScrollPane prefHeight="466.0" prefWidth="619.0">
+                            <content>
+                                <TableView fx:id="itemTable" prefHeight="450.0" prefWidth="634.0">
+                                    <columns>
+                                        <TableColumn fx:id="testItem" editable="false" maxWidth="250.0" minWidth="41.0" prefWidth="43.0" sortable="false" />
+                                        <TableColumn fx:id="type" prefWidth="181.0" sortable="false" />
+                                        <TableColumn fx:id="lsl" prefWidth="173.0" sortable="false" />
+                                        <TableColumn fx:id="usl" prefWidth="189.0" sortable="false" />
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                    </columnResizePolicy>
+                                </TableView>
+                            </content>
+                        </ScrollPane>
+                    </children>
+                </VBox>
+                <VBox prefHeight="485.0" prefWidth="160.0" style="-fx-border-color: #DCDCDC; -fx-border-width: 0 1 0 0;">
+                    <children>
+                        <TabPane prefHeight="483.0" prefWidth="172.0" tabClosingPolicy="UNAVAILABLE">
+                            <tabs>
+                                <Tab style="-fx-pref-width: 45;">
+                                    <content>
+                                        <VBox prefHeight="402.0" prefWidth="158.0">
+                                            <children>
+                                                <HBox maxHeight="38.0" minHeight="26.0" prefHeight="33.0" prefWidth="158.0" style="-fx-border-color: #DCDCDC;">
+                                                    <children>
+                                                        <Label maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="110.0" text="Basic Search">
+                                                            <HBox.margin>
+                                                                <Insets right="16.0" />
+                                                            </HBox.margin>
+                                                        </Label>
+                                                        <Button maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" />
+                                                        <Button maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0">
+                                                            <HBox.margin>
+                                                                <Insets />
+                                                            </HBox.margin>
+                                                        </Button>
+                                                    </children></HBox>
+                                                <ScrollPane prefHeight="382.0" prefWidth="158.0">
+                                                    <content>
+                                                        <VBox prefHeight="379.0" prefWidth="153.0" />
+                                                    </content>
+                                                </ScrollPane>
+                                          <HBox prefHeight="24.0" prefWidth="158.0">
+                                              <children>
+                                                  <Button fx:id="rename" maxWidth="32.0" minWidth="32.0" mnemonicParsing="false" prefWidth="32.0" styleClass="btn-txt">
+                                                      <HBox.margin>
+                                                          <Insets left="16.0" />
+                                                      </HBox.margin>
+                                                  </Button>
+                                              </children>
+                                          </HBox>
+                                            </children>
+                                        </VBox>
+                                    </content>
+                                </Tab>
+                                <Tab style="-fx-pref-width: 45;">
+                                    <content>
+                                        <VBox prefHeight="200.0" prefWidth="100.0">
+                                            <children>
+                                                <HBox prefHeight="30.0" prefWidth="180.0">
+                                                    <children>
+                                                        <Label prefHeight="30.0" prefWidth="140.0" text=" %ADVANCE_SEARCH" />
+                                                        <Button maxHeight="22.0" maxWidth="22.0" minHeight="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-txt" />
+                                                    </children>
+                                                </HBox>
+                                                <TextArea prefHeight="100.0" prefWidth="160.0">
+                                                    <VBox.margin>
+                                                        <Insets bottom="10.0" left="10.0" right="10.0" />
+                                                    </VBox.margin>
+                                                </TextArea>
+                                                <Label maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="160.0" text="\%AUTO_DIVIDE_BY">
+                                                    <VBox.margin>
+                                                        <Insets left="10.0" right="10.0" />
+                                                    </VBox.margin></Label>
+                                                <ComboBox prefWidth="150.0">
+                                                    <VBox.margin>
+                                                        <Insets bottom="10.0" left="10.0" right="10.0" />
+                                                    </VBox.margin>
+                                                </ComboBox>
+                                                <ComboBox prefWidth="150.0">
+                                                    <VBox.margin>
+                                                        <Insets bottom="10.0" left="10.0" right="10.0" />
+                                                    </VBox.margin>
+                                                </ComboBox>
+                                            </children>
+                                        </VBox>
+                                    </content></Tab>
+                            </tabs>
+                        </TabPane>
+                    </children>
+                </VBox>
+            </children>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+            <VBox.margin>
+                <Insets left="10.0" right="10.0" />
+            </VBox.margin></HBox>
+        <GridPane prefHeight="45.0" prefWidth="800.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" maxWidth="530.0" minWidth="530.0" prefWidth="530.0" />
+                <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
+                <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
+                <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="45.0" prefHeight="45.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Button fx:id="apply" mnemonicParsing="false" prefWidth="80.0" text="Apply" GridPane.columnIndex="3" />
+                <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="Cancel" GridPane.columnIndex="2" />
+                <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="OK" GridPane.columnIndex="1" />
+                <Button mnemonicParsing="false" prefHeight="15.0" prefWidth="15.0">
+                    <GridPane.margin>
+                        <Insets bottom="10.0" left="10.0" top="2.0" />
+                    </GridPane.margin>
+                </Button>
+            </children>
+        </GridPane>
+    </children>
+    <padding>
+        <Insets top="10.0" />
+    </padding>
+</VBox>

@@ -11,5 +11,7 @@ public class GuiConst {
 
 
     public final static String PLARTFORM_NODE_MAIN = PLARTFORM_NODE + "main";
+    public final static String PLARTFORM_STAGE_CHANGE_PASSWORD = PLARTFORM_STAGE + "change_password";
+    public final static String PLARTFORM_STAGE_CHANGE_PASSWORD_BACK = PLARTFORM_STAGE + "change_password_back";
 
 }

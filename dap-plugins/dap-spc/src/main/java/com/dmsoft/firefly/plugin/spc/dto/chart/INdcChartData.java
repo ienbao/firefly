@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by cherry on 2018/3/8.
  */
-public interface INdcChartData {
+public interface INdcChartData extends AxisRange {
 
     IXYChartData getCurveData();
 

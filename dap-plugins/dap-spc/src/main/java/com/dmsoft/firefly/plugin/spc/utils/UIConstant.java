@@ -38,5 +38,7 @@ public class UIConstant {
     public static final String[] SPC_RULE_R = new String[]{"R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"};
 
     public static final String[] SPC_USL_LSL = new String[]{"USL", "LSL"};
+    public static final String[] SPC_UCL_LCL = new String[]{"UCL", "LCL"};
+    public static final String SPC_CHART_CL = "cl";
 
 }

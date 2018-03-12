@@ -4,11 +4,7 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.plugin.spc.charts.*;
-import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationFetch;
-import com.dmsoft.firefly.plugin.spc.charts.data.BoxExtraData;
-import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
-import com.dmsoft.firefly.plugin.spc.charts.utils.enums.LineType;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
@@ -16,8 +12,7 @@ import com.dmsoft.firefly.plugin.spc.charts.view.VerticalTabPane;
 import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.*;
-import com.dmsoft.firefly.plugin.spc.charts.data.BarCategoryData;
-import com.dmsoft.firefly.plugin.spc.model.SpcNdChartData;
+import com.dmsoft.firefly.plugin.spc.dto.chart.SpcNdChartData;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
@@ -27,7 +22,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.scene.chart.*;
 import javafx.scene.control.Tab;
 import javafx.scene.paint.Color;
@@ -283,7 +277,6 @@ public class ChartResultController implements Initializable {
     }
 
 
-
     /**
      * init main controller
      *
@@ -301,6 +294,13 @@ public class ChartResultController implements Initializable {
     public void initSpcChartData(List<SpcChartDto> spcChartDtoList) {
         Map<String, java.awt.Color> colorCache = spcMainController.getColorCache();
         List<INdcChartData> ndcChartDataList = Lists.newArrayList();
+        List<IRunChartData> runChartDataList = Lists.newArrayList();
+        List<IControlChartData> xBarChartDataList = Lists.newArrayList();
+        List<IControlChartData> rangeChartDataList = Lists.newArrayList();
+        List<IControlChartData> sdChartDataList = Lists.newArrayList();
+        List<IControlChartData> medianChartDataList = Lists.newArrayList();
+        List<IBoxChartData> boxChartDataList = Lists.newArrayList();
+        List<IControlChartData> mrChartDataList = Lists.newArrayList();
         for (SpcChartDto spcChartDto : spcChartDtoList) {
             String key = spcChartDto.getKey();
             Color color = ColorUtils.toFxColorFromAwtColor(colorCache.get(key));
@@ -311,12 +311,41 @@ public class ChartResultController implements Initializable {
             //nd chart
             INdcChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
             ndcChartDataList.add(iNdcChartData);
+            //run chart
+            IRunChartData iRunChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), color);
+            runChartDataList.add(iRunChartData);
+            //x bar chart
+            IControlChartData xBarChartData = new SpcControlChartData(key, spcChartResultDto.getXbarCResult(), color);
+            xBarChartDataList.add(xBarChartData);
+            //range chart
+            IControlChartData rangeChartData = new SpcControlChartData(key, spcChartResultDto.getRangeCResult(), color);
+            rangeChartDataList.add(rangeChartData);
+            //sd chart
+            IControlChartData sdChartData = new SpcControlChartData(key, spcChartResultDto.getSdCResult(), color);
+            sdChartDataList.add(sdChartData);
+            //median chart
+            IControlChartData medianChartData = new SpcControlChartData(key, spcChartResultDto.getMedianCResult(), color);
+            medianChartDataList.add(medianChartData);
+            //box chart
+            IBoxChartData iBoxChartData = new SpcBoxChartData(key, spcChartResultDto.getBoxCResult(), color);
+            boxChartDataList.add(iBoxChartData);
+            //mr chart
+            IControlChartData mrChartData = new SpcControlChartData(key, spcChartResultDto.getMrCResult(), color);
+            mrChartDataList.add(mrChartData);
+
         }
 
-        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList, null);
+        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
+        this.setRunChartData(UIConstant.SPC_CHART_NAME[1], runChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[2], xBarChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[4], sdChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[5], medianChartDataList);
+        this.setBoxChartData(UIConstant.SPC_CHART_NAME[6], boxChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
     }
 
-    public void setNdChartData(String chartName, List<INdcChartData> ndChartData, AxisRange axisRange) {
+    public void setNdChartData(String chartName, List<INdcChartData> ndChartData) {
         NDChart chart = ndChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
@@ -327,7 +356,7 @@ public class ChartResultController implements Initializable {
         setNdChartData(ndChartData);
     }
 
-    public void setRunChartData(String chartName, List<IRunChartData> runChartData, AxisRange axisRange) {
+    public void setRunChartData(String chartName, List<IRunChartData> runChartData) {
         LinearChart chart = runChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
@@ -338,7 +367,7 @@ public class ChartResultController implements Initializable {
         setRunChartData(runChartData);
     }
 
-    public void setControlChartData(String chartName, List<IControlChartData> controlChartData, AxisRange axisRange) {
+    public void setControlChartData(String chartName, List<IControlChartData> controlChartData) {
         Object chart = getChartByName(chartName);
         if (chart != null && chart instanceof LinearChart) {
             LinearChart linearChart = (LinearChart) chart;
@@ -352,7 +381,7 @@ public class ChartResultController implements Initializable {
         }
     }
 
-    public void setBoxChartData(String chartName, List<IBoxChartData> boxChartData, AxisRange axisRange) {
+    public void setBoxChartData(String chartName, List<IBoxChartData> boxChartData) {
         BoxPlotChart chart = boxChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
@@ -364,7 +393,6 @@ public class ChartResultController implements Initializable {
     }
 
     public void clearChartData() {
-
         for (Map.Entry<String, XYChart> chartMap : chartMap.entrySet()) {
             if (chartMap.getValue() instanceof NDChart) {
                 ((NDChart) chartMap.getValue()).removeAllChildren();

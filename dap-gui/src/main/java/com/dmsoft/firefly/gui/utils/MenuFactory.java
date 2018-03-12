@@ -76,6 +76,8 @@ public class MenuFactory {
         label.setContentDisplay(ContentDisplay.RIGHT);*/
 
         MenuItem dataSourceSettingMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_DATA_SOURCE_SETTING"));
+        dataSourceSettingMenuItem.setOnAction(event -> buildSourceSettingDia());
+
 
         MenuItem analysisMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ANALYSIS_TEMPLATE"));
         analysisMenuItem.setOnAction(event -> buildTemplateDia());
@@ -147,6 +149,19 @@ public class MenuFactory {
         menu.getItems().add(dapMenuItem);
         menu.getItems().add(updateMenuItem);
         return getParentMenuBuilder().setParentLocation(ROOT_MENU).addMenu(menu);
+    }
+
+    private static void buildSourceSettingDia(){
+        Pane root = null;
+        try {
+            //root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source_setting.fxml");
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("sourceSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.SOURCESETTING), root, getResource("css/platform_app.css").toExternalForm());
+            stage.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private static void buildTemplateDia() {
