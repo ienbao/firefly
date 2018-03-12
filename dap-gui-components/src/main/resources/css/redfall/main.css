@@ -159,12 +159,21 @@
     -fx-padding: 0 10 0 3;
 }
 
-.tooltip-warn-svg {
+.icon-warn-svg {
     -fx-background-position: left;
     -fx-background-color: #F38400;
     -fx-scale-shape: false;
     -fx-shape: "M8,2C4.7,2,2,4.7,2,8s2.7,6,6,6s6-2.7,6-6S11.3,2,8,2z M9,12H8H7v-2h1h1V12z M9,9H8H7V4h1h1V9z";
 }
+
+.icon-success-svg {
+    -fx-background-position: left;
+    -fx-background-color: COLORFUL_DARK_GREEN;
+    -fx-scale-shape: false;
+    -fx-shape: "M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M25.7,11.7l-12,12C13.5,23.9,13.3,24,13,24s-0.5-0.1-0.7-0.3l-7-7c-0.4-0.4-0.4-1,0-1.4s1-0.4,1.4,0l6.3,6.3l11.3-11.3c0.4-0.4,1-0.4,1.4,0S26.1,11.3,25.7,11.7z";
+}
+
+
 
 /*******************************************************************************
  *                                                                             *

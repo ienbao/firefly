@@ -45,7 +45,7 @@ public class TooltipUtil {
     public static Tooltip installWarnTooltip(Node node, String msg) {
         if (tooltip == null) {
             Label warnLbl = new Label();
-            warnLbl.getStyleClass().add("tooltip-warn-svg");
+            warnLbl.getStyleClass().add("icon-warn-svg");
             warnLbl.setPrefWidth(26);
             warnLbl.setMinWidth(26);
             warnLbl.setMaxWidth(26);

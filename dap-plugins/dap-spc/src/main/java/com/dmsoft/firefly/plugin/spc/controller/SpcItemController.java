@@ -247,14 +247,24 @@ public class SpcItemController implements Initializable {
         });
         windowProgressTipController.addProcessMonitorListener(new WindowCustomListener() {
             @Override
-            public void onCloseAndCancelCustomEvent() {
-                //to do
-                System.out.println("close");
+            public boolean onShowCustomEvent() {
+                System.out.println("show");
+
+                return false;
             }
 
             @Override
-            public void onOkCustomEvent() {
+            public boolean onCloseAndCancelCustomEvent() {
+                //to do
+                System.out.println("close");
+                return false;
+            }
 
+            @Override
+            public boolean onOkCustomEvent() {
+                System.out.println("ok");
+
+                return false;
             }
         });
         Map paramMap = Maps.newHashMap();
