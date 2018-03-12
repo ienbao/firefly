@@ -291,8 +291,8 @@ public class SpcItemController implements Initializable {
                         //todo message tip
                         return;
                     }
-                    List<SpcStatsDto> spcStatsDtoList = (List<SpcStatsDto>) returnValue;
-                    spcMainController.setStatisticalResultData(spcStatsDtoList);
+                    List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
+                    spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
                 }
             }, paramMap, spcMainController);
         });
