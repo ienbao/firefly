@@ -86,7 +86,6 @@ public class SpcItemController implements Initializable {
     private SearchTab searchTab;
 
     private CheckBox box;
-    private ObservableList<String> groupItem = FXCollections.observableArrayList();
 
     private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
