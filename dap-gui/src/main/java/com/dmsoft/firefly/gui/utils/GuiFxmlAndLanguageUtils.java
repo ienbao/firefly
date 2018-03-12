@@ -4,6 +4,7 @@
 package com.dmsoft.firefly.gui.utils;
 
 import com.dmsoft.firefly.gui.components.utils.ModuleType;
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -90,7 +91,7 @@ public class GuiFxmlAndLanguageUtils {
         try {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/change_password.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("platform_gui_change_password", GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_CHANGE_PASSWORD, GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
             stage.show();
         } catch (Exception ex) {
@@ -106,6 +107,23 @@ public class GuiFxmlAndLanguageUtils {
             Stage stage = WindowFactory.createSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_LEGAL, GuiFxmlAndLanguageUtils.getString(ResourceMassages.DATASOURCE), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
             stage.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void buildChangePasswordBackDia() {
+        Pane root = null;
+        try {
+            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/change_password_back.fxml");
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_CHANGE_PASSWORD_BACK, GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), root, getResource("css/platform_app.css").toExternalForm());
+            stage.setResizable(false);
+            stage.show();
+            stage.setOnCloseRequest(event -> {
+                StageMap.getStage(GuiConst.PLARTFORM_STAGE_CHANGE_PASSWORD_BACK).close();
+                StageMap.getStage(GuiConst.PLARTFORM_STAGE_CHANGE_PASSWORD).close();
+            });
         } catch (Exception ex) {
             ex.printStackTrace();
         }

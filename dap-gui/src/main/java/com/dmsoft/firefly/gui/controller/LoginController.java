@@ -74,7 +74,7 @@ public class LoginController {
         Stage loginStage = StageMap.getStage(GuiConst.PLARTFORM_STAGE_LOGIN);
         loginStage.setResizable(true);
         Label warnLbl = new Label();
-        warnLbl.getStyleClass().add("tooltip-warn-svg");
+        warnLbl.getStyleClass().add("icon-warn-svg");
         warnLbl.setPadding(new Insets(0, 10, 0, 10));
 
         Label warnLbl1 = new Label();

@@ -41,7 +41,7 @@ public class ChartDataUtils {
         Double[] x = new Double[cl.length * 3];
         Double[] y = new Double[cl.length * 3];
         for (int i = 0; i < cl.length * 3; i++) {
-            x[i] = Double.valueOf(i / 3);
+            x[i] = i / 3.0;
             y[i] = cl[i / 3];
         }
         XYData xyData = new XYData();

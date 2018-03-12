@@ -1,6 +1,8 @@
 package com.dmsoft.firefly.gui.controller;
 
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.gui.model.UserModel;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.UserService;
@@ -35,8 +37,23 @@ public class ChangePasswordController {
     }
 
     private void initEvent() {
+        UserModel userModel = UserModel.getInstance();
         btnOK.setOnAction(event -> {
-            userService.updatePassword("admin", txtOldPassword.getText(), txtNewPassword.getText());
+            if (txtOldPassword.getStyleClass().contains(errorStyle)
+                    || txtNewPassword.getStyleClass().contains(errorStyle)
+                    || txtConfirmPassword.getStyleClass().contains(errorStyle)) {
+                return;
+            }
+            try {
+                if (userService.updatePassword(userModel.getUser().getUserName(), txtOldPassword.getText(), txtNewPassword.getText())){
+                    GuiFxmlAndLanguageUtils.buildChangePasswordBackDia();
+                } else {
+                    WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_CHECK_PASSWORD"));
+                }
+            } catch (Exception e) {
+                WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_FAIL"));
+            }
+
         });
 
         txtOldPassword.setOnMouseEntered(event -> {

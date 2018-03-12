@@ -39,11 +39,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updatePassword(String userName, String oldPwd, String newPwd) {
+    public boolean updatePassword(String userName, String oldPwd, String newPwd) {
         String json = JsonFileUtil.readJsonFile(parentPath, fileName);
         if (json == null) {
             logger.debug("Don`t find " + fileName);
-            return;
+            return false;
         }
         List<UserDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, UserDto.class));
         Boolean isExist = Boolean.FALSE;
@@ -59,7 +59,10 @@ public class UserServiceImpl implements UserService {
         }
         if (isExist) {
             JsonFileUtil.writeJsonFile(list, parentPath, fileName);
+        } else {
+            return false;
         }
+        return true;
     }
 
     @Override

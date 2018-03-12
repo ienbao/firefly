@@ -147,6 +147,21 @@ public class ChartUtils {
         chart.lookupAll(s).forEach((node -> node.addEventHandler(MouseEvent.MOUSE_RELEASED, this::release)));
     }
 
+    public void setOriginalXUpper(double originalXUpper) {
+        this.originalXUpper = originalXUpper;
+    }
+
+    public void setOriginalXLower(double originalXLower) {
+        this.originalXLower = originalXLower;
+    }
+
+    public void setOriginalYUpper(double originalYUpper) {
+        this.originalYUpper = originalYUpper;
+    }
+
+    public void setOriginalYLower(double originalYLower) {
+        this.originalYLower = originalYLower;
+    }
 
     private void startDrag(MouseEvent event) {
         lastX = event.getX();
