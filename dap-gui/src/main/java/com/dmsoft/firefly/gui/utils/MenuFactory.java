@@ -80,7 +80,7 @@ public class MenuFactory {
 
 
         MenuItem analysisMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ANALYSIS_TEMPLATE"));
-        analysisMenuItem.setOnAction(event -> buildTemplateDia());
+        analysisMenuItem.setOnAction(event -> GuiFxmlAndLanguageUtils.buildTemplateDia());
 
         MenuItem pluginMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_PLUGIN_MANAGER"));
         pluginMenuItem.setOnAction(event -> {
@@ -164,18 +164,7 @@ public class MenuFactory {
         }
     }
 
-    private static void buildTemplateDia() {
-        Pane root = null;
-        try {
-            //root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/template.fxml");
-            root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("template", GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE), root, getResource("css/platform_app.css").toExternalForm());
-            stage.show();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+
 
     private static void buildeSettingExportDia() {
         Pane root = null;

@@ -8,6 +8,7 @@ import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
 import com.dmsoft.firefly.gui.model.TemplateItemModel;
 import com.dmsoft.firefly.gui.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -169,12 +170,14 @@ public class TemplateController {
                 templateService.saveAllAnalysisTemplate(Lists.newArrayList(allTemplate.values()));
             }
             StageMap.closeStage("template");
+            refreshMainTemplate();
         });
         apply.setOnAction(event -> {
             saveCache();
             if (allTemplate != null) {
                 templateService.saveAllAnalysisTemplate(Lists.newArrayList(allTemplate.values()));
             }
+            refreshMainTemplate();
         });
         cancel.setOnAction(event -> {
             StageMap.closeStage("template");
@@ -390,6 +393,21 @@ public class TemplateController {
 
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    private void refreshMainTemplate() {
+        ObservableList<StateBarTemplateModel> templateList = FXCollections.observableArrayList();
+        if (allTemplate != null && currTemplate != null) {
+            allTemplate.keySet().forEach(name -> {
+                StateBarTemplateModel stateBarTemplateModel = new StateBarTemplateModel(name, false);
+                if (name.equals(currTemplate.getName())) {
+                    stateBarTemplateModel = new StateBarTemplateModel(name, true);
+                }
+                templateList.add(stateBarTemplateModel);
+            });
+            MenuFactory.getMainController().refreshTemplate(templateList);
+            MenuFactory.getMainController().updateTemplateText(currTemplate.getName());
         }
     }
 
