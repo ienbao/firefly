@@ -90,10 +90,10 @@ public class SpcBoxChartData implements IBoxChartData {
             }
         };
 
-        maxY = MathUtils.getMax((Double[]) yPoint.toArray(), (Double[]) boxY.toArray());
-        minY = MathUtils.getMin((Double[]) yPoint.toArray(), (Double[]) boxY.toArray());
-        maxX = MathUtils.getMax((Double[]) xPoint.toArray());
-        minX = MathUtils.getMax((Double[]) xPoint.toArray());
+        maxY = MathUtils.getMax(yPoint.toArray(new Double[0]), boxY.toArray(new Double[0]));
+        minY = MathUtils.getMin(yPoint.toArray(new Double[0]), boxY.toArray(new Double[0]));
+        maxX = MathUtils.getMax(xPoint.toArray(new Double[0]));
+        minX = MathUtils.getMax(xPoint.toArray(new Double[0]));
     }
 
     @Override
