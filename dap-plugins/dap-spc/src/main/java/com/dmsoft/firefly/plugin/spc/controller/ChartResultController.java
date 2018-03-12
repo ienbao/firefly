@@ -335,17 +335,17 @@ public class ChartResultController implements Initializable {
 
         }
 
-        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList, null);
-        this.setRunChartData(UIConstant.SPC_CHART_NAME[1], runChartDataList, null);
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[2], xBarChartDataList, null);
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList, null);
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[4], sdChartDataList, null);
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[5], medianChartDataList, null);
-        this.setBoxChartData(UIConstant.SPC_CHART_NAME[6], boxChartDataList, null);
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList, null);
+        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
+        this.setRunChartData(UIConstant.SPC_CHART_NAME[1], runChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[2], xBarChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[4], sdChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[5], medianChartDataList);
+        this.setBoxChartData(UIConstant.SPC_CHART_NAME[6], boxChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
     }
 
-    public void setNdChartData(String chartName, List<INdcChartData> ndChartData, AxisRange axisRange) {
+    public void setNdChartData(String chartName, List<INdcChartData> ndChartData) {
         NDChart chart = ndChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
@@ -356,7 +356,7 @@ public class ChartResultController implements Initializable {
         setNdChartData(ndChartData);
     }
 
-    public void setRunChartData(String chartName, List<IRunChartData> runChartData, AxisRange axisRange) {
+    public void setRunChartData(String chartName, List<IRunChartData> runChartData) {
         LinearChart chart = runChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
@@ -367,7 +367,7 @@ public class ChartResultController implements Initializable {
         setRunChartData(runChartData);
     }
 
-    public void setControlChartData(String chartName, List<IControlChartData> controlChartData, AxisRange axisRange) {
+    public void setControlChartData(String chartName, List<IControlChartData> controlChartData) {
         Object chart = getChartByName(chartName);
         if (chart != null && chart instanceof LinearChart) {
             LinearChart linearChart = (LinearChart) chart;
@@ -381,7 +381,7 @@ public class ChartResultController implements Initializable {
         }
     }
 
-    public void setBoxChartData(String chartName, List<IBoxChartData> boxChartData, AxisRange axisRange) {
+    public void setBoxChartData(String chartName, List<IBoxChartData> boxChartData) {
         BoxPlotChart chart = boxChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
@@ -393,7 +393,6 @@ public class ChartResultController implements Initializable {
     }
 
     public void clearChartData() {
-
         for (Map.Entry<String, XYChart> chartMap : chartMap.entrySet()) {
             if (chartMap.getValue() instanceof NDChart) {
                 ((NDChart) chartMap.getValue()).removeAllChildren();

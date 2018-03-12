@@ -6,6 +6,7 @@ package com.dmsoft.firefly.plugin.spc.dto.chart;
 import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.ILineData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
+import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.RunCResultDto;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.google.common.collect.Lists;
@@ -23,6 +24,11 @@ public class SpcRunChartData implements IRunChartData {
     private String key;
     private Color color;
     private List<ILineData> lineDataList = Lists.newArrayList();
+
+    private Double minX;
+    private Double maxX;
+    private Double minY;
+    private Double maxY;
     /**
      * constructor
      *
@@ -49,6 +55,7 @@ public class SpcRunChartData implements IRunChartData {
         String[] uslLslName = UIConstant.SPC_USL_LSL;
         Double usl = runCResultDto.getUsl();
         Double lsl = runCResultDto.getLsl();
+        Double[] uslAndlsl = new Double[]{usl, lsl};
 
         ILineData uslData = new LineData(usl, uslLslName[1]);
         ILineData lslData = new LineData(lsl, uslLslName[1]);
@@ -62,6 +69,11 @@ public class SpcRunChartData implements IRunChartData {
                 lineDataList.add(lineData);
             }
         }
+
+        maxY = MathUtils.getMax(y, cls, uslAndlsl);
+        minY = MathUtils.getMin(y, cls, uslAndlsl);
+        maxX = MathUtils.getMax(x);
+        minX = MathUtils.getMax(x);
     }
 
     @Override
@@ -81,11 +93,31 @@ public class SpcRunChartData implements IRunChartData {
 
     @Override
     public Color getColor() {
-        return null;
+        return color;
     }
 
     @Override
     public String getUniqueKey() {
-        return null;
+        return key;
+    }
+
+    @Override
+    public Number getXLowerBound() {
+        return minX;
+    }
+
+    @Override
+    public Number getXUpperBound() {
+        return maxX;
+    }
+
+    @Override
+    public Number getYLowerBound() {
+        return minY;
+    }
+
+    @Override
+    public Number getYUpperBound() {
+        return maxY;
     }
 }

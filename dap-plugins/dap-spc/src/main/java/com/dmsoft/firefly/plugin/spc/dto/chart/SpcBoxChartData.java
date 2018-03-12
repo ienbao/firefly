@@ -6,6 +6,7 @@ package com.dmsoft.firefly.plugin.spc.dto.chart;
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxExtraData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBoxAndWhiskerData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IPoint;
+import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.BoxCResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SingleBoxDataDto;
 import com.google.common.collect.Lists;
@@ -22,6 +23,10 @@ public class SpcBoxChartData implements IBoxChartData {
     private String key;
     private Color color;
     private IPoint iPoint;
+    private Double minX;
+    private Double maxX;
+    private Double minY;
+    private Double maxY;
 
     /**
      * constructor
@@ -45,11 +50,18 @@ public class SpcBoxChartData implements IBoxChartData {
         List<BoxExtraData> data = Lists.newArrayList();
         List<Double> xPoint = Lists.newArrayList();
         List<Double> yPoint = Lists.newArrayList();
+        List<Double> boxY = Lists.newArrayList();
         for (SingleBoxDataDto singleBoxDataDto : boxCResultDto.getBoxData()) {
             BoxExtraData boxExtraData = new BoxExtraData(singleBoxDataDto.getX(), singleBoxDataDto.getCl(),
                     singleBoxDataDto.getMedian(), singleBoxDataDto.getQ1(), singleBoxDataDto.getQ3(), singleBoxDataDto.getLowerWhisker(),
                     singleBoxDataDto.getUpperWhisker());
             data.add(boxExtraData);
+            boxY.add(singleBoxDataDto.getCl());
+            boxY.add(singleBoxDataDto.getMedian());
+            boxY.add(singleBoxDataDto.getQ1());
+            boxY.add(singleBoxDataDto.getQ3());
+            boxY.add(singleBoxDataDto.getLowerWhisker());
+            boxY.add(singleBoxDataDto.getUpperWhisker());
             if (singleBoxDataDto.getAbnormalPoints() == null) {
                 continue;
             }
@@ -77,6 +89,11 @@ public class SpcBoxChartData implements IBoxChartData {
                 return xPoint == null ? 0 : xPoint.size();
             }
         };
+
+        maxY = MathUtils.getMax(yPoint.toArray(new Double[0]), boxY.toArray(new Double[0]));
+        minY = MathUtils.getMin(yPoint.toArray(new Double[0]), boxY.toArray(new Double[0]));
+        maxX = MathUtils.getMax(xPoint.toArray(new Double[0]));
+        minX = MathUtils.getMax(xPoint.toArray(new Double[0]));
     }
 
     @Override
@@ -91,11 +108,31 @@ public class SpcBoxChartData implements IBoxChartData {
 
     @Override
     public Color getColor() {
-        return null;
+        return color;
     }
 
     @Override
     public String getUniqueKey() {
-        return null;
+        return key;
+    }
+
+    @Override
+    public Number getXLowerBound() {
+        return minX;
+    }
+
+    @Override
+    public Number getXUpperBound() {
+        return maxX;
+    }
+
+    @Override
+    public Number getYLowerBound() {
+        return minY;
+    }
+
+    @Override
+    public Number getYUpperBound() {
+        return maxY;
     }
 }
