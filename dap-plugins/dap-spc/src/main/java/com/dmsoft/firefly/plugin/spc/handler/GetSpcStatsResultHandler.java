@@ -2,12 +2,15 @@ package com.dmsoft.firefly.plugin.spc.handler;
 
 import com.dmsoft.firefly.plugin.spc.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcAnalysisConfigDto;
+import com.dmsoft.firefly.plugin.spc.service.SpcAnalysisService;
 import com.dmsoft.firefly.plugin.spc.service.SpcService;
 import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionCode;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
+import com.dmsoft.firefly.sdk.job.AbstractProcessMonitorAutoAdd;
+import com.dmsoft.firefly.sdk.job.ProcessMonitorAuto;
 import com.dmsoft.firefly.sdk.job.core.JobHandlerContext;
 import com.dmsoft.firefly.sdk.job.core.JobInboundHandler;
 
@@ -30,8 +33,13 @@ public class GetSpcStatsResultHandler implements JobInboundHandler {
         SearchDataFrame dataFrame = (SearchDataFrame) param.get(ParamKeys.SEARCH_DATA_FRAME);
         List<SearchConditionDto> searchConditionDtoList = (List<SearchConditionDto>) param.get(ParamKeys.SEARCH_CONDITION_DTO_LIST);
         SpcAnalysisConfigDto analysisConfigDto = (SpcAnalysisConfigDto) param.get(ParamKeys.SPC_ANALYSIS_CONFIG_DTO);
-        //TODO progress
-        context.returnValue(RuntimeContext.getBean(SpcService.class).getStatisticalResult(dataFrame, searchConditionDtoList, analysisConfigDto));
+        // progress
+        SpcService spcService = RuntimeContext.getBean(SpcService.class);
+        if (spcService instanceof AbstractProcessMonitorAutoAdd) {
+            ProcessMonitorAuto monitor = (ProcessMonitorAuto) spcService;
+            monitor.addProcessMonitorListener(context.getContextProcessMonitorListenerIfExists());
+        }
+        context.returnValue(spcService.getStatisticalResult(dataFrame, searchConditionDtoList, analysisConfigDto));
     }
 
     @Override
