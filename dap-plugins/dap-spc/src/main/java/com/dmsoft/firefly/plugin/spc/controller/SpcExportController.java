@@ -3,26 +3,45 @@ package com.dmsoft.firefly.plugin.spc.controller;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
+import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
+import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
+import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
+import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
+import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.dmsoft.firefly.sdk.job.Job;
+import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
+import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by GuangLi on 2018/3/7.
@@ -71,6 +90,8 @@ public class SpcExportController {
 
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
+    private JobManager manager = RuntimeContext.getBean(JobManager.class);
+    private SearchDataFrame dataFrame;
 
     @FXML
     private void initialize() {
@@ -133,7 +154,8 @@ public class SpcExportController {
         });
 
         viewData.setOnAction(event -> {
-
+            if (getSelectedItem() != null && getSelectedItem().size() > 0)
+                buildViewDataDia();
         });
         setting.setOnAction(event -> {
 
@@ -141,6 +163,13 @@ public class SpcExportController {
         export.setOnAction(event -> {
             StageMap.closeStage("spcExport");
 
+        });
+        print.setOnAction(event -> {
+            StageMap.closeStage("spcExport");
+
+        });
+        cancel.setOnAction(event -> {
+            StageMap.closeStage("spcExport");
         });
     }
 
@@ -185,6 +214,63 @@ public class SpcExportController {
             }
         }
         return selectItems;
+    }
+
+    /**
+     * get selected test items
+     *
+     * @return test items
+     */
+    public List<TestItemWithTypeDto> getSelectedItemDto() {
+        List<TestItemWithTypeDto> selectItems = Lists.newArrayList();
+        if (items != null) {
+            for (ItemTableModel model : items) {
+                if (model.getSelector().isSelected()) {
+                    selectItems.add(model.getItemDto());
+                }
+            }
+        }
+        return selectItems;
+    }
+
+    private void buildViewData() {
+        List<String> selectItem = getSelectedItem();
+        List<TestItemWithTypeDto> selectItemDto = Lists.newArrayList();
+
+        if (selectItem != null) {
+            List<String> conditionTestItem = searchTab.getConditionTestItem();
+            if (conditionTestItem != null) {
+                conditionTestItem.forEach(item -> {
+                    if (!selectItem.contains(item)) {
+                        selectItem.add(item);
+                    }
+                });
+            }
+            selectItem.forEach(itemName -> {
+                selectItemDto.add(envService.findTestItemNameByItemName(itemName));
+            });
+            List<RowDataDto> rowDataDtoList = dataService.findTestData(envService.findActivatedProjectName(), selectItem);
+            dataFrame = RuntimeContext.getBean(DataFrameFactory.class).createSearchDataFrame(selectItemDto, rowDataDtoList);
+            dataFrame.addSearchCondition(searchTab.getSearch());
+//            dataFrame.subDataFrame(searchTab.getSearch(), selectItem);
+        }
+    }
+
+    private void buildViewDataDia() {
+        buildViewData();
+        Pane root = null;
+        try {
+            FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML("view/export_view_data.fxml");
+            ExportViewData controller = new ExportViewData();
+            controller.setDataFrame(dataFrame);
+            fxmlLoader.setController(controller);
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("spcExportViewData", SpcFxmlAndLanguageUtils.getString(ResourceMassages.VIEW_DATA), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            stage.show();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 }

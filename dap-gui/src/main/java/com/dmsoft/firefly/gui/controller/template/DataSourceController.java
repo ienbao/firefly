@@ -11,6 +11,7 @@ import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
+import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -266,6 +267,8 @@ public class DataSourceController implements Initializable {
             //TODO notify refresh event
 
             StageMap.closeStage("dataSource");
+            refreshMainDataSource(selectProject);
+
         });
 
         cancel.setOnAction(event -> {
@@ -363,6 +366,12 @@ public class DataSourceController implements Initializable {
             });
         }
         setTableData(chooseTableRowDataList);
+    }
+
+    private void refreshMainDataSource(List<String> selectProject) {
+        MenuFactory.getMainController().updateDataSourceText(selectProject.size());
+        ObservableList<String> dataSourceList = FXCollections.observableArrayList(selectProject);
+        MenuFactory.getMainController().refreshDataSource(dataSourceList);
     }
 
     public void setTableData(List<ChooseTableRowData> chooseTableRowDataList) {

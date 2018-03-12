@@ -234,8 +234,11 @@ public class MainController {
         }
     }
 
-    public void updateStateBarText(int selectedFileNumber, String selecteTemplateName) {
+    public void updateDataSourceText(int selectedFileNumber) {
         dataSourceBtn.setText(selectedFileNumber + GuiFxmlAndLanguageUtils.getString("STATE_BAR_FILE_SELECTED"));
+    }
+
+    public void updateTemplateText(String selecteTemplateName) {
         templateBtn.setText(selecteTemplateName);
     }
 
@@ -404,6 +407,7 @@ public class MainController {
         if (dataSourcePopup.isShowing()) {
             dataSourcePopup.hide();
         }
+        GuiFxmlAndLanguageUtils.buildTemplateDia();
     }
 
     private void getTemplateLblEvent() {

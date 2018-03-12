@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.grr.controller.GrrResultController">
+    <children>
+        <SplitPane dividerPositions="0.3888888888888889" orientation="VERTICAL" prefWidth="1090.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
+            <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="166.0" prefWidth="1082.0">
+                    <children>
+                        <VBox fx:id="summaryVBox" prefHeight="233.0" prefWidth="1080.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
+                            <children>
+                                <BorderPane fx:id="summaryBorderPane" prefHeight="28.0" prefWidth="1090.0">
+                                    <left>
+                                        <HBox fx:id="summaryTitleBox" prefHeight="30.0" prefWidth="288.0">
+                                            <children>
+                                                <Label prefHeight="17.0" prefWidth="137.0" text="GRR Result based on">
+                                                    <HBox.margin>
+                                                        <Insets left="7.0" top="6.0" />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <ComboBox fx:id="resultBasedCmb" prefHeight="22.0" prefWidth="150.0">
+                                                    <HBox.margin>
+                                                        <Insets top="3.0" />
+                                                    </HBox.margin>
+                                                </ComboBox>
+                                            </children>
+                                        </HBox>
+                                    </left>
+                                    <right>
+                                        <HBox fx:id="itemFilterHBox" prefHeight="28.0" prefWidth="203.0" BorderPane.alignment="CENTER">
+                                            <children>
+                                                <TextField fx:id="" prefHeight="22.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                                                    <HBox.margin>
+                                                        <Insets top="3.0" />
+                                                    </HBox.margin>
+                                                </TextField>
+                                            </children>
+                                        </HBox>
+                                    </right>
+                                </BorderPane>
+                        <TableView fx:id="summaryTb" prefHeight="200.0" prefWidth="200.0">
+                          <columns>
+                            <TableColumn prefWidth="75.0" text="C1" />
+                            <TableColumn prefWidth="75.0" text="C2" />
+                          </columns>
+                        </TableView>
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="1082.0">
+                    <children>
+                        <VBox prefHeight="422.0" prefWidth="1080.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
+                            <children>
+                                <HBox maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                    <children>
+                                        <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="22.0" minHeight="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="119.0" style="-fx-border-width: 1 0 1 1;" text="GRR Data Sheet" textAlignment="CENTER" />
+                                        <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="22.0" minHeight="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="60.0" style="-fx-border-width: 1 0 1 1;" text="Charts" textAlignment="CENTER" />
+                                        <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="22.0" minHeight="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="119.0" style="-fx-border-width: 1 1 1 1;" text="Analysis Result" textAlignment="CENTER" />
+                                    </children>
+                                    <padding>
+                                        <Insets top="8.0" />
+                                    </padding>
+                                </HBox>
+                                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" prefHeight="385.0" prefWidth="1080.0" style="-fx-border-width: 0px; -fx-border-color: transparent;" VBox.vgrow="ALWAYS">
+                                    <content>
+                                        <VBox prefWidth="1068.0" style="-fx-border-width: 0px;">
+                                             <children>
+                                                <VBox prefHeight="360.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+                                                    <children>
+                                                        <HBox prefHeight="30.0" prefWidth="200.0" style="-fx-border-width: 1 1 0 1; -fx-border-color: rgb(220,220,220); -fx-background-color: rgb(248,248,248);">
+                                                            <children>
+                                                                <Label text="Tolerance:" />
+                                                                <Label>
+                                                                    <HBox.margin>
+                                                                        <Insets left="5.0" />
+                                                                    </HBox.margin>
+                                                                </Label>
+                                                            </children>
+                                                            <padding>
+                                                                <Insets bottom="6.0" left="10.0" top="6.0" />
+                                                            </padding>
+                                                        </HBox>
+                                          <TableView prefHeight="600.0" prefWidth="200.0">
+                                            <columns>
+                                              <TableColumn prefWidth="75.0" text="C1" />
+                                              <TableColumn prefWidth="75.0" text="C2" />
+                                            </columns>
+                                          </TableView>
+                                                    </children>
+                                                    <VBox.margin>
+                                                        <Insets top="10.0" />
+                                                    </VBox.margin>
+                                                </VBox>
+                                                <VBox prefHeight="1460.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+                                                    <VBox.margin>
+                                                        <Insets top="10.0" />
+                                                    </VBox.margin>
+                                       <children>
+                                          <VBox prefHeight="235.0" prefWidth="100.0" style="-fx-border-width: 1px; -fx-border-color: rgb(220,220,220);" VBox.vgrow="ALWAYS">
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                             <children>
+                                                <HBox prefHeight="30.0" prefWidth="200.0" style="-fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220); -fx-background-color: rgb(248, 248,248);">
+                                                   <children>
+                                                      <Label text="Components of Variation" />
+                                                   </children>
+                                                   <padding>
+                                                      <Insets bottom="6.0" left="10.0" top="6.0" />
+                                                   </padding>
+                                                </HBox>
+                                             </children>
+                                          </VBox>
+                                          <VBox prefHeight="235.0" prefWidth="100.0" style="-fx-border-width: 1px; -fx-border-color: rgb(220,220,220);" VBox.vgrow="ALWAYS">
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                             <children>
+                                                <HBox prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: rgb(248,248,248); -fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220);">
+                                                   <children>
+                                                      <Label text="Parts * Appraiser Interaction" />
+                                                   </children>
+                                                   <padding>
+                                                      <Insets bottom="6.0" left="10.0" top="6.0" />
+                                                   </padding>
+                                                </HBox>
+                                             </children>
+                                          </VBox>
+                                          <VBox prefHeight="235.0" prefWidth="100.0" style="-fx-border-width: 1px; -fx-border-color: rgb(220,220,220);" VBox.vgrow="ALWAYS">
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                             <children>
+                                                <HBox prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: rgb(248,248,248); -fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220);">
+                                                   <children>
+                                                      <Label text="X-bar by Appraiser" />
+                                                   </children>
+                                                   <padding>
+                                                      <Insets bottom="6.0" left="10.0" top="6.0" />
+                                                   </padding>
+                                                </HBox>
+                                             </children>
+                                          </VBox>
+                                          <VBox prefHeight="235.0" prefWidth="100.0" style="-fx-border-width: 1px; -fx-border-color: rgb(220,220,220);" VBox.vgrow="ALWAYS">
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                             <children>
+                                                <HBox prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: rgb(248,248,248); -fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220);">
+                                                   <children>
+                                                      <Label text="Range by Appraiser" />
+                                                   </children>
+                                                   <VBox.margin>
+                                                      <Insets />
+                                                   </VBox.margin>
+                                                   <padding>
+                                                      <Insets bottom="6.0" left="10.0" top="6.0" />
+                                                   </padding>
+                                                </HBox>
+                                             </children>
+                                          </VBox>
+                                          <VBox prefHeight="235.0" prefWidth="100.0" style="-fx-border-width: 1px; -fx-border-color: rgb(220,220,220);" VBox.vgrow="ALWAYS">
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                             <children>
+                                                <HBox prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: rgb(248,248,248); -fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220);">
+                                                   <children>
+                                                      <Label text="R &amp; R Plot by Appraiser">
+                                                         <HBox.margin>
+                                                            <Insets />
+                                                         </HBox.margin>
+                                                      </Label>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets bottom="6.0" left="10.0" top="6.0" />
+                                                   </padding>
+                                                </HBox>
+                                             </children>
+                                          </VBox>
+                                          <VBox prefHeight="235.0" prefWidth="100.0" style="-fx-border-width: 1px; -fx-border-color: rgb(220,220,220);">
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                             <children>
+                                                <HBox prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: rgb(248,248,248); -fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220);">
+                                                   <children>
+                                                      <Label text="R &amp; R Plot by Parts">
+                                                         <HBox.margin>
+                                                            <Insets />
+                                                         </HBox.margin>
+                                                      </Label>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets bottom="6.0" left="10.0" top="6.0" />
+                                                   </padding>
+                                                </HBox>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                                </VBox>
+                                                <VBox prefHeight="365.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+                                                    <VBox.margin>
+                                                        <Insets top="10.0" />
+                                                    </VBox.margin>
+                                       <children>
+                                          <VBox prefHeight="145.0" prefWidth="100.0">
+                                             <children>
+                                                <HBox maxHeight="32.0" minHeight="30.0" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: rgb(248,248,248); -fx-border-width: 1 1 0 1; -fx-border-color: rgb(220,220,220);">
+                                                   <children>
+                                                      <Label text="ANOVA" />
+                                                   </children>
+                                                   <padding>
+                                                      <Insets bottom="6.0" left="10.0" top="6.0" />
+                                                   </padding>
+                                                </HBox>
+                                                <TableView prefHeight="116.0" prefWidth="200.0">
+                                                  <columns>
+                                                    <TableColumn prefWidth="75.0" text="C1" />
+                                                    <TableColumn prefWidth="75.0" text="C2" />
+                                                  </columns>
+                                                </TableView>
+                                             </children>
+                                          </VBox>
+                                          <VBox prefHeight="210.0" prefWidth="100.0">
+                                             <children>
+                                                <HBox maxHeight="32.0" minHeight="30.0" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: rgb(248,248,248); -fx-border-width: 1 1 0 1; -fx-border-color: rgb(220,220,220);">
+                                                   <children>
+                                                      <Label text="Source Analysis" />
+                                                   </children>
+                                                   <padding>
+                                                      <Insets bottom="6.0" left="10.0" top="6.0" />
+                                                   </padding>
+                                                </HBox>
+                                                <TableView prefHeight="150.0" prefWidth="200.0">
+                                                  <columns>
+                                                    <TableColumn prefWidth="75.0" text="C1" />
+                                                    <TableColumn prefWidth="75.0" text="C2" />
+                                                  </columns>
+                                                </TableView>
+                                                <HBox maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: rgb(248,248,248); -fx-border-width: 0 1 1 1; -fx-border-color: rgb(220,220,220);">
+                                                   <children>
+                                                      <Label text="Number of Distinct Categories:" />
+                                                      <Button maxHeight="15.0" minHeight="15.0" mnemonicParsing="false" prefHeight="15.0" style="-fx-background-color: red; -fx-border-width: 0px;" text="1">
+                                                         <HBox.margin>
+                                                            <Insets top="-2.0" />
+                                                         </HBox.margin>
+                                                      </Button>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets bottom="6.0" left="10.0" top="6.0" />
+                                                   </padding>
+                                                </HBox>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                          </VBox>
+                                       </children>
+                                                </VBox>
+                                            </children>
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
+                            </children>
+                            <padding>
+                                <Insets left="10.0" />
+                            </padding>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+    </children>
+</AnchorPane>

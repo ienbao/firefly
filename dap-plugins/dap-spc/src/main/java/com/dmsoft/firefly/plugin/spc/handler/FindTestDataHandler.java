@@ -8,6 +8,8 @@ import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
+import com.dmsoft.firefly.sdk.job.AbstractProcessMonitorAutoAdd;
+import com.dmsoft.firefly.sdk.job.ProcessMonitorAuto;
 import com.dmsoft.firefly.sdk.job.core.JobHandlerContext;
 import com.dmsoft.firefly.sdk.job.core.JobInboundHandler;
 import com.google.common.collect.Lists;
@@ -34,8 +36,13 @@ public class FindTestDataHandler implements JobInboundHandler {
         for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtoList) {
             testItemNames.add(testItemWithTypeDto.getTestItemName());
         }
-
-        List<RowDataDto> dataDtoList = RuntimeContext.getBean(SourceDataService.class).findTestData(projectNameList, testItemNames);
+       // progress
+        SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
+        if (sourceDataService instanceof AbstractProcessMonitorAutoAdd) {
+            ProcessMonitorAuto monitor = (ProcessMonitorAuto) sourceDataService;
+            monitor.addProcessMonitorListener(context.getContextProcessMonitorListenerIfExists());
+        }
+        List<RowDataDto> dataDtoList = sourceDataService.findTestData(projectNameList, testItemNames);
         param.put(ParamKeys.ROW_DATA_DTO_LIST, dataDtoList);
         context.fireDoJob(param, in[1]);
     }

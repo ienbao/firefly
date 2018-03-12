@@ -8,6 +8,7 @@ import com.dmsoft.firefly.plugin.spc.charts.data.basic.ILineData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IPathData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IPoint;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
+import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcControlChartDto;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.google.common.collect.Lists;
@@ -25,7 +26,10 @@ public class SpcControlChartData implements IControlChartData {
     private Color color;
     private List<ILineData> lineDataList = Lists.newArrayList();
     private List<IPathData> breakLineList = Lists.newArrayList();
-
+    private Double minX;
+    private Double maxX;
+    private Double minY;
+    private Double maxY;
     /**
      * constructor
      *
@@ -75,7 +79,7 @@ public class SpcControlChartData implements IControlChartData {
         IPathData lclData = new IPathData() {
             @Override
             public IPoint getPoints() {
-                return new SpcPointData(x, ucl);
+                return new SpcPointData(x, lcl);
             }
 
             @Override
@@ -91,6 +95,10 @@ public class SpcControlChartData implements IControlChartData {
         breakLineList.add(uclData);
         breakLineList.add(lclData);
 
+        maxY = MathUtils.getMax(y, ucl, lcl, new Double[]{cl});
+        minY = MathUtils.getMin(y, ucl, lcl, new Double[]{cl});
+        maxX = MathUtils.getMax(x);
+        minX = MathUtils.getMax(x);
     }
 
     @Override
@@ -110,12 +118,32 @@ public class SpcControlChartData implements IControlChartData {
 
     @Override
     public Color getColor() {
-        return null;
+        return color;
     }
 
     @Override
     public String getUniqueKey() {
-        return null;
+        return key;
+    }
+
+    @Override
+    public Number getXLowerBound() {
+        return minX;
+    }
+
+    @Override
+    public Number getXUpperBound() {
+        return maxX;
+    }
+
+    @Override
+    public Number getYLowerBound() {
+        return minY;
+    }
+
+    @Override
+    public Number getYUpperBound() {
+        return maxY;
     }
 
     class SpcPointData implements IPoint {

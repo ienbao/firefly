@@ -86,7 +86,6 @@ public class SpcItemController implements Initializable {
     private SearchTab searchTab;
 
     private CheckBox box;
-    private ObservableList<String> groupItem = FXCollections.observableArrayList();
 
     private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
@@ -247,14 +246,24 @@ public class SpcItemController implements Initializable {
         });
         windowProgressTipController.addProcessMonitorListener(new WindowCustomListener() {
             @Override
-            public void onCloseAndCancelCustomEvent() {
-                //to do
-                System.out.println("close");
+            public boolean onShowCustomEvent() {
+                System.out.println("show");
+
+                return false;
             }
 
             @Override
-            public void onOkCustomEvent() {
+            public boolean onCloseAndCancelCustomEvent() {
+                //to do
+                System.out.println("close");
+                return false;
+            }
 
+            @Override
+            public boolean onOkCustomEvent() {
+                System.out.println("ok");
+
+                return false;
             }
         });
         Map paramMap = Maps.newHashMap();
@@ -282,8 +291,8 @@ public class SpcItemController implements Initializable {
                         //todo message tip
                         return;
                     }
-                    List<SpcStatsDto> spcStatsDtoList = (List<SpcStatsDto>) returnValue;
-                    spcMainController.setStatisticalResultData(spcStatsDtoList);
+                    List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
+                    spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
                 }
             }, paramMap, spcMainController);
         });
