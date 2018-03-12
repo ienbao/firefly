@@ -118,6 +118,26 @@ public class SpcControlChartData implements IControlChartData {
         return null;
     }
 
+    @Override
+    public Number getXLowerBound() {
+        return null;
+    }
+
+    @Override
+    public Number getXUpperBound() {
+        return null;
+    }
+
+    @Override
+    public Number getYLowerBound() {
+        return null;
+    }
+
+    @Override
+    public Number getYUpperBound() {
+        return null;
+    }
+
     class SpcPointData implements IPoint {
         private Double[] x;
         private Double[] y;

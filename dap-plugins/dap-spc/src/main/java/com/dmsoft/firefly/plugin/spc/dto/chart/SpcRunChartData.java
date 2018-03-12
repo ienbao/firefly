@@ -88,4 +88,24 @@ public class SpcRunChartData implements IRunChartData {
     public String getUniqueKey() {
         return null;
     }
+
+    @Override
+    public Number getXLowerBound() {
+        return null;
+    }
+
+    @Override
+    public Number getXUpperBound() {
+        return null;
+    }
+
+    @Override
+    public Number getYLowerBound() {
+        return null;
+    }
+
+    @Override
+    public Number getYUpperBound() {
+        return null;
+    }
 }

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <SplitPane dividerPositions="0.3888888888888889" orientation="VERTICAL" prefWidth="1090.0"
+                   AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0"
+                   AnchorPane.topAnchor="1.0">
+            <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="166.0" prefWidth="1082.0">
+                    <children>
+                        <VBox fx:id="summaryBox" prefHeight="233.0" prefWidth="1080.0" AnchorPane.bottomAnchor="1.0"
+                              AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
+                            <children>
+                                <BorderPane prefHeight="28.0" prefWidth="1090.0">
+                                    <left>
+                                        <HBox prefHeight="30.0" prefWidth="288.0">
+                                            <children>
+                                                <Label prefHeight="17.0" prefWidth="137.0" text="GRR Result based on">
+                                                    <HBox.margin>
+                                                        <Insets left="7.0" top="6.0"/>
+                                                    </HBox.margin>
+                                                </Label>
+                                                <ComboBox fx:id="resultBasedCmb" prefHeight="22.0" prefWidth="150.0">
+                                                    <HBox.margin>
+                                                        <Insets top="3.0"/>
+                                                    </HBox.margin>
+                                                </ComboBox>
+                                            </children>
+                                        </HBox>
+                                    </left>
+                                    <right>
+                                        <HBox prefHeight="28.0" prefWidth="203.0" BorderPane.alignment="CENTER">
+                                            <children>
+                                                <TextField fx:id="" prefHeight="22.0" prefWidth="200.0"
+                                                           HBox.hgrow="ALWAYS">
+                                                    <HBox.margin>
+                                                        <Insets top="3.0"/>
+                                                    </HBox.margin>
+                                                </TextField>
+                                            </children>
+                                        </HBox>
+                                    </right>
+                                </BorderPane>
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="1082.0">
+                    <children>
+                        <VBox prefHeight="422.0" prefWidth="1080.0" AnchorPane.bottomAnchor="1.0"
+                              AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
+                            <children>
+                                <HBox maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="200.0">
+                                    <children>
+                                        <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="22.0"
+                                                minHeight="22.0" mnemonicParsing="false" prefHeight="22.0"
+                                                prefWidth="119.0" style="-fx-border-width: 1 0 1 1;"
+                                                text="GRR Data Sheet" textAlignment="CENTER"/>
+                                        <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="22.0"
+                                                minHeight="22.0" mnemonicParsing="false" prefHeight="22.0"
+                                                prefWidth="60.0" style="-fx-border-width: 1 0 1 1;" text="Charts"
+                                                textAlignment="CENTER"/>
+                                        <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="22.0"
+                                                minHeight="22.0" mnemonicParsing="false" prefHeight="22.0"
+                                                prefWidth="119.0" style="-fx-border-width: 1 1 1 1;"
+                                                text="Analysis Result" textAlignment="CENTER"/>
+                                    </children>
+                                    <padding>
+                                        <Insets top="8.0"/>
+                                    </padding>
+                                </HBox>
+                                <ScrollPane hbarPolicy="NEVER" prefHeight="385.0" prefWidth="1080.0"
+                                            style="-fx-border-width: 0px; -fx-border-color: transparent;"
+                                            VBox.vgrow="ALWAYS">
+                                    <content>
+                                        <VBox prefWidth="1068.0" style="-fx-border-width: 0px;">
+                                            <children>
+                                                <VBox prefHeight="360.0" prefWidth="100.0"
+                                                      style="-fx-background-color: blue;">
+                                                    <children>
+                                                        <HBox prefHeight="30.0" prefWidth="200.0"
+                                                              style="-fx-border-width: 1px; -fx-border-color: rgb(220,220,220);">
+                                                            <children>
+                                                                <Label text="Tolerance:"/>
+                                                                <Label>
+                                                                    <HBox.margin>
+                                                                        <Insets left="5.0"/>
+                                                                    </HBox.margin>
+                                                                </Label>
+                                                            </children>
+                                                            <padding>
+                                                                <Insets bottom="10.0" left="10.0" top="10.0"/>
+                                                            </padding>
+                                                        </HBox>
+                                                    </children>
+                                                    <VBox.margin>
+                                                        <Insets top="10.0"/>
+                                                    </VBox.margin>
+                                                </VBox>
+                                                <VBox prefHeight="1460.0" prefWidth="100.0"
+                                                      style="-fx-background-color: red;">
+                                                    <VBox.margin>
+                                                        <Insets top="10.0"/>
+                                                    </VBox.margin>
+                                                </VBox>
+                                                <VBox prefHeight="335.0" prefWidth="100.0"
+                                                      style="-fx-background-color: green;">
+                                                    <VBox.margin>
+                                                        <Insets top="10.0"/>
+                                                    </VBox.margin>
+                                                </VBox>
+                                            </children>
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
+                            </children>
+                            <padding>
+                                <Insets left="10.0"/>
+                            </padding>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+    </children>
+</AnchorPane>
