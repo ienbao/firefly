@@ -30,6 +30,7 @@ public class SpcControlChartData implements IControlChartData {
     private Double maxX;
     private Double minY;
     private Double maxY;
+
     /**
      * constructor
      *
@@ -54,9 +55,10 @@ public class SpcControlChartData implements IControlChartData {
 
         //init lines data
         Double cl = spcControlChartDto.getCl();
-        ILineData uslData = new LineData(cl, UIConstant.SPC_CHART_CL);
-        lineDataList.add(uslData);
-
+        if (cl != null) {
+            ILineData uslData = new LineData(cl, UIConstant.SPC_CHART_CL);
+            lineDataList.add(uslData);
+        }
         String[] uclLclName = UIConstant.SPC_UCL_LCL;
         Double[] ucl = spcControlChartDto.getUcl();
         Double[] lcl = spcControlChartDto.getLcl();

@@ -36,6 +36,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
@@ -185,7 +186,9 @@ public class SpcItemController implements Initializable {
             });
             pop.getItems().addAll(all, show);
         }
-        pop.show(is, e.getScreenX(), e.getScreenY());
+        Bounds bounds = is.localToScreen(is.getBoundsInLocal());
+        pop.show(is, bounds.getMinX(), bounds.getMinY() + 22);
+//        pop.show(is, e.getScreenX(), e.getScreenY());
         return pop;
     }
 
