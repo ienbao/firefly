@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.gui.components.utils;
 
 import com.dmsoft.firefly.gui.components.window.WindowPane;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -233,7 +234,9 @@ public final class StageMap {
      * @@return Whether to close success or not， true:success
      */
     public static boolean closeStage(String name) {
-        getStage(name).close();
+        Platform.runLater(() -> {
+            getStage(name).close();
+        });
         return true;
     }
 
