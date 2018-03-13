@@ -68,7 +68,9 @@ public class GuiApplication extends Application {
         List<String> plugins = Lists.newArrayList();
         if (activePlugin != null) {
             activePlugin.forEach(v -> {
-                plugins.add(v.getKey());
+                if ((boolean) v.getValue()) {
+                    plugins.add(v.getKey());
+                }
             });
         }
 //        DAPApplication.run(Lists.newArrayList(plugins));

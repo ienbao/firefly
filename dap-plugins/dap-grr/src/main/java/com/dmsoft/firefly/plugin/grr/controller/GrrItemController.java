@@ -233,7 +233,7 @@ public class GrrItemController implements Initializable {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         Job job = new Job(ParamKeys.GRR_ANALYSIS_JOB_PIPELINE);
         job.addProcessMonitorListener(event -> {
-            windowProgressTipController.refreshProgress(event.getPoint());
+//            windowProgressTipController.refreshProgress(event.getPoint());
         });
         windowProgressTipController.addProcessMonitorListener(new WindowCustomListener() {
             @Override

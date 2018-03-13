@@ -109,11 +109,12 @@ public class DataSourceController implements Initializable {
                             textField.setStyle("-fx-border-width: 0 0 0 0");
                             textField.setPrefWidth(400);
                             ProgressBar progressBar = new ProgressBar();
+                            progressBar.getStyleClass().setAll("progress-bar-lg-green");
                             progressBar.setPrefWidth(70);
                             progressBar.setMinWidth(70);
-                            progressBar.setMaxHeight(10);
-                            progressBar.setPrefHeight(10);
-                            progressBar.setMinHeight(10);
+                            progressBar.setMaxHeight(3);
+                            progressBar.setPrefHeight(3);
+                            progressBar.setMinHeight(3);
                             Button rename = new Button();
                             rename.getStyleClass().add("btn-icon");
                             rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rename_normal.png")));
