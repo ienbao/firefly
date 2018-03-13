@@ -1,6 +1,5 @@
 package com.dmsoft.firefly.plugin.spc.handler;
 
-import com.dmsoft.firefly.plugin.spc.controller.SpcMainController;
 import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionCode;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -26,7 +25,7 @@ public class FindTestDataHandler implements JobInboundHandler {
     @Override
     @SuppressWarnings("unchecked")
     public void doJob(JobHandlerContext context, Object... in) throws Exception {
-        if (in == null || !(in[0] instanceof Map) || !(in[1] instanceof SpcMainController)) {
+        if (in == null || !(in[0] instanceof Map)) {
             throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11001));
         }
         Map<String, Object> param = (Map) in[0];

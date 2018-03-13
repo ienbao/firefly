@@ -17,4 +17,9 @@ public class TestItemWithTypeDto extends TestItemDto {
     public void setTestItemType(TestItemType testItemType) {
         this.testItemType = testItemType;
     }
+
+    @Override
+    public String toString() {
+        return getTestItemName();
+    }
 }
