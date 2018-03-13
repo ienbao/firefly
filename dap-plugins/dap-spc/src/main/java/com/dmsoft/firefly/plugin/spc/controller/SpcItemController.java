@@ -283,19 +283,17 @@ public class SpcItemController implements Initializable {
         paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
 
         spcMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
-        Platform.runLater(() -> {
-            manager.doJobASyn(job, new JobDoComplete() {
-                @Override
-                public void doComplete(Object returnValue) {
-                    if (returnValue == null) {
-                        //todo message tip
-                        return;
-                    }
-                    List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
-                    spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
-                }
-            }, paramMap, spcMainController);
-        });
+
+        Object returnValue = manager.doJobSyn(job, paramMap, spcMainController);
+        if (returnValue == null) {
+            //todo message tip
+
+        } else {
+            List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
+            spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
+        }
+
+
 
     }
 
