@@ -22,4 +22,7 @@ public class ParamKeys {
     //pipeline
     public static final String GRR_ANALYSIS_JOB_PIPELINE = "grrAnalysisJobPipeline";
     public static final String GRR_DETAIL_ANALYSIS_JOB_PIPELINE = "grrDetailAnalysisJobPipeline";
+
+    public static final String GRR_ANALYSIS_CONDITION_KEY = "analysisKey";
+
 }

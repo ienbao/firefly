@@ -51,7 +51,8 @@
                   </TabPane>
                     </children>
                 </VBox>
-                <VBox minWidth="180.0" prefHeight="330.0" prefWidth="180.0">
+                <VBox minWidth="180.0" prefWidth="180.0">
+                    <fx:include fx:id="grrItem" source="grr_item.fxml" VBox.vgrow="ALWAYS"/>
                 </VBox>
             </items>
         </SplitPane>

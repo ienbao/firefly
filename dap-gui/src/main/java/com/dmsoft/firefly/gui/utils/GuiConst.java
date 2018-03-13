@@ -1,6 +1,8 @@
 package com.dmsoft.firefly.gui.utils;
 
 public class GuiConst {
+    public final static String DEFAULT_TEMPLATE_NAME = "Default";
+
     public final static String PLARTFORM_STAGE = "platform_stage_";
     public final static String PLARTFORM_NODE = "platform_node_";
 

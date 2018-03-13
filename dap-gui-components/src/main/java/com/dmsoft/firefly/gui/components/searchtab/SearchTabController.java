@@ -17,10 +17,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -54,6 +51,8 @@ public class SearchTabController {
     private ComboBox group1;
     @FXML
     private ComboBox group2;
+    @FXML
+    private Label autoDivideLbl;
 
     private ObservableList<String> groupItem = FXCollections.observableArrayList();
 
@@ -256,5 +255,13 @@ public class SearchTabController {
 
     public ComboBox getGroup2() {
         return group2;
+    }
+
+    public Label getAutoDivideLbl() {
+        return autoDivideLbl;
+    }
+
+    public void hiddenGroupAdd() {
+        groupAdd.setVisible(false);
     }
 }
