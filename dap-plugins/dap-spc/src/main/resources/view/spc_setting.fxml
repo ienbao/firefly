@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.dmsoft.firefly.gui.components.utils.TextFieldFilter?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -15,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcSettingController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcSettingController">
     <children>
         <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-border-color: #DCDCDC;">
             <children>
@@ -61,7 +62,7 @@
                                                         <Insets right="10.0" />
                                                     </HBox.margin>
                                                 </Label>
-                                                <TextField prefHeight="22.0" prefWidth="70.0" />
+                                                <TextField fx:id="subgroupSizeTf" prefHeight="22.0" prefWidth="70.0" />
                                             </children>
                                             <VBox.margin>
                                                 <Insets bottom="10.0" />
@@ -74,7 +75,7 @@
                                                         <Insets right="10.0" />
                                                     </HBox.margin>
                                                 </Label>
-                                                <TextField prefHeight="22.0" prefWidth="70.0">
+                                                <TextField fx:id="ndChartNumberTf" prefHeight="22.0" prefWidth="70.0">
                                                     <HBox.margin>
                                                         <Insets />
                                                     </HBox.margin>
@@ -91,7 +92,7 @@
                                 </VBox>
                                 <VBox>
                                     <children>
-                                        <Label style="-fx-font-weight: bold" text="Alaram Setting">
+                                        <Label style="-fx-font-weight: bold" text="Alarm Setting">
                                             <VBox.margin>
                                                 <Insets bottom="10.0" top="10.0" />
                                             </VBox.margin>
@@ -161,15 +162,15 @@
                                                 <Label text="≥" GridPane.columnIndex="2" GridPane.rowIndex="6" />
                                                 <Label text="≥" GridPane.columnIndex="2" GridPane.rowIndex="7" />
                                                 <Label text="≥" GridPane.columnIndex="2" GridPane.rowIndex="8" />
-                                                <TextField GridPane.columnIndex="3" />
-                                                <TextField GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                <TextField GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                                                <TextField GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                                                <TextField GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                                                <TextField GridPane.columnIndex="3" GridPane.rowIndex="5" />
-                                                <TextField GridPane.columnIndex="3" GridPane.rowIndex="6" />
-                                                <TextField GridPane.columnIndex="3" GridPane.rowIndex="7" />
-                                                <TextField GridPane.columnIndex="3" GridPane.rowIndex="8" />
+                                                <TextField fx:id="caExcellentTf" GridPane.columnIndex="3" />
+                                                <TextField fx:id="cpExcellentTf" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                                <TextField fx:id="cpkExcellentTf" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                                <TextField fx:id="cplExcellentTf" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                                                <TextField fx:id="cpuExcellentTf" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                                                <TextField fx:id="ppExcellentTf" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                                                <TextField fx:id="ppkExcellentTf" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+                                                <TextField fx:id="pplExcellentTf" GridPane.columnIndex="3" GridPane.rowIndex="7" />
+                                                <TextField fx:id="ppuExcellentTf" GridPane.columnIndex="3" GridPane.rowIndex="8" />
                                                 <Label text="≤" GridPane.columnIndex="4" />
                                                 <Label text="&gt;" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                                 <Label text="&gt;" GridPane.columnIndex="4" GridPane.rowIndex="2" />
@@ -197,15 +198,15 @@
                                                 <Label text="≥" GridPane.columnIndex="6" GridPane.rowIndex="6" />
                                                 <Label text="≥" GridPane.columnIndex="6" GridPane.rowIndex="7" />
                                                 <Label text="≥" GridPane.columnIndex="6" GridPane.rowIndex="8" />
-                                                <TextField GridPane.columnIndex="7" />
-                                                <TextField GridPane.columnIndex="7" GridPane.rowIndex="1" />
-                                                <TextField GridPane.columnIndex="7" GridPane.rowIndex="2" />
-                                                <TextField GridPane.columnIndex="7" GridPane.rowIndex="3" />
-                                                <TextField GridPane.columnIndex="7" GridPane.rowIndex="4" />
-                                                <TextField GridPane.columnIndex="7" GridPane.rowIndex="5" />
-                                                <TextField GridPane.columnIndex="7" GridPane.rowIndex="6" />
-                                                <TextField GridPane.columnIndex="7" GridPane.rowIndex="7" />
-                                                <TextField GridPane.columnIndex="7" GridPane.rowIndex="8" />
+                                                <TextField fx:id="caAcceptableTf" GridPane.columnIndex="7" />
+                                                <TextField fx:id="cpGoodTf" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+                                                <TextField fx:id="cpkGoodTf" GridPane.columnIndex="7" GridPane.rowIndex="2" />
+                                                <TextField fx:id="cplGoodTf" GridPane.columnIndex="7" GridPane.rowIndex="3" />
+                                                <TextField fx:id="cpuGoodTf" GridPane.columnIndex="7" GridPane.rowIndex="4" />
+                                                <TextField fx:id="ppGoodTf" GridPane.columnIndex="7" GridPane.rowIndex="5" />
+                                                <TextField fx:id="ppkGoodTf" GridPane.columnIndex="7" GridPane.rowIndex="6" />
+                                                <TextField fx:id="pplGoodTf" GridPane.columnIndex="7" GridPane.rowIndex="7" />
+                                                <TextField fx:id="ppuGoodTf" GridPane.columnIndex="7" GridPane.rowIndex="8" />
                                                 <Label text="≤" GridPane.columnIndex="8" />
                                                 <Label text="&gt;" GridPane.columnIndex="8" GridPane.rowIndex="1" />
                                                 <Label text="&gt;" GridPane.columnIndex="8" GridPane.rowIndex="2" />
@@ -233,16 +234,15 @@
                                                 <Label text="≥" GridPane.columnIndex="10" GridPane.rowIndex="6" />
                                                 <Label text="≥" GridPane.columnIndex="10" GridPane.rowIndex="7" />
                                                 <Label text="≥" GridPane.columnIndex="10" GridPane.rowIndex="8" />
-                                                <TextField GridPane.columnIndex="11" />
-                                                <TextField GridPane.columnIndex="11" GridPane.rowIndex="1" />
-                                                <TextField GridPane.columnIndex="11" GridPane.rowIndex="2" />
-                                                <TextField GridPane.columnIndex="11" GridPane.rowIndex="2" />
-                                                <TextField GridPane.columnIndex="11" GridPane.rowIndex="3" />
-                                                <TextField GridPane.columnIndex="11" GridPane.rowIndex="4" />
-                                                <TextField GridPane.columnIndex="11" GridPane.rowIndex="5" />
-                                                <TextField GridPane.columnIndex="11" GridPane.rowIndex="6" />
-                                                <TextField GridPane.columnIndex="11" GridPane.rowIndex="7" />
-                                                <TextField GridPane.columnIndex="11" GridPane.rowIndex="8" />
+                                                <TextField fx:id="caRectificationTf" GridPane.columnIndex="11" />
+                                                <TextField fx:id="cpAcceptableTf" GridPane.columnIndex="11" GridPane.rowIndex="1" />
+                                                <TextField fx:id="cpkAcceptableTf" GridPane.columnIndex="11" GridPane.rowIndex="2" />
+                                                <TextField fx:id="cplAcceptableTf" GridPane.columnIndex="11" GridPane.rowIndex="3" />
+                                                <TextField fx:id="cpuAcceptableTf" GridPane.columnIndex="11" GridPane.rowIndex="4" />
+                                                <TextField fx:id="ppAcceptableTf" GridPane.columnIndex="11" GridPane.rowIndex="5" />
+                                                <TextField fx:id="ppkAcceptableTf" GridPane.columnIndex="11" GridPane.rowIndex="6" />
+                                                <TextField fx:id="pplAcceptableTf" GridPane.columnIndex="11" GridPane.rowIndex="7" />
+                                                <TextField fx:id="ppuAcceptableTf" GridPane.columnIndex="11" GridPane.rowIndex="8" />
                                                 <Label text="≤" GridPane.columnIndex="12" />
                                                 <Label text="&gt;" GridPane.columnIndex="12" GridPane.rowIndex="1" />
                                                 <Label text="&gt;" GridPane.columnIndex="12" GridPane.rowIndex="2" />
@@ -269,14 +269,14 @@
                                                 <Label text="≥" GridPane.columnIndex="14" GridPane.rowIndex="6" />
                                                 <Label text="≥" GridPane.columnIndex="14" GridPane.rowIndex="7" />
                                                 <Label text="≥" GridPane.columnIndex="14" GridPane.rowIndex="8" />
-                                                <TextField GridPane.columnIndex="15" GridPane.rowIndex="1" />
-                                                <TextField GridPane.columnIndex="15" GridPane.rowIndex="2" />
-                                                <TextField GridPane.columnIndex="15" GridPane.rowIndex="3" />
-                                                <TextField GridPane.columnIndex="15" GridPane.rowIndex="4" />
-                                                <TextField GridPane.columnIndex="15" GridPane.rowIndex="5" />
-                                                <TextField GridPane.columnIndex="15" GridPane.rowIndex="6" />
-                                                <TextField GridPane.columnIndex="15" GridPane.rowIndex="7" />
-                                                <TextField GridPane.columnIndex="15" GridPane.rowIndex="8" />
+                                                <TextField fx:id="cpRectificationTf" GridPane.columnIndex="15" GridPane.rowIndex="1" />
+                                                <TextField fx:id="cpkRectificationTf" GridPane.columnIndex="15" GridPane.rowIndex="2" />
+                                                <TextField fx:id="cplRectificationTf" GridPane.columnIndex="15" GridPane.rowIndex="3" />
+                                                <TextField fx:id="cpuRectificationTf" GridPane.columnIndex="15" GridPane.rowIndex="4" />
+                                                <TextField fx:id="ppRectificationTf" GridPane.columnIndex="15" GridPane.rowIndex="5" />
+                                                <TextField fx:id="ppkRectificationTf" GridPane.columnIndex="15" GridPane.rowIndex="6" />
+                                                <TextField fx:id="pplRectificationTf" GridPane.columnIndex="15" GridPane.rowIndex="7" />
+                                                <TextField fx:id="ppuRectificationTf" GridPane.columnIndex="15" GridPane.rowIndex="8" />
                                                 <Label text="&gt;" GridPane.columnIndex="16" GridPane.rowIndex="1" />
                                                 <Label text="&gt;" GridPane.columnIndex="16" GridPane.rowIndex="2" />
                                                 <Label text="&gt;" GridPane.columnIndex="16" GridPane.rowIndex="3" />
@@ -310,10 +310,17 @@
                                             <children>
                                                 <VBox HBox.hgrow="ALWAYS">
                                                     <children>
-                                                        <HBox alignment="CENTER_RIGHT" minHeight="30.0" prefHeight="30.0" spacing="10.0">
+                                                        <HBox alignment="CENTER_RIGHT" minHeight="30.0" prefHeight="30.0" spacing="10.0" style="-fx-border-width:1 1 0 1;-fx-border-color: #DCDCDC;">
                                                             <children>
-                                                                <TextField prefHeight="22.0" prefWidth="200.0" />
-                                                                <Button mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-icon" text="Button">
+                                                                <TextFieldFilter fx:id="searchTestItemTf" prefHeight="22.0" prefWidth="200.0">
+                                                                    <GridPane.margin>
+                                                                        <Insets bottom="3.0" right="10.0" top="3.0" />
+                                                                    </GridPane.margin>
+                                                                    <opaqueInsets>
+                                                                        <Insets />
+                                                                    </opaqueInsets>
+                                                                </TextFieldFilter>
+                                                                <Button fx:id="addTestItemBtn" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-icon">
                                                                     <HBox.margin>
                                                                         <Insets right="3.0" />
                                                                     </HBox.margin>
@@ -323,32 +330,32 @@
                                                                 <Insets bottom="3.0" top="3.0" />
                                                             </padding>
                                                         </HBox>
-                                                        <TableView>
+                                                        <TableView fx:id="testItemTable" style="-fx-border-width:1 0 1 1">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="C1" />
-                                                                <TableColumn prefWidth="75.0" text="C2" />
+                                                                <TableColumn fx:id="testItemColumn" />
                                                             </columns>
                                                         </TableView>
                                                     </children>
                                                 </VBox>
                                                 <VBox minWidth="290.0" prefWidth="290.0">
                                                     <children>
-                                                        <HBox alignment="CENTER_LEFT" minHeight="30.0" prefWidth="30.0">
+                                                        <HBox alignment="CENTER_LEFT" minHeight="30.0" prefWidth="30.0" style="-fx-border-width:1 1 0 0;-fx-border-color: #DCDCDC;">
                                                             <padding>
                                                                 <Insets bottom="3.0" top="3.0" />
                                                             </padding>
                                                             <children>
-                                                                <Label text="xxx">
+                                                                <Label fx:id="testItemNameLabel">
                                                                     <HBox.margin>
                                                                         <Insets left="10.0" />
                                                                     </HBox.margin>
                                                                 </Label>
                                                             </children>
                                                         </HBox>
-                                                        <TableView>
+                                                        <TableView fx:id="statisticalResultAlarmSetTable">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="C1" />
-                                                                <TableColumn prefWidth="75.0" text="C2" />
+                                                                <TableColumn fx:id="statisticsColumn" prefWidth="75.0" text="Statistics" />
+                                                                <TableColumn fx:id="lowerLimitColumn" prefWidth="75.0" text="Lower Limit" />
+                                                                <TableColumn fx:id="upperLimitColumn" prefWidth="75.0" text="Upper Limit" />
                                                             </columns>
                                                         </TableView>
                                                     </children>
@@ -370,7 +377,7 @@
                                                 <Insets bottom="10.0" top="10.0" />
                                             </VBox.margin>
                                         </Label>
-                                        <TableView prefHeight="188.0">
+                                        <TableView fx:id="controlAlarmRuleTable" prefHeight="188.0">
                                             <columns>
                                                 <TableColumn prefWidth="75.0" text="C1" />
                                                 <TableColumn prefWidth="75.0" text="C2" />
@@ -379,7 +386,7 @@
                                                 <Insets bottom="10.0" />
                                             </VBox.margin>
                                         </TableView>
-                                        <TextArea prefHeight="226.0">
+                                        <TextArea fx:id="ruleInstructionTextArea" prefHeight="226.0">
                                             <VBox.margin>
                                                 <Insets bottom="10.0" />
                                             </VBox.margin>
@@ -399,8 +406,8 @@
                                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                                             <children>
                                                 <Label text="Active Template" />
-                                                <ComboBox prefWidth="150.0" />
-                                                <Button mnemonicParsing="false" text="Button" />
+                                                <ComboBox fx:id="exportTemplateCb" prefWidth="150.0" />
+                                                <Button fx:id="exportTemplateSettingBtn" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" />
                                             </children>
                                         </HBox>
                                     </children>

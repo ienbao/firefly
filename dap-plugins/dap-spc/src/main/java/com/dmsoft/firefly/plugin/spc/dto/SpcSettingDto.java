@@ -11,21 +11,12 @@ import java.util.Map;
  */
 public class SpcSettingDto {
 
-    private int decimalDigit;
     private int customGroupNumber;
     private int chartIntervalNumber;
     private Map<String, Double[]> abilityAlarmRule;
     private Map<String, List<CustomAlarmDto>> statisticalAlarmSetting;
-    private Map<String, Object[]> controlChartRule;
+    private List<ControlRuleDto> controlChartRule;
     private String exportTemplateName;
-
-    public int getDecimalDigit() {
-        return decimalDigit;
-    }
-
-    public void setDecimalDigit(int decimalDigit) {
-        this.decimalDigit = decimalDigit;
-    }
 
     public int getCustomGroupNumber() {
         return customGroupNumber;
@@ -59,11 +50,11 @@ public class SpcSettingDto {
         this.statisticalAlarmSetting = statisticalAlarmSetting;
     }
 
-    public Map<String, Object[]> getControlChartRule() {
+    public List<ControlRuleDto> getControlChartRule() {
         return controlChartRule;
     }
 
-    public void setControlChartRule(Map<String, Object[]> controlChartRule) {
+    public void setControlChartRule(List<ControlRuleDto> controlChartRule) {
         this.controlChartRule = controlChartRule;
     }
 
