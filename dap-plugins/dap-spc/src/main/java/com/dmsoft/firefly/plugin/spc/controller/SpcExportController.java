@@ -51,6 +51,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
@@ -170,14 +171,11 @@ public class SpcExportController {
     private void initEvent() {
         browse.setOnAction(event -> {
             String str = System.getProperty("user.home");
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Spc Config export");
-            fileChooser.setInitialDirectory(new File(str));
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Excl", "*.xlsl")
-            );
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.setTitle("Spc Config export");
+            directoryChooser.setInitialDirectory(new File(str));
             Stage fileStage = null;
-            File file = fileChooser.showSaveDialog(fileStage);
+            File file = directoryChooser.showDialog(fileStage);
 
             if (file != null) {
                 locationPath.setText(file.getPath());
@@ -306,6 +304,7 @@ public class SpcExportController {
             return;
         }
         List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
+
         Map<String, Map<String, String>> chartPath = initSpcChartData(spcChartDtoList);
 //        chartResultController.initSpcChartData(spcChartDtoList);
         SpcUserActionAttributesDto spcConfig = new SpcUserActionAttributesDto();
@@ -321,10 +320,19 @@ public class SpcExportController {
         exportDataItem.put("Samples", true);
         exportDataItem.put("AVG", true);
         exportDataItem.put("Max", true);
-        exportDataItem.put("Max", true);
         exportDataItem.put("Min", true);
         exportDataItem.put("Range", true);
-        exportDataItem.put("SD", true);
+        exportDataItem.put("CA", true);
+        exportDataItem.put("CPK", true);
+
+        exportDataItem.put("ND Chart", true);
+        exportDataItem.put("Run Chart", true);
+        exportDataItem.put("X-bar Chart", true);
+        exportDataItem.put("Range Chart", true);
+        exportDataItem.put("SD Chart", true);
+        exportDataItem.put("Median Chart", true);
+        exportDataItem.put("Box Chart", true);
+        exportDataItem.put("MR Chart", true);
 
         spcConfig.setExportDataItem(exportDataItem);
 
@@ -346,14 +354,6 @@ public class SpcExportController {
         List<SpcStatisticalResultAlarmDto> spcStatisticalResultDtosToExport = null;
         int conditionSize = searchTab.getSearch().size();
         if (conditionSize < 2) {
-            if (exportDataItem.get("DetailSheet")) {
-//                            for (ChartResultDto chartResultDto : chartResultDtos) {
-//                                chartDataDtos = new ArrayList<>();
-//                                chartDataDtos.add(chartResultDto.getChartDataDtos());
-//                                chartPicPath = exportSpcChart2Gif(chartDataDtos, savePicPath, exportDataItem);
-//                                picPathMap.put(chartResultDto.getKey(), chartPicPath);
-//                            }
-            }
             spcStatisticalResultDtosToExport = spcStatsDtoList;
         } else {
             spcStatisticalResultDtosToExport = Lists.newArrayList();
@@ -368,22 +368,6 @@ public class SpcExportController {
                 for (int i = 0; i < conditionSize; i++) {
                     spcStatisticalResultDtosToExport.add(spcStatsDtoList.get(index + i));
                 }
-            }
-            if (exportDataItem.get("DetailSheet")) {
-//                            int charDataLen = chartResultDtos.size();
-//                            for (int index = 0; index <= charDataLen - conditionSize; index += conditionSize) {
-//                                chartDataDtos = new ArrayList<>();
-//                                chartDataDtosTemp = new ArrayList<>();
-//                                for (int i = 0; i < conditionSize; i++) {
-//                                    chartDataDtos.add(chartResultDtos.get(index + i).getChartDataDtos());
-//                                    chartDataDtosTemp.add(chartResultDtos.get(index + i).getChartDataDtos());
-//                                    chartPicPath = exportSpcChart2Gif(chartDataDtosTemp, savePicPath, exportDataItem);
-//                                    picPathMap.put(chartResultDtos.get(index + i).getKey(), chartPicPath);
-//                                    chartDataDtosTemp.clear();
-//                                }
-//                                chartPicPath = exportSpcChart2Gif(chartDataDtos, savePicPath, exportDataItem);
-//                                picPathMap.put(chartResultDtos.get(index).getKey() + "SubSummary", chartPicPath);
-//                            }
             }
         }
         spcExportService.spcExport(spcConfig, spcStatisticalResultDtosToExport, chartPath);

@@ -34,7 +34,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         if (isBlank(data)) {
             return true;
         } else {
-            return data.equalsIgnoreCase("N/A") || data.equalsIgnoreCase("-") || data.equalsIgnoreCase("nil") || data.equalsIgnoreCase("UnKown Line") || data.equalsIgnoreCase("_");
+            return data.equalsIgnoreCase("N/A") || data.equalsIgnoreCase("NA") || data.equalsIgnoreCase("-") || data.equalsIgnoreCase("nil") || data.equalsIgnoreCase("UnKown Line") || data.equalsIgnoreCase("_");
         }
     }
 
