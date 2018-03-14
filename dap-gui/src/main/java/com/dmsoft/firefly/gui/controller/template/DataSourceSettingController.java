@@ -9,6 +9,7 @@ import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,7 +27,14 @@ public class DataSourceSettingController {
     private Button chooseItem, newTemplate, clearAll, help, ok, oK, cancel, apply;
     @FXML
     private Tab basicTab, advanceTab;
+    @FXML
+    private TableColumn<ItemTableModel, CheckBox> select;
+    @FXML
+    private TableColumn<ItemTableModel, TestItemWithTypeDto> item;
+    @FXML
+    private TableView itemTable;
 
+    private CheckBox box;
     private ChooseColDialogController chooseCumDialogController;
     private SearchDataFrame dataFrame;
 
@@ -35,6 +43,7 @@ public class DataSourceSettingController {
         initButton();
         this.buildChooseColumnDialog();
         this.initComponentEvent();
+
     }
 
     private void initButton() {
@@ -69,5 +78,7 @@ public class DataSourceSettingController {
         chooseCumDialogController.setSelectResultName(dataFrame.getAllTestItemName());
     }
 
+    private void initTableData() {
 
+    }
 }
