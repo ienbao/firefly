@@ -11,6 +11,7 @@ import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.model.PluginTableRowData;
 import com.dmsoft.firefly.gui.utils.FileUtils;
+import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.KeyValueDto;
 import com.dmsoft.firefly.core.utils.SystemPath;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -64,7 +65,7 @@ public class PluginManageController implements Initializable {
     private ObservableList<PluginTableRowData> pluginTableRowDataObservableList;
     private FilteredList<PluginTableRowData> pluginTableRowDataFilteredList;
     private SortedList<PluginTableRowData> pluginTableRowDataSortedList;
-    private final String parentPath = SystemPath.getFilePath() + "config";
+    private final String parentPath = SystemPath.getFilePath() + GuiConst.CONFIG_PATH;
     private JsonMapper mapper = JsonMapper.defaultMapper();
     private boolean isEdit = false;
 
@@ -152,7 +153,7 @@ public class PluginManageController implements Initializable {
         pluginTableRowDataObservableList.forEach(v -> {
             activePlugin.add(new KeyValueDto(v.getInfo().getId(), v.getSelector().isSelected()));
         });
-        JsonFileUtil.writeJsonFile(activePlugin, parentPath, "activePlugin");
+        JsonFileUtil.writeJsonFile(activePlugin, parentPath, GuiConst.ACTIVE_PLUGIN);
     }
 
     private void initEvent() {
@@ -230,7 +231,7 @@ public class PluginManageController implements Initializable {
         PluginContext context = RuntimeContext.getBean(PluginContext.class);
         Map<String, PluginInfo> map = context.getAllInstalledPluginInfo();
 
-        String json = JsonFileUtil.readJsonFile(parentPath, "activePlugin");
+        String json = JsonFileUtil.readJsonFile(parentPath, GuiConst.ACTIVE_PLUGIN);
         List<KeyValueDto> activePlugin = Lists.newArrayList();
         if (DAPStringUtils.isNotBlank(json)) {
             activePlugin = mapper.fromJson(json, mapper.buildCollectionType(List.class, KeyValueDto.class));

@@ -16,4 +16,11 @@ public class GuiConst {
     public final static String PLARTFORM_STAGE_CHANGE_PASSWORD = PLARTFORM_STAGE + "change_password";
     public final static String PLARTFORM_STAGE_CHANGE_PASSWORD_BACK = PLARTFORM_STAGE + "change_password_back";
 
+    public static final String ACTIVE_PLUGIN = "activePlugin";
+    public static final String DATASOURCE_IMPORT = "import";
+    public static final String RESOLVER_HANDLER = "resolver";
+    public static final String IMPORT_HANDLER = "import";
+
+    public static final String CONFIG_PATH = "config";
+
 }
