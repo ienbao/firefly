@@ -12,6 +12,7 @@ import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -86,6 +87,9 @@ public class SpcExportServiceImpl {
         spcExportWorker.buildSPCMultiItem(chartImage, spcStatisticalResultDtos, spcUserActionAttributesDto);
         spcExportBuilder.drawSpcExcel(excelPath, spcExportWorker);
         logger.info("Export complete.");
+        String savePicPath = FileUtils.getAbsolutePath("../export/temp");
+//        File file = new File(savePicPath);
+        FileUtils.deleteDir(savePicPath);
         spcExportBuilder.clear();
         spcExportWorker.cleanExportWorker();
         return true;

@@ -108,7 +108,7 @@ public class SpcMainController implements Initializable {
     @Deprecated
     private SpcSettingDto initSpcSettingDto() {
         SpcSettingDto spcSettingDto = new SpcSettingDto();
-        spcSettingDto.setDecimalDigit(5);
+
         spcSettingDto.setCustomGroupNumber(10);
         spcSettingDto.setChartIntervalNumber(8);
 
@@ -142,11 +142,17 @@ public class SpcMainController implements Initializable {
         });
         spcSettingDto.setStatisticalAlarmSetting(statistiacalAlarmMap);
 
-        Map<String, Object[]> controlChartRule = Maps.newHashMap();
+        List<ControlRuleDto> controlChartRule = Lists.newArrayList();
         List<String> alarmNameList = Lists.newArrayList("R1", "R2", "R3", "R4", "R5", "R6", "R7",
                 "R8", "R9");
         alarmNameList.forEach(alarmName -> {
-            controlChartRule.put(alarmName, new Double[]{7d, 4d, 1d});
+            ControlRuleDto controlRuleDto = new ControlRuleDto();
+            controlRuleDto.setUsed(true);
+            controlRuleDto.setRuleName(alarmName);
+            controlRuleDto.setmValue(7d);
+            controlRuleDto.setnValue(4d);
+            controlRuleDto.setsValue(1d);
+            controlChartRule.add(controlRuleDto);
         });
         spcSettingDto.setControlChartRule(controlChartRule);
 

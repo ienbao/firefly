@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.gui;
 
-import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
+import com.dmsoft.firefly.core.utils.SystemPath;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
@@ -27,7 +27,7 @@ public class SystemProcessorController {
     @FXML
     private void initialize() {
         logger.debug("The processor bar is start.");
-        imageViewLogo.setImage(new Image(LOGOPATH));
+        imageViewLogo.setImage(new Image("file:/" + SystemPath.getFilePath() + LOGOPATH));
         progressBar.setProgress(0);
     }
 
