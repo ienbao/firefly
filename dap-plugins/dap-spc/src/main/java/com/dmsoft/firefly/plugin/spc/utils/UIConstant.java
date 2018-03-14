@@ -51,8 +51,8 @@ public class UIConstant {
     public static final String SPC_CHART_RUN = "RunChart";
     public static final String SPC_CHART_XBAR = "XBarChart";
 
-    public static final String[] SPC_CHART_NAME = new String[] {"ND Chart", "Run Chart", "X-bar Chart", "Range Chart", "SD Chart", "Median Chart", "Box Chart", "MR Chart"};
-    public static final String[] EXPORT_NDC_SECOND_LABELS = {"Item Name", "Search Condition", "Samples", "AVG", "Max", "Min",  "USL", "LSL", "Center", "Range", "SD", "AVG-3SD", "AVG+3SD", "Kurtosis", "Skewness",
+    public static final String[] SPC_CHART_NAME = new String[]{"ND Chart", "Run Chart", "X-bar Chart", "Range Chart", "SD Chart", "Median Chart", "Box Chart", "MR Chart"};
+    public static final String[] EXPORT_NDC_SECOND_LABELS = {"Item Name", "Search Condition", "Samples", "AVG", "Max", "Min", "USL", "LSL", "Center", "Range", "SD", "AVG-3SD", "AVG+3SD", "Kurtosis", "Skewness",
             "CA", "CPK", "CP", "CPL", "CPU", "Within PPM", "PPK", "PP", "PPL", "PPU", "Overall PPM"};
 
     //    "LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL"
@@ -79,4 +79,6 @@ public class UIConstant {
     public static final String EXPORT_SUMMARY_MARGIMAL = "ACCEPTABLE";
     public static final String EXPORT_SUMMARY_BAD = "RECTIFICATION";
     public static final String EXPORT_SUMMARY_NULL = "-";
+
+    public static final String[] CONTROL_ALARM_RULE_HEADER = new String[]{"Is Use", "Rule Name", "n", "m", "s"};
 }
