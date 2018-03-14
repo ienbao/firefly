@@ -12,6 +12,7 @@ import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.model.PluginTableRowData;
 import com.dmsoft.firefly.gui.utils.FileUtils;
 import com.dmsoft.firefly.gui.utils.KeyValueDto;
+import com.dmsoft.firefly.core.utils.SystemPath;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
@@ -63,7 +64,7 @@ public class PluginManageController implements Initializable {
     private ObservableList<PluginTableRowData> pluginTableRowDataObservableList;
     private FilteredList<PluginTableRowData> pluginTableRowDataFilteredList;
     private SortedList<PluginTableRowData> pluginTableRowDataSortedList;
-    private final String parentPath = this.getClass().getResource("/").getPath() + "config";
+    private final String parentPath = SystemPath.getFilePath() + "config";
     private JsonMapper mapper = JsonMapper.defaultMapper();
     private boolean isEdit = false;
 
