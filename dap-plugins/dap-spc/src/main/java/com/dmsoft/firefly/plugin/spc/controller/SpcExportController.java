@@ -8,6 +8,10 @@ import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
+import com.dmsoft.firefly.plugin.spc.charts.BoxPlotChart;
+import com.dmsoft.firefly.plugin.spc.charts.LinearChart;
+import com.dmsoft.firefly.plugin.spc.charts.NDChart;
+import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.*;
@@ -39,6 +43,8 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.scene.Node;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
@@ -300,7 +306,7 @@ public class SpcExportController {
             return;
         }
         List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
-        initSpcChartData(spcChartDtoList);
+        Map<String, Map<String, String>> chartPath = initSpcChartData(spcChartDtoList);
 //        chartResultController.initSpcChartData(spcChartDtoList);
         SpcUserActionAttributesDto spcConfig = new SpcUserActionAttributesDto();
         spcConfig.setExportPath(locationPath.getText());
@@ -380,7 +386,7 @@ public class SpcExportController {
 //                            }
             }
         }
-        spcExportService.spcExport(spcConfig, spcStatisticalResultDtosToExport, Maps.newHashMap());
+        spcExportService.spcExport(spcConfig, spcStatisticalResultDtosToExport, chartPath);
 //        spcExportService.spcExport(spcConfig, spcStatsDtoList, null);
     }
 
@@ -418,57 +424,61 @@ public class SpcExportController {
         return searchConditionDtoList;
     }
 
-    public void initSpcChartData(List<SpcChartDto> spcChartDtoList) {
-        List<INdcChartData> ndcChartDataList = Lists.newArrayList();
-        List<IRunChartData> runChartDataList = Lists.newArrayList();
-        List<IControlChartData> xBarChartDataList = Lists.newArrayList();
-        List<IControlChartData> rangeChartDataList = Lists.newArrayList();
-        List<IControlChartData> sdChartDataList = Lists.newArrayList();
-        List<IControlChartData> medianChartDataList = Lists.newArrayList();
-        List<IBoxChartData> boxChartDataList = Lists.newArrayList();
-        List<IControlChartData> mrChartDataList = Lists.newArrayList();
-        for (SpcChartDto spcChartDto : spcChartDtoList) {
-            String key = spcChartDto.getKey();
-            javafx.scene.paint.Color color = ColorUtils.toFxColorFromAwtColor(colorMap.get(key));
-            SpcChartResultDto spcChartResultDto = spcChartDto.getResultDto();
-            if (spcChartResultDto == null) {
-                continue;
-            }
-            //nd chart
-            INdcChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
-            ndcChartDataList.add(iNdcChartData);
-            //run chart
-            IRunChartData iRunChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), color);
-            runChartDataList.add(iRunChartData);
-            //x bar chart
-            IControlChartData xBarChartData = new SpcControlChartData(key, spcChartResultDto.getXbarCResult(), color);
-            xBarChartDataList.add(xBarChartData);
-            //range chart
-            IControlChartData rangeChartData = new SpcControlChartData(key, spcChartResultDto.getRangeCResult(), color);
-            rangeChartDataList.add(rangeChartData);
-            //sd chart
-            IControlChartData sdChartData = new SpcControlChartData(key, spcChartResultDto.getSdCResult(), color);
-            sdChartDataList.add(sdChartData);
-            //median chart
-            IControlChartData medianChartData = new SpcControlChartData(key, spcChartResultDto.getMedianCResult(), color);
-            medianChartDataList.add(medianChartData);
-            //box chart
-            IBoxChartData iBoxChartData = new SpcBoxChartData(key, spcChartResultDto.getBoxCResult(), color);
-            boxChartDataList.add(iBoxChartData);
-            //mr chart
-            IControlChartData mrChartData = new SpcControlChartData(key, spcChartResultDto.getMrCResult(), color);
-            mrChartDataList.add(mrChartData);
+    public Map<String, Map<String, String>> initSpcChartData(List<SpcChartDto> spcChartDtoList) {
+        Map<String, Map<String, String>> chartPath = BuildChart.initSpcChartData(spcChartDtoList, colorMap);
 
-        }
-//        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
-//        this.setRunChartData(UIConstant.SPC_CHART_NAME[1], runChartDataList);
-//        this.setControlChartData(UIConstant.SPC_CHART_NAME[2], xBarChartDataList);
-//        this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList);
-//        this.setControlChartData(UIConstant.SPC_CHART_NAME[4], sdChartDataList);
-//        this.setControlChartData(UIConstant.SPC_CHART_NAME[5], medianChartDataList);
-//        this.setBoxChartData(UIConstant.SPC_CHART_NAME[6], boxChartDataList);
-//        this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
+        return chartPath;
+//        List<INdcChartData> ndcChartDataList = Lists.newArrayList();
+//        List<IRunChartData> runChartDataList = Lists.newArrayList();
+//        List<IControlChartData> xBarChartDataList = Lists.newArrayList();
+//        List<IControlChartData> rangeChartDataList = Lists.newArrayList();
+//        List<IControlChartData> sdChartDataList = Lists.newArrayList();
+//        List<IControlChartData> medianChartDataList = Lists.newArrayList();
+//        List<IBoxChartData> boxChartDataList = Lists.newArrayList();
+//        List<IControlChartData> mrChartDataList = Lists.newArrayList();
+//        for (SpcChartDto spcChartDto : spcChartDtoList) {
+//            String key = spcChartDto.getKey();
+//            javafx.scene.paint.Color color = ColorUtils.toFxColorFromAwtColor(colorMap.get(key));
+//            SpcChartResultDto spcChartResultDto = spcChartDto.getResultDto();
+//            if (spcChartResultDto == null) {
+//                continue;
+//            }
+//            //nd chart
+//            INdcChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
+//            ndcChartDataList.add(iNdcChartData);
+//            //run chart
+//            IRunChartData iRunChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), color);
+//            runChartDataList.add(iRunChartData);
+//            //x bar chart
+//            IControlChartData xBarChartData = new SpcControlChartData(key, spcChartResultDto.getXbarCResult(), color);
+//            xBarChartDataList.add(xBarChartData);
+//            //range chart
+//            IControlChartData rangeChartData = new SpcControlChartData(key, spcChartResultDto.getRangeCResult(), color);
+//            rangeChartDataList.add(rangeChartData);
+//            //sd chart
+//            IControlChartData sdChartData = new SpcControlChartData(key, spcChartResultDto.getSdCResult(), color);
+//            sdChartDataList.add(sdChartData);
+//            //median chart
+//            IControlChartData medianChartData = new SpcControlChartData(key, spcChartResultDto.getMedianCResult(), color);
+//            medianChartDataList.add(medianChartData);
+//            //box chart
+//            IBoxChartData iBoxChartData = new SpcBoxChartData(key, spcChartResultDto.getBoxCResult(), color);
+//            boxChartDataList.add(iBoxChartData);
+//            //mr chart
+//            IControlChartData mrChartData = new SpcControlChartData(key, spcChartResultDto.getMrCResult(), color);
+//            mrChartDataList.add(mrChartData);
+//
+//        }
+//        BuildChart.setNdChartData(UIConstant.SPC_CHART_NAME[0], buildND(), ndcChartDataList);
+//        BuildChart.setRunChartData(UIConstant.SPC_CHART_NAME[1], buildRunOrXbar(), runChartDataList);
+//        BuildChart.setControlChartData(UIConstant.SPC_CHART_NAME[2], buildRunOrXbar(), xBarChartDataList);
+//        BuildChart.setControlChartData(UIConstant.SPC_CHART_NAME[3], new LinearChart(new NumberAxis(), new NumberAxis()), rangeChartDataList);
+//        BuildChart.setControlChartData(UIConstant.SPC_CHART_NAME[4], new LinearChart(new NumberAxis(), new NumberAxis()), sdChartDataList);
+//        BuildChart.setControlChartData(UIConstant.SPC_CHART_NAME[5], new LinearChart(new NumberAxis(), new NumberAxis()), medianChartDataList);
+//        BuildChart.setBoxChartData(UIConstant.SPC_CHART_NAME[6], buildBox(), boxChartDataList);
+//        BuildChart.setControlChartData(UIConstant.SPC_CHART_NAME[7], new LinearChart(new NumberAxis(), new NumberAxis()),mrChartDataList);
     }
+
 
     /**
      * get selected test items
