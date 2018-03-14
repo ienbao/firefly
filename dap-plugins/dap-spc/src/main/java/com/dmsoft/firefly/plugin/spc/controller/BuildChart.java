@@ -1,19 +1,18 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.gui.components.window.WindowPane;
 import com.dmsoft.firefly.plugin.spc.charts.BoxPlotChart;
 import com.dmsoft.firefly.plugin.spc.charts.LinearChart;
 import com.dmsoft.firefly.plugin.spc.charts.NDChart;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
-import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.*;
+import com.dmsoft.firefly.plugin.spc.utils.FileUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
@@ -21,16 +20,15 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -39,8 +37,13 @@ import java.util.Map;
  */
 public class BuildChart {
 
+    private static Group vBox;
+    private static Scene scene;
     public static Map<String, Map<String, String>> initSpcChartData(List<SpcChartDto> spcChartDtoList, Map<String, Color> colorCache) {
-//        Map<String, java.awt.Color> colorCache = spcMainController.getColorCache();
+        vBox = new Group();
+        scene = new Scene(vBox);
+        scene.getStylesheets().add(BuildChart.class.getClassLoader().getResource("css/charts.css").toExternalForm());
+
         Map<String, Map<String, String>> result = Maps.newHashMap();
 //        List<INdcChartData> ndcChartDataList = Lists.newArrayList();
 //        List<IRunChartData> runChartDataList = Lists.newArrayList();
@@ -122,7 +125,6 @@ public class BuildChart {
 
             result.put(key, chartPath);
         }
-
         return result;
     }
 
@@ -133,6 +135,8 @@ public class BuildChart {
         yAxis.setTickMarkVisible(false);
         yAxis.setMinorTickVisible(false);
         NDChart<Double, Double> ndChart = new NDChart(xAxis, yAxis);
+        ndChart.setAnimated(false);
+        ndChart.setLegendVisible(false);
         return ndChart;
     }
 
@@ -144,6 +148,8 @@ public class BuildChart {
         xAxis.setMinorTickVisible(false);
         yAxis.setMinorTickVisible(false);
         LinearChart runChart = new LinearChart(xAxis, yAxis);
+        runChart.setAnimated(false);
+        runChart.setLegendVisible(false);
         return runChart;
     }
 
@@ -155,12 +161,15 @@ public class BuildChart {
         xAxis.setMinorTickVisible(false);
         yAxis.setMinorTickVisible(false);
         BoxPlotChart boxPlotChart = new BoxPlotChart(xAxis, yAxis);
+        boxPlotChart.setAnimated(false);
+        boxPlotChart.setLegendVisible(false);
         return boxPlotChart;
 
     }
 
     private static void setNdChartData(NDChart chart, INdcChartData chartData) {
 //        NDChart chart = ndChartPane.getChart();
+//        chart.removeAllChildren();
         IBarChartData barChartData = chartData.getBarData();
         IXYChartData curveData = chartData.getCurveData();
         List<ILineData> lineData = chartData.getLineData();
@@ -175,7 +184,8 @@ public class BuildChart {
     }
 
     private static void setRunChartData(LinearChart chart, IRunChartData chartData) {
-//        LinearChart chart = runChartPane.getChart();
+        chart.removeAllChildren();
+
         IXYChartData xyChartData = chartData.getXYChartData();
         List<ILineData> lineData = chartData.getLineData();
         chart.createChartSeries(xyChartData, "ALL", null);
@@ -185,6 +195,8 @@ public class BuildChart {
     }
 
     private static void setControlChartData(LinearChart chart, IControlChartData chartData) {
+        chart.removeAllChildren();
+
         IXYChartData xyChartData = chartData.getChartData();
         List<ILineData> lineData = chartData.getLineData();
         List<IPathData> pathData = chartData.getBrokenLineData();
@@ -199,7 +211,8 @@ public class BuildChart {
     }
 
     private static void setBoxPlotChartData(BoxPlotChart chart, IBoxChartData chartData) {
-//        BoxPlotChart chart = boxChartPane.getChart();
+        chart.removeAllChildren();
+
         IBoxAndWhiskerData boxAndWhiskerData = chartData.getBoxAndWhiskerData();
         IPoint points = chartData.getPoints();
         chart.createChartSeries(boxAndWhiskerData, "ALL");
@@ -207,30 +220,30 @@ public class BuildChart {
     }
 
     public static String exportImages(String name, Node node) {
-//        node.prefHeight(400);
-//        node.prefWidth(600);
-        Stage stage = new Stage();
-        stage.setScene(new Scene(new VBox(node)));
-        stage.show();
-        stage.hide();
+//        node.getStyleClass().add(BuildChart.class.getClassLoader().getResource("css/charts.css").toExternalForm());
+        vBox.getChildren().clear();
+        vBox.getChildren().add(node);
         SnapshotParameters parameters = new SnapshotParameters();
-//        WritableImage image = node.snapshot(parameters, null);
+        WritableImage image = node.snapshot(parameters, null);
 //        // 重置图片大小
-//        ImageView imageView = new ImageView(image);
-//        imageView.setFitWidth(600);
-//        imageView.setFitHeight(400);
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(600);
+        imageView.setFitHeight(220);
         WritableImage exportImage = node.snapshot(parameters, null);
-//        WritableImage image = node.snapshot(new SnapshotParameters(), null);
-        String path = "F:\\idea\\project\\export" + "/" + name + ".png";
+        String savePicPath = FileUtils.getAbsolutePath("../export/temp");
+        File file = new File(savePicPath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        String path = savePicPath + "/" + name + new Date().getTime() + ".png";
 
         try {
-            File file = new File(path);
+            file = new File(path);
             ImageIO.write(SwingFXUtils.fromFXImage(exportImage, null), "png", file);
 //            AlertDialog.showAlertDialog("保存成功!");
         } catch (IOException ex) {
 //            AlertDialog.showAlertDialog("保存失败:" + ex.getMessage());
         }
-        stage.close();
         return path;
     }
 }
