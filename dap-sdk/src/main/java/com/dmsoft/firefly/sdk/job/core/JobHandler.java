@@ -29,7 +29,6 @@ public interface JobHandler {
     }
 
     default int getWeight() {
-        System.out.println(WEIGHT.size());
         return WEIGHT.containsKey(this) ? WEIGHT.get(this) : 0;
     }
 
