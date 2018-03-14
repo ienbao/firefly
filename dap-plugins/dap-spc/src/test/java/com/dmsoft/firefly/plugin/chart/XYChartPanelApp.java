@@ -214,7 +214,7 @@ public class XYChartPanelApp extends Application {
         changeColorBtn.setOnAction(event -> xBarChar.updateChartColor(seriesName, Color.YELLOW));
 
 //        LinearChart chart = xBarChartPane.getChart();
-//        ObservableList<XYChart.Series<Number, Number>> series = chart.getData();
+//        ObservableList<XYChart.Series<Number, Number>> series = chart.getCellData();
 //
 //        for (int i = 0; i < series.size(); i++) {
 //            XYChart.Series oneSeries = series.get(i);

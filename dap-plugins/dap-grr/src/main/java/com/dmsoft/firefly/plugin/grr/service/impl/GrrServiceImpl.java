@@ -11,6 +11,7 @@ import com.dmsoft.firefly.plugin.grr.service.GrrAnalysisService;
 import com.dmsoft.firefly.plugin.grr.service.GrrService;
 import com.dmsoft.firefly.plugin.grr.utils.GrrExceptionCode;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
+import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
@@ -65,14 +66,14 @@ public class GrrServiceImpl implements GrrService {
     }
 
     @Override
-    public GrrDetailDto getDetailResult(SearchDataFrame dataFrame, GrrTestItemDto testItemDto, GrrAnalysisConfigDto configDto) {
-        if (dataFrame == null || testItemDto == null || configDto == null) {
+    public GrrDetailDto getDetailResult(DataColumn dataColumn, GrrTestItemDto testItemDto, GrrAnalysisConfigDto configDto) {
+        if (dataColumn == null || testItemDto == null || configDto == null) {
             throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_11001));
         }
         GrrDetailDto result = new GrrDetailDto();
 
         GrrAnalysisDataDto grrAnalysisDataDto = new GrrAnalysisDataDto();
-        List<String> datas = dataFrame.getDataValue(testItemDto.getItemName(), testItemDto.getRowKeysToByAnalyzed());
+        List<String> datas = dataColumn.getData(testItemDto.getRowKeysToByAnalyzed());
         List<Double> doubleList = Lists.newArrayList();
         for (String s : datas) {
             if (DAPStringUtils.isNumeric(s)) {
@@ -82,12 +83,12 @@ public class GrrServiceImpl implements GrrService {
         if (testItemDto.getCusLsl() != null) {
             grrAnalysisDataDto.setLsl(testItemDto.getCusLsl());
         } else {
-            grrAnalysisDataDto.setLsl(dataFrame.getTestItemWithTypeDto(testItemDto.getItemName()).getLsl());
+            grrAnalysisDataDto.setLsl(dataColumn.getTestItemWithTypeDto().getLsl());
         }
         if (testItemDto.getCusUsl() != null) {
             grrAnalysisDataDto.setUsl(testItemDto.getCusUsl());
         } else {
-            grrAnalysisDataDto.setUsl(dataFrame.getTestItemWithTypeDto(testItemDto.getItemName()).getUsl());
+            grrAnalysisDataDto.setUsl(dataColumn.getTestItemWithTypeDto().getUsl());
         }
         GrrDetailResultDto resultDto = getAnalysisService().analyzeDetailResult(grrAnalysisDataDto, configDto);
         grrAnalysisDataDto.setDataList(doubleList);

@@ -39,10 +39,14 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         if (DAPStringUtils.isNumeric(dataDto.getLsl())) {
             engine.assign("lsl", new double[]{Double.valueOf(dataDto.getLsl())});
             resultDto.setLsl(Double.valueOf(dataDto.getLsl()));
+        } else {
+            engine.assign("lsl", new double[]{Double.NaN});
         }
         if (DAPStringUtils.isNumeric(dataDto.getUsl())) {
             engine.assign("usl", new double[]{Double.valueOf(dataDto.getUsl())});
             resultDto.setUsl(Double.valueOf(dataDto.getUsl()));
+        } else {
+            engine.assign("usl", new double[]{Double.NaN});
         }
         engine.eval("DSResult <- intspc.normal.getDSResult(x)");
 
