@@ -18,10 +18,12 @@ public class ParamKeys {
     public static final String DATA_FRAME_HANDLER = "dataFrameHandler";
     public static final String SPC_STATS_RESULT_HANDLER = "spcStatsResultHandler";
     public static final String SPC_CHART_RESULT_HANDLER = "spcChartResultHandler";
+    public static final String FIND_SPC_SETTING_HANDLER = "findSpcSettingHandler";
 
     //pipeline
     public static final String SPC_ANALYSIS_JOB_PIPELINE = "spcAnalysisJobPipeline";
     public static final String SPC_REFRESH_JOB_PIPELINE = "spcRefreshJobPipeline";
+    public static final String FIND_SPC_SETTING_DATA_JOP_PIPELINE = "findSpcSettingDataJobPipeline";
 
     public static final String SPC_ANALYSIS_CONDITION_KEY = "analysisKey";
 

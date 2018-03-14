@@ -51,4 +51,16 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         }
     }
 
+    /**
+     * to string from double
+     * @param value double
+     * @return string
+     */
+    public static String toStringFromDouble(Double value) {
+        if (value == null) {
+            return "";
+        }
+        return String.valueOf(value);
+    }
+
 }
