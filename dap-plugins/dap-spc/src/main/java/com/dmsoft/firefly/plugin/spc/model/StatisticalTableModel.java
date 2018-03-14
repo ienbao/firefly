@@ -5,11 +5,12 @@ package com.dmsoft.firefly.plugin.spc.model;
 
 import com.dmsoft.firefly.gui.components.table.NewTableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
-import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
-import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
+import com.dmsoft.firefly.plugin.spc.dto.StatisticalAlarmDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
 import com.dmsoft.firefly.plugin.spc.utils.Colur;
 import com.dmsoft.firefly.plugin.spc.utils.SourceObjectProperty;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
+import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.StringUtils;
 import com.google.common.collect.Lists;
@@ -39,11 +40,11 @@ public class StatisticalTableModel implements NewTableModel {
     private Map<String, SimpleObjectProperty<Boolean>> checkMap = new HashMap<>();
     private ObjectProperty<Boolean> allChecked = new SimpleObjectProperty<>(false);
     private Set<String> falseSet = new HashSet<>();
-    private List<SpcStatsDto> spcStatsDtoList;
+    private List<SpcStatisticalResultAlarmDto> spcStatsDtoList;
 
     private FilteredList<String> statisticalTableRowDataFilteredList;
     private SortedList<String> statisticalTableRowDataSortedList;
-    private Map<String, SpcStatsDto> keyToStatsDtoMap = Maps.newHashMap();
+    private Map<String, SpcStatisticalResultAlarmDto> keyToStatsDtoMap = Maps.newHashMap();
 
     private List<TableMenuRowEvent> menuRowEvents;
     private CheckBox allCheckBox;
@@ -70,15 +71,15 @@ public class StatisticalTableModel implements NewTableModel {
      *
      * @param spcStatsDtoList data list
      */
-    public void initData(List<SpcStatsDto> spcStatsDtoList) {
+    public void initData(List<SpcStatisticalResultAlarmDto> spcStatsDtoList) {
         this.spcStatsDtoList = spcStatsDtoList;
         this.clearTableData();
         if (spcStatsDtoList != null) {
             int m = 0;
-            for (SpcStatsDto dto : spcStatsDtoList) {
+            for (SpcStatisticalResultAlarmDto dto : spcStatsDtoList) {
                 rowKey.add(dto.getKey());
                 keyToStatsDtoMap.put(dto.getKey(), dto);
-                if (this.isEmptyResult(dto.getStatsResultDto())) {
+                if (this.isEmptyResult(dto.getStatisticalAlarmDtoMap())) {
                     emptyResultKeys.add(dto.getKey());
                 } else {
                     colorCache.put(dto.getKey(), ColorUtils.getTransparentColor(Colur.RAW_VALUES[m % 10], 1));
@@ -127,13 +128,13 @@ public class StatisticalTableModel implements NewTableModel {
      *
      * @return the list of SpcStatsDto
      */
-    public List<SpcStatsDto> getSelectData() {
-        List<SpcStatsDto> selectStatsDtoList = Lists.newArrayList();
+    public List<SpcStatisticalResultAlarmDto> getSelectData() {
+        List<SpcStatisticalResultAlarmDto> selectStatsDtoList = Lists.newArrayList();
         for (Map.Entry<String, SimpleObjectProperty<Boolean>> entry : checkMap.entrySet()) {
             String key = entry.getKey().toString();
             boolean isSelect = entry.getValue().getValue();
             if (isSelect) {
-                SpcStatsDto spcStatsDto = keyToStatsDtoMap.get(key);
+                SpcStatisticalResultAlarmDto spcStatsDto = keyToStatsDtoMap.get(key);
                 selectStatsDtoList.add(spcStatsDto);
             }
         }
@@ -224,17 +225,32 @@ public class StatisticalTableModel implements NewTableModel {
         if (editorCell.contains(rowKey + "-" + column)) {
             tableCell.setStyle("-fx-text-fill: #f38400");
         }
-        if (column.equals("CPK")) {
-            SimpleObjectProperty<String> stringSimpleObjectProperty = this.valueMap.get(rowKey + "-" + column);
-            if (stringSimpleObjectProperty != null && stringSimpleObjectProperty.getValue() != null) {
-                String value = stringSimpleObjectProperty.getValue();
-                if (StringUtils.isNumeric(value) && Double.valueOf(value) > 60) {
-                    tableCell.setStyle("-fx-background-color:#ea2028;-fx-text-fill: #ffffff");
-                } else {
-                    tableCell.setStyle("-fx-background-color:#51b511;-fx-text-fill: #ffffff");
+//        if (column.equals("CPK")) {
+//            SimpleObjectProperty<String> stringSimpleObjectProperty = this.valueMap.get(rowKey + "-" + column);
+//            if (stringSimpleObjectProperty != null && stringSimpleObjectProperty.getValue() != null) {
+//                String value = stringSimpleObjectProperty.getValue();
+//                if (StringUtils.isNumeric(value) && Double.valueOf(value) > 60) {
+//                    tableCell.setStyle("-fx-background-color:#ea2028;-fx-text-fill: #ffffff");
+//                } else {
+//                    tableCell.setStyle("-fx-background-color:#51b511;-fx-text-fill: #ffffff");
+//                }
+//            }
+//        }
+
+        SpcStatisticalResultAlarmDto spcStatsDto = keyToStatsDtoMap.get(rowKey);
+        Map<String, StatisticalAlarmDto> statisticalAlarmDtoMap = spcStatsDto.getStatisticalAlarmDtoMap();
+        if (statisticalAlarmDtoMap != null && statisticalAlarmDtoMap.get(column) != null) {
+            String level = statisticalAlarmDtoMap.get(column).getLevel();
+            if (level != null) {
+                Color bgColor = getAlarmBackgroundColor(level);
+                Color fgColor = Color.BLACK;
+                if (Colur.isUsingLightFont(bgColor)) {
+                    fgColor = Colur.WHITE;
                 }
+                tableCell.setStyle("-fx-background-color:" + ColorUtils.toHexFromColor(bgColor) + ";-fx-text-fill:" + ColorUtils.toHexFromColor(fgColor));
             }
         }
+
 
         return tableCell;
     }
@@ -264,66 +280,69 @@ public class StatisticalTableModel implements NewTableModel {
 
     private void setValueMap(String rowKey, String columnName) {
         String value = "";
-        for (SpcStatsDto spcStatsDto : spcStatsDtoList) {
+        for (SpcStatisticalResultAlarmDto spcStatsDto : spcStatsDtoList) {
             if (spcStatsDto.getKey().equals(rowKey)) {
                 if (columnName.equals(STATISTICAL_TITLE[0])) {
                     value = spcStatsDto.getItemName();
                 } else if (columnName.equals(STATISTICAL_TITLE[1])) {
                     value = spcStatsDto.getCondition();
                 } else {
-                    SpcStatsResultDto spcStatsResultDto = spcStatsDto.getStatsResultDto();
-                    if (spcStatsDto.getStatsResultDto() == null) {
+                    Map<String, StatisticalAlarmDto> statisticalAlarmDtoMap = spcStatsDto.getStatisticalAlarmDtoMap();
+                    if (statisticalAlarmDtoMap == null) {
                         value = "-";
                     } else {
-                        if (columnName.equals(STATISTICAL_TITLE[2])) {
-                            value = showValue(spcStatsResultDto.getSamples());
-                        } else if (columnName.equals(STATISTICAL_TITLE[3])) {
-                            value = showValue(spcStatsResultDto.getAvg());
-                        } else if (columnName.equals(STATISTICAL_TITLE[4])) {
-                            value = showValue(spcStatsResultDto.getMax());
-                        } else if (columnName.equals(STATISTICAL_TITLE[5])) {
-                            value = showValue(spcStatsResultDto.getMin());
-                        } else if (columnName.equals(STATISTICAL_TITLE[6])) {
-                            value = showValue(spcStatsResultDto.getStDev());
-                        } else if (columnName.equals(STATISTICAL_TITLE[7])) {
-                            value = showValue(spcStatsResultDto.getLsl());
-                        } else if (columnName.equals(STATISTICAL_TITLE[8])) {
-                            value = showValue(spcStatsResultDto.getUsl());
-                        } else if (columnName.equals(STATISTICAL_TITLE[9])) {
-                            value = showValue(spcStatsResultDto.getCenter());
-                        } else if (columnName.equals(STATISTICAL_TITLE[10])) {
-                            value = showValue(spcStatsResultDto.getRange());
-                        } else if (columnName.equals(STATISTICAL_TITLE[11])) {
-                            value = showValue(spcStatsResultDto.getLcl());
-                        } else if (columnName.equals(STATISTICAL_TITLE[12])) {
-                            value = showValue(spcStatsResultDto.getUcl());
-                        } else if (columnName.equals(STATISTICAL_TITLE[13])) {
-                            value = showValue(spcStatsResultDto.getKurtosis());
-                        } else if (columnName.equals(STATISTICAL_TITLE[14])) {
-                            value = showValue(spcStatsResultDto.getSkewness());
-                        } else if (columnName.equals(STATISTICAL_TITLE[15])) {
-                            value = showValue(spcStatsResultDto.getCpk());
-                        } else if (columnName.equals(STATISTICAL_TITLE[16])) {
-                            value = showValue(spcStatsResultDto.getCa());
-                        } else if (columnName.equals(STATISTICAL_TITLE[17])) {
-                            value = showValue(spcStatsResultDto.getCp());
-                        } else if (columnName.equals(STATISTICAL_TITLE[18])) {
-                            value = showValue(spcStatsResultDto.getCpl());
-                        } else if (columnName.equals(STATISTICAL_TITLE[19])) {
-                            value = showValue(spcStatsResultDto.getCpu());
-                        } else if (columnName.equals(STATISTICAL_TITLE[20])) {
-                            value = showValue(spcStatsResultDto.getWithinPPM());
-                        } else if (columnName.equals(STATISTICAL_TITLE[21])) {
-                            value = showValue(spcStatsResultDto.getOverallPPM());
-                        } else if (columnName.equals(STATISTICAL_TITLE[22])) {
-                            value = showValue(spcStatsResultDto.getPp());
-                        } else if (columnName.equals(STATISTICAL_TITLE[23])) {
-                            value = showValue(spcStatsResultDto.getPpk());
-                        } else if (columnName.equals(STATISTICAL_TITLE[24])) {
-                            value = showValue(spcStatsResultDto.getPpl());
-                        } else if (columnName.equals(STATISTICAL_TITLE[25])) {
-                            value = showValue(spcStatsResultDto.getPpu());
-                        }
+
+                            value = showValue(statisticalAlarmDtoMap.get(columnName));
+
+//                        if (columnName.equals(STATISTICAL_TITLE[2])) {
+//                            value = showValue(spcStatsResultDto.getSamples());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[3])) {
+//                            value = showValue(spcStatsResultDto.getAvg());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[4])) {
+//                            value = showValue(spcStatsResultDto.getMax());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[5])) {
+//                            value = showValue(spcStatsResultDto.getMin());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[6])) {
+//                            value = showValue(spcStatsResultDto.getStDev());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[7])) {
+//                            value = showValue(spcStatsResultDto.getLsl());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[8])) {
+//                            value = showValue(spcStatsResultDto.getUsl());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[9])) {
+//                            value = showValue(spcStatsResultDto.getCenter());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[10])) {
+//                            value = showValue(spcStatsResultDto.getRange());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[11])) {
+//                            value = showValue(spcStatsResultDto.getLcl());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[12])) {
+//                            value = showValue(spcStatsResultDto.getUcl());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[13])) {
+//                            value = showValue(spcStatsResultDto.getKurtosis());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[14])) {
+//                            value = showValue(spcStatsResultDto.getSkewness());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[15])) {
+//                            value = showValue(spcStatsResultDto.getCpk());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[16])) {
+//                            value = showValue(spcStatsResultDto.getCa());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[17])) {
+//                            value = showValue(spcStatsResultDto.getCp());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[18])) {
+//                            value = showValue(spcStatsResultDto.getCpl());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[19])) {
+//                            value = showValue(spcStatsResultDto.getCpu());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[20])) {
+//                            value = showValue(spcStatsResultDto.getWithinPPM());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[21])) {
+//                            value = showValue(spcStatsResultDto.getOverallPPM());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[22])) {
+//                            value = showValue(spcStatsResultDto.getPp());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[23])) {
+//                            value = showValue(spcStatsResultDto.getPpk());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[24])) {
+//                            value = showValue(spcStatsResultDto.getPpl());
+//                        } else if (columnName.equals(STATISTICAL_TITLE[25])) {
+//                            value = showValue(spcStatsResultDto.getPpu());
+//                        }
                     }
                 }
             }
@@ -367,22 +386,43 @@ public class StatisticalTableModel implements NewTableModel {
         return emptyResultKeys;
     }
 
-    private boolean isEmptyResult(SpcStatsResultDto spcStatsResultDto) {
-        if (spcStatsResultDto == null || spcStatsResultDto.getSamples() == null
-                || spcStatsResultDto.getSamples() == 0) {
+    private boolean isEmptyResult(Map<String, StatisticalAlarmDto> statisticalAlarmDtoMap) {
+        StatisticalAlarmDto simpleDto = statisticalAlarmDtoMap.get(STATISTICAL_TITLE[2]);
+        if (simpleDto == null || simpleDto.getValue() == null
+                || simpleDto.getValue() == 0) {
             return true;
         }
         return false;
     }
 
-    private String showValue(Double value) {
-        if (value == null) {
+    private String showValue(StatisticalAlarmDto statisticalAlarmDto) {
+        if (statisticalAlarmDto == null || statisticalAlarmDto.getValue() == null) {
             return "-";
         }
-        return value.toString();
+        return statisticalAlarmDto.getValue().toString();
     }
 
     public Map<String, Color> getColorCache() {
         return colorCache;
+    }
+
+    private Color getAlarmBackgroundColor(String level) {
+        Color color = Color.WHITE;
+        if (level.equals(SpcKey.EXCELLENT.getCode())) {
+            color = Colur.GREEN;
+        } else if (level.equals(SpcKey.GOOD.getCode())) {
+            color = Colur.LEVEL_A;
+        } else if (level.equals(SpcKey.ACCEPTABLE.getCode())) {
+            color = Colur.LEVEL_B;
+        } else if (level.equals(SpcKey.RECTIFICATION.getCode())) {
+            color = Colur.LEVEL_C;
+        } else if (level.equals(SpcKey.BAD.getCode())) {
+            color = Colur.LEVEL_D;
+        } else if (level.equals(SpcKey.PASS.getCode())) {
+            color = Colur.GREEN;
+        } else if (level.equals(SpcKey.FAIL.getCode())) {
+            color = Colur.LEVEL_D;
+        }
+        return color;
     }
 }

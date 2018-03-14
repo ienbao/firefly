@@ -8,12 +8,14 @@ import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
 import com.dmsoft.firefly.gui.model.TemplateItemModel;
 import com.dmsoft.firefly.gui.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.SpecificationDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -78,6 +80,7 @@ public class TemplateController {
     private SortedList<String> nameSortedList = new SortedList<>(nameFilterList);
 
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
+    private EnvService envService = RuntimeContext.getBean(EnvService.class);
 
     private LinkedHashMap<String, TemplateSettingDto> allTemplate = Maps.newLinkedHashMap();
     private TemplateSettingDto currTemplate;
@@ -124,7 +127,7 @@ public class TemplateController {
                 templateNames.add(dto.getName());
             });
         }
-        initData("Default");
+        initData(GuiConst.DEFAULT_TEMPLATE_NAME);
         templateName.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
@@ -154,7 +157,7 @@ public class TemplateController {
         });
         delete.setOnAction(event -> {
             if (templateName.getSelectionModel().getSelectedItem() != null
-                    && !templateName.getSelectionModel().getSelectedItem().equals("Default")) {
+                    && !templateName.getSelectionModel().getSelectedItem().equals(GuiConst.DEFAULT_TEMPLATE_NAME)) {
                 allTemplate.remove(templateName.getSelectionModel().getSelectedItem().toString());
                 templateNames.remove(templateName.getSelectionModel().getSelectedItem().toString());
 //                currTemplate = null;
@@ -169,12 +172,14 @@ public class TemplateController {
                 templateService.saveAllAnalysisTemplate(Lists.newArrayList(allTemplate.values()));
             }
             StageMap.closeStage("template");
+            refreshMainTemplate();
         });
         apply.setOnAction(event -> {
             saveCache();
             if (allTemplate != null) {
                 templateService.saveAllAnalysisTemplate(Lists.newArrayList(allTemplate.values()));
             }
+            refreshMainTemplate();
         });
         cancel.setOnAction(event -> {
             StageMap.closeStage("template");
@@ -243,7 +248,7 @@ public class TemplateController {
     }
 
     private void clear() {
-        title.setText("Default");
+        title.setText(GuiConst.DEFAULT_TEMPLATE_NAME);
         decimal.setValue(6);
         timeKeys.getChildren().clear();
         patternText.setText("yyy/MM/dd HH:mm:ss SSSSSS");
@@ -390,6 +395,22 @@ public class TemplateController {
 
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    private void refreshMainTemplate() {
+        ObservableList<StateBarTemplateModel> templateList = FXCollections.observableArrayList();
+        if (allTemplate != null && currTemplate != null) {
+            allTemplate.keySet().forEach(name -> {
+                StateBarTemplateModel stateBarTemplateModel = new StateBarTemplateModel(name, false);
+                if (name.equals(currTemplate.getName())) {
+                    stateBarTemplateModel.setIsChecked(true);
+                }
+                templateList.add(stateBarTemplateModel);
+            });
+            MenuFactory.getMainController().refreshTemplate(templateList);
+            MenuFactory.getMainController().updateTemplateText(currTemplate.getName());
+            envService.setActivatedTemplate(currTemplate.getName());
         }
     }
 

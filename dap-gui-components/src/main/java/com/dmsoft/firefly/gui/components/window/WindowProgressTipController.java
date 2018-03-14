@@ -3,6 +3,7 @@ package com.dmsoft.firefly.gui.components.window;
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.components.utils.ResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -26,7 +27,13 @@ public class WindowProgressTipController {
     @FXML
     private void initialize(){
         initCancelBtn();
+        taskProgress.getStyleClass().setAll("progress-bar-lg-green");
         taskProgress.setProgress(0);
+        taskProgress.progressProperty().addListener(e->{
+            if (taskProgress.getProgress() >= 1) {
+                closeDialog();
+            }
+        });
     }
 
     public void updateCancelBtn(String msg) {
@@ -45,12 +52,12 @@ public class WindowProgressTipController {
         }
     }
 
-    public void refreshProgress(double progressValue) {
-        taskProgress.getStyleClass().setAll("progress-bar-lg-green");
-        taskProgress.setProgress(progressValue);
-        if (progressValue >= 100) {
+    public void updateFailProgress(double progressValue) {
+        taskProgress.getStyleClass().setAll("progress-bar-lg-red");
+        taskProgress.setProgress(progressValue / 100);
+        /*if (progressValue >= 100) {
             closeDialog();
-        }
+        }*/
     }
 
     public void onShowingRequest() {
@@ -61,7 +68,7 @@ public class WindowProgressTipController {
 
         if (!isOverride) {
             Stage stage = StageMap.getStage(ResourceMassages.PLARTFORM_STAGE_MAIN);
-            if (stage != null &&  stage.getScene() != null &&  stage.getScene().lookup("#grpContent") != null) {
+            if (stage != null && stage.getScene() != null && stage.getScene().lookup("#grpContent") != null) {
                 stage.getScene().lookup("#grpContent").setDisable(true);
                 stage.getScene().lookup("#tbaSystem").setDisable(true);
                 stage.getScene().getRoot().getScene().lookup("#menuPane").setDisable(true);
@@ -94,5 +101,9 @@ public class WindowProgressTipController {
 
     public void addProcessMonitorListener(WindowCustomListener windowCustomListener) {
         this.windowCustomListener = windowCustomListener;
+    }
+
+    public ProgressBar getTaskProgress() {
+        return taskProgress;
     }
 }

@@ -1,8 +1,8 @@
 package com.dmsoft.firefly.plugin.grr.utils;
 
 public class GrrExceptionCode {
-    //Grr
-    //invalid grr parameter!
+    //SPC
+    //invalid spc parameter!
     public static final int ERR_11001 = 11001;
 
     //system error

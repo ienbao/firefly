@@ -7,7 +7,6 @@ import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
-import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.spc.dto.*;
@@ -21,7 +20,6 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.job.Job;
-import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
@@ -34,12 +32,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -48,8 +47,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
-
-import static com.google.common.io.Resources.getResource;
 
 
 /**
@@ -86,7 +83,6 @@ public class SpcItemController implements Initializable {
     private SearchTab searchTab;
 
     private CheckBox box;
-    private ObservableList<String> groupItem = FXCollections.observableArrayList();
 
     private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
@@ -190,7 +186,9 @@ public class SpcItemController implements Initializable {
             });
             pop.getItems().addAll(all, show);
         }
-        pop.show(is, e.getScreenX(), e.getScreenY());
+        Bounds bounds = is.localToScreen(is.getBoundsInLocal());
+        pop.show(is, bounds.getMinX(), bounds.getMinY() + 22);
+//        pop.show(is, e.getScreenX(), e.getScreenY());
         return pop;
     }
 
@@ -240,11 +238,8 @@ public class SpcItemController implements Initializable {
     }
 
     private void getAnalysisBtnEvent() {
+
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
-        Job job = new Job(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
-        job.addProcessMonitorListener(event -> {
-            windowProgressTipController.refreshProgress(event.getPoint());
-        });
         windowProgressTipController.addProcessMonitorListener(new WindowCustomListener() {
             @Override
             public boolean onShowCustomEvent() {
@@ -267,37 +262,50 @@ public class SpcItemController implements Initializable {
                 return false;
             }
         });
-        Map paramMap = Maps.newHashMap();
 
         List<String> projectNameList = envService.findActivatedProjectName();
         List<TestItemWithTypeDto> selectedItemDto = this.getSelectedItemDto();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
         List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(selectedItemDto);
         SpcAnalysisConfigDto spcAnalysisConfigDto = this.buildSpcAnalysisConfigData();
+        Service<Integer> service = new Service<Integer>() {
+            @Override
+            protected Task<Integer> createTask() {
+                return new Task<Integer>() {
+                    @Override
+                    protected Integer call() throws Exception {
+                            Thread.sleep(100);
+                            Job job = new Job(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
+                            job.addProcessMonitorListener(event -> {
+                                System.out.println("event*****" + event.getPoint());
+                                updateProgress( event.getPoint(), 100);
+                            });
+                            Map paramMap = Maps.newHashMap();
+                            //todo delete
+                            spcAnalysisConfigDto.setSubgroupSize(10);
+                            spcAnalysisConfigDto.setIntervalNumber(8);
+                            paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
+                            paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+                            paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
+                            paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
 
-        //todo delete
-        spcAnalysisConfigDto.setSubgroupSize(10);
-        spcAnalysisConfigDto.setIntervalNumber(8);
-        paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
-        paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
-        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
-        paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+                            spcMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
 
-        spcMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
-        Platform.runLater(() -> {
-            manager.doJobASyn(job, new JobDoComplete() {
-                @Override
-                public void doComplete(Object returnValue) {
-                    if (returnValue == null) {
-                        //todo message tip
-                        return;
+                            Object returnValue = manager.doJobSyn(job, paramMap, spcMainController);
+                            if (returnValue == null) {
+                                //todo message tip
+
+                            } else {
+                                List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
+                                spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
+                            }
+                        return null;
                     }
-                    List<SpcStatsDto> spcStatsDtoList = (List<SpcStatsDto>) returnValue;
-                    spcMainController.setStatisticalResultData(spcStatsDtoList);
-                }
-            }, paramMap, spcMainController);
-        });
-
+                };
+            }
+        };
+        windowProgressTipController.getTaskProgress().progressProperty().bind(service.progressProperty());
+        service.start();
     }
 
 

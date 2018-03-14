@@ -11,6 +11,7 @@ import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
+import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -108,11 +109,12 @@ public class DataSourceController implements Initializable {
                             textField.setStyle("-fx-border-width: 0 0 0 0");
                             textField.setPrefWidth(400);
                             ProgressBar progressBar = new ProgressBar();
+                            progressBar.getStyleClass().setAll("progress-bar-lg-green");
                             progressBar.setPrefWidth(70);
                             progressBar.setMinWidth(70);
-                            progressBar.setMaxHeight(10);
-                            progressBar.setPrefHeight(10);
-                            progressBar.setMinHeight(10);
+                            progressBar.setMaxHeight(3);
+                            progressBar.setPrefHeight(3);
+                            progressBar.setMinHeight(3);
                             Button rename = new Button();
                             rename.getStyleClass().add("btn-icon");
                             rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rename_normal.png")));
@@ -266,6 +268,8 @@ public class DataSourceController implements Initializable {
             //TODO notify refresh event
 
             StageMap.closeStage("dataSource");
+            refreshMainDataSource(selectProject);
+
         });
 
         cancel.setOnAction(event -> {
@@ -363,6 +367,12 @@ public class DataSourceController implements Initializable {
             });
         }
         setTableData(chooseTableRowDataList);
+    }
+
+    private void refreshMainDataSource(List<String> selectProject) {
+        MenuFactory.getMainController().updateDataSourceText(selectProject.size());
+        ObservableList<String> dataSourceList = FXCollections.observableArrayList(selectProject);
+        MenuFactory.getMainController().refreshDataSource(dataSourceList);
     }
 
     public void setTableData(List<ChooseTableRowData> chooseTableRowDataList) {

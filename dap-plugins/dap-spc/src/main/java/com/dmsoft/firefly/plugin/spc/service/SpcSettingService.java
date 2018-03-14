@@ -4,6 +4,10 @@
 package com.dmsoft.firefly.plugin.spc.service;
 
 import com.dmsoft.firefly.plugin.spc.dto.SpcSettingDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
+
+import java.util.List;
 
 /**
  * Created by Ethan.Yang on 2018/3/8.
@@ -22,4 +26,13 @@ public interface SpcSettingService {
      * @return spc setting
      */
     SpcSettingDto findSpcSetting();
+
+    /**
+     * set statistical result alarm
+     *
+     * @param spcStatsDtoList statistical result
+     * @return the data of statistical result after setting
+     */
+    List<SpcStatisticalResultAlarmDto> setStatisticalResultAlarm(List<SpcStatsDto> spcStatsDtoList);
+
 }

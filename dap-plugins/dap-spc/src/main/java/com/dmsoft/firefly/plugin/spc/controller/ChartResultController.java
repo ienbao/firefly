@@ -5,6 +5,7 @@ package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.plugin.spc.charts.*;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
+import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
@@ -353,6 +354,26 @@ public class ChartResultController implements Initializable {
         } else {
             chartMap.put(chartName, chart);
         }
+        Double[] xLower = new Double[ndChartData.size()];
+        Double[] xUpper = new Double[ndChartData.size()];
+        Double[] yLower = new Double[ndChartData.size()];
+        Double[] yUpper = new Double[ndChartData.size()];
+        for (int i = 0; i < ndChartData.size(); i++) {
+            xLower[i] = (Double) ndChartData.get(i).getXLowerBound();
+            xUpper[i] = (Double) ndChartData.get(i).getXUpperBound();
+            yLower[i] = (Double) ndChartData.get(i).getYLowerBound();
+            yUpper[i] = (Double) ndChartData.get(i).getYUpperBound();
+        }
+        double xMax = MathUtils.getMax(xUpper);
+        double xMin = MathUtils.getMin(xLower);
+        double yMax = MathUtils.getMax(yUpper);
+        double yMin = MathUtils.getMin(yLower);
+        NumberAxis xAxis = (NumberAxis) chart.getXAxis();
+        NumberAxis yAxis = (NumberAxis) chart.getYAxis();
+        xAxis.setLowerBound(xMin);
+        xAxis.setUpperBound(xMax);
+        yAxis.setLowerBound(yMin);
+        yAxis.setUpperBound(yMax);
         setNdChartData(ndChartData);
     }
 
@@ -364,6 +385,26 @@ public class ChartResultController implements Initializable {
         } else {
             chartMap.put(chartName, chart);
         }
+        Double[] xLower = new Double[runChartData.size()];
+        Double[] xUpper = new Double[runChartData.size()];
+        Double[] yLower = new Double[runChartData.size()];
+        Double[] yUpper = new Double[runChartData.size()];
+        for (int i = 0; i < runChartData.size(); i++) {
+            xLower[i] = (Double) runChartData.get(i).getXLowerBound();
+            xUpper[i] = (Double) runChartData.get(i).getXUpperBound();
+            yLower[i] = (Double) runChartData.get(i).getYLowerBound();
+            yUpper[i] = (Double) runChartData.get(i).getYUpperBound();
+        }
+        double xMax = MathUtils.getMax(xUpper);
+        double xMin = MathUtils.getMin(xLower);
+        double yMax = MathUtils.getMax(yUpper);
+        double yMin = MathUtils.getMin(yLower);
+        NumberAxis xAxis = (NumberAxis) chart.getXAxis();
+        NumberAxis yAxis = (NumberAxis) chart.getYAxis();
+        xAxis.setLowerBound(xMin);
+        xAxis.setUpperBound(xMax);
+        yAxis.setLowerBound(yMin);
+        yAxis.setUpperBound(yMax);
         setRunChartData(runChartData);
     }
 
@@ -377,6 +418,26 @@ public class ChartResultController implements Initializable {
             } else {
                 chartMap.put(chartName, linearChart);
             }
+            Double[] xLower = new Double[controlChartData.size()];
+            Double[] xUpper = new Double[controlChartData.size()];
+            Double[] yLower = new Double[controlChartData.size()];
+            Double[] yUpper = new Double[controlChartData.size()];
+            for (int i = 0; i < controlChartData.size(); i++) {
+                xLower[i] = (Double) controlChartData.get(i).getXLowerBound();
+                xUpper[i] = (Double) controlChartData.get(i).getXUpperBound();
+                yLower[i] = (Double) controlChartData.get(i).getYLowerBound();
+                yUpper[i] = (Double) controlChartData.get(i).getYUpperBound();
+            }
+            double xMax = MathUtils.getMax(xUpper);
+            double xMin = MathUtils.getMin(xLower);
+            double yMax = MathUtils.getMax(yUpper);
+            double yMin = MathUtils.getMin(yLower);
+            NumberAxis xAxis = (NumberAxis) linearChart.getXAxis();
+            NumberAxis yAxis = (NumberAxis) linearChart.getYAxis();
+            xAxis.setLowerBound(xMin);
+            xAxis.setUpperBound(xMax);
+            yAxis.setLowerBound(yMin);
+            yAxis.setUpperBound(yMax);
             setControlChartData(linearChart, controlChartData);
         }
     }
@@ -389,6 +450,26 @@ public class ChartResultController implements Initializable {
         } else {
             chartMap.put(chartName, chart);
         }
+        Double[] xLower = new Double[boxChartData.size()];
+        Double[] xUpper = new Double[boxChartData.size()];
+        Double[] yLower = new Double[boxChartData.size()];
+        Double[] yUpper = new Double[boxChartData.size()];
+        for (int i = 0; i < boxChartData.size(); i++) {
+            xLower[i] = (Double) boxChartData.get(i).getXLowerBound();
+            xUpper[i] = (Double) boxChartData.get(i).getXUpperBound();
+            yLower[i] = (Double) boxChartData.get(i).getYLowerBound();
+            yUpper[i] = (Double) boxChartData.get(i).getYUpperBound();
+        }
+        double xMax = MathUtils.getMax(xUpper);
+        double xMin = MathUtils.getMin(xLower);
+        double yMax = MathUtils.getMax(yUpper);
+        double yMin = MathUtils.getMin(yLower);
+        NumberAxis xAxis = (NumberAxis) chart.getXAxis();
+        NumberAxis yAxis = (NumberAxis) chart.getYAxis();
+        xAxis.setLowerBound(xMin);
+        xAxis.setUpperBound(xMax);
+        yAxis.setLowerBound(yMin);
+        yAxis.setUpperBound(yMax);
         setBoxPlotChartData(boxChartData);
     }
 
@@ -421,9 +502,9 @@ public class ChartResultController implements Initializable {
             IXYChartData curveData = chartData.getCurveData();
             List<ILineData> lineData = chartData.getLineData();
 //          add area data
-            chart.addAreaSeries(curveData, seriesName, Color.GREEN);
+            chart.addAreaSeries(curveData, seriesName, chartData.getColor());
 //          add bar chart data
-            chart.createChartSeries(barChartData, seriesName, Color.GREEN);
+            chart.createChartSeries(barChartData, seriesName, chartData.getColor());
 //                add line data
             if (lineData != null) {
                 chart.addValueMarker(lineData, seriesName);

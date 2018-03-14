@@ -5,15 +5,14 @@
 package com.dmsoft.firefly.gui.controller.template;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
-import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
-import com.dmsoft.firefly.core.utils.DataFormat;
-import com.dmsoft.firefly.core.utils.JsonFileUtil;
-import com.dmsoft.firefly.core.utils.PropertiesUtils;
+import com.dmsoft.firefly.core.utils.*;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.model.PluginTableRowData;
+import com.dmsoft.firefly.gui.utils.FileUtils;
 import com.dmsoft.firefly.gui.utils.KeyValueDto;
+import com.dmsoft.firefly.core.utils.SystemPath;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
@@ -65,7 +64,7 @@ public class PluginManageController implements Initializable {
     private ObservableList<PluginTableRowData> pluginTableRowDataObservableList;
     private FilteredList<PluginTableRowData> pluginTableRowDataFilteredList;
     private SortedList<PluginTableRowData> pluginTableRowDataSortedList;
-    private final String parentPath = this.getClass().getResource("/").getPath() + "config";
+    private final String parentPath = SystemPath.getFilePath() + "config";
     private JsonMapper mapper = JsonMapper.defaultMapper();
     private boolean isEdit = false;
 
@@ -149,7 +148,11 @@ public class PluginManageController implements Initializable {
     }
 
     private void updateProjectOrder() {
-
+        List<KeyValueDto> activePlugin = Lists.newArrayList();
+        pluginTableRowDataObservableList.forEach(v -> {
+            activePlugin.add(new KeyValueDto(v.getInfo().getId(), v.getSelector().isSelected()));
+        });
+        JsonFileUtil.writeJsonFile(activePlugin, parentPath, "activePlugin");
     }
 
     private void initEvent() {
@@ -183,37 +186,43 @@ public class PluginManageController implements Initializable {
             fileChooser.setTitle("Open");
             fileChooser.setInitialDirectory(new File(str));
             fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("JAR", "*.jar")
+                    new FileChooser.ExtensionFilter("ZIP", "*.zip")
             );
             Stage fileStage = null;
             File file = fileChooser.showOpenDialog(fileStage);
             if (file != null) {
                 //TODO
-                PluginContext context = RuntimeContext.getBean(PluginContext.class);
-//                context.installPlugin();
+                String propertiesURL = ApplicationPathUtil.getPath("resources", "application.properties");
+                InputStream inputStream = null;
+                String pluginFolderPath = null;
+                try {
+                    inputStream = new BufferedInputStream(new FileInputStream(propertiesURL));
+                    Properties properties = new Properties();
+                    properties.load(inputStream);
+                    pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
+                    FileUtils.unZipFiles(file, pluginFolderPath + "/");
+                    PluginContext context = RuntimeContext.getBean(PluginContext.class);
+                    List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath);
+                    context.getAllEnabledPluginInfo().forEach((k, v) -> {
+
+                    });
+                    context.installPlugin(scannedPlugins);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         });
         unInstallPlugin.setOnAction(event -> {
             if (pluginTable.getSelectionModel().getSelectedIndex() != -1) {
                 PluginTableRowData pluginTableRowData = pluginTableRowDataObservableList.get(pluginTable.getSelectionModel().getSelectedIndex());
                 PluginContext context = RuntimeContext.getBean(PluginContext.class);
+                String url = pluginTableRowData.getInfo().getFolderPath();
+                FileUtils.deleteFolder(url);
                 context.uninstallPlugin(pluginTableRowData.getInfo().getId());
                 pluginTableRowDataObservableList.remove(pluginTableRowData);
+                updateProjectOrder();
             }
-            String propertiesURL = ApplicationPathUtil.getPath("resources", "application.properties");
-            InputStream inputStream = null;
-            try {
-                inputStream = new BufferedInputStream(new FileInputStream(propertiesURL));
-                Properties properties = new Properties();
-                properties.load(inputStream);
-                String pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
-                File file = new File(pluginFolderPath);
-                //TODO delete the plugin
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
         });
     }
 

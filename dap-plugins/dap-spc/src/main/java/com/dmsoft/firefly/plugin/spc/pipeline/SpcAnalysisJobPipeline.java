@@ -19,6 +19,6 @@ public class SpcAnalysisJobPipeline implements InitJobPipeline {
     public void initJobPipeline(JobPipeline pipeline) {
         pipeline.addLast(ParamKeys.FIND_TEST_DATA_HANDLER, new FindTestDataHandler());
         pipeline.addLast(ParamKeys.DATA_FRAME_HANDLER, new DataFrameHandler());
-        pipeline.addLast(ParamKeys.SPC_STATS_RESULT_HANDLER, new GetSpcStatsResultHandler());
+        pipeline.addLast(ParamKeys.SPC_STATS_RESULT_HANDLER, new GetSpcStatsResultHandler().setWeight(100));
     }
 }
