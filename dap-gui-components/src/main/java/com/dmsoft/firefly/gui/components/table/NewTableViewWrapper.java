@@ -127,9 +127,6 @@ public class NewTableViewWrapper {
             return column;
         } else if (model.isCheckBox(s)) {
             TableColumn<String, CheckBox> column = new TableColumn<>(s);
-            column.setSortable(false);
-            column.setResizable(false);
-            column.setPrefWidth(32);
             if (model.getAllCheckValue(s) != null) {
                 CheckBox allCheckBox = new CheckBox();
                 allCheckBox.selectedProperty().set(model.getAllCheckValue(s).getValue());
@@ -138,6 +135,9 @@ public class NewTableViewWrapper {
                 });
                 model.setAllCheckBox(allCheckBox);
                 column.setGraphic(allCheckBox);
+                column.setSortable(false);
+                column.setResizable(false);
+                column.setPrefWidth(32);
             }
             column.setCellValueFactory(cell -> {
                 ObjectProperty<Boolean> b = model.getCheckValue(cell.getValue(), s);
