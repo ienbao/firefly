@@ -2,6 +2,7 @@ package com.dmsoft.firefly.plugin.grr.controller;
 
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
@@ -15,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -23,6 +25,12 @@ import java.util.ResourceBundle;
 public class GrrMainController implements Initializable {
 
     private SearchDataFrame dataFrame;
+    private GrrDataFrameDto grrDataFrame;
+    private List<String> includeRows;
+    private List<String> excludeRows;
+    @FXML
+    private GrrItemController grrItemController;
+
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
 
     @FXML
@@ -30,6 +38,7 @@ public class GrrMainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        grrItemController.init(this);
         initBtnIcon();
         initComponentEvents();
     }
@@ -59,5 +68,33 @@ public class GrrMainController implements Initializable {
 
     public void setDataFrame(SearchDataFrame dataFrame) {
         this.dataFrame = dataFrame;
+    }
+
+    public SearchDataFrame getDataFrame() {
+        return dataFrame;
+    }
+
+    public List<String> getIncludeRows() {
+        return includeRows;
+    }
+
+    public void setIncludeRows(List<String> includeRows) {
+        this.includeRows = includeRows;
+    }
+
+    public List<String> getExcludeRows() {
+        return excludeRows;
+    }
+
+    public void setExcludeRows(List<String> excludeRows) {
+        this.excludeRows = excludeRows;
+    }
+
+    public GrrDataFrameDto getGrrDataFrame() {
+        return grrDataFrame;
+    }
+
+    public void setGrrDataFrame(GrrDataFrameDto grrDataFrame) {
+        this.grrDataFrame = grrDataFrame;
     }
 }

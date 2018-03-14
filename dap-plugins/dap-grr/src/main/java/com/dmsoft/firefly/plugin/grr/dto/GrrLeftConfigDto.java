@@ -1,18 +1,18 @@
-/*
- * Copyright (c) 2017. For Intelligent Group.
- */
 package com.dmsoft.firefly.plugin.grr.dto;
 
-import com.dmsoft.bamboo.common.dto.AbstractValueObject;
+import com.dmsoft.firefly.gui.components.searchtab.BasicSearchDto;
 
+import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
- * Created by Ethan.Yang on 2018/2/6.
+ * Created by GuangLi on 2018/3/5.
  */
-public class SearchConditionDto extends AbstractValueObject {
-    private List<GrrTestItemDto> testItemDtoList;
-    private String condition;
+public class GrrLeftConfigDto implements Serializable {
+    private List<String> items;
+    private List<BasicSearchDto> basicSearchs;
+    private String advanceSearch;
     private String part;
     private String appraiser;
     private Integer partInt;
@@ -21,20 +21,29 @@ public class SearchConditionDto extends AbstractValueObject {
     private List<String> parts;
     private List<String> appraisers;
 
-    public List<GrrTestItemDto> getTestItemDtoList() {
-        return testItemDtoList;
+
+    public List<String> getItems() {
+        return items;
     }
 
-    public void setTestItemDtoList(List<GrrTestItemDto> testItemDtoList) {
-        this.testItemDtoList = testItemDtoList;
+    public void setItems(List<String> items) {
+        this.items = items;
     }
 
-    public String getCondition() {
-        return condition;
+    public List<BasicSearchDto> getBasicSearchs() {
+        return basicSearchs;
     }
 
-    public void setCondition(String condition) {
-        this.condition = condition;
+    public void setBasicSearchs(List<BasicSearchDto> basicSearchs) {
+        this.basicSearchs = basicSearchs;
+    }
+
+    public String getAdvanceSearch() {
+        return advanceSearch;
+    }
+
+    public void setAdvanceSearch(String advanceSearch) {
+        this.advanceSearch = advanceSearch;
     }
 
     public String getPart() {
