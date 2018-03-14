@@ -4,6 +4,7 @@
 
 package com.dmsoft.firefly.plugin.spc;
 
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.pipeline.SpcAnalysisJobPipeline;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -37,6 +38,7 @@ import org.slf4j.LoggerFactory;
 public class SpcPlugin extends Plugin {
     public static final String SPC_PLUGIN_NAME = "com.dmsoft.dap.SpcPlugin";
     private static final Logger LOGGER = LoggerFactory.getLogger(SpcPlugin.class);
+    private static final String SPC_SETTING = "spcSetting";
 
     @Override
     public void initialize(InitModel model) {
@@ -89,10 +91,36 @@ public class SpcPlugin extends Plugin {
         LOGGER.debug("Plugin-SPC UI register done.");
 
         LOGGER.info("Plugin-SPC started.");
+
+        //register spc setting menu
+        MenuItem menuItem = new MenuItem("Spc Settings");
+        menuItem.setId("spcSetting");
+        menuItem.setOnAction(event -> {
+            if (StageMap.getStage(SPC_SETTING) == null) {
+                initSpcSettingDialog();
+            } else {
+                StageMap.showStage(SPC_SETTING);
+            }
+        });
+        RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.SpcPlugin",
+                MenuBuilder.MenuType.MENU_ITEM, "Spc Settings", MenuBuilder.MENU_PREFERENCE).addMenu(menuItem));
     }
 
     @Override
     public void destroy() {
         System.out.println("Plugin-SPC Destroyed.");
+    }
+
+    private void initSpcSettingDialog() {
+        Pane root = null;
+        try {
+            FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML("view/spc_setting.fxml");
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(SPC_SETTING, "Spc Setting", root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            stage.show();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

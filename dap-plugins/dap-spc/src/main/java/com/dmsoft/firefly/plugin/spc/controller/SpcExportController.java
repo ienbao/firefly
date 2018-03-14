@@ -8,14 +8,13 @@ import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
-import com.dmsoft.firefly.plugin.spc.dto.SearchConditionDto;
-import com.dmsoft.firefly.plugin.spc.dto.SpcAnalysisConfigDto;
-import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
-import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
+import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.*;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
+import com.dmsoft.firefly.plugin.spc.service.impl.SpcExportServiceImpl;
+import com.dmsoft.firefly.plugin.spc.service.impl.SpcSettingServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
@@ -52,6 +51,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -105,7 +106,9 @@ public class SpcExportController {
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private SearchDataFrame dataFrame;
 
-    private List<SpcStatsDto> spcStatsDtoList;
+    private SpcSettingServiceImpl settingService = new SpcSettingServiceImpl();
+    private SpcExportServiceImpl spcExportService = new SpcExportServiceImpl();
+    private List<SpcStatisticalResultAlarmDto> spcStatsDtoList;
     private Map<String, Color> colorMap = Maps.newHashMap();
 
     @FXML
@@ -280,21 +283,9 @@ public class SpcExportController {
         paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
         paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
 
-//        spcMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
-        Platform.runLater(() -> {
-            manager.doJobASyn(job, new JobDoComplete() {
-                @Override
-                public void doComplete(Object returnValue) {
-                    if (returnValue == null) {
-                        //todo message tip
-                        return;
-                    }
-                    spcStatsDtoList = (List<SpcStatsDto>) returnValue;
-//                    spcMainController.setStatisticalResultData(spcStatsDtoList);
-                }
-            }, paramMap, null);
-        });
+        spcStatsDtoList = (List<SpcStatisticalResultAlarmDto>) manager.doJobSyn(job, paramMap, null);
 
+        //build chart
         Job chartJob = new Job(ParamKeys.SPC_REFRESH_JOB_PIPELINE);
         Map chartParamMap = Maps.newHashMap();
         chartParamMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
@@ -311,7 +302,86 @@ public class SpcExportController {
         List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
         initSpcChartData(spcChartDtoList);
 //        chartResultController.initSpcChartData(spcChartDtoList);
+        SpcUserActionAttributesDto spcConfig = new SpcUserActionAttributesDto();
+        spcConfig.setExportPath(locationPath.getText());
+        spcConfig.setPerformer(envService.getUserName());
+        SpcSettingDto spcSettingDto = settingService.findSpcSetting();
+        if (spcSettingDto != null) {
+            spcSettingDto.getExportTemplateName();
+        }
+        Map<String, Boolean> exportDataItem = Maps.newHashMap();
+        exportDataItem.put("SubSummary", true);
+        exportDataItem.put("DetailSheet", true);
+        exportDataItem.put("Samples", true);
+        exportDataItem.put("AVG", true);
+        exportDataItem.put("Max", true);
+        exportDataItem.put("Max", true);
+        exportDataItem.put("Min", true);
+        exportDataItem.put("Range", true);
+        exportDataItem.put("SD", true);
 
+        spcConfig.setExportDataItem(exportDataItem);
+
+        //build statistical data
+//        Platform.runLater(() -> {
+//            manager.doJobASyn(job, new JobDoComplete() {
+//                @Override
+//                public void doComplete(Object returnValue) {
+//                    if (returnValue == null) {
+//                        //todo message tip
+//                        return;
+//                    }
+//                    spcStatsDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
+//
+////                    spcMainController.setStatisticalResultData(spcStatsDtoList);
+//                }
+//            }, paramMap, null);
+//        });
+        List<SpcStatisticalResultAlarmDto> spcStatisticalResultDtosToExport = null;
+        int conditionSize = searchTab.getSearch().size();
+        if (conditionSize < 2) {
+            if (exportDataItem.get("DetailSheet")) {
+//                            for (ChartResultDto chartResultDto : chartResultDtos) {
+//                                chartDataDtos = new ArrayList<>();
+//                                chartDataDtos.add(chartResultDto.getChartDataDtos());
+//                                chartPicPath = exportSpcChart2Gif(chartDataDtos, savePicPath, exportDataItem);
+//                                picPathMap.put(chartResultDto.getKey(), chartPicPath);
+//                            }
+            }
+            spcStatisticalResultDtosToExport = spcStatsDtoList;
+        } else {
+            spcStatisticalResultDtosToExport = Lists.newArrayList();
+            for (int index = 0; index <= spcStatsDtoList.size() - conditionSize; index += conditionSize) {
+                if (exportDataItem.get("SubSummary")) {
+                    SpcStatisticalResultAlarmDto spcStatisticalResultDto = new SpcStatisticalResultAlarmDto();
+                    spcStatisticalResultDto.setItemName(spcStatsDtoList.get(index).getItemName());
+                    spcStatisticalResultDto.setKey(spcStatsDtoList.get(index).getKey() + "SubSummary");
+                    spcStatisticalResultDto.setCondition("SubSummary");
+                    spcStatisticalResultDtosToExport.add(spcStatisticalResultDto);
+                }
+                for (int i = 0; i < conditionSize; i++) {
+                    spcStatisticalResultDtosToExport.add(spcStatsDtoList.get(index + i));
+                }
+            }
+            if (exportDataItem.get("DetailSheet")) {
+//                            int charDataLen = chartResultDtos.size();
+//                            for (int index = 0; index <= charDataLen - conditionSize; index += conditionSize) {
+//                                chartDataDtos = new ArrayList<>();
+//                                chartDataDtosTemp = new ArrayList<>();
+//                                for (int i = 0; i < conditionSize; i++) {
+//                                    chartDataDtos.add(chartResultDtos.get(index + i).getChartDataDtos());
+//                                    chartDataDtosTemp.add(chartResultDtos.get(index + i).getChartDataDtos());
+//                                    chartPicPath = exportSpcChart2Gif(chartDataDtosTemp, savePicPath, exportDataItem);
+//                                    picPathMap.put(chartResultDtos.get(index + i).getKey(), chartPicPath);
+//                                    chartDataDtosTemp.clear();
+//                                }
+//                                chartPicPath = exportSpcChart2Gif(chartDataDtos, savePicPath, exportDataItem);
+//                                picPathMap.put(chartResultDtos.get(index).getKey() + "SubSummary", chartPicPath);
+//                            }
+            }
+        }
+        spcExportService.spcExport(spcConfig, spcStatisticalResultDtosToExport, Maps.newHashMap());
+//        spcExportService.spcExport(spcConfig, spcStatsDtoList, null);
     }
 
     private List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
