@@ -18,21 +18,23 @@ public class SystemPath {
     private SystemPath() {}
 
     public static String getFilePath() {
+        return getFilePath("");
+    }
+
+    public static String getFilePath(String res) {
         if (filePath == null) {
             synchronized (SystemPath.class) {
                 if (filePath == null) {
                     filePath = ApplicationPathUtil.getCanonicalPath();
-                    System.out.println(filePath);
                     InputStream fis = null;
                     try {
                         fis = new FileInputStream(new File(filePath + "application.properties"));
                     } catch (Exception e) {
-                        filePath = ApplicationPathUtil.getPath(File.separator, "");
+                        filePath = ApplicationPathUtil.getPath(File.separator, res);
                     }
                 }
             }
         }
-        System.out.println(filePath);
         return filePath;
     }
 }

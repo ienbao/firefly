@@ -47,6 +47,21 @@
             </includes>
         </fileSet>
 
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/images</directory>
+            <outputDirectory>images</outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/scripts</directory>
+            <outputDirectory></outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>../dap-plugins/distribution/target/distribution-1.0.0-bin/Plugins</directory>
+            <outputDirectory>Plugins</outputDirectory>
+        </fileSet>
+
     </fileSets>
 
 

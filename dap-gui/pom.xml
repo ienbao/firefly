@@ -76,6 +76,12 @@
                             <mainClass>com.dmsoft.firefly.gui.GuiApplication</mainClass>
                         </manifest>
                     </archive>
+                    <excludes>
+                        <exclude>*.xml</exclude>
+                        <exclude>*.properties</exclude>
+                        <exclude>config/</exclude>
+                        <exclude>scripts/</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
