@@ -149,7 +149,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC stats result error, exception message = {}", e.getMessage());
-            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_12001));
+            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11005));
         }
         logger.info("Analyze SPC stats result done ...");
         return resultDto;
@@ -180,7 +180,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC ND chart result error, exception message = {}", e.getMessage());
-            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_12001));
+            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11005));
         }
         return resultDto;
 
@@ -201,7 +201,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC RUN chart result error, exception message = {}", e.getMessage());
-            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_12001));
+            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11005));
         }
         return resultDto;
     }
@@ -221,7 +221,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC Xbar chart result error, exception message = {}", e.getMessage());
-            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_12001));
+            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11005));
         }
         return resultDto;
     }
@@ -241,7 +241,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC Range chart result error, exception message = {}", e.getMessage());
-            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_12001));
+            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11005));
         }
         return result;
     }
@@ -261,7 +261,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC SD error, exception message = {}", e.getMessage());
-            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_12001));
+            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11005));
         }
         return result;
     }
@@ -281,7 +281,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC");
-            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_12001));
+            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11005));
         }
         return result;
     }
@@ -301,7 +301,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC MR chart result error, exception message = {}", e.getMessage());
-            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_12001));
+            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11005));
         }
 
         return result;
@@ -322,7 +322,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC BOX chart result error, exception message = {}", e.getMessage());
-            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_12001));
+            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11005));
         }
         return result;
     }
@@ -351,7 +351,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC charts result error, exception message = {}", e.getMessage());
-            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_12001));
+            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11005));
         }
         return result;
     }
@@ -400,7 +400,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC charts result error, exception message = {}", e.getMessage());
-            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_12001));
+            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11005));
         }
         return result;
     }

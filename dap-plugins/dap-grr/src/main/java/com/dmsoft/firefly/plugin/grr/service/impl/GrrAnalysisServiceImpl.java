@@ -53,7 +53,7 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze GRR summary result error, exception message = {}", e.getMessage());
-            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
+            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12013));
         }
         return result;
     }
@@ -70,7 +70,7 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze Grr detail result error, exception message = {}", e.getMessage());
-            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
+            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12013));
         }
         return result;
     }

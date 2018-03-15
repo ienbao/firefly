@@ -36,7 +36,7 @@ public class SpcServiceImpl implements SpcService {
         2.Get analysis statistical result from R
          */
         if (searchDataFrame == null || searchConditions == null || configDto == null) {
-            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11001));
+            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11002));
         }
         List<SpcStatsDto> result = Lists.newArrayList();
         List<SpcAnalysisDataDto> spcAnalysisDataDtoList = Lists.newArrayList();
@@ -89,7 +89,7 @@ public class SpcServiceImpl implements SpcService {
         2.Get analysis chart result from R
          */
         if (searchDataFrame == null || searchConditions == null || configDto == null) {
-            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11001));
+            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11002));
         }
         List<SpcChartDto> result = Lists.newArrayList();
         List<SpcAnalysisDataDto> spcAnalysisDataDtoList = Lists.newArrayList();
