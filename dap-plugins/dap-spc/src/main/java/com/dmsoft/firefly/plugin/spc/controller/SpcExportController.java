@@ -323,21 +323,24 @@ public class SpcExportController {
         spcStatsDtoList = (List<SpcStatisticalResultAlarmDto>) manager.doJobSyn(job, paramMap, null);
 
         //build chart
-        Job chartJob = new Job(ParamKeys.SPC_REFRESH_JOB_PIPELINE);
-        Map chartParamMap = Maps.newHashMap();
-        chartParamMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
-        chartParamMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
+        Map<String, Map<String, String>> chartPath = Maps.newHashMap();
 
-        buildViewData();
-        chartParamMap.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
+        if (exportDataItem.get(SpcExportItemKey.EXPORT_CHARTS.getCode())) {
+            Job chartJob = new Job(ParamKeys.SPC_REFRESH_JOB_PIPELINE);
+            Map chartParamMap = Maps.newHashMap();
+            chartParamMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+            chartParamMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
 
-        Object returnValue = manager.doJobSyn(chartJob, chartParamMap);
-        if (returnValue == null) {
-            return null;
+            buildViewData();
+            chartParamMap.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
+
+            Object returnValue = manager.doJobSyn(chartJob, chartParamMap);
+            if (returnValue == null) {
+                return null;
+            }
+            List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
+            chartPath = initSpcChartData(spcChartDtoList);
         }
-        List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
-
-        Map<String, Map<String, String>> chartPath = initSpcChartData(spcChartDtoList);
         SpcUserActionAttributesDto spcConfig = new SpcUserActionAttributesDto();
         spcConfig.setExportPath(locationPath.getText());
         spcConfig.setPerformer(envService.getUserName());
