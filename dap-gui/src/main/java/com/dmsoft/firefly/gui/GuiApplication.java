@@ -2,8 +2,8 @@ package com.dmsoft.firefly.gui;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.core.DAPApplication;
+import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
 import com.dmsoft.firefly.core.utils.JsonFileUtil;
-import com.dmsoft.firefly.core.utils.SystemPath;
 import com.dmsoft.firefly.gui.components.utils.NodeMap;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -49,7 +49,7 @@ public class GuiApplication extends Application {
     public static final int TOTAL_LOAD_CLASS = 5700;
     private SystemProcessorController systemProcessorController;
 
-    private final String parentPath = SystemPath.getFilePath() + GuiConst.CONFIG_PATH;
+    private final String parentPath = ApplicationPathUtil.getPath(GuiConst.CONFIG_PATH);
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
     static {

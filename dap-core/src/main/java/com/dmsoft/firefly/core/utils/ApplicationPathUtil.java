@@ -48,4 +48,15 @@ public class ApplicationPathUtil {
         }
         return path;
     }
+
+    public static String getPath(String fileName) {
+        ResourceFinder rf = new ResourceFinder();
+
+        String path = rf.findResource(fileName).getPath();
+
+        if (OS_NAME.toLowerCase().startsWith(OS_WIN)) {
+            path = path.substring(1, path.length());
+        }
+        return path;
+    }
 }

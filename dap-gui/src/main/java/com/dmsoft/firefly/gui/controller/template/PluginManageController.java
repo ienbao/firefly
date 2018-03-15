@@ -13,7 +13,6 @@ import com.dmsoft.firefly.gui.model.PluginTableRowData;
 import com.dmsoft.firefly.gui.utils.FileUtils;
 import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.KeyValueDto;
-import com.dmsoft.firefly.core.utils.SystemPath;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
@@ -66,7 +65,7 @@ public class PluginManageController implements Initializable {
     private ObservableList<PluginTableRowData> pluginTableRowDataObservableList;
     private FilteredList<PluginTableRowData> pluginTableRowDataFilteredList;
     private SortedList<PluginTableRowData> pluginTableRowDataSortedList;
-    private final String parentPath = SystemPath.getFilePath() + GuiConst.CONFIG_PATH;
+    private final String parentPath = ApplicationPathUtil.getPath(GuiConst.CONFIG_PATH);
     private JsonMapper mapper = JsonMapper.defaultMapper();
     private boolean isEdit = false;
     private List<String> deleteList = Lists.newArrayList();
@@ -169,10 +168,12 @@ public class PluginManageController implements Initializable {
                 Runtime.getRuntime().addShutdownHook(new Thread() {
                     public void run() {
                         try {
+                            StringBuilder stringBuilder = new StringBuilder("java -jar dap-restart-1.0.0.jar");
                             deleteList.forEach(v -> {
-                                FileUtils.deleteFolder(v);
+                                stringBuilder.append(" " + v);
                             });
-                            Runtime.getRuntime().exec("java -jar dap-gui-1.0.0.jar");
+                            System.out.println(stringBuilder.toString());
+                            Runtime.getRuntime().exec(stringBuilder.toString());
                         } catch (IOException e) {
                             System.out.println("restart failed.");
                         }
@@ -198,7 +199,7 @@ public class PluginManageController implements Initializable {
             File file = fileChooser.showOpenDialog(fileStage);
             if (file != null) {
                 //TODO
-                String propertiesURL = SystemPath.getFilePath() + "application.properties";
+                String propertiesURL = ApplicationPathUtil.getPath("application.properties");
                 InputStream inputStream = null;
                 String pluginFolderPath = null;
                 try {
@@ -237,6 +238,7 @@ public class PluginManageController implements Initializable {
                 PluginTableRowData pluginTableRowData = pluginTableRowDataObservableList.get(pluginTable.getSelectionModel().getSelectedIndex());
                 PluginContext context = RuntimeContext.getBean(PluginContext.class);
                 String url = pluginTableRowData.getInfo().getFolderPath();
+                System.out.println(url);
                 deleteList.add(url);
                 context.uninstallPlugin(pluginTableRowData.getInfo().getId());
                 pluginTableRowDataObservableList.remove(pluginTableRowData);

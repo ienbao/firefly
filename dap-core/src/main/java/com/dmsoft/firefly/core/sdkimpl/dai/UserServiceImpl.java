@@ -3,8 +3,8 @@ package com.dmsoft.firefly.core.sdkimpl.dai;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.bamboo.common.utils.text.EncodeUtil;
 import com.dmsoft.bamboo.common.utils.text.HashUtil;
+import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
 import com.dmsoft.firefly.core.utils.JsonFileUtil;
-import com.dmsoft.firefly.core.utils.SystemPath;
 import com.dmsoft.firefly.sdk.dai.dto.UserDto;
 import com.dmsoft.firefly.sdk.dai.service.UserService;
 import org.slf4j.Logger;
@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Lucien.Chen on 2018/2/9.
  */
 public class UserServiceImpl implements UserService {
-    private final String parentPath = SystemPath.getFilePath() + "config";
+    private final String parentPath = ApplicationPathUtil.getPath("config");
     private final String fileName = "user";
     private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();

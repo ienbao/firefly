@@ -1,9 +1,5 @@
 @echo off
 
-set JRE_HOME=%~dp0jre
-set PATH=%JRE_HOME%\bin;%JRE_HOME%\bin\server
-set CLASSPATH=%CLASSPATH%;%JRE_HOME%\lib
-
 set APP_JAR=dap-gui-1.0.0.jar
 set LOG=log
 

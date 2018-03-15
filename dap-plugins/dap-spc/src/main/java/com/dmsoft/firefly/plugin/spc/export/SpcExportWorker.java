@@ -6,9 +6,9 @@ package com.dmsoft.firefly.plugin.spc.export;
 
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.poi.*;
-import com.dmsoft.firefly.plugin.spc.utils.StringUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
+import com.dmsoft.firefly.sdk.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.poi.ss.usermodel.*;

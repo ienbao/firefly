@@ -2,17 +2,15 @@ package com.dmsoft.firefly.plugin.spc.service.impl;
 
 import com.dmsoft.firefly.plugin.spc.dto.ExportParamDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
-import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcUserActionAttributesDto;
 import com.dmsoft.firefly.plugin.spc.export.SpcExportBuilder;
 import com.dmsoft.firefly.plugin.spc.export.SpcExportWorker;
 import com.dmsoft.firefly.plugin.spc.utils.FileUtils;
-import com.dmsoft.firefly.plugin.spc.utils.StringUtils;
+import com.dmsoft.firefly.sdk.utils.StringUtils;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;

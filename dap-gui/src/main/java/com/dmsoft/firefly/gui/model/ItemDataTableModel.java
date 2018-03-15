@@ -31,6 +31,8 @@ public class ItemDataTableModel implements NewTableModel {
     private ObjectProperty<Boolean> allChecked = new SimpleObjectProperty<>(false);
     private Set<String> falseSet = new HashSet<>();
 
+    private CheckBox allCheckBox;
+
 
     /**
      * constructor
@@ -144,11 +146,23 @@ public class ItemDataTableModel implements NewTableModel {
 
     @Override
     public void setAllCheckBox(CheckBox checkBox) {
-
+        this.allCheckBox = checkBox;
     }
 
     @Override
     public void setTableView(TableView<String> tableView) {
 
+    }
+
+    public Map<String, SimpleObjectProperty<Boolean>> getCheckMap() {
+        return checkMap;
+    }
+
+    public CheckBox getAllCheckBox() {
+        return allCheckBox;
+    }
+
+    public ObservableList<String> getRowKey(){
+        return rowKey;
     }
 }
