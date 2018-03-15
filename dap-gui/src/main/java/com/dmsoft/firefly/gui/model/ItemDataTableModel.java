@@ -88,24 +88,37 @@ public class ItemDataTableModel implements NewTableModel {
 
     @Override
     public boolean isCheckBox(String columnName) {
-//        if(columnName.equals("")){
-//           return true;
-//        }
+        if(columnName.equals("")){
+           return true;
+        }
        return false;
     }
 
     @Override
     public ObjectProperty<Boolean> getCheckValue(String rowKey, String columnName) {
-        if(checkMap.get(rowKey)==null){
+        if (checkMap.get(rowKey) == null) {
             SimpleObjectProperty<Boolean> b = new SimpleObjectProperty<>(false);
-//            checkMap.put();
+            checkMap.put(rowKey, b);
+            falseSet.add(rowKey);
+            allChecked.setValue(false);
+            b.addListener((ov, b1, b2) -> {
+                if (!b2) {
+                    falseSet.add(rowKey);
+                    allChecked.setValue(false);
+                } else {
+                    falseSet.remove(rowKey);
+                    if (falseSet.isEmpty()) {
+                        allChecked.setValue(true);
+                    }
+                }
+            });
         }
-        return null;
+        return checkMap.get(rowKey);
     }
 
     @Override
     public ObjectProperty<Boolean> getAllCheckValue(String columnName) {
-        return null;
+        return allChecked;
     }
 
     @Override
