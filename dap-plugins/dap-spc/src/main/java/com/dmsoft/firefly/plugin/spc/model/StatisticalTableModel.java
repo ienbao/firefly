@@ -12,7 +12,7 @@ import com.dmsoft.firefly.plugin.spc.utils.SourceObjectProperty;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
-import com.dmsoft.firefly.sdk.utils.StringUtils;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.beans.property.ObjectProperty;
@@ -212,7 +212,7 @@ public class StatisticalTableModel implements NewTableModel {
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
         tableCell.setStyle(null);
         tableCell.getStyleClass().remove("error");
-        if (StringUtils.isBlank(column)) {
+        if (DAPStringUtils.isBlank(column)) {
             Color color = colorCache.get(rowKey);
             if (color != null) {
                 tableCell.setStyle("-fx-background-color:" + ColorUtils.toHexFromColor(color));
@@ -292,7 +292,7 @@ public class StatisticalTableModel implements NewTableModel {
                         value = "-";
                     } else {
 
-                            value = showValue(statisticalAlarmDtoMap.get(columnName));
+                        value = showValue(statisticalAlarmDtoMap.get(columnName));
 
 //                        if (columnName.equals(STATISTICAL_TITLE[2])) {
 //                            value = showValue(spcStatsResultDto.getSamples());
@@ -350,7 +350,7 @@ public class StatisticalTableModel implements NewTableModel {
         SourceObjectProperty valueProperty = new SourceObjectProperty<>(value);
         if (columnName.equals(STATISTICAL_TITLE[7]) || columnName.equals(STATISTICAL_TITLE[8])) {
             valueProperty.addListener((ov, b1, b2) -> {
-                if (!StringUtils.isNumeric((String) b2)) {
+                if (!DAPStringUtils.isNumeric((String) b2)) {
                     valueProperty.set(b1);
                     return;
                 }

@@ -42,9 +42,7 @@ public class SearchComboBoxSkin<T> extends ComboBoxListViewSkin<T> {
                 double x = bounds.getMinX() - 1;
                 double y = bounds.getMinY() + 25;
                 popup.show(comboBox, x, y);
-                popup.setOnHiding(event1 -> {
-                    comboBox.getEditor().setText(getTimeStr(calendarChooser.getCalendar(), timePattern));
-                });
+                popup.setOnHiding(event1 -> comboBox.getEditor().setText(getTimeStr(calendarChooser.getCalendar(), timePattern)));
             }
         });
     }

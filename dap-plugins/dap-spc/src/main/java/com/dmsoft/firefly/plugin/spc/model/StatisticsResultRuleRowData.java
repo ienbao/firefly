@@ -5,7 +5,7 @@ package com.dmsoft.firefly.plugin.spc.model;
 
 import com.dmsoft.firefly.plugin.spc.dto.CustomAlarmDto;
 
-import com.dmsoft.firefly.sdk.utils.StringUtils;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
@@ -25,8 +25,8 @@ public class StatisticsResultRuleRowData {
             return;
         }
         this.statisticName = new SimpleStringProperty(customAlarmDto.getStatisticName());
-        this.lowerLimit = new SimpleStringProperty(StringUtils.toStringFromDouble(customAlarmDto.getLowerLimit()));
-        this.upperLimit = new SimpleStringProperty(StringUtils.toStringFromDouble(customAlarmDto.getUpperLimit()));
+        this.lowerLimit = new SimpleStringProperty(DAPStringUtils.toStringFromDouble(customAlarmDto.getLowerLimit()));
+        this.upperLimit = new SimpleStringProperty(DAPStringUtils.toStringFromDouble(customAlarmDto.getUpperLimit()));
     }
 
     public String getStatisticName() {

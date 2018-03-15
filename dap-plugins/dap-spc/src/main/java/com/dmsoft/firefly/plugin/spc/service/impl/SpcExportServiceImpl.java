@@ -6,7 +6,7 @@ import com.dmsoft.firefly.plugin.spc.dto.SpcUserActionAttributesDto;
 import com.dmsoft.firefly.plugin.spc.export.SpcExportBuilder;
 import com.dmsoft.firefly.plugin.spc.export.SpcExportWorker;
 import com.dmsoft.firefly.plugin.spc.utils.FileUtils;
-import com.dmsoft.firefly.sdk.utils.StringUtils;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class SpcExportServiceImpl {
 //        String exportType = exportConfig.getExportType();
         Map<String, Boolean> exportDataItem = exportConfig.getExportDataItem();
 //        int digitNum = globalSettingService.findGlobalSetting("default").getDecimalDigit();
-        if (StringUtils.isBlank(exportPath)) {
+        if (DAPStringUtils.isBlank(exportPath)) {
             basePath[0] = savePath;
         } else {
             basePath[0] = exportPath;

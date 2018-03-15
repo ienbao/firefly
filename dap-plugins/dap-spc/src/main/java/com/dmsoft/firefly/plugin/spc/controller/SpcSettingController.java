@@ -4,7 +4,9 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
+import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.dto.ControlRuleDto;
 import com.dmsoft.firefly.plugin.spc.dto.CustomAlarmDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcSettingDto;
@@ -16,15 +18,20 @@ import com.dmsoft.firefly.plugin.spc.model.StatisticsResultRuleRowData;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.StateKey;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcProCapAlarmKey;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.google.common.collect.Maps;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.List;
@@ -93,6 +100,9 @@ public class SpcSettingController implements Initializable {
 
     private ObservableList<CustomAlarmTestItemRowData> testItemRowDataObservableList;
     private ObservableList<StatisticsResultRuleRowData> statisticsRuleRowDataObservableList;
+
+    private SpcExportSettingController spcExportSettingController;
+    private AddItemController addItemController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -198,8 +208,8 @@ public class SpcSettingController implements Initializable {
     }
 
     private void setCustomAlarmSettingData(Map<String, List<CustomAlarmDto>> statisticalAlarmSetting) {
+        testItemRowDataObservableList.clear();
         if (statisticalAlarmSetting == null) {
-            testItemRowDataObservableList.clear();
             return;
         }
         for (Map.Entry<String, List<CustomAlarmDto>> entry : statisticalAlarmSetting.entrySet()) {
@@ -221,7 +231,153 @@ public class SpcSettingController implements Initializable {
 
 
     private void initComponentEvent() {
+        apply.setOnAction(event -> getApplyBtnEvent());
+        cancel.setOnAction(event -> getCancelBtnEvent());
+        ok.setOnAction(event -> getOkBtnEvent());
 
+        addTestItemBtn.setOnAction(event -> getAddTestItemEvent());
+        exportTemplateSettingBtn.setOnAction(event -> getExportTemplateSettingEvent());
+    }
+
+    private void getApplyBtnEvent() {
+        //todo check
+        SpcSettingDto spcSettingDto = this.buildSaveSettingData();
+        Job job = new Job(ParamKeys.SAVE_SPC_SETTING_DATA_JOP_PIPELINE);
+        manager.doJobSyn(job, spcSettingDto);
+
+    }
+
+    private void getCancelBtnEvent() {
+        StageMap.closeStage(StateKey.SPC_SETTING);
+    }
+
+    private void getOkBtnEvent() {
+        this.getApplyBtnEvent();
+        StageMap.closeStage(StateKey.SPC_SETTING);
+    }
+
+    private void getAddTestItemEvent() {
+        if (StageMap.getStage(StateKey.SPC_SETTING_ADD_ITEM) != null) {
+            StageMap.showStage(StateKey.SPC_SETTING_ADD_ITEM);
+        } else {
+            Pane root = null;
+            try {
+                FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML("view/add_item_dialog.fxml");
+                addItemController = fxmlLoader.getController();
+                root = fxmlLoader.load();
+                Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.SPC_SETTING_ADD_ITEM, SpcFxmlAndLanguageUtils.getString(ResourceMassages.ADD_TEST_ITEMS), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+                stage.show();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private void getExportTemplateSettingEvent() {
+        if (StageMap.getStage(StateKey.SPC_EXPORT_TEMPLATE_SETTING) != null) {
+            if (spcExportSettingController != null) {
+                spcExportSettingController.initData();
+            }
+            StageMap.showStage(StateKey.SPC_EXPORT_TEMPLATE_SETTING);
+        } else {
+            this.initSpcExportSettingDialog();
+        }
+    }
+
+    private void initSpcExportSettingDialog() {
+        Pane root = null;
+        try {
+            FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML("view/spc_export_setting.fxml");
+            root = fxmlLoader.load();
+            spcExportSettingController = fxmlLoader.getController();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.SPC_EXPORT_TEMPLATE_SETTING, SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_SETTING_TITLE), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            stage.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private SpcSettingDto buildSaveSettingData() {
+        SpcSettingDto spcSettingDto = new SpcSettingDto();
+        spcSettingDto.setCustomGroupNumber(Integer.valueOf(subgroupSizeTf.getText()));
+        spcSettingDto.setChartIntervalNumber(Integer.valueOf(ndChartNumberTf.getText()));
+
+        spcSettingDto.setAbilityAlarmRule(this.buildProcessAlarmData());
+        spcSettingDto.setStatisticalAlarmSetting(this.buildStatisticalAlarmData());
+        spcSettingDto.setControlChartRule(controlAlarmRuleTableModel.getControlRuleDtoList());
+
+        spcSettingDto.setExportTemplateName(String.valueOf(exportTemplateCb.getValue()));
+        return spcSettingDto;
+    }
+
+    private Map<String, Double[]> buildProcessAlarmData() {
+        SpcProCapAlarmKey[] proCapAlarmKeys = SpcProCapAlarmKey.values();
+        if (proCapAlarmKeys == null) {
+            return null;
+        }
+        Map<String, Double[]> abilityAlarmRule = Maps.newHashMap();
+        for (int i = 0; i < proCapAlarmKeys.length; i++) {
+            String key = proCapAlarmKeys[i].getCode();
+
+            Double[] value = new Double[4];
+            if (SpcProCapAlarmKey.CA.getCode().equals(key)) {
+                value[0] = Double.valueOf(caExcellentTf.getText());
+                value[1] = Double.valueOf(caAcceptableTf.getText());
+                value[2] = Double.valueOf(caRectificationTf.getText());
+            } else if (SpcProCapAlarmKey.CP.getCode().equals(key)) {
+                value[0] = Double.valueOf(cpExcellentTf.getText());
+                value[1] = Double.valueOf(cpGoodTf.getText());
+                value[2] = Double.valueOf(cpAcceptableTf.getText());
+                value[3] = Double.valueOf(cpRectificationTf.getText());
+            } else if (SpcProCapAlarmKey.CPK.getCode().equals(key)) {
+                value[0] = Double.valueOf(cpkExcellentTf.getText());
+                value[1] = Double.valueOf(cpkGoodTf.getText());
+                value[2] = Double.valueOf(cpkAcceptableTf.getText());
+                value[3] = Double.valueOf(cpkRectificationTf.getText());
+            } else if (SpcProCapAlarmKey.CPL.getCode().equals(key)) {
+                value[0] = Double.valueOf(cplExcellentTf.getText());
+                value[1] = Double.valueOf(cplGoodTf.getText());
+                value[2] = Double.valueOf(cplAcceptableTf.getText());
+                value[3] = Double.valueOf(cplRectificationTf.getText());
+            } else if (SpcProCapAlarmKey.CPU.getCode().equals(key)) {
+                value[0] = Double.valueOf(cpuExcellentTf.getText());
+                value[1] = Double.valueOf(cpuGoodTf.getText());
+                value[2] = Double.valueOf(cpuAcceptableTf.getText());
+                value[3] = Double.valueOf(cpuRectificationTf.getText());
+            } else if (SpcProCapAlarmKey.PP.getCode().equals(key)) {
+                value[0] = Double.valueOf(ppExcellentTf.getText());
+                value[1] = Double.valueOf(ppGoodTf.getText());
+                value[2] = Double.valueOf(ppAcceptableTf.getText());
+                value[3] = Double.valueOf(ppRectificationTf.getText());
+            } else if (SpcProCapAlarmKey.PPK.getCode().equals(key)) {
+                value[0] = Double.valueOf(ppkExcellentTf.getText());
+                value[1] = Double.valueOf(ppkGoodTf.getText());
+                value[2] = Double.valueOf(ppkAcceptableTf.getText());
+                value[3] = Double.valueOf(ppkRectificationTf.getText());
+            } else if (SpcProCapAlarmKey.PPL.getCode().equals(key)) {
+                value[0] = Double.valueOf(pplExcellentTf.getText());
+                value[1] = Double.valueOf(pplGoodTf.getText());
+                value[2] = Double.valueOf(pplAcceptableTf.getText());
+                value[3] = Double.valueOf(pplRectificationTf.getText());
+            } else if (SpcProCapAlarmKey.PPU.getCode().equals(key)) {
+                value[0] = Double.valueOf(ppuExcellentTf.getText());
+                value[1] = Double.valueOf(ppuGoodTf.getText());
+                value[2] = Double.valueOf(ppuAcceptableTf.getText());
+                value[3] = Double.valueOf(ppuRectificationTf.getText());
+            }
+            abilityAlarmRule.put(key, value);
+        }
+        return abilityAlarmRule;
+    }
+
+    private Map<String, List<CustomAlarmDto>> buildStatisticalAlarmData() {
+        Map<String, List<CustomAlarmDto>> statisticalAlarmSetting = Maps.newHashMap();
+        if (testItemRowDataObservableList != null) {
+            for (CustomAlarmTestItemRowData customAlarmTestItemRowData : testItemRowDataObservableList) {
+                statisticalAlarmSetting.put(customAlarmTestItemRowData.getName(), customAlarmTestItemRowData.getCustomAlarmDtoList());
+            }
+        }
+        return statisticalAlarmSetting;
     }
 
     private void initBtnIcon() {

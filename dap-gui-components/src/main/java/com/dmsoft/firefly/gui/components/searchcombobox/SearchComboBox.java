@@ -2,6 +2,7 @@ package com.dmsoft.firefly.gui.components.searchcombobox;
 
 import com.google.common.collect.Lists;
 import com.sun.javafx.collections.ObservableListWrapper;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -113,7 +114,7 @@ public class SearchComboBox extends GridPane {
             }
         });
 
-        this.testItemBox.valueProperty().addListener((ov, s1, s2) -> {
+        this.testItemBox.valueProperty().addListener((ObservableValue<? extends String> ov, String s1, String s2) -> {
             if (this.searchComboBoxController.isTimeKey(s2)) {
                 if (!this.valueBox.lookup(".arrow-button").getStyleClass().contains("arrow-calendar-button")) {
                     this.valueBox.lookup(".arrow-button").getStyleClass().add("arrow-calendar-button");
@@ -281,7 +282,7 @@ public class SearchComboBox extends GridPane {
         return !(s == null || s.length() == 0);
     }
 
-    private void moveCaret(int caretPos, ComboBox comboBox) {
+    private void moveCaret(int caretPos, ComboBox<String> comboBox) {
         if (caretPos == -1) {
             comboBox.getEditor().positionCaret(comboBox.getEditor().getText().length());
         } else {
