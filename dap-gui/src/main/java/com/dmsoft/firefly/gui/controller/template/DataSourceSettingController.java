@@ -4,12 +4,18 @@
 package com.dmsoft.firefly.gui.controller.template;
 
 import com.dmsoft.firefly.gui.GuiApplication;
+import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.model.ItemDataTableModel;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +23,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -32,17 +41,21 @@ public class DataSourceSettingController {
     @FXML
     private TableColumn<ItemTableModel, TestItemWithTypeDto> item;
     @FXML
-    private TableView itemTable;
+    private TableView itemDataTable;
 
     private CheckBox box;
+    private ItemDataTableModel itemDataTableModel;
     private ChooseColDialogController chooseCumDialogController;
     private SearchDataFrame dataFrame;
+    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
 
     @FXML
     private void initialize() {
         initButton();
         this.buildChooseColumnDialog();
         this.initComponentEvent();
+        this.setTableData();
 
     }
 
@@ -65,7 +78,7 @@ public class DataSourceSettingController {
         Pane root = null;
         try {
             root = loader.load();
-            chooseCumDialogController = loader.getController();
+           chooseCumDialogController = loader.getController();
             WindowFactory.createSimpleWindowAsModel("spcViewDataColumn", GuiFxmlAndLanguageUtils.getString( ResourceMassages.CHOOSE_ITEMS_TITLE), root,
                     getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
         } catch (IOException e) {
@@ -78,7 +91,20 @@ public class DataSourceSettingController {
         chooseCumDialogController.setSelectResultName(dataFrame.getAllTestItemName());
     }
 
-    private void initTableData() {
+    private void setTableData() {
+        List<String> projectNames = envService.findActivatedProjectName();
+        List<TestItemWithTypeDto> testItemWithTypeDtos =envService.findTestItems();
+        List<String> testItems = new ArrayList<>();
+        if(testItemWithTypeDtos!= null && !testItemWithTypeDtos.isEmpty()){
+            for(TestItemWithTypeDto dto: testItemWithTypeDtos){
+                testItems.add(dto.getTestItemName());
+            }
+        }
+        List<RowDataDto> rowDataDtos = sourceDataService.findTestData(projectNames, testItems);
 
+        if(testItems!= null && !testItems.isEmpty()){
+            itemDataTableModel = new ItemDataTableModel(testItems,rowDataDtos);
+            NewTableViewWrapper.decorate(itemDataTable, itemDataTableModel);
+        }
     }
 }
