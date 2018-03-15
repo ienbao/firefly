@@ -50,6 +50,20 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <excludes>
+                    <exclude>assembly</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>../dap-plugins/distribution/target/distribution-1.0.0-bin</directory>
+                <includes>
+                    <include>**/</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -76,6 +90,13 @@
                             <mainClass>com.dmsoft.firefly.gui.GuiApplication</mainClass>
                         </manifest>
                     </archive>
+                    <excludes>
+                        <exclude>*.xml</exclude>
+                        <exclude>*.properties</exclude>
+                        <exclude>config/</exclude>
+                        <exclude>scripts/</exclude>
+                        <exclude>Plugins/</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>

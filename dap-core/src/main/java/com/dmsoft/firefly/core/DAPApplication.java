@@ -28,15 +28,13 @@ import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
 import com.google.common.collect.Lists;
 import com.mongodb.MongoClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.Properties;
 
@@ -47,6 +45,8 @@ import java.util.Properties;
  * @author Can Guan
  */
 public class DAPApplication {
+
+    private  static Logger logger = LoggerFactory.getLogger(DAPApplication.class);
 
     /**
      * methdod to init env
@@ -95,14 +95,18 @@ public class DAPApplication {
      */
     public static void startPlugin(List<String> activePlugins) {
         // prepare env done
-        String propertiesURL = ApplicationPathUtil.getPath("resources", "application.properties");
+        String propertiesURL = ApplicationPathUtil.getPath("application.properties");
+        System.out.println(propertiesURL);
+
         InputStream inputStream = null;
         try {
             inputStream = new BufferedInputStream(new FileInputStream(propertiesURL));
             Properties properties = new Properties();
             properties.load(inputStream);
             String pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
+            logger.info("start scan... pluginFolderPath = " + pluginFolderPath);
             List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath);
+            logger.info("end scan... PluginInfo = " + scannedPlugins.toString());
             RuntimeContext.getBean(PluginContext.class).installPlugin(scannedPlugins);
             RuntimeContext.getBean(PluginContext.class).enablePlugin(activePlugins);
         } catch (Exception e) {

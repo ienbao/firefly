@@ -15,6 +15,7 @@ import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.ProcessMonitorAuto;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.dmsoft.firefly.sdk.utils.StringUtils;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.Validate;
 
@@ -51,12 +52,12 @@ public class SpcServiceImpl implements SpcService {
                     doubleList.add(Double.valueOf(s));
                 }
             }
-            if (searchConditionDto.getCusLsl() != null) {
+            if (!StringUtils.isSpecialBlank(searchConditionDto.getCusLsl())) {
                 spcAnalysisDataDto.setLsl(searchConditionDto.getCusLsl());
             } else {
                 spcAnalysisDataDto.setLsl(searchDataFrame.getTestItemWithTypeDto(searchConditionDto.getItemName()).getLsl());
             }
-            if (searchConditionDto.getCusUsl() != null) {
+            if (!StringUtils.isSpecialBlank(searchConditionDto.getCusUsl())) {
                 spcAnalysisDataDto.setUsl(searchConditionDto.getCusUsl());
             } else {
                 spcAnalysisDataDto.setUsl(searchDataFrame.getTestItemWithTypeDto(searchConditionDto.getItemName()).getUsl());

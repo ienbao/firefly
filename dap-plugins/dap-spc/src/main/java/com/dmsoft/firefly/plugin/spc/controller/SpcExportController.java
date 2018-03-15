@@ -8,6 +8,10 @@ import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
+import com.dmsoft.firefly.plugin.spc.charts.BoxPlotChart;
+import com.dmsoft.firefly.plugin.spc.charts.LinearChart;
+import com.dmsoft.firefly.plugin.spc.charts.NDChart;
+import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.*;
@@ -39,12 +43,15 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.scene.Node;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
@@ -88,12 +95,17 @@ public class SpcExportController {
     @FXML
     private Button browse;
     @FXML
+    private RadioButton eachFile;
+    @FXML
+    private RadioButton allFile;
+    @FXML
     private TextField locationPath;
 
     @FXML
     private SplitPane split;
     private SearchTab searchTab;
     private CheckBox box;
+    private ToggleGroup group = new ToggleGroup();
 
     private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
@@ -113,6 +125,9 @@ public class SpcExportController {
 
     @FXML
     private void initialize() {
+        eachFile.setToggleGroup(group);
+        eachFile.setSelected(true);
+        allFile.setToggleGroup(group);
         searchTab = new SearchTab();
         split.getItems().add(searchTab);
         initBtnIcon();
@@ -164,14 +179,11 @@ public class SpcExportController {
     private void initEvent() {
         browse.setOnAction(event -> {
             String str = System.getProperty("user.home");
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Spc Config export");
-            fileChooser.setInitialDirectory(new File(str));
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Excl", "*.xlsl")
-            );
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.setTitle("Spc Config export");
+            directoryChooser.setInitialDirectory(new File(str));
             Stage fileStage = null;
-            File file = fileChooser.showSaveDialog(fileStage);
+            File file = directoryChooser.showDialog(fileStage);
 
             if (file != null) {
                 locationPath.setText(file.getPath());
@@ -186,13 +198,16 @@ public class SpcExportController {
 
         });
         export.setOnAction(event -> {
+            if (StringUtils.isEmpty(locationPath.getText())) {
+                //todo
+                return;
+            }
             export();
             StageMap.closeStage("spcExport");
 
         });
         print.setOnAction(event -> {
             StageMap.closeStage("spcExport");
-
         });
         cancel.setOnAction(event -> {
             StageMap.closeStage("spcExport");
@@ -237,9 +252,9 @@ public class SpcExportController {
         }
     }
 
-    private void export() {
+    private String export() {
 //        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
-        Job job = new Job(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
+//        Job job = new Job(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
 //        job.addProcessMonitorListener(event -> {
 //            windowProgressTipController.refreshProgress(event.getPoint());
 //        });
@@ -265,8 +280,11 @@ public class SpcExportController {
 //                return false;
 //            }
 //        });
-        Map paramMap = Maps.newHashMap();
 
+        Boolean exportEachFile = false;
+        if (eachFile.isSelected()) {
+            exportEachFile = true;
+        }
         List<String> projectNameList = envService.findActivatedProjectName();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = this.getSelectedItemDto();
         searchTab.getConditionTestItem().forEach(item -> {
@@ -278,11 +296,25 @@ public class SpcExportController {
         //todo delete
         spcAnalysisConfigDto.setSubgroupSize(10);
         spcAnalysisConfigDto.setIntervalNumber(8);
+        if (exportEachFile) {
+            String result = "";
+            for (String projectName : projectNameList) {
+                result = exportFile(Lists.newArrayList(projectName), testItemWithTypeDtoList, searchConditionDtoList, spcAnalysisConfigDto);
+            }
+            return result;
+        } else {
+            return exportFile(projectNameList, testItemWithTypeDtoList, searchConditionDtoList, spcAnalysisConfigDto);
+        }
+    }
+
+    private String exportFile(List<String> projectNameList, List<TestItemWithTypeDto> testItemWithTypeDtoList, List<SearchConditionDto> searchConditionDtoList, SpcAnalysisConfigDto spcAnalysisConfigDto) {
+        Job job = new Job(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
+
+        Map paramMap = Maps.newHashMap();
         paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
         paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
         paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
-
         spcStatsDtoList = (List<SpcStatisticalResultAlarmDto>) manager.doJobSyn(job, paramMap, null);
 
         //build chart
@@ -291,17 +323,16 @@ public class SpcExportController {
         chartParamMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         chartParamMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
 
-//        SearchDataFrame subDataFrame = this.buildSubSearchDataFrame(searchConditionDtoList);
         buildViewData();
         chartParamMap.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
 
         Object returnValue = manager.doJobSyn(chartJob, chartParamMap);
         if (returnValue == null) {
-            return;
+            return null;
         }
         List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
-        initSpcChartData(spcChartDtoList);
-//        chartResultController.initSpcChartData(spcChartDtoList);
+
+        Map<String, Map<String, String>> chartPath = initSpcChartData(spcChartDtoList);
         SpcUserActionAttributesDto spcConfig = new SpcUserActionAttributesDto();
         spcConfig.setExportPath(locationPath.getText());
         spcConfig.setPerformer(envService.getUserName());
@@ -315,10 +346,19 @@ public class SpcExportController {
         exportDataItem.put("Samples", true);
         exportDataItem.put("AVG", true);
         exportDataItem.put("Max", true);
-        exportDataItem.put("Max", true);
         exportDataItem.put("Min", true);
         exportDataItem.put("Range", true);
-        exportDataItem.put("SD", true);
+        exportDataItem.put("CA", true);
+        exportDataItem.put("CPK", true);
+
+        exportDataItem.put("ND Chart", true);
+        exportDataItem.put("Run Chart", true);
+        exportDataItem.put("X-bar Chart", true);
+        exportDataItem.put("Range Chart", true);
+        exportDataItem.put("SD Chart", true);
+        exportDataItem.put("Median Chart", true);
+        exportDataItem.put("Box Chart", true);
+        exportDataItem.put("MR Chart", true);
 
         spcConfig.setExportDataItem(exportDataItem);
 
@@ -340,14 +380,6 @@ public class SpcExportController {
         List<SpcStatisticalResultAlarmDto> spcStatisticalResultDtosToExport = null;
         int conditionSize = searchTab.getSearch().size();
         if (conditionSize < 2) {
-            if (exportDataItem.get("DetailSheet")) {
-//                            for (ChartResultDto chartResultDto : chartResultDtos) {
-//                                chartDataDtos = new ArrayList<>();
-//                                chartDataDtos.add(chartResultDto.getChartDataDtos());
-//                                chartPicPath = exportSpcChart2Gif(chartDataDtos, savePicPath, exportDataItem);
-//                                picPathMap.put(chartResultDto.getKey(), chartPicPath);
-//                            }
-            }
             spcStatisticalResultDtosToExport = spcStatsDtoList;
         } else {
             spcStatisticalResultDtosToExport = Lists.newArrayList();
@@ -363,25 +395,9 @@ public class SpcExportController {
                     spcStatisticalResultDtosToExport.add(spcStatsDtoList.get(index + i));
                 }
             }
-            if (exportDataItem.get("DetailSheet")) {
-//                            int charDataLen = chartResultDtos.size();
-//                            for (int index = 0; index <= charDataLen - conditionSize; index += conditionSize) {
-//                                chartDataDtos = new ArrayList<>();
-//                                chartDataDtosTemp = new ArrayList<>();
-//                                for (int i = 0; i < conditionSize; i++) {
-//                                    chartDataDtos.add(chartResultDtos.get(index + i).getChartDataDtos());
-//                                    chartDataDtosTemp.add(chartResultDtos.get(index + i).getChartDataDtos());
-//                                    chartPicPath = exportSpcChart2Gif(chartDataDtosTemp, savePicPath, exportDataItem);
-//                                    picPathMap.put(chartResultDtos.get(index + i).getKey(), chartPicPath);
-//                                    chartDataDtosTemp.clear();
-//                                }
-//                                chartPicPath = exportSpcChart2Gif(chartDataDtos, savePicPath, exportDataItem);
-//                                picPathMap.put(chartResultDtos.get(index).getKey() + "SubSummary", chartPicPath);
-//                            }
-            }
         }
-        spcExportService.spcExport(spcConfig, spcStatisticalResultDtosToExport, Maps.newHashMap());
-//        spcExportService.spcExport(spcConfig, spcStatsDtoList, null);
+        String exportPath = spcExportService.spcExport(spcConfig, spcStatisticalResultDtosToExport, chartPath);
+        return exportPath;
     }
 
     private List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
@@ -418,57 +434,12 @@ public class SpcExportController {
         return searchConditionDtoList;
     }
 
-    public void initSpcChartData(List<SpcChartDto> spcChartDtoList) {
-        List<INdcChartData> ndcChartDataList = Lists.newArrayList();
-        List<IRunChartData> runChartDataList = Lists.newArrayList();
-        List<IControlChartData> xBarChartDataList = Lists.newArrayList();
-        List<IControlChartData> rangeChartDataList = Lists.newArrayList();
-        List<IControlChartData> sdChartDataList = Lists.newArrayList();
-        List<IControlChartData> medianChartDataList = Lists.newArrayList();
-        List<IBoxChartData> boxChartDataList = Lists.newArrayList();
-        List<IControlChartData> mrChartDataList = Lists.newArrayList();
-        for (SpcChartDto spcChartDto : spcChartDtoList) {
-            String key = spcChartDto.getKey();
-            javafx.scene.paint.Color color = ColorUtils.toFxColorFromAwtColor(colorMap.get(key));
-            SpcChartResultDto spcChartResultDto = spcChartDto.getResultDto();
-            if (spcChartResultDto == null) {
-                continue;
-            }
-            //nd chart
-            INdcChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
-            ndcChartDataList.add(iNdcChartData);
-            //run chart
-            IRunChartData iRunChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), color);
-            runChartDataList.add(iRunChartData);
-            //x bar chart
-            IControlChartData xBarChartData = new SpcControlChartData(key, spcChartResultDto.getXbarCResult(), color);
-            xBarChartDataList.add(xBarChartData);
-            //range chart
-            IControlChartData rangeChartData = new SpcControlChartData(key, spcChartResultDto.getRangeCResult(), color);
-            rangeChartDataList.add(rangeChartData);
-            //sd chart
-            IControlChartData sdChartData = new SpcControlChartData(key, spcChartResultDto.getSdCResult(), color);
-            sdChartDataList.add(sdChartData);
-            //median chart
-            IControlChartData medianChartData = new SpcControlChartData(key, spcChartResultDto.getMedianCResult(), color);
-            medianChartDataList.add(medianChartData);
-            //box chart
-            IBoxChartData iBoxChartData = new SpcBoxChartData(key, spcChartResultDto.getBoxCResult(), color);
-            boxChartDataList.add(iBoxChartData);
-            //mr chart
-            IControlChartData mrChartData = new SpcControlChartData(key, spcChartResultDto.getMrCResult(), color);
-            mrChartDataList.add(mrChartData);
+    private Map<String, Map<String, String>> initSpcChartData(List<SpcChartDto> spcChartDtoList) {
+        Map<String, Map<String, String>> chartPath = BuildChart.initSpcChartData(spcChartDtoList, colorMap);
 
-        }
-//        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
-//        this.setRunChartData(UIConstant.SPC_CHART_NAME[1], runChartDataList);
-//        this.setControlChartData(UIConstant.SPC_CHART_NAME[2], xBarChartDataList);
-//        this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList);
-//        this.setControlChartData(UIConstant.SPC_CHART_NAME[4], sdChartDataList);
-//        this.setControlChartData(UIConstant.SPC_CHART_NAME[5], medianChartDataList);
-//        this.setBoxChartData(UIConstant.SPC_CHART_NAME[6], boxChartDataList);
-//        this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
+        return chartPath;
     }
+
 
     /**
      * get selected test items

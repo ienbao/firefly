@@ -7,7 +7,7 @@ package com.dmsoft.firefly.plugin.spc.export;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.poi.*;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
-import com.dmsoft.firefly.plugin.spc.utils.enums.SpcRuleLevelType;
+import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -36,7 +36,7 @@ public class SpcExportWorker implements ExWorker {
     //index of current row to write
     private Integer currentRow = 0;
     //sheets to export
-    private List<ExSheet> sheets = new ArrayList<>();
+    private List<ExSheet> sheets = Lists.newArrayList();
     //default digit number
     private int digNum = 6;
     private int imgSheetIndex = 0, curWrittenItemNum = 0;
@@ -85,10 +85,10 @@ public class SpcExportWorker implements ExWorker {
                 continue;
             }
             if (!exportDataItem.get("DetailSheet")) {
-                ndcCellList.addAll(buildMultiNDC(spcStatisticalResultDto.getStatisticalAlarmDtoMap(), itemName, condition, itemCounter, exportDataItem, perfomer, false));
+                ndcCellList.addAll(buildMultiNDC(spcStatisticalResultDto, itemCounter, exportDataItem, perfomer, false));
                 currentRow += 1;
             } else {
-                ndcCellList.addAll(buildMultiNDC(spcStatisticalResultDto.getStatisticalAlarmDtoMap(), itemName, condition, itemCounter, exportDataItem, perfomer, true));
+                ndcCellList.addAll(buildMultiNDC(spcStatisticalResultDto, itemCounter, exportDataItem, perfomer, true));
                 currentRow += 1;
                 itemCounter++;
             }
@@ -161,8 +161,8 @@ public class SpcExportWorker implements ExWorker {
                 }
                 ndcCellList = null;
 
-                if (chartPicPath.containsKey(UIConstant.CHART_TYPE_SPC_ND)) {
-                    ndcCellList = buildNDChart(chartPicPath.get(UIConstant.CHART_TYPE_SPC_ND));
+                if (chartPicPath.containsKey(UIConstant.SPC_CHART_NDC)) {
+                    ndcCellList = buildNDChart(chartPicPath.get(UIConstant.SPC_CHART_NDC));
                     cellList.addAll(ndcCellList);
                     count++;
                     currentRow -= 20;
@@ -170,18 +170,18 @@ public class SpcExportWorker implements ExWorker {
                 }
                 ndcCellList = null;
 
-                if (chartPicPath.containsKey(UIConstant.CHART_TYPE_SPC_RUN)) {
+                if (chartPicPath.containsKey(UIConstant.SPC_CHART_RUN)) {
                     if (!firstChart) {
                         currentRow += 2;
                         firstChart = true;
                     }
                     if (!"SubSummary".equals(condition)) {
-                        rcCellList = buildRChart(rRules.get(key), chartPicPath.get(UIConstant.CHART_TYPE_SPC_RUN), "Run Chart");
+                        rcCellList = buildRChart(rRules.get(key), chartPicPath.get(UIConstant.SPC_CHART_RUN), "Run Chart");
                         chartFlag = true;
                         rcCellListAll.addAll(rcCellList);
                         count++;
                     } else {
-                        rcCellList = buildRChart(null, chartPicPath.get(UIConstant.CHART_TYPE_SPC_RUN), "Run Chart");
+                        rcCellList = buildRChart(null, chartPicPath.get(UIConstant.SPC_CHART_RUN), "Run Chart");
                         chartFlag = true;
                         rcCellListAll.addAll(rcCellList);
                         count++;
@@ -189,35 +189,35 @@ public class SpcExportWorker implements ExWorker {
                     rowAdd = true;
                 }
 
-                if (chartPicPath.containsKey(UIConstant.CHART_TYPE_SPC_XBAR)) {
+                if (chartPicPath.containsKey(UIConstant.SPC_CHART_XBAR)) {
                     if (!firstChart) {
                         currentRow += 2;
                         firstChart = true;
                     }
-                    rcCellList = buildRChart(null, chartPicPath.get(UIConstant.CHART_TYPE_SPC_XBAR), "X-Bar Chart");
+                    rcCellList = buildRChart(null, chartPicPath.get(UIConstant.SPC_CHART_XBAR), "X-Bar Chart");
                     chartFlag = true;
                     rcCellListAll.addAll(rcCellList);
                     count++;
                     rowAdd = true;
                 }
-                if (chartPicPath.containsKey(UIConstant.CHART_TYPE_SPC_R)) {
+                if (chartPicPath.containsKey(UIConstant.SPC_CHART_RANGE)) {
                     if (!firstChart) {
                         currentRow += 2;
                         firstChart = true;
                     }
-                    rcCellList = buildRChart(null, chartPicPath.get(UIConstant.CHART_TYPE_SPC_R), "Range Chart");
+                    rcCellList = buildRChart(null, chartPicPath.get(UIConstant.SPC_CHART_RANGE), "Range Chart");
                     chartFlag = true;
                     rcCellListAll.addAll(rcCellList);
                     count++;
                     rowAdd = true;
                 }
 
-                if (chartPicPath.containsKey(UIConstant.CHART_TYPE_SPC_SD)) {
+                if (chartPicPath.containsKey(UIConstant.SPC_CHART_SD)) {
                     if (!firstChart) {
                         currentRow += 2;
                         firstChart = true;
                     }
-                    rcCellList = buildRChart(null, chartPicPath.get(UIConstant.CHART_TYPE_SPC_SD), "SD Chart");
+                    rcCellList = buildRChart(null, chartPicPath.get(UIConstant.SPC_CHART_SD), "SD Chart");
                     chartFlag = true;
                     rcCellListAll.addAll(rcCellList);
                     count++;
@@ -228,36 +228,36 @@ public class SpcExportWorker implements ExWorker {
                     currentRow += 20;
                 }
 
-                if (chartPicPath.containsKey(UIConstant.CHART_TYPE_SPC_SCT)) {
+                if (chartPicPath.containsKey(UIConstant.SPC_CHART_MED)) {
                     if (!firstChart) {
                         currentRow += 2;
                         firstChart = true;
                     }
                     currentRow -= 4;
-                    rcCellList = buildSCTChart(chartPicPath.get(UIConstant.CHART_TYPE_SPC_SCT), "Median Chart");
+                    rcCellList = buildSCTChart(chartPicPath.get(UIConstant.SPC_CHART_MED), "Median Chart");
                     chartFlag = true;
                     cellList.addAll(rcCellList);
                 }
 
-                if (chartPicPath.containsKey(UIConstant.CHART_TYPE_SPC_SCT_BOX)) {
+                if (chartPicPath.containsKey(UIConstant.SPC_CHART_BOX)) {
                     if (!firstChart) {
                         currentRow += 2;
                         firstChart = true;
                     }
                     currentRow -= 4;
-                    rcCellList = buildSCTChart(chartPicPath.get(UIConstant.CHART_TYPE_SPC_SCT_BOX), "Box Chart");
+                    rcCellList = buildSCTChart(chartPicPath.get(UIConstant.SPC_CHART_BOX), "Box Chart");
                     cellList.addAll(rcCellList);
                 } else {
                     currentRow += 1;
                 }
 
                 count = 0;
-                if (chartPicPath.containsKey(UIConstant.CHART_TYPE_SPC_MR)) {
+                if (chartPicPath.containsKey(UIConstant.SPC_CHART_MR)) {
                     if (!firstChart) {
                         currentRow += 2;
                         firstChart = true;
                     }
-                    rcCellList = buildRChart(null, chartPicPath.get(UIConstant.CHART_TYPE_SPC_MR), "MR Chart");
+                    rcCellList = buildRChart(null, chartPicPath.get(UIConstant.SPC_CHART_MR), "MR Chart");
                     chartFlag = true;
                     rcCellListAll.addAll(rcCellList);
                     count++;
@@ -320,9 +320,12 @@ public class SpcExportWorker implements ExWorker {
         return exCellList;
     }
 
-    private List<ExCell> buildMultiNDC(Map<String, StatisticalAlarmDto> dto, String itemName, String condition, int itemCounter, Map<String, Boolean> exportDataItem, String performer, boolean isHyperlink) {
+    private List<ExCell> buildMultiNDC(SpcStatisticalResultAlarmDto statisticalResultAlarmDto, int itemCounter, Map<String, Boolean> exportDataItem, String performer, boolean isHyperlink) {
+        String itemName = statisticalResultAlarmDto.getItemName();
+        String condition = statisticalResultAlarmDto.getCondition();
+        Map<String, StatisticalAlarmDto> dto = statisticalResultAlarmDto.getStatisticalAlarmDtoMap();
 
-        List<ExCell> exCellList = new ArrayList<>();
+        List<ExCell> exCellList = Lists.newArrayList();
         Map<String, CellStyle> cellStyleMap = CellStyleUtil.getStyle(getCurrentWorkbook());
         CellStyle cellStyle = cellStyleMap.get(CellStyleType.head_lightBlue.toString());
         String[] scdLabels = UIConstant.EXPORT_NDC_SECOND_LABELS;
@@ -411,7 +414,7 @@ public class SpcExportWorker implements ExWorker {
             String name = UIConstant.SPC_EXPORT_RESULT[i];
             if (exportDataItem.containsKey(name) && exportDataItem.get(name)) {
                 exCellList.add(ExUtil.fillToCell(new Integer[]{n++, column}, (checkStaticData(dto, name) ? "-" : formatDouble(Double.valueOf(dto.get(name).getValue()), 0) + ""), ExCellType.TEXT,
-                        (checkStaticData(dto, name) || cusCpwToLevel(dto, name).equals("NORMAL")) ? textCellStyle : fillPcColor(cusCpwToLevel(dto, name))));
+                        (checkStaticData(dto, name) || cusCpwToLevel(dto, name).equals(SpcKey.NORMAL.getCode())) ? textCellStyle : fillPcColor(cusCpwToLevel(dto, name))));
             }
         }
 
@@ -482,7 +485,7 @@ public class SpcExportWorker implements ExWorker {
                 }
                 if (exportDataItem.keySet().contains(name) && exportDataItem.get(name)) {
                     exCellList.add(ExUtil.fillToCell(new Integer[]{currentRow + n++, dataIndex[1] + 4}, (checkStaticData(dto, name) ? "-" : formatDouble(Double.valueOf(dto.get(name).getValue()), tempDigit) + s),
-                            ExCellType.TEXT, checkStaticData(dto, name) ? textStyle : fillPcColor(cusCpwToLevel(dto, name))));
+                            ExCellType.TEXT, (checkStaticData(dto, name) || cusCpwToLevel(dto, name).equals(SpcKey.NORMAL.getCode())) ? textStyle : fillPcColor(cusCpwToLevel(dto, name))));
                 }
             }
 
@@ -509,12 +512,8 @@ public class SpcExportWorker implements ExWorker {
             int p = 1;
             for (int i = 0; i < UIConstant.SPC_EXPORT_B.length; i++) {
                 String name = UIConstant.SPC_EXPORT_B[i];
-                String s = "";
-                if (name.equals("CA")) {
-                    s = "%";
-                }
                 if (exportDataItem.keySet().contains(name) && exportDataItem.get(name)) {
-                    exCellList.add(ExUtil.fillToCell(new Integer[]{currentRow + 4 + p++, dataIndex[1] + 1}, (checkStaticData(dto, name) ? "-" : formatDouble(Double.valueOf(dto.get(name).getValue()), 0) + s),
+                    exCellList.add(ExUtil.fillToCell(new Integer[]{currentRow + 4 + p++, dataIndex[1] + 1}, (checkStaticData(dto, name) ? "-" : formatDouble(Double.valueOf(dto.get(name).getValue()), 0) +  ""),
                             ExCellType.TEXT, textStyle));
                 }
             }
@@ -633,7 +632,7 @@ public class SpcExportWorker implements ExWorker {
             XSSFFont font = (XSSFFont) workbook.createFont();
             font.setColor(IndexedColors.BLACK.index);
             style.setFont(font);
-            cpColorMap.put(SpcRuleLevelType.EXCELLENT.toString(), style);
+            cpColorMap.put(SpcKey.EXCELLENT.getCode(), style);
 
             style = (XSSFCellStyle) this.getCurrentWorkbook().createCellStyle();
             style.setFillForegroundColor(ExColor.CYAN);
@@ -642,7 +641,7 @@ public class SpcExportWorker implements ExWorker {
             font = (XSSFFont) workbook.createFont();
             font.setColor(IndexedColors.BLACK.index);
             style.setFont(font);
-            cpColorMap.put(SpcRuleLevelType.GOOD.toString(), style);
+            cpColorMap.put(SpcKey.GOOD.getCode(), style);
 
             style = (XSSFCellStyle) this.getCurrentWorkbook().createCellStyle();
             style.setFillForegroundColor(ExColor.MBLUE);
@@ -651,7 +650,7 @@ public class SpcExportWorker implements ExWorker {
             font = (XSSFFont) workbook.createFont();
             font.setColor(IndexedColors.BLACK.index);
             style.setFont(font);
-            cpColorMap.put(SpcRuleLevelType.ACCEPTABLE.toString(), style);
+            cpColorMap.put(SpcKey.ACCEPTABLE.getCode(), style);
 
             style = (XSSFCellStyle) this.getCurrentWorkbook().createCellStyle();
             style.setFillForegroundColor(ExColor.ORANGE);
@@ -660,7 +659,7 @@ public class SpcExportWorker implements ExWorker {
             font = (XSSFFont) workbook.createFont();
             font.setColor(IndexedColors.BLACK.index);
             style.setFont(font);
-            cpColorMap.put(SpcRuleLevelType.ABOVE_RECTIFICATION.toString(), style);
+            cpColorMap.put(SpcKey.BAD.getCode(), style);
 
             style = (XSSFCellStyle) this.getCurrentWorkbook().createCellStyle();
             style.setFillForegroundColor(ExColor.RED);
@@ -669,7 +668,25 @@ public class SpcExportWorker implements ExWorker {
             font = (XSSFFont) workbook.createFont();
             font.setColor(IndexedColors.BLACK.index);
             style.setFont(font);
-            cpColorMap.put(SpcRuleLevelType.RECTIFICATION.toString(), style);
+            cpColorMap.put(SpcKey.RECTIFICATION.getCode(), style);
+
+            style = (XSSFCellStyle) this.getCurrentWorkbook().createCellStyle();
+            style.setFillForegroundColor(ExColor.RED);
+            style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            addBorder(style);
+            font = (XSSFFont) workbook.createFont();
+            font.setColor(IndexedColors.BLACK.index);
+            style.setFont(font);
+            cpColorMap.put(SpcKey.PASS.getCode(), style);
+
+            style = (XSSFCellStyle) this.getCurrentWorkbook().createCellStyle();
+            style.setFillForegroundColor(ExColor.ORANGE);
+            style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            addBorder(style);
+            font = (XSSFFont) workbook.createFont();
+            font.setColor(IndexedColors.BLACK.index);
+            style.setFont(font);
+            cpColorMap.put(SpcKey.FAIL.getCode(), style);
 
             style = (XSSFCellStyle) this.getCurrentWorkbook().createCellStyle();
             style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
@@ -677,7 +694,7 @@ public class SpcExportWorker implements ExWorker {
             font = (XSSFFont) workbook.createFont();
             font.setColor(IndexedColors.BLACK.index);
             style.setFont(font);
-            cpColorMap.put(SpcRuleLevelType.NORMAL.toString(), style);
+            cpColorMap.put(SpcKey.NORMAL.getCode(), style);
         }
 
         return cpColorMap;
@@ -758,7 +775,7 @@ public class SpcExportWorker implements ExWorker {
 
     private String cusCpwToLevel(Map<String, StatisticalAlarmDto> cusCpwMap, String key) {
         if (cusCpwMap == null || cusCpwMap.get(key) == null || cusCpwMap.get(key).getLevel() == null) {
-            return SpcRuleLevelType.NORMAL.toString();
+            return SpcKey.NORMAL.getCode();
         }
         return cusCpwMap.get(key).getLevel();
     }

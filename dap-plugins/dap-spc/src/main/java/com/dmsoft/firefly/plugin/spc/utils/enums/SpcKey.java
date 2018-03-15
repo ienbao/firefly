@@ -58,8 +58,9 @@ public enum SpcKey {
     BAD("Bad"),
 
     PASS("Pass"),
-    FAIL("Fail");
+    FAIL("Fail"),
 
+    NORMAL("Normal");
     private String code;
 
     SpcKey(String code) {

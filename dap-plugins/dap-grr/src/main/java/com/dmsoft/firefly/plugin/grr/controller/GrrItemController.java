@@ -18,6 +18,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.job.Job;
+import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
@@ -231,7 +232,7 @@ public class GrrItemController implements Initializable {
 
     private void getAnalysisBtnEvent() {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
-        Job job = new Job(ParamKeys.GRR_ANALYSIS_JOB_PIPELINE);
+        Job job = new Job(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE);
         job.addProcessMonitorListener(event -> {
 //            windowProgressTipController.refreshProgress(event.getPoint());
         });
@@ -262,18 +263,18 @@ public class GrrItemController implements Initializable {
         List<String> projectNameList = envService.findActivatedProjectName();
         List<TestItemWithTypeDto> selectedItemDto = this.getSelectedItemDto();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
-       /* List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(selectedItemDto);
-        SpcAnalysisConfigDto spcAnalysisConfigDto = this.buildSpcAnalysisConfigData();
+        //List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(selectedItemDto);
+//        GrrAnalysisConfigDto spcAnalysisConfigDto = this.buildSpcAnalysisConfigData();
 
         //todo delete
-        spcAnalysisConfigDto.setSubgroupSize(10);
-        spcAnalysisConfigDto.setIntervalNumber(8);
+//        spcAnalysisConfigDto.setSubgroupSize(10);
+//        spcAnalysisConfigDto.setIntervalNumber(8);
         paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
-        paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
-        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
+//        paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+//        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
         paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
 
-        grrMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
+//        grrMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
         Platform.runLater(() -> {
             manager.doJobASyn(job, new JobDoComplete() {
                 @Override
@@ -282,11 +283,12 @@ public class GrrItemController implements Initializable {
                         //todo message tip
                         return;
                     }
-                    List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
-                    grrMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
+
+//                    List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
+//                    grrMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
                 }
             }, paramMap, grrMainController);
-        });*/
+        });
 
     }
 
@@ -458,7 +460,7 @@ public class GrrItemController implements Initializable {
         return spcAnalysisConfigDto;
     }*/
 
-    private List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
+   /* private List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
         if (testItemWithTypeDtoList == null) {
             return null;
         }
@@ -469,17 +471,14 @@ public class GrrItemController implements Initializable {
             if (conditionList != null) {
                 for (String condition : conditionList) {
                     SearchConditionDto searchConditionDto = new SearchConditionDto();
-                    searchConditionDto.setKey(ParamKeys.GRR_ANALYSIS_CONDITION_KEY + i);
                     searchConditionDto.setItemName(testItemWithTypeDto.getTestItemName());
                     searchConditionDto.setCusLsl(testItemWithTypeDto.getLsl());
                     searchConditionDto.setCusUsl(testItemWithTypeDto.getUsl());
-                    searchConditionDto.setCondition(condition);
                     searchConditionDtoList.add(searchConditionDto);
                     i++;
                 }
             } else {
                 SearchConditionDto searchConditionDto = new SearchConditionDto();
-                searchConditionDto.setKey(ParamKeys.GRR_ANALYSIS_CONDITION_KEY + i);
                 searchConditionDto.setItemName(testItemWithTypeDto.getTestItemName());
                 searchConditionDto.setCusLsl(testItemWithTypeDto.getLsl());
                 searchConditionDto.setCusUsl(testItemWithTypeDto.getUsl());
@@ -488,7 +487,7 @@ public class GrrItemController implements Initializable {
             }
         }
         return searchConditionDtoList;
-    }
+    }*/
 
     private List<TestItemWithTypeDto> buildSelectTestItemWithTypeData(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
         List<TestItemWithTypeDto> itemWithTypeDtoList = Lists.newArrayList();

@@ -44,7 +44,7 @@
                         </HBox>
                         <ScrollPane prefHeight="466.0" prefWidth="619.0">
                             <content>
-                                <TableView fx:id="itemTable" prefHeight="450.0" prefWidth="634.0">
+                                <TableView fx:id="itemDataTable" prefHeight="450.0" prefWidth="634.0">
                                     <columns>
                                         <TableColumn fx:id="select" editable="false" maxWidth="250.0" minWidth="41.0" prefWidth="43.0" sortable="false" />
                                         <TableColumn fx:id="col1" prefWidth="180.0" sortable="false" />

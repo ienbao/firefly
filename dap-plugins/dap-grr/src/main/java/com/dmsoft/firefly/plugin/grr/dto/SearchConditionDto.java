@@ -5,31 +5,28 @@ package com.dmsoft.firefly.plugin.grr.dto;
 
 import com.dmsoft.bamboo.common.dto.AbstractValueObject;
 
+import java.util.List;
+
 /**
  * Created by Ethan.Yang on 2018/2/6.
  */
 public class SearchConditionDto extends AbstractValueObject {
-
-    private String key;
-    private String itemName;
+    private List<GrrTestItemDto> testItemDtoList;
     private String condition;
-    private String cusLsl;
-    private String cusUsl;
+    private String part;
+    private String appraiser;
+    private Integer partInt;
+    private Integer appraiserInt;
+    private Integer trialInt;
+    private List<String> parts;
+    private List<String> appraisers;
 
-    public String getKey() {
-        return key;
+    public List<GrrTestItemDto> getTestItemDtoList() {
+        return testItemDtoList;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getItemName() {
-        return itemName;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
+    public void setTestItemDtoList(List<GrrTestItemDto> testItemDtoList) {
+        this.testItemDtoList = testItemDtoList;
     }
 
     public String getCondition() {
@@ -40,19 +37,59 @@ public class SearchConditionDto extends AbstractValueObject {
         this.condition = condition;
     }
 
-    public String getCusLsl() {
-        return cusLsl;
+    public String getPart() {
+        return part;
     }
 
-    public void setCusLsl(String cusLsl) {
-        this.cusLsl = cusLsl;
+    public void setPart(String part) {
+        this.part = part;
     }
 
-    public String getCusUsl() {
-        return cusUsl;
+    public String getAppraiser() {
+        return appraiser;
     }
 
-    public void setCusUsl(String cusUsl) {
-        this.cusUsl = cusUsl;
+    public void setAppraiser(String appraiser) {
+        this.appraiser = appraiser;
+    }
+
+    public Integer getPartInt() {
+        return partInt;
+    }
+
+    public void setPartInt(Integer partInt) {
+        this.partInt = partInt;
+    }
+
+    public Integer getAppraiserInt() {
+        return appraiserInt;
+    }
+
+    public void setAppraiserInt(Integer appraiserInt) {
+        this.appraiserInt = appraiserInt;
+    }
+
+    public Integer getTrialInt() {
+        return trialInt;
+    }
+
+    public void setTrialInt(Integer trialInt) {
+        this.trialInt = trialInt;
+    }
+
+    public List<String> getParts() {
+        return parts;
+    }
+
+    public void setParts(List<String> parts) {
+        this.parts = parts;
+    }
+
+    public List<String> getAppraisers() {
+        return appraisers;
+    }
+
+    public void setAppraisers(List<String> appraisers) {
+        this.appraisers = appraisers;
     }
 }
