@@ -1,8 +1,8 @@
 package com.dmsoft.firefly.core.sdkimpl.dai;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
 import com.dmsoft.firefly.core.utils.JsonFileUtil;
-import com.dmsoft.firefly.core.utils.SystemPath;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class UserPreferenceServiceImpl implements UserPreferenceService {
 
-    private final String parentPath = SystemPath.getFilePath() + "config";
+    private final String parentPath = ApplicationPathUtil.getPath("config");
     private final String fileName = "userPreference";
     private Logger logger = LoggerFactory.getLogger(UserPreferenceServiceImpl.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();

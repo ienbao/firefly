@@ -13,7 +13,6 @@ import com.dmsoft.firefly.gui.model.PluginTableRowData;
 import com.dmsoft.firefly.gui.utils.FileUtils;
 import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.KeyValueDto;
-import com.dmsoft.firefly.core.utils.SystemPath;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
@@ -32,7 +31,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.net.URL;
@@ -67,7 +65,7 @@ public class PluginManageController implements Initializable {
     private ObservableList<PluginTableRowData> pluginTableRowDataObservableList;
     private FilteredList<PluginTableRowData> pluginTableRowDataFilteredList;
     private SortedList<PluginTableRowData> pluginTableRowDataSortedList;
-    private final String parentPath = SystemPath.getFilePath() + GuiConst.CONFIG_PATH;
+    private final String parentPath = ApplicationPathUtil.getPath(GuiConst.CONFIG_PATH);
     private JsonMapper mapper = JsonMapper.defaultMapper();
     private boolean isEdit = false;
     private List<String> deleteList = Lists.newArrayList();
@@ -201,7 +199,7 @@ public class PluginManageController implements Initializable {
             File file = fileChooser.showOpenDialog(fileStage);
             if (file != null) {
                 //TODO
-                String propertiesURL = SystemPath.getFilePath() + "application.properties";
+                String propertiesURL = ApplicationPathUtil.getPath("application.properties");
                 InputStream inputStream = null;
                 String pluginFolderPath = null;
                 try {

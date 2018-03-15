@@ -47,10 +47,10 @@
             </includes>
         </fileSet>
 
-        <fileSet>
-            <directory>${project.basedir}/src/main/resources/images</directory>
-            <outputDirectory>images</outputDirectory>
-        </fileSet>
+        <!--<fileSet>-->
+            <!--<directory>${project.basedir}/src/main/resources/images</directory>-->
+            <!--<outputDirectory>images</outputDirectory>-->
+        <!--</fileSet>-->
 
         <fileSet>
             <directory>${project.basedir}/src/main/resources/scripts</directory>

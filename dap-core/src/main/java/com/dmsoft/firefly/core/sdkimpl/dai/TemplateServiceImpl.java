@@ -1,8 +1,8 @@
 package com.dmsoft.firefly.core.sdkimpl.dai;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
 import com.dmsoft.firefly.core.utils.JsonFileUtil;
-import com.dmsoft.firefly.core.utils.SystemPath;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -22,7 +22,7 @@ import java.util.Map;
  * Created by Lucien.Chen on 2018/2/9.
  */
 public class TemplateServiceImpl implements TemplateService {
-    private final String parentPath = SystemPath.getFilePath() + "config";
+    private final String parentPath = ApplicationPathUtil.getPath("config");
     private final String fileName = "template";
     private Logger logger = LoggerFactory.getLogger(TemplateServiceImpl.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
