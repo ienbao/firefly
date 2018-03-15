@@ -11,6 +11,7 @@ import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.model.PluginTableRowData;
 import com.dmsoft.firefly.gui.utils.FileUtils;
+import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.KeyValueDto;
 import com.dmsoft.firefly.core.utils.SystemPath;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -18,6 +19,7 @@ import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -64,9 +66,10 @@ public class PluginManageController implements Initializable {
     private ObservableList<PluginTableRowData> pluginTableRowDataObservableList;
     private FilteredList<PluginTableRowData> pluginTableRowDataFilteredList;
     private SortedList<PluginTableRowData> pluginTableRowDataSortedList;
-    private final String parentPath = SystemPath.getFilePath() + "config";
+    private final String parentPath = SystemPath.getFilePath() + GuiConst.CONFIG_PATH;
     private JsonMapper mapper = JsonMapper.defaultMapper();
     private boolean isEdit = false;
+    private List<String> deleteList = Lists.newArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -152,7 +155,7 @@ public class PluginManageController implements Initializable {
         pluginTableRowDataObservableList.forEach(v -> {
             activePlugin.add(new KeyValueDto(v.getInfo().getId(), v.getSelector().isSelected()));
         });
-        JsonFileUtil.writeJsonFile(activePlugin, parentPath, "activePlugin");
+        JsonFileUtil.writeJsonFile(activePlugin, parentPath, GuiConst.ACTIVE_PLUGIN);
     }
 
     private void initEvent() {
@@ -166,6 +169,9 @@ public class PluginManageController implements Initializable {
                 Runtime.getRuntime().addShutdownHook(new Thread() {
                     public void run() {
                         try {
+                            deleteList.forEach(v -> {
+                                FileUtils.deleteFolder(v);
+                            });
                             Runtime.getRuntime().exec("java -jar dap-gui-1.0.0.jar");
                         } catch (IOException e) {
                             System.out.println("restart failed.");
@@ -192,7 +198,7 @@ public class PluginManageController implements Initializable {
             File file = fileChooser.showOpenDialog(fileStage);
             if (file != null) {
                 //TODO
-                String propertiesURL = ApplicationPathUtil.getPath("resources", "application.properties");
+                String propertiesURL = SystemPath.getFilePath() + "application.properties";
                 InputStream inputStream = null;
                 String pluginFolderPath = null;
                 try {
@@ -203,10 +209,23 @@ public class PluginManageController implements Initializable {
                     FileUtils.unZipFiles(file, pluginFolderPath + "/");
                     PluginContext context = RuntimeContext.getBean(PluginContext.class);
                     List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath);
-                    context.getAllEnabledPluginInfo().forEach((k, v) -> {
-
+                    Map<String, PluginInfo> map = Maps.newHashMap();
+                    if (scannedPlugins != null) {
+                        scannedPlugins.forEach(v -> {
+                            map.put(v.getId(), v);
+                        });
+                    }
+                    List<PluginInfo> installPlugins = Lists.newArrayList();
+                    map.forEach((k, v) -> {
+                        if (!context.getAllInstalledPluginInfo().containsKey(k)) {
+                            installPlugins.add(map.get(k));
+                        }
                     });
-                    context.installPlugin(scannedPlugins);
+                    context.installPlugin(installPlugins);
+                    installPlugins.forEach(v -> {
+                        PluginTableRowData chooseTableRowData = new PluginTableRowData(false, v.getName(), v);
+                        pluginTableRowDataObservableList.add(chooseTableRowData);
+                    });
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -218,7 +237,7 @@ public class PluginManageController implements Initializable {
                 PluginTableRowData pluginTableRowData = pluginTableRowDataObservableList.get(pluginTable.getSelectionModel().getSelectedIndex());
                 PluginContext context = RuntimeContext.getBean(PluginContext.class);
                 String url = pluginTableRowData.getInfo().getFolderPath();
-                FileUtils.deleteFolder(url);
+                deleteList.add(url);
                 context.uninstallPlugin(pluginTableRowData.getInfo().getId());
                 pluginTableRowDataObservableList.remove(pluginTableRowData);
                 updateProjectOrder();
@@ -230,7 +249,7 @@ public class PluginManageController implements Initializable {
         PluginContext context = RuntimeContext.getBean(PluginContext.class);
         Map<String, PluginInfo> map = context.getAllInstalledPluginInfo();
 
-        String json = JsonFileUtil.readJsonFile(parentPath, "activePlugin");
+        String json = JsonFileUtil.readJsonFile(parentPath, GuiConst.ACTIVE_PLUGIN);
         List<KeyValueDto> activePlugin = Lists.newArrayList();
         if (DAPStringUtils.isNotBlank(json)) {
             activePlugin = mapper.fromJson(json, mapper.buildCollectionType(List.class, KeyValueDto.class));

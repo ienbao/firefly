@@ -9,11 +9,14 @@ import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.pipeline.GrrSummaryJobPipeline;
 import com.dmsoft.firefly.plugin.grr.pipeline.GrrDetailResultJobPipeline;
+import com.dmsoft.firefly.plugin.grr.pipeline.GrrViewDataJobPipeline;
 import com.dmsoft.firefly.plugin.grr.service.GrrAnalysisService;
 import com.dmsoft.firefly.plugin.grr.service.GrrConfigService;
+import com.dmsoft.firefly.plugin.grr.service.GrrFilterService;
 import com.dmsoft.firefly.plugin.grr.service.GrrService;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrAnalysisServiceImpl;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
+import com.dmsoft.firefly.plugin.grr.service.impl.GrrFilterServiceImpl;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrServiceImpl;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -41,6 +44,8 @@ public class GrrPlugin extends Plugin {
     public static final String GRR_SERVICE_ANALYSIS_NAME = "GrrAnalysisServiceImpl";
     public static final String GRR_SERVICE_RESULT_NAME = "GrrServiceImpl";
     public static final String GRR_SERVICE_CONFIG_NAME = "GrrConfigServiceImpl";
+    public static final String GRR_SERVICE_Filter = "GrrFilterServiceImpl";
+
     private static final Logger logger = LoggerFactory.getLogger(GrrPlugin.class);
 
     @Override
@@ -48,13 +53,17 @@ public class GrrPlugin extends Plugin {
         GrrServiceImpl grrService = new GrrServiceImpl();
         GrrAnalysisService grrAnalysisService = new GrrAnalysisServiceImpl();
         GrrConfigService grrConfigService = new GrrConfigServiceImpl();
+        GrrFilterService grrFilterService = new GrrFilterServiceImpl();
+
         grrService.setAnalysisService(grrAnalysisService);
         RuntimeContext.registerBean(GrrService.class, grrService);
         RuntimeContext.registerBean(GrrConfigService.class, grrConfigService);
         RuntimeContext.registerBean(GrrAnalysisService.class, grrAnalysisService);
+        RuntimeContext.registerBean(GrrFilterService.class, grrFilterService);
         RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_CONFIG_NAME, grrConfigService);
         RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_RESULT_NAME, grrService);
         RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_ANALYSIS_NAME, grrAnalysisService);
+        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_Filter, grrFilterService);
         logger.info("Plugin-GRR Initialized.");
     }
 
@@ -94,6 +103,8 @@ public class GrrPlugin extends Plugin {
         JobManager manager = RuntimeContext.getBean(JobManager.class);
         manager.initializeJob(ParamKeys.GRR_ANALYSIS_JOB_PIPELINE, new GrrSummaryJobPipeline());
         manager.initializeJob(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE, new GrrDetailResultJobPipeline());
+        manager.initializeJob(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE, new GrrViewDataJobPipeline());
+
     }
 
     @Override

@@ -28,13 +28,13 @@ public class GrrServiceImpl implements GrrService {
     @Override
     public List<GrrSummaryDto> getSummaryResult(SearchDataFrame dataFrame, List<GrrTestItemDto> testItemDtoList, GrrAnalysisConfigDto configDto) {
         if (dataFrame == null || testItemDtoList == null || configDto == null) {
-            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_11001));
+            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
         }
         List<GrrSummaryDto> result = Lists.newArrayList();
         List<GrrAnalysisDataDto> grrAnalysisDataDtoList = Lists.newArrayList();
         for (GrrTestItemDto itemDto : testItemDtoList) {
             GrrAnalysisDataDto grrAnalysisDataDto = new GrrAnalysisDataDto();
-            List<String> datas = dataFrame.getDataValue(itemDto.getItemName(), itemDto.getRowKeysToByAnalyzed());
+            List<String> datas = dataFrame.getDataValue(itemDto.getItemName());
             List<Double> doubleList = Lists.newArrayList();
             for (String s : datas) {
                 if (DAPStringUtils.isNumeric(s)) {
@@ -58,7 +58,6 @@ public class GrrServiceImpl implements GrrService {
             GrrSummaryResultDto resultDto = getAnalysisService().analyzeSummaryResult(grrAnalysisDataDtoList.get(i), configDto);
             GrrSummaryDto summaryDto = new GrrSummaryDto();
             summaryDto.setSummaryResultDto(resultDto);
-            summaryDto.setKey(testItemDtoList.get(i).getKey());
             summaryDto.setItemName(testItemDtoList.get(i).getItemName());
             result.add(summaryDto);
         }
@@ -68,7 +67,7 @@ public class GrrServiceImpl implements GrrService {
     @Override
     public GrrDetailDto getDetailResult(DataColumn dataColumn, GrrTestItemDto testItemDto, GrrAnalysisConfigDto configDto) {
         if (dataColumn == null || testItemDto == null || configDto == null) {
-            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_11001));
+            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
         }
         GrrDetailDto result = new GrrDetailDto();
 
@@ -93,7 +92,6 @@ public class GrrServiceImpl implements GrrService {
         GrrDetailResultDto resultDto = getAnalysisService().analyzeDetailResult(grrAnalysisDataDto, configDto);
         grrAnalysisDataDto.setDataList(doubleList);
         result.setItemName(testItemDto.getItemName());
-        result.setKey(testItemDto.getKey());
         result.setGrrDetailResultDto(resultDto);
         return result;
     }

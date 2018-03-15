@@ -47,9 +47,14 @@ public class UIConstant {
     };
     public static final String TEST_ITEM = "TestItem";
 
-    public static final String SPC_CHART_NDC = "NdChart";
-    public static final String SPC_CHART_RUN = "RunChart";
-    public static final String SPC_CHART_XBAR = "XBarChart";
+    public static final String SPC_CHART_NDC = "ND Chart";
+    public static final String SPC_CHART_RUN = "Run Chart";
+    public static final String SPC_CHART_XBAR = "X-bar Chart";
+    public static final String SPC_CHART_RANGE = "Range Chart";
+    public static final String SPC_CHART_SD = "SD Chart";
+    public static final String SPC_CHART_MED = "Median-bar Chart";
+    public static final String SPC_CHART_BOX= "Box Chart";
+    public static final String SPC_CHART_MR = "MR Chart";
 
     public static final String[] SPC_CHART_NAME = new String[]{"ND Chart", "Run Chart", "X-bar Chart", "Range Chart", "SD Chart", "Median Chart", "Box Chart", "MR Chart"};
     public static final String[] EXPORT_NDC_SECOND_LABELS = {"Item Name", "Search Condition", "Samples", "AVG", "Max", "Min", "USL", "LSL", "Center", "Range", "SD", "AVG-3SD", "AVG+3SD", "Kurtosis", "Skewness",

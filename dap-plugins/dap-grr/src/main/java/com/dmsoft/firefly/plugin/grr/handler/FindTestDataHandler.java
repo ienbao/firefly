@@ -27,7 +27,7 @@ public class FindTestDataHandler implements JobInboundHandler {
     @SuppressWarnings("unchecked")
     public void doJob(JobHandlerContext context, Object... in) throws Exception {
         if (in == null || !(in[0] instanceof Map) || !(in[1] instanceof GrrMainController)) {
-            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_11001));
+            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
         }
         Map<String, Object> param = (Map) in[0];
         List<String> projectNameList = (List<String>) param.get(ParamKeys.PROJECT_NAME_LIST);
@@ -36,6 +36,12 @@ public class FindTestDataHandler implements JobInboundHandler {
         for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtoList) {
             testItemNames.add(testItemWithTypeDto.getTestItemName());
         }
+
+        //包含所有需要数据的测试项
+        testItemNames.add("Serial Number");
+        testItemNames.add("Site ID");
+        //String condition = "(\"Serial Number\" = \"part4\" | \"Serial Number\" = \"part5\") & (\"Site ID\" = \"2\" | \"Site ID\" = \"4\")";
+
        // progress
         SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
         if (sourceDataService instanceof AbstractProcessMonitorAutoAdd) {

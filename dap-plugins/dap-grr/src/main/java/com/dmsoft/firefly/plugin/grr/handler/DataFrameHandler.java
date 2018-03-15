@@ -13,6 +13,7 @@ import com.dmsoft.firefly.sdk.job.AbstractProcessMonitorAutoAdd;
 import com.dmsoft.firefly.sdk.job.ProcessMonitorAuto;
 import com.dmsoft.firefly.sdk.job.core.JobHandlerContext;
 import com.dmsoft.firefly.sdk.job.core.JobInboundHandler;
+import com.google.common.collect.Lists;
 
 import java.util.List;
 import java.util.Map;
@@ -27,10 +28,10 @@ public class DataFrameHandler implements JobInboundHandler {
     @SuppressWarnings("unchecked")
     public void doJob(JobHandlerContext context, Object... in) throws Exception {
         if (in == null || !(in[0] instanceof Map) || !(in[1] instanceof GrrMainController)) {
-            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_11001));
+            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
         }
         Map<String, Object> param = (Map) in[0];
-        List<RowDataDto> rowDataDtoList = (List<RowDataDto>) param.remove(ParamKeys.ROW_DATA_DTO_LIST);
+        List<RowDataDto> rowDataDtoList = (List<RowDataDto>) param.get(ParamKeys.ROW_DATA_DTO_LIST);
        // progress
         DataFrameFactory dataFrameFactory = RuntimeContext.getBean(DataFrameFactory.class);
         if (dataFrameFactory instanceof AbstractProcessMonitorAutoAdd) {
@@ -41,9 +42,16 @@ public class DataFrameHandler implements JobInboundHandler {
                 createSearchDataFrame((List<TestItemWithTypeDto>) param.get(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST), rowDataDtoList);
         param.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
 
+        //todo
+        List<String> seachConditions = Lists.newLinkedList();
+        String condition = "(\"Serial Number\" = \"part4\" | \"Serial Number\" = \"part5\") & (\"Site ID\" = \"2\" | \"Site ID\" = \"4\")";
+        seachConditions.add(condition);
+        dataFrame.addSearchCondition(seachConditions);
+        dataFrame.shrink();
+
         GrrMainController grrMainController = (GrrMainController) in[1];
         grrMainController.setDataFrame(dataFrame);
-        context.fireDoJob(param);
+        context.fireDoJob(param, in[1]);
     }
 
     @Override
