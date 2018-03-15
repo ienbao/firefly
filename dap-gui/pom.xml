@@ -95,6 +95,7 @@
                         <exclude>*.properties</exclude>
                         <exclude>config/</exclude>
                         <exclude>scripts/</exclude>
+                        <exclude>Plugins/</exclude>
                     </excludes>
                 </configuration>
             </plugin>
