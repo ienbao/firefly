@@ -106,6 +106,10 @@
     -fx-background-insets: 1px;
 }
 
+.chart-line-symbol:hover {
+    -fx-background-insets: 0px;
+}
+
 .default-color0.chart-line-symbol {
     -fx-background-color: #e9967a, #e9967a;
 }

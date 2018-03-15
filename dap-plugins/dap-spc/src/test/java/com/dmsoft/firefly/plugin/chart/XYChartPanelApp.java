@@ -89,7 +89,7 @@ public class XYChartPanelApp extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        primaryStage.hide();
+//        primaryStage.hide();
 
         WritableImage image = xBarChar.snapshot(new SnapshotParameters(), null);
         String path = "/Users/mac/Desktop";
@@ -170,6 +170,9 @@ public class XYChartPanelApp extends Application {
         ChartOperateButton button = new ChartOperateButton();
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
+        xAxis.setAutoRanging(false);
+        yAxis.setAutoRanging(false);
+        yAxis.setUpperBound(3000D);
         xAxis.setTickMarkVisible(false);
         yAxis.setTickMarkVisible(false);
         button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_XBAR_EXTERN_MENU));

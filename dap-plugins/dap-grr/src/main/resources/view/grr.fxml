@@ -39,7 +39,7 @@
                     <tabs>
                       <Tab text="GRR">
                         <content>
-                            <fx:include fx:id="grrResultTabContent" source="grr_result.fxml"/>
+                            <fx:include fx:id="grrResult" source="grr_result.fxml"/>
                         </content>
                       </Tab>
                       <Tab text="View Data">

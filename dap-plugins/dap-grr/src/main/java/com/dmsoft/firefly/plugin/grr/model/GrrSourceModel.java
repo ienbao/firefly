@@ -21,7 +21,8 @@ public class GrrSourceModel {
 
     public void setData(List<GrrSourceDto> sourceDtos) {
         this.data.clear();
-        if (data == null) {
+        sources.setAll(FXCollections.observableArrayList());
+        if (sourceDtos == null) {
             return;
         }
         this.data.addAll(data);
@@ -36,7 +37,7 @@ public class GrrSourceModel {
         ));
     }
 
-    public ObservableList<GrrSingleSource> getSouces() {
+    public ObservableList<GrrSingleSource> getSources() {
         return sources;
     }
 }
