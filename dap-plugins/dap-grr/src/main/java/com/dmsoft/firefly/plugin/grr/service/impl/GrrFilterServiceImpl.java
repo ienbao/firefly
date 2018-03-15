@@ -8,7 +8,7 @@ import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
-import com.dmsoft.firefly.sdk.utils.StringUtils;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
             throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
         }
         String appraiserName = searchConditionDto.getAppraiser();
-        if (StringUtils.isNotBlank(appraiserName)) {
+        if (DAPStringUtils.isNotBlank(appraiserName)) {
             return getGrrSlot1(dataFrame, searchConditionDto);
         } else {
             if (SORT_MEHODE_APPRAISER.equals(configDto.getSortMethod())) {
@@ -253,7 +253,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
         int appraiserInt = searchConditionDtos.get(0).getAppraiserInt();
         int trialInt = searchConditionDtos.get(0).getTrialInt();
 
-        if (StringUtils.isNotBlank(appraiserName)) {
+        if (DAPStringUtils.isNotBlank(appraiserName)) {
             Map<String, Integer> everyPartMap = new LinkedHashMap<>();
             allRowDataDtos.forEach(rowDataDto -> {
                 Map<String, String> rowData = rowDataDto.getData();
@@ -282,7 +282,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
             throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
         }
         SearchDataFrame filterDatas = null;
-        if (StringUtils.isBlank(condition)) {
+        if (DAPStringUtils.isBlank(condition)) {
             filterDatas = selectedItemsDataFrame;
         } else {
             List<String> searchRowKeys = selectedItemsDataFrame.getSearchRowKey(condition);

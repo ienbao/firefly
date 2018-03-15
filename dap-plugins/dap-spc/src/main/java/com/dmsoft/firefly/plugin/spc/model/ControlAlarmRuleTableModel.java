@@ -8,7 +8,7 @@ import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.plugin.spc.dto.ControlRuleDto;
 import com.dmsoft.firefly.plugin.spc.utils.SourceObjectProperty;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
-import com.dmsoft.firefly.sdk.utils.StringUtils;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -87,11 +87,11 @@ public class ControlAlarmRuleTableModel implements NewTableModel {
             } else if (columnName.equals(HEADER[1])) {
                 value = controlRuleDto.getRuleName();
             } else if (columnName.equals(HEADER[2])) {
-                value = StringUtils.toStringFromDouble(controlRuleDto.getnValue());
+                value = DAPStringUtils.toStringFromDouble(controlRuleDto.getnValue());
             } else if (columnName.equals(HEADER[3])) {
-                value = StringUtils.toStringFromDouble(controlRuleDto.getmValue());
+                value = DAPStringUtils.toStringFromDouble(controlRuleDto.getmValue());
             } else if (columnName.equals(HEADER[4])) {
-                value = StringUtils.toStringFromDouble(controlRuleDto.getsValue());
+                value = DAPStringUtils.toStringFromDouble(controlRuleDto.getsValue());
             }
             valueMap.put(rowKey + "-" + columnName, new SourceObjectProperty(value));
         }

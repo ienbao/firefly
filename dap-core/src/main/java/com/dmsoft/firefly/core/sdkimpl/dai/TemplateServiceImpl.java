@@ -7,7 +7,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
-import com.dmsoft.firefly.sdk.utils.StringUtils;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -200,10 +200,10 @@ public class TemplateServiceImpl implements TemplateService {
                     testItemWithTypeDto.setLsl(curr.getSpecificationDatas().get(item).getLslFail());
                     testItemWithTypeDto.setUsl(curr.getSpecificationDatas().get(item).getUslPass());
                 } else {
-                    if (StringUtils.isSpecialBlank(testItemWithTypeDto.getLsl())) {
+                    if (DAPStringUtils.isSpecialBlank(testItemWithTypeDto.getLsl())) {
                         testItemWithTypeDto.setLsl("");
                     }
-                    if (StringUtils.isSpecialBlank(testItemWithTypeDto.getUsl())) {
+                    if (DAPStringUtils.isSpecialBlank(testItemWithTypeDto.getUsl())) {
                         testItemWithTypeDto.setUsl("");
                     }
                 }

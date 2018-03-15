@@ -190,4 +190,17 @@ public class DAPStringUtils extends StringUtils {
     public static boolean compareTrim(String str1, String str2) {
         return str1 == null && str2 == null || (str1 != null && str2 != null && str1.trim().equals(str2.trim()));
     }
+
+    /**
+     * to string from double
+     *
+     * @param value double
+     * @return string
+     */
+    public static String toStringFromDouble(Double value) {
+        if (value == null) {
+            return "";
+        }
+        return String.valueOf(value);
+    }
 }
