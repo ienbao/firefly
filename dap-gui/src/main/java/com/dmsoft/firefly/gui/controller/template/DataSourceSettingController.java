@@ -17,12 +17,12 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
-import com.dmsoft.firefly.sdk.utils.StringUtils;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -101,58 +101,65 @@ public class DataSourceSettingController {
                 testItems.add( dto.getTestItemName() );
             }
         }
-        List<RowDataDto> rowDataDtos = sourceDataService.findTestData( projectNames, testItems );
-
+        List<RowDataDto> rowDataDtos= new ArrayList<>(  );
+        if(projectNames!= null && !projectNames.isEmpty()) {
+            rowDataDtos = sourceDataService.findTestData( projectNames, testItems );
+        }
         //assemble data of csv
-        for (String projectName : projectNames) {
-            RowDataDto uslDataDto = new RowDataDto();
-            RowDataDto lslDataDto = new RowDataDto();
-            RowDataDto unitDtaDto = new RowDataDto();
-            uslDataDto.setRowKey( projectName + "_!@#_" + 2 );
-            lslDataDto.setRowKey( projectName + "_!@#_" + 3 );
-            unitDtaDto.setRowKey( projectName + "_!@#_" + 4 );
+        if(projectNames!= null && !projectNames.isEmpty()){
+            for (String projectName : projectNames) {
+                RowDataDto uslDataDto = new RowDataDto();
+                RowDataDto lslDataDto = new RowDataDto();
+                RowDataDto unitDtaDto = new RowDataDto();
+                uslDataDto.setRowKey( projectName + "_!@#_" + 2 );
+                lslDataDto.setRowKey( projectName + "_!@#_" + 3 );
+                unitDtaDto.setRowKey( projectName + "_!@#_" + 4 );
 
-            Map<String,String> uslDataMap = new HashMap<>();
-            Map<String,String> lslDataMap = new HashMap<>();
-            Map<String,String> unitDataMap = new HashMap<>();
-            int i = 0;
-            for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtos) {
-                if(i == 0){
-                    uslDataMap.put(testItemWithTypeDto.getTestItemName(),"Upper Limited----------->");
-                    lslDataMap.put( testItemWithTypeDto.getTestItemName(), "Lower Limited----------->");
-                    unitDataMap.put( testItemWithTypeDto.getTestItemName(), "Measurement Units---->");
-                }else {
-                    if (StringUtils.isNotBlank( testItemWithTypeDto.getUsl() )) {
-                        uslDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getUsl() );
-                    }
+                Map<String,String> uslDataMap = new HashMap<>();
+                Map<String,String> lslDataMap = new HashMap<>();
+                Map<String,String> unitDataMap = new HashMap<>();
+                int i = 0;
+                for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtos) {
+                    if(i == 0){
+                        uslDataMap.put(testItemWithTypeDto.getTestItemName(),"Upper Limited----------->");
+                        lslDataMap.put( testItemWithTypeDto.getTestItemName(), "Lower Limited----------->");
+                        unitDataMap.put( testItemWithTypeDto.getTestItemName(), "Measurement Units---->");
+                    }else {
+                        if (StringUtils.isNotBlank( testItemWithTypeDto.getUsl() )) {
+                            uslDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getUsl() );
+                        }
 
-                    if (StringUtils.isNotBlank( testItemWithTypeDto.getLsl() )) {
-                        lslDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getLsl() );
-                    }
+                        if (StringUtils.isNotBlank( testItemWithTypeDto.getLsl() )) {
+                            lslDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getLsl() );
+                        }
 
-                    if (StringUtils.isNotBlank( testItemWithTypeDto.getUnit() )) {
-                        unitDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getUnit() );
+                        if (StringUtils.isNotBlank( testItemWithTypeDto.getUnit() )) {
+                            unitDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getUnit() );
+                        }
                     }
+                    i++;
                 }
-                i++;
-            }
-            uslDataDto.setData(uslDataMap);
-            lslDataDto.setData(lslDataMap);
-            unitDtaDto.setData(unitDataMap);
+                uslDataDto.setData(uslDataMap);
+                uslDataDto.setInUsed( false );
+                lslDataDto.setData(lslDataMap);
+                lslDataDto.setInUsed( false );
+                unitDtaDto.setData(unitDataMap);
+                unitDtaDto.setInUsed( false );
 
-            rowDataDtoList.add( uslDataDto );
-            rowDataDtoList.add( lslDataDto );
-            rowDataDtoList.add( unitDtaDto );
+                rowDataDtoList.add( uslDataDto );
+                rowDataDtoList.add( lslDataDto );
+                rowDataDtoList.add( unitDtaDto );
 
-            for (RowDataDto rowDataDto : rowDataDtos) {
-               if(rowDataDto.getRowKey().contains(projectName)){
-                   rowDataDtoList.add(rowDataDto);
-               };
+                for (RowDataDto rowDataDto : rowDataDtos) {
+                    if(rowDataDto.getRowKey().contains(projectName)){
+                        rowDataDtoList.add(rowDataDto);
+                    };
+                }
             }
         }
 
         if (testItems != null && !testItems.isEmpty()) {
-            itemDataTableModel = new ItemDataTableModel( testItems, rowDataDtoList );
+            itemDataTableModel = new ItemDataTableModel( testItems, rowDataDtoList);
             NewTableViewWrapper.decorate( itemDataTable, itemDataTableModel );
         }
     }
