@@ -51,6 +51,7 @@ public class ControlAlarmRuleTableModel implements NewTableModel {
      */
     public void initData(List<ControlRuleDto> controlRuleDtoList) {
         this.controlRuleDtoList = controlRuleDtoList;
+        this.clearTable();
         if (controlRuleDtoList != null) {
             for (ControlRuleDto controlRuleDto : controlRuleDtoList) {
                 String ruleName = controlRuleDto.getRuleName();
@@ -58,6 +59,14 @@ public class ControlAlarmRuleTableModel implements NewTableModel {
                 dataMap.put(ruleName, controlRuleDto);
             }
         }
+    }
+
+    private void clearTable(){
+        rowKey.clear();
+        dataMap.clear();
+        valueMap.clear();
+        checkMap.clear();
+        columnKey.clear();
     }
 
     @Override
@@ -150,5 +159,9 @@ public class ControlAlarmRuleTableModel implements NewTableModel {
     @Override
     public void setTableView(TableView<String> tableView) {
 
+    }
+
+    public List<ControlRuleDto> getControlRuleDtoList() {
+        return controlRuleDtoList;
     }
 }
