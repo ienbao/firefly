@@ -46,20 +46,20 @@
                                         styleClass="btn-primary" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
                             </children>
                         </GridPane>
-                        <TabPane prefHeight="675.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-                            <tabs>
-                                <Tab text="GRR">
-                                    <content>
-                                        <fx:include fx:id="grrResultTabContent" source="grr_result.fxml"/>
-                                    </content>
-                                </Tab>
-                                <Tab text="View Data">
-                                    <content>
-                                        <fx:include fx:id="grrViewData" source="grr_view_data.fxml"/>
-                                    </content>
-                                </Tab>
-                            </tabs>
-                        </TabPane>
+                  <TabPane prefHeight="675.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                      <Tab text="GRR">
+                        <content>
+                            <fx:include fx:id="grrResult" source="grr_result.fxml"/>
+                        </content>
+                      </Tab>
+                      <Tab text="View Data">
+                        <content>
+                            <fx:include fx:id="grrViewData" source="grr_view_data.fxml"/>
+                        </content>
+                      </Tab>
+                    </tabs>
+                  </TabPane>
                     </children>
                 </VBox>
                 <VBox minWidth="180.0" prefWidth="180.0">

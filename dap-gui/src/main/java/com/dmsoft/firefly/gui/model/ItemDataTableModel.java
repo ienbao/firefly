@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
 
@@ -19,17 +20,14 @@ import java.util.*;
  * Created by Alice on 2018/3/14.
  */
 public class ItemDataTableModel implements NewTableModel {
-    private TableCheckBox selector = new TableCheckBox();
     private ObservableList<String> columnKey = FXCollections.observableArrayList();
     private ObservableList<String> rowKey = FXCollections.observableArrayList();
     private Map<String, SimpleObjectProperty<String>> valueMap;
     private List<RowDataDto> rowDataDtoList = new ArrayList<>();
     private Map<String, SimpleObjectProperty<Boolean>> checkMap = new HashMap<>();
-    private ObjectProperty<Boolean> allChecked = new SimpleObjectProperty<>(false);
+    private ObjectProperty<Boolean> allChecked = new SimpleObjectProperty<>( false );
     private Set<String> falseSet = new HashSet<>();
-
     private CheckBox allCheckBox;
-
 
     /**
      * constructor
@@ -37,22 +35,22 @@ public class ItemDataTableModel implements NewTableModel {
     public ItemDataTableModel(List<String> headers, List<RowDataDto> rowDataDtos) {
         valueMap = Maps.newHashMap();
         if (headers != null && !headers.isEmpty()) {
-            columnKey.add(0, "");
+            columnKey.add( 0, "" );
             if (headers.size() > 10) {
                 for (int i = 0; i < 10; i++) {
-                    columnKey.add(headers.get(i));
+                    columnKey.add( headers.get( i ) );
                 }
             } else {
                 for (String header : headers) {
-                    columnKey.add(header);
+                    columnKey.add( header );
                 }
             }
         }
 
         if (rowDataDtos != null && !rowDataDtos.isEmpty()) {
             for (RowDataDto rowDataDto : rowDataDtos) {
-                rowKey.add(rowDataDto.getRowKey());
-                rowDataDtoList.add(rowDataDto);
+                rowKey.add( rowDataDto.getRowKey() );
+                rowDataDtoList.add( rowDataDto );
             }
         }
     }
@@ -64,14 +62,12 @@ public class ItemDataTableModel implements NewTableModel {
 
     @Override
     public ObjectProperty<String> getCellData(String rowKey, String columnName) {
-        if (columnName.equals("")) {
+        if (columnName.equals( "" )) {
             return null;
         } else {
-            String row = rowKey.substring(rowKey.indexOf("_!@#_") + 5);
-            if (!row.equals("0")) {
-                valueMap.put(rowKey, new SimpleObjectProperty<String>(rowDataDtoList.get(Integer.parseInt(row) - 5).getData().get(columnName)));
-            }
-            return valueMap.get(rowKey);
+            String row = rowKey.substring( rowKey.indexOf( "_!@#_" ) + 5 );
+            valueMap.put( rowKey, new SimpleObjectProperty<String>( rowDataDtoList.get( Integer.parseInt( row ) - 2 ).getData().get( columnName ) ) );
+            return valueMap.get( rowKey );
         }
     }
 
@@ -87,7 +83,7 @@ public class ItemDataTableModel implements NewTableModel {
 
     @Override
     public boolean isCheckBox(String columnName) {
-        if (columnName.equals("")) {
+        if (columnName.equals( "" )) {
             return true;
         }
         return false;
@@ -95,24 +91,24 @@ public class ItemDataTableModel implements NewTableModel {
 
     @Override
     public ObjectProperty<Boolean> getCheckValue(String rowKey, String columnName) {
-        if (checkMap.get(rowKey) == null) {
-            SimpleObjectProperty<Boolean> b = new SimpleObjectProperty<>(false);
-            checkMap.put(rowKey, b);
-            falseSet.add(rowKey);
-            allChecked.setValue(false);
-            b.addListener((ov, b1, b2) -> {
+        if (checkMap.get( rowKey ) == null) {
+            SimpleObjectProperty<Boolean> b = new SimpleObjectProperty<>( false );
+            checkMap.put( rowKey, b );
+            falseSet.add( rowKey );
+            allChecked.setValue( false );
+            b.addListener( (ov, b1, b2) -> {
                 if (!b2) {
-                    falseSet.add(rowKey);
-                    allChecked.setValue(false);
+                    falseSet.add( rowKey );
+                    allChecked.setValue( false );
                 } else {
-                    falseSet.remove(rowKey);
+                    falseSet.remove( rowKey );
                     if (falseSet.isEmpty()) {
-                        allChecked.setValue(true);
+                        allChecked.setValue( true );
                     }
                 }
-            });
+            } );
         }
-        return checkMap.get(rowKey);
+        return checkMap.get( rowKey );
     }
 
     @Override
@@ -127,17 +123,27 @@ public class ItemDataTableModel implements NewTableModel {
 
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
-        //todo check
-//        String usl = "2.0";
-//        String lsl = "1.0";
-//        String row = rowKey.substring( rowKey.indexOf( "_!@#_" ) + 5 );
-//        if(!column.equals("")){
-//            String dataValue = rowDataDtoList.get( Integer.parseInt( row ) - 5 ).getData().get( column );
-//            if (StringUtils.isNotBlank(dataValue)&&(Double.parseDouble( dataValue ) > Double.parseDouble( usl ) ||
-//                    Double.parseDouble( dataValue ) < Double.parseDouble( lsl ))) {
-//                tableCell.setStyle( "-fx-background-color:red" );
-//            }
-//        }
+        String row = rowKey.substring( rowKey.indexOf( "_!@#_" ) + 5 );
+        String dataValue = null;
+        String usl = null;
+        String lsl = null;
+
+        usl = rowDataDtoList.get( 0).getData().get( column );
+        lsl = rowDataDtoList.get( 1 ).getData().get( column );
+
+        if (Integer.parseInt( row ) > 2) {
+            if (!column.equals( "" )) {
+                dataValue = rowDataDtoList.get( Integer.parseInt( row ) - 2 ).getData().get( column );
+            }
+            if (StringUtils.isNotBlank( dataValue ) && StringUtils.isNotBlank( usl )&& !usl.equals("Upper Limited----------->") && (Double.parseDouble( dataValue ) > Double.parseDouble( usl ))) {
+                tableCell.setStyle( "-fx-background-color:red" );
+                return tableCell;
+            }
+            if (StringUtils.isNotBlank( dataValue ) && StringUtils.isNotBlank( lsl )&&!lsl.equals("Lower Limited----------->") && (Double.parseDouble( dataValue ) < Double.parseDouble( lsl ))) {
+                tableCell.setStyle( "-fx-background-color:red" );
+                return tableCell;
+            }
+        }
         return null;
     }
 

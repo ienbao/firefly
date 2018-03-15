@@ -21,6 +21,7 @@ public class GrrSummaryModel {
 
     public void setData(List<GrrSummaryDto> summaryDtos, String resultType) {
         data.clear();
+        summaries.setAll(FXCollections.observableArrayList());
         if (summaryDtos == null) {
             return;
         }
@@ -37,7 +38,7 @@ public class GrrSummaryModel {
                     summaryDtos.get(i).getSummaryResultDto().getGrrOnTolerance() :
                     summaryDtos.get(i).getSummaryResultDto().getGrrOnContribution();
 
-            summaries.set(i, new GrrSingleSummary(selected,
+            summaries.add(new GrrSingleSummary(selected,
                     summaryDtos.get(i).getItemName(),
                     String.valueOf(summaryDtos.get(i).getSummaryResultDto().getLsl()),
                     String.valueOf(summaryDtos.get(i).getSummaryResultDto().getUsl()),

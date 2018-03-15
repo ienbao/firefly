@@ -14,16 +14,22 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +88,19 @@ public class XYChartPanelApp extends Application {
         primaryStage.setTitle("XY Chart panel example.");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+//        primaryStage.hide();
+
+        WritableImage image = xBarChar.snapshot(new SnapshotParameters(), null);
+        String path = "/Users/mac/Desktop";
+
+        try {
+            File file = new File(path + "/" + "nd" + ".png");
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+//            AlertDialog.showAlertDialog("保存成功!");
+        } catch (IOException ex) {
+//            AlertDialog.showAlertDialog("保存失败:" + ex.getMessage());
+        }
 
         initData();
         initEvent();
@@ -151,6 +170,9 @@ public class XYChartPanelApp extends Application {
         ChartOperateButton button = new ChartOperateButton();
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
+        xAxis.setAutoRanging(false);
+        yAxis.setAutoRanging(false);
+        yAxis.setUpperBound(3000D);
         xAxis.setTickMarkVisible(false);
         yAxis.setTickMarkVisible(false);
         button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_XBAR_EXTERN_MENU));
