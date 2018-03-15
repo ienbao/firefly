@@ -69,6 +69,7 @@ public class PluginManageController implements Initializable {
     private JsonMapper mapper = JsonMapper.defaultMapper();
     private boolean isEdit = false;
     private List<String> deleteList = Lists.newArrayList();
+    private Map<String, Boolean> validateMap = Maps.newHashMap();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -126,7 +127,7 @@ public class PluginManageController implements Initializable {
                     event.setDropCompleted(true);
                     pluginTable.getSelectionModel().select(dropIndex);
                     event.consume();
-
+                    isEdit = true;
                     updateProjectOrder();
                 }
             });
@@ -135,7 +136,6 @@ public class PluginManageController implements Initializable {
                 if (pluginTable.getSelectionModel().getSelectedIndex() != -1) {
                     PluginTableRowData pluginTableRowData = pluginTableRowDataObservableList.get(pluginTable.getSelectionModel().getSelectedIndex());
                     explain.setText(pluginTableRowData.getInfo().getDescription());
-                    System.out.println(pluginTable.getSelectionModel().getSelectedIndex() + " click");
                 }
             });
 
@@ -159,7 +159,8 @@ public class PluginManageController implements Initializable {
 
     private void initEvent() {
         ok.setOnAction(event -> {
-            if (true) {
+            validateMapChange();
+            if (isEdit) {
                 List<KeyValueDto> activePlugin = Lists.newArrayList();
                 pluginTableRowDataObservableList.forEach(v -> {
                     activePlugin.add(new KeyValueDto(v.getInfo().getId(), v.getSelector().isSelected()));
@@ -207,26 +208,26 @@ public class PluginManageController implements Initializable {
                     Properties properties = new Properties();
                     properties.load(inputStream);
                     pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
-                    FileUtils.unZipFiles(file, pluginFolderPath + "/");
+
+                    //validate
+                    FileUtils.unZipFiles(file, pluginFolderPath + "/temp/" + file.getName() + "/");
                     PluginContext context = RuntimeContext.getBean(PluginContext.class);
-                    List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath);
-                    Map<String, PluginInfo> map = Maps.newHashMap();
-                    if (scannedPlugins != null) {
-                        scannedPlugins.forEach(v -> {
-                            map.put(v.getId(), v);
-                        });
+                    List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath + "/temp/" + file.getName() + "/");
+                    PluginInfo installPlugins = scannedPlugins.get(0);
+
+                    Map<String, PluginInfo> allInstallPlugins = context.getAllInstalledPluginInfo() == null ? Maps.newHashMap() : context.getAllInstalledPluginInfo();
+
+                    if (isExists(scannedPlugins.get(0), allInstallPlugins)) {
+                        //TODO 存在相同的插件时对应的逻辑
+                        return;
                     }
-                    List<PluginInfo> installPlugins = Lists.newArrayList();
-                    map.forEach((k, v) -> {
-                        if (!context.getAllInstalledPluginInfo().containsKey(k)) {
-                            installPlugins.add(map.get(k));
-                        }
-                    });
-                    context.installPlugin(installPlugins);
-                    installPlugins.forEach(v -> {
-                        PluginTableRowData chooseTableRowData = new PluginTableRowData(false, v.getName(), v);
-                        pluginTableRowDataObservableList.add(chooseTableRowData);
-                    });
+
+                    FileUtils.unZipFiles(file, pluginFolderPath + "/");
+                    FileUtils.deleteFolder(pluginFolderPath + "/temp/" + file.getName());
+
+                    PluginTableRowData chooseTableRowData = new PluginTableRowData(false, installPlugins.getName(), installPlugins);
+                    pluginTableRowDataObservableList.add(chooseTableRowData);
+                    isEdit = true;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -242,7 +243,33 @@ public class PluginManageController implements Initializable {
                 deleteList.add(url);
                 context.uninstallPlugin(pluginTableRowData.getInfo().getId());
                 pluginTableRowDataObservableList.remove(pluginTableRowData);
+                isEdit = true;
                 updateProjectOrder();
+            }
+        });
+    }
+
+    private boolean isExists(PluginInfo pluginInfo, Map<String, PluginInfo> allInstallPlugins) {
+
+        if (allInstallPlugins.containsKey(pluginInfo.getId())) {
+            PluginInfo exist = allInstallPlugins.get(pluginInfo.getId());
+            if (exist.getVersion().equals(pluginInfo.getVersion())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void validateMapChange() {
+        pluginTableRowDataObservableList.forEach(v -> {
+            if (validateMap.containsKey(v.getInfo().getId())) {
+                if (validateMap.get(v.getInfo().getId()).booleanValue() != v.getSelector().isSelected()) {
+                    isEdit = true;
+                    return;
+                }
+            } else {
+                isEdit = true;
+                return;
             }
         });
     }
@@ -260,6 +287,7 @@ public class PluginManageController implements Initializable {
             activePlugin.forEach(v -> {
                 PluginTableRowData chooseTableRowData = new PluginTableRowData((Boolean) v.getValue(), map.get(v.getKey()).getName(), map.get(v.getKey()));
                 pluginTableRowDataObservableList.add(chooseTableRowData);
+                validateMap.put(v.getKey(), (Boolean) v.getValue());
             });
         }
     }
