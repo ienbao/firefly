@@ -17,6 +17,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.dmsoft.firefly.sdk.utils.StringUtils;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,12 +42,11 @@ public class DataSourceSettingController {
     @FXML
     private TableView itemDataTable;
 
-    private CheckBox box;
     private ItemDataTableModel itemDataTableModel;
     private ChooseColDialogController chooseCumDialogController;
     private SearchDataFrame dataFrame;
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
-    private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
+    private EnvService envService = RuntimeContext.getBean( EnvService.class );
+    private SourceDataService sourceDataService = RuntimeContext.getBean( SourceDataService.class );
 
     @FXML
     private void initialize() {
@@ -54,7 +54,6 @@ public class DataSourceSettingController {
         this.buildChooseColumnDialog();
         this.setTableData();
         this.initComponentEvent();
-
 
     }
 
@@ -69,52 +68,102 @@ public class DataSourceSettingController {
     }
 
     private void initComponentEvent() {
-        chooseItem.setOnAction(event -> getChooseColumnBtnEvent());
-        itemDataTableModel.getAllCheckBox().setOnAction(event -> getAllCheckBoxEvent());
+        chooseItem.setOnAction( event -> getChooseColumnBtnEvent() );
+        itemDataTableModel.getAllCheckBox().setOnAction( event -> getAllCheckBoxEvent() );
     }
 
     private void buildChooseColumnDialog() {
-        FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource( "view/choosecol_dialog.fxml" ), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+        FXMLLoader loader = new FXMLLoader( GuiApplication.class.getClassLoader().getResource( "view/choosecol_dialog.fxml" ), ResourceBundle.getBundle( "i18n.message_en_US_GUI" ) );
         Pane root = null;
         try {
             root = loader.load();
-           chooseCumDialogController = loader.getController();
-            WindowFactory.createSimpleWindowAsModel("spcViewDataColumn", GuiFxmlAndLanguageUtils.getString( ResourceMassages.CHOOSE_ITEMS_TITLE), root,
-                    getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            chooseCumDialogController = loader.getController();
+            WindowFactory.createSimpleWindowAsModel( "spcViewDataColumn", GuiFxmlAndLanguageUtils.getString( ResourceMassages.CHOOSE_ITEMS_TITLE ), root,
+                    getClass().getClassLoader().getResource( "css/spc_app.css" ).toExternalForm() );
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void getChooseColumnBtnEvent() {
-        StageMap.showStage("spcViewDataColumn");
-        chooseCumDialogController.setSelectResultName(dataFrame.getAllTestItemName());
+        StageMap.showStage( "spcViewDataColumn" );
+        chooseCumDialogController.setSelectResultName( dataFrame.getAllTestItemName() );
     }
 
     private void setTableData() {
+
+        List<RowDataDto> rowDataDtoList = new LinkedList<>();
         List<String> projectNames = envService.findActivatedProjectName();
-        List<TestItemWithTypeDto> testItemWithTypeDtos =envService.findTestItems();
+        List<TestItemWithTypeDto> testItemWithTypeDtos = envService.findTestItems();
         List<String> testItems = new ArrayList<>();
-        if(testItemWithTypeDtos!= null && !testItemWithTypeDtos.isEmpty()){
-            for(TestItemWithTypeDto dto: testItemWithTypeDtos){
-                testItems.add(dto.getTestItemName());
+        if (testItemWithTypeDtos != null && !testItemWithTypeDtos.isEmpty()) {
+            for (TestItemWithTypeDto dto : testItemWithTypeDtos) {
+                testItems.add( dto.getTestItemName() );
             }
         }
-        List<RowDataDto> rowDataDtos = sourceDataService.findTestData(projectNames, testItems);
+        List<RowDataDto> rowDataDtos = sourceDataService.findTestData( projectNames, testItems );
 
-        if(testItems!= null && !testItems.isEmpty()){
-            itemDataTableModel = new ItemDataTableModel(testItems,rowDataDtos);
-            NewTableViewWrapper.decorate(itemDataTable, itemDataTableModel);
+        //assemble data of csv
+        for (String projectName : projectNames) {
+            RowDataDto uslDataDto = new RowDataDto();
+            RowDataDto lslDataDto = new RowDataDto();
+            RowDataDto unitDtaDto = new RowDataDto();
+            uslDataDto.setRowKey( projectName + "_!@#_" + 2 );
+            lslDataDto.setRowKey( projectName + "_!@#_" + 3 );
+            unitDtaDto.setRowKey( projectName + "_!@#_" + 4 );
+
+            Map<String,String> uslDataMap = new HashMap<>();
+            Map<String,String> lslDataMap = new HashMap<>();
+            Map<String,String> unitDataMap = new HashMap<>();
+            int i = 0;
+            for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtos) {
+                if(i == 0){
+                    uslDataMap.put(testItemWithTypeDto.getTestItemName(),"Upper Limited----------->");
+                    lslDataMap.put( testItemWithTypeDto.getTestItemName(), "Lower Limited----------->");
+                    unitDataMap.put( testItemWithTypeDto.getTestItemName(), "Measurement Units---->");
+                }else {
+                    if (StringUtils.isNotBlank( testItemWithTypeDto.getUsl() )) {
+                        uslDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getUsl() );
+                    }
+
+                    if (StringUtils.isNotBlank( testItemWithTypeDto.getLsl() )) {
+                        lslDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getLsl() );
+                    }
+
+                    if (StringUtils.isNotBlank( testItemWithTypeDto.getUnit() )) {
+                        unitDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getUnit() );
+                    }
+                }
+                i++;
+            }
+            uslDataDto.setData(uslDataMap);
+            lslDataDto.setData(lslDataMap);
+            unitDtaDto.setData(unitDataMap);
+
+            rowDataDtoList.add( uslDataDto );
+            rowDataDtoList.add( lslDataDto );
+            rowDataDtoList.add( unitDtaDto );
+
+            for (RowDataDto rowDataDto : rowDataDtos) {
+               if(rowDataDto.getRowKey().contains(projectName)){
+                   rowDataDtoList.add(rowDataDto);
+               };
+            }
+        }
+
+        if (testItems != null && !testItems.isEmpty()) {
+            itemDataTableModel = new ItemDataTableModel( testItems, rowDataDtoList );
+            NewTableViewWrapper.decorate( itemDataTable, itemDataTableModel );
         }
     }
 
     private void getAllCheckBoxEvent() {
         Map<String, SimpleObjectProperty<Boolean>> checkMap = itemDataTableModel.getCheckMap();
         for (String key : itemDataTableModel.getRowKey()) {
-            if (checkMap.get(key) != null) {
-                checkMap.get(key).set(itemDataTableModel.getAllCheckBox().isSelected());
+            if (checkMap.get( key ) != null) {
+                checkMap.get( key ).set( itemDataTableModel.getAllCheckBox().isSelected() );
             } else {
-                checkMap.put(key, new SimpleObjectProperty<>(itemDataTableModel.getAllCheckBox().isSelected()));
+                checkMap.put( key, new SimpleObjectProperty<>( itemDataTableModel.getAllCheckBox().isSelected() ) );
             }
         }
     }
