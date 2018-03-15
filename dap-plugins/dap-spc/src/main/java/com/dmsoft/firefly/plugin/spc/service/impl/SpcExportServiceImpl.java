@@ -6,6 +6,7 @@ import com.dmsoft.firefly.plugin.spc.dto.SpcUserActionAttributesDto;
 import com.dmsoft.firefly.plugin.spc.export.SpcExportBuilder;
 import com.dmsoft.firefly.plugin.spc.export.SpcExportWorker;
 import com.dmsoft.firefly.plugin.spc.utils.FileUtils;
+import com.dmsoft.firefly.plugin.spc.utils.enums.SpcExportItemKey;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
@@ -48,11 +49,11 @@ public class SpcExportServiceImpl {
 //        if ("global".equals(exportType)) {
         for (SpcStatisticalResultAlarmDto spcStatisticalResultDto : spcStatsDtos) {
             spcStatisticDtoToExport.add(spcStatisticalResultDto);
-            if (exportDataItem.get("SubSummary") && exportDataItem.get("DetailSheet")) {
+            if (exportDataItem.get(SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode()) && exportDataItem.get(SpcExportItemKey.EXPORT_DETAIL_SHEET.getCode())) {
                 exportCount++;
-            } else if (exportDataItem.get("SubSummary") && !exportDataItem.get("DetailSheet") && spcStatisticalResultDto.getCondition().equals("SubSummary")) {
+            } else if (exportDataItem.get(SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode()) && !exportDataItem.get(SpcExportItemKey.EXPORT_DETAIL_SHEET.getCode()) && spcStatisticalResultDto.getCondition().equals(SpcExportItemKey.EXPORT_DETAIL_SHEET.getCode())) {
                 exportCount++;
-            } else if (!exportDataItem.get("SubSummary") && exportDataItem.get("DetailSheet") && !spcStatisticalResultDto.getCondition().equals("SubSummary")) {
+            } else if (!exportDataItem.get(SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode()) && exportDataItem.get(SpcExportItemKey.EXPORT_DETAIL_SHEET.getCode()) && !spcStatisticalResultDto.getCondition().equals(SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode())) {
                 exportCount++;
             }
             if (exportCount == readPieceSize) {
@@ -63,10 +64,7 @@ public class SpcExportServiceImpl {
                 exportTimes++;
             }
         }
-//        }
-//        if (exportType == "current") {
-//            spcStatisticDtoToExport.addAll(spcStatsDtos);
-//        }
+
         if (spcStatisticDtoToExport.size() != 0) {
             spcExportBuildDetail(exportParamDto, chartImage, spcStatisticDtoToExport, exportConfig, exportTimes);
         }
