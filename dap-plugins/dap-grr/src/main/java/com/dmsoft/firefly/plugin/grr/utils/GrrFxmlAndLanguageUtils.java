@@ -21,7 +21,11 @@ public class GrrFxmlAndLanguageUtils {
     public static boolean isDebug = false;
 
     private static ResourceBundle getResourceBundle() {
-        LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+        LanguageType languageType;
+        if (isDebug == false) {
+            languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+        }
+        languageType = LanguageType.EN;
         String bundleKey = "i18n.message_en_US_";
         if (languageType.equals(LanguageType.ZH)) {
             bundleKey = "i18n.message_zh_CN_";
