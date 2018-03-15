@@ -7,6 +7,7 @@ import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.utils.JsonFileUtil;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
+import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.utils.RangeUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
@@ -34,7 +35,6 @@ import static java.util.Arrays.asList;
 @Config
 public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
     private final Logger logger = LoggerFactory.getLogger(SpcSettingServiceImpl.class);
-    private String fileName = "spcSetting";
     private JsonMapper jsonMapper = JsonMapper.defaultMapper();
     private PluginContext pluginContext = RuntimeContext.getBean(PluginContext.class);
 
@@ -42,21 +42,21 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
     @Override
     public void saveSpcSetting(SpcSettingDto spcSettingDto) {
         String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.SpcPlugin").getFolderPath() + File.separator + "config";
-        String json = JsonFileUtil.readJsonFile(path, fileName);
+        String json = JsonFileUtil.readJsonFile(path, ParamKeys.SPC_SETTING_FILE_NAME);
         if (json == null) {
-            logger.debug("Don`t find " + fileName);
+            logger.debug("Don`t find " + ParamKeys.SPC_SETTING_FILE_NAME);
         }
 
-        JsonFileUtil.writeJsonFile(spcSettingDto, path, fileName);
+        JsonFileUtil.writeJsonFile(spcSettingDto, path, ParamKeys.SPC_SETTING_FILE_NAME);
     }
 
     @ExcludeMethod
     @Override
     public SpcSettingDto findSpcSetting() {
         String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.SpcPlugin").getFolderPath() + File.separator + "config";
-        String json = JsonFileUtil.readJsonFile(path, fileName);
+        String json = JsonFileUtil.readJsonFile(path, ParamKeys.SPC_SETTING_FILE_NAME);
         if (json == null) {
-            logger.debug("Don`t find " + fileName);
+            logger.debug("Don`t find " + ParamKeys.SPC_SETTING_FILE_NAME);
         }
 
         SpcSettingDto spcSettingDto = null;
@@ -66,6 +66,7 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
         return spcSettingDto;
     }
 
+    @ExcludeMethod
     @Override
     public List<SpcStatisticalResultAlarmDto> setStatisticalResultAlarm(List<SpcStatsDto> spcStatsDtoList) {
         if (spcStatsDtoList == null) {
@@ -145,7 +146,7 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
                     level = this.getCustomAlarmLevel(statisticalResultName, value, customAlarmDtoList);
                 }
 
-                if (SpcKey.isAbilityAlarmResultName(statisticalResultName)){
+                if (SpcKey.isAbilityAlarmResultName(statisticalResultName)) {
                     level = this.getAbilityAlarmLevel(statisticalResultName, value, abilityAlarmRule);
                 }
                 statisticalAlarmDto.setLevel(level);
@@ -158,6 +159,34 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
         return spcStatisticalResultAlarmDtoList;
     }
 
+    @ExcludeMethod
+    @Override
+    public void saveSpcExportTemplateSetting(Map<String, Boolean> exportSetting) {
+        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.SpcPlugin").getFolderPath() + File.separator + "config";
+        String json = JsonFileUtil.readJsonFile(path, ParamKeys.SPC_EXPORT_SETTING_FILE_NAME);
+        if (json == null) {
+            logger.debug("Don`t find " + ParamKeys.SPC_EXPORT_SETTING_FILE_NAME);
+        }
+
+        JsonFileUtil.writeJsonFile(exportSetting, path, ParamKeys.SPC_EXPORT_SETTING_FILE_NAME);
+    }
+
+    @ExcludeMethod
+    @Override
+    public Map<String, Boolean> findSpcExportTemplateSetting() {
+        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.SpcPlugin").getFolderPath() + File.separator + "config";
+        String json = JsonFileUtil.readJsonFile(path, ParamKeys.SPC_EXPORT_SETTING_FILE_NAME);
+        if (json == null) {
+            logger.debug("Don`t find " + ParamKeys.SPC_EXPORT_SETTING_FILE_NAME);
+        }
+
+        Map<String, Boolean> exportSetting = null;
+        if (!StringUtils.isEmpty(json)) {
+            exportSetting = jsonMapper.fromJson(json, Map.class);
+        }
+        return exportSetting;
+    }
+
     @Override
     public String getConfigName() {
         return "Spc Setting";
@@ -166,8 +195,12 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
     @Override
     public byte[] exportConfig() {
         SpcSettingDto spcSettingDto = findSpcSetting();
-        if (spcSettingDto != null) {
-            return jsonMapper.toJson(spcSettingDto).getBytes();
+        Map<String, Boolean> exportSetting = findSpcExportTemplateSetting();
+        Map<String, Object> settingMap = Maps.newHashMap();
+        if (spcSettingDto != null || exportSetting != null) {
+            settingMap.put(ParamKeys.SPC_SETTING_FILE_NAME, spcSettingDto);
+            settingMap.put(ParamKeys.SPC_EXPORT_SETTING_FILE_NAME, exportSetting);
+            return jsonMapper.toJson(settingMap).getBytes();
         }
         return new byte[0];
     }
@@ -177,7 +210,9 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
         if (config == null) {
             return;
         }
-        saveSpcSetting(jsonMapper.fromJson(new String(config), SpcSettingDto.class));
+        Map<String, Object> settingMap = jsonMapper.fromJson(new String(config), Map.class);
+        saveSpcSetting((SpcSettingDto) settingMap.get(ParamKeys.SPC_SETTING_FILE_NAME));
+        saveSpcExportTemplateSetting((Map<String, Boolean>) settingMap.get(ParamKeys.SPC_EXPORT_SETTING_FILE_NAME));
     }
 
     private String getAbilityAlarmLevel(String name, Double value, Map<String, Double[]> abilityAlarmRule) {

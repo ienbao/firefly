@@ -11,9 +11,9 @@ import com.dmsoft.firefly.core.sdkimpl.plugin.PluginContextImpl;
 import com.dmsoft.firefly.core.sdkimpl.plugin.PluginImageContextImpl;
 import com.dmsoft.firefly.core.sdkimpl.plugin.PluginProxyMethodFactoryImpl;
 import com.dmsoft.firefly.core.sdkimpl.plugin.PluginUIContextImpl;
+import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
 import com.dmsoft.firefly.core.utils.PluginScanner;
 import com.dmsoft.firefly.core.utils.PropertiesUtils;
-import com.dmsoft.firefly.core.utils.SystemPath;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.*;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
@@ -95,7 +95,9 @@ public class DAPApplication {
      */
     public static void startPlugin(List<String> activePlugins) {
         // prepare env done
-        String propertiesURL = SystemPath.getFilePath() + "application.properties";
+        String propertiesURL = ApplicationPathUtil.getPath("application.properties");
+        System.out.println(propertiesURL);
+
         InputStream inputStream = null;
         try {
             inputStream = new BufferedInputStream(new FileInputStream(propertiesURL));

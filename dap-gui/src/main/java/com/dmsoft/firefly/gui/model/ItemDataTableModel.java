@@ -4,14 +4,11 @@ import com.dmsoft.firefly.gui.components.table.NewTableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.utils.TableCheckBox;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
-import com.dmsoft.firefly.sdk.utils.StringUtils;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
@@ -40,22 +37,22 @@ public class ItemDataTableModel implements NewTableModel {
     public ItemDataTableModel(List<String> headers, List<RowDataDto> rowDataDtos) {
         valueMap = Maps.newHashMap();
         if (headers != null && !headers.isEmpty()) {
-            columnKey.add( 0, "" );
+            columnKey.add(0, "");
             if (headers.size() > 10) {
                 for (int i = 0; i < 10; i++) {
-                    columnKey.add( headers.get( i ) );
+                    columnKey.add(headers.get(i));
                 }
             } else {
                 for (String header : headers) {
-                    columnKey.add( header );
+                    columnKey.add(header);
                 }
             }
         }
 
         if (rowDataDtos != null && !rowDataDtos.isEmpty()) {
             for (RowDataDto rowDataDto : rowDataDtos) {
-                rowKey.add( rowDataDto.getRowKey() );
-                rowDataDtoList.add( rowDataDto );
+                rowKey.add(rowDataDto.getRowKey());
+                rowDataDtoList.add(rowDataDto);
             }
         }
     }
@@ -67,14 +64,14 @@ public class ItemDataTableModel implements NewTableModel {
 
     @Override
     public ObjectProperty<String> getCellData(String rowKey, String columnName) {
-        if(columnName.equals("")){
+        if (columnName.equals("")) {
             return null;
-        }else{
-        String row = rowKey.substring( rowKey.indexOf( "_!@#_" ) + 5 );
-        if (!row.equals( "0" )) {
-            valueMap.put( rowKey, new SimpleObjectProperty<String>( rowDataDtoList.get( Integer.parseInt( row ) - 2 ).getData().get( columnName ) ) );
-        }
-        return valueMap.get( rowKey );
+        } else {
+            String row = rowKey.substring(rowKey.indexOf("_!@#_") + 5);
+            if (!row.equals("0")) {
+                valueMap.put(rowKey, new SimpleObjectProperty<String>(rowDataDtoList.get(Integer.parseInt(row) - 5).getData().get(columnName)));
+            }
+            return valueMap.get(rowKey);
         }
     }
 
@@ -90,10 +87,10 @@ public class ItemDataTableModel implements NewTableModel {
 
     @Override
     public boolean isCheckBox(String columnName) {
-        if(columnName.equals("")){
-           return true;
+        if (columnName.equals("")) {
+            return true;
         }
-       return false;
+        return false;
     }
 
     @Override
@@ -162,7 +159,7 @@ public class ItemDataTableModel implements NewTableModel {
         return allCheckBox;
     }
 
-    public ObservableList<String> getRowKey(){
+    public ObservableList<String> getRowKey() {
         return rowKey;
     }
 }

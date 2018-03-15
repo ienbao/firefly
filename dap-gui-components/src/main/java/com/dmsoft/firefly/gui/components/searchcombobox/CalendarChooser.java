@@ -23,13 +23,13 @@ import java.util.Date;
  */
 public class CalendarChooser extends GridPane {
     private Calendar calendar = Calendar.getInstance();
-    private int year, month, day, hour, minute, second;
+    private int year;
+    private int month;
+    private int day;
     private String[] years = null;
     private String[] months = null;
     private int showYears = 100;
     private Label label = null;
-    private StackPane preBtn = null;
-    private StackPane nextBtn = null;
     private ComboBox<String> yearCmb = null;
     private ComboBox<String> monthCmb = null;
     private VBox pane;
@@ -37,7 +37,6 @@ public class CalendarChooser extends GridPane {
     private String[] tits = {"Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat"};
     private String redBtnClass = "btn-primary";
     private String normalBtnClass = "btn-txt";
-    private String calendarChooserClass = "calendar-chooser";
 
     /**
      * constructor
@@ -63,9 +62,9 @@ public class CalendarChooser extends GridPane {
         this.year = this.calendar.get(Calendar.YEAR);
         this.month = this.calendar.get(Calendar.MONTH);
         this.day = this.calendar.get(Calendar.DAY_OF_MONTH);
-        this.hour = this.calendar.get(Calendar.HOUR_OF_DAY);
-        this.minute = this.calendar.get(Calendar.MINUTE);
-        this.second = this.calendar.get(Calendar.SECOND);
+        int hour = this.calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = this.calendar.get(Calendar.MINUTE);
+        int second = this.calendar.get(Calendar.SECOND);
         this.years = new String[showYears];
         this.months = new String[12];
         label = new Label();
@@ -92,6 +91,7 @@ public class CalendarChooser extends GridPane {
         this.add(getNorthPane(), 1, 1);
         this.add(printCalendar(), 1, 3);
         this.add(getSouthPane(), 1, 4);
+        String calendarChooserClass = "calendar-chooser";
         this.getStyleClass().add(calendarChooserClass);
     }
 
@@ -105,10 +105,10 @@ public class CalendarChooser extends GridPane {
         ColumnConstraints c5 = new ColumnConstraints(26, 26, 26);
         ColumnConstraints c6 = new ColumnConstraints(22, 22, 22);
         RowConstraints r0 = new RowConstraints(22, 22, 22);
-        this.preBtn = new BasicArrowButton(BasicArrowButton.Direction.LEFT);
-        Tooltip.install(this.preBtn, new Tooltip(FxmlAndLanguageUtils.getString(ResourceMassages.PRE_MONTH)));
-        this.preBtn.addEventHandler(MouseEvent.MOUSE_RELEASED, this::preBtnHandler);
-        this.preBtn.setPrefSize(22, 22);
+        StackPane preBtn = new BasicArrowButton(BasicArrowButton.Direction.LEFT);
+        Tooltip.install(preBtn, new Tooltip(FxmlAndLanguageUtils.getString(ResourceMassages.PRE_MONTH)));
+        preBtn.addEventHandler(MouseEvent.MOUSE_RELEASED, this::preBtnHandler);
+        preBtn.setPrefSize(22, 22);
         this.yearCmb = new ComboBox<>(FXCollections.observableArrayList(this.years));
         this.yearCmb.setPrefSize(80, 22);
         this.yearCmb.setValue(String.valueOf(calendar.get(Calendar.YEAR)));
@@ -126,10 +126,10 @@ public class CalendarChooser extends GridPane {
             this.calendar.set(Calendar.MONTH, value - 1);
             this.updatePane();
         });
-        this.nextBtn = new BasicArrowButton(BasicArrowButton.Direction.RIGHT);
-        Tooltip.install(this.nextBtn, new Tooltip(FxmlAndLanguageUtils.getString(ResourceMassages.NEXT_MONTH)));
-        this.nextBtn.addEventHandler(MouseEvent.MOUSE_RELEASED, this::nextBtnHandler);
-        this.nextBtn.setPrefSize(22, 22);
+        StackPane nextBtn = new BasicArrowButton(BasicArrowButton.Direction.RIGHT);
+        Tooltip.install(nextBtn, new Tooltip(FxmlAndLanguageUtils.getString(ResourceMassages.NEXT_MONTH)));
+        nextBtn.addEventHandler(MouseEvent.MOUSE_RELEASED, this::nextBtnHandler);
+        nextBtn.setPrefSize(22, 22);
         northPane.getColumnConstraints().addAll(c0, c1, c2, c3, c4, c5, c6);
         northPane.getRowConstraints().addAll(r0);
         northPane.add(preBtn, 0, 0);
@@ -201,8 +201,8 @@ public class CalendarChooser extends GridPane {
         int month2 = calendar.get(Calendar.MONTH);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
-        Button b = null;
-        Label l = null;
+        Button b;
+        Label l;
         int columnCount = 0;
         int rowCount = 0;
         for (int i = Calendar.SUNDAY; i < weekDay; i++) {
@@ -214,8 +214,8 @@ public class CalendarChooser extends GridPane {
                 rowCount++;
             }
         }
-        int currday = 0;
-        String dayStr = null;
+        int currday;
+        String dayStr;
         do {
             currday = calendar.get(Calendar.DAY_OF_MONTH);
             dayStr = formatDay(currday);
@@ -259,18 +259,17 @@ public class CalendarChooser extends GridPane {
         currBtn.getStyleClass().setAll(redBtnClass);
         int day1 = Integer.valueOf(currBtn.getText());
         this.calendar.set(Calendar.DAY_OF_MONTH, day1);
-        StringBuffer sb = new StringBuffer();
-        sb.append(this.calendar.get(Calendar.YEAR)).append("-")
-                .append(this.formatDay(this.calendar.get(Calendar.MONTH) + 1))
-                .append("-")
-                .append(this.formatDay(this.calendar.get(Calendar.DAY_OF_MONTH)))
-                .append(" ")
-                .append(this.formatDay(this.calendar.get(Calendar.HOUR_OF_DAY)))
-                .append(":")
-                .append(this.formatDay(this.calendar.get(Calendar.MINUTE)))
-                .append(":")
-                .append(this.formatDay(this.calendar.get(Calendar.SECOND)));
-        this.setInfo(sb.toString());
+        String sb = String.valueOf(this.calendar.get(Calendar.YEAR)) + "-" +
+                this.formatDay(this.calendar.get(Calendar.MONTH) + 1) +
+                "-" +
+                this.formatDay(this.calendar.get(Calendar.DAY_OF_MONTH)) +
+                " " +
+                this.formatDay(this.calendar.get(Calendar.HOUR_OF_DAY)) +
+                ":" +
+                this.formatDay(this.calendar.get(Calendar.MINUTE)) +
+                ":" +
+                this.formatDay(this.calendar.get(Calendar.SECOND));
+        this.setInfo(sb);
     }
 
     private void nextBtnHandler(Event event) {

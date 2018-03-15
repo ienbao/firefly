@@ -59,6 +59,7 @@ public class TestApplication extends Application {
         Scene scene = new Scene(root, 1280, 704);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/grr_chart.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
     }

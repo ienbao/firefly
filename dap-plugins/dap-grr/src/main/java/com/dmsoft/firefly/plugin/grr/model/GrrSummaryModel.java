@@ -37,7 +37,7 @@ public class GrrSummaryModel {
                     summaryDtos.get(i).getSummaryResultDto().getGrrOnTolerance() :
                     summaryDtos.get(i).getSummaryResultDto().getGrrOnContribution();
 
-            summaries.set(i, new GrrSingleSummary(selected,
+            summaries.add(new GrrSingleSummary(selected,
                     summaryDtos.get(i).getItemName(),
                     String.valueOf(summaryDtos.get(i).getSummaryResultDto().getLsl()),
                     String.valueOf(summaryDtos.get(i).getSummaryResultDto().getUsl()),

@@ -45,7 +45,7 @@ public class NewTableViewWrapper {
                             columnArray[c.getList().indexOf(tableColumn.getText())] = tableColumn;
                         }
                         tableView.getColumns().setAll(columnArray);
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
 
                     }
                 } else if (c.wasAdded()) {
@@ -53,7 +53,7 @@ public class NewTableViewWrapper {
                         for (String s : c.getAddedSubList()) {
                             tableView.getColumns().add(initColumn(s, model));
                         }
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
 
                     }
                 } else if (c.wasRemoved()) {
@@ -64,7 +64,7 @@ public class NewTableViewWrapper {
                                 tableView.getColumns().remove(column);
                             }
                         }
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
 
                     }
                 }
@@ -130,9 +130,7 @@ public class NewTableViewWrapper {
             if (model.getAllCheckValue(s) != null) {
                 CheckBox allCheckBox = new CheckBox();
                 allCheckBox.selectedProperty().set(model.getAllCheckValue(s).getValue());
-                model.getAllCheckValue(s).addListener((ov, b1, b2) -> {
-                    allCheckBox.selectedProperty().set(b2);
-                });
+                model.getAllCheckValue(s).addListener((ov, b1, b2) -> allCheckBox.selectedProperty().set(b2));
                 model.setAllCheckBox(allCheckBox);
                 column.setGraphic(allCheckBox);
                 column.setSortable(false);
