@@ -4,15 +4,22 @@
 
 package com.dmsoft.firefly.plugin.spc;
 
+import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.plugin.spc.controller.SpcSettingController;
+import com.dmsoft.firefly.plugin.spc.handler.FindSpcSettingDataHandler;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
+import com.dmsoft.firefly.plugin.spc.handler.SaveSpcSettingDataHandler;
 import com.dmsoft.firefly.plugin.spc.pipeline.SpcAnalysisJobPipeline;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.pipeline.SpcRefreshJobPipeline;
 import com.dmsoft.firefly.plugin.spc.service.SpcAnalysisService;
 import com.dmsoft.firefly.plugin.spc.service.SpcService;
+import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcAnalysisServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcServiceImpl;
+import com.dmsoft.firefly.plugin.spc.service.impl.SpcSettingServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.StateKey;
 import com.dmsoft.firefly.plugin.spc.utils.ViewResource;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
@@ -35,19 +42,25 @@ import org.slf4j.LoggerFactory;
 public class SpcPlugin extends Plugin {
     public static final String SPC_PLUGIN_NAME = "com.dmsoft.dap.SpcPlugin";
     private static final Logger LOGGER = LoggerFactory.getLogger(SpcPlugin.class);
+    private SpcSettingController spcSettingController;
 
     @Override
     public void initialize(InitModel model) {
         SpcServiceImpl spcService = new SpcServiceImpl();
         SpcAnalysisServiceImpl spcAnalysisService = new SpcAnalysisServiceImpl();
+        SpcSettingService spcSettingService = new SpcSettingServiceImpl();
         spcService.setAnalysisService(spcAnalysisService);
         RuntimeContext.registerBean(SpcService.class, spcService);
         RuntimeContext.registerBean(SpcAnalysisService.class, spcAnalysisService);
+        RuntimeContext.registerBean(SpcSettingService.class, spcSettingService);
         RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(SPC_PLUGIN_NAME,
                 "com.dmsoft.firefly.plugin.spc.service.impl.SpcServiceImpl", spcService);
 
         RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(SPC_PLUGIN_NAME,
                 "com.dmsoft.firefly.plugin.spc.service.impl.SpcAnalysisServiceImpl", spcAnalysisService);
+
+        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(SPC_PLUGIN_NAME,
+                "com.dmsoft.firefly.plugin.spc.service.impl.SpcSettingServiceImpl", spcSettingService);
         LOGGER.info("Plugin-SPC Initialized.");
     }
 
@@ -75,17 +88,54 @@ public class SpcPlugin extends Plugin {
 
             }
         });
-        JobManager manager = RuntimeContext.getBean(JobManager.class);
-        manager.initializeJob(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE, new SpcAnalysisJobPipeline());
-        manager.initializeJob(ParamKeys.SPC_REFRESH_JOB_PIPELINE, new SpcRefreshJobPipeline());
 
         LOGGER.debug("Plugin-SPC UI register done.");
 
         LOGGER.info("Plugin-SPC started.");
+
+        //register spc setting menu
+        MenuItem menuItem = new MenuItem("Spc Settings");
+        menuItem.setId("spcSetting");
+        menuItem.setOnAction(event -> {
+            if (StageMap.getStage(StateKey.SPC_SETTING) == null) {
+                initSpcSettingDialog();
+            } else {
+                if (spcSettingController != null) {
+                    spcSettingController.initData();
+                }
+                StageMap.showStage(StateKey.SPC_SETTING);
+            }
+        });
+        RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.SpcPlugin",
+                MenuBuilder.MenuType.MENU_ITEM, "Spc Settings", MenuBuilder.MENU_PREFERENCE).addMenu(menuItem));
+
+        JobManager manager = RuntimeContext.getBean(JobManager.class);
+        manager.initializeJob(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE, new SpcAnalysisJobPipeline());
+        manager.initializeJob(ParamKeys.SPC_REFRESH_JOB_PIPELINE, new SpcRefreshJobPipeline());
+        manager.initializeJob(ParamKeys.FIND_SPC_SETTING_DATA_JOP_PIPELINE, pipeline -> {
+            pipeline.addLast(ParamKeys.FIND_SPC_SETTING_HANDLER, new FindSpcSettingDataHandler());
+        });
+        manager.initializeJob(ParamKeys.SAVE_SPC_SETTING_DATA_JOP_PIPELINE, pipeline -> {
+            pipeline.addLast(ParamKeys.SAVE_SPC_SETTING_HANDLER, new SaveSpcSettingDataHandler());
+        });
     }
 
     @Override
     public void destroy() {
         System.out.println("Plugin-SPC Destroyed.");
+    }
+
+    private void initSpcSettingDialog() {
+        Pane root = null;
+        try {
+            FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML("view/spc_setting.fxml");
+            root = fxmlLoader.load();
+            spcSettingController = fxmlLoader.getController();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.SPC_SETTING, "Spc Setting", root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            stage.show();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

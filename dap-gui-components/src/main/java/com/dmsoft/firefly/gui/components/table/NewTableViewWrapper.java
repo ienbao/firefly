@@ -45,7 +45,7 @@ public class NewTableViewWrapper {
                             columnArray[c.getList().indexOf(tableColumn.getText())] = tableColumn;
                         }
                         tableView.getColumns().setAll(columnArray);
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
 
                     }
                 } else if (c.wasAdded()) {
@@ -53,7 +53,7 @@ public class NewTableViewWrapper {
                         for (String s : c.getAddedSubList()) {
                             tableView.getColumns().add(initColumn(s, model));
                         }
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
 
                     }
                 } else if (c.wasRemoved()) {
@@ -64,7 +64,7 @@ public class NewTableViewWrapper {
                                 tableView.getColumns().remove(column);
                             }
                         }
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
 
                     }
                 }
@@ -127,16 +127,16 @@ public class NewTableViewWrapper {
             return column;
         } else if (model.isCheckBox(s)) {
             TableColumn<String, CheckBox> column = new TableColumn<>(s);
-            column.setSortable(false);
-            column.setResizable(false);
-            column.setPrefWidth(32);
-            CheckBox allCheckBox = new CheckBox();
-            allCheckBox.selectedProperty().set(model.getAllCheckValue(s).getValue());
-            model.getAllCheckValue(s).addListener((ov, b1, b2) -> {
-                allCheckBox.selectedProperty().set(b2);
-            });
-            model.setAllCheckBox(allCheckBox);
-            column.setGraphic(allCheckBox);
+            if (model.getAllCheckValue(s) != null) {
+                CheckBox allCheckBox = new CheckBox();
+                allCheckBox.selectedProperty().set(model.getAllCheckValue(s).getValue());
+                model.getAllCheckValue(s).addListener((ov, b1, b2) -> allCheckBox.selectedProperty().set(b2));
+                model.setAllCheckBox(allCheckBox);
+                column.setGraphic(allCheckBox);
+                column.setSortable(false);
+                column.setResizable(false);
+                column.setPrefWidth(32);
+            }
             column.setCellValueFactory(cell -> {
                 ObjectProperty<Boolean> b = model.getCheckValue(cell.getValue(), s);
                 CheckBox checkBox = new CheckBox();

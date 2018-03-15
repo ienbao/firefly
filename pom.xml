@@ -11,11 +11,12 @@
     <name>Firefly-DAP :: Data Analysis Platform (DAP)</name>
 
     <modules>
-        <module>dap-gui</module>
-        <module>dap-core</module>
-        <module>dap-sdk</module>
         <module>dap-plugins</module>
         <module>dap-gui-components</module>
+        <module>dap-sdk</module>
+        <module>dap-core</module>
+        <module>dap-restart</module>
+        <module>dap-gui</module>
     </modules>
 
     <properties>

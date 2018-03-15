@@ -1,11 +1,13 @@
 package com.dmsoft.firefly.core.sdkimpl.dai;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
 import com.dmsoft.firefly.core.utils.JsonFileUtil;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -21,7 +23,7 @@ import java.util.Map;
  * Created by Lucien.Chen on 2018/2/9.
  */
 public class TemplateServiceImpl implements TemplateService {
-    private final String parentPath = this.getClass().getResource("/").getPath() + "config";
+    private final String parentPath = ApplicationPathUtil.getPath("config");
     private final String fileName = "template";
     private Logger logger = LoggerFactory.getLogger(TemplateServiceImpl.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
@@ -194,8 +196,15 @@ public class TemplateServiceImpl implements TemplateService {
                 if (curr.getSpecificationDatas() != null && curr.getSpecificationDatas().containsKey(item)) {
                     if (curr.getSpecificationDatas().get(item).getDataType().equals("VARIABLE")) {
                         testItemWithTypeDto.setTestItemType(TestItemType.VARIABLE);
-                        testItemWithTypeDto.setLsl(curr.getSpecificationDatas().get(item).getLslFail());
-                        testItemWithTypeDto.setUsl(curr.getSpecificationDatas().get(item).getUslPass());
+                    }
+                    testItemWithTypeDto.setLsl(curr.getSpecificationDatas().get(item).getLslFail());
+                    testItemWithTypeDto.setUsl(curr.getSpecificationDatas().get(item).getUslPass());
+                } else {
+                    if (DAPStringUtils.isSpecialBlank(testItemWithTypeDto.getLsl())) {
+                        testItemWithTypeDto.setLsl("");
+                    }
+                    if (DAPStringUtils.isSpecialBlank(testItemWithTypeDto.getUsl())) {
+                        testItemWithTypeDto.setUsl("");
                     }
                 }
                 result.put(item, testItemWithTypeDto);

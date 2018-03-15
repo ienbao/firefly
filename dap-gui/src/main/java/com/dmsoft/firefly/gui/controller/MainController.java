@@ -5,6 +5,7 @@ import com.dmsoft.firefly.gui.component.ContentStackPane;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
 import com.dmsoft.firefly.gui.model.UserModel;
+import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -15,6 +16,7 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -118,8 +120,7 @@ public class MainController {
     }
 
     private void setActiveMain(String name, Button activeBtn, PluginUIContext pc) {
-        UserModel userModel = UserModel.getInstance();
-        if (userModel != null && userModel.getUser() != null) {
+        if (isLogin()) {
             grpContent.setDisable(false);
             if (activeBtn.getId().equals(name)) {
                 setActiveBtnStyle(activeBtn);
@@ -223,19 +224,28 @@ public class MainController {
     }
 
     private void initStateBarText() {
-        List<String> activeProjectNames = envService.findActivatedProjectName();
-        if (activeProjectNames != null && !activeProjectNames.isEmpty()) {
-            dataSourceBtn.setText(activeProjectNames.size() + GuiFxmlAndLanguageUtils.getString("STATE_BAR_FILE_SELECTED"));
+        if (isLogin()) {
+            List<String> activeProjectNames = envService.findActivatedProjectName();
+            if (activeProjectNames != null && !activeProjectNames.isEmpty()) {
+                dataSourceBtn.setText(activeProjectNames.size() +" "+ GuiFxmlAndLanguageUtils.getString("STATE_BAR_FILE_SELECTED"));
+            }
+
+            TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
+            if (templateSettingDto != null) {
+                templateBtn.setText(templateSettingDto.getName());
+            }
+        } else {
+            dataSourceBtn.setText("");
+            templateBtn.setText("");
         }
 
-        TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
-        if (templateSettingDto != null) {
-            templateBtn.setText(templateSettingDto.getName());
-        }
     }
 
-    public void updateStateBarText(int selectedFileNumber, String selecteTemplateName) {
+    public void updateDataSourceText(int selectedFileNumber) {
         dataSourceBtn.setText(selectedFileNumber + GuiFxmlAndLanguageUtils.getString("STATE_BAR_FILE_SELECTED"));
+    }
+
+    public void updateTemplateText(String selecteTemplateName) {
         templateBtn.setText(selecteTemplateName);
     }
 
@@ -370,7 +380,7 @@ public class MainController {
 
         if (projectName != null) {
             Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
-            LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, "Default");
+            LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, GuiConst.DEFAULT_TEMPLATE_NAME);
             envService.setTestItems(itemWithTypeDtoMap);
             envService.setActivatedProjectName(projectName);
         } else {
@@ -380,12 +390,19 @@ public class MainController {
     }
 
     public void initTemplate() {
-        templateList = FXCollections.observableArrayList(
-                new StateBarTemplateModel("87", false),
-                new StateBarTemplateModel("09", false),
-                new StateBarTemplateModel("123", true),
-                new StateBarTemplateModel("123", false),
-                new StateBarTemplateModel("123", false));
+        List<StateBarTemplateModel> stateBarTemplateModels = Lists.newLinkedList();
+        List<TemplateSettingDto> allTemplates = templateService.findAllTemplate();
+        if (allTemplates != null) {
+            allTemplates.forEach(dto -> {
+                StateBarTemplateModel stateBarTemplateModel = new StateBarTemplateModel(dto.getName(), false);
+                if (DAPStringUtils.isNotBlank(dto.getName()) && dto.getName().equals(GuiConst.DEFAULT_TEMPLATE_NAME)) {
+                    stateBarTemplateModel.setIsChecked(true);
+                }
+                stateBarTemplateModels.add(stateBarTemplateModel);
+            });
+        }
+        templateList = FXCollections.observableArrayList(stateBarTemplateModels);
+        envService.setActivatedTemplate(GuiConst.DEFAULT_TEMPLATE_NAME);
     }
 
     public void refreshDataSource(ObservableList<String> dataSourceList) {
@@ -404,6 +421,7 @@ public class MainController {
         if (dataSourcePopup.isShowing()) {
             dataSourcePopup.hide();
         }
+        GuiFxmlAndLanguageUtils.buildTemplateDia();
     }
 
     private void getTemplateLblEvent() {
@@ -452,6 +470,15 @@ public class MainController {
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    private boolean isLogin() {
+        UserModel userModel = UserModel.getInstance();
+        if (userModel != null && userModel.getUser() != null) {
+           return true;
+        } else {
+           return false;
         }
     }
 }

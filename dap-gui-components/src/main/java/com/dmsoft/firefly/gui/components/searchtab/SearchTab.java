@@ -3,6 +3,7 @@ package com.dmsoft.firefly.gui.components.searchtab;
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
@@ -56,9 +57,18 @@ public class SearchTab extends VBox {
         return controller.getGroup2();
     }
 
+    public Label getAutoDivideLbl() {
+        return controller.getAutoDivideLbl();
+    }
+
+    public void hiddenGroupAdd() {
+        controller.hiddenGroupAdd();
+    }
+
     public LinkedHashMap<String, List<BasicSearchDto>> getBasicSearch() {
         return controller.getBasicSearch();
     }
+
     public void setBasicSearch(LinkedHashMap<String, List<BasicSearchDto>> basicSearchDtoMaps){
         controller.setBasicSearch(basicSearchDtoMaps);
     }

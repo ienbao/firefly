@@ -8,7 +8,7 @@ import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
 import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
 import com.dmsoft.firefly.plugin.spc.model.StatisticalTableModel;
 import com.dmsoft.firefly.plugin.spc.utils.*;
@@ -77,7 +77,7 @@ public class StatisticalResultController implements Initializable {
      *
      * @param list the data list
      */
-    public void setStatisticalResultTableData(List<SpcStatsDto> list) {
+    public void setStatisticalResultTableData(List<SpcStatisticalResultAlarmDto> list) {
         statisticalTableModel.initData(list);
     }
 
@@ -85,7 +85,7 @@ public class StatisticalResultController implements Initializable {
      * get select stats data
      * @return the list of SpcStatsDto
      */
-    public List<SpcStatsDto> getSelectStatsData(){
+    public List<SpcStatisticalResultAlarmDto> getSelectStatsData(){
         return statisticalTableModel.getSelectData();
     }
 

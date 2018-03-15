@@ -48,7 +48,7 @@ public class DAPClassLoader extends ClassLoader {
         for (PluginClassLoader pcl : pluginClassLoaders) {
             try {
                 return pcl.loadClass(name);
-            } catch (ClassNotFoundException e) {
+            } catch (ClassNotFoundException ignored) {
             }
         }
         throw new ClassNotFoundException(name);

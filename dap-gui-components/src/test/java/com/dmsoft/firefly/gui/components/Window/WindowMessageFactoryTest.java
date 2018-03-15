@@ -47,7 +47,7 @@ public class WindowMessageFactoryTest extends Application{
         MenuItem progressMenuItem = new MenuItem("Progress");
         progressMenuItem.setOnAction(event -> {
             WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip("Running Task");
-            windowProgressTipController.refreshProgress(0.8);
+//            windowProgressTipController.refreshProgress(0.8);
         });
 
         menu.getItems().add(okMenuItem);

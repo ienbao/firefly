@@ -4,31 +4,27 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.plugin.spc.dto.SearchConditionDto;
-import com.dmsoft.firefly.plugin.spc.dto.SpcAnalysisConfigDto;
-import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
-import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
+import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
+import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.job.Job;
-import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
 import java.net.URL;
@@ -63,6 +59,7 @@ public class SpcMainController implements Initializable {
     private SearchDataFrame dataFrame;
     private SpcAnalysisConfigDto analysisConfigDto;
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
+    private SpcSettingService spcSettingService = RuntimeContext.getBean(SpcSettingService.class);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -79,15 +76,16 @@ public class SpcMainController implements Initializable {
      *
      * @param list the data list
      */
-    public void setStatisticalResultData(List<SpcStatsDto> list) {
+    public void setStatisticalResultData(List<SpcStatisticalResultAlarmDto> list) {
         statisticalResultController.setStatisticalResultTableData(list);
     }
 
     /**
      * get Cache color
+     *
      * @return color Cache
      */
-    public Map<String, Color> getColorCache(){
+    public Map<String, Color> getColorCache() {
         return statisticalResultController.getColorCache();
     }
 
@@ -103,7 +101,63 @@ public class SpcMainController implements Initializable {
     }
 
     private void getPrintBtnEvent() {
+        SpcSettingDto spcSettingDto = this.initSpcSettingDto();
+        spcSettingService.saveSpcSetting(spcSettingDto);
+    }
 
+    @Deprecated
+    private SpcSettingDto initSpcSettingDto() {
+        SpcSettingDto spcSettingDto = new SpcSettingDto();
+
+        spcSettingDto.setCustomGroupNumber(10);
+        spcSettingDto.setChartIntervalNumber(8);
+
+        Map<String, Double[]> abilityAlarmRule = Maps.newHashMap();
+        abilityAlarmRule.put("CA", new Double[]{12.5, 25d, 50d});
+        abilityAlarmRule.put("CP", new Double[]{1.67, 1.33, 1.0, 0.67});
+        abilityAlarmRule.put("CPK", new Double[]{1.67, 1.33, 1.0, 0.67});
+        abilityAlarmRule.put("CPL", new Double[]{1.67, 1.33, 1.0, 0.67});
+        abilityAlarmRule.put("CPU", new Double[]{1.67, 1.33, 1.0, 0.67});
+        abilityAlarmRule.put("PP", new Double[]{1.67, 1.33, 1.0, 0.67});
+        abilityAlarmRule.put("PPK", new Double[]{1.67, 1.33, 1.0, 0.67});
+        abilityAlarmRule.put("PPL", new Double[]{1.67, 1.33, 1.0, 0.67});
+        abilityAlarmRule.put("PPU", new Double[]{1.67, 1.33, 1.0, 0.67});
+        spcSettingDto.setAbilityAlarmRule(abilityAlarmRule);
+
+        Map<String, List<CustomAlarmDto>> statistiacalAlarmMap = Maps.newHashMap();
+        List<String> testItem = Lists.newArrayList("A1", "A2", "A3");
+        testItem.forEach(name -> {
+            List<CustomAlarmDto> customAlarmDtoList = Lists.newArrayList();
+            List<String> statistics = Lists.newArrayList("AVG", "Max", "Min", "StDev", "Center", "Range", "LCL",
+                    "UCL", "Kurtosis", "Skewness");
+            statistics.forEach(s -> {
+                CustomAlarmDto customAlarmDto = new CustomAlarmDto();
+                customAlarmDto.setStatisticName(s);
+                customAlarmDto.setUpperLimit(10d);
+                customAlarmDto.setLowerLimit(3d);
+                customAlarmDtoList.add(customAlarmDto);
+            });
+
+            statistiacalAlarmMap.put(name, customAlarmDtoList);
+        });
+        spcSettingDto.setStatisticalAlarmSetting(statistiacalAlarmMap);
+
+        List<ControlRuleDto> controlChartRule = Lists.newArrayList();
+        List<String> alarmNameList = Lists.newArrayList("R1", "R2", "R3", "R4", "R5", "R6", "R7",
+                "R8", "R9");
+        alarmNameList.forEach(alarmName -> {
+            ControlRuleDto controlRuleDto = new ControlRuleDto();
+            controlRuleDto.setUsed(true);
+            controlRuleDto.setRuleName(alarmName);
+            controlRuleDto.setmValue(7d);
+            controlRuleDto.setnValue(4d);
+            controlRuleDto.setsValue(1d);
+            controlChartRule.add(controlRuleDto);
+        });
+        spcSettingDto.setControlChartRule(controlChartRule);
+
+        spcSettingDto.setExportTemplateName("Default Template");
+        return spcSettingDto;
     }
 
     private void getExportBtnEvent() {
@@ -132,7 +186,7 @@ public class SpcMainController implements Initializable {
         SearchDataFrame subDataFrame = this.buildSubSearchDataFrame(searchConditionDtoList);
         paramMap.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
 
-        Object returnValue =  manager.doJobSyn(job, paramMap);
+        Object returnValue = manager.doJobSyn(job, paramMap);
         if (returnValue == null) {
             return;
         }
@@ -192,14 +246,14 @@ public class SpcMainController implements Initializable {
 
     private List<SearchConditionDto> buildRefreshSearchConditionData() {
         List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
-        List<SpcStatsDto> spcStatsDtoList = statisticalResultController.getSelectStatsData();
-        for (SpcStatsDto spcStatsDto : spcStatsDtoList) {
+        List<SpcStatisticalResultAlarmDto> spcStatsDtoList = statisticalResultController.getSelectStatsData();
+        for (SpcStatisticalResultAlarmDto spcStatsDto : spcStatsDtoList) {
             SearchConditionDto searchConditionDto = new SearchConditionDto();
             searchConditionDto.setKey(spcStatsDto.getKey());
             searchConditionDto.setItemName(spcStatsDto.getItemName());
             searchConditionDto.setCondition(spcStatsDto.getCondition());
-            searchConditionDto.setCusUsl(String.valueOf(spcStatsDto.getStatsResultDto().getUsl()));
-            searchConditionDto.setCusLsl(String.valueOf(spcStatsDto.getStatsResultDto().getLsl()));
+            searchConditionDto.setCusUsl(String.valueOf(spcStatsDto.getStatisticalAlarmDtoMap().get(UIConstant.SPC_SR_ALL[8]).getValue()));
+            searchConditionDto.setCusLsl(String.valueOf(spcStatsDto.getStatisticalAlarmDtoMap().get(UIConstant.SPC_SR_ALL[7]).getValue()));
             searchConditionDtoList.add(searchConditionDto);
         }
         return searchConditionDtoList;

@@ -132,7 +132,7 @@ public class ResourceFinder {
         URL url = null;
         try {
             final File file = new File(filename);
-            if (file.exists() && file.isFile() && file.canRead()) {
+            if (file.exists() && file.canRead()) {
                 url = file.toURI().toURL();
             }
         } catch (MalformedURLException e) { // NOPMD

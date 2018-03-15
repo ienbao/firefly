@@ -5,20 +5,20 @@
 package com.dmsoft.firefly.gui.controller.template;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
-import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
-import com.dmsoft.firefly.core.utils.DataFormat;
-import com.dmsoft.firefly.core.utils.JsonFileUtil;
-import com.dmsoft.firefly.core.utils.PropertiesUtils;
+import com.dmsoft.firefly.core.utils.*;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.model.PluginTableRowData;
+import com.dmsoft.firefly.gui.utils.FileUtils;
+import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.KeyValueDto;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -65,9 +65,11 @@ public class PluginManageController implements Initializable {
     private ObservableList<PluginTableRowData> pluginTableRowDataObservableList;
     private FilteredList<PluginTableRowData> pluginTableRowDataFilteredList;
     private SortedList<PluginTableRowData> pluginTableRowDataSortedList;
-    private final String parentPath = this.getClass().getResource("/").getPath() + "config";
+    private final String parentPath = ApplicationPathUtil.getPath(GuiConst.CONFIG_PATH);
     private JsonMapper mapper = JsonMapper.defaultMapper();
     private boolean isEdit = false;
+    private List<String> deleteList = Lists.newArrayList();
+    private Map<String, Boolean> validateMap = Maps.newHashMap();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -125,7 +127,7 @@ public class PluginManageController implements Initializable {
                     event.setDropCompleted(true);
                     pluginTable.getSelectionModel().select(dropIndex);
                     event.consume();
-
+                    isEdit = true;
                     updateProjectOrder();
                 }
             });
@@ -134,7 +136,6 @@ public class PluginManageController implements Initializable {
                 if (pluginTable.getSelectionModel().getSelectedIndex() != -1) {
                     PluginTableRowData pluginTableRowData = pluginTableRowDataObservableList.get(pluginTable.getSelectionModel().getSelectedIndex());
                     explain.setText(pluginTableRowData.getInfo().getDescription());
-                    System.out.println(pluginTable.getSelectionModel().getSelectedIndex() + " click");
                 }
             });
 
@@ -149,12 +150,17 @@ public class PluginManageController implements Initializable {
     }
 
     private void updateProjectOrder() {
-
+        List<KeyValueDto> activePlugin = Lists.newArrayList();
+        pluginTableRowDataObservableList.forEach(v -> {
+            activePlugin.add(new KeyValueDto(v.getInfo().getId(), v.getSelector().isSelected()));
+        });
+        JsonFileUtil.writeJsonFile(activePlugin, parentPath, GuiConst.ACTIVE_PLUGIN);
     }
 
     private void initEvent() {
         ok.setOnAction(event -> {
-            if (true) {
+            validateMapChange();
+            if (isEdit) {
                 List<KeyValueDto> activePlugin = Lists.newArrayList();
                 pluginTableRowDataObservableList.forEach(v -> {
                     activePlugin.add(new KeyValueDto(v.getInfo().getId(), v.getSelector().isSelected()));
@@ -163,7 +169,12 @@ public class PluginManageController implements Initializable {
                 Runtime.getRuntime().addShutdownHook(new Thread() {
                     public void run() {
                         try {
-                            Runtime.getRuntime().exec("java -jar dap-gui-1.0.0.jar");
+                            StringBuilder stringBuilder = new StringBuilder("java -jar dap-restart-1.0.0.jar");
+                            deleteList.forEach(v -> {
+                                stringBuilder.append(" " + v);
+                            });
+                            System.out.println(stringBuilder.toString());
+                            Runtime.getRuntime().exec(stringBuilder.toString());
                         } catch (IOException e) {
                             System.out.println("restart failed.");
                         }
@@ -183,37 +194,83 @@ public class PluginManageController implements Initializable {
             fileChooser.setTitle("Open");
             fileChooser.setInitialDirectory(new File(str));
             fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("JAR", "*.jar")
+                    new FileChooser.ExtensionFilter("ZIP", "*.zip")
             );
             Stage fileStage = null;
             File file = fileChooser.showOpenDialog(fileStage);
             if (file != null) {
                 //TODO
-                PluginContext context = RuntimeContext.getBean(PluginContext.class);
-//                context.installPlugin();
+                String propertiesURL = ApplicationPathUtil.getPath("application.properties");
+                InputStream inputStream = null;
+                String pluginFolderPath = null;
+                try {
+                    inputStream = new BufferedInputStream(new FileInputStream(propertiesURL));
+                    Properties properties = new Properties();
+                    properties.load(inputStream);
+                    pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
+
+                    //validate
+                    FileUtils.unZipFiles(file, pluginFolderPath + "/temp/" + file.getName() + "/");
+                    PluginContext context = RuntimeContext.getBean(PluginContext.class);
+                    List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath + "/temp/" + file.getName() + "/");
+                    PluginInfo installPlugins = scannedPlugins.get(0);
+
+                    Map<String, PluginInfo> allInstallPlugins = context.getAllInstalledPluginInfo() == null ? Maps.newHashMap() : context.getAllInstalledPluginInfo();
+
+                    if (isExists(scannedPlugins.get(0), allInstallPlugins)) {
+                        //TODO 存在相同的插件时对应的逻辑
+                        return;
+                    }
+
+                    FileUtils.unZipFiles(file, pluginFolderPath + "/");
+                    FileUtils.deleteFolder(pluginFolderPath + "/temp/" + file.getName());
+
+                    PluginTableRowData chooseTableRowData = new PluginTableRowData(false, installPlugins.getName(), installPlugins);
+                    pluginTableRowDataObservableList.add(chooseTableRowData);
+                    isEdit = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         });
         unInstallPlugin.setOnAction(event -> {
             if (pluginTable.getSelectionModel().getSelectedIndex() != -1) {
                 PluginTableRowData pluginTableRowData = pluginTableRowDataObservableList.get(pluginTable.getSelectionModel().getSelectedIndex());
                 PluginContext context = RuntimeContext.getBean(PluginContext.class);
+                String url = pluginTableRowData.getInfo().getFolderPath();
+                System.out.println(url);
+                deleteList.add(url);
                 context.uninstallPlugin(pluginTableRowData.getInfo().getId());
                 pluginTableRowDataObservableList.remove(pluginTableRowData);
+                isEdit = true;
+                updateProjectOrder();
             }
-            String propertiesURL = ApplicationPathUtil.getPath("resources", "application.properties");
-            InputStream inputStream = null;
-            try {
-                inputStream = new BufferedInputStream(new FileInputStream(propertiesURL));
-                Properties properties = new Properties();
-                properties.load(inputStream);
-                String pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
-                File file = new File(pluginFolderPath);
-                //TODO delete the plugin
-            } catch (Exception e) {
-                e.printStackTrace();
+        });
+    }
+
+    private boolean isExists(PluginInfo pluginInfo, Map<String, PluginInfo> allInstallPlugins) {
+
+        if (allInstallPlugins.containsKey(pluginInfo.getId())) {
+            PluginInfo exist = allInstallPlugins.get(pluginInfo.getId());
+            if (exist.getVersion().equals(pluginInfo.getVersion())) {
+                return true;
             }
+        }
+        return false;
+    }
 
-
+    private void validateMapChange() {
+        pluginTableRowDataObservableList.forEach(v -> {
+            if (validateMap.containsKey(v.getInfo().getId())) {
+                if (validateMap.get(v.getInfo().getId()).booleanValue() != v.getSelector().isSelected()) {
+                    isEdit = true;
+                    return;
+                }
+            } else {
+                isEdit = true;
+                return;
+            }
         });
     }
 
@@ -221,7 +278,7 @@ public class PluginManageController implements Initializable {
         PluginContext context = RuntimeContext.getBean(PluginContext.class);
         Map<String, PluginInfo> map = context.getAllInstalledPluginInfo();
 
-        String json = JsonFileUtil.readJsonFile(parentPath, "activePlugin");
+        String json = JsonFileUtil.readJsonFile(parentPath, GuiConst.ACTIVE_PLUGIN);
         List<KeyValueDto> activePlugin = Lists.newArrayList();
         if (DAPStringUtils.isNotBlank(json)) {
             activePlugin = mapper.fromJson(json, mapper.buildCollectionType(List.class, KeyValueDto.class));
@@ -230,6 +287,7 @@ public class PluginManageController implements Initializable {
             activePlugin.forEach(v -> {
                 PluginTableRowData chooseTableRowData = new PluginTableRowData((Boolean) v.getValue(), map.get(v.getKey()).getName(), map.get(v.getKey()));
                 pluginTableRowDataObservableList.add(chooseTableRowData);
+                validateMap.put(v.getKey(), (Boolean) v.getValue());
             });
         }
     }

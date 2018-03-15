@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.dmsoft.firefly.gui.components.utils.TextFieldFilter?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcSettingController">
+    <children>
+        <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-border-color: #DCDCDC;">
+            <children>
+                <VBox style="-fx-background-color: #F0F0F0;">
+                    <children>
+                        <Label fx:id="defaultSetting" prefHeight="22.0" prefWidth="160.0" text="Analysis Setting">
+                            <padding>
+                                <Insets left="10.0" />
+                            </padding>
+                        </Label>
+                        <Label fx:id="alarmSetting" prefHeight="22.0" prefWidth="160.0" text="Alarm Setting">
+                            <padding>
+                                <Insets left="10.0" />
+                            </padding>
+                        </Label>
+                        <Label fx:id="controlAlarmRule" prefHeight="22.0" prefWidth="160.0" text="Control Alarm Rule">
+                            <padding>
+                                <Insets left="10.0" />
+                            </padding>
+                        </Label>
+                        <Label fx:id="exportSetting" prefHeight="22.0" prefWidth="160.0" text="Export Setting">
+                            <padding>
+                                <Insets left="10.0" />
+                            </padding>
+                        </Label>
+                    </children>
+                </VBox>
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="450.0" prefWidth="625.0" HBox.hgrow="ALWAYS">
+                    <content>
+                        <VBox>
+                            <children>
+                                <VBox>
+                                    <children>
+                                        <Label style="-fx-font-weight: bold" text="Analysis Setting">
+                                            <VBox.margin>
+                                                <Insets bottom="10.0" top="10.0" />
+                                            </VBox.margin>
+                                        </Label>
+                                        <HBox alignment="CENTER_LEFT">
+                                            <children>
+                                                <Label alignment="CENTER" contentDisplay="CENTER" text="Subgroup Size">
+                                                    <HBox.margin>
+                                                        <Insets right="10.0" />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="subgroupSizeTf" prefHeight="22.0" prefWidth="70.0" />
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets bottom="10.0" />
+                                            </VBox.margin>
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT">
+                                            <children>
+                                                <Label text="ND Chart Interval Number">
+                                                    <HBox.margin>
+                                                        <Insets right="10.0" />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="ndChartNumberTf" prefHeight="22.0" prefWidth="70.0">
+                                                    <HBox.margin>
+                                                        <Insets />
+                                                    </HBox.margin>
+                                                </TextField>
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets bottom="10.0" />
+                                            </VBox.margin>
+                                        </HBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets bottom="10.0" />
+                                    </VBox.margin>
+                                </VBox>
+                                <VBox>
+                                    <children>
+                                        <Label style="-fx-font-weight: bold" text="Alarm Setting">
+                                            <VBox.margin>
+                                                <Insets bottom="10.0" top="10.0" />
+                                            </VBox.margin>
+                                        </Label>
+                                        <Label text="Process Capability Alarm Setting">
+                                            <VBox.margin>
+                                                <Insets bottom="10.0" />
+                                            </VBox.margin>
+                                        </Label>
+                                        <GridPane hgap="10.0" vgap="2.0">
+                                            <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="40.0" prefWidth="40.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="22.0" prefWidth="22.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="8.0" prefWidth="8.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="8.0" prefWidth="8.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="22.0" prefWidth="22.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="8.0" prefWidth="8.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="8.0" prefWidth="8.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="22.0" prefWidth="22.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="8.0" prefWidth="8.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="8.0" prefWidth="8.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="22.0" prefWidth="22.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="8.0" prefWidth="8.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="55.0" prefWidth="55.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="8.0" prefWidth="8.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="22.0" prefWidth="22.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <children>
+                                                <Label text="\%|CA|" />
+                                                <Label text="CP" GridPane.rowIndex="1" />
+                                                <Label text="CPK" GridPane.rowIndex="2" />
+                                                <Label text="CPL" GridPane.rowIndex="3" />
+                                                <Label text="CPU" GridPane.rowIndex="4" />
+                                                <Label text="PP" GridPane.rowIndex="5" />
+                                                <Label text="PPK" GridPane.rowIndex="6" />
+                                                <Label text="PPL" GridPane.rowIndex="7" />
+                                                <Label text="PPU" GridPane.rowIndex="8" />
+                                                <Label styleClass="alarm-excellent" text="A" GridPane.columnIndex="1" />
+                                                <Label styleClass="alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Label styleClass="alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                <Label styleClass="alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                <Label styleClass="alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                <Label styleClass="alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                                <Label styleClass="alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                                <Label styleClass="alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                                <Label styleClass="alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                                                <Label text="&lt;" GridPane.columnIndex="2" />
+                                                <Label text="≥" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                <Label text="≥" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                                <Label text="≥" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                                <Label text="≥" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                                <Label text="≥" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                                                <Label text="≥" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                                                <Label text="≥" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                                                <Label text="≥" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+                                                <TextField fx:id="caExcellentTf" GridPane.columnIndex="3" />
+                                                <TextField fx:id="cpExcellentTf" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                                <TextField fx:id="cpkExcellentTf" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                                <TextField fx:id="cplExcellentTf" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                                                <TextField fx:id="cpuExcellentTf" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                                                <TextField fx:id="ppExcellentTf" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                                                <TextField fx:id="ppkExcellentTf" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+                                                <TextField fx:id="pplExcellentTf" GridPane.columnIndex="3" GridPane.rowIndex="7" />
+                                                <TextField fx:id="ppuExcellentTf" GridPane.columnIndex="3" GridPane.rowIndex="8" />
+                                                <Label text="≤" GridPane.columnIndex="4" />
+                                                <Label text="&gt;" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <Label text="&gt;" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                                                <Label text="&gt;" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                                                <Label text="&gt;" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                                                <Label text="&gt;" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+                                                <Label text="&gt;" GridPane.columnIndex="4" GridPane.rowIndex="6" />
+                                                <Label text="&gt;" GridPane.columnIndex="4" GridPane.rowIndex="7" />
+                                                <Label text="&gt;" GridPane.columnIndex="4" GridPane.rowIndex="8" />
+                                                <Label styleClass="alarm-acceptable" text="B" GridPane.columnIndex="5" />
+                                                <Label styleClass="alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                                <Label styleClass="alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                                                <Label styleClass="alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+                                                <Label styleClass="alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+                                                <Label styleClass="alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="5" />
+                                                <Label styleClass="alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="6" />
+                                                <Label styleClass="alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="7" />
+                                                <Label styleClass="alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="8" />
+                                                <Label text="&lt;" GridPane.columnIndex="6" />
+                                                <Label text="≥" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                                                <Label text="≥" GridPane.columnIndex="6" GridPane.rowIndex="2" />
+                                                <Label text="≥" GridPane.columnIndex="6" GridPane.rowIndex="3" />
+                                                <Label text="≥" GridPane.columnIndex="6" GridPane.rowIndex="4" />
+                                                <Label text="≥" GridPane.columnIndex="6" GridPane.rowIndex="5" />
+                                                <Label text="≥" GridPane.columnIndex="6" GridPane.rowIndex="6" />
+                                                <Label text="≥" GridPane.columnIndex="6" GridPane.rowIndex="7" />
+                                                <Label text="≥" GridPane.columnIndex="6" GridPane.rowIndex="8" />
+                                                <TextField fx:id="caAcceptableTf" GridPane.columnIndex="7" />
+                                                <TextField fx:id="cpGoodTf" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+                                                <TextField fx:id="cpkGoodTf" GridPane.columnIndex="7" GridPane.rowIndex="2" />
+                                                <TextField fx:id="cplGoodTf" GridPane.columnIndex="7" GridPane.rowIndex="3" />
+                                                <TextField fx:id="cpuGoodTf" GridPane.columnIndex="7" GridPane.rowIndex="4" />
+                                                <TextField fx:id="ppGoodTf" GridPane.columnIndex="7" GridPane.rowIndex="5" />
+                                                <TextField fx:id="ppkGoodTf" GridPane.columnIndex="7" GridPane.rowIndex="6" />
+                                                <TextField fx:id="pplGoodTf" GridPane.columnIndex="7" GridPane.rowIndex="7" />
+                                                <TextField fx:id="ppuGoodTf" GridPane.columnIndex="7" GridPane.rowIndex="8" />
+                                                <Label text="≤" GridPane.columnIndex="8" />
+                                                <Label text="&gt;" GridPane.columnIndex="8" GridPane.rowIndex="1" />
+                                                <Label text="&gt;" GridPane.columnIndex="8" GridPane.rowIndex="2" />
+                                                <Label text="&gt;" GridPane.columnIndex="8" GridPane.rowIndex="3" />
+                                                <Label text="&gt;" GridPane.columnIndex="8" GridPane.rowIndex="4" />
+                                                <Label text="&gt;" GridPane.columnIndex="8" GridPane.rowIndex="5" />
+                                                <Label text="&gt;" GridPane.columnIndex="8" GridPane.rowIndex="6" />
+                                                <Label text="&gt;" GridPane.columnIndex="8" GridPane.rowIndex="7" />
+                                                <Label text="&gt;" GridPane.columnIndex="8" GridPane.rowIndex="8" />
+                                                <Label styleClass="alarm-rectification" text="C" GridPane.columnIndex="9" />
+                                                <Label styleClass="alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="1" />
+                                                <Label styleClass="alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="2" />
+                                                <Label styleClass="alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="3" />
+                                                <Label styleClass="alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="4" />
+                                                <Label styleClass="alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="5" />
+                                                <Label styleClass="alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="6" />
+                                                <Label styleClass="alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="7" />
+                                                <Label styleClass="alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="8" />
+                                                <Label text="&lt;" GridPane.columnIndex="10" />
+                                                <Label text="≥" GridPane.columnIndex="10" GridPane.rowIndex="1" />
+                                                <Label text="≥" GridPane.columnIndex="10" GridPane.rowIndex="2" />
+                                                <Label text="≥" GridPane.columnIndex="10" GridPane.rowIndex="3" />
+                                                <Label text="≥" GridPane.columnIndex="10" GridPane.rowIndex="4" />
+                                                <Label text="≥" GridPane.columnIndex="10" GridPane.rowIndex="5" />
+                                                <Label text="≥" GridPane.columnIndex="10" GridPane.rowIndex="6" />
+                                                <Label text="≥" GridPane.columnIndex="10" GridPane.rowIndex="7" />
+                                                <Label text="≥" GridPane.columnIndex="10" GridPane.rowIndex="8" />
+                                                <TextField fx:id="caRectificationTf" GridPane.columnIndex="11" />
+                                                <TextField fx:id="cpAcceptableTf" GridPane.columnIndex="11" GridPane.rowIndex="1" />
+                                                <TextField fx:id="cpkAcceptableTf" GridPane.columnIndex="11" GridPane.rowIndex="2" />
+                                                <TextField fx:id="cplAcceptableTf" GridPane.columnIndex="11" GridPane.rowIndex="3" />
+                                                <TextField fx:id="cpuAcceptableTf" GridPane.columnIndex="11" GridPane.rowIndex="4" />
+                                                <TextField fx:id="ppAcceptableTf" GridPane.columnIndex="11" GridPane.rowIndex="5" />
+                                                <TextField fx:id="ppkAcceptableTf" GridPane.columnIndex="11" GridPane.rowIndex="6" />
+                                                <TextField fx:id="pplAcceptableTf" GridPane.columnIndex="11" GridPane.rowIndex="7" />
+                                                <TextField fx:id="ppuAcceptableTf" GridPane.columnIndex="11" GridPane.rowIndex="8" />
+                                                <Label text="≤" GridPane.columnIndex="12" />
+                                                <Label text="&gt;" GridPane.columnIndex="12" GridPane.rowIndex="1" />
+                                                <Label text="&gt;" GridPane.columnIndex="12" GridPane.rowIndex="2" />
+                                                <Label text="&gt;" GridPane.columnIndex="12" GridPane.rowIndex="3" />
+                                                <Label text="&gt;" GridPane.columnIndex="12" GridPane.rowIndex="4" />
+                                                <Label text="&gt;" GridPane.columnIndex="12" GridPane.rowIndex="5" />
+                                                <Label text="&gt;" GridPane.columnIndex="12" GridPane.rowIndex="6" />
+                                                <Label text="&gt;" GridPane.columnIndex="12" GridPane.rowIndex="7" />
+                                                <Label text="&gt;" GridPane.columnIndex="12" GridPane.rowIndex="8" />
+                                                <Label styleClass="alarm-bad" text="D" GridPane.columnIndex="13" />
+                                                <Label styleClass="alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="1" />
+                                                <Label styleClass="alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="2" />
+                                                <Label styleClass="alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="3" />
+                                                <Label styleClass="alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="4" />
+                                                <Label styleClass="alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="5" />
+                                                <Label styleClass="alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="6" />
+                                                <Label styleClass="alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="7" />
+                                                <Label styleClass="alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="8" />
+                                                <Label text="≥" GridPane.columnIndex="14" GridPane.rowIndex="1" />
+                                                <Label text="≥" GridPane.columnIndex="14" GridPane.rowIndex="2" />
+                                                <Label text="≥" GridPane.columnIndex="14" GridPane.rowIndex="3" />
+                                                <Label text="≥" GridPane.columnIndex="14" GridPane.rowIndex="4" />
+                                                <Label text="≥" GridPane.columnIndex="14" GridPane.rowIndex="5" />
+                                                <Label text="≥" GridPane.columnIndex="14" GridPane.rowIndex="6" />
+                                                <Label text="≥" GridPane.columnIndex="14" GridPane.rowIndex="7" />
+                                                <Label text="≥" GridPane.columnIndex="14" GridPane.rowIndex="8" />
+                                                <TextField fx:id="cpRectificationTf" GridPane.columnIndex="15" GridPane.rowIndex="1" />
+                                                <TextField fx:id="cpkRectificationTf" GridPane.columnIndex="15" GridPane.rowIndex="2" />
+                                                <TextField fx:id="cplRectificationTf" GridPane.columnIndex="15" GridPane.rowIndex="3" />
+                                                <TextField fx:id="cpuRectificationTf" GridPane.columnIndex="15" GridPane.rowIndex="4" />
+                                                <TextField fx:id="ppRectificationTf" GridPane.columnIndex="15" GridPane.rowIndex="5" />
+                                                <TextField fx:id="ppkRectificationTf" GridPane.columnIndex="15" GridPane.rowIndex="6" />
+                                                <TextField fx:id="pplRectificationTf" GridPane.columnIndex="15" GridPane.rowIndex="7" />
+                                                <TextField fx:id="ppuRectificationTf" GridPane.columnIndex="15" GridPane.rowIndex="8" />
+                                                <Label text="&gt;" GridPane.columnIndex="16" GridPane.rowIndex="1" />
+                                                <Label text="&gt;" GridPane.columnIndex="16" GridPane.rowIndex="2" />
+                                                <Label text="&gt;" GridPane.columnIndex="16" GridPane.rowIndex="3" />
+                                                <Label text="&gt;" GridPane.columnIndex="16" GridPane.rowIndex="4" />
+                                                <Label text="&gt;" GridPane.columnIndex="16" GridPane.rowIndex="5" />
+                                                <Label text="&gt;" GridPane.columnIndex="16" GridPane.rowIndex="6" />
+                                                <Label text="&gt;" GridPane.columnIndex="16" GridPane.rowIndex="7" />
+                                                <Label text="&gt;" GridPane.columnIndex="16" GridPane.rowIndex="8" />
+                                                <Label styleClass="alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="1" />
+                                                <Label styleClass="alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="2" />
+                                                <Label styleClass="alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="3" />
+                                                <Label styleClass="alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="4" />
+                                                <Label styleClass="alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="5" />
+                                                <Label styleClass="alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="6" />
+                                                <Label styleClass="alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="7" />
+                                                <Label styleClass="alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="8" />
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets bottom="10.0" />
+                                            </VBox.margin>
+                                            <padding>
+                                                <Insets bottom="10.0" />
+                                            </padding>
+                                        </GridPane>
+                                        <Label text="Custom Statistical Alarm Setting">
+                                            <VBox.margin>
+                                                <Insets bottom="10.0" />
+                                            </VBox.margin>
+                                        </Label>
+                                        <HBox alignment="CENTER_RIGHT" prefHeight="240.0" prefWidth="200.0">
+                                            <children>
+                                                <VBox HBox.hgrow="ALWAYS">
+                                                    <children>
+                                                        <HBox alignment="CENTER_RIGHT" minHeight="30.0" prefHeight="30.0" spacing="10.0" style="-fx-border-width:1 1 0 1;-fx-border-color: #DCDCDC;">
+                                                            <children>
+                                                                <TextFieldFilter fx:id="searchTestItemTf" prefHeight="22.0" prefWidth="200.0">
+                                                                    <GridPane.margin>
+                                                                        <Insets bottom="3.0" right="10.0" top="3.0" />
+                                                                    </GridPane.margin>
+                                                                    <opaqueInsets>
+                                                                        <Insets />
+                                                                    </opaqueInsets>
+                                                                </TextFieldFilter>
+                                                                <Button fx:id="addTestItemBtn" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-icon">
+                                                                    <HBox.margin>
+                                                                        <Insets right="3.0" />
+                                                                    </HBox.margin>
+                                                                </Button>
+                                                            </children>
+                                                            <padding>
+                                                                <Insets bottom="3.0" top="3.0" />
+                                                            </padding>
+                                                        </HBox>
+                                                        <TableView fx:id="testItemTable" style="-fx-border-width:1 0 1 1">
+                                                            <columns>
+                                                                <TableColumn fx:id="testItemColumn" />
+                                                            </columns>
+                                                        </TableView>
+                                                    </children>
+                                                </VBox>
+                                                <VBox minWidth="290.0" prefWidth="290.0">
+                                                    <children>
+                                                        <HBox alignment="CENTER_LEFT" minHeight="30.0" prefWidth="30.0" style="-fx-border-width:1 1 0 0;-fx-border-color: #DCDCDC;">
+                                                            <padding>
+                                                                <Insets bottom="3.0" top="3.0" />
+                                                            </padding>
+                                                            <children>
+                                                                <Label fx:id="testItemNameLabel">
+                                                                    <HBox.margin>
+                                                                        <Insets left="10.0" />
+                                                                    </HBox.margin>
+                                                                </Label>
+                                                            </children>
+                                                        </HBox>
+                                                        <TableView fx:id="statisticalResultAlarmSetTable">
+                                                            <columns>
+                                                                <TableColumn fx:id="statisticsColumn" prefWidth="75.0" text="Statistics" />
+                                                                <TableColumn fx:id="lowerLimitColumn" prefWidth="75.0" text="Lower Limit" />
+                                                                <TableColumn fx:id="upperLimitColumn" prefWidth="75.0" text="Upper Limit" />
+                                                            </columns>
+                                                        </TableView>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets bottom="10.0" />
+                                            </VBox.margin>
+                                        </HBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets bottom="10.0" />
+                                    </VBox.margin>
+                                </VBox>
+                                <VBox>
+                                    <children>
+                                        <Label style="-fx-font-weight: bold" text="Control Alarm Rule">
+                                            <VBox.margin>
+                                                <Insets bottom="10.0" top="10.0" />
+                                            </VBox.margin>
+                                        </Label>
+                                        <TableView fx:id="controlAlarmRuleTable" prefHeight="188.0">
+                                            <columns>
+                                                <TableColumn prefWidth="75.0" text="C1" />
+                                                <TableColumn prefWidth="75.0" text="C2" />
+                                            </columns>
+                                            <VBox.margin>
+                                                <Insets bottom="10.0" />
+                                            </VBox.margin>
+                                        </TableView>
+                                        <TextArea fx:id="ruleInstructionTextArea" prefHeight="226.0">
+                                            <VBox.margin>
+                                                <Insets bottom="10.0" />
+                                            </VBox.margin>
+                                        </TextArea>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets bottom="10.0" />
+                                    </VBox.margin>
+                                </VBox>
+                                <VBox prefHeight="100.0">
+                                    <children>
+                                        <Label style="-fx-font-weight: bold" text="Export Mode">
+                                            <VBox.margin>
+                                                <Insets bottom="10.0" top="10.0" />
+                                            </VBox.margin>
+                                        </Label>
+                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                            <children>
+                                                <Label text="Active Template" />
+                                                <ComboBox fx:id="exportTemplateCb" prefWidth="150.0" />
+                                                <Button fx:id="exportTemplateSettingBtn" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" />
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                            <padding>
+                                <Insets left="10.0" right="10.0" />
+                            </padding>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </children>
+            <VBox.margin>
+                <Insets left="10.0" right="10.0" top="10.0" />
+            </VBox.margin>
+        </HBox>
+        <GridPane prefHeight="45.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" />
+                <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
+                <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
+                <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="45.0" prefHeight="45.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Button fx:id="apply" mnemonicParsing="false" prefWidth="80.0" text="Apply" GridPane.columnIndex="3" />
+                <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="Cancel" GridPane.columnIndex="2" />
+                <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="OK" GridPane.columnIndex="1" />
+            </children>
+        </GridPane>
+    </children>
+</VBox>

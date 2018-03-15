@@ -66,11 +66,14 @@ public class SpcNdChartData implements INdcChartData {
         Double usl = ndcResultDto.getUsl();
         Double lsl = ndcResultDto.getLsl();
         Double[] uslAndlsl = new Double[]{usl, lsl};
-        ILineData uslData = new LineData(usl, uslLslName[1]);
-        ILineData lslData = new LineData(lsl, uslLslName[1]);
-        lineDataList.add(uslData);
-        lineDataList.add(lslData);
-
+        if (usl != null) {
+            ILineData uslData = new LineData(usl, uslLslName[1]);
+            lineDataList.add(uslData);
+        }
+        if (lsl != null) {
+            ILineData lslData = new LineData(lsl, uslLslName[1]);
+            lineDataList.add(lslData);
+        }
         String[] lineNames = UIConstant.SPC_CHART_LINE_NAME;
         Double[] cls = ndcResultDto.getCls();
         if (cls != null) {
