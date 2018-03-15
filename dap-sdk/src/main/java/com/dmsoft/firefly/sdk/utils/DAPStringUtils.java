@@ -33,6 +33,10 @@ public class DAPStringUtils extends StringUtils {
             return false;
         }
         Pattern pattern = Pattern.compile("-?[0-9]+(\\.?)[0-9]*");
+        return checkPattern(str, pattern);
+    }
+
+    static boolean checkPattern(String str, Pattern pattern) {
         if (pattern.matcher(str).matches()) {
             return true;
         } else {
@@ -50,17 +54,7 @@ public class DAPStringUtils extends StringUtils {
      * @return true if it's blank.
      */
     public static boolean isSpecialBlank(String data) {
-        if (StringUtils.isBlank(data)) {
-            return true;
-        }
-
-        if (data.equalsIgnoreCase("N/A") || data.equalsIgnoreCase("-")
-                || data.equalsIgnoreCase("nil") || data.equalsIgnoreCase("UnKown Line")
-                || data.equalsIgnoreCase("_")) {
-            return true;
-        }
-
-        return false;
+        return StringUtils.isBlank(data) || data.equalsIgnoreCase("N/A") || data.equalsIgnoreCase("-") || data.equalsIgnoreCase("nil") || data.equalsIgnoreCase("UnKown Line") || data.equalsIgnoreCase("_");
     }
 
     /**
@@ -71,12 +65,8 @@ public class DAPStringUtils extends StringUtils {
      * @return true if it's blank.
      */
     public static boolean isBlankWithSpecialNumber(String d) {
-        if (StringUtils.isBlank(d)) {
-            return true;
-        }
+        return StringUtils.isBlank(d) || (d.equalsIgnoreCase("N/A") || d.equalsIgnoreCase("-") || d.equalsIgnoreCase("NaN") || d.equalsIgnoreCase("nil") || d.equalsIgnoreCase("_"));
 
-        return (d.equalsIgnoreCase("N/A") || d.equalsIgnoreCase("-") || d.equalsIgnoreCase("NaN")
-                || d.equalsIgnoreCase("nil") || d.equalsIgnoreCase("_"));
     }
 
     /**
@@ -110,7 +100,7 @@ public class DAPStringUtils extends StringUtils {
                         value = df.parse(value).toString();
                         bd = new BigDecimal(value);
                         value = bd.toPlainString();
-                    } catch (ParseException e1) {
+                    } catch (ParseException ignored) {
                     }
                 }
             }
@@ -126,15 +116,7 @@ public class DAPStringUtils extends StringUtils {
      * @return true if it's Infinity or NaN.
      */
     public static boolean isCheckInfinityAndNaN(String d) {
-        if (StringUtils.isBlank(d)) {
-            return true;
-        }
-
-        if (d.equalsIgnoreCase("Infinity") || d.equalsIgnoreCase("-Infinity") || d.equalsIgnoreCase("NaN")) {
-            return true;
-        }
-
-        return false;
+        return StringUtils.isBlank(d) || d.equalsIgnoreCase("Infinity") || d.equalsIgnoreCase("-Infinity") || d.equalsIgnoreCase("NaN");
     }
 
     /**
@@ -163,10 +145,7 @@ public class DAPStringUtils extends StringUtils {
      * @return true :  infinity or nan, false : normal double
      */
     public static boolean isInfinityAndNaN(double d) {
-        if (Double.isNaN(d) || (d == Double.NEGATIVE_INFINITY) || (d == Double.POSITIVE_INFINITY) || (d >= Math.pow(10, 16)) || (d <= -Math.pow(10, 16))) {
-            return true;
-        }
-        return false;
+        return Double.isNaN(d) || (d == Double.NEGATIVE_INFINITY) || (d == Double.POSITIVE_INFINITY) || (d >= Math.pow(10, 16)) || (d <= -Math.pow(10, 16));
     }
 
     /**
@@ -176,10 +155,7 @@ public class DAPStringUtils extends StringUtils {
      * @return true : inifity or nan, false : normal double
      */
     public static boolean isInfinityAndNaN(Double d) {
-        if (d == null || Double.isNaN(d) || (d == Double.NEGATIVE_INFINITY) || (d == Double.POSITIVE_INFINITY) || (d >= Math.pow(10, 16)) || (d <= -Math.pow(10, 16))) {
-            return true;
-        }
-        return false;
+        return d == null || Double.isNaN(d) || (d == Double.NEGATIVE_INFINITY) || (d == Double.POSITIVE_INFINITY) || (d >= Math.pow(10, 16)) || (d <= -Math.pow(10, 16));
     }
 
     /**
@@ -201,13 +177,7 @@ public class DAPStringUtils extends StringUtils {
      * @return is equal or not
      */
     public static boolean compare(String str1, String str2) {
-        if (str1 == null && str2 == null) {
-            return true;
-        } else if (str1 != null && str2 != null) {
-            return str1.equals(str2);
-        } else {
-            return true;
-        }
+        return str1 == null && str2 == null || str1 == null || str2 == null || str1.equals(str2);
     }
 
     /**
@@ -218,12 +188,6 @@ public class DAPStringUtils extends StringUtils {
      * @return is equal or not
      */
     public static boolean compareTrim(String str1, String str2) {
-        if (str1 == null && str2 == null) {
-            return true;
-        } else if (str1.trim() != null && str2.trim() != null) {
-            return str1.equals(str2);
-        } else {
-            return true;
-        }
+        return str1 == null && str2 == null || (str1 != null && str2 != null && str1.trim().equals(str2.trim()));
     }
 }

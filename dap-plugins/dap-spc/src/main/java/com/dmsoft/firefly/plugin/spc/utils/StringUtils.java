@@ -5,31 +5,15 @@
 
 package com.dmsoft.firefly.plugin.spc.utils;
 
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class StringUtils extends org.apache.commons.lang3.StringUtils {
-    public StringUtils() {
-    }
-
-    public static boolean isNumeric(String str) {
-        if (isSpecialBlank(str)) {
-            return false;
-        } else {
-            Pattern pattern = Pattern.compile("-?[0-9]+(\\.?)[0-9]*");
-            if (pattern.matcher(str).matches()) {
-                return true;
-            } else {
-                String scientificNotationRegx = "^([+-]?[1-9].[0-9]+[Ee][+-]?[0-9]+)$";
-                pattern = Pattern.compile(scientificNotationRegx);
-                return pattern.matcher(str).matches();
-            }
-        }
-    }
-
+public class StringUtils extends DAPStringUtils {
     public static boolean isSpecialBlank(String data) {
         if (isBlank(data)) {
             return true;
@@ -87,7 +71,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         char[] chars = str.toCharArray();
         int len = chars.length;
 
-        for(int i = 0; i < len; ++i) {
+        for (int i = 0; i < len; ++i) {
             if (chars[i] == '\\' || chars[i] == '@' || chars[i] == '#' || chars[i] == '$' || chars[i] == '%' || chars[i] == '^' || chars[i] == '&' || chars[i] == '*' || chars[i] == '(' || chars[i] == ')' || chars[i] == '-' || chars[i] == '+' || chars[i] == '=' || chars[i] == '{' || chars[i] == '}' || chars[i] == '[' || chars[i] == ']' || chars[i] == '|' || chars[i] == '/' || chars[i] == ';' || chars[i] == '"' || chars[i] == ' ' || chars[i] == '<' || chars[i] == '>' || chars[i] == '?' || chars[i] == ',' || chars[i] == '.' || chars[i] == '!' || chars[i] == '~' || chars[i] == '`' || chars[i] == ':') {
                 chars[i] = '_';
             }

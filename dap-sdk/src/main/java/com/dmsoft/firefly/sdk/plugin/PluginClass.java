@@ -61,6 +61,10 @@ public class PluginClass {
      * @return instance
      */
     public <T> T getInstance(Class<T> clazz) {
-        return (T) instance;
+        if (clazz.isInstance(instance)) {
+            return (T) instance;
+        } else {
+            return null;
+        }
     }
 }

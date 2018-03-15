@@ -6,9 +6,9 @@ package com.dmsoft.firefly.plugin.spc.export;
 
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.poi.*;
-import com.dmsoft.firefly.plugin.spc.utils.StringUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcRuleLevelType;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.poi.ss.usermodel.*;
@@ -117,7 +117,7 @@ public class SpcExportWorker implements ExWorker {
             String key = spcStatisticalResultDto.getKey();
             String testItemName = spcStatisticalResultDto.getItemName();
             String condition = spcStatisticalResultDto.getCondition();
-            if (StringUtils.isBlank(condition)) {
+            if (DAPStringUtils.isBlank(condition)) {
                 condition = "All";
             }
             if ("SubSummary".equals(condition) && !exportDataItem.get("SubSummary")
@@ -130,17 +130,17 @@ public class SpcExportWorker implements ExWorker {
             List<ExCell> cellList = Lists.newArrayList();
 
             Map<String, String> headerMap = new HashMap<>();
-            testItemName = StringUtils.filterSpeChars(testItemName);
+            testItemName = DAPStringUtils.filterSpeChars(testItemName);
             headerMap.put("name", testItemName);
             headerMap.put("searchCondition", condition);
 
             String sheetName = "";
             if ("SubSummary".equals(condition)) {
                 sheetName = "SubSummary" + "_" + testItemName;
-                sheetName = StringUtils.filterSpeChars(sheetName);
+                sheetName = DAPStringUtils.filterSpeChars(sheetName);
             } else {
                 sheetName = "Detail" + "_" + testItemName + "_" + condition;
-                sheetName = StringUtils.filterSpeChars(sheetName);
+                sheetName = DAPStringUtils.filterSpeChars(sheetName);
             }
             exSheet.setName(sheetName);
 
@@ -366,20 +366,20 @@ public class SpcExportWorker implements ExWorker {
         int n = startRow;
         int column = 1 + currentRow % columnCountPerRow;
 
-        itemName = StringUtils.filterSpeChars(itemName);
+        itemName = DAPStringUtils.filterSpeChars(itemName);
         String ref = itemName;
         String link = null;
 
-        if (StringUtils.isBlank(condition)) {
+        if (DAPStringUtils.isBlank(condition)) {
             condition = "All";
         }
         if (!"All Summary".equals(condition)) {
             if ("SubSummary".equals(condition)) {
                 link = "SubSummary" + "_" + itemName;
-                link = StringUtils.filterSpeChars(link);
+                link = DAPStringUtils.filterSpeChars(link);
             } else {
                 link = "Detail" + "_" + itemName + "_" + condition;
-                link = StringUtils.filterSpeChars(link);
+                link = DAPStringUtils.filterSpeChars(link);
             }
         }
 
@@ -579,7 +579,7 @@ public class SpcExportWorker implements ExWorker {
         exCellList.add(ExUtil.fillToCell(new Integer[]{currentRow - 1, startCol - 1}, rCharName, ExCellType.TEXT, fillTitleStyle()));
 
         if (rCharName.equals("Run Chart")) {
-            if (StringUtils.isNotBlank(rRule)) {
+            if (DAPStringUtils.isNotBlank(rRule)) {
                 runChartRow = currentRow - 1;
                 exCellList.add(ExUtil.fillToCell(new Integer[]{currentRow - 1, startCol}, "Out of Control Conditions:", ExCellType.TEXT, fillTitleStyle()));
                 exCellList.add(ExUtil.fillToCell(new Integer[]{currentRow - 1, startCol + 1}, "", ExCellType.TEXT, fillTitleStyle()));
@@ -687,7 +687,7 @@ public class SpcExportWorker implements ExWorker {
         if (dto == null) {
             return true;
         }
-        if (StringUtils.isCheckInfinityAndNaN(dto.get(checkType).getValue()) || "-".equals(dto.get(checkType).getValue())) {
+        if (Double.NEGATIVE_INFINITY == dto.get(checkType).getValue() || Double.POSITIVE_INFINITY == dto.get(checkType).getValue() || "-".equals(dto.get(checkType).getValue())) {
             return true;
         }
         return false;

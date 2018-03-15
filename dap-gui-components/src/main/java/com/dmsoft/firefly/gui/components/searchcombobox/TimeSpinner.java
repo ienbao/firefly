@@ -53,7 +53,7 @@ public class TimeSpinner extends Spinner<LocalTime> {
             }
         };
 
-        TextFormatter<LocalTime> textFormatter = new TextFormatter<LocalTime>(localTimeConverter, LocalTime.now(), c -> {
+        TextFormatter<LocalTime> textFormatter = new TextFormatter<>(localTimeConverter, LocalTime.now(), c -> {
             String txt = c.getControlNewText();
             if (txt.matches("^[0-9]{0,2}:[0-9]{0,2}:[0-9]{0,2}$")) {
                 return c;
