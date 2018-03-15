@@ -8,6 +8,7 @@ import com.dmsoft.bamboo.common.monitor.ProcessResult;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
+import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
@@ -130,7 +131,7 @@ private JsonMapper mapper = JsonMapper.defaultMapper();
         ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, fileName);
         chooseTableRowData.setImport(true);
         JobManager manager = RuntimeContext.getBean(JobManager.class);
-        Job job = new Job("import");
+        Job job = new Job(GuiConst.DATASOURCE_IMPORT);
         job.addProcessMonitorListener(event -> {
             chooseTableRowData.setProgress(event.getPoint());
             controller.getDataSourceTable().refresh();

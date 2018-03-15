@@ -11,6 +11,7 @@ import com.dmsoft.firefly.plugin.spc.service.SpcAnalysisService;
 import com.dmsoft.firefly.plugin.spc.service.SpcService;
 import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionCode;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.StringUtils;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.ProcessMonitorAuto;
@@ -51,12 +52,12 @@ public class SpcServiceImpl implements SpcService {
                     doubleList.add(Double.valueOf(s));
                 }
             }
-            if (searchConditionDto.getCusLsl() != null) {
+            if (!StringUtils.isSpecialBlank(searchConditionDto.getCusLsl())) {
                 spcAnalysisDataDto.setLsl(searchConditionDto.getCusLsl());
             } else {
                 spcAnalysisDataDto.setLsl(searchDataFrame.getTestItemWithTypeDto(searchConditionDto.getItemName()).getLsl());
             }
-            if (searchConditionDto.getCusUsl() != null) {
+            if (!StringUtils.isSpecialBlank(searchConditionDto.getCusUsl())) {
                 spcAnalysisDataDto.setUsl(searchConditionDto.getCusUsl());
             } else {
                 spcAnalysisDataDto.setUsl(searchDataFrame.getTestItemWithTypeDto(searchConditionDto.getItemName()).getUsl());

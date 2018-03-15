@@ -26,4 +26,8 @@ public class ResourceMassages {
     public static final String TEST_ITEMS = "TEST_ITEMS";
     public static final String VALUES = "VALUES";
 
+
+    //Spc setting
+    public static final String FILTER_TEXTFIELD_PROMPT = "FILTER_TEXTFIELD_PROMPT";
+
 }
