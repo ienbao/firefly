@@ -72,7 +72,7 @@ public class ItemDataTableModel implements NewTableModel {
         }else{
         String row = rowKey.substring( rowKey.indexOf( "_!@#_" ) + 5 );
         if (!row.equals( "0" )) {
-            valueMap.put( rowKey, new SimpleObjectProperty<String>( rowDataDtoList.get( Integer.parseInt( row ) - 5 ).getData().get( columnName ) ) );
+            valueMap.put( rowKey, new SimpleObjectProperty<String>( rowDataDtoList.get( Integer.parseInt( row ) - 2 ).getData().get( columnName ) ) );
         }
         return valueMap.get( rowKey );
         }
