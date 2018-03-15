@@ -7,6 +7,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
+import com.dmsoft.firefly.sdk.utils.StringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -195,8 +196,15 @@ public class TemplateServiceImpl implements TemplateService {
                 if (curr.getSpecificationDatas() != null && curr.getSpecificationDatas().containsKey(item)) {
                     if (curr.getSpecificationDatas().get(item).getDataType().equals("VARIABLE")) {
                         testItemWithTypeDto.setTestItemType(TestItemType.VARIABLE);
-                        testItemWithTypeDto.setLsl(curr.getSpecificationDatas().get(item).getLslFail());
-                        testItemWithTypeDto.setUsl(curr.getSpecificationDatas().get(item).getUslPass());
+                    }
+                    testItemWithTypeDto.setLsl(curr.getSpecificationDatas().get(item).getLslFail());
+                    testItemWithTypeDto.setUsl(curr.getSpecificationDatas().get(item).getUslPass());
+                } else {
+                    if (StringUtils.isSpecialBlank(testItemWithTypeDto.getLsl())) {
+                        testItemWithTypeDto.setLsl("");
+                    }
+                    if (StringUtils.isSpecialBlank(testItemWithTypeDto.getUsl())) {
+                        testItemWithTypeDto.setUsl("");
                     }
                 }
                 result.put(item, testItemWithTypeDto);
