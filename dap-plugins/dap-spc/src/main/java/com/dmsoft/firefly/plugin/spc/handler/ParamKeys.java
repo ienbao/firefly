@@ -19,12 +19,18 @@ public class ParamKeys {
     public static final String SPC_STATS_RESULT_HANDLER = "spcStatsResultHandler";
     public static final String SPC_CHART_RESULT_HANDLER = "spcChartResultHandler";
     public static final String FIND_SPC_SETTING_HANDLER = "findSpcSettingHandler";
+    public static final String SAVE_SPC_SETTING_HANDLER = "saveSpcSettingHandler";
 
     //pipeline
     public static final String SPC_ANALYSIS_JOB_PIPELINE = "spcAnalysisJobPipeline";
     public static final String SPC_REFRESH_JOB_PIPELINE = "spcRefreshJobPipeline";
     public static final String FIND_SPC_SETTING_DATA_JOP_PIPELINE = "findSpcSettingDataJobPipeline";
+    public static final String SAVE_SPC_SETTING_DATA_JOP_PIPELINE = "saveSpcSettingDataJobPipeline";
 
     public static final String SPC_ANALYSIS_CONDITION_KEY = "analysisKey";
+
+    //file name
+    public static final String SPC_SETTING_FILE_NAME = "spcSetting";
+    public static final String SPC_EXPORT_SETTING_FILE_NAME = "spcExportSetting";
 
 }

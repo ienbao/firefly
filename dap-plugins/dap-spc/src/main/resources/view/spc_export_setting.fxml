@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcExportSettingController">
+   <children>
+      <ScrollPane style="-fx-border-color: #DCDCDC; -fx-border-width: 1 1 1 1;">
+         <content>
+            <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" vgap="5.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="140.0" minWidth="18.0" prefWidth="24.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" />
+                  <ColumnConstraints />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints />
+                  <RowConstraints />
+               </rowConstraints>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+               <children>
+                  <HBox GridPane.columnSpan="5">
+                     <children>
+                        <CheckBox fx:id="exportSummary" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%EXPORT_SUB_SUMMARY" />
+                        <Label style="-fx-text-fill: #aaaaaa;" text="%EXPORT_SUB_SUMMARY_UNDERLINE" />
+                     </children>
+                  </HBox>
+                  <HBox GridPane.columnSpan="5" GridPane.rowIndex="1">
+                     <children>
+                        <CheckBox fx:id="exportDetailSheet" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%EXPORT_DETAIL_SHEET" />
+                        <Label style="-fx-text-fill: #aaaaaa;" text="%EXPORT_DETAIL_SHEET_UNDERLINE" />
+                     </children>
+                  </HBox>
+                  <CheckBox fx:id="exportCharts" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%EXPORT_CHARTS" GridPane.columnSpan="5" GridPane.rowIndex="2" />
+                  <CheckBox fx:id="ndChart" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%ND_CHART" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <CheckBox fx:id="runChart" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%RUN_CHART" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <CheckBox fx:id="xBarChart" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%X_BAR_CHART" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                  <CheckBox fx:id="rangeChart" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%RANGE_CHART" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                  <CheckBox fx:id="sdChart" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%SD_CHART" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <CheckBox fx:id="medianChart" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%MEDIAN_CHART" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                  <CheckBox fx:id="boxChart" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%BOX_CHART" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                  <CheckBox fx:id="mrChart" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%MR_CHART" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                  <Label text="%EXPORT_STATISTICAL_RESULTS" GridPane.columnSpan="5" GridPane.rowIndex="5">
+                     <GridPane.margin>
+                        <Insets top="15.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <CheckBox fx:id="statistics" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%DESCRIPTIVE_STATISTICS" GridPane.columnSpan="5" GridPane.rowIndex="6" />
+                  <CheckBox fx:id="samples" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%SAMPLES" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                  <CheckBox fx:id="mean" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%MEAN" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                  <CheckBox fx:id="sd" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%SD" GridPane.columnIndex="3" GridPane.rowIndex="7" />
+                  <CheckBox fx:id="range" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%RANGE" GridPane.columnIndex="4" GridPane.rowIndex="7" />
+                  <CheckBox fx:id="max" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%Max" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                  <CheckBox fx:id="min" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%Min" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+                  <CheckBox fx:id="lcl" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%LCL" GridPane.columnIndex="3" GridPane.rowIndex="8" />
+                  <CheckBox fx:id="ucl" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%UCL" GridPane.columnIndex="4" GridPane.rowIndex="8" />
+                  <CheckBox fx:id="kurtosis" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%KURTOSIS" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                  <CheckBox fx:id="skewness" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%SKEWNESS" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+                  <CheckBox fx:id="processCapability" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%PROCESS_CAPABILITY_INDEX" GridPane.columnSpan="5" GridPane.rowIndex="10" />
+                  <CheckBox fx:id="ca" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%CA" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                  <CheckBox fx:id="cp" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%CP" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+                  <CheckBox fx:id="cpu" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%CPU" GridPane.columnIndex="3" GridPane.rowIndex="11" />
+                  <CheckBox fx:id="cpl" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%CPL" GridPane.columnIndex="4" GridPane.rowIndex="11" />
+                  <CheckBox fx:id="cpk" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%CPK" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+                  <CheckBox fx:id="withinPPM" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%WITHIN_PPM" GridPane.columnIndex="2" GridPane.rowIndex="12" />
+                  <CheckBox fx:id="processPerformance" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%PROCESS_PERFORMANCE_INDEX" GridPane.columnSpan="5" GridPane.rowIndex="13" />
+                  <CheckBox fx:id="pp" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%PP" GridPane.columnIndex="1" GridPane.rowIndex="14"/>
+                  <CheckBox fx:id="ppu" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%PPU" GridPane.columnIndex="2" GridPane.rowIndex="14" />
+                  <CheckBox fx:id="ppl" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%PPL" GridPane.columnIndex="3" GridPane.rowIndex="14" />
+                  <CheckBox fx:id="ppk" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%PPK" GridPane.columnIndex="4" GridPane.rowIndex="14" />
+                  <CheckBox fx:id="overallPPM" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%OVERALL_PPM" GridPane.columnIndex="1" GridPane.rowIndex="15" />
+               </children>
+            </GridPane>
+         </content>
+      </ScrollPane>
+      <HBox alignment="CENTER_RIGHT" spacing="10.0">
+         <children>
+            <Button fx:id="saveBtn" alignment="CENTER" mnemonicParsing="false" prefWidth="80.0" text="%OK_BTN" />
+            <Button fx:id="cancelBtn" alignment="CENTER" mnemonicParsing="false" prefWidth="80.0" text="%CANCEL_BTN" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</VBox>
