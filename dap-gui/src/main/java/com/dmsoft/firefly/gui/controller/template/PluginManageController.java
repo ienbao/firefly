@@ -32,6 +32,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.net.URL;
@@ -169,10 +170,12 @@ public class PluginManageController implements Initializable {
                 Runtime.getRuntime().addShutdownHook(new Thread() {
                     public void run() {
                         try {
+                            StringBuilder stringBuilder = new StringBuilder("java -jar dap-restart-1.0.0.jar");
                             deleteList.forEach(v -> {
-                                FileUtils.deleteFolder(v);
+                                stringBuilder.append(" " + v);
                             });
-                            Runtime.getRuntime().exec("java -jar dap-gui-1.0.0.jar");
+                            System.out.println(stringBuilder.toString());
+                            Runtime.getRuntime().exec(stringBuilder.toString());
                         } catch (IOException e) {
                             System.out.println("restart failed.");
                         }
@@ -237,6 +240,7 @@ public class PluginManageController implements Initializable {
                 PluginTableRowData pluginTableRowData = pluginTableRowDataObservableList.get(pluginTable.getSelectionModel().getSelectedIndex());
                 PluginContext context = RuntimeContext.getBean(PluginContext.class);
                 String url = pluginTableRowData.getInfo().getFolderPath();
+                System.out.println(url);
                 deleteList.add(url);
                 context.uninstallPlugin(pluginTableRowData.getInfo().getId());
                 pluginTableRowDataObservableList.remove(pluginTableRowData);

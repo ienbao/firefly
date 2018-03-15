@@ -15,6 +15,7 @@
         <module>dap-gui-components</module>
         <module>dap-sdk</module>
         <module>dap-core</module>
+        <module>dap-restart</module>
         <module>dap-gui</module>
     </modules>
 
