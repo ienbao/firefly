@@ -17,16 +17,14 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Created by Alice on 2018/2/10.
@@ -54,8 +52,9 @@ public class DataSourceSettingController {
     private void initialize() {
         initButton();
         this.buildChooseColumnDialog();
-        this.initComponentEvent();
         this.setTableData();
+        this.initComponentEvent();
+
 
     }
 
@@ -71,6 +70,7 @@ public class DataSourceSettingController {
 
     private void initComponentEvent() {
         chooseItem.setOnAction(event -> getChooseColumnBtnEvent());
+        itemDataTableModel.getAllCheckBox().setOnAction(event -> getAllCheckBoxEvent());
     }
 
     private void buildChooseColumnDialog() {
@@ -105,6 +105,17 @@ public class DataSourceSettingController {
         if(testItems!= null && !testItems.isEmpty()){
             itemDataTableModel = new ItemDataTableModel(testItems,rowDataDtos);
             NewTableViewWrapper.decorate(itemDataTable, itemDataTableModel);
+        }
+    }
+
+    private void getAllCheckBoxEvent() {
+        Map<String, SimpleObjectProperty<Boolean>> checkMap = itemDataTableModel.getCheckMap();
+        for (String key : itemDataTableModel.getRowKey()) {
+            if (checkMap.get(key) != null) {
+                checkMap.get(key).set(itemDataTableModel.getAllCheckBox().isSelected());
+            } else {
+                checkMap.put(key, new SimpleObjectProperty<>(itemDataTableModel.getAllCheckBox().isSelected()));
+            }
         }
     }
 }
