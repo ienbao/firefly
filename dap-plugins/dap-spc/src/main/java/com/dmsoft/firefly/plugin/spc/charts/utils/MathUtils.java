@@ -1,5 +1,7 @@
 package com.dmsoft.firefly.plugin.spc.charts.utils;
 
+import static java.lang.Double.NaN;
+
 /**
  * Created by cherry on 2018/3/8.
  */
@@ -7,32 +9,32 @@ public class MathUtils {
 
     public static Double getMax(Double[] array) {
         if (array == null) {
-            return null;
+            return NaN;
         }
-        Double max = null;
+        Double max = NaN;
         for (int x = 0; x < array.length; x++) {
             if (array[x] == null) {
                 continue;
             }
-            if (max == null) {
+            if (max == NaN) {
                 max = array[x];
             } else {
                 max = Math.max(array[x], max);
             }
         }
-        return max;
+        return NaN;
     }
 
     public static Double getMin(Double[] array) {
         if (array == null) {
-            return null;
+            return NaN;
         }
-        Double min = null;
-        for (int x = 1; x < array.length; x++) {
+        Double min = NaN;
+        for (int x = 0; x < array.length; x++) {
             if (array[x] == null) {
                 continue;
             }
-            if (min == null) {
+            if (min == NaN) {
                 min = array[x];
             } else {
                 min = Math.min(array[x], min);
@@ -43,15 +45,15 @@ public class MathUtils {
 
     public static Double getMax(Double[]... array) {
         if (array == null) {
-            return null;
+            return NaN;
         }
-        Double max = null;
+        Double max = NaN;
         for (int i = 0; i < array.length; i++) {
             for (int x = 0; x < array[i].length; x++) {
                 if (array[i][x] == null) {
                     continue;
                 }
-                if (max == null) {
+                if (max == NaN) {
                     max = array[i][x];
                 } else {
                     max = Math.max(array[i][x], max);
@@ -63,15 +65,15 @@ public class MathUtils {
 
     public static Double getMin(Double[]... array) {
         if (array == null) {
-            return null;
+            return NaN;
         }
-        Double min = null;
+        Double min = NaN;
         for (int i = 0; i < array.length; i++) {
             for (int x = 0; x < array[i].length; x++) {
                 if (array[i][x] == null) {
                     continue;
                 }
-                if (min == null) {
+                if (min == NaN) {
                     min = array[i][x];
                 } else {
                     min = Math.min(array[i][x], min);

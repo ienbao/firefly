@@ -73,6 +73,8 @@ public class GrrExportController {
     private RadioButton eachFile;
     @FXML
     private RadioButton allFile;
+    @FXML
+    private ComboBox partCombox;
 
     @FXML
     private SplitPane split;
@@ -149,6 +151,13 @@ public class GrrExportController {
 
     private void initItemData() {
         items.clear();
+        ObservableList<String> datas = FXCollections.observableArrayList();
+        if (items != null) {
+            for (ItemTableModel model : items) {
+                datas.add(model.getItem());
+            }
+        }
+        partCombox.setItems(datas);
         List<TestItemWithTypeDto> itemDtos = envService.findTestItems();
         if (itemDtos != null) {
             for (TestItemWithTypeDto dto : itemDtos) {
