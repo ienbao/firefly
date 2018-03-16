@@ -18,6 +18,7 @@ import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.*;
 import com.dmsoft.firefly.plugin.grr.service.GrrConfigService;
 import com.dmsoft.firefly.plugin.grr.utils.DataConvertUtils;
+import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.ScrollPaneValueUtils;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.plugin.grr.utils.charts.ChartUtils;
@@ -71,6 +72,9 @@ public class GrrResultController implements Initializable {
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private GrrConfigService grrConfigService = RuntimeContext.getBean(GrrConfigService.class);
 
+    private String appKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " ";
+    private String trailKey = GrrFxmlAndLanguageUtils.getString("TRAIL") + " ";
+
     List<String> parts = Lists.newArrayList("part1", "part2", "part3", "part4");
     List<String> appraisers = Lists.newArrayList("1", "2", "3", "4");
 
@@ -89,32 +93,45 @@ public class GrrResultController implements Initializable {
         this.initComponentsRender();
         this.initComponentEvents();
         this.initData();
-//        this.analyzeGrrResult(null, null, null);
     }
 
-    public void analyzeGrrResult(GrrDataFrameDto grrDataFrameDto,
-                                 List<String> includeRows,
-                                 SearchConditionDto conditionDto) {
+    public void analyzeGrrResult(GrrDataFrameDto grrDataFrameDto, SearchConditionDto conditionDto) {
 
-        Map paramMap = Maps.newHashMap();
-        Job job = new Job(ParamKeys.GRR_ANALYSIS_JOB_PIPELINE);
+        Map summaryParamMap = Maps.newHashMap();
+        Map detailParamMap = Maps.newHashMap();
+        List<String> includeRows = Lists.newArrayList();
+        String itemName = conditionDto.getSelectedTestItemDtos().get(0).getTestItemName();
+        Job summaryJob = new Job(ParamKeys.GRR_ANALYSIS_JOB_PIPELINE);
+        Job detailJob = new Job(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE);
+        grrDataFrameDto.getIncludeDatas().forEach(grrViewDataDto -> includeRows.add(grrViewDataDto.getRowKey()));
         GrrAnalysisConfigDto analysisConfigDto = buildGrrAnalysisConfig(conditionDto);
-        paramMap.put(ParamKeys.ANALYSIS_GRR_INCLUDE_ROWS, includeRows);
-        paramMap.put(ParamKeys.SEARCH_DATA_FRAME, grrDataFrameDto.getDataFrame());
-        paramMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG, analysisConfigDto);
-        paramMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_TESTITEM, conditionDto.getSelectedTestItemDtos());
-
-        Platform.runLater(() -> manager.doJobASyn(job, returnValue -> {
+        summaryParamMap.put(ParamKeys.ANALYSIS_GRR_INCLUDE_ROWS, includeRows);
+        summaryParamMap.put(ParamKeys.SEARCH_DATA_FRAME, grrDataFrameDto.getDataFrame());
+        summaryParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG, analysisConfigDto);
+        summaryParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_TESTITEM, conditionDto.getSelectedTestItemDtos());
+        detailParamMap.put(ParamKeys.SEARCH_DATA_COLUMN, grrDataFrameDto.getDataFrame().getDataColumn(itemName, null));
+        detailParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_TESTITEM, conditionDto.getSelectedTestItemDtos().get(0));
+        detailParamMap.put(ParamKeys.ANALYSIS_GRR_INCLUDE_ROWS, includeRows);
+        detailParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG, analysisConfigDto);
+        this.removeAllResultData();
+        this.setItemResultData(grrDataFrameDto,  conditionDto, itemName);
+        Platform.runLater(() -> manager.doJobASyn(summaryJob, returnValue -> {
             if (returnValue == null) {
                 //todo message tip
                 return;
             }
-        }, paramMap, grrMainController));
+            setSummaryData((List<GrrSummaryDto>) returnValue);
 
-        this.removeAllResultData();
-        this.setSummaryData(null);
-        this.setItemResultData(null, null, conditionDto, null);
-        this.setAnalysisItemResultData(new GrrDetailResultDto());
+        }, summaryParamMap, grrMainController));
+
+        Platform.runLater(() -> manager.doJobASyn(detailJob, returnValue -> {
+            if (returnValue == null) {
+                //todo message tip
+                return;
+            }
+            setAnalysisItemResultData((GrrDetailResultDto) returnValue);
+
+        }, detailParamMap, grrMainController));
     }
 
     private GrrAnalysisConfigDto buildGrrAnalysisConfig(SearchConditionDto conditionDto) {
@@ -132,37 +149,36 @@ public class GrrResultController implements Initializable {
 
     private void setSummaryData(List<GrrSummaryDto> summaryData) {
 
-        List<GrrSummaryDto> summaryDtos = Lists.newArrayList();
-        for (int i = 0; i < 5; i++) {
-            GrrSummaryDto grrSummaryDto = new GrrSummaryDto();
-            GrrSummaryResultDto summaryResultDto = new GrrSummaryResultDto();
-            grrSummaryDto.setItemName("A" + (i + 1));
-            summaryResultDto.setLsl(Double.valueOf(i + 1));
-            summaryResultDto.setUsl(Double.valueOf(i * 10 + 1));
-            summaryResultDto.setTolerance(Double.valueOf(i + 2));
-            summaryResultDto.setRepeatabilityOnTolerance(Double.valueOf(i * 2 + 2));
-            summaryResultDto.setRepeatabilityOnContribution(Double.valueOf(i * 3 + 2));
-            summaryResultDto.setReproducibilityOnTolerance(Double.valueOf(i * 2 + 3));
-            summaryResultDto.setReproducibilityOnContribution(Double.valueOf(i * 3 + 3));
-            summaryResultDto.setGrrOnTolerance(Double.valueOf(i * 4 + 2));
-            summaryResultDto.setGrrOnContribution(Double.valueOf(i * 4 + 3));
-            grrSummaryDto.setSummaryResultDto(summaryResultDto);
-            summaryDtos.add(grrSummaryDto);
-        }
-        summaryModel.setData(summaryDtos, resultBasedCmb.getSelectionModel().getSelectedItem().toString());
-        System.out.println("");
+//        List<GrrSummaryDto> summaryDtos = Lists.newArrayList();
+//        for (int i = 0; i < 5; i++) {
+//            GrrSummaryDto grrSummaryDto = new GrrSummaryDto();
+//            GrrSummaryResultDto summaryResultDto = new GrrSummaryResultDto();
+//            grrSummaryDto.setItemName("A" + (i + 1));
+//            summaryResultDto.setLsl(Double.valueOf(i + 1));
+//            summaryResultDto.setUsl(Double.valueOf(i * 10 + 1));
+//            summaryResultDto.setTolerance(Double.valueOf(i + 2));
+//            summaryResultDto.setRepeatabilityOnTolerance(Double.valueOf(i * 2 + 2));
+//            summaryResultDto.setRepeatabilityOnContribution(Double.valueOf(i * 3 + 2));
+//            summaryResultDto.setReproducibilityOnTolerance(Double.valueOf(i * 2 + 3));
+//            summaryResultDto.setReproducibilityOnContribution(Double.valueOf(i * 3 + 3));
+//            summaryResultDto.setGrrOnTolerance(Double.valueOf(i * 4 + 2));
+//            summaryResultDto.setGrrOnContribution(Double.valueOf(i * 4 + 3));
+//            grrSummaryDto.setSummaryResultDto(summaryResultDto);
+//            summaryDtos.add(grrSummaryDto);
+//        }
+        summaryModel.setData(summaryData, resultBasedCmb.getSelectionModel().getSelectedItem().toString());
     }
 
-    private void setItemResultData(GrrDataFrameDto grrDataFrameDto, List<String> includeRows, SearchConditionDto conditionDto, String itemName) {
+    private void setItemResultData(GrrDataFrameDto grrDataFrameDto, SearchConditionDto conditionDto, String itemName) {
 
         GrrItemResultDto itemResultDto = DataConvertUtils.convertToItemResult(grrDataFrameDto, itemName, "");
         List<GrrViewDataDto> viewDataDtos = grrDataFrameDto.getIncludeDatas();
 
         Set<String> headerArray = Sets.newHashSet();
-        String appraiserKey = DAPStringUtils.isBlank(conditionDto.getAppraiser()) ? UIConstant.APPRAISER_NORMAL_KEY : conditionDto.getAppraiser();
-        String trialKey = UIConstant.TRIAL_KEY;
-        headerArray.add(appraiserKey);
-        headerArray.add(trialKey);
+//        String appraiserKey = DAPStringUtils.isBlank(conditionDto.getAppraiser()) ? UIConstant.APPRAISER_NORMAL_KEY : conditionDto.getAppraiser();
+//        String trialKey = UIConstant.TRIAL_KEY;
+        headerArray.add(appKey);
+        headerArray.add(trailKey);
 
         List<String> rowKeyArray = buildItemTbRowKey(conditionDto.getAppraiserInt(),
                 conditionDto.getTrialInt(),
@@ -170,7 +186,6 @@ public class GrrResultController implements Initializable {
         viewDataDtos.forEach(viewDataDto -> headerArray.add(viewDataDto.getPart()));
         itemResultModel.setRowKeyArray(FXCollections.observableArrayList(rowKeyArray));
         itemResultModel.setHeaderArray(FXCollections.observableArrayList(headerArray));
-        itemResultModel.setAppraiserAndTrialKey(appraiserKey, trialKey);
         itemResultModel.setData(grrDataFrameDto.getDataFrame(),
                 itemName,
                 grrDataFrameDto.getIncludeDatas(),

@@ -36,7 +36,6 @@ public class SummaryHandler implements JobInboundHandler {
                 itemWithTypeDtos,
                 includeRows,
                 analysisConfigDto);
-
         context.returnValue(summaryDtos);
     }
 

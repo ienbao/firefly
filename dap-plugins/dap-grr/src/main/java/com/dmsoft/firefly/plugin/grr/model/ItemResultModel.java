@@ -5,6 +5,7 @@ import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.plugin.grr.dto.GrrItemResultDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrViewDataDto;
 import com.dmsoft.firefly.plugin.grr.utils.DataConvertUtils;
+import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import javafx.beans.property.ObjectProperty;
@@ -24,9 +25,9 @@ public class ItemResultModel implements TableModel {
     private SearchDataFrame dataFrame;
     private GrrItemResultDto itemResultDto;
     private List<GrrViewDataDto> grrViewDataDtos;
-    private String trialKey;
-    private String appraiserKey;
     private String currentItemName;
+    private String trialKey = GrrFxmlAndLanguageUtils.getString("TRAIL") + " ";
+    private String appraiserKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " ";
     private ObservableList<String> headerArray;
     private ObservableList<String> rowKeyArray;
 
@@ -47,17 +48,6 @@ public class ItemResultModel implements TableModel {
         this.currentItemName = currentItemName;
         this.grrViewDataDtos = viewDataDtos;
         this.itemResultDto = itemResultDto;
-    }
-
-    /**
-     * Set appraiser key and trial key
-     *
-     * @param appraiserKey appraiser key
-     * @param trialKey     trial key
-     */
-    public void setAppraiserAndTrialKey(String appraiserKey, String trialKey) {
-        this.appraiserKey = appraiserKey;
-        this.trialKey = trialKey;
     }
 
     @Override

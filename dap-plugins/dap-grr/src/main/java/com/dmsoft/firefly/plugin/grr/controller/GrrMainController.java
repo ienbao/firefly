@@ -47,7 +47,7 @@ public class GrrMainController implements Initializable {
     }
 
     public void grrAnalyzeResult() {
-        grrResultController.analyzeGrrResult(grrDataFrame, null, getSearchConditionDto());
+        grrResultController.analyzeGrrResult(grrDataFrame, getSearchConditionDto());
     }
 
     private void initBtnIcon() {
