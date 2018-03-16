@@ -28,8 +28,8 @@ public class UIConstant {
 
     public static final String SPLIT_FLAG = "!@#";
 
-    public static final Color COLOR_EXCELLENT = new Color(125, 174, 20, 1);
-    public static final Color COLOR_GOOD = new Color(72, 124, 244, 1);
-    public static final Color COLOR_ACCEPTABLE = new Color(243, 132, 0, 1);
-    public static final Color COLOR_RECTIFICATION = new Color(233, 68, 41, 1);
+    public static final Color COLOR_EXCELLENT = Color.rgb(125, 174, 20);
+    public static final Color COLOR_GOOD = Color.rgb(72, 124, 244);
+    public static final Color COLOR_ACCEPTABLE = Color.rgb(243, 132, 0);
+    public static final Color COLOR_RECTIFICATION = Color.rgb(233, 68, 41);
 }
