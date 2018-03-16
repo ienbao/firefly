@@ -99,6 +99,7 @@ public class GrrResultController implements Initializable {
             parts.add(viewDataDto.getPart());
             appraisers.add(viewDataDto.getOperator());
         });
+        this.removeAllResultData();
         this.setSummaryData(grrSummaryDtos);
         this.setItemResultData(grrMainController.getGrrDataFrame(),
                 grrMainController.getSearchConditionDto(),
