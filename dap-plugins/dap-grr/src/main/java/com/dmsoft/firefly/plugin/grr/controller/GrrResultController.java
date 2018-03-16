@@ -108,8 +108,26 @@ public class GrrResultController implements Initializable {
         this.setAnalysisItemResultData(grrDetailDto);
     }
 
-    private void analyzeGrrSubResult(TestItemWithTypeDto testItemDto, GrrAnalysisConfigDto configDto) {
-        DigNumInstance.newInstance().setDigNum(grrMainController.getActiveTemplateSettingDto().getDecimalDigit());
+    private void analyzeGrrSubResult(TestItemWithTypeDto testItemDto) {
+        Map detailParamMap = Maps.newHashMap();
+        Job detailJob = new Job(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE);
+        detailParamMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, grrMainController.getSearchConditionDto());
+        detailParamMap.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrMainController.getGrrDataFrame());
+        detailParamMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO, testItemDto);
+        this.removeSubResultData();
+        this.setItemResultData(grrMainController.getGrrDataFrame(),
+                grrMainController.getSearchConditionDto(),
+                testItemDto.getTestItemName());
+
+        Platform.runLater(() -> manager.doJobASyn(detailJob, returnValue -> {
+            if (returnValue == null) {
+                //todo message tip
+                return;
+            }
+            Platform.runLater(() -> {
+                setAnalysisItemResultData((GrrDetailDto) returnValue);
+            });
+        }, detailParamMap, grrMainController));
     }
 
 //    public void analyzeGrrResult(GrrDataFrameDto grrDataFrameDto, SearchConditionDto conditionDto) {
@@ -439,7 +457,6 @@ public class GrrResultController implements Initializable {
         xBarAppraiserChart.getData().setAll(FXCollections.observableArrayList());
         rrByAppraiserChart.getData().setAll(FXCollections.observableArrayList());
         xBarAppraiserChart.clear();
-
         componentBp.getChildren().remove(componentBp.getLeft());
         partAppraiserBp.getChildren().remove(partAppraiserBp.getLeft());
         xBarAppraiserBp.getChildren().remove(xBarAppraiserBp.getLeft());
@@ -449,86 +466,6 @@ public class GrrResultController implements Initializable {
         anovaModel.setData(null);
         sourceModel.setData(null);
     }
-
-//    private GrrComponentCResultDto buildComponentChartData() {
-//        GrrComponentCResultDto componentCResult = new GrrComponentCResultDto();
-//        componentCResult.setGrrContri(80D);
-//        componentCResult.setGrrTol(55.32);
-//        componentCResult.setGrrVar(100D);
-//        componentCResult.setRepeatContri(80D);
-//        componentCResult.setRepeatTol(55.32);
-//        componentCResult.setRepeatVar(100D);
-//        componentCResult.setReprodContri(80D);
-//        componentCResult.setReprodTol(55.32);
-//        componentCResult.setReprodVar(100D);
-//        componentCResult.setPartContri(80D);
-//        componentCResult.setPartTol(55.32);
-//        componentCResult.setPartVar(100D);
-//        return componentCResult;
-//    }
-//
-//    private GrrPACResultDto buildPartAppraiserChartData() {
-//        GrrPACResultDto partAppraiserChartDto = new GrrPACResultDto();
-//        double[][] datas = new double[][]{{10, 20, 30, 40}, {50, 60, 70, 80}, {100, 110, 120, 130}, {150, 160, 170, 180}};
-//        partAppraiserChartDto.setDatas(datas);
-//        return partAppraiserChartDto;
-//    }
-//
-//    private GrrControlChartDto buildXBarAppraiserChartData() {
-//        GrrControlChartDto xbarAppraiserChartDto = new GrrControlChartDto();
-//        Double[] x = new Double[]{1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D, 11D, 12D, 13D, 14D, 15D, 16D};
-//        Double[] y = new Double[]{10D, 12D, 13D, 14D, 15D, 26D, 27D, 28D, 29D, 30D, 16D, 17D, 18D, 19D, 20D, 21D};
-//        xbarAppraiserChartDto.setX(x);
-//        xbarAppraiserChartDto.setY(y);
-//        xbarAppraiserChartDto.setCl(29D);
-//        xbarAppraiserChartDto.setLcl(13D);
-//        xbarAppraiserChartDto.setUcl(20D);
-//        return xbarAppraiserChartDto;
-//    }
-//
-//    private GrrScatterChartDto buildRrByAppraiserChartData() {
-//        GrrScatterChartDto rrbyAppraiserDto = new GrrScatterChartDto();
-//        Double[] x = new Double[]{1D, 1D, 1D, 1D, 1D, 1D, 2D, 2D, 2D, 2D, 2D, 2D, 3D, 3D, 3D, 3D, 3D, 3D, 4D, 4D, 4D, 4D, 4D, 4D};
-//        Double[] y = new Double[]{1.1D, 1.2D, 1.3D, 1.4D, 1.5D, 1.6D, 2.1D, 2.2D, 2.3D, 2.4D, 2.5D, 2.6D, 3.1D, 3.2D, 3.3D, 3.4D, 3.5D, 3.6D, 4.1D, 4.2D, 4.3D, 4.4D, 4.5D, 4.6D};
-//        Double[] clX = new Double[]{1D, 2D, 3D, 4D};
-//        Double[] clY = new Double[]{1.35D, 2.35D, 3.35D, 4.35D};
-//        rrbyAppraiserDto.setX(x);
-//        rrbyAppraiserDto.setY(y);
-//        rrbyAppraiserDto.setClX(clX);
-//        rrbyAppraiserDto.setClY(clY);
-//        return rrbyAppraiserDto;
-//    }
-//
-//    private GrrAnovaAndSourceResultDto buildAnovaAndSourceData() {
-//        GrrAnovaAndSourceResultDto anovaAndSourceResultDto = new GrrAnovaAndSourceResultDto();
-//        List<GrrAnovaDto> anovaDtos = Lists.newArrayList();
-//        List<GrrSourceDto> sourceDtos = Lists.newArrayList();
-//        for (int i = 0; i < UIConstant.GRR_ANOVA_SOURCE.length; i++) {
-//            GrrAnovaDto grrAnovaDto = new GrrAnovaDto();
-//            grrAnovaDto.setName(GrrResultName.Appraisers);
-//            grrAnovaDto.setDf(Double.valueOf(i + 2));
-//            grrAnovaDto.setF(Double.valueOf(i + 3));
-//            grrAnovaDto.setMs(Double.valueOf(i + 5));
-//            grrAnovaDto.setSs(Double.valueOf(i + 9));
-//            grrAnovaDto.setProbF(Double.valueOf(i + 11));
-//            anovaDtos.add(grrAnovaDto);
-//        }
-//        for (int i = 0; i < 7; i++) {
-//            GrrSourceDto grrSourceDto = new GrrSourceDto();
-//            grrSourceDto.setName(GrrResultName.Appraisers);
-//            grrSourceDto.setContribution(Double.valueOf(i * 2 + 1));
-//            grrSourceDto.setSigma(Double.valueOf(i * 2 + 2));
-//            grrSourceDto.setStudyVar(Double.valueOf(i * 2 + 4));
-//            grrSourceDto.setTotalTolerance(Double.valueOf(i * 2 + 7));
-//            grrSourceDto.setTotalVariation(Double.valueOf(i * 2 + 9));
-//            grrSourceDto.setVariation(Double.valueOf(i * 3 + 11));
-//            sourceDtos.add(grrSourceDto);
-//        }
-//        anovaAndSourceResultDto.setGrrAnovaDtos(anovaDtos);
-//        anovaAndSourceResultDto.setGrrSourceDtos(sourceDtos);
-//        anovaAndSourceResultDto.setNumberOfDc(10.0);
-//        return anovaAndSourceResultDto;
-//    }
 
     private void initComponents() {
         summaryItemTf = new TextFieldFilter();
@@ -744,6 +681,12 @@ public class GrrResultController implements Initializable {
                 GrrSingleSummary singleSummary = filteredList.get(cell.getIndex());
                 singleSummary.setSelect(true);
                 summaryTb.refresh();
+                String itemName = singleSummary.getItemName();
+                grrMainController.getSearchConditionDto().getSelectedTestItemDtos().forEach(testItemWithTypeDto -> {
+                    if (itemName.equals(testItemWithTypeDto.getTestItemName())) {
+                        analyzeGrrSubResult(testItemWithTypeDto);
+                    }
+                });
             }
         };
     }
