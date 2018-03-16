@@ -9,9 +9,11 @@ public class ParamKeys {
     public static final String TEST_ITEM_WITH_TYPE_DTO_LIST = "testItemWithTypeDtoList";
     public static final String ROW_DATA_DTO_LIST = "rowDataDtoList";
     public static final String SEARCH_DATA_FRAME = "searchDataFrame";
+    public static final String SEARCH_DATA_COLUMN = "searchDataColumn";
     public static final String SEARCH_GRR_CONFIG_DTO = "searchGrrConfigDto";
     public static final String SEARCH_GRR_ANALYSIS_CONFIG = "analysisGrrConfigDto";
     public static final String SEARCH_GRR_ANALYSIS_TESTITEM = "analysisGrrTestItem";
+    public static final String ANALYSIS_GRR_INCLUDE_ROWS = "includeRows";
     public static final String SEARCH_TEMPLATE_SETTING_DTO = "searchTemplateSettingDto";
 
     public static final String SEARCH_GRR_LEFT_CONFIG_DTO = "searchGrrLeftConfigDto";

@@ -1,8 +1,8 @@
 package com.dmsoft.firefly.plugin.spc.model;
 
-import com.dmsoft.firefly.gui.components.table.NewTableModel;
+import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
-import com.dmsoft.firefly.plugin.spc.utils.RangeUtils;
+import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
@@ -24,7 +24,7 @@ import java.util.Map;
  *
  * @author Can Guan
  */
-public class DetailDataModel implements NewTableModel {
+public class DetailDataModel implements TableModel {
     private RowDataDto rowDataDto;
     private ObservableList<String> headerArray;
     private ObservableList<String> rowKeyArray;

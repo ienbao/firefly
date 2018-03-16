@@ -66,7 +66,6 @@ public class DAPStringUtils extends StringUtils {
      */
     public static boolean isBlankWithSpecialNumber(String d) {
         return StringUtils.isBlank(d) || (d.equalsIgnoreCase("N/A") || d.equalsIgnoreCase("-") || d.equalsIgnoreCase("NaN") || d.equalsIgnoreCase("nil") || d.equalsIgnoreCase("_"));
-
     }
 
     /**

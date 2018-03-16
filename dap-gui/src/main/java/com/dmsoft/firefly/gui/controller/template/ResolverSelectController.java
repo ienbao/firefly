@@ -4,9 +4,9 @@
 
 package com.dmsoft.firefly.gui.controller.template;
 
-import com.dmsoft.bamboo.common.monitor.ProcessResult;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -14,6 +14,7 @@ import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.plugin.PluginClass;
 import com.dmsoft.firefly.sdk.plugin.PluginClassType;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
@@ -59,7 +60,7 @@ public class ResolverSelectController implements Initializable {
     private CheckBox defaultTemplate;
 
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
-private JsonMapper mapper = JsonMapper.defaultMapper();
+    private JsonMapper mapper = JsonMapper.defaultMapper();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -95,7 +96,12 @@ private JsonMapper mapper = JsonMapper.defaultMapper();
     private void initEvent() {
         nextStep.setOnAction(event -> {
 
-            String resolverName = resolver.getSelectionModel().getSelectedItem().toString();
+            String resolverName = resolver.getSelectionModel().getSelectedItem() == null ? null : resolver.getSelectionModel().getSelectedItem().toString();
+
+            if (DAPStringUtils.isEmpty(resolverName)) {
+                WindowMessageFactory.createWindowMessage("select resolver", "please select one resolver.");
+                return;
+            }
 
             UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
             userPreferenceDto.setUserName("admin");
@@ -103,9 +109,6 @@ private JsonMapper mapper = JsonMapper.defaultMapper();
             userPreferenceDto.setValue(resolverName);
             userPreferenceService.updatePreference(userPreferenceDto);
 
-            if (DAPStringUtils.isEmpty(resolverName)) {
-                //TODO 出错交互
-            }
             StageMap.closeStage("resolver");
 
             String str = System.getProperty("user.home");

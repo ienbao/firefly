@@ -8,6 +8,7 @@ import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
 import com.dmsoft.firefly.gui.model.TemplateItemModel;
 import com.dmsoft.firefly.gui.utils.*;
@@ -146,14 +147,18 @@ public class TemplateController {
         );
         add.setOnAction(event -> buildNewTemplateDialog());
         rename.setOnAction(event -> {
-            if (templateName.getSelectionModel().getSelectedItem() != null) {
-                buildRenameTemplateDialog();
+            if (templateName.getSelectionModel().getSelectedItem() == null) {
+                WindowMessageFactory.createWindowMessageHasOk("Message", "Please select a template.");
+                return;
             }
+            buildRenameTemplateDialog();
         });
         copy.setOnAction(event -> {
-            if (templateName.getSelectionModel().getSelectedItem() != null) {
-                buildCopyTemplateDialog();
+            if (templateName.getSelectionModel().getSelectedItem() == null) {
+                WindowMessageFactory.createWindowMessageHasOk("Message", "Please select a template.");
+                return;
             }
+            buildCopyTemplateDialog();
         });
         delete.setOnAction(event -> {
             if (templateName.getSelectionModel().getSelectedItem() != null
@@ -257,111 +262,111 @@ public class TemplateController {
 
     private void buildNewTemplateDialog() {
 //        if (newStage == null) {
-            Pane root = null;
-            try {
-                FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-                NewNameController newNameController = new NewNameController();
-                newNameController.setPaneName("newTemplate");
-                loader.setController(newNameController);
-                root = loader.load();
-                newNameController.getOk().setOnAction(event -> {
-                    TextField n = newNameController.getName();
-                    if (StringUtils.isNotEmpty(n.getText())) {
-                        if (!templateNames.contains(n.getText())) {
-                            templateNames.add(n.getText());
-                            TemplateSettingDto newDto = new TemplateSettingDto();
-                            newDto.setName(n.getText());
-                            allTemplate.put(n.getText(), newDto);
-                            initData(n.getText());
-                        }
+        Pane root = null;
+        try {
+            FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+            NewNameController newNameController = new NewNameController();
+            newNameController.setPaneName("newTemplate");
+            loader.setController(newNameController);
+            root = loader.load();
+            newNameController.getOk().setOnAction(event -> {
+                TextField n = newNameController.getName();
+                if (StringUtils.isNotEmpty(n.getText())) {
+                    if (!templateNames.contains(n.getText())) {
+                        templateNames.add(n.getText());
+                        TemplateSettingDto newDto = new TemplateSettingDto();
+                        newDto.setName(n.getText());
+                        allTemplate.put(n.getText(), newDto);
+                        initData(n.getText());
                     }
-                    n.setText("");
-                    StageMap.closeStage("newTemplate");
-                });
+                }
+                n.setText("");
+                StageMap.closeStage("newTemplate");
+            });
 
-                Stage newStage = WindowFactory.createOrUpdateSimpleWindowAsModel("newTemplate", "New Template", root);
-                newStage.setOnCloseRequest(event -> newNameController.getName().setText(""));
-                newStage.show();
+            Stage newStage = WindowFactory.createOrUpdateSimpleWindowAsModel("newTemplate", "New Template", root);
+            newStage.setOnCloseRequest(event -> newNameController.getName().setText(""));
+            newStage.show();
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 //        }
 
     }
 
     private void buildRenameTemplateDialog() {
 //        if (renameStage == null) {
-            Pane root = null;
-            try {
-                FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-                NewNameController renameTemplateController = new NewNameController();
-                renameTemplateController.setPaneName("renameTemplate");
+        Pane root = null;
+        try {
+            FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+            NewNameController renameTemplateController = new NewNameController();
+            renameTemplateController.setPaneName("renameTemplate");
 
-                loader.setController(renameTemplateController);
-                root = loader.load();
-                renameTemplateController.getOk().setOnAction(event -> {
-                    TextField n = renameTemplateController.getName();
-                    if (StringUtils.isNotEmpty(n.getText()) && !n.getText().equals(templateName.getSelectionModel().getSelectedItem().toString())) {
-                        for (int i = 0; i < templateNames.size(); i++) {
-                            if (templateNames.get(i).equals(templateName.getSelectionModel().getSelectedItem().toString())) {
-                                allTemplate.put(n.getText(), allTemplate.get(templateNames.get(i)));
-                                allTemplate.remove(templateNames.get(i));
-                                templateNames.set(i, n.getText());
-                            }
+            loader.setController(renameTemplateController);
+            root = loader.load();
+            renameTemplateController.getOk().setOnAction(event -> {
+                TextField n = renameTemplateController.getName();
+                if (StringUtils.isNotEmpty(n.getText()) && !n.getText().equals(templateName.getSelectionModel().getSelectedItem().toString())) {
+                    for (int i = 0; i < templateNames.size(); i++) {
+                        if (templateNames.get(i).equals(templateName.getSelectionModel().getSelectedItem().toString())) {
+                            allTemplate.put(n.getText(), allTemplate.get(templateNames.get(i)));
+                            allTemplate.remove(templateNames.get(i));
+                            templateNames.set(i, n.getText());
                         }
                     }
-                    StageMap.closeStage("renameTemplate");
-                });
-                Stage renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameTemplate", "Rename Template", root);
-                renameTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem().toString());
-                renameStage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                }
+                StageMap.closeStage("renameTemplate");
+            });
+            Stage renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameTemplate", "Rename Template", root);
+            renameTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem().toString());
+            renameStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 //        }
 
     }
 
     private void buildCopyTemplateDialog() {
 //        if (copyStage == null) {
-            Pane root = null;
-            try {
-                FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-                NewNameController copyTemplateController = new NewNameController();
-                copyTemplateController.setPaneName("copyTemplate");
+        Pane root = null;
+        try {
+            FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+            NewNameController copyTemplateController = new NewNameController();
+            copyTemplateController.setPaneName("copyTemplate");
 
-                loader.setController(copyTemplateController);
-                root = loader.load();
-                copyTemplateController.getOk().setOnAction(event -> {
-                    TextField n = copyTemplateController.getName();
-                    if (StringUtils.isNotEmpty(n.getText())) {
-                        if (!templateNames.contains(n.getText())) {
-                            TemplateSettingDto copyDto = new TemplateSettingDto();
-                            try {
-                                copyDto = (TemplateSettingDto) DeepCopy.deepCopy(currTemplate);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
-                            }
-//                            BeanUtils.copyProperties(currTemplate, copyDto);
-                            copyDto.setName(n.getText());
-                            allTemplate.put(n.getText(), copyDto);
-                            templateNames.add(n.getText());
-                            templateName.getSelectionModel().select(n.getText());
-//                            currTemplate = copyDto;
+            loader.setController(copyTemplateController);
+            root = loader.load();
+            copyTemplateController.getOk().setOnAction(event -> {
+                TextField n = copyTemplateController.getName();
+                if (StringUtils.isNotEmpty(n.getText())) {
+                    if (!templateNames.contains(n.getText())) {
+                        TemplateSettingDto copyDto = new TemplateSettingDto();
+                        try {
+                            copyDto = (TemplateSettingDto) DeepCopy.deepCopy(currTemplate);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
                         }
+//                            BeanUtils.copyProperties(currTemplate, copyDto);
+                        copyDto.setName(n.getText());
+                        allTemplate.put(n.getText(), copyDto);
+                        templateNames.add(n.getText());
+                        templateName.getSelectionModel().select(n.getText());
+//                            currTemplate = copyDto;
                     }
-                    n.setText("");
-                    StageMap.closeStage("copyTemplate");
-                });
-                Stage copyStage = WindowFactory.createOrUpdateSimpleWindowAsModel("copyTemplate", "Copy Template", root);
-                copyTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem().toString());
-                copyStage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                }
+                n.setText("");
+                StageMap.closeStage("copyTemplate");
+            });
+            Stage copyStage = WindowFactory.createOrUpdateSimpleWindowAsModel("copyTemplate", "Copy Template", root);
+            copyTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem().toString());
+            copyStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 //        }
 
     }

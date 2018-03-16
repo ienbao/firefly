@@ -3,7 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.model;
 
-import com.dmsoft.firefly.gui.components.table.NewTableModel;
+import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.plugin.spc.dto.StatisticalAlarmDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Created by Ethan.Yang on 2018/2/12.
  */
-public class StatisticalTableModel implements NewTableModel {
+public class StatisticalTableModel implements TableModel {
     private static final String[] STATISTICAL_TITLE = UIConstant.SPC_SR_ALL;
     private ObservableList<String> columnKey = FXCollections.observableArrayList(Arrays.asList(STATISTICAL_TITLE));
     private ObservableList<String> rowKey = FXCollections.observableArrayList();
@@ -100,6 +100,7 @@ public class StatisticalTableModel implements NewTableModel {
         colorCache.clear();
         emptyResultKeys.clear();
         editorCell.clear();
+        allChecked.setValue(false);
     }
 
     /**
@@ -120,6 +121,7 @@ public class StatisticalTableModel implements NewTableModel {
      * @param result column name
      */
     public void updateStatisticalResultColumn(List<String> result) {
+        columnKey.remove(3, columnKey.size());
         columnKey.addAll(result);
     }
 
@@ -291,8 +293,11 @@ public class StatisticalTableModel implements NewTableModel {
                     if (statisticalAlarmDtoMap == null) {
                         value = "-";
                     } else {
-
-                        value = showValue(statisticalAlarmDtoMap.get(columnName));
+                        String key = columnName;
+                        if (columnName.equals(STATISTICAL_TITLE[16])) {
+                            key = SpcKey.CA.getCode();
+                        }
+                        value = showValue(statisticalAlarmDtoMap.get(key));
 
 //                        if (columnName.equals(STATISTICAL_TITLE[2])) {
 //                            value = showValue(spcStatsResultDto.getSamples());

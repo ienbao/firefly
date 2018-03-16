@@ -87,7 +87,7 @@
                                                                 <Insets bottom="6.0" left="10.0" top="6.0" />
                                                             </padding>
                                                         </HBox>
-                                          <TableView prefHeight="600.0" prefWidth="200.0">
+                                          <TableView fx:id="itemDetailTb" prefHeight="600.0" prefWidth="200.0">
                                             <columns>
                                               <TableColumn prefWidth="75.0" text="C1" />
                                               <TableColumn prefWidth="75.0" text="C2" />
