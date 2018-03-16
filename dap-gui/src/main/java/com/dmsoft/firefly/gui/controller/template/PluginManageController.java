@@ -4,6 +4,7 @@
 
 package com.dmsoft.firefly.gui.controller.template;
 
+import com.dmsoft.bamboo.common.utils.collection.ListUtil;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.core.utils.*;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
@@ -22,6 +23,7 @@ import com.dmsoft.firefly.sdk.plugin.PluginInfo;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -189,40 +191,45 @@ public class PluginManageController implements Initializable {
             Stage fileStage = null;
             File file = fileChooser.showOpenDialog(fileStage);
             if (file != null) {
-                //TODO
-                String propertiesURL = ApplicationPathUtil.getPath("application.properties");
-                InputStream inputStream = null;
-                String pluginFolderPath = null;
-                try {
-                    inputStream = new BufferedInputStream(new FileInputStream(propertiesURL));
-                    Properties properties = new Properties();
-                    properties.load(inputStream);
-                    pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
+                Platform.runLater(() -> {
+                    //TODO
+                    String propertiesURL = ApplicationPathUtil.getPath("application.properties");
+                    InputStream inputStream = null;
+                    String pluginFolderPath = null;
+                    try {
+                        inputStream = new BufferedInputStream(new FileInputStream(propertiesURL));
+                        Properties properties = new Properties();
+                        properties.load(inputStream);
+                        pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
+                        //validate
+                        FileUtils.unZipFiles(file, pluginFolderPath + "/temp/" + file.getName() + "/");
+                        PluginContext context = RuntimeContext.getBean(PluginContext.class);
+                        List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath + "/temp/" + file.getName() + "/");
+                        PluginInfo installPlugins = ListUtil.isEmpty(scannedPlugins) ? null : scannedPlugins.get(0);
 
-                    //validate
-                    FileUtils.unZipFiles(file, pluginFolderPath + "/temp/" + file.getName() + "/");
-                    PluginContext context = RuntimeContext.getBean(PluginContext.class);
-                    List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath + "/temp/" + file.getName() + "/");
-                    PluginInfo installPlugins = scannedPlugins.get(0);
+                        if (installPlugins == null) {
+                            WindowMessageFactory.createWindowMessageNoBtnHasOk("Install Error", "Install Plugin Illegal.");
+                            return;
+                        }
 
-                    Map<String, PluginInfo> allInstallPlugins = context.getAllInstalledPluginInfo() == null ? Maps.newHashMap() : context.getAllInstalledPluginInfo();
+                        Map<String, PluginInfo> allInstallPlugins = context.getAllInstalledPluginInfo() == null ? Maps.newHashMap() : context.getAllInstalledPluginInfo();
 
-                    if (isExists(scannedPlugins.get(0), allInstallPlugins)) {
-                        //TODO 存在相同的插件时对应的逻辑
-                        return;
+                        if (isExists(scannedPlugins.get(0), allInstallPlugins)) {
+                            WindowMessageFactory.createWindowMessageNoBtnHasOk("Install Error", "Plugin Exist.");
+                            return;
+                        }
+
+                        FileUtils.unZipFiles(file, pluginFolderPath + "/");
+                        FileUtils.deleteFolder(pluginFolderPath + "/temp/" + file.getName());
+
+                        PluginTableRowData chooseTableRowData = new PluginTableRowData(false, installPlugins.getName(), installPlugins);
+                        pluginTableRowDataObservableList.add(chooseTableRowData);
+                        isEdit = true;
+                        ok.setText("restart");
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-
-                    FileUtils.unZipFiles(file, pluginFolderPath + "/");
-                    FileUtils.deleteFolder(pluginFolderPath + "/temp/" + file.getName());
-
-                    PluginTableRowData chooseTableRowData = new PluginTableRowData(false, installPlugins.getName(), installPlugins);
-                    pluginTableRowDataObservableList.add(chooseTableRowData);
-                    isEdit = true;
-                    ok.setText("restart");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+                });
             }
         });
         unInstallPlugin.setOnAction(event -> {
