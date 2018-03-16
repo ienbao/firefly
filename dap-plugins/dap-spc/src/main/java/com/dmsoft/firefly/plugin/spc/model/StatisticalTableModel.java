@@ -100,6 +100,7 @@ public class StatisticalTableModel implements TableModel {
         colorCache.clear();
         emptyResultKeys.clear();
         editorCell.clear();
+        allChecked.setValue(false);
     }
 
     /**
@@ -120,6 +121,7 @@ public class StatisticalTableModel implements TableModel {
      * @param result column name
      */
     public void updateStatisticalResultColumn(List<String> result) {
+        columnKey.remove(3, columnKey.size());
         columnKey.addAll(result);
     }
 
@@ -291,8 +293,11 @@ public class StatisticalTableModel implements TableModel {
                     if (statisticalAlarmDtoMap == null) {
                         value = "-";
                     } else {
-
-                        value = showValue(statisticalAlarmDtoMap.get(columnName));
+                        String key = columnName;
+                        if (columnName.equals(STATISTICAL_TITLE[16])) {
+                            key = SpcKey.CA.getCode();
+                        }
+                        value = showValue(statisticalAlarmDtoMap.get(key));
 
 //                        if (columnName.equals(STATISTICAL_TITLE[2])) {
 //                            value = showValue(spcStatsResultDto.getSamples());
