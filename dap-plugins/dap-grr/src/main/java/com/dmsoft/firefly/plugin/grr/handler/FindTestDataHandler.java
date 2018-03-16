@@ -37,11 +37,6 @@ public class FindTestDataHandler implements JobInboundHandler {
             testItemNames.add(testItemWithTypeDto.getTestItemName());
         }
 
-        //包含所有需要数据的测试项
-        testItemNames.add("Serial Number");
-        testItemNames.add("Site ID");
-        //String condition = "(\"Serial Number\" = \"part4\" | \"Serial Number\" = \"part5\") & (\"Site ID\" = \"2\" | \"Site ID\" = \"4\")";
-
        // progress
         SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
         if (sourceDataService instanceof AbstractProcessMonitorAutoAdd) {

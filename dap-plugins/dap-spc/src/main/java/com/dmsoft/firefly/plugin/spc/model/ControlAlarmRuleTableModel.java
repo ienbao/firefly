@@ -34,7 +34,7 @@ public class ControlAlarmRuleTableModel implements NewTableModel {
 
 
     private Map<String, ControlRuleDto> dataMap = new HashMap<>();
-    private Map<String, SourceObjectProperty<String>> valueMap = new HashMap<>();
+    private Map<String, SimpleObjectProperty<String>> valueMap = new HashMap<>();
     private Map<String, SimpleObjectProperty<Boolean>> checkMap = new HashMap<>();
 
     /**
@@ -61,12 +61,11 @@ public class ControlAlarmRuleTableModel implements NewTableModel {
         }
     }
 
-    private void clearTable(){
+    private void clearTable() {
         rowKey.clear();
         dataMap.clear();
         valueMap.clear();
         checkMap.clear();
-        columnKey.clear();
     }
 
     @Override
@@ -82,18 +81,38 @@ public class ControlAlarmRuleTableModel implements NewTableModel {
             }
             ControlRuleDto controlRuleDto = dataMap.get(rowKey);
             Object value = "";
+            SimpleObjectProperty objectProperty = new SimpleObjectProperty();
             if (columnName.equals(HEADER[0])) {
                 value = controlRuleDto.isUsed();
             } else if (columnName.equals(HEADER[1])) {
                 value = controlRuleDto.getRuleName();
             } else if (columnName.equals(HEADER[2])) {
                 value = DAPStringUtils.toStringFromDouble(controlRuleDto.getnValue());
+                objectProperty.addListener((ov, b1, b2) -> {
+                    if (!DAPStringUtils.isNumeric(String.valueOf(b2)) || DAPStringUtils.isBlank(String.valueOf(b2))) {
+                        return;
+                    }
+                    controlRuleDto.setnValue(Double.valueOf((String)b2));
+                });
             } else if (columnName.equals(HEADER[3])) {
                 value = DAPStringUtils.toStringFromDouble(controlRuleDto.getmValue());
+                objectProperty.addListener((ov, b1, b2) -> {
+                    if (!DAPStringUtils.isNumeric(String.valueOf(b2)) || DAPStringUtils.isBlank(String.valueOf(b2))) {
+                        return;
+                    }
+                    controlRuleDto.setmValue(Double.valueOf((String)b2));
+                });
             } else if (columnName.equals(HEADER[4])) {
                 value = DAPStringUtils.toStringFromDouble(controlRuleDto.getsValue());
+                objectProperty.addListener((ov, b1, b2) -> {
+                    if (!DAPStringUtils.isNumeric(String.valueOf(b2)) || DAPStringUtils.isBlank(String.valueOf(b2))) {
+                        return;
+                    }
+                    controlRuleDto.setsValue(Double.valueOf((String)b2));
+                });
             }
-            valueMap.put(rowKey + "-" + columnName, new SourceObjectProperty(value));
+            objectProperty.setValue(value);
+            valueMap.put(rowKey + "-" + columnName,objectProperty);
         }
 
         return valueMap.get(rowKey + "-" + columnName);
@@ -106,6 +125,9 @@ public class ControlAlarmRuleTableModel implements NewTableModel {
 
     @Override
     public boolean isEditableTextField(String columnName) {
+        if (columnName.equals(HEADER[2]) || columnName.equals(HEADER[3]) || columnName.equals(HEADER[4])) {
+            return true;
+        }
         return false;
     }
 
@@ -145,10 +167,7 @@ public class ControlAlarmRuleTableModel implements NewTableModel {
 
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
-        if (column.equals(HEADER[0])) {
-            tableCell.setPrefWidth(72);
-        }
-        return tableCell;
+        return null;
     }
 
     @Override

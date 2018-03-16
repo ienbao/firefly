@@ -11,8 +11,7 @@ import java.util.List;
  * Created by Ethan.Yang on 2018/2/6.
  */
 public class SearchConditionDto extends AbstractValueObject {
-    private List<GrrTestItemDto> testItemDtoList;
-    private String condition;
+    private List<String> searchCondition;
     private String part;
     private String appraiser;
     private Integer partInt;
@@ -21,20 +20,12 @@ public class SearchConditionDto extends AbstractValueObject {
     private List<String> parts;
     private List<String> appraisers;
 
-    public List<GrrTestItemDto> getTestItemDtoList() {
-        return testItemDtoList;
+    public List<String> getSearchCondition() {
+        return searchCondition;
     }
 
-    public void setTestItemDtoList(List<GrrTestItemDto> testItemDtoList) {
-        this.testItemDtoList = testItemDtoList;
-    }
-
-    public String getCondition() {
-        return condition;
-    }
-
-    public void setCondition(String condition) {
-        this.condition = condition;
+    public void setSearchCondition(List<String> searchCondition) {
+        this.searchCondition = searchCondition;
     }
 
     public String getPart() {

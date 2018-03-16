@@ -4,6 +4,7 @@
 package com.dmsoft.firefly.gui.controller.template;
 
 import com.dmsoft.firefly.gui.GuiApplication;
+import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
@@ -18,6 +19,7 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.google.common.collect.Lists;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,44 +35,55 @@ import java.util.*;
  */
 public class DataSourceSettingController {
     @FXML
-    private Button chooseItem, newTemplate, clearAll, help, ok, oK, cancel, apply;
-    @FXML
-    private Tab basicTab, advanceTab;
-    @FXML
-    private TableColumn<ItemTableModel, CheckBox> select;
-    @FXML
-    private TableColumn<ItemTableModel, TestItemWithTypeDto> item;
+    private Button chooseItem, oK, cancel, apply;
     @FXML
     private TableView itemDataTable;
 
+    @FXML
+    private SplitPane split;
+    private SearchTab searchTab;
     private ItemDataTableModel itemDataTableModel;
     private ChooseColDialogController chooseCumDialogController;
-    private SearchDataFrame dataFrame;
     private EnvService envService = RuntimeContext.getBean( EnvService.class );
     private SourceDataService sourceDataService = RuntimeContext.getBean( SourceDataService.class );
+    private List<String> testItems = new ArrayList<>();
 
     @FXML
     private void initialize() {
         initButton();
-        this.buildChooseColumnDialog();
         this.setTableData();
+        searchTab = new SearchTab();
+        split.getItems().add(searchTab);
+//        this.buildChooseColumnDialog();
         this.initComponentEvent();
 
     }
 
     private void initButton() {
         chooseItem.setGraphic( ImageUtils.getImageView( getClass().getResourceAsStream( "/images/btn_choose_test_items_normal.png" ) ) );
-        basicTab.setGraphic( ImageUtils.getImageView( getClass().getResourceAsStream( "/images/btn_basic_search_normal.png" ) ) );
-        advanceTab.setGraphic( ImageUtils.getImageView( getClass().getResourceAsStream( "/images/btn_advance_search_normal.png" ) ) );
-        newTemplate.setGraphic( ImageUtils.getImageView( getClass().getResourceAsStream( "/images/btn_new_template_normal.png" ) ) );
-        clearAll.setGraphic( ImageUtils.getImageView( getClass().getResourceAsStream( "/images/btn_clear_all_normal.png" ) ) );
-        help.setGraphic( ImageUtils.getImageView( getClass().getResourceAsStream( "/images/btn_help.svg" ) ) );
-        ok.setGraphic( ImageUtils.getImageView( getClass().getResourceAsStream( "/images/icon_choose_one_white.png" ) ) );
     }
 
     private void initComponentEvent() {
-        chooseItem.setOnAction( event -> getChooseColumnBtnEvent() );
+//        chooseItem.setOnAction( event -> getChooseColumnBtnEvent() );
         itemDataTableModel.getAllCheckBox().setOnAction( event -> getAllCheckBoxEvent() );
+        oK.setOnAction(event -> {
+//            saveCache();
+//            if (allTemplate != null) {
+//                templateService.saveAllAnalysisTemplate( Lists.newArrayList(allTemplate.values()));
+//            }
+//            StageMap.closeStage("template");
+//            refreshMainTemplate();
+        });
+        apply.setOnAction(event -> {
+//            saveCache();
+//            if (allTemplate != null) {
+//                templateService.saveAllAnalysisTemplate(Lists.newArrayList(allTemplate.values()));
+//            }
+//            refreshMainTemplate();
+        });
+        cancel.setOnAction(event -> {
+            StageMap.closeStage("sourceSetting");
+        });
     }
 
     private void buildChooseColumnDialog() {
@@ -87,8 +100,8 @@ public class DataSourceSettingController {
     }
 
     private void getChooseColumnBtnEvent() {
+//        chooseCumDialogController.setTableData(testItems);
         StageMap.showStage( "spcViewDataColumn" );
-        chooseCumDialogController.setSelectResultName( dataFrame.getAllTestItemName() );
     }
 
     private void setTableData() {
@@ -96,13 +109,12 @@ public class DataSourceSettingController {
         List<RowDataDto> rowDataDtoList = new LinkedList<>();
         List<String> projectNames = envService.findActivatedProjectName();
         List<TestItemWithTypeDto> testItemWithTypeDtos = envService.findTestItems();
-        List<String> testItems = new ArrayList<>();
         if (testItemWithTypeDtos != null && !testItemWithTypeDtos.isEmpty()) {
             for (TestItemWithTypeDto dto : testItemWithTypeDtos) {
                 testItems.add( dto.getTestItemName() );
             }
         }
-        List<RowDataDto> rowDataDtos = sourceDataService.findTestData( projectNames, testItems );
+        List<RowDataDto> rowDataDtos = sourceDataService.findTestData( projectNames, testItems,true);
 
         //assemble data of csv
         for (String projectName : projectNames) {
