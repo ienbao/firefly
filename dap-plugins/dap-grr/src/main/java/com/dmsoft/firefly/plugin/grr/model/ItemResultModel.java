@@ -60,6 +60,21 @@ public class ItemResultModel implements TableModel {
         if (dataFrame == null || itemResultDto == null || grrViewDataDtos == null) {
             return null;
         }
+        if (rowKey.contains(UIConstant.SPLIT_FLAG + "mean")) {
+            return this.getMeanCellData(rowKey, columnName);
+        } else if (rowKey.contains(UIConstant.SPLIT_FLAG + "range")) {
+            return this.getRangeCellData(rowKey, columnName);
+        } else if (rowKey.equals("total mean")) {
+            return this.getTotalMeanCellData(columnName);
+        } else if (rowKey.equals("total range")) {
+            return this.getTotalRangeCellData(columnName);
+        } else if (rowKey.contains(UIConstant.SPLIT_FLAG)) {
+            return this.getItemCellData(rowKey, columnName);
+        }
+        return null;
+    }
+
+    private ObjectProperty<String> getItemCellData(String rowKey, String columnName) {
         String appraiser = rowKey.split(UIConstant.SPLIT_FLAG)[0];
         String trial = rowKey.split(UIConstant.SPLIT_FLAG)[1];
         if (columnName.equals(appraiserKey)) {
@@ -69,6 +84,48 @@ public class ItemResultModel implements TableModel {
         } else {
             String viewDataRowKey = DataConvertUtils.findRowKeyFromViewData(grrViewDataDtos, appraiser, trial, columnName);
             return new SimpleObjectProperty(dataFrame.getDataRow(viewDataRowKey).getData().get(currentItemName));
+        }
+    }
+
+    private ObjectProperty<String> getTotalMeanCellData(String columnName) {
+        if (columnName.equals(appraiserKey)) {
+            return new SimpleObjectProperty<>("");
+        } else if (columnName.equals(trialKey)) {
+            return new SimpleObjectProperty<>("total mean");
+        } else {
+            return new SimpleObjectProperty<>(itemResultDto.getTotalMeans().get(columnName));
+        }
+    }
+
+    private ObjectProperty<String> getMeanCellData(String rowKey, String columnName) {
+        if (columnName.equals(appraiserKey)) {
+            return new SimpleObjectProperty<>("");
+        } else if (columnName.equals(trialKey)) {
+            return new SimpleObjectProperty<>("mean");
+        } else {
+            return new SimpleObjectProperty<>(itemResultDto.getMeanAndRangeDtos().
+                    get(rowKey.split(UIConstant.SPLIT_FLAG)[0]).getMeans().get(columnName));
+        }
+    }
+
+    private ObjectProperty<String> getTotalRangeCellData(String columnName) {
+        if (columnName.equals(appraiserKey)) {
+            return new SimpleObjectProperty<>("");
+        } else if (columnName.equals(trialKey)) {
+            return new SimpleObjectProperty<>("total range");
+        } else {
+            return new SimpleObjectProperty<>(itemResultDto.getTotalRanges().get(columnName));
+        }
+    }
+
+    private ObjectProperty<String> getRangeCellData(String rowKey, String columnName) {
+        if (columnName.equals(appraiserKey)) {
+            return new SimpleObjectProperty<>("");
+        } else if (columnName.equals(trialKey)) {
+            return new SimpleObjectProperty<>("range");
+        } else {
+            return new SimpleObjectProperty<>(itemResultDto.getMeanAndRangeDtos().
+                    get(rowKey.split(UIConstant.SPLIT_FLAG)[0]).getRanges().get(columnName));
         }
     }
 

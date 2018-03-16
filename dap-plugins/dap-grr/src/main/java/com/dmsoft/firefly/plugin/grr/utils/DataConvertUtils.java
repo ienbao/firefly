@@ -20,11 +20,11 @@ public class DataConvertUtils {
 
     public static GrrItemResultDto convertToItemResult(GrrDataFrameDto grrDataFrameDto, String itemName, String appraiserKey) {
 
-        String splitFlag = "!@#";
+        String splitFlag = UIConstant.SPLIT_FLAG;
         SearchDataFrame dataFrame = grrDataFrameDto.getDataFrame();
         List<GrrViewDataDto> includeData = grrDataFrameDto.getIncludeDatas();
-        Map<String, List<String>> partRowKeys = Maps.newHashMap();
-        Map<String, List<String>> partAppraiserRowKeys = Maps.newHashMap();
+        Map<String, List<String>> partRowKeys = Maps.newLinkedHashMap();
+        Map<String, List<String>> partAppraiserRowKeys = Maps.newLinkedHashMap();
 //      Package rowKey
         includeData.forEach(grrViewDataDto -> {
             String part = grrViewDataDto.getPart();
@@ -46,8 +46,8 @@ public class DataConvertUtils {
         });
 
 //      Get total mean and total range
-        List<String> totalMeans = Lists.newArrayList();
-        List<String> totalRanges = Lists.newArrayList();
+        Map<String, String> totalMeans = Maps.newLinkedHashMap();
+        Map<String, String> totalRanges = Maps.newLinkedHashMap();
         partRowKeys.forEach((partRowKey, rowKeys) -> {
 //            String condition = partKey + "=" + partRowKey;
             List<String> data = dataFrame.subDataFrame(rowKeys, Lists.newArrayList(itemName)).getDataColumn(itemName, null).getData();
@@ -58,15 +58,15 @@ public class DataConvertUtils {
                     array[i] = Double.valueOf(cellData);
                 }
             });
-            totalMeans.add(getAverage(array));
-            totalRanges.add(getRange(MathUtils.getMax(array), MathUtils.getMin(array)));
+            totalMeans.put(partRowKey, getAverage(array));
+            totalRanges.put(partRowKey, getRange(MathUtils.getMax(array), MathUtils.getMin(array)));
         });
 
         //Get mean and range
-        Map<String, GrrMeanAndRangeDto> meanAndRange = Maps.newHashMap();
+        Map<String, GrrMeanAndRangeDto> meanAndRange = Maps.newLinkedHashMap();
         partAppraiserRowKeys.forEach((partAppraiserKey, rowKeys) -> {
-//            String partValue = partAppraiserKey.split(splitFlag)[0];
-            String appraiserValue = appraiserKey + "=" + partAppraiserKey.split(splitFlag)[1];
+            String partValue = partAppraiserKey.split(splitFlag)[0];
+            String appraiserValue = partAppraiserKey.split(splitFlag)[1];
 //            String condition = partKey + "=" + partValue + "&" + appraiserValue;
             List<String> data = dataFrame.subDataFrame(rowKeys, Lists.newArrayList(itemName)).getDataColumn(itemName, null).getData();
             double[] array = new double[data.size()];
@@ -80,13 +80,17 @@ public class DataConvertUtils {
             String range = getRange(MathUtils.getMax(array), MathUtils.getMin(array));
             if (meanAndRange.containsKey(appraiserValue)) {
                 GrrMeanAndRangeDto grrMeanAndRangeDto = meanAndRange.get(appraiserValue);
-                grrMeanAndRangeDto.getMeans().add(mean);
-                grrMeanAndRangeDto.getRanges().add(range);
+                grrMeanAndRangeDto.getMeans().put(partValue, mean);
+                grrMeanAndRangeDto.getRanges().put(partValue, range);
             } else {
                 GrrMeanAndRangeDto grrMeanAndRangeDto = new GrrMeanAndRangeDto();
-                grrMeanAndRangeDto.setMeans(Lists.newArrayList(mean));
-                grrMeanAndRangeDto.setRanges(Lists.newArrayList(range));
-                meanAndRange.put(partAppraiserKey.split(splitFlag)[1], grrMeanAndRangeDto);
+                Map<String, String> meanMap = Maps.newLinkedHashMap();
+                Map<String, String> rangeMap = Maps.newLinkedHashMap();
+                meanMap.put(partValue, mean);
+                rangeMap.put(partValue, range);
+                grrMeanAndRangeDto.setMeans(meanMap);
+                grrMeanAndRangeDto.setRanges(rangeMap);
+                meanAndRange.put(appraiserValue, grrMeanAndRangeDto);
             }
         });
 

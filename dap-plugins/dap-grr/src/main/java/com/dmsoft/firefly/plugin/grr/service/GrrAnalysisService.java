@@ -1,9 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.service;
 
-import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnalysisConfigDto;
-import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnalysisDataDto;
-import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrDetailResultDto;
-import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrSummaryResultDto;
+import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
 
 /**
  * interface class for grr analysis
@@ -28,4 +25,13 @@ public interface GrrAnalysisService {
      * @return grr detail result dto
      */
     GrrDetailResultDto analyzeDetailResult(GrrAnalysisDataDto analysisDataDto, GrrAnalysisConfigDto configDto);
+
+    /**
+     * method to analyze grr detail result for export
+     *
+     * @param analysisDataDto grr analysis data dto
+     * @param configDto grr config dto
+     * @return grr detail result dto
+     */
+    GrrExportDetailResultDto analyzeExportDetailResult(GrrAnalysisDataDto analysisDataDto, GrrAnalysisConfigDto configDto);
 }

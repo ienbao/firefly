@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.grr.service.impl;
 
 import com.dmsoft.firefly.plugin.grr.GrrPlugin;
+import com.dmsoft.firefly.plugin.grr.dto.GrrExportDetailDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
 import com.dmsoft.firefly.plugin.grr.service.GrrAnalysisService;
 import com.dmsoft.firefly.plugin.grr.utils.GrrExceptionCode;
@@ -35,7 +36,7 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
     @Override
     public GrrSummaryResultDto analyzeSummaryResult(GrrAnalysisDataDto analysisDataDto, GrrAnalysisConfigDto configDto) {
         logger.debug("Analyzing GRR summary result ...");
-        GrrSummaryResultDto result = new GrrSummaryResultDto();
+        GrrSummaryResultDto result;
         try {
             Rengine engine = prepareEngine(analysisDataDto, configDto);
             result = getSummaryResult(engine, configDto.getMethod());
@@ -61,7 +62,7 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
     @Override
     public GrrDetailResultDto analyzeDetailResult(GrrAnalysisDataDto analysisDataDto, GrrAnalysisConfigDto configDto) {
         logger.debug("Analyzing GRR detail result ...");
-        GrrDetailResultDto result = new GrrDetailResultDto();
+        GrrDetailResultDto result;
         try {
             Rengine engine = prepareEngine(analysisDataDto, configDto);
             result = getGrrDetailResult(engine, configDto);
@@ -75,6 +76,12 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
         return result;
     }
 
+    @Override
+    public GrrExportDetailResultDto analyzeExportDetailResult(GrrAnalysisDataDto analysisDataDto, GrrAnalysisConfigDto configDto) {
+        logger.debug("Analyzing GRR export detail result ...");
+        GrrExportDetailDto result;
+        return null;
+    }
 
     private Rengine prepareEngine(GrrAnalysisDataDto dataDto, GrrAnalysisConfigDto configDto) {
         if (this.privateEngine == null) {

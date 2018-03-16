@@ -51,10 +51,6 @@ public class GrrMainController implements Initializable {
         initComponentEvents();
     }
 
-    public void grrAnalyzeResult() {
-        grrResultController.analyzeGrrResult(grrDataFrame, getSearchConditionDto());
-    }
-
     private void initBtnIcon() {
         exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_export_normal.png")));
     }

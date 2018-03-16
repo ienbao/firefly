@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.sdk.utils;
 
-import com.dmsoft.firefly.sdk.exception.ApplicationException;
+import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.utils.parser.FilterExpressionParser;
 import com.dmsoft.firefly.sdk.utils.parser.ParserToken;
 import com.dmsoft.firefly.sdk.utils.parser.SEPResult;
@@ -151,6 +151,18 @@ public class FilterUtils {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /**
+     * method to filter data frame
+     *
+     * @param searchCondition search condition
+     * @param searchDataFrame search data frame
+     * @return list of boolean present is legal or
+     */
+    public List<Boolean> filterDF(String searchCondition, SearchDataFrame searchDataFrame) {
+        //TODO
+        return null;
     }
 
     // parse sep result Object is List<Map>, Map key is String of test item, Map value is String of test item value
