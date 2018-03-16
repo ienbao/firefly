@@ -9,7 +9,6 @@ import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
-import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
 import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
@@ -336,9 +335,9 @@ public class GrrItemController implements Initializable {
                             //todo message tip
                             return;
                         }
-                        Platform.runLater(()->{
+                        Platform.runLater(() -> {
                             grrMainController.updateGrrViewData();
-                            grrMainController.updateGrrSummaryAndDetail();
+//                            grrMainController.updateGrrSummaryAndDetail();
                         });
 //                        GrrDataFrameDto grrDataFrameDto = (GrrDataFrameDto) returnValue;
 //                        grrMainController.setGrrDataFrame(grrDataFrameDto);
@@ -632,11 +631,11 @@ public class GrrItemController implements Initializable {
         return conditionTestItemList;
     }
 
-    public void setSearchConditionDto(SearchConditionDto searchConditionDto) {
-        this.searchConditionDto = searchConditionDto;
-    }
-
     public SearchConditionDto getSearchConditionDto() {
         return searchConditionDto;
+    }
+
+    public void setSearchConditionDto(SearchConditionDto searchConditionDto) {
+        this.searchConditionDto = searchConditionDto;
     }
 }

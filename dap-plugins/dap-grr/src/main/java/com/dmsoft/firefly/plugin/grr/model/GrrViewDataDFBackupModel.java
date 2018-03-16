@@ -132,7 +132,7 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
         tableCell.setStyle(null);
-        if (radioKey.equals(rowKey)) {
+        if (radioKey.equals(column)) {
             tableCell.setText(null);
             tableCell.setGraphic(grrRadioButton.get(rowKey));
             return tableCell;
@@ -165,6 +165,9 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
     @Override
     public void selectChange(GrrViewDataDto grrViewDataDto) {
         this.filterRowKeyArray.setPredicate(s -> grrViewDataDtoMap.get(s).getPart().equals(grrViewDataDto.getPart()) && (!isSlot || grrViewDataDtoMap.get(s).getOperator().equals(grrViewDataDto.getOperator())));
+        if (!this.filterRowKeyArray.isEmpty()) {
+            this.grrRadioButton.get(filterRowKeyArray.get(0)).setSelected(true);
+        }
         if (tableView != null) {
             tableView.refresh();
         }
@@ -178,6 +181,24 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
     public void searchTestItem(String testItem) {
         this.filterHeaderArray.setPredicate(s -> radioKey.equals(s) || partKey.equals(s) || appKey.equals(s) || trailKey.equals(s) || s.toLowerCase().contains(testItem.toLowerCase()));
         this.tableView.refresh();
+    }
+
+    /**
+     * method to replace view data dto
+     *
+     * @param grrViewDataDto grr view data dto to replace
+     */
+    public void replace(GrrViewDataDto grrViewDataDto) {
+        GrrViewDataDto oldDto = getSelectedViewDataDto();
+        if (oldDto != null) {
+            int index = this.rowKeyArray.indexOf(oldDto.getRowKey());
+            this.rowKeyArray.remove(index);
+            this.rowKeyArray.add(index, grrViewDataDto.getRowKey());
+            this.grrViewDataDtoMap.remove(oldDto.getRowKey());
+            this.grrViewDataDtoMap.put(grrViewDataDto.getRowKey(), grrViewDataDto);
+            RadioButton rb = this.grrRadioButton.remove(oldDto.getRowKey());
+            this.grrRadioButton.put(grrViewDataDto.getRowKey(), rb);
+        }
     }
 
     /**

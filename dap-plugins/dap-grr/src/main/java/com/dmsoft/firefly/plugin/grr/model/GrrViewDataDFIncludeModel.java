@@ -123,7 +123,7 @@ public class GrrViewDataDFIncludeModel implements TableModel {
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
         tableCell.setStyle(null);
-        if (radioKey.equals(rowKey)) {
+        if (radioKey.equals(column)) {
             tableCell.setText(null);
             tableCell.setGraphic(grrRadioButton.get(rowKey));
             return tableCell;
@@ -185,6 +185,24 @@ public class GrrViewDataDFIncludeModel implements TableModel {
      */
     public void addListener(GrrViewDataListener listener) {
         this.listeners.add(listener);
+    }
+
+    /**
+     * method to replace view data dto
+     *
+     * @param grrViewDataDto grr view data dto to replace
+     */
+    public void replace(GrrViewDataDto grrViewDataDto) {
+        GrrViewDataDto oldDto = getSelectedViewDataDto();
+        if (oldDto != null) {
+            int index = this.rowKeyArray.indexOf(oldDto.getRowKey());
+            this.rowKeyArray.remove(index);
+            this.rowKeyArray.add(index, grrViewDataDto.getRowKey());
+            this.grrViewDataDtoMap.remove(oldDto.getRowKey());
+            this.grrViewDataDtoMap.put(grrViewDataDto.getRowKey(), grrViewDataDto);
+            RadioButton rb = this.grrRadioButton.remove(oldDto.getRowKey());
+            this.grrRadioButton.put(grrViewDataDto.getRowKey(), rb);
+        }
     }
 
     private void fireToggle(RadioButton radioButton) {

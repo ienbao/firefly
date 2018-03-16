@@ -6,9 +6,11 @@ import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.DataFrame;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -316,6 +318,14 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
                 result.add(rowKey);
             }
         }
+        return result;
+    }
+
+    @Override
+    public Set<String> getValueSet(String testItemName) {
+        List<String> valueList = getDataValue(testItemName);
+        Set<String> result = Sets.newLinkedHashSet();
+        valueList.forEach(s -> result.add(s));
         return result;
     }
 

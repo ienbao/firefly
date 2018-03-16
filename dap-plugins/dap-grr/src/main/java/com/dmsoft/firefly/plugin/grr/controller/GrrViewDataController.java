@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
+import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrViewDataDto;
@@ -80,12 +81,8 @@ public class GrrViewDataController implements Initializable {
             if (this.backupModel != null && this.includeModel != null && this.backupModel.getSelectedViewDataDto() != null && this.includeModel.getSelectedViewDataDto() != null) {
                 GrrViewDataDto toBeBackupDto = this.includeModel.getSelectedViewDataDto();
                 GrrViewDataDto toBeIncludeDto = this.backupModel.getSelectedViewDataDto();
-                int index = this.includeModel.getRowKeyArray().indexOf(toBeBackupDto.getRowKey());
-                this.includeModel.getRowKeyArray().remove(index);
-                this.includeModel.getRowKeyArray().add(index, toBeIncludeDto.getRowKey());
-                index = this.backupModel.getAllRowKeys().indexOf(toBeIncludeDto.getRowKey());
-                this.backupModel.getAllRowKeys().remove(index);
-                this.backupModel.getAllRowKeys().add(index, toBeBackupDto.getRowKey());
+                this.includeModel.replace(toBeIncludeDto);
+                this.backupModel.replace(toBeBackupDto);
             }
         });
     }
@@ -134,6 +131,8 @@ public class GrrViewDataController implements Initializable {
                 this.exchangeDataTB.getColumns().clear();
             }
         }
+        TableViewWrapper.decorate(analysisDataTB, this.includeModel);
+        TableViewWrapper.decorate(exchangeDataTB, this.backupModel);
     }
 
     /**
