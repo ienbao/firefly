@@ -5,6 +5,7 @@ import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
@@ -185,7 +186,11 @@ public class SpcExportController {
         });
         export.setOnAction(event -> {
             if (StringUtils.isEmpty(locationPath.getText())) {
-                //todo
+                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export path.");
+                return;
+            }
+            if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
+                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
                 return;
             }
             export();
@@ -193,6 +198,14 @@ public class SpcExportController {
 
         });
         print.setOnAction(event -> {
+            if (StringUtils.isEmpty(locationPath.getText())) {
+                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export path.");
+                return;
+            }
+            if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
+                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                return;
+            }
             StageMap.closeStage("spcExport");
         });
         cancel.setOnAction(event -> {
@@ -306,21 +319,23 @@ public class SpcExportController {
         spcStatsDtoList = (List<SpcStatisticalResultAlarmDto>) manager.doJobSyn(job, paramMap, null);
 
         //build chart
-        Job chartJob = new Job(ParamKeys.SPC_REFRESH_JOB_PIPELINE);
-        Map chartParamMap = Maps.newHashMap();
-        chartParamMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
-        chartParamMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
+        Map<String, Map<String, String>> chartPath = Maps.newHashMap();
 
-        buildViewData();
-        chartParamMap.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
+        if (exportDataItem.get(SpcExportItemKey.EXPORT_CHARTS.getCode())) {
+            Job chartJob = new Job(ParamKeys.SPC_REFRESH_JOB_PIPELINE);
+            Map chartParamMap = Maps.newHashMap();
+            chartParamMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+            chartParamMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
 
-        Object returnValue = manager.doJobSyn(chartJob, chartParamMap);
-        if (returnValue == null) {
-            return null;
+            buildViewData();
+            chartParamMap.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
+
+            Object returnValue = manager.doJobSyn(chartJob, chartParamMap);
+            if (returnValue != null) {
+                List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
+                chartPath = initSpcChartData(spcChartDtoList);
+            }
         }
-        List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
-
-        Map<String, Map<String, String>> chartPath = initSpcChartData(spcChartDtoList);
         SpcUserActionAttributesDto spcConfig = new SpcUserActionAttributesDto();
         spcConfig.setExportPath(locationPath.getText());
         spcConfig.setPerformer(envService.getUserName());

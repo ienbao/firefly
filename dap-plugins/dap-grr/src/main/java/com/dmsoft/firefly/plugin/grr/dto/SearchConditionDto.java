@@ -4,6 +4,7 @@
 package com.dmsoft.firefly.plugin.grr.dto;
 
 import com.dmsoft.bamboo.common.dto.AbstractValueObject;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 
 import java.util.List;
 
@@ -11,8 +12,8 @@ import java.util.List;
  * Created by Ethan.Yang on 2018/2/6.
  */
 public class SearchConditionDto extends AbstractValueObject {
-    private List<GrrTestItemDto> testItemDtoList;
-    private String condition;
+    private List<TestItemWithTypeDto> selectedTestItemDtos;
+    private List<String> searchCondition;
     private String part;
     private String appraiser;
     private Integer partInt;
@@ -21,20 +22,20 @@ public class SearchConditionDto extends AbstractValueObject {
     private List<String> parts;
     private List<String> appraisers;
 
-    public List<GrrTestItemDto> getTestItemDtoList() {
-        return testItemDtoList;
+    public List<TestItemWithTypeDto> getSelectedTestItemDtos() {
+        return selectedTestItemDtos;
     }
 
-    public void setTestItemDtoList(List<GrrTestItemDto> testItemDtoList) {
-        this.testItemDtoList = testItemDtoList;
+    public void setSelectedTestItemDtos(List<TestItemWithTypeDto> selectedTestItemDtos) {
+        this.selectedTestItemDtos = selectedTestItemDtos;
     }
 
-    public String getCondition() {
-        return condition;
+    public List<String> getSearchCondition() {
+        return searchCondition;
     }
 
-    public void setCondition(String condition) {
-        this.condition = condition;
+    public void setSearchCondition(List<String> searchCondition) {
+        this.searchCondition = searchCondition;
     }
 
     public String getPart() {

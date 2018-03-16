@@ -157,13 +157,14 @@ public class SpcExportWorker implements ExWorker {
             count = 0;
             currentRow = 3;
 
+            if (!SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode().equals(condition)) {
+                ndcCellList = buildTestData(spcStatisticalResultDto.getStatisticalAlarmDtoMap(), exportDataItem);
+                cellList.addAll(ndcCellList);
+            }
+            ndcCellList = null;
+
             if (chartPicPaths.get(key) != null) {
                 Map<String, String> chartPicPath = chartPicPaths.get(key);
-                if (!SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode().equals(condition)) {
-                    ndcCellList = buildTestData(spcStatisticalResultDto.getStatisticalAlarmDtoMap(), exportDataItem);
-                    cellList.addAll(ndcCellList);
-                }
-                ndcCellList = null;
 
                 if (chartPicPath.containsKey(UIConstant.SPC_CHART_NDC)) {
                     ndcCellList = buildNDChart(chartPicPath.get(UIConstant.SPC_CHART_NDC));
@@ -272,28 +273,29 @@ public class SpcExportWorker implements ExWorker {
                     cellList.addAll(rcCellListAll);
                 }
                 rcCellListAll = null;
-                exSheet.setIndex(sheetIndex + 1);
-                exSheet.setExCells(cellList);
-                if (40 < currentRow) {
-                    if (!breakRowLists.contains(43)) {
-                        breakRowLists.add(43);
-                    }
-                }
-
-                if (100 < currentRow) {
-                    if (!breakRowLists.contains(103)) {
-                        breakRowLists.add(103);
-                    }
-                }
-
-                if (160 < currentRow) {
-                    if (!breakRowLists.contains(163)) {
-                        breakRowLists.add(163);
-                    }
-                }
-                sheets.add(exSheet);
-                sheetIndex++;
             }
+            exSheet.setIndex(sheetIndex + 1);
+            exSheet.setExCells(cellList);
+            if (40 < currentRow) {
+                if (!breakRowLists.contains(43)) {
+                    breakRowLists.add(43);
+                }
+            }
+
+            if (100 < currentRow) {
+                if (!breakRowLists.contains(103)) {
+                    breakRowLists.add(103);
+                }
+            }
+
+            if (160 < currentRow) {
+                if (!breakRowLists.contains(163)) {
+                    breakRowLists.add(163);
+                }
+            }
+            sheets.add(exSheet);
+            sheetIndex++;
+//            }
         }
     }
 

@@ -27,6 +27,12 @@ public class GrrExportSettingController {
     private Button ok;
     @FXML
     private Button cancel;
+    @FXML
+    private CheckBox ec;
+    @FXML
+    private CheckBox esr;
+    @FXML
+    private CheckBox eds;
 
     private ToggleGroup group = new ToggleGroup();
     private Map<String, Boolean> data;
@@ -65,6 +71,40 @@ public class GrrExportSettingController {
     }
 
     private void initEvent() {
+        eds.setOnAction(event -> {
+            if (eds.isSelected()) {
+                esr.setDisable(false);
+                ec.setDisable(false);
+                chartPane.getChildren().forEach(node -> {
+                    if (node instanceof CheckBox) {
+                        node.setDisable(false);
+                    }
+                });
+            } else {
+                esr.setDisable(true);
+                ec.setDisable(true);
+                chartPane.getChildren().forEach(node -> {
+                    if (node instanceof CheckBox) {
+                        node.setDisable(true);
+                    }
+                });
+            }
+        });
+        ec.setOnAction(event -> {
+            if (ec.isSelected()) {
+                chartPane.getChildren().forEach(node -> {
+                    if (node instanceof CheckBox) {
+                        node.setDisable(false);
+                    }
+                });
+            } else {
+                chartPane.getChildren().forEach(node -> {
+                    if (node instanceof CheckBox) {
+                        node.setDisable(true);
+                    }
+                });
+            }
+        });
         ok.setOnAction(event -> {
             saveData();
             StageMap.closeStage("grrExportSetting");

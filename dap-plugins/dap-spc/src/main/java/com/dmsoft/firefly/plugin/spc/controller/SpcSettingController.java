@@ -18,19 +18,26 @@ import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.StateKey;
+import com.dmsoft.firefly.plugin.spc.utils.enums.SpcCustomAlarmKey;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcProCapAlarmKey;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.net.URL;
 import java.util.List;
@@ -68,7 +75,7 @@ public class SpcSettingController implements Initializable {
     @FXML
     private Button addTestItemBtn;
     @FXML
-    private TableView<CustomAlarmTestItemRowData> testItemTable;
+    private TableView<CustomAlarmTestItemRowData> customAlarmTable;
     @FXML
     private TableColumn<CustomAlarmTestItemRowData, String> testItemColumn;
     @FXML
@@ -98,6 +105,7 @@ public class SpcSettingController implements Initializable {
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
 
     private ObservableList<CustomAlarmTestItemRowData> testItemRowDataObservableList;
+    private FilteredList<CustomAlarmTestItemRowData> testItemRowDataFilteredList;
     private ObservableList<StatisticsResultRuleRowData> statisticsRuleRowDataObservableList;
 
     private SpcExportSettingController spcExportSettingController;
@@ -115,16 +123,20 @@ public class SpcSettingController implements Initializable {
     private void initComponent() {
         testItemColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         testItemRowDataObservableList = FXCollections.observableArrayList();
-        testItemTable.setItems(testItemRowDataObservableList);
+        testItemRowDataFilteredList = testItemRowDataObservableList.filtered(p -> true);
+        customAlarmTable.setItems(testItemRowDataFilteredList);
 
         statisticsColumn.setCellValueFactory(cellData -> cellData.getValue().statisticNameProperty());
         lowerLimitColumn.setCellValueFactory(cellData -> cellData.getValue().lowerLimitProperty());
         upperLimitColumn.setCellValueFactory(cellData -> cellData.getValue().upperLimitProperty());
+        lowerLimitColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        upperLimitColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         statisticsRuleRowDataObservableList = FXCollections.observableArrayList();
         statisticalResultAlarmSetTable.setItems(statisticsRuleRowDataObservableList);
 
         controlAlarmRuleTableModel = new ControlAlarmRuleTableModel();
         TableViewWrapper.decorate(controlAlarmRuleTable, controlAlarmRuleTableModel);
+        ((TableColumn) controlAlarmRuleTable.getColumns().get(0)).setPrefWidth(72);
     }
 
     /**
@@ -143,6 +155,49 @@ public class SpcSettingController implements Initializable {
         this.setCustomAlarmSettingData(spcSettingDto.getStatisticalAlarmSetting());
         this.setControlAlarmSettingData(spcSettingDto.getControlChartRule());
         this.setExportSettingData(spcSettingDto.getExportTemplateName());
+    }
+
+    /**
+     * add custom alarm data
+     *
+     * @param testItemList testItem list
+     * @param testItem     test Item
+     */
+    public void addCustomAlarmSettingData(List<String> testItemList, String testItem) {
+        if (testItem != null) {
+            List<CustomAlarmTestItemRowData> list = Lists.newArrayList();
+            list.addAll(testItemRowDataObservableList);
+            for (CustomAlarmTestItemRowData customAlarmTestItemRowData : list) {
+                if (customAlarmTestItemRowData.getName().equals(testItem)) {
+                    testItemRowDataObservableList.remove(customAlarmTestItemRowData);
+                    CustomAlarmTestItemRowData newRowData = new CustomAlarmTestItemRowData(testItem, this.initEmptyCustomDto());
+                    testItemRowDataObservableList.add(0, newRowData);
+                    break;
+                }
+            }
+        }
+        if (testItemList != null) {
+            for (String item : testItemList) {
+                CustomAlarmTestItemRowData newRowData = new CustomAlarmTestItemRowData(item, this.initEmptyCustomDto());
+                testItemRowDataObservableList.add(0, newRowData);
+            }
+        }
+
+    }
+
+    private List<CustomAlarmDto> initEmptyCustomDto() {
+        List<CustomAlarmDto> customAlarmDtoList = Lists.newArrayList();
+        SpcCustomAlarmKey[] customAlarmKeys = SpcCustomAlarmKey.values();
+        if (customAlarmKeys == null) {
+            return customAlarmDtoList;
+        }
+        for (int i = 0; i < customAlarmKeys.length; i++) {
+            String key = customAlarmKeys[i].getCode();
+            CustomAlarmDto customAlarmDto = new CustomAlarmDto();
+            customAlarmDto.setStatisticName(key);
+            customAlarmDtoList.add(customAlarmDto);
+        }
+        return customAlarmDtoList;
     }
 
     private void setAnalysisSettingData(int customGroupNumber, int chartIntervalNumber) {
@@ -236,6 +291,38 @@ public class SpcSettingController implements Initializable {
 
         addTestItemBtn.setOnAction(event -> getAddTestItemEvent());
         exportTemplateSettingBtn.setOnAction(event -> getExportTemplateSettingEvent());
+        searchTestItemTf.getTextField().textProperty().addListener((observable, oldValue, newValue) -> getFilterTestItemTfEvent(newValue));
+
+        customAlarmTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> getCustomAlarmTableChangeEvent(newValue));
+        statisticalResultAlarmSetTable.editingCellProperty().addListener(new ChangeListener<TablePosition<StatisticsResultRuleRowData, ?>>() {
+            @Override
+            public void changed(ObservableValue<? extends TablePosition<StatisticsResultRuleRowData, ?>> observable, TablePosition<StatisticsResultRuleRowData, ?> oldValue, TablePosition<StatisticsResultRuleRowData, ?> newValue) {
+
+            }
+        });
+    }
+
+    private void getCustomAlarmTableChangeEvent(CustomAlarmTestItemRowData customAlarmTestItemRowData) {
+        statisticsRuleRowDataObservableList.clear();
+        if (customAlarmTestItemRowData != null) {
+            List<CustomAlarmDto> customAlarmDtoList = customAlarmTestItemRowData.getCustomAlarmDtoList();
+            if (customAlarmDtoList == null) {
+                return;
+            }
+            for (CustomAlarmDto customAlarmDto : customAlarmDtoList) {
+                statisticsRuleRowDataObservableList.add(new StatisticsResultRuleRowData(customAlarmDto));
+            }
+        }
+    }
+
+    private void getFilterTestItemTfEvent(String filterTf) {
+        if (testItemRowDataFilteredList == null) {
+            return;
+        }
+        testItemRowDataFilteredList.setPredicate(p -> {
+            String testItem = p.getName();
+            return testItem.contains(filterTf);
+        });
     }
 
     private void getApplyBtnEvent() {
@@ -262,13 +349,17 @@ public class SpcSettingController implements Initializable {
             Pane root = null;
             try {
                 FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML("view/add_item_dialog.fxml");
-                addItemController = fxmlLoader.getController();
                 root = fxmlLoader.load();
+                addItemController = fxmlLoader.getController();
+                addItemController.setSpcSettingController(this);
                 Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.SPC_SETTING_ADD_ITEM, SpcFxmlAndLanguageUtils.getString(ResourceMassages.ADD_TEST_ITEMS), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
                 stage.show();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+        }
+        if (addItemController != null) {
+            addItemController.initData(getAlarmTestItemList());
         }
     }
 
@@ -390,6 +481,17 @@ public class SpcSettingController implements Initializable {
             return "";
         }
         return String.valueOf(value);
+    }
+
+    private List<String> getAlarmTestItemList() {
+        List<String> testItem = Lists.newArrayList();
+        if (testItemRowDataObservableList == null) {
+            return testItem;
+        }
+        for (CustomAlarmTestItemRowData testItemRowData : testItemRowDataObservableList) {
+            testItem.add(testItemRowData.getName());
+        }
+        return testItem;
     }
 
     //Process Capability alarm Setting
