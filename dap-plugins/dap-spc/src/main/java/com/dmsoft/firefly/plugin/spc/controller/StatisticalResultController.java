@@ -97,6 +97,39 @@ public class StatisticalResultController implements Initializable {
         return statisticalTableModel.getSelectData();
     }
 
+    /**
+     * get edit row data
+     * @return the row data
+     */
+    public List<SpcStatisticalResultAlarmDto> getEditRowStatsData(){
+        return statisticalTableModel.getEditRowData();
+    }
+
+    /**
+     * get edit row key
+     * @return row key
+     */
+    public List<String> getEidtStatisticalRowKey(){
+        return statisticalTableModel.getEditorRowKey();
+    }
+
+    /**
+     * get all stats data
+     * @return
+     */
+    public List<SpcStatisticalResultAlarmDto> getAllRowStatsData(){
+        return statisticalTableModel.getSpcStatsDtoList();
+    }
+
+    /**
+     * get select row key
+     *
+     * @return row key
+     */
+    public List<String> getSelectStatisticalRowKey(){
+        return statisticalTableModel.getSelectRowKey();
+    }
+
     private void buildChooseColumnDialog() {
         FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML(ViewResource.SPC_CHOOSE_STATISTICAL_VIEW_RES);
         Pane root = null;

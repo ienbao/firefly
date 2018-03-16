@@ -55,6 +55,7 @@ public class StatisticalTableModel implements TableModel {
     private Map<String, Color> colorCache = Maps.newHashMap();
 
     private Set<String> editorCell = new HashSet<>();
+    private List<String> editorRowKey = Lists.newArrayList();
 
     /**
      * constructor
@@ -101,6 +102,7 @@ public class StatisticalTableModel implements TableModel {
         emptyResultKeys.clear();
         editorCell.clear();
         allChecked.setValue(false);
+        editorRowKey.clear();
     }
 
     /**
@@ -141,6 +143,57 @@ public class StatisticalTableModel implements TableModel {
             }
         }
         return selectStatsDtoList;
+    }
+
+    /**
+     * get select row key
+     *
+     * @return row key
+     */
+    public List<String> getSelectRowKey() {
+        List<String> rowList = Lists.newArrayList();
+        for (Map.Entry<String, SimpleObjectProperty<Boolean>> entry : checkMap.entrySet()) {
+            String key = entry.getKey().toString();
+            boolean isSelect = entry.getValue().getValue();
+            if (isSelect) {
+                rowList.add(key);
+            }
+        }
+        return rowList;
+    }
+
+    /**
+     * get editor row key
+     *
+     * @return the row keys
+     */
+    public List<String> getEditorRowKey() {
+        if (editorRowKey == null) {
+            return null;
+        }
+        List<String> rowKeyList = Lists.newArrayList();
+        for (String key : editorRowKey) {
+            if (!rowKeyList.contains(key)) {
+                rowKeyList.add(key);
+            }
+        }
+        return rowKeyList;
+    }
+
+    /**
+     * get edit row data
+     * @return the row data
+     */
+    public List<SpcStatisticalResultAlarmDto> getEditRowData() {
+        List<String> rowKeyList = getEditorRowKey();
+        if (rowKeyList == null) {
+            return null;
+        }
+        List<SpcStatisticalResultAlarmDto> editRowDataList = Lists.newArrayList();
+        for (String key : rowKeyList) {
+            editRowDataList.add(keyToStatsDtoMap.get(key));
+        }
+        return editRowDataList;
     }
 
     @Override
@@ -361,8 +414,10 @@ public class StatisticalTableModel implements TableModel {
                 }
                 if (!valueProperty.getSourceValue().equals(b2)) {
                     editorCell.add(rowKey + "-" + columnName);
+                    editorRowKey.add(rowKey);
                 } else {
                     editorCell.remove(rowKey + "-" + columnName);
+                    editorRowKey.remove(rowKey);
                 }
             });
         }
@@ -429,5 +484,9 @@ public class StatisticalTableModel implements TableModel {
             color = Colur.LEVEL_D;
         }
         return color;
+    }
+
+    public List<SpcStatisticalResultAlarmDto> getSpcStatsDtoList() {
+        return spcStatsDtoList;
     }
 }
