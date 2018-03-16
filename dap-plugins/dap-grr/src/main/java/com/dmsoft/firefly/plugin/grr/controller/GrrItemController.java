@@ -331,7 +331,7 @@ public class GrrItemController implements Initializable {
             paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
 //        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
             paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
-            SearchConditionDto searchConditionDto = this.getSearchConditionDto();
+            SearchConditionDto searchConditionDto = this.initSearchConditionDto();
             searchConditionDto.setSelectedTestItemDtos(selectedItemDto);
             paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, searchConditionDto);
 
@@ -352,7 +352,7 @@ public class GrrItemController implements Initializable {
         }
     }
 
-    private SearchConditionDto getSearchConditionDto() {
+    private SearchConditionDto initSearchConditionDto() {
         searchConditionDto = new SearchConditionDto();
         searchConditionDto.setPart(partCombox.getValue().toString());
         searchConditionDto.setPartInt(Integer.valueOf(partTxt.getText()));
@@ -634,4 +634,11 @@ public class GrrItemController implements Initializable {
         return conditionTestItemList;
     }
 
+    public void setSearchConditionDto(SearchConditionDto searchConditionDto) {
+        this.searchConditionDto = searchConditionDto;
+    }
+
+    public SearchConditionDto getSearchConditionDto() {
+        return searchConditionDto;
+    }
 }
