@@ -1,6 +1,5 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.gui.components.utils.PngJpgImagePerTest;
 import com.dmsoft.firefly.plugin.spc.charts.BoxPlotChart;
 import com.dmsoft.firefly.plugin.spc.charts.LinearChart;
 import com.dmsoft.firefly.plugin.spc.charts.NDChart;
