@@ -11,7 +11,6 @@ import java.util.List;
  * Created by Ethan.Yang on 2018/2/6.
  */
 public class GrrTestItemDto extends AbstractValueObject {
-
     private String key;
     private String itemName;
     private String cusLsl;

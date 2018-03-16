@@ -9,6 +9,13 @@ import javafx.scene.chart.XYChart;
  */
 public class LegendUtils {
 
+    /**
+     * Build chart legend component
+     *
+     * @param data        chart series
+     * @param classStyles classStyles
+     * @return legend
+     */
     public static Legend buildLegend(ObservableList<XYChart.Series> data, String... classStyles) {
 
         Legend legend = new Legend();

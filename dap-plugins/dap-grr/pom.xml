@@ -35,6 +35,19 @@
         <dependency>
             <groupId>com.dmsoft</groupId>
             <artifactId>bamboo</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.lucarosellini.rJava</groupId>
+            <artifactId>REngine</artifactId>
+            <version>0.9-7</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.lucarosellini.rJava</groupId>
+            <artifactId>JRI</artifactId>
+            <version>0.9-7</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

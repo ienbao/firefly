@@ -54,7 +54,7 @@ public class DAPStringUtils extends StringUtils {
      * @return true if it's blank.
      */
     public static boolean isSpecialBlank(String data) {
-        return StringUtils.isBlank(data) || data.equalsIgnoreCase("N/A") || data.equalsIgnoreCase("-") || data.equalsIgnoreCase("nil") || data.equalsIgnoreCase("UnKown Line") || data.equalsIgnoreCase("_");
+        return StringUtils.isBlank(data) || data.equalsIgnoreCase("NA") || data.equalsIgnoreCase("N/A") || data.equalsIgnoreCase("-") || data.equalsIgnoreCase("nil") || data.equalsIgnoreCase("UnKnown Line") || data.equalsIgnoreCase("_");
     }
 
     /**

@@ -7,6 +7,7 @@ package com.dmsoft.firefly.plugin.spc.export;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.poi.*;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
+import com.dmsoft.firefly.plugin.spc.utils.enums.SpcExportItemKey;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
@@ -61,6 +62,9 @@ public class SpcExportWorker implements ExWorker {
         rRules.put("analysisKey0", "R1,R2");
         String perfomer = spcUserActionAttributesDto.getPerformer();
         Map<String, Boolean> exportDataItem = spcUserActionAttributesDto.getExportDataItem();
+        exportDataItem.put("Center", true);
+//        exportDataItem.put("USL", true);
+//        exportDataItem.put("LSL", true);
 
         //summary sheet
         ExSheet summarySheet = new ExSheet();
@@ -81,10 +85,10 @@ public class SpcExportWorker implements ExWorker {
         for (SpcStatisticalResultAlarmDto spcStatisticalResultDto : spcStatisticalResultDtos) {
             String itemName = spcStatisticalResultDto.getItemName();
             String condition = spcStatisticalResultDto.getCondition();
-            if ("SubSummary".equals(condition) && !exportDataItem.get("SubSummary")) {
+            if (SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode().equals(condition) && !exportDataItem.get(SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode())) {
                 continue;
             }
-            if (!exportDataItem.get("DetailSheet")) {
+            if (!exportDataItem.get(SpcExportItemKey.EXPORT_DETAIL_SHEET.getCode())) {
                 ndcCellList.addAll(buildMultiNDC(spcStatisticalResultDto, itemCounter, exportDataItem, perfomer, false));
                 currentRow += 1;
             } else {
@@ -101,7 +105,7 @@ public class SpcExportWorker implements ExWorker {
         summarySheet.setExCells(summaryCellList);
         exChartSheet1.setExCells(summaryCellList);
         sheets.add(summarySheet);
-        if (!exportDataItem.get("DetailSheet") && !exportDataItem.get("SubSummary")) {
+        if (!exportDataItem.get(SpcExportItemKey.EXPORT_DETAIL_SHEET.getCode()) && !exportDataItem.get(SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode())) {
             sheets.add(exChartSheet1);
             return;
         }
@@ -120,8 +124,8 @@ public class SpcExportWorker implements ExWorker {
             if (DAPStringUtils.isBlank(condition)) {
                 condition = "All";
             }
-            if ("SubSummary".equals(condition) && !exportDataItem.get("SubSummary")
-                    || (!"SubSummary".equals(condition) && !exportDataItem.get("DetailSheet"))) {
+            if (SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode().equals(condition) && !exportDataItem.get(SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode())
+                    || (!SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode().equals(condition) && !exportDataItem.get(SpcExportItemKey.EXPORT_DETAIL_SHEET.getCode()))) {
                 continue;
             }
 
@@ -135,7 +139,7 @@ public class SpcExportWorker implements ExWorker {
             headerMap.put("searchCondition", condition);
 
             String sheetName = "";
-            if ("SubSummary".equals(condition)) {
+            if (SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode().equals(condition)) {
                 sheetName = "SubSummary" + "_" + testItemName;
                 sheetName = DAPStringUtils.filterSpeChars(sheetName);
             } else {
@@ -153,13 +157,14 @@ public class SpcExportWorker implements ExWorker {
             count = 0;
             currentRow = 3;
 
+            if (!SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode().equals(condition)) {
+                ndcCellList = buildTestData(spcStatisticalResultDto.getStatisticalAlarmDtoMap(), exportDataItem);
+                cellList.addAll(ndcCellList);
+            }
+            ndcCellList = null;
+
             if (chartPicPaths.get(key) != null) {
                 Map<String, String> chartPicPath = chartPicPaths.get(key);
-                if (!"SubSummary".equals(condition)) {
-                    ndcCellList = buildTestData(spcStatisticalResultDto.getStatisticalAlarmDtoMap(), exportDataItem);
-                    cellList.addAll(ndcCellList);
-                }
-                ndcCellList = null;
 
                 if (chartPicPath.containsKey(UIConstant.SPC_CHART_NDC)) {
                     ndcCellList = buildNDChart(chartPicPath.get(UIConstant.SPC_CHART_NDC));
@@ -175,7 +180,7 @@ public class SpcExportWorker implements ExWorker {
                         currentRow += 2;
                         firstChart = true;
                     }
-                    if (!"SubSummary".equals(condition)) {
+                    if (!SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode().equals(condition)) {
                         rcCellList = buildRChart(rRules.get(key), chartPicPath.get(UIConstant.SPC_CHART_RUN), "Run Chart");
                         chartFlag = true;
                         rcCellListAll.addAll(rcCellList);
@@ -268,28 +273,29 @@ public class SpcExportWorker implements ExWorker {
                     cellList.addAll(rcCellListAll);
                 }
                 rcCellListAll = null;
-                exSheet.setIndex(sheetIndex + 1);
-                exSheet.setExCells(cellList);
-                if (40 < currentRow) {
-                    if (!breakRowLists.contains(43)) {
-                        breakRowLists.add(43);
-                    }
-                }
-
-                if (100 < currentRow) {
-                    if (!breakRowLists.contains(103)) {
-                        breakRowLists.add(103);
-                    }
-                }
-
-                if (160 < currentRow) {
-                    if (!breakRowLists.contains(163)) {
-                        breakRowLists.add(163);
-                    }
-                }
-                sheets.add(exSheet);
-                sheetIndex++;
             }
+            exSheet.setIndex(sheetIndex + 1);
+            exSheet.setExCells(cellList);
+            if (40 < currentRow) {
+                if (!breakRowLists.contains(43)) {
+                    breakRowLists.add(43);
+                }
+            }
+
+            if (100 < currentRow) {
+                if (!breakRowLists.contains(103)) {
+                    breakRowLists.add(103);
+                }
+            }
+
+            if (160 < currentRow) {
+                if (!breakRowLists.contains(163)) {
+                    breakRowLists.add(163);
+                }
+            }
+            sheets.add(exSheet);
+            sheetIndex++;
+//            }
         }
     }
 
@@ -338,7 +344,6 @@ public class SpcExportWorker implements ExWorker {
             exCellList.add(ExUtil.fillToCell(new Integer[]{1, 1}, performer, ExCellType.TEXT, cellStyleMap.get(CellStyleType.items_content.toString())));
             exCellList.add(ExUtil.fillToCell(new Integer[]{1, 2}, "", ExCellType.TEXT, cellStyleMap.get(CellStyleType.items_content.toString())));
         }
-
 
         int startRow = 3;
         int columnCountPerRow = 4;
@@ -410,10 +415,16 @@ public class SpcExportWorker implements ExWorker {
 
 
         exCellList.add(ExUtil.fillToCell(new Integer[]{n++, column}, condition, ExCellType.TEXT, textCellStyle));
-        for (int i = 0; i < UIConstant.SPC_EXPORT_RESULT.length; i++) {
-            String name = UIConstant.SPC_EXPORT_RESULT[i];
+        for (int i = 0; i < scdLabels.length; i++) {
+            String name = scdLabels[i];
+            String s = "";
+            int digNumber = digNum;
+            if (name.equals("CA")) {
+                s = "%";
+                digNumber = digNumber <= 2 ? 0 : digNumber - 2;
+            }
             if (exportDataItem.containsKey(name) && exportDataItem.get(name)) {
-                exCellList.add(ExUtil.fillToCell(new Integer[]{n++, column}, (checkStaticData(dto, name) ? "-" : formatDouble(Double.valueOf(dto.get(name).getValue()), 0) + ""), ExCellType.TEXT,
+                exCellList.add(ExUtil.fillToCell(new Integer[]{n++, column}, (checkStaticData(dto, name) ? "-" : formatDouble(Double.valueOf(dto.get(name).getValue()), digNumber) + s), ExCellType.TEXT,
                         (checkStaticData(dto, name) || cusCpwToLevel(dto, name).equals(SpcKey.NORMAL.getCode())) ? textCellStyle : fillPcColor(cusCpwToLevel(dto, name))));
             }
         }
@@ -480,12 +491,18 @@ public class SpcExportWorker implements ExWorker {
             for (int i = 0; i < UIConstant.SPC_EXPORT_A.length; i++) {
                 String name = UIConstant.SPC_EXPORT_A[i];
                 String s = "";
+                int digNumber = digNum;
                 if (name.equals("CA")) {
                     s = "%";
+                    digNumber = digNumber <= 2 ? 0 : digNumber - 2;
                 }
+
                 if (exportDataItem.keySet().contains(name) && exportDataItem.get(name)) {
-                    exCellList.add(ExUtil.fillToCell(new Integer[]{currentRow + n++, dataIndex[1] + 4}, (checkStaticData(dto, name) ? "-" : formatDouble(Double.valueOf(dto.get(name).getValue()), tempDigit) + s),
+                    exCellList.add(ExUtil.fillToCell(new Integer[]{currentRow + n++, dataIndex[1] + 4}, (checkStaticData(dto, name) ? "-" : formatDouble(Double.valueOf(dto.get(name).getValue()), digNumber) + s),
                             ExCellType.TEXT, (checkStaticData(dto, name) || cusCpwToLevel(dto, name).equals(SpcKey.NORMAL.getCode())) ? textStyle : fillPcColor(cusCpwToLevel(dto, name))));
+                }
+                if (name.equals("Within PPM")) {
+                    n = n + 2;
                 }
             }
 
@@ -513,7 +530,7 @@ public class SpcExportWorker implements ExWorker {
             for (int i = 0; i < UIConstant.SPC_EXPORT_B.length; i++) {
                 String name = UIConstant.SPC_EXPORT_B[i];
                 if (exportDataItem.keySet().contains(name) && exportDataItem.get(name)) {
-                    exCellList.add(ExUtil.fillToCell(new Integer[]{currentRow + 4 + p++, dataIndex[1] + 1}, (checkStaticData(dto, name) ? "-" : formatDouble(Double.valueOf(dto.get(name).getValue()), 0) +  ""),
+                    exCellList.add(ExUtil.fillToCell(new Integer[]{currentRow + 4 + p++, dataIndex[1] + 1}, (checkStaticData(dto, name) ? "-" : formatDouble(Double.valueOf(dto.get(name).getValue()), digNum) + ""),
                             ExCellType.TEXT, textStyle));
                 }
             }
@@ -701,7 +718,7 @@ public class SpcExportWorker implements ExWorker {
     }
 
     private boolean checkStaticData(Map<String, StatisticalAlarmDto> dto, String checkType) {
-        if (dto == null) {
+        if (dto == null || dto.get(checkType) == null || dto.get(checkType).getValue() == null) {
             return true;
         }
         if (Double.NEGATIVE_INFINITY == dto.get(checkType).getValue() || Double.POSITIVE_INFINITY == dto.get(checkType).getValue() || "-".equals(dto.get(checkType).getValue())) {

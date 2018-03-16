@@ -9,7 +9,9 @@ import javafx.scene.paint.Color;
  */
 public interface ILineData {
 
-    String getName();
+    default String getName() {
+        return "";
+    }
 
     default String getTitle() {
         return "";

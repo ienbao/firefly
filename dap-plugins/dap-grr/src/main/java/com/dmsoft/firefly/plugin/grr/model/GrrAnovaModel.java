@@ -20,6 +20,7 @@ public class GrrAnovaModel {
 
     public void setData(List<GrrAnovaDto> data) {
         this.data.clear();
+        anovas.setAll(FXCollections.observableArrayList());
         if (data == null) {
             return;
         }

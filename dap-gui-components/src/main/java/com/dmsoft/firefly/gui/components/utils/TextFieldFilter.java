@@ -22,8 +22,8 @@ public class TextFieldFilter extends HBox {
         textField.setPrefHeight(20);
         label = new Label("", ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
         label.setAlignment(Pos.CENTER);
-        label.setPrefSize(22, 22);
-        label.setMinSize(22, 22);
+        label.setPrefSize(20, 20);
+        label.setMinSize(20, 20);
         this.setStyle("-fx-border-width: 1 1 1 1;-fx-border-color: #DCDCDC");
         this.getChildren().add(textField);
         this.getChildren().add(label);

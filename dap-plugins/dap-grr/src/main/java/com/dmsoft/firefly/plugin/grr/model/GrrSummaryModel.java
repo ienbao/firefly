@@ -21,6 +21,7 @@ public class GrrSummaryModel {
 
     public void setData(List<GrrSummaryDto> summaryDtos, String resultType) {
         data.clear();
+        summaries.setAll(FXCollections.observableArrayList());
         if (summaryDtos == null) {
             return;
         }

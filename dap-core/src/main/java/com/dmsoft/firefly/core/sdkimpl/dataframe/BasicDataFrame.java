@@ -188,7 +188,7 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
                 this.testItemDtoList.add(dataColumn.getTestItemWithTypeDto());
                 for (int i = 0; i < this.rowKeys.size(); i++) {
                     String rowKey = this.rowKeys.get(i);
-                    this.cellValues.get(i).add(dataColumn.getDataValue(rowKey));
+                    this.cellValues.get(i).add(dataColumn.getData(rowKey));
                 }
             }
         }
@@ -203,7 +203,7 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
             this.testItemDtoList.add(index, dataColumn.getTestItemWithTypeDto());
             for (int i = 0; i < this.rowKeys.size(); i++) {
                 String rowKey = this.rowKeys.get(i);
-                this.cellValues.get(i).add(index, dataColumn.getDataValue(rowKey));
+                this.cellValues.get(i).add(index, dataColumn.getData(rowKey));
             }
         }
     }
