@@ -297,7 +297,7 @@ public class SpcItemController implements Initializable {
                             //todo message tip
 
                         } else {
-                            spcMainController.clearAnalysisShowData();
+                            spcMainController.clearAnalysisSubShowData();
                             List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
                             spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
                         }

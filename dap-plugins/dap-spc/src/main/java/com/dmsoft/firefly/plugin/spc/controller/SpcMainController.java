@@ -65,6 +65,9 @@ public class SpcMainController implements Initializable {
     private SpcAnalysisConfigDto analysisConfigDto;
     private List<SearchConditionDto> initSearchConditionDtoList;
 
+    private List<String> chooseStatisticalRowKeyCache = Lists.newArrayList();
+    private List<String> viewDataRowKeyCache = Lists.newArrayList();
+
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private SpcSettingService spcSettingService = RuntimeContext.getBean(SpcSettingService.class);
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
@@ -112,8 +115,8 @@ public class SpcMainController implements Initializable {
     /**
      * clear analysis data
      */
-    public void clearAnalysisShowData(){
-        statisticalResultController.clearStatisticalResultData();
+    public void clearAnalysisSubShowData() {
+        //todo clear chart data
         viewDataController.setViewData(null, null);
     }
 
@@ -170,9 +173,9 @@ public class SpcMainController implements Initializable {
                             //todo message tip
 
                         } else {
-                            clearAnalysisShowData();
                             List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
                             setStatisticalResultData(spcStatisticalResultAlarmDtoList);
+                            clearAnalysisSubShowData();
                         }
                         return null;
                     }
@@ -257,25 +260,71 @@ public class SpcMainController implements Initializable {
     }
 
     private void getChooseBtnEvent() {
-        List<SearchConditionDto> searchConditionDtoList = this.buildRefreshSearchConditionData();
-        if (searchConditionDtoList.size() == 0) {
-            return;
-        }
-        Job job = new Job(ParamKeys.SPC_REFRESH_JOB_PIPELINE);
-        Map paramMap = Maps.newHashMap();
-        paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
-        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
+        //if only refresh statistical result
+        List<String> statisticalSelectRowKeyList = statisticalResultController.getSelectStatisticalRowKey();
+        if (statisticalSelectRowKeyList.size() == 0 || !this.resultSelectIsChange(statisticalSelectRowKeyList, chooseStatisticalRowKeyCache)) {
+            //refresh statistical result
+            List<String> viewDataSelectRowKeyList = dataFrame.getAllRowKeys();
+            if (statisticalSelectRowKeyList.size() == 0) {
+                this.clearAnalysisSubShowData();
+            }
+            if (chooseStatisticalRowKeyCache.size() != 0) {
+                viewDataSelectRowKeyList = viewDataController.getSelectedRowKeys();
+            }
 
-        SearchDataFrame subDataFrame = this.buildSubSearchDataFrame(searchConditionDtoList);
-        viewDataController.setViewData(subDataFrame, null);
-        paramMap.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
+//            List<SpcStatisticalResultAlarmDto> editRowDataList = statisticalResultController.getEditRowStatsData();
+            List<SpcStatisticalResultAlarmDto> editRowDataList = statisticalResultController.getAllRowStatsData();
+            List<SearchConditionDto> searchConditionDtoList = this.buildRefreshSearchConditionData(editRowDataList);
+            SearchDataFrame subDataFrame = this.buildSubSearchDataFrame(viewDataSelectRowKeyList, searchConditionDtoList);
+            Job job = new Job(ParamKeys.SPC_STATS_RESULT_HANDLER);
+            Map paramMap = Maps.newHashMap();
+            paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+            paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
+            paramMap.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
 
-        Object returnValue = manager.doJobSyn(job, paramMap);
-        if (returnValue == null) {
-            return;
+            Object returnValue = manager.doJobSyn(job, paramMap);
+            if (returnValue == null) {
+                //todo message tip
+
+            } else {
+//                clearAnalysisSubShowData();
+                List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
+                this.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
+            }
+
+        } else if (statisticalResultController.getEidtStatisticalRowKey().size() == 0 && !viewDataController.isChanged()) {
+            //only refresh chart
+            List<SearchConditionDto> searchConditionDtoList = this.buildRefreshSearchConditionData(statisticalResultController.getSelectStatsData());
+            if (searchConditionDtoList.size() == 0) {
+                return;
+            }
+            Job job = new Job(ParamKeys.SPC_REFRESH_CHART_JOB_PIPELINE);
+            Map paramMap = Maps.newHashMap();
+            paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+            paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
+
+            List<String> rowKeyList = dataFrame.getAllRowKeys();
+            if (chooseStatisticalRowKeyCache.size() != 0) {
+                rowKeyList = viewDataController.getSelectedRowKeys();
+            }
+            SearchDataFrame subDataFrame = this.buildSubSearchDataFrame(rowKeyList, searchConditionDtoList);
+
+            paramMap.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
+
+            Object returnValue = manager.doJobSyn(job, paramMap);
+            if (returnValue == null) {
+                return;
+            }
+            List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
+            chartResultController.initSpcChartData(spcChartDtoList);
+
+            viewDataRowKeyCache = rowKeyList;
+            SearchDataFrame viewDataFrame = this.buildSubSearchDataFrame(dataFrame.getAllRowKeys(), searchConditionDtoList);
+            viewDataController.setViewData(viewDataFrame, viewDataRowKeyCache);
+        } else {
+            viewDataRowKeyCache = viewDataController.getSelectedRowKeys();
+            // refresh all data
         }
-        List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
-        chartResultController.initSpcChartData(spcChartDtoList);
     }
 
     private void initBtnIcon() {
@@ -335,9 +384,11 @@ public class SpcMainController implements Initializable {
         this.initSearchConditionDtoList = initSearchConditionDtoList;
     }
 
-    private List<SearchConditionDto> buildRefreshSearchConditionData() {
+    private List<SearchConditionDto> buildRefreshSearchConditionData(List<SpcStatisticalResultAlarmDto> spcStatsDtoList) {
         List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
-        List<SpcStatisticalResultAlarmDto> spcStatsDtoList = statisticalResultController.getSelectStatsData();
+        if (spcStatsDtoList == null) {
+            return searchConditionDtoList;
+        }
         for (SpcStatisticalResultAlarmDto spcStatsDto : spcStatsDtoList) {
             SearchConditionDto searchConditionDto = new SearchConditionDto();
             searchConditionDto.setKey(spcStatsDto.getKey());
@@ -350,7 +401,7 @@ public class SpcMainController implements Initializable {
         return searchConditionDtoList;
     }
 
-    private SearchDataFrame buildSubSearchDataFrame(List<SearchConditionDto> searchConditionDtoList) {
+    private SearchDataFrame buildSubSearchDataFrame(List<String> rowKeyList, List<SearchConditionDto> searchConditionDtoList) {
         if (dataFrame == null || searchConditionDtoList == null) {
             return null;
         }
@@ -376,8 +427,19 @@ public class SpcMainController implements Initializable {
                 }
             }
         }
-        List<String> rowKeyList = dataFrame.getAllRowKeys();
         SearchDataFrame subDataFrame = dataFrame.subDataFrame(rowKeyList, testItemNameList);
         return subDataFrame;
+    }
+
+    private boolean resultSelectIsChange(List<String> newList, List<String> oldList) {
+        if (newList.size() != oldList.size()) {
+            return true;
+        }
+        for (String oldRowKey : oldList) {
+            if (!newList.contains(oldRowKey)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
