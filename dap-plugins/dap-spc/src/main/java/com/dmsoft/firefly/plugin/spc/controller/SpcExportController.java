@@ -4,17 +4,9 @@ import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
-import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
-import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
-import com.dmsoft.firefly.plugin.spc.charts.BoxPlotChart;
-import com.dmsoft.firefly.plugin.spc.charts.LinearChart;
-import com.dmsoft.firefly.plugin.spc.charts.NDChart;
-import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
 import com.dmsoft.firefly.plugin.spc.dto.*;
-import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
-import com.dmsoft.firefly.plugin.spc.dto.chart.*;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcExportServiceImpl;
@@ -28,15 +20,12 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
-import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.Job;
-import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -44,8 +33,6 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
-import javafx.scene.Node;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
@@ -53,14 +40,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -202,7 +186,11 @@ public class SpcExportController {
         });
         export.setOnAction(event -> {
             if (StringUtils.isEmpty(locationPath.getText())) {
-                //todo
+                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export path.");
+                return;
+            }
+            if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
+                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
                 return;
             }
             export();
@@ -210,6 +198,14 @@ public class SpcExportController {
 
         });
         print.setOnAction(event -> {
+            if (StringUtils.isEmpty(locationPath.getText())) {
+                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export path.");
+                return;
+            }
+            if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
+                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                return;
+            }
             StageMap.closeStage("spcExport");
         });
         cancel.setOnAction(event -> {
@@ -335,11 +331,10 @@ public class SpcExportController {
             chartParamMap.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
 
             Object returnValue = manager.doJobSyn(chartJob, chartParamMap);
-            if (returnValue == null) {
-                return null;
+            if (returnValue != null) {
+                List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
+                chartPath = initSpcChartData(spcChartDtoList);
             }
-            List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
-            chartPath = initSpcChartData(spcChartDtoList);
         }
         SpcUserActionAttributesDto spcConfig = new SpcUserActionAttributesDto();
         spcConfig.setExportPath(locationPath.getText());
