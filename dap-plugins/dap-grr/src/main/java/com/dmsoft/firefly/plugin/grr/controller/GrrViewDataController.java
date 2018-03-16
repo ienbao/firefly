@@ -77,7 +77,16 @@ public class GrrViewDataController implements Initializable {
             }
         });
         this.exchangeBtn.setOnAction(event -> {
-
+            if (this.backupModel != null && this.includeModel != null && this.backupModel.getSelectedViewDataDto() != null && this.includeModel.getSelectedViewDataDto() != null) {
+                GrrViewDataDto toBeBackupDto = this.includeModel.getSelectedViewDataDto();
+                GrrViewDataDto toBeIncludeDto = this.backupModel.getSelectedViewDataDto();
+                int index = this.includeModel.getRowKeyArray().indexOf(toBeBackupDto.getRowKey());
+                this.includeModel.getRowKeyArray().remove(index);
+                this.includeModel.getRowKeyArray().add(index, toBeIncludeDto.getRowKey());
+                index = this.backupModel.getAllRowKeys().indexOf(toBeIncludeDto.getRowKey());
+                this.backupModel.getAllRowKeys().remove(index);
+                this.backupModel.getAllRowKeys().add(index, toBeBackupDto.getRowKey());
+            }
         });
     }
 
@@ -103,10 +112,10 @@ public class GrrViewDataController implements Initializable {
             analysisFilterLB.setDisable(false);
             exchangeableLB.setDisable(false);
             this.grrDataFrameDto = dataFrame;
-            this.includeModel = new GrrViewDataDFIncludeModel(this.grrDataFrameDto);
+            this.includeModel = new GrrViewDataDFIncludeModel(this.grrDataFrameDto, grrMainController.getSearchConditionDto());
             this.includeModel.addListener(grrViewDataDto -> this.exchangeableLB.setText(partKey + grrViewDataDto.getPart() + ", " + appKey + grrViewDataDto.getOperator()));
             if (dataFrame.getBackupDatas() != null && !dataFrame.getBackupDatas().isEmpty()) {
-                this.backupModel = new GrrViewDataDFBackupModel(this.grrDataFrameDto, isSlot);
+                this.backupModel = new GrrViewDataDFBackupModel(this.grrDataFrameDto, grrMainController.getSearchConditionDto(), isSlot);
                 this.includeModel.addListener(this.backupModel);
             } else {
                 this.backupModel = null;
