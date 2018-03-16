@@ -15,5 +15,8 @@ public class GrrViewDataJobPipeline implements InitJobPipeline {
         pipeline.addLast(ParamKeys.DATA_FRAME_HANDLER, new DataFrameHandler());
         pipeline.addLast(ParamKeys.GRR_CONFIG_HANDLER, new GrrConfigHandler());
         pipeline.addLast(ParamKeys.GRR_VIEW_DATA_RESULT_HANDLER, new ViewDataHandler());
+        pipeline.addLast(ParamKeys.GRR_SUMMARY_RESULT_HANDLER, new SummaryHandler1());
+        pipeline.addLast(ParamKeys.GRR_DETAIL_RESULT_HANDLER, new DetailResultHandler1());
+
     }
 }

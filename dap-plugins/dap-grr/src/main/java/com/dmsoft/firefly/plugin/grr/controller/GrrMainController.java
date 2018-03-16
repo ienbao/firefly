@@ -3,7 +3,10 @@ package com.dmsoft.firefly.plugin.grr.controller;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
+import com.dmsoft.firefly.plugin.grr.dto.GrrDetailDto;
+import com.dmsoft.firefly.plugin.grr.dto.GrrSummaryDto;
 import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
+import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrDetailResultDto;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
@@ -25,6 +28,8 @@ import java.util.ResourceBundle;
 public class GrrMainController implements Initializable {
 
     private GrrDataFrameDto grrDataFrame;
+    private List<GrrSummaryDto> summaryDtos;
+    private GrrDetailDto grrDetailDto;
     @FXML
     private GrrItemController grrItemController;
     @FXML
@@ -85,4 +90,29 @@ public class GrrMainController implements Initializable {
     public SearchConditionDto getSearchConditionDto() {
         return grrItemController.getSearchConditionDto();
     }
+
+    public List<GrrSummaryDto> getSummaryDtos() {
+        return summaryDtos;
+    }
+
+    public void setSummaryDtos(List<GrrSummaryDto> summaryDtos) {
+        this.summaryDtos = summaryDtos;
+    }
+
+    public GrrDetailDto getGrrDetailDto() {
+        return grrDetailDto;
+    }
+
+    public void setGrrDetailDto(GrrDetailDto grrDetailDto) {
+        this.grrDetailDto = grrDetailDto;
+    }
+
+    public void updateGrrSummaryAndDetail() {
+        grrResultController.analyzeGrrResult(summaryDtos, grrDetailDto);
+    }
+
+    public void updateGrrViewData() {
+        grrViewDataController.refresh();
+    }
+
 }

@@ -202,4 +202,43 @@ public class DAPStringUtils extends StringUtils {
         }
         return String.valueOf(value);
     }
+
+    /**
+     * mongodb ket can not contains this char
+     * @param value
+     * @return
+     */
+    public static String specificToNomal(String value) {
+        if (value.contains(".")) {
+            value = value.replace(".", "_");
+        }
+        if (value.contains("/")) {
+            value = value.replace("/", "_");
+        }
+        if (value.contains("\"")) {
+            value = value.replace("\"", "_");
+        }
+        if (value.contains("$")) {
+            value = value.replace("$", "_");
+        }
+        if (value.contains("*")) {
+            value = value.replace("*", "_");
+        }
+        if (value.contains("<")) {
+            value = value.replace("<", "_");
+        }
+        if (value.contains(">")) {
+            value = value.replace(">", "_");
+        }
+        if (value.contains(":")) {
+            value = value.replace(":", "_");
+        }
+        if (value.contains("|")) {
+            value = value.replace("|", "_");
+        }
+        if (value.contains("?")) {
+            value = value.replace("?", "_");
+        }
+        return value;
+    }
 }

@@ -13,7 +13,6 @@ import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnovaAndSourceResultDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnovaDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrSourceDto;
-import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrSummaryResultDto;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.*;
 import com.dmsoft.firefly.plugin.grr.service.GrrConfigService;
@@ -29,7 +28,6 @@ import com.dmsoft.firefly.plugin.grr.utils.table.TableRender;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
-import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -95,6 +93,12 @@ public class GrrResultController implements Initializable {
         this.initData();
     }
 
+    public void analyzeGrrResult(List<GrrSummaryDto> grrSummaryDtos, GrrDetailDto grrDetailDto) {
+        this.setSummaryData(grrSummaryDtos);
+        this.setItemResultData(grrMainController.getGrrDataFrame(),  grrMainController.getSearchConditionDto(), grrSummaryDtos.get(0).getItemName());
+        this.setAnalysisItemResultData(grrDetailDto);
+    }
+
     public void analyzeGrrResult(GrrDataFrameDto grrDataFrameDto, SearchConditionDto conditionDto) {
 
         Map summaryParamMap = Maps.newHashMap();
@@ -109,6 +113,7 @@ public class GrrResultController implements Initializable {
         summaryParamMap.put(ParamKeys.SEARCH_DATA_FRAME, grrDataFrameDto.getDataFrame());
         summaryParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG, analysisConfigDto);
         summaryParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_TESTITEM, conditionDto.getSelectedTestItemDtos());
+
         detailParamMap.put(ParamKeys.SEARCH_DATA_COLUMN, grrDataFrameDto.getDataFrame().getDataColumn(itemName, null));
         detailParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_TESTITEM, conditionDto.getSelectedTestItemDtos().get(0));
         detailParamMap.put(ParamKeys.ANALYSIS_GRR_INCLUDE_ROWS, includeRows);
@@ -129,7 +134,7 @@ public class GrrResultController implements Initializable {
                 //todo message tip
                 return;
             }
-            setAnalysisItemResultData((GrrDetailResultDto) returnValue);
+            setAnalysisItemResultData((GrrDetailDto) returnValue);
 
         }, detailParamMap, grrMainController));
     }
@@ -230,7 +235,7 @@ public class GrrResultController implements Initializable {
         return rowKeys;
     }
 
-    private void setAnalysisItemResultData(GrrDetailResultDto grrDetailResultDto) {
+    private void setAnalysisItemResultData(GrrDetailDto grrDetailDto) {
         setComponentChart(buildComponentChartData());
         setPartAppraiserChart(buildPartAppraiserChartData(), parts, appraisers);
         setXBarAppraiserChart(buildXBarAppraiserChartData(), parts, appraisers);

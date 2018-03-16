@@ -21,6 +21,7 @@ import com.dmsoft.firefly.sdk.plugin.apis.annotation.DataParser;
 import com.dmsoft.firefly.sdk.plugin.apis.annotation.ExcludeMethod;
 import com.dmsoft.firefly.sdk.plugin.apis.IDataParser;
 import com.dmsoft.firefly.plugin.csvresolver.utils.DoubleIdUtils;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
@@ -66,17 +67,13 @@ public class CsvResolverService implements IDataParser {
             };
         }
 
-
         try {
             logStr = "Start to import <" + csvPath + ">.";
             logger.debug(logStr);
             processMonitor.push(10);
 
-//            push(new ProcessResult(0, logStr, csvPath));
-
             List<String[]> csvList = Lists.newArrayList();
             csvReader = new CsvReader(csvPath, ',', Charset.forName("UTF-8"));
-//            push(new ProcessResult(0, "paring file<" + filePath + ">.", csvPath));
             processMonitor.push(20);
             logger.debug("Parsing <" + csvPath + ">.");
             CsvTemplateDto fileFormat = findCsvTemplate();
@@ -94,12 +91,13 @@ public class CsvResolverService implements IDataParser {
             if (dataIndex > rowSize) {
                 logStr = "Import <" + csvPath + "> failed. Csv data missing. ";
                 logger.debug(logStr);
-//                pushErrorMsg(logStr, csvPath);
-//                throw new ApplicationException(exceptionNumber, logStr);
             }
             sourceDataService.saveProject(csvFile.getName());
             processMonitor.push(40);
             String[] items = csvList.get(fileFormat.getItem() - 1);
+            for (int i = 0; i < items.length; i++) {
+                items[i] = DAPStringUtils.specificToNomal(items[i]);
+            }
             String[] lslRow = null, uslRow = null, unitRow = null;
 
             if (fileFormat.getHeader() != null && fileFormat.getHeader() > 0) {
@@ -134,8 +132,6 @@ public class CsvResolverService implements IDataParser {
             }
             sourceDataService.saveTestItem(csvFile.getName(), testItemDtoList);
             processMonitor.push(50, 80, "", 5000);
-//            processMonitor.push(50);
-            //save line data
             List<RowDataDto> rowDataDtos = Lists.newArrayList();
             for (int i = dataIndex; i < csvList.size(); i++) {
                 List<String> data = Arrays.asList(csvList.get(i));
@@ -157,15 +153,11 @@ public class CsvResolverService implements IDataParser {
             sourceDataService.saveTestData(csvFile.getName(), rowDataDtos);
             processMonitor.push(90);
 
-
             importSucc = true;
             csvReader.close();
-
         } catch (Exception e) {
             e.printStackTrace();
-            logStr = "Exception happened. Details recorded in the log";
-//            pushErrorMsg(logStr, csvPath);
-//            throw new ApplicationException(exceptionNumber, e.getMessage());
+
         } finally {
             if (!importSucc) {
                 sourceDataService.deleteProject(Lists.newArrayList(csvFile.getName()));
