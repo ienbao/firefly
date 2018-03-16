@@ -86,10 +86,15 @@ public class ViewDataController implements Initializable {
     public void setViewData(SearchDataFrame dataFrame) {
         Platform.runLater(() -> {
             if (dataFrame == null) {
-                viewDataTable.getItems().clear();
-                viewDataTable.getColumns().clear();
-                this.model = null;
-                chooseDialogController.setSelectResultName(Lists.newArrayList());
+                Platform.runLater(() -> {
+                    viewDataTable.getColumns().clear();
+                    chooseDialogController.setSelectResultName(Lists.newArrayList());
+                    try {
+                        this.model.getRowKeyArray().clear();
+                    } catch (NullPointerException ignored) {
+                    }
+                    this.model = null;
+                });
                 return;
             }
             this.dataFrame = dataFrame;

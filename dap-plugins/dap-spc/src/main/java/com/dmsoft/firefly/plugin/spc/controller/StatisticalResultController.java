@@ -84,15 +84,16 @@ public class StatisticalResultController implements Initializable {
     /**
      * clear statistical result data
      */
-    public void clearStatisticalResultData(){
+    public void clearStatisticalResultData() {
         statisticalTableModel.clearTableData();
     }
 
     /**
      * get select stats data
+     *
      * @return the list of SpcStatsDto
      */
-    public List<SpcStatisticalResultAlarmDto> getSelectStatsData(){
+    public List<SpcStatisticalResultAlarmDto> getSelectStatsData() {
         return statisticalTableModel.getSelectData();
     }
 
@@ -113,10 +114,11 @@ public class StatisticalResultController implements Initializable {
 
     /**
      * get Cache color
+     *
      * @return color Cache
      */
-    public Map<String, Color> getColorCache(){
-      return statisticalTableModel.getColorCache();
+    public Map<String, Color> getColorCache() {
+        return statisticalTableModel.getColorCache();
     }
 
     private void initChooseStatisticalResultTableData() {
