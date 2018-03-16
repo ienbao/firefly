@@ -5,6 +5,10 @@ package com.dmsoft.firefly.plugin.grr.utils;
  */
 public class UIConstant {
 
+    public static final String UI_MESSAGE_TIP_SUCCESS_TITLE = "UI_MESSAGE_TIP_SUCCESS_TITLE";
+    public static final String UI_MESSAGE_TIP_WARNING_TITLE = "UI_MESSAGE_TIP_WARNING_TITLE";
+    public static final String UI_MESSAGE_TIP_INFO_TITLE = "UI_MESSAGE_TIP_INFO_TITLE";
+
     public static final String[] GRR_RESULT_TYPE = new String[] {"process tolerance", "system contribution"};
 
     public static final String[] GRR_SUMMARY_TITLE = new String[] {"TestItem", "LSL", "USL", "Tolerance", "%Repeatability", "%Reproducibility", "%Gauge R & R"};
