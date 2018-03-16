@@ -12,8 +12,6 @@ public class GrrItemResultDto extends AbstractValueObject {
 
     private Map<String, String> totalMeans;
     private Map<String, String> totalRanges;
-//    private List<String> totalMeans;
-//    private List<String> totalRanges;
     private Map<String, GrrMeanAndRangeDto> meanAndRangeDtos;
 
     public Map<String, String> getTotalMeans() {

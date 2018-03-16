@@ -16,18 +16,18 @@ import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrSourceDto;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.*;
 import com.dmsoft.firefly.plugin.grr.service.GrrConfigService;
-import com.dmsoft.firefly.plugin.grr.utils.DataConvertUtils;
-import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
-import com.dmsoft.firefly.plugin.grr.utils.ScrollPaneValueUtils;
-import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
+import com.dmsoft.firefly.plugin.grr.utils.*;
 import com.dmsoft.firefly.plugin.grr.utils.charts.ChartUtils;
 import com.dmsoft.firefly.plugin.grr.utils.charts.LegendUtils;
 import com.dmsoft.firefly.plugin.grr.utils.enums.GrrResultName;
 import com.dmsoft.firefly.plugin.grr.utils.table.TableCellCallBack;
 import com.dmsoft.firefly.plugin.grr.utils.table.TableRender;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.utils.ColorUtils;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -93,7 +93,8 @@ public class GrrResultController implements Initializable {
     }
 
     public void analyzeGrrResult(List<GrrSummaryDto> grrSummaryDtos, GrrDetailDto grrDetailDto) {
-
+//        Set digNum
+        DigNumInstance.newInstance().setDigNum(grrMainController.getActiveTemplateSettingDto().getDecimalDigit());
         List<GrrViewDataDto> viewDataDtos = grrMainController.getGrrDataFrame().getIncludeDatas();
         viewDataDtos.forEach(viewDataDto -> {
             parts.add(viewDataDto.getPart());
@@ -105,6 +106,10 @@ public class GrrResultController implements Initializable {
                 grrMainController.getSearchConditionDto(),
                 grrSummaryDtos.get(0).getItemName());
         this.setAnalysisItemResultData(grrDetailDto);
+    }
+
+    private void analyzeGrrSubResult(TestItemWithTypeDto testItemDto, GrrAnalysisConfigDto configDto) {
+        DigNumInstance.newInstance().setDigNum(grrMainController.getActiveTemplateSettingDto().getDecimalDigit());
     }
 
 //    public void analyzeGrrResult(GrrDataFrameDto grrDataFrameDto, SearchConditionDto conditionDto) {
@@ -166,7 +171,7 @@ public class GrrResultController implements Initializable {
 
     private void setItemResultData(GrrDataFrameDto grrDataFrameDto, SearchConditionDto conditionDto, String itemName) {
 
-        GrrItemResultDto itemResultDto = DataConvertUtils.convertToItemResult(grrDataFrameDto, itemName, "");
+        GrrItemResultDto itemResultDto = DataConvertUtils.convertToItemResult(grrDataFrameDto, itemName);
         Set<String> headerArray = Sets.newLinkedHashSet();
         headerArray.add(appKey);
         headerArray.add(trailKey);
@@ -445,85 +450,85 @@ public class GrrResultController implements Initializable {
         sourceModel.setData(null);
     }
 
-    private GrrComponentCResultDto buildComponentChartData() {
-        GrrComponentCResultDto componentCResult = new GrrComponentCResultDto();
-        componentCResult.setGrrContri(80D);
-        componentCResult.setGrrTol(55.32);
-        componentCResult.setGrrVar(100D);
-        componentCResult.setRepeatContri(80D);
-        componentCResult.setRepeatTol(55.32);
-        componentCResult.setRepeatVar(100D);
-        componentCResult.setReprodContri(80D);
-        componentCResult.setReprodTol(55.32);
-        componentCResult.setReprodVar(100D);
-        componentCResult.setPartContri(80D);
-        componentCResult.setPartTol(55.32);
-        componentCResult.setPartVar(100D);
-        return componentCResult;
-    }
-
-    private GrrPACResultDto buildPartAppraiserChartData() {
-        GrrPACResultDto partAppraiserChartDto = new GrrPACResultDto();
-        double[][] datas = new double[][]{{10, 20, 30, 40}, {50, 60, 70, 80}, {100, 110, 120, 130}, {150, 160, 170, 180}};
-        partAppraiserChartDto.setDatas(datas);
-        return partAppraiserChartDto;
-    }
-
-    private GrrControlChartDto buildXBarAppraiserChartData() {
-        GrrControlChartDto xbarAppraiserChartDto = new GrrControlChartDto();
-        Double[] x = new Double[]{1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D, 11D, 12D, 13D, 14D, 15D, 16D};
-        Double[] y = new Double[]{10D, 12D, 13D, 14D, 15D, 26D, 27D, 28D, 29D, 30D, 16D, 17D, 18D, 19D, 20D, 21D};
-        xbarAppraiserChartDto.setX(x);
-        xbarAppraiserChartDto.setY(y);
-        xbarAppraiserChartDto.setCl(29D);
-        xbarAppraiserChartDto.setLcl(13D);
-        xbarAppraiserChartDto.setUcl(20D);
-        return xbarAppraiserChartDto;
-    }
-
-    private GrrScatterChartDto buildRrByAppraiserChartData() {
-        GrrScatterChartDto rrbyAppraiserDto = new GrrScatterChartDto();
-        Double[] x = new Double[]{1D, 1D, 1D, 1D, 1D, 1D, 2D, 2D, 2D, 2D, 2D, 2D, 3D, 3D, 3D, 3D, 3D, 3D, 4D, 4D, 4D, 4D, 4D, 4D};
-        Double[] y = new Double[]{1.1D, 1.2D, 1.3D, 1.4D, 1.5D, 1.6D, 2.1D, 2.2D, 2.3D, 2.4D, 2.5D, 2.6D, 3.1D, 3.2D, 3.3D, 3.4D, 3.5D, 3.6D, 4.1D, 4.2D, 4.3D, 4.4D, 4.5D, 4.6D};
-        Double[] clX = new Double[]{1D, 2D, 3D, 4D};
-        Double[] clY = new Double[]{1.35D, 2.35D, 3.35D, 4.35D};
-        rrbyAppraiserDto.setX(x);
-        rrbyAppraiserDto.setY(y);
-        rrbyAppraiserDto.setClX(clX);
-        rrbyAppraiserDto.setClY(clY);
-        return rrbyAppraiserDto;
-    }
-
-    private GrrAnovaAndSourceResultDto buildAnovaAndSourceData() {
-        GrrAnovaAndSourceResultDto anovaAndSourceResultDto = new GrrAnovaAndSourceResultDto();
-        List<GrrAnovaDto> anovaDtos = Lists.newArrayList();
-        List<GrrSourceDto> sourceDtos = Lists.newArrayList();
-        for (int i = 0; i < UIConstant.GRR_ANOVA_SOURCE.length; i++) {
-            GrrAnovaDto grrAnovaDto = new GrrAnovaDto();
-            grrAnovaDto.setName(GrrResultName.Appraisers);
-            grrAnovaDto.setDf(Double.valueOf(i + 2));
-            grrAnovaDto.setF(Double.valueOf(i + 3));
-            grrAnovaDto.setMs(Double.valueOf(i + 5));
-            grrAnovaDto.setSs(Double.valueOf(i + 9));
-            grrAnovaDto.setProbF(Double.valueOf(i + 11));
-            anovaDtos.add(grrAnovaDto);
-        }
-        for (int i = 0; i < 7; i++) {
-            GrrSourceDto grrSourceDto = new GrrSourceDto();
-            grrSourceDto.setName(GrrResultName.Appraisers);
-            grrSourceDto.setContribution(Double.valueOf(i * 2 + 1));
-            grrSourceDto.setSigma(Double.valueOf(i * 2 + 2));
-            grrSourceDto.setStudyVar(Double.valueOf(i * 2 + 4));
-            grrSourceDto.setTotalTolerance(Double.valueOf(i * 2 + 7));
-            grrSourceDto.setTotalVariation(Double.valueOf(i * 2 + 9));
-            grrSourceDto.setVariation(Double.valueOf(i * 3 + 11));
-            sourceDtos.add(grrSourceDto);
-        }
-        anovaAndSourceResultDto.setGrrAnovaDtos(anovaDtos);
-        anovaAndSourceResultDto.setGrrSourceDtos(sourceDtos);
-        anovaAndSourceResultDto.setNumberOfDc(10.0);
-        return anovaAndSourceResultDto;
-    }
+//    private GrrComponentCResultDto buildComponentChartData() {
+//        GrrComponentCResultDto componentCResult = new GrrComponentCResultDto();
+//        componentCResult.setGrrContri(80D);
+//        componentCResult.setGrrTol(55.32);
+//        componentCResult.setGrrVar(100D);
+//        componentCResult.setRepeatContri(80D);
+//        componentCResult.setRepeatTol(55.32);
+//        componentCResult.setRepeatVar(100D);
+//        componentCResult.setReprodContri(80D);
+//        componentCResult.setReprodTol(55.32);
+//        componentCResult.setReprodVar(100D);
+//        componentCResult.setPartContri(80D);
+//        componentCResult.setPartTol(55.32);
+//        componentCResult.setPartVar(100D);
+//        return componentCResult;
+//    }
+//
+//    private GrrPACResultDto buildPartAppraiserChartData() {
+//        GrrPACResultDto partAppraiserChartDto = new GrrPACResultDto();
+//        double[][] datas = new double[][]{{10, 20, 30, 40}, {50, 60, 70, 80}, {100, 110, 120, 130}, {150, 160, 170, 180}};
+//        partAppraiserChartDto.setDatas(datas);
+//        return partAppraiserChartDto;
+//    }
+//
+//    private GrrControlChartDto buildXBarAppraiserChartData() {
+//        GrrControlChartDto xbarAppraiserChartDto = new GrrControlChartDto();
+//        Double[] x = new Double[]{1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D, 11D, 12D, 13D, 14D, 15D, 16D};
+//        Double[] y = new Double[]{10D, 12D, 13D, 14D, 15D, 26D, 27D, 28D, 29D, 30D, 16D, 17D, 18D, 19D, 20D, 21D};
+//        xbarAppraiserChartDto.setX(x);
+//        xbarAppraiserChartDto.setY(y);
+//        xbarAppraiserChartDto.setCl(29D);
+//        xbarAppraiserChartDto.setLcl(13D);
+//        xbarAppraiserChartDto.setUcl(20D);
+//        return xbarAppraiserChartDto;
+//    }
+//
+//    private GrrScatterChartDto buildRrByAppraiserChartData() {
+//        GrrScatterChartDto rrbyAppraiserDto = new GrrScatterChartDto();
+//        Double[] x = new Double[]{1D, 1D, 1D, 1D, 1D, 1D, 2D, 2D, 2D, 2D, 2D, 2D, 3D, 3D, 3D, 3D, 3D, 3D, 4D, 4D, 4D, 4D, 4D, 4D};
+//        Double[] y = new Double[]{1.1D, 1.2D, 1.3D, 1.4D, 1.5D, 1.6D, 2.1D, 2.2D, 2.3D, 2.4D, 2.5D, 2.6D, 3.1D, 3.2D, 3.3D, 3.4D, 3.5D, 3.6D, 4.1D, 4.2D, 4.3D, 4.4D, 4.5D, 4.6D};
+//        Double[] clX = new Double[]{1D, 2D, 3D, 4D};
+//        Double[] clY = new Double[]{1.35D, 2.35D, 3.35D, 4.35D};
+//        rrbyAppraiserDto.setX(x);
+//        rrbyAppraiserDto.setY(y);
+//        rrbyAppraiserDto.setClX(clX);
+//        rrbyAppraiserDto.setClY(clY);
+//        return rrbyAppraiserDto;
+//    }
+//
+//    private GrrAnovaAndSourceResultDto buildAnovaAndSourceData() {
+//        GrrAnovaAndSourceResultDto anovaAndSourceResultDto = new GrrAnovaAndSourceResultDto();
+//        List<GrrAnovaDto> anovaDtos = Lists.newArrayList();
+//        List<GrrSourceDto> sourceDtos = Lists.newArrayList();
+//        for (int i = 0; i < UIConstant.GRR_ANOVA_SOURCE.length; i++) {
+//            GrrAnovaDto grrAnovaDto = new GrrAnovaDto();
+//            grrAnovaDto.setName(GrrResultName.Appraisers);
+//            grrAnovaDto.setDf(Double.valueOf(i + 2));
+//            grrAnovaDto.setF(Double.valueOf(i + 3));
+//            grrAnovaDto.setMs(Double.valueOf(i + 5));
+//            grrAnovaDto.setSs(Double.valueOf(i + 9));
+//            grrAnovaDto.setProbF(Double.valueOf(i + 11));
+//            anovaDtos.add(grrAnovaDto);
+//        }
+//        for (int i = 0; i < 7; i++) {
+//            GrrSourceDto grrSourceDto = new GrrSourceDto();
+//            grrSourceDto.setName(GrrResultName.Appraisers);
+//            grrSourceDto.setContribution(Double.valueOf(i * 2 + 1));
+//            grrSourceDto.setSigma(Double.valueOf(i * 2 + 2));
+//            grrSourceDto.setStudyVar(Double.valueOf(i * 2 + 4));
+//            grrSourceDto.setTotalTolerance(Double.valueOf(i * 2 + 7));
+//            grrSourceDto.setTotalVariation(Double.valueOf(i * 2 + 9));
+//            grrSourceDto.setVariation(Double.valueOf(i * 3 + 11));
+//            sourceDtos.add(grrSourceDto);
+//        }
+//        anovaAndSourceResultDto.setGrrAnovaDtos(anovaDtos);
+//        anovaAndSourceResultDto.setGrrSourceDtos(sourceDtos);
+//        anovaAndSourceResultDto.setNumberOfDc(10.0);
+//        return anovaAndSourceResultDto;
+//    }
 
     private void initComponents() {
         summaryItemTf = new TextFieldFilter();
@@ -610,20 +615,22 @@ public class GrrResultController implements Initializable {
         ObservableList<TableColumn<GrrSingleAnova, ?>> anovaTbColumns = anovaTb.getColumns();
         ObservableList<TableColumn<GrrSingleSource, ?>> sourceTbColumns = sourceTb.getColumns();
         summaryTbColumns.get(0).setPrefWidth(30);
-        summaryTbColumns.get(1).setPrefWidth(200);
-        summaryTbColumns.get(2).setPrefWidth(150);
-        summaryTbColumns.get(3).setPrefWidth(115);
-        summaryTbColumns.get(4).setPrefWidth(190);
+        summaryTbColumns.get(1).setPrefWidth(180);
+        summaryTbColumns.get(2).setPrefWidth(80);
+        summaryTbColumns.get(3).setPrefWidth(80);
+        summaryTbColumns.get(4).setPrefWidth(100);
         summaryTbColumns.get(5).setPrefWidth(110);
-        summaryTbColumns.get(6).setPrefWidth(162);
-        summaryTbColumns.get(6).setPrefWidth(185);
+        summaryTbColumns.get(6).setPrefWidth(110);
+        summaryTbColumns.get(6).setPrefWidth(120);
         summaryTbColumns.get(7).setPrefWidth(110);
+
         anovaTbColumns.get(0).setPrefWidth(183);
         anovaTbColumns.get(1).setPrefWidth(173);
         anovaTbColumns.get(2).setPrefWidth(181);
         anovaTbColumns.get(3).setPrefWidth(172);
         anovaTbColumns.get(4).setPrefWidth(172);
         anovaTbColumns.get(5).setPrefWidth(179);
+
         sourceTbColumns.get(0).setPrefWidth(183);
         sourceTbColumns.get(1).setPrefWidth(130);
         sourceTbColumns.get(2).setPrefWidth(149);
@@ -700,6 +707,7 @@ public class GrrResultController implements Initializable {
     private void fireSummaryItemTfEvent() {
         String textValue = summaryItemTf.getTextField().getText();
         filteredList.setPredicate(singleSummary -> singleSummary.getItemName().contains(textValue));
+        summaryTb.refresh();
     }
 
     private void fireDataBtnEvent() {
@@ -743,8 +751,29 @@ public class GrrResultController implements Initializable {
     private TableCellCallBack buildGrrCallBack() {
         return new TableCellCallBack() {
             @Override
-            public void execute(TableCell cell) {
-                cell.setStyle("-fx-text-fill: red");
+            public void execute(TableCell cell, Object item) {
+                if (item == null && !(item instanceof String)) {
+                    return;
+                }
+                String grrStr = (String) item;
+                grrStr = grrStr.substring(0, grrStr.length() - 1);
+                if (DAPStringUtils.isBlankWithSpecialNumber(grrStr)) {
+                    cell.setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_EXCELLENT));
+                } else {
+                    double grr = Double.valueOf(grrStr);
+                    List<Double> rules = grrMainController.getGrrConfigDto().getAlarmSetting();
+                    int size = rules.size();
+                    if (size >= 1 && grr <= rules.get(0)) {
+                        cell.setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_EXCELLENT));
+                    } else if (size >= 2 && grr > rules.get(0) && grr < rules.get(1)) {
+                        cell.setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_GOOD));
+                    } else if (size >= 3 && grr >= rules.get(1) && grr < rules.get(2)) {
+                        cell.setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_ACCEPTABLE));
+                    } else {
+                        cell.setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_RECTIFICATION));
+                    }
+
+                }
             }
         };
     }
