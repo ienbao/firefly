@@ -86,10 +86,13 @@ public class ViewDataController implements Initializable {
     public void setViewData(SearchDataFrame dataFrame) {
         Platform.runLater(() -> {
             if (dataFrame == null) {
+                viewDataTable.getItems().clear();
+                viewDataTable.getColumns().clear();
                 return;
             }
             this.dataFrame = dataFrame;
             this.model = new ViewDataDFModel(dataFrame);
+            this.model.setMainController(spcMainController);
             TableViewWrapper.decorate(viewDataTable, model);
             model.getAllCheckBox().setOnMouseClicked(event -> {
                 for (String s : model.getRowKeyArray()) {

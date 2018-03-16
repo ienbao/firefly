@@ -1,11 +1,15 @@
 package com.dmsoft.firefly.plugin.spc.model;
 
-import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
+import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.plugin.spc.controller.SpcMainController;
 import com.dmsoft.firefly.plugin.spc.controller.ViewDataDetailController;
-import com.dmsoft.firefly.plugin.spc.utils.*;
+import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
+import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionCode;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.ViewResource;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -55,6 +59,7 @@ public class ViewDataDFModel implements TableModel {
     private Set<String> highLightRowKeys;
     private CheckBox allCheckBox;
     private TableView<String> tableView;
+    private SpcMainController mainController;
 
     /**
      * constructor
@@ -152,8 +157,10 @@ public class ViewDataDFModel implements TableModel {
 
             @Override
             public void handleAction(String rowKey, ActionEvent event) {
-                //TODO notify other pane
                 RuntimeContext.getBean(SourceDataService.class).changeRowDataInUsed(Lists.newArrayList(rowKey), false);
+                if (mainController != null) {
+                    mainController.removeDataFrameRow(rowKey);
+                }
             }
         };
         this.menuRowEvents.add(highLight);
@@ -231,5 +238,9 @@ public class ViewDataDFModel implements TableModel {
     @Override
     public void setTableView(TableView<String> tableView) {
         this.tableView = tableView;
+    }
+
+    public void setMainController(SpcMainController mainController) {
+        this.mainController = mainController;
     }
 }
