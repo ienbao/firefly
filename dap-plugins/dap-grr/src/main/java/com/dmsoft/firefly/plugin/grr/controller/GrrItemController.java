@@ -3,6 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.grr.controller;
 
+import com.dmsoft.firefly.gui.components.messagetip.MessageTipFactory;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
@@ -13,6 +14,9 @@ import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
+import com.dmsoft.firefly.plugin.grr.model.ListViewModel;
+import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -24,8 +28,10 @@ import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.sun.javafx.collections.ObservableListWrapper;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,10 +40,15 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.stage.Popup;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.swing.*;
 import java.net.URL;
 import java.util.*;
 
@@ -66,6 +77,23 @@ public class GrrItemController implements Initializable {
     private TableColumn<ItemTableModel, TestItemWithTypeDto> item;
     @FXML
     private TableView itemTable;
+    @FXML
+    private TextField partTxt;
+    @FXML
+    private TextField appraiserTxt;
+    @FXML
+    private TextField trialTxt;
+    @FXML
+    private ComboBox partCombox;
+    @FXML
+    private ComboBox appraiserCombox;
+    @FXML
+    private ListView<ListViewModel> partListView;
+    private ObservableList<ListViewModel> partList = FXCollections.observableArrayList();
+
+    @FXML
+    private ListView<ListViewModel> appraiserListView;
+    private ObservableList<ListViewModel> appraiserList = FXCollections.observableArrayList();
 
     @FXML
     private SplitPane split;
@@ -86,6 +114,7 @@ public class GrrItemController implements Initializable {
     private GrrLeftConfigServiceImpl leftConfigService = new GrrLeftConfigServiceImpl();
 */
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
+    private SearchConditionDto searchConditionDto = new SearchConditionDto();
 
     /**
      * init main controller
@@ -151,6 +180,63 @@ public class GrrItemController implements Initializable {
                 is.relocate(w2.doubleValue() - 21, 0);
             });
         });
+        initPartAndAppraiserDatas();
+    }
+
+    private void initPartAndAppraiserDatas() {
+        ObservableList<String> datas = FXCollections.observableArrayList();
+        if (items != null) {
+            for (ItemTableModel model : items) {
+                datas.add(model.getItem());
+            }
+        }
+        partCombox.setItems(datas);
+        appraiserCombox.setItems(datas);
+
+        initListView(partListView);
+        initListView(appraiserListView);
+
+        this.partCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
+            values.forEach(value->{
+                partList.add(new ListViewModel(value, false));
+            });
+            partListView.setItems(partList);
+        });
+
+        this.appraiserCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
+            values.forEach(value->{
+                appraiserList.add(new ListViewModel(value, false));
+            });
+            appraiserListView.setItems(appraiserList);
+        });
+    }
+
+    private void initListView(ListView<ListViewModel> listView) {
+        listView.setCellFactory(e -> new ListCell<ListViewModel>() {
+            @Override
+            public void updateItem(ListViewModel item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!empty && item != null) {
+                    HBox cell;
+                    CheckBox checkBox = new CheckBox();
+                    if (item.isIsChecked()) {
+                        checkBox.setSelected(true);
+                    } else {
+                        checkBox.setSelected(false);
+                    }
+                    checkBox.setOnAction(event -> {
+                        item.setIsChecked(checkBox.isSelected());
+                    });
+                    Label label = new Label(item.getName());
+                    cell = new HBox(checkBox, label);
+                    setGraphic(cell);
+                }
+            }
+        });
+
+        listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     private void initBtnIcon() {
@@ -231,65 +317,107 @@ public class GrrItemController implements Initializable {
     }
 
     private void getAnalysisBtnEvent() {
-        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
-        Job job = new Job(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE);
-        job.addProcessMonitorListener(event -> {
-//            windowProgressTipController.refreshProgress(event.getPoint());
-        });
-        windowProgressTipController.addProcessMonitorListener(new WindowCustomListener() {
-            @Override
-            public boolean onShowCustomEvent() {
-                System.out.println("show");
-
-                return false;
-            }
-
-            @Override
-            public boolean onCloseAndCancelCustomEvent() {
-                //to do
-                System.out.println("close");
-                return false;
-            }
-
-            @Override
-            public boolean onOkCustomEvent() {
-                System.out.println("ok");
-
-                return false;
-            }
-        });
-        Map paramMap = Maps.newHashMap();
-
-        List<String> projectNameList = envService.findActivatedProjectName();
         List<TestItemWithTypeDto> selectedItemDto = this.getSelectedItemDto();
-        List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
-        //List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(selectedItemDto);
-//        GrrAnalysisConfigDto spcAnalysisConfigDto = this.buildSpcAnalysisConfigData();
+        if (checkSubmitParam(selectedItemDto.size())) {
 
-        //todo delete
-//        spcAnalysisConfigDto.setSubgroupSize(10);
-//        spcAnalysisConfigDto.setIntervalNumber(8);
-        paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
-//        paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+            WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+            Job job = new Job(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE);
+            job.addProcessMonitorListener(event -> {
+//            windowProgressTipController.refreshProgress(event.getPoint());
+            });
+            Map paramMap = Maps.newHashMap();
+            List<String> projectNameList = envService.findActivatedProjectName();
+            List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
+            paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
 //        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
-        paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+            paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+            paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, this.getSearchConditionDto());
 
-//        grrMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
-        Platform.runLater(() -> {
-            manager.doJobASyn(job, new JobDoComplete() {
-                @Override
-                public void doComplete(Object returnValue) {
-                    if (returnValue == null) {
-                        //todo message tip
-                        return;
-                    }
+            Platform.runLater(() -> {
+                manager.doJobASyn(job, new JobDoComplete() {
+                    @Override
+                    public void doComplete(Object returnValue) {
+                        if (returnValue == null) {
+                            //todo message tip
+                            return;
+                        }
 
 //                    List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
 //                    grrMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
-                }
-            }, paramMap, grrMainController);
-        });
+                    }
+                }, paramMap, grrMainController);
+            });
+        }
+    }
 
+    private SearchConditionDto getSearchConditionDto() {
+        searchConditionDto = new SearchConditionDto();
+        searchConditionDto.setPart(partCombox.getValue().toString());
+        searchConditionDto.setPartInt(Integer.valueOf(partTxt.getText()));
+        searchConditionDto.setAppraiserInt(Integer.valueOf(appraiserTxt.getText()));
+        searchConditionDto.setTrialInt(Integer.valueOf(trialTxt.getText()));
+        List<String> parts = Lists.newLinkedList();
+        partList.forEach(listViewModel->{
+            if (listViewModel.isIsChecked()) {
+                parts.add(listViewModel.getName());
+            }
+        });
+        searchConditionDto.setParts(parts);
+
+        if (appraiserCombox.getValue() != null) {
+            searchConditionDto.setAppraiser(appraiserCombox.getValue().toString());
+            List<String> appraisers = Lists.newLinkedList();
+            appraiserList.forEach(listViewModel->{
+                if (listViewModel.isIsChecked()) {
+                    appraisers.add(listViewModel.getName());
+                }
+            });
+            if (!appraisers.isEmpty()) {
+                searchConditionDto.setAppraisers(appraisers);
+            }
+        }
+        List<String> conditionList = searchTab.getSearch();
+        conditionList.remove("");
+        searchConditionDto.setSearchCondition(conditionList);
+        return searchConditionDto;
+    }
+
+    private boolean checkSubmitParam(Integer itemNumbers) {
+//        if (itemNumbers ==  null || itemNumbers <= 0) {
+//            MessageTipFactory.getWarnTip(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_ANALYSIS_ITEM_EMPTY"));
+//            return false;
+//        }
+//
+//        if (StringUtils.isBlank(partTxt.getText())) {
+//            MessageTipFactory.getWarnTip(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_NUMBER_EMPTY"));
+//            return false;
+//        }
+//        if (StringUtils.isBlank(appraiserTxt.getText())) {
+//            MessageTipFactory.getWarnTip(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_NUMBER_EMPTY"));
+//            return false;
+//        }
+//
+//        if (StringUtils.isBlank(trialTxt.getText())) {
+//            MessageTipFactory.getWarnTip(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_TRIAL_NUMBER_EMPTY"));
+//            return false;
+//        }
+//
+//        if (appraiserCombox.getValue() == null) {
+//            MessageTipFactory.getWarnTip(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_NAME_EMPTY"));
+//            return false;
+//        }
+//
+//        if (partList.getItems().size() != Integer.valueOf(partTxt.getText())) {
+//            MessageTipFactory.getWarnTip(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_NUMBER_NOT_MATCH"));
+//            return false;
+//        }
+//
+//        if ((appraiserCombox.getValue() != null) &&  appraiserList.getItems().size() != Integer.valueOf(appraiserTxt.getText())) {
+//            MessageTipFactory.getWarnTip(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_NUMBER_NOT_MATCH"));
+//            return false;
+//        }
+
+        return true;
     }
 
 
@@ -460,35 +588,6 @@ public class GrrItemController implements Initializable {
         return spcAnalysisConfigDto;
     }*/
 
-   /* private List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
-        if (testItemWithTypeDtoList == null) {
-            return null;
-        }
-        List<String> conditionList = searchTab.getSearch();
-        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
-        int i = 0;
-        for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtoList) {
-            if (conditionList != null) {
-                for (String condition : conditionList) {
-                    SearchConditionDto searchConditionDto = new SearchConditionDto();
-                    searchConditionDto.setItemName(testItemWithTypeDto.getTestItemName());
-                    searchConditionDto.setCusLsl(testItemWithTypeDto.getLsl());
-                    searchConditionDto.setCusUsl(testItemWithTypeDto.getUsl());
-                    searchConditionDtoList.add(searchConditionDto);
-                    i++;
-                }
-            } else {
-                SearchConditionDto searchConditionDto = new SearchConditionDto();
-                searchConditionDto.setItemName(testItemWithTypeDto.getTestItemName());
-                searchConditionDto.setCusLsl(testItemWithTypeDto.getLsl());
-                searchConditionDto.setCusUsl(testItemWithTypeDto.getUsl());
-                searchConditionDtoList.add(searchConditionDto);
-                i++;
-            }
-        }
-        return searchConditionDtoList;
-    }*/
-
     private List<TestItemWithTypeDto> buildSelectTestItemWithTypeData(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
         List<TestItemWithTypeDto> itemWithTypeDtoList = Lists.newArrayList();
         itemWithTypeDtoList.addAll(testItemWithTypeDtoList);
@@ -504,6 +603,7 @@ public class GrrItemController implements Initializable {
 
     private List<String> getConditionTestItem() {
         List<String> conditionList = searchTab.getSearch();
+        conditionList.remove("");
         List<String> testItemList = getSelectedItem();
         List<String> conditionTestItemList = Lists.newArrayList();
         List<String> timeKeys = Lists.newArrayList();
@@ -514,6 +614,11 @@ public class GrrItemController implements Initializable {
         } catch (Exception e) {
 
         }
+        conditionTestItemList.add(partCombox.getValue().toString());
+        if (appraiserCombox.getValue() != null) {
+            conditionTestItemList.add(appraiserCombox.getValue().toString());
+        }
+
         FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         for (String condition : conditionList) {
             Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);
@@ -523,6 +628,7 @@ public class GrrItemController implements Initializable {
                 }
             }
         }
+
         return conditionTestItemList;
     }
 
