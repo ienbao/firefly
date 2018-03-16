@@ -71,7 +71,7 @@ public class ViewDataDFModel implements TableModel {
         this.headerArray = FXCollections.observableArrayList(dataFrame.getAllTestItemName());
         this.headerArray.add(0, "CheckBox");
         this.rowKeyArray = FXCollections.observableArrayList(dataFrame.getAllRowKeys());
-        this.checkValueMap = Maps.newHashMap();
+        this.checkValueMap = Maps.newLinkedHashMap();
         this.allCheck = new SimpleObjectProperty<>(true);
         this.highLightRowKeys = Sets.newLinkedHashSet();
         this.menuRowEvents = Lists.newArrayList();
@@ -242,5 +242,20 @@ public class ViewDataDFModel implements TableModel {
 
     public void setMainController(SpcMainController mainController) {
         this.mainController = mainController;
+    }
+
+    /**
+     * method to get selected row keys
+     *
+     * @return list of selected row key
+     */
+    public List<String> getSelectedRowKeys() {
+        List<String> result = Lists.newArrayList();
+        for (String s : this.checkValueMap.keySet()) {
+            if (this.checkValueMap.get(s).get()) {
+                result.add(s);
+            }
+        }
+        return result;
     }
 }

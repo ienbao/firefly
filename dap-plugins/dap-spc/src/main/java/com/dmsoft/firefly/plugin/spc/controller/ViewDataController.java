@@ -88,6 +88,8 @@ public class ViewDataController implements Initializable {
             if (dataFrame == null) {
                 viewDataTable.getItems().clear();
                 viewDataTable.getColumns().clear();
+                this.model = null;
+                chooseDialogController.setSelectResultName(Lists.newArrayList());
                 return;
             }
             this.dataFrame = dataFrame;
@@ -109,6 +111,19 @@ public class ViewDataController implements Initializable {
             }
             chooseDialogController.setTableData(chooseTableRowDataList);
         });
+    }
+
+    /**
+     * method to get selected row keys
+     *
+     * @return list of selected row key
+     */
+    public List<String> getSelectedRowKeys() {
+        if (this.model != null) {
+            return this.model.getSelectedRowKeys();
+        } else {
+            return Lists.newArrayList();
+        }
     }
 
     private void decorate(TableColumn<String, ?> tableColumn) {
@@ -195,9 +210,7 @@ public class ViewDataController implements Initializable {
         tableColumn.setGraphic(filterBtn);
         tableColumn.getStyleClass().add("filter-header");
         tableColumn.widthProperty().addListener((ov, w1, w2) -> {
-            Platform.runLater(() -> {
-                filterBtn.relocate(w2.doubleValue() - 21, 0);
-            });
+            Platform.runLater(() -> filterBtn.relocate(w2.doubleValue() - 21, 0));
         });
     }
 
@@ -226,8 +239,7 @@ public class ViewDataController implements Initializable {
             StageMap.getStage("spcViewDataColumn").close();
             List<String> selectedTestItems = chooseDialogController.getSelectResultName();
             int curIndex = 0;
-            for (int i = 0; i < typeDtoList.size(); i++) {
-                TestItemWithTypeDto typeDto = typeDtoList.get(i);
+            for (TestItemWithTypeDto typeDto : typeDtoList) {
                 if (selectedTestItems.contains(typeDto.getTestItemName())) {
                     if (!dataFrame.isTestItemExist(typeDto.getTestItemName())) {
                         List<RowDataDto> rowDataDtoList = RuntimeContext.getBean(SourceDataService.class).findTestData(this.selectedProjectNames,
