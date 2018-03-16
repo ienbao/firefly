@@ -32,8 +32,9 @@ public class BasicSearchPane extends VBox {
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
     private List<String> timeKey;
     private String pattern;
+
     public BasicSearchPane(String title) {
-        if (envService.findActivatedTemplate().getTimePatternDto() != null) {
+        if (envService.findActivatedTemplate() != null && envService.findActivatedTemplate().getTimePatternDto() != null) {
             timeKey = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
             pattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
         }
