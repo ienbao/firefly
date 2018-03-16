@@ -208,7 +208,7 @@ public class ViewDataDFModel implements TableModel {
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
         tableCell.setStyle(null);
         if (!RangeUtils.isPass(dataFrame.getCellValue(rowKey, column), dataFrame.getTestItemWithTypeDto(column))) {
-            tableCell.setStyle("-fx-background-color: red; -fx-text-fill: white");
+            tableCell.setStyle("-fx-background-color: #ea2028; -fx-text-fill: white");
         } else if (dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column)) && this.highLightRowKeys.contains(rowKey)) {
             tableCell.setStyle("-fx-background-color: #f8d251; -fx-text-fill: #aaaaaa");
         } else if (this.highLightRowKeys.contains(rowKey)) {

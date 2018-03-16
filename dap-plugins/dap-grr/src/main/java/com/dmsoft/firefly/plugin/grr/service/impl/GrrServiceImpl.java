@@ -2,7 +2,6 @@ package com.dmsoft.firefly.plugin.grr.service.impl;
 
 import com.dmsoft.firefly.plugin.grr.dto.GrrDetailDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrSummaryDto;
-import com.dmsoft.firefly.plugin.grr.dto.GrrTestItemDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnalysisConfigDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnalysisDataDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrDetailResultDto;
@@ -11,8 +10,8 @@ import com.dmsoft.firefly.plugin.grr.service.GrrAnalysisService;
 import com.dmsoft.firefly.plugin.grr.service.GrrService;
 import com.dmsoft.firefly.plugin.grr.utils.GrrExceptionCode;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
-import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
@@ -40,6 +39,8 @@ public class GrrServiceImpl implements GrrService {
             for (String s : datas) {
                 if (DAPStringUtils.isNumeric(s)) {
                     doubleList.add(Double.valueOf(s));
+                } else if (s != null && DAPStringUtils.isSpecialBlank(s)) {
+                    doubleList.add(Double.NaN);
                 }
             }
             if (itemDto.getLsl() != null) {
@@ -78,6 +79,8 @@ public class GrrServiceImpl implements GrrService {
         for (String s : datas) {
             if (DAPStringUtils.isNumeric(s)) {
                 doubleList.add(Double.valueOf(s));
+            } else if (s != null && DAPStringUtils.isSpecialBlank(s)) {
+                doubleList.add(Double.NaN);
             }
         }
         if (testItemDto.getLsl() != null) {
