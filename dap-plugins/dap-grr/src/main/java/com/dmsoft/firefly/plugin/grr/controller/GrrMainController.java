@@ -44,7 +44,7 @@ public class GrrMainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         grrItemController.init(this);
         grrResultController.init(this);
-        //grrViewDataController.init(this);
+        grrViewDataController.init(this);
         initBtnIcon();
         initComponentEvents();
     }

@@ -32,10 +32,20 @@ public class GrrViewDataController implements Initializable {
     @FXML
     private Button exchangeBtn;
 
+    private GrrMainController grrMainController;
     private GrrDataFrameDto grrDataFrameDto;
     private GrrViewDataDFIncludeModel model;
     private String partKey = GrrFxmlAndLanguageUtils.getString("PART") + " : ";
     private String appKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " : ";
+
+    /**
+     * Init grr main controller
+     *
+     * @param grrMainController grr main controller
+     */
+    public void init(GrrMainController grrMainController) {
+        this.grrMainController = grrMainController;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
