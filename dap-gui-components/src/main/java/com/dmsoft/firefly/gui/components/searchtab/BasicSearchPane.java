@@ -30,8 +30,11 @@ public class BasicSearchPane extends VBox {
     private Label groupTitle;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
-
+    private List<String> timeKey;
+    private String pattern;
     public BasicSearchPane(String title) {
+        timeKey = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
+        pattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
         this.setStyle("-fx-border-color: #DCDCDC; -fx-border-width: 0 0 1 0");
         groupTitle = new Label(title);
         this.getChildren().add(groupTitle);
@@ -73,7 +76,7 @@ public class BasicSearchPane extends VBox {
 
             @Override
             public boolean isTimeKey(String testItem) {
-                if (testItem != null && testItem.contains("A")) {
+                if (testItem != null && timeKey != null && timeKey.contains(testItem)) {
                     return true;
                 }
                 return false;
@@ -81,7 +84,7 @@ public class BasicSearchPane extends VBox {
 
             @Override
             public String getTimePattern() {
-                return null;
+                return pattern;
             }
         });
         basicSearchCom.getCloseBtn().setOnAction(e -> {
