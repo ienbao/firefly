@@ -322,7 +322,9 @@ public class DataSourceController implements Initializable {
                     while (iterable.hasNext()) {
                         ChooseTableRowData rowData = iterable.next();
                         if (rowData.getSelector().isSelected()) {
-                            activeProject.remove(rowData.getValue());
+                            if (activeProject != null) {
+                                activeProject.remove(rowData.getValue());
+                            }
                             deleteProjects.add(rowData.getValue());
                             iterable.remove();
                         }
