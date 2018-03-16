@@ -9,6 +9,7 @@ import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
+import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
 import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
@@ -322,7 +323,6 @@ public class GrrItemController implements Initializable {
             List<String> projectNameList = envService.findActivatedProjectName();
             List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
             paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
-//        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
             paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
             SearchConditionDto searchConditionDto = this.initSearchConditionDto();
             searchConditionDto.setSelectedTestItemDtos(selectedItemDto);
@@ -336,9 +336,14 @@ public class GrrItemController implements Initializable {
                             //todo message tip
                             return;
                         }
-
-//                    List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
-//                    grrMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
+                        Platform.runLater(()->{
+                            grrMainController.updateGrrViewData();
+                            grrMainController.updateGrrSummaryAndDetail();
+                        });
+//                        GrrDataFrameDto grrDataFrameDto = (GrrDataFrameDto) returnValue;
+//                        grrMainController.setGrrDataFrame(grrDataFrameDto);
+//                        grrMainController.updateGrrDataFrameDto();
+//                        grrMainController.grrAnalyzeResult();
                     }
                 }, paramMap, grrMainController);
             });

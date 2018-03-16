@@ -18,6 +18,7 @@ public class ParamKeys {
 
     public static final String SEARCH_GRR_LEFT_CONFIG_DTO = "searchGrrLeftConfigDto";
     public static final String SEARCH_GRR_CONDITION_DTO = "searchGrrConditionDto";
+    public static final String SEARCH_VIEW_DATA_FRAME = "searchViewDataFrame";
 
 
     //handler

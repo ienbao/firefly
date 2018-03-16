@@ -26,7 +26,7 @@ import java.util.Map;
 public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener {
     private GrrDataFrameDto grrDataFrameDto;
     private ObservableList<String> headerArray;
-    private ObservableList<String> rowKeyArray;
+    private ObservableList<String> rowKeyArray = FXCollections.observableArrayList();
     private FilteredList<String> filterHeaderArray;
     private FilteredList<String> filterRowKeyArray;
     private TableView<String> tableView;
@@ -157,8 +157,10 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
 
     @Override
     public void selectChange(GrrViewDataDto grrViewDataDto) {
-        this.filterHeaderArray.setPredicate(s -> grrViewDataDtoMap.get(s).getPart().equals(grrViewDataDto.getPart()) && (!isSlot || grrViewDataDtoMap.get(s).getOperator().equals(grrViewDataDto.getOperator())));
-        tableView.refresh();
+        this.filterRowKeyArray.setPredicate(s -> grrViewDataDtoMap.get(s).getPart().equals(grrViewDataDto.getPart()) && (!isSlot || grrViewDataDtoMap.get(s).getOperator().equals(grrViewDataDto.getOperator())));
+        if (tableView != null) {
+            tableView.refresh();
+        }
     }
 
     /**

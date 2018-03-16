@@ -38,10 +38,10 @@ public class DataConvertUtils {
             }
 
             if (partAppraiserRowKeys.containsKey(part + splitFlag + appraiser)) {
-                List<String> rowKeys = partRowKeys.get(part + splitFlag + appraiser);
+                List<String> rowKeys = partAppraiserRowKeys.get(part + splitFlag + appraiser);
                 rowKeys.add(rowKey);
             } else {
-                partRowKeys.put(part + splitFlag + appraiser, Lists.newArrayList(rowKey));
+                partAppraiserRowKeys.put(part + splitFlag + appraiser, Lists.newArrayList(rowKey));
             }
         });
 

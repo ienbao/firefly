@@ -25,7 +25,7 @@ public class MathUtils {
             return null;
         }
         Double min = null;
-        for (int x = 1; x < array.length; x++) {
+        for (int x = 0; x < array.length; x++) {
             if (min == null) {
                 min = array[x];
             } else {
