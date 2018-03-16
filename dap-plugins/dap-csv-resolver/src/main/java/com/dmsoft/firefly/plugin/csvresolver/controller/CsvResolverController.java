@@ -4,6 +4,7 @@
 package com.dmsoft.firefly.plugin.csvresolver.controller;
 
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.csvresolver.service.CsvResolverService;
 import com.dmsoft.firefly.plugin.csvresolver.dto.CsvTemplateDto;
 import com.dmsoft.firefly.plugin.csvresolver.model.RowDataModel;
@@ -98,9 +99,19 @@ public class CsvResolverController {
             if (!StringUtils.isEmpty(path.getText())) {
                 str = path.getText();
             }
+            File filePath = new File(str);
+            if (!filePath.exists()){
+                WindowMessageFactory.createWindowMessageHasOk("Message", "File is not exist.");
+                return;
+            }
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Csv Choose");
-            fileChooser.setInitialDirectory(new File(str));
+            if (filePath.isDirectory()) {
+                fileChooser.setInitialDirectory(filePath);
+            } else {
+                fileChooser.setInitialDirectory(new File(filePath.getParent()));
+
+            }
             fileChooser.getExtensionFilters().addAll(
                     new FileChooser.ExtensionFilter("CSV", "*.csv")
             );
@@ -110,8 +121,13 @@ public class CsvResolverController {
             if (file != null) {
                 path.setText(file.getPath());
                 rowData = service.rowParser(file.getPath());
-                refreshData();
+                for (int i = 0; i < rowData.size(); i++) {
+                    if (rowDataList != null && rowDataList.get(i) != null) {
+                        rowDataList.get(i).setData(rowData.get(i));
+                    }
+                }
             }
+
         });
         ok.setOnAction(event -> {
             save();
