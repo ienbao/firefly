@@ -4,6 +4,7 @@
 package com.dmsoft.firefly.plugin.grr.dto;
 
 import com.dmsoft.bamboo.common.dto.AbstractValueObject;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * Created by Ethan.Yang on 2018/2/6.
  */
 public class SearchConditionDto extends AbstractValueObject {
+    private List<TestItemWithTypeDto> selectedTestItemDtos;
     private List<String> searchCondition;
     private String part;
     private String appraiser;
@@ -19,6 +21,14 @@ public class SearchConditionDto extends AbstractValueObject {
     private Integer trialInt;
     private List<String> parts;
     private List<String> appraisers;
+
+    public List<TestItemWithTypeDto> getSelectedTestItemDtos() {
+        return selectedTestItemDtos;
+    }
+
+    public void setSelectedTestItemDtos(List<TestItemWithTypeDto> selectedTestItemDtos) {
+        this.selectedTestItemDtos = selectedTestItemDtos;
+    }
 
     public List<String> getSearchCondition() {
         return searchCondition;

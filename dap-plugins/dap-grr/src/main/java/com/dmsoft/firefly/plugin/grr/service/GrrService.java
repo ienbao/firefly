@@ -4,6 +4,7 @@ import com.dmsoft.firefly.plugin.grr.dto.GrrDetailDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrSummaryDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrTestItemDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnalysisConfigDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 
@@ -23,7 +24,7 @@ public interface GrrService {
      * @param configDto       config dto
      * @return list of grr summary dto
      */
-    List<GrrSummaryDto> getSummaryResult(SearchDataFrame dataFrame, List<GrrTestItemDto> testItemDtoList, GrrAnalysisConfigDto configDto);
+    List<GrrSummaryDto> getSummaryResult(SearchDataFrame dataFrame, List<TestItemWithTypeDto> testItemDtoList, List<String> rowKeysToByAnalyzed, GrrAnalysisConfigDto configDto);
 
     /**
      * method to get detail result
@@ -33,5 +34,5 @@ public interface GrrService {
      * @param configDto   config dto
      * @return grr detail dto
      */
-    GrrDetailDto getDetailResult(DataColumn dataColumn, GrrTestItemDto testItemDto, GrrAnalysisConfigDto configDto);
+    GrrDetailDto getDetailResult(DataColumn dataColumn, TestItemWithTypeDto testItemDto,List<String> rowKeysToByAnalyzed, GrrAnalysisConfigDto configDto);
 }

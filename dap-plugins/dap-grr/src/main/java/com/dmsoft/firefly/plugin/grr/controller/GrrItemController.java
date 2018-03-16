@@ -331,7 +331,9 @@ public class GrrItemController implements Initializable {
             paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
 //        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
             paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
-            paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, this.getSearchConditionDto());
+            SearchConditionDto searchConditionDto = this.getSearchConditionDto();
+            searchConditionDto.setSelectedTestItemDtos(selectedItemDto);
+            paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, searchConditionDto);
 
             Platform.runLater(() -> {
                 manager.doJobASyn(job, new JobDoComplete() {
