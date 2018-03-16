@@ -114,7 +114,7 @@ public class SpcMainController implements Initializable {
      */
     public void clearAnalysisShowData(){
         statisticalResultController.clearStatisticalResultData();
-        viewDataController.setViewData(null);
+        viewDataController.setViewData(null, null);
     }
 
     private void initComponentEvent() {
@@ -267,7 +267,7 @@ public class SpcMainController implements Initializable {
         paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
 
         SearchDataFrame subDataFrame = this.buildSubSearchDataFrame(searchConditionDtoList);
-        viewDataController.setViewData(subDataFrame);
+        viewDataController.setViewData(subDataFrame, null);
         paramMap.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
 
         Object returnValue = manager.doJobSyn(job, paramMap);

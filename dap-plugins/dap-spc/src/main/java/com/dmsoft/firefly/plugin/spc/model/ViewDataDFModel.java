@@ -60,14 +60,17 @@ public class ViewDataDFModel implements TableModel {
     private CheckBox allCheckBox;
     private TableView<String> tableView;
     private SpcMainController mainController;
+    private List<String> initSelectedRowKeys;
 
     /**
      * constructor
      *
-     * @param dataFrame search data frame
+     * @param dataFrame       search data frame
+     * @param selectedRowKeys selected row keys
      */
-    public ViewDataDFModel(SearchDataFrame dataFrame) {
+    public ViewDataDFModel(SearchDataFrame dataFrame, List<String> selectedRowKeys) {
         this.dataFrame = dataFrame;
+        this.initSelectedRowKeys = selectedRowKeys;
         this.headerArray = FXCollections.observableArrayList(dataFrame.getAllTestItemName());
         this.headerArray.add(0, "CheckBox");
         this.rowKeyArray = FXCollections.observableArrayList(dataFrame.getAllRowKeys());
@@ -196,7 +199,11 @@ public class ViewDataDFModel implements TableModel {
     @Override
     public ObjectProperty<Boolean> getCheckValue(String rowKey, String columnName) {
         if (this.checkValueMap.get(rowKey) == null) {
-            this.checkValueMap.put(rowKey, new SimpleObjectProperty<>(true));
+            if (this.initSelectedRowKeys != null && this.initSelectedRowKeys.contains(rowKey)) {
+                this.checkValueMap.put(rowKey, new SimpleObjectProperty<>(true));
+            } else {
+                this.checkValueMap.put(rowKey, new SimpleObjectProperty<>(false));
+            }
         }
         return this.checkValueMap.get(rowKey);
     }

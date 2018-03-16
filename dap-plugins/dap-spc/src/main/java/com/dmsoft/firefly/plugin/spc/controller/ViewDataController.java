@@ -61,6 +61,7 @@ public class ViewDataController implements Initializable {
     private ViewDataDFModel model;
     private List<TestItemWithTypeDto> typeDtoList;
     private List<String> selectedProjectNames;
+    private List<String> selectedRowKeys;
 
     private ChooseDialogController chooseDialogController;
 
@@ -81,9 +82,11 @@ public class ViewDataController implements Initializable {
     /**
      * set view data table dataList
      *
-     * @param dataFrame search data frame
+     * @param dataFrame      search data frame
+     * @param selectedRowKey selected row key
      */
-    public void setViewData(SearchDataFrame dataFrame) {
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey) {
+        this.selectedRowKeys = selectedRowKey;
         Platform.runLater(() -> {
             if (dataFrame == null) {
                 Platform.runLater(() -> {
@@ -98,7 +101,7 @@ public class ViewDataController implements Initializable {
                 return;
             }
             this.dataFrame = dataFrame;
-            this.model = new ViewDataDFModel(dataFrame);
+            this.model = new ViewDataDFModel(dataFrame, selectedRowKey);
             this.model.setMainController(spcMainController);
             TableViewWrapper.decorate(viewDataTable, model);
             model.getAllCheckBox().setOnMouseClicked(event -> {
@@ -116,6 +119,29 @@ public class ViewDataController implements Initializable {
             }
             chooseDialogController.setTableData(chooseTableRowDataList);
         });
+    }
+
+    /**
+     * is changed or not
+     *
+     * @return is changed or not
+     */
+    public boolean isChanged() {
+        List<String> newSelectedRowKeys = getSelectedRowKeys();
+        if (this.selectedRowKeys != null) {
+            if (newSelectedRowKeys == null) {
+                return true;
+            }
+            if (newSelectedRowKeys.size() != this.selectedRowKeys.size()) {
+                return true;
+            }
+            for (String s : this.selectedRowKeys) {
+                if (!newSelectedRowKeys.contains(s)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -257,7 +283,7 @@ public class ViewDataController implements Initializable {
                     dataFrame.removeColumns(Lists.newArrayList(typeDto.getTestItemName()));
                 }
             }
-            setViewData(this.dataFrame);
+            setViewData(this.dataFrame, getSelectedRowKeys());
         });
         unSelectedCheckBox.setOnAction(event -> getInvertCheckBoxEvent());
     }
