@@ -127,18 +127,20 @@ public class ItemDataTableModel implements TableModel {
         String usl = null;
         String lsl = null;
 
-        usl = rowDataDtoList.get( 0).getData().get( column );
+        usl = rowDataDtoList.get( 0 ).getData().get( column );
         lsl = rowDataDtoList.get( 1 ).getData().get( column );
 
         if (Integer.parseInt( row ) > 2) {
             if (!column.equals( "" )) {
                 dataValue = rowDataDtoList.get( Integer.parseInt( row ) - 2 ).getData().get( column );
             }
-            if (StringUtils.isNotBlank( dataValue ) && StringUtils.isNotBlank( usl )&& !usl.equals("Upper Limited----------->") && (Double.parseDouble( dataValue ) > Double.parseDouble( usl ))) {
+            if (StringUtils.isNotBlank( dataValue ) && StringUtils.isNotBlank( usl ) && !usl.equals( "Upper Limited----------->" )
+                    && !usl.equals( "Av" ) && (Double.parseDouble( dataValue ) > Double.parseDouble( usl ))) {
                 tableCell.setStyle( "-fx-background-color:red" );
                 return tableCell;
             }
-            if (StringUtils.isNotBlank( dataValue ) && StringUtils.isNotBlank( lsl )&&!lsl.equals("Lower Limited----------->") && (Double.parseDouble( dataValue ) < Double.parseDouble( lsl ))) {
+            if (StringUtils.isNotBlank( dataValue ) && StringUtils.isNotBlank( lsl ) && !lsl.equals( "Lower Limited----------->" )
+                    && !lsl.equals( "Av" ) && (Double.parseDouble( dataValue ) < Double.parseDouble( lsl ))) {
                 tableCell.setStyle( "-fx-background-color:red" );
                 return tableCell;
             }
@@ -167,12 +169,10 @@ public class ItemDataTableModel implements TableModel {
         return rowKey;
     }
 
-   public void updateTestItemColumn(List<String> result) {
-        columnKey.addAll(result);
+    public void updateTestItemColumn(List<String> result) {
+        columnKey.clear();
+        columnKey.add( "" );
+        columnKey.addAll( result );
     }
 
-//    public ObservableList<String> setHeaderArray(ObservableList<String> columnKey) {
-//
-//        return this.columnKey = columnKey;
-//    }
 }
