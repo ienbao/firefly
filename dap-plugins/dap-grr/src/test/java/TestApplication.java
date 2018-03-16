@@ -67,7 +67,7 @@ public class TestApplication extends Application {
         Parent root = fxmlLoader.load();
 
 
-        Scene scene = new Scene(root, 1280, 704);
+        Scene scene = new Scene(root, 1000, 704);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/grr_chart.css").toExternalForm());
