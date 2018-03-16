@@ -9,6 +9,7 @@ import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.model.ItemDataTableModel;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
@@ -19,6 +20,7 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.google.common.collect.Lists;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,6 +32,8 @@ import javafx.scene.layout.Pane;
 import java.io.IOException;
 import java.util.*;
 
+import static java.util.Arrays.asList;
+
 /**
  * Created by Alice on 2018/2/10.
  */
@@ -38,7 +42,6 @@ public class DataSourceSettingController {
     private Button chooseItem, oK, cancel, apply;
     @FXML
     private TableView itemDataTable;
-
     @FXML
     private SplitPane split;
     private SearchTab searchTab;
@@ -47,7 +50,7 @@ public class DataSourceSettingController {
     private EnvService envService = RuntimeContext.getBean( EnvService.class );
     private SourceDataService sourceDataService = RuntimeContext.getBean( SourceDataService.class );
     private List<String> testItems = new ArrayList<>();
-    private SearchDataFrame dataFrame;
+    private List<String> selectTestItemName = Lists.newArrayList();
 
     @FXML
     private void initialize() {
@@ -67,6 +70,7 @@ public class DataSourceSettingController {
     private void initComponentEvent() {
         chooseItem.setOnAction( event -> getChooseColumnBtnEvent() );
         itemDataTableModel.getAllCheckBox().setOnAction( event -> getAllCheckBoxEvent() );
+        chooseCumDialogController.getChooseOkButton().setOnAction(event -> getChooseTestItemEvent());
         oK.setOnAction( event -> {
 //            saveCache();
 //            if (allTemplate != null) {
@@ -88,12 +92,14 @@ public class DataSourceSettingController {
     }
 
     private void buildChooseColumnDialog() {
-        FXMLLoader loader = new FXMLLoader( GuiApplication.class.getClassLoader().getResource( "view/choosecol_dialog.fxml" ), ResourceBundle.getBundle( "i18n.message_en_US_GUI" ) );
+        FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/choosecol_dialog.fxml");
         Pane root = null;
         try {
-            root = loader.load();
-            chooseCumDialogController = loader.getController();
-            WindowFactory.createSimpleWindowAsModel( "viewDataColumn", GuiFxmlAndLanguageUtils.getString( ResourceMassages.CHOOSE_ITEMS_TITLE ), root,
+            root = fxmlLoader.load();
+            chooseCumDialogController = fxmlLoader.getController();
+            chooseCumDialogController.setValueColumnText("Test Item");
+            this.initChooseColumnTableData();
+            WindowFactory.createSimpleWindowAsModel( "dataSourceSetting", GuiFxmlAndLanguageUtils.getString( ResourceMassages.CHOOSE_ITEMS_TITLE ), root,
                     getClass().getClassLoader().getResource( "css/platform_app.css" ).toExternalForm() );
         } catch (IOException e) {
             e.printStackTrace();
@@ -101,8 +107,8 @@ public class DataSourceSettingController {
     }
 
     private void getChooseColumnBtnEvent() {
-//        chooseCumDialogController.setSelectResultName(dataFrame.getAllTestItemName());
-        StageMap.showStage( "viewDataColumn" );
+        chooseCumDialogController.setSelectResultName(itemDataTableModel.getHeaderArray());
+        StageMap.showStage( "dataSourceSetting" );
     }
 
     private void setTableData() {
@@ -155,6 +161,15 @@ public class DataSourceSettingController {
         }
     }
 
+    private void initChooseColumnTableData() {
+        List<ChooseTableRowData> chooseTableRowDataList = Lists.newArrayList();
+        testItems.forEach(v -> {
+            ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, v);
+            chooseTableRowDataList.add(chooseTableRowData);
+        });
+        chooseCumDialogController.setTableData(chooseTableRowDataList);
+    }
+
     private void getAllCheckBoxEvent() {
         Map<String, SimpleObjectProperty<Boolean>> checkMap = itemDataTableModel.getCheckMap();
         for (String key : itemDataTableModel.getRowKey()) {
@@ -164,5 +179,12 @@ public class DataSourceSettingController {
                 checkMap.put( key, new SimpleObjectProperty<>( itemDataTableModel.getAllCheckBox().isSelected() ) );
             }
         }
+    }
+
+    private void getChooseTestItemEvent() {
+        selectTestItemName = chooseCumDialogController.getSelectResultName();
+        itemDataTable.getColumns().remove(1, itemDataTable.getColumns().size());
+        itemDataTableModel.updateTestItemColumn(selectTestItemName);
+        StageMap.closeStage("dataSourceSetting");
     }
 }

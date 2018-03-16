@@ -153,7 +153,6 @@ public class ItemDataTableModel implements TableModel {
 
     @Override
     public void setTableView(TableView<String> tableView) {
-
     }
 
     public Map<String, SimpleObjectProperty<Boolean>> getCheckMap() {
@@ -167,4 +166,13 @@ public class ItemDataTableModel implements TableModel {
     public ObservableList<String> getRowKey() {
         return rowKey;
     }
+
+   public void updateTestItemColumn(List<String> result) {
+        columnKey.addAll(result);
+    }
+
+//    public ObservableList<String> setHeaderArray(ObservableList<String> columnKey) {
+//
+//        return this.columnKey = columnKey;
+//    }
 }
