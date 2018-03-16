@@ -24,4 +24,9 @@ public class UIConstant {
     public static final String[] CHART_COMPONENT_CATEGORY = new String[]{"Contribution", "Variation", "Tolerance"};
 
     public static final String[] CHART_OPERATE_NAME = new String[]{"UCL", "μ", "LCL"};
+
+    public static final String SPLIT_FLAG = "!@#";
+
+    public static final String APPRAISER_NORMAL_KEY = "Appraiser";
+    public static final String TRIAL_KEY = "Trial";
 }

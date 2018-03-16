@@ -3,7 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.model;
 
-import com.dmsoft.firefly.gui.components.table.NewTableModel;
+import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
@@ -29,7 +29,7 @@ import java.util.*;
  * Created by Ethan.Yang on 2018/3/2.
  */
 @Deprecated
-public class ViewDataTableModel implements NewTableModel {
+public class ViewDataTableModel implements TableModel {
     private ObservableList<String> columnKey = FXCollections.observableArrayList();
     private ObservableList<String> rowKey = FXCollections.observableArrayList();
     private Map<String, SimpleObjectProperty<Boolean>> checkMap = new HashMap<>();

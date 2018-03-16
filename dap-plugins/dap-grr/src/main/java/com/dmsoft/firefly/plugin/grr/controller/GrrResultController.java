@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
+import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.plugin.grr.charts.ChartOperateButton;
@@ -7,9 +8,12 @@ import com.dmsoft.firefly.plugin.grr.charts.LinearChart;
 import com.dmsoft.firefly.plugin.grr.charts.data.RuleLineData;
 import com.dmsoft.firefly.plugin.grr.charts.data.VerticalCutLine;
 import com.dmsoft.firefly.plugin.grr.charts.data.ILineData;
-import com.dmsoft.firefly.plugin.grr.dto.GrrSummaryDto;
+import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
+import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.*;
+import com.dmsoft.firefly.plugin.grr.service.GrrConfigService;
+import com.dmsoft.firefly.plugin.grr.utils.DataConvertUtils;
 import com.dmsoft.firefly.plugin.grr.utils.ScrollPaneValueUtils;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.plugin.grr.utils.charts.ChartUtils;
@@ -18,16 +22,20 @@ import com.dmsoft.firefly.plugin.grr.utils.enums.GrrResultName;
 import com.dmsoft.firefly.plugin.grr.utils.table.TableCellCallBack;
 import com.dmsoft.firefly.plugin.grr.utils.table.TableRender;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.sun.javafx.charts.Legend;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -41,73 +49,15 @@ import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 
 import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Created by cherry on 2018/3/12.
  */
 public class GrrResultController implements Initializable {
 
-    /****** Summary *****/
-    @FXML
-    private HBox itemFilterHBox;
-    @FXML
-    private ComboBox resultBasedCmb;
-    @FXML
-    private TableView<GrrSingleSummary> summaryTb;
-    @FXML
-    private TableView anovaTb;
-    @FXML
-    private TableView sourceTb;
-    @FXML
-    private Button categoryBtn;
-    @FXML
-    private Button grrDataBtn;
-    @FXML
-    private Button grrChartBtn;
-    @FXML
-    private Button grrResultBtn;
-    @FXML
-    private ScrollPane grrResultScrollPane;
-    @FXML
-    private VBox chartVBox;
-    @FXML
-    private VBox resultVBox;
-    private TextFieldFilter summaryItemTf;
-    /****** Chart ******/
-    @FXML
-    private VBox xBarAppraiserVBox;
-    @FXML
-    private VBox rangeAppraiserVBox;
-    @FXML
-    private VBox rrByAppraiserVBox;
-    @FXML
-    private BorderPane componentBp;
-    @FXML
-    private BorderPane partAppraiserBp;
-    @FXML
-    private BorderPane xBarAppraiserBp;
-    @FXML
-    private BorderPane rangeAppraiserBp;
-    @FXML
-    private BorderPane rrbyAppraiserBp;
-    @FXML
-    private BorderPane rrbyPartBp;
-    @FXML
-    private BarChart componentChart;
-    @FXML
-    private LineChart partAppraiserChart;
-    private LinearChart xBarAppraiserChart;
-    private LinearChart rangeAppraiserChart;
-    private LineChart rrByAppraiserChart;
-    private LineChart rrbyPartChart;
-
-    private ChartOperateButton xBarAppraiserChartBtn;
-
-    private VBox rrbyPartVBox;
-
     private GrrSummaryModel summaryModel = new GrrSummaryModel();
+    private ItemResultModel itemResultModel = new ItemResultModel();
     private GrrAnovaModel anovaModel = new GrrAnovaModel();
     private GrrSourceModel sourceModel = new GrrSourceModel();
     final FilteredList<GrrSingleSummary> filteredList = summaryModel.getSummaries().filtered(p -> true);
@@ -115,6 +65,7 @@ public class GrrResultController implements Initializable {
     private GrrMainController grrMainController;
 
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
+    private GrrConfigService grrConfigService = RuntimeContext.getBean(GrrConfigService.class);
 
     List<String> parts = Lists.newArrayList("part1", "part2", "part3", "part4");
     List<String> appraisers = Lists.newArrayList("1", "2", "3", "4");
@@ -134,14 +85,46 @@ public class GrrResultController implements Initializable {
         this.initComponentsRender();
         this.initComponentEvents();
         this.initData();
-        this.analyzeGrrResult();
+//        buildItemTbRowKey(3, 3, Lists.newArrayList("1", "2", "3"));
+//        this.analyzeGrrResult(null, null, null);
     }
 
-    public void analyzeGrrResult() {
+    public void analyzeGrrResult(GrrDataFrameDto grrDataFrameDto,
+                                 List<String> includeRows,
+                                 SearchConditionDto conditionDto) {
+
+        Map paramMap = Maps.newHashMap();
+        Job job = new Job(ParamKeys.GRR_ANALYSIS_JOB_PIPELINE);
+        GrrAnalysisConfigDto analysisConfigDto = buildGrrAnalysisConfig(conditionDto);
+        paramMap.put(ParamKeys.SEARCH_DATA_FRAME, grrDataFrameDto.getDataFrame());
+        paramMap.put(ParamKeys.ANALYSIS_GRR_INCLUDE_ROWS, includeRows);
+        paramMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_TESTITEM, conditionDto.getSelectedTestItemDtos());
+        paramMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG, analysisConfigDto);
+        Platform.runLater(() -> manager.doJobASyn(job, returnValue -> {
+            if (returnValue == null) {
+                //todo message tip
+                return;
+            }
+        }, paramMap, grrMainController));
+
         this.removeAllResultData();
         this.setSummaryData(null);
-        this.setResultData(new GrrDetailResultDto());
+        this.setItemResultData(null, null, conditionDto, null);
+        this.setAnalysisItemResultData(new GrrDetailResultDto());
     }
+
+    private GrrAnalysisConfigDto buildGrrAnalysisConfig(SearchConditionDto conditionDto) {
+        GrrConfigDto configDto = grrConfigService.findGrrConfig();
+        GrrAnalysisConfigDto analysisConfigDto = new GrrAnalysisConfigDto();
+        analysisConfigDto.setAppraiser(conditionDto.getAppraiserInt());
+        analysisConfigDto.setTrial(conditionDto.getTrialInt());
+        analysisConfigDto.setPart(conditionDto.getPartInt());
+        analysisConfigDto.setCoverage(configDto.getCoverage());
+        analysisConfigDto.setMethod(configDto.getAnalysisMethod());
+        analysisConfigDto.setSignificance(Double.valueOf(configDto.getSignLevel()));
+        return analysisConfigDto;
+    }
+
 
     private void setSummaryData(List<GrrSummaryDto> summaryData) {
 
@@ -166,7 +149,69 @@ public class GrrResultController implements Initializable {
         System.out.println("");
     }
 
-    private void setResultData(GrrDetailResultDto grrDetailResultDto) {
+    private void setItemResultData(GrrDataFrameDto grrDataFrameDto, List<String> includeRows, SearchConditionDto conditionDto, String itemName) {
+
+        GrrItemResultDto itemResultDto = DataConvertUtils.convertToItemResult(grrDataFrameDto, itemName, "");
+        List<GrrViewDataDto> viewDataDtos = grrDataFrameDto.getIncludeDatas();
+
+        Set<String> headerArray = Sets.newHashSet();
+        String appraiserKey = DAPStringUtils.isBlank(conditionDto.getAppraiser()) ? UIConstant.APPRAISER_NORMAL_KEY : conditionDto.getAppraiser();
+        String trialKey = UIConstant.TRIAL_KEY;
+        headerArray.add(appraiserKey);
+        headerArray.add(trialKey);
+
+        List<String> rowKeyArray = buildItemTbRowKey(conditionDto.getAppraiserInt(),
+                conditionDto.getTrialInt(),
+                conditionDto.getAppraisers());
+        viewDataDtos.forEach(viewDataDto -> headerArray.add(viewDataDto.getPart()));
+        itemResultModel.setRowKeyArray(FXCollections.observableArrayList(rowKeyArray));
+        itemResultModel.setHeaderArray(FXCollections.observableArrayList(headerArray));
+        itemResultModel.setAppraiserAndTrialKey(appraiserKey, trialKey);
+        itemResultModel.setData(grrDataFrameDto.getDataFrame(),
+                itemName,
+                grrDataFrameDto.getIncludeDatas(),
+                itemResultDto);
+        TableViewWrapper.decorate(itemDetailTb, itemResultModel);
+    }
+
+    private List<String> buildItemTbRowKey(int appraiser, int trial, List<String> appraisers) {
+        int rowCount = appraiser * (trial + 2) + 2;
+        List<String> rowKeys = new ArrayList<>(rowCount);
+        int trialIndex = 0;
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            int reminder = rowIndex % (trial + 2);
+            int value = rowIndex / (trial + 2);
+//            total mean
+            if (rowIndex == rowCount - 2) {
+                rowKeys.add(rowIndex, "total mean");
+                trialIndex = 0;
+                continue;
+            }
+//            total range
+            if (rowIndex == rowCount - 1) {
+                rowKeys.add(rowIndex, "total range");
+                trialIndex = 0;
+                continue;
+            }
+//            mean
+            if (reminder == trial) {
+                rowKeys.add(rowIndex, appraisers.get(value) + UIConstant.SPLIT_FLAG + "mean");
+                trialIndex = 0;
+                continue;
+            }
+//            range
+            if (reminder == trial + 1) {
+                rowKeys.add(rowIndex, appraisers.get(value) + UIConstant.SPLIT_FLAG + "range");
+                trialIndex = 0;
+                continue;
+            }
+            trialIndex++;
+            rowKeys.add(rowIndex, appraisers.get(value) + UIConstant.SPLIT_FLAG + trialIndex);
+        }
+        return rowKeys;
+    }
+
+    private void setAnalysisItemResultData(GrrDetailResultDto grrDetailResultDto) {
         setComponentChart(buildComponentChartData());
         setPartAppraiserChart(buildPartAppraiserChartData(), parts, appraisers);
         setXBarAppraiserChart(buildXBarAppraiserChartData(), parts, appraisers);
@@ -258,7 +303,7 @@ public class GrrResultController implements Initializable {
         RuleLineData clLineData = new RuleLineData(UIConstant.CHART_OPERATE_NAME[1], xBarAppraiserChartDto.getCl());
         RuleLineData lclLineData = new RuleLineData(UIConstant.CHART_OPERATE_NAME[2], xBarAppraiserChartDto.getLcl());
         uclLineData.setColor(Color.rgb(102, 102, 102));
-        lclLineData.setColor( Color.rgb(178, 178, 178));
+        lclLineData.setColor(Color.rgb(178, 178, 178));
         uclLineData.setLineClass("dashed2-line");
         clLineData.setLineClass("solid-line");
         lclLineData.setLineClass("dashed1-line");
@@ -341,7 +386,7 @@ public class GrrResultController implements Initializable {
 //            }
 //        });
 
-        ChartUtils.setChartToolTip(xBarAppraiserChart.getData(), pointTooltip -> pointTooltip == null ? "":
+        ChartUtils.setChartToolTip(xBarAppraiserChart.getData(), pointTooltip -> pointTooltip == null ? "" :
                 "(" + pointTooltip.getData().getYValue() + ")");
 
         xBarAppraiserChart.getData().add(series);
@@ -362,7 +407,7 @@ public class GrrResultController implements Initializable {
             lineSeries.getData().add(new XYChart.Data<>(clX[i], clY[i]));
         }
         rrByAppraiserChart.getData().addAll(scatterSeries, lineSeries);
-        ChartUtils.setChartToolTip(rrByAppraiserChart.getData(), pointTooltip -> pointTooltip == null ? "":
+        ChartUtils.setChartToolTip(rrByAppraiserChart.getData(), pointTooltip -> pointTooltip == null ? "" :
                 "(" + pointTooltip.getData().getYValue() + ")");
         scatterSeries.getNode().getStyleClass().add("chart-series-hidden-line");
     }
@@ -695,4 +740,63 @@ public class GrrResultController implements Initializable {
         };
     }
 
+    /****** Summary *****/
+    @FXML
+    private HBox itemFilterHBox;
+    @FXML
+    private ComboBox resultBasedCmb;
+    @FXML
+    private TableView<GrrSingleSummary> summaryTb;
+    @FXML
+    private TableView itemDetailTb;
+    @FXML
+    private TableView anovaTb;
+    @FXML
+    private TableView sourceTb;
+    @FXML
+    private Button categoryBtn;
+    @FXML
+    private Button grrDataBtn;
+    @FXML
+    private Button grrChartBtn;
+    @FXML
+    private Button grrResultBtn;
+    @FXML
+    private ScrollPane grrResultScrollPane;
+    @FXML
+    private VBox chartVBox;
+    @FXML
+    private VBox resultVBox;
+    private TextFieldFilter summaryItemTf;
+    /****** Chart ******/
+    @FXML
+    private VBox xBarAppraiserVBox;
+    @FXML
+    private VBox rangeAppraiserVBox;
+    @FXML
+    private VBox rrByAppraiserVBox;
+    @FXML
+    private BorderPane componentBp;
+    @FXML
+    private BorderPane partAppraiserBp;
+    @FXML
+    private BorderPane xBarAppraiserBp;
+    @FXML
+    private BorderPane rangeAppraiserBp;
+    @FXML
+    private BorderPane rrbyAppraiserBp;
+    @FXML
+    private BorderPane rrbyPartBp;
+    @FXML
+    private BarChart componentChart;
+    @FXML
+    private LineChart partAppraiserChart;
+    private LinearChart xBarAppraiserChart;
+    private LinearChart rangeAppraiserChart;
+    private LineChart rrByAppraiserChart;
+    private LineChart rrbyPartChart;
+
+    private ChartOperateButton xBarAppraiserChartBtn;
+
+    private VBox rrbyPartVBox;
 }

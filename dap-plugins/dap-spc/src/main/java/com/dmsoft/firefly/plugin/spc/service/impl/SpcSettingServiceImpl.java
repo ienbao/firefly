@@ -9,7 +9,7 @@ import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
-import com.dmsoft.firefly.plugin.spc.utils.RangeUtils;
+import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
 import com.dmsoft.firefly.sdk.RuntimeContext;

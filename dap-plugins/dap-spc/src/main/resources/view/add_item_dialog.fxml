@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.dmsoft.firefly.gui.components.utils.TextFieldFilter?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-
-<!--<?import com.dmsoft.firefly.gui.components.utils.TextFieldFilter?>-->
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.AddItemController">
    <children>
@@ -26,12 +23,12 @@
                      <children>
                         <Label text="Choose Test Item">
                            <VBox.margin>
-                              <Insets bottom="10.0" top="10.0" />
+                              <Insets bottom="10.0" />
                            </VBox.margin>
                         </Label>
                         <HBox spacing="10.0" style="-fx-border-width: 1 1 0 1; -fx-border-color: #dcdcdc;">
                            <children>
-                              <TextField minWidth="182.0" prefHeight="22.0" fx:id="xxx" />
+                              <TextFieldFilter fx:id="filterTf" minWidth="182.0" prefHeight="22.0" />
                            </children>
                            <padding>
                               <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
@@ -40,10 +37,8 @@
                               <Insets />
                            </opaqueInsets>
                         </HBox>
-                        <TableView fx:id="chooseColumnTable" minHeight="228.0" minWidth="190.0" prefHeight="228.0" prefWidth="190.0">
+                        <TableView fx:id="testItemTable" minHeight="228.0" minWidth="190.0" prefHeight="228.0" prefWidth="190.0">
                            <columns>
-                              <TableColumn fx:id="chooseCheckBoxColumn" maxWidth="30.0" minWidth="30.0" prefWidth="30" resizable="false" sortable="false" />
-                              <TableColumn fx:id="chooseValueColumn" maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" resizable="false" />
                            </columns>
                         </TableView>
                      </children>
@@ -59,15 +54,15 @@
                             <RowConstraints vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label text="Cutomize Test Items">
+                              <Label text="Customize Test Items">
                                  <GridPane.margin>
-                                    <Insets bottom="10.0" top="10.0" />
+                                    <Insets bottom="10.0" />
                                  </GridPane.margin>
                               </Label>
-                              <Label text="x" GridPane.columnIndex="1" />
+                              <Label fx:id="tipLabel" GridPane.columnIndex="1" />
                            </children>
                         </GridPane>
-                        <TextArea minHeight="257.0" minWidth="190.0" prefHeight="257.0" prefWidth="190.0" />
+                        <TextArea fx:id="textAreaTestItem" minHeight="257.0" minWidth="190.0" prefHeight="257.0" prefWidth="190.0" />
                      </children>
                   </VBox>
                </children>
