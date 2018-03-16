@@ -1,7 +1,7 @@
 package com.dmsoft.firefly.plugin.grr.model;
 
-import com.dmsoft.firefly.gui.components.table.NewTableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
+import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.plugin.grr.dto.GrrItemResultDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrViewDataDto;
 import com.dmsoft.firefly.plugin.grr.utils.DataConvertUtils;
@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by cherry on 2018/3/15.
  */
-public class ItemResultModel implements NewTableModel {
+public class ItemResultModel implements TableModel {
 
     private SearchDataFrame dataFrame;
     private GrrItemResultDto itemResultDto;

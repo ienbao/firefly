@@ -3,19 +3,16 @@
  */
 package com.dmsoft.firefly.plugin.grr.controller;
 
-import com.dmsoft.firefly.gui.components.messagetip.MessageTipFactory;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
-import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
+import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.grr.model.ListViewModel;
-import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
-import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -27,10 +24,8 @@ import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.sun.javafx.collections.ObservableListWrapper;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,17 +34,16 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.stage.Popup;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.swing.*;
 import java.net.URL;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 
 /**
@@ -109,9 +103,9 @@ public class GrrItemController implements Initializable {
 
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
-/*
-    private GrrLeftConfigServiceImpl leftConfigService = new GrrLeftConfigServiceImpl();
-*/
+    /*
+        private GrrLeftConfigServiceImpl leftConfigService = new GrrLeftConfigServiceImpl();
+    */
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private SearchConditionDto searchConditionDto = new SearchConditionDto();
 
@@ -197,7 +191,7 @@ public class GrrItemController implements Initializable {
 
         this.partCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
             Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
-            values.forEach(value->{
+            values.forEach(value -> {
                 partList.add(new ListViewModel(value, false));
             });
             partListView.setItems(partList);
@@ -205,7 +199,7 @@ public class GrrItemController implements Initializable {
 
         this.appraiserCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
             Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
-            values.forEach(value->{
+            values.forEach(value -> {
                 appraiserList.add(new ListViewModel(value, false));
             });
             appraiserListView.setItems(appraiserList);
@@ -358,7 +352,7 @@ public class GrrItemController implements Initializable {
         searchConditionDto.setAppraiserInt(Integer.valueOf(appraiserTxt.getText()));
         searchConditionDto.setTrialInt(Integer.valueOf(trialTxt.getText()));
         List<String> parts = Lists.newLinkedList();
-        partList.forEach(listViewModel->{
+        partList.forEach(listViewModel -> {
             if (listViewModel.isIsChecked()) {
                 parts.add(listViewModel.getName());
             }
@@ -368,7 +362,7 @@ public class GrrItemController implements Initializable {
         if (appraiserCombox.getValue() != null) {
             searchConditionDto.setAppraiser(appraiserCombox.getValue().toString());
             List<String> appraisers = Lists.newLinkedList();
-            appraiserList.forEach(listViewModel->{
+            appraiserList.forEach(listViewModel -> {
                 if (listViewModel.isIsChecked()) {
                     appraisers.add(listViewModel.getName());
                 }
