@@ -33,8 +33,10 @@ public class BasicSearchPane extends VBox {
     private List<String> timeKey;
     private String pattern;
     public BasicSearchPane(String title) {
-        timeKey = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
-        pattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
+        if (envService.findActivatedTemplate().getTimePatternDto() != null) {
+            timeKey = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
+            pattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
+        }
         this.setStyle("-fx-border-color: #DCDCDC; -fx-border-width: 0 0 1 0");
         groupTitle = new Label(title);
         this.getChildren().add(groupTitle);
