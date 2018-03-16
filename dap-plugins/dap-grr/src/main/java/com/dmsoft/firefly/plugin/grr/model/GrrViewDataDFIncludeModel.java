@@ -4,7 +4,9 @@ import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrViewDataDto;
+import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.google.common.collect.Lists;
@@ -36,13 +38,15 @@ public class GrrViewDataDFIncludeModel implements TableModel {
     private Map<String, RadioButton> grrRadioButton = Maps.newHashMap();
     private ToggleGroup group = new ToggleGroup();
     private List<GrrViewDataListener> listeners = Lists.newArrayList();
+    private Map<String, TestItemWithTypeDto> typeDtoMap = Maps.newHashMap();
 
     /**
      * constructor
      *
-     * @param grrDataFrameDto grr data frame dto
+     * @param grrDataFrameDto    grr data frame dto
+     * @param searchConditionDto search condition dto
      */
-    public GrrViewDataDFIncludeModel(GrrDataFrameDto grrDataFrameDto) {
+    public GrrViewDataDFIncludeModel(GrrDataFrameDto grrDataFrameDto, SearchConditionDto searchConditionDto) {
         this.grrDataFrameDto = grrDataFrameDto;
         this.rowKeyArray = FXCollections.observableArrayList();
         this.headerArray = FXCollections.observableArrayList(grrDataFrameDto.getDataFrame().getAllTestItemName());
@@ -62,6 +66,9 @@ public class GrrViewDataDFIncludeModel implements TableModel {
             grrRadioButton.get(grrDataFrameDto.getIncludeDatas().get(0).getRowKey()).setSelected(true);
         }
         this.group.selectedToggleProperty().addListener((ov, t1, t2) -> fireToggle((RadioButton) t2));
+        for (TestItemWithTypeDto testItemWithTypeDto : searchConditionDto.getSelectedTestItemDtos()) {
+            this.typeDtoMap.put(testItemWithTypeDto.getTestItemName(), testItemWithTypeDto);
+        }
     }
 
     @Override
@@ -128,7 +135,7 @@ public class GrrViewDataDFIncludeModel implements TableModel {
             } else if (tableCell.getText() != null && !DAPStringUtils.isNumeric(tableCell.getText()) && !DAPStringUtils.isSpecialBlank(tableCell.getText())) {
                 tableCell.setStyle("-fx-text-fill: #aaaaaa");
             } else if (tableCell.getText() != null && DAPStringUtils.isNumeric(tableCell.getText())) {
-                if (!RangeUtils.isPass(tableCell.getText(), this.grrDataFrameDto.getDataFrame().getTestItemWithTypeDto(column))) {
+                if (!RangeUtils.isPass(tableCell.getText(), this.typeDtoMap.get(column))) {
                     tableCell.setStyle("-fx-background-color: #ea2028; -fx-text-fill: white");
                 }
             }

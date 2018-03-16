@@ -6,7 +6,6 @@ package com.dmsoft.firefly.plugin.spc.model;
 import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.plugin.spc.dto.ControlRuleDto;
-import com.dmsoft.firefly.plugin.spc.utils.SourceObjectProperty;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import javafx.beans.property.ObjectProperty;
@@ -92,7 +91,7 @@ public class ControlAlarmRuleTableModel implements TableModel {
                     if (!DAPStringUtils.isNumeric(String.valueOf(b2)) || DAPStringUtils.isBlank(String.valueOf(b2))) {
                         return;
                     }
-                    controlRuleDto.setnValue(Double.valueOf((String)b2));
+                    controlRuleDto.setnValue(Double.valueOf((String) b2));
                 });
             } else if (columnName.equals(HEADER[3])) {
                 value = DAPStringUtils.toStringFromDouble(controlRuleDto.getmValue());
@@ -100,7 +99,7 @@ public class ControlAlarmRuleTableModel implements TableModel {
                     if (!DAPStringUtils.isNumeric(String.valueOf(b2)) || DAPStringUtils.isBlank(String.valueOf(b2))) {
                         return;
                     }
-                    controlRuleDto.setmValue(Double.valueOf((String)b2));
+                    controlRuleDto.setmValue(Double.valueOf((String) b2));
                 });
             } else if (columnName.equals(HEADER[4])) {
                 value = DAPStringUtils.toStringFromDouble(controlRuleDto.getsValue());
@@ -108,11 +107,11 @@ public class ControlAlarmRuleTableModel implements TableModel {
                     if (!DAPStringUtils.isNumeric(String.valueOf(b2)) || DAPStringUtils.isBlank(String.valueOf(b2))) {
                         return;
                     }
-                    controlRuleDto.setsValue(Double.valueOf((String)b2));
+                    controlRuleDto.setsValue(Double.valueOf((String) b2));
                 });
             }
             objectProperty.setValue(value);
-            valueMap.put(rowKey + "-" + columnName,objectProperty);
+            valueMap.put(rowKey + "-" + columnName, objectProperty);
         }
 
         return valueMap.get(rowKey + "-" + columnName);

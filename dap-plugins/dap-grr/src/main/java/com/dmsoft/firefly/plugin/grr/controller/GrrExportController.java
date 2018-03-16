@@ -10,7 +10,9 @@ import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
+import com.dmsoft.firefly.plugin.grr.model.ListViewModel;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -31,6 +33,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -39,6 +42,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Garen.Pang on 2018/3/13.
@@ -75,6 +79,15 @@ public class GrrExportController {
     private RadioButton allFile;
     @FXML
     private ComboBox partCombox;
+    @FXML
+    private ComboBox appraiserCombox;
+    @FXML
+    private ListView<ListViewModel> partListView;
+    private ObservableList<ListViewModel> partList = FXCollections.observableArrayList();
+
+    @FXML
+    private ListView<ListViewModel> appraiserListView;
+    private ObservableList<ListViewModel> appraiserList = FXCollections.observableArrayList();
 
     @FXML
     private SplitPane split;
@@ -151,13 +164,6 @@ public class GrrExportController {
 
     private void initItemData() {
         items.clear();
-        ObservableList<String> datas = FXCollections.observableArrayList();
-        if (items != null) {
-            for (ItemTableModel model : items) {
-                datas.add(model.getItem());
-            }
-        }
-        partCombox.setItems(datas);
         List<TestItemWithTypeDto> itemDtos = envService.findTestItems();
         if (itemDtos != null) {
             for (TestItemWithTypeDto dto : itemDtos) {
@@ -167,6 +173,60 @@ public class GrrExportController {
             itemTable.setItems(personSortedList);
             personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
         }
+
+        ObservableList<String> datas = FXCollections.observableArrayList();
+        if (items != null) {
+            for (ItemTableModel model : items) {
+                datas.add(model.getItem());
+            }
+        }
+        partCombox.setItems(datas);
+        appraiserCombox.setItems(datas);
+        initListView(partListView);
+        initListView(appraiserListView);
+        this.partCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
+            values.forEach(value -> {
+                partList.add(new ListViewModel(value, false));
+            });
+            partListView.setItems(partList);
+        });
+
+        this.appraiserCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
+            values.forEach(value -> {
+                appraiserList.add(new ListViewModel(value, false));
+            });
+            appraiserListView.setItems(appraiserList);
+        });
+
+
+    }
+
+    private void initListView(ListView<ListViewModel> listView) {
+        listView.setCellFactory(e -> new ListCell<ListViewModel>() {
+            @Override
+            public void updateItem(ListViewModel item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!empty && item != null) {
+                    HBox cell;
+                    CheckBox checkBox = new CheckBox();
+                    if (item.isIsChecked()) {
+                        checkBox.setSelected(true);
+                    } else {
+                        checkBox.setSelected(false);
+                    }
+                    checkBox.setOnAction(event -> {
+                        item.setIsChecked(checkBox.isSelected());
+                    });
+                    Label label = new Label(item.getName());
+                    cell = new HBox(checkBox, label);
+                    setGraphic(cell);
+                }
+            }
+        });
+
+        listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
@@ -209,11 +269,14 @@ public class GrrExportController {
         });
 
         viewData.setOnAction(event -> {
-            if (getSelectedItem() != null && getSelectedItem().size() > 0)
-                buildViewDataDia();
+            if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
+                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                return;
+            }
+            buildViewDataDia();
         });
         setting.setOnAction(event -> {
-
+            build();
         });
         export.setOnAction(event -> {
             export();
@@ -281,7 +344,21 @@ public class GrrExportController {
         }
     }
 
+    private void build() {
+        Pane root = null;
+        try {
+            FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_setting.fxml");
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrSetting", "Grr Setting", root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
+            stage.show();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     private void export() {
+
 
     }
 }

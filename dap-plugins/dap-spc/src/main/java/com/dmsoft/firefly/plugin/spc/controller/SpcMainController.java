@@ -3,7 +3,10 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
@@ -21,6 +24,8 @@ import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -58,6 +63,8 @@ public class SpcMainController implements Initializable {
 
     private SearchDataFrame dataFrame;
     private SpcAnalysisConfigDto analysisConfigDto;
+    private List<SearchConditionDto> initSearchConditionDtoList;
+
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private SpcSettingService spcSettingService = RuntimeContext.getBean(SpcSettingService.class);
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
@@ -107,6 +114,7 @@ public class SpcMainController implements Initializable {
      */
     public void clearAnalysisShowData(){
         statisticalResultController.clearStatisticalResultData();
+        viewDataController.setViewData(null);
     }
 
     private void initComponentEvent() {
@@ -117,7 +125,62 @@ public class SpcMainController implements Initializable {
     }
 
     private void getResetBtnEvent() {
+        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+        windowProgressTipController.addProcessMonitorListener(new WindowCustomListener() {
+            @Override
+            public boolean onShowCustomEvent() {
+                System.out.println("show");
 
+                return false;
+            }
+
+            @Override
+            public boolean onCloseAndCancelCustomEvent() {
+                //to do
+                System.out.println("close");
+                return false;
+            }
+
+            @Override
+            public boolean onOkCustomEvent() {
+                System.out.println("ok");
+
+                return false;
+            }
+        });
+        Service<Integer> service = new Service<Integer>() {
+            @Override
+            protected Task<Integer> createTask() {
+                return new Task<Integer>() {
+                    @Override
+                    protected Integer call() throws Exception {
+                        Thread.sleep(100);
+                        Job job = new Job(ParamKeys.SPC_RESET_JOB_PIPELINE);
+                        job.addProcessMonitorListener(event -> {
+                            System.out.println("event*****" + event.getPoint());
+                            updateProgress(event.getPoint(), 100);
+                        });
+                        Map paramMap = Maps.newHashMap();
+                        paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, initSearchConditionDtoList);
+                        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
+                        paramMap.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
+
+                        Object returnValue = manager.doJobSyn(job, paramMap);
+                        if (returnValue == null) {
+                            //todo message tip
+
+                        } else {
+                            clearAnalysisShowData();
+                            List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
+                            setStatisticalResultData(spcStatisticalResultAlarmDtoList);
+                        }
+                        return null;
+                    }
+                };
+            }
+        };
+        windowProgressTipController.getTaskProgress().progressProperty().bind(service.progressProperty());
+        service.start();
     }
 
     private void getPrintBtnEvent() {
@@ -262,6 +325,14 @@ public class SpcMainController implements Initializable {
 
     public void setAnalysisConfigDto(SpcAnalysisConfigDto analysisConfigDto) {
         this.analysisConfigDto = analysisConfigDto;
+    }
+
+    public List<SearchConditionDto> getInitSearchConditionDtoList() {
+        return initSearchConditionDtoList;
+    }
+
+    public void setInitSearchConditionDtoList(List<SearchConditionDto> initSearchConditionDtoList) {
+        this.initSearchConditionDtoList = initSearchConditionDtoList;
     }
 
     private List<SearchConditionDto> buildRefreshSearchConditionData() {

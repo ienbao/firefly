@@ -4,7 +4,9 @@ import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrViewDataDto;
+import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.google.common.collect.Maps;
@@ -38,14 +40,16 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
     private Map<String, RadioButton> grrRadioButton = Maps.newHashMap();
     private ToggleGroup group = new ToggleGroup();
     private boolean isSlot;
+    private Map<String, TestItemWithTypeDto> typeDtoMap = Maps.newHashMap();
 
     /**
      * constructor
      *
-     * @param grrDataFrameDto grr data frame dto
-     * @param isSlot          is slot or not
+     * @param grrDataFrameDto    grr data frame dto
+     * @param searchConditionDto search condition dto
+     * @param isSlot             is slot or not
      */
-    public GrrViewDataDFBackupModel(GrrDataFrameDto grrDataFrameDto, boolean isSlot) {
+    public GrrViewDataDFBackupModel(GrrDataFrameDto grrDataFrameDto, SearchConditionDto searchConditionDto, boolean isSlot) {
         this.grrDataFrameDto = grrDataFrameDto;
         this.isSlot = isSlot;
         this.headerArray = FXCollections.observableArrayList(grrDataFrameDto.getDataFrame().getAllTestItemName());
@@ -66,6 +70,9 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
         }
         if (grrDataFrameDto.getIncludeDatas() != null && !grrDataFrameDto.getIncludeDatas().isEmpty()) {
             selectChange(grrDataFrameDto.getIncludeDatas().get(0));
+        }
+        for (TestItemWithTypeDto testItemWithTypeDto : searchConditionDto.getSelectedTestItemDtos()) {
+            this.typeDtoMap.put(testItemWithTypeDto.getTestItemName(), testItemWithTypeDto);
         }
     }
 
@@ -137,7 +144,7 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
             } else if (tableCell.getText() != null && !DAPStringUtils.isNumeric(tableCell.getText()) && !DAPStringUtils.isSpecialBlank(tableCell.getText())) {
                 tableCell.setStyle("-fx-text-fill: #aaaaaa");
             } else if (tableCell.getText() != null && DAPStringUtils.isNumeric(tableCell.getText())) {
-                if (!RangeUtils.isPass(tableCell.getText(), this.grrDataFrameDto.getDataFrame().getTestItemWithTypeDto(column))) {
+                if (!RangeUtils.isPass(tableCell.getText(), this.typeDtoMap.get(column))) {
                     tableCell.setStyle("-fx-background-color: #ea2028; -fx-text-fill: white");
                 }
             }
@@ -180,10 +187,15 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
      */
     public GrrViewDataDto getSelectedViewDataDto() {
         if (this.group.getSelectedToggle() != null) {
-            RadioButton rb = (RadioButton) this.group.getSelectedToggle();
-            String selectRowKey = getSelectRowKey(rb);
-            if (selectRowKey != null) {
-                return this.grrViewDataDtoMap.get(selectRowKey);
+            RadioButton rb = null;
+            for (String s : getRowKeyArray()) {
+                if (grrRadioButton.get(s).isSelected()) {
+                    rb = grrRadioButton.get(s);
+                    String selectRowKey = getSelectRowKey(rb);
+                    if (selectRowKey != null) {
+                        return this.grrViewDataDtoMap.get(selectRowKey);
+                    }
+                }
             }
         }
         return null;

@@ -24,6 +24,7 @@ public class ParamKeys {
     //pipeline
     public static final String SPC_ANALYSIS_JOB_PIPELINE = "spcAnalysisJobPipeline";
     public static final String SPC_REFRESH_JOB_PIPELINE = "spcRefreshJobPipeline";
+    public static final String SPC_RESET_JOB_PIPELINE = "spcResetJobPipeline";
     public static final String FIND_SPC_SETTING_DATA_JOP_PIPELINE = "findSpcSettingDataJobPipeline";
     public static final String SAVE_SPC_SETTING_DATA_JOP_PIPELINE = "saveSpcSettingDataJobPipeline";
 

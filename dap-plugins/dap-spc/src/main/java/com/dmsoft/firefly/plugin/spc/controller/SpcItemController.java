@@ -274,31 +274,33 @@ public class SpcItemController implements Initializable {
                 return new Task<Integer>() {
                     @Override
                     protected Integer call() throws Exception {
-                            Thread.sleep(100);
-                            Job job = new Job(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
-                            job.addProcessMonitorListener(event -> {
-                                System.out.println("event*****" + event.getPoint());
-                                updateProgress( event.getPoint(), 100);
-                            });
-                            Map paramMap = Maps.newHashMap();
-                            //todo delete
-                            spcAnalysisConfigDto.setSubgroupSize(10);
-                            spcAnalysisConfigDto.setIntervalNumber(8);
-                            paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
-                            paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
-                            paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
-                            paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+                        Thread.sleep(100);
+                        Job job = new Job(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
+                        job.addProcessMonitorListener(event -> {
+                            System.out.println("event*****" + event.getPoint());
+                            updateProgress(event.getPoint(), 100);
+                        });
+                        Map paramMap = Maps.newHashMap();
+                        //todo delete
+                        spcAnalysisConfigDto.setSubgroupSize(10);
+                        spcAnalysisConfigDto.setIntervalNumber(8);
+                        paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
+                        paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+                        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
+                        paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
 
-                            spcMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
+                        spcMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
+                        spcMainController.setInitSearchConditionDtoList(searchConditionDtoList);
 
-                            Object returnValue = manager.doJobSyn(job, paramMap, spcMainController);
-                            if (returnValue == null) {
-                                //todo message tip
+                        Object returnValue = manager.doJobSyn(job, paramMap, spcMainController);
+                        if (returnValue == null) {
+                            //todo message tip
 
-                            } else {
-                                List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
-                                spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
-                            }
+                        } else {
+                            spcMainController.clearAnalysisShowData();
+                            List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
+                            spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
+                        }
                         return null;
                     }
                 };
@@ -427,7 +429,7 @@ public class SpcItemController implements Initializable {
     private void exportLeftConfig() {
         SpcLeftConfigDto leftConfigDto = new SpcLeftConfigDto();
         leftConfigDto.setItems(getSelectedItem());
-            leftConfigDto.setBasicSearchs(searchTab.getBasicSearch());
+        leftConfigDto.setBasicSearchs(searchTab.getBasicSearch());
         if (searchTab.getAdvanceText().getText() != null) {
             leftConfigDto.setAdvanceSearch(searchTab.getAdvanceText().getText().toString());
         }
