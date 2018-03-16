@@ -72,9 +72,8 @@ public class GrrResultController implements Initializable {
 
     private String appKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " ";
     private String trailKey = GrrFxmlAndLanguageUtils.getString("TRAIL") + " ";
-
-    List<String> parts = Lists.newArrayList("part1", "part2", "part3", "part4");
-    List<String> appraisers = Lists.newArrayList("1", "2", "3", "4");
+    private Set<String> parts = Sets.newLinkedHashSet();
+    private Set<String> appraisers = Sets.newLinkedHashSet();
 
     /**
      * Init grr main controller
@@ -94,101 +93,86 @@ public class GrrResultController implements Initializable {
     }
 
     public void analyzeGrrResult(List<GrrSummaryDto> grrSummaryDtos, GrrDetailDto grrDetailDto) {
+
+        List<GrrViewDataDto> viewDataDtos = grrMainController.getGrrDataFrame().getIncludeDatas();
+        viewDataDtos.forEach(viewDataDto -> {
+            parts.add(viewDataDto.getPart());
+            appraisers.add(viewDataDto.getOperator());
+        });
         this.setSummaryData(grrSummaryDtos);
-        this.setItemResultData(grrMainController.getGrrDataFrame(),  grrMainController.getSearchConditionDto(), grrSummaryDtos.get(0).getItemName());
+        this.setItemResultData(grrMainController.getGrrDataFrame(),
+                grrMainController.getSearchConditionDto(),
+                grrSummaryDtos.get(0).getItemName());
         this.setAnalysisItemResultData(grrDetailDto);
     }
 
-    public void analyzeGrrResult(GrrDataFrameDto grrDataFrameDto, SearchConditionDto conditionDto) {
+//    public void analyzeGrrResult(GrrDataFrameDto grrDataFrameDto, SearchConditionDto conditionDto) {
+//
+//        Map summaryParamMap = Maps.newHashMap();
+//        Map detailParamMap = Maps.newHashMap();
+//        List<String> includeRows = Lists.newArrayList();
+//        String itemName = conditionDto.getSelectedTestItemDtos().get(0).getTestItemName();
+//        Job summaryJob = new Job(ParamKeys.GRR_ANALYSIS_JOB_PIPELINE);
+//        Job detailJob = new Job(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE);
+//        grrDataFrameDto.getIncludeDatas().forEach(grrViewDataDto -> includeRows.add(grrViewDataDto.getRowKey()));
+//        GrrAnalysisConfigDto analysisConfigDto = buildGrrAnalysisConfig(conditionDto);
+//        summaryParamMap.put(ParamKeys.ANALYSIS_GRR_INCLUDE_ROWS, includeRows);
+//        summaryParamMap.put(ParamKeys.SEARCH_DATA_FRAME, grrDataFrameDto.getDataFrame());
+//        summaryParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG, analysisConfigDto);
+//        summaryParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_TESTITEM, conditionDto.getSelectedTestItemDtos());
+//
+//        detailParamMap.put(ParamKeys.SEARCH_DATA_COLUMN, grrDataFrameDto.getDataFrame().getDataColumn(itemName, null));
+//        detailParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_TESTITEM, conditionDto.getSelectedTestItemDtos().get(0));
+//        detailParamMap.put(ParamKeys.ANALYSIS_GRR_INCLUDE_ROWS, includeRows);
+//        detailParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG, analysisConfigDto);
+//        this.removeAllResultData();
+//        this.setItemResultData(grrDataFrameDto,  conditionDto, itemName);
+//        Platform.runLater(() -> manager.doJobASyn(summaryJob, returnValue -> {
+//            if (returnValue == null) {
+//                //todo message tip
+//                return;
+//            }
+//            setSummaryData((List<GrrSummaryDto>) returnValue);
+//
+//        }, summaryParamMap, grrMainController));
+//
+//        Platform.runLater(() -> manager.doJobASyn(detailJob, returnValue -> {
+//            if (returnValue == null) {
+//                //todo message tip
+//                return;
+//            }
+//            setAnalysisItemResultData((GrrDetailDto) returnValue);
+//
+//        }, detailParamMap, grrMainController));
+//    }
 
-        Map summaryParamMap = Maps.newHashMap();
-        Map detailParamMap = Maps.newHashMap();
-        List<String> includeRows = Lists.newArrayList();
-        String itemName = conditionDto.getSelectedTestItemDtos().get(0).getTestItemName();
-        Job summaryJob = new Job(ParamKeys.GRR_ANALYSIS_JOB_PIPELINE);
-        Job detailJob = new Job(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE);
-        grrDataFrameDto.getIncludeDatas().forEach(grrViewDataDto -> includeRows.add(grrViewDataDto.getRowKey()));
-        GrrAnalysisConfigDto analysisConfigDto = buildGrrAnalysisConfig(conditionDto);
-        summaryParamMap.put(ParamKeys.ANALYSIS_GRR_INCLUDE_ROWS, includeRows);
-        summaryParamMap.put(ParamKeys.SEARCH_DATA_FRAME, grrDataFrameDto.getDataFrame());
-        summaryParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG, analysisConfigDto);
-        summaryParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_TESTITEM, conditionDto.getSelectedTestItemDtos());
-
-        detailParamMap.put(ParamKeys.SEARCH_DATA_COLUMN, grrDataFrameDto.getDataFrame().getDataColumn(itemName, null));
-        detailParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_TESTITEM, conditionDto.getSelectedTestItemDtos().get(0));
-        detailParamMap.put(ParamKeys.ANALYSIS_GRR_INCLUDE_ROWS, includeRows);
-        detailParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG, analysisConfigDto);
-        this.removeAllResultData();
-        this.setItemResultData(grrDataFrameDto,  conditionDto, itemName);
-        Platform.runLater(() -> manager.doJobASyn(summaryJob, returnValue -> {
-            if (returnValue == null) {
-                //todo message tip
-                return;
-            }
-            setSummaryData((List<GrrSummaryDto>) returnValue);
-
-        }, summaryParamMap, grrMainController));
-
-        Platform.runLater(() -> manager.doJobASyn(detailJob, returnValue -> {
-            if (returnValue == null) {
-                //todo message tip
-                return;
-            }
-            setAnalysisItemResultData((GrrDetailDto) returnValue);
-
-        }, detailParamMap, grrMainController));
-    }
-
-    private GrrAnalysisConfigDto buildGrrAnalysisConfig(SearchConditionDto conditionDto) {
-        GrrConfigDto configDto = grrConfigService.findGrrConfig();
-        GrrAnalysisConfigDto analysisConfigDto = new GrrAnalysisConfigDto();
-        analysisConfigDto.setAppraiser(conditionDto.getAppraiserInt());
-        analysisConfigDto.setTrial(conditionDto.getTrialInt());
-        analysisConfigDto.setPart(conditionDto.getPartInt());
-        analysisConfigDto.setCoverage(configDto.getCoverage());
-        analysisConfigDto.setMethod(configDto.getAnalysisMethod());
-        analysisConfigDto.setSignificance(Double.valueOf(configDto.getSignLevel()));
-        return analysisConfigDto;
-    }
+//    private GrrAnalysisConfigDto buildGrrAnalysisConfig(SearchConditionDto conditionDto) {
+//        GrrConfigDto configDto = grrConfigService.findGrrConfig();
+//        GrrAnalysisConfigDto analysisConfigDto = new GrrAnalysisConfigDto();
+//        analysisConfigDto.setAppraiser(conditionDto.getAppraiserInt());
+//        analysisConfigDto.setTrial(conditionDto.getTrialInt());
+//        analysisConfigDto.setPart(conditionDto.getPartInt());
+//        analysisConfigDto.setCoverage(configDto.getCoverage());
+//        analysisConfigDto.setMethod(configDto.getAnalysisMethod());
+//        analysisConfigDto.setSignificance(Double.valueOf(configDto.getSignLevel()));
+//        return analysisConfigDto;
+//    }
 
 
     private void setSummaryData(List<GrrSummaryDto> summaryData) {
-
-//        List<GrrSummaryDto> summaryDtos = Lists.newArrayList();
-//        for (int i = 0; i < 5; i++) {
-//            GrrSummaryDto grrSummaryDto = new GrrSummaryDto();
-//            GrrSummaryResultDto summaryResultDto = new GrrSummaryResultDto();
-//            grrSummaryDto.setItemName("A" + (i + 1));
-//            summaryResultDto.setLsl(Double.valueOf(i + 1));
-//            summaryResultDto.setUsl(Double.valueOf(i * 10 + 1));
-//            summaryResultDto.setTolerance(Double.valueOf(i + 2));
-//            summaryResultDto.setRepeatabilityOnTolerance(Double.valueOf(i * 2 + 2));
-//            summaryResultDto.setRepeatabilityOnContribution(Double.valueOf(i * 3 + 2));
-//            summaryResultDto.setReproducibilityOnTolerance(Double.valueOf(i * 2 + 3));
-//            summaryResultDto.setReproducibilityOnContribution(Double.valueOf(i * 3 + 3));
-//            summaryResultDto.setGrrOnTolerance(Double.valueOf(i * 4 + 2));
-//            summaryResultDto.setGrrOnContribution(Double.valueOf(i * 4 + 3));
-//            grrSummaryDto.setSummaryResultDto(summaryResultDto);
-//            summaryDtos.add(grrSummaryDto);
-//        }
         summaryModel.setData(summaryData, resultBasedCmb.getSelectionModel().getSelectedItem().toString());
     }
 
     private void setItemResultData(GrrDataFrameDto grrDataFrameDto, SearchConditionDto conditionDto, String itemName) {
 
         GrrItemResultDto itemResultDto = DataConvertUtils.convertToItemResult(grrDataFrameDto, itemName, "");
-        List<GrrViewDataDto> viewDataDtos = grrDataFrameDto.getIncludeDatas();
-
-        Set<String> headerArray = Sets.newHashSet();
-//        String appraiserKey = DAPStringUtils.isBlank(conditionDto.getAppraiser()) ? UIConstant.APPRAISER_NORMAL_KEY : conditionDto.getAppraiser();
-//        String trialKey = UIConstant.TRIAL_KEY;
+        Set<String> headerArray = Sets.newLinkedHashSet();
         headerArray.add(appKey);
         headerArray.add(trailKey);
-
+        headerArray.addAll(parts);
         List<String> rowKeyArray = buildItemTbRowKey(conditionDto.getAppraiserInt(),
                 conditionDto.getTrialInt(),
-                conditionDto.getAppraisers());
-        viewDataDtos.forEach(viewDataDto -> headerArray.add(viewDataDto.getPart()));
+                Lists.newArrayList(appraisers));
         itemResultModel.setRowKeyArray(FXCollections.observableArrayList(rowKeyArray));
         itemResultModel.setHeaderArray(FXCollections.observableArrayList(headerArray));
         itemResultModel.setData(grrDataFrameDto.getDataFrame(),
@@ -236,11 +220,11 @@ public class GrrResultController implements Initializable {
     }
 
     private void setAnalysisItemResultData(GrrDetailDto grrDetailDto) {
-        setComponentChart(buildComponentChartData());
-        setPartAppraiserChart(buildPartAppraiserChartData(), parts, appraisers);
-        setXBarAppraiserChart(buildXBarAppraiserChartData(), parts, appraisers);
-        setRrByAppraiserChart(buildRrByAppraiserChartData());
-        setAnovaAndSourceTb(buildAnovaAndSourceData());
+        setComponentChart(grrDetailDto.getGrrDetailResultDto().getComponentChartDto());
+        setPartAppraiserChart(grrDetailDto.getGrrDetailResultDto().getPartAppraiserChartDto(), Lists.newArrayList(parts), Lists.newArrayList(appraisers));
+        setXBarAppraiserChart(grrDetailDto.getGrrDetailResultDto().getXbarAppraiserChartDto(), Lists.newArrayList(parts), Lists.newArrayList(appraisers));
+        setRrByAppraiserChart(grrDetailDto.getGrrDetailResultDto().getRrbyAppraiserChartDto());
+        setAnovaAndSourceTb(grrDetailDto.getGrrDetailResultDto().getAnovaAndSourceResultDto());
     }
 
     private void removeAllResultData() {

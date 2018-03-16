@@ -93,8 +93,8 @@ public class GrrServiceImpl implements GrrService {
         } else {
             grrAnalysisDataDto.setUsl(dataColumn.getTestItemWithTypeDto().getUsl());
         }
-        GrrDetailResultDto resultDto = getAnalysisService().analyzeDetailResult(grrAnalysisDataDto, configDto);
         grrAnalysisDataDto.setDataList(doubleList);
+        GrrDetailResultDto resultDto = getAnalysisService().analyzeDetailResult(grrAnalysisDataDto, configDto);
         result.setItemName(testItemDto.getTestItemName());
         result.setGrrDetailResultDto(resultDto);
         return result;
