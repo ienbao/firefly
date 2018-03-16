@@ -4,6 +4,7 @@ import com.dmsoft.firefly.plugin.grr.dto.GrrDetailDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrSummaryDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrTestItemDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnalysisConfigDto;
+import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 
 import java.util.List;
@@ -27,10 +28,10 @@ public interface GrrService {
     /**
      * method to get detail result
      *
-     * @param dataFrame   data frame
+     * @param dataColumn   data frame
      * @param testItemDto test item dto, ps: when the usl and lsl doesn't exist in test item dto, the api will search in data frame
      * @param configDto   config dto
      * @return grr detail dto
      */
-    GrrDetailDto getDetailResult(SearchDataFrame dataFrame, GrrTestItemDto testItemDto, GrrAnalysisConfigDto configDto);
+    GrrDetailDto getDetailResult(DataColumn dataColumn, GrrTestItemDto testItemDto, GrrAnalysisConfigDto configDto);
 }

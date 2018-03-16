@@ -24,7 +24,7 @@ public class GetSpcChartResultHandler implements JobInboundHandler {
     @SuppressWarnings("unchecked")
     public void doJob(JobHandlerContext context, Object... in) throws Exception {
         if (in == null || !(in[0] instanceof Map)) {
-            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11001));
+            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11002));
         }
         Map<String, Object> param = (Map) in[0];
         SearchDataFrame dataFrame = (SearchDataFrame) param.get(ParamKeys.SEARCH_DATA_FRAME);

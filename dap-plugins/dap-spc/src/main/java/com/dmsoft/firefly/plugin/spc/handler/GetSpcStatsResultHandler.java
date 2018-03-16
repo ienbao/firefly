@@ -4,7 +4,6 @@ import com.dmsoft.firefly.plugin.spc.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcAnalysisConfigDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
-import com.dmsoft.firefly.plugin.spc.service.SpcAnalysisService;
 import com.dmsoft.firefly.plugin.spc.service.SpcService;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionCode;
@@ -30,7 +29,7 @@ public class GetSpcStatsResultHandler implements JobInboundHandler {
     @SuppressWarnings("unchecked")
     public void doJob(JobHandlerContext context, Object... in) throws Exception {
         if (in == null || !(in[0] instanceof Map)) {
-            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11001));
+            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11002));
         }
         Map<String, Object> param = (Map) in[0];
         SearchDataFrame dataFrame = (SearchDataFrame) param.get(ParamKeys.SEARCH_DATA_FRAME);

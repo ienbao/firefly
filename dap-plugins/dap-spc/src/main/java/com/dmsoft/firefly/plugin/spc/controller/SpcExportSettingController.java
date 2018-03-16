@@ -63,9 +63,9 @@ public class SpcExportSettingController implements Initializable {
             String key = spcExportItemKeys[i].getCode();
             if (SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode().equals(key)) {
                 checkBoxMap.put(key, exportSummary);
-            } else if (SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode().equals(key)) {
-                checkBoxMap.put(key, exportDetailSheet);
             } else if (SpcExportItemKey.EXPORT_DETAIL_SHEET.getCode().equals(key)) {
+                checkBoxMap.put(key, exportDetailSheet);
+            } else if (SpcExportItemKey.EXPORT_CHARTS.getCode().equals(key)) {
                 checkBoxMap.put(key, exportCharts);
             } else if (SpcExportItemKey.ND_CHART.getCode().equals(key)) {
                 checkBoxMap.put(key, ndChart);

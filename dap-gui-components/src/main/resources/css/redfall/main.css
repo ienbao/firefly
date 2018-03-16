@@ -565,8 +565,8 @@
 .text-field-filter {
     -fx-border-color: #ffffff;
     -fx-background-color: #ffffff;
-    -fx-min-height: 22;
-    -fx-max-height: 22;
+    -fx-min-height: 20;
+    -fx-max-height: 20;
     -fx-font: 12 arial;
     -fx-padding: 0 10 1 10;
 }

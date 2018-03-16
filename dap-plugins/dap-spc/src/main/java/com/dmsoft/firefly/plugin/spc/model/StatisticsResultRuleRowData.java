@@ -27,6 +27,18 @@ public class StatisticsResultRuleRowData {
         this.statisticName = new SimpleStringProperty(customAlarmDto.getStatisticName());
         this.lowerLimit = new SimpleStringProperty(DAPStringUtils.toStringFromDouble(customAlarmDto.getLowerLimit()));
         this.upperLimit = new SimpleStringProperty(DAPStringUtils.toStringFromDouble(customAlarmDto.getUpperLimit()));
+        upperLimit.addListener((ov, b1, b2) -> {
+            if (!DAPStringUtils.isNumeric(b2)) {
+                return;
+            }
+            customAlarmDto.setUpperLimit(Double.valueOf(b2));
+        });
+        lowerLimit.addListener((ov, b1, b2) -> {
+            if (!DAPStringUtils.isNumeric(b2)) {
+                return;
+            }
+            customAlarmDto.setLowerLimit(Double.valueOf(b2));
+        });
     }
 
     public String getStatisticName() {

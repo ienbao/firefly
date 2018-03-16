@@ -3,9 +3,12 @@ package com.dmsoft.firefly.plugin.grr.service.impl;
 import com.dmsoft.firefly.plugin.grr.GrrPlugin;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
 import com.dmsoft.firefly.plugin.grr.service.GrrAnalysisService;
+import com.dmsoft.firefly.plugin.grr.utils.GrrExceptionCode;
+import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.enums.GrrAnalysisMethod;
 import com.dmsoft.firefly.plugin.grr.utils.enums.GrrResultName;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.apis.IAnalysis;
 import com.dmsoft.firefly.sdk.plugin.apis.annotation.Analysis;
@@ -32,29 +35,43 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
     @Override
     public GrrSummaryResultDto analyzeSummaryResult(GrrAnalysisDataDto analysisDataDto, GrrAnalysisConfigDto configDto) {
         logger.debug("Analyzing GRR summary result ...");
-        Rengine engine = prepareEngine(analysisDataDto, configDto);
-        GrrSummaryResultDto result = getSummaryResult(engine, configDto.getMethod());
-        if (DAPStringUtils.isNumeric(analysisDataDto.getUsl())) {
-            result.setUsl(Double.valueOf(analysisDataDto.getUsl()));
+        GrrSummaryResultDto result = new GrrSummaryResultDto();
+        try {
+            Rengine engine = prepareEngine(analysisDataDto, configDto);
+            result = getSummaryResult(engine, configDto.getMethod());
+            if (DAPStringUtils.isNumeric(analysisDataDto.getUsl())) {
+                result.setUsl(Double.valueOf(analysisDataDto.getUsl()));
+            }
+            if (DAPStringUtils.isNumeric(analysisDataDto.getLsl())) {
+                result.setLsl(Double.valueOf(analysisDataDto.getLsl()));
+            }
+            if (result.getLsl() != null && result.getUsl() != null) {
+                result.setTolerance(result.getUsl() - result.getLsl());
+            }
+            SemaphoreUtils.releaseSemaphore(engine);
+            logger.info("Analyze GRR summary result done");
+        } catch (Exception e) {
+            SemaphoreUtils.releaseSemaphore(privateEngine);
+            logger.error("Analyze GRR summary result error, exception message = {}", e.getMessage());
+            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12013));
         }
-        if (DAPStringUtils.isNumeric(analysisDataDto.getLsl())) {
-            result.setLsl(Double.valueOf(analysisDataDto.getLsl()));
-        }
-        if (result.getLsl() != null && result.getUsl() != null) {
-            result.setTolerance(result.getUsl() - result.getLsl());
-        }
-        SemaphoreUtils.releaseSemaphore(engine);
-        logger.info("Analyze Grr summary result done");
         return result;
     }
 
     @Override
     public GrrDetailResultDto analyzeDetailResult(GrrAnalysisDataDto analysisDataDto, GrrAnalysisConfigDto configDto) {
         logger.debug("Analyzing GRR detail result ...");
-        Rengine engine = prepareEngine(analysisDataDto, configDto);
-        GrrDetailResultDto result = getGrrDetailResult(engine, configDto);
-        SemaphoreUtils.releaseSemaphore(engine);
-        logger.info("Analyze GRR detail result done.");
+        GrrDetailResultDto result = new GrrDetailResultDto();
+        try {
+            Rengine engine = prepareEngine(analysisDataDto, configDto);
+            result = getGrrDetailResult(engine, configDto);
+            SemaphoreUtils.releaseSemaphore(engine);
+            logger.info("Analyze GRR detail result done.");
+        } catch (Exception e) {
+            SemaphoreUtils.releaseSemaphore(privateEngine);
+            logger.error("Analyze Grr detail result error, exception message = {}", e.getMessage());
+            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12013));
+        }
         return result;
     }
 
@@ -67,7 +84,6 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
                 privateEngine.end();
                 RuntimeContext.registerBean(Rengine.class, privateEngine);
             }
-            SemaphoreUtils.lockSemaphore(privateEngine);
             String anovaPathName = "rscripts/intgrr_anova.R";
             String xrPathName = "rscripts/intgrr_xr.R";
             String anovaScriptPath = RuntimeContext.getBean(PluginContext.class).getEnabledPluginInfo(GrrPlugin.GRR_PLUGIN_ID).getFolderPath() + "/" + anovaPathName;
@@ -75,6 +91,7 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
             String xrScriptPath = RuntimeContext.getBean(PluginContext.class).getEnabledPluginInfo(GrrPlugin.GRR_PLUGIN_ID).getFolderPath() + "/" + xrPathName;
             privateEngine.eval("source(\"" + xrScriptPath + "\")");
         }
+        SemaphoreUtils.lockSemaphore(privateEngine);
         privateEngine.eval("rm(list=setdiff(ls(), ls()[grep(\"^int\", ls())]))");
         double[] dataArray = new double[dataDto.getDataList().size()];
         for (int i = 0; i < dataDto.getDataList().size(); i++) {

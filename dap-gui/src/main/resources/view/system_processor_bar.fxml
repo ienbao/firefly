@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
@@ -40,7 +41,7 @@
                            <Font name="Arial" size="22.0" />
                         </font>
                      </Label>
-                     <ProgressBar fx:id="progressBar" maxHeight="2.0" maxWidth="355.0" minHeight="2.0" minWidth="355.0" prefHeight="2.0" prefWidth="355.0" progress="0.45" GridPane.rowIndex="3" />
+                     <ProgressBar fx:id="progressBar" maxHeight="2.0" maxWidth="350.0" minHeight="2.0" minWidth="350.0" prefHeight="2.0" prefWidth="350.0" progress="0.45" GridPane.rowIndex="3" />
                      <Label prefHeight="16.0" prefWidth="360.0" text="Initializing UI..." GridPane.rowIndex="4">
                         <font>
                            <Font name="Arial" size="12.0" />

@@ -9,6 +9,12 @@ import javafx.scene.control.ScrollPane;
  */
 public class ScrollPaneValueUtils {
 
+    /**
+     * Set scroll pane vertical scroll bar location
+     *
+     * @param scrollPane scrollPane
+     * @param node       it will move to node
+     */
     public static void setScrollVerticalValue(ScrollPane scrollPane, Node node) {
         final Bounds visibleBounds = scrollPane.getViewportBounds();
         double totalHeight = scrollPane.getContent().getBoundsInLocal().getHeight();//总高度

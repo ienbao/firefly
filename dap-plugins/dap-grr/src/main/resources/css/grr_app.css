@@ -1,0 +1,9 @@
+#analysisDataTB, #analysisDataTB:focused {
+    -fx-border-width: 1 0 1 0;
+    -fx-border-color: #DCDCDC;
+}
+
+#exchangeDataTB, #exchangeDataTB:focused {
+    -fx-border-width: 1 0 1 0;
+    -fx-border-color: #DCDCDC;
+}

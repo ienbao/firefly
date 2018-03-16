@@ -31,14 +31,14 @@ public class UIConstant {
     };
 
     public static final String[] SPC_EXPORT_RESULT = new String[]{
-            "Samples", "AVG", "Max", "Min", "StDev", "LSL", "USL", "Center", "CPK", "Range", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness",
+            "Samples", "AVG", "Max", "Min", "SD", "LSL", "USL", "Center", "CPK", "Range", "AVG-3SD", "AVG+3SD", "Kurtosis", "Skewness",
             "CA", "CP", "CPL", "CPU", "Within PPM", "PP", "PPK", "PPL", "PPU", "OverAll PPM"
     };
     public static final String[] SPC_EXPORT_A = new String[]{
-            "CA", "CPK", "CP", "CPL", "CPU", "Within PPM", "PP", "PPK", "PPL", "PPU", "OverAll PPM"
+            "CA", "CPK", "CP", "CPL", "CPU", "Within PPM", "PPK", "PP", "PPL", "PPU", "OverAll PPM"
     };
     public static final String[] SPC_EXPORT_B = new String[]{
-            "Samples", "AVG", "Max", "Min", "StDev", "LSL", "USL", "Center", "Range", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness",
+            "Samples", "AVG", "Max", "Min", "Center", "Range", "SD", "AVG-3SD", "AVG+3SD", "Kurtosis", "Skewness"
     };
 
     public static final String[] SPC_LEVEL_RESULT = new String[]{
@@ -74,7 +74,7 @@ public class UIConstant {
 
     public static final String[] EXPORT_SPC_NDC_LABELS = {"CA", "CPK", "CP", "CPL", "CPU", "Within PPM"};
     public static final String[] EXPORT_SPC_DESCRIPTIVE = {"Descriptive Statistics", "Samples", "AVG", "Max", "Min", "Center", "Range", "SD", "AVG-3SD", "AVG+3SD", "Kurtosis", "Skewness"};
-    public static final String[] EXPORT_SPC_PERFORMANCE = {"Performace Cability Index", "PPK", "PP", "PPL", "PPU", "Overall PPM"};
+    public static final String[] EXPORT_SPC_PERFORMANCE = {"Performace Cability Index", "PPK", "PP", "PPL", "PPU", "OverAll PPM"};
     public static final String[] SPC_USL_LSL = new String[]{"USL", "LSL"};
     public static final String[] SPC_UCL_LCL = new String[]{"UCL", "LCL"};
     public static final String SPC_CHART_CL = "cl";

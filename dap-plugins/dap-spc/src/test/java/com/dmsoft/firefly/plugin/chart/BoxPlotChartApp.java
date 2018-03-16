@@ -78,7 +78,7 @@ public class BoxPlotChartApp extends Application {
 
 //        XYChart.Series<Number, Number> series = new XYChart.Series<Number, Number>();
 //        chartData.forEach(data -> {
-//            series.getData().add(
+//            series.getCellData().add(
 //                    new XYChart.Data(
 //                            data.getxPos(),
 //                            data.getQ3(),

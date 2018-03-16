@@ -18,11 +18,18 @@ public interface DataColumn {
     TestItemWithTypeDto getTestItemWithTypeDto();
 
     /**
-     * method to get data string array.
+     * method to get cell data array.
+     *
+     * @return cell data array
+     */
+    List<CellData> getCellData();
+
+    /**
+     * method to get data string array
      *
      * @return data string array
      */
-    List<CellData> getData();
+    List<String> getData();
 
     /**
      * method to get data by row key
@@ -30,7 +37,15 @@ public interface DataColumn {
      * @param rowKey row key
      * @return value
      */
-    String getDataValue(String rowKey);
+    String getData(String rowKey);
+
+    /**
+     * method to get data by row kyes
+     *
+     * @param rowKeys row key
+     * @return list of value
+     */
+    List<String> getData(List<String> rowKeys);
 
     /**
      * method to get data in used value by row key

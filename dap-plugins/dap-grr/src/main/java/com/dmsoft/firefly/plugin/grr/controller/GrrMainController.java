@@ -30,6 +30,8 @@ public class GrrMainController implements Initializable {
     private List<String> excludeRows;
     @FXML
     private GrrItemController grrItemController;
+    @FXML
+    private GrrResultController grrResultController;
 
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
 
@@ -39,6 +41,7 @@ public class GrrMainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         grrItemController.init(this);
+        grrResultController.init(this);
         initBtnIcon();
         initComponentEvents();
     }

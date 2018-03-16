@@ -34,8 +34,7 @@ public class SemaphoreUtils {
      * @return semaphore
      */
     public static synchronized Semaphore acquireSemaphore(Object o) {
-        String lockName = RuntimeContext.getSimpleBeanName(o.getClass().getName());
-        return acquireSemaphore(lockName);
+        return acquireSemaphore(RuntimeContext.getSimpleBeanName(o.getClass().getName()));
     }
 
     /**
@@ -45,9 +44,8 @@ public class SemaphoreUtils {
      * @return semaphore
      */
     public static synchronized boolean lockSemaphore(String lockName) {
-        Semaphore semaphore = acquireSemaphore(lockName);
         try {
-            semaphore.acquire();
+            acquireSemaphore(lockName).acquire();
             return true;
         } catch (InterruptedException e) {
             return false;
@@ -61,8 +59,7 @@ public class SemaphoreUtils {
      * @return semaphore
      */
     public static synchronized boolean lockSemaphore(Object o) {
-        String lockName = RuntimeContext.getSimpleBeanName(o.getClass().getName());
-        return lockSemaphore(lockName);
+        return lockSemaphore(RuntimeContext.getSimpleBeanName(o.getClass().getName()));
     }
 
     /**
@@ -80,7 +77,6 @@ public class SemaphoreUtils {
      * @param o instance
      */
     public static synchronized void releaseSemaphore(Object o) {
-        String lockName = RuntimeContext.getSimpleBeanName(o.getClass().getName());
-        acquireSemaphore(lockName).release();
+        acquireSemaphore(RuntimeContext.getSimpleBeanName(o.getClass().getName())).release();
     }
 }
