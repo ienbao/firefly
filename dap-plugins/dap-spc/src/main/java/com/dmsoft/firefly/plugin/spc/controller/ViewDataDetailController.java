@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
+import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.plugin.spc.model.DetailDataModel;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
@@ -30,7 +30,7 @@ public class ViewDataDetailController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         DetailDataModel model = new DetailDataModel(rowDataDto, typeDtoList);
-        NewTableViewWrapper.decorate(detailTB, model);
+        TableViewWrapper.decorate(detailTB, model);
         detailTB.getColumns().get(0).setPrefWidth(226);
         detailTB.getColumns().get(1).setPrefWidth(163);
     }

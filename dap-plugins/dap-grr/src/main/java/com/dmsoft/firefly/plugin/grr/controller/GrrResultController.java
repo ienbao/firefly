@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
-import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
+import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.plugin.grr.charts.ChartOperateButton;
@@ -171,7 +171,7 @@ public class GrrResultController implements Initializable {
                 itemName,
                 grrDataFrameDto.getIncludeDatas(),
                 itemResultDto);
-        NewTableViewWrapper.decorate(itemDetailTb, itemResultModel);
+        TableViewWrapper.decorate(itemDetailTb, itemResultModel);
     }
 
     private List<String> buildItemTbRowKey(int appraiser, int trial, List<String> appraisers) {

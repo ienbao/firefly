@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @author Can Guan
  */
-public class NewTableViewWrapper {
+public class TableViewWrapper {
     /**
      * method to decorate table view with model
      *
@@ -29,7 +29,7 @@ public class NewTableViewWrapper {
      * @param model     model
      */
     @SuppressWarnings("unchecked")
-    public static void decorate(TableView<String> tableView, NewTableModel model) {
+    public static void decorate(TableView<String> tableView, TableModel model) {
         tableView.getColumns().clear();
         List<TableColumn<String, ?>> columns = Lists.newArrayList();
         for (String s : model.getHeaderArray()) {
@@ -106,7 +106,7 @@ public class NewTableViewWrapper {
         }
     }
 
-    private static TableColumn<String, ?> initColumn(String s, NewTableModel model) {
+    private static TableColumn<String, ?> initColumn(String s, TableModel model) {
         if (model.isEditableTextField(s)) {
             TableColumn<String, String> column = new TableColumn<>(s);
             column.getStyleClass().add("editable-header");

@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author Can Guan
  */
-public interface NewTableModel {
+public interface TableModel {
 
     /**
      * method to get header array

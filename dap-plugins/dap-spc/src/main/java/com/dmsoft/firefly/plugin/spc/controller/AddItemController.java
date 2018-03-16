@@ -3,11 +3,10 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
+import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.plugin.spc.model.AddItemTableModel;
-import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
@@ -67,7 +66,7 @@ public class AddItemController implements Initializable {
 
     private void initComponent() {
         addItemTableModel = new AddItemTableModel();
-        NewTableViewWrapper.decorate(testItemTable, addItemTableModel);
+        TableViewWrapper.decorate(testItemTable, addItemTableModel);
         ((TableColumn) testItemTable.getColumns().get(1)).setPrefWidth(145);
     }
 

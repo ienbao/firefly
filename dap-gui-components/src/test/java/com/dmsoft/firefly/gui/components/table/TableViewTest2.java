@@ -31,7 +31,7 @@ public class TableViewTest2 extends Application {
     public void start(Stage primaryStage) throws Exception {
         TableView<String> tableView = new TableView<>();
         tableView.setEditable(true);
-        NewTableModel model = new NewTableModel() {
+        TableModel model = new TableModel() {
             private ObservableList<String> header = FXCollections.observableArrayList("AA", "BB", "CC", "DD", "EE", "FF");
             private SortedList<String> rowKey = new SortedList<>(FXCollections.observableArrayList("1", "2", "3", "4", "5").filtered(p -> true));
             private Map<String, SimpleObjectProperty<String>> valueMap = new HashMap<>();
@@ -180,7 +180,7 @@ public class TableViewTest2 extends Application {
         pane.add(tableView, 0, 2);
         Scene scene = new Scene(pane);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
-        NewTableViewWrapper.decorate(tableView, model);
+        TableViewWrapper.decorate(tableView, model);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
