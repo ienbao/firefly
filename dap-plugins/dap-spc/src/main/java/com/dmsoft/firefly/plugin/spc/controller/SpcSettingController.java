@@ -3,7 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
+import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -11,7 +11,6 @@ import com.dmsoft.firefly.plugin.spc.dto.ControlRuleDto;
 import com.dmsoft.firefly.plugin.spc.dto.CustomAlarmDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcSettingDto;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
-import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
 import com.dmsoft.firefly.plugin.spc.model.ControlAlarmRuleTableModel;
 import com.dmsoft.firefly.plugin.spc.model.CustomAlarmTestItemRowData;
 import com.dmsoft.firefly.plugin.spc.model.StatisticsResultRuleRowData;
@@ -136,7 +135,7 @@ public class SpcSettingController implements Initializable {
         statisticalResultAlarmSetTable.setItems(statisticsRuleRowDataObservableList);
 
         controlAlarmRuleTableModel = new ControlAlarmRuleTableModel();
-        NewTableViewWrapper.decorate(controlAlarmRuleTable, controlAlarmRuleTableModel);
+        TableViewWrapper.decorate(controlAlarmRuleTable, controlAlarmRuleTableModel);
         ((TableColumn) controlAlarmRuleTable.getColumns().get(0)).setPrefWidth(72);
     }
 

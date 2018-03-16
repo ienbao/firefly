@@ -49,8 +49,6 @@ public class DataFrameHandler implements JobInboundHandler {
             dataFrame.shrink();
         }
 
-        GrrMainController grrMainController = (GrrMainController) in[1];
-        grrMainController.setDataFrame(dataFrame);
         context.fireDoJob(param, in[1]);
     }
 

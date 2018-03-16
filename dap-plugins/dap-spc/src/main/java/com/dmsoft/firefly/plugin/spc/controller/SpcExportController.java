@@ -1,7 +1,7 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
-import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
+import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -127,10 +127,10 @@ public class SpcExportController {
             itemTable.focusModelProperty();
         });
         if (itemTable.getSkin() != null) {
-            NewTableViewWrapper.decorateSkinForSortHeader((TableViewSkin) itemTable.getSkin(), itemTable);
+            TableViewWrapper.decorateSkinForSortHeader((TableViewSkin) itemTable.getSkin(), itemTable);
         } else {
             itemTable.skinProperty().addListener((ov, s1, s2) -> {
-                NewTableViewWrapper.decorateSkinForSortHeader((TableViewSkin) s2, itemTable);
+                TableViewWrapper.decorateSkinForSortHeader((TableViewSkin) s2, itemTable);
             });
         }
         box = new CheckBox();

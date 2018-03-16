@@ -9,7 +9,7 @@ import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
-import com.dmsoft.firefly.plugin.spc.utils.RangeUtils;
+import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -258,11 +258,15 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
             if (name.equals(customAlarmDto.getStatisticName())) {
                 Double lowerLimit = customAlarmDto.getLowerLimit();
                 Double upperLimit = customAlarmDto.getUpperLimit();
-                if (RangeUtils.isWithinRange(String.valueOf(value), String.valueOf(lowerLimit), String.valueOf(upperLimit))) {
+                if (lowerLimit == null && upperLimit == null) {
+                    break;
+                }
+                if (RangeUtils.isWithinRange(String.valueOf(value), String.valueOf(upperLimit), String.valueOf(lowerLimit))) {
                     level = SpcKey.PASS.getCode();
                 } else {
                     level = SpcKey.FAIL.getCode();
                 }
+                break;
             }
         }
         return level;

@@ -3,7 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.model;
 
-import com.dmsoft.firefly.gui.components.table.NewTableModel;
+import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.plugin.spc.dto.ControlRuleDto;
 import com.dmsoft.firefly.plugin.spc.utils.SourceObjectProperty;
@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Created by Ethan.Yang on 2018/3/14.
  */
-public class ControlAlarmRuleTableModel implements NewTableModel {
+public class ControlAlarmRuleTableModel implements TableModel {
     private static final String[] HEADER = UIConstant.CONTROL_ALARM_RULE_HEADER;
     private ObservableList<String> columnKey = FXCollections.observableArrayList(Arrays.asList(HEADER));
     private ObservableList<String> rowKey = FXCollections.observableArrayList();

@@ -13,10 +13,12 @@ import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.fxml.FXML;
@@ -28,10 +30,8 @@ import javafx.stage.Stage;
 
 import java.awt.*;
 import java.net.URL;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.ResourceBundle;
 
 /**
  * Created by Ethan.Yang on 2018/2/2.
@@ -60,6 +60,7 @@ public class SpcMainController implements Initializable {
     private SpcAnalysisConfigDto analysisConfigDto;
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private SpcSettingService spcSettingService = RuntimeContext.getBean(SpcSettingService.class);
+    private EnvService envService = RuntimeContext.getBean(EnvService.class);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -87,6 +88,25 @@ public class SpcMainController implements Initializable {
      */
     public Map<String, Color> getColorCache() {
         return statisticalResultController.getColorCache();
+    }
+
+    /**
+     * remove row from dataFrame
+     *
+     * @param rowKey row key
+     */
+    public void removeDataFrameRow(String rowKey) {
+        if (dataFrame == null) {
+            return;
+        }
+        dataFrame.removeRows(Lists.newArrayList(rowKey));
+    }
+
+    /**
+     * clear analysis data
+     */
+    public void clearAnalysisShowData(){
+        statisticalResultController.clearStatisticalResultData();
     }
 
     private void initComponentEvent() {
@@ -184,6 +204,7 @@ public class SpcMainController implements Initializable {
         paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
 
         SearchDataFrame subDataFrame = this.buildSubSearchDataFrame(searchConditionDtoList);
+        viewDataController.setViewData(subDataFrame);
         paramMap.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
 
         Object returnValue = manager.doJobSyn(job, paramMap);
@@ -192,7 +213,6 @@ public class SpcMainController implements Initializable {
         }
         List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
         chartResultController.initSpcChartData(spcChartDtoList);
-        viewDataController.setViewData(subDataFrame);
     }
 
     private void initBtnIcon() {
@@ -264,9 +284,25 @@ public class SpcMainController implements Initializable {
             return null;
         }
         List<String> testItemNameList = Lists.newArrayList();
+        List<String> timeKeys = Lists.newArrayList();
+        String timePattern = null;
+        try {
+            timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
+            timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
+        } catch (Exception e) {
+
+        }
+        FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         for (SearchConditionDto searchConditionDto : searchConditionDtoList) {
             if (!testItemNameList.contains(searchConditionDto.getItemName())) {
                 testItemNameList.add(searchConditionDto.getItemName());
+            }
+            String condition = searchConditionDto.getCondition();
+            Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);
+            for (String conditionTestItem : conditionTestItemSet) {
+                if (!testItemNameList.contains(conditionTestItem)) {
+                    testItemNameList.add(conditionTestItem);
+                }
             }
         }
         List<String> rowKeyList = dataFrame.getAllRowKeys();

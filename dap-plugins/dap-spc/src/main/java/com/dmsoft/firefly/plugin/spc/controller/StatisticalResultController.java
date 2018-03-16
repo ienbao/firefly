@@ -3,7 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
+import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
@@ -82,6 +82,13 @@ public class StatisticalResultController implements Initializable {
     }
 
     /**
+     * clear statistical result data
+     */
+    public void clearStatisticalResultData(){
+        statisticalTableModel.clearTableData();
+    }
+
+    /**
      * get select stats data
      * @return the list of SpcStatsDto
      */
@@ -125,7 +132,7 @@ public class StatisticalResultController implements Initializable {
     private void initStatisticalResultTable() {
         statisticalTableModel = new StatisticalTableModel();
         this.initTableMenuEvent();
-        NewTableViewWrapper.decorate(statisticalResultTb, statisticalTableModel);
+        TableViewWrapper.decorate(statisticalResultTb, statisticalTableModel);
         selectStatisticalResultName.addAll(Arrays.asList(UIConstant.SPC_CHOOSE_RESULT));
     }
 

@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.model;
 
-import com.dmsoft.firefly.gui.components.table.NewTableModel;
+import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -13,6 +13,7 @@ import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -43,7 +44,7 @@ import java.util.Set;
  *
  * @author Can Guan
  */
-public class ViewDataDFModel implements NewTableModel {
+public class ViewDataDFModel implements TableModel {
     private static Logger logger = LoggerFactory.getLogger(ViewDataDFModel.class);
     private SearchDataFrame dataFrame;
     private ObservableList<String> headerArray;
@@ -207,7 +208,7 @@ public class ViewDataDFModel implements NewTableModel {
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
         tableCell.setStyle(null);
         if (!RangeUtils.isPass(dataFrame.getCellValue(rowKey, column), dataFrame.getTestItemWithTypeDto(column))) {
-            tableCell.setStyle("-fx-background-color: red; -fx-text-fill: white");
+            tableCell.setStyle("-fx-background-color: #ea2028; -fx-text-fill: white");
         } else if (dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column)) && this.highLightRowKeys.contains(rowKey)) {
             tableCell.setStyle("-fx-background-color: #f8d251; -fx-text-fill: #aaaaaa");
         } else if (this.highLightRowKeys.contains(rowKey)) {

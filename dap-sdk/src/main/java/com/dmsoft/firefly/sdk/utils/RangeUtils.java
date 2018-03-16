@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.plugin.spc.utils;
+package com.dmsoft.firefly.sdk.utils;
 
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;

@@ -44,6 +44,10 @@ public class TableCheckBox {
         };
     }
 
+    public CheckBox getCheckbox() {
+        return checkbox;
+    }
+
     public Boolean isSelected() {
         return checkbox.isSelected();
     }
