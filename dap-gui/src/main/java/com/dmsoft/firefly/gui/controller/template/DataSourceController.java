@@ -9,7 +9,10 @@ import com.dmsoft.firefly.core.utils.DataFormat;
 import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowMessageController;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -176,14 +179,32 @@ public class DataSourceController implements Initializable {
                                 renameStage.show();
                             });
                             deleteOne.setOnAction(event -> {
-                                List<String> deleteProjects = Lists.newArrayList();
-                                List<String> activeProject = envService.findActivatedProjectName();
-                                activeProject.remove(item.getValue());
-                                deleteProjects.add(item.getValue());
-                                sourceDataService.deleteProject(deleteProjects);
-                                envService.setActivatedProjectName(activeProject);
-                                chooseTableRowDataObservableList.remove(item);
-                                updateProjectOrder();
+                                WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Delete DataSource", "Are you sure to delete this file?");
+                                controller.addProcessMonitorListener(new WindowCustomListener() {
+                                    @Override
+                                    public boolean onShowCustomEvent() {
+                                        return false;
+                                    }
+
+                                    @Override
+                                    public boolean onCloseAndCancelCustomEvent() {
+                                        return false;
+                                    }
+
+                                    @Override
+                                    public boolean onOkCustomEvent() {
+                                        List<String> deleteProjects = Lists.newArrayList();
+                                        List<String> activeProject = envService.findActivatedProjectName();
+                                        activeProject.remove(item.getValue());
+                                        deleteProjects.add(item.getValue());
+                                        sourceDataService.deleteProject(deleteProjects);
+                                        envService.setActivatedProjectName(activeProject);
+                                        chooseTableRowDataObservableList.remove(item);
+                                        updateProjectOrder();
+                                        return false;
+                                    }
+                                });
+
                             });
                             this.setGraphic(hBox);
                         }
@@ -282,19 +303,37 @@ public class DataSourceController implements Initializable {
         });
         List<String> deleteProjects = Lists.newArrayList();
         delete.setOnAction(event -> {
-            List<String> activeProject = envService.findActivatedProjectName();
-            Iterator<ChooseTableRowData> iterable = chooseTableRowDataObservableList.iterator();
-            while (iterable.hasNext()) {
-                ChooseTableRowData rowData = iterable.next();
-                if (rowData.getSelector().isSelected()) {
-                    activeProject.remove(rowData.getValue());
-                    deleteProjects.add(rowData.getValue());
-                    iterable.remove();
+            WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Delete DataSource", "Are you sure to delete this file?");
+            controller.addProcessMonitorListener(new WindowCustomListener() {
+                @Override
+                public boolean onShowCustomEvent() {
+                    return false;
                 }
-            }
-            envService.setActivatedProjectName(activeProject);
-            sourceDataService.deleteProject(deleteProjects);
-            updateProjectOrder();
+
+                @Override
+                public boolean onCloseAndCancelCustomEvent() {
+                    return false;
+                }
+
+                @Override
+                public boolean onOkCustomEvent() {
+                    List<String> activeProject = envService.findActivatedProjectName();
+                    Iterator<ChooseTableRowData> iterable = chooseTableRowDataObservableList.iterator();
+                    while (iterable.hasNext()) {
+                        ChooseTableRowData rowData = iterable.next();
+                        if (rowData.getSelector().isSelected()) {
+                            activeProject.remove(rowData.getValue());
+                            deleteProjects.add(rowData.getValue());
+                            iterable.remove();
+                        }
+                    }
+                    envService.setActivatedProjectName(activeProject);
+                    sourceDataService.deleteProject(deleteProjects);
+                    updateProjectOrder();
+                    return false;
+                }
+            });
+
         });
         addFile.setOnAction(event -> {
             buildDataSourceDialog();

@@ -10,6 +10,10 @@ import com.dmsoft.firefly.plugin.grr.charts.data.VerticalCutLine;
 import com.dmsoft.firefly.plugin.grr.charts.data.ILineData;
 import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
+import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnovaAndSourceResultDto;
+import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnovaDto;
+import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrSourceDto;
+import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrSummaryResultDto;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.*;
 import com.dmsoft.firefly.plugin.grr.service.GrrConfigService;
@@ -85,7 +89,6 @@ public class GrrResultController implements Initializable {
         this.initComponentsRender();
         this.initComponentEvents();
         this.initData();
-//        buildItemTbRowKey(3, 3, Lists.newArrayList("1", "2", "3"));
 //        this.analyzeGrrResult(null, null, null);
     }
 
@@ -96,10 +99,11 @@ public class GrrResultController implements Initializable {
         Map paramMap = Maps.newHashMap();
         Job job = new Job(ParamKeys.GRR_ANALYSIS_JOB_PIPELINE);
         GrrAnalysisConfigDto analysisConfigDto = buildGrrAnalysisConfig(conditionDto);
-        paramMap.put(ParamKeys.SEARCH_DATA_FRAME, grrDataFrameDto.getDataFrame());
         paramMap.put(ParamKeys.ANALYSIS_GRR_INCLUDE_ROWS, includeRows);
-        paramMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_TESTITEM, conditionDto.getSelectedTestItemDtos());
+        paramMap.put(ParamKeys.SEARCH_DATA_FRAME, grrDataFrameDto.getDataFrame());
         paramMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG, analysisConfigDto);
+        paramMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_TESTITEM, conditionDto.getSelectedTestItemDtos());
+
         Platform.runLater(() -> manager.doJobASyn(job, returnValue -> {
             if (returnValue == null) {
                 //todo message tip

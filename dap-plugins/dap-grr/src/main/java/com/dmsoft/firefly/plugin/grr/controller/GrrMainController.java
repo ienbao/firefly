@@ -3,6 +3,7 @@ package com.dmsoft.firefly.plugin.grr.controller;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
+import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
@@ -11,7 +12,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -32,6 +32,8 @@ public class GrrMainController implements Initializable {
     private GrrItemController grrItemController;
     @FXML
     private GrrResultController grrResultController;
+    @FXML
+    private GrrViewDataController grrViewDataController;
 
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
 
@@ -42,8 +44,13 @@ public class GrrMainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         grrItemController.init(this);
         grrResultController.init(this);
+        grrViewDataController.init(this);
         initBtnIcon();
         initComponentEvents();
+    }
+
+    public void grrAnalyzeResult() {
+        grrResultController.analyzeGrrResult(grrDataFrame, includeRows, getSearchConditionDto());
     }
 
     private void initBtnIcon() {
@@ -99,5 +106,9 @@ public class GrrMainController implements Initializable {
 
     public void setGrrDataFrame(GrrDataFrameDto grrDataFrame) {
         this.grrDataFrame = grrDataFrame;
+    }
+
+    public SearchConditionDto getSearchConditionDto() {
+        return grrItemController.getSearchConditionDto();
     }
 }
