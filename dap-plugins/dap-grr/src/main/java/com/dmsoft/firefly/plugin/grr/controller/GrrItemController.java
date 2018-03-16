@@ -4,13 +4,12 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
-import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
+import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
-import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -114,10 +113,10 @@ public class GrrItemController implements Initializable {
             itemTable.focusModelProperty();
         });
         if (itemTable.getSkin() != null) {
-            NewTableViewWrapper.decorateSkinForSortHeader((TableViewSkin) itemTable.getSkin(), itemTable);
+            TableViewWrapper.decorateSkinForSortHeader((TableViewSkin) itemTable.getSkin(), itemTable);
         } else {
             itemTable.skinProperty().addListener((ov, s1, s2) -> {
-                NewTableViewWrapper.decorateSkinForSortHeader((TableViewSkin) s2, itemTable);
+                TableViewWrapper.decorateSkinForSortHeader((TableViewSkin) s2, itemTable);
             });
         }
         box = new CheckBox();

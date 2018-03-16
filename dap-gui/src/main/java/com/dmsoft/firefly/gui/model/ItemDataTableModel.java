@@ -1,8 +1,7 @@
 package com.dmsoft.firefly.gui.model;
 
-import com.dmsoft.firefly.gui.components.table.NewTableModel;
+import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
-import com.dmsoft.firefly.gui.utils.TableCheckBox;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.google.common.collect.Maps;
 import javafx.beans.property.ObjectProperty;
@@ -19,7 +18,7 @@ import java.util.*;
 /**
  * Created by Alice on 2018/3/14.
  */
-public class ItemDataTableModel implements NewTableModel {
+public class ItemDataTableModel implements TableModel {
     private ObservableList<String> columnKey = FXCollections.observableArrayList();
     private ObservableList<String> rowKey = FXCollections.observableArrayList();
     private Map<String, SimpleObjectProperty<String>> valueMap;

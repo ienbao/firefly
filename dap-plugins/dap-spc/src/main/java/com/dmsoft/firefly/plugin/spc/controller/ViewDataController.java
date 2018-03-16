@@ -3,7 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
+import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -18,6 +18,7 @@ import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.application.Platform;
@@ -89,7 +90,7 @@ public class ViewDataController implements Initializable {
             }
             this.dataFrame = dataFrame;
             this.model = new ViewDataDFModel(dataFrame);
-            NewTableViewWrapper.decorate(viewDataTable, model);
+            TableViewWrapper.decorate(viewDataTable, model);
             model.getAllCheckBox().setOnMouseClicked(event -> {
                 for (String s : model.getRowKeyArray()) {
                     model.getCheckValue(s, "").setValue(model.getAllCheckBox().selectedProperty().getValue());

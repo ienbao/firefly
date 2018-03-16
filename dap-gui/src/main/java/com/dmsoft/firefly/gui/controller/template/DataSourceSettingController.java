@@ -4,7 +4,7 @@
 package com.dmsoft.firefly.gui.controller.template;
 
 import com.dmsoft.firefly.gui.GuiApplication;
-import com.dmsoft.firefly.gui.components.table.NewTableViewWrapper;
+import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -23,7 +23,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
-import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -154,7 +153,7 @@ public class DataSourceSettingController {
 
         if (testItems != null && !testItems.isEmpty()) {
             itemDataTableModel = new ItemDataTableModel( testItems, rowDataDtoList );
-            NewTableViewWrapper.decorate( itemDataTable, itemDataTableModel );
+            TableViewWrapper.decorate( itemDataTable, itemDataTableModel );
         }
     }
 
