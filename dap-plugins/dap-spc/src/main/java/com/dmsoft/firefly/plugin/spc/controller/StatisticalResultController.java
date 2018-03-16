@@ -82,6 +82,13 @@ public class StatisticalResultController implements Initializable {
     }
 
     /**
+     * clear statistical result data
+     */
+    public void clearStatisticalResultData(){
+        statisticalTableModel.clearTableData();
+    }
+
+    /**
      * get select stats data
      * @return the list of SpcStatsDto
      */

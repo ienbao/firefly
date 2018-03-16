@@ -86,7 +86,7 @@ public class TestApplication extends Application {
         RuntimeContext.registerBean(DataFrameFactory.class, dataFrameFactory);
         envService.setActivatedProjectName(projectNameList);
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getClassLoader().getResource("view/spc_setting.fxml"));
+        loader.setLocation(getClass().getClassLoader().getResource("view/spc.fxml"));
         loader.setResources(ResourceBundle.getBundle("i18n.message_en_US_SPC"));
         Parent root = loader.load();
 
