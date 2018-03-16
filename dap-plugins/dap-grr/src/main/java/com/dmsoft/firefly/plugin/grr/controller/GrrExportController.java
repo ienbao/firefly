@@ -32,6 +32,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
@@ -68,6 +69,10 @@ public class GrrExportController {
     private Button browse;
     @FXML
     private TextField locationPath;
+    @FXML
+    private RadioButton eachFile;
+    @FXML
+    private RadioButton allFile;
 
     @FXML
     private SplitPane split;
@@ -84,6 +89,7 @@ public class GrrExportController {
     private SearchDataFrame dataFrame;
     private SearchTab searchTab;
     private ContextMenu pop;
+    private ToggleGroup group = new ToggleGroup();
 
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
@@ -92,6 +98,9 @@ public class GrrExportController {
     private void initialize() {
         searchTab = new SearchTab();
         split.getItems().add(searchTab);
+        eachFile.setToggleGroup(group);
+        eachFile.setSelected(true);
+        allFile.setToggleGroup(group);
         initBtnIcon();
         initEvent();
         itemFilter.getTextField().setPromptText("Test Item");
@@ -179,14 +188,11 @@ public class GrrExportController {
     private void initEvent() {
         browse.setOnAction(event -> {
             String str = System.getProperty("user.home");
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Grr Config export");
-            fileChooser.setInitialDirectory(new File(str));
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Excl", "*.xlsl")
-            );
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.setTitle("Grr Config export");
+            directoryChooser.setInitialDirectory(new File(str));
             Stage fileStage = null;
-            File file = fileChooser.showSaveDialog(fileStage);
+            File file = directoryChooser.showDialog(fileStage);
 
             if (file != null) {
                 locationPath.setText(file.getPath());

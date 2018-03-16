@@ -34,12 +34,12 @@
                                 <Insets top="20.0" />
                             </VBox.margin>
                         </Label>
-                        <RadioButton mnemonicParsing="false" text="%EXPORT_EACH">
+                        <RadioButton fx:id="eachFile" mnemonicParsing="false" text="%EXPORT_EACH">
                             <VBox.margin>
                                 <Insets bottom="10.0" />
                             </VBox.margin>
                         </RadioButton>
-                        <RadioButton mnemonicParsing="false" text="%EXPORT_ALL">
+                        <RadioButton fx:id="allFile" mnemonicParsing="false" text="%EXPORT_ALL">
                             <VBox.margin>
                                 <Insets right="10.0" />
                             </VBox.margin>

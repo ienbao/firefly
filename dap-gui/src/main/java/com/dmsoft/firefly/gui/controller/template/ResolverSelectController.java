@@ -59,7 +59,7 @@ public class ResolverSelectController implements Initializable {
     private CheckBox defaultTemplate;
 
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
-private JsonMapper mapper = JsonMapper.defaultMapper();
+    private JsonMapper mapper = JsonMapper.defaultMapper();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

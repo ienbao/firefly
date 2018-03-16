@@ -4,6 +4,7 @@ import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.*;
 import com.dmsoft.firefly.gui.controller.AppController;
 import com.dmsoft.firefly.gui.controller.MainController;
+import com.dmsoft.firefly.gui.controller.template.PluginManageController;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
@@ -184,6 +185,8 @@ public class MenuFactory {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/plugin.fxml");
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("pluginManage", GuiFxmlAndLanguageUtils.getString(ResourceMassages.PLUGIN_MANAGE), root, getResource("css/platform_app.css").toExternalForm());
+            PluginManageController controller = fxmlLoader.getController();
+            stage.setOnCloseRequest(controller.getOnCloseRequest());
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();

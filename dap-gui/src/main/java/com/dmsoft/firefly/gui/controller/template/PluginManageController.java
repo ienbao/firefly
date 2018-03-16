@@ -8,6 +8,9 @@ import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.core.utils.*;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
+import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
+import com.dmsoft.firefly.gui.components.window.WindowMessageController;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.model.PluginTableRowData;
 import com.dmsoft.firefly.gui.utils.FileUtils;
@@ -23,14 +26,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import javafx.util.Callback;
 
 import java.io.*;
 import java.net.URL;
@@ -128,11 +135,13 @@ public class PluginManageController implements Initializable {
                     pluginTable.getSelectionModel().select(dropIndex);
                     event.consume();
                     isEdit = true;
+                    ok.setText("restart");
                     updateProjectOrder();
                 }
             });
 
             row.setOnMouseClicked(event -> {
+                System.out.println("xx");
                 if (pluginTable.getSelectionModel().getSelectedIndex() != -1) {
                     PluginTableRowData pluginTableRowData = pluginTableRowDataObservableList.get(pluginTable.getSelectionModel().getSelectedIndex());
                     explain.setText(pluginTableRowData.getInfo().getDescription());
@@ -161,26 +170,7 @@ public class PluginManageController implements Initializable {
         ok.setOnAction(event -> {
             validateMapChange();
             if (isEdit) {
-                List<KeyValueDto> activePlugin = Lists.newArrayList();
-                pluginTableRowDataObservableList.forEach(v -> {
-                    activePlugin.add(new KeyValueDto(v.getInfo().getId(), v.getSelector().isSelected()));
-                });
-                JsonFileUtil.writeJsonFile(activePlugin, parentPath, "activePlugin");
-                Runtime.getRuntime().addShutdownHook(new Thread() {
-                    public void run() {
-                        try {
-                            StringBuilder stringBuilder = new StringBuilder("java -jar dap-restart-1.0.0.jar");
-                            deleteList.forEach(v -> {
-                                stringBuilder.append(" " + v);
-                            });
-                            System.out.println(stringBuilder.toString());
-                            Runtime.getRuntime().exec(stringBuilder.toString());
-                        } catch (IOException e) {
-                            System.out.println("restart failed.");
-                        }
-                    }
-                });
-                System.exit(0);
+                showRestart();
             } else {
                 StageMap.closeStage("pluginManage");
             }
@@ -228,6 +218,7 @@ public class PluginManageController implements Initializable {
                     PluginTableRowData chooseTableRowData = new PluginTableRowData(false, installPlugins.getName(), installPlugins);
                     pluginTableRowDataObservableList.add(chooseTableRowData);
                     isEdit = true;
+                    ok.setText("restart");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -244,9 +235,56 @@ public class PluginManageController implements Initializable {
                 context.uninstallPlugin(pluginTableRowData.getInfo().getId());
                 pluginTableRowDataObservableList.remove(pluginTableRowData);
                 isEdit = true;
+                ok.setText("restart");
                 updateProjectOrder();
             }
         });
+    }
+
+    private void showRestart() {
+        WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOk("Restart Application", "The application needs to restart the configuration to take effect");
+        controller.addProcessMonitorListener(new WindowCustomListener() {
+            @Override
+            public boolean onShowCustomEvent() {
+                restart();
+                return false;
+            }
+
+            @Override
+            public boolean onCloseAndCancelCustomEvent() {
+                restart();
+                return false;
+            }
+
+            @Override
+            public boolean onOkCustomEvent() {
+                restart();
+                return false;
+            }
+        });
+    }
+
+    private void restart() {
+        List<KeyValueDto> activePlugin = Lists.newArrayList();
+        pluginTableRowDataObservableList.forEach(v -> {
+            activePlugin.add(new KeyValueDto(v.getInfo().getId(), v.getSelector().isSelected()));
+        });
+        JsonFileUtil.writeJsonFile(activePlugin, parentPath, "activePlugin");
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                try {
+                    StringBuilder stringBuilder = new StringBuilder("java -jar dap-restart-1.0.0.jar");
+                    deleteList.forEach(v -> {
+                        stringBuilder.append(" " + v);
+                    });
+                    System.out.println(stringBuilder.toString());
+                    Runtime.getRuntime().exec(stringBuilder.toString());
+                } catch (IOException e) {
+                    System.out.println("restart failed.");
+                }
+            }
+        });
+        System.exit(0);
     }
 
     private boolean isExists(PluginInfo pluginInfo, Map<String, PluginInfo> allInstallPlugins) {
@@ -286,9 +324,25 @@ public class PluginManageController implements Initializable {
         if (activePlugin != null) {
             activePlugin.forEach(v -> {
                 PluginTableRowData chooseTableRowData = new PluginTableRowData((Boolean) v.getValue(), map.get(v.getKey()).getName(), map.get(v.getKey()));
+                chooseTableRowData.setOnAction(event -> {
+                    isEdit = true;
+                    ok.setText("restart");
+                });
                 pluginTableRowDataObservableList.add(chooseTableRowData);
                 validateMap.put(v.getKey(), (Boolean) v.getValue());
             });
         }
+    }
+
+    public EventHandler<WindowEvent> getOnCloseRequest() {
+        return new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                validateMapChange();
+                if (isEdit) {
+                    showRestart();
+                }
+            }
+        };
     }
 }

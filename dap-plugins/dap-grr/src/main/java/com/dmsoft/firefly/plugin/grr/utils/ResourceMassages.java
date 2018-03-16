@@ -12,4 +12,5 @@ public class ResourceMassages {
     public static final String VIEW_DATA = "VIEW_DATA";
 
     public static final String GRR_EXPORT_SETTING_TITLE = "GRR_EXPORT_SETTING_TITLE";
+    public static final String EXCEPTION_GRR_PARAMETER_INVALID = "EXCEPTION_GRR_PARAMETER_INVALID";
 }
