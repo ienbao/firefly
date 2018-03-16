@@ -392,11 +392,7 @@ public class BuildChart {
 
         try {
             file = new File(path);
-
-            long start = System.currentTimeMillis();
             saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(exportImage, null), file, 0.9f);
-            long end = System.currentTimeMillis();
-            System.out.println("image time" + (end - start));
 //            AlertDialog.showAlertDialog("保存成功!");
         } catch (IOException ex) {
 //            AlertDialog.showAlertDialog("保存失败:" + ex.getMessage());
