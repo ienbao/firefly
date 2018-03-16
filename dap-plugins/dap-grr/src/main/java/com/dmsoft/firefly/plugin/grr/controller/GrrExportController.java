@@ -11,8 +11,15 @@ import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.plugin.grr.dto.*;
+import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnalysisConfigDto;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.grr.model.ListViewModel;
+import com.dmsoft.firefly.plugin.grr.service.GrrAnalysisService;
+import com.dmsoft.firefly.plugin.grr.service.GrrExportService;
+import com.dmsoft.firefly.plugin.grr.service.GrrService;
+import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
+import com.dmsoft.firefly.plugin.grr.service.impl.GrrExportServiceImpl;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -36,7 +43,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 
@@ -108,6 +114,10 @@ public class GrrExportController {
 
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
+    private GrrConfigServiceImpl grrConfigService = new GrrConfigServiceImpl();
+    private GrrExportService grrExportService = new GrrExportServiceImpl();
+    private GrrAnalysisService grrAnalysisService = RuntimeContext.getBean(GrrAnalysisService.class);
+    private GrrService grrService = RuntimeContext.getBean(GrrService.class);
 
     @FXML
     private void initialize() {
@@ -279,11 +289,27 @@ public class GrrExportController {
             build();
         });
         export.setOnAction(event -> {
+            if (StringUtils.isEmpty(locationPath.getText())) {
+                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export path.");
+                return;
+            }
+            if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
+                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                return;
+            }
             export();
             StageMap.closeStage("grrExport");
 
         });
         print.setOnAction(event -> {
+            if (StringUtils.isEmpty(locationPath.getText())) {
+                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export path.");
+                return;
+            }
+            if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
+                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                return;
+            }
             StageMap.closeStage("grrExport");
 
         });
@@ -357,8 +383,49 @@ public class GrrExportController {
         }
     }
 
+    /**
+     * get selected test items
+     *
+     * @return test items
+     */
+    public List<TestItemWithTypeDto> getSelectedItemDto() {
+        List<TestItemWithTypeDto> selectItems = Lists.newArrayList();
+        if (items != null) {
+            for (ItemTableModel model : items) {
+                if (model.getSelector().isSelected()) {
+                    selectItems.add(model.getItemDto());
+                }
+            }
+        }
+        return selectItems;
+    }
+
     private void export() {
 
+        GrrConfigDto grrConfigDto = grrConfigService.findGrrConfig();
+        Boolean detail = grrConfigDto.getExport().get("Export detail sheet of each selected items");
+
+        GrrExportConfigDto grrExportConfigDto = new GrrExportConfigDto();
+        grrExportConfigDto.setExportPath(locationPath.getText());
+        grrExportConfigDto.setUserName(envService.getUserName());
+//        grrExportConfigDto
+
+        List<TestItemWithTypeDto> testItemWithTypeDtoList = getSelectedItemDto();
+        searchTab.getConditionTestItem().forEach(item -> {
+            testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(item));
+        });
+        List<String> rowKeysToByAnalyzed = Lists.newArrayList();
+        GrrAnalysisConfigDto configDto = new GrrAnalysisConfigDto();
+
+        List<GrrSummaryDto> grrSummaryDtoList = grrService.getSummaryResult(dataFrame, testItemWithTypeDtoList, rowKeysToByAnalyzed, configDto);
+
+        List<GrrSummaryResultDto> grrSummaryResultDtos = Lists.newArrayList();
+        List<GrrExportResultDto> grrExportResultDtos = Lists.newArrayList();
+        if (detail) {
+            grrExportService.exportGrrSummary(grrExportConfigDto, grrSummaryResultDtos);
+        } else {
+            grrExportService.exportGrrSummaryDetail(grrExportConfigDto, grrSummaryResultDtos, grrExportResultDtos);
+        }
 
     }
 }
