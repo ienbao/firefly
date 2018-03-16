@@ -11,6 +11,7 @@ import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,16 +71,20 @@ public class GrrFilterServiceImpl implements GrrFilterService {
         }
     }
 
-   /* private void getGrrParts(SearchDataFrame dataFrame, SearchConditionDto searchConditionDto) {
+    private void getGrrPartOrAppraiser(SearchDataFrame dataFrame, SearchConditionDto searchConditionDto) {
         if (dataFrame == null || searchConditionDto == null) {
             throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
         }
-        String partName = searchConditionDto.getPart();
+        int partInt = searchConditionDto.getPartInt();
         int appraiserInt = searchConditionDto.getAppraiserInt();
         int trialInt = searchConditionDto.getTrialInt();
 
-        List<String> parts = searchConditionDto.getParts();
-        if (parts == null || parts.isEmpty()) {
+        String partName = searchConditionDto.getPart();
+        String appraiser = searchConditionDto.getAppraiser();
+        Set<String> parts = getParts(dataFrame, searchConditionDto);
+        Set<String> appraisers = getAppraisers(dataFrame, searchConditionDto);
+
+        if (parts != null && !parts.isEmpty()) {
             List<String> dataValues = dataFrame.getDataValue(partName);
             dataValues.forEach(partValue->{
                 StringBuffer search = new StringBuffer();
@@ -102,12 +107,38 @@ public class GrrFilterServiceImpl implements GrrFilterService {
                     index.getAndIncrement();
                 });
                 if (trialIndex.getAndIncrement() < appraiserInt * trialInt) {
-                    errorParams = new String[] {partValue +" * " + appraiserValue, String.valueOf(trialInt), String.valueOf(count.getAndIncrement())};
-                    errors.add(GrrFxmlAndLanguageUtils.getString(UIConstant.EXCEPTION_GRR_MODEL, errorParams));
+//                        errorParams = new String[] {partValue +" * " + appraiserValue, String.valueOf(trialInt), String.valueOf(count.getAndIncrement())};
+//                        errors.add(GrrFxmlAndLanguageUtils.getString(UIConstant.EXCEPTION_GRR_MODEL, errorParams));
                 }
             });
+        } else {
+            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
         }
-    }*/
+    }
+
+    private Set<String> getParts(SearchDataFrame dataFrame, SearchConditionDto searchConditionDto) {
+        String partName = searchConditionDto.getPart();
+        if (StringUtils.isNotBlank(partName)) {
+            if (searchConditionDto.getParts() != null && !searchConditionDto.getParts().isEmpty()) {
+                return new LinkedHashSet(searchConditionDto.getParts());
+            } else {
+                return dataFrame.getValueSet(partName);
+            }
+        }
+       return null;
+    }
+
+    private Set<String> getAppraisers(SearchDataFrame dataFrame, SearchConditionDto searchConditionDto) {
+        String appraiser = searchConditionDto.getAppraiser();
+        if (StringUtils.isNotBlank(appraiser)) {
+            if (searchConditionDto.getAppraisers() != null && !searchConditionDto.getAppraisers().isEmpty()) {
+                return new LinkedHashSet(searchConditionDto.getAppraisers());
+            } else {
+                return dataFrame.getValueSet(appraiser);
+            }
+        }
+        return null;
+    }
 
     @Override
     public GrrDataFrameDto getGrrViewData(SearchDataFrame dataFrame, GrrConfigDto configDto, TemplateSettingDto templateSettingDto, SearchConditionDto searchConditionDto) {

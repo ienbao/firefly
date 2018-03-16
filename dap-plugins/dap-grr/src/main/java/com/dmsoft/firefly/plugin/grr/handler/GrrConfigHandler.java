@@ -2,6 +2,8 @@ package com.dmsoft.firefly.plugin.grr.handler;
 
 import com.dmsoft.firefly.plugin.grr.controller.GrrMainController;
 import com.dmsoft.firefly.plugin.grr.dto.GrrConfigDto;
+import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
+import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnalysisConfigDto;
 import com.dmsoft.firefly.plugin.grr.service.GrrConfigService;
 import com.dmsoft.firefly.plugin.grr.utils.GrrExceptionCode;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
@@ -39,6 +41,21 @@ public class GrrConfigHandler implements JobInboundHandler {
         EnvService envService = RuntimeContext.getBean(EnvService.class);
         TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
         param.put(ParamKeys.SEARCH_TEMPLATE_SETTING_DTO, templateSettingDto);
+
+        SearchConditionDto searchConditionDto = (SearchConditionDto) param.get(ParamKeys.SEARCH_GRR_CONDITION_DTO);
+        GrrAnalysisConfigDto analysisConfigDto = new GrrAnalysisConfigDto();
+        analysisConfigDto.setAppraiser(searchConditionDto.getAppraiserInt());
+        analysisConfigDto.setTrial(searchConditionDto.getTrialInt());
+        analysisConfigDto.setPart(searchConditionDto.getPartInt());
+        analysisConfigDto.setCoverage(grrConfigDto.getCoverage());
+        analysisConfigDto.setMethod(grrConfigDto.getAnalysisMethod());
+        analysisConfigDto.setSignificance(Double.valueOf(grrConfigDto.getSignLevel()));
+        param.put(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG, analysisConfigDto);
+        if (in[1] != null && in[1] instanceof GrrMainController) {
+            GrrMainController grrMainController = (GrrMainController) in[1];
+            grrMainController.setGrrConfigDto(grrConfigDto);
+            grrMainController.setActiveTemplateSettingDto(templateSettingDto);
+        }
         context.fireDoJob(param, in[1]);
     }
 

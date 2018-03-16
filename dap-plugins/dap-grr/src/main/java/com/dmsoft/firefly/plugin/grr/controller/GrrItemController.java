@@ -190,6 +190,7 @@ public class GrrItemController implements Initializable {
         initListView(appraiserListView);
 
         this.partCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            partList.clear();
             Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
             values.forEach(value -> {
                 partList.add(new ListViewModel(value, false));
@@ -337,7 +338,7 @@ public class GrrItemController implements Initializable {
                         }
                         Platform.runLater(() -> {
                             grrMainController.updateGrrViewData();
-//                            grrMainController.updateGrrSummaryAndDetail();
+                            grrMainController.updateGrrSummaryAndDetail();
                         });
 //                        GrrDataFrameDto grrDataFrameDto = (GrrDataFrameDto) returnValue;
 //                        grrMainController.setGrrDataFrame(grrDataFrameDto);

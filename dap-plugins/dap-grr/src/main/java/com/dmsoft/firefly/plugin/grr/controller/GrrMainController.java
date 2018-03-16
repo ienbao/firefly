@@ -2,13 +2,11 @@ package com.dmsoft.firefly.plugin.grr.controller;
 
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
-import com.dmsoft.firefly.plugin.grr.dto.GrrDetailDto;
-import com.dmsoft.firefly.plugin.grr.dto.GrrSummaryDto;
-import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
+import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrDetailResultDto;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import javafx.fxml.FXML;
@@ -30,6 +28,8 @@ public class GrrMainController implements Initializable {
     private GrrDataFrameDto grrDataFrame;
     private List<GrrSummaryDto> summaryDtos;
     private GrrDetailDto grrDetailDto;
+    private GrrConfigDto grrConfigDto;
+    private TemplateSettingDto activeTemplateSettingDto;
     @FXML
     private GrrItemController grrItemController;
     @FXML
@@ -115,4 +115,19 @@ public class GrrMainController implements Initializable {
         grrViewDataController.refresh();
     }
 
+    public GrrConfigDto getGrrConfigDto() {
+        return grrConfigDto;
+    }
+
+    public void setGrrConfigDto(GrrConfigDto grrConfigDto) {
+        this.grrConfigDto = grrConfigDto;
+    }
+
+    public TemplateSettingDto getActiveTemplateSettingDto() {
+        return activeTemplateSettingDto;
+    }
+
+    public void setActiveTemplateSettingDto(TemplateSettingDto activeTemplateSettingDto) {
+        this.activeTemplateSettingDto = activeTemplateSettingDto;
+    }
 }

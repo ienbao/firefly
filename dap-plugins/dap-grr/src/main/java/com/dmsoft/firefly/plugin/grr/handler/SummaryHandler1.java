@@ -32,17 +32,8 @@ public class SummaryHandler1 implements JobInboundHandler {
         }
         Map<String, Object> param = (Map) in[0];
 
-        GrrConfigDto grrConfigDto = (GrrConfigDto) param.get(ParamKeys.SEARCH_GRR_CONFIG_DTO);
         SearchConditionDto searchConditionDto = (SearchConditionDto) param.get(ParamKeys.SEARCH_GRR_CONDITION_DTO);
-
-        GrrAnalysisConfigDto analysisConfigDto = new GrrAnalysisConfigDto();
-        analysisConfigDto.setAppraiser(searchConditionDto.getAppraiserInt());
-        analysisConfigDto.setTrial(searchConditionDto.getTrialInt());
-        analysisConfigDto.setPart(searchConditionDto.getPartInt());
-        analysisConfigDto.setCoverage(grrConfigDto.getCoverage());
-        analysisConfigDto.setMethod(grrConfigDto.getAnalysisMethod());
-        analysisConfigDto.setSignificance(Double.valueOf(grrConfigDto.getSignLevel()));
-        param.put(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG, analysisConfigDto);
+        GrrAnalysisConfigDto grrAnalysisConfigDto = (GrrAnalysisConfigDto) param.get(ParamKeys.SEARCH_GRR_CONDITION_DTO);
 
         List<TestItemWithTypeDto> itemWithTypeDtos = searchConditionDto.getSelectedTestItemDtos();
 
@@ -56,7 +47,7 @@ public class SummaryHandler1 implements JobInboundHandler {
         List<GrrSummaryDto> summaryDtos = grrService.getSummaryResult(dataFrame,
                 itemWithTypeDtos,
                 includeRows,
-                analysisConfigDto);
+                grrAnalysisConfigDto);
         if (in[1] != null && in[1] instanceof GrrMainController) {
             GrrMainController grrMainController = (GrrMainController) in[1];
             grrMainController.setSummaryDtos(summaryDtos);
