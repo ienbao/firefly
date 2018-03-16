@@ -24,10 +24,7 @@ import java.util.ResourceBundle;
  */
 public class GrrMainController implements Initializable {
 
-    private SearchDataFrame dataFrame;
     private GrrDataFrameDto grrDataFrame;
-    private List<String> includeRows;
-    private List<String> excludeRows;
     @FXML
     private GrrItemController grrItemController;
     @FXML
@@ -50,7 +47,7 @@ public class GrrMainController implements Initializable {
     }
 
     public void grrAnalyzeResult() {
-        grrResultController.analyzeGrrResult(grrDataFrame, includeRows, getSearchConditionDto());
+        grrResultController.analyzeGrrResult(grrDataFrame, null, getSearchConditionDto());
     }
 
     private void initBtnIcon() {
@@ -76,29 +73,6 @@ public class GrrMainController implements Initializable {
         }
     }
 
-    public void setDataFrame(SearchDataFrame dataFrame) {
-        this.dataFrame = dataFrame;
-    }
-
-    public SearchDataFrame getDataFrame() {
-        return dataFrame;
-    }
-
-    public List<String> getIncludeRows() {
-        return includeRows;
-    }
-
-    public void setIncludeRows(List<String> includeRows) {
-        this.includeRows = includeRows;
-    }
-
-    public List<String> getExcludeRows() {
-        return excludeRows;
-    }
-
-    public void setExcludeRows(List<String> excludeRows) {
-        this.excludeRows = excludeRows;
-    }
 
     public GrrDataFrameDto getGrrDataFrame() {
         return grrDataFrame;

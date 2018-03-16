@@ -4,6 +4,7 @@ import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.service.GrrFilterService;
 import com.dmsoft.firefly.plugin.grr.utils.GrrExceptionCode;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
@@ -27,6 +28,86 @@ public class GrrFilterServiceImpl implements GrrFilterService {
     private static String SORT_MEHODE_APPRAISER = "Appraisers";
     private static String SORT_MEHODE_TRIAL = "Trial";
 
+    private void validateGrrDataFormat(SearchDataFrame dataFrame, SearchConditionDto searchConditionDto) {
+        if (dataFrame == null || searchConditionDto == null) {
+            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
+        }
+        List<String> errors = Lists.newLinkedList();
+        String appraiserName = searchConditionDto.getAppraiser();
+
+        if (DAPStringUtils.isNotBlank(appraiserName)) {
+            String partName = searchConditionDto.getPart();
+            int trialInt = searchConditionDto.getTrialInt();
+            List<String> parts = searchConditionDto.getParts();
+            List<String> appraisers = searchConditionDto.getAppraisers();
+            parts.forEach(partValue->{
+                appraisers.forEach(appraiserValue->{
+                    StringBuffer search = new StringBuffer();
+                    search.append("\"" + partName + "\"").append("=").append("\"" + partValue + "\"").append("&").append("\"" + appraiserName + "\"").append("=").append("\"" + appraiserValue + "\"");
+                    List<String> rowKeys = dataFrame.getSearchRowKey(search.toString());
+                    String[] errorParams;
+                    if (rowKeys != null && !rowKeys.isEmpty()) {
+                        AtomicInteger index = new AtomicInteger(1);
+                        AtomicInteger count = new AtomicInteger(0);
+                        rowKeys.forEach(rowKey->{
+                            if (index.get() <= trialInt) {
+                                count.getAndIncrement();
+                            }
+                            index.getAndIncrement();
+                        });
+                        if (count.getAndIncrement() < trialInt) {
+                            errorParams = new String[] {partValue +" * " + appraiserValue, String.valueOf(trialInt), String.valueOf(count.getAndIncrement())};
+                            errors.add(GrrFxmlAndLanguageUtils.getString(UIConstant.EXCEPTION_GRR_MODEL, errorParams));
+                        }
+                    } else {
+                        errorParams = new String[] {partValue +" * " + appraiserValue, String.valueOf(trialInt), "0"};
+                        errors.add(GrrFxmlAndLanguageUtils.getString(UIConstant.EXCEPTION_GRR_MODEL, errorParams));
+                    }
+                });
+            });
+        } else {
+
+        }
+    }
+
+   /* private void getGrrParts(SearchDataFrame dataFrame, SearchConditionDto searchConditionDto) {
+        if (dataFrame == null || searchConditionDto == null) {
+            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
+        }
+        String partName = searchConditionDto.getPart();
+        int appraiserInt = searchConditionDto.getAppraiserInt();
+        int trialInt = searchConditionDto.getTrialInt();
+
+        List<String> parts = searchConditionDto.getParts();
+        if (parts == null || parts.isEmpty()) {
+            List<String> dataValues = dataFrame.getDataValue(partName);
+            dataValues.forEach(partValue->{
+                StringBuffer search = new StringBuffer();
+                search.append("\"" + partName + "\"").append("=").append("\"" + partValue + "\"");
+                List<String> rowKeys = dataFrame.getSearchRowKey(search.toString());
+                AtomicInteger index = new AtomicInteger(1);
+                AtomicInteger appraiserIndex = new AtomicInteger(1);
+                AtomicInteger trialIndex = new AtomicInteger(1);
+                rowKeys.forEach(rowKey->{
+                    if (trialIndex.get() == trialInt + 1) {
+                        appraiserIndex.set(appraiserIndex.get() + 1);
+                        trialIndex.set(1);
+                    }
+                    GrrViewDataDto grrViewDataDto = new GrrViewDataDto();
+                    grrViewDataDto.setPart(partValue);
+                    grrViewDataDto.setRowKey(rowKey);
+                    if (index.get() <= (appraiserInt * trialInt)) {
+                        trialIndex.getAndIncrement();
+                    }
+                    index.getAndIncrement();
+                });
+                if (trialIndex.getAndIncrement() < appraiserInt * trialInt) {
+                    errorParams = new String[] {partValue +" * " + appraiserValue, String.valueOf(trialInt), String.valueOf(count.getAndIncrement())};
+                    errors.add(GrrFxmlAndLanguageUtils.getString(UIConstant.EXCEPTION_GRR_MODEL, errorParams));
+                }
+            });
+        }
+    }*/
 
     @Override
     public GrrDataFrameDto getGrrViewData(SearchDataFrame dataFrame, GrrConfigDto configDto, TemplateSettingDto templateSettingDto, SearchConditionDto searchConditionDto) {
