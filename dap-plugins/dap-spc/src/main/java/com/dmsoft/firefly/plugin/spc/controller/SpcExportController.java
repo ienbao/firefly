@@ -178,8 +178,11 @@ public class SpcExportController {
         });
 
         viewData.setOnAction(event -> {
-            if (getSelectedItem() != null && getSelectedItem().size() > 0)
-                buildViewDataDia();
+            if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
+                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                return;
+            }
+            buildViewDataDia();
         });
         setting.setOnAction(event -> {
             initSpcExportSettingDialog();
