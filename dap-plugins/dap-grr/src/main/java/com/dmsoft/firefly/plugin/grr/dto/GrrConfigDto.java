@@ -16,6 +16,34 @@ public class GrrConfigDto {
     private List<Double> alarmSetting;
     private Map<String, Boolean> export;
 
+    private int parts;
+    private int appraisers;
+    private int trials;
+
+    public int getParts() {
+        return parts;
+    }
+
+    public void setParts(int parts) {
+        this.parts = parts;
+    }
+
+    public int getAppraisers() {
+        return appraisers;
+    }
+
+    public void setAppraisers(int appraisers) {
+        this.appraisers = appraisers;
+    }
+
+    public int getTrials() {
+        return trials;
+    }
+
+    public void setTrials(int trials) {
+        this.trials = trials;
+    }
+
     public GrrAnalysisMethod getAnalysisMethod() {
         return analysisMethod;
     }

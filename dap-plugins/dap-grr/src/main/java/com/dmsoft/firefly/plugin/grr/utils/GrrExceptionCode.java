@@ -15,6 +15,8 @@ public class GrrExceptionCode {
     public static final int ERR_12011 = 12011;
     public static final int ERR_12012 = 12012;
 
+    public static final int ERR_15009 = 15009;
+
     //system error
     public static final int ERR_20001 = 20001;
 }

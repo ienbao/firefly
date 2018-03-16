@@ -6,6 +6,8 @@ package com.dmsoft.firefly.gui.model;
 import com.dmsoft.firefly.gui.utils.TableCheckBox;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 /**
  * Created by Ethan.Yang on 2018/2/11.
@@ -46,6 +48,10 @@ public class PluginTableRowData {
             return true;
         }
         return false;
+    }
+
+    public void setOnAction(EventHandler<ActionEvent> value) {
+        selector.getCheckBox().getValue().setOnAction(value);
     }
 
     public PluginInfo getInfo() {

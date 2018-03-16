@@ -26,11 +26,13 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.*;
 import java.net.URL;
@@ -128,11 +130,13 @@ public class PluginManageController implements Initializable {
                     pluginTable.getSelectionModel().select(dropIndex);
                     event.consume();
                     isEdit = true;
+                    ok.setText("restart");
                     updateProjectOrder();
                 }
             });
 
             row.setOnMouseClicked(event -> {
+                System.out.println("xx");
                 if (pluginTable.getSelectionModel().getSelectedIndex() != -1) {
                     PluginTableRowData pluginTableRowData = pluginTableRowDataObservableList.get(pluginTable.getSelectionModel().getSelectedIndex());
                     explain.setText(pluginTableRowData.getInfo().getDescription());
@@ -228,6 +232,7 @@ public class PluginManageController implements Initializable {
                     PluginTableRowData chooseTableRowData = new PluginTableRowData(false, installPlugins.getName(), installPlugins);
                     pluginTableRowDataObservableList.add(chooseTableRowData);
                     isEdit = true;
+                    ok.setText("restart");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -244,6 +249,7 @@ public class PluginManageController implements Initializable {
                 context.uninstallPlugin(pluginTableRowData.getInfo().getId());
                 pluginTableRowDataObservableList.remove(pluginTableRowData);
                 isEdit = true;
+                ok.setText("restart");
                 updateProjectOrder();
             }
         });
@@ -286,6 +292,10 @@ public class PluginManageController implements Initializable {
         if (activePlugin != null) {
             activePlugin.forEach(v -> {
                 PluginTableRowData chooseTableRowData = new PluginTableRowData((Boolean) v.getValue(), map.get(v.getKey()).getName(), map.get(v.getKey()));
+                chooseTableRowData.setOnAction(event -> {
+                    isEdit = true;
+                    ok.setText("restart");
+                });
                 pluginTableRowDataObservableList.add(chooseTableRowData);
                 validateMap.put(v.getKey(), (Boolean) v.getValue());
             });
