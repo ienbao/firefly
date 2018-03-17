@@ -34,6 +34,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.awt.Color;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
@@ -119,6 +120,16 @@ public class SpcMainController implements Initializable {
         //todo clear chart data
         chartResultController.clearChartData();
         viewDataController.setViewData(null, null);
+    }
+
+    /**
+     * change chart color
+     *
+     * @param key   key
+     * @param color color
+     */
+    public void updateChartColor(String key, javafx.scene.paint.Color color) {
+        chartResultController.updateChartColor(key, color);
     }
 
     private void initComponentEvent() {
