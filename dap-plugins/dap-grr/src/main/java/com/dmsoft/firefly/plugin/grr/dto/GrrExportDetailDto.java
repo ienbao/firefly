@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.grr.dto;
 
 import com.dmsoft.bamboo.common.dto.AbstractValueObject;
+import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrExportDetailResultDto;
 
 /**
  * grr export detail dto
@@ -10,7 +11,7 @@ import com.dmsoft.bamboo.common.dto.AbstractValueObject;
 public class GrrExportDetailDto extends AbstractValueObject {
     private String key;
     private String itemName;
-    private GrrExportDetailDto exportDetailDto;
+    private GrrExportDetailResultDto exportDetailDto;
 
     public String getKey() {
         return key;
@@ -28,11 +29,11 @@ public class GrrExportDetailDto extends AbstractValueObject {
         this.itemName = itemName;
     }
 
-    public GrrExportDetailDto getExportDetailDto() {
+    public GrrExportDetailResultDto getExportDetailDto() {
         return exportDetailDto;
     }
 
-    public void setExportDetailDto(GrrExportDetailDto exportDetailDto) {
+    public void setExportDetailDto(GrrExportDetailResultDto exportDetailDto) {
         this.exportDetailDto = exportDetailDto;
     }
 }

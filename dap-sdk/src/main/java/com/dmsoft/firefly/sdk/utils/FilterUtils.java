@@ -161,8 +161,26 @@ public class FilterUtils {
      * @return list of boolean present is legal or
      */
     public List<Boolean> filterDF(String searchCondition, SearchDataFrame searchDataFrame) {
-        //TODO
-        return null;
+        List<Boolean> result = Lists.newArrayList();
+        for (int i = 0; i < searchDataFrame.getAllRowKeys().size(); i++) {
+            result.add(true);
+        }
+        if (DAPStringUtils.isBlank(searchCondition)) {
+            return result;
+        }
+        try {
+            FilterExpressionParser fep = new FilterExpressionParser();
+            SEPResult sepResult = fep.doParser(searchCondition);
+            for (int i = 0; i < searchDataFrame.getAllRowKeys().size(); i++) {
+                List<Object> rowResult = parseSepResult(sepResult, searchDataFrame, i);
+                if (rowResult == null || rowResult.isEmpty()) {
+                    result.set(i, false);
+                }
+            }
+        } catch (Exception e) {
+            logger.debug("Search condition parse error! condition = {}", searchCondition);
+        }
+        return result;
     }
 
     // parse sep result Object is List<Map>, Map key is String of test item, Map value is String of test item value
@@ -198,6 +216,139 @@ public class FilterUtils {
         }
         return resultList;
     }
+
+    private List<Object> parseSepResult(SEPResult result, SearchDataFrame dataFrame, int index) {
+        List<Object> resultList = Lists.newLinkedList();
+        List<Object> leftList = Lists.newLinkedList();
+        List<Object> rightList = Lists.newLinkedList();
+        if (result.getLeftExpr() instanceof SEPResult) {
+            List left = parseSepResult((SEPResult) result.getLeftExpr(), dataFrame, index);
+            leftList.addAll(left);
+            resultList.addAll(left);
+        }
+        if (result.getRightExpr() instanceof SEPResult) {
+            List right = parseSepResult((SEPResult) result.getRightExpr(), dataFrame, index);
+            rightList.addAll(right);
+            resultList.addAll(right);
+        }
+        if (DAPStringUtils.isBlank(result.getLogicalToken())) {
+            resultList.addAll(parseBaseData(result, dataFrame, index));
+        } else {
+            // Logical Token : |
+            if (result.getLogicalToken().equals(ParserToken.OR.getCode())) {
+                return resultList;
+            }
+            // Logical Token : &
+            if (result.getLogicalToken().equals(ParserToken.AND.getCode()) && leftList != null && !leftList.isEmpty() && rightList != null && !rightList.isEmpty()) {
+                return resultList;
+            } else {
+                resultList.clear();
+                return resultList;
+            }
+        }
+        return resultList;
+    }
+
+    private List<Object> parseBaseData(SEPResult result, SearchDataFrame dataFrame, int index) {
+        List<Object> resultList = Lists.newLinkedList();
+        if (DAPStringUtils.isBlank(result.getLogicalToken())) {
+            if (filterBaseData((String) result.getLeftExpr(), (String) result.getRightExpr(), result.getToken(), dataFrame, index)) {
+                resultList.add(index);
+            }
+        }
+        return resultList;
+    }
+
+    // judge if this row is legal or illegal
+    private boolean filterBaseData(String name, String value, String token, SearchDataFrame dataFrame, int index) {
+        boolean isExist = true;
+        if (dataFrame.getAllTestItemName().contains(name) && DAPStringUtils.isNotBlank(token) && DAPStringUtils.isNotBlank(value)) {
+            String realValue = dataFrame.getCellValue(dataFrame.getAllRowKeys().get(index), name);
+            return filterBaseData(name, value, token, realValue);
+        }
+        return isExist;
+    }
+
+    private boolean filterBaseData(String name, String value, String token, String realValue) {
+        boolean isExist = true;
+        if (DAPStringUtils.isBlank(realValue)) {
+            isExist = false;
+        } else {
+            switch (ParserToken.getValueOf(token)) {
+                case EQ:
+                    if (!realValue.equals(value)) {
+                        isExist = false;
+                    }
+                    break;
+                case LIKE:
+                    if (!realValue.contains(value)) {
+                        isExist = false;
+                    }
+                    break;
+                case GT:
+                    if (DAPStringUtils.isNumeric(realValue) && DAPStringUtils.isNumeric(value)) {
+                        if (Double.valueOf(realValue) <= Double.valueOf(value)) {
+                            isExist = false;
+                        }
+                    } else if (timeKeys != null && !timeKeys.isEmpty() && timeKeys.contains(name)) {
+                        Long timeValue = getTime(value);
+                        Long realTimeValue = getTime(realValue);
+                        if (null == timeValue || null == realTimeValue || realTimeValue <= timeValue) {
+                            isExist = false;
+                        }
+                    }
+                    break;
+                case GET:
+                    if (DAPStringUtils.isNumeric(realValue) && DAPStringUtils.isNumeric(value)) {
+                        if (Double.valueOf(realValue) < Double.valueOf(value)) {
+                            isExist = false;
+                        }
+                    } else if (timeKeys != null && !timeKeys.isEmpty() && timeKeys.contains(name)) {
+                        Long timeValue = getTime(value);
+                        Long realTimeValue = getTime(realValue);
+                        if (null == timeValue || null == realTimeValue || realTimeValue < timeValue) {
+                            isExist = false;
+                        }
+                    }
+                    break;
+                case LT:
+                    if (DAPStringUtils.isNumeric(realValue) && DAPStringUtils.isNumeric(value)) {
+                        if (Double.valueOf(realValue) >= Double.valueOf(value)) {
+                            isExist = false;
+                        }
+                    } else if (timeKeys != null && !timeKeys.isEmpty() && timeKeys.contains(name)) {
+                        Long timeValue = getTime(value);
+                        Long realTimeValue = getTime(realValue);
+                        if (null == timeValue || null == realTimeValue || realTimeValue >= timeValue) {
+                            isExist = false;
+                        }
+                    }
+                    break;
+                case LET:
+                    if (DAPStringUtils.isNumeric(realValue) && DAPStringUtils.isNumeric(value)) {
+                        if (Double.valueOf(realValue) > Double.valueOf(value)) {
+                            isExist = false;
+                        }
+                    } else if (timeKeys != null && !timeKeys.isEmpty() && timeKeys.contains(name)) {
+                        Long timeValue = getTime(value);
+                        Long realTimeValue = getTime(realValue);
+                        if (null == timeValue || null == realTimeValue || realTimeValue > timeValue) {
+                            isExist = false;
+                        }
+                    }
+                    break;
+                case NE:
+                    if (realValue.equals(value)) {
+                        isExist = false;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return isExist;
+    }
+
 
     // parse item names from spe result
     private List<Object> parseItemNameFromConditions(SEPResult result) {
@@ -236,81 +387,7 @@ public class FilterUtils {
         boolean isExist = true;
         if (row != null && row.containsKey(name) && DAPStringUtils.isNotBlank(token) && DAPStringUtils.isNotBlank(value)) {
             String realValue = row.get(name);
-            if (DAPStringUtils.isBlank(realValue)) {
-                isExist = false;
-            } else {
-                switch (ParserToken.getValueOf(token)) {
-                    case EQ:
-                        if (!realValue.equals(value)) {
-                            isExist = false;
-                        }
-                        break;
-                    case LIKE:
-                        if (!realValue.contains(value)) {
-                            isExist = false;
-                        }
-                        break;
-                    case GT:
-                        if (DAPStringUtils.isNumeric(realValue) && DAPStringUtils.isNumeric(value)) {
-                            if (Double.valueOf(realValue) <= Double.valueOf(value)) {
-                                isExist = false;
-                            }
-                        } else if (timeKeys != null && !timeKeys.isEmpty() && timeKeys.contains(name)) {
-                            Long timeValue = getTime(value);
-                            Long realTimeValue = getTime(realValue);
-                            if (null == timeValue || null == realTimeValue || realTimeValue <= timeValue) {
-                                isExist = false;
-                            }
-                        }
-                        break;
-                    case GET:
-                        if (DAPStringUtils.isNumeric(realValue) && DAPStringUtils.isNumeric(value)) {
-                            if (Double.valueOf(realValue) < Double.valueOf(value)) {
-                                isExist = false;
-                            }
-                        } else if (timeKeys != null && !timeKeys.isEmpty() && timeKeys.contains(name)) {
-                            Long timeValue = getTime(value);
-                            Long realTimeValue = getTime(realValue);
-                            if (null == timeValue || null == realTimeValue || realTimeValue < timeValue) {
-                                isExist = false;
-                            }
-                        }
-                        break;
-                    case LT:
-                        if (DAPStringUtils.isNumeric(realValue) && DAPStringUtils.isNumeric(value)) {
-                            if (Double.valueOf(realValue) >= Double.valueOf(value)) {
-                                isExist = false;
-                            }
-                        } else if (timeKeys != null && !timeKeys.isEmpty() && timeKeys.contains(name)) {
-                            Long timeValue = getTime(value);
-                            Long realTimeValue = getTime(realValue);
-                            if (null == timeValue || null == realTimeValue || realTimeValue >= timeValue) {
-                                isExist = false;
-                            }
-                        }
-                        break;
-                    case LET:
-                        if (DAPStringUtils.isNumeric(realValue) && DAPStringUtils.isNumeric(value)) {
-                            if (Double.valueOf(realValue) > Double.valueOf(value)) {
-                                isExist = false;
-                            }
-                        } else if (timeKeys != null && !timeKeys.isEmpty() && timeKeys.contains(name)) {
-                            Long timeValue = getTime(value);
-                            Long realTimeValue = getTime(realValue);
-                            if (null == timeValue || null == realTimeValue || realTimeValue > timeValue) {
-                                isExist = false;
-                            }
-                        }
-                        break;
-                    case NE:
-                        if (realValue.equals(value)) {
-                            isExist = false;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
+            return filterBaseData(name, value, token, realValue);
         }
         return isExist;
     }

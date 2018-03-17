@@ -1,7 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.service.impl;
 
 import com.dmsoft.firefly.plugin.grr.GrrPlugin;
-import com.dmsoft.firefly.plugin.grr.dto.GrrExportDetailDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
 import com.dmsoft.firefly.plugin.grr.service.GrrAnalysisService;
 import com.dmsoft.firefly.plugin.grr.utils.GrrExceptionCode;
@@ -90,6 +89,23 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
             result.setRrbyAppraiserChartDto(detailResultDto.getRrbyAppraiserChartDto());
             result.setRrbyPartChartDto(detailResultDto.getRrbyPartChartDto());
             result.setAnovaAndSourceResultDto(detailResultDto.getAnovaAndSourceResultDto());
+            GrrSummaryResultDto summaryResult = getSummaryResult(engine, configDto.getMethod());
+            result.setRepeatabilityOnTolerance(summaryResult.getRepeatabilityOnTolerance());
+            result.setReproducibilityOnTolerance(summaryResult.getReproducibilityOnTolerance());
+            result.setGrrOnTolerance(summaryResult.getGrrOnTolerance());
+            result.setRepeatabilityOnContribution(summaryResult.getRepeatabilityOnContribution());
+            result.setReproducibilityOnContribution(summaryResult.getReproducibilityOnContribution());
+            result.setGrrOnContribution(summaryResult.getGrrOnContribution());
+
+            if (DAPStringUtils.isNumeric(analysisDataDto.getUsl())) {
+                result.setUsl(Double.valueOf(analysisDataDto.getUsl()));
+            }
+            if (DAPStringUtils.isNumeric(analysisDataDto.getLsl())) {
+                result.setLsl(Double.valueOf(analysisDataDto.getLsl()));
+            }
+            if (result.getLsl() != null && result.getUsl() != null) {
+                result.setTolerance(result.getUsl() - result.getLsl());
+            }
             //TODO
             SemaphoreUtils.releaseSemaphore(engine);
             logger.info("Analyze GRR export detail result done.");

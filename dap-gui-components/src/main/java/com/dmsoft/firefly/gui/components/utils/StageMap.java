@@ -311,6 +311,7 @@ public final class StageMap {
             for (StageStyle s : styles) {
                 tempStage.initStyle(s);
             }
+            tempStage.setResizable(false);
 
             windowPane.setStage(tempStage);
             windowPane.init();
