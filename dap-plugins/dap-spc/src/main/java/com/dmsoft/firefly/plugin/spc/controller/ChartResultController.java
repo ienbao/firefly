@@ -61,7 +61,7 @@ public class ChartResultController implements Initializable {
     private List<XYChart.Data> annotationData = Lists.newArrayList();
 
     private RuleXYChartData ruleXYChartData = new RuleXYChartData();
-    private Function rulePointFunc = (Function<PointRule, PointStyle>) pointRule -> {
+    private Function rulePointFunc = (Function<PointRule, PointStyle>) (PointRule pointRule) -> {
         PointStyle pointStyle = new PointStyle();
         Double value = (Double) pointRule.getData().getYValue();
         Color color = pointRule.getNormalColor();

@@ -9,6 +9,7 @@ import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
+import com.dmsoft.firefly.plugin.grr.dto.GrrParamDto;
 import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
@@ -17,6 +18,7 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
@@ -207,12 +209,33 @@ public class GrrItemController implements Initializable {
         });
     }
 
+    private void refreshPartListView(Set<String> selectedParts) {
+        partListView.getItems().forEach(listViewModel->{
+            if (selectedParts != null && selectedParts.contains(listViewModel.getName())){
+                listViewModel.setIsChecked(true);
+            }
+        });
+        partListView.refresh();
+    }
+
+    private void refreshAppraiserListView(Set<String> selectedAppraisers) {
+        appraiserListView.getItems().forEach(listViewModel->{
+            if (selectedAppraisers != null && selectedAppraisers.contains(listViewModel.getName())){
+                listViewModel.setIsChecked(true);
+            }
+        });
+        appraiserListView.refresh();
+    }
+
     private void initListView(ListView<ListViewModel> listView) {
         listView.setCellFactory(e -> new ListCell<ListViewModel>() {
             @Override
             public void updateItem(ListViewModel item, boolean empty) {
                 super.updateItem(item, empty);
-                if (!empty && item != null) {
+                if (item == null || empty) {
+                    setGraphic(null);
+                    setText(null);
+                } else {
                     HBox cell;
                     CheckBox checkBox = new CheckBox();
                     if (item.isIsChecked()) {
@@ -227,6 +250,7 @@ public class GrrItemController implements Initializable {
                     cell = new HBox(checkBox, label);
                     setGraphic(cell);
                 }
+
             }
         });
 
@@ -332,18 +356,36 @@ public class GrrItemController implements Initializable {
                 manager.doJobASyn(job, new JobDoComplete() {
                     @Override
                     public void doComplete(Object returnValue) {
-                        if (returnValue == null) {
-                            //todo message tip
-                            return;
-                        }
-                        Platform.runLater(() -> {
-                            grrMainController.updateGrrViewData();
-                            grrMainController.updateGrrSummaryAndDetail();
-                        });
+                        try {
+                            Platform.runLater(() -> {
+                                if (returnValue == null) {
+                                    //todo message tip
+                                    return;
+                                }
+                                grrMainController.updateGrrViewData();
+                                grrMainController.updateGrrSummaryAndDetail();
+
+//                                GrrParamDto grrParamDto = grrMainController.getGrrParamDto();
+//                                if (grrParamDto != null && (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty())) {
+//                                    refreshPartListView(grrParamDto.getParts());
+//                                    refreshAppraiserListView(grrParamDto.getAppraisers());
+//                                    grrMainController.updateGrrViewData();
+//                                    grrMainController.updateGrrSummaryAndDetail();
+//                                } else {
+//                                    //to do
+//                                    System.out.println(returnValue);
+//                                }
+
+
+                            });
 //                        GrrDataFrameDto grrDataFrameDto = (GrrDataFrameDto) returnValue;
 //                        grrMainController.setGrrDataFrame(grrDataFrameDto);
 //                        grrMainController.updateGrrDataFrameDto();
 //                        grrMainController.grrAnalyzeResult();
+                        } catch (ApplicationException excption) {
+                            excption.printStackTrace();
+                        }
+
                     }
                 }, paramMap, grrMainController);
             });

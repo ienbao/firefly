@@ -26,6 +26,8 @@ public class ParamKeys {
     public static final String FIND_TEST_DATA_HANDLER = "findTestDataHandler";
     public static final String DATA_FRAME_HANDLER = "dataFrameHandler";
     public static final String GRR_CONFIG_HANDLER = "grrConfigHandler";
+    public static final String VALIDATE_PARAM_HANDLER = "validateParamHandler";
+
     public static final String GRR_VIEW_DATA_RESULT_HANDLER = "grrViewDataHandler";
     public static final String GRR_SUMMARY_RESULT_HANDLER = "grrSummaryHandler";
     public static final String GRR_DETAIL_RESULT_HANDLER = "grrDetailHandler";
