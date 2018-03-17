@@ -153,7 +153,9 @@ public class ViewDataController implements Initializable {
      * @param rowKey row key
      */
     public void setFocusRowData(String rowKey) {
-
+        if (viewDataTable != null && viewDataTable.getItems() != null) {
+            this.viewDataTable.getSelectionModel().focus(viewDataTable.getItems().indexOf(rowKey));
+        }
     }
 
     /**
