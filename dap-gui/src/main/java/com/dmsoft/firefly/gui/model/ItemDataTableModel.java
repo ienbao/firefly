@@ -91,10 +91,10 @@ public class ItemDataTableModel implements TableModel {
     @Override
     public ObjectProperty<Boolean> getCheckValue(String rowKey, String columnName) {
         if (checkMap.get( rowKey ) == null) {
-            SimpleObjectProperty<Boolean> b = new SimpleObjectProperty<>( false );
+            SimpleObjectProperty<Boolean> b = new SimpleObjectProperty<>( true );
             checkMap.put( rowKey, b );
             falseSet.add( rowKey );
-            allChecked.setValue( false );
+            allChecked.setValue( true );
             b.addListener( (ov, b1, b2) -> {
                 if (!b2) {
                     falseSet.add( rowKey );
@@ -171,8 +171,10 @@ public class ItemDataTableModel implements TableModel {
 
     public void updateTestItemColumn(List<String> result) {
         columnKey.clear();
-        columnKey.add( "" );
-        columnKey.addAll( result );
+        if(result!= null &&!result.isEmpty()) {
+            columnKey.add( "" );
+            columnKey.addAll( result );
+        }
     }
 
 }
