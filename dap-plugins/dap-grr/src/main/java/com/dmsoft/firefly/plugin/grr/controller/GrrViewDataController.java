@@ -105,12 +105,24 @@ public class GrrViewDataController implements Initializable {
         if (grrMainController.getSearchConditionDto() != null && grrMainController.getSearchConditionDto().getAppraiser() == null) {
             isSlot = false;
         }
+        final boolean slot = isSlot;
         if (dataFrame != null && dataFrame.getDataFrame() != null && dataFrame.getIncludeDatas() != null && !dataFrame.getIncludeDatas().isEmpty()) {
             analysisFilterLB.setDisable(false);
             exchangeableLB.setDisable(false);
             this.grrDataFrameDto = dataFrame;
             this.includeModel = new GrrViewDataDFIncludeModel(this.grrDataFrameDto, grrMainController.getSearchConditionDto());
-            this.includeModel.addListener(grrViewDataDto -> this.exchangeableLB.setText(partKey + grrViewDataDto.getPart() + ", " + appKey + grrViewDataDto.getOperator()));
+            if (isSlot) {
+                this.exchangeableLB.setText(partKey + this.grrDataFrameDto.getIncludeDatas().get(0).getPart() + ", " + appKey + this.grrDataFrameDto.getIncludeDatas().get(0).getOperator());
+            } else {
+                this.exchangeableLB.setText(partKey + this.grrDataFrameDto.getIncludeDatas().get(0).getPart());
+            }
+            this.includeModel.addListener(grrViewDataDto -> {
+                if (slot) {
+                    this.exchangeableLB.setText(partKey + grrViewDataDto.getPart() + ", " + appKey + grrViewDataDto.getOperator());
+                } else {
+                    this.exchangeableLB.setText(partKey + grrViewDataDto.getPart());
+                }
+            });
             if (dataFrame.getBackupDatas() != null && !dataFrame.getBackupDatas().isEmpty()) {
                 this.backupModel = new GrrViewDataDFBackupModel(this.grrDataFrameDto, grrMainController.getSearchConditionDto(), isSlot);
                 this.includeModel.addListener(this.backupModel);

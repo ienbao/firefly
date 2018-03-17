@@ -11,15 +11,11 @@ import com.dmsoft.firefly.plugin.grr.charts.data.ILineData;
 import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnovaAndSourceResultDto;
-import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnovaDto;
-import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrSourceDto;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.*;
-import com.dmsoft.firefly.plugin.grr.service.GrrConfigService;
 import com.dmsoft.firefly.plugin.grr.utils.*;
 import com.dmsoft.firefly.plugin.grr.utils.charts.ChartUtils;
 import com.dmsoft.firefly.plugin.grr.utils.charts.LegendUtils;
-import com.dmsoft.firefly.plugin.grr.utils.enums.GrrResultName;
 import com.dmsoft.firefly.plugin.grr.utils.table.TableCellCallBack;
 import com.dmsoft.firefly.plugin.grr.utils.table.TableRender;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -66,9 +62,7 @@ public class GrrResultController implements Initializable {
     final FilteredList<GrrSingleSummary> filteredList = summaryModel.getSummaries().filtered(p -> true);
 
     private GrrMainController grrMainController;
-
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
-    private GrrConfigService grrConfigService = RuntimeContext.getBean(GrrConfigService.class);
 
     private String appKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " ";
     private String trailKey = GrrFxmlAndLanguageUtils.getString("TRAIL") + " ";
@@ -94,7 +88,8 @@ public class GrrResultController implements Initializable {
 
     public void analyzeGrrResult(List<GrrSummaryDto> grrSummaryDtos, GrrDetailDto grrDetailDto) {
 //        Set digNum
-        DigNumInstance.newInstance().setDigNum(grrMainController.getActiveTemplateSettingDto().getDecimalDigit());
+//        DigNumInstance.newInstance().setDigNum(grrMainController.getActiveTemplateSettingDto().getDecimalDigit());
+        DigNumInstance.newInstance().setDigNum(2);
         List<GrrViewDataDto> viewDataDtos = grrMainController.getGrrDataFrame().getIncludeDatas();
         viewDataDtos.forEach(viewDataDto -> {
             parts.add(viewDataDto.getPart());
@@ -106,6 +101,7 @@ public class GrrResultController implements Initializable {
                 grrMainController.getSearchConditionDto(),
                 grrSummaryDtos.get(0).getItemName());
         this.setAnalysisItemResultData(grrDetailDto);
+        this.setToleranceValue(filteredList.get(0).getTolerance());
     }
 
     private void analyzeGrrSubResult(TestItemWithTypeDto testItemDto) {
@@ -124,64 +120,9 @@ public class GrrResultController implements Initializable {
                 //todo message tip
                 return;
             }
-            Platform.runLater(() -> {
-                setAnalysisItemResultData((GrrDetailDto) returnValue);
-            });
+            Platform.runLater(() -> setAnalysisItemResultData((GrrDetailDto) returnValue));
         }, detailParamMap, grrMainController));
     }
-
-//    public void analyzeGrrResult(GrrDataFrameDto grrDataFrameDto, SearchConditionDto conditionDto) {
-//
-//        Map summaryParamMap = Maps.newHashMap();
-//        Map detailParamMap = Maps.newHashMap();
-//        List<String> includeRows = Lists.newArrayList();
-//        String itemName = conditionDto.getSelectedTestItemDtos().get(0).getTestItemName();
-//        Job summaryJob = new Job(ParamKeys.GRR_ANALYSIS_JOB_PIPELINE);
-//        Job detailJob = new Job(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE);
-//        grrDataFrameDto.getIncludeDatas().forEach(grrViewDataDto -> includeRows.add(grrViewDataDto.getRowKey()));
-//        GrrAnalysisConfigDto analysisConfigDto = buildGrrAnalysisConfig(conditionDto);
-//        summaryParamMap.put(ParamKeys.ANALYSIS_GRR_INCLUDE_ROWS, includeRows);
-//        summaryParamMap.put(ParamKeys.SEARCH_DATA_FRAME, grrDataFrameDto.getDataFrame());
-//        summaryParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG, analysisConfigDto);
-//        summaryParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_TESTITEM, conditionDto.getSelectedTestItemDtos());
-//
-//        detailParamMap.put(ParamKeys.SEARCH_DATA_COLUMN, grrDataFrameDto.getDataFrame().getDataColumn(itemName, null));
-//        detailParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_TESTITEM, conditionDto.getSelectedTestItemDtos().get(0));
-//        detailParamMap.put(ParamKeys.ANALYSIS_GRR_INCLUDE_ROWS, includeRows);
-//        detailParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG, analysisConfigDto);
-//        this.removeAllResultData();
-//        this.setItemResultData(grrDataFrameDto,  conditionDto, itemName);
-//        Platform.runLater(() -> manager.doJobASyn(summaryJob, returnValue -> {
-//            if (returnValue == null) {
-//                //todo message tip
-//                return;
-//            }
-//            setSummaryData((List<GrrSummaryDto>) returnValue);
-//
-//        }, summaryParamMap, grrMainController));
-//
-//        Platform.runLater(() -> manager.doJobASyn(detailJob, returnValue -> {
-//            if (returnValue == null) {
-//                //todo message tip
-//                return;
-//            }
-//            setAnalysisItemResultData((GrrDetailDto) returnValue);
-//
-//        }, detailParamMap, grrMainController));
-//    }
-
-//    private GrrAnalysisConfigDto buildGrrAnalysisConfig(SearchConditionDto conditionDto) {
-//        GrrConfigDto configDto = grrConfigService.findGrrConfig();
-//        GrrAnalysisConfigDto analysisConfigDto = new GrrAnalysisConfigDto();
-//        analysisConfigDto.setAppraiser(conditionDto.getAppraiserInt());
-//        analysisConfigDto.setTrial(conditionDto.getTrialInt());
-//        analysisConfigDto.setPart(conditionDto.getPartInt());
-//        analysisConfigDto.setCoverage(configDto.getCoverage());
-//        analysisConfigDto.setMethod(configDto.getAnalysisMethod());
-//        analysisConfigDto.setSignificance(Double.valueOf(configDto.getSignLevel()));
-//        return analysisConfigDto;
-//    }
-
 
     private void setSummaryData(List<GrrSummaryDto> summaryData) {
         summaryModel.setData(summaryData, resultBasedCmb.getSelectionModel().getSelectedItem().toString());
@@ -215,25 +156,25 @@ public class GrrResultController implements Initializable {
             int value = rowIndex / (trial + 2);
 //            total mean
             if (rowIndex == rowCount - 2) {
-                rowKeys.add(rowIndex, "total mean");
+                rowKeys.add(rowIndex, UIConstant.TOTAL_MEAN);
                 trialIndex = 0;
                 continue;
             }
 //            total range
             if (rowIndex == rowCount - 1) {
-                rowKeys.add(rowIndex, "total range");
+                rowKeys.add(rowIndex, UIConstant.TOTAL_RANGE);
                 trialIndex = 0;
                 continue;
             }
 //            mean
             if (reminder == trial) {
-                rowKeys.add(rowIndex, appraisers.get(value) + UIConstant.SPLIT_FLAG + "mean");
+                rowKeys.add(rowIndex, appraisers.get(value) + UIConstant.SPLIT_FLAG + UIConstant.MEAN);
                 trialIndex = 0;
                 continue;
             }
 //            range
             if (reminder == trial + 1) {
-                rowKeys.add(rowIndex, appraisers.get(value) + UIConstant.SPLIT_FLAG + "range");
+                rowKeys.add(rowIndex, appraisers.get(value) + UIConstant.SPLIT_FLAG + UIConstant.RANGE);
                 trialIndex = 0;
                 continue;
             }
@@ -260,18 +201,30 @@ public class GrrResultController implements Initializable {
         XYChart.Series series1 = new XYChart.Series();
         XYChart.Series series2 = new XYChart.Series();
         XYChart.Series series3 = new XYChart.Series();
-        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[0], componentCResult.getGrrContri()));
-        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[1], componentCResult.getRepeatContri()));
-        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[2], componentCResult.getReprodContri()));
-        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[3], componentCResult.getPartContri()));
-        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[0], componentCResult.getGrrVar()));
-        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[1], componentCResult.getRepeatVar()));
-        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[2], componentCResult.getReprodVar()));
-        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[3], componentCResult.getPartVar()));
-        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[0], componentCResult.getGrrTol()));
-        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[1], componentCResult.getRepeatVar()));
-        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[2], componentCResult.getReprodVar()));
-        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[3], componentCResult.getPartVar()));
+        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[0],
+                DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrContri()) ? 0 : componentCResult.getGrrContri()));
+        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[1],
+                DAPStringUtils.isInfinityAndNaN(componentCResult.getRepeatContri()) ? 0 : componentCResult.getRepeatContri()));
+        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[2],
+                DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodContri()) ? 0 : componentCResult.getReprodContri()));
+        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[3],
+                DAPStringUtils.isInfinityAndNaN(componentCResult.getPartContri()) ? 0 : componentCResult.getPartContri()));
+        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[0],
+                DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrVar()) ? 0 : componentCResult.getGrrVar()));
+        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[1],
+                DAPStringUtils.isInfinityAndNaN(componentCResult.getRepeatVar()) ? 0 : componentCResult.getRepeatVar()));
+        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[2],
+                DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodVar()) ? 0 : componentCResult.getReprodVar()));
+        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[3],
+                DAPStringUtils.isInfinityAndNaN(componentCResult.getPartVar()) ? 0 : componentCResult.getPartVar()));
+        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[0],
+                DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrTol()) ? 0 : componentCResult.getGrrTol()));
+        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[1],
+                DAPStringUtils.isInfinityAndNaN(componentCResult.getRepeatVar()) ? 0 : componentCResult.getRepeatVar()));
+        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[2],
+                DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodVar()) ? 0 : componentCResult.getReprodVar()));
+        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[3],
+                DAPStringUtils.isInfinityAndNaN(componentCResult.getPartVar()) ? 0 : componentCResult.getPartVar()));
         componentChart.getData().addAll(series1, series2, series3);
         String[] colors = new String[UIConstant.CHART_COMPONENT_CATEGORY.length + 2];
         for (int i = 0; i < UIConstant.CHART_COMPONENT_CATEGORY.length; i++) {
@@ -297,7 +250,9 @@ public class GrrResultController implements Initializable {
             series.setName(appraisers.get(i));
             double[] appraiser = data[i];
             for (int j = 0; j < appraiser.length; j++) {
-                series.getData().add(new XYChart.Data<>(parts.get(j), appraiser[j], appraisers.get(i)));
+                if (!DAPStringUtils.isInfinityAndNaN(appraiser[j])) {
+                    series.getData().add(new XYChart.Data<>(parts.get(j), appraiser[j], appraisers.get(i)));
+                }
             }
             seriesData.add(series);
         }
@@ -445,9 +400,12 @@ public class GrrResultController implements Initializable {
     }
 
     private void setAnovaAndSourceTb(GrrAnovaAndSourceResultDto anovaAndSourceResultDto) {
+        int digNum = DigNumInstance.newInstance().getDigNum();
+        String numberOfDc = digNum >= 0 ? DAPStringUtils.formatDouble(anovaAndSourceResultDto.getNumberOfDc(), digNum)
+                : String.valueOf(anovaAndSourceResultDto.getNumberOfDc());
         anovaModel.setData(anovaAndSourceResultDto.getGrrAnovaDtos());
         sourceModel.setData(anovaAndSourceResultDto.getGrrSourceDtos());
-        categoryBtn.setText(String.valueOf(anovaAndSourceResultDto.getNumberOfDc()));
+        categoryBtn.setText(DAPStringUtils.isBlankWithSpecialNumber(numberOfDc) ? "-" : numberOfDc);
     }
 
     private void removeSubResultData() {
@@ -543,8 +501,8 @@ public class GrrResultController implements Initializable {
         tableRender.buildEditCellByIndex(2, buildEditCallBack());
         tableRender.buildEditCellByIndex(3, buildEditCallBack());
         tableRender.buildSpecialCellByIndex(7, buildGrrCallBack());
-        componentChart.setBarGap(20);
-        componentChart.setCategoryGap(100);
+//        componentChart.setBarGap(20);
+//        componentChart.setCategoryGap(100);
         xBarAppraiserChart.setLegendVisible(false);
         xBarAppraiserChart.setVerticalGridLinesVisible(false);
         xBarAppraiserChart.setHorizontalGridLinesVisible(false);
@@ -561,20 +519,20 @@ public class GrrResultController implements Initializable {
         summaryTbColumns.get(6).setPrefWidth(120);
         summaryTbColumns.get(7).setPrefWidth(110);
 
-        anovaTbColumns.get(0).setPrefWidth(183);
-        anovaTbColumns.get(1).setPrefWidth(173);
-        anovaTbColumns.get(2).setPrefWidth(181);
-        anovaTbColumns.get(3).setPrefWidth(172);
-        anovaTbColumns.get(4).setPrefWidth(172);
-        anovaTbColumns.get(5).setPrefWidth(179);
+        anovaTbColumns.get(0).setPrefWidth(100);
+        anovaTbColumns.get(1).setPrefWidth(140);
+        anovaTbColumns.get(2).setPrefWidth(140);
+        anovaTbColumns.get(3).setPrefWidth(130);
+        anovaTbColumns.get(4).setPrefWidth(130);
+        anovaTbColumns.get(5).setPrefWidth(130);
 
-        sourceTbColumns.get(0).setPrefWidth(183);
-        sourceTbColumns.get(1).setPrefWidth(130);
-        sourceTbColumns.get(2).setPrefWidth(149);
-        sourceTbColumns.get(3).setPrefWidth(150);
-        sourceTbColumns.get(4).setPrefWidth(167);
-        sourceTbColumns.get(5).setPrefWidth(139);
-        sourceTbColumns.get(6).setPrefWidth(139);
+        sourceTbColumns.get(0).setPrefWidth(127);
+        sourceTbColumns.get(1).setPrefWidth(80);
+        sourceTbColumns.get(2).setPrefWidth(110);
+        sourceTbColumns.get(3).setPrefWidth(110);
+        sourceTbColumns.get(4).setPrefWidth(120);
+        sourceTbColumns.get(5).setPrefWidth(120);
+        sourceTbColumns.get(6).setPrefWidth(120);
 
         xBarAppraiserChartBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
         xBarAppraiserChartBtn.setListViewSize(80, 80);
@@ -681,6 +639,7 @@ public class GrrResultController implements Initializable {
                 GrrSingleSummary singleSummary = filteredList.get(cell.getIndex());
                 singleSummary.setSelect(true);
                 summaryTb.refresh();
+                setToleranceValue(singleSummary.getTolerance());
                 String itemName = singleSummary.getItemName();
                 grrMainController.getSearchConditionDto().getSelectedTestItemDtos().forEach(testItemWithTypeDto -> {
                     if (itemName.equals(testItemWithTypeDto.getTestItemName())) {
@@ -719,6 +678,10 @@ public class GrrResultController implements Initializable {
                 }
             }
         };
+    }
+
+    public void setToleranceValue(String toleranceText) {
+        this.toleranceLbl.setText(toleranceText);
     }
 
     /****** Summary *****/
@@ -778,6 +741,7 @@ public class GrrResultController implements Initializable {
     private LineChart rrbyPartChart;
 
     private ChartOperateButton xBarAppraiserChartBtn;
-
     private VBox rrbyPartVBox;
+    @FXML
+    private Label toleranceLbl;
 }
