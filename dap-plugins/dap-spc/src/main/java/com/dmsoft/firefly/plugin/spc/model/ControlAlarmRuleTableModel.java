@@ -107,7 +107,7 @@ public class ControlAlarmRuleTableModel implements TableModel {
                     if (!DAPStringUtils.isNumeric(String.valueOf(b2)) || DAPStringUtils.isBlank(String.valueOf(b2))) {
                         return;
                     }
-                    controlRuleDto.setsValue(Double.valueOf((String) b2));
+                    controlRuleDto.setsValue(Integer.valueOf((String) b2));
                 });
             }
             objectProperty.setValue(value);

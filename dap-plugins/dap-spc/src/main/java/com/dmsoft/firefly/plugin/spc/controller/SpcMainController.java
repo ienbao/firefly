@@ -492,6 +492,13 @@ public class SpcMainController implements Initializable {
     }
 
     private boolean resultSelectIsChange(List<String> newList, List<String> oldList) {
+        if (oldList == null) {
+            if (newList.size() == 0) {
+                return false;
+            } else {
+                return true;
+            }
+        }
         if (newList.size() != oldList.size()) {
             return true;
         }
