@@ -306,6 +306,7 @@ public class ChartResultController implements Initializable {
             String key = spcChartDto.getKey();
             Color color = ColorUtils.toFxColorFromAwtColor(colorCache.get(key));
             SpcChartResultDto spcChartResultDto = spcChartDto.getResultDto();
+            List<String> analyzedRowKeys = spcChartDto.getAnalyzedRowKeys();
             if (spcChartResultDto == null) {
                 continue;
             }
@@ -313,7 +314,7 @@ public class ChartResultController implements Initializable {
             INdcChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
             ndcChartDataList.add(iNdcChartData);
             //run chart
-            IRunChartData iRunChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), color);
+            IRunChartData iRunChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), analyzedRowKeys, color);
             runChartDataList.add(iRunChartData);
             //x bar chart
             IControlChartData xBarChartData = new SpcControlChartData(key, spcChartResultDto.getXbarCResult(), color);

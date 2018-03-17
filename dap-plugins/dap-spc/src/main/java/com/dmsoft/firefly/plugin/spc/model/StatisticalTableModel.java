@@ -510,4 +510,11 @@ public class StatisticalTableModel implements TableModel {
         }
         return spcStatisticalResultAlarmDtoList;
     }
+
+    public boolean isMenuEventEnable(String rowKey) {
+        if (emptyResultKeys.contains(rowKey)) {
+            return false;
+        }
+        return true;
+    }
 }
