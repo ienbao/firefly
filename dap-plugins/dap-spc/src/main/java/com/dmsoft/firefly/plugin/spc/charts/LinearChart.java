@@ -36,7 +36,10 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
     private Map<String, XYChart.Series> seriesMap = Maps.newHashMap();
     private Map<XYChart.Series, Color> seriesColorMap = Maps.newHashMap();
 
+    private PointClickCallBack pointClickCallBack;
+
     private boolean showTooltip = true;
+    private boolean pointClick = false;
 
     /**
      * Construct a new LinearChart with the given axis.
@@ -73,6 +76,7 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         XYChart.Series oneSeries = this.buildSeries(xyOneChartData);
         this.seriesMap.put(unique, oneSeries);
         this.getData().add(oneSeries);
+        this.dataClickEvent(oneSeries);
         this.setSeriesDataStyleByDefault(oneSeries, xyOneChartData.getColor(), true);
         this.setSeriesDataTooltip(oneSeries, pointTooltipFunction);
         this.seriesColorMap.put(oneSeries, xyOneChartData.getColor());
@@ -358,10 +362,19 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         }
     }
 
-    public void activePointClickEvent(PointClickCallBack pointClickCallBack) {
-        ObservableList<Series<X,Y>> series = this.getData();
-        series.forEach(oneSeries -> oneSeries.getData().forEach(oneData -> oneData.getNode().setOnMouseClicked(event ->
-                pointClickCallBack.execute(oneData.getExtraValue()))));
+    public void activePointClickEvent(boolean flag) {
+        this.pointClick = flag;
     }
 
+    private void dataClickEvent(XYChart.Series<X,Y> series) {
+        series.getData().forEach(oneData -> oneData.getNode().setOnMouseClicked(event -> {
+            if (pointClickCallBack != null && pointClick) {
+                pointClickCallBack.execute(oneData.getExtraValue());
+            }
+        }));
+    }
+
+    public void setPointClickCallBack(PointClickCallBack pointClickCallBack) {
+        this.pointClickCallBack = pointClickCallBack;
+    }
 }
