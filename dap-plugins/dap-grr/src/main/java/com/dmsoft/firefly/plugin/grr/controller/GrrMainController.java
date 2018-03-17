@@ -30,6 +30,7 @@ public class GrrMainController implements Initializable {
     private GrrDetailDto grrDetailDto;
     private GrrConfigDto grrConfigDto;
     private TemplateSettingDto activeTemplateSettingDto;
+    private GrrParamDto grrParamDto;
     @FXML
     private GrrItemController grrItemController;
     @FXML
@@ -125,5 +126,13 @@ public class GrrMainController implements Initializable {
 
     public void setActiveTemplateSettingDto(TemplateSettingDto activeTemplateSettingDto) {
         this.activeTemplateSettingDto = activeTemplateSettingDto;
+    }
+
+    public GrrParamDto getGrrParamDto() {
+        return grrParamDto;
+    }
+
+    public void setGrrParamDto(GrrParamDto grrParamDto) {
+        this.grrParamDto = grrParamDto;
     }
 }
