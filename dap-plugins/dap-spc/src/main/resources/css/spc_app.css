@@ -137,12 +137,12 @@ table
     -fx-font-weight: bold;
 }
 
-.cell .error .check-box:disabled > .box {
+.cell .error .check-box > .box {
     -fx-border-color: #ea2028;
     -fx-background-color: #fde8e9;
 }
 
-.cell .error .check-box:disabled {
+.cell .error .check-box {
     -fx-opacity: 1;
     -fx-cursor: inherit;
 }

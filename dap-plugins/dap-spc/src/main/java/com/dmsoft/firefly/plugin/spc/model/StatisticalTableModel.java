@@ -338,7 +338,6 @@ public class StatisticalTableModel implements TableModel {
                 tableCell.setStyle("-fx-background-color:" + ColorUtils.toHexFromColor(color));
             }
             if (emptyResultKeys.contains(rowKey)) {
-                tableCell.getGraphic().setDisable(true);
                 tableCell.getStyleClass().add("error");
             }
         }

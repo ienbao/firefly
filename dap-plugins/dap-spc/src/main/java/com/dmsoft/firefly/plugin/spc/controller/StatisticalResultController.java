@@ -210,9 +210,6 @@ public class StatisticalResultController implements Initializable {
         if (statisticalTableModel.getStatisticalTableRowDataSortedList() != null) {
             Map<String, SimpleObjectProperty<Boolean>> checkMap = statisticalTableModel.getCheckMap();
             for (String key : statisticalTableModel.getStatisticalTableRowDataSortedList()) {
-                if (statisticalTableModel.getEmptyResultKeys().contains(key)) {
-                    continue;
-                }
                 if (checkMap.get(key) != null) {
                     checkMap.get(key).set(statisticalTableModel.getAllCheckBox().isSelected());
                 } else {

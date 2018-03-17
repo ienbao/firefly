@@ -132,6 +132,15 @@ public class SpcMainController implements Initializable {
         chartResultController.updateChartColor(key, color);
     }
 
+    /**
+     * set view data focus row data
+     *
+     * @param rowKey row key
+     */
+    public void setViewDataFocusRowData(String rowKey) {
+        viewDataController.setFocusRowData(rowKey);
+    }
+
     private void initComponentEvent() {
         resetBtn.setOnAction(event -> getResetBtnEvent());
         printBtn.setOnAction(event -> getPrintBtnEvent());

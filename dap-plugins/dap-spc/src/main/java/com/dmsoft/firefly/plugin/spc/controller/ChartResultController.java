@@ -6,6 +6,7 @@ package com.dmsoft.firefly.plugin.spc.controller;
 import com.dmsoft.firefly.plugin.spc.charts.*;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
 import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
+import com.dmsoft.firefly.plugin.spc.charts.utils.PointClickCallBack;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
@@ -202,6 +203,14 @@ public class ChartResultController implements Initializable {
                 runChart.setSeriesDataStyleByRule(oneSeries, Lists.newArrayList(selectedNames), rulePointFunc);
             });
         }));
+        runChart.activePointClickEvent(true);
+        runChart.setPointClickCallBack(new PointClickCallBack(){
+            @Override
+            public void execute(Object id) {
+                String key = (String) id;
+                spcMainController.setViewDataFocusRowData(key);
+            }
+        });
     }
 
     private void initXBarChartPane() {
