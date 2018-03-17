@@ -197,7 +197,7 @@ public class GrrExportController {
         this.partCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
             Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
             values.forEach(value -> {
-                partList.add(new ListViewModel(value, false));
+                partList.add(new ListViewModel(value, false, ""));
             });
             partListView.setItems(partList);
         });
@@ -205,7 +205,7 @@ public class GrrExportController {
         this.appraiserCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
             Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
             values.forEach(value -> {
-                appraiserList.add(new ListViewModel(value, false));
+                appraiserList.add(new ListViewModel(value, false, ""));
             });
             appraiserListView.setItems(appraiserList);
         });

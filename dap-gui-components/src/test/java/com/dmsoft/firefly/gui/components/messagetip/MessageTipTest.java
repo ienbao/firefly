@@ -30,7 +30,9 @@ public class MessageTipTest extends Application {
             HBox hbox = new HBox();
             hbox.getChildren().add(new Label("Tfdsfsfsfsab" + i));
             hbox.setAlignment(Pos.CENTER);
-            tab.setContent(hbox);
+            CheckBox checkBox = new CheckBox();
+            checkBox.getStyleClass().add("error");
+            tab.setContent(checkBox);
 
             tab.setClosable(true);
 
