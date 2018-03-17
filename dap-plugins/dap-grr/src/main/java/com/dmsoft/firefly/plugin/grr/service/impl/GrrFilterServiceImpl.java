@@ -308,7 +308,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
                             errorMap.put(partValue + UIConstant.SPLIT_FLAG + appraiserValue, GrrFxmlAndLanguageUtils.getString(UIConstant.EXCEPTION_GRR_MODEL, errorParams));
                         }
                     }
-                    if (partIndex == partInt) {
+                    if (partIndex == partInt + 1) {
                         break;
                     }
                 }

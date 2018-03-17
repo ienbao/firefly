@@ -45,7 +45,9 @@ public class VaidateParamHandler implements JobInboundHandler {
         }
         if (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty()) {
             searchConditionDto.setParts(new LinkedList<>(grrParamDto.getParts()));
-            searchConditionDto.setAppraisers(new LinkedList<>(grrParamDto.getAppraisers()));
+            if (grrParamDto.getAppraisers() != null && !grrParamDto.getAppraisers().isEmpty()) {
+                searchConditionDto.setAppraisers(new LinkedList<>(grrParamDto.getAppraisers()));
+            }
             param.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, searchConditionDto);
             context.fireDoJob(param, in[1]);
         } else {
