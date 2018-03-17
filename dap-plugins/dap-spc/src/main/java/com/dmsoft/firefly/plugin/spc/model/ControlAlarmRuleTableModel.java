@@ -86,23 +86,23 @@ public class ControlAlarmRuleTableModel implements TableModel {
             } else if (columnName.equals(HEADER[1])) {
                 value = controlRuleDto.getRuleName();
             } else if (columnName.equals(HEADER[2])) {
-                value = DAPStringUtils.toStringFromDouble(controlRuleDto.getnValue());
+                value = controlRuleDto.getnValue();
                 objectProperty.addListener((ov, b1, b2) -> {
                     if (!DAPStringUtils.isNumeric(String.valueOf(b2)) || DAPStringUtils.isBlank(String.valueOf(b2))) {
                         return;
                     }
-                    controlRuleDto.setnValue(Double.valueOf((String) b2));
+                    controlRuleDto.setnValue(Integer.valueOf((String) b2));
                 });
             } else if (columnName.equals(HEADER[3])) {
-                value = DAPStringUtils.toStringFromDouble(controlRuleDto.getmValue());
+                value = controlRuleDto.getmValue();
                 objectProperty.addListener((ov, b1, b2) -> {
                     if (!DAPStringUtils.isNumeric(String.valueOf(b2)) || DAPStringUtils.isBlank(String.valueOf(b2))) {
                         return;
                     }
-                    controlRuleDto.setmValue(Double.valueOf((String) b2));
+                    controlRuleDto.setmValue(Integer.valueOf((String) b2));
                 });
             } else if (columnName.equals(HEADER[4])) {
-                value = DAPStringUtils.toStringFromDouble(controlRuleDto.getsValue());
+                value = controlRuleDto.getsValue();
                 objectProperty.addListener((ov, b1, b2) -> {
                     if (!DAPStringUtils.isNumeric(String.valueOf(b2)) || DAPStringUtils.isBlank(String.valueOf(b2))) {
                         return;

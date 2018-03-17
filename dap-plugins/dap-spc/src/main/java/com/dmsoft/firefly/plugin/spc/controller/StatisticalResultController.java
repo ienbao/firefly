@@ -122,6 +122,15 @@ public class StatisticalResultController implements Initializable {
     }
 
     /**
+     * refresh spc statistical data
+     *
+     * @param spcStatsDtoList the refresh data
+     */
+    public void refreshStatisticalResult(List<SpcStatisticalResultAlarmDto> spcStatsDtoList){
+        statisticalTableModel.refreshData(spcStatsDtoList);
+    }
+
+    /**
      * get select row key
      *
      * @return row key
