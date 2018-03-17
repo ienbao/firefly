@@ -1,7 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.service.impl;
 
 import com.dmsoft.firefly.plugin.grr.GrrPlugin;
-import com.dmsoft.firefly.plugin.grr.dto.GrrExportDetailDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
 import com.dmsoft.firefly.plugin.grr.service.GrrAnalysisService;
 import com.dmsoft.firefly.plugin.grr.utils.GrrExceptionCode;
@@ -79,8 +78,43 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
     @Override
     public GrrExportDetailResultDto analyzeExportDetailResult(GrrAnalysisDataDto analysisDataDto, GrrAnalysisConfigDto configDto) {
         logger.debug("Analyzing GRR export detail result ...");
-        GrrExportDetailDto result;
-        return null;
+        GrrExportDetailResultDto result = new GrrExportDetailResultDto();
+        try {
+            Rengine engine = prepareEngine(analysisDataDto, configDto);
+            GrrDetailResultDto detailResultDto = getGrrDetailResult(engine, configDto);
+            result.setComponentChartDto(detailResultDto.getComponentChartDto());
+            result.setPartAppraiserChartDto(detailResultDto.getPartAppraiserChartDto());
+            result.setXbarAppraiserChartDto(detailResultDto.getXbarAppraiserChartDto());
+            result.setRangeAppraiserChartDto(detailResultDto.getRangeAppraiserChartDto());
+            result.setRrbyAppraiserChartDto(detailResultDto.getRrbyAppraiserChartDto());
+            result.setRrbyPartChartDto(detailResultDto.getRrbyPartChartDto());
+            result.setAnovaAndSourceResultDto(detailResultDto.getAnovaAndSourceResultDto());
+            GrrSummaryResultDto summaryResult = getSummaryResult(engine, configDto.getMethod());
+            result.setRepeatabilityOnTolerance(summaryResult.getRepeatabilityOnTolerance());
+            result.setReproducibilityOnTolerance(summaryResult.getReproducibilityOnTolerance());
+            result.setGrrOnTolerance(summaryResult.getGrrOnTolerance());
+            result.setRepeatabilityOnContribution(summaryResult.getRepeatabilityOnContribution());
+            result.setReproducibilityOnContribution(summaryResult.getReproducibilityOnContribution());
+            result.setGrrOnContribution(summaryResult.getGrrOnContribution());
+
+            if (DAPStringUtils.isNumeric(analysisDataDto.getUsl())) {
+                result.setUsl(Double.valueOf(analysisDataDto.getUsl()));
+            }
+            if (DAPStringUtils.isNumeric(analysisDataDto.getLsl())) {
+                result.setLsl(Double.valueOf(analysisDataDto.getLsl()));
+            }
+            if (result.getLsl() != null && result.getUsl() != null) {
+                result.setTolerance(result.getUsl() - result.getLsl());
+            }
+            //TODO
+            SemaphoreUtils.releaseSemaphore(engine);
+            logger.info("Analyze GRR export detail result done.");
+        } catch (Exception e) {
+            SemaphoreUtils.releaseSemaphore(privateEngine);
+            logger.error("Analyze Grr export detail result error, exception message = {}", e.getMessage());
+            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12013));
+        }
+        return result;
     }
 
     private Rengine prepareEngine(GrrAnalysisDataDto dataDto, GrrAnalysisConfigDto configDto) {

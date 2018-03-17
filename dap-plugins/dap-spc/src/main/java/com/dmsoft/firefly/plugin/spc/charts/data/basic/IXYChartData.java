@@ -2,6 +2,8 @@ package com.dmsoft.firefly.plugin.spc.charts.data.basic;
 
 import javafx.scene.paint.Color;
 
+import java.util.function.Function;
+
 /**
  * Created by cherry on 2018/2/27.
  */
@@ -21,5 +23,9 @@ public interface IXYChartData<X, Y> {
 
     default String getSeriesName() {
         return "";
+    }
+
+    default Function<PointRule, PointStyle> getPointFunction() {
+        return null;
     }
 }

@@ -34,6 +34,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.awt.Color;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
@@ -65,8 +66,8 @@ public class SpcMainController implements Initializable {
     private SpcAnalysisConfigDto analysisConfigDto;
     private List<SearchConditionDto> initSearchConditionDtoList;
 
-    private List<String> chooseStatisticalRowKeyCache = Lists.newArrayList();
-    private List<String> viewDataRowKeyCache = Lists.newArrayList();
+    private List<String> chooseStatisticalRowKeyCache;
+    private List<String> viewDataRowKeyCache;
 
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private SpcSettingService spcSettingService = RuntimeContext.getBean(SpcSettingService.class);
@@ -117,7 +118,27 @@ public class SpcMainController implements Initializable {
      */
     public void clearAnalysisSubShowData() {
         //todo clear chart data
+        chartResultController.clearChartData();
         viewDataController.setViewData(null, null);
+    }
+
+    /**
+     * change chart color
+     *
+     * @param key   key
+     * @param color color
+     */
+    public void updateChartColor(String key, javafx.scene.paint.Color color) {
+        chartResultController.updateChartColor(key, color);
+    }
+
+    /**
+     * set view data focus row data
+     *
+     * @param rowKey row key
+     */
+    public void setViewDataFocusRowData(String rowKey) {
+        viewDataController.setFocusRowData(rowKey);
     }
 
     private void initComponentEvent() {
@@ -235,9 +256,9 @@ public class SpcMainController implements Initializable {
             ControlRuleDto controlRuleDto = new ControlRuleDto();
             controlRuleDto.setUsed(true);
             controlRuleDto.setRuleName(alarmName);
-            controlRuleDto.setmValue(7d);
-            controlRuleDto.setnValue(4d);
-            controlRuleDto.setsValue(1d);
+            controlRuleDto.setmValue(7);
+            controlRuleDto.setnValue(4);
+            controlRuleDto.setsValue(1);
             controlChartRule.add(controlRuleDto);
         });
         spcSettingDto.setControlChartRule(controlChartRule);
@@ -268,8 +289,8 @@ public class SpcMainController implements Initializable {
             if (statisticalSelectRowKeyList.size() == 0) {
                 this.clearAnalysisSubShowData();
             }
-            if (chooseStatisticalRowKeyCache.size() != 0) {
-                viewDataSelectRowKeyList = viewDataController.getSelectedRowKeys();
+            if (chooseStatisticalRowKeyCache != null) {
+                viewDataSelectRowKeyList = chooseStatisticalRowKeyCache;
             }
 
 //            List<SpcStatisticalResultAlarmDto> editRowDataList = statisticalResultController.getEditRowStatsData();
@@ -294,6 +315,11 @@ public class SpcMainController implements Initializable {
 
         } else if (statisticalResultController.getEidtStatisticalRowKey().size() == 0 && !viewDataController.isChanged()) {
             //only refresh chart
+            List<String> rowKeyList = dataFrame.getAllRowKeys();
+            if (chooseStatisticalRowKeyCache.size() != 0) {
+                rowKeyList = viewDataController.getSelectedRowKeys();
+            }
+            chooseStatisticalRowKeyCache = statisticalResultController.getSelectStatisticalRowKey();
             List<SearchConditionDto> searchConditionDtoList = this.buildRefreshSearchConditionData(statisticalResultController.getSelectStatsData());
             if (searchConditionDtoList.size() == 0) {
                 return;
@@ -303,12 +329,7 @@ public class SpcMainController implements Initializable {
             paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
             paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
 
-            List<String> rowKeyList = dataFrame.getAllRowKeys();
-            if (chooseStatisticalRowKeyCache.size() != 0) {
-                rowKeyList = viewDataController.getSelectedRowKeys();
-            }
             SearchDataFrame subDataFrame = this.buildSubSearchDataFrame(rowKeyList, searchConditionDtoList);
-
             paramMap.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
 
             Object returnValue = manager.doJobSyn(job, paramMap);
@@ -322,8 +343,47 @@ public class SpcMainController implements Initializable {
             SearchDataFrame viewDataFrame = this.buildSubSearchDataFrame(dataFrame.getAllRowKeys(), searchConditionDtoList);
             viewDataController.setViewData(viewDataFrame, viewDataRowKeyCache);
         } else {
-            viewDataRowKeyCache = viewDataController.getSelectedRowKeys();
             // refresh all data
+            chooseStatisticalRowKeyCache = statisticalResultController.getSelectStatisticalRowKey();
+            viewDataRowKeyCache = viewDataController.getSelectedRowKeys();
+            //statistical data
+            List<SpcStatisticalResultAlarmDto> editRowDataList = statisticalResultController.getAllRowStatsData();
+            List<SearchConditionDto> statisticalSearchConditionDtoList = this.buildRefreshSearchConditionData(editRowDataList);
+            if (statisticalSearchConditionDtoList.size() == 0) {
+                return;
+            }
+            SearchDataFrame statisticalDataFrame = this.buildSubSearchDataFrame(viewDataRowKeyCache, statisticalSearchConditionDtoList);
+
+            //chart data
+            List<SpcStatisticalResultAlarmDto> chooseRowDataList = statisticalResultController.getSelectStatsData();
+            List<SearchConditionDto> chartSearchConditionDtoList = this.buildRefreshSearchConditionData(chooseRowDataList);
+            SearchDataFrame chartDataFrame = this.buildSubSearchDataFrame(viewDataRowKeyCache, chartSearchConditionDtoList);
+
+            Job job = new Job(ParamKeys.SPC_REFRESH_ANALYSIS_JOB_PIPELINE);
+            Map paramMap = Maps.newHashMap();
+            paramMap.put(ParamKeys.STATISTICAL_SEARCH_DATA_FRAME, statisticalDataFrame);
+            paramMap.put(ParamKeys.STATISTICAL_SEARCH_CONDITION_DTO_LIST, statisticalSearchConditionDtoList);
+            paramMap.put(ParamKeys.CHART_SEARCH_DATA_FRAME, chartDataFrame);
+            paramMap.put(ParamKeys.CHART_SEARCH_CONDITION_DTO_LIST, chartSearchConditionDtoList);
+            paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
+
+            Object returnValue = manager.doJobSyn(job, paramMap);
+            if (returnValue == null) {
+                return;
+            }
+            Map<String, Object> analysisResultMap = (Map) returnValue;
+            List<SpcStatisticalResultAlarmDto> statisticalAnaysisResult = (List<SpcStatisticalResultAlarmDto>) analysisResultMap.get(ParamKeys.STATISTICAL_ANALYSIS_RESULT);
+            List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) analysisResultMap.get(ParamKeys.CHART_ANALYSIS_RESULT);
+
+            //set statistical data
+            statisticalResultController.refreshStatisticalResult(statisticalAnaysisResult);
+
+            //set chart data
+            chartResultController.initSpcChartData(spcChartDtoList);
+
+            //set view data
+            SearchDataFrame viewDataFrame = this.buildSubSearchDataFrame(dataFrame.getAllRowKeys(), chartSearchConditionDtoList);
+            viewDataController.setViewData(viewDataFrame, viewDataRowKeyCache);
         }
     }
 
@@ -441,5 +501,21 @@ public class SpcMainController implements Initializable {
             }
         }
         return false;
+    }
+
+    public List<String> getChooseStatisticalRowKeyCache() {
+        return chooseStatisticalRowKeyCache;
+    }
+
+    public void setChooseStatisticalRowKeyCache(List<String> chooseStatisticalRowKeyCache) {
+        this.chooseStatisticalRowKeyCache = chooseStatisticalRowKeyCache;
+    }
+
+    public List<String> getViewDataRowKeyCache() {
+        return viewDataRowKeyCache;
+    }
+
+    public void setViewDataRowKeyCache(List<String> viewDataRowKeyCache) {
+        this.viewDataRowKeyCache = viewDataRowKeyCache;
     }
 }

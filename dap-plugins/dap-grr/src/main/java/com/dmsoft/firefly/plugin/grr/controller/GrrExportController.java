@@ -419,12 +419,12 @@ public class GrrExportController {
 
         List<GrrSummaryDto> grrSummaryDtoList = grrService.getSummaryResult(dataFrame, testItemWithTypeDtoList, rowKeysToByAnalyzed, configDto);
 
-        List<GrrSummaryResultDto> grrSummaryResultDtos = Lists.newArrayList();
+        List<GrrSummaryExportDto> grrSummaryExportDtos = Lists.newArrayList();
         List<GrrExportResultDto> grrExportResultDtos = Lists.newArrayList();
         if (detail) {
-            grrExportService.exportGrrSummary(grrExportConfigDto, grrSummaryResultDtos);
+            grrExportService.exportGrrSummary(grrExportConfigDto, grrSummaryExportDtos);
         } else {
-            grrExportService.exportGrrSummaryDetail(grrExportConfigDto, grrSummaryResultDtos, grrExportResultDtos);
+            grrExportService.exportGrrSummaryDetail(grrExportConfigDto, grrSummaryExportDtos, grrExportResultDtos);
         }
 
     }

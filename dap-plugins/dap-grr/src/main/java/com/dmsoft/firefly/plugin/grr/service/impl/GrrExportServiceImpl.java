@@ -31,7 +31,7 @@ public class GrrExportServiceImpl implements GrrExportService {
     private Logger logger = LoggerFactory.getLogger(GrrExportServiceImpl.class);
 
     @Override
-    public String exportGrrSummary(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryResultDto> grrSummaryResultDtos) {
+    public String exportGrrSummary(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryExportDto> grrSummaryExportDtos) {
        /*
         1.Verify the validity of the parameters
         2.Create directory exportDir
@@ -43,7 +43,7 @@ public class GrrExportServiceImpl implements GrrExportService {
         propertyConfig.setGrrExportNumber(200);
         propertyConfig.setDefaultExportPath("../export/");
         //Verify the validity of the parameters
-        if (grrExportConfigDto == null || grrSummaryResultDtos == null || grrSummaryResultDtos.size() <= 0) {
+        if (grrExportConfigDto == null || grrSummaryExportDtos == null || grrSummaryExportDtos.size() <= 0) {
 //            throw new ApplicationException(GrrExceptionCode.ERR_12001, GrrFxmlAndLanguageUtils.getString(ResourceMassages.VIEW_DATA));
             throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXCEPTION_GRR_PARAMETER_INVALID));
         }
@@ -67,7 +67,7 @@ public class GrrExportServiceImpl implements GrrExportService {
             String exportFilePath = exportPath + "/" + fixDir;
             //Build grr excel
             GrrExportWorker factory = new GrrExportWorker();
-            factory.buildGrrSummary(grrExportConfigDto, grrSummaryResultDtos);
+            factory.buildGrrSummary(grrExportConfigDto, grrSummaryExportDtos);
             GrrExcelBuilder grrExcelBuilder = new GrrExcelBuilder(null, null);
             FileUtils.createDir(exportFilePath);
             logger.info("Export grr only result to filepath:{}", exportFilePath);
@@ -82,7 +82,7 @@ public class GrrExportServiceImpl implements GrrExportService {
     }
 
     @Override
-    public String exportGrrSummaryDetail(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryResultDto> grrSummaryResultDtos, List<GrrExportResultDto> grrExportResultDtos) {
+    public String exportGrrSummaryDetail(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryExportDto> grrSummaryExportDtos, List<GrrExportResultDto> grrExportResultDtos) {
         /*
         1.Verify the validity of the parameters
         2.Create directory exportDir
@@ -92,7 +92,7 @@ public class GrrExportServiceImpl implements GrrExportService {
         PropertyConfig propertyConfig = new PropertyConfig();
         propertyConfig.setSpcExportNumber(200);
         propertyConfig.setGrrExportNumber(200);
-        if (grrSummaryResultDtos == null || grrSummaryResultDtos.size() <= 0 || grrExportResultDtos == null || grrExportResultDtos.size() <= 0) {
+        if (grrSummaryExportDtos == null || grrSummaryExportDtos.size() <= 0 || grrExportResultDtos == null || grrExportResultDtos.size() <= 0) {
 //            throw new ApplicationException(ExceptionMessages.ERR_15009, ResourceBundleUtils.getString(ExceptionMessages.EXCEPTION_GLOBAL_MKDIRS_FAILED));
             throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXCEPTION_GRR_PARAMETER_INVALID));
         }
@@ -131,7 +131,7 @@ public class GrrExportServiceImpl implements GrrExportService {
                 }
                 String filePath = exportFilePath + "/" + fixDir + "_" + excelIndex + ".xlsx";
                 GrrExportWorker factory = new GrrExportWorker();
-                factory.buildSummaryAndDetail(grrExportConfigDto, grrSummaryResultDtos, grrExportResultDtos);
+                factory.buildSummaryAndDetail(grrExportConfigDto, grrSummaryExportDtos, grrExportResultDtos);
                 GrrExcelBuilder grrExcelBuilder = new GrrExcelBuilder(null, null);
                 grrExcelBuilder.drawExcel(filePath, factory);
                 logger.info("Export grr result and data to filepath:{}", filePath);

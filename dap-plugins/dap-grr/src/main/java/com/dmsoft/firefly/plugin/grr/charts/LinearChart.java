@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.grr.charts;
 
 import com.dmsoft.firefly.plugin.grr.charts.data.ILineData;
+import com.dmsoft.firefly.plugin.grr.charts.data.PointTooltip;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
@@ -18,6 +19,7 @@ import javafx.scene.shape.Line;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Created by cherry on 2018/3/14.
@@ -70,7 +72,21 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         }
     }
 
-    public void buildValueMarker(List<ILineData> lineData, boolean showTooltip) {
+    public void buildValueMarkerWithTooltip(List<ILineData> lineData, Function<ILineData, String> pointTooltipFunction) {
+        buildValueMarkerWithoutTooltip(lineData);
+        lineData.forEach(oneLineData -> {
+            if (lineMap.containsKey(oneLineData.getName())) {
+                Line line = lineMap.get(oneLineData.getName());
+                line.setOnMouseEntered(event -> {
+                    //Set tooltip
+                    Tooltip.install(line, new Tooltip(pointTooltipFunction.apply(oneLineData)));
+                });
+            }
+        });
+
+    }
+
+    public void buildValueMarkerWithoutTooltip(List<ILineData> lineData) {
         lineData.forEach(oneLineData -> {
             Line line = new Line();
             Orientation orientationType = oneLineData.getPlotOrientation();
@@ -92,15 +108,6 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
                 line.getStyleClass().setAll("line", oneLineData.getLineClass());
             }
             setLineColor(line, oneLineData.getColor());
-            if (showTooltip) {
-                line.setOnMouseEntered(event -> {
-                    //Set tooltip
-                    String content = DAPStringUtils.isBlank(oneLineData.getTooltipContent()) ?
-                            oneLineData.getTitle() + "\n" + oneLineData.getName() + "="
-                                    + oneLineData.getValue() : oneLineData.getTooltipContent();
-                    Tooltip.install(line, new Tooltip(content));
-                });
-            }
         });
     }
 
