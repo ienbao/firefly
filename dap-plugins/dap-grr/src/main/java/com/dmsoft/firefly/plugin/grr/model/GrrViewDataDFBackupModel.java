@@ -91,9 +91,13 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
         } else if (partKey.equals(columnName)) {
             return new SimpleObjectProperty<>(grrViewDataDtoMap.get(rowKey).getPart());
         } else if (appKey.equals(columnName)) {
-            return new SimpleObjectProperty<>(grrViewDataDtoMap.get(rowKey).getOperator());
+            if (isSlot) {
+                return new SimpleObjectProperty<>(grrViewDataDtoMap.get(rowKey).getOperator());
+            } else {
+                return new SimpleObjectProperty<>();
+            }
         } else if (trailKey.equals(columnName)) {
-            return new SimpleObjectProperty<>(grrViewDataDtoMap.get(rowKey).getTrial());
+            return new SimpleObjectProperty<>();
         }
         return new SimpleObjectProperty<>(this.grrDataFrameDto.getDataFrame().getCellValue(rowKey, columnName));
     }
