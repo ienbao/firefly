@@ -313,10 +313,9 @@ public class GrrFilterServiceImpl implements GrrFilterService {
                     }
                 }
             }
-            if (rights.get() == partInt * appraiserInt ) {
-                grrParamDto.setParts(rightParts);
-                grrParamDto.setAppraisers(rightAppraisers);
-            } else {
+            grrParamDto.setParts(rightParts);
+            grrParamDto.setAppraisers(rightAppraisers);
+            if (rights.get() != partInt * appraiserInt ) {
                 grrParamDto.setErrors(errorMap);
             }
         }
@@ -367,9 +366,8 @@ public class GrrFilterServiceImpl implements GrrFilterService {
                 errorMap.put(partValue, GrrFxmlAndLanguageUtils.getString(UIConstant.EXCEPTION_GRR_MODEL, errorParams));
             }
         }
-        if (rights.get() == partInt ) {
-            grrParamDto.setParts(rightParts);
-        } else {
+        grrParamDto.setParts(rightParts);
+        if (rights.get() != partInt ) {
             grrParamDto.setErrors(errorMap);
         }
 

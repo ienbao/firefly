@@ -7,13 +7,13 @@ import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
-import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
-import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.plugin.grr.dto.GrrParamDto;
 import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.grr.model.ListViewModel;
+import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -46,7 +46,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
-
 
 /**
  * Created by Ethan.Yang on 2018/2/6.
@@ -195,7 +194,7 @@ public class GrrItemController implements Initializable {
             partList.clear();
             Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
             values.forEach(value -> {
-                partList.add(new ListViewModel(value, false));
+                partList.add(new ListViewModel(value, false, ""));
             });
             partListView.setItems(partList);
         });
@@ -203,29 +202,110 @@ public class GrrItemController implements Initializable {
         this.appraiserCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
             Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
             values.forEach(value -> {
-                appraiserList.add(new ListViewModel(value, false));
+                appraiserList.add(new ListViewModel(value, false, ""));
             });
             appraiserListView.setItems(appraiserList);
         });
     }
 
-    private void refreshPartListView(Set<String> selectedParts) {
-        partListView.getItems().forEach(listViewModel->{
-            if (selectedParts != null && selectedParts.contains(listViewModel.getName())){
-                listViewModel.setIsChecked(true);
+    private void refreshPartOrAppraiserListView(GrrParamDto grrParamDto) {
+        if (grrParamDto != null && grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty()) {
+            Set<String> selectedParts = grrParamDto.getParts();
+            if (selectedParts != null) {
+                partListView.getItems().forEach(listViewModel->{
+                    listViewModel.setErrorMsg(null);
+                    if (selectedParts.contains(listViewModel.getName())){
+                        listViewModel.setIsChecked(true);
+                    }
+                });
+                partListView.refresh();
             }
+
+            Set<String> selectedAppraisers = grrParamDto.getAppraisers();
+            if (selectedAppraisers != null) {
+                appraiserListView.getItems().forEach(listViewModel->{
+                    listViewModel.setErrorMsg(null);
+                    if (selectedAppraisers != null && selectedAppraisers.contains(listViewModel.getName())){
+                        listViewModel.setIsChecked(true);
+                    }
+                });
+                appraiserListView.refresh();
+            }
+        } else {
+            getTooltipMsg(partListView, grrParamDto, false);
+            getTooltipMsg(appraiserListView, grrParamDto, true);
+        }
+    }
+
+    private void getTooltipMsg(ListView<ListViewModel> listView, GrrParamDto grrParamDto, boolean isSlot) {
+        Map<String, String> errorMsgs = grrParamDto.getErrors();
+        listView.getItems().forEach(listViewModel->{
+            StringBuilder errorMsg = new StringBuilder();
+            errorMsgs.keySet().forEach(key->{
+                String[] keys = key.split(UIConstant.SPLIT_FLAG);
+                if (keys != null) {
+                    if (isSlot) {
+                        if (keys[1].equals(listViewModel.getName())) {
+                            errorMsg.append(errorMsgs.get(key)).append("\n");
+                        }
+                    } else {
+                        if (keys[0].equals(listViewModel.getName())) {
+                            errorMsg.append(errorMsgs.get(key)).append("\n");
+                        }
+                    }
+                }
+            });
+            listViewModel.setErrorMsg(errorMsg.toString());
         });
+        listView.refresh();
+    }
+
+    /*private void refreshPartListView(GrrParamDto grrParamDto) {
+        if (grrParamDto != null && grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty()) {
+            Set<String> selectedParts = grrParamDto.getParts();
+            partListView.getItems().forEach(listViewModel->{
+                if (selectedParts != null && selectedParts.contains(listViewModel.getName())){
+                    listViewModel.setIsChecked(true);
+                }
+            });
+        } else {
+            Map<String, String> errorMsgs = grrParamDto.getErrors();
+            partListView.getItems().forEach(listViewModel->{
+                StringBuilder errorMsg = new StringBuilder();
+                errorMsgs.keySet().forEach(key->{
+                    if (key.contains(listViewModel.getName())) {
+                        errorMsg.append(errorMsgs.get(key)).append("\n");
+                    }
+                });
+                listViewModel.setErrorMsg(errorMsg.toString());
+            });
+        }
         partListView.refresh();
     }
 
-    private void refreshAppraiserListView(Set<String> selectedAppraisers) {
-        appraiserListView.getItems().forEach(listViewModel->{
-            if (selectedAppraisers != null && selectedAppraisers.contains(listViewModel.getName())){
-                listViewModel.setIsChecked(true);
-            }
-        });
+    private void refreshAppraiserListView(GrrParamDto grrParamDto) {
+
+        if (grrParamDto != null && grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty()) {
+            Set<String> selectedAppraisers = grrParamDto.getAppraisers();
+            appraiserListView.getItems().forEach(listViewModel->{
+                if (selectedAppraisers != null && selectedAppraisers.contains(listViewModel.getName())){
+                    listViewModel.setIsChecked(true);
+                }
+            });
+        } else {
+            Map<String, String> errorMsgs = grrParamDto.getErrors();
+            appraiserListView.getItems().forEach(listViewModel->{
+                StringBuilder errorMsg = new StringBuilder();
+                errorMsgs.keySet().forEach(key->{
+                    if (key.contains(listViewModel.getName())) {
+                        errorMsg.append(errorMsgs.get(key)).append("\n");
+                    }
+                });
+                listViewModel.setErrorMsg(errorMsg.toString());
+            });
+        }
         appraiserListView.refresh();
-    }
+    }*/
 
     private void initListView(ListView<ListViewModel> listView) {
         listView.setCellFactory(e -> new ListCell<ListViewModel>() {
@@ -238,14 +318,29 @@ public class GrrItemController implements Initializable {
                 } else {
                     HBox cell;
                     CheckBox checkBox = new CheckBox();
+                    checkBox.setPrefSize(12,12);
                     if (item.isIsChecked()) {
                         checkBox.setSelected(true);
                     } else {
                         checkBox.setSelected(false);
                     }
+                    if (StringUtils.isNotBlank(item.getErrorMsg())) {
+                        checkBox.getStyleClass().add("error");
+                    } else {
+                        checkBox.getStyleClass().removeAll("error");
+                    }
                     checkBox.setOnAction(event -> {
                         item.setIsChecked(checkBox.isSelected());
                     });
+                    if (StringUtils.isNotBlank(item.getErrorMsg())) {
+                        checkBox.setOnMouseEntered(event -> {
+                            TooltipUtil.installNormalTooltip(checkBox, item.getErrorMsg());
+                        });
+                        checkBox.setOnMouseExited(event -> {
+                            TooltipUtil.uninstallNormalTooltip(checkBox);
+                        });
+                    }
+
                     Label label = new Label(item.getName());
                     cell = new HBox(checkBox, label);
                     setGraphic(cell);
@@ -366,9 +461,8 @@ public class GrrItemController implements Initializable {
 //                                grrMainController.updateGrrSummaryAndDetail();
 
                                 GrrParamDto grrParamDto = grrMainController.getGrrParamDto();
+                                refreshPartOrAppraiserListView(grrParamDto);
                                 if (grrParamDto != null && (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty())) {
-                                    refreshPartListView(grrParamDto.getParts());
-                                    refreshAppraiserListView(grrParamDto.getAppraisers());
                                     grrMainController.updateGrrViewData();
                                     grrMainController.updateGrrSummaryAndDetail();
                                 } else {
@@ -457,52 +551,6 @@ public class GrrItemController implements Initializable {
 
         return true;
     }
-
-
-   /* @Deprecated
-    private List<SpcStatsDto> initData() {
-        List<SpcStatsDto> spcStatsDtoList = Lists.newArrayList();
-        Random random = new Random();
-        int k = random.nextInt(100);
-        for (int i = 0; i < k; i++) {
-            SpcStatsDto statisticalResultDto = new SpcStatsDto();
-            statisticalResultDto.setKey("key" + i);
-            statisticalResultDto.setItemName("itemName" + i);
-            statisticalResultDto.setCondition("itemName > 22");
-            spcStatsDtoList.add(statisticalResultDto);
-            SpcStatsResultDto spcStatsResultDto = new SpcStatsResultDto();
-            statisticalResultDto.setStatsResultDto(spcStatsResultDto);
-            int m = random.nextInt(k);
-            if (m > i) {
-                statisticalResultDto.getStatsResultDto().setSamples(m + 2.1);
-            }
-            statisticalResultDto.getStatsResultDto().setAvg(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setMax(m + 312.7);
-            statisticalResultDto.getStatsResultDto().setMin(m + 34.8);
-            statisticalResultDto.getStatsResultDto().setStDev(m + 124.6);
-            statisticalResultDto.getStatsResultDto().setLsl(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setUsl(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setCenter(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setRange(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setLcl(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setUcl(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setKurtosis(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setCpk(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setSkewness(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setCa(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setCp(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setCpl(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setCpu(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setWithinPPM(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setOverallPPM(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setPp(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setPpk(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setPpl(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setPpu(m + 32.2);
-
-        }
-        return spcStatsDtoList;
-    }*/
 
     /**
      * get selected test items
