@@ -362,16 +362,19 @@ public class GrrItemController implements Initializable {
                                     //todo message tip
                                     return;
                                 }
-                                GrrParamDto grrParamDto = grrMainController.getGrrParamDto();
-                                if (grrParamDto != null && (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty())) {
-                                    refreshPartListView(grrParamDto.getParts());
-                                    refreshAppraiserListView(grrParamDto.getAppraisers());
-                                    grrMainController.updateGrrViewData();
-                                    grrMainController.updateGrrSummaryAndDetail();
-                                } else {
-                                    //to do
-                                    System.out.println(returnValue);
-                                }
+                                grrMainController.updateGrrViewData();
+                                grrMainController.updateGrrSummaryAndDetail();
+
+//                                GrrParamDto grrParamDto = grrMainController.getGrrParamDto();
+//                                if (grrParamDto != null && (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty())) {
+//                                    refreshPartListView(grrParamDto.getParts());
+//                                    refreshAppraiserListView(grrParamDto.getAppraisers());
+//                                    grrMainController.updateGrrViewData();
+//                                    grrMainController.updateGrrSummaryAndDetail();
+//                                } else {
+//                                    //to do
+//                                    System.out.println(returnValue);
+//                                }
 
 
                             });

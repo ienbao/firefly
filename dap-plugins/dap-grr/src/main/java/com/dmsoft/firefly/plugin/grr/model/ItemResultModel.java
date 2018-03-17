@@ -5,9 +5,11 @@ import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.plugin.grr.dto.GrrItemResultDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrViewDataDto;
 import com.dmsoft.firefly.plugin.grr.utils.DataConvertUtils;
+import com.dmsoft.firefly.plugin.grr.utils.DigNumInstance;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -30,6 +32,7 @@ public class ItemResultModel implements TableModel {
     private String appraiserKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " ";
     private ObservableList<String> headerArray;
     private ObservableList<String> rowKeyArray;
+    private int digNum = -1;
 
     /**
      * Set item result model data
@@ -60,13 +63,14 @@ public class ItemResultModel implements TableModel {
         if (dataFrame == null || itemResultDto == null || grrViewDataDtos == null) {
             return null;
         }
-        if (rowKey.contains(UIConstant.SPLIT_FLAG + "mean")) {
+        digNum = DigNumInstance.newInstance().getDigNum();
+        if (rowKey.contains(UIConstant.SPLIT_FLAG + UIConstant.MEAN)) {
             return this.getMeanCellData(rowKey, columnName);
-        } else if (rowKey.contains(UIConstant.SPLIT_FLAG + "range")) {
+        } else if (rowKey.contains(UIConstant.SPLIT_FLAG + UIConstant.RANGE)) {
             return this.getRangeCellData(rowKey, columnName);
-        } else if (rowKey.equals("total mean")) {
+        } else if (rowKey.equals(UIConstant.TOTAL_MEAN)) {
             return this.getTotalMeanCellData(columnName);
-        } else if (rowKey.equals("total range")) {
+        } else if (rowKey.equals(UIConstant.TOTAL_RANGE)) {
             return this.getTotalRangeCellData(columnName);
         } else if (rowKey.contains(UIConstant.SPLIT_FLAG)) {
             return this.getItemCellData(rowKey, columnName);
@@ -83,7 +87,7 @@ public class ItemResultModel implements TableModel {
             return new SimpleObjectProperty<>(trial);
         } else {
             String viewDataRowKey = DataConvertUtils.findRowKeyFromViewData(grrViewDataDtos, appraiser, trial, columnName);
-            return new SimpleObjectProperty(dataFrame.getDataRow(viewDataRowKey).getData().get(currentItemName));
+            return buildCellData(dataFrame.getDataRow(viewDataRowKey).getData().get(currentItemName));
         }
     }
 
@@ -91,9 +95,9 @@ public class ItemResultModel implements TableModel {
         if (columnName.equals(appraiserKey)) {
             return new SimpleObjectProperty<>("");
         } else if (columnName.equals(trialKey)) {
-            return new SimpleObjectProperty<>("total mean");
+            return new SimpleObjectProperty<>(UIConstant.TOTAL_MEAN);
         } else {
-            return new SimpleObjectProperty<>(itemResultDto.getTotalMeans().get(columnName));
+            return buildCellData(itemResultDto.getTotalMeans().get(columnName));
         }
     }
 
@@ -101,9 +105,9 @@ public class ItemResultModel implements TableModel {
         if (columnName.equals(appraiserKey)) {
             return new SimpleObjectProperty<>("");
         } else if (columnName.equals(trialKey)) {
-            return new SimpleObjectProperty<>("mean");
+            return new SimpleObjectProperty<>(UIConstant.MEAN);
         } else {
-            return new SimpleObjectProperty<>(itemResultDto.getMeanAndRangeDtos().
+            return buildCellData(itemResultDto.getMeanAndRangeDtos().
                     get(rowKey.split(UIConstant.SPLIT_FLAG)[0]).getMeans().get(columnName));
         }
     }
@@ -112,9 +116,9 @@ public class ItemResultModel implements TableModel {
         if (columnName.equals(appraiserKey)) {
             return new SimpleObjectProperty<>("");
         } else if (columnName.equals(trialKey)) {
-            return new SimpleObjectProperty<>("total range");
+            return new SimpleObjectProperty<>(UIConstant.TOTAL_RANGE);
         } else {
-            return new SimpleObjectProperty<>(itemResultDto.getTotalRanges().get(columnName));
+            return buildCellData(itemResultDto.getTotalRanges().get(columnName));
         }
     }
 
@@ -122,11 +126,20 @@ public class ItemResultModel implements TableModel {
         if (columnName.equals(appraiserKey)) {
             return new SimpleObjectProperty<>("");
         } else if (columnName.equals(trialKey)) {
-            return new SimpleObjectProperty<>("range");
+            return new SimpleObjectProperty<>(UIConstant.RANGE);
         } else {
-            return new SimpleObjectProperty<>(itemResultDto.getMeanAndRangeDtos().
+            return buildCellData(itemResultDto.getMeanAndRangeDtos().
                     get(rowKey.split(UIConstant.SPLIT_FLAG)[0]).getRanges().get(columnName));
         }
+    }
+
+    private SimpleObjectProperty buildCellData(String value) {
+        if (DAPStringUtils.isBlankWithSpecialNumber(value)) {
+            return new SimpleObjectProperty("-");
+        } else if (DAPStringUtils.isNumeric(value)) {
+            return new SimpleObjectProperty(DAPStringUtils.formatDouble(Double.valueOf(value), digNum));
+        }
+        return new SimpleObjectProperty(value);
     }
 
     @Override

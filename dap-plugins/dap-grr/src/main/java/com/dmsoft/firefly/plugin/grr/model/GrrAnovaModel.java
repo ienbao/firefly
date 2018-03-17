@@ -1,6 +1,8 @@
 package com.dmsoft.firefly.plugin.grr.model;
 
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnovaDto;
+import com.dmsoft.firefly.plugin.grr.utils.DigNumInstance;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,14 +27,20 @@ public class GrrAnovaModel {
             return;
         }
         this.data.addAll(data);
-        data.forEach(oneData -> anovas.add(new GrrSingleAnova(
-                String.valueOf(oneData.getName()),
-                String.valueOf(oneData.getDf()),
-                String.valueOf(oneData.getSs()),
-                String.valueOf(oneData.getMs()),
-                String.valueOf(oneData.getF()),
-                String.valueOf(oneData.getProbF())
-        )));
+        int digNum = DigNumInstance.newInstance().getDigNum();
+        data.forEach(oneData -> {
+            String dfStr = digNum >= 0 ? DAPStringUtils.isInfinityAndNaN(oneData.getDf()) ? "-" :
+                    DAPStringUtils.formatDouble(oneData.getDf(), digNum) : String.valueOf(oneData.getDf());
+            String ssStr = digNum >= 0 ? DAPStringUtils.isInfinityAndNaN(oneData.getSs()) ? "-" :
+                    DAPStringUtils.formatDouble(oneData.getSs(), digNum) : String.valueOf(oneData.getSs());
+            String msStr = digNum >= 0 ? DAPStringUtils.isInfinityAndNaN(oneData.getMs()) ? "-" :
+                    DAPStringUtils.formatDouble(oneData.getMs(), digNum) : String.valueOf(oneData.getMs());
+            String fStr = digNum >= 0 ? DAPStringUtils.isInfinityAndNaN(oneData.getF()) ? "-" :
+                    DAPStringUtils.formatDouble(oneData.getF(), digNum) : String.valueOf(oneData.getF());
+            String probFStr = digNum >= 0 ? DAPStringUtils.isInfinityAndNaN(oneData.getProbF()) ? "-" :
+                    DAPStringUtils.formatDouble(oneData.getProbF(), digNum) : String.valueOf(oneData.getProbF());
+            anovas.add(new GrrSingleAnova(oneData.getName().name(), dfStr, ssStr, msStr, fStr, probFStr));
+        });
     }
 
     public ObservableList<GrrSingleAnova> getAnovas() {

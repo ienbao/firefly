@@ -50,7 +50,7 @@ public class GrrSummaryModel {
         double tolerance = summaryDto.getSummaryResultDto().getTolerance();
         String lslStr = String.valueOf(lsl);
         String uslStr = String.valueOf(usl);
-        String toleranceStr = digNum >= 0 ? DAPStringUtils.formatDouble(tolerance, digNum) : String.valueOf(tolerance);
+        String toleranceStr = digNum >= 0 ? DAPStringUtils.formatDouble(tolerance, digNum + 2) : String.valueOf(tolerance);
         String repeatabilityStr = digNum >= 0 ? DAPStringUtils.formatDouble(repeatability, digNum) : String.valueOf(repeatability);
         String reproducibilityStr = digNum >= 0 ? DAPStringUtils.formatDouble(reproducibility, digNum) : String.valueOf(reproducibility);
         String grrStr = digNum >= 0 ? DAPStringUtils.formatDouble(grr, digNum) : String.valueOf(grr);
@@ -58,7 +58,7 @@ public class GrrSummaryModel {
                 summaryDto.getItemName(),
                 DAPStringUtils.isBlankWithSpecialNumber(lslStr) ? "-" : lslStr,
                 DAPStringUtils.isBlankWithSpecialNumber(uslStr) ? "-" : uslStr,
-                DAPStringUtils.isBlankWithSpecialNumber(toleranceStr) ? "-" : toleranceStr + "%",
+                DAPStringUtils.isBlankWithSpecialNumber(toleranceStr) ? "-" : toleranceStr,
                 DAPStringUtils.isBlankWithSpecialNumber(repeatabilityStr) ? "-" : repeatabilityStr + "%",
                 DAPStringUtils.isBlankWithSpecialNumber(reproducibilityStr) ? "-" : reproducibilityStr + "%",
                 DAPStringUtils.isBlankWithSpecialNumber(grrStr) ? "-" : grrStr + "%");
