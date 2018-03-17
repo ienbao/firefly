@@ -257,10 +257,10 @@ public class ViewDataDFModel implements TableModel {
      * @return list of selected row key
      */
     public List<String> getSelectedRowKeys() {
-        List<String> result = Lists.newArrayList();
+        List<String> result = Lists.newArrayList(dataFrame.getAllRowKeys());
         for (String s : this.checkValueMap.keySet()) {
-            if (this.checkValueMap.get(s).get()) {
-                result.add(s);
+            if (!this.checkValueMap.get(s).get()) {
+                result.remove(s);
             }
         }
         return result;
