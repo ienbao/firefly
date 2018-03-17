@@ -3,6 +3,7 @@ package com.dmsoft.firefly.plugin.grr.model;
 import com.dmsoft.firefly.plugin.grr.dto.GrrSummaryDto;
 import com.dmsoft.firefly.plugin.grr.utils.DigNumInstance;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
@@ -17,6 +18,7 @@ public class GrrSummaryModel {
 
     private ObservableList<GrrSingleSummary> summaries = FXCollections.observableArrayList();
     private List<GrrSummaryDto> data = Lists.newArrayList();
+    private List<TestItemWithTypeDto> editTestItem = Lists.newArrayList();
 
     public GrrSummaryModel() {
     }
@@ -87,5 +89,21 @@ public class GrrSummaryModel {
 
     public ObservableList<GrrSingleSummary> getSummaries() {
         return summaries;
+    }
+
+    public void setEditTestItem(List<TestItemWithTypeDto> editTestItem) {
+        this.editTestItem = editTestItem;
+    }
+
+    public void addEditTestItem(TestItemWithTypeDto editTestItem) {
+        this.editTestItem.add(editTestItem);
+    }
+
+    public void removeEditTestItem(TestItemWithTypeDto editTestItem) {
+        this.editTestItem.remove(editTestItem);
+    }
+
+    public void clearEditTestItem() {
+        this.editTestItem.clear();
     }
 }

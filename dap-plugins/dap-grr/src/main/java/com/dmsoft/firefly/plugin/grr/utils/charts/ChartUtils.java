@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.grr.utils.charts;
 
 import com.dmsoft.firefly.plugin.grr.charts.data.PointTooltip;
+import com.dmsoft.firefly.plugin.grr.utils.DigNumInstance;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,9 +22,8 @@ public class ChartUtils {
      * Set chart text on top
      *
      * @param series chart series
-     * @param suffix suffix
      */
-    public static void setChartText(ObservableList<XYChart.Series> series, String suffix) {
+    public static void setChartText(ObservableList<XYChart.Series> series, Function<String, String> formatTextFunc) {
         series.forEach(oneSeries -> {
             ObservableList<XYChart.Data> data = oneSeries.getData();
             data.forEach(dataItem -> {
@@ -35,12 +35,14 @@ public class ChartUtils {
                             Node node = stackPane.getChildren().get(i);
                             if (node instanceof Text) {
                                 Text oldText = (Text) node;
-                                oldText.setText(dataItem.getYValue().toString() + suffix);
+                                String textVal = formatTextFunc.apply(dataItem.getYValue().toString());
+                                oldText.setText(textVal);
                                 return;
                             }
                         }
                     }
-                    Text text = new Text(dataItem.getYValue().toString() + suffix);
+                    String textVal = formatTextFunc.apply(dataItem.getYValue().toString());
+                    Text text = new Text(textVal);
                     stackPane.getChildren().add(text);
                     stackPane.setMargin(text, new Insets(-15, 0, 0, 0));
                 }
