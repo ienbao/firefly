@@ -39,7 +39,7 @@ import static java.util.Arrays.asList;
  */
 public class DataSourceSettingController {
     @FXML
-    private Button chooseItem, oK, cancel, apply;
+    private Button chooseItem, searchBtn, oK, cancel, apply;
     @FXML
     private TableView itemDataTable;
     @FXML
@@ -60,17 +60,18 @@ public class DataSourceSettingController {
         split.getItems().add( searchTab );
         this.buildChooseColumnDialog();
         this.initComponentEvent();
-
     }
 
     private void initButton() {
         chooseItem.setGraphic( ImageUtils.getImageView( getClass().getResourceAsStream( "/images/btn_choose_test_items_normal.png" ) ) );
+        searchBtn.setGraphic( ImageUtils.getImageView( getClass().getResourceAsStream( "/images/icon_choose_one_white.png" ) ) );
     }
 
     private void initComponentEvent() {
         chooseItem.setOnAction( event -> getChooseColumnBtnEvent() );
         itemDataTableModel.getAllCheckBox().setOnAction( event -> getAllCheckBoxEvent() );
         chooseCumDialogController.getChooseOkButton().setOnAction(event -> getChooseTestItemEvent());
+        searchBtn.setOnAction( event -> getSearchConditionEvent() );
         oK.setOnAction( event -> {
 //            saveCache();
 //            if (allTemplate != null) {
@@ -121,7 +122,7 @@ public class DataSourceSettingController {
                 testItems.add( dto.getTestItemName() );
             }
         }
-        List<RowDataDto> rowDataDtos = sourceDataService.findTestData( projectNames, testItems, null );
+        List<RowDataDto> rowDataDtos = sourceDataService.findTestData( projectNames, testItems, true );
 
         RowDataDto uslDataDto = new RowDataDto();
         RowDataDto lslDataDto = new RowDataDto();
@@ -163,10 +164,10 @@ public class DataSourceSettingController {
 
     private void initChooseColumnTableData() {
         List<ChooseTableRowData> chooseTableRowDataList = Lists.newArrayList();
-        testItems.forEach(v -> {
+        testItems.forEach( v -> {
             ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, v);
             chooseTableRowDataList.add(chooseTableRowData);
-        });
+        } );
         chooseCumDialogController.setTableData(chooseTableRowDataList);
     }
 
@@ -186,5 +187,19 @@ public class DataSourceSettingController {
         itemDataTable.getColumns().remove(1, itemDataTable.getColumns().size());
         itemDataTableModel.updateTestItemColumn(selectTestItemName);
         StageMap.closeStage("dataSourceSetting");
+    }
+
+    private void getSearchConditionEvent() {
+        List<String> searchCondition = searchTab.getSearch();
+        System.out.print( "============" + searchCondition );
+//        SearchDataFrame dataFrame;
+//        if (!searchCondition.isEmpty() && searchCondition.size() > 0) {
+//            List<RowDataDto> rowDataDtos = dataFrame.getDataRowArray( searchCondition );
+//            if (selectTestItemName != null && !selectTestItemName.isEmpty()) {
+//                itemDataTableModel = new ItemDataTableModel( selectTestItemName, rowDataDtos );
+//                TableViewWrapper.decorate( itemDataTable, itemDataTableModel );
+//            }
+//        }
+
     }
 }
