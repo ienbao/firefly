@@ -90,7 +90,7 @@ public class TableViewWrapper {
             tableView.setRowFactory(tv -> {
                 TableRow<String> row = new TableRow<>();
                 row.setOnMouseClicked(event -> {
-                    if (!row.isEmpty()) {
+                    if (!row.isEmpty() && model.isMenuEventEnable(row.getItem())) {
                         row.setContextMenu(menu);
                     }
                 });
