@@ -35,6 +35,11 @@ public class ExpandableTableViewSkin extends TableViewSkin {
     public ExpandableTableViewSkin(TableView tableView) {
         super(tableView);
         this.tableView = tableView;
+        this.tableView.widthProperty().addListener((ov, w1, w2) -> {
+            for (int i = 0; i < this.tableView.getColumns().size(); i++) {
+                resizeColumnToFitContent((TableColumn) this.tableView.getColumns().get(i), 30);
+            }
+        });
     }
 
     @Override
