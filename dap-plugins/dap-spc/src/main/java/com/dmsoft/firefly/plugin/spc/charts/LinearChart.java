@@ -2,6 +2,7 @@ package com.dmsoft.firefly.plugin.spc.charts;
 
 import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationFetch;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
+import com.dmsoft.firefly.plugin.spc.charts.utils.PointClickCallBack;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -356,4 +357,11 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
             pathMarker.updateAllLineColor(color);
         }
     }
+
+    public void activePointClickEvent(PointClickCallBack pointClickCallBack) {
+        ObservableList<Series<X,Y>> series = this.getData();
+        series.forEach(oneSeries -> oneSeries.getData().forEach(oneData -> oneData.getNode().setOnMouseClicked(event ->
+                pointClickCallBack.execute(oneData.getExtraValue()))));
+    }
+
 }
