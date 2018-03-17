@@ -128,4 +128,8 @@ public class WindowFactory {
         return StageMap.loadAndRefreshStage(name, title, bodyPane, true, WindowPane.WINDOW_MODEL_NONE, checkStyles(styles), StageStyle.TRANSPARENT);
     }
 
+    public static Stage createNoManagedStage(String title, Pane bodyPane, String... styles) {
+        return StageMap.createNoManagedStage(title, bodyPane, true, checkStyles(styles), StageStyle.TRANSPARENT);
+    }
+
 }

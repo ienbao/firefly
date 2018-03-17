@@ -277,4 +277,49 @@ public final class StageMap {
     public static Set<String> getAllStage() {
         return stages.keySet();
     }
+
+    public static Stage createNoManagedStage(Object title, Pane resources, boolean modality, List<String> cusStyles, StageStyle... styles) {
+        try {
+            WindowPane windowPane = null;
+            if (title instanceof String) {
+                windowPane = new WindowPane((String) title, resources);
+
+            } else if (title instanceof Pane) {
+                windowPane = new WindowPane((Pane) title, resources);
+            }
+
+            windowPane.setWindowsModel(WindowPane.WINDOW_MODEL_X);
+
+            //The corresponding Stage
+            Scene tempScene = new Scene(windowPane);
+            if (cusStyles != null && !cusStyles.isEmpty()) {
+                cusStyles.forEach(s -> {
+                    tempScene.getStylesheets().add(s);
+                });
+            }
+
+            tempScene.setFill(Color.TRANSPARENT);
+
+
+            Stage tempStage = new Stage();
+            if (modality) {
+                tempStage.initModality(Modality.APPLICATION_MODAL);
+            }
+            tempStage.setScene(tempScene);
+
+            //set initStyle
+            for (StageStyle s : styles) {
+                tempStage.initStyle(s);
+            }
+
+            windowPane.setStage(tempStage);
+            windowPane.init();
+
+            return tempStage;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

@@ -79,8 +79,26 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
     @Override
     public GrrExportDetailResultDto analyzeExportDetailResult(GrrAnalysisDataDto analysisDataDto, GrrAnalysisConfigDto configDto) {
         logger.debug("Analyzing GRR export detail result ...");
-        GrrExportDetailDto result;
-        return null;
+        GrrExportDetailResultDto result = new GrrExportDetailResultDto();
+        try {
+            Rengine engine = prepareEngine(analysisDataDto, configDto);
+            GrrDetailResultDto detailResultDto = getGrrDetailResult(engine, configDto);
+            result.setComponentChartDto(detailResultDto.getComponentChartDto());
+            result.setPartAppraiserChartDto(detailResultDto.getPartAppraiserChartDto());
+            result.setXbarAppraiserChartDto(detailResultDto.getXbarAppraiserChartDto());
+            result.setRangeAppraiserChartDto(detailResultDto.getRangeAppraiserChartDto());
+            result.setRrbyAppraiserChartDto(detailResultDto.getRrbyAppraiserChartDto());
+            result.setRrbyPartChartDto(detailResultDto.getRrbyPartChartDto());
+            result.setAnovaAndSourceResultDto(detailResultDto.getAnovaAndSourceResultDto());
+            //TODO
+            SemaphoreUtils.releaseSemaphore(engine);
+            logger.info("Analyze GRR export detail result done.");
+        } catch (Exception e) {
+            SemaphoreUtils.releaseSemaphore(privateEngine);
+            logger.error("Analyze Grr export detail result error, exception message = {}", e.getMessage());
+            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12013));
+        }
+        return result;
     }
 
     private Rengine prepareEngine(GrrAnalysisDataDto dataDto, GrrAnalysisConfigDto configDto) {

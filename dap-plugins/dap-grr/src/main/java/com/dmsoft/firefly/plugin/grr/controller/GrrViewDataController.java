@@ -80,7 +80,15 @@ public class GrrViewDataController implements Initializable {
         this.exchangeBtn.setOnAction(event -> {
             if (this.backupModel != null && this.includeModel != null && this.backupModel.getSelectedViewDataDto() != null && this.includeModel.getSelectedViewDataDto() != null) {
                 GrrViewDataDto toBeBackupDto = this.includeModel.getSelectedViewDataDto();
+                String toBeBackUpApp = toBeBackupDto.getOperator();
+                String toBeBackUpTrail = toBeBackupDto.getTrial();
                 GrrViewDataDto toBeIncludeDto = this.backupModel.getSelectedViewDataDto();
+                String toBeIncludeApp = toBeIncludeDto.getOperator();
+                String toBeIncludeTrail = toBeIncludeDto.getTrial();
+                toBeBackupDto.setOperator(toBeIncludeApp);
+                toBeBackupDto.setTrial(toBeIncludeTrail);
+                toBeIncludeDto.setOperator(toBeBackUpApp);
+                toBeBackupDto.setTrial(toBeBackUpTrail);
                 this.includeModel.replace(toBeIncludeDto);
                 this.backupModel.replace(toBeBackupDto);
             }

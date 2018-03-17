@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.List;
@@ -43,6 +44,7 @@ public class ChooseDialogController implements Initializable {
     private ObservableList<ChooseTableRowData> chooseTableRowDataObservableList;
     private FilteredList<ChooseTableRowData> chooseTableRowDataFilteredList;
     private SortedList<ChooseTableRowData> chooseTableRowDataSortedList;
+    private Stage stage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -150,4 +152,12 @@ public class ChooseDialogController implements Initializable {
         return chooseOkButton;
     }
 
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 }
