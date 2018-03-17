@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
@@ -18,9 +19,9 @@
             <children>
                 <VBox prefHeight="480.0" prefWidth="620.0">
                     <children>
-                        <HBox prefHeight="45.0" style="-fx-border-color: #DCDCDC;">
+                        <HBox prefHeight="24.0" prefWidth="619.0" style="-fx-border-color: #DCDCDC;">
                             <children>
-                                <Label fx:id="title" minHeight="30.0" prefHeight="30.0" prefWidth="598.0" text="All Data">
+                                <Label fx:id="title" minHeight="30.0" prefHeight="30.0" prefWidth="591.0" text="All Data">
                                     <opaqueInsets>
                                         <Insets />
                                     </opaqueInsets>
@@ -30,7 +31,7 @@
                                 </Label>
                                 <Button fx:id="chooseItem" prefHeight="22.0" prefWidth="22.0" styleClass="btn-txt">
                                     <HBox.margin>
-                                        <Insets right="5.0" top="5.0" />
+                                        <Insets right="5.0" />
                                     </HBox.margin>
                                 </Button>
                             </children>
@@ -61,11 +62,12 @@
                 </VBox>
                 <VBox fx:id="vBox" prefHeight="485.0" prefWidth="160.0" style="-fx-border-color: #DCDCDC; -fx-border-width: 0 1 0 0;">
                <children>
-                  <SplitPane fx:id="split" orientation="VERTICAL" prefHeight="487.0" prefWidth="158.0">
-                    <items>
-                        <Button fx:id="searchBtn" minHeight="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-primary" />
-                    </items>
-                  </SplitPane>
+                  <SplitPane fx:id="split" orientation="VERTICAL" prefHeight="487.0" prefWidth="158.0" />
+                  <Pane prefHeight="53.0" prefWidth="158.0">
+                     <children>
+                        <Button fx:id="searchBtn" layoutX="29.0" layoutY="2.0" minHeight="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-primary" />
+                     </children>
+                  </Pane>
                </children></VBox>
             </children>
             <opaqueInsets>
@@ -75,7 +77,7 @@
                 <Insets left="10.0" right="10.0" />
             </VBox.margin>
         </HBox>
-        <GridPane prefHeight="45.0" prefWidth="800.0">
+        <GridPane prefHeight="30.0" prefWidth="800.0">
             <columnConstraints>
                 <ColumnConstraints hgrow="ALWAYS" maxWidth="530.0" minWidth="29.0" prefWidth="29.0" />
                 <ColumnConstraints hgrow="ALWAYS" maxWidth="1001.0" minWidth="278.0" prefWidth="500.0" />
@@ -90,12 +92,12 @@
                 <Button fx:id="apply" mnemonicParsing="false" prefWidth="80.0" text="Apply" GridPane.columnIndex="4" />
                 <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="Cancel" GridPane.columnIndex="3" />
                 <Button fx:id="oK" mnemonicParsing="false" prefWidth="80.0" text="OK" GridPane.columnIndex="2" />
-                <Button mnemonicParsing="false" prefHeight="15.0" prefWidth="15.0" styleClass="btn-primary">
+                <Button maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" styleClass="btn-primary">
                     <GridPane.margin>
                         <Insets bottom="10.0" left="10.0" top="2.0" />
                     </GridPane.margin>
                 </Button>
-                <Label text="Failed Test Data (Greater than USL or lower than ILSL) " GridPane.columnIndex="1">
+                <Label prefHeight="7.0" prefWidth="363.0" text="Failed Test Data (Greater than USL or lower than ILSL) " GridPane.columnIndex="1">
                     <GridPane.margin>
                         <Insets left="15.0" />
                     </GridPane.margin>

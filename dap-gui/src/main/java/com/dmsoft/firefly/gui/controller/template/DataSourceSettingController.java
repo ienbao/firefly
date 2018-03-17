@@ -15,11 +15,13 @@ import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
+import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.google.common.collect.Lists;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -70,22 +72,16 @@ public class DataSourceSettingController {
     private void initComponentEvent() {
         chooseItem.setOnAction( event -> getChooseColumnBtnEvent() );
         itemDataTableModel.getAllCheckBox().setOnAction( event -> getAllCheckBoxEvent() );
-        chooseCumDialogController.getChooseOkButton().setOnAction(event -> getChooseTestItemEvent());
+        chooseCumDialogController.getChooseOkButton().setOnAction( event -> getChooseTestItemEvent() );
         searchBtn.setOnAction( event -> getSearchConditionEvent() );
         oK.setOnAction( event -> {
-//            saveCache();
-//            if (allTemplate != null) {
-//                templateService.saveAllAnalysisTemplate( Lists.newArrayList(allTemplate.values()));
-//            }
-//            StageMap.closeStage("template");
-//            refreshMainTemplate();
+            //get change List
+//             sourceDataService.changeRowDataInUsed(List<String> rowKeyList, boolean inUsed);
+//            StageMap.closeStage("sourceSetting");
         } );
         apply.setOnAction( event -> {
-//            saveCache();
-//            if (allTemplate != null) {
-//                templateService.saveAllAnalysisTemplate(Lists.newArrayList(allTemplate.values()));
-//            }
-//            refreshMainTemplate();
+            //get change List
+//             sourceDataService.changeRowDataInUsed(List<String> rowKeyList, boolean inUsed);
         } );
         cancel.setOnAction( event -> {
             StageMap.closeStage( "sourceSetting" );
@@ -190,16 +186,32 @@ public class DataSourceSettingController {
     }
 
     private void getSearchConditionEvent() {
+        List<RowDataDto> rowDataDtos = itemDataTableModel.getRowDataDtoList();
+        List<RowDataDto> searchResultDtos = new ArrayList<>();
+        Boolean flag = false;
         List<String> searchCondition = searchTab.getSearch();
-        System.out.print( "============" + searchCondition );
-//        SearchDataFrame dataFrame;
-//        if (!searchCondition.isEmpty() && searchCondition.size() > 0) {
-//            List<RowDataDto> rowDataDtos = dataFrame.getDataRowArray( searchCondition );
-//            if (selectTestItemName != null && !selectTestItemName.isEmpty()) {
-//                itemDataTableModel = new ItemDataTableModel( selectTestItemName, rowDataDtos );
-//                TableViewWrapper.decorate( itemDataTable, itemDataTableModel );
-//            }
-//        }
+        TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
+        if (templateSettingDto.getTimePatternDto() != null) {
+            FilterUtils filterUtils = new FilterUtils( templateSettingDto.getTimePatternDto().getTimeKeys(), templateSettingDto.getTimePatternDto().getPattern() );
 
+            if (!searchCondition.isEmpty() && searchCondition != null) {
+                for (String condition : searchCondition) {
+                    if (rowDataDtos != null && !rowDataDtos.isEmpty()) {
+                        for (RowDataDto rowDataDto : rowDataDtos) {
+                            flag = filterUtils.filterData(condition, rowDataDto.getData());
+                            if (flag) {
+                                searchResultDtos.add( rowDataDto );
+                            }
+                        }
+                    }
+                }
+
+                if (itemDataTableModel.getHeaderArray() != null && !itemDataTableModel.getHeaderArray().isEmpty()) {
+                    itemDataTableModel = new ItemDataTableModel( itemDataTableModel.getHeaderArray(), searchResultDtos );
+                    TableViewWrapper.decorate( itemDataTable, itemDataTableModel );
+                }
+            }
+        }
     }
+
 }

@@ -32,6 +32,8 @@ public class ItemDataTableModel implements TableModel {
      * constructor
      */
     public ItemDataTableModel(List<String> headers, List<RowDataDto> rowDataDtos) {
+        rowKey.clear();
+        columnKey.clear();
         valueMap = Maps.newHashMap();
         if (headers != null && !headers.isEmpty()) {
             columnKey.add( 0, "" );
@@ -175,6 +177,10 @@ public class ItemDataTableModel implements TableModel {
             columnKey.add( "" );
             columnKey.addAll( result );
         }
+    }
+
+    public List<RowDataDto> getRowDataDtoList() {
+        return rowDataDtoList;
     }
 
 }
