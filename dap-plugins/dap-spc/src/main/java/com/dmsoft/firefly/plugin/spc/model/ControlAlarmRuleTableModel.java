@@ -91,7 +91,7 @@ public class ControlAlarmRuleTableModel implements TableModel {
                     if (!DAPStringUtils.isNumeric(String.valueOf(b2)) || DAPStringUtils.isBlank(String.valueOf(b2))) {
                         return;
                     }
-                    controlRuleDto.setnValue((Integer) b2);
+                    controlRuleDto.setnValue(Integer.parseInt((String) b2));
                 });
             } else if (columnName.equals(HEADER[3])) {
                 value = controlRuleDto.getmValue();
@@ -99,7 +99,7 @@ public class ControlAlarmRuleTableModel implements TableModel {
                     if (!DAPStringUtils.isNumeric(String.valueOf(b2)) || DAPStringUtils.isBlank(String.valueOf(b2))) {
                         return;
                     }
-                    controlRuleDto.setmValue((Integer) b2);
+                    controlRuleDto.setmValue(Integer.parseInt((String) b2));
                 });
             } else if (columnName.equals(HEADER[4])) {
                 value = controlRuleDto.getsValue();
@@ -107,10 +107,10 @@ public class ControlAlarmRuleTableModel implements TableModel {
                     if (!DAPStringUtils.isNumeric(String.valueOf(b2)) || DAPStringUtils.isBlank(String.valueOf(b2))) {
                         return;
                     }
-                    controlRuleDto.setsValue((Integer) b2);
+                    controlRuleDto.setsValue(Integer.parseInt((String) b2));
                 });
             }
-            objectProperty.setValue(value);
+            objectProperty.setValue(String.valueOf(value));
             valueMap.put(rowKey + "-" + columnName, objectProperty);
         }
 

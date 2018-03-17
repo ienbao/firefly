@@ -316,8 +316,8 @@ public class SpcMainController implements Initializable {
         } else if (statisticalResultController.getEidtStatisticalRowKey().size() == 0 && !viewDataController.isChanged()) {
             //only refresh chart
             List<String> rowKeyList = dataFrame.getAllRowKeys();
-            if (chooseStatisticalRowKeyCache.size() != 0) {
-                rowKeyList = viewDataController.getSelectedRowKeys();
+            if (chooseStatisticalRowKeyCache != null) {
+                rowKeyList = viewDataRowKeyCache;
             }
             chooseStatisticalRowKeyCache = statisticalResultController.getSelectStatisticalRowKey();
             List<SearchConditionDto> searchConditionDtoList = this.buildRefreshSearchConditionData(statisticalResultController.getSelectStatsData());
