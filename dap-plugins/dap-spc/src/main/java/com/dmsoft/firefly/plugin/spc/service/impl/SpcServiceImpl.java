@@ -103,16 +103,16 @@ public class SpcServiceImpl implements SpcService {
             List<String> datas = searchDataFrame.getDataValue(searchConditionDto.getItemName(), searchRowKeys);
             List<String> rowKeys = Lists.newArrayList();
             List<Double> doubleList = Lists.newArrayList();
-            for (String s : datas) {
-                if (DAPStringUtils.isNumeric(s)) {
-                    Double value = Double.valueOf(s);
+            for (int i = 0; i < datas.size(); i++) {
+                if (DAPStringUtils.isNumeric(datas.get(i))) {
+                    Double value = Double.valueOf(datas.get(i));
                     if (value > ndcMax) {
                         ndcMax = value;
                     }
                     if (value < ndcMin) {
                         ndcMin = value;
                     }
-                    rowKeys.add(s);
+                    rowKeys.add(searchRowKeys.get(i));
                     doubleList.add(value);
                 }
             }
