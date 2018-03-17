@@ -94,7 +94,8 @@ public class GrrResultController implements Initializable {
 
     public void analyzeGrrResult(List<GrrSummaryDto> grrSummaryDtos, GrrDetailDto grrDetailDto) {
 //        Set digNum
-        DigNumInstance.newInstance().setDigNum(grrMainController.getActiveTemplateSettingDto().getDecimalDigit());
+//        DigNumInstance.newInstance().setDigNum(grrMainController.getActiveTemplateSettingDto().getDecimalDigit());
+        DigNumInstance.newInstance().setDigNum(2);
         List<GrrViewDataDto> viewDataDtos = grrMainController.getGrrDataFrame().getIncludeDatas();
         viewDataDtos.forEach(viewDataDto -> {
             parts.add(viewDataDto.getPart());

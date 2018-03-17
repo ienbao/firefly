@@ -10,6 +10,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.google.common.collect.Maps;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -29,7 +30,6 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
     private GrrDataFrameDto grrDataFrameDto;
     private ObservableList<String> headerArray;
     private ObservableList<String> rowKeyArray = FXCollections.observableArrayList();
-    private FilteredList<String> filterHeaderArray;
     private FilteredList<String> filterRowKeyArray;
     private TableView<String> tableView;
     private String partKey = GrrFxmlAndLanguageUtils.getString("PART") + " ";
@@ -57,7 +57,6 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
         this.headerArray.add(0, appKey);
         this.headerArray.add(0, partKey);
         this.headerArray.add(0, radioKey);
-        this.filterHeaderArray = this.headerArray.filtered(p -> true);
         if (grrDataFrameDto.getBackupDatas() != null && !grrDataFrameDto.getBackupDatas().isEmpty()) {
             for (GrrViewDataDto grrViewDataDto : grrDataFrameDto.getBackupDatas()) {
                 this.rowKeyArray.add(grrViewDataDto.getRowKey());
@@ -78,7 +77,7 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
 
     @Override
     public ObservableList<String> getHeaderArray() {
-        return this.filterHeaderArray;
+        return this.headerArray;
     }
 
     public List<String> getAllRowKeys() {
@@ -179,8 +178,18 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
      * @param testItem test item
      */
     public void searchTestItem(String testItem) {
-        this.filterHeaderArray.setPredicate(s -> radioKey.equals(s) || partKey.equals(s) || appKey.equals(s) || trailKey.equals(s) || s.toLowerCase().contains(testItem.toLowerCase()));
-        this.tableView.refresh();
+        Platform.runLater(() -> {
+            this.headerArray.clear();
+            this.headerArray.add(0, trailKey);
+            this.headerArray.add(0, appKey);
+            this.headerArray.add(0, partKey);
+            this.headerArray.add(0, radioKey);
+            for (String s : this.grrDataFrameDto.getDataFrame().getAllTestItemName()) {
+                if (s.toLowerCase().contains(testItem.toLowerCase())) {
+                    this.headerArray.add(s);
+                }
+            }
+        });
     }
 
     /**
@@ -191,13 +200,13 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
     public void replace(GrrViewDataDto grrViewDataDto) {
         GrrViewDataDto oldDto = getSelectedViewDataDto();
         if (oldDto != null) {
-            int index = this.rowKeyArray.indexOf(oldDto.getRowKey());
-            this.rowKeyArray.remove(index);
-            this.rowKeyArray.add(index, grrViewDataDto.getRowKey());
             this.grrViewDataDtoMap.remove(oldDto.getRowKey());
             this.grrViewDataDtoMap.put(grrViewDataDto.getRowKey(), grrViewDataDto);
             RadioButton rb = this.grrRadioButton.remove(oldDto.getRowKey());
             this.grrRadioButton.put(grrViewDataDto.getRowKey(), rb);
+            int index = this.rowKeyArray.indexOf(oldDto.getRowKey());
+            this.rowKeyArray.remove(index);
+            this.rowKeyArray.add(index, grrViewDataDto.getRowKey());
         }
     }
 
