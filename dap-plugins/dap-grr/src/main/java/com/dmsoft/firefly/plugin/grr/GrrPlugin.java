@@ -78,6 +78,8 @@ public class GrrPlugin extends Plugin {
                     root = fxmlLoader.load();
 //                    root.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
                     root.getStylesheets().add(getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
+                    root.getStylesheets().add(getClass().getClassLoader().getResource("css/grr_chart.css").toExternalForm());
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
