@@ -40,7 +40,7 @@
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                             </columnResizePolicy>
                         </TableView>
-                        <TextArea fx:id="explain" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <TextArea fx:id="explain" disable="true" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                     </children>
                 </HBox>
             </children>

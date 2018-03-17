@@ -49,7 +49,7 @@ public class TableRender {
                 public void updateItem(Object item, boolean empty) {
                     super.updateItem(item, empty);
                     if (!isEmpty()) {
-                        callBack.execute(this);
+                        callBack.execute(this, item);
                         setText(item.toString());
                     }
                 }

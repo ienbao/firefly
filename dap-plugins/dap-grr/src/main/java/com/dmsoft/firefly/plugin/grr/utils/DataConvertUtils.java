@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public class DataConvertUtils {
 
-    public static GrrItemResultDto convertToItemResult(GrrDataFrameDto grrDataFrameDto, String itemName, String appraiserKey) {
+    public static GrrItemResultDto convertToItemResult(GrrDataFrameDto grrDataFrameDto, String itemName) {
 
         String splitFlag = UIConstant.SPLIT_FLAG;
         SearchDataFrame dataFrame = grrDataFrameDto.getDataFrame();
@@ -49,8 +49,8 @@ public class DataConvertUtils {
         Map<String, String> totalMeans = Maps.newLinkedHashMap();
         Map<String, String> totalRanges = Maps.newLinkedHashMap();
         partRowKeys.forEach((partRowKey, rowKeys) -> {
-//            String condition = partKey + "=" + partRowKey;
-            List<String> data = dataFrame.subDataFrame(rowKeys, Lists.newArrayList(itemName)).getDataColumn(itemName, null).getData();
+            List<String> data = dataFrame.subDataFrame(rowKeys, Lists.newArrayList(itemName)).
+                    getDataColumn(itemName, null).getData();
             double[] array = new double[data.size()];
             int i = 0;
             data.forEach(cellData -> {
@@ -67,8 +67,8 @@ public class DataConvertUtils {
         partAppraiserRowKeys.forEach((partAppraiserKey, rowKeys) -> {
             String partValue = partAppraiserKey.split(splitFlag)[0];
             String appraiserValue = partAppraiserKey.split(splitFlag)[1];
-//            String condition = partKey + "=" + partValue + "&" + appraiserValue;
-            List<String> data = dataFrame.subDataFrame(rowKeys, Lists.newArrayList(itemName)).getDataColumn(itemName, null).getData();
+            List<String> data = dataFrame.subDataFrame(rowKeys, Lists.newArrayList(itemName)).
+                    getDataColumn(itemName, null).getData();
             double[] array = new double[data.size()];
             int i = 0;
             data.forEach(cellData -> {

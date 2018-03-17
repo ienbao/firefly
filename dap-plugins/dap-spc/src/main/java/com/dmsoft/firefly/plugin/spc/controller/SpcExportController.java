@@ -325,7 +325,7 @@ public class SpcExportController {
         Map<String, Map<String, String>> chartPath = Maps.newHashMap();
 
         if (exportDataItem.get(SpcExportItemKey.EXPORT_CHARTS.getCode())) {
-            Job chartJob = new Job(ParamKeys.SPC_REFRESH_JOB_PIPELINE);
+            Job chartJob = new Job(ParamKeys.SPC_REFRESH_CHART_JOB_PIPELINE);
             Map chartParamMap = Maps.newHashMap();
             chartParamMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
             chartParamMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);

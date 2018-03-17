@@ -33,7 +33,7 @@ public class SummaryHandler1 implements JobInboundHandler {
         Map<String, Object> param = (Map) in[0];
 
         SearchConditionDto searchConditionDto = (SearchConditionDto) param.get(ParamKeys.SEARCH_GRR_CONDITION_DTO);
-        GrrAnalysisConfigDto grrAnalysisConfigDto = (GrrAnalysisConfigDto) param.get(ParamKeys.SEARCH_GRR_CONDITION_DTO);
+        GrrAnalysisConfigDto grrAnalysisConfigDto = (GrrAnalysisConfigDto) param.get(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG);
 
         List<TestItemWithTypeDto> itemWithTypeDtos = searchConditionDto.getSelectedTestItemDtos();
 

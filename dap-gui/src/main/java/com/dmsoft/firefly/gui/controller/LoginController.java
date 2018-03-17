@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.gui.controller;
 
+import com.dmsoft.firefly.gui.components.utils.DecoratorTextFiledUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.model.UserModel;
 import com.dmsoft.firefly.gui.utils.GuiConst;
@@ -37,6 +38,8 @@ public class LoginController {
 
     @FXML
     private void initialize() {
+        DecoratorTextFiledUtils.decoratorFixedLengthTextFiled(userNameTxt, 20);
+        DecoratorTextFiledUtils.decoratorFixedLengthTextFiled(passwordField, 20);
         ImageView imageReset = new ImageView(new Image("/images/icon_choose_one_gray.png"));
         imageReset.setFitHeight(16);
         imageReset.setFitWidth(16);

@@ -12,9 +12,6 @@ public class GrrMeanAndRangeDto extends AbstractValueObject {
 
     private Map<String, String> means;
     private Map<String, String> ranges;
-//    private List<String> means;
-//    private List<String> ranges;
-
 
     public Map<String, String> getMeans() {
         return means;

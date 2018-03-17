@@ -1,5 +1,7 @@
 package com.dmsoft.firefly.plugin.grr.utils;
 
+import javafx.scene.paint.Color;
+
 /**
  * Created by cherry on 2018/3/12.
  */
@@ -16,8 +18,6 @@ public class UIConstant {
 
     public static final String[] GRR_ANOVA_TITLE = new String[] {"Source", "DF", "SS", "MS", "F", "Prob > F"};
 
-    public static final String[] GRR_ANOVA_SOURCE = new String[] {"Appraisers", "Parts", "Appraisers*Parts", "Repeatability", "Total"};
-
     public static final String[] GRR_SOURCE_TITLE = new String[] {"Source of Variation", "SIGMA", "Study Var 6", "Variation", "%Total Sigma", "%Total Variation", "%Total Tolerance"};
 
     public static final String[] CHART_COMPONENT_LABEL = new String[]{ "Gage R&R","Repeatability", "Reproducibility", "Part to Part"};
@@ -28,6 +28,8 @@ public class UIConstant {
 
     public static final String SPLIT_FLAG = "!@#";
 
-    public static final String APPRAISER_NORMAL_KEY = "Appraiser";
-    public static final String TRIAL_KEY = "Trial";
+    public static final Color COLOR_EXCELLENT = Color.rgb(125, 174, 20);
+    public static final Color COLOR_GOOD = Color.rgb(72, 124, 244);
+    public static final Color COLOR_ACCEPTABLE = Color.rgb(243, 132, 0);
+    public static final Color COLOR_RECTIFICATION = Color.rgb(233, 68, 41);
 }
