@@ -145,6 +145,15 @@ public class ViewDataController implements Initializable {
     }
 
     /**
+     * set focus row data
+     *
+     * @param rowKey row key
+     */
+    public void setFocusRowData(String rowKey) {
+
+    }
+
+    /**
      * method to get selected row keys
      *
      * @return list of selected row key
