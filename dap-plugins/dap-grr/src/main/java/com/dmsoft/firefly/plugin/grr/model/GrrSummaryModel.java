@@ -99,8 +99,12 @@ public class GrrSummaryModel {
         this.editTestItem.add(editTestItem);
     }
 
-    public void removeEditTestItem(TestItemWithTypeDto editTestItem) {
-        this.editTestItem.remove(editTestItem);
+    public void removeEditTestItem(TestItemWithTypeDto itemWithTypeDto) {
+        this.editTestItem.forEach(testItemWithTypeDto -> {
+            if (itemWithTypeDto.getTestItemName().equals(testItemWithTypeDto.getTestItemName())) {
+                this.editTestItem.remove(testItemWithTypeDto);
+            }
+        });
     }
 
     public void clearEditTestItem() {

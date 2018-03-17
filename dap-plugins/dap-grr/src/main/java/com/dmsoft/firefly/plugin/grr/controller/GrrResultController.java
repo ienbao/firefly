@@ -645,6 +645,22 @@ public class GrrResultController implements Initializable {
                 boolean invalid = !"-".equals(singleSummary.getLsl()) && !DAPStringUtils.isNumeric(singleSummary.getLsl());
                 invalid = invalid || !"-".equals(singleSummary.getUsl()) && !DAPStringUtils.isNumeric(singleSummary.getUsl());
                 invalid = invalid && Double.valueOf(singleSummary.getLsl()) > Double.valueOf(singleSummary.getUsl());
+                boolean valid = false;
+                boolean hasEdit = false;
+                if (columnIndex == 2) {
+                    valid = validLsl(cell, singleSummary);
+                }
+                if (columnIndex == 3) {
+                    valid = validUsl(cell, singleSummary);
+                }
+                if (valid) {
+                    //TODO 输入框变红
+                }
+
+                if (hasEdit) {
+                    cell.setStyle("-fx-text-fill: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_EDIT_CHANGE));
+                }
+
                 if (invalid) {
                     //TODO error exception
                 } else {
@@ -653,10 +669,17 @@ public class GrrResultController implements Initializable {
                     testItemWithTypeDto.setUsl(singleSummary.getUsl());
                     testItemWithTypeDto.setLsl(singleSummary.getLsl());
                     summaryModel.addEditTestItem(testItemWithTypeDto);
-                    cell.setStyle("-fx-text-fill: red");
                 }
             }
         };
+    }
+
+    private boolean validUsl(TableCell cell, GrrSingleSummary singleSummary) {
+        return false;
+    }
+
+    private boolean validLsl(TableCell cell, GrrSingleSummary singleSummary) {
+        return false;
     }
 
     private TableCellCallBack buildRadioCallBack() {
