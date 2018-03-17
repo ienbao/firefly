@@ -1,5 +1,10 @@
 package com.dmsoft.firefly.plugin.spc.dto.analysis;
 
+import com.dmsoft.firefly.plugin.spc.dto.RuleResultDto;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * run chart dto
  *
@@ -11,6 +16,7 @@ public class RunCResultDto {
     private Double[] cls;
     private Double usl;
     private Double lsl;
+    private Map<String, RuleResultDto> ruleResultDtoMap;
 
     public Double[] getX() {
         return x;
@@ -50,5 +56,13 @@ public class RunCResultDto {
 
     public void setLsl(Double lsl) {
         this.lsl = lsl;
+    }
+
+    public Map<String, RuleResultDto> getRuleResultDtoMap() {
+        return ruleResultDtoMap;
+    }
+
+    public void setRuleResultDtoMap(Map<String, RuleResultDto> ruleResultDtoMap) {
+        this.ruleResultDtoMap = ruleResultDtoMap;
     }
 }

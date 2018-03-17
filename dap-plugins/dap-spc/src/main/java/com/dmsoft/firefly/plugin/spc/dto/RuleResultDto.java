@@ -8,31 +8,31 @@ import java.util.Map;
  * Created by GuangLi on 2017/7/12.
  */
 public class RuleResultDto extends AbstractValueObject {
-//    private String key;
-    private Map<String, String> cpwMap;
-    private Map<String, Boolean> cusCpwMap;
-//
-//    public String getKey() {
-//        return key;
-//    }
-//
-//    public void setKey(String key) {
-//        this.key = key;
-//    }
+    private String ruleName;
+    private Double[] x;
+    private Double[] y;
 
-    public Map<String, String> getCpwMap() {
-        return cpwMap;
+    public String getRuleName() {
+        return ruleName;
     }
 
-    public void setCpwMap(Map<String, String> cpwMap) {
-        this.cpwMap = cpwMap;
+    public void setRuleName(String ruleName) {
+        this.ruleName = ruleName;
     }
 
-    public Map<String, Boolean> getCusCpwMap() {
-        return cusCpwMap;
+    public Double[] getX() {
+        return x;
     }
 
-    public void setCusCpwMap(Map<String, Boolean> cusCpwMap) {
-        this.cusCpwMap = cusCpwMap;
+    public void setX(Double[] x) {
+        this.x = x;
+    }
+
+    public Double[] getY() {
+        return y;
+    }
+
+    public void setY(Double[] y) {
+        this.y = y;
     }
 }

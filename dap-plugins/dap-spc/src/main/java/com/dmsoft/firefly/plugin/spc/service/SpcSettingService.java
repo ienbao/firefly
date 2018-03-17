@@ -3,6 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.service;
 
+import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcSettingDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatsDto;
@@ -37,16 +38,26 @@ public interface SpcSettingService {
     List<SpcStatisticalResultAlarmDto> setStatisticalResultAlarm(List<SpcStatsDto> spcStatsDtoList);
 
     /**
+     * set Control chart rule alarm
+     *
+     * @param spcChartDtoList spc chart data
+     * @return the data of spc chart
+     */
+    void setControlChartRuleAlarm(List<SpcChartDto> spcChartDtoList);
+
+    /**
      * save spc export template setting.
+     *
      * @param exportSetting export Setting data
      */
     void saveSpcExportTemplateSetting(Map<String, Boolean> exportSetting);
 
     /**
      * find spc export template setting.
+     *
      * @return
      */
-    Map<String, Boolean>  findSpcExportTemplateSetting();
+    Map<String, Boolean> findSpcExportTemplateSetting();
 
 
 }

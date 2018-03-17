@@ -29,16 +29,17 @@ public class RefreshAnalysisDataHandler implements JobInboundHandler {
             throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11002));
         }
         Map<String, Object> param = (Map) in[0];
-        SearchDataFrame dataFrame = (SearchDataFrame) param.get(ParamKeys.SEARCH_DATA_FRAME);
         SpcAnalysisConfigDto analysisConfigDto = (SpcAnalysisConfigDto) param.get(ParamKeys.SPC_ANALYSIS_CONFIG_DTO);
 
+        SearchDataFrame statisticalDataFrame = (SearchDataFrame) param.get(ParamKeys.STATISTICAL_SEARCH_DATA_FRAME);
         List<SearchConditionDto> statisticalSearchConditionDtoList = (List<SearchConditionDto>) param.get(ParamKeys.STATISTICAL_SEARCH_CONDITION_DTO_LIST);
         SpcService spcService = RuntimeContext.getBean(SpcService.class);
-        List<SpcStatsDto> spcStatsDtoList = spcService.getStatisticalResult(dataFrame, statisticalSearchConditionDtoList, analysisConfigDto);
+        List<SpcStatsDto> spcStatsDtoList = spcService.getStatisticalResult(statisticalDataFrame, statisticalSearchConditionDtoList, analysisConfigDto);
         List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = RuntimeContext.getBean(SpcSettingService.class).setStatisticalResultAlarm(spcStatsDtoList);
 
+        SearchDataFrame chartDtaFrame = (SearchDataFrame) param.get(ParamKeys.CHART_SEARCH_DATA_FRAME);
         List<SearchConditionDto> chartSearchConditionDtoList = (List<SearchConditionDto>) param.get(ParamKeys.CHART_SEARCH_CONDITION_DTO_LIST);
-        List<SpcChartDto> spcChartDtoList = RuntimeContext.getBean(SpcService.class).getChartResult(dataFrame, chartSearchConditionDtoList, analysisConfigDto);
+        List<SpcChartDto> spcChartDtoList = RuntimeContext.getBean(SpcService.class).getChartResult(chartDtaFrame, chartSearchConditionDtoList, analysisConfigDto);
 
         Map<String, Object> analysisResultMap = Maps.newHashMap();
         analysisResultMap.put(ParamKeys.STATISTICAL_ANALYSIS_RESULT, spcStatisticalResultAlarmDtoList);

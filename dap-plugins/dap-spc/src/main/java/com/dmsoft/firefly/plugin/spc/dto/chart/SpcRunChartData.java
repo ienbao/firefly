@@ -50,6 +50,7 @@ public class SpcRunChartData implements IRunChartData {
         Double[] x = runCResultDto.getX();
         Double[] y = runCResultDto.getY();
         xyChartData = new XYChartData<>(x, y);
+        xyChartData.setRuleResultDtoMap(runCResultDto.getRuleResultDtoMap());
 
         //init lines data
         String[] uslLslName = UIConstant.SPC_USL_LSL;

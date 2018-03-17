@@ -474,13 +474,13 @@ public class ChartResultController implements Initializable {
     }
 
     public void clearChartData() {
-        for (Map.Entry<String, XYChart> chartMap : chartMap.entrySet()) {
-            if (chartMap.getValue() instanceof NDChart) {
-                ((NDChart) chartMap.getValue()).removeAllChildren();
-            } else if (chartMap.getValue() instanceof LinearChart) {
-                ((LinearChart) chartMap.getValue()).removeAllChildren();
-            } else if (chartMap.getValue() instanceof BoxPlotChart) {
-                ((BoxPlotChart) chartMap.getValue()).removeAllChildren();
+        for (Map.Entry<String, XYChart> chart : chartMap.entrySet()) {
+            if (chart.getValue() instanceof NDChart) {
+                ((NDChart) chart.getValue()).removeAllChildren();
+            } else if (chart.getValue() instanceof LinearChart) {
+                ((LinearChart) chart.getValue()).removeAllChildren();
+            } else if (chart.getValue() instanceof BoxPlotChart) {
+                ((BoxPlotChart) chart.getValue()).removeAllChildren();
             }
         }
     }
