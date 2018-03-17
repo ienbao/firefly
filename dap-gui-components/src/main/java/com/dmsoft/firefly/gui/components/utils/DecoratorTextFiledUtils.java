@@ -4,6 +4,7 @@
 
 package com.dmsoft.firefly.gui.components.utils;
 
+import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -24,6 +25,9 @@ public class DecoratorTextFiledUtils {
 
     public static TextField decoratorFixedLengthTextFiled(TextField textField, int length) {
 
+        if (length < 1) {
+            throw new ApplicationException("invalid length.");
+        }
         Tooltip tip = new Tooltip("Exceeding limit length.");
         textField.textProperty().addListener(new ChangeListener<String>() {
             @Override
