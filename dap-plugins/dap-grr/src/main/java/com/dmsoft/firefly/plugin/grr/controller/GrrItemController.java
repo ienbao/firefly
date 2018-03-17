@@ -338,7 +338,7 @@ public class GrrItemController implements Initializable {
         List<TestItemWithTypeDto> selectedItemDto = this.getSelectedItemDto();
         if (checkSubmitParam(selectedItemDto.size())) {
 
-            WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+//            WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
             Job job = new Job(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE);
             job.addProcessMonitorListener(event -> {
 //            windowProgressTipController.refreshProgress(event.getPoint());
@@ -362,26 +362,22 @@ public class GrrItemController implements Initializable {
                                     //todo message tip
                                     return;
                                 }
-                                grrMainController.updateGrrViewData();
-                                grrMainController.updateGrrSummaryAndDetail();
+//                                grrMainController.updateGrrViewData();
+//                                grrMainController.updateGrrSummaryAndDetail();
 
-//                                GrrParamDto grrParamDto = grrMainController.getGrrParamDto();
-//                                if (grrParamDto != null && (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty())) {
-//                                    refreshPartListView(grrParamDto.getParts());
-//                                    refreshAppraiserListView(grrParamDto.getAppraisers());
-//                                    grrMainController.updateGrrViewData();
-//                                    grrMainController.updateGrrSummaryAndDetail();
-//                                } else {
-//                                    //to do
-//                                    System.out.println(returnValue);
-//                                }
+                                GrrParamDto grrParamDto = grrMainController.getGrrParamDto();
+                                if (grrParamDto != null && (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty())) {
+                                    refreshPartListView(grrParamDto.getParts());
+                                    refreshAppraiserListView(grrParamDto.getAppraisers());
+                                    grrMainController.updateGrrViewData();
+                                    grrMainController.updateGrrSummaryAndDetail();
+                                } else {
+                                    //to do
+                                    System.out.println(returnValue);
+                                }
 
 
                             });
-//                        GrrDataFrameDto grrDataFrameDto = (GrrDataFrameDto) returnValue;
-//                        grrMainController.setGrrDataFrame(grrDataFrameDto);
-//                        grrMainController.updateGrrDataFrameDto();
-//                        grrMainController.grrAnalyzeResult();
                         } catch (ApplicationException excption) {
                             excption.printStackTrace();
                         }
