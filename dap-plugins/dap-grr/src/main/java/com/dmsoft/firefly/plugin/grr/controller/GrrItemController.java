@@ -38,11 +38,17 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
+import org.omg.PortableInterceptor.INACTIVE;
 
 import java.net.URL;
 import java.util.List;
@@ -83,7 +89,13 @@ public class GrrItemController implements Initializable {
     @FXML
     private ComboBox partCombox;
     @FXML
+    private Label partLbl;
+    @FXML
     private ComboBox appraiserCombox;
+    @FXML
+    private Label appraiserLbl;
+    @FXML
+    private GridPane grrConfigPane;
     @FXML
     private ListView<ListViewModel> partListView;
     private ObservableList<ListViewModel> partList = FXCollections.observableArrayList();
@@ -95,7 +107,8 @@ public class GrrItemController implements Initializable {
     @FXML
     private SplitPane split;
     private SearchTab searchTab;
-
+    private Label warnIconLbl;
+    private Label warnIconLbl1;
     private CheckBox box;
 
     private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
@@ -179,6 +192,13 @@ public class GrrItemController implements Initializable {
         });
         initPartAndAppraiserDatas();
         GrrValidateUtil.validateGrr(partTxt, appraiserTxt, trialTxt, partCombox);
+        partTxt.textProperty().addListener((obVal, oldVal, newVal)->{
+            updatePartLbl();
+        });
+        appraiserTxt.textProperty().addListener((obVal, oldVal, newVal)->{
+            updateAppraiserLbl();
+        });
+        getWarnLblIcon();
     }
 
     private void initPartAndAppraiserDatas() {
@@ -196,19 +216,30 @@ public class GrrItemController implements Initializable {
 
         this.partCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
             partList.clear();
+            clearPartLbl();
             Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
             values.forEach(value -> {
                 partList.add(new ListViewModel(value, false, ""));
             });
             partListView.setItems(partList);
+            RowConstraints row7 = grrConfigPane.getRowConstraints().get(7);
+            row7.setPrefHeight(112);
+            row7.setMaxHeight(112);
+            row7.setMinHeight(112);
         });
 
         this.appraiserCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            appraiserList.clear();
+            clearAppraiserLbl();
             Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
             values.forEach(value -> {
                 appraiserList.add(new ListViewModel(value, false, ""));
             });
             appraiserListView.setItems(appraiserList);
+            RowConstraints row11 = grrConfigPane.getRowConstraints().get(11);
+            row11.setPrefHeight(112);
+            row11.setMaxHeight(112);
+            row11.setMinHeight(112);
         });
     }
 
@@ -299,6 +330,11 @@ public class GrrItemController implements Initializable {
                     }
                     checkBox.setOnAction(event -> {
                         item.setIsChecked(checkBox.isSelected());
+                        if (listView.getId().equals("partListView")) {
+                            updatePartLbl();
+                        } else {
+                            updateAppraiserLbl();
+                        }
                     });
                     if (StringUtils.isNotBlank(item.getErrorMsg())) {
                         checkBox.setOnMouseEntered(event -> {
@@ -318,6 +354,97 @@ public class GrrItemController implements Initializable {
         });
 
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    }
+
+    private void updatePartLbl() {
+        partLbl.setVisible(true);
+        partLbl.setContentDisplay(ContentDisplay.LEFT);
+        partLbl.setGraphic(warnIconLbl);
+        partLbl.setStyle("-fx-text-fill: red");
+        int count = (int) partListView.getItems().stream().filter(ListViewModel::isIsChecked).count();
+        if (StringUtils.isBlank(partTxt.getText())) {
+            if (count != 0) {
+                partLbl.setText(count + "/-");
+                TooltipUtil.installNormalTooltip(partLbl, GrrFxmlAndLanguageUtils.getString("UI_GRR_ITEM_VALUE_COUNT_EXPECT_WARN"));
+            }  else {
+                clearPartLbl();
+            }
+        } else {
+            Integer expectInt = Integer.valueOf(partTxt.getText());
+            if (count != 0 && count != expectInt) {
+                partLbl.setText(count + "/" + expectInt);
+                String[] params = new String[]{expectInt.toString()};
+                if (count < Integer.valueOf(expectInt)) {
+                    TooltipUtil.installNormalTooltip(partLbl, GrrFxmlAndLanguageUtils.getString("UI_GRR_ITEM_VALUE_COUNT_LESS_WARN", params));
+                } else {
+                    TooltipUtil.installNormalTooltip(partLbl, GrrFxmlAndLanguageUtils.getString("UI_GRR_ITEM_VALUE_COUNT_MORE_WARN", params));
+                }
+            } else if (count != 0 && count == Integer.valueOf(partTxt.getText())) {
+                partLbl.setText(count + "/" + partTxt.getText());
+                partLbl.setGraphic(null);
+                partLbl.setStyle("");
+            } else {
+                clearPartLbl();
+            }
+        }
+    }
+
+    private void updateAppraiserLbl() {
+        appraiserLbl.setVisible(true);
+        appraiserLbl.setContentDisplay(ContentDisplay.LEFT);
+        appraiserLbl.setGraphic(warnIconLbl1);
+        appraiserLbl.setStyle("-fx-text-fill: red");
+        int count = (int) appraiserListView.getItems().stream().filter(ListViewModel::isIsChecked).count();
+        if (StringUtils.isBlank(appraiserTxt.getText())) {
+            if (count != 0) {
+                appraiserLbl.setText(count + "/-");
+            }  else {
+                clearAppraiserLbl();
+            }
+        } else {
+            Integer expectInt = Integer.valueOf(appraiserTxt.getText());
+            if (count != 0 && count != expectInt) {
+                appraiserLbl.setText(count + "/" + expectInt);
+                String[] params = new String[]{expectInt.toString()};
+                if (count < Integer.valueOf(expectInt)) {
+                    TooltipUtil.installNormalTooltip(appraiserLbl, GrrFxmlAndLanguageUtils.getString("UI_GRR_ITEM_VALUE_COUNT_LESS_WARN", params));
+                } else {
+                    TooltipUtil.installNormalTooltip(appraiserLbl, GrrFxmlAndLanguageUtils.getString("UI_GRR_ITEM_VALUE_COUNT_MORE_WARN", params));
+                }
+            } else if (count != 0 && count == Integer.valueOf(appraiserTxt.getText())) {
+                appraiserLbl.setText(count + "/" + appraiserTxt.getText());
+                appraiserLbl.setGraphic(null);
+                appraiserLbl.setStyle("");
+            } else {
+                clearAppraiserLbl();
+            }
+        }
+    }
+
+    private void getWarnLblIcon() {
+        warnIconLbl = new Label();
+        warnIconLbl.getStyleClass().add("message-tip-warn-mark");
+        warnIconLbl.setStyle("-fx-padding: 0 26 0 0;");
+        warnIconLbl1 = new Label();
+        warnIconLbl1.getStyleClass().add("message-tip-warn-mark");
+        warnIconLbl1.setStyle("-fx-padding: 0 26 0 0;");
+    }
+
+    private void clearPartLbl(){
+        partLbl.setText("");
+        partLbl.setGraphic(null);
+        partLbl.setStyle("");
+        partLbl.setVisible(false);
+        TooltipUtil.uninstallNormalTooltip(partLbl);
+    }
+
+    private void clearAppraiserLbl(){
+        appraiserLbl.setText("");
+        appraiserLbl.setStyle("");
+        appraiserLbl.setGraphic(null);
+        appraiserLbl.setVisible(false);
+        TooltipUtil.uninstallNormalTooltip(appraiserLbl);
+
     }
 
     private void initBtnIcon() {
@@ -485,20 +612,26 @@ public class GrrItemController implements Initializable {
             return false;
         }
 
-        if (partListView.getItems().size() > 0 && partListView.getItems().size() < Integer.valueOf(partTxt.getText())) {
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_NUMBER_NOT_MATCH"));
-            return false;
-        }
-
-        if ((appraiserCombox.getValue() != null) &&  (appraiserListView.getItems().size() > 0 && appraiserListView.getItems().size() < Integer.valueOf(appraiserTxt.getText()))) {
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_NUMBER_NOT_MATCH"));
-            return false;
-        }
-
         if (!GrrValidateUtil.validateResult(partTxt, appraiserTxt, trialTxt, partCombox)) {
             RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
             return false;
         }
+
+        if (appraiserLbl.getGraphic() != null || partLbl.getGraphic() != null) {
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+            return false;
+        }
+
+        if (partListView.getItems().size() > 0 && partListView.getItems().size() < Integer.valueOf(partTxt.getText())) {
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_MAX_NUMBER_NOT_MATCH"));
+            return false;
+        }
+
+        if ((appraiserCombox.getValue() != null) &&  (appraiserListView.getItems().size() > 0 && appraiserListView.getItems().size() < Integer.valueOf(appraiserTxt.getText()))) {
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_MAX_NUMBER_NOT_MATCH"));
+            return false;
+        }
+
         return true;
     }
 
