@@ -99,6 +99,7 @@ public class StatisticalTableModel implements TableModel {
         if (spcStatsDtoList == null) {
             return;
         }
+        editorCell.clear();
         editorRowKey.clear();
         for (SpcStatisticalResultAlarmDto statisticalResultAlarmDto : spcStatsDtoList) {
             String key = statisticalResultAlarmDto.getKey();
@@ -109,6 +110,7 @@ public class StatisticalTableModel implements TableModel {
             }
             this.refreshValue(resultAlarmDto);
         }
+        tableView.refresh();
     }
 
     private void refreshValue(SpcStatisticalResultAlarmDto spcStatsDto) {
@@ -140,6 +142,7 @@ public class StatisticalTableModel implements TableModel {
                             valueProperty.set(b1);
                             return;
                         }
+                        spcStatsDto.getStatisticalAlarmDtoMap().get(columnName).setValue(Double.valueOf((String) b2));
                         if (!valueProperty.getSourceValue().equals(b2)) {
                             editorCell.add(rowKey + "-" + columnName);
                             editorRowKey.add(rowKey);
@@ -425,6 +428,7 @@ public class StatisticalTableModel implements TableModel {
                     valueProperty.set(b1);
                     return;
                 }
+                spcStatsDto.getStatisticalAlarmDtoMap().get(columnName).setValue(Double.valueOf((String) b2));
                 if (!valueProperty.getSourceValue().equals(b2)) {
                     editorCell.add(rowKey + "-" + columnName);
                     editorRowKey.add(rowKey);

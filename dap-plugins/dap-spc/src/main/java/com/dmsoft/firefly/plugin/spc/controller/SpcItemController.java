@@ -298,8 +298,8 @@ public class SpcItemController implements Initializable {
 
                         } else {
                             spcMainController.clearAnalysisSubShowData();
-                            spcMainController.setViewDataRowKeyCache(null);
-                            spcMainController.setChooseStatisticalRowKeyCache(null);
+                            SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
+                            SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
                             List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
                             spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
                         }
