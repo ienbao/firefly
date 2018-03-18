@@ -94,13 +94,16 @@ public class ChooseDialogController implements Initializable {
      * @param resultName result name
      */
     public void setSelectResultName(List<String> resultName) {
-        if (chooseTableRowDataObservableList != null) {
+        if (chooseTableRowDataObservableList != null && resultName != null) {
             for (ChooseTableRowData data : chooseTableRowDataObservableList) {
                 if (resultName.contains(data.getValue())) {
                     data.getSelector().setValue(true);
                 } else {
                     data.getSelector().setValue(false);
                 }
+            }
+            if (resultName.size() != 0 && resultName.size() == chooseTableRowDataObservableList.size()) {
+                allCheckBox.setSelected(true);
             }
         }
     }

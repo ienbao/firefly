@@ -8,6 +8,7 @@ import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.plugin.spc.dto.StatisticalAlarmDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
 import com.dmsoft.firefly.plugin.spc.utils.Colur;
+import com.dmsoft.firefly.plugin.spc.utils.DigNumInstance;
 import com.dmsoft.firefly.plugin.spc.utils.SourceObjectProperty;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
@@ -132,7 +133,7 @@ public class StatisticalTableModel implements TableModel {
                         if (i == 16) {
                             key = SpcKey.CA.getCode();
                         }
-                        value = showValue(statisticalAlarmDtoMap.get(key));
+                        value = showValue(key, statisticalAlarmDtoMap.get(key));
                     }
                 }
                 SourceObjectProperty valueProperty = new SourceObjectProperty<>(value);
@@ -417,7 +418,7 @@ public class StatisticalTableModel implements TableModel {
                     if (columnName.equals(STATISTICAL_TITLE[16])) {
                         key = SpcKey.CA.getCode();
                     }
-                    value = showValue(statisticalAlarmDtoMap.get(key));
+                    value = showValue(key, statisticalAlarmDtoMap.get(key));
                 }
             }
         }
@@ -472,10 +473,14 @@ public class StatisticalTableModel implements TableModel {
         return false;
     }
 
-    private String showValue(StatisticalAlarmDto statisticalAlarmDto) {
+    private String showValue(String key, StatisticalAlarmDto statisticalAlarmDto) {
         if (statisticalAlarmDto == null || statisticalAlarmDto.getValue() == null) {
             return "-";
         }
+        if (!key.equals(STATISTICAL_TITLE[7]) && !key.equals(STATISTICAL_TITLE[8])) {
+            return DAPStringUtils.formatDouble(statisticalAlarmDto.getValue(), DigNumInstance.newInstance().getDigNum());
+        }
+
         return statisticalAlarmDto.getValue().toString();
     }
 

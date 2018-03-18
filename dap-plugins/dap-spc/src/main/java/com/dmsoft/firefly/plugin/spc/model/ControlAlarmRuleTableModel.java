@@ -6,8 +6,10 @@ package com.dmsoft.firefly.plugin.spc.model;
 import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.plugin.spc.dto.ControlRuleDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.google.common.collect.Lists;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -111,6 +113,19 @@ public class ControlAlarmRuleTableModel implements TableModel {
                 });
             }
             objectProperty.setValue(String.valueOf(value));
+            objectProperty.addListener((ov, b1, b2) -> {
+                if (!DAPStringUtils.isNumeric((String) b2)) {
+                    objectProperty.set(b1);
+                    return;
+                }
+                if (columnName.equals(HEADER[2])) {
+                    controlRuleDto.setnValue(Integer.valueOf((String) b2));
+                } else if (columnName.equals(HEADER[3])) {
+                    controlRuleDto.setmValue(Integer.valueOf((String) b2));
+                } else if (columnName.equals(HEADER[4])) {
+                    controlRuleDto.setsValue(Integer.valueOf((String) b2));
+                }
+            });
             valueMap.put(rowKey + "-" + columnName, objectProperty);
         }
 
@@ -179,7 +194,18 @@ public class ControlAlarmRuleTableModel implements TableModel {
 
     }
 
+    /**
+     * get controlRule dto list
+     * @return
+     */
     public List<ControlRuleDto> getControlRuleDtoList() {
-        return controlRuleDtoList;
+        if (dataMap == null) {
+            return null;
+        }
+        List<ControlRuleDto> list = Lists.newArrayList();
+        for (Map.Entry<String, ControlRuleDto> entry : dataMap.entrySet()) {
+            list.add(entry.getValue());
+        }
+        return list;
     }
 }

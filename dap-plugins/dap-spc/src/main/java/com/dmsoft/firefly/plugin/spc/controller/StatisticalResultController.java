@@ -24,6 +24,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
+import javafx.stage.Stage;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -150,8 +151,9 @@ public class StatisticalResultController implements Initializable {
             chooseDialogController = fxmlLoader.getController();
             chooseDialogController.setValueColumnText("Statistical Result");
             this.initChooseStatisticalResultTableData();
-            WindowFactory.createSimpleWindowAsModel("spcStatisticalResult", "Choose Statistical Results", root,
+            Stage stage = WindowFactory.createNoManagedStage("Choose Statistical Results", root,
                     getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            chooseDialogController.setStage(stage);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -192,7 +194,7 @@ public class StatisticalResultController implements Initializable {
 
     private void getChooseColumnBtnEvent() {
         chooseDialogController.setSelectResultName(selectStatisticalResultName);
-        StageMap.showStage("spcStatisticalResult");
+        chooseDialogController.getStage().show();
     }
 
     private void getFilterTestItemTfEvent() {
@@ -203,7 +205,7 @@ public class StatisticalResultController implements Initializable {
         selectStatisticalResultName = chooseDialogController.getSelectResultName();
         statisticalResultTb.getColumns().remove(3, statisticalResultTb.getColumns().size());
         statisticalTableModel.updateStatisticalResultColumn(selectStatisticalResultName);
-        StageMap.closeStage("spcStatisticalResult");
+        chooseDialogController.getStage().close();
     }
 
     private void getAllCheckBoxEvent() {

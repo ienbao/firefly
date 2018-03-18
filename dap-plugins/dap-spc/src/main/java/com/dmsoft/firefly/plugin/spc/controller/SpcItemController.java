@@ -16,6 +16,7 @@ import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
@@ -281,9 +282,6 @@ public class SpcItemController implements Initializable {
                             updateProgress(event.getPoint(), 100);
                         });
                         Map paramMap = Maps.newHashMap();
-                        //todo delete
-                        spcAnalysisConfigDto.setSubgroupSize(10);
-                        spcAnalysisConfigDto.setIntervalNumber(8);
                         paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
                         paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
                         paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
@@ -301,6 +299,8 @@ public class SpcItemController implements Initializable {
                             SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
                             SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
                             List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
+                            TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
+                            DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
                             spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
                         }
                         return null;
