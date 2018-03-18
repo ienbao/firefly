@@ -13,6 +13,8 @@ import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.grr.model.ListViewModel;
+import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.grr.utils.GrrValidateUtil;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -22,6 +24,7 @@ import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
@@ -175,6 +178,7 @@ public class GrrItemController implements Initializable {
             });
         });
         initPartAndAppraiserDatas();
+        GrrValidateUtil.validateGrr(partTxt, appraiserTxt, trialTxt, partCombox);
     }
 
     private void initPartAndAppraiserDatas() {
@@ -260,52 +264,16 @@ public class GrrItemController implements Initializable {
         listView.refresh();
     }
 
-    /*private void refreshPartListView(GrrParamDto grrParamDto) {
-        if (grrParamDto != null && grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty()) {
-            Set<String> selectedParts = grrParamDto.getParts();
-            partListView.getItems().forEach(listViewModel->{
-                if (selectedParts != null && selectedParts.contains(listViewModel.getName())){
-                    listViewModel.setIsChecked(true);
-                }
-            });
-        } else {
-            Map<String, String> errorMsgs = grrParamDto.getErrors();
-            partListView.getItems().forEach(listViewModel->{
-                StringBuilder errorMsg = new StringBuilder();
-                errorMsgs.keySet().forEach(key->{
-                    if (key.contains(listViewModel.getName())) {
-                        errorMsg.append(errorMsgs.get(key)).append("\n");
-                    }
-                });
-                listViewModel.setErrorMsg(errorMsg.toString());
-            });
-        }
-        partListView.refresh();
+    private void resetPartOrAppraiserListView() {
+        partListView.getItems().forEach(listViewModel->{
+            listViewModel.setIsChecked(false);
+            listViewModel.setErrorMsg(null);
+        });
+        appraiserListView.getItems().forEach(listViewModel->{
+            listViewModel.setIsChecked(false);
+            listViewModel.setErrorMsg(null);
+        });
     }
-
-    private void refreshAppraiserListView(GrrParamDto grrParamDto) {
-
-        if (grrParamDto != null && grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty()) {
-            Set<String> selectedAppraisers = grrParamDto.getAppraisers();
-            appraiserListView.getItems().forEach(listViewModel->{
-                if (selectedAppraisers != null && selectedAppraisers.contains(listViewModel.getName())){
-                    listViewModel.setIsChecked(true);
-                }
-            });
-        } else {
-            Map<String, String> errorMsgs = grrParamDto.getErrors();
-            appraiserListView.getItems().forEach(listViewModel->{
-                StringBuilder errorMsg = new StringBuilder();
-                errorMsgs.keySet().forEach(key->{
-                    if (key.contains(listViewModel.getName())) {
-                        errorMsg.append(errorMsgs.get(key)).append("\n");
-                    }
-                });
-                listViewModel.setErrorMsg(errorMsg.toString());
-            });
-        }
-        appraiserListView.refresh();
-    }*/
 
     private void initListView(ListView<ListViewModel> listView) {
         listView.setCellFactory(e -> new ListCell<ListViewModel>() {
@@ -432,7 +400,6 @@ public class GrrItemController implements Initializable {
     private void getAnalysisBtnEvent() {
         List<TestItemWithTypeDto> selectedItemDto = this.getSelectedItemDto();
         if (checkSubmitParam(selectedItemDto.size())) {
-
 //            WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
             Job job = new Job(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE);
             job.addProcessMonitorListener(event -> {
@@ -469,8 +436,6 @@ public class GrrItemController implements Initializable {
                                     //to do
                                     System.out.println(returnValue);
                                 }
-
-
                             });
                         } catch (ApplicationException excption) {
                             excption.printStackTrace();
@@ -515,40 +480,25 @@ public class GrrItemController implements Initializable {
     }
 
     private boolean checkSubmitParam(Integer itemNumbers) {
-//        if (itemNumbers ==  null || itemNumbers <= 0) {
-//            MessageTipFactory.getWarnTip(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_ANALYSIS_ITEM_EMPTY"));
-//            return false;
-//        }
-//
-//        if (StringUtils.isBlank(partTxt.getText())) {
-//            MessageTipFactory.getWarnTip(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_NUMBER_EMPTY"));
-//            return false;
-//        }
-//        if (StringUtils.isBlank(appraiserTxt.getText())) {
-//            MessageTipFactory.getWarnTip(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_NUMBER_EMPTY"));
-//            return false;
-//        }
-//
-//        if (StringUtils.isBlank(trialTxt.getText())) {
-//            MessageTipFactory.getWarnTip(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_TRIAL_NUMBER_EMPTY"));
-//            return false;
-//        }
-//
-//        if (appraiserCombox.getValue() == null) {
-//            MessageTipFactory.getWarnTip(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_NAME_EMPTY"));
-//            return false;
-//        }
-//
-//        if (partList.getItems().size() != Integer.valueOf(partTxt.getText())) {
-//            MessageTipFactory.getWarnTip(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_NUMBER_NOT_MATCH"));
-//            return false;
-//        }
-//
-//        if ((appraiserCombox.getValue() != null) &&  appraiserList.getItems().size() != Integer.valueOf(appraiserTxt.getText())) {
-//            MessageTipFactory.getWarnTip(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_NUMBER_NOT_MATCH"));
-//            return false;
-//        }
+        if (itemNumbers ==  null || itemNumbers <= 0) {
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_ANALYSIS_ITEM_EMPTY"));
+            return false;
+        }
 
+        if (partListView.getItems().size() > 0 && partListView.getItems().size() < Integer.valueOf(partTxt.getText())) {
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_NUMBER_NOT_MATCH"));
+            return false;
+        }
+
+        if ((appraiserCombox.getValue() != null) &&  (appraiserListView.getItems().size() > 0 && appraiserListView.getItems().size() < Integer.valueOf(appraiserTxt.getText()))) {
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_NUMBER_NOT_MATCH"));
+            return false;
+        }
+
+        if (!GrrValidateUtil.validateResult(partTxt, appraiserTxt, trialTxt, partCombox)) {
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+            return false;
+        }
         return true;
     }
 
