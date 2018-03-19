@@ -31,7 +31,7 @@ public class GrrExportServiceImpl implements GrrExportService {
     private Logger logger = LoggerFactory.getLogger(GrrExportServiceImpl.class);
 
     @Override
-    public String exportGrrSummary(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryExportDto> grrSummaryExportDtos) {
+    public String exportGrrSummary(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryDto> grrSummaryExportDtos,  List<Double> level) {
        /*
         1.Verify the validity of the parameters
         2.Create directory exportDir
@@ -67,7 +67,7 @@ public class GrrExportServiceImpl implements GrrExportService {
             String exportFilePath = exportPath + "/" + fixDir;
             //Build grr excel
             GrrExportWorker factory = new GrrExportWorker();
-            factory.buildGrrSummary(grrExportConfigDto, grrSummaryExportDtos);
+            factory.buildGrrSummary(grrExportConfigDto, grrSummaryExportDtos, level);
             GrrExcelBuilder grrExcelBuilder = new GrrExcelBuilder(null, null);
             FileUtils.createDir(exportFilePath);
             logger.info("Export grr only result to filepath:{}", exportFilePath);
@@ -82,7 +82,7 @@ public class GrrExportServiceImpl implements GrrExportService {
     }
 
     @Override
-    public String exportGrrSummaryDetail(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryExportDto> grrSummaryExportDtos, List<GrrExportResultDto> grrExportResultDtos) {
+    public String exportGrrSummaryDetail(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryDto> grrSummaryExportDtos, List<GrrExportResultDto> grrExportResultDtos, List<Double> level) {
         /*
         1.Verify the validity of the parameters
         2.Create directory exportDir
@@ -131,7 +131,7 @@ public class GrrExportServiceImpl implements GrrExportService {
                 }
                 String filePath = exportFilePath + "/" + fixDir + "_" + excelIndex + ".xlsx";
                 GrrExportWorker factory = new GrrExportWorker();
-                factory.buildSummaryAndDetail(grrExportConfigDto, grrSummaryExportDtos, grrExportResultDtos);
+                factory.buildSummaryAndDetail(grrExportConfigDto, grrSummaryExportDtos, grrExportResultDtos, level);
                 GrrExcelBuilder grrExcelBuilder = new GrrExcelBuilder(null, null);
                 grrExcelBuilder.drawExcel(filePath, factory);
                 logger.info("Export grr result and data to filepath:{}", filePath);

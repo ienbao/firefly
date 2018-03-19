@@ -90,7 +90,7 @@
                                             <content>
                                                 <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="330.0">
                                                     <content>
-                                                        <GridPane maxWidth="500.0" minWidth="180.0" prefWidth="180.0">
+                                                        <GridPane fx:id="grrConfigPane" maxWidth="500.0" minWidth="180.0" prefWidth="180.0">
                                                             <columnConstraints>
                                                                 <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="180.0" />
                                                                 <ColumnConstraints />
@@ -130,9 +130,9 @@
                                                                         <Insets left="70.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <Label alignment="CENTER" contentDisplay="CENTER" text="Part*" GridPane.rowIndex="5" />
+                                                                <Label fx:id="partLbl" alignment="CENTER" contentDisplay="CENTER" text="Part*" GridPane.rowIndex="5" />
                                                                 <ComboBox fx:id="partCombox" maxHeight="22.0" maxWidth="500.0" minHeight="22.0" minWidth="160.0" prefHeight="22.0" prefWidth="167.0" GridPane.rowIndex="6" />
-                                                                <Label text="Appraisers" GridPane.rowIndex="9" />
+                                                                <Label fx:id="appraiserLbl" text="Appraisers" GridPane.rowIndex="9" />
                                                                 <ComboBox fx:id="appraiserCombox" maxHeight="22.0" maxWidth="500.0" minHeight="22.0" minWidth="160.0" prefHeight="22.0" prefWidth="180.0" GridPane.rowIndex="10" />
                                                                 <ListView fx:id="partListView" GridPane.rowIndex="7" />
                                                                 <ListView fx:id="appraiserListView" GridPane.rowIndex="11" />

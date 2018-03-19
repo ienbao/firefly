@@ -1,7 +1,9 @@
 package com.dmsoft.firefly.plugin.grr.handler;
 
 import com.dmsoft.firefly.plugin.grr.controller.GrrMainController;
-import com.dmsoft.firefly.plugin.grr.dto.*;
+import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
+import com.dmsoft.firefly.plugin.grr.dto.GrrSummaryDto;
+import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnalysisConfigDto;
 import com.dmsoft.firefly.plugin.grr.service.GrrService;
 import com.dmsoft.firefly.plugin.grr.utils.GrrExceptionCode;
@@ -20,7 +22,7 @@ import java.util.Map;
 /**
  * Created by cherry on 2018/3/12.
  */
-public class DetailResultHandler1 implements JobInboundHandler {
+public class ExportSummaryHandler implements JobInboundHandler {
 
     @Override
     public void doJob(JobHandlerContext context, Object... in) throws Exception {
@@ -29,30 +31,24 @@ public class DetailResultHandler1 implements JobInboundHandler {
         }
         Map<String, Object> param = (Map) in[0];
 
-//        detailParamMap.put(ParamKeys.SEARCH_DATA_COLUMN, grrDataFrameDto.getDataFrame().getDataColumn(itemName, null));
-//        detailParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_TESTITEM, conditionDto.getSelectedTestItemDtos().get(0));
-//        detailParamMap.put(ParamKeys.ANALYSIS_GRR_INCLUDE_ROWS, includeRows);
-//        detailParamMap.put(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG, analysisConfigDto);
-//
         SearchConditionDto searchConditionDto = (SearchConditionDto) param.get(ParamKeys.SEARCH_GRR_CONDITION_DTO);
-        GrrAnalysisConfigDto analysisConfigDto = (GrrAnalysisConfigDto) param.get(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG);
+        GrrAnalysisConfigDto grrAnalysisConfigDto = (GrrAnalysisConfigDto) param.get(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG);
+
         List<TestItemWithTypeDto> itemWithTypeDtos = searchConditionDto.getSelectedTestItemDtos();
+
+        SearchDataFrame dataFrame = (SearchDataFrame) param.get(ParamKeys.SEARCH_DATA_FRAME);
         GrrDataFrameDto grrDataFrameDto = (GrrDataFrameDto) param.get(ParamKeys.SEARCH_VIEW_DATA_FRAME);
 
         List<String> includeRows = Lists.newLinkedList();
         grrDataFrameDto.getIncludeDatas().forEach(grrViewDataDto -> includeRows.add(grrViewDataDto.getRowKey()));
 
         GrrService grrService = RuntimeContext.getBean(GrrService.class);
-        String itemName = itemWithTypeDtos.get(0).getTestItemName();
-        GrrDetailDto grrDetailDto = grrService.getDetailResult(grrDataFrameDto.getDataFrame().getDataColumn(itemName, null),
-                itemWithTypeDtos.get(0),
+        List<GrrSummaryDto> summaryDtos = grrService.getSummaryResult(dataFrame,
+                itemWithTypeDtos,
                 includeRows,
-                analysisConfigDto);
-        if (in[1] != null && in[1] instanceof GrrMainController) {
-            GrrMainController grrMainController = (GrrMainController) in[1];
-            grrMainController.setGrrDetailDto(grrDetailDto);
-        }
-        context.returnValue(grrDetailDto);
+                grrAnalysisConfigDto);
+//        context.fireDoJob(param, in[1]);
+        context.returnValue(summaryDtos);
     }
 
     @Override

@@ -34,6 +34,7 @@ public class ParamKeys {
     public static final String GRR_ANALYSIS_JOB_PIPELINE = "grrAnalysisJobPipeline";
     public static final String GRR_DETAIL_ANALYSIS_JOB_PIPELINE = "grrDetailAnalysisJobPipeline";
     public static final String GRR_VIEW_DATA_JOB_PIPELINE = "grrViewDataJobPipeline";
+    public static final String GRR_EXPORT_JOB_PIPELINE = "grrExportJobPipeline";
 
 
     public static final String GRR_ANALYSIS_CONDITION_KEY = "analysisKey";

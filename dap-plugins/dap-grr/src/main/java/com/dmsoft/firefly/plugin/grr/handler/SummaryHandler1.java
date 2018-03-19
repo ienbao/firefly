@@ -27,7 +27,7 @@ public class SummaryHandler1 implements JobInboundHandler {
 
     @Override
     public void doJob(JobHandlerContext context, Object... in) throws Exception {
-        if (in == null || !(in[0] instanceof Map) || !(in[1] instanceof GrrMainController)) {
+        if (in == null || !(in[0] instanceof Map)) {
             throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
         }
         Map<String, Object> param = (Map) in[0];
