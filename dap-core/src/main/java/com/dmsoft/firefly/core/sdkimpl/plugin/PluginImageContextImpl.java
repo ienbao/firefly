@@ -152,6 +152,7 @@ public class PluginImageContextImpl implements PluginImageContext, PluginContext
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     private Map<String, PluginClass> privateScanClass(ClassLoader classLoader, String scanPath) {
         Map<String, PluginClass> result = Maps.newHashMap();
 

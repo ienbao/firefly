@@ -13,12 +13,11 @@ import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.grr.dto.*;
-import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnalysisConfigDto;
+import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrSummaryResultDto;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.grr.model.ListViewModel;
 import com.dmsoft.firefly.plugin.grr.service.GrrAnalysisService;
-import com.dmsoft.firefly.plugin.grr.service.GrrConfigService;
 import com.dmsoft.firefly.plugin.grr.service.GrrExportService;
 import com.dmsoft.firefly.plugin.grr.service.GrrService;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
@@ -35,7 +34,6 @@ import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.job.Job;
-import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.google.common.collect.Lists;
@@ -460,7 +458,7 @@ public class GrrExportController {
                 } else {
                     HBox cell;
                     CheckBox checkBox = new CheckBox();
-                    checkBox.setPrefSize(12,12);
+                    checkBox.setPrefSize(12, 12);
                     if (item.isIsChecked()) {
                         checkBox.setSelected(true);
                     } else {
@@ -687,29 +685,40 @@ public class GrrExportController {
             SearchConditionDto searchConditionDto = this.initSearchConditionDto();
             searchConditionDto.setSelectedTestItemDtos(getSelectedItemDto());
             paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, searchConditionDto);
-
-            List<GrrSummaryDto> grrSummaryDtoList = null;
-
-            Job job = new Job(ParamKeys.GRR_EXPORT_JOB_PIPELINE);
-            grrSummaryDtoList = (List<GrrSummaryDto>) manager.doJobSyn(job, paramMap, null);
-//        List<String> rowKeysToByAnalyzed = Lists.newArrayList();
-//
-//        GrrConfigDto grrSetting = grrConfigService.findGrrConfig();
-//        GrrAnalysisConfigDto configDto = new GrrAnalysisConfigDto();
-//        configDto.setPart(Integer.valueOf(partTxt.getText()));
-//        configDto.setAppraiser(Integer.valueOf(appraiserTxt.getText()));
-//        configDto.setTrial(Integer.valueOf(trialTxt.getText()));
-//        configDto.setCoverage(grrSetting.getCoverage());
-//        configDto.setMethod(grrSetting.getAnalysisMethod());
-//        configDto.setSignificance(Double.valueOf(grrSetting.getSignLevel()));
-//
-//        List<GrrSummaryDto> grrSummaryResultDtos = Lists.newArrayList();
-
-            List<GrrExportResultDto> grrExportResultDtos = Lists.newArrayList();
-            if (detail) {
+            if (!detail) {
+                Job job = new Job(ParamKeys.GRR_EXPORT_JOB_PIPELINE);
+                List<GrrSummaryDto> grrSummaryDtoList = (List<GrrSummaryDto>) manager.doJobSyn(job, paramMap, null);
                 grrExportService.exportGrrSummary(grrExportConfigDto, grrSummaryDtoList);
             } else {
-                grrExportService.exportGrrSummaryDetail(grrExportConfigDto, grrSummaryDtoList, grrExportResultDtos);
+                Job job = new Job(ParamKeys.GRR_EXPORT_DETAIL_JOB_PIPELINE);
+                List<GrrExportDetailDto> grrSummaryDtoList = (List<GrrExportDetailDto>) manager.doJobSyn(job, paramMap, null);
+                List<GrrSummaryDto> summaryDtos = Lists.newArrayList();
+                List<GrrExportResultDto> grrExportResultDtos = Lists.newArrayList();
+                for (GrrExportDetailDto dto : grrSummaryDtoList) {
+                    GrrSummaryDto summaryDto = new GrrSummaryDto();
+                    summaryDto.setItemName(dto.getItemName());
+                    GrrSummaryResultDto summaryResultDto = new GrrSummaryResultDto();
+                    summaryResultDto.setUsl(dto.getExportDetailDto().getUsl());
+                    summaryResultDto.setGrrOnContribution(dto.getExportDetailDto().getGrrOnContribution());
+                    summaryResultDto.setGrrOnTolerance(dto.getExportDetailDto().getGrrOnTolerance());
+                    summaryResultDto.setLsl(dto.getExportDetailDto().getLsl());
+                    summaryResultDto.setRepeatabilityOnContribution(dto.getExportDetailDto().getRepeatabilityOnContribution());
+                    summaryResultDto.setRepeatabilityOnTolerance(dto.getExportDetailDto().getRepeatabilityOnTolerance());
+                    summaryResultDto.setReproducibilityOnContribution(dto.getExportDetailDto().getReproducibilityOnContribution());
+                    summaryResultDto.setReproducibilityOnTolerance(dto.getExportDetailDto().getReproducibilityOnTolerance());
+                    summaryResultDto.setTolerance(dto.getExportDetailDto().getTolerance());
+
+                    summaryDto.setSummaryResultDto(summaryResultDto);
+                    summaryDtos.add(summaryDto);
+
+                    GrrExportResultDto exportResultDto = new GrrExportResultDto();
+                    exportResultDto.setItemName(dto.getItemName());
+                    exportResultDto.setGrrAnovaAndSourceResultDto(dto.getExportDetailDto().getAnovaAndSourceResultDto());
+                    exportResultDto.setGrrImageDto(BuildChart.buildImage(dto.getExportDetailDto(), searchConditionDto.getParts(), searchConditionDto.getAppraisers()));
+                    grrExportResultDtos.add(exportResultDto);
+                }
+
+                grrExportService.exportGrrSummaryDetail(grrExportConfigDto, summaryDtos, grrExportResultDtos);
             }
         }
     }
