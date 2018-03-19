@@ -2,6 +2,7 @@ package com.dmsoft.firefly.gui.components.window;
 
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.components.utils.ResourceMassages;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -130,6 +131,13 @@ public class WindowMessageFactory {
             newStage.show();
 
             newStage.setOnCloseRequest(event -> {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        newStage.setMinHeight(150);
+                        newStage.setMaxHeight(150);
+                    }
+                });
                 windowProgressTipController.closeDialog();
             });
         } catch (IOException e) {

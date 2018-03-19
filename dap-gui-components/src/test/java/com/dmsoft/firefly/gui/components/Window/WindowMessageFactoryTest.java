@@ -54,8 +54,24 @@ public class WindowMessageFactoryTest extends Application{
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                windowProgressTipController.updateFailProgress(80);
+                windowProgressTipController.updateFailProgress(80, "first commit...");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                windowProgressTipController.updateFailProgressNextLine("second commit...");
             }).start();
+
+//            Platform.runLater(() -> {
+//                try {
+//                    Thread.sleep(2000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                windowProgressTipController.updateFailProgress(80);
+//            });
+
         });
 
         menu.getItems().add(okMenuItem);
