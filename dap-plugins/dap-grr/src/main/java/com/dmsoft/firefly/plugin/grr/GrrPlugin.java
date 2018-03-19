@@ -7,11 +7,7 @@ package com.dmsoft.firefly.plugin.grr;
 
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
-import com.dmsoft.firefly.plugin.grr.pipeline.GrrExportJobPipeline;
-import com.dmsoft.firefly.plugin.grr.pipeline.GrrRefreshJobPipeline;
-import com.dmsoft.firefly.plugin.grr.pipeline.GrrSummaryJobPipeline;
-import com.dmsoft.firefly.plugin.grr.pipeline.GrrDetailResultJobPipeline;
-import com.dmsoft.firefly.plugin.grr.pipeline.GrrViewDataJobPipeline;
+import com.dmsoft.firefly.plugin.grr.pipeline.*;
 import com.dmsoft.firefly.plugin.grr.service.GrrAnalysisService;
 import com.dmsoft.firefly.plugin.grr.service.GrrConfigService;
 import com.dmsoft.firefly.plugin.grr.service.GrrFilterService;
@@ -109,6 +105,7 @@ public class GrrPlugin extends Plugin {
         manager.initializeJob(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE, new GrrDetailResultJobPipeline());
         manager.initializeJob(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE, new GrrViewDataJobPipeline());
         manager.initializeJob(ParamKeys.GRR_EXPORT_JOB_PIPELINE, new GrrExportJobPipeline());
+        manager.initializeJob(ParamKeys.GRR_EXPORT_DETAIL_JOB_PIPELINE, new GrrExportDetailJobPipeline());
 
         manager.initializeJob(ParamKeys.GRR_REFRESH_JOB_PIPELINE, new GrrRefreshJobPipeline());
 

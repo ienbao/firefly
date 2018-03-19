@@ -4,6 +4,8 @@
 
 package com.dmsoft.firefly.plugin.grr.dto;
 
+import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnovaAndSourceResultDto;
+
 /**
  * Created by Administrator on 2017/7/27.
  */
