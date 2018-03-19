@@ -66,7 +66,6 @@ public class DAPStringUtils extends StringUtils {
      */
     public static boolean isBlankWithSpecialNumber(String d) {
         return StringUtils.isBlank(d) || (d.equalsIgnoreCase("N/A") || d.equalsIgnoreCase("-") || d.equalsIgnoreCase("NaN") || d.equalsIgnoreCase("nil") || d.equalsIgnoreCase("_"));
-
     }
 
     /**
@@ -202,5 +201,44 @@ public class DAPStringUtils extends StringUtils {
             return "";
         }
         return String.valueOf(value);
+    }
+
+    /**
+     * mongodb ket can not contains this char
+     * @param value
+     * @return
+     */
+    public static String specificToNomal(String value) {
+        if (value.contains(".")) {
+            value = value.replace(".", "_");
+        }
+        if (value.contains("/")) {
+            value = value.replace("/", "_");
+        }
+        if (value.contains("\"")) {
+            value = value.replace("\"", "_");
+        }
+        if (value.contains("$")) {
+            value = value.replace("$", "_");
+        }
+        if (value.contains("*")) {
+            value = value.replace("*", "_");
+        }
+        if (value.contains("<")) {
+            value = value.replace("<", "_");
+        }
+        if (value.contains(">")) {
+            value = value.replace(">", "_");
+        }
+        if (value.contains(":")) {
+            value = value.replace(":", "_");
+        }
+        if (value.contains("|")) {
+            value = value.replace("|", "_");
+        }
+        if (value.contains("?")) {
+            value = value.replace("?", "_");
+        }
+        return value;
     }
 }

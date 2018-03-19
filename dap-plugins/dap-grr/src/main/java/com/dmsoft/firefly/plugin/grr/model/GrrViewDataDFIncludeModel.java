@@ -4,16 +4,18 @@ import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrViewDataDto;
+import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.*;
 
 import java.util.List;
@@ -25,7 +27,6 @@ import java.util.Map;
 public class GrrViewDataDFIncludeModel implements TableModel {
     private GrrDataFrameDto grrDataFrameDto;
     private ObservableList<String> headerArray;
-    private FilteredList<String> filterHeaderArray;
     private ObservableList<String> rowKeyArray;
     private TableView<String> tableView;
     private String partKey = GrrFxmlAndLanguageUtils.getString("PART") + " ";
@@ -36,39 +37,41 @@ public class GrrViewDataDFIncludeModel implements TableModel {
     private Map<String, RadioButton> grrRadioButton = Maps.newHashMap();
     private ToggleGroup group = new ToggleGroup();
     private List<GrrViewDataListener> listeners = Lists.newArrayList();
+    private Map<String, TestItemWithTypeDto> typeDtoMap = Maps.newHashMap();
 
     /**
      * constructor
      *
-     * @param grrDataFrameDto grr data frame dto
+     * @param grrDataFrameDto    grr data frame dto
+     * @param searchConditionDto search condition dto
      */
-    public GrrViewDataDFIncludeModel(GrrDataFrameDto grrDataFrameDto) {
+    public GrrViewDataDFIncludeModel(GrrDataFrameDto grrDataFrameDto, SearchConditionDto searchConditionDto) {
         this.grrDataFrameDto = grrDataFrameDto;
-        if (grrDataFrameDto != null && grrDataFrameDto.getDataFrame() != null) {
-            this.headerArray = FXCollections.observableArrayList(grrDataFrameDto.getDataFrame().getAllTestItemName());
-            this.headerArray.add(0, trailKey);
-            this.headerArray.add(0, appKey);
-            this.headerArray.add(0, partKey);
-            this.headerArray.add(0, radioKey);
-            this.filterHeaderArray = this.headerArray.filtered(p -> true);
-            this.rowKeyArray = FXCollections.observableArrayList();
-            if (grrDataFrameDto.getIncludeDatas() != null && !grrDataFrameDto.getIncludeDatas().isEmpty()) {
-                for (GrrViewDataDto grrViewDataDto : grrDataFrameDto.getIncludeDatas()) {
-                    this.rowKeyArray.add(grrViewDataDto.getRowKey());
-                    this.grrViewDataDtoMap.put(grrViewDataDto.getRowKey(), grrViewDataDto);
-                    RadioButton radioButton = new RadioButton();
-                    radioButton.setToggleGroup(group);
-                    grrRadioButton.put(grrViewDataDto.getRowKey(), radioButton);
-                }
-                grrRadioButton.get(grrDataFrameDto.getIncludeDatas().get(0).getRowKey()).setSelected(true);
+        this.rowKeyArray = FXCollections.observableArrayList();
+        this.headerArray = FXCollections.observableArrayList(grrDataFrameDto.getDataFrame().getAllTestItemName());
+        this.headerArray.add(0, trailKey);
+        this.headerArray.add(0, appKey);
+        this.headerArray.add(0, partKey);
+        this.headerArray.add(0, radioKey);
+        if (grrDataFrameDto.getIncludeDatas() != null && !grrDataFrameDto.getIncludeDatas().isEmpty()) {
+            for (GrrViewDataDto grrViewDataDto : grrDataFrameDto.getIncludeDatas()) {
+                this.rowKeyArray.add(grrViewDataDto.getRowKey());
+                this.grrViewDataDtoMap.put(grrViewDataDto.getRowKey(), grrViewDataDto);
+                RadioButton radioButton = new RadioButton();
+                radioButton.setToggleGroup(group);
+                grrRadioButton.put(grrViewDataDto.getRowKey(), radioButton);
             }
-            this.group.selectedToggleProperty().addListener((ov, t1, t2) -> fireToggle((RadioButton) t2));
+            grrRadioButton.get(grrDataFrameDto.getIncludeDatas().get(0).getRowKey()).setSelected(true);
+        }
+        this.group.selectedToggleProperty().addListener((ov, t1, t2) -> fireToggle((RadioButton) t2));
+        for (TestItemWithTypeDto testItemWithTypeDto : searchConditionDto.getSelectedTestItemDtos()) {
+            this.typeDtoMap.put(testItemWithTypeDto.getTestItemName(), testItemWithTypeDto);
         }
     }
 
     @Override
     public ObservableList<String> getHeaderArray() {
-        return this.filterHeaderArray;
+        return this.headerArray;
     }
 
     @Override
@@ -118,7 +121,7 @@ public class GrrViewDataDFIncludeModel implements TableModel {
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
         tableCell.setStyle(null);
-        if (radioKey.equals(rowKey)) {
+        if (radioKey.equals(column)) {
             tableCell.setText(null);
             tableCell.setGraphic(grrRadioButton.get(rowKey));
             return tableCell;
@@ -130,8 +133,8 @@ public class GrrViewDataDFIncludeModel implements TableModel {
             } else if (tableCell.getText() != null && !DAPStringUtils.isNumeric(tableCell.getText()) && !DAPStringUtils.isSpecialBlank(tableCell.getText())) {
                 tableCell.setStyle("-fx-text-fill: #aaaaaa");
             } else if (tableCell.getText() != null && DAPStringUtils.isNumeric(tableCell.getText())) {
-                if (!RangeUtils.isPass(tableCell.getText(), this.grrDataFrameDto.getDataFrame().getTestItemWithTypeDto(column))) {
-                    tableCell.setStyle("-fx-background-color: red; -fx-text-fill: white");
+                if (!RangeUtils.isPass(tableCell.getText(), this.typeDtoMap.get(column))) {
+                    tableCell.setStyle("-fx-background-color: #ea2028; -fx-text-fill: white");
                 }
             }
         }
@@ -153,8 +156,19 @@ public class GrrViewDataDFIncludeModel implements TableModel {
      * @param testItem test item
      */
     public void searchTestItem(String testItem) {
-        this.filterHeaderArray.setPredicate(s -> radioKey.equals(s) || partKey.equals(s) || appKey.equals(s) || trailKey.equals(s) || s.toLowerCase().contains(testItem.toLowerCase()));
-        this.tableView.refresh();
+        Platform.runLater(() -> {
+            this.headerArray.clear();
+            this.headerArray.add(0, trailKey);
+            this.headerArray.add(0, appKey);
+            this.headerArray.add(0, partKey);
+            this.headerArray.add(0, radioKey);
+            for (String s : this.grrDataFrameDto.getDataFrame().getAllTestItemName()) {
+                if (s.toLowerCase().contains(testItem.toLowerCase())) {
+                    this.headerArray.add(s);
+                }
+            }
+            this.tableView.refresh();
+        });
     }
 
     /**
@@ -180,6 +194,24 @@ public class GrrViewDataDFIncludeModel implements TableModel {
      */
     public void addListener(GrrViewDataListener listener) {
         this.listeners.add(listener);
+    }
+
+    /**
+     * method to replace view data dto
+     *
+     * @param grrViewDataDto grr view data dto to replace
+     */
+    public void replace(GrrViewDataDto grrViewDataDto) {
+        GrrViewDataDto oldDto = getSelectedViewDataDto();
+        if (oldDto != null) {
+            this.grrViewDataDtoMap.remove(oldDto.getRowKey());
+            this.grrViewDataDtoMap.put(grrViewDataDto.getRowKey(), grrViewDataDto);
+            RadioButton rb = this.grrRadioButton.remove(oldDto.getRowKey());
+            this.grrRadioButton.put(grrViewDataDto.getRowKey(), rb);
+            int index = this.rowKeyArray.indexOf(oldDto.getRowKey());
+            this.rowKeyArray.remove(index);
+            this.rowKeyArray.add(index, grrViewDataDto.getRowKey());
+        }
     }
 
     private void fireToggle(RadioButton radioButton) {

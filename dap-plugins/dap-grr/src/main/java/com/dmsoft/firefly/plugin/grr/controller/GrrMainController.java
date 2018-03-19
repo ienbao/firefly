@@ -2,10 +2,11 @@ package com.dmsoft.firefly.plugin.grr.controller;
 
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
-import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
+import com.dmsoft.firefly.plugin.grr.dto.*;
+import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrDetailResultDto;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import javafx.fxml.FXML;
@@ -24,10 +25,12 @@ import java.util.ResourceBundle;
  */
 public class GrrMainController implements Initializable {
 
-    private SearchDataFrame dataFrame;
     private GrrDataFrameDto grrDataFrame;
-    private List<String> includeRows;
-    private List<String> excludeRows;
+    private List<GrrSummaryDto> summaryDtos;
+    private GrrDetailDto grrDetailDto;
+    private GrrConfigDto grrConfigDto;
+    private TemplateSettingDto activeTemplateSettingDto;
+    private GrrParamDto grrParamDto;
     @FXML
     private GrrItemController grrItemController;
     @FXML
@@ -47,10 +50,6 @@ public class GrrMainController implements Initializable {
         grrViewDataController.init(this);
         initBtnIcon();
         initComponentEvents();
-    }
-
-    public void grrAnalyzeResult() {
-        grrResultController.analyzeGrrResult(grrDataFrame, includeRows, getSearchConditionDto());
     }
 
     private void initBtnIcon() {
@@ -76,29 +75,6 @@ public class GrrMainController implements Initializable {
         }
     }
 
-    public void setDataFrame(SearchDataFrame dataFrame) {
-        this.dataFrame = dataFrame;
-    }
-
-    public SearchDataFrame getDataFrame() {
-        return dataFrame;
-    }
-
-    public List<String> getIncludeRows() {
-        return includeRows;
-    }
-
-    public void setIncludeRows(List<String> includeRows) {
-        this.includeRows = includeRows;
-    }
-
-    public List<String> getExcludeRows() {
-        return excludeRows;
-    }
-
-    public void setExcludeRows(List<String> excludeRows) {
-        this.excludeRows = excludeRows;
-    }
 
     public GrrDataFrameDto getGrrDataFrame() {
         return grrDataFrame;
@@ -110,5 +86,53 @@ public class GrrMainController implements Initializable {
 
     public SearchConditionDto getSearchConditionDto() {
         return grrItemController.getSearchConditionDto();
+    }
+
+    public List<GrrSummaryDto> getSummaryDtos() {
+        return summaryDtos;
+    }
+
+    public void setSummaryDtos(List<GrrSummaryDto> summaryDtos) {
+        this.summaryDtos = summaryDtos;
+    }
+
+    public GrrDetailDto getGrrDetailDto() {
+        return grrDetailDto;
+    }
+
+    public void setGrrDetailDto(GrrDetailDto grrDetailDto) {
+        this.grrDetailDto = grrDetailDto;
+    }
+
+    public void updateGrrSummaryAndDetail() {
+        grrResultController.analyzeGrrResult(summaryDtos, grrDetailDto);
+    }
+
+    public void updateGrrViewData() {
+        grrViewDataController.refresh();
+    }
+
+    public GrrConfigDto getGrrConfigDto() {
+        return grrConfigDto;
+    }
+
+    public void setGrrConfigDto(GrrConfigDto grrConfigDto) {
+        this.grrConfigDto = grrConfigDto;
+    }
+
+    public TemplateSettingDto getActiveTemplateSettingDto() {
+        return activeTemplateSettingDto;
+    }
+
+    public void setActiveTemplateSettingDto(TemplateSettingDto activeTemplateSettingDto) {
+        this.activeTemplateSettingDto = activeTemplateSettingDto;
+    }
+
+    public GrrParamDto getGrrParamDto() {
+        return grrParamDto;
+    }
+
+    public void setGrrParamDto(GrrParamDto grrParamDto) {
+        this.grrParamDto = grrParamDto;
     }
 }

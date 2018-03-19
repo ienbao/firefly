@@ -51,15 +51,15 @@ public class GrrExportWorker implements ExWorker {
      * buildGrrSummary
      *
      * @param grrExportConfigDto   grrExportConfigDto
-     * @param grrSummaryResultDtos grrSummaryResultDtos
+     * @param grrSummaryExportDtos grrSummaryExportDtos
      */
-    public void buildGrrSummary(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryResultDto> grrSummaryResultDtos) {
+    public void buildGrrSummary(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryExportDto> grrSummaryExportDtos) {
         mapCellStyle = CellStyleUtil.getStyle(this.getCurrentWorkbook());
         String userName = grrExportConfigDto.getUserName();
         if (sheets != null && sheets.size() < 1) {
             cellList.addAll(buildSummaryHead(userName));
         }
-        cellList.addAll(buildSummaryContent(grrSummaryResultDtos, grrExportConfigDto));
+        cellList.addAll(buildSummaryContent(grrSummaryExportDtos, grrExportConfigDto));
         exSheet.setExCells(cellList);
         exSheet.setName(AppConstant.GRR_EXPORT_SUMMARY);
         if (sheets != null && sheets.size() < 1) {
@@ -71,15 +71,15 @@ public class GrrExportWorker implements ExWorker {
      * buildSummaryAndDetail
      *
      * @param grrExportConfigDto   grrExportConfigDto
-     * @param grrSummaryResultDtos grrSummaryResultDtos
+     * @param grrSummaryExportDtos grrSummaryExportDtos
      * @param grrExportResultDtos  grrExportResultDtos
      */
-    public void buildSummaryAndDetail(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryResultDto> grrSummaryResultDtos, List<GrrExportResultDto> grrExportResultDtos) {
+    public void buildSummaryAndDetail(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryExportDto> grrSummaryExportDtos, List<GrrExportResultDto> grrExportResultDtos) {
         mapCellStyle = CellStyleUtil.getStyle(this.getCurrentWorkbook());
         String username = grrExportConfigDto.getUserName();
         List<ExCell> summaryHead = buildSummaryHead(username);
         cellList.addAll(summaryHead);
-        List<ExCell> summaryContent = buildSummaryAndDetailContent(grrSummaryResultDtos, grrExportConfigDto);
+        List<ExCell> summaryContent = buildSummaryAndDetailContent(grrSummaryExportDtos, grrExportConfigDto);
         cellList.addAll(summaryContent);
         exSheet.setExCells(cellList);
         sheets.add(exSheet);
@@ -88,12 +88,12 @@ public class GrrExportWorker implements ExWorker {
         exSheet = null;
 
 //        int j = 0;
-        for (int i = 0; i < grrSummaryResultDtos.size(); i++) {
+        for (int i = 0; i < grrSummaryExportDtos.size(); i++) {
             for (int j = 0; j < grrExportResultDtos.size(); j++) {
 //            if (j >= grrExportResultDtos.size()) {
 //                break;
 //            }
-                String summaryItemName = grrSummaryResultDtos.get(i).getTestItem();
+                String summaryItemName = grrSummaryExportDtos.get(i).getTestItem();
                 String subItemName = grrExportResultDtos.get(j).getItemName();
 
                 if (summaryItemName.equals(subItemName)) {
@@ -103,7 +103,7 @@ public class GrrExportWorker implements ExWorker {
                     itemName = DAPStringUtils.filterSpeChars(itemName);
                     exSheetItem.setName(itemName);
                     exSheetItem.setIndex(i + 1);
-                    List<ExCell> itemsCellList = buildGRRTestItem(exSheetItem.getName(), grrExportResultDtos.get(j), grrSummaryResultDtos.get(i), grrExportConfigDto);
+                    List<ExCell> itemsCellList = buildGRRTestItem(exSheetItem.getName(), grrExportResultDtos.get(j), grrSummaryExportDtos.get(i), grrExportConfigDto);
                     exSheetItem.setExCells(itemsCellList);
                     sheets.add(exSheetItem);
                     j++;
@@ -147,27 +147,27 @@ public class GrrExportWorker implements ExWorker {
         return exCellList;
     }
 
-    private List<ExCell> buildSummaryContent(List<GrrSummaryResultDto> grrSummaryResultDtos, GrrExportConfigDto grrExportConfigDto) {
+    private List<ExCell> buildSummaryContent(List<GrrSummaryExportDto> grrSummaryExportDtos, GrrExportConfigDto grrExportConfigDto) {
         List<ExCell> exCellList = Lists.newArrayList();
         mapRuleStyle = SummaryRuleStyle.getBackStyle(this.getCurrentWorkbook());
 
-        for (int i = 0; i < grrSummaryResultDtos.size(); i++) {
-            String name = grrSummaryResultDtos.get(i).getTestItem();
-            String tolerance = grrSummaryResultDtos.get(i).getTolerance();
+        for (int i = 0; i < grrSummaryExportDtos.size(); i++) {
+            String name = grrSummaryExportDtos.get(i).getTestItem();
+            String tolerance = grrSummaryExportDtos.get(i).getTolerance();
             String repeat = "";
             String reprod = "";
             String grr = "";
             String result = "";
             if (!grrExportConfigDto.isTolerance()) {
-                repeat = grrSummaryResultDtos.get(i).getRepeatabilityOnContribution();
-                reprod = grrSummaryResultDtos.get(i).getReproducibilityOnContribution();
-                grr = grrSummaryResultDtos.get(i).getGrrOnContribution();
-                result = grrSummaryResultDtos.get(i).getLevelOnContribution();
+                repeat = grrSummaryExportDtos.get(i).getRepeatabilityOnContribution();
+                reprod = grrSummaryExportDtos.get(i).getReproducibilityOnContribution();
+                grr = grrSummaryExportDtos.get(i).getGrrOnContribution();
+                result = grrSummaryExportDtos.get(i).getLevelOnContribution();
             } else {
-                repeat = grrSummaryResultDtos.get(i).getRepeatabilityOnTolerance();
-                reprod = grrSummaryResultDtos.get(i).getReproducibilityOnTolerance();
-                grr = grrSummaryResultDtos.get(i).getGrrOnTolerance();
-                result = grrSummaryResultDtos.get(i).getLevelOnTolerance();
+                repeat = grrSummaryExportDtos.get(i).getRepeatabilityOnTolerance();
+                reprod = grrSummaryExportDtos.get(i).getReproducibilityOnTolerance();
+                grr = grrSummaryExportDtos.get(i).getGrrOnTolerance();
+                result = grrSummaryExportDtos.get(i).getLevelOnTolerance();
             }
 
             String[] arr = {name, repeat, reprod, grr};
@@ -198,14 +198,14 @@ public class GrrExportWorker implements ExWorker {
         return exCellList;
     }
 
-    private List<ExCell> buildSummaryAndDetailContent(List<GrrSummaryResultDto> grrSummaryResultDtos, GrrExportConfigDto grrExportConfigDto) {
+    private List<ExCell> buildSummaryAndDetailContent(List<GrrSummaryExportDto> grrSummaryExportDtos, GrrExportConfigDto grrExportConfigDto) {
         List<ExCell> exCellList = Lists.newArrayList();
         List<String> itemNameAdd = Lists.newArrayList();
         mapRuleStyle = SummaryRuleStyle.getBackStyle(this.getCurrentWorkbook());
 
-        for (int i = 0; i < grrSummaryResultDtos.size(); i++) {
+        for (int i = 0; i < grrSummaryExportDtos.size(); i++) {
 
-            String name = grrSummaryResultDtos.get(i).getTestItem();
+            String name = grrSummaryExportDtos.get(i).getTestItem();
 
             LinkedHashMap<String, SpecificationDataDto> specificationDataDtoMap = grrExportConfigDto.getSpecificationDataDtoMap();
             if (specificationDataDtoMap.size() != 0 && specificationDataDtoMap != null) {
@@ -216,21 +216,21 @@ public class GrrExportWorker implements ExWorker {
                 }
             }
 
-            String tolerance = grrSummaryResultDtos.get(i).getTolerance();
+            String tolerance = grrSummaryExportDtos.get(i).getTolerance();
             String repeat = "";
             String reprod = "";
             String grr = "";
             String result = "";
             if (!grrExportConfigDto.isTolerance()) {
-                repeat = grrSummaryResultDtos.get(i).getRepeatabilityOnContribution();
-                reprod = grrSummaryResultDtos.get(i).getReproducibilityOnContribution();
-                grr = grrSummaryResultDtos.get(i).getGrrOnContribution();
-                result = grrSummaryResultDtos.get(i).getLevelOnContribution();
+                repeat = grrSummaryExportDtos.get(i).getRepeatabilityOnContribution();
+                reprod = grrSummaryExportDtos.get(i).getReproducibilityOnContribution();
+                grr = grrSummaryExportDtos.get(i).getGrrOnContribution();
+                result = grrSummaryExportDtos.get(i).getLevelOnContribution();
             } else {
-                repeat = grrSummaryResultDtos.get(i).getRepeatabilityOnTolerance();
-                reprod = grrSummaryResultDtos.get(i).getReproducibilityOnTolerance();
-                grr = grrSummaryResultDtos.get(i).getGrrOnTolerance();
-                result = grrSummaryResultDtos.get(i).getLevelOnTolerance();
+                repeat = grrSummaryExportDtos.get(i).getRepeatabilityOnTolerance();
+                reprod = grrSummaryExportDtos.get(i).getReproducibilityOnTolerance();
+                grr = grrSummaryExportDtos.get(i).getGrrOnTolerance();
+                result = grrSummaryExportDtos.get(i).getLevelOnTolerance();
             }
 
             String[] arr = {name, repeat, reprod, grr};
@@ -245,7 +245,7 @@ public class GrrExportWorker implements ExWorker {
                 result = "-";
             }
 
-//            if (grrSummaryResultDtos.get(i).isHasAdd()) {
+//            if (grrSummaryExportDtos.get(i).isHasAdd()) {
 //                itemNameAdd.add(arr[0]);
 //            }
 
@@ -283,7 +283,7 @@ public class GrrExportWorker implements ExWorker {
             XSSFCellStyle style = (XSSFCellStyle) workbook.createCellStyle();
             style.setFont(font);
             for (int i = 0; i < itemNameAdd.size(); i++) {
-                exCellList.add(ExUtil.fillToCell(new Integer[]{summaryDataIndex[1] + 1 + grrSummaryResultDtos.size() + i, summaryDataIndex[0]}, itemNameAdd.get(i) + "  is not consistent with GRR analysis require!",
+                exCellList.add(ExUtil.fillToCell(new Integer[]{summaryDataIndex[1] + 1 + grrSummaryExportDtos.size() + i, summaryDataIndex[0]}, itemNameAdd.get(i) + "  is not consistent with GRR analysis require!",
                         ExCellType.TEXT, style));
             }
         }
@@ -291,16 +291,16 @@ public class GrrExportWorker implements ExWorker {
         return exCellList;
     }
 
-    private List<ExCell> buildGRRTestItem(String sheetName, GrrExportResultDto grrExportResultDto, GrrSummaryResultDto grrSummaryResultDto, GrrExportConfigDto grrExportConfigDto
+    private List<ExCell> buildGRRTestItem(String sheetName, GrrExportResultDto grrExportResultDto, GrrSummaryExportDto grrSummaryExportDto, GrrExportConfigDto grrExportConfigDto
     ) {
         List<ExCell> exCellList = Lists.newArrayList();
 
-        if (grrExportResultDto.getGrrAnovaAndSourceResultDto() != null || grrSummaryResultDto != null || grrExportResultDto.getGrrImageDto() != null) {
+        if (grrExportResultDto.getGrrAnovaAndSourceResultDto() != null || grrSummaryExportDto != null || grrExportResultDto.getGrrImageDto() != null) {
             exCellList.add(ExUtil.fillToCell(new Integer[]{0, 0}, "Summary", ExCellType.HYPERLINK.withCode(ExSheet.formatName(0, "Summary")), mapCellStyle.get(CellStyleType.link.toString())));
         }
         currentRow = 0;
-        if (grrSummaryResultDto != null) {
-            List<ExCell> exCellParamList = buildTestItemParam(grrSummaryResultDto, grrExportConfigDto);
+        if (grrSummaryExportDto != null) {
+            List<ExCell> exCellParamList = buildTestItemParam(grrSummaryExportDto, grrExportConfigDto);
             exCellList.addAll(exCellParamList);
         }
         if (grrExportResultDto.getGrrAnovaAndSourceResultDto() != null) {
@@ -317,29 +317,29 @@ public class GrrExportWorker implements ExWorker {
         return exCellList;
     }
 
-    private List<ExCell> buildTestItemParam(GrrSummaryResultDto grrSummaryResultDto, GrrExportConfigDto grrExportConfigDto) {
+    private List<ExCell> buildTestItemParam(GrrSummaryExportDto grrSummaryExportDto, GrrExportConfigDto grrExportConfigDto) {
         List<ExCell> exCellList = Lists.newArrayList();
         mapRuleStyle = SummaryRuleStyle.getBackStyle(this.getCurrentWorkbook());
-        String name = grrSummaryResultDto.getTestItem();
+        String name = grrSummaryExportDto.getTestItem();
 
         //getProcess
-        String usl = grrSummaryResultDto.getUsl();
-        String lsl = grrSummaryResultDto.getLsl();
-        String tolerance = grrSummaryResultDto.getTolerance() == null ? "-" : grrSummaryResultDto.getTolerance();
-//        String grr = grrSummaryResultDto.getGrr() == null ? "-" : StringUtils.formatDouble(Double.valueOf(grrSummaryResultDto.getGrr()), digGrrNum) + "%";
+        String usl = grrSummaryExportDto.getUsl();
+        String lsl = grrSummaryExportDto.getLsl();
+        String tolerance = grrSummaryExportDto.getTolerance() == null ? "-" : grrSummaryExportDto.getTolerance();
+//        String grr = grrSummaryExportDto.getGrr() == null ? "-" : StringUtils.formatDouble(Double.valueOf(grrSummaryExportDto.getGrr()), digGrrNum) + "%";
 
-//        String grr = grrSummaryResultDto.getGrr() == null ? "-" : grrSummaryResultDto.getGrr() + "%";
-//        String result = grrSummaryResultDto.getLevel() == null ? "-" : grrSummaryResultDto.getLevel();
+//        String grr = grrSummaryExportDto.getGrr() == null ? "-" : grrSummaryExportDto.getGrr() + "%";
+//        String result = grrSummaryExportDto.getLevel() == null ? "-" : grrSummaryExportDto.getLevel();
         String grr = "";
         String result = "";
 
         boolean isTorlance = grrExportConfigDto.getTolerance();
         if (isTorlance) {
-            grr = grrSummaryResultDto.getGrrOnTolerance() == null ? "-" : grrSummaryResultDto.getGrrOnTolerance() + "%";
-            result = grrSummaryResultDto.getLevelOnTolerance() == null ? "-" : grrSummaryResultDto.getLevelOnTolerance();
+            grr = grrSummaryExportDto.getGrrOnTolerance() == null ? "-" : grrSummaryExportDto.getGrrOnTolerance() + "%";
+            result = grrSummaryExportDto.getLevelOnTolerance() == null ? "-" : grrSummaryExportDto.getLevelOnTolerance();
         } else {
-            grr = grrSummaryResultDto.getGrrOnContribution() == null ? "-" : grrSummaryResultDto.getGrrOnContribution() + "%";
-            result = grrSummaryResultDto.getGrrOnContribution() == null ? "-" : grrSummaryResultDto.getGrrOnContribution();
+            grr = grrSummaryExportDto.getGrrOnContribution() == null ? "-" : grrSummaryExportDto.getGrrOnContribution() + "%";
+            result = grrSummaryExportDto.getGrrOnContribution() == null ? "-" : grrSummaryExportDto.getGrrOnContribution();
         }
 
 

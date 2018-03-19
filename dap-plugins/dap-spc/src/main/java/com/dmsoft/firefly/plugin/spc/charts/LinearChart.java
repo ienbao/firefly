@@ -2,6 +2,7 @@ package com.dmsoft.firefly.plugin.spc.charts;
 
 import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationFetch;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
+import com.dmsoft.firefly.plugin.spc.charts.utils.PointClickCallBack;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -35,7 +36,10 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
     private Map<String, XYChart.Series> seriesMap = Maps.newHashMap();
     private Map<XYChart.Series, Color> seriesColorMap = Maps.newHashMap();
 
+    private PointClickCallBack pointClickCallBack;
+
     private boolean showTooltip = true;
+    private boolean pointClick = false;
 
     /**
      * Construct a new LinearChart with the given axis.
@@ -72,6 +76,7 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         XYChart.Series oneSeries = this.buildSeries(xyOneChartData);
         this.seriesMap.put(unique, oneSeries);
         this.getData().add(oneSeries);
+        this.dataClickEvent(oneSeries);
         this.setSeriesDataStyleByDefault(oneSeries, xyOneChartData.getColor(), true);
         this.setSeriesDataTooltip(oneSeries, pointTooltipFunction);
         this.seriesColorMap.put(oneSeries, xyOneChartData.getColor());
@@ -355,5 +360,21 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
             PathMarker pathMarker = pathMarkerMap.get(unique);
             pathMarker.updateAllLineColor(color);
         }
+    }
+
+    public void activePointClickEvent(boolean flag) {
+        this.pointClick = flag;
+    }
+
+    private void dataClickEvent(XYChart.Series<X,Y> series) {
+        series.getData().forEach(oneData -> oneData.getNode().setOnMouseClicked(event -> {
+            if (pointClickCallBack != null && pointClick) {
+                pointClickCallBack.execute(oneData.getExtraValue());
+            }
+        }));
+    }
+
+    public void setPointClickCallBack(PointClickCallBack pointClickCallBack) {
+        this.pointClickCallBack = pointClickCallBack;
     }
 }

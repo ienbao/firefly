@@ -17,20 +17,20 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.control.Tooltip;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.FileImageOutputStream;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -88,7 +88,7 @@ public class BuildChart {
             INdcChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
             ndcChartDataList.add(iNdcChartData);
             //run chart
-            IRunChartData iRunChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), color);
+            IRunChartData iRunChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), null, color);
             runChartDataList.add(iRunChartData);
             //x bar chart
             IControlChartData xBarChartData = new SpcControlChartData(key, spcChartResultDto.getXbarCResult(), color);
@@ -366,17 +366,16 @@ public class BuildChart {
     }
 
     public static String exportImages(String name, Node node) {
-
-//        node.getStyleClass().add(BuildChart.class.getClassLoader().getResource("css/charts.css").toExternalForm());
         vBox.getChildren().clear();
         vBox.getChildren().add(node);
-        SnapshotParameters parameters = new SnapshotParameters();
-        WritableImage image = node.snapshot(parameters, null);
+
+//        SnapshotParameters parameters = new SnapshotParameters();
+//        WritableImage image = node.snapshot(parameters, null);
 //        // 重置图片大小
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(600);
-        imageView.setFitHeight(220);
-        WritableImage exportImage = node.snapshot(parameters, null);
+//        ImageView imageView = new ImageView(image);
+//        imageView.setFitWidth(600);
+//        imageView.setFitHeight(220);
+        WritableImage exportImage = scene.snapshot(null);
         String savePicPath = FileUtils.getAbsolutePath("../export/temp");
         File file = new File(savePicPath);
         if (!file.exists()) {
@@ -386,11 +385,36 @@ public class BuildChart {
 
         try {
             file = new File(path);
-            ImageIO.write(SwingFXUtils.fromFXImage(exportImage, null), "png", file);
+            saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(exportImage, null), file, 0.9f);
 //            AlertDialog.showAlertDialog("保存成功!");
         } catch (IOException ex) {
 //            AlertDialog.showAlertDialog("保存失败:" + ex.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return path;
+    }
+
+    public static void saveImageUsingJPGWithQuality(BufferedImage image,
+                                                    File filePath, float quality) throws Exception {
+
+        BufferedImage newBufferedImage = new BufferedImage(image.getWidth(),
+                image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+        newBufferedImage.getGraphics().drawImage(image, 0, 0, null);
+
+        Iterator iter = ImageIO
+                .getImageWritersByFormatName("jpeg");
+
+        ImageWriter imageWriter = (ImageWriter) iter.next();
+        ImageWriteParam iwp = imageWriter.getDefaultWriteParam();
+
+        iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+        iwp.setCompressionQuality(quality);
+
+        FileImageOutputStream fileImageOutput = new FileImageOutputStream(filePath);
+        imageWriter.setOutput(fileImageOutput);
+        IIOImage jpgimage = new IIOImage(newBufferedImage, null, null);
+        imageWriter.write(null, jpgimage, iwp);
+        imageWriter.dispose();
     }
 }

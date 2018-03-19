@@ -4,7 +4,6 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
-import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
@@ -61,35 +60,53 @@ public class ViewDataController implements Initializable {
     private ViewDataDFModel model;
     private List<TestItemWithTypeDto> typeDtoList;
     private List<String> selectedProjectNames;
+    private List<String> selectedRowKeys;
 
     private ChooseDialogController chooseDialogController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.typeDtoList = RuntimeContext.getBean(EnvService.class).findTestItems();
+        if (this.typeDtoList != null) {
+            for (TestItemWithTypeDto typeDto : typeDtoList) {
+                ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, typeDto.getTestItemName());
+                chooseTableRowDataList.add(chooseTableRowData);
+            }
+        }
         this.filterTf.getTextField().setPromptText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_VALUE_PROMPT));
         this.buildChooseColumnDialog();
         this.initBtnIcon();
         this.initComponentEvent();
-        this.typeDtoList = RuntimeContext.getBean(EnvService.class).findTestItems();
         this.selectedProjectNames = RuntimeContext.getBean(EnvService.class).findActivatedProjectName();
-        for (TestItemWithTypeDto typeDto : typeDtoList) {
-            ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, typeDto.getTestItemName());
-            chooseTableRowDataList.add(chooseTableRowData);
-        }
     }
 
     /**
      * set view data table dataList
      *
-     * @param dataFrame search data frame
+     * @param dataFrame      search data frame
+     * @param selectedRowKey selected row key
      */
-    public void setViewData(SearchDataFrame dataFrame) {
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey) {
+        this.selectedRowKeys = selectedRowKey;
         Platform.runLater(() -> {
             if (dataFrame == null) {
+                Platform.runLater(() -> {
+                    viewDataTable.getColumns().clear();
+                    chooseDialogController.setSelectResultName(Lists.newArrayList());
+                    try {
+                        if (model != null) {
+                            this.model.getRowKeyArray().clear();
+                        }
+                    } catch (NullPointerException ignored) {
+                        ignored.printStackTrace();
+                    }
+                    this.model = null;
+                });
                 return;
             }
             this.dataFrame = dataFrame;
-            this.model = new ViewDataDFModel(dataFrame);
+            this.model = new ViewDataDFModel(dataFrame, selectedRowKey);
+            this.model.setMainController(spcMainController);
             TableViewWrapper.decorate(viewDataTable, model);
             model.getAllCheckBox().setOnMouseClicked(event -> {
                 for (String s : model.getRowKeyArray()) {
@@ -104,8 +121,54 @@ public class ViewDataController implements Initializable {
                     rowData.getSelector().setValue(false);
                 }
             }
-            chooseDialogController.setTableData(chooseTableRowDataList);
         });
+    }
+
+    /**
+     * is changed or not
+     *
+     * @return is changed or not
+     */
+    public boolean isChanged() {
+        List<String> newSelectedRowKeys = getSelectedRowKeys();
+        if (this.selectedRowKeys != null) {
+            if (newSelectedRowKeys == null) {
+                return true;
+            }
+            if (newSelectedRowKeys.size() != this.selectedRowKeys.size()) {
+                return true;
+            }
+            for (String s : this.selectedRowKeys) {
+                if (!newSelectedRowKeys.contains(s)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * set focus row data
+     *
+     * @param rowKey row key
+     */
+    public void setFocusRowData(String rowKey) {
+        if (viewDataTable != null && viewDataTable.getItems() != null) {
+            this.viewDataTable.getSelectionModel().focus(viewDataTable.getItems().indexOf(rowKey));
+        }
+    }
+
+    /**
+     * method to get selected row keys
+     *
+     * @return list of selected row key
+     */
+    public List<String> getSelectedRowKeys() {
+        if (this.model != null) {
+            return this.model.getSelectedRowKeys();
+        } else {
+            return Lists.newArrayList();
+        }
     }
 
     private void decorate(TableColumn<String, ?> tableColumn) {
@@ -192,9 +255,7 @@ public class ViewDataController implements Initializable {
         tableColumn.setGraphic(filterBtn);
         tableColumn.getStyleClass().add("filter-header");
         tableColumn.widthProperty().addListener((ov, w1, w2) -> {
-            Platform.runLater(() -> {
-                filterBtn.relocate(w2.doubleValue() - 21, 0);
-            });
+            Platform.runLater(() -> filterBtn.relocate(w2.doubleValue() - 21, 0));
         });
     }
 
@@ -205,8 +266,9 @@ public class ViewDataController implements Initializable {
         try {
             root = fxmlLoader.load();
             chooseDialogController = fxmlLoader.getController();
-            WindowFactory.createSimpleWindowAsModel("spcViewDataColumn", SpcFxmlAndLanguageUtils.getString(ResourceMassages.CHOOSE_ITEMS_TITLE), root,
+            Stage stage = WindowFactory.createNoManagedStage(SpcFxmlAndLanguageUtils.getString(ResourceMassages.CHOOSE_ITEMS_TITLE), root,
                     getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            chooseDialogController.setStage(stage);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -220,11 +282,13 @@ public class ViewDataController implements Initializable {
         });
         chooseItemBtn.setOnAction(event -> getChooseColumnBtnEvent());
         chooseDialogController.getChooseOkButton().setOnAction(event -> {
-            StageMap.getStage("spcViewDataColumn").close();
+            chooseDialogController.getStage().close();
+            if (dataFrame == null) {
+                return;
+            }
             List<String> selectedTestItems = chooseDialogController.getSelectResultName();
             int curIndex = 0;
-            for (int i = 0; i < typeDtoList.size(); i++) {
-                TestItemWithTypeDto typeDto = typeDtoList.get(i);
+            for (TestItemWithTypeDto typeDto : typeDtoList) {
                 if (selectedTestItems.contains(typeDto.getTestItemName())) {
                     if (!dataFrame.isTestItemExist(typeDto.getTestItemName())) {
                         List<RowDataDto> rowDataDtoList = RuntimeContext.getBean(SourceDataService.class).findTestData(this.selectedProjectNames,
@@ -237,7 +301,7 @@ public class ViewDataController implements Initializable {
                     dataFrame.removeColumns(Lists.newArrayList(typeDto.getTestItemName()));
                 }
             }
-            setViewData(this.dataFrame);
+            setViewData(this.dataFrame, getSelectedRowKeys());
         });
         unSelectedCheckBox.setOnAction(event -> getInvertCheckBoxEvent());
     }
@@ -302,8 +366,13 @@ public class ViewDataController implements Initializable {
     }
 
     private void getChooseColumnBtnEvent() {
-        StageMap.showStage("spcViewDataColumn");
-        chooseDialogController.setSelectResultName(dataFrame.getAllTestItemName());
+        chooseDialogController.setTableData(chooseTableRowDataList);
+        if (dataFrame != null) {
+            chooseDialogController.setSelectResultName(dataFrame.getAllTestItemName());
+        } else {
+            chooseDialogController.setSelectResultName(Lists.newArrayList());
+        }
+        chooseDialogController.getStage().show();
     }
 
     private void getInvertCheckBoxEvent() {

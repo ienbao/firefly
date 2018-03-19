@@ -1,11 +1,15 @@
 package com.dmsoft.firefly.plugin.spc.model;
 
-import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
+import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.plugin.spc.controller.SpcMainController;
 import com.dmsoft.firefly.plugin.spc.controller.ViewDataDetailController;
-import com.dmsoft.firefly.plugin.spc.utils.*;
+import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
+import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionCode;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.ViewResource;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -55,18 +59,22 @@ public class ViewDataDFModel implements TableModel {
     private Set<String> highLightRowKeys;
     private CheckBox allCheckBox;
     private TableView<String> tableView;
+    private SpcMainController mainController;
+    private List<String> initSelectedRowKeys;
 
     /**
      * constructor
      *
-     * @param dataFrame search data frame
+     * @param dataFrame       search data frame
+     * @param selectedRowKeys selected row keys
      */
-    public ViewDataDFModel(SearchDataFrame dataFrame) {
+    public ViewDataDFModel(SearchDataFrame dataFrame, List<String> selectedRowKeys) {
         this.dataFrame = dataFrame;
+        this.initSelectedRowKeys = selectedRowKeys;
         this.headerArray = FXCollections.observableArrayList(dataFrame.getAllTestItemName());
         this.headerArray.add(0, "CheckBox");
         this.rowKeyArray = FXCollections.observableArrayList(dataFrame.getAllRowKeys());
-        this.checkValueMap = Maps.newHashMap();
+        this.checkValueMap = Maps.newLinkedHashMap();
         this.allCheck = new SimpleObjectProperty<>(true);
         this.highLightRowKeys = Sets.newLinkedHashSet();
         this.menuRowEvents = Lists.newArrayList();
@@ -152,8 +160,10 @@ public class ViewDataDFModel implements TableModel {
 
             @Override
             public void handleAction(String rowKey, ActionEvent event) {
-                //TODO notify other pane
                 RuntimeContext.getBean(SourceDataService.class).changeRowDataInUsed(Lists.newArrayList(rowKey), false);
+                if (mainController != null) {
+                    mainController.removeDataFrameRow(rowKey);
+                }
             }
         };
         this.menuRowEvents.add(highLight);
@@ -189,7 +199,11 @@ public class ViewDataDFModel implements TableModel {
     @Override
     public ObjectProperty<Boolean> getCheckValue(String rowKey, String columnName) {
         if (this.checkValueMap.get(rowKey) == null) {
-            this.checkValueMap.put(rowKey, new SimpleObjectProperty<>(true));
+            if (this.initSelectedRowKeys != null && this.initSelectedRowKeys.contains(rowKey)) {
+                this.checkValueMap.put(rowKey, new SimpleObjectProperty<>(true));
+            } else {
+                this.checkValueMap.put(rowKey, new SimpleObjectProperty<>(false));
+            }
         }
         return this.checkValueMap.get(rowKey);
     }
@@ -208,7 +222,7 @@ public class ViewDataDFModel implements TableModel {
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
         tableCell.setStyle(null);
         if (!RangeUtils.isPass(dataFrame.getCellValue(rowKey, column), dataFrame.getTestItemWithTypeDto(column))) {
-            tableCell.setStyle("-fx-background-color: red; -fx-text-fill: white");
+            tableCell.setStyle("-fx-background-color: #ea2028; -fx-text-fill: white");
         } else if (dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column)) && this.highLightRowKeys.contains(rowKey)) {
             tableCell.setStyle("-fx-background-color: #f8d251; -fx-text-fill: #aaaaaa");
         } else if (this.highLightRowKeys.contains(rowKey)) {
@@ -231,5 +245,24 @@ public class ViewDataDFModel implements TableModel {
     @Override
     public void setTableView(TableView<String> tableView) {
         this.tableView = tableView;
+    }
+
+    public void setMainController(SpcMainController mainController) {
+        this.mainController = mainController;
+    }
+
+    /**
+     * method to get selected row keys
+     *
+     * @return list of selected row key
+     */
+    public List<String> getSelectedRowKeys() {
+        List<String> result = Lists.newArrayList(dataFrame.getAllRowKeys());
+        for (String s : this.checkValueMap.keySet()) {
+            if (!this.checkValueMap.get(s).get()) {
+                result.remove(s);
+            }
+        }
+        return result;
     }
 }

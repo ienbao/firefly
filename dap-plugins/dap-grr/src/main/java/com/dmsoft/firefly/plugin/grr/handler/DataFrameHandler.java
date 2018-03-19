@@ -41,16 +41,14 @@ public class DataFrameHandler implements JobInboundHandler {
         }
         SearchDataFrame dataFrame = dataFrameFactory.
                 createSearchDataFrame((List<TestItemWithTypeDto>) param.get(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST), rowDataDtoList);
-        param.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
 
         List<String> searchConditions = searchConditionDto.getSearchCondition();
         if (searchConditions != null && !searchConditions.isEmpty()) {
             dataFrame.addSearchCondition(searchConditions);
             dataFrame.shrink();
         }
+        param.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
 
-        GrrMainController grrMainController = (GrrMainController) in[1];
-        grrMainController.setDataFrame(dataFrame);
         context.fireDoJob(param, in[1]);
     }
 

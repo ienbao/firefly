@@ -41,8 +41,8 @@ public class TableViewWrapper {
                 if (c.wasPermutated()) {
                     try {
                         TableColumn<String, ?>[] columnArray = new TableColumn[tableView.getColumns().size()];
-                        for (TableColumn<String, ?> tableColumn : tableView.getColumns()) {
-                            columnArray[c.getList().indexOf(tableColumn.getText())] = tableColumn;
+                        for (int i = 0; i < tableView.getColumns().size(); i++) {
+                            columnArray[c.getList().indexOf(tableView.getColumns().get(i).getText())] = tableView.getColumns().get(i);
                         }
                         tableView.getColumns().setAll(columnArray);
                     } catch (Exception ignored) {
@@ -51,7 +51,7 @@ public class TableViewWrapper {
                 } else if (c.wasAdded()) {
                     try {
                         for (String s : c.getAddedSubList()) {
-                            tableView.getColumns().add(initColumn(s, model));
+                            tableView.getColumns().add(c.getFrom(), initColumn(s, model));
                         }
                     } catch (Exception ignored) {
 
@@ -59,13 +59,14 @@ public class TableViewWrapper {
                 } else if (c.wasRemoved()) {
                     try {
                         List<? extends String> removedHeaders = c.getRemoved();
-                        for (TableColumn column : tableView.getColumns()) {
-                            if (removedHeaders.contains(column.getText())) {
-                                tableView.getColumns().remove(column);
+                        List<TableColumn> tableColumnList = Lists.newArrayList(tableView.getColumns());
+                        for (TableColumn aTableColumnList : tableColumnList) {
+                            if (removedHeaders.contains(aTableColumnList.getText())) {
+                                tableView.getColumns().remove(aTableColumnList);
                             }
                         }
                     } catch (Exception ignored) {
-
+                        ignored.printStackTrace();
                     }
                 }
             }
@@ -89,7 +90,7 @@ public class TableViewWrapper {
             tableView.setRowFactory(tv -> {
                 TableRow<String> row = new TableRow<>();
                 row.setOnMouseClicked(event -> {
-                    if (!row.isEmpty()) {
+                    if (!row.isEmpty() && model.isMenuEventEnable(row.getItem())) {
                         row.setContextMenu(menu);
                     }
                 });

@@ -29,15 +29,20 @@ public class SpcRunChartData implements IRunChartData {
     private Double maxX;
     private Double minY;
     private Double maxY;
+
+    private List<String> analyzedRowKeys;
+
     /**
      * constructor
      *
-     * @param key           key
-     * @param runCResultDto run chart dto
-     * @param color         color
+     * @param key             key
+     * @param runCResultDto   run chart dto
+     * @param analyzedRowKeys row keys
+     * @param color           color
      */
-    public SpcRunChartData(String key, RunCResultDto runCResultDto, Color color) {
+    public SpcRunChartData(String key, RunCResultDto runCResultDto, List<String> analyzedRowKeys, Color color) {
         this.runCResultDto = runCResultDto;
+        this.analyzedRowKeys = analyzedRowKeys;
         this.key = key;
         this.color = color;
         this.initData();
@@ -50,6 +55,10 @@ public class SpcRunChartData implements IRunChartData {
         Double[] x = runCResultDto.getX();
         Double[] y = runCResultDto.getY();
         xyChartData = new XYChartData<>(x, y);
+        xyChartData.setRuleResultDtoMap(runCResultDto.getRuleResultDtoMap());
+        if (analyzedRowKeys != null) {
+            xyChartData.setIds(analyzedRowKeys.toArray(new Object[analyzedRowKeys.size()]));
+        }
 
         //init lines data
         String[] uslLslName = UIConstant.SPC_USL_LSL;

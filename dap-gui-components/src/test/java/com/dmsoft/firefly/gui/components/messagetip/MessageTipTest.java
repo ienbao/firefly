@@ -1,5 +1,4 @@
 package com.dmsoft.firefly.gui.components.messagetip;
-
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
@@ -28,8 +27,20 @@ public class MessageTipTest extends Application {
             tab.setText("hhjkhjhdsfsf" + i);
 
             HBox hbox = new HBox();
-            hbox.getChildren().add(new Label("Tfdsfsfsfsab" + i));
             hbox.setAlignment(Pos.CENTER);
+            CheckBox checkBox = new CheckBox();
+            checkBox.getStyleClass().add("error");
+            Label label1 = new Label();
+            label1.getStyleClass().add("message-tip-warn-mark");
+            label1.setStyle("-fx-padding: 0 26 0 0;");
+
+            Label label = new Label();
+            label.setGraphic(label1);
+            label.setVisible(true);
+            label.setText("20/29");
+            label.setContentDisplay(ContentDisplay.LEFT);
+
+            hbox.getChildren().addAll(label);
             tab.setContent(hbox);
 
             tab.setClosable(true);

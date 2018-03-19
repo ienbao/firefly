@@ -9,9 +9,8 @@ import com.dmsoft.firefly.plugin.spc.controller.SpcSettingController;
 import com.dmsoft.firefly.plugin.spc.handler.FindSpcSettingDataHandler;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.handler.SaveSpcSettingDataHandler;
-import com.dmsoft.firefly.plugin.spc.pipeline.SpcAnalysisJobPipeline;
+import com.dmsoft.firefly.plugin.spc.pipeline.*;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.plugin.spc.pipeline.SpcRefreshJobPipeline;
 import com.dmsoft.firefly.plugin.spc.service.SpcAnalysisService;
 import com.dmsoft.firefly.plugin.spc.service.SpcService;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
@@ -111,7 +110,10 @@ public class SpcPlugin extends Plugin {
 
         JobManager manager = RuntimeContext.getBean(JobManager.class);
         manager.initializeJob(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE, new SpcAnalysisJobPipeline());
-        manager.initializeJob(ParamKeys.SPC_REFRESH_JOB_PIPELINE, new SpcRefreshJobPipeline());
+        manager.initializeJob(ParamKeys.SPC_REFRESH_CHART_JOB_PIPELINE, new SpcRefreshChartJobPipeline());
+        manager.initializeJob(ParamKeys.SPC_RESET_JOB_PIPELINE, new SpcResetJobPipeline());
+        manager.initializeJob(ParamKeys.SPC_REFRESH_STATISTICAL_JOB_PIPELINE, new SpcRefreshStatisticalJobPipeline());
+        manager.initializeJob(ParamKeys.SPC_REFRESH_ANALYSIS_JOB_PIPELINE, new SpcRefreshJobPipeline());
         manager.initializeJob(ParamKeys.FIND_SPC_SETTING_DATA_JOP_PIPELINE, pipeline -> {
             pipeline.addLast(ParamKeys.FIND_SPC_SETTING_HANDLER, new FindSpcSettingDataHandler());
         });

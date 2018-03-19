@@ -178,8 +178,11 @@ public class SpcExportController {
         });
 
         viewData.setOnAction(event -> {
-            if (getSelectedItem() != null && getSelectedItem().size() > 0)
-                buildViewDataDia();
+            if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
+                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                return;
+            }
+            buildViewDataDia();
         });
         setting.setOnAction(event -> {
             initSpcExportSettingDialog();
@@ -322,7 +325,7 @@ public class SpcExportController {
         Map<String, Map<String, String>> chartPath = Maps.newHashMap();
 
         if (exportDataItem.get(SpcExportItemKey.EXPORT_CHARTS.getCode())) {
-            Job chartJob = new Job(ParamKeys.SPC_REFRESH_JOB_PIPELINE);
+            Job chartJob = new Job(ParamKeys.SPC_REFRESH_CHART_JOB_PIPELINE);
             Map chartParamMap = Maps.newHashMap();
             chartParamMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
             chartParamMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);

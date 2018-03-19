@@ -6,9 +6,12 @@ package com.dmsoft.firefly.plugin.spc.service.impl;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.utils.JsonFileUtil;
 import com.dmsoft.firefly.plugin.spc.dto.*;
+import com.dmsoft.firefly.plugin.spc.dto.analysis.RunCResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
+import com.dmsoft.firefly.plugin.spc.utils.ControlRuleConfigUtil;
+import com.dmsoft.firefly.plugin.spc.utils.enums.JudgeRuleType;
 import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
@@ -161,6 +164,78 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
 
     @ExcludeMethod
     @Override
+    public void setControlChartRuleAlarm(List<SpcChartDto> spcChartDtoList) {
+        if (spcChartDtoList == null) {
+            logger.debug("The chart result is null");
+            return;
+        }
+        SpcSettingDto spcSettingDto = this.findSpcSetting();
+        List<ControlRuleDto> controlRuleDtoList = spcSettingDto.getControlChartRule();
+        for (SpcChartDto spcChartDto : spcChartDtoList) {
+            if (spcChartDto.getResultDto() == null) {
+                continue;
+            }
+            ControlRuleConfigUtil controlRuleConfigUtil = new ControlRuleConfigUtil();
+            RunCResultDto runCResultDto = spcChartDto.getResultDto().getRunCResult();
+            controlRuleConfigUtil.setAnalyseData(runCResultDto.getY());
+            Double[] clValue = runCResultDto.getCls();
+            double avgValue = clValue[3];
+            double sigma = clValue[4] - avgValue;
+            Double usl = runCResultDto.getUsl();
+            Double lsl = runCResultDto.getLsl();
+
+            Map<String, RuleResultDto> ruleResultDtoMap = Maps.newHashMap();
+            for (ControlRuleDto controlRuleDto : controlRuleDtoList) {
+                if(!controlRuleDto.isUsed()){
+                    continue;
+                }
+                RuleResultDto ruleResultDto = null;
+                String ruleName = controlRuleDto.getRuleName();
+                JudgeRuleType iRuleType = JudgeRuleType.getByCode(ruleName);
+                int iSigma = controlRuleDto.getsValue();
+                int iPoints = controlRuleDto.getnValue();
+                int iSomePoints = controlRuleDto.getmValue();
+                switch (iRuleType) {
+                    case R1:
+                        ruleResultDto = controlRuleConfigUtil.setRuleR1(iSigma, avgValue, sigma);
+                        break;
+                    case R2:
+                        ruleResultDto = controlRuleConfigUtil.setRuleR2(iPoints, avgValue);
+                        break;
+                    case R3:
+                        ruleResultDto = controlRuleConfigUtil.setRuleR3(iPoints);
+                        break;
+                    case R4:
+                        ruleResultDto = controlRuleConfigUtil.setRuleR4(iPoints);
+                        break;
+                    case R5:
+                        ruleResultDto = controlRuleConfigUtil.setRuleR5And6(iPoints, iSomePoints, avgValue, sigma, iSigma, JudgeRuleType.R5.getCode());
+                        break;
+                    case R6:
+                        ruleResultDto = controlRuleConfigUtil.setRuleR5And6(iPoints, iSomePoints, avgValue, sigma, iSigma, JudgeRuleType.R6.getCode());
+                        break;
+                    case R7:
+                        ruleResultDto = controlRuleConfigUtil.setRuleR7And8(iPoints, avgValue, sigma, iSigma, JudgeRuleType.R7.getCode());
+                        break;
+                    case R8:
+                        ruleResultDto = controlRuleConfigUtil.setRuleR7And8(iPoints, avgValue, sigma, iSigma, JudgeRuleType.R8.getCode());
+                        break;
+                    case R9:
+                        ruleResultDto = controlRuleConfigUtil.setRuleR9(usl, lsl);
+                        break;
+                    default:
+                        break;
+                }
+                if (ruleResultDto != null) {
+                    ruleResultDtoMap.put(ruleName, ruleResultDto);
+                }
+            }
+            runCResultDto.setRuleResultDtoMap(ruleResultDtoMap);
+        }
+    }
+
+    @ExcludeMethod
+    @Override
     public void saveSpcExportTemplateSetting(Map<String, Boolean> exportSetting) {
         String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.SpcPlugin").getFolderPath() + File.separator + "config";
         String json = JsonFileUtil.readJsonFile(path, ParamKeys.SPC_EXPORT_SETTING_FILE_NAME);
@@ -258,11 +333,15 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
             if (name.equals(customAlarmDto.getStatisticName())) {
                 Double lowerLimit = customAlarmDto.getLowerLimit();
                 Double upperLimit = customAlarmDto.getUpperLimit();
-                if (RangeUtils.isWithinRange(String.valueOf(value), String.valueOf(lowerLimit), String.valueOf(upperLimit))) {
+                if (lowerLimit == null && upperLimit == null) {
+                    break;
+                }
+                if (RangeUtils.isWithinRange(String.valueOf(value), String.valueOf(upperLimit), String.valueOf(lowerLimit))) {
                     level = SpcKey.PASS.getCode();
                 } else {
                     level = SpcKey.FAIL.getCode();
                 }
+                break;
             }
         }
         return level;

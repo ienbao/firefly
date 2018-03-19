@@ -10,23 +10,23 @@ import java.util.Map;
  */
 public class GrrItemResultDto extends AbstractValueObject {
 
-    private List<String> totalMeans;
-    private List<String> totalRanges;
+    private Map<String, String> totalMeans;
+    private Map<String, String> totalRanges;
     private Map<String, GrrMeanAndRangeDto> meanAndRangeDtos;
 
-    public List<String> getTotalMeans() {
+    public Map<String, String> getTotalMeans() {
         return totalMeans;
     }
 
-    public void setTotalMeans(List<String> totalMeans) {
+    public void setTotalMeans(Map<String, String> totalMeans) {
         this.totalMeans = totalMeans;
     }
 
-    public List<String> getTotalRanges() {
+    public Map<String, String> getTotalRanges() {
         return totalRanges;
     }
 
-    public void setTotalRanges(List<String> totalRanges) {
+    public void setTotalRanges(Map<String, String> totalRanges) {
         this.totalRanges = totalRanges;
     }
 

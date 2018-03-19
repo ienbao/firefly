@@ -13,9 +13,19 @@ public class ParamKeys {
     public static final String SEARCH_CONDITION_DTO_LIST = "searchConditionDtoList";
     public static final String SPC_ANALYSIS_CONFIG_DTO = "spcAnalysisConfigDto";
 
+    public static final String STATISTICAL_SEARCH_CONDITION_DTO_LIST = "statisticSearchConditionDtoList";
+    public static final String CHART_SEARCH_CONDITION_DTO_LIST = "chartSearchConditionDtoList";
+
+    public static final String STATISTICAL_ANALYSIS_RESULT = "statisticalAnalysisResult";
+    public static final String CHART_ANALYSIS_RESULT = "chartAnalysisResult";
+
+    public static final String STATISTICAL_SEARCH_DATA_FRAME = "statisticalSearchDataFrame";
+    public static final String CHART_SEARCH_DATA_FRAME = "chartSearchDataFrame";
+
     //handler
     public static final String FIND_TEST_DATA_HANDLER = "findTestDataHandler";
     public static final String DATA_FRAME_HANDLER = "dataFrameHandler";
+    public static final String SPC_REFRESH_RESULT_HANDLER = "spcRefreshResultHandler";
     public static final String SPC_STATS_RESULT_HANDLER = "spcStatsResultHandler";
     public static final String SPC_CHART_RESULT_HANDLER = "spcChartResultHandler";
     public static final String FIND_SPC_SETTING_HANDLER = "findSpcSettingHandler";
@@ -23,7 +33,10 @@ public class ParamKeys {
 
     //pipeline
     public static final String SPC_ANALYSIS_JOB_PIPELINE = "spcAnalysisJobPipeline";
-    public static final String SPC_REFRESH_JOB_PIPELINE = "spcRefreshJobPipeline";
+    public static final String SPC_REFRESH_ANALYSIS_JOB_PIPELINE = "spcRefreshAnalysisJobPipeline";
+    public static final String SPC_REFRESH_CHART_JOB_PIPELINE = "spcRefreshChartJobPipeline";
+    public static final String SPC_RESET_JOB_PIPELINE = "spcResetJobPipeline";
+    public static final String SPC_REFRESH_STATISTICAL_JOB_PIPELINE = "spcRefreshStatisticalJobPipeline";
     public static final String FIND_SPC_SETTING_DATA_JOP_PIPELINE = "findSpcSettingDataJobPipeline";
     public static final String SAVE_SPC_SETTING_DATA_JOP_PIPELINE = "saveSpcSettingDataJobPipeline";
 

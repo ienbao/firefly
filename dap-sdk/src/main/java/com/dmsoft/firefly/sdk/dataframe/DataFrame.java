@@ -5,6 +5,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -202,6 +203,14 @@ public interface DataFrame {
      * @return only filter result is true will be return
      */
     List<String> filterRowKey(Function<Map<String, String>, Boolean> filterFunction);
+
+    /**
+     * method to get value set for test item name
+     *
+     * @param testItemName test item name
+     * @return value set
+     */
+    Set<String> getValueSet(String testItemName);
 
     /**
      * method to get in used status

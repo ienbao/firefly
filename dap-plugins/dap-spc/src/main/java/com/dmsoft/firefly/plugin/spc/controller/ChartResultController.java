@@ -6,6 +6,7 @@ package com.dmsoft.firefly.plugin.spc.controller;
 import com.dmsoft.firefly.plugin.spc.charts.*;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
 import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
+import com.dmsoft.firefly.plugin.spc.charts.utils.PointClickCallBack;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
@@ -61,7 +62,7 @@ public class ChartResultController implements Initializable {
     private List<XYChart.Data> annotationData = Lists.newArrayList();
 
     private RuleXYChartData ruleXYChartData = new RuleXYChartData();
-    private Function rulePointFunc = (Function<PointRule, PointStyle>) pointRule -> {
+    private Function rulePointFunc = (Function<PointRule, PointStyle>) (PointRule pointRule) -> {
         PointStyle pointStyle = new PointStyle();
         Double value = (Double) pointRule.getData().getYValue();
         Color color = pointRule.getNormalColor();
@@ -202,6 +203,14 @@ public class ChartResultController implements Initializable {
                 runChart.setSeriesDataStyleByRule(oneSeries, Lists.newArrayList(selectedNames), rulePointFunc);
             });
         }));
+        runChart.activePointClickEvent(true);
+        runChart.setPointClickCallBack(new PointClickCallBack(){
+            @Override
+            public void execute(Object id) {
+                String key = (String) id;
+                spcMainController.setViewDataFocusRowData(key);
+            }
+        });
     }
 
     private void initXBarChartPane() {
@@ -306,6 +315,7 @@ public class ChartResultController implements Initializable {
             String key = spcChartDto.getKey();
             Color color = ColorUtils.toFxColorFromAwtColor(colorCache.get(key));
             SpcChartResultDto spcChartResultDto = spcChartDto.getResultDto();
+            List<String> analyzedRowKeys = spcChartDto.getAnalyzedRowKeys();
             if (spcChartResultDto == null) {
                 continue;
             }
@@ -313,7 +323,7 @@ public class ChartResultController implements Initializable {
             INdcChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
             ndcChartDataList.add(iNdcChartData);
             //run chart
-            IRunChartData iRunChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), color);
+            IRunChartData iRunChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), analyzedRowKeys, color);
             runChartDataList.add(iRunChartData);
             //x bar chart
             IControlChartData xBarChartData = new SpcControlChartData(key, spcChartResultDto.getXbarCResult(), color);
@@ -474,13 +484,13 @@ public class ChartResultController implements Initializable {
     }
 
     public void clearChartData() {
-        for (Map.Entry<String, XYChart> chartMap : chartMap.entrySet()) {
-            if (chartMap.getValue() instanceof NDChart) {
-                ((NDChart) chartMap.getValue()).removeAllChildren();
-            } else if (chartMap.getValue() instanceof LinearChart) {
-                ((LinearChart) chartMap.getValue()).removeAllChildren();
-            } else if (chartMap.getValue() instanceof BoxPlotChart) {
-                ((BoxPlotChart) chartMap.getValue()).removeAllChildren();
+        for (Map.Entry<String, XYChart> chart : chartMap.entrySet()) {
+            if (chart.getValue() instanceof NDChart) {
+                ((NDChart) chart.getValue()).removeAllChildren();
+            } else if (chart.getValue() instanceof LinearChart) {
+                ((LinearChart) chart.getValue()).removeAllChildren();
+            } else if (chart.getValue() instanceof BoxPlotChart) {
+                ((BoxPlotChart) chart.getValue()).removeAllChildren();
             }
         }
     }

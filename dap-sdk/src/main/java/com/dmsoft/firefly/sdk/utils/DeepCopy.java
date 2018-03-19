@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.gui.utils;
+package com.dmsoft.firefly.sdk.utils;
 
 import java.io.*;
 

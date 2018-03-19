@@ -17,12 +17,15 @@ public class ParamKeys {
 
     public static final String SEARCH_GRR_LEFT_CONFIG_DTO = "searchGrrLeftConfigDto";
     public static final String SEARCH_GRR_CONDITION_DTO = "searchGrrConditionDto";
+    public static final String SEARCH_VIEW_DATA_FRAME = "searchViewDataFrame";
 
 
     //handler
     public static final String FIND_TEST_DATA_HANDLER = "findTestDataHandler";
     public static final String DATA_FRAME_HANDLER = "dataFrameHandler";
     public static final String GRR_CONFIG_HANDLER = "grrConfigHandler";
+    public static final String VALIDATE_PARAM_HANDLER = "validateParamHandler";
+
     public static final String GRR_VIEW_DATA_RESULT_HANDLER = "grrViewDataHandler";
     public static final String GRR_SUMMARY_RESULT_HANDLER = "grrSummaryHandler";
     public static final String GRR_DETAIL_RESULT_HANDLER = "grrDetailHandler";

@@ -187,8 +187,9 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
     }
 
     private void search(String searchCondition) {
-        for (int i = 0; i < this.getRowSize(); i++) {
-            if (filterUtils.filterData(searchCondition, getDataMap(this.getRowKeys().get(i)))) {
+        List<Boolean> searchedRowKeys = filterUtils.filterDF(searchCondition, this);
+        for (int i = 0; i < searchedRowKeys.size(); i++) {
+            if (searchedRowKeys.get(i)) {
                 this.rowSearchConditionResultList.get(i).add(searchCondition);
             }
         }

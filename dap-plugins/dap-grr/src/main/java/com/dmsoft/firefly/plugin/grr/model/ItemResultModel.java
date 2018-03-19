@@ -5,8 +5,11 @@ import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.plugin.grr.dto.GrrItemResultDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrViewDataDto;
 import com.dmsoft.firefly.plugin.grr.utils.DataConvertUtils;
+import com.dmsoft.firefly.plugin.grr.utils.DigNumInstance;
+import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -24,11 +27,12 @@ public class ItemResultModel implements TableModel {
     private SearchDataFrame dataFrame;
     private GrrItemResultDto itemResultDto;
     private List<GrrViewDataDto> grrViewDataDtos;
-    private String trialKey;
-    private String appraiserKey;
     private String currentItemName;
+    private String trialKey = GrrFxmlAndLanguageUtils.getString("TRAIL") + " ";
+    private String appraiserKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " ";
     private ObservableList<String> headerArray;
     private ObservableList<String> rowKeyArray;
+    private int digNum = -1;
 
     /**
      * Set item result model data
@@ -49,17 +53,6 @@ public class ItemResultModel implements TableModel {
         this.itemResultDto = itemResultDto;
     }
 
-    /**
-     * Set appraiser key and trial key
-     *
-     * @param appraiserKey appraiser key
-     * @param trialKey     trial key
-     */
-    public void setAppraiserAndTrialKey(String appraiserKey, String trialKey) {
-        this.appraiserKey = appraiserKey;
-        this.trialKey = trialKey;
-    }
-
     @Override
     public ObservableList<String> getHeaderArray() {
         return headerArray;
@@ -70,6 +63,22 @@ public class ItemResultModel implements TableModel {
         if (dataFrame == null || itemResultDto == null || grrViewDataDtos == null) {
             return null;
         }
+        digNum = DigNumInstance.newInstance().getDigNum();
+        if (rowKey.contains(UIConstant.SPLIT_FLAG + UIConstant.MEAN)) {
+            return this.getMeanCellData(rowKey, columnName);
+        } else if (rowKey.contains(UIConstant.SPLIT_FLAG + UIConstant.RANGE)) {
+            return this.getRangeCellData(rowKey, columnName);
+        } else if (rowKey.equals(UIConstant.TOTAL_MEAN)) {
+            return this.getTotalMeanCellData(columnName);
+        } else if (rowKey.equals(UIConstant.TOTAL_RANGE)) {
+            return this.getTotalRangeCellData(columnName);
+        } else if (rowKey.contains(UIConstant.SPLIT_FLAG)) {
+            return this.getItemCellData(rowKey, columnName);
+        }
+        return null;
+    }
+
+    private ObjectProperty<String> getItemCellData(String rowKey, String columnName) {
         String appraiser = rowKey.split(UIConstant.SPLIT_FLAG)[0];
         String trial = rowKey.split(UIConstant.SPLIT_FLAG)[1];
         if (columnName.equals(appraiserKey)) {
@@ -78,8 +87,59 @@ public class ItemResultModel implements TableModel {
             return new SimpleObjectProperty<>(trial);
         } else {
             String viewDataRowKey = DataConvertUtils.findRowKeyFromViewData(grrViewDataDtos, appraiser, trial, columnName);
-            return new SimpleObjectProperty(dataFrame.getDataRow(viewDataRowKey).getData().get(currentItemName));
+            return buildCellData(dataFrame.getDataRow(viewDataRowKey).getData().get(currentItemName));
         }
+    }
+
+    private ObjectProperty<String> getTotalMeanCellData(String columnName) {
+        if (columnName.equals(appraiserKey)) {
+            return new SimpleObjectProperty<>("");
+        } else if (columnName.equals(trialKey)) {
+            return new SimpleObjectProperty<>(UIConstant.TOTAL_MEAN);
+        } else {
+            return buildCellData(itemResultDto.getTotalMeans().get(columnName));
+        }
+    }
+
+    private ObjectProperty<String> getMeanCellData(String rowKey, String columnName) {
+        if (columnName.equals(appraiserKey)) {
+            return new SimpleObjectProperty<>("");
+        } else if (columnName.equals(trialKey)) {
+            return new SimpleObjectProperty<>(UIConstant.MEAN);
+        } else {
+            return buildCellData(itemResultDto.getMeanAndRangeDtos().
+                    get(rowKey.split(UIConstant.SPLIT_FLAG)[0]).getMeans().get(columnName));
+        }
+    }
+
+    private ObjectProperty<String> getTotalRangeCellData(String columnName) {
+        if (columnName.equals(appraiserKey)) {
+            return new SimpleObjectProperty<>("");
+        } else if (columnName.equals(trialKey)) {
+            return new SimpleObjectProperty<>(UIConstant.TOTAL_RANGE);
+        } else {
+            return buildCellData(itemResultDto.getTotalRanges().get(columnName));
+        }
+    }
+
+    private ObjectProperty<String> getRangeCellData(String rowKey, String columnName) {
+        if (columnName.equals(appraiserKey)) {
+            return new SimpleObjectProperty<>("");
+        } else if (columnName.equals(trialKey)) {
+            return new SimpleObjectProperty<>(UIConstant.RANGE);
+        } else {
+            return buildCellData(itemResultDto.getMeanAndRangeDtos().
+                    get(rowKey.split(UIConstant.SPLIT_FLAG)[0]).getRanges().get(columnName));
+        }
+    }
+
+    private SimpleObjectProperty buildCellData(String value) {
+        if (DAPStringUtils.isBlankWithSpecialNumber(value)) {
+            return new SimpleObjectProperty("-");
+        } else if (DAPStringUtils.isNumeric(value)) {
+            return new SimpleObjectProperty(DAPStringUtils.formatDouble(Double.valueOf(value), digNum));
+        }
+        return new SimpleObjectProperty(value);
     }
 
     @Override

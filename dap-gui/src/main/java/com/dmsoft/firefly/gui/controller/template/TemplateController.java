@@ -18,6 +18,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
+import com.dmsoft.firefly.sdk.utils.DeepCopy;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.beans.value.ChangeListener;

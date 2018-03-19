@@ -10,6 +10,16 @@ import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
  * @author Julia
  */
 public interface GrrFilterService {
+
+    /**
+     * method to validate param and get auto param
+     *
+     * @param dataFrame       data frame
+     * @param searchConditionDto  search condition dto
+     * @return list of grr summary dto
+     */
+     GrrParamDto validateGrrParam(SearchDataFrame dataFrame, SearchConditionDto searchConditionDto);
+
     /**
      * method to get grr view data
      *
