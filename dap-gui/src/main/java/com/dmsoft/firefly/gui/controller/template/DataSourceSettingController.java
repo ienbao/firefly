@@ -211,6 +211,7 @@ public class DataSourceSettingController {
         selectTestItemName = chooseCumDialogController.getSelectResultName();
         itemDataTable.getColumns().remove( 0, itemDataTable.getColumns().size() );
         itemDataTableModel.updateTestItemColumn( selectTestItemName );
+        itemDataTableModel.setTableView(itemDataTable);
 
         List<RowDataDto> rowDataDtos = sourceDataService.findTestData( projectNames, selectTestItemName, true );
         List<RowDataDto> rowDataDtoList = new LinkedList<>();
@@ -261,7 +262,6 @@ public class DataSourceSettingController {
            }
         }
         itemDataTableModel.updateRowDataList(rowDataDtoList);
-
         StageMap.closeStage( "dataSourceSetting" );
     }
 
