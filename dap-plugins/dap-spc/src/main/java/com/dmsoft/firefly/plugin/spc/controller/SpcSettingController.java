@@ -118,6 +118,7 @@ public class SpcSettingController implements Initializable {
         this.initComponent();
         this.initData();
         this.initComponentEvent();
+        this.initValidate();
     }
 
     private void initComponent() {
@@ -184,6 +185,20 @@ public class SpcSettingController implements Initializable {
             }
         }
 
+    }
+
+    private void initValidate() {
+        SpcSettingValidateUtil.newInstance().validateSpcAnalysisSetting(subgroupSizeTf, ndChartNumberTf);
+        SpcSettingValidateUtil.BindNode caBindNode = SpcSettingValidateUtil.newInstance().new BindNode(SpcSettingValidateUtil.BindNode.ASC, caExcellentTf, caAcceptableTf, caRectificationTf);
+        SpcSettingValidateUtil.BindNode cpBindNode = SpcSettingValidateUtil.newInstance().new BindNode(cpExcellentTf, cpGoodTf, cpAcceptableTf, cpRectificationTf);
+        SpcSettingValidateUtil.BindNode cpkBindNode = SpcSettingValidateUtil.newInstance().new BindNode(cpkExcellentTf, cpkGoodTf, cpkAcceptableTf, cpkRectificationTf);
+        SpcSettingValidateUtil.BindNode cplBindNode = SpcSettingValidateUtil.newInstance().new BindNode(cplExcellentTf, cplGoodTf, cplAcceptableTf, cplRectificationTf);
+        SpcSettingValidateUtil.BindNode cpuBindNode = SpcSettingValidateUtil.newInstance().new BindNode(cpuExcellentTf, cpuGoodTf, cpuAcceptableTf, cpuRectificationTf);
+        SpcSettingValidateUtil.BindNode ppBindNode = SpcSettingValidateUtil.newInstance().new BindNode(ppExcellentTf, ppGoodTf, ppAcceptableTf, ppRectificationTf);
+        SpcSettingValidateUtil.BindNode ppkBindNode = SpcSettingValidateUtil.newInstance().new BindNode(ppkExcellentTf, ppkGoodTf, ppkAcceptableTf, ppkRectificationTf);
+        SpcSettingValidateUtil.BindNode pplBindNode = SpcSettingValidateUtil.newInstance().new BindNode(pplExcellentTf, pplGoodTf, pplAcceptableTf, pplRectificationTf);
+        SpcSettingValidateUtil.BindNode ppuBindNode = SpcSettingValidateUtil.newInstance().new BindNode(ppuExcellentTf, ppuGoodTf, ppuAcceptableTf, ppuRectificationTf);
+        SpcSettingValidateUtil.newInstance().validateSpcAlarmSetting(caBindNode, cpBindNode, cpkBindNode, cplBindNode, cpuBindNode, ppBindNode, ppkBindNode, pplBindNode, ppuBindNode);
     }
 
     private List<CustomAlarmDto> initEmptyCustomDto() {
