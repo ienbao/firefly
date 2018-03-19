@@ -71,7 +71,6 @@ public class ItemDataTableModel implements TableModel {
         if (columnName.equals( "" )) {
             return null;
         } else {
-          //  String row = rowKey.substring( rowKey.indexOf( "_!@#_" ) + 5 );
             valueMap.put( rowKey, new SimpleObjectProperty<String>( rowDataDtoList.get( Integer.parseInt( rowKey )).getData().get( columnName ) ) );
             return valueMap.get( rowKey );
         }

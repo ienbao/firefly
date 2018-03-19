@@ -249,9 +249,19 @@ public class DataSourceSettingController {
         rowDataDtoList.add( uslDataDto );
         rowDataDtoList.add( lslDataDto );
         rowDataDtoList.add( unitDtaDto );
-        rowDataDtoList.addAll( rowDataDtos );
 
+        if( itemDataTableModel.getRowDataDtoList()!= null && ! itemDataTableModel.getRowDataDtoList().isEmpty()){
+           for(int i = 0; i< itemDataTableModel.getRowDataDtoList().size();i++){
+               for(RowDataDto rowDataDto:rowDataDtos){
+                   if(itemDataTableModel.getRowDataDtoList().get(i).getRowKey().equals(rowDataDto.getRowKey())){
+                       rowDataDtoList.add(rowDataDto);
+                   }
+               }
+
+           }
+        }
         itemDataTableModel.updateRowDataList(rowDataDtoList);
+
         StageMap.closeStage( "dataSourceSetting" );
     }
 
@@ -298,19 +308,18 @@ public class DataSourceSettingController {
         uslDataDto.setData( uslDataMap );
         lslDataDto.setData( lslDataMap );
         unitDtaDto.setData( unitDataMap );
-        rowDataDtoList.add( uslDataDto );
-        rowDataDtoList.add( lslDataDto );
-        rowDataDtoList.add( unitDtaDto );
+        List<RowDataDto> searchResultDtos = new ArrayList<>();
+        searchResultDtos.add( uslDataDto );
+        searchResultDtos.add( lslDataDto );
+        searchResultDtos.add( unitDtaDto );
+
         List<RowDataDto> rowDataDtos = sourceDataService.findTestData( projectNames, columKey, true );
         rowDataDtoList.addAll( rowDataDtos );
-
-        List<RowDataDto> searchResultDtos = new ArrayList<>();
         Boolean flag = false;
         List<String> searchCondition = searchTab.getSearch();
         TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
         if (templateSettingDto.getTimePatternDto() != null) {
             FilterUtils filterUtils = new FilterUtils( templateSettingDto.getTimePatternDto().getTimeKeys(), templateSettingDto.getTimePatternDto().getPattern() );
-
             if (!searchCondition.isEmpty() && searchCondition != null) {
                 for (String condition : searchCondition) {
                     if (rowDataDtoList != null && !rowDataDtoList.isEmpty()) {
@@ -322,7 +331,6 @@ public class DataSourceSettingController {
                         }
                     }
                 }
-
                itemDataTableModel.updateRowDataList(searchResultDtos);
             }
         }
