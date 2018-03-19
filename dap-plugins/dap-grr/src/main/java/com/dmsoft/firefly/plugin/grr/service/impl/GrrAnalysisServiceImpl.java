@@ -164,7 +164,7 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
         GrrSummaryResultDto result = new GrrSummaryResultDto();
         double rep = engine.eval("sourceResult[1, 5]").asDouble();
         double reprod = engine.eval("sourceResult[2, 5]").asDouble();
-        Double grr = null;
+        Double grr;
         if ("xr".equals(methodKey)) {
             grr = engine.eval("sourceResult[3, 5]").asDouble();
         } else {

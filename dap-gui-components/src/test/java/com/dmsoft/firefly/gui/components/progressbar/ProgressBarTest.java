@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 public class ProgressBarTest extends Application {
 
     static {
-        FxmlAndLanguageUtils.isDebug = true;
+        FxmlAndLanguageUtils.setIsDebug(true);
     }
 
     @Override

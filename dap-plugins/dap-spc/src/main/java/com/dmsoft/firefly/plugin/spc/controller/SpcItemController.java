@@ -20,6 +20,7 @@ import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.job.Job;
@@ -297,9 +298,9 @@ public class SpcItemController implements Initializable {
                         spcMainController.setInitSearchConditionDtoList(searchConditionDtoList);
 
                         Object returnValue = manager.doJobSyn(job, paramMap, spcMainController);
-                        if (returnValue == null) {
+                        if (returnValue == null || returnValue instanceof Exception) {
                             //todo message tip
-
+                            ((Exception) returnValue).printStackTrace();
                         } else {
                             spcMainController.clearAnalysisSubShowData();
                             SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
@@ -538,10 +539,13 @@ public class SpcItemController implements Initializable {
         List<String> timeKeys = Lists.newArrayList();
         String timePattern = null;
         try {
-            timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
-            timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
+            TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
+            if (timePatternDto != null) {
+                timeKeys = timePatternDto.getTimeKeys();
+                timePattern = timePatternDto.getPattern();
+            }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         for (String condition : conditionList) {

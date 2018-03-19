@@ -190,15 +190,15 @@ public class TemplateServiceImpl implements TemplateService {
         LinkedHashMap<String, TestItemWithTypeDto> result = Maps.newLinkedHashMap();
 
         if (curr != null) {
-            for (String item : testItemDtoMap.keySet()) {
+            for (TestItemDto itemDto : testItemDtoMap.values()) {
                 TestItemWithTypeDto testItemWithTypeDto = new TestItemWithTypeDto();
-                BeanUtils.copyProperties(testItemDtoMap.get(item), testItemWithTypeDto);
-                if (curr.getSpecificationDatas() != null && curr.getSpecificationDatas().containsKey(item)) {
-                    if (curr.getSpecificationDatas().get(item).getDataType().equals("VARIABLE")) {
+                BeanUtils.copyProperties(itemDto, testItemWithTypeDto);
+                if (curr.getSpecificationDatas() != null && curr.getSpecificationDatas().containsKey(itemDto.getTestItemName())) {
+                    if (curr.getSpecificationDatas().get(itemDto.getTestItemName()).getDataType().equals("VARIABLE")) {
                         testItemWithTypeDto.setTestItemType(TestItemType.VARIABLE);
                     }
-                    testItemWithTypeDto.setLsl(curr.getSpecificationDatas().get(item).getLslFail());
-                    testItemWithTypeDto.setUsl(curr.getSpecificationDatas().get(item).getUslPass());
+                    testItemWithTypeDto.setLsl(curr.getSpecificationDatas().get(itemDto.getTestItemName()).getLslFail());
+                    testItemWithTypeDto.setUsl(curr.getSpecificationDatas().get(itemDto.getTestItemName()).getUslPass());
                 } else {
                     if (DAPStringUtils.isSpecialBlank(testItemWithTypeDto.getLsl())) {
                         testItemWithTypeDto.setLsl("");
@@ -207,7 +207,7 @@ public class TemplateServiceImpl implements TemplateService {
                         testItemWithTypeDto.setUsl("");
                     }
                 }
-                result.put(item, testItemWithTypeDto);
+                result.put(itemDto.getTestItemName(), testItemWithTypeDto);
             }
         }
         return result;

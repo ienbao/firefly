@@ -27,4 +27,12 @@ public class PlatformEvent {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public EventType getEventType() {
+        return eventType;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }

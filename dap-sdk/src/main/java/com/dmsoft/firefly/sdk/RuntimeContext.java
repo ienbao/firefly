@@ -49,7 +49,7 @@ public class RuntimeContext {
         if (instance == null) {
             return null;
         }
-        return (T) SERVICE_MAPPING.put(getSimpleBeanName(clazz.getName()), instance);
+        return clazz.cast(SERVICE_MAPPING.put(getSimpleBeanName(clazz.getName()), instance));
     }
 
     /**
@@ -76,7 +76,7 @@ public class RuntimeContext {
         }
         Object o = SERVICE_MAPPING.get(beanName);
         if (o != null && classType.isInstance(o)) {
-            return (T) o;
+            return classType.cast(o);
         }
         return null;
     }
@@ -94,11 +94,11 @@ public class RuntimeContext {
         }
         if (SERVICE_MAPPING.get(getSimpleBeanName(classType.getName())) != null
                 && classType.isInstance(SERVICE_MAPPING.get(getSimpleBeanName(classType.getName())))) {
-            return (T) SERVICE_MAPPING.get(getSimpleBeanName(classType.getName()));
+            return classType.cast(SERVICE_MAPPING.get(getSimpleBeanName(classType.getName())));
         }
         for (Object o : SERVICE_MAPPING.values()) {
             if (classType.isInstance(o)) {
-                return (T) o;
+                return classType.cast(o);
             }
         }
         return null;
