@@ -50,6 +50,8 @@ public class GrrMainController implements Initializable {
     @FXML
     private Button refreshBtn;
     @FXML
+    private Button printBtn;
+    @FXML
     private Button resetBtn;
 
     @Override
@@ -63,12 +65,13 @@ public class GrrMainController implements Initializable {
 
     private void initBtnIcon() {
         exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_export_normal.png")));
+        resetBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_reset_normal.png")));
+        printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_print_normal.png")));
+        refreshBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
     }
 
     private void initComponentEvents() {
-        exportBtn.setOnAction(event -> {
-            getExportBtnEvent();
-        });
+        exportBtn.setOnAction(event -> getExportBtnEvent());
 
         refreshBtn.setOnAction(event -> {
             grrResultController.refreshGrrResult();
@@ -87,6 +90,9 @@ public class GrrMainController implements Initializable {
         resetBtn.setOnAction(event -> {
             this.getSearchConditionDto().setSelectedTestItemDtos(this.grrItemController.getInitSelectTestItemDtos());
             GrrDataFrameDto newDataFrame = new GrrDataFrameDto();
+            if (backGrrDataFrame == null) {
+                return;
+            }
             newDataFrame.setDataFrame(backGrrDataFrame.getDataFrame());
             List<GrrViewDataDto> includeViewDataDtos = null;
             try {
