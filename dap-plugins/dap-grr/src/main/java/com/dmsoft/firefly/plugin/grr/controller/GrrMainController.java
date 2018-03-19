@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -37,11 +38,16 @@ public class GrrMainController implements Initializable {
     private GrrResultController grrResultController;
     @FXML
     private GrrViewDataController grrViewDataController;
+    @FXML
+    private Tab grrResultTab;
 
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
 
     @FXML
     private Button exportBtn;
+
+    @FXML
+    private Button refreshBtn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -59,6 +65,20 @@ public class GrrMainController implements Initializable {
     private void initComponentEvents() {
         exportBtn.setOnAction(event -> {
             getExportBtnEvent();
+        });
+
+        refreshBtn.setOnAction(event -> {
+            grrResultController.refreshGrrResult();
+            grrViewDataController.refresh();
+        });
+
+        grrResultTab.setOnSelectionChanged(event -> {
+            if (grrResultTab.isSelected()) {
+                if (grrViewDataController.isChanged()) {
+                    grrDataFrame = grrViewDataController.getChangedGrrDFDto();
+                    grrResultController.changeGrrResult();
+                }
+            }
         });
     }
 

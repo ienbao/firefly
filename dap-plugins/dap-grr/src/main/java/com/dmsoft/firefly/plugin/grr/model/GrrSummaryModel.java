@@ -19,11 +19,12 @@ public class GrrSummaryModel {
     private ObservableList<GrrSingleSummary> summaries = FXCollections.observableArrayList();
     private List<GrrSummaryDto> data = Lists.newArrayList();
     private List<TestItemWithTypeDto> editTestItem = Lists.newArrayList();
+    private String selectedItemName;
 
     public GrrSummaryModel() {
     }
 
-    public void setData(List<GrrSummaryDto> summaryDtos, String resultType) {
+    public void setData(List<GrrSummaryDto> summaryDtos, String resultType, int selectedIndex) {
         data.clear();
         summaries.setAll(FXCollections.observableArrayList());
         if (summaryDtos == null) {
@@ -31,7 +32,7 @@ public class GrrSummaryModel {
         }
         data.addAll(summaryDtos);
         for (int i = 0; i < summaryDtos.size(); i++) {
-            boolean selected = (i == 0) ? true : false;
+            boolean selected = (selectedIndex == i) ? true : false;
             summaries.add(buildGrrSingleSummary(summaryDtos.get(i), resultType, selected));
         }
     }
@@ -87,6 +88,22 @@ public class GrrSummaryModel {
         }
     }
 
+    public void updateSummaryModelData(List<GrrSummaryDto> summaryDtos, String resultType, String selectedItem) {
+        if (summaryDtos == null) {
+            return;
+        }
+        summaryDtos.forEach(summaryDto -> {
+            for (int i = 0; i < summaries.size(); i++) {
+                if (summaryDto.getItemName().equals(summaries.get(i).getItemName())) {
+                    boolean selected = selectedItem.equals(summaryDto.getItemName());
+                    summaries.set(i, buildGrrSingleSummary(summaryDto, resultType, selected));
+                } else {
+                    summaries.get(i).setSelect(false);
+                }
+            }
+        });
+    }
+
     public ObservableList<GrrSingleSummary> getSummaries() {
         return summaries;
     }
@@ -109,5 +126,17 @@ public class GrrSummaryModel {
 
     public void clearEditTestItem() {
         this.editTestItem.clear();
+    }
+
+    public void setSelectedItemName(String selectedItemName) {
+        this.selectedItemName = selectedItemName;
+    }
+
+    public String getSelectedItemName() {
+        return selectedItemName;
+    }
+
+    public List<TestItemWithTypeDto> getEditTestItem() {
+        return editTestItem;
     }
 }
