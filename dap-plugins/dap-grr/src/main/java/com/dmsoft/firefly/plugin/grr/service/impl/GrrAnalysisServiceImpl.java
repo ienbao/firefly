@@ -128,8 +128,10 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
             String anovaPathName = "rscripts/intgrr_anova.R";
             String xrPathName = "rscripts/intgrr_xr.R";
             String anovaScriptPath = RuntimeContext.getBean(PluginContext.class).getEnabledPluginInfo(GrrPlugin.GRR_PLUGIN_ID).getFolderPath() + "/" + anovaPathName;
+            anovaScriptPath = anovaScriptPath.replace('\\', '/');
             privateEngine.eval("source(\"" + anovaScriptPath + "\")");
             String xrScriptPath = RuntimeContext.getBean(PluginContext.class).getEnabledPluginInfo(GrrPlugin.GRR_PLUGIN_ID).getFolderPath() + "/" + xrPathName;
+            xrScriptPath = xrScriptPath.replace('\\', '/');
             privateEngine.eval("source(\"" + xrScriptPath + "\")");
         }
         SemaphoreUtils.lockSemaphore(privateEngine);
