@@ -3,6 +3,7 @@ package com.dmsoft.firefly.core.sdkimpl.dataframe;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
@@ -37,10 +38,13 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
         super(testItemDtoList, rowDataDtoList);
         this.rowSearchConditionResultList = Lists.newArrayList();
         this.searchConditions = Sets.newLinkedHashSet();
-        List<String> timeKeys;
-        String timePattern;
-        timeKeys = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getTimePatternDto().getTimeKeys();
-        timePattern = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getTimePatternDto().getPattern();
+        List<String> timeKeys = Lists.newArrayList();
+        String timePattern = null;
+        TimePatternDto timePatternDto = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getTimePatternDto();
+        if (timePatternDto != null) {
+            timeKeys = timePatternDto.getTimeKeys();
+            timePattern = timePatternDto.getPattern();
+        }
         this.filterUtils = new FilterUtils(timeKeys, timePattern);
         for (int i = 0; i < this.getRowSize(); i++) {
             this.rowSearchConditionResultList.add(Sets.newHashSet());
