@@ -44,7 +44,7 @@ import static com.google.common.io.Resources.getResource;
 public class MainController {
 
     private final Logger logger = LoggerFactory.getLogger(MainController.class);
-    public final Double MAX_HEIGHT = 80.0;
+    public final Double MAX_HEIGHT = 250.0;
     public final Double MAX_WIDTH = 280.0;
     public final Double MIN_WIDTH = 160.0;
 
@@ -290,6 +290,11 @@ public class MainController {
     }
 
     private void getDataSourceLblEvent() {
+//        AtomicReference<String> fileNames = new AtomicReference<>("");
+//        dataSourceList.forEach(value->{
+//            fileNames.set(value + "/n");
+//        });
+//        Tooltip tooltip = TooltipUtil.installNormalTooltip(dataSourceBtn, fileNames.get());
         logger.debug("Data source lbl event.");
         if (!dataSourceBtn.isDisable()) {
             if (!dataSourcePopup.isShowing()) {
@@ -407,10 +412,12 @@ public class MainController {
 
     public void refreshDataSource(ObservableList<String> dataSourceList) {
         dataSourceView.setItems(dataSourceList);
+        dataSourceView.refresh();
     }
 
     public void refreshTemplate(ObservableList<StateBarTemplateModel> templateList) {
         templateView.setItems(templateList);
+        templateView.refresh();
     }
 
     private void getTemplateBtnEvent() {

@@ -24,6 +24,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
+import javafx.stage.Stage;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -99,26 +100,38 @@ public class StatisticalResultController implements Initializable {
 
     /**
      * get edit row data
+     *
      * @return the row data
      */
-    public List<SpcStatisticalResultAlarmDto> getEditRowStatsData(){
+    public List<SpcStatisticalResultAlarmDto> getEditRowStatsData() {
         return statisticalTableModel.getEditRowData();
     }
 
     /**
      * get edit row key
+     *
      * @return row key
      */
-    public List<String> getEidtStatisticalRowKey(){
+    public List<String> getEidtStatisticalRowKey() {
         return statisticalTableModel.getEditorRowKey();
     }
 
     /**
      * get all stats data
+     *
      * @return
      */
-    public List<SpcStatisticalResultAlarmDto> getAllRowStatsData(){
+    public List<SpcStatisticalResultAlarmDto> getAllRowStatsData() {
         return statisticalTableModel.getSpcStatsDtoList();
+    }
+
+    /**
+     * refresh spc statistical data
+     *
+     * @param spcStatsDtoList the refresh data
+     */
+    public void refreshStatisticalResult(List<SpcStatisticalResultAlarmDto> spcStatsDtoList) {
+        statisticalTableModel.refreshData(spcStatsDtoList);
     }
 
     /**
@@ -126,7 +139,7 @@ public class StatisticalResultController implements Initializable {
      *
      * @return row key
      */
-    public List<String> getSelectStatisticalRowKey(){
+    public List<String> getSelectStatisticalRowKey() {
         return statisticalTableModel.getSelectRowKey();
     }
 
@@ -138,8 +151,9 @@ public class StatisticalResultController implements Initializable {
             chooseDialogController = fxmlLoader.getController();
             chooseDialogController.setValueColumnText("Statistical Result");
             this.initChooseStatisticalResultTableData();
-            WindowFactory.createSimpleWindowAsModel("spcStatisticalResult", "Choose Statistical Results", root,
+            Stage stage = WindowFactory.createNoManagedStage("Choose Statistical Results", root,
                     getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            chooseDialogController.setStage(stage);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -180,7 +194,7 @@ public class StatisticalResultController implements Initializable {
 
     private void getChooseColumnBtnEvent() {
         chooseDialogController.setSelectResultName(selectStatisticalResultName);
-        StageMap.showStage("spcStatisticalResult");
+        chooseDialogController.getStage().show();
     }
 
     private void getFilterTestItemTfEvent() {
@@ -191,16 +205,13 @@ public class StatisticalResultController implements Initializable {
         selectStatisticalResultName = chooseDialogController.getSelectResultName();
         statisticalResultTb.getColumns().remove(3, statisticalResultTb.getColumns().size());
         statisticalTableModel.updateStatisticalResultColumn(selectStatisticalResultName);
-        StageMap.closeStage("spcStatisticalResult");
+        chooseDialogController.getStage().close();
     }
 
     private void getAllCheckBoxEvent() {
         if (statisticalTableModel.getStatisticalTableRowDataSortedList() != null) {
             Map<String, SimpleObjectProperty<Boolean>> checkMap = statisticalTableModel.getCheckMap();
             for (String key : statisticalTableModel.getStatisticalTableRowDataSortedList()) {
-                if (statisticalTableModel.getEmptyResultKeys().contains(key)) {
-                    continue;
-                }
                 if (checkMap.get(key) != null) {
                     checkMap.get(key).set(statisticalTableModel.getAllCheckBox().isSelected());
                 } else {
@@ -231,6 +242,7 @@ public class StatisticalResultController implements Initializable {
         public void handleAction(String rowKey, ActionEvent event) {
             Color color = ColorUtils.toAwtColorFromFxColor(colorPicker.getValue());
             statisticalTableModel.setRowColor(rowKey, color);
+            spcMainController.updateChartColor(rowKey, colorPicker.getValue());
             statisticalResultTb.refresh();
         }
 
@@ -243,7 +255,6 @@ public class StatisticalResultController implements Initializable {
                     ColorUtils.toFxColorFromAwtColor(Colur.RAW_VALUES)
             );
             colorPicker.valueProperty().addListener((observable, oldValue, c) -> {
-
             });
             return colorPicker;
         }

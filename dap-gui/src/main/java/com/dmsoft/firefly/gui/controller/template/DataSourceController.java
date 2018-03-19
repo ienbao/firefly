@@ -168,6 +168,7 @@ public class DataSourceController implements Initializable {
 
                                             item.setValue(n.getText());
                                             dataSourceTable.refresh();
+                                            updateProjectOrder();
                                         }
                                         StageMap.closeStage("renameProject");
                                     });

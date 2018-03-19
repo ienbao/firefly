@@ -120,14 +120,6 @@
     -fx-alignment: center-left;
 }
 
-.table-view:focused {
-    -fx-border-width: 1;
-    -fx-background-color: transparent;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-padding: 0;
-}
-
 /*.tab-pane {*/
 /*-fx-skin:  "com.dmsoft.firefly.plugin.spc.utils.HTabPaneSkin";*/
 /*}*/
@@ -145,12 +137,12 @@ table
     -fx-font-weight: bold;
 }
 
-.cell .error .check-box:disabled > .box {
+.cell .error .check-box > .box {
     -fx-border-color: #ea2028;
     -fx-background-color: #fde8e9;
 }
 
-.cell .error .check-box:disabled {
+.cell .error .check-box {
     -fx-opacity: 1;
     -fx-cursor: inherit;
 }

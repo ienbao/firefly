@@ -14,10 +14,7 @@ import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.model.ControlAlarmRuleTableModel;
 import com.dmsoft.firefly.plugin.spc.model.CustomAlarmTestItemRowData;
 import com.dmsoft.firefly.plugin.spc.model.StatisticsResultRuleRowData;
-import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
-import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
-import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
-import com.dmsoft.firefly.plugin.spc.utils.StateKey;
+import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcCustomAlarmKey;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcProCapAlarmKey;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -36,8 +33,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.apache.poi.ss.formula.functions.T;
 
 import java.net.URL;
 import java.util.List;
@@ -102,6 +99,9 @@ public class SpcSettingController implements Initializable {
     @FXML
     private Button exportTemplateSettingBtn;
 
+    @FXML
+    private ScrollPane settingScrollPane;
+
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
 
     private ObservableList<CustomAlarmTestItemRowData> testItemRowDataObservableList;
@@ -118,6 +118,7 @@ public class SpcSettingController implements Initializable {
         this.initComponent();
         this.initData();
         this.initComponentEvent();
+        this.initValidate();
     }
 
     private void initComponent() {
@@ -170,12 +171,13 @@ public class SpcSettingController implements Initializable {
             for (CustomAlarmTestItemRowData customAlarmTestItemRowData : list) {
                 if (customAlarmTestItemRowData.getName().equals(testItem)) {
                     testItemRowDataObservableList.remove(customAlarmTestItemRowData);
-                    CustomAlarmTestItemRowData newRowData = new CustomAlarmTestItemRowData(testItem, this.initEmptyCustomDto());
-                    testItemRowDataObservableList.add(0, newRowData);
                     break;
                 }
             }
+            CustomAlarmTestItemRowData newRowData = new CustomAlarmTestItemRowData(testItem, this.initEmptyCustomDto());
+            testItemRowDataObservableList.add(0, newRowData);
         }
+
         if (testItemList != null) {
             for (String item : testItemList) {
                 CustomAlarmTestItemRowData newRowData = new CustomAlarmTestItemRowData(item, this.initEmptyCustomDto());
@@ -183,6 +185,20 @@ public class SpcSettingController implements Initializable {
             }
         }
 
+    }
+
+    private void initValidate() {
+        SpcSettingValidateUtil.newInstance().validateSpcAnalysisSetting(subgroupSizeTf, ndChartNumberTf);
+        SpcSettingValidateUtil.BindNode caBindNode = SpcSettingValidateUtil.newInstance().new BindNode(SpcSettingValidateUtil.BindNode.ASC, caExcellentTf, caAcceptableTf, caRectificationTf);
+        SpcSettingValidateUtil.BindNode cpBindNode = SpcSettingValidateUtil.newInstance().new BindNode(cpExcellentTf, cpGoodTf, cpAcceptableTf, cpRectificationTf);
+        SpcSettingValidateUtil.BindNode cpkBindNode = SpcSettingValidateUtil.newInstance().new BindNode(cpkExcellentTf, cpkGoodTf, cpkAcceptableTf, cpkRectificationTf);
+        SpcSettingValidateUtil.BindNode cplBindNode = SpcSettingValidateUtil.newInstance().new BindNode(cplExcellentTf, cplGoodTf, cplAcceptableTf, cplRectificationTf);
+        SpcSettingValidateUtil.BindNode cpuBindNode = SpcSettingValidateUtil.newInstance().new BindNode(cpuExcellentTf, cpuGoodTf, cpuAcceptableTf, cpuRectificationTf);
+        SpcSettingValidateUtil.BindNode ppBindNode = SpcSettingValidateUtil.newInstance().new BindNode(ppExcellentTf, ppGoodTf, ppAcceptableTf, ppRectificationTf);
+        SpcSettingValidateUtil.BindNode ppkBindNode = SpcSettingValidateUtil.newInstance().new BindNode(ppkExcellentTf, ppkGoodTf, ppkAcceptableTf, ppkRectificationTf);
+        SpcSettingValidateUtil.BindNode pplBindNode = SpcSettingValidateUtil.newInstance().new BindNode(pplExcellentTf, pplGoodTf, pplAcceptableTf, pplRectificationTf);
+        SpcSettingValidateUtil.BindNode ppuBindNode = SpcSettingValidateUtil.newInstance().new BindNode(ppuExcellentTf, ppuGoodTf, ppuAcceptableTf, ppuRectificationTf);
+        SpcSettingValidateUtil.newInstance().validateSpcAlarmSetting(caBindNode, cpBindNode, cpkBindNode, cplBindNode, cpuBindNode, ppBindNode, ppkBindNode, pplBindNode, ppuBindNode);
     }
 
     private List<CustomAlarmDto> initEmptyCustomDto() {
@@ -270,6 +286,21 @@ public class SpcSettingController implements Initializable {
             CustomAlarmTestItemRowData testItemRowData = new CustomAlarmTestItemRowData(entry.getKey(), entry.getValue());
             testItemRowDataObservableList.add(testItemRowData);
         }
+        if (testItemRowDataObservableList != null && testItemRowDataObservableList.size() != 0) {
+            statisticsRuleRowDataObservableList.clear();
+            CustomAlarmTestItemRowData customAlarmTestItemRowData = testItemRowDataObservableList.get(0);
+            if (customAlarmTestItemRowData == null) {
+                return;
+            }
+            List<CustomAlarmDto> customAlarmDtoList = customAlarmTestItemRowData.getCustomAlarmDtoList();
+            if (customAlarmDtoList == null) {
+                return;
+            }
+            for (CustomAlarmDto customAlarmDto : customAlarmDtoList) {
+                statisticsRuleRowDataObservableList.add(new StatisticsResultRuleRowData(customAlarmDto));
+            }
+            testItemNameLabel.setText(customAlarmTestItemRowData.getName());
+        }
     }
 
     private void setControlAlarmSettingData(List<ControlRuleDto> controlChartRule) {
@@ -300,10 +331,48 @@ public class SpcSettingController implements Initializable {
 
             }
         });
+
+        defaultSetting.setOnMousePressed(defaultSetting -> getDefaultSettingMousePressedEvent());
+        alarmSetting.setOnMousePressed(defaultSetting -> getAlarmSettingMousePressedEvent());
+        controlAlarmRule.setOnMousePressed(defaultSetting -> getControlAlarmRuleMousePressedEvent());
+        exportSetting.setOnMousePressed(defaultSetting -> getExportSettingMousePressedEvent());
+    }
+
+    private void getDefaultSettingMousePressedEvent() {
+        ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, defaultSettingVBox);
+        defaultSetting.setStyle("-fx-background-color: #FFFFFF");
+        alarmSetting.setStyle("-fx-background-color: #F0F0F0");
+        controlAlarmRule.setStyle("-fx-background-color: #F0F0F0");
+        exportSetting.setStyle("-fx-background-color: #F0F0F0");
+    }
+
+    private void getAlarmSettingMousePressedEvent() {
+        ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, alarmSettingVBox);
+        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
+        alarmSetting.setStyle("-fx-background-color: #FFFFFF");
+        controlAlarmRule.setStyle("-fx-background-color: #F0F0F0");
+        exportSetting.setStyle("-fx-background-color: #F0F0F0");
+    }
+
+    private void getControlAlarmRuleMousePressedEvent() {
+        ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, controlAlarmRuleVBox);
+        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
+        alarmSetting.setStyle("-fx-background-color: #F0F0F0");
+        controlAlarmRule.setStyle("-fx-background-color: #FFFFFF");
+        exportSetting.setStyle("-fx-background-color: #F0F0F0");
+    }
+
+    private void getExportSettingMousePressedEvent() {
+        ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, exportSettingVBox);
+        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
+        alarmSetting.setStyle("-fx-background-color: #F0F0F0");
+        controlAlarmRule.setStyle("-fx-background-color: #F0F0F0");
+        exportSetting.setStyle("-fx-background-color: #FFFFFF");
     }
 
     private void getCustomAlarmTableChangeEvent(CustomAlarmTestItemRowData customAlarmTestItemRowData) {
         statisticsRuleRowDataObservableList.clear();
+        testItemNameLabel.setText("");
         if (customAlarmTestItemRowData != null) {
             List<CustomAlarmDto> customAlarmDtoList = customAlarmTestItemRowData.getCustomAlarmDtoList();
             if (customAlarmDtoList == null) {
@@ -312,6 +381,7 @@ public class SpcSettingController implements Initializable {
             for (CustomAlarmDto customAlarmDto : customAlarmDtoList) {
                 statisticsRuleRowDataObservableList.add(new StatisticsResultRuleRowData(customAlarmDto));
             }
+            testItemNameLabel.setText(customAlarmTestItemRowData.getName());
         }
     }
 
@@ -583,5 +653,7 @@ public class SpcSettingController implements Initializable {
     @FXML
     private TextField ppuRectificationTf;
 
+    @FXML
+    private VBox defaultSettingVBox, alarmSettingVBox, controlAlarmRuleVBox, exportSettingVBox;
 
 }

@@ -8,21 +8,6 @@
     -fx-border-color: #dcdcdc #dcdcdc transparent transparent;
 }
 
-/*.default-color0 {*/
-/*-fx-bar-fill: rgb(72, 124,244);*/
-/*-fx-demo-fill: rgb(127, 164, 247);*/
-/*-fx-background-color: linear-gradient(to bottom, -fx-bar-fill 0%, -fx-demo-fill 100%);*/
-/*-fx-background-insets: 0, 1, 1;*/
-/*}*/
-
-/*.default-color1 {*/
-/*-fx-bar-fill: rgb(94, 181, 17);*/
-/*}*/
-
-/*.default-color2 {*/
-/*-fx-bar-fill: rgb(234, 32, 40);*/
-/*}*/
-
 /*line*/
 .line {
     -fx-cursor: hand;

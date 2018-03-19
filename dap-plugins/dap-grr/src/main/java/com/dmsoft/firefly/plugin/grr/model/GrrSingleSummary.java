@@ -11,10 +11,12 @@ import java.util.Map;
  */
 public class GrrSingleSummary {
 
+    private String originalUsl;
+    private String originalLsl;
     private BooleanProperty selected;
     private StringProperty itemName;
-    private StringProperty lsl = new SimpleStringProperty("");
-    private StringProperty usl = new SimpleStringProperty("");
+    private SimpleStringProperty lsl;
+    private SimpleStringProperty usl;
     private StringProperty tolerance = new SimpleStringProperty("");
     private StringProperty repeatability = new SimpleStringProperty("");
     private StringProperty reproducibility = new SimpleStringProperty("");
@@ -41,10 +43,6 @@ public class GrrSingleSummary {
         propertyKeys.put(UIConstant.GRR_SUMMARY_TITLE[6], grrKey);
     }
 
-    public GrrSingleSummary() {
-
-    }
-
     public GrrSingleSummary(boolean selected,
                             String itemName,
                             String lsl,
@@ -57,7 +55,9 @@ public class GrrSingleSummary {
         this.selected = new SimpleBooleanProperty(selected);
         this.itemName = new SimpleStringProperty(itemName);
         this.lsl = new SimpleStringProperty(lsl);
-        this.usl.set(usl);
+        this.usl = new SimpleStringProperty(usl);
+        this.originalLsl = lsl;
+        this.originalUsl = usl;
         this.tolerance.set(tolerance);
         this.updateData(repeatability, reproducibility, grr);
     }
@@ -116,5 +116,13 @@ public class GrrSingleSummary {
 
     public void setUsl(String usl) {
         this.usl.set(usl);
+    }
+
+    public String getOriginalUsl() {
+        return originalUsl;
+    }
+
+    public String getOriginalLsl() {
+        return originalLsl;
     }
 }

@@ -7,7 +7,7 @@ package com.dmsoft.firefly.plugin.grr.dto;
 /**
  * Created by GuangLi on 2017/7/21.
  */
-public class GrrSummaryResultDto {
+public class GrrSummaryExportDto {
     private String testItem;
     private String lsl;
     private String usl;

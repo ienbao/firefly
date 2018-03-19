@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -30,17 +31,23 @@ public class GrrMainController implements Initializable {
     private GrrDetailDto grrDetailDto;
     private GrrConfigDto grrConfigDto;
     private TemplateSettingDto activeTemplateSettingDto;
+    private GrrParamDto grrParamDto;
     @FXML
     private GrrItemController grrItemController;
     @FXML
     private GrrResultController grrResultController;
     @FXML
     private GrrViewDataController grrViewDataController;
+    @FXML
+    private Tab grrResultTab;
 
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
 
     @FXML
     private Button exportBtn;
+
+    @FXML
+    private Button refreshBtn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -58,6 +65,20 @@ public class GrrMainController implements Initializable {
     private void initComponentEvents() {
         exportBtn.setOnAction(event -> {
             getExportBtnEvent();
+        });
+
+        refreshBtn.setOnAction(event -> {
+            grrResultController.refreshGrrResult();
+            grrViewDataController.refresh();
+        });
+
+        grrResultTab.setOnSelectionChanged(event -> {
+            if (grrResultTab.isSelected()) {
+                if (grrViewDataController.isChanged()) {
+                    grrDataFrame = grrViewDataController.getChangedGrrDFDto();
+                    grrResultController.changeGrrResult();
+                }
+            }
         });
     }
 
@@ -125,5 +146,13 @@ public class GrrMainController implements Initializable {
 
     public void setActiveTemplateSettingDto(TemplateSettingDto activeTemplateSettingDto) {
         this.activeTemplateSettingDto = activeTemplateSettingDto;
+    }
+
+    public GrrParamDto getGrrParamDto() {
+        return grrParamDto;
+    }
+
+    public void setGrrParamDto(GrrParamDto grrParamDto) {
+        this.grrParamDto = grrParamDto;
     }
 }

@@ -8,7 +8,6 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -44,11 +43,11 @@
                         </Label>
                     </children>
                 </VBox>
-                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="450.0" prefWidth="625.0" HBox.hgrow="ALWAYS">
+                <ScrollPane fx:id="settingScrollPane" fitToWidth="true" hbarPolicy="NEVER" prefHeight="450.0" prefWidth="625.0" HBox.hgrow="ALWAYS">
                     <content>
                         <VBox>
                             <children>
-                                <VBox>
+                                <VBox fx:id="defaultSettingVBox">
                                     <children>
                                         <Label style="-fx-font-weight: bold" text="Analysis Setting">
                                             <VBox.margin>
@@ -90,7 +89,7 @@
                                         <Insets bottom="10.0" />
                                     </VBox.margin>
                                 </VBox>
-                                <VBox>
+                                <VBox fx:id="alarmSettingVBox">
                                     <children>
                                         <Label style="-fx-font-weight: bold" text="Alarm Setting">
                                             <VBox.margin>
@@ -357,8 +356,8 @@
                                                         <TableView fx:id="statisticalResultAlarmSetTable" editable="true">
                                                             <columns>
                                                                 <TableColumn fx:id="statisticsColumn" prefWidth="75.0" text="Statistics" />
-                                                                <TableColumn fx:id="lowerLimitColumn" prefWidth="75.0" text="Lower Limit" editable="true" />
-                                                                <TableColumn fx:id="upperLimitColumn" prefWidth="75.0" text="Upper Limit" editable="true"/>
+                                                                <TableColumn fx:id="lowerLimitColumn" editable="true" prefWidth="75.0" text="Lower Limit" />
+                                                                <TableColumn fx:id="upperLimitColumn" editable="true" prefWidth="75.0" text="Upper Limit" />
                                                             </columns>
                                              <columnResizePolicy>
                                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -376,14 +375,14 @@
                                         <Insets bottom="10.0" />
                                     </VBox.margin>
                                 </VBox>
-                                <VBox>
+                                <VBox fx:id="controlAlarmRuleVBox">
                                     <children>
                                         <Label style="-fx-font-weight: bold" text="Control Alarm Rule">
                                             <VBox.margin>
                                                 <Insets bottom="10.0" top="10.0" />
                                             </VBox.margin>
                                         </Label>
-                                        <TableView fx:id="controlAlarmRuleTable" prefHeight="188.0">
+                                        <TableView fx:id="controlAlarmRuleTable" editable="true" prefHeight="188.0">
                                             <VBox.margin>
                                                 <Insets bottom="10.0" />
                                             </VBox.margin>
@@ -391,17 +390,33 @@
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
                                         </TableView>
-                                        <TextArea fx:id="ruleInstructionTextArea" prefHeight="226.0">
-                                            <VBox.margin>
-                                                <Insets bottom="10.0" />
-                                            </VBox.margin>
-                                        </TextArea>
+                              <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0"
+                                    style="-fx-border-width: 1;-fx-border-color: #DCDCDC;-fx-background-color: #f8f8f8">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="%RULES" style="-fx-font-weight: bold"/>
+                                    <Label text="%R1_RULE" />
+                                    <Label text="%R2_RULE" />
+                                    <Label text="%R3_RULE" />
+                                    <Label text="%R4_RULE" />
+                                     <Label text="%R5_RULE" />
+                                     <Label text="%R6_RULE" />
+                                     <Label text="%R7_RULE" />
+                                     <Label text="%R8_RULE" />
+                                     <Label text="%R9_RULE" />
+                                 </children>
+                                  <VBox.margin>
+                                      <Insets bottom="10.0" />
+                                  </VBox.margin>
+                              </VBox>
                                     </children>
                                     <VBox.margin>
                                         <Insets bottom="10.0" />
                                     </VBox.margin>
                                 </VBox>
-                                <VBox prefHeight="100.0">
+                                <VBox fx:id="exportSettingVBox" prefHeight="100.0">
                                     <children>
                                         <Label style="-fx-font-weight: bold" text="Export Mode">
                                             <VBox.margin>
@@ -412,7 +427,7 @@
                                             <children>
                                                 <Label text="Active Template" />
                                                 <ComboBox fx:id="exportTemplateCb" prefWidth="150.0" />
-                                                <Button fx:id="exportTemplateSettingBtn" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" />
+                                                <Button fx:id="exportTemplateSettingBtn" maxHeight="22.0" maxWidth="22.0" minHeight="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" />
                                             </children>
                                         </HBox>
                                     </children>

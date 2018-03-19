@@ -12,15 +12,13 @@ import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 public interface GrrFilterService {
 
     /**
-     * method to get grr view data
+     * method to validate param and get auto param
      *
      * @param dataFrame       data frame
-     * @param configDto  config dto
-     * @param templateSettingDto       template setting dto
      * @param searchConditionDto  search condition dto
      * @return list of grr summary dto
      */
-   // GrrDataFrameDto validateGrrDataFormat(SearchDataFrame dataFrame, GrrConfigDto configDto, TemplateSettingDto templateSettingDto, SearchConditionDto searchConditionDto);
+     GrrParamDto validateGrrParam(SearchDataFrame dataFrame, SearchConditionDto searchConditionDto);
 
     /**
      * method to get grr view data

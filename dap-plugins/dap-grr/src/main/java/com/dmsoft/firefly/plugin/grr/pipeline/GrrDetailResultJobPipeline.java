@@ -12,6 +12,6 @@ public class GrrDetailResultJobPipeline implements InitJobPipeline {
     @Override
     public void initJobPipeline(JobPipeline pipeline) {
         pipeline.addLast(ParamKeys.GRR_CONFIG_HANDLER, new GrrConfigHandler());
-        pipeline.addLast(ParamKeys.GRR_DETAIL_RESULT_HANDLER, new DetailResultHandler());
+        pipeline.addLast(ParamKeys.GRR_DETAIL_RESULT_HANDLER, new DetailResultHandler1());
     }
 }

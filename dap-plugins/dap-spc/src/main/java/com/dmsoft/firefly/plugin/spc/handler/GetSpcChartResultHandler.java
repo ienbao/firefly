@@ -2,7 +2,9 @@ package com.dmsoft.firefly.plugin.spc.handler;
 
 import com.dmsoft.firefly.plugin.spc.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcAnalysisConfigDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
 import com.dmsoft.firefly.plugin.spc.service.SpcService;
+import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionCode;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -30,8 +32,11 @@ public class GetSpcChartResultHandler implements JobInboundHandler {
         SearchDataFrame dataFrame = (SearchDataFrame) param.get(ParamKeys.SEARCH_DATA_FRAME);
         List<SearchConditionDto> searchConditionDtoList = (List<SearchConditionDto>) param.get(ParamKeys.SEARCH_CONDITION_DTO_LIST);
         SpcAnalysisConfigDto analysisConfigDto = (SpcAnalysisConfigDto) param.get(ParamKeys.SPC_ANALYSIS_CONFIG_DTO);
+
+        List<SpcChartDto> spcChartDtoList = RuntimeContext.getBean(SpcService.class).getChartResult(dataFrame, searchConditionDtoList, analysisConfigDto);
+        RuntimeContext.getBean(SpcSettingService.class).setControlChartRuleAlarm(spcChartDtoList);
         //TODO progress
-        context.returnValue(RuntimeContext.getBean(SpcService.class).getChartResult(dataFrame, searchConditionDtoList, analysisConfigDto));
+        context.returnValue(spcChartDtoList);
     }
 
     @Override

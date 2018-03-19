@@ -17,5 +17,5 @@ public class ResourceMassages {
     public static final String REMOVE_MSG = "REMOVE_MSG";
     public static final String PLUGIN_MANAGE = "PLUGIN_MANAGE";
 
-    public static final String CHOOSE_ITEMS_TITLE = "CHOOSE_ITEMS_TITLE";
+    public static final String CHOOSE_ITEMS_TITLE = "Choose Test Items";
 }

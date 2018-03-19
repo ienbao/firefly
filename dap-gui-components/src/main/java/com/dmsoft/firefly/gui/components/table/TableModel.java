@@ -102,4 +102,14 @@ public interface TableModel {
      * @param tableView table view
      */
     void setTableView(TableView<String> tableView);
+
+    /**
+     * method to judege menu event enable or not
+     *
+     * @param rowKey row key
+     * @return is enable or not
+     */
+    default boolean isMenuEventEnable(String rowKey) {
+        return true;
+    }
 }

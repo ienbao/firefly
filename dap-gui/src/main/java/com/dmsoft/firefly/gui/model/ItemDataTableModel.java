@@ -3,6 +3,7 @@ package com.dmsoft.firefly.gui.model;
 import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -25,13 +26,16 @@ public class ItemDataTableModel implements TableModel {
     private List<RowDataDto> rowDataDtoList = new ArrayList<>();
     private Map<String, SimpleObjectProperty<Boolean>> checkMap = new HashMap<>();
     private ObjectProperty<Boolean> allChecked = new SimpleObjectProperty<>( false );
-    private Set<String> falseSet = new HashSet<>();
+    private List<String> trueSet = new ArrayList<>();
+    private List<String> falseSet = new ArrayList<>();
     private CheckBox allCheckBox;
 
     /**
      * constructor
      */
     public ItemDataTableModel(List<String> headers, List<RowDataDto> rowDataDtos) {
+        rowKey.clear();
+        columnKey.clear();
         valueMap = Maps.newHashMap();
         if (headers != null && !headers.isEmpty()) {
             columnKey.add( 0, "" );
@@ -46,9 +50,12 @@ public class ItemDataTableModel implements TableModel {
             }
         }
 
+        int i=0;
         if (rowDataDtos != null && !rowDataDtos.isEmpty()) {
             for (RowDataDto rowDataDto : rowDataDtos) {
-                rowKey.add( rowDataDto.getRowKey() );
+               // rowKey.add( rowDataDto.getRowKey() );
+                rowKey.add(String.valueOf(i));
+                i++;
                 rowDataDtoList.add( rowDataDto );
             }
         }
@@ -64,8 +71,7 @@ public class ItemDataTableModel implements TableModel {
         if (columnName.equals( "" )) {
             return null;
         } else {
-            String row = rowKey.substring( rowKey.indexOf( "_!@#_" ) + 5 );
-            valueMap.put( rowKey, new SimpleObjectProperty<String>( rowDataDtoList.get( Integer.parseInt( row ) - 2 ).getData().get( columnName ) ) );
+            valueMap.put( rowKey, new SimpleObjectProperty<String>( rowDataDtoList.get( Integer.parseInt( rowKey )).getData().get( columnName ) ) );
             return valueMap.get( rowKey );
         }
     }
@@ -91,19 +97,23 @@ public class ItemDataTableModel implements TableModel {
     @Override
     public ObjectProperty<Boolean> getCheckValue(String rowKey, String columnName) {
         if (checkMap.get( rowKey ) == null) {
-            SimpleObjectProperty<Boolean> b = new SimpleObjectProperty<>( false );
+            SimpleObjectProperty<Boolean> b = new SimpleObjectProperty<>( true );
             checkMap.put( rowKey, b );
-            falseSet.add( rowKey );
-            allChecked.setValue( false );
+            trueSet.add( rowKey );
+            allChecked.setValue( true );
             b.addListener( (ov, b1, b2) -> {
                 if (!b2) {
+//                    if(trueSet.contains(rowKey )){
+//                        trueSet.remove(rowKey);
+//                    }
                     falseSet.add( rowKey );
                     allChecked.setValue( false );
                 } else {
-                    falseSet.remove( rowKey );
-                    if (falseSet.isEmpty()) {
-                        allChecked.setValue( true );
+                    if (falseSet.contains( rowKey )) {
+                        falseSet.remove( rowKey );
                     }
+//                    trueSet.add( rowKey );
+                    allChecked.setValue( true );
                 }
             } );
         }
@@ -122,23 +132,32 @@ public class ItemDataTableModel implements TableModel {
 
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
-        String row = rowKey.substring( rowKey.indexOf( "_!@#_" ) + 5 );
-        String dataValue = null;
-        String usl = null;
-        String lsl = null;
+       // String row = rowKey.substring( rowKey.indexOf( "_!@#_" ) + 5 );
+        Double dataValue = null;
+        Double usl = null;
+        Double lsl = null;
 
-        usl = rowDataDtoList.get( 0).getData().get( column );
-        lsl = rowDataDtoList.get( 1 ).getData().get( column );
+        if(("").equals(column)){
+            return null;
+        }
+        if(DAPStringUtils.isNumeric( rowDataDtoList.get( 0 ).getData().get( column ) )) {
+            usl =  Double.valueOf(rowDataDtoList.get( 0 ).getData().get( column ));
+        }
 
-        if (Integer.parseInt( row ) > 2) {
-            if (!column.equals( "" )) {
-                dataValue = rowDataDtoList.get( Integer.parseInt( row ) - 2 ).getData().get( column );
+        if(DAPStringUtils.isNumeric( rowDataDtoList.get( 1 ).getData().get( column ) )) {
+            lsl =  Double.valueOf(rowDataDtoList.get( 1 ).getData().get( column ));
+        }
+
+        if (Integer.parseInt( rowKey ) > 2) {
+           String data = rowDataDtoList.get( Integer.parseInt( rowKey )).getData().get( column );
+            if (DAPStringUtils.isNumeric( data )) {
+              dataValue = Double.valueOf( data );
             }
-            if (StringUtils.isNotBlank( dataValue ) && StringUtils.isNotBlank( usl )&& !usl.equals("Upper Limited----------->") && (Double.parseDouble( dataValue ) > Double.parseDouble( usl ))) {
+            if (null != usl && null != dataValue && dataValue > usl) {
                 tableCell.setStyle( "-fx-background-color:red" );
                 return tableCell;
             }
-            if (StringUtils.isNotBlank( dataValue ) && StringUtils.isNotBlank( lsl )&&!lsl.equals("Lower Limited----------->") && (Double.parseDouble( dataValue ) < Double.parseDouble( lsl ))) {
+            if (null != lsl && null != dataValue && dataValue < lsl) {
                 tableCell.setStyle( "-fx-background-color:red" );
                 return tableCell;
             }
@@ -153,6 +172,17 @@ public class ItemDataTableModel implements TableModel {
 
     @Override
     public void setTableView(TableView<String> tableView) {
+        if(tableView.getColumns()!= null && !tableView.getColumns().isEmpty()){
+            for(int i = 0;i<tableView.getColumns().size();i++){
+                if(i == 0){
+                    tableView.getColumns().get(0).setPrefWidth(35);
+                }else {
+                    tableView.getColumns().get(i).setPrefWidth(75);
+                    tableView.getColumns().get(i).setMinWidth(75);
+                }
+            }
+
+        }
 
     }
 
@@ -166,5 +196,38 @@ public class ItemDataTableModel implements TableModel {
 
     public ObservableList<String> getRowKey() {
         return rowKey;
+    }
+
+    public void updateTestItemColumn(List<String> result) {
+        columnKey.clear();
+            if (result != null && !result.isEmpty()) {
+            columnKey.add( "" );
+            columnKey.addAll( result );
+        }
+    }
+
+    public void updateRowDataList(List<RowDataDto> rowDataDtos) {
+        rowDataDtoList.clear();
+        rowKey.clear();
+        int i=0;
+        if (rowDataDtos != null && !rowDataDtos.isEmpty()) {
+            for (RowDataDto rowDataDto : rowDataDtos) {
+                rowKey.add(String.valueOf(i));
+                i++;
+                rowDataDtoList.add( rowDataDto );
+            }
+        }
+    }
+
+    public List<RowDataDto> getRowDataDtoList() {
+        return rowDataDtoList;
+    }
+
+    public List<String> getFalseSet() {
+        return falseSet;
+    }
+
+    public List<String> getTrueSet() {
+        return trueSet;
     }
 }

@@ -88,7 +88,7 @@ public class BuildChart {
             INdcChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
             ndcChartDataList.add(iNdcChartData);
             //run chart
-            IRunChartData iRunChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), color);
+            IRunChartData iRunChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), null, color);
             runChartDataList.add(iRunChartData);
             //x bar chart
             IControlChartData xBarChartData = new SpcControlChartData(key, spcChartResultDto.getXbarCResult(), color);
