@@ -13,7 +13,9 @@ import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
+import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcLeftConfigServiceImpl;
+import com.dmsoft.firefly.plugin.spc.service.impl.SpcSettingServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
@@ -93,8 +95,8 @@ public class SpcItemController implements Initializable {
     private ContextMenu pop;
 
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
-    private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
     private SpcLeftConfigServiceImpl leftConfigService = new SpcLeftConfigServiceImpl();
+    private SpcSettingService spcSettingService = RuntimeContext.getBean(SpcSettingServiceImpl.class);
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
 
     /**
@@ -150,13 +152,17 @@ public class SpcItemController implements Initializable {
         item.getStyleClass().add("filter-header");
         item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
         initItemData();
-        item.setPrefWidth(148);
 
         item.widthProperty().addListener((ov, w1, w2) -> {
             Platform.runLater(() -> {
                 is.relocate(w2.doubleValue() - 21, 0);
             });
         });
+        SpcSettingDto settingDto = spcSettingService.findSpcSetting();
+        if (settingDto != null) {
+            ndGroup.setText(String.valueOf(settingDto.getCustomGroupNumber()));
+            subGroup.setText(String.valueOf(settingDto.getChartIntervalNumber()));
+        }
     }
 
     private void initBtnIcon() {

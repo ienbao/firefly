@@ -6,6 +6,7 @@ import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
@@ -47,7 +48,30 @@ public class WindowMessageFactoryTest extends Application{
         MenuItem progressMenuItem = new MenuItem("Progress");
         progressMenuItem.setOnAction(event -> {
             WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip("Running Task");
-//            windowProgressTipController.refreshProgress(0.8);
+            new Thread(() -> {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                windowProgressTipController.updateFailProgress(80, "first commit...");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                windowProgressTipController.updateFailProgressNextLine("second commit...");
+            }).start();
+
+//            Platform.runLater(() -> {
+//                try {
+//                    Thread.sleep(2000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                windowProgressTipController.updateFailProgress(80);
+//            });
+
         });
 
         menu.getItems().add(okMenuItem);

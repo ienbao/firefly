@@ -125,7 +125,7 @@ public class SearchTabController {
             advancedInput.append(advanceText.getText());
             List<String> autoCondition1 = Lists.newArrayList();
             List<String> autoCondition2 = Lists.newArrayList();
-            if (!StringUtils.isBlank(group1.getValue().toString())) {
+            if (group1.getValue() != null && !StringUtils.isBlank(group1.getValue().toString())) {
                 Set<String> valueList = dataService.findUniqueTestData(envService.findActivatedProjectName(), group1.getValue().toString());
                 if (valueList != null && !valueList.isEmpty()) {
                     for (String value : valueList) {
@@ -138,7 +138,7 @@ public class SearchTabController {
                     }
                 }
             }
-            if (!StringUtils.isBlank(group2.getValue().toString())) {
+            if (group2.getValue() != null && !StringUtils.isBlank(group2.getValue().toString())) {
                 Set<String> valueList = dataService.findUniqueTestData(envService.findActivatedProjectName(), group2.getValue().toString());
                 if (valueList != null && !valueList.isEmpty()) {
                     if (autoCondition1.isEmpty()) {

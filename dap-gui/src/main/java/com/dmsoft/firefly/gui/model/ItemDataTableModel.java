@@ -71,7 +71,6 @@ public class ItemDataTableModel implements TableModel {
         if (columnName.equals( "" )) {
             return null;
         } else {
-          //  String row = rowKey.substring( rowKey.indexOf( "_!@#_" ) + 5 );
             valueMap.put( rowKey, new SimpleObjectProperty<String>( rowDataDtoList.get( Integer.parseInt( rowKey )).getData().get( columnName ) ) );
             return valueMap.get( rowKey );
         }
@@ -173,6 +172,18 @@ public class ItemDataTableModel implements TableModel {
 
     @Override
     public void setTableView(TableView<String> tableView) {
+        if(tableView.getColumns()!= null && !tableView.getColumns().isEmpty()){
+            for(int i = 0;i<tableView.getColumns().size();i++){
+                if(i == 0){
+                    tableView.getColumns().get(0).setPrefWidth(35);
+                }else {
+                    tableView.getColumns().get(i).setPrefWidth(75);
+                    tableView.getColumns().get(i).setMinWidth(75);
+                }
+            }
+
+        }
+
     }
 
     public Map<String, SimpleObjectProperty<Boolean>> getCheckMap() {
@@ -189,7 +200,7 @@ public class ItemDataTableModel implements TableModel {
 
     public void updateTestItemColumn(List<String> result) {
         columnKey.clear();
-        if (result != null && !result.isEmpty()) {
+            if (result != null && !result.isEmpty()) {
             columnKey.add( "" );
             columnKey.addAll( result );
         }
