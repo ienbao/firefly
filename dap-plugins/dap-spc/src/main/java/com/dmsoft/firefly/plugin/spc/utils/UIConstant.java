@@ -86,4 +86,6 @@ public class UIConstant {
     public static final String EXPORT_SUMMARY_NULL = "-";
 
     public static final String[] CONTROL_ALARM_RULE_HEADER = new String[]{"Is Use", "Rule Name", "n", "m", "s"};
+
+    public static final double FACTOR = 0.20;
 }

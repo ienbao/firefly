@@ -100,7 +100,7 @@ public class SpcControlChartData implements IControlChartData {
         maxY = MathUtils.getMax(y, ucl, lcl, new Double[]{cl});
         minY = MathUtils.getMin(y, ucl, lcl, new Double[]{cl});
         maxX = MathUtils.getMax(x);
-        minX = MathUtils.getMax(x);
+        minX = MathUtils.getMin(x);
     }
 
     @Override

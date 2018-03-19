@@ -4,6 +4,7 @@ import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationFetch;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
 import com.dmsoft.firefly.plugin.spc.charts.utils.PointClickCallBack;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.collections.FXCollections;
@@ -62,6 +63,18 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
 //            this.createChartSeries(xyOneChartData, pointTooltipFunction);
 //        });
 //    }
+    public void createChartSeries(IXYChartData<X, Y> xyOneChartData,
+                                  String unique,
+                                  Color color,
+                                  Function<PointTooltip, String> pointTooltipFunction) {
+        XYChart.Series oneSeries = this.buildSeries(xyOneChartData);
+        this.seriesMap.put(unique, oneSeries);
+        this.getData().add(oneSeries);
+        this.dataClickEvent(oneSeries);
+        this.setSeriesDataStyleByDefault(oneSeries, color, true);
+        this.setSeriesDataTooltip(oneSeries, pointTooltipFunction);
+        this.seriesColorMap.put(oneSeries, xyOneChartData.getColor());
+    }
 
     /**
      * Create chart series
@@ -72,14 +85,7 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
     public void createChartSeries(IXYChartData<X, Y> xyOneChartData,
                                   String unique,
                                   Function<PointTooltip, String> pointTooltipFunction) {
-
-        XYChart.Series oneSeries = this.buildSeries(xyOneChartData);
-        this.seriesMap.put(unique, oneSeries);
-        this.getData().add(oneSeries);
-        this.dataClickEvent(oneSeries);
-        this.setSeriesDataStyleByDefault(oneSeries, xyOneChartData.getColor(), true);
-        this.setSeriesDataTooltip(oneSeries, pointTooltipFunction);
-        this.seriesColorMap.put(oneSeries, xyOneChartData.getColor());
+        this.createChartSeries(xyOneChartData, unique, xyOneChartData.getColor(), pointTooltipFunction);
     }
 
     private XYChart.Series buildSeries(IXYChartData<X, Y> xyOneChartData) {
@@ -329,15 +335,18 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
     }
 
     private void setSeriesDataStyleByDefault(XYChart.Series series, Color color, boolean showLined) {
-
         ObservableList<Data<X, Y>> data = series.getData();
         String seriesClass = "chart-series-hidden-line";
         if (!showLined) {
             series.getNode().getStyleClass().add(seriesClass);
         }
-        series.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
+        if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
+            series.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
+        }
         data.forEach(dataItem -> {
-            dataItem.getNode().setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
+            if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
+                dataItem.getNode().setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
+            }
         });
     }
 
@@ -366,7 +375,7 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         this.pointClick = flag;
     }
 
-    private void dataClickEvent(XYChart.Series<X,Y> series) {
+    private void dataClickEvent(XYChart.Series<X, Y> series) {
         series.getData().forEach(oneData -> oneData.getNode().setOnMouseClicked(event -> {
             if (pointClickCallBack != null && pointClick) {
                 pointClickCallBack.execute(oneData.getExtraValue());

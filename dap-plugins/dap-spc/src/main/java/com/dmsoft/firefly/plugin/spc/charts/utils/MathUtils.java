@@ -8,76 +8,76 @@ import static java.lang.Double.NaN;
 public class MathUtils {
 
     public static Double getMax(Double[] array) {
-        if (array == null) {
-            return NaN;
+        if (array == null || array.length <= 0) {
+            return null;
         }
-        Double max = NaN;
+        Double max = null;
         for (int x = 0; x < array.length; x++) {
-            if (array[x] == null) {
+            if (array[x] == null || array[x] == NaN) {
                 continue;
             }
-            if (max == NaN) {
+            if (max == null || max == NaN) {
                 max = array[x];
-            } else {
-                max = Math.max(array[x], max);
+                continue;
             }
+            max = Math.max(array[x], max);
         }
-        return NaN;
+        return max;
     }
 
     public static Double getMin(Double[] array) {
-        if (array == null) {
-            return NaN;
+        if (array == null || array.length <= 0) {
+            return null;
         }
-        Double min = NaN;
+        Double min = null;
         for (int x = 0; x < array.length; x++) {
-            if (array[x] == null) {
+            if (array[x] == null || array[x] == NaN) {
                 continue;
             }
-            if (min == NaN) {
+            if (min == null || min == NaN) {
                 min = array[x];
-            } else {
-                min = Math.min(array[x], min);
+                continue;
             }
+            min = Math.min(array[x], min);
         }
         return min;
     }
 
     public static Double getMax(Double[]... array) {
-        if (array == null) {
-            return NaN;
+        if (array == null || array.length <= 0) {
+            return null;
         }
-        Double max = NaN;
+        Double max = null;
         for (int i = 0; i < array.length; i++) {
             for (int x = 0; x < array[i].length; x++) {
-                if (array[i][x] == null) {
+                if (array[i][x] == null || array[i][x] == NaN) {
                     continue;
                 }
-                if (max == NaN) {
+                if (max == null || max == NaN) {
                     max = array[i][x];
-                } else {
-                    max = Math.max(array[i][x], max);
+                    continue;
                 }
+                max = Math.max(array[i][x], max);
             }
         }
         return max;
     }
 
     public static Double getMin(Double[]... array) {
-        if (array == null) {
-            return NaN;
+        if (array == null || array.length <= 0) {
+            return null;
         }
-        Double min = NaN;
+        Double min = null;
         for (int i = 0; i < array.length; i++) {
             for (int x = 0; x < array[i].length; x++) {
-                if (array[i][x] == null) {
+                if (array[i][x] == null || array[i][x] == NaN) {
                     continue;
                 }
-                if (min == NaN) {
+                if (min == null || min == NaN) {
                     min = array[i][x];
-                } else {
-                    min = Math.min(array[i][x], min);
+                    continue;
                 }
+                min = Math.min(array[i][x], min);
             }
         }
         return min;
