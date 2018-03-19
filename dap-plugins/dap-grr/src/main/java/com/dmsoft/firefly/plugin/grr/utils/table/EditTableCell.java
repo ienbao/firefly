@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.utils.table;
 
+import javafx.event.Event;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 /**
@@ -7,7 +8,7 @@ import javafx.scene.input.KeyCode;
  */
 public class EditTableCell extends TableCell {
 
-    private TextField textField;
+    protected TextField textField;
     private int columnIndex;
     private TableCellCallBack callBack;
 
@@ -39,7 +40,20 @@ public class EditTableCell extends TableCell {
 
     @Override
     public void commitEdit(Object newValue) {
-        super.commitEdit(newValue);
+        if (! isEditing()) return;
+        if (this.getTableView() != null) {
+            TableColumn.CellEditEvent editEvent = new TableColumn.CellEditEvent(
+                    this.getTableView(),
+                    this.getTableView().getEditingCell(),
+                    TableColumn.editCommitEvent(),
+                    newValue
+            );
+            Event.fireEvent(getTableColumn(), editEvent);
+        }
+        updateItem(newValue, false);
+        if (this.getTableView() != null) {
+            this.getTableView().edit(-1, null);
+        }
         if (callBack != null) {
             this.getIndex();
             callBack.execute(this, columnIndex);
@@ -91,5 +105,9 @@ public class EditTableCell extends TableCell {
 
     private String getString() {
         return getItem() == null ? "" : getItem().toString();
+    }
+
+    public TextField getTextField() {
+        return textField;
     }
 }

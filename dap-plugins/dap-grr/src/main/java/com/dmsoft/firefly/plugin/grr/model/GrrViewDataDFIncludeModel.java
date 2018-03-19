@@ -211,6 +211,12 @@ public class GrrViewDataDFIncludeModel implements TableModel {
             int index = this.rowKeyArray.indexOf(oldDto.getRowKey());
             this.rowKeyArray.remove(index);
             this.rowKeyArray.add(index, grrViewDataDto.getRowKey());
+
+            for (int i = 0; i < this.grrDataFrameDto.getIncludeDatas().size(); i++) {
+                if (oldDto.getRowKey().equals(this.grrDataFrameDto.getIncludeDatas().get(i).getRowKey())) {
+                    this.grrDataFrameDto.getIncludeDatas().set(i, grrViewDataDto);
+                }
+            }
         }
     }
 

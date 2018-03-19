@@ -17,11 +17,14 @@ import com.dmsoft.firefly.plugin.grr.model.*;
 import com.dmsoft.firefly.plugin.grr.utils.*;
 import com.dmsoft.firefly.plugin.grr.utils.charts.ChartUtils;
 import com.dmsoft.firefly.plugin.grr.utils.charts.LegendUtils;
+import com.dmsoft.firefly.plugin.grr.utils.table.EditTableCell;
 import com.dmsoft.firefly.plugin.grr.utils.table.TableCellCallBack;
 import com.dmsoft.firefly.plugin.grr.utils.table.TableRender;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.Job;
+import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
@@ -105,6 +108,84 @@ public class GrrResultController implements Initializable {
         this.setToleranceValue(filteredList.get(0).getTolerance());
     }
 
+    public void changeGrrResult() {
+        submitGrrResult(grrMainController.getSearchConditionDto().getSelectedTestItemDtos().get(0).getTestItemName(), 0);
+    }
+
+    public void refreshGrrResult() {
+        List<TestItemWithTypeDto> changedTestItemWithTypeDtos = summaryModel.getEditTestItem();
+        List<TestItemWithTypeDto> selectTestItemWithTypeDtos = grrMainController.getSearchConditionDto().getSelectedTestItemDtos();
+        if (changedTestItemWithTypeDtos.isEmpty() || selectTestItemWithTypeDtos.isEmpty()) {
+            return;
+        }
+//        edit select test item with type
+        for (int i = 0; i < selectTestItemWithTypeDtos.size(); i++) {
+            for (int j = 0; j < changedTestItemWithTypeDtos.size(); j++) {
+                if (selectTestItemWithTypeDtos.get(i).getTestItemName().equals(changedTestItemWithTypeDtos.get(j).getTestItemName())) {
+                    selectTestItemWithTypeDtos.set(i, changedTestItemWithTypeDtos.get(j));
+                }
+            }
+        }
+        String selectedItem = summaryModel.getSelectedItemName();
+        boolean hasSelectedItem = false;
+        int selectedIndex = -1;
+        for (int i = 0; i < selectTestItemWithTypeDtos.size(); i++) {
+            if (selectedItem.equals(selectTestItemWithTypeDtos.get(i).getTestItemName())) {
+                hasSelectedItem = true;
+                selectedIndex = i;
+                break;
+            }
+        }
+        String itemName = hasSelectedItem ? selectedItem : "";
+        submitGrrResult(itemName, selectedIndex);
+    }
+
+    private void submitGrrResult(String selectedItem, int selectedIndex) {
+        Job job = new Job(ParamKeys.GRR_REFRESH_JOB_PIPELINE);
+        Map paramMap = Maps.newHashMap();
+        paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, grrMainController.getSearchConditionDto());
+        paramMap.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrMainController.getGrrDataFrame());
+        if (DAPStringUtils.isNotBlank(selectedItem)) {
+            paramMap.put(ParamKeys.TEST_ITEM_NAME, selectedItem);
+        }
+
+        Platform.runLater(() -> manager.doJobASyn(job, returnValue -> {
+            try {
+                Platform.runLater(() -> {
+                    if (returnValue == null) {
+                        //todo message tip
+                        return;
+                    }
+                    if (returnValue instanceof Map) {
+                        Map<String, Object> value = (Map<String, Object>) returnValue;
+                        if (value.containsKey(UIConstant.ANALYSIS_RESULT_SUMMARY)) {
+                            List<GrrSummaryDto> summaryDtos = (List<GrrSummaryDto>) value.get(UIConstant.ANALYSIS_RESULT_SUMMARY);
+                            summaryModel.setData(summaryDtos, resultBasedCmb.getSelectionModel().getSelectedItem().toString(), selectedIndex);
+                            summaryTb.refresh();
+                        }
+
+                        if (value.containsKey(UIConstant.ANALYSIS_RESULT_DETAIL)) {
+                            GrrDetailDto grrDetailDto = (GrrDetailDto) value.get(UIConstant.ANALYSIS_RESULT_DETAIL);
+                            this.removeSubResultData();
+                            this.setItemResultData(grrMainController.getGrrDataFrame(),
+                                    grrMainController.getSearchConditionDto(),
+                                    selectedItem);
+                            this.setAnalysisItemResultData(grrDetailDto);
+                            this.setToleranceValue(summaryModel.getSummaries().get(selectedIndex).getTolerance());
+                        }
+                    }
+                });
+
+            } catch (ApplicationException exception) {
+                exception.printStackTrace();
+            }
+        }, paramMap, grrMainController));
+    }
+
+    public void reset(List<TestItemWithTypeDto> itemWithTypeDtos) {
+
+    }
+
     private void analyzeGrrSubResult(TestItemWithTypeDto testItemDto) {
         Map detailParamMap = Maps.newHashMap();
         Job detailJob = new Job(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE);
@@ -126,7 +207,9 @@ public class GrrResultController implements Initializable {
     }
 
     private void setSummaryData(List<GrrSummaryDto> summaryData) {
-        summaryModel.setData(summaryData, resultBasedCmb.getSelectionModel().getSelectedItem().toString());
+        summaryModel.clearEditTestItem();
+        summaryModel.setSelectedItemName(summaryData.get(0).getItemName());
+        summaryModel.setData(summaryData, resultBasedCmb.getSelectionModel().getSelectedItem().toString(), 0);
     }
 
     private void setItemResultData(GrrDataFrameDto grrDataFrameDto, SearchConditionDto conditionDto, String itemName) {
@@ -207,7 +290,7 @@ public class GrrResultController implements Initializable {
     }
 
     private void removeAllResultData() {
-        summaryModel.setData(null, null);
+        summaryModel.setData(null, null, 0);
         this.removeSubResultData();
     }
 
@@ -639,47 +722,69 @@ public class GrrResultController implements Initializable {
     private TableCellCallBack buildEditCallBack() {
         return new TableCellCallBack() {
             @Override
-            public void execute(TableCell cell, int columnIndex) {
+            public boolean execute(TableCell cell, int columnIndex) {
                 int rowIndex = cell.getTableRow().getIndex();
                 GrrSingleSummary singleSummary = (GrrSingleSummary) cell.getTableView().getItems().get(rowIndex);
-                boolean invalid = !"-".equals(singleSummary.getLsl()) && !DAPStringUtils.isNumeric(singleSummary.getLsl());
-                invalid = invalid || !"-".equals(singleSummary.getUsl()) && !DAPStringUtils.isNumeric(singleSummary.getUsl());
-                invalid = invalid && Double.valueOf(singleSummary.getLsl()) > Double.valueOf(singleSummary.getUsl());
                 boolean valid = false;
                 boolean hasEdit = false;
                 if (columnIndex == 2) {
-                    valid = validLsl(cell, singleSummary);
+                    valid = validLsl(singleSummary, cell.getText());
+                    if (!singleSummary.getOriginalLsl().equals(cell.getText())) {
+                        hasEdit = true;
+                    }
                 }
                 if (columnIndex == 3) {
-                    valid = validUsl(cell, singleSummary);
+                    valid = validUsl(singleSummary, cell.getText());
+                    if (!singleSummary.getOriginalUsl().equals(cell.getText())) {
+                        hasEdit = true;
+                    }
                 }
-                if (valid) {
-                    //TODO 输入框变红
-                }
+                if (valid && hasEdit) {
+                    TestItemWithTypeDto testItemWithTypeDto = new TestItemWithTypeDto();
+                    testItemWithTypeDto.setTestItemName(singleSummary.getItemName());
+                    if (columnIndex == 2) {
+                        testItemWithTypeDto.setLsl(cell.getText());
+                        testItemWithTypeDto.setUsl(singleSummary.getUsl());
+                    }
 
+                    if (columnIndex == 3) {
+                        testItemWithTypeDto.setLsl(singleSummary.getLsl());
+                        testItemWithTypeDto.setUsl(cell.getText());
+                    }
+                    boolean hasItemName = false;
+                    for (int i = 0; i < summaryModel.getEditTestItem().size(); i++) {
+                        if (singleSummary.getItemName().equals(summaryModel.getEditTestItem().get(i).getTestItemName())) {
+                            summaryModel.getEditTestItem().set(i, testItemWithTypeDto);
+                            hasItemName = true;
+                        }
+                    }
+                    if (!hasItemName) {
+                        summaryModel.addEditTestItem(testItemWithTypeDto);
+                    }
+                } else {
+                    //输入框变红
+                    ((EditTableCell) cell).getTextField().setStyle("-fx-border-color: red; -fx-border-width: 1px");
+                    return false;
+                }
+//                有修改文本变黄
                 if (hasEdit) {
                     cell.setStyle("-fx-text-fill: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_EDIT_CHANGE));
                 }
-
-                if (invalid) {
-                    //TODO error exception
-                } else {
-                    TestItemWithTypeDto testItemWithTypeDto = new TestItemWithTypeDto();
-                    testItemWithTypeDto.setTestItemName(singleSummary.getItemName());
-                    testItemWithTypeDto.setUsl(singleSummary.getUsl());
-                    testItemWithTypeDto.setLsl(singleSummary.getLsl());
-                    summaryModel.addEditTestItem(testItemWithTypeDto);
-                }
+                return true;
             }
         };
     }
 
-    private boolean validUsl(TableCell cell, GrrSingleSummary singleSummary) {
-        return false;
+    private boolean validUsl(GrrSingleSummary singleSummary, String textValue) {
+        boolean valid = DAPStringUtils.isNumeric(textValue);
+        valid = valid && Double.valueOf(singleSummary.getLsl()) < Double.valueOf(textValue);
+        return valid;
     }
 
-    private boolean validLsl(TableCell cell, GrrSingleSummary singleSummary) {
-        return false;
+    private boolean validLsl(GrrSingleSummary singleSummary, String textValue) {
+        boolean valid = DAPStringUtils.isNumeric(textValue);
+        valid = valid && Double.valueOf(textValue) < Double.valueOf(singleSummary.getUsl());
+        return valid;
     }
 
     private TableCellCallBack buildRadioCallBack() {
@@ -692,6 +797,7 @@ public class GrrResultController implements Initializable {
                 }
                 GrrSingleSummary singleSummary = filteredList.get(cell.getIndex());
                 singleSummary.setSelect(true);
+                summaryModel.setSelectedItemName(singleSummary.getItemName());
                 summaryTb.refresh();
                 setToleranceValue(singleSummary.getTolerance());
                 String itemName = singleSummary.getItemName();

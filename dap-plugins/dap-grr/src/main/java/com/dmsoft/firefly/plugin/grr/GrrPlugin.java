@@ -8,6 +8,7 @@ package com.dmsoft.firefly.plugin.grr;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.pipeline.GrrExportJobPipeline;
+import com.dmsoft.firefly.plugin.grr.pipeline.GrrRefreshJobPipeline;
 import com.dmsoft.firefly.plugin.grr.pipeline.GrrSummaryJobPipeline;
 import com.dmsoft.firefly.plugin.grr.pipeline.GrrDetailResultJobPipeline;
 import com.dmsoft.firefly.plugin.grr.pipeline.GrrViewDataJobPipeline;
@@ -109,6 +110,7 @@ public class GrrPlugin extends Plugin {
         manager.initializeJob(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE, new GrrViewDataJobPipeline());
         manager.initializeJob(ParamKeys.GRR_EXPORT_JOB_PIPELINE, new GrrExportJobPipeline());
 
+        manager.initializeJob(ParamKeys.GRR_REFRESH_JOB_PIPELINE, new GrrRefreshJobPipeline());
 
     }
 
