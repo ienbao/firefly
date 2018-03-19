@@ -5,7 +5,6 @@ import com.dmsoft.firefly.sdk.dataframe.CellData;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.google.common.collect.Lists;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -75,7 +74,7 @@ public class BasicDataColumn implements DataColumn {
         String[] result = new String[rowKeys.size()];
         for (CellData cellData : this.cellDataList) {
             if (rowKeys.contains(cellData.getRowKey())) {
-                result[rowKeys.indexOf(cellData.getRowKey())] =cellData.getValue();
+                result[rowKeys.indexOf(cellData.getRowKey())] = cellData.getValue();
             }
         }
         return Arrays.asList(result);
@@ -84,14 +83,14 @@ public class BasicDataColumn implements DataColumn {
     @Override
     public Boolean getInUsed(String rowKey) {
         if (rowKey == null) {
-            return null;
+            return Boolean.FALSE;
         }
         for (CellData cellData : this.cellDataList) {
             if (rowKey.equals(cellData.getRowKey())) {
                 return cellData.getInUsed();
             }
         }
-        return null;
+        return Boolean.FALSE;
     }
 
     @Override

@@ -136,7 +136,7 @@ public class PluginContextImpl implements PluginContext, PluginContextListener {
     public Map<String, PluginInfo> getAllEnabledPluginInfo() {
         Map<String, PluginInfo> result = Maps.newHashMap();
         for (PluginInfo pluginInfo : this.pluginInfoMap.values()) {
-            if (PluginStatus.ACTIVE.equals(pluginInfo)) {
+            if (PluginStatus.ACTIVE.equals(pluginInfo.getStatus())) {
                 result.put(pluginInfo.getId(), pluginInfo);
             }
         }
