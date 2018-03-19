@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class GrrFilterServiceImpl implements GrrFilterService {
     private final Logger logger = LoggerFactory.getLogger(GrrFilterServiceImpl.class);
     private static String SORT_MEHODE_APPRAISER = "Appraisers";
-    private static String SORT_MEHODE_TRIAL = "Trial";
+    private static String SORT_MEHODE_TRIAL = "default";
 
     @Override
     public GrrParamDto validateGrrParam(SearchDataFrame dataFrame, SearchConditionDto searchConditionDto) {

@@ -212,11 +212,11 @@ public class GrrViewDataDFIncludeModel implements TableModel {
             this.rowKeyArray.remove(index);
             this.rowKeyArray.add(index, grrViewDataDto.getRowKey());
 
-            for (int i = 0; i < this.grrDataFrameDto.getIncludeDatas().size(); i++) {
-                if (oldDto.getRowKey().equals(this.grrDataFrameDto.getIncludeDatas().get(i).getRowKey())) {
-                    this.grrDataFrameDto.getIncludeDatas().set(i, grrViewDataDto);
-                }
-            }
+//            for (int i = 0; i < this.grrDataFrameDto.getIncludeDatas().size(); i++) {
+//                if (oldDto.getRowKey().equals(this.grrDataFrameDto.getIncludeDatas().get(i).getRowKey())) {
+//                    this.grrDataFrameDto.getIncludeDatas().set(i, grrViewDataDto);
+//                }
+//            }
         }
     }
 
@@ -235,5 +235,9 @@ public class GrrViewDataDFIncludeModel implements TableModel {
             }
         }
         return null;
+    }
+
+    public Map<String, GrrViewDataDto> getGrrViewDataDtoMap() {
+        return grrViewDataDtoMap;
     }
 }

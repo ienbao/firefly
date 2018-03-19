@@ -87,6 +87,7 @@ public class ItemResultModel implements TableModel {
             return new SimpleObjectProperty<>(trial);
         } else {
             String viewDataRowKey = DataConvertUtils.findRowKeyFromViewData(grrViewDataDtos, appraiser, trial, columnName);
+            System.out.println(viewDataRowKey);
             return buildCellData(dataFrame.getDataRow(viewDataRowKey).getData().get(currentItemName));
         }
     }

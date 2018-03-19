@@ -65,6 +65,7 @@ public class GrrResultController implements Initializable {
     private GrrAnovaModel anovaModel = new GrrAnovaModel();
     private GrrSourceModel sourceModel = new GrrSourceModel();
     final FilteredList<GrrSingleSummary> filteredList = summaryModel.getSummaries().filtered(p -> true);
+    private List<TableCell> editCells = Lists.newArrayList();
 
     private GrrMainController grrMainController;
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
@@ -141,6 +142,7 @@ public class GrrResultController implements Initializable {
     }
 
     private void submitGrrResult(String selectedItem, int selectedIndex) {
+        this.clearCellStyle();
         Job job = new Job(ParamKeys.GRR_REFRESH_JOB_PIPELINE);
         Map paramMap = Maps.newHashMap();
         paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, grrMainController.getSearchConditionDto());
@@ -163,7 +165,6 @@ public class GrrResultController implements Initializable {
                             summaryModel.setData(summaryDtos, resultBasedCmb.getSelectionModel().getSelectedItem().toString(), selectedIndex);
                             summaryTb.refresh();
                         }
-
                         if (value.containsKey(UIConstant.ANALYSIS_RESULT_DETAIL)) {
                             GrrDetailDto grrDetailDto = (GrrDetailDto) value.get(UIConstant.ANALYSIS_RESULT_DETAIL);
                             this.removeSubResultData();
@@ -175,7 +176,6 @@ public class GrrResultController implements Initializable {
                         }
                     }
                 });
-
             } catch (ApplicationException exception) {
                 exception.printStackTrace();
             }
@@ -183,7 +183,7 @@ public class GrrResultController implements Initializable {
     }
 
     public void reset(List<TestItemWithTypeDto> itemWithTypeDtos) {
-
+        this.clearCellStyle();
     }
 
     private void analyzeGrrSubResult(TestItemWithTypeDto testItemDto) {
@@ -769,6 +769,7 @@ public class GrrResultController implements Initializable {
 //                有修改文本变黄
                 if (hasEdit) {
                     cell.setStyle("-fx-text-fill: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_EDIT_CHANGE));
+                    editCells.add(cell);
                 }
                 return true;
             }
@@ -838,6 +839,10 @@ public class GrrResultController implements Initializable {
                 }
             }
         };
+    }
+
+    private void clearCellStyle() {
+        editCells.forEach(cell -> cell.setStyle("-fx-text-fill: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_EDIT_RESET)));
     }
 
     public void setToleranceValue(String toleranceText) {
