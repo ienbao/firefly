@@ -39,8 +39,11 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
         this.searchConditions = Sets.newLinkedHashSet();
         List<String> timeKeys;
         String timePattern;
-        timeKeys = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getTimePatternDto().getTimeKeys();
-        timePattern = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getTimePatternDto().getPattern();
+        TimePatternDto timePatternDto = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getTimePatternDto();
+        if(timePatternDto != null) {
+            timeKeys = timePatternDto.getTimeKeys();
+            timePattern = timePatternDto.getPattern();
+        }
         this.filterUtils = new FilterUtils(timeKeys, timePattern);
         for (int i = 0; i < this.getRowSize(); i++) {
             this.rowSearchConditionResultList.add(Sets.newHashSet());
