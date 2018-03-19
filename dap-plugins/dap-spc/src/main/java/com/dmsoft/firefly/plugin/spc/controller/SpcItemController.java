@@ -319,52 +319,6 @@ public class SpcItemController implements Initializable {
         service.start();
     }
 
-
-    @Deprecated
-    private List<SpcStatsDto> initData() {
-        List<SpcStatsDto> spcStatsDtoList = Lists.newArrayList();
-        Random random = new Random();
-        int k = random.nextInt(100);
-        for (int i = 0; i < k; i++) {
-            SpcStatsDto statisticalResultDto = new SpcStatsDto();
-            statisticalResultDto.setKey("key" + i);
-            statisticalResultDto.setItemName("itemName" + i);
-            statisticalResultDto.setCondition("itemName > 22");
-            spcStatsDtoList.add(statisticalResultDto);
-            SpcStatsResultDto spcStatsResultDto = new SpcStatsResultDto();
-            statisticalResultDto.setStatsResultDto(spcStatsResultDto);
-            int m = random.nextInt(k);
-            if (m > i) {
-                statisticalResultDto.getStatsResultDto().setSamples(m + 2.1);
-            }
-            statisticalResultDto.getStatsResultDto().setAvg(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setMax(m + 312.7);
-            statisticalResultDto.getStatsResultDto().setMin(m + 34.8);
-            statisticalResultDto.getStatsResultDto().setStDev(m + 124.6);
-            statisticalResultDto.getStatsResultDto().setLsl(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setUsl(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setCenter(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setRange(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setLcl(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setUcl(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setKurtosis(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setCpk(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setSkewness(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setCa(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setCp(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setCpl(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setCpu(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setWithinPPM(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setOverallPPM(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setPp(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setPpk(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setPpl(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setPpu(m + 32.2);
-
-        }
-        return spcStatsDtoList;
-    }
-
     /**
      * get selected test items
      *
