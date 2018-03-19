@@ -16,6 +16,7 @@ import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
@@ -271,6 +272,7 @@ public class DataSourceController implements Initializable {
     }
 
     private void initEvent() {
+       TemplateSettingDto templateSettingDto =  envService.findActivatedTemplate();
         ok.setOnAction(event -> {
             List<String> selectProject = Lists.newArrayList();
             List<String> projectOrder = Lists.newArrayList();
@@ -283,14 +285,14 @@ public class DataSourceController implements Initializable {
             Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(selectProject);
 
             envService.setActivatedProjectName(selectProject);
-            envService.setActivatedTemplate("default");
-            LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, "Default");
+            LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, templateSettingDto.getName());
             envService.setTestItems(itemWithTypeDtoMap);
 
             //TODO notify refresh event
 
             StageMap.closeStage("dataSource");
-            refreshMainDataSource(selectProject);
+            MenuFactory.getMainController().resetMain();
+            //refreshMainDataSource(selectProject);
 
         });
 

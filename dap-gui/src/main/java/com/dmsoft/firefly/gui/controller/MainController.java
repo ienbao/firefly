@@ -45,8 +45,8 @@ public class MainController {
 
     private final Logger logger = LoggerFactory.getLogger(MainController.class);
     public final Double MAX_HEIGHT = 250.0;
-    public final Double MAX_WIDTH = 280.0;
-    public final Double MIN_WIDTH = 160.0;
+    public final Double MAX_WIDTH = 250.0;
+    public final Double MIN_WIDTH = 250.0;
 
     @FXML
     private GridPane grpContent;
@@ -92,7 +92,6 @@ public class MainController {
         this.initTemplate();
         this.initTemplatePopup();
         this.initComponentEvent();
-        System.out.println("init");
     }
 
     private void initToolBar() {
@@ -270,31 +269,18 @@ public class MainController {
     }
 
     private void getHidePopupEvent() {
-        if (templatePopup.isShowing()) {
-            templatePopup.hide();
-        }
-        if (dataSourcePopup.isShowing()) {
-            dataSourcePopup.hide();
-        }
+        templatePopup.hide();
+        dataSourcePopup.hide();
     }
 
     private void getDataSourceBtnEvent() {
         buildDataSourceDialog();
         logger.debug("Data source btn event.");
-        if (templatePopup.isShowing()) {
-            templatePopup.hide();
-        }
-        if (dataSourcePopup.isShowing()) {
-            dataSourcePopup.hide();
-        }
+        templatePopup.hide();
+        dataSourcePopup.hide();
     }
 
     private void getDataSourceLblEvent() {
-//        AtomicReference<String> fileNames = new AtomicReference<>("");
-//        dataSourceList.forEach(value->{
-//            fileNames.set(value + "/n");
-//        });
-//        Tooltip tooltip = TooltipUtil.installNormalTooltip(dataSourceBtn, fileNames.get());
         logger.debug("Data source lbl event.");
         if (!dataSourceBtn.isDisable()) {
             if (!dataSourcePopup.isShowing()) {
@@ -308,17 +294,21 @@ public class MainController {
                 dataSourcePopup.show(dataSourceBtn, screenX, screenY);
             }
         }
-        if (templatePopup.isShowing()) {
-            templatePopup.hide();
-        }
+        templatePopup.hide();
     }
 
     private void initDataSourcePopup() {
         dataSourceView = new ListView<>();
         dataSourceView.setFocusTraversable(true);
         dataSourceView.setItems(dataSourceList);
-        dataSourcePopup = new Popup();
-        dataSourcePopup.getContent().add(dataSourceView);
+
+        if (dataSourcePopup == null) {
+            dataSourcePopup = new Popup();
+            dataSourcePopup.getContent().add(dataSourceView);
+        } else {
+            dataSourcePopup.getContent().clear();
+            dataSourcePopup.getContent().add(dataSourceView);
+        }
     }
 
     private void initTemplatePopup() {
@@ -330,19 +320,15 @@ public class MainController {
         templateView.setCellFactory(e -> new ListCell<StateBarTemplateModel>() {
             @Override
             public void updateItem(StateBarTemplateModel item, boolean empty) {
-                if (item != null && item.equals(getItem())) {
-                    return;
-                }
                 super.updateItem(item, empty);
-                if (item == null) {
-                    super.setText(null);
-                    super.setGraphic(null);
+                if (item == null || empty == true) {
+                    setGraphic(null);
+                    setText(null);
                 } else {
                     HBox cell;
                     Label label = new Label(item.getTemplateName());
                     if (item.isIsChecked()) {
                         cell = new HBox(imageReset, label);
-                        templateView.getSelectionModel().select(item);
                     } else {
                         Label label1 = new Label("");
                         label1.setPrefWidth(16);
@@ -365,20 +351,24 @@ public class MainController {
                 templateBtn.setText(newValue.getTemplateName());
                 envService.setActivatedTemplate(newValue.getTemplateName());
             }
-            templateView.refresh();
+            resetMain();
         });
 
-        templatePopup = new Popup();
-        templatePopup.getContent().add(templateView);
+        if (templatePopup == null) {
+            templatePopup = new Popup();
+            templatePopup.getContent().add(templateView);
+        } else {
+            templatePopup.getContent().clear();
+            templatePopup.getContent().add(templateView);
+        }
     }
 
     private void setListViewSize(ListView listView, ObservableList dataList) {
         listView.setMaxWidth(MAX_WIDTH);
-        listView.setPrefWidth(MIN_WIDTH);
-        listView.setMinWidth(MIN_WIDTH);
+        listView.setPrefWidth(MAX_WIDTH);
         listView.setMaxHeight(MAX_HEIGHT);
         if (dataList != null && !dataList.isEmpty()) {
-            listView.setPrefHeight(26 * dataList.size());
+            listView.setPrefHeight((26 * dataList.size()) + 10);
         } else {
             listView.setPrefHeight(0);
             listView.setPrefWidth(0);
@@ -437,9 +427,7 @@ public class MainController {
 
     private void getTemplateBtnEvent() {
         logger.debug("Template btn event.");
-        if (templatePopup.isShowing()) {
-            templatePopup.hide();
-        }
+        templatePopup.hide();
         if (dataSourcePopup.isShowing()) {
             dataSourcePopup.hide();
         }

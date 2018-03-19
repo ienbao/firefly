@@ -53,7 +53,8 @@ public class EnvServiceImpl implements EnvService {
 
     @Override
     public List<String> findActivatedProjectName() {
-        return projectNames;
+        List<String> projectName = mapper.fromJson(findPreference("selectProject"), mapper.buildCollectionType(List.class, String.class));
+        return projectNames != null ? projectNames :  projectName;
     }
 
     @Override
