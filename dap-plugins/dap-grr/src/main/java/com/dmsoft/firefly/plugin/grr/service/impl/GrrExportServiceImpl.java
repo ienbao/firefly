@@ -31,7 +31,7 @@ public class GrrExportServiceImpl implements GrrExportService {
     private Logger logger = LoggerFactory.getLogger(GrrExportServiceImpl.class);
 
     @Override
-    public String exportGrrSummary(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryExportDto> grrSummaryExportDtos) {
+    public String exportGrrSummary(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryDto> grrSummaryExportDtos) {
        /*
         1.Verify the validity of the parameters
         2.Create directory exportDir
@@ -82,7 +82,7 @@ public class GrrExportServiceImpl implements GrrExportService {
     }
 
     @Override
-    public String exportGrrSummaryDetail(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryExportDto> grrSummaryExportDtos, List<GrrExportResultDto> grrExportResultDtos) {
+    public String exportGrrSummaryDetail(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryDto> grrSummaryExportDtos, List<GrrExportResultDto> grrExportResultDtos) {
         /*
         1.Verify the validity of the parameters
         2.Create directory exportDir

@@ -409,14 +409,14 @@ public class TemplateController {
         if (allTemplate != null && currTemplate != null) {
             allTemplate.keySet().forEach(name -> {
                 StateBarTemplateModel stateBarTemplateModel = new StateBarTemplateModel(name, false);
-                if (name.equals(currTemplate.getName())) {
-                    stateBarTemplateModel.setIsChecked(true);
-                }
+//                if (name.equals(currTemplate.getName())) {
+//                    stateBarTemplateModel.setIsChecked(true);
+//                }
                 templateList.add(stateBarTemplateModel);
             });
             MenuFactory.getMainController().refreshTemplate(templateList);
-            MenuFactory.getMainController().updateTemplateText(currTemplate.getName());
-            envService.setActivatedTemplate(currTemplate.getName());
+            //MenuFactory.getMainController().updateTemplateText(currTemplate.getName());
+            //envService.setActivatedTemplate(currTemplate.getName());
         }
     }
 

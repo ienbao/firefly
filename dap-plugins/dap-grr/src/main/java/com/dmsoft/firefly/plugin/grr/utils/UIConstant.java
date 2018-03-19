@@ -30,4 +30,7 @@ public class UIConstant {
     public static final String RANGE = "Range";
     public static final String TOTAL_MEAN = "Total Mean";
     public static final String TOTAL_RANGE = "Total Range";
+
+    public static final String ANALYSIS_RESULT_SUMMARY = "SummaryResult";
+    public static final String ANALYSIS_RESULT_DETAIL = "DetailResult";
 }

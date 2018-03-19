@@ -11,8 +11,8 @@ public interface TableCellCallBack {
 
     }
 
-    default void execute(TableCell cell, int index) {
-
+    default boolean execute(TableCell cell, int index) {
+        return true;
     }
 
     default void execute(TableCell cell, Object item) {

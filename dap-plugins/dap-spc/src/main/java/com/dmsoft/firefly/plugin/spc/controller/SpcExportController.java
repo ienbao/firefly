@@ -26,6 +26,7 @@ import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -196,9 +197,10 @@ public class SpcExportController {
                 WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
                 return;
             }
-            export();
             StageMap.closeStage("spcExport");
-
+            Platform.runLater(() -> {
+                export();
+            });
         });
         print.setOnAction(event -> {
             if (StringUtils.isEmpty(locationPath.getText())) {
@@ -210,6 +212,16 @@ public class SpcExportController {
                 return;
             }
             StageMap.closeStage("spcExport");
+            Platform.runLater(() -> {
+//                PdfPrintUtil.getPrintService();
+//                String folderPath = export("");
+//                boolean isSucceed = new ExcelToPdfUtil().excelToPdf(folderPath);
+//                if (isSucceed) {
+//                    exportProcessDialogView.getTaProgress().append("Print success...\n");
+//                    exportProcessDialogView.dispose();
+//                    PdfPrintUtil.printPdf(folderPath);
+//                }
+            });
         });
         cancel.setOnAction(event -> {
             StageMap.closeStage("spcExport");
