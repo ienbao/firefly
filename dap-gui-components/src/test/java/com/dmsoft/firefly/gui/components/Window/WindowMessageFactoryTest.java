@@ -6,15 +6,16 @@ import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-public class WindowMessageFactoryTest extends Application{
+public class WindowMessageFactoryTest extends Application {
     static {
-        FxmlAndLanguageUtils.isDebug = true;
+        FxmlAndLanguageUtils.setIsDebug(true);
     }
 
     @Override

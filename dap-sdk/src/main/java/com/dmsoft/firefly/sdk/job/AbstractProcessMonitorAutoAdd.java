@@ -15,7 +15,7 @@ public abstract class AbstractProcessMonitorAutoAdd extends AbstractProcessMonit
     public void push(int process, int end, String msg, long allTime) {
         ThreadTask threadTask = new ThreadTask() {
             public void run() {
-                double second = Math.ceil((double) (allTime / 1000L));
+                double second = allTime / 1000F;
                 int average = (int) ((double) (end - process) / second);
 
                 for (int i = 0; (double) i < second && !this.isStop(); ++i) {

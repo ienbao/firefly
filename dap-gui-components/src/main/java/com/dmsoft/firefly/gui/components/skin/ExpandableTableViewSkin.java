@@ -13,8 +13,6 @@ import javafx.util.Callback;
 public class ExpandableTableViewSkin extends TableViewSkin {
     public static final Callback<TableView.ResizeFeatures, Boolean> AUTO_EXPAND_POLICY = new Callback<TableView.ResizeFeatures, Boolean>() {
 
-        private boolean isFirstRun = true;
-
         @Override
         public String toString() {
             return "auto-expand";

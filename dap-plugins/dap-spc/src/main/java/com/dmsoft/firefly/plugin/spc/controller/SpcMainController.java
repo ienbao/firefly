@@ -17,6 +17,7 @@ import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
@@ -404,10 +405,13 @@ public class SpcMainController implements Initializable {
         List<String> timeKeys = Lists.newArrayList();
         String timePattern = null;
         try {
-            timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
-            timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
+            TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
+            if(timePatternDto != null) {
+                timeKeys = timePatternDto.getTimeKeys();
+                timePattern = timePatternDto.getPattern();
+            }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         for (SearchConditionDto searchConditionDto : searchConditionDtoList) {
