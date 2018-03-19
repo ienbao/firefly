@@ -31,6 +31,7 @@ public class ParamKeys {
     public static final String GRR_VIEW_DATA_RESULT_HANDLER = "grrViewDataHandler";
     public static final String GRR_SUMMARY_RESULT_HANDLER = "grrSummaryHandler";
     public static final String GRR_DETAIL_RESULT_HANDLER = "grrDetailHandler";
+    public static final String GRR_EXPORT_DETAIL_HANDLER = "grrExportDetailHandler";
 
     //pipeline
     public static final String GRR_ANALYSIS_JOB_PIPELINE = "grrAnalysisJobPipeline";
@@ -38,6 +39,7 @@ public class ParamKeys {
     public static final String GRR_VIEW_DATA_JOB_PIPELINE = "grrViewDataJobPipeline";
     public static final String GRR_REFRESH_JOB_PIPELINE = "grrRefreshJobPipeline";
     public static final String GRR_EXPORT_JOB_PIPELINE = "grrExportJobPipeline";
+    public static final String GRR_EXPORT_DETAIL_JOB_PIPELINE = "grrExportDetailJobPipeline";
 
 
     public static final String GRR_ANALYSIS_CONDITION_KEY = "analysisKey";

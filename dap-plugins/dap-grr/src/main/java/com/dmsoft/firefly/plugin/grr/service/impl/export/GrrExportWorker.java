@@ -5,9 +5,13 @@
 package com.dmsoft.firefly.plugin.grr.service.impl.export;
 
 import com.dmsoft.firefly.plugin.grr.dto.*;
+import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnovaAndSourceResultDto;
+import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnovaDto;
+import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrSourceDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrSummaryResultDto;
 import com.dmsoft.firefly.plugin.grr.service.impl.export.enums.RuleLevelType;
 import com.dmsoft.firefly.plugin.grr.utils.AppConstant;
+import com.dmsoft.firefly.plugin.grr.utils.enums.GrrResultName;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -415,12 +419,12 @@ public class GrrExportWorker implements ExWorker {
 
             currentRow = currentRow + 1;
             for (int i = 0; i < grrAnovaDtos.size(); i++) {
-                String keyValue = grrAnovaDtos.get(i).getName();
-                String dfValue = grrAnovaDtos.get(i).getDf();
-                String ssValue = grrAnovaDtos.get(i).getSs();
-                String msValue = grrAnovaDtos.get(i).getMs();
-                String fValue = grrAnovaDtos.get(i).getF();
-                String probFValue = grrAnovaDtos.get(i).getProbF();
+                String keyValue = grrAnovaDtos.get(i).getName().toString();
+                String dfValue = grrAnovaDtos.get(i).getDf().toString();
+                String ssValue = grrAnovaDtos.get(i).getSs().toString();
+                String msValue = grrAnovaDtos.get(i).getMs().toString();
+                String fValue = grrAnovaDtos.get(i).getF().toString();
+                String probFValue = grrAnovaDtos.get(i).getProbF().toString();
                 String[] arr = {dfValue, ssValue, msValue, fValue, probFValue};
 
                 if (keyValue.equals("Repeatability")) {
@@ -467,13 +471,14 @@ public class GrrExportWorker implements ExWorker {
 
             currentRow = currentRow + 1;
             for (int i = 0; i < grrSourceDtoList.size(); i++) {
-                String keyValue = grrSourceDtoList.get(i).getName();
-                String variation = grrSourceDtoList.get(i).getVariation();
-                String sigma = grrSourceDtoList.get(i).getSigma();
-                String sv = grrSourceDtoList.get(i).getStudyVar();
-                String contribution = grrSourceDtoList.get(i).getContribution();
-                String totalVariation = grrSourceDtoList.get(i).getTotalVariation();
-                String tolerance = grrSourceDtoList.get(i).getTotalTolerance();
+                GrrResultName grrKey = grrSourceDtoList.get(i).getName();
+                String keyValue = "";
+                String variation = grrSourceDtoList.get(i).getVariation().toString();
+                String sigma = grrSourceDtoList.get(i).getSigma().toString();
+                String sv = grrSourceDtoList.get(i).getStudyVar().toString();
+                String contribution = grrSourceDtoList.get(i).getContribution().toString();
+                String totalVariation = grrSourceDtoList.get(i).getTotalVariation().toString();
+                String tolerance = grrSourceDtoList.get(i).getTotalTolerance().toString();
 //                String[] arr = {sigma, sv, variation, totalVariation, contribution, tolerance};
                 String[] arr = {sigma, sv, variation, contribution, totalVariation, tolerance};
                 for (int j = 0; j < arr.length; j++) {
@@ -481,14 +486,14 @@ public class GrrExportWorker implements ExWorker {
                         arr[j] = "-";
                     }
                 }
-                if (keyValue.equals("Repeatability")) {
+                if (grrKey.equals(GrrResultName.Repeatability)) {
                     keyValue = "Repeat.";
                 }
-                if (keyValue.equals("Reproducibility")) {
+                if (grrKey.equals(GrrResultName.Reproducibility)) {
                     keyValue = "Reprod.";
                 }
 
-                if (keyValue.equals("Appraisers*Parts")) {
+                if (grrKey.equals(GrrResultName.AppraisersAndParts)) {
                     keyValue = "A*p";
                 }
                 exCellList.add(ExUtil.fillToCell(new Integer[]{itemParamIndex[1] + currentRow + i, itemParamIndex[0]}, keyValue, ExCellType.TEXT,
@@ -510,7 +515,7 @@ public class GrrExportWorker implements ExWorker {
         }
 
         currentRow = currentRow + 2;
-        String distinctCategories = grrAnovaAndSourceResultDto.getNumberOfDc();
+        String distinctCategories = grrAnovaAndSourceResultDto.getNumberOfDc().toString();
 
         CellStyle cellStyle = mapCellStyle.get(CellStyleType.head_lightBlue_center.toString());
         cellStyle.setWrapText(false);
