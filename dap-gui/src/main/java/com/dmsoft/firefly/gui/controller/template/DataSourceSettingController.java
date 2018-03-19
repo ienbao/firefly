@@ -30,6 +30,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.*;
@@ -125,8 +126,9 @@ public class DataSourceSettingController {
             chooseCumDialogController = fxmlLoader.getController();
             chooseCumDialogController.setValueColumnText( "Test Item" );
             this.initChooseColumnTableData();
-            WindowFactory.createSimpleWindowAsModel( "dataSourceSetting", GuiFxmlAndLanguageUtils.getString( ResourceMassages.CHOOSE_ITEMS_TITLE ), root,
+            Stage stage = WindowFactory.createNoManagedStage( GuiFxmlAndLanguageUtils.getString( ResourceMassages.CHOOSE_ITEMS_TITLE ), root,
                     getClass().getClassLoader().getResource( "css/platform_app.css" ).toExternalForm() );
+            chooseCumDialogController.setStage( stage );
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -134,7 +136,8 @@ public class DataSourceSettingController {
 
     private void getChooseColumnBtnEvent() {
         chooseCumDialogController.setSelectResultName( itemDataTableModel.getHeaderArray() );
-        StageMap.showStage( "dataSourceSetting" );
+//        StageMap.showStage( "dataSourceSetting" );
+        chooseCumDialogController.getStage().show();
     }
 
     private void initTableData() {
@@ -195,7 +198,8 @@ public class DataSourceSettingController {
            }
         }
         itemDataTableModel.updateRowDataList(rowDataDtoList);
-        StageMap.closeStage( "dataSourceSetting" );
+//        StageMap.closeStage( "dataSourceSetting" );
+        chooseCumDialogController.getStage().close();
     }
 
     private void getSearchConditionEvent() {
