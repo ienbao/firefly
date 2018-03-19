@@ -38,17 +38,23 @@ public class EnvServiceImpl implements EnvService {
     @Override
     public void setActivatedTemplate(String templateName) {
         this.templateName = templateName;
+        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+        userPreferenceDto.setCode("activeTemplate");
+        userPreferenceDto.setUserName(userName);
+        userPreferenceDto.setValue(templateName);
+        getUserPreferenceService().updatePreference(userPreferenceDto);
     }
 
     @Override
     public TemplateSettingDto findActivatedTemplate() {
-        return templateName != null ? getTemplateService().findAnalysisTemplate(templateName) : null;
+        return templateName != null ? getTemplateService().findAnalysisTemplate(templateName) : getTemplateService().findAnalysisTemplate(findPreference("activeTemplate"));
 
     }
 
     @Override
     public List<String> findActivatedProjectName() {
-        return projectNames;
+        List<String> projectName = mapper.fromJson(findPreference("selectProject"), mapper.buildCollectionType(List.class, String.class));
+        return projectNames != null ? projectNames :  projectName;
     }
 
     @Override
