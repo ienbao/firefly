@@ -5,7 +5,6 @@ import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.plugin.grr.charts.ChartOperateButton;
 import com.dmsoft.firefly.plugin.grr.charts.LinearChart;
-import com.dmsoft.firefly.plugin.grr.charts.data.PointTooltip;
 import com.dmsoft.firefly.plugin.grr.charts.data.RuleLineData;
 import com.dmsoft.firefly.plugin.grr.charts.data.VerticalCutLine;
 import com.dmsoft.firefly.plugin.grr.charts.data.ILineData;
@@ -96,6 +95,8 @@ public class GrrResultController implements Initializable {
 //        Set digNum
         DigNumInstance.newInstance().setDigNum(grrMainController.getActiveTemplateSettingDto().getDecimalDigit());
         List<GrrViewDataDto> viewDataDtos = grrMainController.getGrrDataFrame().getIncludeDatas();
+        parts.clear();
+        appraisers.clear();
         viewDataDtos.forEach(viewDataDto -> {
             parts.add(viewDataDto.getPart());
             appraisers.add(viewDataDto.getOperator());

@@ -121,6 +121,8 @@ public class GrrItemController implements Initializable {
     private GrrLeftConfigServiceImpl leftConfigService = new GrrLeftConfigServiceImpl();
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private SearchConditionDto searchConditionDto = new SearchConditionDto();
+    private List<TestItemWithTypeDto> initSelectTestItemDtos = Lists.newLinkedList();
+
 
     /**
      * init main controller
@@ -529,7 +531,7 @@ public class GrrItemController implements Initializable {
     }
 
     private void getAnalysisBtnEvent() {
-        List<TestItemWithTypeDto> selectedItemDto = this.getSelectedItemDto();
+        List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
         if (checkSubmitParam(selectedItemDto.size())) {
 //            WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
             Job job = new Job(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE);
@@ -661,16 +663,18 @@ public class GrrItemController implements Initializable {
      *
      * @return test items
      */
-    public List<TestItemWithTypeDto> getSelectedItemDto() {
-        List<TestItemWithTypeDto> selectItems = Lists.newArrayList();
+    public List<TestItemWithTypeDto> initSelectedItemDto() {
+        List<TestItemWithTypeDto> selectTestItemDtos = Lists.newLinkedList();
+        initSelectTestItemDtos.clear();
         if (items != null) {
             for (ItemTableModel model : items) {
                 if (model.getSelector().isSelected()) {
-                    selectItems.add(model.getItemDto());
+                    selectTestItemDtos.add(model.getItemDto());
+                    initSelectTestItemDtos.add(model.getItemDto());
                 }
             }
         }
-        return selectItems;
+        return selectTestItemDtos;
     }
 
     private void importLeftConfig() {
@@ -824,5 +828,13 @@ public class GrrItemController implements Initializable {
 
     public void setSearchConditionDto(SearchConditionDto searchConditionDto) {
         this.searchConditionDto = searchConditionDto;
+    }
+
+    public List<TestItemWithTypeDto> getInitSelectTestItemDtos() {
+        return initSelectTestItemDtos;
+    }
+
+    public void setInitSelectTestItemDtos(List<TestItemWithTypeDto> initSelectTestItemDtos) {
+        this.initSelectTestItemDtos = initSelectTestItemDtos;
     }
 }
