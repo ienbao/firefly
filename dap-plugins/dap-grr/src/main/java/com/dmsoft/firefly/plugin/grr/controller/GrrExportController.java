@@ -454,21 +454,45 @@ public class GrrExportController {
             @Override
             public void updateItem(ListViewModel item, boolean empty) {
                 super.updateItem(item, empty);
-                if (!empty && item != null) {
+                if (item == null || empty) {
+                    setGraphic(null);
+                    setText(null);
+                } else {
                     HBox cell;
                     CheckBox checkBox = new CheckBox();
+                    checkBox.setPrefSize(12,12);
                     if (item.isIsChecked()) {
                         checkBox.setSelected(true);
                     } else {
                         checkBox.setSelected(false);
                     }
+                    if (StringUtils.isNotBlank(item.getErrorMsg())) {
+                        checkBox.getStyleClass().add("error");
+                    } else {
+                        checkBox.getStyleClass().removeAll("error");
+                    }
                     checkBox.setOnAction(event -> {
                         item.setIsChecked(checkBox.isSelected());
+                        if (listView.getId().equals("partListView")) {
+                            updatePartLbl();
+                        } else {
+                            updateAppraiserLbl();
+                        }
                     });
+                    if (StringUtils.isNotBlank(item.getErrorMsg())) {
+                        checkBox.setOnMouseEntered(event -> {
+                            TooltipUtil.installNormalTooltip(checkBox, item.getErrorMsg());
+                        });
+                        checkBox.setOnMouseExited(event -> {
+                            TooltipUtil.uninstallNormalTooltip(checkBox);
+                        });
+                    }
+
                     Label label = new Label(item.getName());
                     cell = new HBox(checkBox, label);
                     setGraphic(cell);
                 }
+
             }
         });
 
@@ -653,6 +677,10 @@ public class GrrExportController {
             searchTab.getConditionTestItem().forEach(item -> {
                 testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(item));
             });
+            testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(partCombox.getValue().toString()));
+            if (appraiserCombox.getValue() != null) {
+                testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(appraiserCombox.getValue().toString()));
+            }
             Map paramMap = Maps.newHashMap();
             paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
             paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);

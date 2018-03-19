@@ -90,7 +90,7 @@
                                             <content>
                                                 <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="330.0">
                                                     <content>
-                                                        <GridPane fx:id="grrConfigPane" maxWidth="500.0" minWidth="180.0" prefWidth="180.0">
+                                                        <GridPane fx:id="grrConfigPane" minWidth="160.0" prefHeight="350.0" prefWidth="160.0">
                                                             <columnConstraints>
                                                                 <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="180.0" />
                                                                 <ColumnConstraints />
@@ -103,11 +103,11 @@
                                                                 <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="TOP" vgrow="SOMETIMES" />
                                                                 <RowConstraints maxHeight="22.0" minHeight="22.0" prefHeight="22.0" valignment="TOP" vgrow="SOMETIMES" />
                                                                 <RowConstraints maxHeight="22.0" minHeight="22.0" prefHeight="22.0" valignment="TOP" vgrow="SOMETIMES" />
-                                                                <RowConstraints maxHeight="112.0" minHeight="112.0" prefHeight="112.0" valignment="TOP" vgrow="SOMETIMES" />
+                                                                <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" valignment="TOP" vgrow="SOMETIMES" />
                                                                 <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
                                                                 <RowConstraints maxHeight="22.0" minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
                                                                 <RowConstraints maxHeight="22.0" minHeight="22.0" prefHeight="22.0" valignment="TOP" vgrow="SOMETIMES" />
-                                                                <RowConstraints maxHeight="112.0" minHeight="112.0" prefHeight="112.0" vgrow="SOMETIMES" />
+                                                                <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
                                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                             </rowConstraints>
                                                             <children>
@@ -115,27 +115,29 @@
                                                                 <Label text="Part" GridPane.rowIndex="1" />
                                                                 <Label text="Appraisers" GridPane.rowIndex="2" />
                                                                 <Label text="Trial" GridPane.rowIndex="3" />
-                                                                <TextField fx:id="partTxt" maxHeight="22.0" minHeight="22.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="22.0" GridPane.rowIndex="1">
+                                                                <TextField fx:id="partTxt" maxHeight="22.0" maxWidth="70.0" minHeight="22.0" minWidth="70.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="22.0" prefWidth="70.0" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                                                     <GridPane.margin>
-                                                                        <Insets left="70.0" />
+                                                                        <Insets />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="appraiserTxt" maxHeight="22.0" minHeight="22.0" prefHeight="22.0" GridPane.rowIndex="2">
+                                                                <TextField fx:id="appraiserTxt" maxHeight="22.0" maxWidth="70.0" minHeight="22.0" minWidth="70.0" prefHeight="22.0" prefWidth="70.0" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                                                                     <GridPane.margin>
-                                                                        <Insets left="70.0" />
+                                                                        <Insets />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="trialTxt" maxHeight="22.0" minHeight="22.0" prefHeight="22.0" GridPane.rowIndex="3">
+                                                                <TextField fx:id="trialTxt" maxHeight="22.0" maxWidth="70.0" minHeight="22.0" minWidth="70.0" prefHeight="22.0" prefWidth="70.0" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                                                                     <GridPane.margin>
-                                                                        <Insets left="70.0" />
+                                                                        <Insets />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <Label fx:id="partLbl" alignment="CENTER" contentDisplay="CENTER" text="Part*" GridPane.rowIndex="5" />
-                                                                <ComboBox fx:id="partCombox" maxHeight="22.0" maxWidth="500.0" minHeight="22.0" minWidth="160.0" prefHeight="22.0" prefWidth="167.0" GridPane.rowIndex="6" />
-                                                                <Label fx:id="appraiserLbl" text="Appraisers" GridPane.rowIndex="9" />
-                                                                <ComboBox fx:id="appraiserCombox" maxHeight="22.0" maxWidth="500.0" minHeight="22.0" minWidth="160.0" prefHeight="22.0" prefWidth="180.0" GridPane.rowIndex="10" />
-                                                                <ListView fx:id="partListView" GridPane.rowIndex="7" />
-                                                                <ListView fx:id="appraiserListView" GridPane.rowIndex="11" />
+                                                                <Label alignment="CENTER" contentDisplay="CENTER" text="Part*" GridPane.rowIndex="5" />
+                                                                <ComboBox fx:id="partCombox" maxHeight="22.0" maxWidth="500.0" minHeight="22.0" prefHeight="22.0" prefWidth="159.0" GridPane.rowIndex="6" />
+                                                                <Label text="Appraisers" GridPane.rowIndex="9" />
+                                                                <ComboBox fx:id="appraiserCombox" maxHeight="22.0" maxWidth="500.0" minHeight="22.0" prefHeight="22.0" prefWidth="159.0" GridPane.rowIndex="10" />
+                                                                <ListView fx:id="partListView" minHeight="0.0" GridPane.rowIndex="7" />
+                                                                <ListView fx:id="appraiserListView" minHeight="0.0" GridPane.rowIndex="11" />
+                                                                <Label fx:id="partLbl" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                                                                <Label fx:id="appraiserLbl" GridPane.halignment="RIGHT" GridPane.rowIndex="9" />
                                                             </children>
                                                             <padding>
                                                                 <Insets left="10.0" right="10.0" />
