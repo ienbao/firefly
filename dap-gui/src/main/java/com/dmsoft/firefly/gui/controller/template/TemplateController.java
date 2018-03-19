@@ -406,12 +406,13 @@ public class TemplateController {
 
     private void refreshMainTemplate() {
         ObservableList<StateBarTemplateModel> templateList = FXCollections.observableArrayList();
-        if (allTemplate != null && currTemplate != null) {
+        TemplateSettingDto templateSettingDto =  envService.findActivatedTemplate();
+        if (allTemplate != null) {
             allTemplate.keySet().forEach(name -> {
                 StateBarTemplateModel stateBarTemplateModel = new StateBarTemplateModel(name, false);
-//                if (name.equals(currTemplate.getName())) {
-//                    stateBarTemplateModel.setIsChecked(true);
-//                }
+                if (templateSettingDto != null && name.equals(templateSettingDto.getName())) {
+                    stateBarTemplateModel.setIsChecked(true);
+                }
                 templateList.add(stateBarTemplateModel);
             });
             MenuFactory.getMainController().refreshTemplate(templateList);

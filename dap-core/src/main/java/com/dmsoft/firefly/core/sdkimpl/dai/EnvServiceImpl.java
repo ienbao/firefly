@@ -38,11 +38,16 @@ public class EnvServiceImpl implements EnvService {
     @Override
     public void setActivatedTemplate(String templateName) {
         this.templateName = templateName;
+        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+        userPreferenceDto.setCode("activeTemplate");
+        userPreferenceDto.setUserName(userName);
+        userPreferenceDto.setValue(templateName);
+        getUserPreferenceService().updatePreference(userPreferenceDto);
     }
 
     @Override
     public TemplateSettingDto findActivatedTemplate() {
-        return templateName != null ? getTemplateService().findAnalysisTemplate(templateName) : null;
+        return templateName != null ? getTemplateService().findAnalysisTemplate(templateName) : getTemplateService().findAnalysisTemplate(findPreference("activeTemplate"));
 
     }
 

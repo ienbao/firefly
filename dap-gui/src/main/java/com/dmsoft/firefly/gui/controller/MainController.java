@@ -74,10 +74,12 @@ public class MainController {
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
 
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
-    private JsonMapper mapper = JsonMapper.defaultMapper();
+    private TemplateSettingDto templateSettingDto;
+
 
     @FXML
     private void initialize() {
+        templateSettingDto =  envService.findActivatedTemplate();
         contentStackPane = new ContentStackPane();
         grpContent.add(contentStackPane, 0, 1);
         this.initToolBar();
@@ -229,8 +231,6 @@ public class MainController {
             if (activeProjectNames != null && !activeProjectNames.isEmpty()) {
                 dataSourceBtn.setText(activeProjectNames.size() +" "+ GuiFxmlAndLanguageUtils.getString("STATE_BAR_FILE_SELECTED"));
             }
-
-            TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
             if (templateSettingDto != null) {
                 templateBtn.setText(templateSettingDto.getName());
             }
@@ -330,8 +330,14 @@ public class MainController {
         templateView.setCellFactory(e -> new ListCell<StateBarTemplateModel>() {
             @Override
             public void updateItem(StateBarTemplateModel item, boolean empty) {
+                if (item != null && item.equals(getItem())) {
+                    return;
+                }
                 super.updateItem(item, empty);
-                if (!empty && item != null) {
+                if (item == null) {
+                    super.setText(null);
+                    super.setGraphic(null);
+                } else {
                     HBox cell;
                     Label label = new Label(item.getTemplateName());
                     if (item.isIsChecked()) {
@@ -351,14 +357,15 @@ public class MainController {
 
         templateView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         templateView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            newValue.setIsChecked(true);
             if (oldValue != null) {
                 oldValue.setIsChecked(false);
             }
-            templateBtn.setText(newValue.getTemplateName());
+            if (newValue != null) {
+                newValue.setIsChecked(true);
+                templateBtn.setText(newValue.getTemplateName());
+                envService.setActivatedTemplate(newValue.getTemplateName());
+            }
             templateView.refresh();
-            // to do
-            // change analyze template
         });
 
         templatePopup = new Popup();
@@ -380,9 +387,7 @@ public class MainController {
     }
 
     public void initDataSource() {
-
-        List<String> projectName = mapper.fromJson(envService.findPreference("selectProject"), mapper.buildCollectionType(List.class, String.class));
-
+        List<String> projectName = envService.findActivatedProjectName();
         if (projectName != null) {
             Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
             LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, GuiConst.DEFAULT_TEMPLATE_NAME);
@@ -400,22 +405,32 @@ public class MainController {
         if (allTemplates != null) {
             allTemplates.forEach(dto -> {
                 StateBarTemplateModel stateBarTemplateModel = new StateBarTemplateModel(dto.getName(), false);
-                if (DAPStringUtils.isNotBlank(dto.getName()) && dto.getName().equals(GuiConst.DEFAULT_TEMPLATE_NAME)) {
-                    stateBarTemplateModel.setIsChecked(true);
+                if (templateSettingDto != null) {
+                    if (templateSettingDto.getName().equals(stateBarTemplateModel.getTemplateName())) {
+                        stateBarTemplateModel.setIsChecked(true);
+                    }
+                } else {
+                    if (DAPStringUtils.isNotBlank(dto.getName()) && dto.getName().equals(GuiConst.DEFAULT_TEMPLATE_NAME)) {
+                        stateBarTemplateModel.setIsChecked(true);
+                    }
                 }
                 stateBarTemplateModels.add(stateBarTemplateModel);
             });
         }
         templateList = FXCollections.observableArrayList(stateBarTemplateModels);
-        envService.setActivatedTemplate(GuiConst.DEFAULT_TEMPLATE_NAME);
+        if (templateSettingDto == null) {
+            envService.setActivatedTemplate(GuiConst.DEFAULT_TEMPLATE_NAME);
+        }
     }
 
     public void refreshDataSource(ObservableList<String> dataSourceList) {
+        this.dataSourceList = dataSourceList;
         dataSourceView.setItems(dataSourceList);
         dataSourceView.refresh();
     }
 
     public void refreshTemplate(ObservableList<StateBarTemplateModel> templateList) {
+        this.templateList = templateList;
         templateView.setItems(templateList);
         templateView.refresh();
     }
