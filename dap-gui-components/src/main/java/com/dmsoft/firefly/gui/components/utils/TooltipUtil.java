@@ -15,7 +15,7 @@ public class TooltipUtil {
      * @param msg tip msg
      * @return tooltip
      */
-    public static void installNormalTooltip(Node node, String msg) {
+    public static Tooltip installNormalTooltip(Node node, String msg) {
         if (normalTooltip == null) {
             normalTooltip = new Tooltip();
             normalTooltip.setText(msg);
@@ -23,6 +23,7 @@ public class TooltipUtil {
             normalTooltip.setText(msg);
         }
         Tooltip.install(node, normalTooltip);
+        return normalTooltip;
     }
 
     /**

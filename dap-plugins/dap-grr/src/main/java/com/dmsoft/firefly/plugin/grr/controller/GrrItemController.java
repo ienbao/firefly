@@ -8,11 +8,13 @@ import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
+import com.dmsoft.firefly.plugin.grr.dto.GrrLeftConfigDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrParamDto;
 import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.grr.model.ListViewModel;
+import com.dmsoft.firefly.plugin.grr.service.impl.GrrLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.GrrValidateUtil;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
@@ -38,23 +40,19 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
-import org.omg.PortableInterceptor.INACTIVE;
 
+import java.io.File;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Ethan.Yang on 2018/2/6.
@@ -120,9 +118,7 @@ public class GrrItemController implements Initializable {
 
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
-    /*
-        private GrrLeftConfigServiceImpl leftConfigService = new GrrLeftConfigServiceImpl();
-    */
+    private GrrLeftConfigServiceImpl leftConfigService = new GrrLeftConfigServiceImpl();
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private SearchConditionDto searchConditionDto = new SearchConditionDto();
 
@@ -218,29 +214,37 @@ public class GrrItemController implements Initializable {
             partList.clear();
             clearPartLbl();
             Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
-            values.forEach(value -> {
-                partList.add(new ListViewModel(value, false, ""));
-            });
-            partListView.setItems(partList);
-            RowConstraints row7 = grrConfigPane.getRowConstraints().get(7);
-            row7.setPrefHeight(112);
-            row7.setMaxHeight(112);
-            row7.setMinHeight(112);
+            updatePartListViewDatas(values, false);
         });
 
         this.appraiserCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
             appraiserList.clear();
             clearAppraiserLbl();
             Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
-            values.forEach(value -> {
-                appraiserList.add(new ListViewModel(value, false, ""));
-            });
-            appraiserListView.setItems(appraiserList);
-            RowConstraints row11 = grrConfigPane.getRowConstraints().get(11);
-            row11.setPrefHeight(112);
-            row11.setMaxHeight(112);
-            row11.setMinHeight(112);
+            updateAppraiserListViewDatas(values, false);
         });
+    }
+
+    private void updatePartListViewDatas(Set<String> parts, boolean isSelected) {
+        parts.forEach(value -> {
+            partList.add(new ListViewModel(value, isSelected, ""));
+        });
+        partListView.setItems(partList);
+        RowConstraints row7 = grrConfigPane.getRowConstraints().get(7);
+        row7.setPrefHeight(112);
+        row7.setMaxHeight(112);
+        row7.setMinHeight(112);
+    }
+
+    private void updateAppraiserListViewDatas(Set<String> appraisers, boolean isSelected) {
+        appraisers.forEach(value -> {
+            appraiserList.add(new ListViewModel(value, isSelected, ""));
+        });
+        appraiserListView.setItems(appraiserList);
+        RowConstraints row11 = grrConfigPane.getRowConstraints().get(11);
+        row11.setPrefHeight(112);
+        row11.setMaxHeight(112);
+        row11.setMinHeight(112);
     }
 
     private void refreshPartOrAppraiserListView(GrrParamDto grrParamDto) {
@@ -481,8 +485,8 @@ public class GrrItemController implements Initializable {
 
     private void initComponentEvent() {
         analysisBtn.setOnAction(event -> getAnalysisBtnEvent());
-//        importBtn.setOnAction(event -> importLeftConfig());
-//        exportBtn.setOnAction(event -> exportLeftConfig());
+        importBtn.setOnAction(event -> importLeftConfig());
+        exportBtn.setOnAction(event -> exportLeftConfig());
         item.setCellFactory(new Callback<TableColumn<ItemTableModel, TestItemWithTypeDto>, TableCell<ItemTableModel, TestItemWithTypeDto>>() {
             public TableCell call(TableColumn<ItemTableModel, TestItemWithTypeDto> param) {
                 return new TableCell<ItemTableModel, TestItemWithTypeDto>() {
@@ -669,11 +673,11 @@ public class GrrItemController implements Initializable {
         return selectItems;
     }
 
-    /*private void importLeftConfig() {
+    private void importLeftConfig() {
         String str = System.getProperty("user.home");
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Spc config import");
+        fileChooser.setTitle("Grr config import");
         fileChooser.setInitialDirectory(new File(str));
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
@@ -683,79 +687,92 @@ public class GrrItemController implements Initializable {
 
         if (file != null) {
             clearLeftConfig();
-            SpcLeftConfigDto spcLeftConfigDto = leftConfigService.importSpcConfig(file);
-            if (spcLeftConfigDto != null) {
-                if (spcLeftConfigDto.getItems() != null && spcLeftConfigDto.getItems().size() > 0) {
+            GrrLeftConfigDto grrLeftConfigDto = leftConfigService.importGrrConfig(file);
+            if (grrLeftConfigDto != null) {
+                if (grrLeftConfigDto.getItems() != null && grrLeftConfigDto.getItems().size() > 0) {
                     items.forEach(testItem -> {
-                        if (spcLeftConfigDto.getItems().contains(testItem.getItem())) {
+                        if (grrLeftConfigDto.getItems().contains(testItem.getItem())) {
                             testItem.getSelector().setValue(true);
                         }
                     });
                 }
-                if (spcLeftConfigDto.getBasicSearchs() != null && spcLeftConfigDto.getBasicSearchs().size() > 0) {
-                    searchTab.setBasicSearch(spcLeftConfigDto.getBasicSearchs());
+                if (grrLeftConfigDto.getBasicSearchs() != null && grrLeftConfigDto.getBasicSearchs().size() > 0) {
+                    searchTab.setBasicSearch(grrLeftConfigDto.getBasicSearchs());
                 }
-                ndGroup.setText(spcLeftConfigDto.getNdNumber());
-                subGroup.setText(spcLeftConfigDto.getSubGroup());
-                searchTab.getAdvanceText().setText(spcLeftConfigDto.getAdvanceSearch());
-                searchTab.getGroup1().setValue(spcLeftConfigDto.getAutoGroup1());
-                searchTab.getGroup2().setValue(spcLeftConfigDto.getAutoGroup2());
+                searchTab.getAdvanceText().setText(grrLeftConfigDto.getAdvanceSearch());
+                if (grrLeftConfigDto.getPartInt() != null) {
+                    partTxt.setText(grrLeftConfigDto.getPartInt().toString());
+                }
+                if (grrLeftConfigDto.getAppraiserInt() != null) {
+                    appraiserTxt.setText(grrLeftConfigDto.getAppraiserInt().toString());
+                }
+
+                if (grrLeftConfigDto.getTrialInt() != null) {
+                    trialTxt.setText(grrLeftConfigDto.getTrialInt().toString());
+                }
+
+                if (StringUtils.isNotBlank(grrLeftConfigDto.getPart())) {
+                    partCombox.setValue(grrLeftConfigDto.getPart());
+                }
+
+
+                if (StringUtils.isNotBlank(grrLeftConfigDto.getAppraiser())) {
+                    appraiserCombox.setValue(grrLeftConfigDto.getAppraiser());
+                }
+
+                if (grrLeftConfigDto.getParts() != null &&!grrLeftConfigDto.getParts().isEmpty()) {
+                    updatePartListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getParts()), true);
+                }
+
+                if (grrLeftConfigDto.getAppraisers() != null &&!grrLeftConfigDto.getAppraisers().isEmpty()) {
+                    updatePartListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getAppraisers()), true);
+                }
             }
 
         }
-    }*/
+    }
 
-    /*private void exportLeftConfig() {
-        SpcLeftConfigDto leftConfigDto = new SpcLeftConfigDto();
-        leftConfigDto.setItems(getSelectedItem());
-        leftConfigDto.setBasicSearchs(searchTab.getBasicSearch());
-        if (searchTab.getAdvanceText().getText() != null) {
-            leftConfigDto.setAdvanceSearch(searchTab.getAdvanceText().getText().toString());
-        }
-        leftConfigDto.setNdNumber(ndGroup.getText());
-        leftConfigDto.setSubGroup(subGroup.getText());
-        if (searchTab.getGroup1().getValue() != null) {
-            leftConfigDto.setAutoGroup1(searchTab.getGroup1().getValue().toString());
-        }
-        if (searchTab.getGroup2().getValue() != null) {
-            leftConfigDto.setAutoGroup2(searchTab.getGroup2().getValue().toString());
-        }
+    private void exportLeftConfig() {
+        List<String> selectedItems = this.getSelectedItem();
+        if (checkSubmitParam(selectedItems.size())) {
+            GrrLeftConfigDto leftConfigDto = new GrrLeftConfigDto();
+            leftConfigDto.setItems(selectedItems);
+            leftConfigDto.setPart(searchConditionDto.getPart());
+            leftConfigDto.setAppraiser(searchConditionDto.getAppraiser());
+            leftConfigDto.setPartInt(searchConditionDto.getPartInt());
+            leftConfigDto.setAppraiserInt(searchConditionDto.getAppraiserInt());
+            leftConfigDto.setTrialInt(searchConditionDto.getTrialInt());
+            leftConfigDto.setParts(searchConditionDto.getParts());
+            leftConfigDto.setAppraisers(searchConditionDto.getAppraisers());
+            leftConfigDto.setBasicSearchs(searchTab.getBasicSearch());
+            if (searchTab.getAdvanceText().getText() != null) {
+                leftConfigDto.setAdvanceSearch(searchTab.getAdvanceText().getText().toString());
+            }
 
-        String str = System.getProperty("user.home");
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Spc Config export");
-        fileChooser.setInitialDirectory(new File(str));
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("JSON", "*.json")
-        );
-        Stage fileStage = null;
-        File file = fileChooser.showSaveDialog(fileStage);
+            String str = System.getProperty("user.home");
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Grr Config export");
+            fileChooser.setInitialDirectory(new File(str));
+            fileChooser.setInitialFileName("GrrConfig.json");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("JSON", "*.json")
+            );
+            Stage fileStage = null;
+            File file = fileChooser.showSaveDialog(fileStage);
 
-        if (file != null) {
-            leftConfigService.exportSpcConfig(leftConfigDto, file);
+            if (file != null) {
+                leftConfigService.exportGrrConfig(leftConfigDto, file);
+            }
         }
-    }*/
+    }
 
     private void clearLeftConfig() {
         box.setSelected(false);
         for (ItemTableModel model : items) {
             model.getSelector().setValue(false);
         }
-        /*subGroup.setText(null);
-        ndGroup.setText(null);*/
         searchTab.clearSearchTab();
     }
-
-   /* private SpcAnalysisConfigDto buildSpcAnalysisConfigData() {
-        SpcAnalysisConfigDto spcAnalysisConfigDto = new SpcAnalysisConfigDto();
-        if (StringUtils.isNumeric(subGroup.getText())) {
-            spcAnalysisConfigDto.setSubgroupSize(Integer.valueOf(subGroup.getText()));
-        }
-        if (StringUtils.isNumeric(ndGroup.getText())) {
-            spcAnalysisConfigDto.setIntervalNumber(Integer.valueOf(ndGroup.getText()));
-        }
-        return spcAnalysisConfigDto;
-    }*/
 
     private List<TestItemWithTypeDto> buildSelectTestItemWithTypeData(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
         List<TestItemWithTypeDto> itemWithTypeDtoList = Lists.newArrayList();

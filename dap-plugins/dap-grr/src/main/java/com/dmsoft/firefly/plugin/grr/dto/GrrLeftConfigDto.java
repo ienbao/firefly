@@ -11,7 +11,8 @@ import java.util.List;
  */
 public class GrrLeftConfigDto implements Serializable {
     private List<String> items;
-    private List<BasicSearchDto> basicSearchs;
+//    private List<BasicSearchDto> basicSearchs;
+    private LinkedHashMap<String, List<BasicSearchDto>> basicSearchs;
     private String advanceSearch;
     private String part;
     private String appraiser;
@@ -30,11 +31,11 @@ public class GrrLeftConfigDto implements Serializable {
         this.items = items;
     }
 
-    public List<BasicSearchDto> getBasicSearchs() {
+    public LinkedHashMap<String, List<BasicSearchDto>> getBasicSearchs() {
         return basicSearchs;
     }
 
-    public void setBasicSearchs(List<BasicSearchDto> basicSearchs) {
+    public void setBasicSearchs(LinkedHashMap<String, List<BasicSearchDto>> basicSearchs) {
         this.basicSearchs = basicSearchs;
     }
 

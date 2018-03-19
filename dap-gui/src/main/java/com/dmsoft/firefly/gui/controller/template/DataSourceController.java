@@ -289,8 +289,8 @@ public class DataSourceController implements Initializable {
             //TODO notify refresh event
 
             StageMap.closeStage("dataSource");
-            refreshMainDataSource(selectProject);
-
+            MenuFactory.getMainController().resetMain();
+            //refreshMainDataSource(selectProject);
         });
 
         cancel.setOnAction(event -> {
