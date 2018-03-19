@@ -39,24 +39,24 @@ public class GrrSummaryModel {
 
     private GrrSingleSummary buildGrrSingleSummary(GrrSummaryDto summaryDto, String resultType, boolean selected) {
         int digNum = DigNumInstance.newInstance().getDigNum() - 2;
-        double repeatability = UIConstant.GRR_RESULT_TYPE[0].equals(resultType) ?
+        Double repeatability = UIConstant.GRR_RESULT_TYPE[0].equals(resultType) ?
                 summaryDto.getSummaryResultDto().getRepeatabilityOnTolerance() :
                 summaryDto.getSummaryResultDto().getRepeatabilityOnContribution();
-        double reproducibility = UIConstant.GRR_RESULT_TYPE[0].equals(resultType) ?
+        Double reproducibility = UIConstant.GRR_RESULT_TYPE[0].equals(resultType) ?
                 summaryDto.getSummaryResultDto().getReproducibilityOnTolerance() :
                 summaryDto.getSummaryResultDto().getReproducibilityOnContribution();
-        double grr = UIConstant.GRR_RESULT_TYPE[0].equals(resultType) ?
+        Double grr = UIConstant.GRR_RESULT_TYPE[0].equals(resultType) ?
                 summaryDto.getSummaryResultDto().getGrrOnTolerance() :
                 summaryDto.getSummaryResultDto().getGrrOnContribution();
-        double lsl = summaryDto.getSummaryResultDto().getLsl();
-        double usl = summaryDto.getSummaryResultDto().getUsl();
-        double tolerance = summaryDto.getSummaryResultDto().getTolerance();
-        String lslStr = String.valueOf(lsl);
-        String uslStr = String.valueOf(usl);
-        String toleranceStr = digNum >= 0 ? DAPStringUtils.formatDouble(tolerance, digNum + 2) : String.valueOf(tolerance);
-        String repeatabilityStr = digNum >= 0 ? DAPStringUtils.formatDouble(repeatability, digNum) : String.valueOf(repeatability);
-        String reproducibilityStr = digNum >= 0 ? DAPStringUtils.formatDouble(reproducibility, digNum) : String.valueOf(reproducibility);
-        String grrStr = digNum >= 0 ? DAPStringUtils.formatDouble(grr, digNum) : String.valueOf(grr);
+        Double lsl = summaryDto.getSummaryResultDto().getLsl();
+        Double usl = summaryDto.getSummaryResultDto().getUsl();
+        Double tolerance = summaryDto.getSummaryResultDto().getTolerance();
+        String lslStr = lsl == null ? "-" : String.valueOf(lsl);
+        String uslStr = usl == null ? "-" : String.valueOf(usl);
+        String toleranceStr = tolerance == null ? "-" : (digNum >= 0 ? DAPStringUtils.formatDouble(tolerance, digNum + 2) : String.valueOf(tolerance));
+        String repeatabilityStr = repeatability == null ? "-" : (digNum >= 0 ? DAPStringUtils.formatDouble(repeatability, digNum) : String.valueOf(repeatability));
+        String reproducibilityStr = reproducibility == null ? "-" : (digNum >= 0 ? DAPStringUtils.formatDouble(reproducibility, digNum) : String.valueOf(reproducibility));
+        String grrStr = grr == null ? "-" : (digNum >= 0 ? DAPStringUtils.formatDouble(grr, digNum) : String.valueOf(grr));
         return new GrrSingleSummary(selected,
                 summaryDto.getItemName(),
                 DAPStringUtils.isBlankWithSpecialNumber(lslStr) ? "-" : lslStr,
@@ -70,38 +70,22 @@ public class GrrSummaryModel {
     public void updateDataByResultType(String resultType) {
         int digNum = DigNumInstance.newInstance().getDigNum() - 2;
         for (int i = 0; i < summaries.size(); i++) {
-            double repeatability = UIConstant.GRR_RESULT_TYPE[0].equals(resultType) ?
+            Double repeatability = UIConstant.GRR_RESULT_TYPE[0].equals(resultType) ?
                     data.get(i).getSummaryResultDto().getRepeatabilityOnTolerance() :
                     data.get(i).getSummaryResultDto().getRepeatabilityOnContribution();
-            double reproducibility = UIConstant.GRR_RESULT_TYPE[0].equals(resultType) ?
+            Double reproducibility = UIConstant.GRR_RESULT_TYPE[0].equals(resultType) ?
                     data.get(i).getSummaryResultDto().getReproducibilityOnTolerance() :
                     data.get(i).getSummaryResultDto().getReproducibilityOnContribution();
-            double grr = UIConstant.GRR_RESULT_TYPE[0].equals(resultType) ?
+            Double grr = UIConstant.GRR_RESULT_TYPE[0].equals(resultType) ?
                     data.get(i).getSummaryResultDto().getGrrOnTolerance() :
                     data.get(i).getSummaryResultDto().getGrrOnContribution();
-            String repeatabilityStr = digNum >= 0 ? DAPStringUtils.formatDouble(repeatability, digNum) : String.valueOf(repeatability);
-            String reproducibilityStr = digNum >= 0 ? DAPStringUtils.formatDouble(reproducibility, digNum) : String.valueOf(reproducibility);
-            String grrStr = digNum >= 0 ? DAPStringUtils.formatDouble(grr, digNum) : String.valueOf(grr);
+            String repeatabilityStr = repeatability == null ? "-" : (digNum >= 0 ? DAPStringUtils.formatDouble(repeatability, digNum) : String.valueOf(repeatability));
+            String reproducibilityStr = reproducibility == null ? "-" : (digNum >= 0 ? DAPStringUtils.formatDouble(reproducibility, digNum) : String.valueOf(reproducibility));
+            String grrStr = grr == null ? "-" : digNum >= 0 ? DAPStringUtils.formatDouble(grr, digNum) : String.valueOf(grr);
             summaries.get(i).updateData(DAPStringUtils.isSpecialBlank(repeatabilityStr) ? "-" : repeatabilityStr + "%",
                     DAPStringUtils.isBlankWithSpecialNumber(reproducibilityStr) ? "-" : reproducibilityStr + "%",
                     DAPStringUtils.isBlankWithSpecialNumber(grrStr) ? "-" : grrStr + "%");
         }
-    }
-
-    public void updateSummaryModelData(List<GrrSummaryDto> summaryDtos, String resultType, String selectedItem) {
-        if (summaryDtos == null) {
-            return;
-        }
-        summaryDtos.forEach(summaryDto -> {
-            for (int i = 0; i < summaries.size(); i++) {
-                if (summaryDto.getItemName().equals(summaries.get(i).getItemName())) {
-                    boolean selected = selectedItem.equals(summaryDto.getItemName());
-                    summaries.set(i, buildGrrSingleSummary(summaryDto, resultType, selected));
-                } else {
-                    summaries.get(i).setSelect(false);
-                }
-            }
-        });
     }
 
     public ObservableList<GrrSingleSummary> getSummaries() {

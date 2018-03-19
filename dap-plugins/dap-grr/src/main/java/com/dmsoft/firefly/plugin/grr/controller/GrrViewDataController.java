@@ -162,8 +162,9 @@ public class GrrViewDataController implements Initializable {
      * @return grr data frame dto
      */
     public GrrDataFrameDto getChangedGrrDFDto() {
-//        GrrDataFrameDto result = new GrrDataFrameDto();
-//        result.setDataFrame(this.grrDataFrameDto.getDataFrame());
+        GrrDataFrameDto result = new GrrDataFrameDto();
+        result.setDataFrame(this.grrDataFrameDto.getDataFrame());
+
 //        Map<String, GrrViewDataDto> viewDataDtoMap = Maps.newHashMap();
 //        if (this.grrDataFrameDto.getIncludeDatas() != null) {
 //            for (GrrViewDataDto grrViewDataDto : this.grrDataFrameDto.getIncludeDatas()) {
@@ -184,11 +185,28 @@ public class GrrViewDataController implements Initializable {
 //        List<GrrViewDataDto> backupDataDto = Lists.newArrayList();
 //        if (this.backupModel.getAllRowKeys() != null) {
 //            for (String s : this.backupModel.getAllRowKeys()) {
+//
 //                backupDataDto.add(viewDataDtoMap.get(s));
 //            }
 //        }
-//        result.setIncludeDatas(includeDataDto);
-//        result.setBackupDatas(backupDataDto);
+        List<GrrViewDataDto> includeDataDto = Lists.newArrayList();
+        List<GrrViewDataDto> backupDataDto = Lists.newArrayList();
+        if (this.includeModel.getRowKeyArray() != null) {
+            for (String s : includeModel.getRowKeyArray()) {
+                includeDataDto.add(includeModel.getGrrViewDataDtoMap().get(s));
+            }
+        }
+        if (this.backupModel.getRowKeyArray() != null) {
+            for (String s : backupModel.getAllRowKeys()) {
+                backupDataDto.add(backupModel.getGrrViewDataDtoMap().get(s));
+            }
+        }
+        result.setIncludeDatas(includeDataDto);
+        result.setBackupDatas(backupDataDto);
+        return result;
+    }
+
+    public GrrDataFrameDto getGrrDataFrameDto() {
         return grrDataFrameDto;
     }
 }

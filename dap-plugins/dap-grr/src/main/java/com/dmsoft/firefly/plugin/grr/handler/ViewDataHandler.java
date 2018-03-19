@@ -45,6 +45,7 @@ public class ViewDataHandler implements JobInboundHandler {
         if (in[1] != null && in[1] instanceof GrrMainController) {
             GrrMainController grrMainController = (GrrMainController) in[1];
             grrMainController.setGrrDataFrame(grrDataFrameDto);
+            grrMainController.setBackGrrDataFrame(grrDataFrameDto);
         }
         param.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrDataFrameDto);
         context.fireDoJob(param, in[1]);

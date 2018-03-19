@@ -27,6 +27,7 @@ import java.util.ResourceBundle;
 public class GrrMainController implements Initializable {
 
     private GrrDataFrameDto grrDataFrame;
+    private GrrDataFrameDto backGrrDataFrame;
     private List<GrrSummaryDto> summaryDtos;
     private GrrDetailDto grrDetailDto;
     private GrrConfigDto grrConfigDto;
@@ -45,9 +46,10 @@ public class GrrMainController implements Initializable {
 
     @FXML
     private Button exportBtn;
-
     @FXML
     private Button refreshBtn;
+    @FXML
+    private Button resetBtn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -79,6 +81,13 @@ public class GrrMainController implements Initializable {
                     grrResultController.changeGrrResult();
                 }
             }
+        });
+
+        resetBtn.setOnAction(event -> {
+            this.getSearchConditionDto().setSelectedTestItemDtos(this.grrItemController.getSelectedItemDto());
+            this.grrDataFrame = this.getBackGrrDataFrame();
+            this.grrViewDataController.refresh();
+            this.grrResultController.changeGrrResult();
         });
     }
 
@@ -154,5 +163,13 @@ public class GrrMainController implements Initializable {
 
     public void setGrrParamDto(GrrParamDto grrParamDto) {
         this.grrParamDto = grrParamDto;
+    }
+
+    public GrrDataFrameDto getBackGrrDataFrame() {
+        return backGrrDataFrame;
+    }
+
+    public void setBackGrrDataFrame(GrrDataFrameDto backGrrDataFrame) {
+        this.backGrrDataFrame = backGrrDataFrame;
     }
 }
