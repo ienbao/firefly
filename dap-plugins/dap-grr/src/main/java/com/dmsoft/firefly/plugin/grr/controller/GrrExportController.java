@@ -666,12 +666,12 @@ public class GrrExportController {
         if (checkSubmitParam(testItemWithTypeDtoList.size())) {
             GrrConfigDto grrConfigDto = grrConfigService.findGrrConfig();
             Boolean detail = grrConfigDto.getExport().get("Export detail sheet of each selected items");
-            List<Double> level = grrConfigDto.getAlarmSetting();
+//            List<Double> level = grrConfigDto.getAlarmSetting();
 
             GrrExportConfigDto grrExportConfigDto = new GrrExportConfigDto();
             grrExportConfigDto.setExportPath(locationPath.getText());
             grrExportConfigDto.setUserName(envService.getUserName());
-//        grrExportConfigDto
+            grrExportConfigDto.setGrrConfigDto(grrConfigDto);
             List<String> projectNameList = envService.findActivatedProjectName();
 
             searchTab.getConditionTestItem().forEach(item -> {
@@ -707,12 +707,9 @@ public class GrrExportController {
 
             List<GrrExportResultDto> grrExportResultDtos = Lists.newArrayList();
             if (detail) {
-//            buildViewData();
-//            List<GrrSummaryDto> grrSummaryDtoList = grrService.getSummaryResult(dataFrame, testItemWithTypeDtoList, rowKeysToByAnalyzed, configDto);
-
-                grrExportService.exportGrrSummary(grrExportConfigDto, grrSummaryDtoList, level);
+                grrExportService.exportGrrSummary(grrExportConfigDto, grrSummaryDtoList);
             } else {
-                grrExportService.exportGrrSummaryDetail(grrExportConfigDto, grrSummaryDtoList, grrExportResultDtos, level);
+                grrExportService.exportGrrSummaryDetail(grrExportConfigDto, grrSummaryDtoList, grrExportResultDtos);
             }
         }
     }
