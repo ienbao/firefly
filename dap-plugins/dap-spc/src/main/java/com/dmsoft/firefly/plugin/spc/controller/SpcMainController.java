@@ -17,6 +17,7 @@ import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
@@ -206,63 +207,7 @@ public class SpcMainController implements Initializable {
     }
 
     private void getPrintBtnEvent() {
-        SpcSettingDto spcSettingDto = this.initSpcSettingDto();
-        spcSettingService.saveSpcSetting(spcSettingDto);
-    }
 
-    @Deprecated
-    private SpcSettingDto initSpcSettingDto() {
-        SpcSettingDto spcSettingDto = new SpcSettingDto();
-
-        spcSettingDto.setCustomGroupNumber(10);
-        spcSettingDto.setChartIntervalNumber(8);
-
-        Map<String, Double[]> abilityAlarmRule = Maps.newHashMap();
-        abilityAlarmRule.put("CA", new Double[]{12.5, 25d, 50d});
-        abilityAlarmRule.put("CP", new Double[]{1.67, 1.33, 1.0, 0.67});
-        abilityAlarmRule.put("CPK", new Double[]{1.67, 1.33, 1.0, 0.67});
-        abilityAlarmRule.put("CPL", new Double[]{1.67, 1.33, 1.0, 0.67});
-        abilityAlarmRule.put("CPU", new Double[]{1.67, 1.33, 1.0, 0.67});
-        abilityAlarmRule.put("PP", new Double[]{1.67, 1.33, 1.0, 0.67});
-        abilityAlarmRule.put("PPK", new Double[]{1.67, 1.33, 1.0, 0.67});
-        abilityAlarmRule.put("PPL", new Double[]{1.67, 1.33, 1.0, 0.67});
-        abilityAlarmRule.put("PPU", new Double[]{1.67, 1.33, 1.0, 0.67});
-        spcSettingDto.setAbilityAlarmRule(abilityAlarmRule);
-
-        Map<String, List<CustomAlarmDto>> statistiacalAlarmMap = Maps.newHashMap();
-        List<String> testItem = Lists.newArrayList("A1", "A2", "A3");
-        testItem.forEach(name -> {
-            List<CustomAlarmDto> customAlarmDtoList = Lists.newArrayList();
-            List<String> statistics = Lists.newArrayList("AVG", "Max", "Min", "StDev", "Center", "Range", "LCL",
-                    "UCL", "Kurtosis", "Skewness");
-            statistics.forEach(s -> {
-                CustomAlarmDto customAlarmDto = new CustomAlarmDto();
-                customAlarmDto.setStatisticName(s);
-                customAlarmDto.setUpperLimit(10d);
-                customAlarmDto.setLowerLimit(3d);
-                customAlarmDtoList.add(customAlarmDto);
-            });
-
-            statistiacalAlarmMap.put(name, customAlarmDtoList);
-        });
-        spcSettingDto.setStatisticalAlarmSetting(statistiacalAlarmMap);
-
-        List<ControlRuleDto> controlChartRule = Lists.newArrayList();
-        List<String> alarmNameList = Lists.newArrayList("R1", "R2", "R3", "R4", "R5", "R6", "R7",
-                "R8", "R9");
-        alarmNameList.forEach(alarmName -> {
-            ControlRuleDto controlRuleDto = new ControlRuleDto();
-            controlRuleDto.setUsed(true);
-            controlRuleDto.setRuleName(alarmName);
-            controlRuleDto.setmValue(7);
-            controlRuleDto.setnValue(4);
-            controlRuleDto.setsValue(1);
-            controlChartRule.add(controlRuleDto);
-        });
-        spcSettingDto.setControlChartRule(controlChartRule);
-
-        spcSettingDto.setExportTemplateName("Default Template");
-        return spcSettingDto;
     }
 
     private void getExportBtnEvent() {
@@ -404,10 +349,13 @@ public class SpcMainController implements Initializable {
         List<String> timeKeys = Lists.newArrayList();
         String timePattern = null;
         try {
-            timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
-            timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
+            TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
+            if(timePatternDto != null) {
+                timeKeys = timePatternDto.getTimeKeys();
+                timePattern = timePatternDto.getPattern();
+            }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         for (SearchConditionDto searchConditionDto : searchConditionDtoList) {

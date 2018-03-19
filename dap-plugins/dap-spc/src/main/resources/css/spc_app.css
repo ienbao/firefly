@@ -120,14 +120,6 @@
     -fx-alignment: center-left;
 }
 
-/*.tab-pane {*/
-/*-fx-skin:  "com.dmsoft.firefly.plugin.spc.utils.HTabPaneSkin";*/
-/*}*/
-/*.tab-pane > .tab-header-area {*/
-/*-fx-background-color: #dff0cf;*/
-/*-fx-padding: 0;*/
-/*!*-fx-pref-height: 100;*!*/
-/*}*/
 
 /**
 table
@@ -144,8 +136,13 @@ table
 
 .cell .error .check-box {
     -fx-opacity: 1;
-    -fx-cursor: inherit;
+    -fx-cursor: hand;
 }
+/*.cell .error .check-box > .box > .mark {*/
+    /*-fx-scale-shape: false;*/
+    /*-fx-padding: 5px;*/
+    /*-fx-shape: "M -1 0.5 L 4 -4.5 L 5.5 -3 L -1 3.5 L -4.5 -0 L -3.5 -2 Z";*/
+/*}*/
 
 /*
 *Spc setting

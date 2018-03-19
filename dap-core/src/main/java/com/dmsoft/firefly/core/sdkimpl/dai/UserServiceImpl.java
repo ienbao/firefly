@@ -10,6 +10,7 @@ import com.dmsoft.firefly.sdk.dai.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.Charset;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ public class UserServiceImpl implements UserService {
         }
         List<UserDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, UserDto.class));
         for (UserDto userDto : list) {
-            String passwordEn = EncodeUtil.encodeBase64(HashUtil.sha1(password, salt.getBytes()));
+            String passwordEn = EncodeUtil.encodeBase64(HashUtil.sha1(password, salt.getBytes(Charset.forName("UTF-8"))));
             if (userDto.getUserName().equals(userName) && userDto.getPassword().equals(passwordEn)) {
                 return userDto;
             }
@@ -50,8 +51,8 @@ public class UserServiceImpl implements UserService {
         Boolean isExist = Boolean.FALSE;
         for (UserDto userDto : list) {
             String name = userDto.getUserName();
-            String resultOld = EncodeUtil.encodeBase64(HashUtil.sha1(oldPwd, salt.getBytes()));
-            String resultNew = EncodeUtil.encodeBase64(HashUtil.sha1(newPwd, salt.getBytes()));
+            String resultOld = EncodeUtil.encodeBase64(HashUtil.sha1(oldPwd, salt.getBytes(Charset.forName("UTF-8"))));
+            String resultNew = EncodeUtil.encodeBase64(HashUtil.sha1(newPwd, salt.getBytes(Charset.forName("UTF-8"))));
             if (name.equals(userName) && userDto.getPassword().equals(resultOld)) {
                 userDto.setPassword(resultNew);
                 isExist = true;

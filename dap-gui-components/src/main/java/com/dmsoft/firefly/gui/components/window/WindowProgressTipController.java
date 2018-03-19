@@ -21,12 +21,19 @@ public class WindowProgressTipController {
     private GridPane progressPane;
     @FXML
     private ProgressBar taskProgress;
+    @FXML
+    private TextArea errorTxt;
+
+    private Stage stage;
 
     private WindowCustomListener windowCustomListener;
 
     @FXML
     private void initialize(){
         initCancelBtn();
+        errorTxt.setEditable(false);
+        errorTxt.setVisible(false);
+        errorTxt.setMaxHeight(0);
         taskProgress.getStyleClass().setAll("progress-bar-lg-green");
         taskProgress.setProgress(0);
         taskProgress.progressProperty().addListener(e->{
@@ -53,8 +60,40 @@ public class WindowProgressTipController {
     }
 
     public void updateFailProgress(double progressValue) {
+        updateFailProgress(progressValue, "");
+        /*if (progressValue >= 100) {
+            closeDialog();
+        }*/
+    }
+
+    public void updateFailProgress(String errorText) {
+        updateFailProgress(taskProgress.getProgress() * 100, errorText);
+        /*if (progressValue >= 100) {
+            closeDialog();
+        }*/
+    }
+
+    public void updateFailProgressNextLine(String errorText) {
+        updateFailProgress(taskProgress.getProgress() * 100, "\n" + errorText);
+        /*if (progressValue >= 100) {
+            closeDialog();
+        }*/
+    }
+
+    public void updateFailProgress(double progressValue, String errorText) {
         taskProgress.getStyleClass().setAll("progress-bar-lg-red");
         taskProgress.setProgress(progressValue / 100);
+        errorTxt.setVisible(true);
+        errorTxt.setMinHeight(245);
+        errorTxt.appendText(errorText);
+        Stage stage = StageMap.getStage(ResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                stage.setMaxHeight(380);
+                stage.setMinHeight(380);
+            }
+        });
         /*if (progressValue >= 100) {
             closeDialog();
         }*/

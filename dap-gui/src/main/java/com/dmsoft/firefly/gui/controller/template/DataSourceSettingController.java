@@ -30,6 +30,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.*;
@@ -53,8 +54,9 @@ public class DataSourceSettingController {
     private SourceDataService sourceDataService = RuntimeContext.getBean( SourceDataService.class );
     private List<String> testItems = new ArrayList<>();
     private List<String> selectTestItemName = Lists.newArrayList();
-    private List<String> projectNames= new ArrayList<>();
+    private List<String> projectNames = new ArrayList<>();
     private List<TestItemWithTypeDto> testItemWithTypeDtos = Lists.newArrayList();
+
     @FXML
     private void initialize() {
         initButton();
@@ -77,25 +79,30 @@ public class DataSourceSettingController {
         searchBtn.setOnAction( event -> getSearchConditionEvent() );
         oK.setOnAction( event -> {
             List<String> trueSet = new ArrayList<>();
+            List<String> falseSet = new ArrayList<>();
             //get change List
             List<RowDataDto> rowDataDtos = itemDataTableModel.getRowDataDtoList();
             if (rowDataDtos != null && !rowDataDtos.isEmpty()) {
+                int i = 0;
                 for (RowDataDto rowDataDto : rowDataDtos) {
-                    if (!itemDataTableModel.getFalseSet().contains( rowDataDto.getRowKey() )) {
+                    if (!(itemDataTableModel.getFalseSet()).contains( String.valueOf( i ) )) {
                         trueSet.add( rowDataDto.getRowKey() );
+                    } else {
+                        falseSet.add( rowDataDto.getRowKey() );
                     }
+                    i++;
                 }
             }
-//            for(int i=0;i<trueSet.size();i++){
-//                System.out.println("========"+ trueSet.get(i));
-//            }
-//            if(itemDataTableModel.getFalseSet()!=null && !itemDataTableModel.getFalseSet().isEmpty()){
-//                for(int i=0;i<itemDataTableModel.getFalseSet().size();i++) {
-//                    System.out.println( "===============" + itemDataTableModel.getFalseSet().get( i ) );
-//                }
-//            }
+            for (int i = 0; i < trueSet.size(); i++) {
+                System.out.println( "========" + trueSet.get( i ) );
+            }
+            if (falseSet != null && !falseSet.isEmpty()) {
+                for (int i = 0; i < falseSet.size(); i++) {
+                    System.out.println( "=======================" + falseSet.get( i )+"=========" );
+                }
+            }
             sourceDataService.changeRowDataInUsed( trueSet, true );
-            sourceDataService.changeRowDataInUsed( itemDataTableModel.getFalseSet(), false );
+            sourceDataService.changeRowDataInUsed( falseSet, false );
             StageMap.closeStage( "sourceSetting" );
         } );
         apply.setOnAction( event -> {
@@ -125,8 +132,9 @@ public class DataSourceSettingController {
             chooseCumDialogController = fxmlLoader.getController();
             chooseCumDialogController.setValueColumnText( "Test Item" );
             this.initChooseColumnTableData();
-            WindowFactory.createSimpleWindowAsModel( "dataSourceSetting", GuiFxmlAndLanguageUtils.getString( ResourceMassages.CHOOSE_ITEMS_TITLE ), root,
+            Stage stage = WindowFactory.createNoManagedStage( GuiFxmlAndLanguageUtils.getString( ResourceMassages.CHOOSE_ITEMS_TITLE ), root,
                     getClass().getClassLoader().getResource( "css/platform_app.css" ).toExternalForm() );
+            chooseCumDialogController.setStage( stage );
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -134,12 +142,12 @@ public class DataSourceSettingController {
 
     private void getChooseColumnBtnEvent() {
         chooseCumDialogController.setSelectResultName( itemDataTableModel.getHeaderArray() );
-        StageMap.showStage( "dataSourceSetting" );
+//        StageMap.showStage( "dataSourceSetting" );
+        chooseCumDialogController.getStage().show();
     }
 
     private void initTableData() {
 
-        List<RowDataDto> rowDataDtoList = new LinkedList<>();
         projectNames = envService.findActivatedProjectName();
         testItemWithTypeDtos = envService.findTestItems();
         if (testItemWithTypeDtos != null && !testItemWithTypeDtos.isEmpty()) {
@@ -148,37 +156,7 @@ public class DataSourceSettingController {
             }
         }
         List<RowDataDto> rowDataDtos = sourceDataService.findTestData( projectNames, testItems, true );
-
-        RowDataDto uslDataDto = new RowDataDto();
-        RowDataDto lslDataDto = new RowDataDto();
-        RowDataDto unitDtaDto = new RowDataDto();
-        uslDataDto.setRowKey( "UsL_!@#_" + 2 );
-        lslDataDto.setRowKey( "Lsl_!@#_" + 3 );
-        unitDtaDto.setRowKey( "Unit_!@#_" + 4 );
-
-        Map<String, String> uslDataMap = new HashMap<>();
-        Map<String, String> lslDataMap = new HashMap<>();
-        Map<String, String> unitDataMap = new HashMap<>();
-        for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtos) {
-            if (DAPStringUtils.isNotBlank( testItemWithTypeDto.getUsl() )) {
-                uslDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getUsl() );
-            }
-
-            if (DAPStringUtils.isNotBlank( testItemWithTypeDto.getLsl() )) {
-                lslDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getLsl() );
-            }
-
-            if (DAPStringUtils.isNotBlank( testItemWithTypeDto.getUnit() )) {
-                unitDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getUnit() );
-            }
-        }
-        uslDataDto.setData( uslDataMap );
-        lslDataDto.setData( lslDataMap );
-        unitDtaDto.setData( unitDataMap );
-
-        rowDataDtoList.add( uslDataDto );
-        rowDataDtoList.add( lslDataDto );
-        rowDataDtoList.add( unitDtaDto );
+        List<RowDataDto> rowDataDtoList = this.addRowData( testItems );
         rowDataDtoList.addAll( rowDataDtos );
 
         if (testItems != null && !testItems.isEmpty()) {
@@ -211,106 +189,45 @@ public class DataSourceSettingController {
         selectTestItemName = chooseCumDialogController.getSelectResultName();
         itemDataTable.getColumns().remove( 0, itemDataTable.getColumns().size() );
         itemDataTableModel.updateTestItemColumn( selectTestItemName );
+        itemDataTableModel.setTableView( itemDataTable );
 
         List<RowDataDto> rowDataDtos = sourceDataService.findTestData( projectNames, selectTestItemName, true );
-        List<RowDataDto> rowDataDtoList = new LinkedList<>();
-        RowDataDto uslDataDto = new RowDataDto();
-        RowDataDto lslDataDto = new RowDataDto();
-        RowDataDto unitDtaDto = new RowDataDto();
-        uslDataDto.setRowKey( "UsL_!@#_" + 2 );
-        lslDataDto.setRowKey( "Lsl_!@#_" + 3 );
-        unitDtaDto.setRowKey( "Unit_!@#_" + 4 );
-        Map<String, String> uslDataMap = new HashMap<>();
-        Map<String, String> lslDataMap = new HashMap<>();
-        Map<String, String> unitDataMap = new HashMap<>();
-        if(selectTestItemName!= null && !selectTestItemName.isEmpty()){
-            for(String selectTestItem: selectTestItemName){
-                if(testItemWithTypeDtos!= null && !testItemWithTypeDtos.isEmpty()){
-                    for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtos) {
-                        if(testItemWithTypeDto.getTestItemName().equals(selectTestItem)){
-                            if(DAPStringUtils.isNotBlank( testItemWithTypeDto.getUsl() )){
-                                uslDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getUsl());
-                            }
-                            if (DAPStringUtils.isNotBlank( testItemWithTypeDto.getLsl() )) {
-                                lslDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getLsl());
-                            }
-                            if (DAPStringUtils.isNotBlank( testItemWithTypeDto.getUnit() )) {
-                                unitDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getUnit());
-                            }
-                        }
-
+        List<RowDataDto> rowDataDtoList = this.addRowData( testItems );
+        if (itemDataTableModel.getRowDataDtoList() != null && !itemDataTableModel.getRowDataDtoList().isEmpty()) {
+            for (int i = 0; i < itemDataTableModel.getRowDataDtoList().size(); i++) {
+                for (RowDataDto rowDataDto : rowDataDtos) {
+                    if (itemDataTableModel.getRowDataDtoList().get( i ).getRowKey().equals( rowDataDto.getRowKey() )) {
+                        rowDataDtoList.add( rowDataDto );
                     }
                 }
+
             }
         }
-        uslDataDto.setData( uslDataMap );
-        lslDataDto.setData( lslDataMap );
-        unitDtaDto.setData( unitDataMap );
-        rowDataDtoList.add( uslDataDto );
-        rowDataDtoList.add( lslDataDto );
-        rowDataDtoList.add( unitDtaDto );
-        rowDataDtoList.addAll( rowDataDtos );
-
-        itemDataTableModel.updateRowDataList(rowDataDtoList);
-        StageMap.closeStage( "dataSourceSetting" );
+        itemDataTableModel.updateRowDataList( rowDataDtoList );
+        chooseCumDialogController.getStage().close();
     }
 
     private void getSearchConditionEvent() {
         List<String> columKey = new LinkedList<>();
-        if(itemDataTableModel.getHeaderArray()!= null && !itemDataTableModel.getHeaderArray().isEmpty()){
-            for(int i = 0 ;i< itemDataTableModel.getHeaderArray().size();i++){
-                if(i!= 0){
-                    columKey.add(itemDataTableModel.getHeaderArray().get(i));
+        if (itemDataTableModel.getHeaderArray() != null && !itemDataTableModel.getHeaderArray().isEmpty()) {
+            for (int i = 0; i < itemDataTableModel.getHeaderArray().size(); i++) {
+                if (i != 0) {
+                    columKey.add( itemDataTableModel.getHeaderArray().get( i ) );
                 }
             }
         }
+
 
         List<RowDataDto> rowDataDtoList = new LinkedList<>();
-        RowDataDto uslDataDto = new RowDataDto();
-        RowDataDto lslDataDto = new RowDataDto();
-        RowDataDto unitDtaDto = new RowDataDto();
-        uslDataDto.setRowKey( "UsL_!@#_" + 2 );
-        lslDataDto.setRowKey( "Lsl_!@#_" + 3 );
-        unitDtaDto.setRowKey( "Unit_!@#_" + 4 );
-        Map<String, String> uslDataMap = new HashMap<>();
-        Map<String, String> lslDataMap = new HashMap<>();
-        Map<String, String> unitDataMap = new HashMap<>();
-        if(columKey!= null && !columKey.isEmpty()){
-            for(String selectTestItem: columKey){
-                if(testItemWithTypeDtos!= null && !testItemWithTypeDtos.isEmpty()){
-                    for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtos) {
-                        if(testItemWithTypeDto.getTestItemName().equals(selectTestItem)){
-                            if(DAPStringUtils.isNotBlank( testItemWithTypeDto.getUsl() )){
-                                uslDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getUsl());
-                            }
-                            if (DAPStringUtils.isNotBlank( testItemWithTypeDto.getLsl() )) {
-                                lslDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getLsl());
-                            }
-                            if (DAPStringUtils.isNotBlank( testItemWithTypeDto.getUnit() )) {
-                                unitDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getUnit());
-                            }
-                        }
-
-                    }
-                }
-            }
-        }
-        uslDataDto.setData( uslDataMap );
-        lslDataDto.setData( lslDataMap );
-        unitDtaDto.setData( unitDataMap );
-        rowDataDtoList.add( uslDataDto );
-        rowDataDtoList.add( lslDataDto );
-        rowDataDtoList.add( unitDtaDto );
         List<RowDataDto> rowDataDtos = sourceDataService.findTestData( projectNames, columKey, true );
         rowDataDtoList.addAll( rowDataDtos );
 
-        List<RowDataDto> searchResultDtos = new ArrayList<>();
+        List<RowDataDto> searchResultDtos = this.addRowData( columKey );
         Boolean flag = false;
         List<String> searchCondition = searchTab.getSearch();
         TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
         if (templateSettingDto.getTimePatternDto() != null) {
             FilterUtils filterUtils = new FilterUtils( templateSettingDto.getTimePatternDto().getTimeKeys(), templateSettingDto.getTimePatternDto().getPattern() );
-
             if (!searchCondition.isEmpty() && searchCondition != null) {
                 for (String condition : searchCondition) {
                     if (rowDataDtoList != null && !rowDataDtoList.isEmpty()) {
@@ -322,10 +239,49 @@ public class DataSourceSettingController {
                         }
                     }
                 }
-
-               itemDataTableModel.updateRowDataList(searchResultDtos);
+                itemDataTableModel.updateRowDataList( searchResultDtos );
             }
         }
+    }
+
+    private List<RowDataDto> addRowData(List<String> columKey) {
+        List<RowDataDto> rowDataDtoList = new LinkedList<>();
+        RowDataDto uslDataDto = new RowDataDto();
+        RowDataDto lslDataDto = new RowDataDto();
+        RowDataDto unitDtaDto = new RowDataDto();
+        uslDataDto.setRowKey( "UsL_!@#_" + 2 );
+        lslDataDto.setRowKey( "Lsl_!@#_" + 3 );
+        unitDtaDto.setRowKey( "Unit_!@#_" + 4 );
+        Map<String, String> uslDataMap = new HashMap<>();
+        Map<String, String> lslDataMap = new HashMap<>();
+        Map<String, String> unitDataMap = new HashMap<>();
+        if (columKey != null && !columKey.isEmpty()) {
+            for (String selectTestItem : columKey) {
+                if (testItemWithTypeDtos != null && !testItemWithTypeDtos.isEmpty()) {
+                    for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtos) {
+                        if (testItemWithTypeDto.getTestItemName().equals( selectTestItem )) {
+                            if (DAPStringUtils.isNotBlank( testItemWithTypeDto.getUsl() )) {
+                                uslDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getUsl() );
+                            }
+                            if (DAPStringUtils.isNotBlank( testItemWithTypeDto.getLsl() )) {
+                                lslDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getLsl() );
+                            }
+                            if (DAPStringUtils.isNotBlank( testItemWithTypeDto.getUnit() )) {
+                                unitDataMap.put( testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getUnit() );
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+        uslDataDto.setData( uslDataMap );
+        lslDataDto.setData( lslDataMap );
+        unitDtaDto.setData( unitDataMap );
+        rowDataDtoList.add( uslDataDto );
+        rowDataDtoList.add( lslDataDto );
+        rowDataDtoList.add( unitDtaDto );
+        return rowDataDtoList;
     }
 
 }

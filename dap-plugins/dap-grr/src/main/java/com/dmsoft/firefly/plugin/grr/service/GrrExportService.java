@@ -17,7 +17,7 @@ import java.util.List;
  */
 public interface GrrExportService {
 
-    String exportGrrSummary(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryDto> grrSummaryExportDtos, List<Double> level);
+    String exportGrrSummary(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryDto> grrSummaryExportDtos);
 
-    String exportGrrSummaryDetail(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryDto> grrSummaryExportDtos, List<GrrExportResultDto> grrExportResultDtos,  List<Double> level);
+    String exportGrrSummaryDetail(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryDto> grrSummaryExportDtos, List<GrrExportResultDto> grrExportResultDtos);
 }

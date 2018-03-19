@@ -13,11 +13,14 @@ import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
+import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcLeftConfigServiceImpl;
+import com.dmsoft.firefly.plugin.spc.service.impl.SpcSettingServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.job.Job;
@@ -93,8 +96,8 @@ public class SpcItemController implements Initializable {
     private ContextMenu pop;
 
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
-    private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
     private SpcLeftConfigServiceImpl leftConfigService = new SpcLeftConfigServiceImpl();
+    private SpcSettingService spcSettingService = RuntimeContext.getBean(SpcSettingServiceImpl.class);
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
 
     /**
@@ -150,13 +153,17 @@ public class SpcItemController implements Initializable {
         item.getStyleClass().add("filter-header");
         item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
         initItemData();
-        item.setPrefWidth(148);
 
         item.widthProperty().addListener((ov, w1, w2) -> {
             Platform.runLater(() -> {
                 is.relocate(w2.doubleValue() - 21, 0);
             });
         });
+        SpcSettingDto settingDto = spcSettingService.findSpcSetting();
+        if (settingDto != null) {
+            ndGroup.setText(String.valueOf(settingDto.getCustomGroupNumber()));
+            subGroup.setText(String.valueOf(settingDto.getChartIntervalNumber()));
+        }
     }
 
     private void initBtnIcon() {
@@ -291,9 +298,9 @@ public class SpcItemController implements Initializable {
                         spcMainController.setInitSearchConditionDtoList(searchConditionDtoList);
 
                         Object returnValue = manager.doJobSyn(job, paramMap, spcMainController);
-                        if (returnValue == null) {
+                        if (returnValue == null || returnValue instanceof Exception) {
                             //todo message tip
-
+                            ((Exception) returnValue).printStackTrace();
                         } else {
                             spcMainController.clearAnalysisSubShowData();
                             SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
@@ -310,52 +317,6 @@ public class SpcItemController implements Initializable {
         };
         windowProgressTipController.getTaskProgress().progressProperty().bind(service.progressProperty());
         service.start();
-    }
-
-
-    @Deprecated
-    private List<SpcStatsDto> initData() {
-        List<SpcStatsDto> spcStatsDtoList = Lists.newArrayList();
-        Random random = new Random();
-        int k = random.nextInt(100);
-        for (int i = 0; i < k; i++) {
-            SpcStatsDto statisticalResultDto = new SpcStatsDto();
-            statisticalResultDto.setKey("key" + i);
-            statisticalResultDto.setItemName("itemName" + i);
-            statisticalResultDto.setCondition("itemName > 22");
-            spcStatsDtoList.add(statisticalResultDto);
-            SpcStatsResultDto spcStatsResultDto = new SpcStatsResultDto();
-            statisticalResultDto.setStatsResultDto(spcStatsResultDto);
-            int m = random.nextInt(k);
-            if (m > i) {
-                statisticalResultDto.getStatsResultDto().setSamples(m + 2.1);
-            }
-            statisticalResultDto.getStatsResultDto().setAvg(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setMax(m + 312.7);
-            statisticalResultDto.getStatsResultDto().setMin(m + 34.8);
-            statisticalResultDto.getStatsResultDto().setStDev(m + 124.6);
-            statisticalResultDto.getStatsResultDto().setLsl(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setUsl(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setCenter(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setRange(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setLcl(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setUcl(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setKurtosis(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setCpk(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setSkewness(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setCa(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setCp(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setCpl(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setCpu(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setWithinPPM(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setOverallPPM(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setPp(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setPpk(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setPpl(m + 32.2);
-            statisticalResultDto.getStatsResultDto().setPpu(m + 32.2);
-
-        }
-        return spcStatsDtoList;
     }
 
     /**
@@ -532,10 +493,13 @@ public class SpcItemController implements Initializable {
         List<String> timeKeys = Lists.newArrayList();
         String timePattern = null;
         try {
-            timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
-            timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
+            TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
+            if (timePatternDto != null) {
+                timeKeys = timePatternDto.getTimeKeys();
+                timePattern = timePatternDto.getPattern();
+            }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         for (String condition : conditionList) {

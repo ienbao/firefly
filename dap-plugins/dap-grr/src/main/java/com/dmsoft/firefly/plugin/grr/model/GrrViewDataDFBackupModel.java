@@ -211,11 +211,11 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
             int index = this.rowKeyArray.indexOf(oldDto.getRowKey());
             this.rowKeyArray.remove(index);
             this.rowKeyArray.add(index, grrViewDataDto.getRowKey());
-            for (int i = 0; i < this.grrDataFrameDto.getBackupDatas().size(); i++) {
-                if (oldDto.getRowKey().equals(this.grrDataFrameDto.getBackupDatas().get(i).getRowKey())) {
-                    this.grrDataFrameDto.getBackupDatas().set(i, grrViewDataDto);
-                }
-            }
+//            for (int i = 0; i < this.grrDataFrameDto.getBackupDatas().size(); i++) {
+//                if (oldDto.getRowKey().equals(this.grrDataFrameDto.getBackupDatas().get(i).getRowKey())) {
+//                    this.grrDataFrameDto.getBackupDatas().set(i, grrViewDataDto);
+//                }
+//            }
         }
     }
 
@@ -248,5 +248,9 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
             }
         }
         return null;
+    }
+
+    public Map<String, GrrViewDataDto> getGrrViewDataDtoMap() {
+        return grrViewDataDtoMap;
     }
 }

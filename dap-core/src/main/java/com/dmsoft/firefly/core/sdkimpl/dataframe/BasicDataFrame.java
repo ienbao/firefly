@@ -334,7 +334,7 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
         if (isRowKeyExist(rowKey)) {
             return this.inUsedList.get(rowKeys.indexOf(rowKey));
         }
-        return null;
+        return Boolean.FALSE;
     }
 
     @Override

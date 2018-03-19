@@ -2,6 +2,7 @@ package com.dmsoft.firefly.gui.components.window;
 
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.components.utils.ResourceMassages;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -119,7 +120,7 @@ public class WindowMessageFactory {
         Pane root = null;
         WindowProgressTipController windowProgressTipController = new WindowProgressTipController();
         try {
-            FXMLLoader fxmlLoader = FxmlAndLanguageUtils.getLoaderFXML("view/window_progress_tip.fxml");
+            FXMLLoader fxmlLoader = FxmlAndLanguageUtils.getLoaderFXML("view/windows_progress.fxml");
             fxmlLoader.setController(windowProgressTipController);
             root = fxmlLoader.load();
             Stage newStage = WindowFactory.createOrUpdateSimpleWindowAsModel(ResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP, title, root);
@@ -130,6 +131,13 @@ public class WindowMessageFactory {
             newStage.show();
 
             newStage.setOnCloseRequest(event -> {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        newStage.setMinHeight(150);
+                        newStage.setMaxHeight(150);
+                    }
+                });
                 windowProgressTipController.closeDialog();
             });
         } catch (IOException e) {

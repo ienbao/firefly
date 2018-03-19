@@ -159,6 +159,8 @@ public final class StageMap {
 
             } else if (title instanceof Pane) {
                 windowPane = new WindowPane((Pane) title, resources);
+            } else {
+                windowPane = new WindowPane("", resources);
             }
 
             windowPane.setWindowsModel(windowModel);
@@ -286,6 +288,8 @@ public final class StageMap {
 
             } else if (title instanceof Pane) {
                 windowPane = new WindowPane((Pane) title, resources);
+            } else {
+                windowPane = new WindowPane("", resources);
             }
 
             windowPane.setWindowsModel(WindowPane.WINDOW_MODEL_X);

@@ -4,7 +4,7 @@
 
 package com.dmsoft.firefly.plugin.grr.dto;
 
-import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Created by GuangLi on 2017/7/31.
@@ -12,9 +12,8 @@ import java.util.LinkedHashMap;
 public class GrrExportConfigDto extends GrrConfigDto {
     private String exportPath;
     private String userName;
-    private Boolean isTolerance;
-    private String sigma;
-    private LinkedHashMap<String, SpecificationDataDto> specificationDataDtoMap;
+
+    private GrrConfigDto grrConfigDto;
 
     public String getExportPath() {
         return exportPath;
@@ -32,31 +31,31 @@ public class GrrExportConfigDto extends GrrConfigDto {
         this.userName = userName;
     }
 
+    public GrrConfigDto getGrrConfigDto() {
+        return grrConfigDto;
+    }
+
+    public void setGrrConfigDto(GrrConfigDto grrConfigDto) {
+        this.grrConfigDto = grrConfigDto;
+    }
+
     public Boolean isTolerance() {
-        return isTolerance;
-    }
-
-    public void setTolerance(Boolean tolerance) {
-        isTolerance = tolerance;
-    }
-
-    public Boolean getTolerance() {
-        return isTolerance;
-    }
-
-    public LinkedHashMap<String, SpecificationDataDto> getSpecificationDataDtoMap() {
-        return specificationDataDtoMap;
-    }
-
-    public void setSpecificationDataDtoMap(LinkedHashMap<String, SpecificationDataDto> specificationDataDtoMap) {
-        this.specificationDataDtoMap = specificationDataDtoMap;
+        if (grrConfigDto != null) {
+            return grrConfigDto.getExport().get("Export GRR Result based on process tolerance");
+        }
+        return true;
     }
 
     public String getSigma() {
-        return sigma;
+        if (grrConfigDto != null) {
+            return grrConfigDto.getSignLevel();
+        }
+        return "5.15";
     }
-
-    public void setSigma(String sigma) {
-        this.sigma = sigma;
+    public List<Double> getLevel(){
+        if (grrConfigDto != null) {
+            return grrConfigDto.getAlarmSetting();
+        }
+        return null;
     }
 }

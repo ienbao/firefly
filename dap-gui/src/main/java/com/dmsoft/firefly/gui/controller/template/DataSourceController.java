@@ -168,6 +168,7 @@ public class DataSourceController implements Initializable {
 
                                             item.setValue(n.getText());
                                             dataSourceTable.refresh();
+                                            updateProjectOrder();
                                         }
                                         StageMap.closeStage("renameProject");
                                     });
@@ -289,8 +290,8 @@ public class DataSourceController implements Initializable {
             //TODO notify refresh event
 
             StageMap.closeStage("dataSource");
-            MenuFactory.getMainController().resetMain();
-            //refreshMainDataSource(selectProject);
+            refreshMainDataSource(selectProject);
+
         });
 
         cancel.setOnAction(event -> {

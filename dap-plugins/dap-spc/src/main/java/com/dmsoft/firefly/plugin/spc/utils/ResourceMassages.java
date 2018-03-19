@@ -33,4 +33,7 @@ public class ResourceMassages {
     //Spc export template setting
     public static final String EXPORT_SETTING_TITLE = "EXPORT_SETTING_TITLE";
 
+    //validate
+    public static final String ALARM_RULE_ORDER = "ALARM_RULE_ORDER";
+
 }

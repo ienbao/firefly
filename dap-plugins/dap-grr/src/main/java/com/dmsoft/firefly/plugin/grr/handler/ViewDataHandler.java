@@ -3,10 +3,12 @@ package com.dmsoft.firefly.plugin.grr.handler;
 import com.dmsoft.firefly.plugin.grr.controller.GrrMainController;
 import com.dmsoft.firefly.plugin.grr.dto.GrrConfigDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
+import com.dmsoft.firefly.plugin.grr.dto.GrrViewDataDto;
 import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.service.GrrFilterService;
 import com.dmsoft.firefly.plugin.grr.utils.GrrExceptionCode;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.grr.utils.ListUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
@@ -15,7 +17,9 @@ import com.dmsoft.firefly.sdk.job.AbstractProcessMonitorAutoAdd;
 import com.dmsoft.firefly.sdk.job.ProcessMonitorAuto;
 import com.dmsoft.firefly.sdk.job.core.JobHandlerContext;
 import com.dmsoft.firefly.sdk.job.core.JobInboundHandler;
+import com.google.common.collect.Lists;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,6 +49,13 @@ public class ViewDataHandler implements JobInboundHandler {
         if (in[1] != null && in[1] instanceof GrrMainController) {
             GrrMainController grrMainController = (GrrMainController) in[1];
             grrMainController.setGrrDataFrame(grrDataFrameDto);
+            GrrDataFrameDto backDataFrame = new GrrDataFrameDto();
+            backDataFrame.setDataFrame(grrDataFrameDto.getDataFrame());
+            List<GrrViewDataDto> includeViewDataDtos = Lists.newArrayList(ListUtils.deepCopy(grrDataFrameDto.getIncludeDatas()));
+            List<GrrViewDataDto> backViewDataDtos = Lists.newArrayList(ListUtils.deepCopy(grrDataFrameDto.getBackupDatas()));
+            backDataFrame.setIncludeDatas(includeViewDataDtos);
+            backDataFrame.setBackupDatas(backViewDataDtos);
+            grrMainController.setBackGrrDataFrame(backDataFrame);
         }
         param.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrDataFrameDto);
         context.fireDoJob(param, in[1]);
