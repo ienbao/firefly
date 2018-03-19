@@ -132,13 +132,13 @@ public class ItemDataTableModel implements TableModel {
 
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
-       // String row = rowKey.substring( rowKey.indexOf( "_!@#_" ) + 5 );
         Double dataValue = null;
         Double usl = null;
         Double lsl = null;
 
-        if(("").equals(column)){
-            return null;
+        if(("").equals(column)&& checkMap.get(rowKey).equals(true)){
+            tableCell.setStyle( "-fx-text-fill: #f38400" );
+            return tableCell;
         }
         if(DAPStringUtils.isNumeric( rowDataDtoList.get( 0 ).getData().get( column ) )) {
             usl =  Double.valueOf(rowDataDtoList.get( 0 ).getData().get( column ));
