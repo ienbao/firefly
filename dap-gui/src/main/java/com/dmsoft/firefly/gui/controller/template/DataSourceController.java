@@ -404,7 +404,12 @@ public class DataSourceController implements Initializable {
             List<String> value = Lists.newArrayList();
             value.addAll(sourceDataService.findAllProjectName());
             value.forEach(v -> {
-                ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, v);
+                ChooseTableRowData chooseTableRowData = null;
+                if (selectProject != null && selectProject.contains(v)) {
+                    chooseTableRowData = new ChooseTableRowData(true, v);
+                } else {
+                    chooseTableRowData = new ChooseTableRowData(false, v);
+                }
                 chooseTableRowDataList.add(chooseTableRowData);
             });
         }
