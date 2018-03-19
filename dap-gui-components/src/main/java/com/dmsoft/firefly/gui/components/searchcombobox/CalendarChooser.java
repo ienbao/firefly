@@ -257,7 +257,7 @@ public class CalendarChooser extends GridPane {
         }
         currBtn = (Button) event.getSource();
         currBtn.getStyleClass().setAll(redBtnClass);
-        int day1 = Integer.valueOf(currBtn.getText());
+        int day1 = Integer.parseInt(currBtn.getText());
         this.calendar.set(Calendar.DAY_OF_MONTH, day1);
         String sb = String.valueOf(this.calendar.get(Calendar.YEAR)) + "-" +
                 this.formatDay(this.calendar.get(Calendar.MONTH) + 1) +

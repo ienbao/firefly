@@ -11,18 +11,17 @@ import java.util.regex.Pattern;
  * validate tool
  *
  * @author Julia
- *
  */
 public class ValidateUtil {
-    public static String TEXT_FIELD_ERROR_STYLE = "text-field-error";
-    public static String COMBO_BOX_ERROR_STYLE = "combo-box-error";
+    public static final String TEXT_FIELD_ERROR_STYLE = "text-field-error";
+    public static final String COMBO_BOX_ERROR_STYLE = "combo-box-error";
 
     public static boolean validateIsNotEmpty(Object msg, Node node) {
         boolean result = false;
         if (msg == null || DAPStringUtils.isBlank((String) msg)) {
             if (node instanceof TextField) {
                 node.getStyleClass().add(TEXT_FIELD_ERROR_STYLE);
-            } else  if (node instanceof ComboBox) {
+            } else if (node instanceof ComboBox) {
                 node.getStyleClass().add(COMBO_BOX_ERROR_STYLE);
             }
             TooltipUtil.installWarnTooltip(node, FxmlAndLanguageUtils.getString(ValidationAnno.GLOBAL_VALIDATE_NOT_BE_EMPTY));
@@ -30,7 +29,7 @@ public class ValidateUtil {
             TooltipUtil.uninstallWarnTooltip(node);
             if (node instanceof TextField) {
                 node.getStyleClass().removeAll(TEXT_FIELD_ERROR_STYLE);
-            } else  if (node instanceof ComboBox) {
+            } else if (node instanceof ComboBox) {
                 node.getStyleClass().removeAll(COMBO_BOX_ERROR_STYLE);
             }
             result = true;
@@ -51,8 +50,8 @@ public class ValidateUtil {
     public static boolean validateReg(String msgValue, Node node, String regType, String errorMsg) {
         boolean result = false;
         if (DAPStringUtils.isNotBlank(msgValue) && DAPStringUtils.isNotBlank(regType) && !Pattern.matches(regType, msgValue)) {
-                node.getStyleClass().add(TEXT_FIELD_ERROR_STYLE);
-                TooltipUtil.installWarnTooltip(node, errorMsg);
+            node.getStyleClass().add(TEXT_FIELD_ERROR_STYLE);
+            TooltipUtil.installWarnTooltip(node, errorMsg);
         } else {
             node.getStyleClass().removeAll(TEXT_FIELD_ERROR_STYLE);
             TooltipUtil.uninstallWarnTooltip(node);
@@ -72,7 +71,7 @@ public class ValidateUtil {
         } else if (!newValue.equals(confirmValue)) {
             node.getStyleClass().add(TEXT_FIELD_ERROR_STYLE);
             TooltipUtil.installWarnTooltip(node, FxmlAndLanguageUtils.getString("CHANGE_VALIDATE_CONFIRM_NOT_MATCH"));
-        }  else {
+        } else {
             node.getStyleClass().removeAll(TEXT_FIELD_ERROR_STYLE);
             TooltipUtil.uninstallWarnTooltip(node);
             result = true;
