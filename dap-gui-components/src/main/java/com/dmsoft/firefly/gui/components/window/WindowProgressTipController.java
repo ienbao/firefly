@@ -21,12 +21,19 @@ public class WindowProgressTipController {
     private GridPane progressPane;
     @FXML
     private ProgressBar taskProgress;
+    @FXML
+    private TextArea errorTxt;
+
+    private Stage stage;
 
     private WindowCustomListener windowCustomListener;
 
     @FXML
     private void initialize(){
         initCancelBtn();
+        errorTxt.setEditable(false);
+        errorTxt.setVisible(false);
+        errorTxt.setMaxHeight(0);
         taskProgress.getStyleClass().setAll("progress-bar-lg-green");
         taskProgress.setProgress(0);
         taskProgress.progressProperty().addListener(e->{
@@ -55,6 +62,8 @@ public class WindowProgressTipController {
     public void updateFailProgress(double progressValue) {
         taskProgress.getStyleClass().setAll("progress-bar-lg-red");
         taskProgress.setProgress(progressValue / 100);
+        errorTxt.setVisible(true);
+        errorTxt.setMaxHeight(240);
         /*if (progressValue >= 100) {
             closeDialog();
         }*/

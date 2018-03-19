@@ -119,7 +119,7 @@ public class WindowMessageFactory {
         Pane root = null;
         WindowProgressTipController windowProgressTipController = new WindowProgressTipController();
         try {
-            FXMLLoader fxmlLoader = FxmlAndLanguageUtils.getLoaderFXML("view/window_progress_tip.fxml");
+            FXMLLoader fxmlLoader = FxmlAndLanguageUtils.getLoaderFXML("view/windows_progress.fxml");
             fxmlLoader.setController(windowProgressTipController);
             root = fxmlLoader.load();
             Stage newStage = WindowFactory.createOrUpdateSimpleWindowAsModel(ResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP, title, root);
