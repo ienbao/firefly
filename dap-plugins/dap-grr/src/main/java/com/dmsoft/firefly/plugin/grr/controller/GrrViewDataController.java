@@ -88,7 +88,7 @@ public class GrrViewDataController implements Initializable {
                 toBeBackupDto.setOperator(toBeIncludeApp);
                 toBeBackupDto.setTrial(toBeIncludeTrail);
                 toBeIncludeDto.setOperator(toBeBackUpApp);
-                toBeBackupDto.setTrial(toBeBackUpTrail);
+                toBeIncludeDto.setTrial(toBeBackUpTrail);
                 this.includeModel.replace(toBeIncludeDto);
                 this.backupModel.replace(toBeBackupDto);
                 isChanged = true;
