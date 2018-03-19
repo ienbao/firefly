@@ -54,8 +54,9 @@ public class DataSourceSettingController {
     private SourceDataService sourceDataService = RuntimeContext.getBean( SourceDataService.class );
     private List<String> testItems = new ArrayList<>();
     private List<String> selectTestItemName = Lists.newArrayList();
-    private List<String> projectNames= new ArrayList<>();
+    private List<String> projectNames = new ArrayList<>();
     private List<TestItemWithTypeDto> testItemWithTypeDtos = Lists.newArrayList();
+
     @FXML
     private void initialize() {
         initButton();
@@ -78,25 +79,30 @@ public class DataSourceSettingController {
         searchBtn.setOnAction( event -> getSearchConditionEvent() );
         oK.setOnAction( event -> {
             List<String> trueSet = new ArrayList<>();
+            List<String> falseSet = new ArrayList<>();
             //get change List
             List<RowDataDto> rowDataDtos = itemDataTableModel.getRowDataDtoList();
             if (rowDataDtos != null && !rowDataDtos.isEmpty()) {
+                int i = 0;
                 for (RowDataDto rowDataDto : rowDataDtos) {
-                    if (!itemDataTableModel.getFalseSet().contains( rowDataDto.getRowKey() )) {
+                    if (!(itemDataTableModel.getFalseSet()).contains( String.valueOf( i ) )) {
                         trueSet.add( rowDataDto.getRowKey() );
+                    } else {
+                        falseSet.add( rowDataDto.getRowKey() );
                     }
+                    i++;
                 }
             }
-//            for(int i=0;i<trueSet.size();i++){
-//                System.out.println("========"+ trueSet.get(i));
-//            }
-//            if(itemDataTableModel.getFalseSet()!=null && !itemDataTableModel.getFalseSet().isEmpty()){
-//                for(int i=0;i<itemDataTableModel.getFalseSet().size();i++) {
-//                    System.out.println( "===============" + itemDataTableModel.getFalseSet().get( i ) );
-//                }
-//            }
+            for (int i = 0; i < trueSet.size(); i++) {
+                System.out.println( "========" + trueSet.get( i ) );
+            }
+            if (falseSet != null && !falseSet.isEmpty()) {
+                for (int i = 0; i < falseSet.size(); i++) {
+                    System.out.println( "=======================" + falseSet.get( i )+"=========" );
+                }
+            }
             sourceDataService.changeRowDataInUsed( trueSet, true );
-            sourceDataService.changeRowDataInUsed( itemDataTableModel.getFalseSet(), false );
+            sourceDataService.changeRowDataInUsed( falseSet, false );
             StageMap.closeStage( "sourceSetting" );
         } );
         apply.setOnAction( event -> {
@@ -150,7 +156,7 @@ public class DataSourceSettingController {
             }
         }
         List<RowDataDto> rowDataDtos = sourceDataService.findTestData( projectNames, testItems, true );
-        List<RowDataDto> rowDataDtoList = this.addRowData(testItems);
+        List<RowDataDto> rowDataDtoList = this.addRowData( testItems );
         rowDataDtoList.addAll( rowDataDtos );
 
         if (testItems != null && !testItems.isEmpty()) {
@@ -164,7 +170,7 @@ public class DataSourceSettingController {
         testItems.forEach( v -> {
             ChooseTableRowData chooseTableRowData = new ChooseTableRowData( false, v );
             chooseTableRowDataList.add( chooseTableRowData );
-        });
+        } );
         chooseCumDialogController.setTableData( chooseTableRowDataList );
     }
 
@@ -183,31 +189,30 @@ public class DataSourceSettingController {
         selectTestItemName = chooseCumDialogController.getSelectResultName();
         itemDataTable.getColumns().remove( 0, itemDataTable.getColumns().size() );
         itemDataTableModel.updateTestItemColumn( selectTestItemName );
-        itemDataTableModel.setTableView(itemDataTable);
+        itemDataTableModel.setTableView( itemDataTable );
 
         List<RowDataDto> rowDataDtos = sourceDataService.findTestData( projectNames, selectTestItemName, true );
-        List<RowDataDto> rowDataDtoList = this.addRowData(testItems);
-        if( itemDataTableModel.getRowDataDtoList()!= null && ! itemDataTableModel.getRowDataDtoList().isEmpty()){
-           for(int i = 0; i< itemDataTableModel.getRowDataDtoList().size();i++){
-               for(RowDataDto rowDataDto:rowDataDtos){
-                   if(itemDataTableModel.getRowDataDtoList().get(i).getRowKey().equals(rowDataDto.getRowKey())){
-                       rowDataDtoList.add(rowDataDto);
-                   }
-               }
+        List<RowDataDto> rowDataDtoList = this.addRowData( testItems );
+        if (itemDataTableModel.getRowDataDtoList() != null && !itemDataTableModel.getRowDataDtoList().isEmpty()) {
+            for (int i = 0; i < itemDataTableModel.getRowDataDtoList().size(); i++) {
+                for (RowDataDto rowDataDto : rowDataDtos) {
+                    if (itemDataTableModel.getRowDataDtoList().get( i ).getRowKey().equals( rowDataDto.getRowKey() )) {
+                        rowDataDtoList.add( rowDataDto );
+                    }
+                }
 
-           }
+            }
         }
-        itemDataTableModel.updateRowDataList(rowDataDtoList);
-//        StageMap.closeStage( "dataSourceSetting" );
+        itemDataTableModel.updateRowDataList( rowDataDtoList );
         chooseCumDialogController.getStage().close();
     }
 
     private void getSearchConditionEvent() {
         List<String> columKey = new LinkedList<>();
-        if(itemDataTableModel.getHeaderArray()!= null && !itemDataTableModel.getHeaderArray().isEmpty()){
-            for(int i = 0 ;i< itemDataTableModel.getHeaderArray().size();i++){
-                if(i!= 0){
-                    columKey.add(itemDataTableModel.getHeaderArray().get(i));
+        if (itemDataTableModel.getHeaderArray() != null && !itemDataTableModel.getHeaderArray().isEmpty()) {
+            for (int i = 0; i < itemDataTableModel.getHeaderArray().size(); i++) {
+                if (i != 0) {
+                    columKey.add( itemDataTableModel.getHeaderArray().get( i ) );
                 }
             }
         }
@@ -217,7 +222,7 @@ public class DataSourceSettingController {
         List<RowDataDto> rowDataDtos = sourceDataService.findTestData( projectNames, columKey, true );
         rowDataDtoList.addAll( rowDataDtos );
 
-        List<RowDataDto> searchResultDtos = this.addRowData(columKey);
+        List<RowDataDto> searchResultDtos = this.addRowData( columKey );
         Boolean flag = false;
         List<String> searchCondition = searchTab.getSearch();
         TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
@@ -234,7 +239,7 @@ public class DataSourceSettingController {
                         }
                     }
                 }
-               itemDataTableModel.updateRowDataList(searchResultDtos);
+                itemDataTableModel.updateRowDataList( searchResultDtos );
             }
         }
     }
