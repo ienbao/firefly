@@ -9,6 +9,7 @@ import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
+import com.dmsoft.firefly.sdk.plugin.apis.annotation.OpenService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -24,10 +25,11 @@ import java.util.concurrent.atomic.AtomicReference;
  *
  * @author Julia
  */
+@OpenService
 public class GrrFilterServiceImpl implements GrrFilterService {
-    private final Logger logger = LoggerFactory.getLogger(GrrFilterServiceImpl.class);
     private static String SORT_MEHODE_APPRAISER = "Appraisers";
     private static String SORT_MEHODE_TRIAL = "default";
+    private final Logger logger = LoggerFactory.getLogger(GrrFilterServiceImpl.class);
 
     @Override
     public GrrParamDto validateGrrParam(SearchDataFrame dataFrame, SearchConditionDto searchConditionDto) {
@@ -78,7 +80,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
 
     private GrrDataFrameDto getGrrSlot(SearchDataFrame dataFrame, SearchConditionDto searchConditionDto) {
         GrrDataFrameDto grrDataFrameDto = new GrrDataFrameDto();
-        List<GrrViewDataDto> grrIncludeDataDtos = Lists. newLinkedList();
+        List<GrrViewDataDto> grrIncludeDataDtos = Lists.newLinkedList();
         List<GrrViewDataDto> grrBackupDataDtos = Lists.newLinkedList();
 
         String partName = searchConditionDto.getPart();
@@ -87,15 +89,15 @@ public class GrrFilterServiceImpl implements GrrFilterService {
 
         List<String> parts = searchConditionDto.getParts();
         List<String> appraisers = searchConditionDto.getAppraisers();
-        parts.forEach(partValue->{
-            appraisers.forEach(appraiserValue->{
+        parts.forEach(partValue -> {
+            appraisers.forEach(appraiserValue -> {
                 StringBuffer search = new StringBuffer();
                 search.append("\"" + partName + "\"").append("=").append("\"" + partValue + "\"").append("&").append("\"" + appraiserName + "\"").append("=").append("\"" + appraiserValue + "\"");
                 List<String> rowKeys = dataFrame.getSearchRowKey(search.toString());
                 if (rowKeys != null && !rowKeys.isEmpty()) {
                     AtomicInteger index = new AtomicInteger(1);
                     AtomicInteger count = new AtomicInteger(0);
-                    rowKeys.forEach(rowKey->{
+                    rowKeys.forEach(rowKey -> {
                         GrrViewDataDto grrViewDataDto = new GrrViewDataDto();
                         grrViewDataDto.setPart(partValue);
                         grrViewDataDto.setOperator(appraiserValue);
@@ -122,7 +124,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
 
     private GrrDataFrameDto getGrrNormalForTrial(SearchDataFrame dataFrame, SearchConditionDto searchConditionDto) {
         GrrDataFrameDto grrDataFrameDto = new GrrDataFrameDto();
-        List<GrrViewDataDto> grrIncludeDataDtos = Lists. newLinkedList();
+        List<GrrViewDataDto> grrIncludeDataDtos = Lists.newLinkedList();
         List<GrrViewDataDto> grrBackupDataDtos = Lists.newLinkedList();
 
         String partName = searchConditionDto.getPart();
@@ -130,14 +132,14 @@ public class GrrFilterServiceImpl implements GrrFilterService {
         int appraiserInt = searchConditionDto.getAppraiserInt();
 
         List<String> parts = searchConditionDto.getParts();
-        parts.forEach(partValue->{
+        parts.forEach(partValue -> {
             StringBuffer search = new StringBuffer();
             search.append("\"" + partName + "\"").append("=").append("\"" + partValue + "\"");
             List<String> rowKeys = dataFrame.getSearchRowKey(search.toString());
             AtomicInteger index = new AtomicInteger(1);
             AtomicInteger appraiserIndex = new AtomicInteger(1);
             AtomicInteger trialIndex = new AtomicInteger(1);
-            rowKeys.forEach(rowKey->{
+            rowKeys.forEach(rowKey -> {
                 if (trialIndex.get() == trialInt + 1) {
                     appraiserIndex.set(appraiserIndex.get() + 1);
                     trialIndex.set(1);
@@ -166,14 +168,14 @@ public class GrrFilterServiceImpl implements GrrFilterService {
 
     private GrrDataFrameDto getGrrNormalForAppraiser(SearchDataFrame dataFrame, SearchConditionDto searchConditionDto) {
         GrrDataFrameDto grrDataFrameDto = new GrrDataFrameDto();
-        List<GrrViewDataDto> grrIncludeDataDtos = Lists. newLinkedList();
+        List<GrrViewDataDto> grrIncludeDataDtos = Lists.newLinkedList();
         List<GrrViewDataDto> grrBackupDataDtos = Lists.newLinkedList();
         String partName = searchConditionDto.getPart();
         int trialInt = searchConditionDto.getTrialInt();
         int appraiserInt = searchConditionDto.getAppraiserInt();
 
         List<String> parts = searchConditionDto.getParts();
-        parts.forEach(partValue->{
+        parts.forEach(partValue -> {
             StringBuffer search = new StringBuffer();
             search.append("\"" + partName + "\"").append("=").append("\"" + partValue + "\"");
             List<String> rowKeys = dataFrame.getSearchRowKey(search.toString());
@@ -182,7 +184,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
             AtomicInteger trialIndex = new AtomicInteger(1);
             AtomicInteger backupTrialIndex = new AtomicInteger(1);
 
-            rowKeys.forEach(rowKey->{
+            rowKeys.forEach(rowKey -> {
                 if (trialIndex.get() == trialInt + 1) {
                     appraiserIndex.set(appraiserIndex.get() + 1);
                     trialIndex.set(1);
@@ -270,7 +272,8 @@ public class GrrFilterServiceImpl implements GrrFilterService {
             if (appraisers == null || appraisers.isEmpty()) {
                 logger.error("Appraiser value is empty.");
                 throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12004));
-            } if (appraisers.size() < appraiserInt) {
+            }
+            if (appraisers.size() < appraiserInt) {
                 logger.error("Please check your configuration of appraiser numbers!");
                 throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12006));
             } else {
@@ -315,7 +318,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
             }
             grrParamDto.setParts(rightParts);
             grrParamDto.setAppraisers(rightAppraisers);
-            if (rights.get() != partInt * appraiserInt ) {
+            if (rights.get() != partInt * appraiserInt) {
                 grrParamDto.setErrors(errorMap);
             }
         }
@@ -367,7 +370,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
             }
         }
         grrParamDto.setParts(rightParts);
-        if (rights.get() != partInt ) {
+        if (rights.get() != partInt) {
             grrParamDto.setErrors(errorMap);
         }
 
@@ -377,7 +380,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
 
     private GrrDataFrameDto getGrrSlot1(SearchDataFrame dataFrame, SearchConditionDto searchConditionDto) {
         GrrDataFrameDto grrDataFrameDto = new GrrDataFrameDto();
-        List<GrrViewDataDto> grrIncludeDataDtos = Lists. newLinkedList();
+        List<GrrViewDataDto> grrIncludeDataDtos = Lists.newLinkedList();
         List<GrrViewDataDto> grrBackupDataDtos = Lists.newLinkedList();
 
         List<RowDataDto> allRowDataDtos = dataFrame.getAllDataRow();

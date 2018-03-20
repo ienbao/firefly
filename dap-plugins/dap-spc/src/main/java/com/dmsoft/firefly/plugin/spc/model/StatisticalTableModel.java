@@ -35,7 +35,8 @@ import java.util.List;
  */
 public class StatisticalTableModel implements TableModel {
     private static final String[] STATISTICAL_TITLE = UIConstant.SPC_SR_ALL;
-    private ObservableList<String> columnKey = FXCollections.observableArrayList(Arrays.asList(STATISTICAL_TITLE));
+    private static final String[] SPC_STATISTICAL_FIX_COLUMN = UIConstant.SPC_STATISTICAL_FIX_COLUMN;
+    private ObservableList<String> columnKey = FXCollections.observableArrayList();
     private ObservableList<String> rowKey = FXCollections.observableArrayList();
     private Map<String, SourceObjectProperty<String>> valueMap = new HashMap<>();
     private Map<String, SimpleObjectProperty<Boolean>> checkMap = new HashMap<>();
@@ -62,7 +63,6 @@ public class StatisticalTableModel implements TableModel {
      * constructor
      */
     public StatisticalTableModel() {
-        columnKey.add(0, "");
         statisticalTableRowDataFilteredList = rowKey.filtered(p -> true);
         statisticalTableRowDataSortedList = new SortedList<>(statisticalTableRowDataFilteredList);
         this.menuRowEvents = Lists.newArrayList();
@@ -89,6 +89,16 @@ public class StatisticalTableModel implements TableModel {
                 }
             }
         }
+    }
+
+    /**
+     * init column
+     * @param columnList column list
+     */
+    public void initColumn(List<String> columnList){
+        columnKey.clear();
+        columnKey.addAll(Arrays.asList(SPC_STATISTICAL_FIX_COLUMN));
+        columnKey.addAll(columnList);
     }
 
     /**

@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Created by GuangLi on 2018/3/7.
@@ -58,8 +59,22 @@ public class GrrConfigServiceImpl implements GrrConfigService, IConfig {
         if (json == null) {
             logger.debug("Don`t find " + fileName);
         }
-
+        GrrConfigDto oldGrrConfigDto = jsonMapper.fromJson(json, GrrConfigDto.class);
+        grrConfigDto.setExport(oldGrrConfigDto.getExport());
         JsonFileUtil.writeJsonFile(grrConfigDto, path, fileName);
+    }
+
+    @ExcludeMethod
+    @Override
+    public void saveGrrExportConfig(Map<String, Boolean> export) {
+        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.GrrPlugin").getFolderPath() + File.separator + "config";
+        String json = JsonFileUtil.readJsonFile(path, fileName);
+        if (json == null) {
+            logger.debug("Don`t find " + fileName);
+        }
+        GrrConfigDto oldGrrConfigDto = jsonMapper.fromJson(json, GrrConfigDto.class);
+        oldGrrConfigDto.setExport(export);
+        JsonFileUtil.writeJsonFile(oldGrrConfigDto, path, fileName);
     }
 
     @ExcludeMethod
@@ -76,5 +91,21 @@ public class GrrConfigServiceImpl implements GrrConfigService, IConfig {
             grrConfigDto = jsonMapper.fromJson(json, GrrConfigDto.class);
         }
         return grrConfigDto;
+    }
+
+    @Override
+    public Map<String, Boolean> findGrrExportConfig() {
+        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.GrrPlugin").getFolderPath() + File.separator + "config";
+        String json = JsonFileUtil.readJsonFile(path, fileName);
+        if (json == null) {
+            logger.debug("Don`t find " + fileName);
+        }
+
+        Map<String, Boolean> result = null;
+        if (!StringUtils.isEmpty(json)) {
+            GrrConfigDto grrConfigDto = jsonMapper.fromJson(json, GrrConfigDto.class);
+            result = grrConfigDto.getExport();
+        }
+        return result;
     }
 }

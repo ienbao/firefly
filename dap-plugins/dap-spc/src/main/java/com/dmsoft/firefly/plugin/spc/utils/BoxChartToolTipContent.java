@@ -32,13 +32,13 @@ public class BoxChartToolTipContent extends HBox {
      * @param q1     q1
      * @param q3     q3
      */
-    public BoxChartToolTipContent(double median, double min, double max, double q1, double q3) {
+    public BoxChartToolTipContent(String median, String min, String max, String q1, String q3) {
         this.init();
-        medianVLbl.setText(Double.toString(median));
-        q3VLbl.setText(Double.toString(q3));
-        q1VLbl.setText(Double.toString(q1));
-        maxVLbl.setText(Double.toString(max));
-        minVLbl.setText(Double.toString(min));
+        medianVLbl.setText(median);
+        q3VLbl.setText(q3);
+        q1VLbl.setText(q1);
+        maxVLbl.setText(max);
+        minVLbl.setText(min);
     }
 
     private void init() {

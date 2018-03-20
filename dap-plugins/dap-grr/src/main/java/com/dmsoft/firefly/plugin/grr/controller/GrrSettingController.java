@@ -159,9 +159,6 @@ public class GrrSettingController {
         Pane root = null;
         try {
             FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_export_setting.fxml");
-            GrrExportSettingController controller = new GrrExportSettingController();
-            controller.setData(grrExportSetting);
-            fxmlLoader.setController(controller);
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrExportSetting", GrrFxmlAndLanguageUtils.getString(ResourceMassages.GRR_EXPORT_SETTING_TITLE), root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
             stage.show();

@@ -6,22 +6,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 
 public class TooltipUtil {
-    private static Tooltip normalTooltip;
-    private static Tooltip tooltip;
+    private static String TOOLTIP_PROP_KEY = "javafx.scene.control.Tooltip";
 
     /**
      * method to install normal tooltip
      *
-     * @param msg tip msg
+     * @param node node
+     * @param msg  tip msg
      * @return tooltip
      */
     public static Tooltip installNormalTooltip(Node node, String msg) {
-        if (normalTooltip == null) {
-            normalTooltip = new Tooltip();
-            normalTooltip.setText(msg);
-        } else {
-            normalTooltip.setText(msg);
-        }
+        Tooltip normalTooltip = new Tooltip();
+        normalTooltip.setText(msg);
         Tooltip.install(node, normalTooltip);
         return normalTooltip;
     }
@@ -32,33 +28,30 @@ public class TooltipUtil {
      * @param node node
      */
     public static void uninstallNormalTooltip(Node node) {
-        if (normalTooltip != null && node != null) {
-            Tooltip.uninstall(node, normalTooltip);
+        if (node != null && node.getProperties() != null && node.getProperties().containsKey(TOOLTIP_PROP_KEY)) {
+            Tooltip t = (Tooltip) node.getProperties().get(TOOLTIP_PROP_KEY);
+            Tooltip.uninstall(node, t);
         }
     }
 
     /**
      * method to install warn tooltip
      *
-     * @param msg tip msg
+     * @param node node
+     * @param msg  tip msg
      * @return tooltip
      */
     public static Tooltip installWarnTooltip(Node node, String msg) {
-        if (tooltip == null) {
-            Label warnLbl = new Label();
-            warnLbl.getStyleClass().add("icon-warn-svg");
-            warnLbl.setPrefWidth(26);
-            warnLbl.setMinWidth(26);
-            warnLbl.setMaxWidth(26);
-            tooltip = new Tooltip();
-            tooltip.setText(msg);
-            tooltip.setGraphic(warnLbl);
-            tooltip.setContentDisplay(ContentDisplay.LEFT);
-            tooltip.getStyleClass().add("tooltip-warn");
-        } else {
-            tooltip.getStyleClass().add("tooltip-warn");
-            tooltip.setText(msg);
-        }
+        Label warnLbl = new Label();
+        warnLbl.getStyleClass().add("icon-warn-svg");
+        warnLbl.setPrefWidth(26);
+        warnLbl.setMinWidth(26);
+        warnLbl.setMaxWidth(26);
+        Tooltip tooltip = new Tooltip();
+        tooltip.setText(msg);
+        tooltip.setGraphic(warnLbl);
+        tooltip.setContentDisplay(ContentDisplay.LEFT);
+        tooltip.getStyleClass().add("tooltip-warn");
         Tooltip.install(node, tooltip);
         return tooltip;
     }
@@ -69,8 +62,9 @@ public class TooltipUtil {
      * @param node node
      */
     public static void uninstallWarnTooltip(Node node) {
-        if (tooltip != null && node != null) {
-            Tooltip.uninstall(node, tooltip);
+        if (node != null && node.getProperties() != null && node.getProperties().containsKey(TOOLTIP_PROP_KEY)) {
+            Tooltip t = (Tooltip) node.getProperties().get(TOOLTIP_PROP_KEY);
+            Tooltip.uninstall(node, t);
         }
     }
 }

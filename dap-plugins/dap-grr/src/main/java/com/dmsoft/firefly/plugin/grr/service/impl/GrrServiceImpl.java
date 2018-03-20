@@ -12,6 +12,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
+import com.dmsoft.firefly.sdk.plugin.apis.annotation.OpenService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 
@@ -20,6 +21,7 @@ import java.util.List;
 /**
  * impl class for grr service
  */
+@OpenService
 public class GrrServiceImpl implements GrrService {
     private GrrAnalysisService analysisService;
 

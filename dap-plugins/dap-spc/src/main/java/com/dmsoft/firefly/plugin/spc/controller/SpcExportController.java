@@ -9,6 +9,7 @@ import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
+import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcExportServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcSettingServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.*;
@@ -87,6 +88,10 @@ public class SpcExportController {
     private RadioButton allFile;
     @FXML
     private TextField locationPath;
+    @FXML
+    private TextField subGroup;
+    @FXML
+    private TextField ndGroup;
 
     @FXML
     private SplitPane split;
@@ -107,7 +112,7 @@ public class SpcExportController {
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private SearchDataFrame dataFrame;
 
-    private SpcSettingServiceImpl settingService = new SpcSettingServiceImpl();
+    private SpcSettingServiceImpl settingService = RuntimeContext.getBean(SpcSettingServiceImpl.class);
     private SpcExportServiceImpl spcExportService = new SpcExportServiceImpl();
     private List<SpcStatisticalResultAlarmDto> spcStatsDtoList;
     private Map<String, Color> colorMap = Maps.newHashMap();
@@ -157,6 +162,11 @@ public class SpcExportController {
         item.getStyleClass().add("filter-header");
         item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
         initItemData();
+        SpcSettingDto settingDto = settingService.findSpcSetting();
+        if (settingDto != null) {
+            ndGroup.setText(String.valueOf(settingDto.getCustomGroupNumber()));
+            subGroup.setText(String.valueOf(settingDto.getChartIntervalNumber()));
+        }
     }
 
     private void initBtnIcon() {
@@ -305,8 +315,8 @@ public class SpcExportController {
         SpcAnalysisConfigDto spcAnalysisConfigDto = new SpcAnalysisConfigDto();
 //        spcAnalysisConfigDto.setSubgroupSize();
         //todo delete
-        spcAnalysisConfigDto.setSubgroupSize(10);
-        spcAnalysisConfigDto.setIntervalNumber(8);
+        spcAnalysisConfigDto.setSubgroupSize(Integer.valueOf(subGroup.getText()));
+        spcAnalysisConfigDto.setIntervalNumber(Integer.valueOf(ndGroup.getText()));
         if (exportEachFile) {
             String result = "";
             for (String projectName : projectNameList) {
