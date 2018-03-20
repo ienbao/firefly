@@ -53,6 +53,8 @@ public class BuildChart {
         GrrImageDto images = new GrrImageDto();
 //        LineChart partAppraiserChart = buildScatterChart();
         LineChart partAppraiserChart = new LineChart(new CategoryAxis(), new NumberAxis());
+        partAppraiserChart.setAnimated(false);
+        partAppraiserChart.setLegendVisible(false);
         setPartAppraiserChart(partAppraiserChart, grrDetailResultDto.getPartAppraiserChartDto(), parts, appraisers);
         images.setGrrAPlotImagePath(exportImages("partAppraiserChart", partAppraiserChart));
 
@@ -73,6 +75,8 @@ public class BuildChart {
         images.setGrrRPlotChartPartImagePath(exportImages("rrbyPartChart", rrbyPartChart));
 
         BarChart componentChart = new BarChart(new CategoryAxis(), new NumberAxis());
+        componentChart.setAnimated(false);
+        componentChart.setLegendVisible(false);
         setComponentChart(grrDetailResultDto.getComponentChartDto(), componentChart);
         images.setGrrComponentsImagePath(exportImages("componentChart", componentChart));
 
@@ -99,6 +103,8 @@ public class BuildChart {
         yAxis.setTickMarkVisible(false);
         yAxis.setAutoRanging(false);
         LinearChart chart = new LinearChart(xAxis, yAxis);
+        chart.setAnimated(false);
+        chart.setLegendVisible(false);
         return chart;
     }
 
@@ -125,6 +131,8 @@ public class BuildChart {
         chart.setLegendVisible(false);
         chart.setVerticalGridLinesVisible(false);
         chart.setHorizontalGridLinesVisible(false);
+        chart.setAnimated(false);
+        chart.setLegendVisible(false);
         return chart;
     }
 
