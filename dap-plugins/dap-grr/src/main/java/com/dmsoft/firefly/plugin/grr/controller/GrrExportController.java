@@ -556,14 +556,15 @@ public class GrrExportController {
                 WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
                 return;
             }
-            List<String> projectNameList = envService.findActivatedProjectName();
-            if (eachFile.isSelected()) {
-                projectNameList.forEach(projectName -> export(Lists.newArrayList(projectName)));
-            } else {
-                export(projectNameList);
-            }
             StageMap.closeStage("grrExport");
-
+            Platform.runLater(() -> {
+                List<String> projectNameList = envService.findActivatedProjectName();
+                if (eachFile.isSelected()) {
+                    projectNameList.forEach(projectName -> export(Lists.newArrayList(projectName)));
+                } else {
+                    export(projectNameList);
+                }
+            }
         });
         print.setOnAction(event -> {
             if (StringUtils.isEmpty(locationPath.getText())) {
