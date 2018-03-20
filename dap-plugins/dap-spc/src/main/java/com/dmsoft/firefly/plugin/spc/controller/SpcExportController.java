@@ -20,6 +20,7 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
@@ -300,11 +301,7 @@ public class SpcExportController {
             exportEachFile = true;
         }
         List<String> projectNameList = envService.findActivatedProjectName();
-        List<TestItemWithTypeDto> testItemWithTypeDtoList = this.getSelectedItemDto();
-        searchTab.getConditionTestItem().forEach(item -> {
-            testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(item));
-        });
-        List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(getSelectedItemDto());
+
         SpcAnalysisConfigDto spcAnalysisConfigDto = new SpcAnalysisConfigDto();
 //        spcAnalysisConfigDto.setSubgroupSize();
         //todo delete
@@ -313,10 +310,30 @@ public class SpcExportController {
         if (exportEachFile) {
             String result = "";
             for (String projectName : projectNameList) {
-                result = exportFile(Lists.newArrayList(projectName), testItemWithTypeDtoList, searchConditionDtoList, spcAnalysisConfigDto);
+                List<String> project = Lists.newArrayList(projectName);
+                List<TestItemWithTypeDto> itemDto = Lists.newArrayList();
+                List<String> allItem = dataService.findAllTestItemName(project);
+                List<TestItemWithTypeDto> selectItem = getSelectedItemDto();
+                for (TestItemWithTypeDto i : selectItem) {
+                    if (allItem.contains(i.getTestItemName())) {
+                        itemDto.add(i);
+                    }
+                }
+                List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(itemDto);
+
+                searchTab.getConditionTestItem().forEach(item -> {
+                    itemDto.add(envService.findTestItemNameByItemName(item));
+                });
+
+                result = exportFile(project, itemDto, searchConditionDtoList, spcAnalysisConfigDto);
             }
             return result;
         } else {
+            List<TestItemWithTypeDto> testItemWithTypeDtoList = this.getSelectedItemDto();
+            List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(testItemWithTypeDtoList);
+            searchTab.getConditionTestItem().forEach(item -> {
+                testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(item));
+            });
             return exportFile(projectNameList, testItemWithTypeDtoList, searchConditionDtoList, spcAnalysisConfigDto);
         }
     }
@@ -342,10 +359,19 @@ public class SpcExportController {
             chartParamMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
             chartParamMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
 
-            buildViewData();
+//            buildViewData();
+            List<String> selectItem = Lists.newArrayList();
+            testItemWithTypeDtoList.forEach(dto -> selectItem.add(dto.getTestItemName()));
+            List<RowDataDto> rowDataDtoList = dataService.findTestData(projectNameList, selectItem);
+            dataFrame = RuntimeContext.getBean(DataFrameFactory.class).createSearchDataFrame(testItemWithTypeDtoList, rowDataDtoList);
+            dataFrame.addSearchCondition(searchTab.getSearch());
+
             chartParamMap.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
 
             Object returnValue = manager.doJobSyn(chartJob, chartParamMap);
+            if (returnValue instanceof ApplicationException){
+                return null;
+            }
             if (returnValue != null) {
                 List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
                 chartPath = initSpcChartData(spcChartDtoList);
@@ -357,21 +383,6 @@ public class SpcExportController {
 
         spcConfig.setExportDataItem(exportDataItem);
 
-        //build statistical data
-//        Platform.runLater(() -> {
-//            manager.doJobASyn(job, new JobDoComplete() {
-//                @Override
-//                public void doComplete(Object returnValue) {
-//                    if (returnValue == null) {
-//                        //todo message tip
-//                        return;
-//                    }
-//                    spcStatsDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
-//
-////                    spcMainController.setStatisticalResultData(spcStatsDtoList);
-//                }
-//            }, paramMap, null);
-//        });
         List<SpcStatisticalResultAlarmDto> spcStatisticalResultDtosToExport = null;
         int conditionSize = searchTab.getSearch().size();
         if (conditionSize < 2) {
