@@ -4,6 +4,7 @@
 package com.dmsoft.firefly.plugin.csvresolver.controller;
 
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.csvresolver.service.CsvResolverService;
 import com.dmsoft.firefly.plugin.csvresolver.dto.CsvTemplateDto;
@@ -94,13 +95,36 @@ public class CsvResolverController {
     }
 
     private void initComponentEvent() {
+        header.setOnAction(event -> vaildate(header));
+        usl.setOnAction(event -> vaildate(usl));
+        unit.setOnAction(event -> vaildate(unit));
+        lsl.setOnAction(event -> vaildate(lsl));
+
+        item.setOnAction(event -> {
+            if (item.getValue() == null || StringUtils.isEmpty(item.getValue().toString())) {
+                TooltipUtil.installWarnTooltip(item, "Can not be empty!");
+                item.getStyleClass().add("combo-box-error");
+            } else {
+                TooltipUtil.uninstallWarnTooltip(item);
+                item.getStyleClass().removeAll("combo-box-error");
+            }
+        });
+        data.setOnAction(event -> {
+            if (data.getValue() == null || StringUtils.isEmpty(data.getValue().toString())) {
+                TooltipUtil.installWarnTooltip(data, "Can not be empty!");
+                data.getStyleClass().add("combo-box-error");
+            } else {
+                TooltipUtil.uninstallWarnTooltip(data);
+                data.getStyleClass().removeAll("combo-box-error");
+            }
+        });
         browse.setOnAction(event -> {
             String str = System.getProperty("user.home");
             if (!StringUtils.isEmpty(path.getText())) {
                 str = path.getText();
             }
             File filePath = new File(str);
-            if (!filePath.exists()){
+            if (!filePath.exists()) {
                 WindowMessageFactory.createWindowMessageHasOk("Message", "File is not exist.");
                 return;
             }
@@ -130,13 +154,25 @@ public class CsvResolverController {
 
         });
         ok.setOnAction(event -> {
+            if (item.getValue() == null || StringUtils.isEmpty(item.getValue().toString())
+                    || data.getValue() == null || StringUtils.isEmpty(data.getValue().toString())) {
+                WindowMessageFactory.createWindowMessageHasCancel("Message", "Test Item Name or Test Data can not be empty");
+                return;
+            }
             save();
             StageMap.closeStage("csv");
         });
         cancel.setOnAction(event -> {
             StageMap.closeStage("csv");
         });
-        apply.setOnAction(event -> save());
+        apply.setOnAction(event -> {
+            if (item.getValue() == null || StringUtils.isEmpty(item.getValue().toString())
+                    || data.getValue() == null || StringUtils.isEmpty(data.getValue().toString())) {
+                WindowMessageFactory.createWindowMessageHasCancel("Message", "Test Item Name or Test Data can not be empty");
+                return;
+            }
+            save();
+        });
     }
 
     private void initData() {
@@ -188,12 +224,36 @@ public class CsvResolverController {
         CsvTemplateDto csvTemplateDto = new CsvTemplateDto();
         csvTemplateDto.setFilePath(path.getText());
         csvTemplateDto.setHeader(header.getValue() == null || StringUtils.isEmpty(header.getValue().toString()) ? null : Integer.valueOf(header.getValue().toString().substring(3, 4)));
-        csvTemplateDto.setItem(item.getValue() == null || StringUtils.isEmpty(item.getValue().toString()) ? null : Integer.valueOf(item.getValue().toString().substring(3, 4)));
+
+        csvTemplateDto.setItem(Integer.valueOf(item.getValue().toString().substring(3, 4)));
         csvTemplateDto.setUsl(usl.getValue() == null || StringUtils.isEmpty(usl.getValue().toString()) ? null : Integer.valueOf(usl.getValue().toString().substring(3, 4)));
         csvTemplateDto.setLsl(lsl.getValue() == null || StringUtils.isEmpty(lsl.getValue().toString()) ? null : Integer.valueOf(lsl.getValue().toString().substring(3, 4)));
         csvTemplateDto.setUnit(unit.getValue() == null || StringUtils.isEmpty(unit.getValue().toString()) ? null : Integer.valueOf(unit.getValue().toString().substring(3, 4)));
-        csvTemplateDto.setData(data.getValue() == null || StringUtils.isEmpty(data.getValue().toString()) ? null : Integer.valueOf(data.getValue().toString().substring(3, 4)));
+        csvTemplateDto.setData(Integer.valueOf(data.getValue().toString().substring(3, 4)));
 
         service.saveCsvTemplate(csvTemplateDto);
+    }
+
+    private void vaildate(ComboBox node) {
+        if (node.getValue() == null || StringUtils.isEmpty(usl.getValue().toString())) {
+            return;
+        }
+        if (!node.equals(header) && node.getValue().equals(header.getValue())) {
+            header.setValue("");
+        } else if (!node.equals(item) && node.getValue().equals(item.getValue())) {
+            item.setValue("");
+            TooltipUtil.installWarnTooltip(item, "Can not be empty!");
+            item.getStyleClass().add("combo-box-error");
+        } else if (!node.equals(usl) && node.getValue().equals(usl.getValue())) {
+            usl.setValue("");
+        } else if (!node.equals(unit) && node.getValue().equals(unit.getValue())) {
+            unit.setValue("");
+        } else if (!node.equals(lsl) && node.getValue().equals(lsl.getValue())) {
+            lsl.setValue("");
+        } else if (!node.equals(data) && node.getValue().equals(data.getValue())) {
+            data.setValue("");
+            TooltipUtil.installWarnTooltip(data, "Can not be empty!");
+            data.getStyleClass().add("combo-box-error");
+        }
     }
 }

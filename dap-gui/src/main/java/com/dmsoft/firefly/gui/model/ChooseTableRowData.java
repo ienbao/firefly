@@ -14,6 +14,15 @@ public class ChooseTableRowData {
     private SimpleStringProperty value;
     private double progress;
     private boolean isImport = false;
+    private boolean error = false;
+
+    public boolean isError() {
+        return error;
+    }
+
+    public void setError(boolean error) {
+        this.error = error;
+    }
 
     public boolean isImport() {
         return isImport;
