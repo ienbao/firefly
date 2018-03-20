@@ -213,7 +213,7 @@ public class SpcItemController implements Initializable {
         });
         MenuItem setting = new MenuItem("Specification Setting");
         setting.setOnAction(event -> {
-            RuntimeContext.getBean(EventContext.class).pushEvent(new PlatformEvent(null, "Spc_Template_Show"));
+            RuntimeContext.getBean(EventContext.class).pushEvent(new PlatformEvent(null, "Template_Show"));
         });
         right.getItems().addAll(top, setting);
         return right;
