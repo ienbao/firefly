@@ -44,6 +44,15 @@ public class SourceDataServiceTest {
     }
 
     @Test
+    public void renameProjectTest() {
+        MongoClient mongoClient = new MongoClient("localhost");
+        MongoTemplate mongoTemplate = new MongoTemplate(mongoClient, "ispc");
+        RuntimeContext.registerBean(MongoTemplate.class, mongoTemplate);
+        SourceDataServiceImpl sourceDataService = new SourceDataServiceImpl();
+        sourceDataService.renameProject("Case5.csv", "C5");
+    }
+
+    @Test
     public void saveTestDataTest() {
         MongoClient mongoClient = new MongoClient("localhost");
         MongoTemplate mongoTemplate = new MongoTemplate(mongoClient, "test");
