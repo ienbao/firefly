@@ -33,7 +33,7 @@ public class TestDataCacheFactory {
     public TestDataCacheFactory() {
         testDataCache = CacheBuilder.newBuilder().maximumSize(100L).expireAfterAccess(2000L, TimeUnit.SECONDS).build(new CacheLoader<String, Set<String>>() {
             @Override
-            public Set<String> load(String s) throws Exception {
+            public Set<String> load(String s) {
                 String[] keys = s.split(separator);
                 if (keys.length != 2) {
                     return null;

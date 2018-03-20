@@ -42,9 +42,9 @@ public class GrrPlugin extends Plugin {
     public static final String GRR_SERVICE_ANALYSIS_NAME = "GrrAnalysisServiceImpl";
     public static final String GRR_SERVICE_RESULT_NAME = "GrrServiceImpl";
     public static final String GRR_SERVICE_CONFIG_NAME = "GrrConfigServiceImpl";
-    public static final String GRR_SERVICE_Filter = "GrrFilterServiceImpl";
+    public static final String GRR_SERVICE_FILTER = "GrrFilterServiceImpl";
 
-    private static final Logger logger = LoggerFactory.getLogger(GrrPlugin.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GrrPlugin.class);
 
     @Override
     public void initialize(InitModel model) {
@@ -61,8 +61,8 @@ public class GrrPlugin extends Plugin {
         RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_CONFIG_NAME, grrConfigService);
         RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_RESULT_NAME, grrService);
         RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_ANALYSIS_NAME, grrAnalysisService);
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_Filter, grrFilterService);
-        logger.info("Plugin-GRR Initialized.");
+        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_FILTER, grrFilterService);
+        LOGGER.info("Plugin-GRR Initialized.");
     }
 
     @Override
@@ -83,15 +83,10 @@ public class GrrPlugin extends Plugin {
                 }
                 return root;
             }
-
-            @Override
-            public void reset() {
-
-            }
         });
-        logger.debug("Plugin-GRR UI register done.");
+        LOGGER.debug("Plugin-GRR UI register done.");
 
-        logger.info("Plugin-GRR started.");
+        LOGGER.info("Plugin-GRR started.");
 
         MenuItem menuItem = new MenuItem("Grr Settings");
         menuItem.setId("grrSetting");
