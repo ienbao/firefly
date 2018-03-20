@@ -107,7 +107,7 @@ public class GuiApplication extends Application {
         NodeMap.addNode(GuiConst.PLARTFORM_NODE_MAIN, main);
 
         RuntimeContext.getBean(EventContext.class).addEventListener(event -> {
-            if (event.getMessage().equals("Spc_Template_Show")) {
+            if (event.getMessage().equals("Template_Show")) {
                 GuiFxmlAndLanguageUtils.buildTemplateDia();
             }
         });
