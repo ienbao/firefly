@@ -147,6 +147,10 @@ public class ResolverSelectController implements Initializable {
             manager.doJobASyn(job, returnValue -> {
                 if (returnValue != null && returnValue instanceof Throwable) {
                     chooseTableRowData.setError(true);
+                    chooseTableRowData.setImport(false);
+                    Platform.runLater(() -> {
+                        controller.getDataSourceTable().refresh();
+                    });
 //                    controller.getChooseTableRowDataObservableList().remove(chooseTableRowData);
                 } else {
                     chooseTableRowData.setImport(false);

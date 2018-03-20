@@ -141,7 +141,11 @@ public class DataSourceController implements Initializable {
 
                             rename.setVisible(false);
                             deleteOne.setVisible(false);
-                            progressBar.setVisible(item.isImport());
+                            if (!item.isError()) {
+                                progressBar.setVisible(item.isImport());
+                            } else {
+                                progressBar.setVisible(true);
+                            }
                             if (item.getProgress() != 0) {
                                 progressBar.setProgress(item.getProgress() / (double) 100);
                             }
