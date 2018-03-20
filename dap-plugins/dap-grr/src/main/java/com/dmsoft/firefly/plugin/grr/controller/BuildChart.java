@@ -14,7 +14,6 @@ import com.dmsoft.firefly.plugin.grr.utils.charts.ChartUtils;
 import com.dmsoft.firefly.plugin.grr.utils.charts.LegendUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.sun.javafx.charts.Legend;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,10 +21,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
@@ -55,7 +51,8 @@ public class BuildChart {
         scene = new Scene(vBox);
         scene.getStylesheets().add(BuildChart.class.getClassLoader().getResource("css/grr_chart.css").toExternalForm());
         GrrImageDto images = new GrrImageDto();
-        LineChart partAppraiserChart = buildScatterChart();
+//        LineChart partAppraiserChart = buildScatterChart();
+        LineChart partAppraiserChart = new LineChart(new CategoryAxis(), new NumberAxis());
         setPartAppraiserChart(partAppraiserChart, grrDetailResultDto.getPartAppraiserChartDto(), parts, appraisers);
         images.setGrrAPlotImagePath(exportImages("partAppraiserChart", partAppraiserChart));
 
@@ -75,7 +72,7 @@ public class BuildChart {
         setScatterChartData(grrDetailResultDto.getRrbyPartChartDto(), rrbyPartChart);
         images.setGrrRPlotChartPartImagePath(exportImages("rrbyPartChart", rrbyPartChart));
 
-        BarChart componentChart = new BarChart(new NumberAxis(), new NumberAxis());
+        BarChart componentChart = new BarChart(new CategoryAxis(), new NumberAxis());
         setComponentChart(grrDetailResultDto.getComponentChartDto(), componentChart);
         images.setGrrComponentsImagePath(exportImages("componentChart", componentChart));
 
@@ -211,8 +208,8 @@ public class BuildChart {
         }
         partAppraiserChart.getData().addAll(seriesData);
 
-        Legend legend = LegendUtils.buildLegend(partAppraiserChart.getData(),
-                "chart-line-symbol", "line-legend-symbol");
+//        Legend legend = LegendUtils.buildLegend(partAppraiserChart.getData(),
+//                "chart-line-symbol", "line-legend-symbol");
         ChartUtils.setChartToolTip(partAppraiserChart.getData(), pointTooltip -> {
             Double value = (Double) pointTooltip.getData().getYValue();
             int digNum = DigNumInstance.newInstance().getDigNum();

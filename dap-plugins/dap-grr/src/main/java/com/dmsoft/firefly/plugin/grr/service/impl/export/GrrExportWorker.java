@@ -419,12 +419,12 @@ public class GrrExportWorker implements ExWorker {
 
             currentRow = currentRow + 1;
             for (int i = 0; i < grrAnovaDtos.size(); i++) {
-                String keyValue = grrAnovaDtos.get(i).getName().toString();
-                String dfValue = grrAnovaDtos.get(i).getDf().toString();
-                String ssValue = grrAnovaDtos.get(i).getSs().toString();
-                String msValue = grrAnovaDtos.get(i).getMs().toString();
-                String fValue = grrAnovaDtos.get(i).getF().toString();
-                String probFValue = grrAnovaDtos.get(i).getProbF().toString();
+                String keyValue = grrAnovaDtos.get(i).getName() == null ? "-" : grrAnovaDtos.get(i).getName().toString();
+                String dfValue = grrAnovaDtos.get(i).getDf() == null ? "-" : grrAnovaDtos.get(i).getDf().toString();
+                String ssValue = grrAnovaDtos.get(i).getSs() == null ? "-" : grrAnovaDtos.get(i).getSs().toString();
+                String msValue = grrAnovaDtos.get(i).getMs() == null ? "-" : grrAnovaDtos.get(i).getMs().toString();
+                String fValue = grrAnovaDtos.get(i).getF() == null ? "-" : grrAnovaDtos.get(i).getF().toString();
+                String probFValue = grrAnovaDtos.get(i).getProbF() == null ? "-" : grrAnovaDtos.get(i).getProbF().toString();
                 String[] arr = {dfValue, ssValue, msValue, fValue, probFValue};
 
                 if (keyValue.equals("Repeatability")) {
@@ -473,12 +473,12 @@ public class GrrExportWorker implements ExWorker {
             for (int i = 0; i < grrSourceDtoList.size(); i++) {
                 GrrResultName grrKey = grrSourceDtoList.get(i).getName();
                 String keyValue = "";
-                String variation = grrSourceDtoList.get(i).getVariation().toString();
-                String sigma = grrSourceDtoList.get(i).getSigma().toString();
-                String sv = grrSourceDtoList.get(i).getStudyVar().toString();
-                String contribution = grrSourceDtoList.get(i).getContribution().toString();
-                String totalVariation = grrSourceDtoList.get(i).getTotalVariation().toString();
-                String tolerance = grrSourceDtoList.get(i).getTotalTolerance().toString();
+                String variation = grrSourceDtoList.get(i).getVariation() == null ? "-" : grrSourceDtoList.get(i).getVariation().toString();
+                String sigma = grrSourceDtoList.get(i).getSigma() == null ? "-" : grrSourceDtoList.get(i).getSigma().toString();
+                String sv = grrSourceDtoList.get(i).getStudyVar() == null ? "-" : grrSourceDtoList.get(i).getStudyVar().toString();
+                String contribution = grrSourceDtoList.get(i).getContribution() == null ? "-" : grrSourceDtoList.get(i).getContribution().toString();
+                String totalVariation = grrSourceDtoList.get(i).getTotalVariation() == null ? "-" : grrSourceDtoList.get(i).getTotalVariation().toString();
+                String tolerance = grrSourceDtoList.get(i).getTotalTolerance() == null ? "-" : grrSourceDtoList.get(i).getTotalTolerance().toString();
 //                String[] arr = {sigma, sv, variation, totalVariation, contribution, tolerance};
                 String[] arr = {sigma, sv, variation, contribution, totalVariation, tolerance};
                 for (int j = 0; j < arr.length; j++) {
@@ -688,10 +688,6 @@ public class GrrExportWorker implements ExWorker {
             return true;
         }
         return false;
-    }
-
-    private String formatDouble(Double str, int dig) {
-        return String.format("%." + dig + "f", str);
     }
 
     /**
