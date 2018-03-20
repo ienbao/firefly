@@ -37,12 +37,13 @@ public class SpcServiceImpl implements SpcService {
         2.Get analysis statistical result from R
          */
         if (searchDataFrame == null || searchConditions == null || configDto == null) {
+            pushProgress(100);
             throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11002));
         }
         List<SpcStatsDto> result = Lists.newArrayList();
         List<SpcAnalysisDataDto> spcAnalysisDataDtoList = Lists.newArrayList();
         int n = 0;
-        int len = searchConditions.size() * 3;
+        double len = searchConditions.size();
         for (SearchConditionDto searchConditionDto : searchConditions) {
             SpcAnalysisDataDto spcAnalysisDataDto = new SpcAnalysisDataDto();
             List<String> searchRowKeys = searchDataFrame.getSearchRowKey(searchConditionDto.getCondition());
@@ -66,7 +67,7 @@ public class SpcServiceImpl implements SpcService {
             spcAnalysisDataDto.setDataList(doubleList);
             spcAnalysisDataDtoList.add(spcAnalysisDataDto);
             n++;
-            pushProgress(n / len);
+            pushProgress((int) (n / len * 40));
         }
         for (int i = 0; i < spcAnalysisDataDtoList.size(); i++) {
             SpcStatsResultDto resultDto = getAnalysisService().analyzeStatsResult(spcAnalysisDataDtoList.get(i), configDto);
@@ -76,10 +77,8 @@ public class SpcServiceImpl implements SpcService {
             statsDto.setItemName(searchConditions.get(i).getItemName());
             statsDto.setCondition(searchConditions.get(i).getCondition());
             result.add(statsDto);
-            n = n + 2;
-            pushProgress(n / len);
+            pushProgress((int) (40 + ((i + 1) / (double) (spcAnalysisDataDtoList.size())) * 60));
         }
-        pushProgress(100);
         return result;
     }
 
@@ -90,6 +89,7 @@ public class SpcServiceImpl implements SpcService {
         2.Get analysis chart result from R
          */
         if (searchDataFrame == null || searchConditions == null || configDto == null) {
+            pushProgress(100);
             throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11002));
         }
         List<SpcChartDto> result = Lists.newArrayList();
@@ -98,7 +98,7 @@ public class SpcServiceImpl implements SpcService {
         Double ndcMax = Double.NEGATIVE_INFINITY;
         Double ndcMin = Double.POSITIVE_INFINITY;
         int n = 0;
-        int len = searchConditions.size() * 3;
+        double len = searchConditions.size();
         for (SearchConditionDto searchConditionDto : searchConditions) {
             SpcAnalysisDataDto spcAnalysisDataDto = new SpcAnalysisDataDto();
             List<String> searchRowKeys = searchDataFrame.getSearchRowKey(searchConditionDto.getCondition());
@@ -132,7 +132,7 @@ public class SpcServiceImpl implements SpcService {
             spcAnalysisDataDto.setDataList(doubleList);
             spcAnalysisDataDtoList.add(spcAnalysisDataDto);
             n++;
-            pushProgress(n / len);
+            pushProgress((int) (n / len * 40));
         }
         for (int i = 0; i < spcAnalysisDataDtoList.size(); i++) {
             SpcAnalysisDataDto spcAnalysisDataDto = spcAnalysisDataDtoList.get(i);
@@ -150,10 +150,8 @@ public class SpcServiceImpl implements SpcService {
             chartDto.setCondition(searchConditions.get(i).getCondition());
             chartDto.setAnalyzedRowKeys(analyzedRowKeys.get(i));
             result.add(chartDto);
-            n = n + 2;
-            pushProgress(n / len);
+            pushProgress((int) (40 + ((i + 1) / (double) (spcAnalysisDataDtoList.size())) * 60));
         }
-        pushProgress(100);
         return result;
     }
 
