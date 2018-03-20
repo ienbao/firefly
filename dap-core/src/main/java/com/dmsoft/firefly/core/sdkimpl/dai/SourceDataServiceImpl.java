@@ -66,7 +66,7 @@ public class SourceDataServiceImpl implements SourceDataService {
 
     @Override
     public void renameProject(String oldProjectName, String newProjectName) {
-        if (isProjectExist(oldProjectName)) {
+        if (!isProjectExist(oldProjectName)) {
             logger.error("Rename project from {} to {} error! Exception = {}", oldProjectName, newProjectName, oldProjectName + " do not exist!");
             throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_11002));
         }
@@ -75,12 +75,21 @@ public class SourceDataServiceImpl implements SourceDataService {
         }
         try {
             logger.debug("Renaming project from {} to {} ...", oldProjectName, newProjectName);
-            Project project = getMongoTemplate().findOne(new Query(where(PROJECT_NAME_FIELD).is(oldProjectName)), Project.class);
-            project.setProjectName(newProjectName);
-            getMongoTemplate().save(project, PROJECT_COLLECTION_NAME);
+            getMongoTemplate().updateFirst(new Query(where(PROJECT_NAME_FIELD).is(oldProjectName)), new Update().set(PROJECT_NAME_FIELD, newProjectName), Project.class);
+            Query query = new Query();
+            query.fields().include(ROW_KEY_FIELD);
+            List<RowData> rowDataList = getMongoTemplate().find(query, RowData.class, oldProjectName);
+            if (rowDataList != null && !rowDataList.isEmpty()) {
+                for (RowData rowData : rowDataList) {
+                    String id1 = DoubleIdUtils.getId1(rowData.getRowKey());
+                    String newId = DoubleIdUtils.combineIds(newProjectName, id1);
+                    getMongoTemplate().updateFirst(new Query(where(ROW_KEY_FIELD).is(rowData.getRowKey())), new Update().set(ROW_KEY_FIELD, newId), oldProjectName);
+                }
+            }
             MongoDatabase db = getMongoTemplate().getDb();
-            MongoNamespace mongoNamespace = new MongoNamespace(newProjectName);
-            db.getCollection(oldProjectName).renameCollection(mongoNamespace);
+            MongoNamespace oldNamespace = db.getCollection(oldProjectName).getNamespace();
+            MongoNamespace newNamespace = new MongoNamespace(oldNamespace.getDatabaseName() + "." + newProjectName);
+            db.getCollection(oldProjectName).renameCollection(newNamespace);
         } catch (Exception e) {
             logger.error("Rename project from {} to {} error! Exception = {}", oldProjectName, newProjectName, e.getMessage());
             throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
