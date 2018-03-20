@@ -11,7 +11,8 @@ public class ResourceMassages {
     public static final String ADD_ITEM = "ADD_ITEM";
 
     public static final String EXPORTSETTING = "EXPORTSETTING";
-    public static final String SOURCESETTING = "Data Source Setting";
+    public static final String SOURCE_SETTING = "DATA_SOURCE_SETTING";
+    public static final String DataSource = "Data Source";
     public static final String TEMPLATE = "TEMPLATE";
     public static final String DATASOURCE = "DATASOURCE";
     public static final String REMOVE_MSG = "REMOVE_MSG";

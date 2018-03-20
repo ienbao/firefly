@@ -137,6 +137,21 @@ public class DAPStringUtils extends StringUtils {
         return new String(chars);
     }
 
+    public static String filterSpeCharsFile(String str) {
+        char[] chars = str.toCharArray();
+        int len = chars.length;
+        for (int i = 0; i < len; i++) {
+            if (chars[i] == '\\' || chars[i] == '@' || chars[i] == '#' || chars[i] == '$' || chars[i] == '%' || chars[i] == '^' || chars[i] == '&'
+                    || chars[i] == '*' || chars[i] == '(' || chars[i] == ')' || chars[i] == '-' || chars[i] == '+' || chars[i] == '='
+                    || chars[i] == '{' || chars[i] == '}' || chars[i] == '[' || chars[i] == ']' || chars[i] == '|' || chars[i] == '/'
+                    || chars[i] == ';' || chars[i] == '"' || chars[i] == ' ' || chars[i] == '<' || chars[i] == '>' || chars[i] == '?' || chars[i] == ','
+                    || chars[i] == '!' || chars[i] == '~' || chars[i] == '`' || chars[i] == ':') {
+                chars[i] = '_';
+            }
+        }
+        return new String(chars);
+    }
+
     /**
      * method to check is infinity or nan
      *

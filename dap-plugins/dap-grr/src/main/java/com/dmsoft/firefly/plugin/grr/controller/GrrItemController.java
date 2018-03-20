@@ -3,6 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.grr.controller;
 
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
@@ -10,6 +11,7 @@ import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.plugin.grr.dto.GrrLeftConfigDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrParamDto;
+import com.dmsoft.firefly.plugin.grr.dto.GrrPreferenceDto;
 import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
@@ -21,8 +23,10 @@ import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
+import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
@@ -50,6 +54,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
+import org.mockito.internal.util.StringUtil;
 
 import java.io.File;
 import java.net.URL;
@@ -120,9 +125,12 @@ public class GrrItemController implements Initializable {
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
     private GrrLeftConfigServiceImpl leftConfigService = new GrrLeftConfigServiceImpl();
+    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private SearchConditionDto searchConditionDto = new SearchConditionDto();
     private List<TestItemWithTypeDto> initSelectTestItemDtos = Lists.newLinkedList();
+    private JsonMapper mapper = JsonMapper.defaultMapper();
+
 
 
     /**
@@ -190,6 +198,7 @@ public class GrrItemController implements Initializable {
             });
         });
         initPartAndAppraiserDatas();
+        initGrrBasicParam();
         GrrValidateUtil.validateGrr(partTxt, appraiserTxt, trialTxt, partCombox);
         partTxt.textProperty().addListener((obVal, oldVal, newVal)->{
             updatePartLbl();
@@ -198,6 +207,17 @@ public class GrrItemController implements Initializable {
             updateAppraiserLbl();
         });
         getWarnLblIcon();
+    }
+
+    private void initGrrBasicParam() {
+        GrrPreferenceDto grrPreferenceDto = getGrrPreference();
+        if (grrPreferenceDto != null) {
+            partTxt.setText(grrPreferenceDto.getPartInt().toString());
+            appraiserTxt.setText(grrPreferenceDto.getAppraiserInt().toString());
+            trialTxt.setText(grrPreferenceDto.getTrialInt().toString());
+            partCombox.setValue(grrPreferenceDto.getPart());
+            appraiserCombox.setValue(grrPreferenceDto.getAppraiser());
+        }
     }
 
     private void initPartAndAppraiserDatas() {
@@ -547,7 +567,7 @@ public class GrrItemController implements Initializable {
             SearchConditionDto searchConditionDto = this.initSearchConditionDto();
             searchConditionDto.setSelectedTestItemDtos(selectedItemDto);
             paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, searchConditionDto);
-
+            updateGrrPreference(searchConditionDto);
             Platform.runLater(() -> {
                 manager.doJobASyn(job, new JobDoComplete() {
                     @Override
@@ -578,6 +598,30 @@ public class GrrItemController implements Initializable {
                     }
                 }, paramMap, grrMainController);
             });
+        }
+    }
+
+    private void updateGrrPreference(SearchConditionDto searchConditionDto) {
+        GrrPreferenceDto grrPreferenceDto = new GrrPreferenceDto();
+        grrPreferenceDto.setPart(searchConditionDto.getPart());
+        grrPreferenceDto.setAppraiser(searchConditionDto.getAppraiser());
+        grrPreferenceDto.setPartInt(searchConditionDto.getPartInt());
+        grrPreferenceDto.setAppraiserInt(searchConditionDto.getAppraiserInt());
+        grrPreferenceDto.setTrialInt(searchConditionDto.getTrialInt());
+
+        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+        userPreferenceDto.setUserName(envService.getUserName());
+        userPreferenceDto.setCode("grr_param_preference");
+        userPreferenceDto.setValue(grrPreferenceDto);
+        userPreferenceService.updatePreference(userPreferenceDto);
+    }
+
+    private GrrPreferenceDto getGrrPreference() {
+        String value = userPreferenceService.findPreferenceByUserId("grr_param_preference", envService.getUserName());
+        if (StringUtils.isNotBlank(value)) {
+            return mapper.fromJson(value, GrrPreferenceDto.class);
+        } else {
+            return null;
         }
     }
 

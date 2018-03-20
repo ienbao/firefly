@@ -53,6 +53,7 @@ public class MenuFactory {
         MenuItem exportMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_EXPORT_SETTING"));
         MenuItem restoreMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_RESTORE_SETTING"));
         MenuItem exitMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_EXIT"));
+        selectDataSourceMenuItem.setOnAction(event -> buildSelectDataSource());
         importMenuItem.setOnAction(event -> appController.importAllConfig());
         exportMenuItem.setOnAction(event -> buildeSettingExportDia());
         menu.getItems().add(selectDataSourceMenuItem);
@@ -155,18 +156,27 @@ public class MenuFactory {
     private static void buildSourceSettingDia(){
         Pane root = null;
         try {
-            //root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source_setting.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("sourceSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.SOURCESETTING), root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("sourceSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.SOURCE_SETTING), root, getResource("css/platform_app.css").toExternalForm());
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-
-
+    private static void buildSelectDataSource(){
+        Pane root = null;
+        try {
+            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source.fxml");
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("dataSource", GuiFxmlAndLanguageUtils.getString(ResourceMassages.DataSource), root, getResource("css/platform_app.css").toExternalForm());
+            stage.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
     private static void buildeSettingExportDia() {
         Pane root = null;
         try {
