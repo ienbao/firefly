@@ -8,13 +8,13 @@ import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
+import com.dmsoft.firefly.gui.model.UserModel;
 import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
-import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.plugin.PluginClass;
 import com.dmsoft.firefly.sdk.plugin.PluginClassType;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
@@ -104,7 +104,7 @@ public class ResolverSelectController implements Initializable {
             }
 
             UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
-            userPreferenceDto.setUserName("admin");
+            userPreferenceDto.setUserName(UserModel.getInstance().getUser().getUserName());
             userPreferenceDto.setCode("defaultResolver");
             userPreferenceDto.setValue(resolverName);
             userPreferenceService.updatePreference(userPreferenceDto);
@@ -122,9 +122,11 @@ public class ResolverSelectController implements Initializable {
                     new FileChooser.ExtensionFilter("CSV", "*.csv")
             );
             Stage fileStage = null;
-            File file = fileChooser.showOpenDialog(fileStage);
-            if (file != null) {
-                importDataSource(file.getPath(), file.getName(), resolverName);
+            List<File> files = fileChooser.showOpenMultipleDialog(fileStage);
+            if (files != null && files.size() != 0) {
+                files.forEach(file -> {
+                    importDataSource(file.getPath(), file.getName(), resolverName);
+                });
             }
         });
     }
@@ -137,9 +139,11 @@ public class ResolverSelectController implements Initializable {
         Job job = new Job(GuiConst.DATASOURCE_IMPORT);
         job.addProcessMonitorListener(event -> {
             chooseTableRowData.setProgress(event.getPoint());
-            controller.getDataSourceTable().refresh();
+            Platform.runLater(() -> {
+                controller.getDataSourceTable().refresh();
+            });
         });
-        Platform.runLater(() -> {
+        new Thread(() -> {
             manager.doJobASyn(job, returnValue -> {
                 if (returnValue != null && returnValue instanceof Throwable) {
                     //TODO 弹出警告窗口
@@ -149,7 +153,7 @@ public class ResolverSelectController implements Initializable {
                     controller.getDataSourceTable().refresh();
                 }
             }, filPath, resolverName);
-        });
+        }).start();
         controller.getChooseTableRowDataObservableList().add(chooseTableRowData);
     }
 }

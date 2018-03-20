@@ -179,13 +179,7 @@ public class GrrExportWorker implements ExWorker {
 
             String[] arr = {name, repeat, reprod, grr};
 
-            if ((RuleLevelType.EXCELLENT.getValue()).equals(result)) {
-                result = RuleLevelType.EXCELLENT.getValue();
-            } else if ((RuleLevelType.ADEQUATE.getValue()).equals(result)) {
-                result = RuleLevelType.ADEQUATE.getValue();
-            } else if ((RuleLevelType.BAD.getValue()).equals(result)) {
-                result = RuleLevelType.BAD.getValue();
-            } else {
+            if (DAPStringUtils.isEmpty(result)) {
                 result = "-";
             }
 
@@ -198,7 +192,7 @@ public class GrrExportWorker implements ExWorker {
             exCellList.add(ExUtil.fillToCell(new Integer[]{summaryDataIndex[1] + i, summaryDataIndex[0] + 3}, !DAPStringUtils.isNumeric(arr[3]) ? "-" : arr[3] + "%",
                     ExCellType.TEXT, mapCellStyle.get(CellStyleType.summary_content_testItems_1.toString())));
             exCellList.add(ExUtil.fillToCell(new Integer[]{summaryDataIndex[1] + i, summaryDataIndex[0] + 4}, result,
-                    ExCellType.TEXT, mapRuleStyle.get(result.toUpperCase())));
+                    ExCellType.TEXT, mapRuleStyle.get(result)));
 
             arr = null;
         }
@@ -242,19 +236,9 @@ public class GrrExportWorker implements ExWorker {
 
             String[] arr = {name, repeat, reprod, grr};
 
-            if ((RuleLevelType.EXCELLENT.getValue()).equals(result)) {
-                result = RuleLevelType.EXCELLENT.getValue();
-            } else if ((RuleLevelType.ADEQUATE.getValue()).equals(result)) {
-                result = RuleLevelType.ADEQUATE.getValue();
-            } else if ((RuleLevelType.BAD.getValue()).equals(result)) {
-                result = RuleLevelType.BAD.getValue();
-            } else {
+            if (DAPStringUtils.isEmpty(result)) {
                 result = "-";
             }
-
-//            if (grrSummaryResultDtos.get(i).isHasAdd()) {
-//                itemNameAdd.add(arr[0]);
-//            }
 
             if (arr[3].equals("-")) {
                 exCellList.add(ExUtil.fillToCell(new Integer[]{summaryDataIndex[1] + i, summaryDataIndex[0]}, arr[0],
@@ -272,7 +256,7 @@ public class GrrExportWorker implements ExWorker {
                     ExCellType.TEXT, mapCellStyle.get(CellStyleType.summary_content_testItems_1.toString())));
 
             exCellList.add(ExUtil.fillToCell(new Integer[]{summaryDataIndex[1] + i, summaryDataIndex[0] + 4}, result,
-                    ExCellType.TEXT, mapRuleStyle.get(result.toUpperCase())));
+                    ExCellType.TEXT, mapRuleStyle.get(result)));
 
             arr = null;
 
@@ -386,22 +370,14 @@ public class GrrExportWorker implements ExWorker {
 
         }
 
-        String result1 = null;
-        if (("EXCELLENT").equalsIgnoreCase(result)) {
-            result1 = "Excellent";
-        } else if (("ACCEPTABLE").equalsIgnoreCase(result)) {
-            result1 = "Acceptable";
-        } else if (("RECTIFICATION").equalsIgnoreCase(result)) {
-            result1 = "Bad";
-        }
-        if (DAPStringUtils.isBlank(result1)) {
-            result1 = result;
+        if (DAPStringUtils.isEmpty(result)) {
+            result = "-";
         }
 
         exCellList.add(ExUtil.fillToCell(new Integer[]{itemParamIndex[1] + 8, itemParamIndex[0]}, "Result",
                 ExCellType.TEXT, mapCellStyle.get(CellStyleType.summary_content_testItems_weight.toString())));
-        exCellList.add(ExUtil.fillToCell(new Integer[]{itemParamIndex[1] + 8, itemParamIndex[0] + 1}, result1,
-                ExCellType.TEXT, mapRuleStyle.get(result1.toUpperCase())));
+        exCellList.add(ExUtil.fillToCell(new Integer[]{itemParamIndex[1] + 8, itemParamIndex[0] + 1}, result,
+                ExCellType.TEXT, mapRuleStyle.get(result)));
         currentRow = currentRow + 9;
 
         return exCellList;

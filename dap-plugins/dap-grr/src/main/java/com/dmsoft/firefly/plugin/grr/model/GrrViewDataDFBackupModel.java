@@ -41,6 +41,7 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
     private ToggleGroup group = new ToggleGroup();
     private boolean isSlot;
     private Map<String, TestItemWithTypeDto> typeDtoMap = Maps.newHashMap();
+    private SearchConditionDto searchConditionDto;
 
     /**
      * constructor
@@ -57,6 +58,9 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
         this.headerArray.add(0, appKey);
         this.headerArray.add(0, partKey);
         this.headerArray.add(0, radioKey);
+        this.headerArray.remove(searchConditionDto.getPart());
+        this.headerArray.remove(searchConditionDto.getAppraiser());
+        this.searchConditionDto = searchConditionDto;
         if (grrDataFrameDto.getBackupDatas() != null && !grrDataFrameDto.getBackupDatas().isEmpty()) {
             for (GrrViewDataDto grrViewDataDto : grrDataFrameDto.getBackupDatas()) {
                 this.rowKeyArray.add(grrViewDataDto.getRowKey());
@@ -189,7 +193,7 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
             this.headerArray.add(0, partKey);
             this.headerArray.add(0, radioKey);
             for (String s : this.grrDataFrameDto.getDataFrame().getAllTestItemName()) {
-                if (s.toLowerCase().contains(testItem.toLowerCase())) {
+                if (s != null && s.toLowerCase().contains(testItem.toLowerCase()) && !s.equals(this.searchConditionDto.getPart()) && !s.equals(this.searchConditionDto.getAppraiser())) {
                     this.headerArray.add(s);
                 }
             }
@@ -211,11 +215,6 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
             int index = this.rowKeyArray.indexOf(oldDto.getRowKey());
             this.rowKeyArray.remove(index);
             this.rowKeyArray.add(index, grrViewDataDto.getRowKey());
-//            for (int i = 0; i < this.grrDataFrameDto.getBackupDatas().size(); i++) {
-//                if (oldDto.getRowKey().equals(this.grrDataFrameDto.getBackupDatas().get(i).getRowKey())) {
-//                    this.grrDataFrameDto.getBackupDatas().set(i, grrViewDataDto);
-//                }
-//            }
         }
     }
 

@@ -3,6 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.grr.service.impl.export;
 
+import com.dmsoft.firefly.plugin.grr.service.impl.export.enums.RuleLevelType;
 import com.google.common.collect.Maps;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -35,7 +36,7 @@ public class SummaryRuleStyle {
             style.setBorderRight(BorderStyle.THIN);
             style.setFont(font);
             style.setAlignment(HorizontalAlignment.LEFT);
-            resultMap.put(ExportLabelConstant.EXPORT_SUMMARY_EXCELLENT, style);
+            resultMap.put(RuleLevelType.EXCELLENT.getValue(), style);
 
             style = (XSSFCellStyle) workbook.createCellStyle();
             style.setFillForegroundColor(ExColor.MBLUE);
@@ -47,31 +48,19 @@ public class SummaryRuleStyle {
             style.setBorderRight(BorderStyle.THIN);
             style.setFont(font);
             style.setAlignment(HorizontalAlignment.LEFT);
-            resultMap.put(ExportLabelConstant.EXPORT_SUMMARY_ADEQUTE, style);
+            resultMap.put(RuleLevelType.ADEQUATE.getValue(), style);
 
-            style = (XSSFCellStyle) workbook.createCellStyle();
-            style.setFillForegroundColor(ExColor.MBLUE);
-            style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            style.setAlignment(HorizontalAlignment.CENTER);
-            style.setBorderBottom(BorderStyle.THIN);
-            style.setBorderLeft(BorderStyle.THIN);
-            style.setBorderTop(BorderStyle.THIN);
-            style.setBorderRight(BorderStyle.THIN);
-            style.setFont(font);
-            style.setAlignment(HorizontalAlignment.LEFT);
-            resultMap.put("ADEQUATE", style);
-
-            style = (XSSFCellStyle) workbook.createCellStyle();
-            style.setFillForegroundColor(ExColor.ORANGE);
-            style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            style.setAlignment(HorizontalAlignment.CENTER);
-            style.setBorderBottom(BorderStyle.THIN);
-            style.setBorderLeft(BorderStyle.THIN);
-            style.setBorderTop(BorderStyle.THIN);
-            style.setBorderRight(BorderStyle.THIN);
-            style.setFont(font);
-            style.setAlignment(HorizontalAlignment.LEFT);
-            resultMap.put(ExportLabelConstant.EXPORT_SUMMARY_MARGIMAL, style);
+//            style = (XSSFCellStyle) workbook.createCellStyle();
+//            style.setFillForegroundColor(ExColor.ORANGE);
+//            style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+//            style.setAlignment(HorizontalAlignment.CENTER);
+//            style.setBorderBottom(BorderStyle.THIN);
+//            style.setBorderLeft(BorderStyle.THIN);
+//            style.setBorderTop(BorderStyle.THIN);
+//            style.setBorderRight(BorderStyle.THIN);
+//            style.setFont(font);
+//            style.setAlignment(HorizontalAlignment.LEFT);
+//            resultMap.put(ExportLabelConstant.EXPORT_SUMMARY_MARGIMAL, style);
 
             style = (XSSFCellStyle) workbook.createCellStyle();
             style.setFillForegroundColor(ExColor.RED);
@@ -83,7 +72,7 @@ public class SummaryRuleStyle {
             style.setBorderRight(BorderStyle.THIN);
             style.setFont(font);
             style.setAlignment(HorizontalAlignment.LEFT);
-            resultMap.put(ExportLabelConstant.EXPORT_SUMMARY_BAD, style);
+            resultMap.put(RuleLevelType.BAD.getValue(), style);
 
             style = (XSSFCellStyle) workbook.createCellStyle();
             style.setFillForegroundColor(ExColor.WHITE);

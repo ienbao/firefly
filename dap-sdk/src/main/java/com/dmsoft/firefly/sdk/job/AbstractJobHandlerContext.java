@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Semaphore;
 
 /**
  * Created by Garen.Pang on 2018/2/2.
@@ -31,6 +32,7 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
     private ExecutorService executorService;
     private volatile boolean doNextInbound;
     private volatile boolean doNextOutbound;
+    private final Semaphore semaphore;
 
 //    public AbstractJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, boolean inbound, boolean outbound, String name) {
 //        this.jobPipeline = jobPipeline;
@@ -40,7 +42,7 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
 //        this.name = name;
 //    }
 
-    public AbstractJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, boolean inbound, boolean outbound, String name, ExecutorService executorService, List<JobEventListener> eventListeners, Job session) {
+    public AbstractJobHandlerContext(JobPipeline jobPipeline, JobDoComplete jobDoComplete, boolean inbound, boolean outbound, String name, ExecutorService executorService, List<JobEventListener> eventListeners, Job session, Semaphore semaphore) {
         this.jobPipeline = jobPipeline;
         this.jobDoComplete = jobDoComplete;
         this.inbound = inbound;
@@ -49,6 +51,7 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
         this.executorService = executorService;
         this.eventListeners = eventListeners;
         this.session = session;
+        this.semaphore = semaphore;
     }
 
     @Override
@@ -88,6 +91,7 @@ public abstract class AbstractJobHandlerContext implements JobHandlerContext {
         if (this.prev == null) {
             jobDoComplete.doComplete(returnValue);
             jobPipeline.setResult(returnValue);
+            semaphore.release();
             return;
         }
         AbstractJobHandlerContext next = findContextOutbound();

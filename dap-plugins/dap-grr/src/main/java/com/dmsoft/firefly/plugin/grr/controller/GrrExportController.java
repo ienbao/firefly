@@ -33,6 +33,7 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
@@ -663,10 +664,20 @@ public class GrrExportController {
         return selectItems;
     }
 
-    private void export(List<String> projectNameList ) {
+    private void export(List<String> projectNameList) {
         List<TestItemWithTypeDto> testItemWithTypeDtoList = getSelectedItemDto();
-
-        if (checkSubmitParam(testItemWithTypeDtoList.size())) {
+        List<TestItemWithTypeDto> itemDto = Lists.newArrayList();
+        if (projectNameList.size() == 1) {
+            List<String> allItem = dataService.findAllTestItemName(projectNameList);
+            for (TestItemWithTypeDto i : testItemWithTypeDtoList) {
+                if (allItem.contains(i.getTestItemName())) {
+                    itemDto.add(i);
+                }
+            }
+        } else {
+            itemDto = testItemWithTypeDtoList;
+        }
+        if (checkSubmitParam(itemDto.size())) {
             GrrConfigDto grrConfigDto = grrConfigService.findGrrConfig();
             Boolean detail = grrConfigDto.getExport().get("Export detail sheet of each selected items");
 //            List<Double> level = grrConfigDto.getAlarmSetting();
@@ -683,46 +694,61 @@ public class GrrExportController {
             if (appraiserCombox.getValue() != null) {
                 testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(appraiserCombox.getValue().toString()));
             }
+
             Map paramMap = Maps.newHashMap();
             paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
             paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
             SearchConditionDto searchConditionDto = this.initSearchConditionDto();
-            searchConditionDto.setSelectedTestItemDtos(getSelectedItemDto());
+            searchConditionDto.setSelectedTestItemDtos(itemDto);
             paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, searchConditionDto);
             if (!detail) {
                 Job job = new Job(ParamKeys.GRR_EXPORT_JOB_PIPELINE);
-                List<GrrSummaryDto> grrSummaryDtoList = (List<GrrSummaryDto>) manager.doJobSyn(job, paramMap, null);
-                grrExportService.exportGrrSummary(grrExportConfigDto, grrSummaryDtoList);
+                Object returnValue = manager.doJobSyn(job, paramMap, null);
+                if (returnValue instanceof ApplicationException) {
+
+                    return;
+                }
+                if (returnValue != null && !(returnValue instanceof GrrParamDto)) {
+                    List<GrrSummaryDto> grrSummaryDtoList = (List<GrrSummaryDto>) returnValue;
+                    grrExportService.exportGrrSummary(grrExportConfigDto, grrSummaryDtoList);
+                }
             } else {
                 Job job = new Job(ParamKeys.GRR_EXPORT_DETAIL_JOB_PIPELINE);
-                List<GrrExportDetailDto> grrSummaryDtoList = (List<GrrExportDetailDto>) manager.doJobSyn(job, paramMap, null);
-                List<GrrSummaryDto> summaryDtos = Lists.newArrayList();
-                List<GrrExportResultDto> grrExportResultDtos = Lists.newArrayList();
-                for (GrrExportDetailDto dto : grrSummaryDtoList) {
-                    GrrSummaryDto summaryDto = new GrrSummaryDto();
-                    summaryDto.setItemName(dto.getItemName());
-                    GrrSummaryResultDto summaryResultDto = new GrrSummaryResultDto();
-                    summaryResultDto.setUsl(dto.getExportDetailDto().getUsl());
-                    summaryResultDto.setGrrOnContribution(dto.getExportDetailDto().getGrrOnContribution());
-                    summaryResultDto.setGrrOnTolerance(dto.getExportDetailDto().getGrrOnTolerance());
-                    summaryResultDto.setLsl(dto.getExportDetailDto().getLsl());
-                    summaryResultDto.setRepeatabilityOnContribution(dto.getExportDetailDto().getRepeatabilityOnContribution());
-                    summaryResultDto.setRepeatabilityOnTolerance(dto.getExportDetailDto().getRepeatabilityOnTolerance());
-                    summaryResultDto.setReproducibilityOnContribution(dto.getExportDetailDto().getReproducibilityOnContribution());
-                    summaryResultDto.setReproducibilityOnTolerance(dto.getExportDetailDto().getReproducibilityOnTolerance());
-                    summaryResultDto.setTolerance(dto.getExportDetailDto().getTolerance());
+                Object returnValue = manager.doJobSyn(job, paramMap, null);
+                if (returnValue instanceof ApplicationException) {
 
-                    summaryDto.setSummaryResultDto(summaryResultDto);
-                    summaryDtos.add(summaryDto);
-
-                    GrrExportResultDto exportResultDto = new GrrExportResultDto();
-                    exportResultDto.setItemName(dto.getItemName());
-                    exportResultDto.setGrrAnovaAndSourceResultDto(dto.getExportDetailDto().getAnovaAndSourceResultDto());
-                    exportResultDto.setGrrImageDto(BuildChart.buildImage(dto.getExportDetailDto(), searchConditionDto.getParts(), searchConditionDto.getAppraisers()));
-                    grrExportResultDtos.add(exportResultDto);
+                    return;
                 }
+                if (returnValue != null && !(returnValue instanceof GrrParamDto)) {
+                    List<GrrExportDetailDto> grrSummaryDtoList = (List<GrrExportDetailDto>) returnValue;
+//                    List<GrrExportDetailDto> grrSummaryDtoList = (List<GrrExportDetailDto>) manager.doJobSyn(job, paramMap, null);
+                    List<GrrSummaryDto> summaryDtos = Lists.newArrayList();
+                    List<GrrExportResultDto> grrExportResultDtos = Lists.newArrayList();
+                    for (GrrExportDetailDto dto : grrSummaryDtoList) {
+                        GrrSummaryDto summaryDto = new GrrSummaryDto();
+                        summaryDto.setItemName(dto.getItemName());
+                        GrrSummaryResultDto summaryResultDto = new GrrSummaryResultDto();
+                        summaryResultDto.setUsl(dto.getExportDetailDto().getUsl());
+                        summaryResultDto.setGrrOnContribution(dto.getExportDetailDto().getGrrOnContribution());
+                        summaryResultDto.setGrrOnTolerance(dto.getExportDetailDto().getGrrOnTolerance());
+                        summaryResultDto.setLsl(dto.getExportDetailDto().getLsl());
+                        summaryResultDto.setRepeatabilityOnContribution(dto.getExportDetailDto().getRepeatabilityOnContribution());
+                        summaryResultDto.setRepeatabilityOnTolerance(dto.getExportDetailDto().getRepeatabilityOnTolerance());
+                        summaryResultDto.setReproducibilityOnContribution(dto.getExportDetailDto().getReproducibilityOnContribution());
+                        summaryResultDto.setReproducibilityOnTolerance(dto.getExportDetailDto().getReproducibilityOnTolerance());
+                        summaryResultDto.setTolerance(dto.getExportDetailDto().getTolerance());
 
-                grrExportService.exportGrrSummaryDetail(grrExportConfigDto, summaryDtos, grrExportResultDtos);
+                        summaryDto.setSummaryResultDto(summaryResultDto);
+                        summaryDtos.add(summaryDto);
+
+                        GrrExportResultDto exportResultDto = new GrrExportResultDto();
+                        exportResultDto.setItemName(dto.getItemName());
+                        exportResultDto.setGrrAnovaAndSourceResultDto(dto.getExportDetailDto().getAnovaAndSourceResultDto());
+                        exportResultDto.setGrrImageDto(BuildChart.buildImage(dto.getExportDetailDto(), searchConditionDto.getParts(), searchConditionDto.getAppraisers()));
+                        grrExportResultDtos.add(exportResultDto);
+                    }
+                    grrExportService.exportGrrSummaryDetail(grrExportConfigDto, summaryDtos, grrExportResultDtos);
+                }
             }
         }
     }

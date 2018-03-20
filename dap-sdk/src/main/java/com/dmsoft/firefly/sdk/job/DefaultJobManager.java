@@ -17,10 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 
 /**
@@ -32,11 +29,13 @@ public class DefaultJobManager implements JobManager {
     private Map<String, List<JobEventListener>> jobEvent = Maps.newConcurrentMap();
     private Logger logger = LoggerFactory.getLogger(DefaultJobManager.class);
     private ExecutorService service = new JobThreadPoolExecutor(5, 5,
-                                      0L, TimeUnit.MILLISECONDS,
-                                      new LinkedBlockingQueue<Runnable>(), new DefaultThreadFactory());
+            0L, TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<Runnable>(), new DefaultThreadFactory());
+    private Semaphore semaphore = new Semaphore(Runtime.getRuntime().availableProcessors() > 3 ? Runtime.getRuntime().availableProcessors() / 4 + 1 : 1);
+
 
     @Override
-    public synchronized void initializeJob(String jobName, InitJobPipeline pipeline) {
+    public void initializeJob(String jobName, InitJobPipeline pipeline) {
         if (StringUtils.isBlank(jobName)) {
             logger.error("jobName is empty.");
             return;
@@ -49,7 +48,7 @@ public class DefaultJobManager implements JobManager {
     }
 
     @Override
-    public synchronized void addJobEventListenerByName(String jobName, JobEventListener listener) {
+    public void addJobEventListenerByName(String jobName, JobEventListener listener) {
         if (jobEvent.containsKey(jobName)) {
             List<JobEventListener> listenerList = jobEvent.get(jobName);
             listenerList.add(listener);
@@ -61,7 +60,7 @@ public class DefaultJobManager implements JobManager {
     }
 
     @Override
-    public synchronized void removeJobEventListener(String jobName, JobEventListener listener) {
+    public void removeJobEventListener(String jobName, JobEventListener listener) {
         if (jobEvent.containsKey(jobName)) {
             List<JobEventListener> listenerList = jobEvent.get(jobName);
             listenerList.remove(listener);
@@ -79,7 +78,7 @@ public class DefaultJobManager implements JobManager {
     }
 
     @Override
-    public synchronized Object doJobSyn(Job job, long timeout, TimeUnit unit, Object... object) {
+    public Object doJobSyn(Job job, long timeout, TimeUnit unit, Object... object) {
         if (StringUtils.isBlank(job.getJobName())) {
             logger.error("jobName is empty.");
             return null;
@@ -108,7 +107,7 @@ public class DefaultJobManager implements JobManager {
     }
 
     @Override
-    public synchronized Object doJobSyn(Job job, Object... object) {
+    public Object doJobSyn(Job job, Object... object) {
         if (StringUtils.isBlank(job.getJobName())) {
             logger.error("jobName is empty.");
             return null;
@@ -137,7 +136,7 @@ public class DefaultJobManager implements JobManager {
     }
 
     @Override
-    public synchronized void doJobASyn(Job job, JobDoComplete complete, Object... object) {
+    public void doJobASyn(Job job, JobDoComplete complete, Object... object) {
         if (StringUtils.isBlank(job.getJobName())) {
             logger.error("jobName is empty.");
             return;
@@ -150,7 +149,7 @@ public class DefaultJobManager implements JobManager {
 
             @Override
             public void run() {
-                DefaultJobPipeline defaultJobPipeline = new DefaultJobPipeline(complete, service, jobEvent.containsKey(job.getJobName()) ? jobEvent.get(job.getJobName()) : Lists.newArrayList(), job);
+                DefaultJobPipeline defaultJobPipeline = new DefaultJobPipeline(complete, service, jobEvent.containsKey(job.getJobName()) ? jobEvent.get(job.getJobName()) : Lists.newArrayList(), job, semaphore);
                 jobMap.get(job.getJobName()).initJobPipeline(defaultJobPipeline);
                 defaultJobPipeline.fireDoJob(object);
             }
@@ -176,7 +175,7 @@ public class DefaultJobManager implements JobManager {
             public void run() {
                 DefaultJobPipeline defaultJobPipeline = new DefaultJobPipeline(returnValue -> {
                     logger.info(job.getJobId() + " do complete.");
-                }, service, jobEvent.containsKey(job.getJobName()) ? jobEvent.get(job.getJobName()) : Lists.newArrayList(), job);
+                }, service, jobEvent.containsKey(job.getJobName()) ? jobEvent.get(job.getJobName()) : Lists.newArrayList(), job, semaphore);
                 jobMap.get(job.getJobName()).initJobPipeline(defaultJobPipeline);
                 defaultJobPipeline.fireDoJob(object);
             }
