@@ -555,7 +555,12 @@ public class GrrExportController {
                 WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
                 return;
             }
-            export();
+            List<String> projectNameList = envService.findActivatedProjectName();
+            if (eachFile.isSelected()) {
+                projectNameList.forEach(projectName -> export(Lists.newArrayList(projectName)));
+            } else {
+                export(projectNameList);
+            }
             StageMap.closeStage("grrExport");
 
         });
@@ -658,7 +663,7 @@ public class GrrExportController {
         return selectItems;
     }
 
-    private void export() {
+    private void export(List<String> projectNameList ) {
         List<TestItemWithTypeDto> testItemWithTypeDtoList = getSelectedItemDto();
 
         if (checkSubmitParam(testItemWithTypeDtoList.size())) {
@@ -670,7 +675,6 @@ public class GrrExportController {
             grrExportConfigDto.setExportPath(locationPath.getText());
             grrExportConfigDto.setUserName(envService.getUserName());
             grrExportConfigDto.setGrrConfigDto(grrConfigDto);
-            List<String> projectNameList = envService.findActivatedProjectName();
 
             searchTab.getConditionTestItem().forEach(item -> {
                 testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(item));

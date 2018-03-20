@@ -15,9 +15,11 @@ import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.core.JobHandlerContext;
 import com.dmsoft.firefly.sdk.job.core.JobInboundHandler;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by cherry on 2018/3/12.
@@ -37,8 +39,12 @@ public class ExportDetailHandler implements JobInboundHandler {
         GrrDataFrameDto grrDataFrameDto = (GrrDataFrameDto) param.get(ParamKeys.SEARCH_VIEW_DATA_FRAME);
 
         List<String> includeRows = Lists.newLinkedList();
-        grrDataFrameDto.getIncludeDatas().forEach(grrViewDataDto -> includeRows.add(grrViewDataDto.getRowKey()));
-
+        Set<String> appraisers = Sets.newHashSet();
+        grrDataFrameDto.getIncludeDatas().forEach(grrViewDataDto -> {
+            includeRows.add(grrViewDataDto.getRowKey());
+            appraisers.add(grrViewDataDto.getOperator());
+        });
+        searchConditionDto.setAppraisers(Lists.newArrayList(appraisers));
         GrrService grrService = RuntimeContext.getBean(GrrService.class);
 
         List<GrrExportDetailDto> grrDetailDtos = Lists.newArrayList();
