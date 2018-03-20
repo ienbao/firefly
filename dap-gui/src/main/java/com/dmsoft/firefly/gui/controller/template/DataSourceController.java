@@ -112,7 +112,7 @@ public class DataSourceController implements Initializable {
                             Label textField = new Label(item.getValue());
                             textField.setStyle("-fx-border-width: 0 0 0 0");
                             textField.setPrefWidth(400);
-                            ProgressBar progressBar = new ProgressBar();
+                            ProgressBar progressBar = new ProgressBar(0);
                             progressBar.getStyleClass().setAll("progress-bar-lg-green");
                             progressBar.setPrefWidth(70);
                             progressBar.setMinWidth(70);
