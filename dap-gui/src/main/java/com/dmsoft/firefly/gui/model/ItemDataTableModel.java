@@ -30,7 +30,7 @@ public class ItemDataTableModel implements TableModel {
     private ObjectProperty<Boolean> allChecked = new SimpleObjectProperty<>(false);
     private List<String> trueSet = new ArrayList<>();
     private List<String> falseSet = new ArrayList<>();
-    private CheckBox allCheckBox;
+    private CheckBox allCheckBox = null;
 
     /**
      * constructor
