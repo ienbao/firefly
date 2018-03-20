@@ -165,7 +165,7 @@ public class DataSourceController implements Initializable {
                                     renameTemplateController.getOk().setOnAction(renameEvent -> {
                                         TextField n = finalRenameTemplateController.getName();
                                         if (StringUtils.isNotEmpty(n.getText()) && !n.getText().equals(item.getValue().toString())) {
-                                            String newString = DAPStringUtils.filterSpeChars(n.getText());
+                                            String newString = DAPStringUtils.filterSpeCharsFile(n.getText());
                                             sourceDataService.renameProject(item.getValue(), newString);
                                             item.setValue(newString);
                                             dataSourceTable.refresh();
