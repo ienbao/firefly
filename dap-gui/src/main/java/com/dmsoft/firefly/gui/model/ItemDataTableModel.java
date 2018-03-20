@@ -25,7 +25,7 @@ public class ItemDataTableModel implements TableModel {
     private Map<String, SimpleObjectProperty<String>> valueMap;
     private List<RowDataDto> rowDataDtoList = new ArrayList<>();
     private Map<String, SimpleObjectProperty<Boolean>> checkMap = new HashMap<>();
-    private ObjectProperty<Boolean> allChecked = new SimpleObjectProperty<>( false );
+    private ObjectProperty<Boolean> allChecked = new SimpleObjectProperty<>(false);
     private List<String> trueSet = new ArrayList<>();
     private List<String> falseSet = new ArrayList<>();
     private CheckBox allCheckBox;
@@ -38,25 +38,25 @@ public class ItemDataTableModel implements TableModel {
         columnKey.clear();
         valueMap = Maps.newHashMap();
         if (headers != null && !headers.isEmpty()) {
-            columnKey.add( 0, "" );
+            columnKey.add(0, "");
             if (headers.size() > 10) {
                 for (int i = 0; i < 10; i++) {
-                    columnKey.add( headers.get( i ) );
+                    columnKey.add(headers.get(i));
                 }
             } else {
                 for (String header : headers) {
-                    columnKey.add( header );
+                    columnKey.add(header);
                 }
             }
         }
 
-        int i=0;
+        int i = 0;
         if (rowDataDtos != null && !rowDataDtos.isEmpty()) {
             for (RowDataDto rowDataDto : rowDataDtos) {
-               // rowKey.add( rowDataDto.getRowKey() );
+                // rowKey.add( rowDataDto.getRowKey() );
                 rowKey.add(String.valueOf(i));
                 i++;
-                rowDataDtoList.add( rowDataDto );
+                rowDataDtoList.add(rowDataDto);
             }
         }
     }
@@ -68,11 +68,11 @@ public class ItemDataTableModel implements TableModel {
 
     @Override
     public ObjectProperty<String> getCellData(String rowKey, String columnName) {
-        if (columnName.equals( "" )) {
+        if (columnName.equals("")) {
             return null;
         } else {
-            valueMap.put( rowKey, new SimpleObjectProperty<String>( rowDataDtoList.get( Integer.parseInt( rowKey )).getData().get( columnName ) ) );
-            return valueMap.get( rowKey );
+            valueMap.put(rowKey, new SimpleObjectProperty<String>(rowDataDtoList.get(Integer.parseInt(rowKey)).getData().get(columnName)));
+            return valueMap.get(rowKey);
         }
     }
 
@@ -88,7 +88,7 @@ public class ItemDataTableModel implements TableModel {
 
     @Override
     public boolean isCheckBox(String columnName) {
-        if (columnName.equals( "" )) {
+        if (columnName.equals("")) {
             return true;
         }
         return false;
@@ -96,28 +96,28 @@ public class ItemDataTableModel implements TableModel {
 
     @Override
     public ObjectProperty<Boolean> getCheckValue(String rowKey, String columnName) {
-        if (checkMap.get( rowKey ) == null) {
-            SimpleObjectProperty<Boolean> b = new SimpleObjectProperty<>( true );
-            checkMap.put( rowKey, b );
-            trueSet.add( rowKey );
-            allChecked.setValue( true );
-            b.addListener( (ov, b1, b2) -> {
+        if (checkMap.get(rowKey) == null) {
+            SimpleObjectProperty<Boolean> b = new SimpleObjectProperty<>(true);
+            checkMap.put(rowKey, b);
+            trueSet.add(rowKey);
+            allChecked.setValue(true);
+            b.addListener((ov, b1, b2) -> {
                 if (!b2) {
 //                    if(trueSet.contains(rowKey )){
 //                        trueSet.remove(rowKey);
 //                    }
-                    falseSet.add( rowKey );
-                    allChecked.setValue( false );
+                    falseSet.add(rowKey);
+                    allChecked.setValue(false);
                 } else {
-                    if (falseSet.contains( rowKey )) {
-                        falseSet.remove( rowKey );
+                    if (falseSet.contains(rowKey)) {
+                        falseSet.remove(rowKey);
                     }
 //                    trueSet.add( rowKey );
-                    allChecked.setValue( true );
+                    allChecked.setValue(true);
                 }
-            } );
+            });
         }
-        return checkMap.get( rowKey );
+        return checkMap.get(rowKey);
     }
 
     @Override
@@ -136,29 +136,29 @@ public class ItemDataTableModel implements TableModel {
         Double usl = null;
         Double lsl = null;
 
-        if(("").equals(column)&& checkMap.get(rowKey).equals(true)){
-            tableCell.setStyle( "-fx-text-fill: #f38400" );
+        if (column.isEmpty() && (Integer.parseInt(rowKey) == 0 || Integer.parseInt(rowKey) == 1 || Integer.parseInt(rowKey) == 2)) {
+            tableCell.setGraphic(null);
             return tableCell;
         }
-        if(DAPStringUtils.isNumeric( rowDataDtoList.get( 0 ).getData().get( column ) )) {
-            usl =  Double.valueOf(rowDataDtoList.get( 0 ).getData().get( column ));
+        if (DAPStringUtils.isNumeric(rowDataDtoList.get(0).getData().get(column))) {
+            usl = Double.valueOf(rowDataDtoList.get(0).getData().get(column));
         }
 
-        if(DAPStringUtils.isNumeric( rowDataDtoList.get( 1 ).getData().get( column ) )) {
-            lsl =  Double.valueOf(rowDataDtoList.get( 1 ).getData().get( column ));
+        if (DAPStringUtils.isNumeric(rowDataDtoList.get(1).getData().get(column))) {
+            lsl = Double.valueOf(rowDataDtoList.get(1).getData().get(column));
         }
 
-        if (Integer.parseInt( rowKey ) > 2) {
-           String data = rowDataDtoList.get( Integer.parseInt( rowKey )).getData().get( column );
-            if (DAPStringUtils.isNumeric( data )) {
-              dataValue = Double.valueOf( data );
+        if (Integer.parseInt(rowKey) > 2) {
+            String data = rowDataDtoList.get(Integer.parseInt(rowKey)).getData().get(column);
+            if (DAPStringUtils.isNumeric(data)) {
+                dataValue = Double.valueOf(data);
             }
             if (null != usl && null != dataValue && dataValue > usl) {
-                tableCell.setStyle( "-fx-background-color:red" );
+                tableCell.setStyle("-fx-background-color:red");
                 return tableCell;
             }
             if (null != lsl && null != dataValue && dataValue < lsl) {
-                tableCell.setStyle( "-fx-background-color:red" );
+                tableCell.setStyle("-fx-background-color:red");
                 return tableCell;
             }
         }
@@ -172,11 +172,11 @@ public class ItemDataTableModel implements TableModel {
 
     @Override
     public void setTableView(TableView<String> tableView) {
-        if(tableView.getColumns()!= null && !tableView.getColumns().isEmpty()){
-            for(int i = 0;i<tableView.getColumns().size();i++){
-                if(i == 0){
+        if (tableView.getColumns() != null && !tableView.getColumns().isEmpty()) {
+            for (int i = 0; i < tableView.getColumns().size(); i++) {
+                if (i == 0) {
                     tableView.getColumns().get(0).setPrefWidth(35);
-                }else {
+                } else {
                     tableView.getColumns().get(i).setPrefWidth(75);
                     tableView.getColumns().get(i).setMinWidth(75);
                 }
@@ -200,21 +200,21 @@ public class ItemDataTableModel implements TableModel {
 
     public void updateTestItemColumn(List<String> result) {
         columnKey.clear();
-            if (result != null && !result.isEmpty()) {
-            columnKey.add( "" );
-            columnKey.addAll( result );
+        if (result != null && !result.isEmpty()) {
+            columnKey.add("");
+            columnKey.addAll(result);
         }
     }
 
     public void updateRowDataList(List<RowDataDto> rowDataDtos) {
         rowDataDtoList.clear();
         rowKey.clear();
-        int i=0;
+        int i = 0;
         if (rowDataDtos != null && !rowDataDtos.isEmpty()) {
             for (RowDataDto rowDataDto : rowDataDtos) {
                 rowKey.add(String.valueOf(i));
                 i++;
-                rowDataDtoList.add( rowDataDto );
+                rowDataDtoList.add(rowDataDto);
             }
         }
     }
