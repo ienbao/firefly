@@ -113,8 +113,20 @@ public class DataSourceController implements Initializable {
                             Label textField = new Label(item.getValue());
                             textField.setStyle("-fx-border-width: 0 0 0 0");
                             textField.setPrefWidth(400);
+                            if (item.isImport()) {
+                                textField.setDisable(true);
+                                item.getSelector().getCheckbox().setSelected(false);
+                                item.getSelector().getCheckbox().setDisable(true);
+                            } else {
+                                textField.setDisable(false);
+                                item.getSelector().getCheckbox().setDisable(false);
+                            }
                             ProgressBar progressBar = new ProgressBar(0);
-                            progressBar.getStyleClass().setAll("progress-bar-lg-green");
+                            if (item.isError()) {
+                                progressBar.getStyleClass().setAll("progress-bar-lg-red");
+                            } else {
+                                progressBar.getStyleClass().setAll("progress-bar-lg-green");
+                            }
                             progressBar.setPrefWidth(70);
                             progressBar.setMinWidth(70);
                             progressBar.setMaxHeight(3);
@@ -199,7 +211,9 @@ public class DataSourceController implements Initializable {
                                         List<String> activeProject = envService.findActivatedProjectName();
                                         activeProject.remove(item.getValue());
                                         deleteProjects.add(item.getValue());
-                                        sourceDataService.deleteProject(deleteProjects);
+                                        if (!item.isError()) {
+                                            sourceDataService.deleteProject(deleteProjects);
+                                        }
                                         envService.setActivatedProjectName(activeProject);
                                         chooseTableRowDataObservableList.remove(item);
                                         updateProjectOrder();

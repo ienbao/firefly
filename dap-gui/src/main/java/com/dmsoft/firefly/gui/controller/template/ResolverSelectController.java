@@ -146,8 +146,8 @@ public class ResolverSelectController implements Initializable {
         new Thread(() -> {
             manager.doJobASyn(job, returnValue -> {
                 if (returnValue != null && returnValue instanceof Throwable) {
-                    //TODO 弹出警告窗口
-                    controller.getChooseTableRowDataObservableList().remove(chooseTableRowData);
+                    chooseTableRowData.setError(true);
+//                    controller.getChooseTableRowDataObservableList().remove(chooseTableRowData);
                 } else {
                     chooseTableRowData.setImport(false);
                     controller.getDataSourceTable().refresh();
