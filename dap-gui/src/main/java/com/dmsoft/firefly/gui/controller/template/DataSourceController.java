@@ -24,6 +24,7 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -164,10 +165,9 @@ public class DataSourceController implements Initializable {
                                     renameTemplateController.getOk().setOnAction(renameEvent -> {
                                         TextField n = finalRenameTemplateController.getName();
                                         if (StringUtils.isNotEmpty(n.getText()) && !n.getText().equals(item.getValue().toString())) {
-
-                                            //TODO 改变数据库里面的名字
-
-                                            item.setValue(n.getText());
+                                            String newString = DAPStringUtils.filterSpeCharsFile(n.getText());
+                                            sourceDataService.renameProject(item.getValue(), newString);
+                                            item.setValue(newString);
                                             dataSourceTable.refresh();
                                             updateProjectOrder();
                                         }
