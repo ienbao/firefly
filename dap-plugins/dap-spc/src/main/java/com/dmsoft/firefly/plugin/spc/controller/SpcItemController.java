@@ -26,6 +26,9 @@ import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
+import com.dmsoft.firefly.sdk.event.EventContext;
+import com.dmsoft.firefly.sdk.event.EventType;
+import com.dmsoft.firefly.sdk.event.PlatformEvent;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.utils.FilterUtils;
@@ -164,6 +167,7 @@ public class SpcItemController implements Initializable {
                 is.relocate(w2.doubleValue() - 21, 0);
             });
         });
+        itemTable.setContextMenu(createTableRightMenu());
       this.initSpcConfig();
     }
 
@@ -199,6 +203,20 @@ public class SpcItemController implements Initializable {
         pop.show(is, bounds.getMinX(), bounds.getMinY() + 22);
 //        pop.show(is, e.getScreenX(), e.getScreenY());
         return pop;
+    }
+
+    private ContextMenu createTableRightMenu() {
+        ContextMenu right = new ContextMenu();
+        MenuItem top = new MenuItem("Sticky On Top");
+        top.setOnAction(event -> {
+
+        });
+        MenuItem setting = new MenuItem("Specification Setting");
+        setting.setOnAction(event -> {
+            RuntimeContext.getBean(EventContext.class).pushEvent(new PlatformEvent(null, "Spc_Template_Show"));
+        });
+        right.getItems().addAll(top, setting);
+        return right;
     }
 
     private void initComponentEvent() {
