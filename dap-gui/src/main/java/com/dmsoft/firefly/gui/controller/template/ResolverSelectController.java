@@ -8,13 +8,13 @@ import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
+import com.dmsoft.firefly.gui.model.UserModel;
 import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
-import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.plugin.PluginClass;
 import com.dmsoft.firefly.sdk.plugin.PluginClassType;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
@@ -104,7 +104,7 @@ public class ResolverSelectController implements Initializable {
             }
 
             UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
-            userPreferenceDto.setUserName("admin");
+            userPreferenceDto.setUserName(UserModel.getInstance().getUser().getUserName());
             userPreferenceDto.setCode("defaultResolver");
             userPreferenceDto.setValue(resolverName);
             userPreferenceService.updatePreference(userPreferenceDto);

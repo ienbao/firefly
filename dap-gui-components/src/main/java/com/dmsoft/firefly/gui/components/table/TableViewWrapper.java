@@ -31,6 +31,9 @@ public class TableViewWrapper {
     @SuppressWarnings("unchecked")
     public static void decorate(TableView<String> tableView, TableModel model) {
         tableView.getColumns().clear();
+        if (model == null) {
+            return;
+        }
         List<TableColumn<String, ?>> columns = Lists.newArrayList();
         for (String s : model.getHeaderArray()) {
             columns.add(initColumn(s, model));
