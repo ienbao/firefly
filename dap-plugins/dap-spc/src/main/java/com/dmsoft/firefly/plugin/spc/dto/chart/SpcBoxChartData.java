@@ -9,6 +9,7 @@ import com.dmsoft.firefly.plugin.spc.charts.data.basic.IPoint;
 import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.BoxCResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SingleBoxDataDto;
+import com.dmsoft.firefly.plugin.spc.dto.chart.pel.BoxAndWhiskerData;
 import com.google.common.collect.Lists;
 import javafx.scene.paint.Color;
 
@@ -93,7 +94,7 @@ public class SpcBoxChartData implements IBoxChartData {
         maxY = MathUtils.getMax(yPoint.toArray(new Double[0]), boxY.toArray(new Double[0]));
         minY = MathUtils.getMin(yPoint.toArray(new Double[0]), boxY.toArray(new Double[0]));
         maxX = MathUtils.getMax(xPoint.toArray(new Double[0]));
-        minX = MathUtils.getMax(xPoint.toArray(new Double[0]));
+        minX = MathUtils.getMin(xPoint.toArray(new Double[0]));
     }
 
     @Override

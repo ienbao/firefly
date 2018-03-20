@@ -3,13 +3,14 @@
  */
 package com.dmsoft.firefly.plugin.spc.dto.chart;
 
-import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.ILineData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IPathData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IPoint;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcControlChartDto;
+import com.dmsoft.firefly.plugin.spc.dto.chart.pel.LineData;
+import com.dmsoft.firefly.plugin.spc.dto.chart.pel.SpcXYChartData;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.google.common.collect.Lists;
 import javafx.scene.paint.Color;
@@ -21,7 +22,7 @@ import java.util.List;
  */
 public class SpcControlChartData implements IControlChartData {
     private SpcControlChartDto spcControlChartDto;
-    private XYChartData xyChartData;
+    private SpcXYChartData xyChartData;
     private String key;
     private Color color;
     private List<ILineData> lineDataList = Lists.newArrayList();
@@ -51,7 +52,7 @@ public class SpcControlChartData implements IControlChartData {
         }
         Double[] x = spcControlChartDto.getX();
         Double[] y = spcControlChartDto.getY();
-        xyChartData = new XYChartData<>(x, y);
+        xyChartData = new SpcXYChartData(x, y);
 
         //init lines data
         Double cl = spcControlChartDto.getCl();

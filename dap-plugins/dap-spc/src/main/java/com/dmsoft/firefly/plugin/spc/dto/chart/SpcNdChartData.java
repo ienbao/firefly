@@ -3,12 +3,14 @@
  */
 package com.dmsoft.firefly.plugin.spc.dto.chart;
 
-import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBarChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.ILineData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.NDCResultDto;
+import com.dmsoft.firefly.plugin.spc.dto.chart.pel.LineData;
+import com.dmsoft.firefly.plugin.spc.dto.chart.pel.SpcBarChartData;
+import com.dmsoft.firefly.plugin.spc.dto.chart.pel.SpcXYChartData;
 import com.dmsoft.firefly.plugin.spc.utils.ChartDataUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.google.common.collect.Lists;
@@ -21,8 +23,8 @@ import java.util.List;
  */
 public class SpcNdChartData implements INdcChartData {
     private NDCResultDto ndcResultDto;
-    private XYChartData xyChartData;
-    private BarChartData barChartData;
+    private SpcXYChartData xyChartData;
+    private SpcBarChartData barChartData;
     private List<ILineData> lineDataList = Lists.newArrayList();
 
     private String key;
@@ -54,20 +56,20 @@ public class SpcNdChartData implements INdcChartData {
         //init bar data
         Double[] histX = ndcResultDto.getHistX();
         Double[] histY = ndcResultDto.getHistY();
-        barChartData = new BarChartData(histX, histY);
+        barChartData = new SpcBarChartData(histX, histY);
 
         //init curve data
         Double[] curveX = ndcResultDto.getCurveX();
         Double[] curveY = ChartDataUtils.rebaseNormalCurveData(histY, ndcResultDto.getCurveY());
-        xyChartData = new XYChartData<>(curveX, curveY);
+        xyChartData = new SpcXYChartData(curveX, curveY);
 
         //init lines data
         String[] uslLslName = UIConstant.SPC_USL_LSL;
         Double usl = ndcResultDto.getUsl();
         Double lsl = ndcResultDto.getLsl();
-        Double[] uslAndlsl = new Double[]{usl, lsl};
+        Double[] uslAndLsl = new Double[]{usl, lsl};
         if (usl != null) {
-            ILineData uslData = new LineData(usl, uslLslName[1]);
+            ILineData uslData = new LineData(usl, uslLslName[0]);
             lineDataList.add(uslData);
         }
         if (lsl != null) {
@@ -85,8 +87,8 @@ public class SpcNdChartData implements INdcChartData {
 
         maxY = MathUtils.getMax(histY, curveY);
         minY = MathUtils.getMin(histY, curveY);
-        maxX = MathUtils.getMax(histX, curveX, cls, uslAndlsl);
-        minX = MathUtils.getMax(histX, curveX, cls, uslAndlsl);
+        maxX = MathUtils.getMax(histX, curveX, cls, uslAndLsl);
+        minX = MathUtils.getMin(histX, curveX, cls, uslAndLsl);
     }
 
     @Override

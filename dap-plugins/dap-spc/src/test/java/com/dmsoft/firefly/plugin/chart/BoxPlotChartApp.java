@@ -2,6 +2,7 @@ package com.dmsoft.firefly.plugin.chart;
 
 import com.dmsoft.firefly.plugin.spc.charts.BoxPlotChart;
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxExtraData;
+import com.dmsoft.firefly.plugin.spc.dto.chart.pel.BoxAndWhiskerData;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.application.Application;
@@ -86,7 +87,7 @@ public class BoxPlotChartApp extends Application {
 //            );
 //        });
 
-        com.dmsoft.firefly.plugin.spc.dto.chart.BoxAndWhiskerData data = new com.dmsoft.firefly.plugin.spc.dto.chart.BoxAndWhiskerData();
+        BoxAndWhiskerData data = new BoxAndWhiskerData();
         data.setData(chartData);
         data.setColor(Color.RED);
         chart.createChartSeries(data, seriesName);
