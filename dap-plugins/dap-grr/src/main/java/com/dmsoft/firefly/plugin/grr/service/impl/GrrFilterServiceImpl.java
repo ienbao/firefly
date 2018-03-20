@@ -27,8 +27,8 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @OpenService
 public class GrrFilterServiceImpl implements GrrFilterService {
-    private static String SORT_MEHODE_APPRAISER = "Appraisers";
-    private static String SORT_MEHODE_TRIAL = "default";
+    private static final String SORT_METHOD_APPRAISER = "Appraisers";
+    private static final String SORT_METHOD_TRIAL = "default";
     private final Logger logger = LoggerFactory.getLogger(GrrFilterServiceImpl.class);
 
     @Override
@@ -67,9 +67,9 @@ public class GrrFilterServiceImpl implements GrrFilterService {
         if (DAPStringUtils.isNotBlank(appraiserName)) {
             return getGrrSlot(dataFrame, searchConditionDto);
         } else {
-            if (SORT_MEHODE_APPRAISER.equals(configDto.getSortMethod())) {
+            if (SORT_METHOD_APPRAISER.equals(configDto.getSortMethod())) {
                 return getGrrNormalForAppraiser(dataFrame, searchConditionDto);
-            } else if (SORT_MEHODE_TRIAL.equals(configDto.getSortMethod())) {
+            } else if (SORT_METHOD_TRIAL.equals(configDto.getSortMethod())) {
                 return getGrrNormalForTrial(dataFrame, searchConditionDto);
             } else {
                 logger.error("Sort method is empty.");

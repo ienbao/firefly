@@ -1,7 +1,6 @@
 package com.dmsoft.firefly.gui.components.searchcombobox;
 
 import com.google.common.collect.Lists;
-import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -56,7 +55,8 @@ public class SearchComboBox extends GridPane {
         this.getColumnConstraints().addAll(c1, c2, c3);
 
         FilteredList<String> filterItems = new FilteredList<>(searchComboBoxController.getTestItems(), p -> true);
-        FilteredList<String> filterValues = new FilteredList<>(FXCollections.observableArrayList(), p -> true);
+        ObservableList<String> values = FXCollections.observableArrayList("");
+        FilteredList<String> filterValues = new FilteredList<>(values, p -> true);
 
         this.testItemBox = new ComboBox<>();
         this.testItemBox.setEditable(true);
@@ -70,6 +70,18 @@ public class SearchComboBox extends GridPane {
                 this.testItemBox.setStyle("-fx-border-color: #66c0ff");
                 this.operatorBox.setStyle("-fx-border-color: #66c0ff #ccc #ccc #ccc");
                 this.valueBox.setStyle("-fx-border-color: #66c0ff #ccc #ccc #ccc");
+            } else {
+                this.testItemBox.setStyle("-fx-border-color: #ccc");
+                this.operatorBox.setStyle("-fx-border-color: #ccc");
+                this.valueBox.setStyle("-fx-border-color: #ccc");
+            }
+        });
+
+        this.testItemBox.hoverProperty().addListener((ov, b1, b2) -> {
+            if (b2) {
+                this.testItemBox.setStyle("-fx-border-color: #7fcaff");
+                this.operatorBox.setStyle("-fx-border-color: #7fcaff #ccc #ccc #ccc");
+                this.valueBox.setStyle("-fx-border-color: #7fcaff #ccc #ccc #ccc");
             } else {
                 this.testItemBox.setStyle("-fx-border-color: #ccc");
                 this.operatorBox.setStyle("-fx-border-color: #ccc");
@@ -123,7 +135,9 @@ public class SearchComboBox extends GridPane {
                 this.valueBox.lookup(".arrow-button").getStyleClass().remove("arrow-calendar-button");
             }
             this.valueDatas = searchComboBoxController.getValueForTestItem(s2);
-            ((ObservableListWrapper) filterValues.getSource()).setAll(valueDatas);
+            values.clear();
+            values.add("");
+            values.addAll(this.valueDatas);
         });
 
         this.operatorBox = new ComboBox<>();
@@ -136,6 +150,13 @@ public class SearchComboBox extends GridPane {
         this.operatorBox.focusedProperty().addListener((ov, b1, b2) -> {
             if (b2) {
                 this.operatorBox.setStyle("-fx-border-color: #66c0ff");
+            } else {
+                this.operatorBox.setStyle("-fx-border-color: #ccc");
+            }
+        });
+        this.operatorBox.hoverProperty().addListener((ov, b1, b2) -> {
+            if (b2) {
+                this.operatorBox.setStyle("-fx-border-color: #7fcaff");
             } else {
                 this.operatorBox.setStyle("-fx-border-color: #ccc");
             }
@@ -153,6 +174,15 @@ public class SearchComboBox extends GridPane {
             if (b2) {
                 this.operatorBox.setStyle("-fx-border-color: #ccc #66c0ff #ccc #ccc");
                 this.valueBox.setStyle("-fx-border-color: #66c0ff");
+            } else {
+                this.operatorBox.setStyle("-fx-border-color: #ccc");
+                this.valueBox.setStyle("-fx-border-color: #ccc");
+            }
+        });
+        this.valueBox.hoverProperty().addListener((ov, b1, b2) -> {
+            if (b2) {
+                this.operatorBox.setStyle("-fx-border-color: #ccc #7fcaff #ccc #ccc");
+                this.valueBox.setStyle("-fx-border-color: #7fcaff");
             } else {
                 this.operatorBox.setStyle("-fx-border-color: #ccc");
                 this.valueBox.setStyle("-fx-border-color: #ccc");
@@ -180,6 +210,7 @@ public class SearchComboBox extends GridPane {
                 return;
             }
             ObservableList<String> list = FXCollections.observableArrayList();
+            list.add("");
             for (String s : this.valueDatas) {
                 if (s.toLowerCase().contains(this.valueBox.getEditor().getText().toLowerCase())) {
                     list.add(s);
@@ -203,6 +234,15 @@ public class SearchComboBox extends GridPane {
             if (b2) {
                 this.testItemBox.setStyle("-fx-border-color: #ccc #66c0ff #ccc #ccc");
                 this.valueBox.setStyle("-fx-border-color: #ccc #66c0ff #ccc #ccc");
+            } else {
+                this.testItemBox.setStyle("-fx-border-color: #ccc");
+                this.valueBox.setStyle("-fx-border-color: #ccc");
+            }
+        });
+        this.closeBtn.hoverProperty().addListener((ov, b1, b2) -> {
+            if (b2) {
+                this.testItemBox.setStyle("-fx-border-color: #ccc #7fcaff #ccc #ccc");
+                this.valueBox.setStyle("-fx-border-color: #ccc #7fcaff #ccc #ccc");
             } else {
                 this.testItemBox.setStyle("-fx-border-color: #ccc");
                 this.valueBox.setStyle("-fx-border-color: #ccc");

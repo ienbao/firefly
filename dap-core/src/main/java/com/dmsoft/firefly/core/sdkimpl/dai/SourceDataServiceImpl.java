@@ -390,6 +390,29 @@ public class SourceDataServiceImpl implements SourceDataService {
     }
 
     @Override
+    public Map<String, String> findTestData(List<String> projectNameList, String testItemName) {
+        Map<String, String> result = Maps.newHashMap();
+        try {
+            Criteria criteria = where(IN_USED_FIELD).is(Boolean.TRUE);
+            Query query = new Query(criteria);
+            query.fields().include(ROW_KEY_FIELD);
+            query.fields().include(DATA_FIELD + "." + testItemName);
+            for (String projectName : projectNameList) {
+                logger.debug("Finding Test Data for project name = {}...", projectName);
+                List<RowData> rowDataList = getMongoTemplate().find(query, RowData.class, projectName);
+                for (RowData rowData : rowDataList) {
+                    result.putAll(rowData.getData());
+                }
+                logger.info("Find Test Data for project name = {} done.", projectName);
+            }
+        } catch (Exception e) {
+            logger.error("Find Test Data error! Exception = {}", e.getMessage());
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
+        }
+        return result;
+    }
+
+    @Override
     public RowDataDto findTestData(String rowKey) {
         RowDataDto rowDataDto = new RowDataDto();
         try {
