@@ -556,14 +556,15 @@ public class GrrExportController {
                 WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
                 return;
             }
-            List<String> projectNameList = envService.findActivatedProjectName();
-            if (eachFile.isSelected()) {
-                projectNameList.forEach(projectName -> export(Lists.newArrayList(projectName)));
-            } else {
-                export(projectNameList);
-            }
             StageMap.closeStage("grrExport");
-
+            Platform.runLater(() -> {
+                List<String> projectNameList = envService.findActivatedProjectName();
+                if (eachFile.isSelected()) {
+                    projectNameList.forEach(projectName -> export(Lists.newArrayList(projectName)));
+                } else {
+                    export(projectNameList);
+                }
+            });
         });
         print.setOnAction(event -> {
             if (StringUtils.isEmpty(locationPath.getText())) {
@@ -637,9 +638,9 @@ public class GrrExportController {
     private void build() {
         Pane root = null;
         try {
-            FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_setting.fxml");
+            FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_export_setting.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrSetting", "Grr Setting", root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrExportSetting",  GrrFxmlAndLanguageUtils.getString(ResourceMassages.GRR_EXPORT_SETTING_TITLE), root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
             stage.show();
 
         } catch (Exception ex) {

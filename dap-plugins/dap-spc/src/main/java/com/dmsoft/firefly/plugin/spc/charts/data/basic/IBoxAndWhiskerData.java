@@ -7,19 +7,19 @@ import javafx.scene.paint.Color;
  */
 public interface IBoxAndWhiskerData {
 
-    Number getXPosByIndex(int index);
+    Double getXPosByIndex(int index);
 
-    Number getMeanByIndex(int index);   //cl
+    Double getMeanByIndex(int index);   //cl
 
-    Number getMedianByIndex(int index);
+    Double getMedianByIndex(int index);
 
-    Number getQ1ByIndex(int index);
+    Double getQ1ByIndex(int index);
 
-    Number getQ3ByIndex(int index);
+    Double getQ3ByIndex(int index);
 
-    Number getMinRegularValueByIndex(int index);
+    Double getMinRegularValueByIndex(int index);
 
-    Number getMaxRegularValueByIndex(int index);
+    Double getMaxRegularValueByIndex(int index);
 
     default Color getColor() {
         return null;
