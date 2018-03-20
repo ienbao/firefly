@@ -13,6 +13,8 @@ import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.mongodb.MongoNamespace;
+import com.mongodb.client.MongoDatabase;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +61,29 @@ public class SourceDataServiceImpl implements SourceDataService {
         } else {
             logger.error("Save project = {} error! Exception = {}", "Project already exist!");
             throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_11001));
+        }
+    }
+
+    @Override
+    public void renameProject(String oldProjectName, String newProjectName) {
+        if (isProjectExist(oldProjectName)) {
+            logger.error("Rename project from {} to {} error! Exception = {}", oldProjectName, newProjectName, oldProjectName + " do not exist!");
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_11002));
+        }
+        if (isProjectExist(newProjectName)) {
+            logger.error("Rename project from {} to {} error! Exception = {}", oldProjectName, newProjectName, newProjectName + " already exist!");
+        }
+        try {
+            logger.debug("Renaming project from {} to {} ...", oldProjectName, newProjectName);
+            Project project = getMongoTemplate().findOne(new Query(where(PROJECT_NAME_FIELD).is(oldProjectName)), Project.class);
+            project.setProjectName(newProjectName);
+            getMongoTemplate().save(project, PROJECT_COLLECTION_NAME);
+            MongoDatabase db = getMongoTemplate().getDb();
+            MongoNamespace mongoNamespace = new MongoNamespace(newProjectName);
+            db.getCollection(oldProjectName).renameCollection(mongoNamespace);
+        } catch (Exception e) {
+            logger.error("Rename project from {} to {} error! Exception = {}", oldProjectName, newProjectName, e.getMessage());
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
         }
     }
 
