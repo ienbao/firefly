@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2017. For Intelligent Group.
+ */
 package com.dmsoft.firefly.gui.model;
 
 import com.dmsoft.firefly.gui.components.table.TableModel;
@@ -12,7 +15,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
 
@@ -32,6 +34,8 @@ public class ItemDataTableModel implements TableModel {
 
     /**
      * constructor
+     * @param headers  testItem
+     * @param rowDataDtos  rowDataDtos
      */
     public ItemDataTableModel(List<String> headers, List<RowDataDto> rowDataDtos) {
         rowKey.clear();
@@ -140,6 +144,12 @@ public class ItemDataTableModel implements TableModel {
             tableCell.setGraphic(null);
             return tableCell;
         }
+
+//        if (column.isEmpty() && falseSet.contains(rowKey)) {
+//            tableCell.setStyle("-fx-text-fill: #f38400");
+//            return tableCell;
+//        }
+        
         if (DAPStringUtils.isNumeric(rowDataDtoList.get(0).getData().get(column))) {
             usl = Double.valueOf(rowDataDtoList.get(0).getData().get(column));
         }
@@ -186,18 +196,34 @@ public class ItemDataTableModel implements TableModel {
 
     }
 
+    /**
+     * get CheckMap
+     * @return checkMap
+     */
     public Map<String, SimpleObjectProperty<Boolean>> getCheckMap() {
         return checkMap;
     }
 
+    /**
+     * get All Check Box
+     * @return allCheckBox
+     */
     public CheckBox getAllCheckBox() {
         return allCheckBox;
     }
 
+    /**
+     * get Row Key
+     * @return rowKey
+     */
     public ObservableList<String> getRowKey() {
         return rowKey;
     }
 
+    /**
+     * update TestItem Column
+     * @param result columnKey
+     */
     public void updateTestItemColumn(List<String> result) {
         columnKey.clear();
         if (result != null && !result.isEmpty()) {
@@ -206,6 +232,10 @@ public class ItemDataTableModel implements TableModel {
         }
     }
 
+    /**
+     * update RowData List
+     * @param rowDataDtos rowDataDtos
+     */
     public void updateRowDataList(List<RowDataDto> rowDataDtos) {
         rowDataDtoList.clear();
         rowKey.clear();
@@ -219,14 +249,26 @@ public class ItemDataTableModel implements TableModel {
         }
     }
 
+    /**
+     * get RowDataDtoList
+     * @return rowDataDtoList
+     */
     public List<RowDataDto> getRowDataDtoList() {
         return rowDataDtoList;
     }
 
+    /**
+     * get FalseSet
+     * @return falseSet
+     */
     public List<String> getFalseSet() {
         return falseSet;
     }
 
+    /**
+     * get TrueSet
+     * @return trueSet
+     */
     public List<String> getTrueSet() {
         return trueSet;
     }

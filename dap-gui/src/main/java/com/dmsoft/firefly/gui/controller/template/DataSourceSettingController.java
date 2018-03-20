@@ -3,7 +3,6 @@
  */
 package com.dmsoft.firefly.gui.controller.template;
 
-import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
@@ -19,7 +18,6 @@ import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
-import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.google.common.collect.Lists;
@@ -34,8 +32,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.*;
-
-import static java.util.Arrays.asList;
 
 /**
  * Created by Alice on 2018/2/10.
@@ -67,11 +63,17 @@ public class DataSourceSettingController {
         this.initComponentEvent();
     }
 
+    /**
+     * init Button
+     */
     private void initButton() {
         chooseItem.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
         searchBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
     }
 
+    /**
+     * init Component
+     */
     private void initComponentEvent() {
         chooseItem.setOnAction(event -> getChooseColumnBtnEvent());
         itemDataTableModel.getAllCheckBox().setOnAction(event -> getAllCheckBoxEvent());
@@ -118,6 +120,9 @@ public class DataSourceSettingController {
         });
     }
 
+    /**
+     * build Choose Column Dialog
+     */
     private void buildChooseColumnDialog() {
         FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/choosecol_dialog.fxml");
         Pane root = null;
@@ -134,13 +139,19 @@ public class DataSourceSettingController {
         }
     }
 
+
+    /**
+     * Choose Column Btn Event
+     */
     private void getChooseColumnBtnEvent() {
         chooseCumDialogController.setSelectResultName(itemDataTableModel.getHeaderArray());
         chooseCumDialogController.getStage().show();
     }
 
+    /**
+     * init Table Data
+     */
     private void initTableData() {
-
         projectNames = envService.findActivatedProjectName();
         testItemWithTypeDtos = envService.findTestItems();
         if (testItemWithTypeDtos != null && !testItemWithTypeDtos.isEmpty()) {
@@ -158,6 +169,9 @@ public class DataSourceSettingController {
         }
     }
 
+    /**
+     * init Choose Column Table Data
+     */
     private void initChooseColumnTableData() {
         List<ChooseTableRowData> chooseTableRowDataList = Lists.newArrayList();
         testItems.forEach(v -> {
@@ -167,6 +181,9 @@ public class DataSourceSettingController {
         chooseCumDialogController.setTableData(chooseTableRowDataList);
     }
 
+    /**
+     * get All Check Box Event
+     */
     private void getAllCheckBoxEvent() {
         Map<String, SimpleObjectProperty<Boolean>> checkMap = itemDataTableModel.getCheckMap();
         for (String key : itemDataTableModel.getRowKey()) {
@@ -178,6 +195,9 @@ public class DataSourceSettingController {
         }
     }
 
+    /**
+     * get Choose Test Item Event
+     */
     private void getChooseTestItemEvent() {
         selectTestItemName = chooseCumDialogController.getSelectResultName();
         itemDataTable.getColumns().remove(0, itemDataTable.getColumns().size());
@@ -200,6 +220,9 @@ public class DataSourceSettingController {
         chooseCumDialogController.getStage().close();
     }
 
+    /**
+     * get Search Condition Event
+     */
     private void getSearchConditionEvent() {
         List<String> columKey = new LinkedList<>();
         if (itemDataTableModel.getHeaderArray() != null && !itemDataTableModel.getHeaderArray().isEmpty()) {
@@ -237,6 +260,11 @@ public class DataSourceSettingController {
         }
     }
 
+    /**
+     * add Row Data
+     * @param columKey columKey
+     * @return rowDataDtoList
+     */
     private List<RowDataDto> addRowData(List<String> columKey) {
         List<RowDataDto> rowDataDtoList = new LinkedList<>();
         RowDataDto uslDataDto = new RowDataDto();
