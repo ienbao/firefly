@@ -122,9 +122,11 @@ public class ResolverSelectController implements Initializable {
                     new FileChooser.ExtensionFilter("CSV", "*.csv")
             );
             Stage fileStage = null;
-            File file = fileChooser.showOpenDialog(fileStage);
-            if (file != null) {
-                importDataSource(file.getPath(), file.getName(), resolverName);
+            List<File> files = fileChooser.showOpenMultipleDialog(fileStage);
+            if (files != null && files.size() != 0) {
+                files.forEach(file -> {
+                    importDataSource(file.getPath(), file.getName(), resolverName);
+                });
             }
         });
     }
@@ -137,9 +139,11 @@ public class ResolverSelectController implements Initializable {
         Job job = new Job(GuiConst.DATASOURCE_IMPORT);
         job.addProcessMonitorListener(event -> {
             chooseTableRowData.setProgress(event.getPoint());
-            controller.getDataSourceTable().refresh();
+            Platform.runLater(() -> {
+                controller.getDataSourceTable().refresh();
+            });
         });
-        Platform.runLater(() -> {
+        new Thread(() -> {
             manager.doJobASyn(job, returnValue -> {
                 if (returnValue != null && returnValue instanceof Throwable) {
                     //TODO 弹出警告窗口
@@ -149,7 +153,7 @@ public class ResolverSelectController implements Initializable {
                     controller.getDataSourceTable().refresh();
                 }
             }, filPath, resolverName);
-        });
+        }).start();
         controller.getChooseTableRowDataObservableList().add(chooseTableRowData);
     }
 }

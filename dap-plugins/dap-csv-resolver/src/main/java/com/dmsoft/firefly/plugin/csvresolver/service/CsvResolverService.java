@@ -51,11 +51,10 @@ public class CsvResolverService implements IDataParser {
 
     private JsonMapper jsonMapper = JsonMapper.defaultMapper();
 
-    private CsvReader csvReader;
-
     @Override
     public void importFile(String csvPath) {
         logger.info("Start csv importing.");
+        CsvReader csvReader;
         File csvFile = new File(csvPath);
         Boolean importSucc = false;
         String logStr = null;
@@ -218,6 +217,7 @@ public class CsvResolverService implements IDataParser {
      */
     @ExcludeMethod
     public List<String[]> rowParser(String path) {
+        CsvReader csvReader;
         List<String[]> csvList = Lists.newArrayList();
         try {
             csvReader = new CsvReader(path, ',', Charset.forName("UTF-8"));

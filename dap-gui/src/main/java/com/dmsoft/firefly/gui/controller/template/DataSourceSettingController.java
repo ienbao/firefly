@@ -76,8 +76,10 @@ public class DataSourceSettingController {
      */
     private void initComponentEvent() {
         chooseItem.setOnAction(event -> getChooseColumnBtnEvent());
-        itemDataTableModel.getAllCheckBox().setOnAction(event -> getAllCheckBoxEvent());
         chooseCumDialogController.getChooseOkButton().setOnAction(event -> getChooseTestItemEvent());
+        if (itemDataTableModel.getAllCheckBox() != null) {
+            itemDataTableModel.getAllCheckBox().setOnAction(event -> getAllCheckBoxEvent());
+        }
         searchBtn.setOnAction(event -> getSearchConditionEvent());
         oK.setOnAction(event -> {
             List<String> trueSet = new ArrayList<>();
@@ -163,10 +165,8 @@ public class DataSourceSettingController {
         List<RowDataDto> rowDataDtoList = this.addRowData(testItems);
         rowDataDtoList.addAll(rowDataDtos);
 
-        if (testItems != null && !testItems.isEmpty()) {
-            itemDataTableModel = new ItemDataTableModel(testItems, rowDataDtoList);
-            TableViewWrapper.decorate(itemDataTable, itemDataTableModel);
-        }
+        itemDataTableModel = new ItemDataTableModel(testItems, rowDataDtoList);
+        TableViewWrapper.decorate(itemDataTable, itemDataTableModel);
     }
 
     /**
@@ -186,11 +186,13 @@ public class DataSourceSettingController {
      */
     private void getAllCheckBoxEvent() {
         Map<String, SimpleObjectProperty<Boolean>> checkMap = itemDataTableModel.getCheckMap();
-        for (String key : itemDataTableModel.getRowKey()) {
-            if (checkMap.get(key) != null) {
-                checkMap.get(key).set(itemDataTableModel.getAllCheckBox().isSelected());
-            } else {
-                checkMap.put(key, new SimpleObjectProperty<>(itemDataTableModel.getAllCheckBox().isSelected()));
+        if (checkMap != null && checkMap.size() > 0) {
+            for (String key : itemDataTableModel.getRowKey()) {
+                if (checkMap.get(key) != null) {
+                    checkMap.get(key).set(itemDataTableModel.getAllCheckBox().isSelected());
+                } else {
+                    checkMap.put(key, new SimpleObjectProperty<>(itemDataTableModel.getAllCheckBox().isSelected()));
+                }
             }
         }
     }
@@ -262,6 +264,7 @@ public class DataSourceSettingController {
 
     /**
      * add Row Data
+     *
      * @param columKey columKey
      * @return rowDataDtoList
      */

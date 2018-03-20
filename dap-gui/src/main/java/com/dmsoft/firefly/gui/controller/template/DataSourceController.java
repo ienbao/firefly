@@ -112,7 +112,7 @@ public class DataSourceController implements Initializable {
                             Label textField = new Label(item.getValue());
                             textField.setStyle("-fx-border-width: 0 0 0 0");
                             textField.setPrefWidth(400);
-                            ProgressBar progressBar = new ProgressBar();
+                            ProgressBar progressBar = new ProgressBar(0);
                             progressBar.getStyleClass().setAll("progress-bar-lg-green");
                             progressBar.setPrefWidth(70);
                             progressBar.setMinWidth(70);
@@ -406,7 +406,12 @@ public class DataSourceController implements Initializable {
             List<String> value = Lists.newArrayList();
             value.addAll(sourceDataService.findAllProjectName());
             value.forEach(v -> {
-                ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, v);
+                ChooseTableRowData chooseTableRowData = null;
+                if (selectProject != null && selectProject.contains(v)) {
+                    chooseTableRowData = new ChooseTableRowData(true, v);
+                } else {
+                    chooseTableRowData = new ChooseTableRowData(false, v);
+                }
                 chooseTableRowDataList.add(chooseTableRowData);
             });
         }

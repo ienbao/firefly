@@ -38,6 +38,7 @@ public class GrrViewDataDFIncludeModel implements TableModel {
     private ToggleGroup group = new ToggleGroup();
     private List<GrrViewDataListener> listeners = Lists.newArrayList();
     private Map<String, TestItemWithTypeDto> typeDtoMap = Maps.newHashMap();
+    private SearchConditionDto searchConditionDto;
 
     /**
      * constructor
@@ -53,6 +54,9 @@ public class GrrViewDataDFIncludeModel implements TableModel {
         this.headerArray.add(0, appKey);
         this.headerArray.add(0, partKey);
         this.headerArray.add(0, radioKey);
+        this.headerArray.remove(searchConditionDto.getPart());
+        this.headerArray.remove(searchConditionDto.getAppraiser());
+        this.searchConditionDto = searchConditionDto;
         if (grrDataFrameDto.getIncludeDatas() != null && !grrDataFrameDto.getIncludeDatas().isEmpty()) {
             for (GrrViewDataDto grrViewDataDto : grrDataFrameDto.getIncludeDatas()) {
                 this.rowKeyArray.add(grrViewDataDto.getRowKey());
@@ -163,7 +167,7 @@ public class GrrViewDataDFIncludeModel implements TableModel {
             this.headerArray.add(0, partKey);
             this.headerArray.add(0, radioKey);
             for (String s : this.grrDataFrameDto.getDataFrame().getAllTestItemName()) {
-                if (s.toLowerCase().contains(testItem.toLowerCase())) {
+                if (s != null && s.toLowerCase().contains(testItem.toLowerCase()) && !s.equals(this.searchConditionDto.getPart()) && !s.equals(this.searchConditionDto.getAppraiser())) {
                     this.headerArray.add(s);
                 }
             }
@@ -211,12 +215,6 @@ public class GrrViewDataDFIncludeModel implements TableModel {
             int index = this.rowKeyArray.indexOf(oldDto.getRowKey());
             this.rowKeyArray.remove(index);
             this.rowKeyArray.add(index, grrViewDataDto.getRowKey());
-
-//            for (int i = 0; i < this.grrDataFrameDto.getIncludeDatas().size(); i++) {
-//                if (oldDto.getRowKey().equals(this.grrDataFrameDto.getIncludeDatas().get(i).getRowKey())) {
-//                    this.grrDataFrameDto.getIncludeDatas().set(i, grrViewDataDto);
-//                }
-//            }
         }
     }
 
