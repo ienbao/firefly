@@ -448,10 +448,6 @@ public class SourceDataServiceImpl implements SourceDataService {
     private void privateSaveTestData(String projectName, String rowKey, Map<String, String> rowDataMap, boolean appendFlag) {
         if (isRowKeyExist(rowKey)) {
             RowData rowData = getMongoTemplate().find(new Query(where(ROW_KEY_FIELD).is(rowKey)), RowData.class, projectName).get(0);
-            Map<String, String> rowDataMap1 = rowDataMap;
-            if (rowDataMap1 != null) {
-
-            }
             if (appendFlag && rowData.getData() != null) {
                 rowData.getData().putAll(rowDataMap);
             } else {
