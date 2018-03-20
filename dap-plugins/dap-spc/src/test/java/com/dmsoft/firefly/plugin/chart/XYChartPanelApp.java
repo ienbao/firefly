@@ -4,7 +4,7 @@ import com.dmsoft.firefly.plugin.spc.charts.LinearChart;
 import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.AbnormalPointData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.BrokenLineData;
-import com.dmsoft.firefly.plugin.spc.dto.chart.LineData;
+import com.dmsoft.firefly.plugin.spc.dto.chart.pel.LineData;
 import com.dmsoft.firefly.plugin.spc.charts.utils.enums.LineType;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;

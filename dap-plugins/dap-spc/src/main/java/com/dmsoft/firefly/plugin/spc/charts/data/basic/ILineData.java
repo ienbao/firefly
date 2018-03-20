@@ -15,7 +15,7 @@ public interface ILineData {
         return "";
     }
 
-    double getValue();
+    Double getValue();
 
     default Color getColor() {
         return null;

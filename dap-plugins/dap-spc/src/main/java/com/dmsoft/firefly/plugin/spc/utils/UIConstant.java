@@ -77,7 +77,7 @@ public class UIConstant {
     public static final String[] EXPORT_SPC_PERFORMANCE = {"Performace Cability Index", "PPK", "PP", "PPL", "PPU", "OverAll PPM"};
     public static final String[] SPC_USL_LSL = new String[]{"USL", "LSL"};
     public static final String[] SPC_UCL_LCL = new String[]{"UCL", "LCL"};
-    public static final String SPC_CHART_CL = "cl";
+    public static final String SPC_CHART_CL = "μ";
 
     public static final String EXPORT_SUMMARY_EXCELLENT = "EXCELLENT";
     public static final String EXPORT_SUMMARY_ADEQUTE = "GOOD";

@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -26,11 +27,13 @@ public class DefaultJobPipeline implements JobPipeline {
     private Object result;
     private AtomicInteger process = new AtomicInteger(0);
     private volatile int allWeight = 0;
+    private final Semaphore semaphore;
 
-    public DefaultJobPipeline(JobDoComplete doComplete, ExecutorService executorService, List<JobEventListener> jobEventListeners, Job session) {
+    public DefaultJobPipeline(JobDoComplete doComplete, ExecutorService executorService, List<JobEventListener> jobEventListeners, Job session, Semaphore semaphore) {
         this.doComplete = doComplete;
         this.executorService = executorService;
         this.session = session;
+        this.semaphore = semaphore;
         head = new HeadContext(this, doComplete);
         tail = new TailContext(this, doComplete);
         this.jobEventListeners = jobEventListeners;
@@ -173,6 +176,11 @@ public class DefaultJobPipeline implements JobPipeline {
 
     @Override
     public JobPipeline fireDoJob(Object... param) {
+        try {
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         head.fireDoJob(param);
         return this;
     }
@@ -219,7 +227,7 @@ public class DefaultJobPipeline implements JobPipeline {
     }
 
     private AbstractJobHandlerContext newContext(String name, JobHandler handler) {
-        return new DefaultJobHandlerContext(this, doComplete, name, executorService, handler, jobEventListeners, session);
+        return new DefaultJobHandlerContext(this, doComplete, name, executorService, handler, jobEventListeners, session, semaphore);
     }
 
     public Object getResult() {
@@ -248,7 +256,7 @@ public class DefaultJobPipeline implements JobPipeline {
     final class TailContext extends AbstractJobHandlerContext implements JobInboundHandler {
 
         public TailContext(JobPipeline jobPipeline, JobDoComplete complete) {
-            super(jobPipeline, complete, true, false, "TailContext", executorService, Lists.newArrayList(), session);
+            super(jobPipeline, complete, true, false, "TailContext", executorService, Lists.newArrayList(), session, semaphore);
         }
 
         @Override
@@ -271,7 +279,7 @@ public class DefaultJobPipeline implements JobPipeline {
     final class HeadContext extends AbstractJobHandlerContext implements JobOutboundHandler {
 
         public HeadContext(JobPipeline jobPipeline, JobDoComplete complete) {
-            super(jobPipeline, complete, false, true, "HeadContext", executorService, Lists.newArrayList(), session);
+            super(jobPipeline, complete, false, true, "HeadContext", executorService, Lists.newArrayList(), session, semaphore);
         }
 
         @Override

@@ -109,8 +109,8 @@ public class GuiApplication extends Application {
     private void initJob() {
         JobManager manager = RuntimeContext.getBean(JobManager.class);
         manager.initializeJob(GuiConst.DATASOURCE_IMPORT, pipeline -> {
-            pipeline.addLast(GuiConst.RESOLVER_HANDLER, new ResolverSelectHandler().setWeight(20));
-            pipeline.addLast(GuiConst.IMPORT_HANDLER, new CsvImportHandler().setWeight(80));
+            pipeline.addLast(GuiConst.RESOLVER_HANDLER, new ResolverSelectHandler().setWeight(10));
+            pipeline.addLast(GuiConst.IMPORT_HANDLER, new CsvImportHandler().setWeight(90));
         });
     }
 
