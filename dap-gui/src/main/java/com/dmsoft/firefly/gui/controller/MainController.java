@@ -45,8 +45,8 @@ public class MainController {
 
     private final Logger logger = LoggerFactory.getLogger(MainController.class);
     public final Double MAX_HEIGHT = 250.0;
-    public final Double MAX_WIDTH = 280.0;
-    public final Double MIN_WIDTH = 160.0;
+    public final Double MAX_WIDTH = 250.0;
+    public final Double MIN_WIDTH = 250.0;
 
     @FXML
     private GridPane grpContent;
@@ -74,10 +74,12 @@ public class MainController {
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
 
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
-    private JsonMapper mapper = JsonMapper.defaultMapper();
+    private TemplateSettingDto templateSettingDto;
+
 
     @FXML
     private void initialize() {
+        templateSettingDto =  envService.findActivatedTemplate();
         contentStackPane = new ContentStackPane();
         grpContent.add(contentStackPane, 0, 1);
         this.initToolBar();
@@ -90,7 +92,6 @@ public class MainController {
         this.initTemplate();
         this.initTemplatePopup();
         this.initComponentEvent();
-        System.out.println("init");
     }
 
     private void initToolBar() {
@@ -229,8 +230,6 @@ public class MainController {
             if (activeProjectNames != null && !activeProjectNames.isEmpty()) {
                 dataSourceBtn.setText(activeProjectNames.size() +" "+ GuiFxmlAndLanguageUtils.getString("STATE_BAR_FILE_SELECTED"));
             }
-
-            TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
             if (templateSettingDto != null) {
                 templateBtn.setText(templateSettingDto.getName());
             }
@@ -270,31 +269,18 @@ public class MainController {
     }
 
     private void getHidePopupEvent() {
-        if (templatePopup.isShowing()) {
-            templatePopup.hide();
-        }
-        if (dataSourcePopup.isShowing()) {
-            dataSourcePopup.hide();
-        }
+        templatePopup.hide();
+        dataSourcePopup.hide();
     }
 
     private void getDataSourceBtnEvent() {
         buildDataSourceDialog();
         logger.debug("Data source btn event.");
-        if (templatePopup.isShowing()) {
-            templatePopup.hide();
-        }
-        if (dataSourcePopup.isShowing()) {
-            dataSourcePopup.hide();
-        }
+        templatePopup.hide();
+        dataSourcePopup.hide();
     }
 
     private void getDataSourceLblEvent() {
-//        AtomicReference<String> fileNames = new AtomicReference<>("");
-//        dataSourceList.forEach(value->{
-//            fileNames.set(value + "/n");
-//        });
-//        Tooltip tooltip = TooltipUtil.installNormalTooltip(dataSourceBtn, fileNames.get());
         logger.debug("Data source lbl event.");
         if (!dataSourceBtn.isDisable()) {
             if (!dataSourcePopup.isShowing()) {
@@ -308,17 +294,21 @@ public class MainController {
                 dataSourcePopup.show(dataSourceBtn, screenX, screenY);
             }
         }
-        if (templatePopup.isShowing()) {
-            templatePopup.hide();
-        }
+        templatePopup.hide();
     }
 
     private void initDataSourcePopup() {
         dataSourceView = new ListView<>();
         dataSourceView.setFocusTraversable(true);
         dataSourceView.setItems(dataSourceList);
-        dataSourcePopup = new Popup();
-        dataSourcePopup.getContent().add(dataSourceView);
+
+        if (dataSourcePopup == null) {
+            dataSourcePopup = new Popup();
+            dataSourcePopup.getContent().add(dataSourceView);
+        } else {
+            dataSourcePopup.getContent().clear();
+            dataSourcePopup.getContent().add(dataSourceView);
+        }
     }
 
     private void initTemplatePopup() {
@@ -331,12 +321,14 @@ public class MainController {
             @Override
             public void updateItem(StateBarTemplateModel item, boolean empty) {
                 super.updateItem(item, empty);
-                if (!empty && item != null) {
+                if (item == null || empty == true) {
+                    setGraphic(null);
+                    setText(null);
+                } else {
                     HBox cell;
                     Label label = new Label(item.getTemplateName());
                     if (item.isIsChecked()) {
                         cell = new HBox(imageReset, label);
-                        templateView.getSelectionModel().select(item);
                     } else {
                         Label label1 = new Label("");
                         label1.setPrefWidth(16);
@@ -351,27 +343,32 @@ public class MainController {
 
         templateView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         templateView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            newValue.setIsChecked(true);
             if (oldValue != null) {
                 oldValue.setIsChecked(false);
             }
-            templateBtn.setText(newValue.getTemplateName());
-            templateView.refresh();
-            // to do
-            // change analyze template
+            if (newValue != null) {
+                newValue.setIsChecked(true);
+                templateBtn.setText(newValue.getTemplateName());
+                envService.setActivatedTemplate(newValue.getTemplateName());
+            }
+            resetMain();
         });
 
-        templatePopup = new Popup();
-        templatePopup.getContent().add(templateView);
+        if (templatePopup == null) {
+            templatePopup = new Popup();
+            templatePopup.getContent().add(templateView);
+        } else {
+            templatePopup.getContent().clear();
+            templatePopup.getContent().add(templateView);
+        }
     }
 
     private void setListViewSize(ListView listView, ObservableList dataList) {
         listView.setMaxWidth(MAX_WIDTH);
-        listView.setPrefWidth(MIN_WIDTH);
-        listView.setMinWidth(MIN_WIDTH);
+        listView.setPrefWidth(MAX_WIDTH);
         listView.setMaxHeight(MAX_HEIGHT);
         if (dataList != null && !dataList.isEmpty()) {
-            listView.setPrefHeight(26 * dataList.size());
+            listView.setPrefHeight((26 * dataList.size()) + 10);
         } else {
             listView.setPrefHeight(0);
             listView.setPrefWidth(0);
@@ -380,9 +377,7 @@ public class MainController {
     }
 
     public void initDataSource() {
-
-        List<String> projectName = mapper.fromJson(envService.findPreference("selectProject"), mapper.buildCollectionType(List.class, String.class));
-
+        List<String> projectName = envService.findActivatedProjectName();
         if (projectName != null) {
             Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
             LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, GuiConst.DEFAULT_TEMPLATE_NAME);
@@ -400,31 +395,39 @@ public class MainController {
         if (allTemplates != null) {
             allTemplates.forEach(dto -> {
                 StateBarTemplateModel stateBarTemplateModel = new StateBarTemplateModel(dto.getName(), false);
-                if (DAPStringUtils.isNotBlank(dto.getName()) && dto.getName().equals(GuiConst.DEFAULT_TEMPLATE_NAME)) {
-                    stateBarTemplateModel.setIsChecked(true);
+                if (templateSettingDto != null) {
+                    if (templateSettingDto.getName().equals(stateBarTemplateModel.getTemplateName())) {
+                        stateBarTemplateModel.setIsChecked(true);
+                    }
+                } else {
+                    if (DAPStringUtils.isNotBlank(dto.getName()) && dto.getName().equals(GuiConst.DEFAULT_TEMPLATE_NAME)) {
+                        stateBarTemplateModel.setIsChecked(true);
+                    }
                 }
                 stateBarTemplateModels.add(stateBarTemplateModel);
             });
         }
         templateList = FXCollections.observableArrayList(stateBarTemplateModels);
-        envService.setActivatedTemplate(GuiConst.DEFAULT_TEMPLATE_NAME);
+        if (templateSettingDto == null) {
+            envService.setActivatedTemplate(GuiConst.DEFAULT_TEMPLATE_NAME);
+        }
     }
 
     public void refreshDataSource(ObservableList<String> dataSourceList) {
+        this.dataSourceList = dataSourceList;
         dataSourceView.setItems(dataSourceList);
         dataSourceView.refresh();
     }
 
     public void refreshTemplate(ObservableList<StateBarTemplateModel> templateList) {
+        this.templateList = templateList;
         templateView.setItems(templateList);
         templateView.refresh();
     }
 
     private void getTemplateBtnEvent() {
         logger.debug("Template btn event.");
-        if (templatePopup.isShowing()) {
-            templatePopup.hide();
-        }
+        templatePopup.hide();
         if (dataSourcePopup.isShowing()) {
             dataSourcePopup.hide();
         }

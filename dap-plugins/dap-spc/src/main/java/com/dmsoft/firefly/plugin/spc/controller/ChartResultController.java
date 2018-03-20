@@ -143,6 +143,7 @@ public class ChartResultController implements Initializable {
                 ndChartPane.getChart().toggleValueMarker(name, selected);
             }
         });
+        yAxis.setAutoRanging(false);
         NDChart<Double, Double> ndChart = new NDChart(xAxis, yAxis);
         ndChartPane = new ChartPanel(ndChart);
         ndChartPane.setLegend(legend);
@@ -169,6 +170,7 @@ public class ChartResultController implements Initializable {
         yAxis.setTickMarkVisible(false);
         xAxis.setMinorTickVisible(false);
         yAxis.setMinorTickVisible(false);
+        yAxis.setAutoRanging(false);
         LinearChart runChart = new LinearChart(xAxis, yAxis);
         runChartPane = new ChartPanel<>(runChart);
         runChartPane.setLegend(legend);
@@ -225,6 +227,7 @@ public class ChartResultController implements Initializable {
         yAxis.setTickMarkVisible(false);
         xAxis.setMinorTickVisible(false);
         yAxis.setMinorTickVisible(false);
+        yAxis.setAutoRanging(false);
         LinearChart xBarChar = new LinearChart(xAxis, yAxis);
         xBarChartPane = new ChartPanel<>(xBarChar);
         xBarChartPane.getCustomPane().getChildren().add(button);
@@ -249,15 +252,36 @@ public class ChartResultController implements Initializable {
     }
 
     private void initRangeChartPane() {
-        rangeChartPane = new ChartPanel(new LinearChart(new NumberAxis(), new NumberAxis()));
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setTickMarkVisible(false);
+        yAxis.setTickMarkVisible(false);
+        xAxis.setMinorTickVisible(false);
+        yAxis.setMinorTickVisible(false);
+        yAxis.setAutoRanging(false);
+        rangeChartPane = new ChartPanel(new LinearChart(xAxis, yAxis));
     }
 
     private void initSdChartPane() {
-        sdChartPane = new ChartPanel(new LinearChart(new NumberAxis(), new NumberAxis()));
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setTickMarkVisible(false);
+        yAxis.setTickMarkVisible(false);
+        xAxis.setMinorTickVisible(false);
+        yAxis.setMinorTickVisible(false);
+        yAxis.setAutoRanging(false);
+        sdChartPane = new ChartPanel(new LinearChart(xAxis, yAxis));
     }
 
     private void initMedianChartPane() {
-        medianChartPane = new ChartPanel(new LinearChart(new NumberAxis(), new NumberAxis()));
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setTickMarkVisible(false);
+        yAxis.setTickMarkVisible(false);
+        xAxis.setMinorTickVisible(false);
+        yAxis.setMinorTickVisible(false);
+        yAxis.setAutoRanging(false);
+        medianChartPane = new ChartPanel(new LinearChart(xAxis, yAxis));
     }
 
     private void initBoxChartPane() {
@@ -349,11 +373,11 @@ public class ChartResultController implements Initializable {
         this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
         this.setRunChartData(UIConstant.SPC_CHART_NAME[1], runChartDataList);
         this.setControlChartData(UIConstant.SPC_CHART_NAME[2], xBarChartDataList);
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList);
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[4], sdChartDataList);
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[5], medianChartDataList);
-        this.setBoxChartData(UIConstant.SPC_CHART_NAME[6], boxChartDataList);
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
+//        this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList);
+//        this.setControlChartData(UIConstant.SPC_CHART_NAME[4], sdChartDataList);
+//        this.setControlChartData(UIConstant.SPC_CHART_NAME[5], medianChartDataList);
+//        this.setBoxChartData(UIConstant.SPC_CHART_NAME[6], boxChartDataList);
+//        this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
     }
 
     public void setNdChartData(String chartName, List<INdcChartData> ndChartData) {
@@ -380,10 +404,12 @@ public class ChartResultController implements Initializable {
         double yMin = MathUtils.getMin(yLower);
         NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        xAxis.setLowerBound(xMin);
-        xAxis.setUpperBound(xMax);
+        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
+        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
+        xAxis.setLowerBound(xMin - xReserve);
+        xAxis.setUpperBound(xMax + xReserve);
         yAxis.setLowerBound(yMin);
-        yAxis.setUpperBound(yMax);
+        yAxis.setUpperBound(yMax + yReserve);
         setNdChartData(ndChartData);
     }
 
@@ -411,10 +437,12 @@ public class ChartResultController implements Initializable {
         double yMin = MathUtils.getMin(yLower);
         NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        xAxis.setLowerBound(xMin);
-        xAxis.setUpperBound(xMax);
-        yAxis.setLowerBound(yMin);
-        yAxis.setUpperBound(yMax);
+        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
+        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
+        xAxis.setLowerBound(xMin - xReserve);
+        xAxis.setUpperBound(xMax + xReserve);
+        yAxis.setLowerBound(yMin - yReserve);
+        yAxis.setUpperBound(yMax + yReserve);
         setRunChartData(runChartData);
     }
 
@@ -444,10 +472,12 @@ public class ChartResultController implements Initializable {
             double yMin = MathUtils.getMin(yLower);
             NumberAxis xAxis = (NumberAxis) linearChart.getXAxis();
             NumberAxis yAxis = (NumberAxis) linearChart.getYAxis();
-            xAxis.setLowerBound(xMin);
-            xAxis.setUpperBound(xMax);
-            yAxis.setLowerBound(yMin);
-            yAxis.setUpperBound(yMax);
+            double yReserve = (yMax - yMin) * UIConstant.FACTOR;
+            double xReserve = (xMax - xMin) * UIConstant.FACTOR;
+            xAxis.setLowerBound(xMin - xReserve);
+            xAxis.setUpperBound(xMax + xReserve);
+            yAxis.setLowerBound(yMin - yReserve);
+            yAxis.setUpperBound(yMax + yReserve);
             setControlChartData(linearChart, controlChartData);
         }
     }
@@ -527,7 +557,7 @@ public class ChartResultController implements Initializable {
         runChartData.forEach(chartData -> {
             IXYChartData xyChartData = chartData.getXYChartData();
             List<ILineData> lineData = chartData.getLineData();
-            chart.createChartSeries(xyChartData, seriesName, null);
+            chart.createChartSeries(xyChartData, chartData.getUniqueKey(), chartData.getColor(),null);
             if (lineData != null) {
                 chart.addValueMarker(lineData, seriesName);
             }
@@ -540,12 +570,12 @@ public class ChartResultController implements Initializable {
             List<ILineData> lineData = chartData.getLineData();
             List<IPathData> pathData = chartData.getBrokenLineData();
 //            add chart data
-            chart.createChartSeries(xyChartData, seriesName, null);
+            chart.createChartSeries(xyChartData, chartData.getUniqueKey(), chartData.getColor(), null);
             if (lineData != null) {
-                chart.addValueMarker(lineData, seriesName);
+                chart.addValueMarker(lineData, chartData.getUniqueKey());
             }
             if (pathData != null) {
-                chart.addPathMarker(pathData, seriesName);
+                chart.addPathMarker(pathData, chartData.getUniqueKey());
             }
         });
     }

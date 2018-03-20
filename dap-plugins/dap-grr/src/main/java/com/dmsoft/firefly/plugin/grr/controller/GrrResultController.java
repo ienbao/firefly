@@ -94,6 +94,8 @@ public class GrrResultController implements Initializable {
 //        Set digNum
         DigNumInstance.newInstance().setDigNum(grrMainController.getActiveTemplateSettingDto().getDecimalDigit());
         List<GrrViewDataDto> viewDataDtos = grrMainController.getGrrDataFrame().getIncludeDatas();
+        parts.clear();
+        appraisers.clear();
         viewDataDtos.forEach(viewDataDto -> {
             parts.add(viewDataDto.getPart());
             appraisers.add(viewDataDto.getOperator());
