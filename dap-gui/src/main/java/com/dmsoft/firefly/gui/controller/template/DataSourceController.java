@@ -31,6 +31,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -43,6 +44,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 
@@ -58,7 +60,7 @@ import static com.google.common.io.Resources.getResource;
 public class DataSourceController implements Initializable {
 
     @FXML
-    private Button addFile, ok, cancel, search, delete;
+    private Button addFile, ok, cancel, search, delete, errorInfo;
 
     @FXML
     private TableView dataSourceTable;
@@ -87,7 +89,8 @@ public class DataSourceController implements Initializable {
     private void initTable() {
         search.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
         delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
-
+        errorInfo.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_tips_warning.png")));
+        errorInfo.setVisible(false);
         allCheckBox = new CheckBox();
         chooseCheckBoxColumn.setGraphic(allCheckBox);
 
@@ -113,7 +116,7 @@ public class DataSourceController implements Initializable {
                             Label textField = new Label(item.getValue());
                             textField.setStyle("-fx-border-width: 0 0 0 0");
                             textField.setPrefWidth(400);
-                            if (item.isImport()) {
+                            if (item.isImport() || item.isError()) {
                                 textField.setDisable(true);
                                 item.getSelector().getCheckbox().setSelected(false);
                                 item.getSelector().getCheckbox().setDisable(true);
@@ -290,10 +293,20 @@ public class DataSourceController implements Initializable {
     }
 
     private void initEvent() {
-       TemplateSettingDto templateSettingDto =  envService.findActivatedTemplate();
+        TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
         ok.setOnAction(event -> {
             List<String> selectProject = Lists.newArrayList();
             List<String> projectOrder = Lists.newArrayList();
+
+            Iterator<ChooseTableRowData> iterator = chooseTableRowDataObservableList.iterator();
+            while (iterator.hasNext()) {
+                ChooseTableRowData next = iterator.next();
+                if (next.isError()) {
+                    iterator.remove();
+                }
+            }
+            errorInfo.setVisible(false);
+
             chooseTableRowDataObservableList.forEach(v -> {
                 if (v.getSelector().isSelected()) {
                     selectProject.add(v.getValue());
@@ -451,6 +464,26 @@ public class DataSourceController implements Initializable {
         chooseTableRowDataFilteredList.setPredicate(p ->
                 p.containsRex(filterTf.getText())
         );
+    }
+
+    public EventHandler<WindowEvent> getEventHandler() {
+        return new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                Iterator<ChooseTableRowData> iterator = chooseTableRowDataObservableList.iterator();
+                while (iterator.hasNext()) {
+                    ChooseTableRowData next = iterator.next();
+                    if (next.isError()) {
+                        iterator.remove();
+                    }
+                }
+                errorInfo.setVisible(false);
+            }
+        };
+    }
+
+    public Button getErrorInfo() {
+        return errorInfo;
     }
 
     public TableView getDataSourceTable() {

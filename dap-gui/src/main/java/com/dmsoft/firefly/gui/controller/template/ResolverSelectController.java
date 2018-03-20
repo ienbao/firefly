@@ -150,6 +150,7 @@ public class ResolverSelectController implements Initializable {
                     chooseTableRowData.setImport(false);
                     Platform.runLater(() -> {
                         controller.getDataSourceTable().refresh();
+                        controller.getErrorInfo().setVisible(true);
                     });
 //                    controller.getChooseTableRowDataObservableList().remove(chooseTableRowData);
                 } else {
