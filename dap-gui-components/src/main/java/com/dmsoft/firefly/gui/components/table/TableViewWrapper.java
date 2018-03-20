@@ -50,9 +50,11 @@ public class TableViewWrapper {
                     }
                 } else if (c.wasAdded()) {
                     try {
+                        List<TableColumn<String, ?>> addedColumn = Lists.newArrayList();
                         for (String s : c.getAddedSubList()) {
-                            tableView.getColumns().add(c.getFrom(), initColumn(s, model));
+                            addedColumn.add(initColumn(s, model));
                         }
+                        tableView.getColumns().addAll(c.getFrom(), addedColumn);
                     } catch (Exception ignored) {
 
                     }

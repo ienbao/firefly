@@ -13,8 +13,4 @@ public interface IMainBodyPane {
      */
     Pane getNewPane();
 
-    /**
-     * method to reset ui when the env is changed
-     */
-    void reset();
 }
