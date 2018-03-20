@@ -22,6 +22,14 @@ public interface SourceDataService {
     void saveProject(String projectName);
 
     /**
+     * method to rename project with new project name
+     *
+     * @param oldProjectName old project name
+     * @param newProjectName new project name
+     */
+    void renameProject(String oldProjectName, String newProjectName);
+
+    /**
      * method to save & update test item.
      *
      * @param projectName     project name

@@ -5,12 +5,12 @@
 package com.dmsoft.firefly.plugin.spc;
 
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.controller.SpcSettingController;
 import com.dmsoft.firefly.plugin.spc.handler.FindSpcSettingDataHandler;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.handler.SaveSpcSettingDataHandler;
 import com.dmsoft.firefly.plugin.spc.pipeline.*;
-import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.service.SpcAnalysisService;
 import com.dmsoft.firefly.plugin.spc.service.SpcService;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
@@ -80,11 +80,6 @@ public class SpcPlugin extends Plugin {
                     ex.printStackTrace();
                 }
                 return root;
-            }
-
-            @Override
-            public void reset() {
-
             }
         });
 
