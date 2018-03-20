@@ -60,8 +60,9 @@ import static com.google.common.io.Resources.getResource;
 public class DataSourceController implements Initializable {
 
     @FXML
-    private Button addFile, ok, cancel, search, delete, errorInfo;
-
+    private Button addFile, ok, cancel, search, delete;
+    @FXML
+    private Label errorInfo;
     @FXML
     private TableView dataSourceTable;
 
@@ -89,7 +90,8 @@ public class DataSourceController implements Initializable {
     private void initTable() {
         search.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
         delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
-        errorInfo.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_tips_warning.png")));
+//        errorInfo.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_tips_warning.png")));
+        errorInfo.getStyleClass().add("icon-warn-svg");
         errorInfo.setVisible(false);
         allCheckBox = new CheckBox();
         chooseCheckBoxColumn.setGraphic(allCheckBox);
@@ -482,7 +484,7 @@ public class DataSourceController implements Initializable {
         };
     }
 
-    public Button getErrorInfo() {
+    public Label getErrorInfo() {
         return errorInfo;
     }
 
