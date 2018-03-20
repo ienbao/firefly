@@ -3,6 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
@@ -21,8 +22,10 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
+import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.utils.FilterUtils;
@@ -99,6 +102,8 @@ public class SpcItemController implements Initializable {
     private SpcLeftConfigServiceImpl leftConfigService = new SpcLeftConfigServiceImpl();
     private SpcSettingService spcSettingService = RuntimeContext.getBean(SpcSettingServiceImpl.class);
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
+    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+    private JsonMapper mapper = JsonMapper.defaultMapper();
 
     /**
      * init main controller
@@ -159,11 +164,7 @@ public class SpcItemController implements Initializable {
                 is.relocate(w2.doubleValue() - 21, 0);
             });
         });
-        SpcSettingDto settingDto = spcSettingService.findSpcSetting();
-        if (settingDto != null) {
-            ndGroup.setText(String.valueOf(settingDto.getCustomGroupNumber()));
-            subGroup.setText(String.valueOf(settingDto.getChartIntervalNumber()));
-        }
+      this.initSpcConfig();
     }
 
     private void initBtnIcon() {
@@ -276,6 +277,7 @@ public class SpcItemController implements Initializable {
         List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
         List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(selectedItemDto);
         SpcAnalysisConfigDto spcAnalysisConfigDto = this.buildSpcAnalysisConfigData();
+        this.updateSpcConfigPreference(spcAnalysisConfigDto);
         Service<Integer> service = new Service<Integer>() {
             @Override
             protected Task<Integer> createTask() {
@@ -351,6 +353,24 @@ public class SpcItemController implements Initializable {
             }
         }
         return selectItems;
+    }
+
+    private void initSpcConfig(){
+        String customGroupNumber = null;
+        String chartIntervalNumber = null;
+        SpcAnalysisConfigDto spcAnalysisConfigDto = this.getSpcConfigPreference();
+        if (spcAnalysisConfigDto != null) {
+            chartIntervalNumber = String.valueOf(spcAnalysisConfigDto.getIntervalNumber());
+            customGroupNumber = String.valueOf(spcAnalysisConfigDto.getSubgroupSize());
+        } else {
+            SpcSettingDto settingDto = spcSettingService.findSpcSetting();
+            if (settingDto != null) {
+                chartIntervalNumber = String.valueOf(settingDto.getChartIntervalNumber());
+                customGroupNumber = String.valueOf(settingDto.getCustomGroupNumber());
+            }
+        }
+        subGroup.setText(customGroupNumber);
+        ndGroup.setText(chartIntervalNumber);
     }
 
     private void importLeftConfig() {
@@ -513,4 +533,20 @@ public class SpcItemController implements Initializable {
         return conditionTestItemList;
     }
 
+    private void updateSpcConfigPreference(SpcAnalysisConfigDto configDto) {
+        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+        userPreferenceDto.setUserName(envService.getUserName());
+        userPreferenceDto.setCode("spc_config_preference");
+        userPreferenceDto.setValue(configDto);
+        userPreferenceService.updatePreference(userPreferenceDto);
+    }
+
+    private SpcAnalysisConfigDto getSpcConfigPreference() {
+        String value = userPreferenceService.findPreferenceByUserId("spc_config_preference", envService.getUserName());
+        if (StringUtils.isNotBlank(value)) {
+            return mapper.fromJson(value, SpcAnalysisConfigDto.class);
+        } else {
+            return null;
+        }
+    }
 }

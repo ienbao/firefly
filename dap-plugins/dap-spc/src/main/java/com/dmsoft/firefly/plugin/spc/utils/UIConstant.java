@@ -22,8 +22,10 @@ public class UIConstant {
     public static final String CHART_TYPE_SPC_SCT_BOX = "BoxC";
 
     public static final String[] SPC_SR_ALL = new String[]{
-            "TestItem", "Condition", "Samples", "AVG", "Max", "Min", "StDev", "LSL", "USL", "Center", "CPK", "Range", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness",
+            "Test Item", "Condition", "Samples", "AVG", "Max", "Min", "StDev", "LSL", "USL", "Center", "CPK", "Range", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness",
             "CA(%)", "CP", "CPL", "CPU", "Within PPM", "PP", "PPK", "PPL", "PPU", "OverAll PPM"};
+
+    public static final String[] SPC_STATISTICAL_FIX_COLUMN = new String[]{"", "Test Item", "Condition"};
 
     public static final String[] SPC_CHOOSE_RESULT = new String[]{
             "Samples", "AVG", "Max", "Min", "StDev", "LSL", "USL", "Center", "CPK", "Range", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness",
@@ -53,7 +55,7 @@ public class UIConstant {
     public static final String SPC_CHART_RANGE = "Range Chart";
     public static final String SPC_CHART_SD = "SD Chart";
     public static final String SPC_CHART_MED = "Median-bar Chart";
-    public static final String SPC_CHART_BOX= "Box Chart";
+    public static final String SPC_CHART_BOX = "Box Chart";
     public static final String SPC_CHART_MR = "MR Chart";
 
     public static final String[] SPC_CHART_NAME = new String[]{"ND Chart", "Run Chart", "X-bar Chart", "Range Chart", "SD Chart", "Median Chart", "Box Chart", "MR Chart"};
