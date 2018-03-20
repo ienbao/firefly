@@ -564,7 +564,7 @@ public class GrrExportController {
                 } else {
                     export(projectNameList);
                 }
-            }
+            });
         });
         print.setOnAction(event -> {
             if (StringUtils.isEmpty(locationPath.getText())) {
