@@ -95,22 +95,27 @@ public class CsvResolverController {
     }
 
     private void initComponentEvent() {
+        header.setOnAction(event -> vaildate(header));
+        usl.setOnAction(event -> vaildate(usl));
+        unit.setOnAction(event -> vaildate(unit));
+        lsl.setOnAction(event -> vaildate(lsl));
+
         item.setOnAction(event -> {
-            if (item.getValue() == null || StringUtils.isEmpty(item.getValue().toString())){
+            if (item.getValue() == null || StringUtils.isEmpty(item.getValue().toString())) {
                 TooltipUtil.installWarnTooltip(item, "Can not be empty!");
                 item.getStyleClass().add("combo-box-error");
             } else {
                 TooltipUtil.uninstallWarnTooltip(item);
-                item.getStyleClass().remove("combo-box-error");
+                item.getStyleClass().removeAll("combo-box-error");
             }
         });
         data.setOnAction(event -> {
-            if (data.getValue() == null || StringUtils.isEmpty(data.getValue().toString())){
+            if (data.getValue() == null || StringUtils.isEmpty(data.getValue().toString())) {
                 TooltipUtil.installWarnTooltip(data, "Can not be empty!");
                 data.getStyleClass().add("combo-box-error");
             } else {
                 TooltipUtil.uninstallWarnTooltip(data);
-                data.getStyleClass().remove("combo-box-error");
+                data.getStyleClass().removeAll("combo-box-error");
             }
         });
         browse.setOnAction(event -> {
@@ -229,7 +234,26 @@ public class CsvResolverController {
         service.saveCsvTemplate(csvTemplateDto);
     }
 
-    private void vaildate(ComboBox node){
-
+    private void vaildate(ComboBox node) {
+        if (node.getValue() == null || StringUtils.isEmpty(usl.getValue().toString())) {
+            return;
+        }
+        if (!node.equals(header) && node.getValue().equals(header.getValue())) {
+            header.setValue("");
+        } else if (!node.equals(item) && node.getValue().equals(item.getValue())) {
+            item.setValue("");
+            TooltipUtil.installWarnTooltip(item, "Can not be empty!");
+            item.getStyleClass().add("combo-box-error");
+        } else if (!node.equals(usl) && node.getValue().equals(usl.getValue())) {
+            usl.setValue("");
+        } else if (!node.equals(unit) && node.getValue().equals(unit.getValue())) {
+            unit.setValue("");
+        } else if (!node.equals(lsl) && node.getValue().equals(lsl.getValue())) {
+            lsl.setValue("");
+        } else if (!node.equals(data) && node.getValue().equals(data.getValue())) {
+            data.setValue("");
+            TooltipUtil.installWarnTooltip(data, "Can not be empty!");
+            data.getStyleClass().add("combo-box-error");
+        }
     }
 }
