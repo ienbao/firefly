@@ -7,7 +7,7 @@ import javafx.scene.control.TextField;
  *
  * @author Can Guan
  */
-public class TextFieldDecorator {
+public class TextFieldWrapper {
     /**
      * method to decorate text field
      *

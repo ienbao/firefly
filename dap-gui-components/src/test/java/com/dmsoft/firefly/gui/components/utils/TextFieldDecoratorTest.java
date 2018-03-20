@@ -20,7 +20,7 @@ public class TextFieldDecoratorTest extends Application {
         rule.setMinValue(10.0d);
         rule.setPattern(ValidateUtils.DOUBLE_PATTERN);
         rule.setMaxLength(10);
-        TextFieldDecorator.decorate(tf, rule);
+        TextFieldWrapper.decorate(tf, rule);
         Button button = new Button("AA");
         hBox.getChildren().addAll(tf, button);
         Scene scene = new Scene(hBox);
