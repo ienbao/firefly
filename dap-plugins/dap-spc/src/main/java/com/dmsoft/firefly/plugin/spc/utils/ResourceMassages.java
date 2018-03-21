@@ -36,4 +36,9 @@ public class ResourceMassages {
     //validate
     public static final String ALARM_RULE_ORDER = "ALARM_RULE_ORDER";
 
+    //tip header
+    public static final String TIP_WARN_HEADER= "TIP_WARN_HEADER";
+    //warn message
+    public static final String SPC_SETTING_APPLY_WARN_MESSAGE = "SPC_SETTING_APPLY_WARN_MESSAGE";
+
 }
