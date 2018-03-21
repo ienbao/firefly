@@ -248,8 +248,8 @@ public class BuildChart {
 
         IBoxAndWhiskerData boxAndWhiskerData = chartData.getBoxAndWhiskerData();
         IPoint points = chartData.getPoints();
-        chart.createChartSeries(boxAndWhiskerData, "ALL");
-        chart.addPoints(points, javafx.scene.paint.Color.GREEN);
+//        chart.createChartSeries(boxAndWhiskerData, "ALL");
+//        chart.addPoints(points, javafx.scene.paint.Color.GREEN);
     }
 
 

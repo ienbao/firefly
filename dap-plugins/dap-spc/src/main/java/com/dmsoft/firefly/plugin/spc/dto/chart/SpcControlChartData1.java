@@ -12,6 +12,7 @@ import com.dmsoft.firefly.plugin.spc.dto.chart.pel.SpcXYChartData;
 import com.dmsoft.firefly.plugin.spc.utils.ChartDataUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.plugin.spc.utils.XYData;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import javafx.geometry.Orientation;
 import javafx.scene.paint.Color;
@@ -182,12 +183,12 @@ public class SpcControlChartData1 implements ControlChartData {
 
         @Override
         public Object getXByIndex(int index) {
-            return x[index];
+            return DAPStringUtils.isInfinityAndNaN(x[index]) ? null : x[index];
         }
 
         @Override
         public Object getYByIndex(int index) {
-            return y[index];
+            return DAPStringUtils.isInfinityAndNaN(y[index]) ? null : y[index];
         }
 
         @Override

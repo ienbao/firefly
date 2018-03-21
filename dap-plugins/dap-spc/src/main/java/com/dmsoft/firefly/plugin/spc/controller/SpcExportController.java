@@ -549,9 +549,9 @@ public class SpcExportController {
         File file = fileChooser.showOpenDialog(fileStage);
 
         if (file != null) {
-            clearLeftConfig();
             SpcLeftConfigDto spcLeftConfigDto = leftConfigService.importSpcConfig(file);
             if (spcLeftConfigDto != null) {
+                clearLeftConfig();
                 if (spcLeftConfigDto.getItems() != null && spcLeftConfigDto.getItems().size() > 0) {
                     items.forEach(testItem -> {
                         if (spcLeftConfigDto.getItems().contains(testItem.getItem())) {
