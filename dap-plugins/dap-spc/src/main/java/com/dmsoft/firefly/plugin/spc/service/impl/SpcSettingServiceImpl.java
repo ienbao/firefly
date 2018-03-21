@@ -192,9 +192,9 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
                 RuleResultDto ruleResultDto = null;
                 String ruleName = controlRuleDto.getRuleName();
                 JudgeRuleType iRuleType = JudgeRuleType.getByCode(ruleName);
-                int iSigma = controlRuleDto.getsValue();
-                int iPoints = controlRuleDto.getnValue();
-                int iSomePoints = controlRuleDto.getmValue();
+                Integer iSigma = controlRuleDto.getsValue();
+                Integer iPoints = controlRuleDto.getnValue();
+                Integer iSomePoints = controlRuleDto.getmValue();
                 switch (iRuleType) {
                     case R1:
                         ruleResultDto = controlRuleConfigUtil.setRuleR1(iSigma, avgValue, sigma);

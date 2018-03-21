@@ -350,7 +350,7 @@ public class SpcMainController implements Initializable {
         String timePattern = null;
         try {
             TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
-            if(timePatternDto != null) {
+            if (timePatternDto != null) {
                 timeKeys = timePatternDto.getTimeKeys();
                 timePattern = timePatternDto.getPattern();
             }

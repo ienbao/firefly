@@ -121,7 +121,7 @@
                         </TabPane>
                      </items>
                   </SplitPane>
-                  <Button fx:id="importBtn" maxHeight="22.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="30.0">
+                  <Button fx:id="importBtn" maxHeight="22.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="30.0" styleClass="btn-txt">
                      <VBox.margin>
                         <Insets right="20.0" />
                      </VBox.margin></Button>

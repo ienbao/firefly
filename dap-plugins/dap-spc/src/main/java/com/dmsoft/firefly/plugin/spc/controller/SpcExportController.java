@@ -11,6 +11,7 @@ import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcExportServiceImpl;
+import com.dmsoft.firefly.plugin.spc.service.impl.SpcLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcSettingServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcExportItemKey;
@@ -43,6 +44,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 
@@ -114,6 +116,8 @@ public class SpcExportController {
 
     private SpcSettingServiceImpl settingService = RuntimeContext.getBean(SpcSettingServiceImpl.class);
     private SpcExportServiceImpl spcExportService = new SpcExportServiceImpl();
+    private SpcLeftConfigServiceImpl leftConfigService = new SpcLeftConfigServiceImpl();
+
     private List<SpcStatisticalResultAlarmDto> spcStatsDtoList;
     private Map<String, Color> colorMap = Maps.newHashMap();
 
@@ -188,6 +192,7 @@ public class SpcExportController {
                 locationPath.setText(file.getPath());
             }
         });
+        importBtn.setOnAction(event -> importLeftConfig());
 
         viewData.setOnAction(event -> {
             if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
@@ -529,6 +534,51 @@ public class SpcExportController {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    private void importLeftConfig() {
+        String str = System.getProperty("user.home");
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Spc config import");
+        fileChooser.setInitialDirectory(new File(str));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JSON", "*.json")
+        );
+        Stage fileStage = null;
+        File file = fileChooser.showOpenDialog(fileStage);
+
+        if (file != null) {
+            clearLeftConfig();
+            SpcLeftConfigDto spcLeftConfigDto = leftConfigService.importSpcConfig(file);
+            if (spcLeftConfigDto != null) {
+                if (spcLeftConfigDto.getItems() != null && spcLeftConfigDto.getItems().size() > 0) {
+                    items.forEach(testItem -> {
+                        if (spcLeftConfigDto.getItems().contains(testItem.getItem())) {
+                            testItem.getSelector().setValue(true);
+                        }
+                    });
+                }
+                if (spcLeftConfigDto.getBasicSearchs() != null && spcLeftConfigDto.getBasicSearchs().size() > 0) {
+                    searchTab.setBasicSearch(spcLeftConfigDto.getBasicSearchs());
+                }
+                ndGroup.setText(spcLeftConfigDto.getNdNumber());
+                subGroup.setText(spcLeftConfigDto.getSubGroup());
+                searchTab.getAdvanceText().setText(spcLeftConfigDto.getAdvanceSearch());
+                searchTab.getGroup1().setValue(spcLeftConfigDto.getAutoGroup1());
+                searchTab.getGroup2().setValue(spcLeftConfigDto.getAutoGroup2());
+            }
+
+        }
+    }
+    private void clearLeftConfig() {
+        box.setSelected(false);
+        for (ItemTableModel model : items) {
+            model.getSelector().setValue(false);
+        }
+        subGroup.setText(null);
+        ndGroup.setText(null);
+        searchTab.clearSearchTab();
     }
 
     private void initSpcExportSettingDialog() {

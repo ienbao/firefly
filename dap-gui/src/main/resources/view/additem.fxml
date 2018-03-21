@@ -23,7 +23,7 @@
                   <Insets left="10.0" />
                </HBox.margin>
             </Label>
-            <Button fx:id="q" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefWidth="22.0" styleClass="btn-txt" text="Button" />
+            <Button fx:id="message" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefWidth="22.0" styleClass="btn-txt" text="Button" />
          </children>
       </HBox>
       <HBox prefHeight="255.0" prefWidth="410.0" style="-fx-border-width: 0 0 0 0;" VBox.vgrow="ALWAYS">
