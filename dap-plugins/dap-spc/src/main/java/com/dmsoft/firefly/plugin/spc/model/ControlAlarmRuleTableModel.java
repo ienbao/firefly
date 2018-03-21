@@ -112,7 +112,7 @@ public class ControlAlarmRuleTableModel implements TableModel {
                     controlRuleDto.setsValue(Integer.parseInt((String) b2));
                 });
             }
-            objectProperty.setValue(String.valueOf(value));
+            objectProperty.setValue(value == null ? "" : String.valueOf(value));
             objectProperty.addListener((ov, b1, b2) -> {
                 if (!DAPStringUtils.isNumeric((String) b2)) {
                     objectProperty.set(b1);
@@ -181,7 +181,33 @@ public class ControlAlarmRuleTableModel implements TableModel {
 
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
-        return null;
+        if (column.equals(HEADER[2])) {
+            if (rowKey.equals("R1") || rowKey.equals("R9")) {
+                tableCell.setEditable(false);
+                tableCell.setStyle("-fx-background-color: #f5f5f5");
+            } else {
+                tableCell.setStyle("-fx-background-color: #ffffff");
+            }
+            tableCell.getTableColumn().setStyle("-fx-background-color: #f2f2f2");
+        } else if (column.equals(HEADER[3])) {
+            if (!rowKey.equals("R5") && !rowKey.equals("R6")) {
+                tableCell.setEditable(false);
+                tableCell.setStyle("-fx-background-color: #f5f5f5");
+            } else {
+                tableCell.setStyle("-fx-background-color: #ffffff");
+            }
+            tableCell.getTableColumn().setStyle("-fx-background-color: #f2f2f2");
+        } else if (column.equals(HEADER[4])) {
+            if (rowKey.equals("R2") || rowKey.equals("R3") || rowKey.equals("R4") || rowKey.equals("R9")) {
+                tableCell.setEditable(false);
+                tableCell.setStyle("-fx-background-color: #f5f5f5");
+            } else {
+                tableCell.setStyle("-fx-background-color: #ffffff");
+            }
+            tableCell.getTableColumn().setStyle("-fx-background-color: #f2f2f2");
+        }
+
+        return tableCell;
     }
 
     @Override
@@ -196,6 +222,7 @@ public class ControlAlarmRuleTableModel implements TableModel {
 
     /**
      * get controlRule dto list
+     *
      * @return
      */
     public List<ControlRuleDto> getControlRuleDtoList() {
