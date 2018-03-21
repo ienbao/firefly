@@ -31,6 +31,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -43,6 +44,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 
@@ -59,7 +61,8 @@ public class DataSourceController implements Initializable {
 
     @FXML
     private Button addFile, ok, cancel, search, delete;
-
+    @FXML
+    private Label errorInfo;
     @FXML
     private TableView dataSourceTable;
 
@@ -81,13 +84,17 @@ public class DataSourceController implements Initializable {
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+    private EventHandler eventHandler;
 
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
     private void initTable() {
         search.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
         delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
-
+//        errorInfo.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_tips_warning.png")));
+        errorInfo.getStyleClass().add("message-tip-warn-mark");
+        errorInfo.setStyle("-fx-background-color: #F38400");
+        errorInfo.setVisible(false);
         allCheckBox = new CheckBox();
         chooseCheckBoxColumn.setGraphic(allCheckBox);
 
@@ -113,7 +120,7 @@ public class DataSourceController implements Initializable {
                             Label textField = new Label(item.getValue());
                             textField.setStyle("-fx-border-width: 0 0 0 0");
                             textField.setPrefWidth(400);
-                            if (item.isImport()) {
+                            if (item.isImport() || item.isError()) {
                                 textField.setDisable(true);
                                 item.getSelector().getCheckbox().setSelected(false);
                                 item.getSelector().getCheckbox().setDisable(true);
@@ -290,10 +297,20 @@ public class DataSourceController implements Initializable {
     }
 
     private void initEvent() {
-       TemplateSettingDto templateSettingDto =  envService.findActivatedTemplate();
+        TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
         ok.setOnAction(event -> {
             List<String> selectProject = Lists.newArrayList();
             List<String> projectOrder = Lists.newArrayList();
+
+            Iterator<ChooseTableRowData> iterator = chooseTableRowDataObservableList.iterator();
+            while (iterator.hasNext()) {
+                ChooseTableRowData next = iterator.next();
+                if (next.isError()) {
+                    iterator.remove();
+                }
+            }
+            errorInfo.setVisible(false);
+
             chooseTableRowDataObservableList.forEach(v -> {
                 if (v.getSelector().isSelected()) {
                     selectProject.add(v.getValue());
@@ -359,6 +376,7 @@ public class DataSourceController implements Initializable {
 
         });
         addFile.setOnAction(event -> {
+            System.out.println(this);
             buildDataSourceDialog();
         });
     }
@@ -388,7 +406,7 @@ public class DataSourceController implements Initializable {
             FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/resolver.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
             loader.setController(new ResolverSelectController(this));
             root = loader.load();
-            Stage stage = WindowFactory.createSimpleWindowAsModel("resolver", "select Resolver", root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("resolver", "select Resolver", root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
             stage.show();
         } catch (Exception ex) {
@@ -451,6 +469,29 @@ public class DataSourceController implements Initializable {
         chooseTableRowDataFilteredList.setPredicate(p ->
                 p.containsRex(filterTf.getText())
         );
+    }
+
+    public EventHandler<WindowEvent> getEventHandler() {
+        if (eventHandler == null) {
+            eventHandler = new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    Iterator<ChooseTableRowData> iterator = getChooseTableRowDataObservableList().iterator();
+                    while (iterator.hasNext()) {
+                        ChooseTableRowData next = iterator.next();
+                        if (next.isError()) {
+                            iterator.remove();
+                        }
+                    }
+                    errorInfo.setVisible(false);
+                }
+            };
+        }
+        return eventHandler;
+    }
+
+    public Label getErrorInfo() {
+        return errorInfo;
     }
 
     public TableView getDataSourceTable() {

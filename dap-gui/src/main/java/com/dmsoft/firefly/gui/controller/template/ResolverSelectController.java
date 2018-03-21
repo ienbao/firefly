@@ -143,6 +143,7 @@ public class ResolverSelectController implements Initializable {
                 controller.getDataSourceTable().refresh();
             });
         });
+        controller.getChooseTableRowDataObservableList().add(chooseTableRowData);
         new Thread(() -> {
             manager.doJobASyn(job, returnValue -> {
                 if (returnValue != null && returnValue instanceof Throwable) {
@@ -150,6 +151,7 @@ public class ResolverSelectController implements Initializable {
                     chooseTableRowData.setImport(false);
                     Platform.runLater(() -> {
                         controller.getDataSourceTable().refresh();
+                        controller.getErrorInfo().setVisible(true);
                     });
 //                    controller.getChooseTableRowDataObservableList().remove(chooseTableRowData);
                 } else {
@@ -158,6 +160,5 @@ public class ResolverSelectController implements Initializable {
                 }
             }, filPath, resolverName);
         }).start();
-        controller.getChooseTableRowDataObservableList().add(chooseTableRowData);
     }
 }

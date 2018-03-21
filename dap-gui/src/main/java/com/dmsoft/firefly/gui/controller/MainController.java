@@ -3,6 +3,7 @@ package com.dmsoft.firefly.gui.controller;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.component.ContentStackPane;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.controller.template.DataSourceController;
 import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
 import com.dmsoft.firefly.gui.model.UserModel;
 import com.dmsoft.firefly.gui.utils.GuiConst;
@@ -475,7 +476,9 @@ public class MainController {
         try {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createSimpleWindowAsModel("dataSource", GuiFxmlAndLanguageUtils.getString(ResourceMassages.DATASOURCE), root, getResource("css/platform_app.css").toExternalForm());
+            DataSourceController controller = fxmlLoader.getController();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("dataSource", GuiFxmlAndLanguageUtils.getString(ResourceMassages.DATASOURCE), root, getResource("css/platform_app.css").toExternalForm());
+            stage.setOnCloseRequest(controller.getEventHandler());
             stage.setResizable(false);
             stage.show();
         } catch (Exception ex) {
