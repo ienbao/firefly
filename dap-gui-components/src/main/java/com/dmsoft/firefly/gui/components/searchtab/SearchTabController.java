@@ -90,6 +90,7 @@ public class SearchTabController {
                 groupItem.add(dto.getTestItemName());
             }
         }
+        groupItem.add(0, "");
         group1.setItems(groupItem);
         group2.setItems(groupItem);
     }
