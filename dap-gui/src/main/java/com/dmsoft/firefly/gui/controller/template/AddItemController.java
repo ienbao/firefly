@@ -27,6 +27,8 @@ import java.util.List;
  */
 public class AddItemController {
     @FXML
+    private Button message;
+    @FXML
     private Button addItemOk;
     @FXML
     private TableView itemTable;
@@ -46,6 +48,8 @@ public class AddItemController {
 
     @FXML
     private void initialize() {
+        message.getStyleClass().add("message-tip-question");
+        message.setStyle("-fx-background-color: #0096ff");
         CheckBox box = new CheckBox();
         box.setOnAction(event -> {
             if (items != null) {

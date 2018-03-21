@@ -72,6 +72,8 @@ public class SearchTabController {
         advanceTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_advance_search_normal.png")));
         groupAdd.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_new_template_normal.png")));
         groupRemove.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_clear_all_normal.png")));
+        help.getStyleClass().add("message-tip-question");
+        help.setStyle("-fx-background-color: #0096ff");
     }
 
     private void initEvent() {
