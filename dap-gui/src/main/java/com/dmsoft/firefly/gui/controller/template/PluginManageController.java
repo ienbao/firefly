@@ -243,7 +243,18 @@ public class PluginManageController implements Initializable {
                 PluginContext context = RuntimeContext.getBean(PluginContext.class);
                 String url = pluginTableRowData.getInfo().getFolderPath();
                 System.out.println(url);
-                deleteList.add(url);
+                if (url.contains("/temp/") || url.contains("\\temp\\")) {
+                    List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath + "/");
+                    if (scannedPlugins != null) {
+                        scannedPlugins.forEach(v -> {
+                            if (v.getId().equals(pluginTableRowData.getInfo().getId()) && v.getName().equals(pluginTableRowData.getInfo().getName())) {
+                                deleteList.add(v.getFolderPath());
+                            }
+                        });
+                    }
+                } else {
+                    deleteList.add(url);
+                }
                 context.uninstallPlugin(pluginTableRowData.getInfo().getId());
                 pluginTableRowDataObservableList.remove(pluginTableRowData);
                 isEdit = true;
