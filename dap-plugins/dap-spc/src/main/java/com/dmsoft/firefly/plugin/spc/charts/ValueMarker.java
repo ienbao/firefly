@@ -1,6 +1,8 @@
 package com.dmsoft.firefly.plugin.spc.charts;
 
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.ILineData;
+import com.dmsoft.firefly.plugin.spc.charts.data.basic.LineTooltip;
+import com.dmsoft.firefly.plugin.spc.charts.utils.enums.LineType;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
@@ -15,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Created by cherry on 2018/2/27.
@@ -63,7 +66,10 @@ public class ValueMarker<X, Y> {
         }
     }
 
-    public Line buildValueMarker(ILineData lineData) {
+    public Line buildValueMarker(ILineData lineData,
+                                 Color color,
+                                 String seriesName,
+                                 Function<LineTooltip, String> lineTooltipFunction) {
 
         Line line = new Line();
         Orientation orientationType = lineData.getPlotOrientation();
@@ -80,17 +86,17 @@ public class ValueMarker<X, Y> {
         }
 
         //Set line style class
-        if (DAPStringUtils.isNotBlank(lineData.getLineClass())) {
-            line.getStyleClass().setAll("line", lineData.getLineClass());
+        line.getStyleClass().setAll("line");
+        if (lineData.getLineType() == LineType.SOLID) {
+            line.getStyleClass().add("solid-line");
+        } else {     //(lineData.getLineType() == LineType.DASHED)
+            line.getStyleClass().add("dashed-line");
         }
-        setLineColor(line, lineData.getColor());
-        line.setOnMouseEntered(event -> {
-            //Set tooltip
-            String content = DAPStringUtils.isBlank(lineData.getTooltipContent()) ?
-                    lineData.getTitle() + "\n" + lineData.getName() + "="
-                            + lineData.getValue() : lineData.getTooltipContent();
+        if (lineTooltipFunction != null) {
+            String content = lineTooltipFunction.apply(new LineTooltip(seriesName, lineData.getName(), lineData.getValue()));
             Tooltip.install(line, new Tooltip(content));
-        });
+        }
+        setLineColor(line, color);
         return line;
     }
 
@@ -126,6 +132,7 @@ public class ValueMarker<X, Y> {
 
     /**
      * Update all line color
+     *
      * @param color
      */
     public void updateAllLineColor(Color color) {

@@ -1,5 +1,7 @@
 package com.dmsoft.firefly.gui.components.table;
 
+import com.dmsoft.firefly.gui.components.utils.TextFieldWrapper;
+import com.dmsoft.firefly.gui.components.utils.ValidateRule;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
@@ -10,7 +12,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
 
 import java.util.Comparator;
@@ -117,8 +119,9 @@ public class TableViewWrapper {
             TableColumn<String, String> column = new TableColumn<>(s);
             column.getStyleClass().add("editable-header");
             column.setCellValueFactory(cell -> model.getCellData(cell.getValue(), s));
+            final ValidateRule rule = model.getValidateRule();
             column.setCellFactory(tableColumn ->
-                    new TextFieldTableCell<String, String>(new DefaultStringConverter()) {
+                    new CustomTextFieldTableCell<String, String>(new DefaultStringConverter()) {
                         @Override
                         public void updateItem(String item, boolean empty) {
                             super.updateItem(item, empty);
@@ -127,6 +130,22 @@ public class TableViewWrapper {
                             } else {
                                 this.setStyle(null);
                             }
+                        }
+
+                        @Override
+                        public <T> TextField createTextField(Cell<T> cell, StringConverter<T> converter) {
+                            TextField tf = super.createTextField(cell, converter);
+                            TextFieldWrapper.decorate(tf, rule);
+                            tf.textProperty().addListener((ov, s1, s2) -> {
+                                if (model.isTextInputError(s2, this.getTableView().getItems().get(this.getIndex()), s)) {
+                                    if (!tf.getStyleClass().contains(rule.getErrorStyle())) {
+                                        tf.getStyleClass().add(rule.getErrorStyle());
+                                    }
+                                } else {
+                                    tf.getStyleClass().removeAll(rule.getErrorStyle());
+                                }
+                            });
+                            return tf;
                         }
                     });
             column.setComparator(getComparator());

@@ -150,6 +150,7 @@ public class GrrExportController {
     @FXML
     private void initialize() {
         searchTab = new SearchTab();
+        searchTab.hiddenGroupAdd();
         split.getItems().add(searchTab);
         eachFile.setToggleGroup(group);
         eachFile.setSelected(true);

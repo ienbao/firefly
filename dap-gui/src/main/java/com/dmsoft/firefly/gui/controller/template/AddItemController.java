@@ -4,6 +4,7 @@
 package com.dmsoft.firefly.gui.controller.template;
 
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.model.TemplateItemModel;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.SpecificationDataDto;
@@ -50,6 +51,7 @@ public class AddItemController {
     private void initialize() {
         message.getStyleClass().add("message-tip-question");
         message.setStyle("-fx-background-color: #0096ff");
+        TooltipUtil.installNormalTooltip(message, "Please use \"Tab\" or \"Enter\" to separate item names");
         CheckBox box = new CheckBox();
         box.setOnAction(event -> {
             if (items != null) {
@@ -99,7 +101,7 @@ public class AddItemController {
             }
         });
         if (StringUtils.isNotEmpty(customizeItem.getText())) {
-            selectItems.addAll(Arrays.asList(customizeItem.getText().split("\n")));
+            selectItems.addAll(Arrays.asList(customizeItem.getText().replaceAll("\t", "\n").split("\n")));
         }
         return selectItems;
     }

@@ -24,9 +24,21 @@ public class LineData implements ILineData {
         this.plotOrientation = Orientation.VERTICAL;
     }
 
+    public LineData(Double value, String name, Orientation plotOrientation) {
+        this(value, name, plotOrientation, LineType.SOLID);
+    }
+
     /**
      * @param value
      */
+    public LineData(Double value, String name, Orientation plotOrientation, LineType lineType) {
+        this();
+        this.lineType = lineType;
+        this.plotOrientation = plotOrientation;
+        this.value = (DAPDoubleUtils.isBlank(value) ? null : value);
+        this.name = name;
+    }
+
     public LineData(Double value, String name) {
         this();
         this.value = (DAPDoubleUtils.isBlank(value) ? null : value);

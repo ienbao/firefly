@@ -289,7 +289,7 @@ public class SpcItemController implements Initializable {
                 return false;
             }
         });
-
+        spcMainController.clearAnalysisSubShowData();
         List<String> projectNameList = envService.findActivatedProjectName();
         List<TestItemWithTypeDto> selectedItemDto = this.getSelectedItemDto();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
@@ -322,7 +322,7 @@ public class SpcItemController implements Initializable {
                             //todo message tip
                             ((Exception) returnValue).printStackTrace();
                         } else {
-                            spcMainController.clearAnalysisSubShowData();
+
                             SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
                             SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
                             List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
