@@ -167,9 +167,8 @@ public class CsvResolverController {
 
         });
         ok.setOnAction(event -> {
-            if (item.getValue() == null || StringUtils.isEmpty(item.getValue().toString())
-                    || data.getValue() == null || StringUtils.isEmpty(data.getValue().toString())) {
-                WindowMessageFactory.createWindowMessageHasCancel("Message", "Test Item Name or Test Data can not be empty");
+            if (item.getStyleClass().contains("combo-box-error") || data.getStyleClass().contains("combo-box-error")) {
+                WindowMessageFactory.createWindowMessageHasCancel("Message", "Test Item Name or Test Data param error");
                 return;
             }
             save();
@@ -179,9 +178,8 @@ public class CsvResolverController {
             StageMap.closeStage("csv");
         });
         apply.setOnAction(event -> {
-            if (item.getValue() == null || StringUtils.isEmpty(item.getValue().toString())
-                    || data.getValue() == null || StringUtils.isEmpty(data.getValue().toString())) {
-                WindowMessageFactory.createWindowMessageHasCancel("Message", "Test Item Name or Test Data can not be empty");
+            if (item.getStyleClass().contains("combo-box-error") || data.getStyleClass().contains("combo-box-error")) {
+                WindowMessageFactory.createWindowMessageHasCancel("Message", "Test Item Name or Test Data param error");
                 return;
             }
             save();
@@ -259,9 +257,11 @@ public class CsvResolverController {
         }
         cache.put(key, Integer.valueOf(node.getValue().toString().substring(3, 4)));
 
-        if (!node.equals(data) && Integer.valueOf(node.getValue().toString().substring(3, 4)) > Integer.valueOf(data.getValue().toString().substring(3, 4))) {
-            TooltipUtil.installWarnTooltip(data, "Can not be empty!");
-            data.getStyleClass().add("combo-box-error");
+        if (data.getValue() != null && !StringUtils.isEmpty(data.getValue().toString())) {
+            if (!node.equals(data) && Integer.valueOf(node.getValue().toString().substring(3, 4)) > Integer.valueOf(data.getValue().toString().substring(3, 4))) {
+                TooltipUtil.installWarnTooltip(data, "Test Data row must be maximum!");
+                data.getStyleClass().add("combo-box-error");
+            }
         }
         if (!node.equals(header) && node.getValue().equals(header.getValue())) {
             header.setValue("");
