@@ -124,11 +124,11 @@ public class BoxPlotChartApp extends Application {
         addPointBtn.setOnAction(event -> {
             XYChart.Data data = new XYChart.Data<>(5, 20);
             markers.put("Point", data);
-            chart.addSymbol(data, Color.RED);
+//            chart.addSymbol(data, Color.RED);
         });
 
         removePointBtn.setOnAction(event -> {
-            chart.removeSymbol(markers.get("Point"));
+//            chart.removeSymbol(markers.get("Point"));
         });
 
         showLineBtn.setOnAction(event -> {

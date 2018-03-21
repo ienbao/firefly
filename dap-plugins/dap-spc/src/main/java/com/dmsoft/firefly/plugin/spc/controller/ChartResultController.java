@@ -5,6 +5,7 @@ package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.plugin.spc.charts.*;
 import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationFetch;
+import com.dmsoft.firefly.plugin.spc.charts.data.BoxPlotChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.ControlChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
@@ -91,11 +92,7 @@ public class ChartResultController implements Initializable {
         sdChartPane = this.buildControlChartPane();
         medianChartPane = this.buildControlChartPane();
         mrChartPane = this.buildControlChartPane();
-//        this.initRangeChartPane();
-//        this.initSdChartPane();
-//        this.initMedianChartPane();
         this.initBoxChartPane();
-//        this.initMrChartPane();
         chartTabPane = new VerticalTabPane();
         ndChartPane.setId(UIConstant.SPC_CHART_NAME[0]);
         runChartPane.setId(UIConstant.SPC_CHART_NAME[1]);
@@ -223,6 +220,7 @@ public class ChartResultController implements Initializable {
         yAxis.setTickMarkVisible(false);
         xAxis.setMinorTickVisible(false);
         yAxis.setMinorTickVisible(false);
+        xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
         ControlChart chart = new ControlChart(xAxis, yAxis);
         ChartPanel chartPanel = new ChartPanel<>(chart);
@@ -256,6 +254,8 @@ public class ChartResultController implements Initializable {
         yAxis.setTickMarkVisible(false);
         xAxis.setMinorTickVisible(false);
         yAxis.setMinorTickVisible(false);
+        xAxis.setAutoRanging(false);
+        yAxis.setAutoRanging(false);
         BoxPlotChart boxPlotChart = new BoxPlotChart(xAxis, yAxis);
         boxChartPane = new ChartPanel<>(boxPlotChart);
         boxChartPane.getCustomPane().getChildren().add(button);
@@ -289,7 +289,7 @@ public class ChartResultController implements Initializable {
         List<ControlChartData> runChartDataList = Lists.newArrayList();
         List<ControlChartData> sdChartDataList = Lists.newArrayList();
         List<ControlChartData> medianChartDataList = Lists.newArrayList();
-        List<IBoxChartData> boxChartDataList = Lists.newArrayList();
+        List<BoxPlotChartData> boxChartDataList = Lists.newArrayList();
         List<ControlChartData> mrChartDataList = Lists.newArrayList();
         for (SpcChartDto spcChartDto : spcChartDtoList) {
             String key = spcChartDto.getKey();
@@ -320,7 +320,7 @@ public class ChartResultController implements Initializable {
 //            IControlChartData rangeChartData = new SpcControlChartData(key, spcChartResultDto.getRangeCResult(), color);
 //            rangeChartDataList.add(rangeChartData);
             SpcControlChartData1 rangeChartData = new SpcControlChartData1(key, spcChartResultDto.getRangeCResult(), color);
-            xBarChartData.setSeriesName(seriesName);
+            rangeChartData.setSeriesName(seriesName);
             rangeChartDataList.add(rangeChartData);
             //sd chart
 //            IControlChartData sdChartData = new SpcControlChartData(key, spcChartResultDto.getSdCResult(), color);
@@ -333,8 +333,9 @@ public class ChartResultController implements Initializable {
             medianChartData.setSeriesName(seriesName);
             medianChartDataList.add(medianChartData);
             //box chart
-            IBoxChartData iBoxChartData = new SpcBoxChartData(key, spcChartResultDto.getBoxCResult(), color);
-            boxChartDataList.add(iBoxChartData);
+            SpcBoxChartData1 boxChartData = new SpcBoxChartData1(key, spcChartResultDto.getBoxCResult(), color);
+            boxChartData.setSeriesName(seriesName);
+            boxChartDataList.add(boxChartData);
             //mr chart
 //            IControlChartData mrChartData = new SpcControlChartData(key, spcChartResultDto.getMrCResult(), color);
             SpcControlChartData1 mrChartData = new SpcControlChartData1(key, spcChartResultDto.getMrCResult(), color);
@@ -349,7 +350,7 @@ public class ChartResultController implements Initializable {
         this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList);
         this.setControlChartData(UIConstant.SPC_CHART_NAME[4], sdChartDataList);
         this.setControlChartData(UIConstant.SPC_CHART_NAME[5], medianChartDataList);
-//        this.setBoxChartData(UIConstant.SPC_CHART_NAME[6], boxChartDataList);
+        this.setBoxChartData(UIConstant.SPC_CHART_NAME[6], boxChartDataList);
         this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
     }
 
@@ -455,7 +456,7 @@ public class ChartResultController implements Initializable {
         }
     }
 
-    public void setBoxChartData(String chartName, List<IBoxChartData> boxChartData) {
+    public void setBoxChartData(String chartName, List<BoxPlotChartData> boxChartData) {
         BoxPlotChart chart = boxChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
@@ -479,10 +480,12 @@ public class ChartResultController implements Initializable {
         double yMin = MathUtils.getMin(yLower);
         NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        xAxis.setLowerBound(xMin);
-        xAxis.setUpperBound(xMax);
-        yAxis.setLowerBound(yMin);
-        yAxis.setUpperBound(yMax);
+        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
+        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
+        xAxis.setLowerBound(xMin - xReserve);
+        xAxis.setUpperBound(xMax + xReserve);
+        yAxis.setLowerBound(yMin - yReserve);
+        yAxis.setUpperBound(yMax + yReserve);
         setBoxPlotChartData(boxChartData);
     }
 
@@ -565,14 +568,10 @@ public class ChartResultController implements Initializable {
         runChartPane.activeChartDragging();
     }
 
-    private void setBoxPlotChartData(List<IBoxChartData> boxPlotChartData) {
+    private void setBoxPlotChartData(List<BoxPlotChartData> boxPlotChartData) {
         BoxPlotChart chart = boxChartPane.getChart();
-        boxPlotChartData.forEach(chartData -> {
-            IBoxAndWhiskerData boxAndWhiskerData = chartData.getBoxAndWhiskerData();
-            IPoint points = chartData.getPoints();
-            chart.createChartSeries(boxAndWhiskerData, seriesName);
-            chart.addPoints(points, Color.GREEN);
-        });
+        boxChartPane.activeChartDragging();
+        chart.setData(boxPlotChartData, chartTooltip);
     }
 
     private Object getChartByName(String name) {
