@@ -477,10 +477,10 @@ public class MainController {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source.fxml");
             root = fxmlLoader.load();
             DataSourceController controller = fxmlLoader.getController();
-            Stage stage = WindowFactory.createSimpleWindowAsModel("dataSource", GuiFxmlAndLanguageUtils.getString(ResourceMassages.DATASOURCE), root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("dataSource", GuiFxmlAndLanguageUtils.getString(ResourceMassages.DATASOURCE), root, getResource("css/platform_app.css").toExternalForm());
+            stage.setOnCloseRequest(controller.getEventHandler());
             stage.setResizable(false);
             stage.show();
-            stage.setOnCloseRequest(controller.getEventHandler());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
