@@ -64,11 +64,11 @@ public class UIConstant {
 
     //    "LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL"
     public static final String[] SPC_CHART_XBAR_EXTERN_MENU = new String[]{"LCL", "μ", "UCL", "Point", "Connect Line"};
-    public static final String[] SPC_CHART_NDC_EXTERN_MENU = new String[]{"UCL", "USL", "2σ", "σ", "μ", "-σ", "-2σ", "LSL", "LCL", "Histogram", "Normal Curve"};
-    public static final String[] SPC_CHART_RUN_EXTERN_MENU = new String[]{"LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL", "Point", "Connect Line"};
+    public static final String[] SPC_CHART_NDC_EXTERN_MENU = new String[]{"USL", "LSL", "UCL", "2σ", "σ", "μ", "-σ", "-2σ", "LCL", "Histogram", "Normal Curve"};
+    public static final String[] SPC_CHART_RUN_EXTERN_MENU = new String[]{"USL", "LSL", "LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL", "Point", "Connect Line"};
     public static final String[] SPC_CHART_BOX_EXTERN_MENU = new String[]{"CL", "Grid Line"};
 
-    public static final String[] SPC_CHART_LINE_NAME = new String[]{"LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL"};
+    public static final String[] SPC_CHART_LINE_NAME = new String[]{"USL", "LSL", "LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL"};
     public static final String[] SPC_XBARCHART_LINE_NAME = new String[]{"LCL", "μ", "UCL"};
     public static final String[] SPC_NDCCHART_LINE_NAME = new String[]{"UCL", "USL", "2σ", "σ", "μ", "-σ", "-2σ", "LSL", "LCL"};
 
@@ -89,5 +89,5 @@ public class UIConstant {
 
     public static final String[] CONTROL_ALARM_RULE_HEADER = new String[]{"Is Use", "Rule Name", "n", "m", "s"};
 
-    public static final double FACTOR = 0.20;
+    public static final double FACTOR = 0.020;
 }

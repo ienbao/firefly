@@ -69,7 +69,7 @@ public class SpcChartToolTip implements ChartTooltip {
                 String name = lineTooltip.getName();
                 String value = DAPStringUtils.formatDouble(lineTooltip.getValue(), digNumInstance.getDigNum());
                 String tip = seriesName + "\n" + name + "= " + value;
-                return null;
+                return tip;
             }
         };
     }

@@ -149,7 +149,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     public void addValueMarker(List<ILineData> lineData, String unique) {
         ValueMarker valueMarker = new ValueMarker();
         lineData.forEach(oneLineData -> {
-            Line line = valueMarker.buildValueMarker(oneLineData);
+            Line line = valueMarker.buildValueMarker(oneLineData, null,null, null);
             getPlotChildren().add(line);
         });
         valueMarkerMap.put(unique, valueMarker);
@@ -396,9 +396,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
 
     public void removeAllChildren() {
         ObservableList<Node> nodes = getPlotChildren();
-        getData().setAll(FXCollections.observableArrayList());
         getPlotChildren().removeAll(nodes);
         clearData();
+        this.getData().removeAll(this.getData());
     }
 
     public void updateChartColor(String unique, Color color) {

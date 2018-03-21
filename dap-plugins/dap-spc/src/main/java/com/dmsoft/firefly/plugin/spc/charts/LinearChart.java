@@ -53,9 +53,6 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         super(xAxis, yAxis, FXCollections.observableArrayList());
     }
 
-    /**
-     * @param xyChartData
-     */
 //    public void addDataToChart(List<IXYChartData> xyChartData,
 //                               Function<PointTooltip, String> pointTooltipFunction) {
 //
@@ -125,12 +122,12 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
     }
 
     public void addValueMarker(List<ILineData> lineData, String unique) {
-        ValueMarker valueMarker = new ValueMarker();
-        lineData.forEach(oneLineData -> {
-            Line line = valueMarker.buildValueMarker(oneLineData);
-            getPlotChildren().add(line);
-        });
-        valueMarkerMap.put(unique, valueMarker);
+//        ValueMarker valueMarker = new ValueMarker();
+//        lineData.forEach(oneLineData -> {
+//            Line line = valueMarker.buildValueMarker(oneLineData);
+//            getPlotChildren().add(line);
+//        });
+//        valueMarkerMap.put(unique, valueMarker);
     }
 
     public void addPathMarker(List<IPathData> pathData, String unique) {

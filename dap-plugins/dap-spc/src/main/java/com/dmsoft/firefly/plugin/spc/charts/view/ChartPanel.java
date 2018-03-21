@@ -37,7 +37,6 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
     }
 
     public void activeChartDragging() {
-
         if (chartUtils == null) {
             chartUtils = new ChartUtils(chart);
         }
