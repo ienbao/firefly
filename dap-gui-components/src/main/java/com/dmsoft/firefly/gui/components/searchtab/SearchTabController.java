@@ -78,7 +78,10 @@ public class SearchTabController {
 
     private void initEvent() {
         groupAdd.setOnAction(event -> basicSearch.getChildren().add(new BasicSearchPane("Group" + (basicSearch.getChildren().size() + 1))));
-        groupRemove.setOnAction(event -> basicSearch.getChildren().clear());
+        groupRemove.setOnAction(event -> {
+            basicSearch.getChildren().clear();
+            basicSearch.getChildren().add(new BasicSearchPane("Group" + (basicSearch.getChildren().size() + 1)));
+        });
         help.setOnAction(event -> buildAdvanceHelpDia());
     }
 
@@ -199,14 +202,14 @@ public class SearchTabController {
         return conditionTestItemList;
     }
 
-    public void clearSearchTab(){
+    public void clearSearchTab() {
         basicSearch.getChildren().clear();
         advanceText.setText(null);
         group1.setValue(null);
         group2.setValue(null);
     }
 
-    public LinkedHashMap<String, List<BasicSearchDto>> getBasicSearch(){
+    public LinkedHashMap<String, List<BasicSearchDto>> getBasicSearch() {
         if (basicSearch.getChildren().size() > 0) {
             LinkedHashMap<String, List<BasicSearchDto>> basicSearchDtos = Maps.newLinkedHashMap();
 
@@ -233,7 +236,7 @@ public class SearchTabController {
         return null;
     }
 
-    public void setBasicSearch(LinkedHashMap<String, List<BasicSearchDto>> basicSearchDtoMaps){
+    public void setBasicSearch(LinkedHashMap<String, List<BasicSearchDto>> basicSearchDtoMaps) {
         if (basicSearchDtoMaps != null && basicSearchDtoMaps.size() > 0) {
             for (String title : basicSearchDtoMaps.keySet()) {
                 List<BasicSearchDto> basicSearchDtos = basicSearchDtoMaps.get(title);
