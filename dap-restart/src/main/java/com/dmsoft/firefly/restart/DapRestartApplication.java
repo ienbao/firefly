@@ -20,14 +20,16 @@ public class DapRestartApplication {
 
         Thread.sleep(1000);
 
-        String pluginFolderPath = args[0].replace("pluginFolderPath:", "");
         Arrays.stream(args).forEach(v -> {
             if (v.contains("delete:")) {
                 FileUtils.deleteFolder(v.replace("delete:", ""));
             }
             if (v.contains("cover:")) {
                 try {
-                    FileUtils.unZipFiles(new File(v.replace("cover:", "")), pluginFolderPath + "/");
+                    String coverAll = v.replace("cover:", "");
+                    String filePath = coverAll.split(":coverPath:")[0];
+                    String coverPath = coverAll.split(":coverPath:")[1];
+                    FileUtils.unZipFilesNoFileName(new File(filePath), coverPath + "/");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -218,9 +218,9 @@ public class PluginManageController implements Initializable {
                             return;
                         }
 
-                        if (isExist(scannedPlugins.get(0), allInstallPlugins)) {
-                            deleteList.add(scannedPlugins.get(0).getFolderPath());
-                            coverList.add(file.getPath());
+                        PluginInfo pluginInfo = isExist(scannedPlugins.get(0), allInstallPlugins);
+                        if (pluginInfo != null) {
+                            coverList.add(file.getPath() + ":coverPath:" + pluginInfo.getFolderPath());
                         } else {
                             FileUtils.unZipFiles(file, pluginFolderPath + "/");
                             PluginTableRowData chooseTableRowData = new PluginTableRowData(false, installPlugins.getName(), installPlugins);
@@ -327,14 +327,14 @@ public class PluginManageController implements Initializable {
         return false;
     }
 
-    private boolean isExist(PluginInfo pluginInfo, Map<String, PluginInfo> allInstallPlugins) {
+    private PluginInfo isExist(PluginInfo pluginInfo, Map<String, PluginInfo> allInstallPlugins) {
         if (allInstallPlugins.containsKey(pluginInfo.getId())) {
             PluginInfo exist = allInstallPlugins.get(pluginInfo.getId());
             if (exist.getName().equals(pluginInfo.getName())) {
-                return true;
+                return exist;
             }
         }
-        return false;
+        return null;
     }
 
     private void validateMapChange() {
