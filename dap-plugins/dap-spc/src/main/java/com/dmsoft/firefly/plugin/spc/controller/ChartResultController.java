@@ -64,10 +64,10 @@ public class ChartResultController implements Initializable {
     private ChartPanel<ControlChart> runChartPane;
     private ChartPanel<ControlChart> xBarChartPane;
     private ChartPanel<ControlChart> rangeChartPane;
-    private ChartPanel<LinearChart> sdChartPane;
-    private ChartPanel<LinearChart> medianChartPane;
+    private ChartPanel<ControlChart> sdChartPane;
+    private ChartPanel<ControlChart> medianChartPane;
     private ChartPanel<BoxPlotChart> boxChartPane;
-    private ChartPanel<LinearChart> mrChartPane;
+    private ChartPanel<ControlChart> mrChartPane;
 
     private List<XYChart.Data> annotationData = Lists.newArrayList();
 
