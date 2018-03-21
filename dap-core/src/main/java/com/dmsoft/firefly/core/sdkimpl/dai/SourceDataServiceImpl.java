@@ -401,7 +401,8 @@ public class SourceDataServiceImpl implements SourceDataService {
                 logger.debug("Finding Test Data for project name = {}...", projectName);
                 List<RowData> rowDataList = getMongoTemplate().find(query, RowData.class, projectName);
                 for (RowData rowData : rowDataList) {
-                    result.putAll(rowData.getData());
+                    result.put(rowData.getRowKey(), rowData.getData().get(testItemName));
+//                    result.putAll(rowData.getData());
                 }
                 logger.info("Find Test Data for project name = {} done.", projectName);
             }

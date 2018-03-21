@@ -3,8 +3,10 @@ package com.dmsoft.firefly.plugin.spc.charts.view;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.plugin.spc.charts.select.ClearCallBack;
 import com.dmsoft.firefly.plugin.spc.charts.model.SimpleItemCheckModel;
+import com.dmsoft.firefly.plugin.spc.charts.select.SelectCallBack;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.google.common.collect.Sets;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -33,6 +35,7 @@ public class ChartAnnotationButton extends Button {
     private ObservableList<SimpleItemCheckModel> dataModels = FXCollections.observableArrayList();
     private FilteredList<SimpleItemCheckModel> filteredData = new FilteredList(dataModels, s -> true);
     private ClearCallBack callBack;
+    private SelectCallBack selectCallBack;
 
     private Object currentSelectItem;
     private boolean showAnnotation = false;
@@ -114,6 +117,10 @@ public class ChartAnnotationButton extends Button {
             }
             dataListView.refresh();
             editCurrentSelectItem(newValue.getItemName());
+            if (selectCallBack != null) {
+                String itemName = newValue.getItemName();
+                selectCallBack.execute(itemName, true, Sets.newHashSet(itemName));
+            }
         });
 
         Button button = this;
@@ -200,7 +207,6 @@ public class ChartAnnotationButton extends Button {
     }
 
     private void editCurrentSelectItem(Object currentSelectItem) {
-
         this.currentSelectItem = currentSelectItem;
         if (DAPStringUtils.isNotBlank(this.currentSelectItem + "")) {
             this.activeAnnotation();
@@ -220,7 +226,6 @@ public class ChartAnnotationButton extends Button {
         ListCell<SimpleItemCheckModel> listCell = new ListCell<SimpleItemCheckModel>() {
             @Override
             public void updateItem(SimpleItemCheckModel item, boolean empty) {
-
                 super.updateItem(item, empty);
                 if (item == null || empty == true) {
                     setGraphic(null);
@@ -254,5 +259,9 @@ public class ChartAnnotationButton extends Button {
 
     public void setCallBack(ClearCallBack callBack) {
         this.callBack = callBack;
+    }
+
+    public void setSelectCallBack(SelectCallBack selectCallBack) {
+        this.selectCallBack = selectCallBack;
     }
 }

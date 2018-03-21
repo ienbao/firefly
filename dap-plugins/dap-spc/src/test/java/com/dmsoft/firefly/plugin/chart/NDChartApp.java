@@ -87,6 +87,8 @@ public class NDChartApp extends Application {
         chart.createChartSeries(barChartData, seriesName);
         chart.addAreaSeries(xyChartData, seriesName, barColor);
 
+        chart.removeAllChildren();
+
     }
 
     @Override

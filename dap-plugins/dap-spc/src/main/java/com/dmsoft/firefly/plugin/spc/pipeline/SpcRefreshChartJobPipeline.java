@@ -16,6 +16,6 @@ public class SpcRefreshChartJobPipeline implements InitJobPipeline {
 
     @Override
     public void initJobPipeline(JobPipeline pipeline) {
-        pipeline.addLast(ParamKeys.SPC_CHART_RESULT_HANDLER, new GetSpcChartResultHandler());
+        pipeline.addLast(ParamKeys.SPC_CHART_RESULT_HANDLER, new GetSpcChartResultHandler().setWeight(100));
     }
 }

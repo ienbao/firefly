@@ -11,6 +11,8 @@ import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
+import com.dmsoft.firefly.sdk.job.AbstractProcessMonitorAutoAdd;
+import com.dmsoft.firefly.sdk.job.ProcessMonitorAuto;
 import com.dmsoft.firefly.sdk.job.core.JobHandlerContext;
 import com.dmsoft.firefly.sdk.job.core.JobInboundHandler;
 import com.google.common.collect.Maps;
@@ -33,13 +35,19 @@ public class RefreshAnalysisDataHandler implements JobInboundHandler {
 
         SearchDataFrame statisticalDataFrame = (SearchDataFrame) param.get(ParamKeys.STATISTICAL_SEARCH_DATA_FRAME);
         List<SearchConditionDto> statisticalSearchConditionDtoList = (List<SearchConditionDto>) param.get(ParamKeys.STATISTICAL_SEARCH_CONDITION_DTO_LIST);
+
+        // progress
         SpcService spcService = RuntimeContext.getBean(SpcService.class);
+        if (spcService instanceof AbstractProcessMonitorAutoAdd) {
+            ProcessMonitorAuto monitor = (ProcessMonitorAuto) spcService;
+            monitor.addProcessMonitorListener(context.getContextProcessMonitorListenerIfExists());
+        }
         List<SpcStatsDto> spcStatsDtoList = spcService.getStatisticalResult(statisticalDataFrame, statisticalSearchConditionDtoList, analysisConfigDto);
         List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = RuntimeContext.getBean(SpcSettingService.class).setStatisticalResultAlarm(spcStatsDtoList);
 
         SearchDataFrame chartDtaFrame = (SearchDataFrame) param.get(ParamKeys.CHART_SEARCH_DATA_FRAME);
         List<SearchConditionDto> chartSearchConditionDtoList = (List<SearchConditionDto>) param.get(ParamKeys.CHART_SEARCH_CONDITION_DTO_LIST);
-        List<SpcChartDto> spcChartDtoList = RuntimeContext.getBean(SpcService.class).getChartResult(chartDtaFrame, chartSearchConditionDtoList, analysisConfigDto);
+        List<SpcChartDto> spcChartDtoList = spcService.getChartResult(chartDtaFrame, chartSearchConditionDtoList, analysisConfigDto);
 
         Map<String, Object> analysisResultMap = Maps.newHashMap();
         analysisResultMap.put(ParamKeys.STATISTICAL_ANALYSIS_RESULT, spcStatisticalResultAlarmDtoList);

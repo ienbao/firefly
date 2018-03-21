@@ -246,6 +246,12 @@ public class PluginManageController implements Initializable {
                 updateProjectOrder();
             }
         });
+
+        filterTf.getTextField().textProperty().addListener((observable, oldValue, newValue) -> {
+            pluginTableRowDataFilteredList.setPredicate(p -> {
+                return p.getValue().contains(filterTf.getTextField().getText());
+            });
+        });
     }
 
     private void showRestart() {

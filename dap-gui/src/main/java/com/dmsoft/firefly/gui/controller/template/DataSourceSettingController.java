@@ -105,17 +105,24 @@ public class DataSourceSettingController {
         });
         apply.setOnAction(event -> {
             List<String> trueSet = new ArrayList<>();
+            List<String> falseSet = new ArrayList<>();
             //get change List
             List<RowDataDto> rowDataDtos = itemDataTableModel.getRowDataDtoList();
             if (rowDataDtos != null && !rowDataDtos.isEmpty()) {
+                int i = 0;
                 for (RowDataDto rowDataDto : rowDataDtos) {
-                    if (!itemDataTableModel.getFalseSet().contains(rowDataDto.getRowKey())) {
-                        trueSet.add(rowDataDto.getRowKey());
+                    if (i > 2) {
+                        if (!(itemDataTableModel.getFalseSet()).contains(String.valueOf(i))) {
+                            trueSet.add(rowDataDto.getRowKey());
+                        } else {
+                            falseSet.add(rowDataDto.getRowKey());
+                        }
                     }
+                    i++;
                 }
             }
             sourceDataService.changeRowDataInUsed(trueSet, true);
-            sourceDataService.changeRowDataInUsed(itemDataTableModel.getFalseSet(), false);
+            sourceDataService.changeRowDataInUsed(falseSet, false);
         });
         cancel.setOnAction(event -> {
             StageMap.closeStage("sourceSetting");

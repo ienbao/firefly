@@ -10,6 +10,8 @@ import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
+import com.dmsoft.firefly.sdk.job.AbstractProcessMonitorAutoAdd;
+import com.dmsoft.firefly.sdk.job.ProcessMonitorAuto;
 import com.dmsoft.firefly.sdk.job.core.JobHandlerContext;
 import com.dmsoft.firefly.sdk.job.core.JobInboundHandler;
 
@@ -33,7 +35,13 @@ public class GetSpcChartResultHandler implements JobInboundHandler {
         List<SearchConditionDto> searchConditionDtoList = (List<SearchConditionDto>) param.get(ParamKeys.SEARCH_CONDITION_DTO_LIST);
         SpcAnalysisConfigDto analysisConfigDto = (SpcAnalysisConfigDto) param.get(ParamKeys.SPC_ANALYSIS_CONFIG_DTO);
 
-        List<SpcChartDto> spcChartDtoList = RuntimeContext.getBean(SpcService.class).getChartResult(dataFrame, searchConditionDtoList, analysisConfigDto);
+        // progress
+        SpcService spcService = RuntimeContext.getBean(SpcService.class);
+        if (spcService instanceof AbstractProcessMonitorAutoAdd) {
+            ProcessMonitorAuto monitor = (ProcessMonitorAuto) spcService;
+            monitor.addProcessMonitorListener(context.getContextProcessMonitorListenerIfExists());
+        }
+        List<SpcChartDto> spcChartDtoList = spcService.getChartResult(dataFrame, searchConditionDtoList, analysisConfigDto);
         RuntimeContext.getBean(SpcSettingService.class).setControlChartRuleAlarm(spcChartDtoList);
         //TODO progress
         context.returnValue(spcChartDtoList);

@@ -84,6 +84,7 @@ public class DataSourceController implements Initializable {
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+    private EventHandler eventHandler;
 
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
@@ -91,7 +92,8 @@ public class DataSourceController implements Initializable {
         search.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
         delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
 //        errorInfo.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_tips_warning.png")));
-        errorInfo.getStyleClass().add("icon-warn-svg");
+        errorInfo.getStyleClass().add("message-tip-warn-mark");
+        errorInfo.setStyle("-fx-background-color: #F38400");
         errorInfo.setVisible(false);
         allCheckBox = new CheckBox();
         chooseCheckBoxColumn.setGraphic(allCheckBox);
@@ -374,6 +376,7 @@ public class DataSourceController implements Initializable {
 
         });
         addFile.setOnAction(event -> {
+            System.out.println(this);
             buildDataSourceDialog();
         });
     }
@@ -403,7 +406,7 @@ public class DataSourceController implements Initializable {
             FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/resolver.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
             loader.setController(new ResolverSelectController(this));
             root = loader.load();
-            Stage stage = WindowFactory.createSimpleWindowAsModel("resolver", "select Resolver", root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("resolver", "select Resolver", root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
             stage.show();
         } catch (Exception ex) {
@@ -469,19 +472,22 @@ public class DataSourceController implements Initializable {
     }
 
     public EventHandler<WindowEvent> getEventHandler() {
-        return new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                Iterator<ChooseTableRowData> iterator = chooseTableRowDataObservableList.iterator();
-                while (iterator.hasNext()) {
-                    ChooseTableRowData next = iterator.next();
-                    if (next.isError()) {
-                        iterator.remove();
+        if (eventHandler == null) {
+            eventHandler = new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    Iterator<ChooseTableRowData> iterator = getChooseTableRowDataObservableList().iterator();
+                    while (iterator.hasNext()) {
+                        ChooseTableRowData next = iterator.next();
+                        if (next.isError()) {
+                            iterator.remove();
+                        }
                     }
+                    errorInfo.setVisible(false);
                 }
-                errorInfo.setVisible(false);
-            }
-        };
+            };
+        }
+        return eventHandler;
     }
 
     public Label getErrorInfo() {
