@@ -1,19 +1,24 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
-import com.dmsoft.firefly.gui.components.utils.ImageUtils;
-import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.utils.*;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.grr.dto.GrrConfigDto;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.grr.utils.enums.GrrAnalysisMethod;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -21,6 +26,7 @@ import javafx.stage.Stage;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Created by GuangLi on 2018/3/6.
@@ -87,6 +93,9 @@ public class GrrSettingController {
             if (grrConfigDto.getAnalysisMethod().equals(GrrAnalysisMethod.ANOVA)) {
                 anova.setSelected(true);
                 anova.requestFocus();
+            } else {
+                xbar.setSelected(true);
+                xbar.requestFocus();
             }
             coverage.setValue(grrConfigDto.getCoverage());
             sign.setText(grrConfigDto.getSignLevel());
@@ -97,8 +106,69 @@ public class GrrSettingController {
     }
 
     private void initEvent() {
+        levelGood.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue.length() > oldValue.length()) {
+                    String text = levelGood.getText();
+                    Pattern pattern = Pattern.compile("^[+]?\\d*[.]?\\d*$");
+                    if (DAPStringUtils.isEmpty(text) || !pattern.matcher(text).matches()) {
+//                        TooltipUtil.installWarnTooltip(levelGood, "must be number");
+//                        levelGood.getStyleClass().add("text-field-error");
+                        levelGood.setText(oldValue);
+                    } else {
+//                        TooltipUtil.uninstallWarnTooltip(levelGood);
+//                        levelGood.getStyleClass().removeAll("text-field-error");
+                    }
+                }
+                if (DAPStringUtils.isEmpty(levelGood.getText())
+                        || (!DAPStringUtils.isEmpty(levelGood.getText()) && !DAPStringUtils.isEmpty(levelBad.getText())
+                        && Double.valueOf(levelGood.getText()) > Double.valueOf(levelBad.getText()))) {
+                    TooltipUtil.installWarnTooltip(levelGood, "must be number");
+                    levelGood.getStyleClass().add("text-field-error");
+                } else {
+                    TooltipUtil.uninstallWarnTooltip(levelGood);
+                    levelGood.getStyleClass().removeAll("text-field-error");
+                }
+            }
+        });
+        levelBad.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue.length() > oldValue.length()) {
+                    String text = levelBad.getText();
+                    Pattern pattern = Pattern.compile("^[+]?\\d*[.]?\\d*$");
+                    if (DAPStringUtils.isEmpty(text) || !pattern.matcher(text).matches()) {
+//                        TooltipUtil.installWarnTooltip(levelBad, "must be number");
+//                        levelBad.getStyleClass().add("text-field-error");
+                        levelBad.setText(oldValue);
+                    } else {
+//                        TooltipUtil.uninstallWarnTooltip(levelBad);
+//                        levelBad.getStyleClass().removeAll("text-field-error");
+
+                    }
+                }
+                if (DAPStringUtils.isEmpty(levelBad.getText())
+                        || (!DAPStringUtils.isEmpty(levelBad.getText()) && !DAPStringUtils.isEmpty(levelGood.getText())
+                        && Double.valueOf(levelBad.getText()) < Double.valueOf(levelGood.getText()))) {
+                    TooltipUtil.installWarnTooltip(levelBad, "must be number");
+                    levelBad.getStyleClass().add("text-field-error");
+                } else {
+                    TooltipUtil.uninstallWarnTooltip(levelBad);
+                    levelBad.getStyleClass().removeAll("text-field-error");
+                }
+            }
+        });
         exportBtn.setOnAction(event -> buildExportDia());
         ok.setOnAction(event -> {
+            if (DAPStringUtils.isEmpty(levelBad.getText()) || DAPStringUtils.isEmpty(levelGood.getText())) {
+                WindowMessageFactory.createWindowMessageHasCancel("Message", "Bad level and Good level can not be empty.");
+                return;
+            }
+            if (levelBad.getStyleClass().contains("text-field-error") || levelGood.getStyleClass().contains("text-field-error")) {
+                WindowMessageFactory.createWindowMessageHasCancel("Message", "Bad level must be bigger than Good level.");
+                return;
+            }
             saveGrrSetting();
             StageMap.closeStage("grrSetting");
         });
