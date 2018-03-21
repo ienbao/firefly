@@ -12,6 +12,7 @@ import com.dmsoft.firefly.plugin.spc.utils.DigNumInstance;
 import com.dmsoft.firefly.plugin.spc.utils.SourceObjectProperty;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
+import com.dmsoft.firefly.plugin.spc.utils.enums.SpcStatisticalResultKey;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
@@ -93,9 +94,10 @@ public class StatisticalTableModel implements TableModel {
 
     /**
      * init column
+     *
      * @param columnList column list
      */
-    public void initColumn(List<String> columnList){
+    public void initColumn(List<String> columnList) {
         columnKey.clear();
         columnKey.addAll(Arrays.asList(SPC_STATISTICAL_FIX_COLUMN));
         columnKey.addAll(columnList);
@@ -141,7 +143,7 @@ public class StatisticalTableModel implements TableModel {
                     } else {
                         String key = columnName;
                         if (i == 16) {
-                            key = SpcKey.CA.getCode();
+                            key = SpcStatisticalResultKey.CA.getCode();
                         }
                         value = showValue(key, statisticalAlarmDtoMap.get(key));
                     }
@@ -149,10 +151,6 @@ public class StatisticalTableModel implements TableModel {
                 SourceObjectProperty valueProperty = new SourceObjectProperty<>(value);
                 if (columnName.equals(STATISTICAL_TITLE[7]) || columnName.equals(STATISTICAL_TITLE[8])) {
                     valueProperty.addListener((ov, b1, b2) -> {
-                        if (!DAPStringUtils.isNumeric((String) b2)) {
-                            valueProperty.set(b1);
-                            return;
-                        }
                         spcStatsDto.getStatisticalAlarmDtoMap().get(columnName).setValue(Double.valueOf((String) b2));
                         if (!valueProperty.getSourceValue().equals(b2)) {
                             editorCell.add(spcStatsDtoKey + "-" + columnName);
@@ -361,7 +359,13 @@ public class StatisticalTableModel implements TableModel {
 
         SpcStatisticalResultAlarmDto spcStatsDto = keyToStatsDtoMap.get(rowKey);
         Map<String, StatisticalAlarmDto> statisticalAlarmDtoMap = spcStatsDto.getStatisticalAlarmDtoMap();
-        if (statisticalAlarmDtoMap != null && statisticalAlarmDtoMap.get(column) != null) {
+        if (statisticalAlarmDtoMap != null) {
+            if (column.equals(STATISTICAL_TITLE[16])) {
+                column = SpcStatisticalResultKey.CA.getCode();
+            }
+            if (statisticalAlarmDtoMap.get(column) == null) {
+                return tableCell;
+            }
             String level = statisticalAlarmDtoMap.get(column).getLevel();
             if (level != null) {
                 Color bgColor = getAlarmBackgroundColor(level);
@@ -415,7 +419,7 @@ public class StatisticalTableModel implements TableModel {
                 } else {
                     String key = columnName;
                     if (columnName.equals(STATISTICAL_TITLE[16])) {
-                        key = SpcKey.CA.getCode();
+                        key = SpcStatisticalResultKey.CA.getCode();
                     }
                     value = showValue(key, statisticalAlarmDtoMap.get(key));
                 }
@@ -424,10 +428,6 @@ public class StatisticalTableModel implements TableModel {
         SourceObjectProperty valueProperty = new SourceObjectProperty<>(value);
         if (columnName.equals(STATISTICAL_TITLE[7]) || columnName.equals(STATISTICAL_TITLE[8])) {
             valueProperty.addListener((ov, b1, b2) -> {
-                if (!DAPStringUtils.isNumeric((String) b2)) {
-                    valueProperty.set(b1);
-                    return;
-                }
                 spcStatsDto.getStatisticalAlarmDtoMap().get(columnName).setValue(Double.valueOf((String) b2));
                 if (!valueProperty.getSourceValue().equals(b2)) {
                     editorCell.add(rowKey + "-" + columnName);
@@ -509,6 +509,7 @@ public class StatisticalTableModel implements TableModel {
 
     /**
      * get spc statistical data
+     *
      * @return the list of data
      */
     public List<SpcStatisticalResultAlarmDto> getSpcStatsDtoList() {
@@ -524,6 +525,7 @@ public class StatisticalTableModel implements TableModel {
 
     /**
      * is menu event enable
+     *
      * @param rowKey row key
      * @return boolean
      */

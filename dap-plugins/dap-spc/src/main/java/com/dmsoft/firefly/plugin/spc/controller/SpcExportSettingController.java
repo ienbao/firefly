@@ -48,6 +48,15 @@ public class SpcExportSettingController implements Initializable {
                 Boolean isSelect = entry.getValue();
                 if (checkBoxMap.get(entry.getKey()) != null) {
                     checkBoxMap.get(entry.getKey()).selectedProperty().setValue(isSelect);
+                    if (!isSelect && entry.getKey().equals(SpcExportItemKey.EXPORT_CHARTS.getCode())) {
+                        this.setExportChartsDisable(!isSelect);
+                    } else if (!isSelect && entry.getKey().equals(SpcExportItemKey.DESCRIPTIVE_STATISTICS.getCode())) {
+                        this.setStatisticsDisable(!isSelect);
+                    } else if (!isSelect && entry.getKey().equals(SpcExportItemKey.PROCESS_CAPABILITY_INDEX.getCode())) {
+                        this.setProcessCapabilityDisable(!isSelect);
+                    } else if (!isSelect && entry.getKey().equals(SpcExportItemKey.PROCESS_PERFORMANCE_INDEX.getCode())) {
+                        this.setProcessPerformanceDisable(!isSelect);
+                    }
                 }
             }
         }

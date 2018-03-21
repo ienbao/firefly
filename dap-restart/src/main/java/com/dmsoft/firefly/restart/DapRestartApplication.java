@@ -7,6 +7,7 @@ package com.dmsoft.firefly.restart;
 
 import com.dmsoft.firefly.restart.utils.FileUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -19,8 +20,18 @@ public class DapRestartApplication {
 
         Thread.sleep(1000);
 
+        String pluginFolderPath = args[0].replace("pluginFolderPath:", "");
         Arrays.stream(args).forEach(v -> {
-            FileUtils.deleteFolder(v);
+            if (v.contains("delete:")) {
+                FileUtils.deleteFolder(v.replace("delete:", ""));
+            }
+            if (v.contains("cover:")) {
+                try {
+                    FileUtils.unZipFiles(new File(v.replace("cover:", "")), pluginFolderPath + "/");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         });
         Runtime.getRuntime().exec("java -jar dap-gui-1.0.0.jar");
         System.exit(0);

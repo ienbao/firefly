@@ -124,58 +124,6 @@ public enum SpcKey {
         }
     }
 
-    public static boolean isAbilityAlarmResultName(String resultName){
-        switch (resultName) {
-            case "CA":
-                return true;
-            case "CP":
-                return true;
-            case "CPK":
-                return true;
-            case "CPL":
-                return true;
-            case "CPU":
-                return true;
-            case "PP":
-                return true;
-            case "PPK":
-                return true;
-            case "PPL":
-                return true;
-            case "PPU":
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    public static boolean isCustomAlarmResultName(String resultName){
-        switch (resultName) {
-            case "AVG":
-                return true;
-            case "Max":
-                return true;
-            case "Min":
-                return true;
-            case "StDev":
-                return true;
-            case "Center":
-                return true;
-            case "Range":
-                return true;
-            case "μ-3σ":
-                return true;
-            case "μ+3σ":
-                return true;
-            case "Kurtosis":
-                return true;
-            case "Skewness":
-                return true;
-            default:
-                return false;
-        }
-    }
-
 }
 
 

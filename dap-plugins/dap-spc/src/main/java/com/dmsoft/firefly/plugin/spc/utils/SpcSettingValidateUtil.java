@@ -171,6 +171,10 @@ public class SpcSettingValidateUtil {
         return true;
     }
 
+    public boolean getResult() {
+        return result.get();
+    }
+
     public class BindNode {
         public static final String DESC = "desc";
         public static final String ASC = "asc";
