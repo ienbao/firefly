@@ -32,14 +32,12 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javafx.util.Callback;
 
 import java.io.*;
 import java.net.URL;
@@ -200,9 +198,11 @@ public class PluginManageController implements Initializable {
                         properties.load(inputStream);
                         pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
                         //validate
-                        FileUtils.unZipFiles(file, pluginFolderPath + "/temp/" + file.getName() + "/");
+                        String fileNameZip = file.getName();
+                        String fileName = fileNameZip.substring(fileNameZip.lastIndexOf('\\') + 1, fileNameZip.lastIndexOf('.'));
+                        FileUtils.unZipFiles(file, pluginFolderPath + "/temp/" + fileName + "/");
                         PluginContext context = RuntimeContext.getBean(PluginContext.class);
-                        List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath + "/temp/" + file.getName() + "/");
+                        List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath + "/temp/" + fileName + "/");
                         PluginInfo installPlugins = ListUtil.isEmpty(scannedPlugins) ? null : scannedPlugins.get(0);
 
                         if (installPlugins == null) {
@@ -214,11 +214,12 @@ public class PluginManageController implements Initializable {
 
                         if (isExists(scannedPlugins.get(0), allInstallPlugins)) {
                             WindowMessageFactory.createWindowMessageNoBtnHasOk("Install Error", "Plugin Exist.");
-                            FileUtils.deleteFolder(pluginFolderPath + "/temp/" + file.getName());
+                            FileUtils.deleteFolder(pluginFolderPath + "/temp/" + fileName);
                             return;
                         }
 
                         if (isExist(scannedPlugins.get(0), allInstallPlugins)) {
+                            deleteList.add(scannedPlugins.get(0).getFolderPath());
                             coverList.add(file.getPath());
                         } else {
                             FileUtils.unZipFiles(file, pluginFolderPath + "/");
@@ -226,7 +227,7 @@ public class PluginManageController implements Initializable {
                             pluginTableRowDataObservableList.add(chooseTableRowData);
                         }
 
-                        FileUtils.deleteFolder(pluginFolderPath + "/temp/" + file.getName());
+                        FileUtils.deleteFolder(pluginFolderPath + "/temp/" + fileName);
                         isEdit = true;
                         ok.setText("Restart");
 
