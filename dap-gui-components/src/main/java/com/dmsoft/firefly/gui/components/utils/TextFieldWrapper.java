@@ -16,12 +16,19 @@ public class TextFieldWrapper {
      * @return decorated text field
      */
     public static TextField decorate(TextField textField, ValidateRule validateRule) {
+        if (validateRule == null) {
+            return textField;
+        }
         //init
         if (!ValidateUtils.validateNotEmpty(textField.getText())) {
-            textField.getStyleClass().add(validateRule.getErrorStyle());
+            if (!textField.getStyleClass().contains(validateRule.getErrorStyle())) {
+                textField.getStyleClass().add(validateRule.getErrorStyle());
+            }
             TooltipUtil.installWarnTooltip(textField, validateRule.getEmptyErrorMsg());
         } else if (!ValidateUtils.validateWithinRange(textField.getText(), validateRule.getMaxValue(), validateRule.getMinValue())) {
-            textField.getStyleClass().add(validateRule.getErrorStyle());
+            if (!textField.getStyleClass().contains(validateRule.getErrorStyle())) {
+                textField.getStyleClass().add(validateRule.getErrorStyle());
+            }
             TooltipUtil.installWarnTooltip(textField, validateRule.getRangErrorMsg());
         }
         textField.textProperty().addListener((ov, s1, s2) -> {
@@ -29,10 +36,14 @@ public class TextFieldWrapper {
                     && ValidateUtils.validateWithLength(s2, validateRule.getMaxLength()))) {
                 textField.setText(s1);
             } else if (!ValidateUtils.validateNotEmpty(s2)) {
-                textField.getStyleClass().add(validateRule.getErrorStyle());
+                if (!textField.getStyleClass().contains(validateRule.getErrorStyle())) {
+                    textField.getStyleClass().add(validateRule.getErrorStyle());
+                }
                 TooltipUtil.installWarnTooltip(textField, validateRule.getEmptyErrorMsg());
             } else if (!ValidateUtils.validateWithinRange(s2, validateRule.getMaxValue(), validateRule.getMinValue())) {
-                textField.getStyleClass().add(validateRule.getErrorStyle());
+                if (!textField.getStyleClass().contains(validateRule.getErrorStyle())) {
+                    textField.getStyleClass().add(validateRule.getErrorStyle());
+                }
                 TooltipUtil.installWarnTooltip(textField, validateRule.getRangErrorMsg());
             } else {
                 textField.getStyleClass().removeAll(validateRule.getErrorStyle());

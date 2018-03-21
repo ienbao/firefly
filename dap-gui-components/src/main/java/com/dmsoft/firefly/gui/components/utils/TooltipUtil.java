@@ -6,7 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 
 public class TooltipUtil {
-    private static String TOOLTIP_PROP_KEY = "javafx.scene.control.Tooltip";
+    private static final String TOOLTIP_PROP_KEY = "javafx.scene.control.Tooltip";
 
     /**
      * method to install normal tooltip

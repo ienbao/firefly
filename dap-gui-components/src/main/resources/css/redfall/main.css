@@ -1302,6 +1302,19 @@
     -fx-padding: 0;
 }
 
+.table-view .placeholder .label, .table-view .placeholder {
+    -fx-border-color: transparent;
+    -fx-text-fill: transparent;
+    -fx-border-width: 0;
+}
+
+.table-view .placeholder .label:focused,
+.table-view .placeholder .label:selected,
+.table-view .placeholder:focused,
+.table-view .placeholder:selected {
+    -fx-border-color: transparent;
+}
+
 .table-context-menu {
     -fx-min-width: 160;
     -fx-pref-width: 160;
