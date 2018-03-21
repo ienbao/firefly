@@ -161,7 +161,7 @@ public class StatisticalTableModel implements TableModel {
                         }
                     });
                 }
-                valueMap.put(rowKey + "-" + columnName, valueProperty);
+                valueMap.put(spcStatsDtoKey + "-" + columnName, valueProperty);
             }
         }
     }
@@ -179,6 +179,7 @@ public class StatisticalTableModel implements TableModel {
         editorCell.clear();
         allChecked.setValue(false);
         editorRowKey.clear();
+        keyToStatsDtoMap.clear();
     }
 
     /**

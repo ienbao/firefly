@@ -400,6 +400,7 @@ public class SpcSettingController implements Initializable {
         boolean result = SpcSettingValidateUtil.newInstance().getResult();
         if (!result) {
             WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER), SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_SETTING_APPLY_WARN_MESSAGE));
+            return;
         }
         SpcSettingDto spcSettingDto = this.buildSaveSettingData();
         Job job = new Job(ParamKeys.SAVE_SPC_SETTING_DATA_JOP_PIPELINE);

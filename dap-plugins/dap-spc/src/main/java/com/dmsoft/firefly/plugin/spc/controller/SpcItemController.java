@@ -318,7 +318,7 @@ public class SpcItemController implements Initializable {
                         spcMainController.setInitSearchConditionDtoList(searchConditionDtoList);
 
                         Object returnValue = manager.doJobSyn(job, paramMap, spcMainController);
-                        if (returnValue == null || returnValue instanceof Exception) {
+                        if (returnValue instanceof Exception) {
                             //todo message tip
                             ((Exception) returnValue).printStackTrace();
                         } else {

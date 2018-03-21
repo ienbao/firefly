@@ -177,7 +177,7 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
         SpcSettingDto spcSettingDto = this.findSpcSetting();
         List<ControlRuleDto> controlRuleDtoList = spcSettingDto.getControlChartRule();
         for (SpcChartDto spcChartDto : spcChartDtoList) {
-            if (spcChartDto.getResultDto() == null) {
+            if (spcChartDto.getResultDto() == null || spcChartDto.getResultDto().getRunCResult() == null) {
                 continue;
             }
             ControlRuleConfigUtil controlRuleConfigUtil = new ControlRuleConfigUtil();

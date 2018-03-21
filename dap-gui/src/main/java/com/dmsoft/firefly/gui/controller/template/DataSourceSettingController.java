@@ -16,6 +16,7 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
@@ -251,21 +252,30 @@ public class DataSourceSettingController {
         Boolean flag = false;
         List<String> searchCondition = searchTab.getSearch();
         TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
-        if (templateSettingDto.getTimePatternDto() != null) {
-            FilterUtils filterUtils = new FilterUtils(templateSettingDto.getTimePatternDto().getTimeKeys(), templateSettingDto.getTimePatternDto().getPattern());
-            if (!searchCondition.isEmpty() && searchCondition != null) {
-                for (String condition : searchCondition) {
-                    if (rowDataDtoList != null && !rowDataDtoList.isEmpty()) {
-                        for (RowDataDto rowDataDto : rowDataDtoList) {
-                            flag = filterUtils.filterData(condition, rowDataDto.getData());
-                            if (flag) {
-                                searchResultDtos.add(rowDataDto);
-                            }
+        List<String> timeKeys = Lists.newArrayList();
+        String timePattern = null;
+        try {
+            TimePatternDto timePatternDto = templateSettingDto.getTimePatternDto();
+            if (timePatternDto != null) {
+                timeKeys = timePatternDto.getTimeKeys();
+                timePattern = timePatternDto.getPattern();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
+        if (!searchCondition.isEmpty() && searchCondition != null) {
+            for (String condition : searchCondition) {
+                if (rowDataDtoList != null && !rowDataDtoList.isEmpty()) {
+                    for (RowDataDto rowDataDto : rowDataDtoList) {
+                        flag = filterUtils.filterData(condition, rowDataDto.getData());
+                        if (flag) {
+                            searchResultDtos.add(rowDataDto);
                         }
                     }
                 }
-                itemDataTableModel.updateRowDataList(searchResultDtos);
             }
+            itemDataTableModel.updateRowDataList(searchResultDtos);
         }
     }
 
