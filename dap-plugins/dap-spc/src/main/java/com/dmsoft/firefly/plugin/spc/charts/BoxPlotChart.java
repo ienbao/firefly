@@ -302,7 +302,7 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         showLined = true;
     }
 
-    private void removeStroke() {
+    public void removeStroke() {
         showLined = false;
         layoutPlotChildren();
     }
