@@ -32,9 +32,14 @@ public class UIConstant {
             "CA(%)", "CP", "CPL", "CPU", "Within PPM", "PP", "PPK", "PPL", "PPU", "OverAll PPM"
     };
 
-    public static final String[] SPC_EXPORT_RESULT = new String[]{
-            "Samples", "AVG", "Max", "Min", "StDev", "LSL", "USL", "Center", "CPK", "Range", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness",
-            "CA", "CP", "CPL", "CPU", "Within PPM", "PP", "PPK", "PPL", "PPU", "OverAll PPM"
+    public static final String[] SPC_STATISTICAL = new String[]{
+            "Samples", "AVG", "Max", "Min", "StDev", "Range", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness"
+    };
+    public static final String[] SPC_CAPABILITY = new String[]{
+            "CPK", "CA", "CP", "CPL", "CPU", "Within PPM"
+    };
+    public static final String[] SPC_PERFORMANCE = new String[]{
+            "PP", "PPK", "PPL", "PPU", "OverAll PPM"
     };
     public static final String[] SPC_EXPORT_A = new String[]{
             "CA", "CPK", "CP", "CPL", "CPU", "Within PPM", "PPK", "PP", "PPL", "PPU", "OverAll PPM"

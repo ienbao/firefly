@@ -16,7 +16,7 @@ public enum SpcExportItemKey {
     X_BAR_CHART("X-bar Chart"),
     RANGE_CHART("Range Chart"),
     SD_CHART("SD Chart"),
-    MEDIAN_CHART("Median-bar Chart"),
+    MEDIAN_CHART("Median Chart"),
     BOX_CHART("Box Chart"),
     MR_CHART("MR Chart"),
 
