@@ -137,7 +137,7 @@ public class TableViewWrapper {
                             TextField tf = super.createTextField(cell, converter);
                             TextFieldWrapper.decorate(tf, rule);
                             tf.textProperty().addListener((ov, s1, s2) -> {
-                                if (model.isTextInputError(s2, this.getTableView().getItems().get(this.getIndex()), s)) {
+                                if (model.isTextInputError(tf, s2, this.getTableView().getItems().get(this.getIndex()), s)) {
                                     if (!tf.getStyleClass().contains(rule.getErrorStyle())) {
                                         tf.getStyleClass().add(rule.getErrorStyle());
                                     }
@@ -146,6 +146,14 @@ public class TableViewWrapper {
                                 }
                             });
                             return tf;
+                        }
+
+                        @Override
+                        public void startEdit() {
+                            if (getTextField() != null) {
+                                TextFieldWrapper.decorate(getTextField(), rule);
+                            }
+                            super.startEdit();
                         }
                     });
             column.setComparator(getComparator());

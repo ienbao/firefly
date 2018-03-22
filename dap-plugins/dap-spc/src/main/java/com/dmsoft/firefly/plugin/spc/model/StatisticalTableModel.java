@@ -3,10 +3,12 @@
  */
 package com.dmsoft.firefly.plugin.spc.model;
 
-import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
-import com.dmsoft.firefly.plugin.spc.dto.StatisticalAlarmDto;
+import com.dmsoft.firefly.gui.components.table.TableModel;
+import com.dmsoft.firefly.gui.components.utils.ValidateRule;
+import com.dmsoft.firefly.gui.components.utils.ValidateUtils;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
+import com.dmsoft.firefly.plugin.spc.dto.StatisticalAlarmDto;
 import com.dmsoft.firefly.plugin.spc.utils.Colur;
 import com.dmsoft.firefly.plugin.spc.utils.DigNumInstance;
 import com.dmsoft.firefly.plugin.spc.utils.SourceObjectProperty;
@@ -26,6 +28,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
 import java.awt.*;
 import java.util.*;
@@ -59,6 +62,7 @@ public class StatisticalTableModel implements TableModel {
 
     private Set<String> editorCell = new HashSet<>();
     private List<String> editorRowKey = Lists.newArrayList();
+    private ValidateRule rule;
 
     /**
      * constructor
@@ -383,17 +387,17 @@ public class StatisticalTableModel implements TableModel {
     }
 
     @Override
-    public void setAllCheckBox(CheckBox checkBox) {
-        this.allCheckBox = checkBox;
-    }
-
-    @Override
     public void setTableView(TableView<String> tableView) {
         this.tableView = tableView;
     }
 
     public CheckBox getAllCheckBox() {
         return allCheckBox;
+    }
+
+    @Override
+    public void setAllCheckBox(CheckBox checkBox) {
+        this.allCheckBox = checkBox;
     }
 
     /**
@@ -531,9 +535,25 @@ public class StatisticalTableModel implements TableModel {
      * @return boolean
      */
     public boolean isMenuEventEnable(String rowKey) {
-        if (emptyResultKeys.contains(rowKey)) {
-            return false;
+        return !emptyResultKeys.contains(rowKey);
+    }
+
+    @Override
+    public ValidateRule getValidateRule() {
+        if (rule == null) {
+            rule = new ValidateRule();
+            rule.setMaxLength(255);
+//            rule.setMinValue(10.0);
+//            rule.setMaxValue(20.0);
+            rule.setPattern(ValidateUtils.DOUBLE_PATTERN);
+            rule.setErrorStyle("text-field-error");
+            rule.setAllowEmpty(false);
         }
-        return true;
+        return rule;
+    }
+
+    @Override
+    public boolean isTextInputError(TextField textField, String newText, String rowKey, String columnName) {
+        return false;
     }
 }
