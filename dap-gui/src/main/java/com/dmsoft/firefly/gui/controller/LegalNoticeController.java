@@ -22,7 +22,8 @@ public class LegalNoticeController {
     private void initialize() {
         if (userService.findLegal()) {
             acceptCkb.setVisible(false);
-            legalOkBtn.setVisible(false);
+            acceptCkb.setSelected(true);
+            //legalOkBtn.setVisible(false);
         }
         legalOkBtn.setDisable(true);
         acceptCkb.setOnAction(event -> {

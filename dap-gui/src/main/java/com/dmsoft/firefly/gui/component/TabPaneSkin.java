@@ -2,29 +2,11 @@
  * Copyright (c) 2011, 2015, Oracle and/or its affiliates. All rights reserved.
  * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
  */
 
 package com.dmsoft.firefly.gui.component;
 
+import com.dmsoft.firefly.gui.utils.TabUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
@@ -825,6 +807,8 @@ public class TabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
                     tab1.setContent(pane);
                     tabPane.getTabs().add(tab1);
                     tabPane.getSelectionModel().select(tab1);
+                    TabUtils.disableCloseTab(tabPane);
+                    TabUtils.tabSelectedListener(tab1, tabPane);
                 } else {
                     logger.warn("The tab name does not accord with standard.");
                 }

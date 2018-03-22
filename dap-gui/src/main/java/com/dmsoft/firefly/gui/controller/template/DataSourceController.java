@@ -418,12 +418,6 @@ public class DataSourceController implements Initializable {
         setTableData(chooseTableRowDataList);
     }
 
-    private void refreshMainDataSource(List<String> selectProject) {
-        MenuFactory.getMainController().updateDataSourceText(selectProject.size());
-        ObservableList<String> dataSourceList = FXCollections.observableArrayList(selectProject);
-        MenuFactory.getMainController().refreshDataSource(dataSourceList);
-    }
-
     public void setTableData(List<ChooseTableRowData> chooseTableRowDataList) {
         chooseTableRowDataObservableList.clear();
         chooseTableRowDataObservableList.addAll(chooseTableRowDataList);

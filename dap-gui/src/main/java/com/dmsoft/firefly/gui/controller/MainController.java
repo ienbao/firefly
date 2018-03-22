@@ -1,13 +1,14 @@
 package com.dmsoft.firefly.gui.controller;
 
-import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.component.ContentStackPane;
+import com.dmsoft.firefly.gui.component.CustomerTooltip;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
 import com.dmsoft.firefly.gui.model.UserModel;
 import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
+import com.dmsoft.firefly.gui.utils.TabUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
@@ -32,6 +33,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -46,7 +48,7 @@ public class MainController {
     private final Logger logger = LoggerFactory.getLogger(MainController.class);
     public final Double MAX_HEIGHT = 250.0;
     public final Double MAX_WIDTH = 250.0;
-    public final Double MIN_WIDTH = 250.0;
+    public final Double MIN_WIDTH = 160.0;
 
     @FXML
     private GridPane grpContent;
@@ -60,8 +62,8 @@ public class MainController {
     private Button dataSourceBtn;
     private Button templateBtn;
 
-    private Popup dataSourcePopup;
-    private ListView<String> dataSourceView;
+    private ScrollPane scrollPaneTooltip;
+    private CustomerTooltip dataSourceTooltip;
     private ObservableList<String> dataSourceList = FXCollections.observableArrayList();
 
     private Popup templatePopup;
@@ -79,6 +81,8 @@ public class MainController {
 
     @FXML
     private void initialize() {
+        scrollPaneTooltip = new ScrollPane();
+        dataSourceTooltip = new CustomerTooltip();
         templateSettingDto =  envService.findActivatedTemplate();
         contentStackPane = new ContentStackPane();
         grpContent.add(contentStackPane, 0, 1);
@@ -86,9 +90,8 @@ public class MainController {
         this.initStateBar();
 
         this.updateStateBarIcon();
-
         this.initDataSource();
-        this.initDataSourcePopup();
+        this.initDataSourceTooltip();
         this.initTemplate();
         this.initTemplatePopup();
         this.initComponentEvent();
@@ -164,6 +167,8 @@ public class MainController {
         contentStackPane.add(tabPane);
         contentStackPane.navTo(name);
         tabPaneMap.put(name, tabPane);
+        TabUtils.disableCloseTab(tabPane);
+        TabUtils.tabSelectedListener(tab, tabPane);
     }
 
     private void initStateBar() {
@@ -221,7 +226,6 @@ public class MainController {
         Label lblVersion = new Label(GuiFxmlAndLanguageUtils.getString("STATE_BAR_VERSION"));
         lblVersion.getStyleClass().add("state-bar-lbl");
         stateBar.addColumn(5, lblVersion);
-
     }
 
     private void initStateBarText() {
@@ -237,7 +241,6 @@ public class MainController {
             dataSourceBtn.setText("");
             templateBtn.setText("");
         }
-
     }
 
     public void updateDataSourceText(int selectedFileNumber) {
@@ -261,54 +264,67 @@ public class MainController {
 
     private void initComponentEvent() {
         dataSourceBtn.setOnAction(event -> this.getDataSourceBtnEvent());
-        dataSourceBtn.setOnMouseEntered(event -> this.getDataSourceLblEvent());
         templateBtn.setOnAction(event -> this.getTemplateBtnEvent());
         templateBtn.setOnMouseEntered(event -> this.getTemplateLblEvent());
-        dataSourceView.setOnMouseExited(event -> this.getHidePopupEvent());
         templateView.setOnMouseExited(event -> this.getHidePopupEvent());
     }
 
     private void getHidePopupEvent() {
         templatePopup.hide();
-        dataSourcePopup.hide();
     }
 
     private void getDataSourceBtnEvent() {
         buildDataSourceDialog();
         logger.debug("Data source btn event.");
-        templatePopup.hide();
-        dataSourcePopup.hide();
+        getHidePopupEvent();
     }
 
-    private void getDataSourceLblEvent() {
-        logger.debug("Data source lbl event.");
-        if (!dataSourceBtn.isDisable()) {
-            if (!dataSourcePopup.isShowing()) {
-                setListViewSize(dataSourceView, dataSourceList);
-                Double preHeight = dataSourceView.getPrefHeight();
-                if (preHeight >= MAX_HEIGHT) {
-                    preHeight = MAX_HEIGHT;
-                }
-                double screenX = dataSourceBtn.getScene().getWindow().getX() + dataSourceBtn.getScene().getX() + dataSourceBtn.localToScene(0, 0).getX();
-                double screenY = dataSourceBtn.getScene().getWindow().getY() + dataSourceBtn.getScene().getY() + dataSourceBtn.localToScene(0, 0).getY() - preHeight - 5;
-                dataSourcePopup.show(dataSourceBtn, screenX, screenY);
-            }
-        }
-        templatePopup.hide();
-    }
 
-    private void initDataSourcePopup() {
-        dataSourceView = new ListView<>();
-        dataSourceView.setFocusTraversable(true);
-        dataSourceView.setItems(dataSourceList);
-
-        if (dataSourcePopup == null) {
-            dataSourcePopup = new Popup();
-            dataSourcePopup.getContent().add(dataSourceView);
+    private void initDataSourceTooltip() {
+        if (dataSourceList == null || dataSourceList.isEmpty()) {
+            dataSourceTooltip.setMinHeight(0);
+            dataSourceTooltip.setMinWidth(0);
+            dataSourceTooltip.setPrefWidth(0);
+            dataSourceTooltip.setPrefHeight(0);
         } else {
-            dataSourcePopup.getContent().clear();
-            dataSourcePopup.getContent().add(dataSourceView);
+            VBox vBox = new VBox();
+            dataSourceList.forEach(value->{
+                Label label = new Label();
+                label.setStyle("-fx-padding: 5 10 0 10");
+                label.setText(value);
+                label.setContentDisplay(ContentDisplay.CENTER);
+                vBox.getChildren().add(label);
+            });
+            scrollPaneTooltip.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+            scrollPaneTooltip.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+            scrollPaneTooltip.setMaxHeight(MAX_HEIGHT);
+            scrollPaneTooltip.setMinViewportHeight(10);
+            scrollPaneTooltip.setMinViewportWidth(MIN_WIDTH);
+            scrollPaneTooltip.setMaxWidth(MAX_WIDTH + 10);
+            scrollPaneTooltip.setContent(vBox);
+            dataSourceTooltip.setGraphic(scrollPaneTooltip);
+            double preHeight =  (20 * dataSourceList.size()) + 10;
+            if (preHeight >= MAX_HEIGHT) {
+                preHeight = MAX_HEIGHT;
+            }
+            dataSourceTooltip.setPrefHeight(preHeight);
+            dataSourceTooltip.getStyleClass().setAll("candlestick-tooltip");
+            dataSourceTooltip.setOnShowing(event -> {
+                double screenX = dataSourceBtn.getScene().getWindow().getX() + dataSourceBtn.getScene().getX() + dataSourceBtn.localToScene(0, 0).getX();
+                double screenY = dataSourceBtn.getScene().getWindow().getY() + dataSourceBtn.getScene().getY() + dataSourceBtn.localToScene(0, 0).getY() - dataSourceTooltip.getPrefHeight() - 3;
+                dataSourceTooltip.setX(screenX);
+                dataSourceTooltip.setY(screenY);
+            });
+            scrollPaneTooltip.setOnMouseEntered(event -> {
+                dataSourceTooltip.setHover(true);
+            });
+            scrollPaneTooltip.setOnMouseExited(event -> {
+                dataSourceTooltip.setHover(false);
+                dataSourceTooltip.hide();
+            });
         }
+
+        CustomerTooltip.install(dataSourceBtn, dataSourceTooltip);
     }
 
     private void initTemplatePopup() {
@@ -415,8 +431,6 @@ public class MainController {
 
     public void refreshDataSource(ObservableList<String> dataSourceList) {
         this.dataSourceList = dataSourceList;
-        dataSourceView.setItems(dataSourceList);
-        dataSourceView.refresh();
     }
 
     public void refreshTemplate(ObservableList<StateBarTemplateModel> templateList) {
@@ -427,10 +441,7 @@ public class MainController {
 
     private void getTemplateBtnEvent() {
         logger.debug("Template btn event.");
-        templatePopup.hide();
-        if (dataSourcePopup.isShowing()) {
-            dataSourcePopup.hide();
-        }
+        getHidePopupEvent();
         GuiFxmlAndLanguageUtils.buildTemplateDia();
     }
 
@@ -448,9 +459,6 @@ public class MainController {
                 double screenY = templateBtn.getScene().getWindow().getY() + templateBtn.getScene().getY() + templateBtn.localToScene(0, 0).getY() - preHeight - 5;
                 templatePopup.show(templateBtn, screenX, screenY);
             }
-        }
-        if (dataSourcePopup.isShowing()) {
-            dataSourcePopup.hide();
         }
     }
 

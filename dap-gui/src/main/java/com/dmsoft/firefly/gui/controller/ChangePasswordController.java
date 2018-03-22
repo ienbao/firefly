@@ -12,7 +12,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
-
+/**
+ * Created by Julia.Zhou on 2018/2/11.
+ */
 public class ChangePasswordController {
 
     private static String errorStyle = "text-field-error";
@@ -33,6 +35,9 @@ public class ChangePasswordController {
 
     @FXML
     private void initialize() {
+        txtOldPassword.setPromptText(GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_PROMPT"));
+        txtNewPassword.setPromptText(GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_PROMPT"));
+        txtConfirmPassword.setPromptText(GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_PROMPT"));
         initEvent();
     }
 
@@ -53,7 +58,6 @@ public class ChangePasswordController {
             } catch (Exception e) {
                 WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_FAIL"));
             }
-
         });
 
         txtOldPassword.setOnMouseEntered(event -> {

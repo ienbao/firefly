@@ -15,6 +15,7 @@ public class ResourceMassages {
     public static final String DataSource = "Data Source";
     public static final String TEMPLATE = "TEMPLATE";
     public static final String DATASOURCE = "DATASOURCE";
+    public static final String MENU_LEGAL_NOTICE = "MENU_LEGAL_NOTICE";
     public static final String REMOVE_MSG = "REMOVE_MSG";
     public static final String PLUGIN_MANAGE = "PLUGIN_MANAGE";
 
