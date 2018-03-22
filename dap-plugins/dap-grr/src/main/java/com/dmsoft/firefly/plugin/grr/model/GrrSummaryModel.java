@@ -53,7 +53,7 @@ public class GrrSummaryModel {
         Double tolerance = summaryDto.getSummaryResultDto().getTolerance();
         String lslStr = lsl == null ? "-" : String.valueOf(lsl);
         String uslStr = usl == null ? "-" : String.valueOf(usl);
-        String toleranceStr = tolerance == null ? "-" : (digNum >= 0 ? DAPStringUtils.formatDouble(tolerance, digNum + 2) : String.valueOf(tolerance));
+        String toleranceStr = tolerance == null ? "-" : (digNum >= 0 ? DAPStringUtils.formatDouble(tolerance, digNum) : String.valueOf(tolerance));
         String repeatabilityStr = repeatability == null ? "-" : (digNum >= 0 ? DAPStringUtils.formatDouble(repeatability, digNum) : String.valueOf(repeatability));
         String reproducibilityStr = reproducibility == null ? "-" : (digNum >= 0 ? DAPStringUtils.formatDouble(reproducibility, digNum) : String.valueOf(reproducibility));
         String grrStr = grr == null ? "-" : (digNum >= 0 ? DAPStringUtils.formatDouble(grr, digNum) : String.valueOf(grr));

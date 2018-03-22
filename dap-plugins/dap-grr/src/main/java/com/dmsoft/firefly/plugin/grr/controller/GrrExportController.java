@@ -692,7 +692,7 @@ public class GrrExportController {
             grrExportConfigDto.setExportPath(locationPath.getText());
             grrExportConfigDto.setUserName(envService.getUserName());
             grrExportConfigDto.setGrrConfigDto(grrConfigDto);
-
+            grrExportConfigDto.setDigNum(envService.findActivatedTemplate().getDecimalDigit());
             searchTab.getConditionTestItem().forEach(item -> {
                 testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(item));
             });
