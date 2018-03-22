@@ -124,7 +124,7 @@ public class GrrSettingController {
                 if (DAPStringUtils.isEmpty(levelGood.getText())
                         || (!DAPStringUtils.isEmpty(levelGood.getText()) && !DAPStringUtils.isEmpty(levelBad.getText())
                         && Double.valueOf(levelGood.getText()) > Double.valueOf(levelBad.getText()))) {
-                    TooltipUtil.installWarnTooltip(levelGood, "must be number");
+                    TooltipUtil.installWarnTooltip(levelGood, "Must input number");
                     levelGood.getStyleClass().add("text-field-error");
                 } else {
                     TooltipUtil.uninstallWarnTooltip(levelGood);
@@ -151,7 +151,7 @@ public class GrrSettingController {
                 if (DAPStringUtils.isEmpty(levelBad.getText())
                         || (!DAPStringUtils.isEmpty(levelBad.getText()) && !DAPStringUtils.isEmpty(levelGood.getText())
                         && Double.valueOf(levelBad.getText()) < Double.valueOf(levelGood.getText()))) {
-                    TooltipUtil.installWarnTooltip(levelBad, "must be number");
+                    TooltipUtil.installWarnTooltip(levelBad, "Must input number");
                     levelBad.getStyleClass().add("text-field-error");
                 } else {
                     TooltipUtil.uninstallWarnTooltip(levelBad);

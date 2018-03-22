@@ -23,7 +23,7 @@ import java.util.Map;
 public class SpcExportServiceImpl {
     private Logger logger = LoggerFactory.getLogger(SpcExportServiceImpl.class);
 
-    public String spcExport(SpcUserActionAttributesDto exportConfig, List<SpcStatisticalResultAlarmDto> spcStatsDtos, Map<String, Map<String, String>> chartImage) {
+    public String spcExport(SpcUserActionAttributesDto exportConfig, List<SpcStatisticalResultAlarmDto> spcStatsDtos, Map<String, Map<String, String>> chartImage, Map<String, String> runChartRule) {
         String[] basePath = new String[1];
         String savePath = FileUtils.getAbsolutePath("../export/");
         String exportPath = exportConfig.getExportPath();
@@ -57,7 +57,7 @@ public class SpcExportServiceImpl {
             }
             if (exportCount == readPieceSize) {
                 //export
-                spcExportBuildDetail(exportParamDto, chartImage, spcStatisticDtoToExport, exportConfig, exportTimes);
+                spcExportBuildDetail(exportParamDto, chartImage, spcStatisticDtoToExport, exportConfig, exportTimes, runChartRule);
                 spcStatisticDtoToExport.clear();
                 exportCount = 0;
                 exportTimes++;
@@ -65,7 +65,7 @@ public class SpcExportServiceImpl {
         }
 
         if (spcStatisticDtoToExport.size() != 0) {
-            spcExportBuildDetail(exportParamDto, chartImage, spcStatisticDtoToExport, exportConfig, exportTimes);
+            spcExportBuildDetail(exportParamDto, chartImage, spcStatisticDtoToExport, exportConfig, exportTimes, runChartRule);
         }
         String savePicPath = FileUtils.getAbsolutePath("../export/temp");
         FileUtils.deleteDir(savePicPath);
@@ -73,14 +73,14 @@ public class SpcExportServiceImpl {
     }
 
     private boolean spcExportBuildDetail(ExportParamDto exportParamDto, Map<String, Map<String, String>> chartImage, List<SpcStatisticalResultAlarmDto> spcStatisticalResultDtos,
-                                         SpcUserActionAttributesDto spcUserActionAttributesDto, int exportTimes) {
+                                         SpcUserActionAttributesDto spcUserActionAttributesDto, int exportTimes, Map<String, String> runChartRule) {
         SpcExportBuilder spcExportBuilder = new SpcExportBuilder();
         SpcExportWorker spcExportWorker = new SpcExportWorker();
         spcExportWorker.setCurWrittenItemNum(0);
         spcExportWorker.setExcelItemCapacity(exportParamDto.getExcelCapacity());
         String excelPath = exportParamDto.getDirSavePath() + "/" + exportParamDto.getDirName() + "_" + (exportTimes) + ".xlsx";
         spcExportWorker.initWorkbook();
-        spcExportWorker.buildSPCMultiItem(chartImage, spcStatisticalResultDtos, spcUserActionAttributesDto);
+        spcExportWorker.buildSPCMultiItem(chartImage, spcStatisticalResultDtos, spcUserActionAttributesDto, runChartRule);
         spcExportBuilder.drawSpcExcel(excelPath, spcExportWorker);
         logger.info("Export complete.");
         spcExportBuilder.clear();

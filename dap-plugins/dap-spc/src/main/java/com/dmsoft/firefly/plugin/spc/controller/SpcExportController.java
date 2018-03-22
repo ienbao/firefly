@@ -4,8 +4,10 @@ import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
+import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
@@ -282,10 +284,6 @@ public class SpcExportController {
 
     private String export() {
 //        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
-//        Job job = new Job(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
-//        job.addProcessMonitorListener(event -> {
-//            windowProgressTipController.refreshProgress(event.getPoint());
-//        });
 //        windowProgressTipController.addProcessMonitorListener(new WindowCustomListener() {
 //            @Override
 //            public boolean onShowCustomEvent() {
@@ -308,7 +306,6 @@ public class SpcExportController {
 //                return false;
 //            }
 //        });
-
         Boolean exportEachFile = false;
         if (eachFile.isSelected()) {
             exportEachFile = true;
@@ -358,16 +355,21 @@ public class SpcExportController {
             }
             return result;
         } else {
-            List<TestItemWithTypeDto> testItemWithTypeDtoList = this.getSelectedItemDto();
+            List<TestItemWithTypeDto> testItemWithTypeDtoList = getSelectedItemDto();
             List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(testItemWithTypeDtoList);
             searchTab.getConditionTestItem().forEach(item -> {
                 testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(item));
             });
-            return exportFile(projectNameList, testItemWithTypeDtoList, searchConditionDtoList, spcAnalysisConfigDto, exportDataItem);
+            String result = exportFile(projectNameList, testItemWithTypeDtoList, searchConditionDtoList, spcAnalysisConfigDto, exportDataItem);
+            return result;
         }
     }
 
-    private String exportFile(List<String> projectNameList, List<TestItemWithTypeDto> testItemWithTypeDtoList, List<SearchConditionDto> searchConditionDtoList, SpcAnalysisConfigDto spcAnalysisConfigDto, Map<String, Boolean> exportDataItem) {
+    private String exportFile(List<String> projectNameList,
+                              List<TestItemWithTypeDto> testItemWithTypeDtoList,
+                              List<SearchConditionDto> searchConditionDtoList,
+                              SpcAnalysisConfigDto spcAnalysisConfigDto,
+                              Map<String, Boolean> exportDataItem) {
 
         Job job = new Job(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
 
@@ -380,9 +382,11 @@ public class SpcExportController {
 
         //build chart
         Map<String, Map<String, String>> chartPath = Maps.newHashMap();
+        Map<String, String> runChartRule = Maps.newHashMap();
 
         if (exportDataItem.get(SpcExportItemKey.EXPORT_CHARTS.getCode())) {
             Job chartJob = new Job(ParamKeys.SPC_REFRESH_CHART_JOB_PIPELINE);
+
             Map chartParamMap = Maps.newHashMap();
             chartParamMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
             chartParamMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
@@ -403,6 +407,23 @@ public class SpcExportController {
             if (returnValue != null) {
                 List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
                 chartPath = initSpcChartData(spcChartDtoList);
+                if (spcChartDtoList != null) {
+                    for (SpcChartDto dto : spcChartDtoList) {
+                        if (dto.getResultDto() != null && dto.getResultDto().getRunCResult() != null && dto.getResultDto().getRunCResult().getRuleResultDtoMap() != null) {
+                            Map<String, RuleResultDto> rule = dto.getResultDto().getRunCResult().getRuleResultDtoMap();
+                            StringBuilder s = new StringBuilder();
+                            for (String ruleName : rule.keySet()) {
+                                if (rule.get(ruleName) != null && rule.get(ruleName).getX() != null && rule.get(ruleName).getX().length > 0) {
+                                    if (s.length() > 0) {
+                                        s.append(",");
+                                    }
+                                    s.append(ruleName);
+                                }
+                            }
+                            runChartRule.put(dto.getKey(), s.toString());
+                        }
+                    }
+                }
             }
         }
         SpcUserActionAttributesDto spcConfig = new SpcUserActionAttributesDto();
@@ -430,7 +451,8 @@ public class SpcExportController {
                 }
             }
         }
-        String exportPath = spcExportService.spcExport(spcConfig, spcStatisticalResultDtosToExport, chartPath);
+
+        String exportPath = spcExportService.spcExport(spcConfig, spcStatisticalResultDtosToExport, chartPath, runChartRule);
         return exportPath;
     }
 
