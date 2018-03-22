@@ -157,14 +157,21 @@ public class StatisticalTableModel implements TableModel {
                 SourceObjectProperty valueProperty = new SourceObjectProperty<>(value);
                 if (columnName.equals(STATISTICAL_TITLE[7]) || columnName.equals(STATISTICAL_TITLE[8])) {
                     valueProperty.addListener((ov, b1, b2) -> {
-                        spcStatsDto.getStatisticalAlarmDtoMap().get(columnName).setValue(Double.valueOf((String) b2));
-                        if (!valueProperty.getSourceValue().equals(b2)) {
+                        if (DAPStringUtils.isBlank((String) b2) || !DAPStringUtils.isNumeric((String) b2)) {
+                            return;
+                        }
+                        if (!DAPStringUtils.isEqualsString((String) valueProperty.getSourceValue(), (String) b2)) {
                             editorCell.add(spcStatsDtoKey + "-" + columnName);
                             editorRowKey.add(spcStatsDtoKey);
                         } else {
                             editorCell.remove(spcStatsDtoKey + "-" + columnName);
                             editorRowKey.remove(spcStatsDtoKey);
                         }
+                        if (errorEditorCell.contains(rowKey + "-" + columnName)) {
+                            valueProperty.setError(true);
+                            return;
+                        }
+                        spcStatsDto.getStatisticalAlarmDtoMap().get(columnName).setValue(Double.valueOf((String) b2));
                     });
                 }
                 valueMap.put(spcStatsDtoKey + "-" + columnName, valueProperty);
@@ -439,7 +446,10 @@ public class StatisticalTableModel implements TableModel {
         SourceObjectProperty valueProperty = new SourceObjectProperty<>(value);
         if (columnName.equals(STATISTICAL_TITLE[7]) || columnName.equals(STATISTICAL_TITLE[8])) {
             valueProperty.addListener((ov, b1, b2) -> {
-                if (!valueProperty.getSourceValue().equals(b2)) {
+                if (DAPStringUtils.isBlank((String) b2) || !DAPStringUtils.isNumeric((String) b2)) {
+                    return;
+                }
+                if (!DAPStringUtils.isEqualsString((String) valueProperty.getSourceValue(), (String) b2)) {
                     editorCell.add(rowKey + "-" + columnName);
                     editorRowKey.add(rowKey);
                 } else {
@@ -447,6 +457,7 @@ public class StatisticalTableModel implements TableModel {
                     editorRowKey.remove(rowKey);
                 }
                 if (errorEditorCell.contains(rowKey + "-" + columnName)) {
+                    valueProperty.setError(true);
                     return;
                 }
                 spcStatsDto.getStatisticalAlarmDtoMap().get(columnName).setValue(Double.valueOf((String) b2));
@@ -568,8 +579,9 @@ public class StatisticalTableModel implements TableModel {
         SpcStatisticalResultAlarmDto spcStatsDto = keyToStatsDtoMap.get(rowKey);
         Map<String, StatisticalAlarmDto> statisticalAlarmDtoMap = spcStatsDto.getStatisticalAlarmDtoMap();
         if (columnName.equals(STATISTICAL_TITLE[7])) {
+            SourceObjectProperty uslProperty = valueMap.get(rowKey + "-" + STATISTICAL_TITLE[8]);
             StatisticalAlarmDto statisticalAlarmDto = statisticalAlarmDtoMap.get(SpcStatisticalResultKey.USL.getCode());
-            Double usl = statisticalAlarmDto.getValue();
+            Double usl = Double.valueOf((String) uslProperty.getValue());
             if (Double.valueOf(newText) >= usl) {
                 errorEditorCell.add(rowKey + "-" + columnName);
                 if (!textField.getStyleClass().contains("text-field-error")) {
@@ -577,10 +589,17 @@ public class StatisticalTableModel implements TableModel {
                 }
                 TooltipUtil.installWarnTooltip(textField, SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_LSL_MORE_THEN_USL));
                 return true;
+            } else if (errorEditorCell.contains(rowKey + "-" + STATISTICAL_TITLE[8])) {
+                errorEditorCell.remove(rowKey + "-" + STATISTICAL_TITLE[8]);
+                if (uslProperty.isError()) {
+                    uslProperty.setError(false);
+                    statisticalAlarmDto.setValue(usl);
+                }
             }
         } else if (columnName.equals(STATISTICAL_TITLE[8])) {
+            SourceObjectProperty lslProperty = valueMap.get(rowKey + "-" + STATISTICAL_TITLE[7]);
             StatisticalAlarmDto statisticalAlarmDto = statisticalAlarmDtoMap.get(SpcStatisticalResultKey.LSL.getCode());
-            Double lsl = statisticalAlarmDto.getValue();
+            Double lsl = Double.valueOf((String) lslProperty.getValue());
             if (Double.valueOf(newText) <= lsl) {
                 errorEditorCell.add(rowKey + "-" + columnName);
                 if (!textField.getStyleClass().contains("text-field-error")) {
@@ -588,6 +607,12 @@ public class StatisticalTableModel implements TableModel {
                 }
                 TooltipUtil.installWarnTooltip(textField, SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_USL_LESS_THEN_LSL));
                 return true;
+            } else if (errorEditorCell.contains(rowKey + "-" + STATISTICAL_TITLE[7])) {
+                errorEditorCell.remove(rowKey + "-" + STATISTICAL_TITLE[7]);
+                if (lslProperty.isError()) {
+                    lslProperty.setError(false);
+                    statisticalAlarmDto.setValue(lsl);
+                }
             }
         }
         if (errorEditorCell.contains(rowKey + "-" + columnName)) {

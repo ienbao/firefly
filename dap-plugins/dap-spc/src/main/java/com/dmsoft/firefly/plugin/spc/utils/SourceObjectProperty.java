@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleObjectProperty;
  */
 public class SourceObjectProperty<T> extends SimpleObjectProperty<T> {
     private T sourceValue;
+    private boolean error = false;
 
     /**
      * constructor
@@ -27,5 +28,13 @@ public class SourceObjectProperty<T> extends SimpleObjectProperty<T> {
 
     public void setSourceValue(T sourceValue) {
         this.sourceValue = sourceValue;
+    }
+
+    public boolean isError() {
+        return error;
+    }
+
+    public void setError(boolean error) {
+        this.error = error;
     }
 }
