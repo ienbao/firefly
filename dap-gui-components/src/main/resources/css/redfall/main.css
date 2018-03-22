@@ -1254,6 +1254,7 @@
 .table-row-cell {
     -fx-min-height: 18;
     -fx-pref-height: 18;
+    -fx-max-height: 18;
     -fx-background-color: #ffffff;
     -fx-text-fill: #222222;
     -fx-border-width: 0 0 0 0;
@@ -1272,7 +1273,10 @@
 }
 
 .table-cell .text-field {
-    -fx-border-insets: 0 -10 5 -10;
+    -fx-border-insets: -1 -11 -1 -11;
+    -fx-min-height: 16;
+    -fx-pref-height: 16;
+    -fx-max-height: 16;
     -fx-padding: 0 0 0 0;
     -fx-background-insets: 0 -10 0 -10;
     -fx-border-color: black;
@@ -1280,7 +1284,7 @@
     -fx-background-color: white;
 }
 
-.table-view .text-field-error {
+.table-view .table-row-cell .cell .text-field-error {
     -fx-border-color: COLORFUL_PRIMARY_RED;
 }
 

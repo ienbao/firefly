@@ -1,6 +1,5 @@
 package com.dmsoft.firefly.gui.components.table;
 
-import com.dmsoft.firefly.gui.components.utils.ValidateRule;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
@@ -119,21 +118,13 @@ public interface TableModel {
      * method to  judge text input error or not
      *
      * @param textField  text field
+     * @param oldText    old text
      * @param newText    new text
      * @param rowKey     row key
      * @param columnName columnName
      * @return true : is error, false : no error
      */
-    default boolean isTextInputError(TextField textField, String newText, String rowKey, String columnName) {
+    default boolean isTextInputError(TextField textField, String oldText, String newText, String rowKey, String columnName) {
         return false;
-    }
-
-    /**
-     * method to get validate rule for text field
-     *
-     * @return validate rule
-     */
-    default ValidateRule getValidateRule() {
-        return null;
     }
 }

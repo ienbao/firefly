@@ -547,21 +547,20 @@ public class StatisticalTableModel implements TableModel {
     }
 
     @Override
-    public ValidateRule getValidateRule() {
-        if (rule == null) {
-            rule = new ValidateRule();
-            rule.setMaxLength(255);
-            rule.setPattern(ValidateUtils.DOUBLE_PATTERN);
-            rule.setErrorStyle("text-field-error");
-            rule.setAllowEmpty(false);
+    public boolean isTextInputError(TextField textField, String oldText, String newText, String rowKey, String columnName) {
+        if (newText.length() > 255) {
+            textField.setText(oldText);
+            return true;
         }
-        return rule;
-    }
-
-    @Override
-    public boolean isTextInputError(TextField textField, String newText, String rowKey, String columnName) {
+        if (!ValidateUtils.validatePattern(newText, ValidateUtils.DOUBLE_PATTERN)) {
+            textField.setText(oldText);
+            return true;
+        }
         if (DAPStringUtils.isBlank(newText)) {
             errorEditorCell.add(rowKey + "-" + columnName);
+            if (!textField.getStyleClass().contains("text-field-error")) {
+                textField.getStyleClass().add("text-field-error");
+            }
             TooltipUtil.installWarnTooltip(textField, SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_USL_LSL_EMPTY));
             return true;
         }
@@ -572,6 +571,9 @@ public class StatisticalTableModel implements TableModel {
             Double usl = statisticalAlarmDto.getValue();
             if (Double.valueOf(newText) >= usl) {
                 errorEditorCell.add(rowKey + "-" + columnName);
+                if (!textField.getStyleClass().contains("text-field-error")) {
+                    textField.getStyleClass().add("text-field-error");
+                }
                 TooltipUtil.installWarnTooltip(textField, SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_LSL_MORE_THEN_USL));
                 return true;
             }
@@ -580,19 +582,25 @@ public class StatisticalTableModel implements TableModel {
             Double lsl = statisticalAlarmDto.getValue();
             if (Double.valueOf(newText) <= lsl) {
                 errorEditorCell.add(rowKey + "-" + columnName);
+                if (!textField.getStyleClass().contains("text-field-error")) {
+                    textField.getStyleClass().add("text-field-error");
+                }
                 TooltipUtil.installWarnTooltip(textField, SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_USL_LESS_THEN_LSL));
                 return true;
             }
         }
         if (errorEditorCell.contains(rowKey + "-" + columnName)) {
             errorEditorCell.remove(rowKey + "-" + columnName);
+            textField.getStyleClass().removeAll("text-field-error");
             TooltipUtil.uninstallWarnTooltip(textField);
-            return true;
+            return false;
         }
+        textField.getStyleClass().removeAll("text-field-error");
+        TooltipUtil.uninstallWarnTooltip(textField);
         return false;
     }
 
-    public boolean hasErrorEditValue(){
+    public boolean hasErrorEditValue() {
         return errorEditorCell.size() != 0;
     }
 }
