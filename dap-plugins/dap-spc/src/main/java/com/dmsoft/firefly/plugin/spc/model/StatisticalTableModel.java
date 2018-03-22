@@ -543,8 +543,6 @@ public class StatisticalTableModel implements TableModel {
         if (rule == null) {
             rule = new ValidateRule();
             rule.setMaxLength(255);
-//            rule.setMinValue(10.0);
-//            rule.setMaxValue(20.0);
             rule.setPattern(ValidateUtils.DOUBLE_PATTERN);
             rule.setErrorStyle("text-field-error");
             rule.setAllowEmpty(false);
