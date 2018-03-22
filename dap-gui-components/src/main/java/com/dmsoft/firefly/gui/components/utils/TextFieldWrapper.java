@@ -20,7 +20,7 @@ public class TextFieldWrapper {
             return textField;
         }
         //init
-        if (!ValidateUtils.validateNotEmpty(textField.getText())) {
+        if (!ValidateUtils.validateNotEmpty(textField.getText()) && Boolean.FALSE.equals(validateRule.getAllowEmpty())) {
             if (!textField.getStyleClass().contains(validateRule.getErrorStyle())) {
                 textField.getStyleClass().add(validateRule.getErrorStyle());
             }

@@ -11,6 +11,7 @@ public class ValidateRule {
     private Double maxValue;
     private Double minValue;
     private String errorStyle;
+    private Boolean allowEmpty;
     private String emptyErrorMsg;
     private String rangErrorMsg;
 
@@ -52,6 +53,14 @@ public class ValidateRule {
 
     public void setErrorStyle(String errorStyle) {
         this.errorStyle = errorStyle;
+    }
+
+    public Boolean getAllowEmpty() {
+        return allowEmpty;
+    }
+
+    public void setAllowEmpty(Boolean allowEmpty) {
+        this.allowEmpty = allowEmpty;
     }
 
     public String getEmptyErrorMsg() {

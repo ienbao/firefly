@@ -39,6 +39,10 @@ public class LineData implements ILineData {
         this.name = name;
     }
 
+    public LineData(Double value, String name,  LineType lineType) {
+        this(value, name, Orientation.VERTICAL, lineType);
+    }
+
     public LineData(Double value, String name) {
         this();
         this.value = (DAPDoubleUtils.isBlank(value) ? null : value);

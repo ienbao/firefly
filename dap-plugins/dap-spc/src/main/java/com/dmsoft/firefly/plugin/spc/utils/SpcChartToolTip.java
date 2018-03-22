@@ -33,16 +33,13 @@ public class SpcChartToolTip implements ChartTooltip {
     }
 
     public Function<BarToolTip, String> getChartBarToolTip() {
-        return new Function<BarToolTip, String>() {
-            @Override
-            public String apply(BarToolTip barToolTip) {
-                String seriesName = barToolTip.getSeriesName();
-                String startV = DAPStringUtils.formatDouble(barToolTip.getStartValue(), digNumInstance.getDigNum());
-                String endV = DAPStringUtils.formatDouble(barToolTip.getStartValue(), digNumInstance.getDigNum());
-                String value = DAPStringUtils.formatDouble(barToolTip.getValue(), digNumInstance.getDigNum());
-                String tip = seriesName + "\nX[" + startV + ", " + endV + ")\n" + "Y=" + value;
-                return tip;
-            }
+        return barToolTip -> {
+            String seriesName = barToolTip.getSeriesName();
+            String startV = DAPStringUtils.formatDouble((Double) barToolTip.getStartValue(), digNumInstance.getDigNum());
+            String endV = DAPStringUtils.formatDouble((Double) barToolTip.getStartValue(), digNumInstance.getDigNum());
+            String value = DAPStringUtils.formatDouble((Double) barToolTip.getValue(), digNumInstance.getDigNum());
+            String tip = seriesName + "\nX[" + startV + ", " + endV + ")\n" + "Y=" + value;
+            return tip;
         };
     }
 

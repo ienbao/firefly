@@ -6,6 +6,7 @@ package com.dmsoft.firefly.plugin.spc.dto.chart.pel;
 import com.dmsoft.firefly.plugin.spc.charts.data.BarCategoryData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBarChartData;
 import com.dmsoft.firefly.sdk.utils.DAPDoubleUtils;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import javafx.scene.paint.Color;
 
@@ -42,25 +43,25 @@ public class SpcBarChartData implements IBarChartData<Double, Double> {
     @Override
     public Double getValueByIndex(int index) {
 
-        return (barData != null && index < getLen()) ? (DAPDoubleUtils.isBlank(barData.get(index).getValue()) ? null : barData.get(index).getValue()) : null;
+        return (barData != null && index < getLen()) ? ((DAPStringUtils.isInfinityAndNaN(barData.get(index).getValue()) ? null : barData.get(index).getValue())) : null;
     }
 
     @Override
     public Double getStartValueByIndex(int index) {
 
-        return (barData != null && index < getLen()) ? (DAPDoubleUtils.isBlank(barData.get(index).getValue()) ? null : barData.get(index).getValue()) : null;
+        return (barData != null && index < getLen()) ? ((DAPStringUtils.isInfinityAndNaN(barData.get(index).getStartValue()) ? null : barData.get(index).getStartValue())) : null;
     }
 
     @Override
     public Double getBarWidthByIndex(int index) {
 
-        return (barData != null && index < getLen()) ? (DAPDoubleUtils.isBlank(barData.get(index).getValue()) ? null : barData.get(index).getValue()) : null;
+        return (barData != null && index < getLen()) ? ((DAPStringUtils.isInfinityAndNaN(barData.get(index).getBarWidth()) ? null : barData.get(index).getBarWidth())) : null;
     }
 
     @Override
     public Double getEndValueByIndex(int index) {
 
-        return (barData != null && index < getLen()) ? (DAPDoubleUtils.isBlank(barData.get(index).getValue()) ? null : barData.get(index).getValue()) : null;
+        return (barData != null && index < getLen()) ? ((DAPStringUtils.isInfinityAndNaN(barData.get(index).getEndValue()) ? null : barData.get(index).getEndValue())) : null;
     }
 
     @Override

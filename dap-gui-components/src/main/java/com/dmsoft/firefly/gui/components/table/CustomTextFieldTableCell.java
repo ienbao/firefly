@@ -224,4 +224,8 @@ public class CustomTextFieldTableCell<S, T> extends TableCell<S, T> {
         super.updateItem(item, empty);
         updateItem(this, getConverter(), null, null, textField);
     }
+
+    public TextField getTextField() {
+        return textField;
+    }
 }

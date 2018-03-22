@@ -10,6 +10,16 @@ import java.util.List;
  */
 public class ReflectionUtils {
 
+    /**
+     * Get method return value by method name
+     *
+     * @param classInstance class instance
+     * @param methodName    method name
+     * @param source        source
+     * @param paramTypes    param types
+     * @param params        params array
+     * @return return value
+     */
     public static Object forceMethodCall(Class classInstance,
                                          String methodName,
                                          Object source,
@@ -26,6 +36,15 @@ public class ReflectionUtils {
         return returnedObject;
     }
 
+    /**
+     * Get method return value by method name
+     *
+     * @param classInstance class instance
+     * @param methodName    method name
+     * @param source        source
+     * @param params        params array
+     * @return return value
+     */
     public static Object forceMethodCall(Class classInstance,
                                          String methodName,
                                          Object source,
@@ -44,6 +63,13 @@ public class ReflectionUtils {
         return forceMethodCall(classInstance, methodName, source, paramTypes, params);
     }
 
+    /**
+     * Get field value by field name
+     *
+     * @param classInstance class instance
+     * @param source        source
+     * @return field value
+     */
     public static Object forceFieldCall(Class classInstance,
                                         String fieldName,
                                         Object source) {

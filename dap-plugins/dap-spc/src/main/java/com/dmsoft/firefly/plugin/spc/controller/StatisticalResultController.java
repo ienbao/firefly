@@ -144,6 +144,13 @@ public class StatisticalResultController implements Initializable {
     }
 
     /**
+     * has error edit cell.
+     */
+    public boolean hasErrorEditCell(){
+        return statisticalTableModel.hasErrorEditValue();
+    }
+
+    /**
      * get select row key
      *
      * @return row key

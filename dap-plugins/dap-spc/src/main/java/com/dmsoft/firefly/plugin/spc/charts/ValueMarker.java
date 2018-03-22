@@ -31,12 +31,20 @@ public class ValueMarker<X, Y> {
 
     private Map<String, Line> lineMap = Maps.newHashMap();
 
+    /**
+     * The no parameters construction of ValueMarker
+     */
     public ValueMarker() {
 
         horizontalMarkers = FXCollections.observableArrayList(d -> new Observable[]{d.YValueProperty()});
         verticalMarkers = FXCollections.observableArrayList(d -> new Observable[]{d.YValueProperty()});
     }
 
+    /**
+     * Paint value maker
+     *
+     * @param chart chart for paint value marker
+     */
     public void paintValueMaker(XYChart<X, Y> chart) {
 
         //        Draw horizontal markers
@@ -66,6 +74,15 @@ public class ValueMarker<X, Y> {
         }
     }
 
+    /**
+     * Build value marker by parameters
+     *
+     * @param lineData            line data
+     * @param color               color
+     * @param seriesName          series name
+     * @param lineTooltipFunction line tooltip function
+     * @return line object
+     */
     public Line buildValueMarker(ILineData lineData,
                                  Color color,
                                  String seriesName,
@@ -107,6 +124,12 @@ public class ValueMarker<X, Y> {
         line.setStyle("-fx-stroke:" + colorStr);
     }
 
+    /**
+     * ]Toggle show or hide value marker by name
+     *
+     * @param lineName line name
+     * @param showed   whether it show or not
+     */
     public void toggleValueMarker(String lineName, boolean showed) {
 
         if (showed) {
@@ -116,6 +139,11 @@ public class ValueMarker<X, Y> {
         }
     }
 
+    /**
+     * Hidden value marker
+     *
+     * @param lineName line name
+     */
     public void hiddenValueMarker(String lineName) {
 
         if (lineMap.containsKey(lineName)) {
@@ -123,6 +151,11 @@ public class ValueMarker<X, Y> {
         }
     }
 
+    /**
+     * Show value marker
+     *
+     * @param lineName line name
+     */
     public void showValueMarker(String lineName) {
 
         if (lineMap.containsKey(lineName)) {
@@ -141,6 +174,9 @@ public class ValueMarker<X, Y> {
         }
     }
 
+    /**
+     * Clear value marker data
+     */
     public void clear() {
         lineMap.clear();
         horizontalMarkers.setAll(FXCollections.observableArrayList());
