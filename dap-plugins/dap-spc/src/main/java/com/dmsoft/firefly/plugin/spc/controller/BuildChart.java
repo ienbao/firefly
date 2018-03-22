@@ -2,10 +2,10 @@ package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.plugin.spc.charts.BoxPlotChart;
 import com.dmsoft.firefly.plugin.spc.charts.ControlChart;
-import com.dmsoft.firefly.plugin.spc.charts.LinearChart;
 import com.dmsoft.firefly.plugin.spc.charts.NDChart;
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxPlotChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.ControlChartData;
+import com.dmsoft.firefly.plugin.spc.charts.data.NDBarChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
 import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
@@ -52,7 +52,7 @@ public class BuildChart {
         scene = new Scene(vBox);
         scene.getStylesheets().add(BuildChart.class.getClassLoader().getResource("css/charts.css").toExternalForm());
 
-        List<INdcChartData> ndcChartDataList = Lists.newArrayList();
+        List<NDBarChartData> ndcChartDataList = Lists.newArrayList();
         List<ControlChartData> runChartDataList = Lists.newArrayList();
         List<ControlChartData> xBarChartDataList = Lists.newArrayList();
         List<ControlChartData> rangeChartDataList = Lists.newArrayList();
@@ -64,7 +64,7 @@ public class BuildChart {
         Map<String, Map<String, String>> result = Maps.newHashMap();
 
         NDChart nd = buildND();
-        ControlChart run = buildControlChart();
+        ControlChart run = buildRunChart();
         ControlChart xbar = buildControlChart();
         ControlChart range = buildControlChart();
         ControlChart sd = buildControlChart();
@@ -84,7 +84,8 @@ public class BuildChart {
                 continue;
             }
             //nd chart
-            INdcChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
+            SpcNdChartData1 iNdcChartData = new SpcNdChartData1(key, spcChartResultDto.getNdcResult(), color);
+            iNdcChartData.setSeriesName(seriesName);
             ndcChartDataList.add(iNdcChartData);
             //run chart
             SpcRunChartData1 iRunChartData = new SpcRunChartData1(key, spcChartResultDto.getRunCResult(), null, color);
@@ -115,7 +116,7 @@ public class BuildChart {
             mrChartData.setSeriesName(seriesName);
             mrChartDataList.add(mrChartData);
 
-            BuildChart.setNdChartData(nd, iNdcChartData);
+            BuildChart.setNdChartData(nd, Lists.newArrayList(iNdcChartData));
             BuildChart.setRunChartData(run, Lists.newArrayList(iRunChartData));
             BuildChart.setControlChartData(xbar, Lists.newArrayList(xBarChartData));
             BuildChart.setControlChartData(range, Lists.newArrayList(rangeChartData));
@@ -178,10 +179,26 @@ public class BuildChart {
         yAxis.setMinorTickVisible(false);
         xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
+        yAxis.setAutoRanging(false);
         NDChart<Double, Double> ndChart = new NDChart(xAxis, yAxis);
         ndChart.setAnimated(false);
         ndChart.setLegendVisible(false);
         return ndChart;
+    }
+
+    private static ControlChart buildRunChart() {
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setTickMarkVisible(false);
+        yAxis.setTickMarkVisible(false);
+        xAxis.setMinorTickVisible(false);
+        yAxis.setMinorTickVisible(false);
+        yAxis.setAutoRanging(false);
+
+        ControlChart runChart = new ControlChart(xAxis, yAxis);
+        runChart.setAnimated(false);
+        runChart.setLegendVisible(false);
+        return runChart;
     }
 
     private static ControlChart buildControlChart() {
@@ -231,28 +248,8 @@ public class BuildChart {
 //        }
     }
 
-    private static void setRunChartData(ControlChart chart, ControlChartData chartData) {
-        chart.removeAllChildren();
-        chart.setData(Lists.newArrayList(chartData), null);
-    }
 
-//    private static void setControlChartData(ControlChart chart, ControlChartData chartData) {
-//        chart.removeAllChildren();
-//        chart.setData(Lists.newArrayList(chartData), null);
-//        Double[] ucl = chartData.getUclData();
-//        Double[] lcl = chartData.getLclData();
-//        chart.setSeriesDataStyleByRule(chartData.getUniqueKey(), ucl, lcl);
-//    }
-
-//    private static void setBoxPlotChartData(BoxPlotChart chart, SpcBoxChartData1 chartData) {
-//        chart.removeAllChildren();
-//        chart.setData(Lists.newArrayList(chartData), null);
-//    }
-
-
-    private static void setNdChartData(NDChart chart, List<INdcChartData> ndChartData) {
-//        chart.removeAllChildren();
-
+    private static void setNdChartData(NDChart chart, List<NDBarChartData> ndChartData) {
         Double[] xLower = new Double[ndChartData.size()];
         Double[] xUpper = new Double[ndChartData.size()];
         Double[] yLower = new Double[ndChartData.size()];
@@ -269,13 +266,13 @@ public class BuildChart {
         double yMin = MathUtils.getMin(yLower);
         NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        xAxis.setLowerBound(xMin);
-        xAxis.setUpperBound(xMax);
+        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
+        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
+        xAxis.setLowerBound(xMin - xReserve);
+        xAxis.setUpperBound(xMax + xReserve);
         yAxis.setLowerBound(yMin);
-        yAxis.setUpperBound(yMax);
-        ndChartData.forEach(chartData -> {
-            setNdChartData(chart, chartData);
-        });
+        yAxis.setUpperBound(yMax + yReserve);
+        chart.setData(ndChartData, null);
     }
 
     private static void setRunChartData(ControlChart chart, List<ControlChartData> runChartData) {

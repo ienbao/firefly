@@ -445,7 +445,6 @@ public class SpcExportController {
         List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
         int i = 0;
         for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtoList) {
-            colorMap.put(ParamKeys.SPC_ANALYSIS_CONDITION_KEY + i, ColorUtils.getTransparentColor(Colur.RAW_VALUES[i % 10], 1));
             if (conditionList != null) {
                 for (String condition : conditionList) {
                     SearchConditionDto searchConditionDto = new SearchConditionDto();
@@ -455,6 +454,7 @@ public class SpcExportController {
                     searchConditionDto.setCusUsl(testItemWithTypeDto.getUsl());
                     searchConditionDto.setCondition(condition);
                     searchConditionDtoList.add(searchConditionDto);
+                    colorMap.put(searchConditionDto.getKey(), ColorUtils.getTransparentColor(Colur.RAW_VALUES[i % 10], 1));
                     i++;
                 }
             } else {
@@ -464,6 +464,7 @@ public class SpcExportController {
                 searchConditionDto.setCusLsl(testItemWithTypeDto.getLsl());
                 searchConditionDto.setCusUsl(testItemWithTypeDto.getUsl());
                 searchConditionDtoList.add(searchConditionDto);
+                colorMap.put(searchConditionDto.getKey(), ColorUtils.getTransparentColor(Colur.RAW_VALUES[i % 10], 1));
                 i++;
             }
         }

@@ -68,6 +68,8 @@ public class SpcExportServiceImpl {
         if (spcStatisticDtoToExport.size() != 0) {
             spcExportBuildDetail(exportParamDto, chartImage, spcStatisticDtoToExport, exportConfig, exportTimes);
         }
+        String savePicPath = FileUtils.getAbsolutePath("../export/temp");
+        FileUtils.deleteDir(savePicPath);
         return dirSavePath;
     }
 
@@ -83,9 +85,6 @@ public class SpcExportServiceImpl {
         spcExportWorker.buildSPCMultiItem(chartImage, spcStatisticalResultDtos, spcUserActionAttributesDto);
         spcExportBuilder.drawSpcExcel(excelPath, spcExportWorker);
         logger.info("Export complete.");
-        String savePicPath = FileUtils.getAbsolutePath("../export/temp");
-//        File file = new File(savePicPath);
-        FileUtils.deleteDir(savePicPath);
         spcExportBuilder.clear();
         spcExportWorker.cleanExportWorker();
         return true;
