@@ -29,6 +29,7 @@ public class GrrSourceModel {
         }
         this.data.addAll(sourceDtos);
         int digNum = DigNumInstance.newInstance().getDigNum();
+        int percentDigNum = digNum - 2 >= 0 ? digNum - 2 : 0;
         sourceDtos.forEach(oneData -> {
             String sigmaStr = digNum >= 0 ? DAPStringUtils.isInfinityAndNaN(oneData.getSigma()) ? "-" :
                     DAPStringUtils.formatDouble(oneData.getSigma(), digNum) : String.valueOf(oneData.getSigma());
@@ -36,12 +37,12 @@ public class GrrSourceModel {
                     DAPStringUtils.formatDouble(oneData.getStudyVar(), digNum) : String.valueOf(oneData.getStudyVar());
             String variationStr = digNum >= 0 ? DAPStringUtils.isInfinityAndNaN(oneData.getVariation()) ? "-" :
                     DAPStringUtils.formatDouble(oneData.getVariation(), digNum) : String.valueOf(oneData.getVariation());
-            String totalVariationStr = digNum >= 0 ? DAPStringUtils.isInfinityAndNaN(oneData.getTotalVariation())? "-" :
-                    DAPStringUtils.formatDouble(oneData.getTotalVariation(), digNum) : String.valueOf(oneData.getTotalVariation());
-            String contributionStr = digNum >= 0 ? DAPStringUtils.isInfinityAndNaN(oneData.getContribution()) ? "-" :
-                    DAPStringUtils.formatDouble(oneData.getContribution(), digNum) : String.valueOf(oneData.getContribution());
-            String totalToleranceStr = digNum >= 0 ? DAPStringUtils.isInfinityAndNaN(oneData.getTotalTolerance()) ? "-" :
-                    DAPStringUtils.formatDouble(oneData.getTotalTolerance(), digNum) : String.valueOf(oneData.getTotalTolerance());
+            String totalVariationStr = DAPStringUtils.isInfinityAndNaN(oneData.getTotalVariation()) ? "-" :
+                    DAPStringUtils.formatDouble(oneData.getTotalVariation(), percentDigNum) + "%";
+            String contributionStr = DAPStringUtils.isInfinityAndNaN(oneData.getContribution()) ? "-" :
+                    DAPStringUtils.formatDouble(oneData.getContribution(), percentDigNum) + "%";
+            String totalToleranceStr = DAPStringUtils.isInfinityAndNaN(oneData.getTotalTolerance()) ? "-" :
+                    DAPStringUtils.formatDouble(oneData.getTotalTolerance(), percentDigNum) + "%";
             sources.add(new GrrSingleSource(
                     oneData.getName().name(), sigmaStr, studyValStr, variationStr, totalVariationStr, contributionStr, totalToleranceStr));
         });

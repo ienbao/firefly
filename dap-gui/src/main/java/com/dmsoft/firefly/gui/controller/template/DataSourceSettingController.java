@@ -16,6 +16,7 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
@@ -99,23 +100,32 @@ public class DataSourceSettingController {
                     i++;
                 }
             }
+            System.out.println("============" + rowDataDtos.size() + "=======");
+            System.out.println("============" + falseSet.size());
             sourceDataService.changeRowDataInUsed(trueSet, true);
             sourceDataService.changeRowDataInUsed(falseSet, false);
             StageMap.closeStage("sourceSetting");
         });
         apply.setOnAction(event -> {
             List<String> trueSet = new ArrayList<>();
+            List<String> falseSet = new ArrayList<>();
             //get change List
             List<RowDataDto> rowDataDtos = itemDataTableModel.getRowDataDtoList();
             if (rowDataDtos != null && !rowDataDtos.isEmpty()) {
+                int i = 0;
                 for (RowDataDto rowDataDto : rowDataDtos) {
-                    if (!itemDataTableModel.getFalseSet().contains(rowDataDto.getRowKey())) {
-                        trueSet.add(rowDataDto.getRowKey());
+                    if (i > 2) {
+                        if (!(itemDataTableModel.getFalseSet()).contains(String.valueOf(i))) {
+                            trueSet.add(rowDataDto.getRowKey());
+                        } else {
+                            falseSet.add(rowDataDto.getRowKey());
+                        }
                     }
+                    i++;
                 }
             }
             sourceDataService.changeRowDataInUsed(trueSet, true);
-            sourceDataService.changeRowDataInUsed(itemDataTableModel.getFalseSet(), false);
+            sourceDataService.changeRowDataInUsed(falseSet, false);
         });
         cancel.setOnAction(event -> {
             StageMap.closeStage("sourceSetting");
@@ -161,7 +171,7 @@ public class DataSourceSettingController {
                 testItems.add(dto.getTestItemName());
             }
         }
-        List<RowDataDto> rowDataDtos = sourceDataService.findTestData(projectNames, testItems, true);
+        List<RowDataDto> rowDataDtos = sourceDataService.findTestData(projectNames, testItems, null);
         List<RowDataDto> rowDataDtoList = this.addRowData(testItems);
         rowDataDtoList.addAll(rowDataDtos);
 
@@ -244,21 +254,30 @@ public class DataSourceSettingController {
         Boolean flag = false;
         List<String> searchCondition = searchTab.getSearch();
         TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
-        if (templateSettingDto.getTimePatternDto() != null) {
-            FilterUtils filterUtils = new FilterUtils(templateSettingDto.getTimePatternDto().getTimeKeys(), templateSettingDto.getTimePatternDto().getPattern());
-            if (!searchCondition.isEmpty() && searchCondition != null) {
-                for (String condition : searchCondition) {
-                    if (rowDataDtoList != null && !rowDataDtoList.isEmpty()) {
-                        for (RowDataDto rowDataDto : rowDataDtoList) {
-                            flag = filterUtils.filterData(condition, rowDataDto.getData());
-                            if (flag) {
-                                searchResultDtos.add(rowDataDto);
-                            }
+        List<String> timeKeys = Lists.newArrayList();
+        String timePattern = null;
+        try {
+            TimePatternDto timePatternDto = templateSettingDto.getTimePatternDto();
+            if (timePatternDto != null) {
+                timeKeys = timePatternDto.getTimeKeys();
+                timePattern = timePatternDto.getPattern();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
+        if (!searchCondition.isEmpty() && searchCondition != null) {
+            for (String condition : searchCondition) {
+                if (rowDataDtoList != null && !rowDataDtoList.isEmpty()) {
+                    for (RowDataDto rowDataDto : rowDataDtoList) {
+                        flag = filterUtils.filterData(condition, rowDataDto.getData());
+                        if (flag) {
+                            searchResultDtos.add(rowDataDto);
                         }
                     }
                 }
-                itemDataTableModel.updateRowDataList(searchResultDtos);
             }
+            itemDataTableModel.updateRowDataList(searchResultDtos);
         }
     }
 

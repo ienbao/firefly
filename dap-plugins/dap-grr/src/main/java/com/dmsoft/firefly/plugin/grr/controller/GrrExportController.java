@@ -22,6 +22,7 @@ import com.dmsoft.firefly.plugin.grr.service.GrrExportService;
 import com.dmsoft.firefly.plugin.grr.service.GrrService;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrExportServiceImpl;
+import com.dmsoft.firefly.plugin.grr.service.impl.GrrLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.GrrValidateUtil;
 import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
@@ -55,10 +56,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -143,13 +146,14 @@ public class GrrExportController {
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
     private GrrConfigServiceImpl grrConfigService = new GrrConfigServiceImpl();
     private GrrExportService grrExportService = new GrrExportServiceImpl();
-    private GrrAnalysisService grrAnalysisService = RuntimeContext.getBean(GrrAnalysisService.class);
-    private GrrService grrService = RuntimeContext.getBean(GrrService.class);
+    private GrrLeftConfigServiceImpl leftConfigService = new GrrLeftConfigServiceImpl();
+
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
 
     @FXML
     private void initialize() {
         searchTab = new SearchTab();
+        searchTab.hiddenGroupAdd();
         split.getItems().add(searchTab);
         eachFile.setToggleGroup(group);
         eachFile.setSelected(true);
@@ -524,6 +528,7 @@ public class GrrExportController {
     }
 
     private void initEvent() {
+        importBtn.setOnAction(event -> importLeftConfig());
         browse.setOnAction(event -> {
             String str = System.getProperty("user.home");
             DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -556,14 +561,15 @@ public class GrrExportController {
                 WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
                 return;
             }
-            List<String> projectNameList = envService.findActivatedProjectName();
-            if (eachFile.isSelected()) {
-                projectNameList.forEach(projectName -> export(Lists.newArrayList(projectName)));
-            } else {
-                export(projectNameList);
-            }
             StageMap.closeStage("grrExport");
-
+            Platform.runLater(() -> {
+                List<String> projectNameList = envService.findActivatedProjectName();
+                if (eachFile.isSelected()) {
+                    projectNameList.forEach(projectName -> export(Lists.newArrayList(projectName)));
+                } else {
+                    export(projectNameList);
+                }
+            });
         });
         print.setOnAction(event -> {
             if (StringUtils.isEmpty(locationPath.getText())) {
@@ -637,9 +643,9 @@ public class GrrExportController {
     private void build() {
         Pane root = null;
         try {
-            FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_setting.fxml");
+            FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_export_setting.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrSetting", "Grr Setting", root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrExportSetting", GrrFxmlAndLanguageUtils.getString(ResourceMassages.GRR_EXPORT_SETTING_TITLE), root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
             stage.show();
 
         } catch (Exception ex) {
@@ -686,7 +692,7 @@ public class GrrExportController {
             grrExportConfigDto.setExportPath(locationPath.getText());
             grrExportConfigDto.setUserName(envService.getUserName());
             grrExportConfigDto.setGrrConfigDto(grrConfigDto);
-
+            grrExportConfigDto.setDigNum(envService.findActivatedTemplate().getDecimalDigit());
             searchTab.getConditionTestItem().forEach(item -> {
                 testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(item));
             });
@@ -814,4 +820,70 @@ public class GrrExportController {
         return true;
     }
 
+    private void importLeftConfig() {
+        String str = System.getProperty("user.home");
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Grr config import");
+        fileChooser.setInitialDirectory(new File(str));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JSON", "*.json")
+        );
+        Stage fileStage = null;
+        File file = fileChooser.showOpenDialog(fileStage);
+
+        if (file != null) {
+            GrrLeftConfigDto grrLeftConfigDto = leftConfigService.importGrrConfig(file);
+            if (grrLeftConfigDto != null) {
+                clearLeftConfig();
+                if (grrLeftConfigDto.getItems() != null && grrLeftConfigDto.getItems().size() > 0) {
+                    items.forEach(testItem -> {
+                        if (grrLeftConfigDto.getItems().contains(testItem.getItem())) {
+                            testItem.getSelector().setValue(true);
+                        }
+                    });
+                }
+                if (grrLeftConfigDto.getBasicSearchs() != null && grrLeftConfigDto.getBasicSearchs().size() > 0) {
+                    searchTab.setBasicSearch(grrLeftConfigDto.getBasicSearchs());
+                }
+                searchTab.getAdvanceText().setText(grrLeftConfigDto.getAdvanceSearch());
+                if (grrLeftConfigDto.getPartInt() != null) {
+                    partTxt.setText(grrLeftConfigDto.getPartInt().toString());
+                }
+                if (grrLeftConfigDto.getAppraiserInt() != null) {
+                    appraiserTxt.setText(grrLeftConfigDto.getAppraiserInt().toString());
+                }
+
+                if (grrLeftConfigDto.getTrialInt() != null) {
+                    trialTxt.setText(grrLeftConfigDto.getTrialInt().toString());
+                }
+
+                if (StringUtils.isNotBlank(grrLeftConfigDto.getPart())) {
+                    partCombox.setValue(grrLeftConfigDto.getPart());
+                }
+
+
+                if (StringUtils.isNotBlank(grrLeftConfigDto.getAppraiser())) {
+                    appraiserCombox.setValue(grrLeftConfigDto.getAppraiser());
+                }
+
+                if (grrLeftConfigDto.getParts() != null && !grrLeftConfigDto.getParts().isEmpty()) {
+                    updatePartListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getParts()), true);
+                }
+
+                if (grrLeftConfigDto.getAppraisers() != null && !grrLeftConfigDto.getAppraisers().isEmpty()) {
+                    updatePartListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getAppraisers()), true);
+                }
+            }
+
+        }
+    }
+
+    private void clearLeftConfig() {
+        box.setSelected(false);
+        for (ItemTableModel model : items) {
+            model.getSelector().setValue(false);
+        }
+        searchTab.clearSearchTab();
+    }
 }

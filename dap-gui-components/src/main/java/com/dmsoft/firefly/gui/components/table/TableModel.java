@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
 import java.util.List;
 
@@ -111,5 +112,19 @@ public interface TableModel {
      */
     default boolean isMenuEventEnable(String rowKey) {
         return true;
+    }
+
+    /**
+     * method to  judge text input error or not
+     *
+     * @param textField  text field
+     * @param oldText    old text
+     * @param newText    new text
+     * @param rowKey     row key
+     * @param columnName columnName
+     * @return true : is error, false : no error
+     */
+    default boolean isTextInputError(TextField textField, String oldText, String newText, String rowKey, String columnName) {
+        return false;
     }
 }

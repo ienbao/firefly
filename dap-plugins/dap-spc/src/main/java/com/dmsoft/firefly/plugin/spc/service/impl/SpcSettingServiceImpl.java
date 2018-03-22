@@ -12,6 +12,8 @@ import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.utils.ControlRuleConfigUtil;
 import com.dmsoft.firefly.plugin.spc.utils.enums.JudgeRuleType;
+import com.dmsoft.firefly.plugin.spc.utils.enums.SpcStatisticalResultKey;
+import com.dmsoft.firefly.sdk.utils.DAPDoubleUtils;
 import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
@@ -79,7 +81,10 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
         SpcSettingDto spcSettingDto = this.findSpcSetting();
         Map<String, Double[]> abilityAlarmRule = spcSettingDto.getAbilityAlarmRule();
         Map<String, List<CustomAlarmDto>> statisticalAlarmSetting = spcSettingDto.getStatisticalAlarmSetting();
-        List<String> statisticalResultNameList = asList(UIConstant.SPC_CHOOSE_RESULT);
+        SpcStatisticalResultKey[] spcStatisticalResultKeys = SpcStatisticalResultKey.values();
+        if (spcStatisticalResultKeys == null) {
+            return null;
+        }
         List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = Lists.newArrayList();
         spcStatsDtoList.forEach(spcStatsDto -> {
             SpcStatisticalResultAlarmDto spcStatisticalResultAlarmDto = new SpcStatisticalResultAlarmDto();
@@ -89,55 +94,56 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
 
             SpcStatsResultDto spcStatsResultDto = spcStatsDto.getStatsResultDto();
             Map<String, StatisticalAlarmDto> statisticalAlarmDtoMap = Maps.newHashMap();
-            statisticalResultNameList.forEach(statisticalResultName -> {
+            for (int i = 0; i < spcStatisticalResultKeys.length; i++) {
+                String statisticalResultName = spcStatisticalResultKeys[i].getCode();
                 Double value = null;
-                if (statisticalResultName.equals(SpcKey.SAMPLES.getCode())) {
+                if (statisticalResultName.equals(SpcStatisticalResultKey.SAMPLES.getCode())) {
                     value = spcStatsResultDto.getSamples();
-                } else if (statisticalResultName.equals(SpcKey.AVG.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.AVG.getCode())) {
                     value = spcStatsResultDto.getAvg();
-                } else if (statisticalResultName.equals(SpcKey.MAX.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.MAX.getCode())) {
                     value = spcStatsResultDto.getMax();
-                } else if (statisticalResultName.equals(SpcKey.MIN.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.MIN.getCode())) {
                     value = spcStatsResultDto.getMin();
-                } else if (statisticalResultName.equals(SpcKey.ST_DEV.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.ST_DEV.getCode())) {
                     value = spcStatsResultDto.getStDev();
-                } else if (statisticalResultName.equals(SpcKey.LSL.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.LSL.getCode())) {
                     value = spcStatsResultDto.getLsl();
-                } else if (statisticalResultName.equals(SpcKey.USL.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.USL.getCode())) {
                     value = spcStatsResultDto.getUsl();
-                } else if (statisticalResultName.equals(SpcKey.CENTER.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.CENTER.getCode())) {
                     value = spcStatsResultDto.getCenter();
-                } else if (statisticalResultName.equals(SpcKey.RANGE.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.RANGE.getCode())) {
                     value = spcStatsResultDto.getRange();
-                } else if (statisticalResultName.equals(SpcKey.LCL.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.LCL.getCode())) {
                     value = spcStatsResultDto.getLcl();
-                } else if (statisticalResultName.equals(SpcKey.UCL.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.UCL.getCode())) {
                     value = spcStatsResultDto.getUcl();
-                } else if (statisticalResultName.equals(SpcKey.KURTOSIS.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.KURTOSIS.getCode())) {
                     value = spcStatsResultDto.getKurtosis();
-                } else if (statisticalResultName.equals(SpcKey.SKEWNESS.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.SKEWNESS.getCode())) {
                     value = spcStatsResultDto.getSkewness();
-                } else if (statisticalResultName.equals(SpcKey.CPK.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.CPK.getCode())) {
                     value = spcStatsResultDto.getCpk();
-                } else if (statisticalResultName.equals(SpcKey.CA.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.CA.getCode())) {
                     value = spcStatsResultDto.getCa();
-                } else if (statisticalResultName.equals(SpcKey.CP.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.CP.getCode())) {
                     value = spcStatsResultDto.getCp();
-                } else if (statisticalResultName.equals(SpcKey.CPL.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.CPL.getCode())) {
                     value = spcStatsResultDto.getCpl();
-                } else if (statisticalResultName.equals(SpcKey.CPU.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.CPU.getCode())) {
                     value = spcStatsResultDto.getCpu();
-                } else if (statisticalResultName.equals(SpcKey.WITHIN_PPM.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.WITHIN_PPM.getCode())) {
                     value = spcStatsResultDto.getWithinPPM();
-                } else if (statisticalResultName.equals(SpcKey.OVERALL_PPM.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.OVERALL_PPM.getCode())) {
                     value = spcStatsResultDto.getOverallPPM();
-                } else if (statisticalResultName.equals(SpcKey.PP.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.PP.getCode())) {
                     value = spcStatsResultDto.getPp();
-                } else if (statisticalResultName.equals(SpcKey.PPK.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.PPK.getCode())) {
                     value = spcStatsResultDto.getPpk();
-                } else if (statisticalResultName.equals(SpcKey.PPL.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.PPL.getCode())) {
                     value = spcStatsResultDto.getPpl();
-                } else if (statisticalResultName.equals(SpcKey.PPU.getCode())) {
+                } else if (statisticalResultName.equals(SpcStatisticalResultKey.PPU.getCode())) {
                     value = spcStatsResultDto.getPpu();
                 }
 
@@ -145,16 +151,16 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
                 statisticalAlarmDto.setValue(value);
                 String level = null;
                 List<CustomAlarmDto> customAlarmDtoList = statisticalAlarmSetting.get(spcStatsDto.getItemName());
-                if (customAlarmDtoList != null && SpcKey.isCustomAlarmResultName(statisticalResultName)) {
+                if (customAlarmDtoList != null && SpcStatisticalResultKey.isCustomAlarmResultName(statisticalResultName)) {
                     level = this.getCustomAlarmLevel(statisticalResultName, value, customAlarmDtoList);
                 }
 
-                if (SpcKey.isAbilityAlarmResultName(statisticalResultName)) {
+                if (SpcStatisticalResultKey.isAbilityAlarmResultName(statisticalResultName)) {
                     level = this.getAbilityAlarmLevel(statisticalResultName, value, abilityAlarmRule);
                 }
                 statisticalAlarmDto.setLevel(level);
                 statisticalAlarmDtoMap.put(statisticalResultName, statisticalAlarmDto);
-            });
+            }
             spcStatisticalResultAlarmDto.setStatisticalAlarmDtoMap(statisticalAlarmDtoMap);
             spcStatisticalResultAlarmDtoList.add(spcStatisticalResultAlarmDto);
         });
@@ -172,7 +178,7 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
         SpcSettingDto spcSettingDto = this.findSpcSetting();
         List<ControlRuleDto> controlRuleDtoList = spcSettingDto.getControlChartRule();
         for (SpcChartDto spcChartDto : spcChartDtoList) {
-            if (spcChartDto.getResultDto() == null) {
+            if (spcChartDto.getResultDto() == null || spcChartDto.getResultDto().getRunCResult() == null) {
                 continue;
             }
             ControlRuleConfigUtil controlRuleConfigUtil = new ControlRuleConfigUtil();
@@ -192,9 +198,9 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
                 RuleResultDto ruleResultDto = null;
                 String ruleName = controlRuleDto.getRuleName();
                 JudgeRuleType iRuleType = JudgeRuleType.getByCode(ruleName);
-                int iSigma = controlRuleDto.getsValue();
-                int iPoints = controlRuleDto.getnValue();
-                int iSomePoints = controlRuleDto.getmValue();
+                Integer iSigma = controlRuleDto.getsValue();
+                Integer iPoints = controlRuleDto.getnValue();
+                Integer iSomePoints = controlRuleDto.getmValue();
                 switch (iRuleType) {
                     case R1:
                         ruleResultDto = controlRuleConfigUtil.setRuleR1(iSigma, avgValue, sigma);
@@ -291,13 +297,13 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
     }
 
     private String getAbilityAlarmLevel(String name, Double value, Map<String, Double[]> abilityAlarmRule) {
-        if (value == null) {
+        if (DAPDoubleUtils.isSpecialNumber(value)) {
             return null;
         }
         Double[] alarmData = abilityAlarmRule.get(name);
         String level = null;
         if (alarmData != null) {
-            if (name.equals(SpcKey.CA.getCode())) {
+            if (name.equals(SpcStatisticalResultKey.CA.getCode())) {
                 if (value < alarmData[0]) {
                     level = SpcKey.EXCELLENT.getCode();
                 } else if (value < alarmData[1]) {
@@ -325,7 +331,7 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
     }
 
     private String getCustomAlarmLevel(String name, Double value, List<CustomAlarmDto> customAlarmDtoList) {
-        if (value == null || customAlarmDtoList == null) {
+        if (DAPDoubleUtils.isSpecialNumber(value) || customAlarmDtoList == null) {
             return null;
         }
         String level = null;

@@ -3,23 +3,16 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
-import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
-import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
+import com.dmsoft.firefly.gui.components.window.*;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
+import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
-import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
-import com.dmsoft.firefly.plugin.spc.utils.SpcRefreshJudgeUtil;
-import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
+import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
-import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
-import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
@@ -34,6 +27,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.Color;
@@ -71,6 +66,7 @@ public class SpcMainController implements Initializable {
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private SpcSettingService spcSettingService = RuntimeContext.getBean(SpcSettingService.class);
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    private static Logger logger = LoggerFactory.getLogger(SpcMainController.class);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -191,7 +187,8 @@ public class SpcMainController implements Initializable {
                         Object returnValue = manager.doJobSyn(job, paramMap);
                         if (returnValue == null) {
                             //todo message tip
-
+                            ((Exception) returnValue).printStackTrace();
+                            logger.error(((Exception) returnValue).getMessage());
                         } else {
                             List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
                             setStatisticalResultData(spcStatisticalResultAlarmDtoList);
@@ -224,6 +221,32 @@ public class SpcMainController implements Initializable {
     }
 
     private void getChooseBtnEvent() {
+        if (statisticalResultController.hasErrorEditCell()) {
+            WindowMessageController messageController = WindowMessageFactory.createWindowMessageHasOkAndCancel(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER),
+                    SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_ERROR_EDIT_MESSAGE));
+            messageController.addProcessMonitorListener(new WindowCustomListener() {
+                @Override
+                public boolean onShowCustomEvent() {
+                    return false;
+                }
+
+                @Override
+                public boolean onCloseAndCancelCustomEvent() {
+                    return false;
+                }
+
+                @Override
+                public boolean onOkCustomEvent() {
+                    refreshEvent();
+                    return false;
+                }
+            });
+        } else {
+            refreshEvent();
+        }
+    }
+
+    private void refreshEvent(){
         List<String> currentStatisticalSelectRowKeyList = statisticalResultController.getSelectStatisticalRowKey();
         List<String> currentViewDataSelectRowKeyList = viewDataController.getSelectedRowKeys();
         List<String> statisticalModifyRowKeyList = statisticalResultController.getEidtStatisticalRowKey();
@@ -256,15 +279,6 @@ public class SpcMainController implements Initializable {
             default:
                 break;
         }
-//        //if only refresh statistical result
-//        if (currentStatisticalSelectRowKeyList.size() == 0 || !this.resultSelectIsChange(currentStatisticalSelectRowKeyList, chooseStatisticalRowKeyCache)) {
-//
-//
-//        } else if (statisticalResultController.getEidtStatisticalRowKey().size() == 0 && !viewDataController.isChanged()) {
-//
-//        } else {
-//
-//        }
     }
 
     private void initBtnIcon() {
@@ -272,32 +286,6 @@ public class SpcMainController implements Initializable {
         printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_print_normal.png")));
         exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_export_normal.png")));
         chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
-    }
-
-    @Deprecated
-    private SearchDataFrame initData() {
-        List<TestItemWithTypeDto> typeDtoList = Lists.newArrayList();
-        List<RowDataDto> rowDataDtoList = Lists.newArrayList();
-        for (int i = 0; i < 10; i++) {
-            TestItemWithTypeDto typeDto = new TestItemWithTypeDto();
-            typeDto.setTestItemName("itemName" + i);
-            typeDto.setLsl("10");
-            typeDto.setUsl("30");
-            typeDtoList.add(typeDto);
-        }
-        Random random = new Random();
-        int k = random.nextInt(100);
-        for (int i = 0; i < k; i++) {
-            RowDataDto rowDataDto = new RowDataDto();
-            Map<String, String> map = Maps.newHashMap();
-            rowDataDto.setRowKey(i + "");
-            for (int j = 0; j < 10; j++) {
-                map.put(typeDtoList.get(j).getTestItemName(), i + j + "");
-            }
-            rowDataDto.setData(map);
-            rowDataDtoList.add(rowDataDto);
-        }
-        return RuntimeContext.getBean(DataFrameFactory.class).createSearchDataFrame(typeDtoList, rowDataDtoList);
     }
 
     public SearchDataFrame getDataFrame() {
@@ -350,7 +338,7 @@ public class SpcMainController implements Initializable {
         String timePattern = null;
         try {
             TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
-            if(timePatternDto != null) {
+            if (timePatternDto != null) {
                 timeKeys = timePatternDto.getTimeKeys();
                 timePattern = timePatternDto.getPattern();
             }
@@ -412,9 +400,10 @@ public class SpcMainController implements Initializable {
         paramMap.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
 
         Object returnValue = manager.doJobSyn(job, paramMap);
-        if (returnValue == null) {
-            //todo message tip
-
+        if (returnValue instanceof Exception) {
+            ((Exception) returnValue).printStackTrace();
+            logger.error(((Exception) returnValue).getMessage());
+            return;
         } else {
 //                clearAnalysisSubShowData();
             List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
@@ -446,7 +435,9 @@ public class SpcMainController implements Initializable {
         paramMap.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
 
         Object returnValue = manager.doJobSyn(job, paramMap);
-        if (returnValue == null) {
+        if (returnValue instanceof Exception) {
+            ((Exception) returnValue).printStackTrace();
+            logger.error(((Exception) returnValue).getMessage());
             return;
         }
         List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
@@ -485,7 +476,9 @@ public class SpcMainController implements Initializable {
         paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
 
         Object returnValue = manager.doJobSyn(job, paramMap);
-        if (returnValue == null) {
+        if (returnValue instanceof Exception) {
+            ((Exception) returnValue).printStackTrace();
+            logger.error(((Exception) returnValue).getMessage());
             return;
         }
         Map<String, Object> analysisResultMap = (Map) returnValue;

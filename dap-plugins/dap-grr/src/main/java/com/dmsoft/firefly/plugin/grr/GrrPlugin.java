@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 public class GrrPlugin extends Plugin {
     public static final String GRR_PLUGIN_ID = "com.dmsoft.dap.GrrPlugin";
 
-    public static final String GRR_SERVICE_PACKAGE = "com.dmsoft.firefly.plugin.grr.service.impl";
+    public static final String GRR_SERVICE_PACKAGE = "com.dmsoft.firefly.plugin.grr.service.impl.";
     public static final String GRR_SERVICE_ANALYSIS_NAME = "GrrAnalysisServiceImpl";
     public static final String GRR_SERVICE_RESULT_NAME = "GrrServiceImpl";
     public static final String GRR_SERVICE_CONFIG_NAME = "GrrConfigServiceImpl";

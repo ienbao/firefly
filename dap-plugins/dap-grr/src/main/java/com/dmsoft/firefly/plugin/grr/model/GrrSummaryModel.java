@@ -2,6 +2,7 @@ package com.dmsoft.firefly.plugin.grr.model;
 
 import com.dmsoft.firefly.plugin.grr.dto.GrrSummaryDto;
 import com.dmsoft.firefly.plugin.grr.utils.DigNumInstance;
+import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
@@ -21,6 +22,10 @@ public class GrrSummaryModel {
     private List<TestItemWithTypeDto> editTestItem = Lists.newArrayList();
     private String selectedItemName;
 
+    private String[] GRR_RESULT_TYPE = new String[]{
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_TOLERANCE"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_CONTRIBUTION")};
+
     public GrrSummaryModel() {
     }
 
@@ -38,25 +43,26 @@ public class GrrSummaryModel {
     }
 
     private GrrSingleSummary buildGrrSingleSummary(GrrSummaryDto summaryDto, String resultType, boolean selected) {
-        int digNum = DigNumInstance.newInstance().getDigNum() - 2;
-        Double repeatability = UIConstant.GRR_RESULT_TYPE[0].equals(resultType) ?
+        int digNum = DigNumInstance.newInstance().getDigNum();
+        int percentDigNum = digNum - 2 >= 0 ? digNum - 2 : 0;
+        Double repeatability = GRR_RESULT_TYPE[0].equals(resultType) ?
                 summaryDto.getSummaryResultDto().getRepeatabilityOnTolerance() :
                 summaryDto.getSummaryResultDto().getRepeatabilityOnContribution();
-        Double reproducibility = UIConstant.GRR_RESULT_TYPE[0].equals(resultType) ?
+        Double reproducibility = GRR_RESULT_TYPE[0].equals(resultType) ?
                 summaryDto.getSummaryResultDto().getReproducibilityOnTolerance() :
                 summaryDto.getSummaryResultDto().getReproducibilityOnContribution();
-        Double grr = UIConstant.GRR_RESULT_TYPE[0].equals(resultType) ?
+        Double grr = GRR_RESULT_TYPE[0].equals(resultType) ?
                 summaryDto.getSummaryResultDto().getGrrOnTolerance() :
                 summaryDto.getSummaryResultDto().getGrrOnContribution();
         Double lsl = summaryDto.getSummaryResultDto().getLsl();
         Double usl = summaryDto.getSummaryResultDto().getUsl();
         Double tolerance = summaryDto.getSummaryResultDto().getTolerance();
-        String lslStr = lsl == null ? "-" : String.valueOf(lsl);
-        String uslStr = usl == null ? "-" : String.valueOf(usl);
-        String toleranceStr = tolerance == null ? "-" : (digNum >= 0 ? DAPStringUtils.formatDouble(tolerance, digNum + 2) : String.valueOf(tolerance));
-        String repeatabilityStr = repeatability == null ? "-" : (digNum >= 0 ? DAPStringUtils.formatDouble(repeatability, digNum) : String.valueOf(repeatability));
-        String reproducibilityStr = reproducibility == null ? "-" : (digNum >= 0 ? DAPStringUtils.formatDouble(reproducibility, digNum) : String.valueOf(reproducibility));
-        String grrStr = grr == null ? "-" : (digNum >= 0 ? DAPStringUtils.formatDouble(grr, digNum) : String.valueOf(grr));
+        String lslStr = DAPStringUtils.isInfinityAndNaN(lsl) ? "-" : String.valueOf(lsl);
+        String uslStr = DAPStringUtils.isInfinityAndNaN(usl) ? "-" : String.valueOf(usl);
+        String toleranceStr = DAPStringUtils.isInfinityAndNaN(tolerance) ? "-" : DAPStringUtils.formatDouble(tolerance, digNum);
+        String repeatabilityStr = DAPStringUtils.isInfinityAndNaN(repeatability)? "-" : DAPStringUtils.formatDouble(repeatability, percentDigNum);
+        String reproducibilityStr = DAPStringUtils.isInfinityAndNaN(reproducibility) ? "-" : DAPStringUtils.formatDouble(reproducibility, percentDigNum);
+        String grrStr = DAPStringUtils.isInfinityAndNaN(grr) ? "-" : DAPStringUtils.formatDouble(grr, percentDigNum);
         return new GrrSingleSummary(selected,
                 summaryDto.getItemName(),
                 DAPStringUtils.isBlankWithSpecialNumber(lslStr) ? "-" : lslStr,
@@ -70,13 +76,13 @@ public class GrrSummaryModel {
     public void updateDataByResultType(String resultType) {
         int digNum = DigNumInstance.newInstance().getDigNum() - 2;
         for (int i = 0; i < summaries.size(); i++) {
-            Double repeatability = UIConstant.GRR_RESULT_TYPE[0].equals(resultType) ?
+            Double repeatability = GRR_RESULT_TYPE[0].equals(resultType) ?
                     data.get(i).getSummaryResultDto().getRepeatabilityOnTolerance() :
                     data.get(i).getSummaryResultDto().getRepeatabilityOnContribution();
-            Double reproducibility = UIConstant.GRR_RESULT_TYPE[0].equals(resultType) ?
+            Double reproducibility = GRR_RESULT_TYPE[0].equals(resultType) ?
                     data.get(i).getSummaryResultDto().getReproducibilityOnTolerance() :
                     data.get(i).getSummaryResultDto().getReproducibilityOnContribution();
-            Double grr = UIConstant.GRR_RESULT_TYPE[0].equals(resultType) ?
+            Double grr = GRR_RESULT_TYPE[0].equals(resultType) ?
                     data.get(i).getSummaryResultDto().getGrrOnTolerance() :
                     data.get(i).getSummaryResultDto().getGrrOnContribution();
             String repeatabilityStr = repeatability == null ? "-" : (digNum >= 0 ? DAPStringUtils.formatDouble(repeatability, digNum) : String.valueOf(repeatability));

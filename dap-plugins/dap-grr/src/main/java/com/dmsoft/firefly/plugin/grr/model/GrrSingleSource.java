@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.model;
 
+import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.google.common.collect.Maps;
 import javafx.beans.property.SimpleStringProperty;
@@ -29,14 +30,23 @@ public class GrrSingleSource {
     public final static String contributionKey = "contribution";
     public final static String totalToleranceKey = "totalTolerance";
 
+    private static String[] GRR_SOURCE_TITLE = new String[] {
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_SOURCE_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_SIGMA"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_STUDY_VAR"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_SIGMA"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_TOLERANCE")};
+
     static {
-        propertyKeys.put(UIConstant.GRR_SOURCE_TITLE[0], nameKey);
-        propertyKeys.put(UIConstant.GRR_SOURCE_TITLE[1], sigmaKey);
-        propertyKeys.put(UIConstant.GRR_SOURCE_TITLE[2], studyVarKey);
-        propertyKeys.put(UIConstant.GRR_SOURCE_TITLE[3], variationKey);
-        propertyKeys.put(UIConstant.GRR_SOURCE_TITLE[4], totalVariationKey);
-        propertyKeys.put(UIConstant.GRR_SOURCE_TITLE[5], contributionKey);
-        propertyKeys.put(UIConstant.GRR_SOURCE_TITLE[6], totalToleranceKey);
+        propertyKeys.put(GRR_SOURCE_TITLE[0], nameKey);
+        propertyKeys.put(GRR_SOURCE_TITLE[1], sigmaKey);
+        propertyKeys.put(GRR_SOURCE_TITLE[2], studyVarKey);
+        propertyKeys.put(GRR_SOURCE_TITLE[3], variationKey);
+        propertyKeys.put(GRR_SOURCE_TITLE[4], totalVariationKey);
+        propertyKeys.put(GRR_SOURCE_TITLE[5], contributionKey);
+        propertyKeys.put(GRR_SOURCE_TITLE[6], totalToleranceKey);
     }
 
     public GrrSingleSource(String name,

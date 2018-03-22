@@ -16,7 +16,7 @@ public class ItemTableModel implements Comparable<TestItemWithTypeDto> {
 
     public ItemTableModel(TestItemWithTypeDto itemDto) {
 
-        this.itemDto = new SimpleObjectProperty<TestItemWithTypeDto>(itemDto);
+        this.itemDto = new SimpleObjectProperty<>(itemDto);
         this.item = new SimpleStringProperty(itemDto.getTestItemName());
     }
 

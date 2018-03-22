@@ -22,23 +22,30 @@ public class UIConstant {
     public static final String CHART_TYPE_SPC_SCT_BOX = "BoxC";
 
     public static final String[] SPC_SR_ALL = new String[]{
-            "TestItem", "Condition", "Samples", "AVG", "Max", "Min", "StDev", "LSL", "USL", "Center", "CPK", "Range", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness",
+            "Test Item", "Condition", "Samples", "AVG", "Max", "Min", "StDev", "LSL", "USL", "Center", "CPK", "Range", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness",
             "CA(%)", "CP", "CPL", "CPU", "Within PPM", "PP", "PPK", "PPL", "PPU", "OverAll PPM"};
+
+    public static final String[] SPC_STATISTICAL_FIX_COLUMN = new String[]{"", "Test Item", "Condition"};
 
     public static final String[] SPC_CHOOSE_RESULT = new String[]{
             "Samples", "AVG", "Max", "Min", "StDev", "LSL", "USL", "Center", "CPK", "Range", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness",
-            "CA", "CP", "CPL", "CPU", "Within PPM", "PP", "PPK", "PPL", "PPU", "OverAll PPM"
+            "CA(%)", "CP", "CPL", "CPU", "Within PPM", "PP", "PPK", "PPL", "PPU", "OverAll PPM"
     };
 
-    public static final String[] SPC_EXPORT_RESULT = new String[]{
-            "Samples", "AVG", "Max", "Min", "SD", "LSL", "USL", "Center", "CPK", "Range", "AVG-3SD", "AVG+3SD", "Kurtosis", "Skewness",
-            "CA", "CP", "CPL", "CPU", "Within PPM", "PP", "PPK", "PPL", "PPU", "OverAll PPM"
+    public static final String[] SPC_STATISTICAL = new String[]{
+            "Samples", "AVG", "Max", "Min", "StDev", "Range", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness"
+    };
+    public static final String[] SPC_CAPABILITY = new String[]{
+            "CPK", "CA", "CP", "CPL", "CPU", "Within PPM"
+    };
+    public static final String[] SPC_PERFORMANCE = new String[]{
+            "PP", "PPK", "PPL", "PPU", "OverAll PPM"
     };
     public static final String[] SPC_EXPORT_A = new String[]{
             "CA", "CPK", "CP", "CPL", "CPU", "Within PPM", "PPK", "PP", "PPL", "PPU", "OverAll PPM"
     };
     public static final String[] SPC_EXPORT_B = new String[]{
-            "Samples", "AVG", "Max", "Min", "Center", "Range", "SD", "AVG-3SD", "AVG+3SD", "Kurtosis", "Skewness"
+            "Samples", "AVG", "Max", "Min", "Center", "Range", "StDev", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness"
     };
 
     public static final String[] SPC_LEVEL_RESULT = new String[]{
@@ -52,32 +59,32 @@ public class UIConstant {
     public static final String SPC_CHART_XBAR = "X-bar Chart";
     public static final String SPC_CHART_RANGE = "Range Chart";
     public static final String SPC_CHART_SD = "SD Chart";
-    public static final String SPC_CHART_MED = "Median-bar Chart";
-    public static final String SPC_CHART_BOX= "Box Chart";
+    public static final String SPC_CHART_MED = "Median Chart";
+    public static final String SPC_CHART_BOX = "Box Chart";
     public static final String SPC_CHART_MR = "MR Chart";
 
     public static final String[] SPC_CHART_NAME = new String[]{"ND Chart", "Run Chart", "X-bar Chart", "Range Chart", "SD Chart", "Median Chart", "Box Chart", "MR Chart"};
-    public static final String[] EXPORT_NDC_SECOND_LABELS = {"Item Name", "Search Condition", "Samples", "AVG", "Max", "Min", "USL", "LSL", "Center", "Range", "SD", "AVG-3SD", "AVG+3SD", "Kurtosis", "Skewness",
+    public static final String[] EXPORT_NDC_SECOND_LABELS = {"Item Name", "Search Condition", "Samples", "AVG", "Max", "Min", "USL", "LSL", "Center", "Range", "StDev", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness",
             "CA", "CPK", "CP", "CPL", "CPU", "Within PPM", "PPK", "PP", "PPL", "PPU", "Overall PPM"};
 
     //    "LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL"
     public static final String[] SPC_CHART_XBAR_EXTERN_MENU = new String[]{"LCL", "μ", "UCL", "Point", "Connect Line"};
-    public static final String[] SPC_CHART_NDC_EXTERN_MENU = new String[]{"UCL", "USL", "2σ", "σ", "μ", "-σ", "-2σ", "LSL", "LCL", "Histogram", "Normal Curve"};
-    public static final String[] SPC_CHART_RUN_EXTERN_MENU = new String[]{"LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL", "Point", "Connect Line"};
+    public static final String[] SPC_CHART_NDC_EXTERN_MENU = new String[]{"USL", "LSL", "UCL", "2σ", "σ", "μ", "-σ", "-2σ", "LCL", "Histogram", "Normal Curve"};
+    public static final String[] SPC_CHART_RUN_EXTERN_MENU = new String[]{"USL", "LSL", "LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL", "Point", "Connect Line"};
     public static final String[] SPC_CHART_BOX_EXTERN_MENU = new String[]{"CL", "Grid Line"};
 
-    public static final String[] SPC_CHART_LINE_NAME = new String[]{"LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL"};
+    public static final String[] SPC_CHART_LINE_NAME = new String[]{"USL", "LSL", "LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL"};
     public static final String[] SPC_XBARCHART_LINE_NAME = new String[]{"LCL", "μ", "UCL"};
     public static final String[] SPC_NDCCHART_LINE_NAME = new String[]{"UCL", "USL", "2σ", "σ", "μ", "-σ", "-2σ", "LSL", "LCL"};
 
     public static final String[] SPC_RULE_R = new String[]{"R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"};
 
     public static final String[] EXPORT_SPC_NDC_LABELS = {"CA", "CPK", "CP", "CPL", "CPU", "Within PPM"};
-    public static final String[] EXPORT_SPC_DESCRIPTIVE = {"Descriptive Statistics", "Samples", "AVG", "Max", "Min", "Center", "Range", "SD", "AVG-3SD", "AVG+3SD", "Kurtosis", "Skewness"};
+    public static final String[] EXPORT_SPC_DESCRIPTIVE = {"Descriptive Statistics", "Samples", "AVG", "Max", "Min", "Center", "Range", "StDev", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness"};
     public static final String[] EXPORT_SPC_PERFORMANCE = {"Performace Cability Index", "PPK", "PP", "PPL", "PPU", "OverAll PPM"};
     public static final String[] SPC_USL_LSL = new String[]{"USL", "LSL"};
     public static final String[] SPC_UCL_LCL = new String[]{"UCL", "LCL"};
-    public static final String SPC_CHART_CL = "cl";
+    public static final String SPC_CHART_CL = "μ";
 
     public static final String EXPORT_SUMMARY_EXCELLENT = "EXCELLENT";
     public static final String EXPORT_SUMMARY_ADEQUTE = "GOOD";

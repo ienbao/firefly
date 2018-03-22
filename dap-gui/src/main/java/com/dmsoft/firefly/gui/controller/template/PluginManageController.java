@@ -32,21 +32,16 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javafx.util.Callback;
 
 import java.io.*;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Created by Garen.Pang on 2018/3/7.
@@ -78,7 +73,9 @@ public class PluginManageController implements Initializable {
     private JsonMapper mapper = JsonMapper.defaultMapper();
     private boolean isEdit = false;
     private List<String> deleteList = Lists.newArrayList();
+    private List<String> coverList = Lists.newArrayList();
     private Map<String, Boolean> validateMap = Maps.newHashMap();
+    private String pluginFolderPath;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -137,13 +134,12 @@ public class PluginManageController implements Initializable {
                     pluginTable.getSelectionModel().select(dropIndex);
                     event.consume();
                     isEdit = true;
-                    ok.setText("restart");
+                    ok.setText("Restart");
                     updateProjectOrder();
                 }
             });
 
             row.setOnMouseClicked(event -> {
-                System.out.println("xx");
                 if (pluginTable.getSelectionModel().getSelectedIndex() != -1) {
                     PluginTableRowData pluginTableRowData = pluginTableRowDataObservableList.get(pluginTable.getSelectionModel().getSelectedIndex());
                     explain.setText(pluginTableRowData.getInfo().getDescription());
@@ -195,16 +191,18 @@ public class PluginManageController implements Initializable {
                     //TODO
                     String propertiesURL = ApplicationPathUtil.getPath("application.properties");
                     InputStream inputStream = null;
-                    String pluginFolderPath = null;
+                    pluginFolderPath = null;
                     try {
                         inputStream = new BufferedInputStream(new FileInputStream(propertiesURL));
                         Properties properties = new Properties();
                         properties.load(inputStream);
                         pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
                         //validate
-                        FileUtils.unZipFiles(file, pluginFolderPath + "/temp/" + file.getName() + "/");
+                        String fileNameZip = file.getName();
+                        String fileName = fileNameZip.substring(fileNameZip.lastIndexOf('\\') + 1, fileNameZip.lastIndexOf('.'));
+                        FileUtils.unZipFiles(file, pluginFolderPath + "/temp/" + fileName + "/");
                         PluginContext context = RuntimeContext.getBean(PluginContext.class);
-                        List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath + "/temp/" + file.getName() + "/");
+                        List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath + "/temp/" + fileName + "/");
                         PluginInfo installPlugins = ListUtil.isEmpty(scannedPlugins) ? null : scannedPlugins.get(0);
 
                         if (installPlugins == null) {
@@ -216,16 +214,23 @@ public class PluginManageController implements Initializable {
 
                         if (isExists(scannedPlugins.get(0), allInstallPlugins)) {
                             WindowMessageFactory.createWindowMessageNoBtnHasOk("Install Error", "Plugin Exist.");
+                            FileUtils.deleteFolder(pluginFolderPath + "/temp/" + fileName);
                             return;
                         }
 
-                        FileUtils.unZipFiles(file, pluginFolderPath + "/");
-                        FileUtils.deleteFolder(pluginFolderPath + "/temp/" + file.getName());
+                        PluginInfo pluginInfo = isExist(scannedPlugins.get(0), allInstallPlugins);
+                        if (pluginInfo != null) {
+                            coverList.add(file.getPath() + ":coverPath:" + pluginInfo.getFolderPath());
+                        } else {
+                            FileUtils.unZipFiles(file, pluginFolderPath + "/");
+                            PluginTableRowData chooseTableRowData = new PluginTableRowData(false, installPlugins.getName(), installPlugins);
+                            pluginTableRowDataObservableList.add(chooseTableRowData);
+                        }
 
-                        PluginTableRowData chooseTableRowData = new PluginTableRowData(false, installPlugins.getName(), installPlugins);
-                        pluginTableRowDataObservableList.add(chooseTableRowData);
+                        FileUtils.deleteFolder(pluginFolderPath + "/temp/" + fileName);
                         isEdit = true;
-                        ok.setText("restart");
+                        ok.setText("Restart");
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -238,13 +243,30 @@ public class PluginManageController implements Initializable {
                 PluginContext context = RuntimeContext.getBean(PluginContext.class);
                 String url = pluginTableRowData.getInfo().getFolderPath();
                 System.out.println(url);
-                deleteList.add(url);
+                if (url.contains("/temp/") || url.contains("\\temp\\")) {
+                    List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath + "/");
+                    if (scannedPlugins != null) {
+                        scannedPlugins.forEach(v -> {
+                            if (v.getId().equals(pluginTableRowData.getInfo().getId()) && v.getName().equals(pluginTableRowData.getInfo().getName())) {
+                                deleteList.add(v.getFolderPath());
+                            }
+                        });
+                    }
+                } else {
+                    deleteList.add(url);
+                }
                 context.uninstallPlugin(pluginTableRowData.getInfo().getId());
                 pluginTableRowDataObservableList.remove(pluginTableRowData);
                 isEdit = true;
-                ok.setText("restart");
+                ok.setText("Restart");
                 updateProjectOrder();
             }
+        });
+
+        filterTf.getTextField().textProperty().addListener((observable, oldValue, newValue) -> {
+            pluginTableRowDataFilteredList.setPredicate(p -> {
+                return p.getValue().contains(filterTf.getTextField().getText());
+            });
         });
     }
 
@@ -281,8 +303,12 @@ public class PluginManageController implements Initializable {
             public void run() {
                 try {
                     StringBuilder stringBuilder = new StringBuilder("java -jar dap-restart-1.0.0.jar");
+                    stringBuilder.append(" pluginFolderPath:" + pluginFolderPath);
                     deleteList.forEach(v -> {
-                        stringBuilder.append(" " + v);
+                        stringBuilder.append(" delete:" + v);
+                    });
+                    coverList.forEach(v -> {
+                        stringBuilder.append(" cover:" + v);
                     });
                     System.out.println(stringBuilder.toString());
                     Runtime.getRuntime().exec(stringBuilder.toString());
@@ -298,11 +324,28 @@ public class PluginManageController implements Initializable {
 
         if (allInstallPlugins.containsKey(pluginInfo.getId())) {
             PluginInfo exist = allInstallPlugins.get(pluginInfo.getId());
-            if (exist.getVersion().equals(pluginInfo.getVersion())) {
+            if (!exist.getName().equals(pluginInfo.getName())) {
+                return true;
+            }
+        }
+
+        for (int i = 0; i < allInstallPlugins.keySet().size(); i++) {
+            PluginInfo exist = allInstallPlugins.get(new ArrayList(allInstallPlugins.keySet()).get(i));
+            if (exist.getName().equals(pluginInfo.getName()) && !exist.getId().equals(pluginInfo.getId())) {
                 return true;
             }
         }
         return false;
+    }
+
+    private PluginInfo isExist(PluginInfo pluginInfo, Map<String, PluginInfo> allInstallPlugins) {
+        if (allInstallPlugins.containsKey(pluginInfo.getId())) {
+            PluginInfo exist = allInstallPlugins.get(pluginInfo.getId());
+            if (exist.getName().equals(pluginInfo.getName())) {
+                return exist;
+            }
+        }
+        return null;
     }
 
     private void validateMapChange() {
@@ -333,7 +376,7 @@ public class PluginManageController implements Initializable {
                 PluginTableRowData chooseTableRowData = new PluginTableRowData((Boolean) v.getValue(), map.get(v.getKey()).getName(), map.get(v.getKey()));
                 chooseTableRowData.setOnAction(event -> {
                     isEdit = true;
-                    ok.setText("restart");
+                    ok.setText("Restart");
                 });
                 pluginTableRowDataObservableList.add(chooseTableRowData);
                 validateMap.put(v.getKey(), (Boolean) v.getValue());

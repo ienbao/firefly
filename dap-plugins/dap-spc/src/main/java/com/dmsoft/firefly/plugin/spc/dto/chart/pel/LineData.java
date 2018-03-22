@@ -1,7 +1,8 @@
-package com.dmsoft.firefly.plugin.spc.dto.chart;
+package com.dmsoft.firefly.plugin.spc.dto.chart.pel;
 
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.ILineData;
 import com.dmsoft.firefly.plugin.spc.charts.utils.enums.LineType;
+import com.dmsoft.firefly.sdk.utils.DAPDoubleUtils;
 import javafx.geometry.Orientation;
 import javafx.scene.paint.Color;
 
@@ -10,7 +11,7 @@ import javafx.scene.paint.Color;
  */
 public class LineData implements ILineData {
 
-    private double value;
+    private Double value;
     private String name;
     private String title;
     private Color color;
@@ -23,13 +24,29 @@ public class LineData implements ILineData {
         this.plotOrientation = Orientation.VERTICAL;
     }
 
+    public LineData(Double value, String name, Orientation plotOrientation) {
+        this(value, name, plotOrientation, LineType.SOLID);
+    }
+
     /**
      * @param value
      */
-    public LineData(double value, String name) {
+    public LineData(Double value, String name, Orientation plotOrientation, LineType lineType) {
         this();
+        this.lineType = lineType;
+        this.plotOrientation = plotOrientation;
+        this.value = (DAPDoubleUtils.isBlank(value) ? null : value);
         this.name = name;
-        this.value = value;
+    }
+
+    public LineData(Double value, String name,  LineType lineType) {
+        this(value, name, Orientation.VERTICAL, lineType);
+    }
+
+    public LineData(Double value, String name) {
+        this();
+        this.value = (DAPDoubleUtils.isBlank(value) ? null : value);
+        this.name = name;
     }
 
     /**
@@ -39,7 +56,7 @@ public class LineData implements ILineData {
      * @param color
      * @param plotOrientation
      */
-    public LineData(double value,
+    public LineData(Double value,
                     String name,
                     String title,
                     Color color,
@@ -67,7 +84,7 @@ public class LineData implements ILineData {
         this.title = title;
     }
 
-    public double getValue() {
+    public Double getValue() {
         return value;
     }
 

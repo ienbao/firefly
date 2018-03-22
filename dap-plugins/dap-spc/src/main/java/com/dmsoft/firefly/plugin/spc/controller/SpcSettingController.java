@@ -7,6 +7,7 @@ import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.spc.dto.ControlRuleDto;
 import com.dmsoft.firefly.plugin.spc.dto.CustomAlarmDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcSettingDto;
@@ -396,7 +397,11 @@ public class SpcSettingController implements Initializable {
     }
 
     private void getApplyBtnEvent() {
-        //todo check
+        boolean result = SpcSettingValidateUtil.newInstance().getResult();
+        if (!result) {
+            WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER), SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_SETTING_APPLY_WARN_MESSAGE));
+            return;
+        }
         SpcSettingDto spcSettingDto = this.buildSaveSettingData();
         Job job = new Job(ParamKeys.SAVE_SPC_SETTING_DATA_JOP_PIPELINE);
         manager.doJobSyn(job, spcSettingDto);

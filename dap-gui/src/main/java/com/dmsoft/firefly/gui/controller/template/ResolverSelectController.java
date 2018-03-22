@@ -124,8 +124,26 @@ public class ResolverSelectController implements Initializable {
             Stage fileStage = null;
             List<File> files = fileChooser.showOpenMultipleDialog(fileStage);
             if (files != null && files.size() != 0) {
+                List<String> fileNames = Lists.newArrayList();
+                controller.getChooseTableRowDataObservableList().forEach(v -> {
+                    fileNames.add(v.getValue());
+                });
+                List<String> fileNameExits = Lists.newArrayList();
                 files.forEach(file -> {
-                    importDataSource(file.getPath(), file.getName(), resolverName);
+                    if (fileNames.contains(file.getName())) {
+                        fileNameExits.add(file.getName());
+                    } else {
+                        importDataSource(file.getPath(), file.getName(), resolverName);
+                    }
+                });
+                Platform.runLater(() -> {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append("DataSource" + " ");
+                    fileNameExits.forEach(v -> {
+                        stringBuilder.append(v + " ");
+                    });
+                    stringBuilder.append("Repeat");
+                    WindowMessageFactory.createWindowMessage("DataSource Repeat", stringBuilder.toString());
                 });
             }
         });
@@ -143,17 +161,23 @@ public class ResolverSelectController implements Initializable {
                 controller.getDataSourceTable().refresh();
             });
         });
+        controller.getChooseTableRowDataObservableList().add(chooseTableRowData);
+
         new Thread(() -> {
             manager.doJobASyn(job, returnValue -> {
                 if (returnValue != null && returnValue instanceof Throwable) {
-                    //TODO 弹出警告窗口
-                    controller.getChooseTableRowDataObservableList().remove(chooseTableRowData);
+                    chooseTableRowData.setError(true);
+                    chooseTableRowData.setImport(false);
+                    Platform.runLater(() -> {
+                        controller.getDataSourceTable().refresh();
+                        controller.getErrorInfo().setVisible(true);
+                    });
+//                    controller.getChooseTableRowDataObservableList().remove(chooseTableRowData);
                 } else {
                     chooseTableRowData.setImport(false);
                     controller.getDataSourceTable().refresh();
                 }
             }, filPath, resolverName);
         }).start();
-        controller.getChooseTableRowDataObservableList().add(chooseTableRowData);
     }
 }

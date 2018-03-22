@@ -75,23 +75,6 @@ public class PathMarker {
         return path;
     }
 
-    private void setPathColor(Path path, Color color) {
-        //Set line color
-        String colorStr = color == null || DAPStringUtils.isBlank(ColorUtils.toHexFromFXColor(color))
-                ? "black" : ColorUtils.toHexFromFXColor(color);
-        path.setStyle("-fx-stroke:" + colorStr);
-    }
-
-    private void layoutPath(Path path, double x, double y, XYChart chart) {
-        if (path.getElements().isEmpty()) {
-            path.getElements().add(new MoveTo(chart.getXAxis().getDisplayPosition(x),
-                    chart.getYAxis().getDisplayPosition(y)));
-        } else {
-            path.getElements().add(new LineTo(chart.getXAxis().getDisplayPosition(x),
-                    chart.getYAxis().getDisplayPosition(y)));
-        }
-    }
-
     /**
      * Toggle path show or hidden
      *
@@ -107,7 +90,7 @@ public class PathMarker {
     }
 
     /**
-     * Hidden path
+     * Hidden path by path name
      *
      * @param pathName
      */
@@ -118,6 +101,11 @@ public class PathMarker {
         }
     }
 
+    /**
+     * Show path by path name
+     *
+     * @param pathName path name
+     */
     public void showPathMarker(String pathName) {
 
         if (pathMap.containsKey(pathName)) {
@@ -127,6 +115,7 @@ public class PathMarker {
 
     /**
      * Update all path color
+     *
      * @param color
      */
     public void updateAllLineColor(Color color) {
@@ -135,8 +124,28 @@ public class PathMarker {
         }
     }
 
+    /**
+     * Clear path value data
+     */
     public void clear() {
         pathMap.clear();
         pathDataMap.clear();
+    }
+
+    private void setPathColor(Path path, Color color) {
+        //Set line color
+        String colorStr = color == null || DAPStringUtils.isBlank(ColorUtils.toHexFromFXColor(color))
+                ? "black" : ColorUtils.toHexFromFXColor(color);
+        path.setStyle("-fx-stroke:" + colorStr);
+    }
+
+    private void layoutPath(Path path, double x, double y, XYChart chart) {
+        if (path.getElements().isEmpty()) {
+            path.getElements().add(new MoveTo(chart.getXAxis().getDisplayPosition(x),
+                    chart.getYAxis().getDisplayPosition(y)));
+        } else {
+            path.getElements().add(new LineTo(chart.getXAxis().getDisplayPosition(x),
+                    chart.getYAxis().getDisplayPosition(y)));
+        }
     }
 }

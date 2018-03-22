@@ -3,6 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
@@ -12,6 +13,10 @@ import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
 import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
 import com.dmsoft.firefly.plugin.spc.model.StatisticalTableModel;
 import com.dmsoft.firefly.plugin.spc.utils.*;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.google.common.collect.Lists;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
@@ -25,6 +30,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -54,6 +60,9 @@ public class StatisticalResultController implements Initializable {
     private StatisticalTableModel statisticalTableModel;
 
     private List<String> selectStatisticalResultName = Lists.newArrayList();
+    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+    private JsonMapper mapper = JsonMapper.defaultMapper();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -135,6 +144,13 @@ public class StatisticalResultController implements Initializable {
     }
 
     /**
+     * has error edit cell.
+     */
+    public boolean hasErrorEditCell(){
+        return statisticalTableModel.hasErrorEditValue();
+    }
+
+    /**
      * get select row key
      *
      * @return row key
@@ -182,7 +198,12 @@ public class StatisticalResultController implements Initializable {
         statisticalTableModel = new StatisticalTableModel();
         this.initTableMenuEvent();
         TableViewWrapper.decorate(statisticalResultTb, statisticalTableModel);
-        selectStatisticalResultName.addAll(Arrays.asList(UIConstant.SPC_CHOOSE_RESULT));
+
+        List<String> preDisplayResult = this.getSpcStatisticalPreference();
+        List<String> displayResult = preDisplayResult == null ? Arrays.asList(UIConstant.SPC_CHOOSE_RESULT) : preDisplayResult;
+        selectStatisticalResultName.addAll(displayResult);
+
+        statisticalTableModel.initColumn(selectStatisticalResultName);
     }
 
     private void initComponentEvent() {
@@ -205,6 +226,8 @@ public class StatisticalResultController implements Initializable {
         selectStatisticalResultName = chooseDialogController.getSelectResultName();
         statisticalResultTb.getColumns().remove(3, statisticalResultTb.getColumns().size());
         statisticalTableModel.updateStatisticalResultColumn(selectStatisticalResultName);
+
+        this.updateSpcStatisticalPreference(selectStatisticalResultName);
         chooseDialogController.getStage().close();
     }
 
@@ -257,6 +280,23 @@ public class StatisticalResultController implements Initializable {
             colorPicker.valueProperty().addListener((observable, oldValue, c) -> {
             });
             return colorPicker;
+        }
+    }
+
+    private void updateSpcStatisticalPreference(List<String> displayResultList) {
+        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+        userPreferenceDto.setUserName(envService.getUserName());
+        userPreferenceDto.setCode("spc_statistical_preference");
+        userPreferenceDto.setValue(displayResultList);
+        userPreferenceService.updatePreference(userPreferenceDto);
+    }
+
+    private List<String> getSpcStatisticalPreference() {
+        String value = userPreferenceService.findPreferenceByUserId("spc_statistical_preference", envService.getUserName());
+        if (StringUtils.isNotBlank(value)) {
+            return mapper.fromJson(value, List.class);
+        } else {
+            return null;
         }
     }
 

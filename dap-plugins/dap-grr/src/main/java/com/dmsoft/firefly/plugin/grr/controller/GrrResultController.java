@@ -67,9 +67,6 @@ public class GrrResultController implements Initializable {
 
     private GrrMainController grrMainController;
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
-
-    private String appKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " ";
-    private String trailKey = GrrFxmlAndLanguageUtils.getString("TRAIL") + " ";
     private Set<String> parts = Sets.newLinkedHashSet();
     private Set<String> appraisers = Sets.newLinkedHashSet();
 
@@ -298,42 +295,42 @@ public class GrrResultController implements Initializable {
         XYChart.Series series1 = new XYChart.Series();
         XYChart.Series series2 = new XYChart.Series();
         XYChart.Series series3 = new XYChart.Series();
-        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[0],
+        series1.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[0],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrContri()) ? 0 : componentCResult.getGrrContri()));
-        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[1],
+        series1.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[1],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getRepeatContri()) ? 0 : componentCResult.getRepeatContri()));
-        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[2],
+        series1.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[2],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodContri()) ? 0 : componentCResult.getReprodContri()));
-        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[3],
+        series1.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[3],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getPartContri()) ? 0 : componentCResult.getPartContri()));
-        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[0],
+        series2.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[0],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrVar()) ? 0 : componentCResult.getGrrVar()));
-        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[1],
+        series2.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[1],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getRepeatVar()) ? 0 : componentCResult.getRepeatVar()));
-        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[2],
+        series2.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[2],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodVar()) ? 0 : componentCResult.getReprodVar()));
-        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[3],
+        series2.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[3],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getPartVar()) ? 0 : componentCResult.getPartVar()));
-        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[0],
+        series3.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[0],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrTol()) ? 0 : componentCResult.getGrrTol()));
-        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[1],
+        series3.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[1],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getRepeatVar()) ? 0 : componentCResult.getRepeatVar()));
-        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[2],
+        series3.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[2],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodVar()) ? 0 : componentCResult.getReprodVar()));
-        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[3],
+        series3.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[3],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getPartVar()) ? 0 : componentCResult.getPartVar()));
         componentChart.getData().addAll(series1, series2, series3);
-        String[] colors = new String[UIConstant.CHART_COMPONENT_CATEGORY.length + 2];
-        for (int i = 0; i < UIConstant.CHART_COMPONENT_CATEGORY.length; i++) {
+        String[] colors = new String[CHART_COMPONENT_CATEGORY.length + 2];
+        for (int i = 0; i < CHART_COMPONENT_CATEGORY.length; i++) {
             XYChart.Series series = (XYChart.Series) componentChart.getData().get(i);
-            series.setName(UIConstant.CHART_COMPONENT_CATEGORY[i]);
+            series.setName(CHART_COMPONENT_CATEGORY[i]);
             colors[i] = "default-color" + i;
         }
-        colors[UIConstant.CHART_COMPONENT_CATEGORY.length] = "bar-legend-symbol";
-        colors[UIConstant.CHART_COMPONENT_CATEGORY.length + 1] = "chart-bar";
+        colors[CHART_COMPONENT_CATEGORY.length] = "bar-legend-symbol";
+        colors[CHART_COMPONENT_CATEGORY.length + 1] = "chart-bar";
         Legend legend = LegendUtils.buildLegend(componentChart.getData(), colors);
         componentBp.setLeft(legend);
-        int digNum = DigNumInstance.newInstance().getDigNum() - 2;
+        int digNum = DigNumInstance.newInstance().getDigNum() - 2 >= 0 ? DigNumInstance.newInstance().getDigNum() - 2 : 0;
         componentBp.setMargin(legend, new Insets(0, 0, 1, 0));
 
         //Chart text format
@@ -512,11 +509,12 @@ public class GrrResultController implements Initializable {
     }
 
     private void initComponents() {
+        String testItemText = GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TEST_ITEM");
         summaryItemTf = new TextFieldFilter();
-        summaryItemTf.getTextField().setPromptText("Test Item");
+        summaryItemTf.getTextField().setPromptText(testItemText);
         itemFilterHBox.getChildren().setAll(summaryItemTf);
-        resultBasedCmb.getItems().addAll(UIConstant.GRR_RESULT_TYPE);
-        resultBasedCmb.setValue(UIConstant.GRR_RESULT_TYPE[0]);
+        resultBasedCmb.getItems().addAll(GRR_RESULT_TYPE);
+        resultBasedCmb.setValue(GRR_RESULT_TYPE[0]);
         summaryTb.getColumns().addAll(buildSummaryTbColumn());
         anovaTb.getColumns().addAll(buildAnovaTbColumn());
         sourceTb.getColumns().addAll(buildSourceTbColumn());
@@ -667,7 +665,7 @@ public class GrrResultController implements Initializable {
         TableColumn<GrrSingleSummary, Boolean> selectTcn = new TableColumn("");
         selectTcn.setCellValueFactory(new PropertyValueFactory(GrrSingleSummary.selectedKey));
         tableColumns.add(selectTcn);
-        for (String name : UIConstant.GRR_SUMMARY_TITLE) {
+        for (String name : GRR_SUMMARY_TITLE) {
             TableColumn<GrrSingleSummary, String> tableColumn = new TableColumn(name);
             tableColumns.add(tableColumn);
             tableColumn.setCellValueFactory(new PropertyValueFactory(GrrSingleSummary.propertyKeys.get(name)));
@@ -677,7 +675,7 @@ public class GrrResultController implements Initializable {
 
     private ObservableList buildAnovaTbColumn() {
         ObservableList<TableColumn> tableColumns = FXCollections.observableArrayList();
-        for (String name : UIConstant.GRR_ANOVA_TITLE) {
+        for (String name : GRR_ANOVA_TITLE) {
             TableColumn tableColumn = new TableColumn(name);
             tableColumn.setCellValueFactory(new PropertyValueFactory(GrrSingleAnova.propertyKeys.get(name)));
             tableColumns.add(tableColumn);
@@ -687,7 +685,7 @@ public class GrrResultController implements Initializable {
 
     private ObservableList buildSourceTbColumn() {
         ObservableList<TableColumn> tableColumns = FXCollections.observableArrayList();
-        for (String name : UIConstant.GRR_SOURCE_TITLE) {
+        for (String name : GRR_SOURCE_TITLE) {
             TableColumn tableColumn = new TableColumn(name);
             tableColumn.setCellValueFactory(new PropertyValueFactory(GrrSingleSource.propertyKeys.get(name)));
             tableColumns.add(tableColumn);
@@ -703,7 +701,7 @@ public class GrrResultController implements Initializable {
 
     private void fireSummaryItemTfEvent() {
         String textValue = summaryItemTf.getTextField().getText();
-        filteredList.setPredicate(singleSummary -> singleSummary.getItemName().contains(textValue));
+        filteredList.setPredicate(singleSummary -> (singleSummary.getItemName().contains(textValue)));
         summaryTb.refresh();
     }
 
@@ -910,4 +908,46 @@ public class GrrResultController implements Initializable {
     private ChartOperateButton rangeAppraiserChartBtn;
     @FXML
     private Label toleranceLbl;
+
+    private String appKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " ";
+    private String trailKey = GrrFxmlAndLanguageUtils.getString("TRAIL") + " ";
+    private String[] GRR_RESULT_TYPE = new String[]{
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_TOLERANCE"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_CONTRIBUTION")};
+    private String[] CHART_COMPONENT_LABEL = new String[]{
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_GAGE_R"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_REPEATABILITY"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_REPRODUCIBILITY"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_PART")};
+    private String[] CHART_COMPONENT_CATEGORY = new String[]{
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_TOLERANCE")};
+    private String[] CHART_OPERATE_NAME = new String[]{
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION")};
+    private String[] GRR_SUMMARY_TITLE = new String[]{
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_TESTITEM"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_LSL"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_USL"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_TOLERANCE"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_REPEATABILITY"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_REPRODUCIBILITY"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_GAUGE")};
+    private String[] GRR_ANOVA_TITLE = new String[]{
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_SOURCE"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_DF"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_SS"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_MS"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_F"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_PROB")};
+    private String[] GRR_SOURCE_TITLE = new String[] {
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_SOURCE_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_SIGMA"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_STUDY_VAR"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_SIGMA"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_TOLERANCE")};
 }

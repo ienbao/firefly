@@ -10,7 +10,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
 
 import java.util.Comparator;
@@ -118,7 +118,7 @@ public class TableViewWrapper {
             column.getStyleClass().add("editable-header");
             column.setCellValueFactory(cell -> model.getCellData(cell.getValue(), s));
             column.setCellFactory(tableColumn ->
-                    new TextFieldTableCell<String, String>(new DefaultStringConverter()) {
+                    new CustomTextFieldTableCell<String, String>(new DefaultStringConverter()) {
                         @Override
                         public void updateItem(String item, boolean empty) {
                             super.updateItem(item, empty);
@@ -127,6 +127,23 @@ public class TableViewWrapper {
                             } else {
                                 this.setStyle(null);
                             }
+                        }
+
+                        @Override
+                        public <T> TextField createTextField(Cell<T> cell, StringConverter<T> converter) {
+                            TextField tf = super.createTextField(cell, converter);
+                            tf.textProperty().addListener((ov, s1, s2) -> {
+                                model.isTextInputError(tf, s1, s2, this.getTableView().getItems().get(this.getIndex()), s);
+                            });
+                            return tf;
+                        }
+
+                        @Override
+                        public void startEdit() {
+                            if (getTextField() != null) {
+                                model.isTextInputError(getTextField(), getText(), getText(), this.getTableView().getItems().get(this.getIndex()), s);
+                            }
+                            super.startEdit();
                         }
                     });
             column.setComparator(getComparator());

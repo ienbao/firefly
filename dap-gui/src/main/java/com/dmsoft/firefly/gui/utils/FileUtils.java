@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -30,6 +31,10 @@ public class FileUtils {
 
         File pathFile = new File(descDir + name);
         if (!pathFile.exists()) {
+            pathFile.mkdirs();
+        } else {
+            name = name + "_" + UUID.randomUUID().toString();
+            pathFile = new File(descDir + name);
             pathFile.mkdirs();
         }
 

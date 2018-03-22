@@ -27,6 +27,6 @@ public interface IPathData {
     }
 
     default LineType getLineType() {
-        return LineType.SOLID;
+        return LineType.DASHED;
     }
 }

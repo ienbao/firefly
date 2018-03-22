@@ -1,6 +1,8 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
+import com.google.common.collect.Maps;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -35,7 +37,8 @@ public class GrrExportSettingController {
     private CheckBox eds;
 
     private ToggleGroup group = new ToggleGroup();
-    private Map<String, Boolean> data;
+    private Map<String, Boolean> data = Maps.newHashMap();
+    private GrrConfigServiceImpl grrConfigService = new GrrConfigServiceImpl();
 
     @FXML
     private void initialize() {
@@ -47,6 +50,7 @@ public class GrrExportSettingController {
     }
 
     private void initData() {
+        data = grrConfigService.findGrrExportConfig();
         if (data != null) {
             pane.getChildren().forEach(node -> {
                 if (node instanceof CheckBox) {
@@ -128,6 +132,7 @@ public class GrrExportSettingController {
                     data.put(((CheckBox) node).getText(), ((CheckBox) node).isSelected());
                 }
             });
+            grrConfigService.saveGrrExportConfig(data);
         }
     }
 

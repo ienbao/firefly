@@ -32,7 +32,7 @@
                             <RowConstraints minHeight="3.0" prefHeight="3.0" vgrow="SOMETIMES"/>
                         </rowConstraints>
                         <children>
-                            <Label prefHeight="15.0" prefWidth="174.0" text="SPC 1 Analysis Result "
+                            <Label prefHeight="15.0" prefWidth="174.0" text="%SPC_ANALYSIS_RESULT_TITLE"
                                    GridPane.rowIndex="1">
                                 <padding>
                                     <Insets left="10.0"/>

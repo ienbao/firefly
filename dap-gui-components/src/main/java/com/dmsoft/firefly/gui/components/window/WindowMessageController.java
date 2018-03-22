@@ -67,13 +67,10 @@ public class WindowMessageController {
     }
 
     public void closeDialog() {
-        boolean isOverride = false;
+        smLbl.setText("");
+        StageMap.closeStage(ResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE);
         if (windowCustomListener != null) {
-            isOverride = windowCustomListener.onCloseAndCancelCustomEvent();
-        }
-        if (!isOverride) {
-            smLbl.setText("");
-            StageMap.closeStage(ResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE);
+            windowCustomListener.onCloseAndCancelCustomEvent();
         }
     }
 
@@ -82,9 +79,8 @@ public class WindowMessageController {
     }
 
     public void onShowingRequest() {
-        boolean isOverride = false;
         if (windowCustomListener != null) {
-            isOverride = windowCustomListener.onShowCustomEvent();
+             windowCustomListener.onShowCustomEvent();
         }
     }
 
@@ -96,13 +92,10 @@ public class WindowMessageController {
     }
 
     private void okEvent() {
-        boolean isOverride = false;
+        smLbl.setText("");
+        StageMap.closeStage(ResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE);
         if (windowCustomListener != null) {
-            isOverride = windowCustomListener.onOkCustomEvent();
-        }
-        if (!isOverride) {
-            smLbl.setText("");
-            StageMap.closeStage(ResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE);
+           windowCustomListener.onOkCustomEvent();
         }
     }
 

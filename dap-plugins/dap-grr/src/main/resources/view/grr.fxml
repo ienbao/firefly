@@ -26,7 +26,7 @@
                                 <RowConstraints minHeight="3.0" prefHeight="3.0" vgrow="SOMETIMES"/>
                             </rowConstraints>
                             <children>
-                                <Label prefHeight="15.0" prefWidth="174.0" text="GRR 1 Analysis Result "
+                                <Label prefHeight="15.0" prefWidth="174.0" text="%GRR_ANALYSIS_RESULT_TITLE"
                                        GridPane.rowIndex="1">
                                     <padding>
                                         <Insets left="10.0"/>
@@ -48,12 +48,12 @@
                         </GridPane>
                   <TabPane prefHeight="675.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
-                      <Tab text="GRR" fx:id="grrResultTab">
+                      <Tab text="%GRR" fx:id="grrResultTab">
                         <content>
                             <fx:include fx:id="grrResult" source="grr_result.fxml"/>
                         </content>
                       </Tab>
-                      <Tab text="View Data">
+                      <Tab text="%VIEW_DATA">
                         <content>
                             <fx:include fx:id="grrViewData" source="grr_view_data.fxml"/>
                         </content>

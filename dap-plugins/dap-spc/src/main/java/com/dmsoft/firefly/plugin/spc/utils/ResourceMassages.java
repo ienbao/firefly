@@ -36,4 +36,14 @@ public class ResourceMassages {
     //validate
     public static final String ALARM_RULE_ORDER = "ALARM_RULE_ORDER";
 
+    //tip header
+    public static final String TIP_WARN_HEADER= "TIP_WARN_HEADER";
+    //warn message
+    public static final String SPC_SETTING_APPLY_WARN_MESSAGE = "SPC_SETTING_APPLY_WARN_MESSAGE";
+    public static final String SPC_STATISTICAL_USL_LSL_EMPTY = "SPC_STATISTICAL_USL_LSL_EMPTY";
+    public static final String SPC_STATISTICAL_USL_LESS_THEN_LSL = "SPC_STATISTICAL_USL_LESS_THEN_LSL";
+    public static final String SPC_STATISTICAL_LSL_MORE_THEN_USL = "SPC_STATISTICAL_LSL_MORE_THEN_USL";
+
+    public static final String SPC_STATISTICAL_ERROR_EDIT_MESSAGE = "SPC_STATISTICAL_ERROR_EDIT_MESSAGE";
+
 }

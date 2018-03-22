@@ -9,9 +9,9 @@ package com.dmsoft.firefly.plugin.spc.dto;
 public class ControlRuleDto {
     private boolean isUsed;
     private String ruleName;
-    private int nValue;
-    private int mValue;
-    private int sValue;
+    private Integer nValue;
+    private Integer mValue;
+    private Integer sValue;
 
     public boolean isUsed() {
         return isUsed;
@@ -29,27 +29,27 @@ public class ControlRuleDto {
         this.ruleName = ruleName;
     }
 
-    public int getnValue() {
+    public Integer getnValue() {
         return nValue;
     }
 
-    public void setnValue(int nValue) {
+    public void setnValue(Integer nValue) {
         this.nValue = nValue;
     }
 
-    public int getmValue() {
+    public Integer getmValue() {
         return mValue;
     }
 
-    public void setmValue(int mValue) {
+    public void setmValue(Integer mValue) {
         this.mValue = mValue;
     }
 
-    public int getsValue() {
+    public Integer getsValue() {
         return sValue;
     }
 
-    public void setsValue(int sValue) {
+    public void setsValue(Integer sValue) {
         this.sValue = sValue;
     }
 }

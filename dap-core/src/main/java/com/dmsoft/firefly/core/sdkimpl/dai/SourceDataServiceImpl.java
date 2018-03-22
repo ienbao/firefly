@@ -66,7 +66,7 @@ public class SourceDataServiceImpl implements SourceDataService {
 
     @Override
     public void renameProject(String oldProjectName, String newProjectName) {
-        if (isProjectExist(oldProjectName)) {
+        if (!isProjectExist(oldProjectName)) {
             logger.error("Rename project from {} to {} error! Exception = {}", oldProjectName, newProjectName, oldProjectName + " do not exist!");
             throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_11002));
         }
@@ -75,12 +75,21 @@ public class SourceDataServiceImpl implements SourceDataService {
         }
         try {
             logger.debug("Renaming project from {} to {} ...", oldProjectName, newProjectName);
-            Project project = getMongoTemplate().findOne(new Query(where(PROJECT_NAME_FIELD).is(oldProjectName)), Project.class);
-            project.setProjectName(newProjectName);
-            getMongoTemplate().save(project, PROJECT_COLLECTION_NAME);
+            getMongoTemplate().updateFirst(new Query(where(PROJECT_NAME_FIELD).is(oldProjectName)), new Update().set(PROJECT_NAME_FIELD, newProjectName), Project.class);
+            Query query = new Query();
+            query.fields().include(ROW_KEY_FIELD);
+            List<RowData> rowDataList = getMongoTemplate().find(query, RowData.class, oldProjectName);
+            if (rowDataList != null && !rowDataList.isEmpty()) {
+                for (RowData rowData : rowDataList) {
+                    String id1 = DoubleIdUtils.getId1(rowData.getRowKey());
+                    String newId = DoubleIdUtils.combineIds(newProjectName, id1);
+                    getMongoTemplate().updateFirst(new Query(where(ROW_KEY_FIELD).is(rowData.getRowKey())), new Update().set(ROW_KEY_FIELD, newId), oldProjectName);
+                }
+            }
             MongoDatabase db = getMongoTemplate().getDb();
-            MongoNamespace mongoNamespace = new MongoNamespace(newProjectName);
-            db.getCollection(oldProjectName).renameCollection(mongoNamespace);
+            MongoNamespace oldNamespace = db.getCollection(oldProjectName).getNamespace();
+            MongoNamespace newNamespace = new MongoNamespace(oldNamespace.getDatabaseName() + "." + newProjectName);
+            db.getCollection(oldProjectName).renameCollection(newNamespace);
         } catch (Exception e) {
             logger.error("Rename project from {} to {} error! Exception = {}", oldProjectName, newProjectName, e.getMessage());
             throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
@@ -357,6 +366,7 @@ public class SourceDataServiceImpl implements SourceDataService {
             }
             Query query = new Query(criteria);
             query.fields().include(ROW_KEY_FIELD);
+            query.fields().include(IN_USED_FIELD);
             if (testItemNameList != null) {
                 for (String testItemName : testItemNameList) {
                     query.fields().include(DATA_FIELD + "." + testItemName);
@@ -378,6 +388,30 @@ public class SourceDataServiceImpl implements SourceDataService {
             throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
         }
         return rowDataDtoList;
+    }
+
+    @Override
+    public Map<String, String> findTestData(List<String> projectNameList, String testItemName) {
+        Map<String, String> result = Maps.newHashMap();
+        try {
+            Criteria criteria = where(IN_USED_FIELD).is(Boolean.TRUE);
+            Query query = new Query(criteria);
+            query.fields().include(ROW_KEY_FIELD);
+            query.fields().include(DATA_FIELD + "." + testItemName);
+            for (String projectName : projectNameList) {
+                logger.debug("Finding Test Data for project name = {}...", projectName);
+                List<RowData> rowDataList = getMongoTemplate().find(query, RowData.class, projectName);
+                for (RowData rowData : rowDataList) {
+                    result.put(rowData.getRowKey(), rowData.getData().get(testItemName));
+//                    result.putAll(rowData.getData());
+                }
+                logger.info("Find Test Data for project name = {} done.", projectName);
+            }
+        } catch (Exception e) {
+            logger.error("Find Test Data error! Exception = {}", e.getMessage());
+            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
+        }
+        return result;
     }
 
     @Override
@@ -439,10 +473,6 @@ public class SourceDataServiceImpl implements SourceDataService {
     private void privateSaveTestData(String projectName, String rowKey, Map<String, String> rowDataMap, boolean appendFlag) {
         if (isRowKeyExist(rowKey)) {
             RowData rowData = getMongoTemplate().find(new Query(where(ROW_KEY_FIELD).is(rowKey)), RowData.class, projectName).get(0);
-            Map<String, String> rowDataMap1 = rowDataMap;
-            if (rowDataMap1 != null) {
-
-            }
             if (appendFlag && rowData.getData() != null) {
                 rowData.getData().putAll(rowDataMap);
             } else {

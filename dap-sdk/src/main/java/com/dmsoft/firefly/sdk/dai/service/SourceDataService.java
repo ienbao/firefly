@@ -158,6 +158,15 @@ public interface SourceDataService {
     List<RowDataDto> findTestData(List<String> projectNameList, List<String> testItemNameList, Boolean inUsedFlag);
 
     /**
+     * method to find test data by single test data
+     *
+     * @param projectNameList list of project name
+     * @param testItemName    test item name
+     * @return key : rowKey, value : data
+     */
+    Map<String, String> findTestData(List<String> projectNameList, String testItemName);
+
+    /**
      * method to find project data by row key.
      *
      * @param rowKey row key

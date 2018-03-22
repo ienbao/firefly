@@ -7,7 +7,16 @@ public class LineTooltip {
 
     private String externalName;
     private String name;
-    private String value;
+    private Double value;
+
+    public LineTooltip() {
+    }
+
+    public LineTooltip(String externalName, String name, Double value) {
+        this.externalName = externalName;
+        this.name = name;
+        this.value = value;
+    }
 
     public String getExternalName() {
         return externalName;
@@ -25,11 +34,11 @@ public class LineTooltip {
         this.name = name;
     }
 
-    public String getValue() {
+    public Double getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Double value) {
         this.value = value;
     }
 }

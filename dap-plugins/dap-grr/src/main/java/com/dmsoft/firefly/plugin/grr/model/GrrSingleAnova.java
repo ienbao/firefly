@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.model;
 
+import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.google.common.collect.Maps;
 import javafx.beans.property.SimpleStringProperty;
@@ -27,13 +28,21 @@ public class GrrSingleAnova {
     public final static String fKey = "f";
     public final static String probFKey = "probF";
 
+    private static String[] GRR_ANOVA_TITLE = new String[]{
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_SOURCE"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_DF"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_SS"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_MS"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_F"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_PROB")};
+
     static {
-        propertyKeys.put(UIConstant.GRR_ANOVA_TITLE[0], nameKey);
-        propertyKeys.put(UIConstant.GRR_ANOVA_TITLE[1], dfKey);
-        propertyKeys.put(UIConstant.GRR_ANOVA_TITLE[2], ssKey);
-        propertyKeys.put(UIConstant.GRR_ANOVA_TITLE[3], msKey);
-        propertyKeys.put(UIConstant.GRR_ANOVA_TITLE[4], fKey);
-        propertyKeys.put(UIConstant.GRR_ANOVA_TITLE[5], probFKey);
+        propertyKeys.put(GRR_ANOVA_TITLE[0], nameKey);
+        propertyKeys.put(GRR_ANOVA_TITLE[1], dfKey);
+        propertyKeys.put(GRR_ANOVA_TITLE[2], ssKey);
+        propertyKeys.put(GRR_ANOVA_TITLE[3], msKey);
+        propertyKeys.put(GRR_ANOVA_TITLE[4], fKey);
+        propertyKeys.put(GRR_ANOVA_TITLE[5], probFKey);
     }
 
     public GrrSingleAnova(String name, String df, String ss, String ms, String f, String probF) {

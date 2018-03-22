@@ -25,12 +25,12 @@
             <Insets left="10.0" right="10.0" />
          </VBox.margin>
       </TableView>
-      <Label prefHeight="22.0" prefWidth="410.0" text="%ADVANCE_PS">
+      <Label alignment="TOP_LEFT" prefHeight="22.0" prefWidth="410.0" text="%ADVANCE_PS">
          <VBox.margin>
-            <Insets left="10.0" right="10.0" top="10.0" />
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
       </Label>
-      <Label prefHeight="110.0" prefWidth="410.0" text="%ADVANCE_EG">
+      <Label alignment="TOP_LEFT" prefHeight="110.0" prefWidth="410.0" text="%ADVANCE_EG">
          <VBox.margin>
             <Insets left="10.0" right="10.0" />
          </VBox.margin>

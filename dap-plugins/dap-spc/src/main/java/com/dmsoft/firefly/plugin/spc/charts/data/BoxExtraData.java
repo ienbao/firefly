@@ -11,47 +11,47 @@ public class BoxExtraData extends AbstractValueObject {
     /**
      * X coordinate
      */
-    private Number xPos;
+    private Double xPos;
 
     /**
      * The mean
      */
-    private Number mean;   //cl
+    private Double mean;   //cl
 
     /**
      * The median.
      */
-    private Number median;
+    private Double median;
 
     /**
      * The first quarter.
      */
-    private Number q1;
+    private Double q1;
 
     /**
      * The third quarter.
      */
-    private Number q3;
+    private Double q3;
 
     /**
      * The minimum regular value.
      */
-    private Number minRegularValue;
+    private Double minRegularValue;
 
     /**
      * The maximum regular value.
      */
-    private Number maxRegularValue;
+    private Double maxRegularValue;
 
     private Color color;
 
-    public BoxExtraData(Number xPos,
-                        Number mean,
-                        Number q3,
-                        Number q1,
-                        Number maxRegularValue,
-                        Number minRegularValue,
-                        Number median) {
+    public BoxExtraData(Double xPos,
+                        Double mean,
+                        Double q3,
+                        Double q1,
+                        Double maxRegularValue,
+                        Double minRegularValue,
+                        Double median) {
         this.xPos = xPos;
         this.mean = mean;
         this.median = median;
@@ -70,13 +70,13 @@ public class BoxExtraData extends AbstractValueObject {
      * @param minRegularValue
      * @param maxRegularValue
      */
-    public BoxExtraData(Number xPos,
-                        Number mean,
-                        Number q3,
-                        Number q1,
-                        Number maxRegularValue,
-                        Number minRegularValue,
-                        Number median,
+    public BoxExtraData(Double xPos,
+                        Double mean,
+                        Double q3,
+                        Double q1,
+                        Double maxRegularValue,
+                        Double minRegularValue,
+                        Double median,
                         Color color) {
         this.xPos = xPos;
         this.mean = mean;
@@ -88,59 +88,59 @@ public class BoxExtraData extends AbstractValueObject {
         this.maxRegularValue = maxRegularValue;
     }
 
-    public Number getxPos() {
+    public Double getxPos() {
         return xPos;
     }
 
-    public void setxPos(Number xPos) {
+    public void setxPos(Double xPos) {
         this.xPos = xPos;
     }
 
-    public Number getMean() {
+    public Double getMean() {
         return mean;
     }
 
-    public void setMean(Number mean) {
+    public void setMean(Double mean) {
         this.mean = mean;
     }
 
-    public Number getMedian() {
+    public Double getMedian() {
         return median;
     }
 
-    public void setMedian(Number median) {
+    public void setMedian(Double median) {
         this.median = median;
     }
 
-    public Number getQ1() {
+    public Double getQ1() {
         return q1;
     }
 
-    public void setQ1(Number q1) {
+    public void setQ1(Double q1) {
         this.q1 = q1;
     }
 
-    public Number getQ3() {
+    public Double getQ3() {
         return q3;
     }
 
-    public void setQ3(Number q3) {
+    public void setQ3(Double q3) {
         this.q3 = q3;
     }
 
-    public Number getMinRegularValue() {
+    public Double getMinRegularValue() {
         return minRegularValue;
     }
 
-    public void setMinRegularValue(Number minRegularValue) {
+    public void setMinRegularValue(Double minRegularValue) {
         this.minRegularValue = minRegularValue;
     }
 
-    public Number getMaxRegularValue() {
+    public Double getMaxRegularValue() {
         return maxRegularValue;
     }
 
-    public void setMaxRegularValue(Number maxRegularValue) {
+    public void setMaxRegularValue(Double maxRegularValue) {
         this.maxRegularValue = maxRegularValue;
     }
 

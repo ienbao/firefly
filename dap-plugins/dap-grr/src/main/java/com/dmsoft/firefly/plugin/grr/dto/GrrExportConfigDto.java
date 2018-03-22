@@ -12,7 +12,7 @@ import java.util.List;
 public class GrrExportConfigDto extends GrrConfigDto {
     private String exportPath;
     private String userName;
-
+    private int digNum = 6;
     private GrrConfigDto grrConfigDto;
 
     public String getExportPath() {
@@ -29,6 +29,14 @@ public class GrrExportConfigDto extends GrrConfigDto {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public int getDigNum() {
+        return digNum;
+    }
+
+    public void setDigNum(int digNum) {
+        this.digNum = digNum;
     }
 
     public GrrConfigDto getGrrConfigDto() {

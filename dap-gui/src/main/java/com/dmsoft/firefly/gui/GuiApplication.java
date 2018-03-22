@@ -17,6 +17,7 @@ import com.dmsoft.firefly.gui.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserService;
+import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
@@ -76,7 +77,7 @@ public class GuiApplication extends Application {
         DAPApplication.initEnv();
         userService = RuntimeContext.getBean(UserService.class);
 
-       buildProcessorBarDialog();
+        buildProcessorBarDialog();
         if (StageMap.getStage(GuiConst.PLARTFORM_STAGE_PROCESS).isShowing()) {
             updateProcessorBar();
         }
@@ -104,6 +105,12 @@ public class GuiApplication extends Application {
 
         initJob();
         NodeMap.addNode(GuiConst.PLARTFORM_NODE_MAIN, main);
+
+        RuntimeContext.getBean(EventContext.class).addEventListener(event -> {
+            if (event.getMessage().equals("Template_Show")) {
+                GuiFxmlAndLanguageUtils.buildTemplateDia();
+            }
+        });
     }
 
     private void initJob() {
