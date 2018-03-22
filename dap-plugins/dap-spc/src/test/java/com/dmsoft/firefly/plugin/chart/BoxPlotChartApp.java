@@ -136,7 +136,7 @@ public class BoxPlotChartApp extends Application {
         });
 
         removeLineBtn.setOnAction(event -> {
-            chart.removeStroke();
+//            chart.removeStroke();
         });
 
         clearBtn.setOnAction(event -> {
