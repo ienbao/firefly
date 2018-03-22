@@ -100,6 +100,8 @@ public class DataSourceSettingController {
                     i++;
                 }
             }
+            System.out.println("============" + rowDataDtos.size() + "=======");
+            System.out.println("============" + falseSet.size());
             sourceDataService.changeRowDataInUsed(trueSet, true);
             sourceDataService.changeRowDataInUsed(falseSet, false);
             StageMap.closeStage("sourceSetting");
@@ -169,7 +171,7 @@ public class DataSourceSettingController {
                 testItems.add(dto.getTestItemName());
             }
         }
-        List<RowDataDto> rowDataDtos = sourceDataService.findTestData(projectNames, testItems, true);
+        List<RowDataDto> rowDataDtos = sourceDataService.findTestData(projectNames, testItems, null);
         List<RowDataDto> rowDataDtoList = this.addRowData(testItems);
         rowDataDtoList.addAll(rowDataDtos);
 

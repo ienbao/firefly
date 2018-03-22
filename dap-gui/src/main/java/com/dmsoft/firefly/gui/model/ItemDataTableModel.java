@@ -34,8 +34,9 @@ public class ItemDataTableModel implements TableModel {
 
     /**
      * constructor
-     * @param headers  testItem
-     * @param rowDataDtos  rowDataDtos
+     *
+     * @param headers     testItem
+     * @param rowDataDtos rowDataDtos
      */
     public ItemDataTableModel(List<String> headers, List<RowDataDto> rowDataDtos) {
         rowKey.clear();
@@ -102,6 +103,9 @@ public class ItemDataTableModel implements TableModel {
     public ObjectProperty<Boolean> getCheckValue(String rowKey, String columnName) {
         if (checkMap.get(rowKey) == null) {
             SimpleObjectProperty<Boolean> b = new SimpleObjectProperty<>(true);
+            if (rowDataDtoList != null && !rowDataDtoList.isEmpty()) {
+                b.set(rowDataDtoList.get(Integer.parseInt(rowKey)).getInUsed());
+            }
             checkMap.put(rowKey, b);
             trueSet.add(rowKey);
             allChecked.setValue(true);
@@ -149,7 +153,7 @@ public class ItemDataTableModel implements TableModel {
 //            tableCell.setStyle("-fx-text-fill: #f38400");
 //            return tableCell;
 //        }
-        
+
         if (DAPStringUtils.isNumeric(rowDataDtoList.get(0).getData().get(column))) {
             usl = Double.valueOf(rowDataDtoList.get(0).getData().get(column));
         }
@@ -198,6 +202,7 @@ public class ItemDataTableModel implements TableModel {
 
     /**
      * get CheckMap
+     *
      * @return checkMap
      */
     public Map<String, SimpleObjectProperty<Boolean>> getCheckMap() {
@@ -206,6 +211,7 @@ public class ItemDataTableModel implements TableModel {
 
     /**
      * get All Check Box
+     *
      * @return allCheckBox
      */
     public CheckBox getAllCheckBox() {
@@ -214,6 +220,7 @@ public class ItemDataTableModel implements TableModel {
 
     /**
      * get Row Key
+     *
      * @return rowKey
      */
     public ObservableList<String> getRowKey() {
@@ -222,6 +229,7 @@ public class ItemDataTableModel implements TableModel {
 
     /**
      * update TestItem Column
+     *
      * @param result columnKey
      */
     public void updateTestItemColumn(List<String> result) {
@@ -234,6 +242,7 @@ public class ItemDataTableModel implements TableModel {
 
     /**
      * update RowData List
+     *
      * @param rowDataDtos rowDataDtos
      */
     public void updateRowDataList(List<RowDataDto> rowDataDtos) {
@@ -251,6 +260,7 @@ public class ItemDataTableModel implements TableModel {
 
     /**
      * get RowDataDtoList
+     *
      * @return rowDataDtoList
      */
     public List<RowDataDto> getRowDataDtoList() {
@@ -259,6 +269,7 @@ public class ItemDataTableModel implements TableModel {
 
     /**
      * get FalseSet
+     *
      * @return falseSet
      */
     public List<String> getFalseSet() {
@@ -267,6 +278,7 @@ public class ItemDataTableModel implements TableModel {
 
     /**
      * get TrueSet
+     *
      * @return trueSet
      */
     public List<String> getTrueSet() {
