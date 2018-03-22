@@ -181,7 +181,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         if (lineDataList != null) {
             ValueMarker valueMarker = new ValueMarker();
             lineDataList.forEach(lineData -> {
-                Line line = valueMarker.buildValueMarker(lineData, color, seriesName, chartTooltip.getLineTooltip());
+                Line line = valueMarker.buildValueMarker(lineData, color, seriesName, (chartTooltip == null) ? null : chartTooltip.getLineTooltip());
                 getPlotChildren().add(line);
             });
             valueMarkerMap.put(uniqueKey, valueMarker);
@@ -189,7 +189,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         if (series == null) return;
         this.getData().add(series);
         this.setSeriesDataStyle(series, color);
-        this.setSeriesDataTooltip(series, chartTooltip.getChartBarToolTip());
+        this.setSeriesDataTooltip(series, chartTooltip == null ? null : chartTooltip.getChartBarToolTip());
         this.seriesUniqueKeyMap.put(uniqueKey, series);
 
     }
