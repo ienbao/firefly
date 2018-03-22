@@ -145,6 +145,12 @@ public class TableViewWrapper {
                             }
                             super.startEdit();
                         }
+
+                        @Override
+                        public void commitEdit(String newValue) {
+                            super.commitEdit(newValue);
+                            getTableView().refresh();
+                        }
                     });
             column.setComparator(getComparator());
             return column;

@@ -53,6 +53,9 @@ public class MenuFactory {
         MenuItem exportMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_EXPORT_SETTING"));
         MenuItem restoreMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_RESTORE_SETTING"));
         MenuItem exitMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_EXIT"));
+        exitMenuItem.setOnAction(event -> {
+            StageMap.getStage(GuiConst.PLARTFORM_STAGE_MAIN).close();
+        });
         selectDataSourceMenuItem.setOnAction(event -> buildSelectDataSource());
         importMenuItem.setOnAction(event -> appController.importAllConfig());
         exportMenuItem.setOnAction(event -> buildeSettingExportDia());

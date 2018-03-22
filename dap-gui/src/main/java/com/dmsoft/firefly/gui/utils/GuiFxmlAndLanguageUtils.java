@@ -104,7 +104,7 @@ public class GuiFxmlAndLanguageUtils {
         try {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/legal_notice.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_LEGAL, GuiFxmlAndLanguageUtils.getString(ResourceMassages.DATASOURCE), root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_LEGAL, GuiFxmlAndLanguageUtils.getString(ResourceMassages.MENU_LEGAL_NOTICE), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
             stage.show();
         } catch (Exception ex) {

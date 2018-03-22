@@ -54,7 +54,7 @@ public class EnvServiceImpl implements EnvService {
     @Override
     public List<String> findActivatedProjectName() {
         List<String> projectName = mapper.fromJson(findPreference("selectProject"), mapper.buildCollectionType(List.class, String.class));
-        return projectNames != null ? projectNames :  projectName;
+        return projectNames != null ? projectNames : projectName;
     }
 
     @Override
@@ -66,16 +66,6 @@ public class EnvServiceImpl implements EnvService {
         userPreferenceDto.setUserName(userName);
         userPreferenceDto.setValue(activatedProjectName);
         getUserPreferenceService().updatePreference(userPreferenceDto);
-    }
-
-    @Override
-    public List<String> findActivatedPluginName() {
-        return plugNames;
-    }
-
-    @Override
-    public void setActivatedPluginName(List<String> activatedPluginName) {
-        plugNames = activatedPluginName;
     }
 
     @Override

@@ -57,20 +57,6 @@ public interface EnvService {
     void setActivatedProjectName(List<String> activatedProjectName);
 
     /**
-     * find list of activated plugin names
-     *
-     * @return list of project names
-     */
-    List<String> findActivatedPluginName();
-
-    /**
-     * method to set activated plugin name
-     *
-     * @param activatedPluginName activated plugin name
-     */
-    void setActivatedPluginName(List<String> activatedPluginName);
-
-    /**
      * method to find preference
      *
      * @param code code

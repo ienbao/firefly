@@ -220,6 +220,7 @@ public class DAPStringUtils extends StringUtils {
 
     /**
      * mongodb ket can not contains this char
+     *
      * @param value
      * @return
      */
@@ -255,5 +256,19 @@ public class DAPStringUtils extends StringUtils {
             value = value.replace("?", "_");
         }
         return value;
+    }
+
+    public static boolean isEqualsString(String v1, String v2) {
+        if (DAPStringUtils.isBlank(v1) && DAPStringUtils.isBlank(v2)) {
+            return true;
+        } else if (DAPStringUtils.isBlank(v1)) {
+            return false;
+        } else {
+            if (DAPStringUtils.isNumeric(v1) && DAPStringUtils.isNumeric(v2)) {
+                return Double.valueOf(v1).equals(Double.valueOf(v2));
+            } else {
+                return v1.equals(v2);
+            }
+        }
     }
 }
