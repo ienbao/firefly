@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.model;
 
+import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.google.common.collect.Maps;
 import javafx.beans.property.*;
@@ -33,14 +34,24 @@ public class GrrSingleSummary {
     public final static String repeatabilityKey = "repeatability";
     public final static String reproducibilityKey = "reproducibility";
 
+    private static String[] GRR_SUMMARY_TITLE = new String[] {
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_TESTITEM"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_LSL"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_USL"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_TOLERANCE"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_REPEATABILITY"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_REPRODUCIBILITY"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_GAUGE")
+    };
+
     static {
-        propertyKeys.put(UIConstant.GRR_SUMMARY_TITLE[0], itemNameKey);
-        propertyKeys.put(UIConstant.GRR_SUMMARY_TITLE[1], lslKey);
-        propertyKeys.put(UIConstant.GRR_SUMMARY_TITLE[2], uslKey);
-        propertyKeys.put(UIConstant.GRR_SUMMARY_TITLE[3], toleranceKey);
-        propertyKeys.put(UIConstant.GRR_SUMMARY_TITLE[4], repeatabilityKey);
-        propertyKeys.put(UIConstant.GRR_SUMMARY_TITLE[5], reproducibilityKey);
-        propertyKeys.put(UIConstant.GRR_SUMMARY_TITLE[6], grrKey);
+        propertyKeys.put(GRR_SUMMARY_TITLE[0], itemNameKey);
+        propertyKeys.put(GRR_SUMMARY_TITLE[1], lslKey);
+        propertyKeys.put(GRR_SUMMARY_TITLE[2], uslKey);
+        propertyKeys.put(GRR_SUMMARY_TITLE[3], toleranceKey);
+        propertyKeys.put(GRR_SUMMARY_TITLE[4], repeatabilityKey);
+        propertyKeys.put(GRR_SUMMARY_TITLE[5], reproducibilityKey);
+        propertyKeys.put(GRR_SUMMARY_TITLE[6], grrKey);
     }
 
     public GrrSingleSummary(boolean selected,
@@ -125,4 +136,5 @@ public class GrrSingleSummary {
     public String getOriginalLsl() {
         return originalLsl;
     }
+
 }

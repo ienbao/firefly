@@ -28,8 +28,6 @@ public class ItemResultModel implements TableModel {
     private GrrItemResultDto itemResultDto;
     private List<GrrViewDataDto> grrViewDataDtos;
     private String currentItemName;
-    private String trialKey = GrrFxmlAndLanguageUtils.getString("TRAIL") + " ";
-    private String appraiserKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " ";
     private ObservableList<String> headerArray;
     private ObservableList<String> rowKeyArray;
     private int digNum = -1;
@@ -95,7 +93,7 @@ public class ItemResultModel implements TableModel {
         if (columnName.equals(appraiserKey)) {
             return new SimpleObjectProperty<>("");
         } else if (columnName.equals(trialKey)) {
-            return new SimpleObjectProperty<>(UIConstant.TOTAL_MEAN);
+            return new SimpleObjectProperty<>(totalMeanKey);
         } else {
             return buildCellData(itemResultDto.getTotalMeans().get(columnName));
         }
@@ -105,7 +103,7 @@ public class ItemResultModel implements TableModel {
         if (columnName.equals(appraiserKey)) {
             return new SimpleObjectProperty<>("");
         } else if (columnName.equals(trialKey)) {
-            return new SimpleObjectProperty<>(UIConstant.MEAN);
+            return new SimpleObjectProperty<>(meanKey);
         } else {
             return buildCellData(itemResultDto.getMeanAndRangeDtos().
                     get(rowKey.split(UIConstant.SPLIT_FLAG)[0]).getMeans().get(columnName));
@@ -116,7 +114,7 @@ public class ItemResultModel implements TableModel {
         if (columnName.equals(appraiserKey)) {
             return new SimpleObjectProperty<>("");
         } else if (columnName.equals(trialKey)) {
-            return new SimpleObjectProperty<>(UIConstant.TOTAL_RANGE);
+            return new SimpleObjectProperty<>(totalRangeKey);
         } else {
             return buildCellData(itemResultDto.getTotalRanges().get(columnName));
         }
@@ -126,7 +124,7 @@ public class ItemResultModel implements TableModel {
         if (columnName.equals(appraiserKey)) {
             return new SimpleObjectProperty<>("");
         } else if (columnName.equals(trialKey)) {
-            return new SimpleObjectProperty<>(UIConstant.RANGE);
+            return new SimpleObjectProperty<>(rangeKey);
         } else {
             return buildCellData(itemResultDto.getMeanAndRangeDtos().
                     get(rowKey.split(UIConstant.SPLIT_FLAG)[0]).getRanges().get(columnName));
@@ -194,4 +192,11 @@ public class ItemResultModel implements TableModel {
     public void setRowKeyArray(ObservableList<String> rowKeyArray) {
         this.rowKeyArray = rowKeyArray;
     }
+
+    private String trialKey = GrrFxmlAndLanguageUtils.getString("TRAIL") + " ";
+    private String appraiserKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " ";
+    private String meanKey = GrrFxmlAndLanguageUtils.getString("GRR_ITEM_MEAN");
+    private String rangeKey = GrrFxmlAndLanguageUtils.getString("GRR_ITEM_RANGE");
+    private String totalMeanKey = GrrFxmlAndLanguageUtils.getString("GRR_ITEM_TOTAL_MEAN");
+    private String totalRangeKey = GrrFxmlAndLanguageUtils.getString("GRR_ITEM_TOTAL_RANGE");
 }

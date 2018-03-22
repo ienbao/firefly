@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.chart.*?>
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -18,7 +17,7 @@
                                     <left>
                                         <HBox fx:id="summaryTitleBox" prefHeight="30.0" prefWidth="288.0">
                                             <children>
-                                                <Label prefHeight="17.0" prefWidth="137.0" text="GRR Result based on">
+                                                <Label prefHeight="17.0" prefWidth="137.0" text="%GRR_ANALYSIS_RESULT_BASED">
                                                     <HBox.margin>
                                                         <Insets left="7.0" top="2.0" />
                                                     </HBox.margin>
@@ -57,9 +56,9 @@
                             <children>
                                 <HBox maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                     <children>
-                                        <Button fx:id="grrDataBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="22.0" minHeight="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="119.0" style="-fx-border-width: 1 0 1 1;" text="GRR Data Sheet" textAlignment="CENTER" />
-                                        <Button fx:id="grrChartBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="22.0" minHeight="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="60.0" style="-fx-border-width: 1 0 1 1;" text="Charts" textAlignment="CENTER" />
-                                        <Button fx:id="grrResultBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="22.0" minHeight="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="119.0" style="-fx-border-width: 1 1 1 1;" text="Analysis Result" textAlignment="CENTER" />
+                                        <Button fx:id="grrDataBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="22.0" minHeight="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="119.0" style="-fx-border-width: 1 0 1 1;" text="%GRR_RESULT_DATA_SHEET" textAlignment="CENTER" />
+                                        <Button fx:id="grrChartBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="22.0" minHeight="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="60.0" style="-fx-border-width: 1 0 1 1;" text="%GRR_RESULT_CHARTS" textAlignment="CENTER" />
+                                        <Button fx:id="grrResultBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="22.0" minHeight="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="119.0" style="-fx-border-width: 1 1 1 1;" text="%GRR_ANALYSIS_RESULT" textAlignment="CENTER" />
                                     </children>
                                     <padding>
                                         <Insets top="8.0" />
@@ -76,7 +75,7 @@
                                                     <children>
                                                         <HBox prefHeight="30.0" prefWidth="200.0" style="-fx-border-width: 1 1 0 1; -fx-border-color: rgb(220,220,220); -fx-background-color: rgb(248,248,248);">
                                                             <children>
-                                                                <Label text="Tolerance:" />
+                                                                <Label text="%GRR_RESULT_TOLERANCE" />
                                                                 <Label fx:id="toleranceLbl">
                                                                     <HBox.margin>
                                                                         <Insets left="5.0" />
@@ -89,8 +88,6 @@
                                                         </HBox>
                                           <TableView fx:id="itemDetailTb" prefHeight="600.0" prefWidth="200.0">
                                             <columns>
-                                              <TableColumn prefWidth="75.0" text="C1" />
-                                              <TableColumn prefWidth="75.0" text="C2" />
                                             </columns>
                                           </TableView>
                                                     </children>
@@ -110,7 +107,7 @@
                                              <children>
                                                 <HBox prefHeight="30.0" prefWidth="200.0" style="-fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220); -fx-background-color: rgb(248, 248,248);">
                                                    <children>
-                                                      <Label text="Components of Variation" />
+                                                      <Label text="%GRR_CHART_COMPONENTS" />
                                                    </children>
                                                    <padding>
                                                       <Insets bottom="6.0" left="10.0" top="6.0" />
@@ -137,7 +134,7 @@
                                              <children>
                                                 <HBox prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: rgb(248,248,248); -fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220);">
                                                    <children>
-                                                      <Label text="Parts * Appraiser Interaction" />
+                                                      <Label text="%GRR_CHART_PART_APPRAISER" />
                                                    </children>
                                                    <padding>
                                                       <Insets bottom="6.0" left="10.0" top="6.0" />
@@ -164,7 +161,7 @@
                                              <children>
                                                 <HBox prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: rgb(248,248,248); -fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220);">
                                                    <children>
-                                                      <Label text="X-bar by Appraiser" />
+                                                      <Label text="%GRR_CHART_XBAR_APPRAISER" />
                                                    </children>
                                                    <padding>
                                                       <Insets bottom="6.0" left="10.0" top="6.0" />
@@ -180,7 +177,7 @@
                                              <children>
                                                 <HBox prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: rgb(248,248,248); -fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220);">
                                                    <children>
-                                                      <Label text="Range by Appraiser" />
+                                                      <Label text="%GRR_CHART_RANGE_APPRAISER" />
                                                    </children>
                                                    <VBox.margin>
                                                       <Insets />
@@ -199,7 +196,7 @@
                                              <children>
                                                 <HBox prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: rgb(248,248,248); -fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220);">
                                                    <children>
-                                                      <Label text="R &amp; R Plot by Appraiser">
+                                                      <Label text="%GRR_CHART_R_PLOT_APPRAISER">
                                                          <HBox.margin>
                                                             <Insets />
                                                          </HBox.margin>
@@ -219,7 +216,7 @@
                                              <children>
                                                 <HBox prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: rgb(248,248,248); -fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220);">
                                                    <children>
-                                                      <Label text="R &amp; R Plot by Parts">
+                                                      <Label text="%GRR_CHART_R_PLOT_PART">
                                                          <HBox.margin>
                                                             <Insets />
                                                          </HBox.margin>
@@ -243,7 +240,7 @@
                                              <children>
                                                 <HBox maxHeight="32.0" minHeight="30.0" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: rgb(248,248,248); -fx-border-width: 1 1 0 1; -fx-border-color: rgb(220,220,220);">
                                                    <children>
-                                                      <Label text="ANOVA" />
+                                                      <Label text="%GRR_RESULT_ANOVA" />
                                                    </children>
                                                    <padding>
                                                       <Insets bottom="6.0" left="10.0" top="6.0" />
@@ -256,7 +253,7 @@
                                              <children>
                                                 <HBox maxHeight="32.0" minHeight="30.0" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: rgb(248,248,248); -fx-border-width: 1 1 0 1; -fx-border-color: rgb(220,220,220);">
                                                    <children>
-                                                      <Label text="Source Analysis" />
+                                                      <Label text="%GRR_RESULT_SOURCE" />
                                                    </children>
                                                    <padding>
                                                       <Insets bottom="6.0" left="10.0" top="6.0" />
@@ -265,8 +262,8 @@
                                                 <TableView fx:id="sourceTb" prefHeight="150.0" prefWidth="200.0" />
                                                 <HBox maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: rgb(248,248,248); -fx-border-width: 0 1 1 1; -fx-border-color: rgb(220,220,220);">
                                                    <children>
-                                                      <Label text="Number of Distinct Categories:" />
-                                                      <Button fx:id="categoryBtn" maxHeight="15.0" minHeight="15.0" mnemonicParsing="false" prefHeight="15.0" style="-fx-background-color: red; -fx-border-width: 0px;" text="1">
+                                                      <Label text="%GRR_RESULT_NUMBER_CATEGORY" />
+                                                      <Button fx:id="categoryBtn" maxHeight="15.0" minHeight="15.0" mnemonicParsing="false" prefHeight="15.0" style="-fx-background-color: red; -fx-border-width: 0px;" text="">
                                                          <HBox.margin>
                                                             <Insets top="-2.0" />
                                                          </HBox.margin>
