@@ -10,10 +10,7 @@ import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
-import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
-import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
-import com.dmsoft.firefly.plugin.spc.utils.SpcRefreshJudgeUtil;
-import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
+import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -71,6 +68,7 @@ public class SpcMainController implements Initializable {
     private SpcSettingService spcSettingService = RuntimeContext.getBean(SpcSettingService.class);
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private static Logger logger = LoggerFactory.getLogger(SpcMainController.class);
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.spcItemController.init(this);
@@ -224,6 +222,11 @@ public class SpcMainController implements Initializable {
     }
 
     private void getChooseBtnEvent() {
+//        if (statisticalResultController.hasErrorEditCell()) {
+//           WindowMessageFactory.createWindowMessageHasOkAndCancel(
+// SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER), SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_ERROR_EDIT_MESSAGE));
+//            return;
+//        }
         List<String> currentStatisticalSelectRowKeyList = statisticalResultController.getSelectStatisticalRowKey();
         List<String> currentViewDataSelectRowKeyList = viewDataController.getSelectedRowKeys();
         List<String> statisticalModifyRowKeyList = statisticalResultController.getEidtStatisticalRowKey();

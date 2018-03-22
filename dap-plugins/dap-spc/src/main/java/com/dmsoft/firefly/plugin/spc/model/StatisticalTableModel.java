@@ -5,14 +5,12 @@ package com.dmsoft.firefly.plugin.spc.model;
 
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableModel;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.utils.ValidateRule;
 import com.dmsoft.firefly.gui.components.utils.ValidateUtils;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
 import com.dmsoft.firefly.plugin.spc.dto.StatisticalAlarmDto;
-import com.dmsoft.firefly.plugin.spc.utils.Colur;
-import com.dmsoft.firefly.plugin.spc.utils.DigNumInstance;
-import com.dmsoft.firefly.plugin.spc.utils.SourceObjectProperty;
-import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
+import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcStatisticalResultKey;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
@@ -63,6 +61,8 @@ public class StatisticalTableModel implements TableModel {
     private Set<String> editorCell = new HashSet<>();
     private List<String> editorRowKey = Lists.newArrayList();
     private ValidateRule rule;
+
+    private Set<String> errorEditorCell = new HashSet<>();
 
     /**
      * constructor
@@ -118,6 +118,7 @@ public class StatisticalTableModel implements TableModel {
         }
         editorCell.clear();
         editorRowKey.clear();
+        errorEditorCell.clear();
         for (SpcStatisticalResultAlarmDto statisticalResultAlarmDto : spcStatsDtoList) {
             String key = statisticalResultAlarmDto.getKey();
             SpcStatisticalResultAlarmDto resultAlarmDto = keyToStatsDtoMap.get(key);
@@ -184,6 +185,7 @@ public class StatisticalTableModel implements TableModel {
         allChecked.setValue(false);
         editorRowKey.clear();
         keyToStatsDtoMap.clear();
+        errorEditorCell.clear();
     }
 
     /**
@@ -361,6 +363,9 @@ public class StatisticalTableModel implements TableModel {
         if (editorCell.contains(rowKey + "-" + column)) {
             tableCell.setStyle("-fx-text-fill: #f38400");
         }
+        if (errorEditorCell.contains(rowKey + "-" + column)) {
+            tableCell.setStyle("-fx-border-color: #ea2028;-fx-border-with:1 1 1 1");
+        }
 
         SpcStatisticalResultAlarmDto spcStatsDto = keyToStatsDtoMap.get(rowKey);
         Map<String, StatisticalAlarmDto> statisticalAlarmDtoMap = spcStatsDto.getStatisticalAlarmDtoMap();
@@ -433,7 +438,6 @@ public class StatisticalTableModel implements TableModel {
         SourceObjectProperty valueProperty = new SourceObjectProperty<>(value);
         if (columnName.equals(STATISTICAL_TITLE[7]) || columnName.equals(STATISTICAL_TITLE[8])) {
             valueProperty.addListener((ov, b1, b2) -> {
-                spcStatsDto.getStatisticalAlarmDtoMap().get(columnName).setValue(Double.valueOf((String) b2));
                 if (!valueProperty.getSourceValue().equals(b2)) {
                     editorCell.add(rowKey + "-" + columnName);
                     editorRowKey.add(rowKey);
@@ -441,6 +445,10 @@ public class StatisticalTableModel implements TableModel {
                     editorCell.remove(rowKey + "-" + columnName);
                     editorRowKey.remove(rowKey);
                 }
+                if (errorEditorCell.contains(rowKey + "-" + columnName)) {
+                    return;
+                }
+                spcStatsDto.getStatisticalAlarmDtoMap().get(columnName).setValue(Double.valueOf((String) b2));
             });
         }
         valueMap.put(rowKey + "-" + columnName, valueProperty);
@@ -552,6 +560,39 @@ public class StatisticalTableModel implements TableModel {
 
     @Override
     public boolean isTextInputError(TextField textField, String newText, String rowKey, String columnName) {
+        if (DAPStringUtils.isBlank(newText)) {
+            errorEditorCell.add(rowKey + "-" + columnName);
+            TooltipUtil.installWarnTooltip(textField, SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_USL_LSL_EMPTY));
+            return true;
+        }
+        SpcStatisticalResultAlarmDto spcStatsDto = keyToStatsDtoMap.get(rowKey);
+        Map<String, StatisticalAlarmDto> statisticalAlarmDtoMap = spcStatsDto.getStatisticalAlarmDtoMap();
+        if (columnName.equals(STATISTICAL_TITLE[7])) {
+            StatisticalAlarmDto statisticalAlarmDto = statisticalAlarmDtoMap.get(SpcStatisticalResultKey.USL.getCode());
+            Double usl = statisticalAlarmDto.getValue();
+            if (Double.valueOf(newText) >= usl) {
+                errorEditorCell.add(rowKey + "-" + columnName);
+                TooltipUtil.installWarnTooltip(textField, SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_LSL_MORE_THEN_USL));
+                return true;
+            }
+        } else if (columnName.equals(STATISTICAL_TITLE[8])) {
+            StatisticalAlarmDto statisticalAlarmDto = statisticalAlarmDtoMap.get(SpcStatisticalResultKey.LSL.getCode());
+            Double lsl = statisticalAlarmDto.getValue();
+            if (Double.valueOf(newText) <= lsl) {
+                errorEditorCell.add(rowKey + "-" + columnName);
+                TooltipUtil.installWarnTooltip(textField, SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_USL_LESS_THEN_LSL));
+                return true;
+            }
+        }
+        if (errorEditorCell.contains(rowKey + "-" + columnName)) {
+            errorEditorCell.remove(rowKey + "-" + columnName);
+            TooltipUtil.uninstallWarnTooltip(textField);
+            return true;
+        }
         return false;
+    }
+
+    public boolean hasErrorEditValue(){
+        return errorEditorCell.size() != 0;
     }
 }
