@@ -167,7 +167,7 @@ public class StatisticalTableModel implements TableModel {
                             editorCell.remove(spcStatsDtoKey + "-" + columnName);
                             editorRowKey.remove(spcStatsDtoKey);
                         }
-                        if (errorEditorCell.contains(rowKey + "-" + columnName)) {
+                        if (errorEditorCell.contains(spcStatsDtoKey + "-" + columnName)) {
                             valueProperty.setError(true);
                             return;
                         }
@@ -204,7 +204,7 @@ public class StatisticalTableModel implements TableModel {
     public void filterTestItem(String filterTf) {
         statisticalTableRowDataFilteredList.setPredicate(p -> {
             String testItem = keyToStatsDtoMap.get(p).getItemName();
-            return testItem.contains(filterTf);
+            return testItem.toLowerCase().contains(filterTf.toLowerCase());
         });
     }
 
