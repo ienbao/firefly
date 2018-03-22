@@ -3,12 +3,22 @@ package com.dmsoft.firefly.plugin.spc.charts.data.basic;
 /**
  * Created by cherry on 2018/3/20.
  */
-public class BarToolTip {
+public class BarToolTip<X, Y> {
 
     private String seriesName;
-    private Double startValue;
-    private Double endValue;
-    private Double value;
+    private X startValue;
+    private X endValue;
+    private Y value;
+
+    public BarToolTip() {
+    }
+
+    public BarToolTip(String seriesName, X startValue, X endValue, Y value) {
+        this.seriesName = seriesName;
+        this.startValue = startValue;
+        this.endValue = endValue;
+        this.value = value;
+    }
 
     public String getSeriesName() {
         return seriesName;
@@ -18,27 +28,27 @@ public class BarToolTip {
         this.seriesName = seriesName;
     }
 
-    public Double getStartValue() {
+    public X getStartValue() {
         return startValue;
     }
 
-    public void setStartValue(Double startValue) {
+    public void setStartValue(X startValue) {
         this.startValue = startValue;
     }
 
-    public Double getEndValue() {
+    public X getEndValue() {
         return endValue;
     }
 
-    public void setEndValue(Double endValue) {
+    public void setEndValue(X endValue) {
         this.endValue = endValue;
     }
 
-    public Double getValue() {
+    public Y getValue() {
         return value;
     }
 
-    public void setValue(Double value) {
+    public void setValue(Y value) {
         this.value = value;
     }
 }

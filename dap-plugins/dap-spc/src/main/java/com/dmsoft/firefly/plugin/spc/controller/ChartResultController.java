@@ -8,7 +8,7 @@ import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationFetch;
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxPlotChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.ControlChartData;
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
+import com.dmsoft.firefly.plugin.spc.charts.data.NDBarChartData;
 import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
@@ -17,11 +17,9 @@ import com.dmsoft.firefly.plugin.spc.charts.view.VerticalTabPane;
 import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.*;
-import com.dmsoft.firefly.plugin.spc.dto.chart.SpcNdChartData;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.SpcChartToolTip;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
-import com.dmsoft.firefly.plugin.spc.utils.XYData;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
@@ -126,9 +124,9 @@ public class ChartResultController implements Initializable {
         xAxis.setTickMarkVisible(false);
         yAxis.setTickMarkVisible(false);
         yAxis.setMinorTickVisible(false);
-
+        xAxis.setAutoRanging(false);
+//        yAxis.setAutoRanging(false);
         button.setSelectCallBack((name, selected, selectedNames) -> {
-
             if (UIConstant.SPC_CHART_NDC_EXTERN_MENU[9].equalsIgnoreCase(name)) {
                 ObservableList<XYChart.Series> series = ndChartPane.getChart().getData();
                 series.forEach(oneSeries -> {
@@ -170,10 +168,12 @@ public class ChartResultController implements Initializable {
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setTickMarkVisible(false);
-        yAxis.setTickMarkVisible(false);
         xAxis.setMinorTickVisible(false);
+        xAxis.setForceZeroInRange(false);
+        yAxis.setTickMarkVisible(false);
         yAxis.setMinorTickVisible(false);
         yAxis.setAutoRanging(false);
+        yAxis.setForceZeroInRange(false);
         ControlChart runChart = new ControlChart(xAxis, yAxis);
         runChartPane = new ChartPanel<>(runChart);
         runChartPane.setLegend(legend);
@@ -282,8 +282,7 @@ public class ChartResultController implements Initializable {
      */
     public void initSpcChartData(List<SpcChartDto> spcChartDtoList) {
         Map<String, java.awt.Color> colorCache = spcMainController.getColorCache();
-        List<INdcChartData> ndcChartDataList = Lists.newArrayList();
-//        List<IRunChartData> runChartDataList = Lists.newArrayList();
+        List<NDBarChartData> ndcChartDataList = Lists.newArrayList();
         List<ControlChartData> xBarChartDataList = Lists.newArrayList();
         List<ControlChartData> rangeChartDataList = Lists.newArrayList();
         List<ControlChartData> runChartDataList = Lists.newArrayList();
@@ -302,33 +301,25 @@ public class ChartResultController implements Initializable {
                 continue;
             }
             //nd chart
-            INdcChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
+            SpcNdChartData1 iNdcChartData = new SpcNdChartData1(key, spcChartResultDto.getNdcResult(), color);
+            iNdcChartData.setSeriesName(seriesName);
             ndcChartDataList.add(iNdcChartData);
             //run chart
             SpcRunChartData1 runChartData = new SpcRunChartData1(key, spcChartResultDto.getRunCResult(), analyzedRowKeys, color);
             runChartData.setSeriesName(seriesName);
             runChartDataList.add(runChartData);
-//            IRunChartData iRunChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), analyzedRowKeys, color);
-//            runChartDataList.add(iRunChartData);
-            //x bar chart
-//            IControlChartData xBarChartData = new SpcControlChartData(key, spcChartResultDto.getXbarCResult(), color);
-//            xBarChartDataList.add(xBarChartData);
             SpcControlChartData1 xBarChartData = new SpcControlChartData1(key, spcChartResultDto.getXbarCResult(), color);
             xBarChartData.setSeriesName(seriesName);
             xBarChartDataList.add(xBarChartData);
             //range chart
-//            IControlChartData rangeChartData = new SpcControlChartData(key, spcChartResultDto.getRangeCResult(), color);
-//            rangeChartDataList.add(rangeChartData);
             SpcControlChartData1 rangeChartData = new SpcControlChartData1(key, spcChartResultDto.getRangeCResult(), color);
             rangeChartData.setSeriesName(seriesName);
             rangeChartDataList.add(rangeChartData);
             //sd chart
-//            IControlChartData sdChartData = new SpcControlChartData(key, spcChartResultDto.getSdCResult(), color);
             SpcControlChartData1 sdChartData = new SpcControlChartData1(key, spcChartResultDto.getSdCResult(), color);
             sdChartData.setSeriesName(seriesName);
             sdChartDataList.add(sdChartData);
             //median chart
-//            IControlChartData medianChartData = new SpcControlChartData(key, spcChartResultDto.getMedianCResult(), color);
             SpcControlChartData1 medianChartData = new SpcControlChartData1(key, spcChartResultDto.getMedianCResult(), color);
             medianChartData.setSeriesName(seriesName);
             medianChartDataList.add(medianChartData);
@@ -337,14 +328,13 @@ public class ChartResultController implements Initializable {
             boxChartData.setSeriesName(seriesName);
             boxChartDataList.add(boxChartData);
             //mr chart
-//            IControlChartData mrChartData = new SpcControlChartData(key, spcChartResultDto.getMrCResult(), color);
             SpcControlChartData1 mrChartData = new SpcControlChartData1(key, spcChartResultDto.getMrCResult(), color);
             mrChartData.setSeriesName(seriesName);
             mrChartDataList.add(mrChartData);
 
         }
 
-//        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
+        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
         this.setRunChartData(UIConstant.SPC_CHART_NAME[1], runChartDataList);
         this.setControlChartData(UIConstant.SPC_CHART_NAME[2], xBarChartDataList);
         this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList);
@@ -354,7 +344,7 @@ public class ChartResultController implements Initializable {
         this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
     }
 
-    public void setNdChartData(String chartName, List<INdcChartData> ndChartData) {
+    public void setNdChartData(String chartName, List<NDBarChartData> ndChartData) {
         NDChart chart = ndChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
@@ -503,6 +493,7 @@ public class ChartResultController implements Initializable {
 
     public void updateChartColor(String unique, Color color) {
         ndChartPane.getChart().updateChartColor(unique, color);
+        runChartPane.getChart().updateChartColor(unique, color);
         xBarChartPane.getChart().updateChartColor(unique, color);
         rangeChartPane.getChart().updateChartColor(unique, color);
         sdChartPane.getChart().updateChartColor(unique, color);
@@ -511,21 +502,9 @@ public class ChartResultController implements Initializable {
         mrChartPane.getChart().updateChartColor(unique, color);
     }
 
-    private void setNdChartData(List<INdcChartData> ndChartData) {
+    private void setNdChartData(List<NDBarChartData> ndChartData) {
         NDChart chart = ndChartPane.getChart();
-        ndChartData.forEach(chartData -> {
-            IBarChartData barChartData = chartData.getBarData();
-            IXYChartData curveData = chartData.getCurveData();
-            List<ILineData> lineData = chartData.getLineData();
-//          add area data
-            chart.addAreaSeries(curveData, seriesName, chartData.getColor());
-//          add bar chart data
-            chart.createChartSeries(barChartData, seriesName, chartData.getColor());
-//                add line data
-            if (lineData != null) {
-                chart.addValueMarker(lineData, seriesName);
-            }
-        });
+        chart.setData(ndChartData, chartTooltip);
     }
 
     private void setRunChartData(List<ControlChartData> runChartData) {

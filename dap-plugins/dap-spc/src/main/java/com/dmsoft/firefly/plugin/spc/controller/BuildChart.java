@@ -222,13 +222,13 @@ public class BuildChart {
         IXYChartData curveData = chartData.getCurveData();
         List<ILineData> lineData = chartData.getLineData();
 //          add area data
-        chart.addAreaSeries(curveData, "ALL", chartData.getColor());
-//          add bar chart data
-        chart.createChartSeries(barChartData, "ALL", chartData.getColor());
-//                add line data
-        if (lineData != null) {
-            chart.addValueMarker(lineData, "ALL");
-        }
+//        chart.addAreaSeries(curveData, "ALL", chartData.getColor());
+////          add bar chart data
+//        chart.createChartSeries(barChartData, "ALL", chartData.getColor());
+////                add line data
+//        if (lineData != null) {
+//            chart.addValueMarker(lineData, "ALL");
+//        }
     }
 
     private static void setRunChartData(ControlChart chart, ControlChartData chartData) {
