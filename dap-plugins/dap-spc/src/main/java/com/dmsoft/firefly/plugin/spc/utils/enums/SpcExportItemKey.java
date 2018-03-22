@@ -23,7 +23,7 @@ public enum SpcExportItemKey {
     DESCRIPTIVE_STATISTICS("statistics"),
     SAMPLES("Samples"),
     MEAN("AVG"),
-    SD("SD"),
+    SD("StDev"),
     RANGE("Range"),
     Max("Max"),
     Min("Min"),

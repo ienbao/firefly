@@ -531,7 +531,7 @@ public class SpcExportWorker implements ExWorker {
                 String name = UIConstant.SPC_EXPORT_B[i];
                 if (exportDataItem.keySet().contains(name) && exportDataItem.get(name)) {
                     exCellList.add(ExUtil.fillToCell(new Integer[]{currentRow + 4 + p++, dataIndex[1] + 1}, (checkStaticData(dto, name) ? "-" : formatDouble(Double.valueOf(dto.get(name).getValue()), digNum) + ""),
-                            ExCellType.TEXT, textStyle));
+                            ExCellType.TEXT, (checkStaticData(dto, name) || cusCpwToLevel(dto, name).equals(SpcKey.NORMAL.getCode())) ? textStyle : fillPcColor(cusCpwToLevel(dto, name))));
                 }
             }
             currentRow = currentRow + 6 + descriptiveLablesLength;
@@ -694,16 +694,16 @@ public class SpcExportWorker implements ExWorker {
             font = (XSSFFont) workbook.createFont();
             font.setColor(IndexedColors.BLACK.index);
             style.setFont(font);
-            cpColorMap.put(SpcKey.PASS.getCode(), style);
+            cpColorMap.put(SpcKey.FAIL.getCode(), style);
 
             style = (XSSFCellStyle) this.getCurrentWorkbook().createCellStyle();
-            style.setFillForegroundColor(ExColor.ORANGE);
+            style.setFillForegroundColor(ExColor.GREEN);
             style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
             addBorder(style);
             font = (XSSFFont) workbook.createFont();
             font.setColor(IndexedColors.BLACK.index);
             style.setFont(font);
-            cpColorMap.put(SpcKey.FAIL.getCode(), style);
+            cpColorMap.put(SpcKey.PASS.getCode(), style);
 
             style = (XSSFCellStyle) this.getCurrentWorkbook().createCellStyle();
             style.setFillPattern(FillPatternType.SOLID_FOREGROUND);

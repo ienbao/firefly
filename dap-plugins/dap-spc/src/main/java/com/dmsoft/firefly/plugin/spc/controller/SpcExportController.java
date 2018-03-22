@@ -168,8 +168,8 @@ public class SpcExportController {
         initItemData();
         SpcSettingDto settingDto = settingService.findSpcSetting();
         if (settingDto != null) {
-            ndGroup.setText(String.valueOf(settingDto.getCustomGroupNumber()));
-            subGroup.setText(String.valueOf(settingDto.getChartIntervalNumber()));
+            ndGroup.setText(String.valueOf(settingDto.getChartIntervalNumber()));
+            subGroup.setText(String.valueOf(settingDto.getCustomGroupNumber()));
         }
     }
 
