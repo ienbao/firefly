@@ -61,10 +61,9 @@ public class SpcExportWorker implements ExWorker {
         Map<String, String> rRules = Maps.newHashMap();
         rRules.put("analysisKey0", "R1,R2");
         String perfomer = spcUserActionAttributesDto.getPerformer();
+        digNum = spcUserActionAttributesDto.getDigNum();
         Map<String, Boolean> exportDataItem = spcUserActionAttributesDto.getExportDataItem();
         exportDataItem.put("Center", true);
-//        exportDataItem.put("USL", true);
-//        exportDataItem.put("LSL", true);
 
         //summary sheet
         ExSheet summarySheet = new ExSheet();
@@ -762,10 +761,6 @@ public class SpcExportWorker implements ExWorker {
      */
     public void initWorkbook() {
         workbook = new SXSSFWorkbook(CACHE_ROW);
-    }
-
-    public void setDigNum(int digNum) {
-        this.digNum = digNum;
     }
 
     /**

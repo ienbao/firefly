@@ -42,15 +42,13 @@ public class GrrExportWorker implements ExWorker {
     private Map<String, CellStyle> mapCellStyle = Maps.newHashMap();
 
     private Integer[] headIndex = new Integer[]{0, 0};
-    private Integer[] dataIndex = new Integer[]{5, 1};
-    private Integer[] dataIndexImage = new Integer[]{5, 6};
     private Integer currentRow = 0;
-    private Double[] grrRules = new Double[3];
 
     private Integer[] summaryDataIndex = new Integer[]{0, 3};
     private Integer[] itemParamIndex = new Integer[]{0, 1};
     private Map<String, List<Integer>> breakRowLists = new HashMap<>();
     private Map<String, Integer> disCategoriesPlaceMap = new HashMap<>();
+    private int digNum = 6;
 
     /**
      * buildGrrSummary
@@ -59,6 +57,7 @@ public class GrrExportWorker implements ExWorker {
      * @param grrSummaryResultDtos grrSummaryResultDtos
      */
     public void buildGrrSummary(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryDto> grrSummaryResultDtos) {
+        digNum = grrExportConfigDto.getDigNum();
         mapCellStyle = CellStyleUtil.getStyle(this.getCurrentWorkbook());
         String userName = grrExportConfigDto.getUserName();
         if (sheets != null && sheets.size() < 1) {
@@ -80,6 +79,7 @@ public class GrrExportWorker implements ExWorker {
      * @param grrExportResultDtos  grrExportResultDtos
      */
     public void buildSummaryAndDetail(GrrExportConfigDto grrExportConfigDto, List<GrrSummaryDto> grrSummaryResultDtos, List<GrrExportResultDto> grrExportResultDtos) {
+        digNum = grrExportConfigDto.getDigNum();
         mapCellStyle = CellStyleUtil.getStyle(this.getCurrentWorkbook());
         String username = grrExportConfigDto.getUserName();
         List<ExCell> summaryHead = buildSummaryHead(username);
@@ -92,12 +92,8 @@ public class GrrExportWorker implements ExWorker {
         cellList = null;
         exSheet = null;
 
-//        int j = 0;
         for (int i = 0; i < grrSummaryResultDtos.size(); i++) {
             for (int j = 0; j < grrExportResultDtos.size(); j++) {
-//            if (j >= grrExportResultDtos.size()) {
-//                break;
-//            }
                 String summaryItemName = grrSummaryResultDtos.get(i).getItemName();
                 String subItemName = grrExportResultDtos.get(j).getItemName();
 
@@ -208,29 +204,20 @@ public class GrrExportWorker implements ExWorker {
 
             String name = grrSummaryResultDtos.get(i).getItemName();
             GrrSummaryResultDto grrSummary = grrSummaryResultDtos.get(i).getSummaryResultDto();
-//            LinkedHashMap<String, SpecificationDataDto> specificationDataDtoMap = grrExportConfigDto.getSpecificationDataDtoMap();
-//            if (specificationDataDtoMap.size() != 0 && specificationDataDtoMap != null) {
-//                for (Map.Entry<String, SpecificationDataDto> entry : specificationDataDtoMap.entrySet()) {
-//                    if (entry.getKey().equals(name) && entry.getValue().getDataType().equals("Attribute")) {
-//                        name = name + "(Attribute Data)";
-//                    }
-//                }
-//            }
-
-            String tolerance = grrSummary.getTolerance().toString();
             String repeat = "";
             String reprod = "";
             String grr = "";
             String result = "";
+            int digNumber = digNum <= 2 ? 0 : digNum - 2;
             if (!grrExportConfigDto.isTolerance()) {
-                repeat = grrSummary.getRepeatabilityOnContribution().toString();
-                reprod = grrSummary.getReproducibilityOnContribution().toString();
-                grr = grrSummary.getGrrOnContribution().toString();
+                repeat = DAPStringUtils.formatDouble(grrSummary.getRepeatabilityOnContribution(), digNumber);
+                reprod = DAPStringUtils.formatDouble(grrSummary.getReproducibilityOnContribution(), digNumber);
+                grr = DAPStringUtils.formatDouble(grrSummary.getGrrOnContribution(), digNumber);
                 result = buildGrrLevel(grrExportConfigDto.getLevel(), grrSummary.getGrrOnContribution());
             } else {
-                repeat = grrSummary.getRepeatabilityOnTolerance().toString();
-                reprod = grrSummary.getReproducibilityOnTolerance().toString();
-                grr = grrSummary.getGrrOnTolerance().toString();
+                repeat = DAPStringUtils.formatDouble(grrSummary.getRepeatabilityOnTolerance(), digNumber);
+                reprod = DAPStringUtils.formatDouble(grrSummary.getReproducibilityOnTolerance(), digNumber);
+                grr = DAPStringUtils.formatDouble(grrSummary.getGrrOnTolerance(), digNumber);
                 result = buildGrrLevel(grrExportConfigDto.getLevel(), grrSummary.getGrrOnTolerance());
             }
 
@@ -259,7 +246,6 @@ public class GrrExportWorker implements ExWorker {
                     ExCellType.TEXT, mapRuleStyle.get(result)));
 
             arr = null;
-
         }
         Font font = workbook.createFont();
         font.setFontName("Arial");
@@ -308,19 +294,16 @@ public class GrrExportWorker implements ExWorker {
         //getProcess
         String usl = grrSummary.getUsl().toString();
         String lsl = grrSummary.getLsl().toString();
-        String tolerance = grrSummary.getTolerance() == null ? "-" : grrSummary.getTolerance().toString();
-//        String grr = grrSummaryResultDto.getGrr() == null ? "-" : StringUtils.formatDouble(Double.valueOf(grrSummaryResultDto.getGrr()), digGrrNum) + "%";
-
-//        String grr = grrSummaryResultDto.getGrr() == null ? "-" : grrSummaryResultDto.getGrr() + "%";
-//        String result = grrSummaryResultDto.getLevel() == null ? "-" : grrSummaryResultDto.getLevel();
+        String tolerance = grrSummary.getTolerance() == null ? "-" : DAPStringUtils.formatDouble(grrSummary.getTolerance(), digNum);
         String grr = "";
         String result = "";
+        int digNumber = digNum <= 2 ? 0 : digNum - 2;
 
         if (grrExportConfigDto.isTolerance()) {
-            grr = grrSummary.getGrrOnTolerance() == null ? "-" : grrSummary.getGrrOnTolerance() + "%";
+            grr = grrSummary.getGrrOnTolerance() == null ? "-" : DAPStringUtils.formatDouble(grrSummary.getGrrOnTolerance(), digNumber) + "%";
             result = buildGrrLevel(grrExportConfigDto.getLevel(), grrSummary.getGrrOnTolerance()) == null ? "-" : buildGrrLevel(grrExportConfigDto.getLevel(), grrSummary.getGrrOnTolerance());
         } else {
-            grr = grrSummary.getGrrOnContribution() == null ? "-" : grrSummary.getGrrOnContribution() + "%";
+            grr = grrSummary.getGrrOnContribution() == null ? "-" : DAPStringUtils.formatDouble(grrSummary.getGrrOnContribution(), digNumber) + "%";
             result = buildGrrLevel(grrExportConfigDto.getLevel(), grrSummary.getGrrOnContribution()) == null ? "-" : buildGrrLevel(grrExportConfigDto.getLevel(), grrSummary.getGrrOnContribution());
         }
 
@@ -396,11 +379,11 @@ public class GrrExportWorker implements ExWorker {
             currentRow = currentRow + 1;
             for (int i = 0; i < grrAnovaDtos.size(); i++) {
                 String keyValue = grrAnovaDtos.get(i).getName() == null ? "-" : grrAnovaDtos.get(i).getName().toString();
-                String dfValue = grrAnovaDtos.get(i).getDf() == null ? "-" : grrAnovaDtos.get(i).getDf().toString();
-                String ssValue = grrAnovaDtos.get(i).getSs() == null ? "-" : grrAnovaDtos.get(i).getSs().toString();
-                String msValue = grrAnovaDtos.get(i).getMs() == null ? "-" : grrAnovaDtos.get(i).getMs().toString();
-                String fValue = grrAnovaDtos.get(i).getF() == null ? "-" : grrAnovaDtos.get(i).getF().toString();
-                String probFValue = grrAnovaDtos.get(i).getProbF() == null ? "-" : grrAnovaDtos.get(i).getProbF().toString();
+                String dfValue = grrAnovaDtos.get(i).getDf() == null ? "-" : DAPStringUtils.formatDouble(grrAnovaDtos.get(i).getDf(), digNum);
+                String ssValue = grrAnovaDtos.get(i).getSs() == null ? "-" : DAPStringUtils.formatDouble(grrAnovaDtos.get(i).getSs(), digNum);
+                String msValue = grrAnovaDtos.get(i).getMs() == null ? "-" : DAPStringUtils.formatDouble(grrAnovaDtos.get(i).getMs(), digNum);
+                String fValue = grrAnovaDtos.get(i).getF() == null ? "-" : DAPStringUtils.formatDouble(grrAnovaDtos.get(i).getF(), digNum);
+                String probFValue = grrAnovaDtos.get(i).getProbF() == null ? "-" : DAPStringUtils.formatDouble(grrAnovaDtos.get(i).getProbF(), digNum);
                 String[] arr = {dfValue, ssValue, msValue, fValue, probFValue};
 
                 if (keyValue.equals("Repeatability")) {
@@ -449,13 +432,12 @@ public class GrrExportWorker implements ExWorker {
             for (int i = 0; i < grrSourceDtoList.size(); i++) {
                 GrrResultName grrKey = grrSourceDtoList.get(i).getName();
                 String keyValue = "";
-                String variation = grrSourceDtoList.get(i).getVariation() == null ? "-" : grrSourceDtoList.get(i).getVariation().toString();
-                String sigma = grrSourceDtoList.get(i).getSigma() == null ? "-" : grrSourceDtoList.get(i).getSigma().toString();
-                String sv = grrSourceDtoList.get(i).getStudyVar() == null ? "-" : grrSourceDtoList.get(i).getStudyVar().toString();
-                String contribution = grrSourceDtoList.get(i).getContribution() == null ? "-" : grrSourceDtoList.get(i).getContribution().toString();
-                String totalVariation = grrSourceDtoList.get(i).getTotalVariation() == null ? "-" : grrSourceDtoList.get(i).getTotalVariation().toString();
-                String tolerance = grrSourceDtoList.get(i).getTotalTolerance() == null ? "-" : grrSourceDtoList.get(i).getTotalTolerance().toString();
-//                String[] arr = {sigma, sv, variation, totalVariation, contribution, tolerance};
+                String variation = grrSourceDtoList.get(i).getVariation() == null ? "-" : DAPStringUtils.formatDouble(grrSourceDtoList.get(i).getVariation(), digNum);
+                String sigma = grrSourceDtoList.get(i).getSigma() == null ? "-" : DAPStringUtils.formatDouble(grrSourceDtoList.get(i).getSigma(), digNum);
+                String sv = grrSourceDtoList.get(i).getStudyVar() == null ? "-" : DAPStringUtils.formatDouble(grrSourceDtoList.get(i).getStudyVar(), digNum);
+                String contribution = grrSourceDtoList.get(i).getContribution() == null ? "-" : DAPStringUtils.formatDouble(grrSourceDtoList.get(i).getContribution(), digNum);
+                String totalVariation = grrSourceDtoList.get(i).getTotalVariation() == null ? "-" : DAPStringUtils.formatDouble(grrSourceDtoList.get(i).getTotalVariation(), digNum);
+                String tolerance = grrSourceDtoList.get(i).getTotalTolerance() == null ? "-" : DAPStringUtils.formatDouble(grrSourceDtoList.get(i).getTotalTolerance(), digNum);
                 String[] arr = {sigma, sv, variation, contribution, totalVariation, tolerance};
                 for (int j = 0; j < arr.length; j++) {
                     if (DAPStringUtils.isBlankWithSpecialNumber(arr[j]) || DAPStringUtils.isCheckInfinityAndNaN(arr[j])) {

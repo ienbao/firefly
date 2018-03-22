@@ -9,8 +9,7 @@ public class SpcUserActionAttributesDto {
     private Map<String, Boolean> exportDataItem;
     private String performer;
     private String exportPath;
-    private String exportType;
-
+    private int digNum = 6;
     public Map<String, Boolean> getExportDataItem() {
         return exportDataItem;
     }
@@ -34,11 +33,11 @@ public class SpcUserActionAttributesDto {
         this.exportPath = exportPath;
     }
 
-    public String getExportType() {
-        return exportType;
+    public int getDigNum() {
+        return digNum;
     }
 
-    public void setExportType(String exportType) {
-        this.exportType = exportType;
+    public void setDigNum(int digNum) {
+        this.digNum = digNum;
     }
 }

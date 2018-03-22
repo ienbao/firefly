@@ -6,12 +6,12 @@ import com.dmsoft.firefly.plugin.grr.charts.data.RuleLineData;
 import com.dmsoft.firefly.plugin.grr.charts.data.VerticalCutLine;
 import com.dmsoft.firefly.plugin.grr.dto.GrrImageDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
-import com.dmsoft.firefly.plugin.grr.utils.DigNumInstance;
 import com.dmsoft.firefly.plugin.grr.utils.FileUtils;
 import com.dmsoft.firefly.plugin.grr.utils.MathUtils;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.plugin.grr.utils.charts.ChartUtils;
-import com.dmsoft.firefly.plugin.grr.utils.charts.LegendUtils;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.sun.javafx.charts.Legend;
@@ -45,8 +45,9 @@ import java.util.function.Function;
 public class BuildChart {
     private static Group vBox;
     private static Scene scene;
-
+    private static int digNum = 6;
     public static GrrImageDto buildImage(GrrDetailResultDto grrDetailResultDto, List<String> parts, List<String> appraisers) {
+        digNum = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getDecimalDigit();
         vBox = new Group();
         scene = new Scene(vBox);
         scene.getStylesheets().add(BuildChart.class.getClassLoader().getResource("css/grr_chart.css").toExternalForm());
@@ -173,17 +174,14 @@ public class BuildChart {
         }
         colors[UIConstant.CHART_COMPONENT_CATEGORY.length] = "bar-legend-symbol";
         colors[UIConstant.CHART_COMPONENT_CATEGORY.length + 1] = "chart-bar";
-        Legend legend = LegendUtils.buildLegend(componentChart.getData(), colors);
-//        componentBp.setLeft(legend);
-        int digNum = DigNumInstance.newInstance().getDigNum() - 2;
-//        componentBp.setMargin(legend, new Insets(0, 0, 1, 0));
+        int digNumber = digNum <= 2 ? 0 : digNum - 2;
 
         //Chart text format
         ChartUtils.setChartText(componentChart.getData(), s -> {
             if (DAPStringUtils.isNumeric(s)) {
                 Double value = Double.valueOf(s);
                 if (!DAPStringUtils.isInfinityAndNaN(value)) {
-                    return DAPStringUtils.formatDouble(value, digNum) + "%";
+                    return DAPStringUtils.formatDouble(value, digNumber) + "%";
                 }
             }
             return s + "%";
@@ -215,18 +213,6 @@ public class BuildChart {
             seriesData.add(series);
         }
         partAppraiserChart.getData().addAll(seriesData);
-
-//        Legend legend = LegendUtils.buildLegend(partAppraiserChart.getData(),
-//                "chart-line-symbol", "line-legend-symbol");
-        ChartUtils.setChartToolTip(partAppraiserChart.getData(), pointTooltip -> {
-            Double value = (Double) pointTooltip.getData().getYValue();
-            int digNum = DigNumInstance.newInstance().getDigNum();
-            return pointTooltip == null ? "" :
-                    "(" + pointTooltip.getData().getExtraValue() + "," +
-                            pointTooltip.getData().getXValue() + ")" + "=" + DAPStringUtils.formatDouble(value, digNum);
-        });
-//        partAppraiserBp.setLeft(legend);
-//        partAppraiserBp.setMargin(legend, new Insets(0, 0, 1, 0));
     }
 
     private static void setControlChartData(GrrControlChartDto chartData,
@@ -269,29 +255,12 @@ public class BuildChart {
         horizonalLineData.add(uclLineData);
         horizonalLineData.add(clLineData);
         horizonalLineData.add(lclLineData);
-        int digNum = DigNumInstance.newInstance().getDigNum();
+
         chart.getData().add(series);
 //        button.setDisable(false);
 
         chart.buildValueMarkerWithoutTooltip(verticalLineData);
-        chart.buildValueMarkerWithTooltip(horizonalLineData, new Function<ILineData, String>() {
-            @Override
-            public String apply(ILineData oneLineData) {
-                return oneLineData.getTitle() + "\n" + oneLineData.getName() + "="
-                        + DAPStringUtils.formatDouble(oneLineData.getValue(), digNum);
-            }
-        });
-        ChartUtils.setChartToolTip(chart.getData(), pointTooltip -> {
-            Double value = (Double) pointTooltip.getData().getYValue();
-            return pointTooltip == null ? "" :
-                    "(" + pointTooltip.getData().getExtraValue() + "," +
-                            pointTooltip.getData().getXValue() + ")" + "=" + DAPStringUtils.formatDouble(value, digNum);
-        });
-
-        Legend legend = LegendUtils.buildLegend(chart.getData(),
-                "chart-line-symbol", "line-legend-symbol");
-//        borderPane.setLeft(legend);
-//        borderPane.setMargin(legend, new Insets(0, 0, 1, 0));
+        chart.buildValueMarkerWithoutTooltip(horizonalLineData);
     }
 
     private static void setScatterChartData(GrrScatterChartDto scatterChartData, LineChart chart) {
@@ -317,12 +286,6 @@ public class BuildChart {
             lineSeries.getData().add(new XYChart.Data<>(clX[i], clY[i]));
         }
         chart.getData().addAll(scatterSeries, lineSeries);
-        ChartUtils.setChartToolTip(chart.getData(), pointTooltip -> {
-            Double value = (Double) pointTooltip.getData().getYValue();
-            int digNum = DigNumInstance.newInstance().getDigNum();
-            return pointTooltip == null ? "" :
-                    "(" + DAPStringUtils.formatDouble(value, digNum) + ")";
-        });
         scatterSeries.getNode().getStyleClass().add("chart-series-hidden-line");
     }
 

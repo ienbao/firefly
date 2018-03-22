@@ -9,7 +9,6 @@ import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
-import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcExportServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcSettingServiceImpl;
@@ -109,7 +108,6 @@ public class SpcExportController {
 
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
-    private SpcExportSettingController spcExportSettingController;
 
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private SearchDataFrame dataFrame;
@@ -410,7 +408,7 @@ public class SpcExportController {
         SpcUserActionAttributesDto spcConfig = new SpcUserActionAttributesDto();
         spcConfig.setExportPath(locationPath.getText());
         spcConfig.setPerformer(envService.getUserName());
-
+        spcConfig.setDigNum(envService.findActivatedTemplate().getDecimalDigit());
         spcConfig.setExportDataItem(exportDataItem);
 
         List<SpcStatisticalResultAlarmDto> spcStatisticalResultDtosToExport = null;
@@ -603,7 +601,6 @@ public class SpcExportController {
         try {
             FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML("view/spc_export_setting.fxml");
             root = fxmlLoader.load();
-            spcExportSettingController = fxmlLoader.getController();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.SPC_EXPORT_TEMPLATE_SETTING, SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_SETTING_TITLE), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
             stage.show();
         } catch (Exception ex) {
