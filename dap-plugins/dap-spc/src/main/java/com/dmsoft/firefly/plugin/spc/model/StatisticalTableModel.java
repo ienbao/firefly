@@ -14,6 +14,7 @@ import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcStatisticalResultKey;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
+import com.dmsoft.firefly.sdk.utils.DAPDoubleUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -486,7 +487,7 @@ public class StatisticalTableModel implements TableModel {
     }
 
     private String showValue(String key, StatisticalAlarmDto statisticalAlarmDto) {
-        if (statisticalAlarmDto == null || statisticalAlarmDto.getValue() == null) {
+        if (statisticalAlarmDto == null || DAPDoubleUtils.isSpecialNumber(statisticalAlarmDto.getValue())) {
             return "-";
         }
         if (!key.equals(STATISTICAL_TITLE[2]) && !key.equals(STATISTICAL_TITLE[7]) && !key.equals(STATISTICAL_TITLE[8])) {
