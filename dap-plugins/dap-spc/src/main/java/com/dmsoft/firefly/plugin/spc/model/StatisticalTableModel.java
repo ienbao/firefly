@@ -3,17 +3,18 @@
  */
 package com.dmsoft.firefly.plugin.spc.model;
 
-import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
-import com.dmsoft.firefly.plugin.spc.dto.StatisticalAlarmDto;
+import com.dmsoft.firefly.gui.components.table.TableModel;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
+import com.dmsoft.firefly.gui.components.utils.ValidateRule;
+import com.dmsoft.firefly.gui.components.utils.ValidateUtils;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
-import com.dmsoft.firefly.plugin.spc.utils.Colur;
-import com.dmsoft.firefly.plugin.spc.utils.DigNumInstance;
-import com.dmsoft.firefly.plugin.spc.utils.SourceObjectProperty;
-import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
+import com.dmsoft.firefly.plugin.spc.dto.StatisticalAlarmDto;
+import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcStatisticalResultKey;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
+import com.dmsoft.firefly.sdk.utils.DAPDoubleUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -26,6 +27,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
 import java.awt.*;
 import java.util.*;
@@ -59,6 +61,9 @@ public class StatisticalTableModel implements TableModel {
 
     private Set<String> editorCell = new HashSet<>();
     private List<String> editorRowKey = Lists.newArrayList();
+    private ValidateRule rule;
+
+    private Set<String> errorEditorCell = new HashSet<>();
 
     /**
      * constructor
@@ -114,6 +119,7 @@ public class StatisticalTableModel implements TableModel {
         }
         editorCell.clear();
         editorRowKey.clear();
+        errorEditorCell.clear();
         for (SpcStatisticalResultAlarmDto statisticalResultAlarmDto : spcStatsDtoList) {
             String key = statisticalResultAlarmDto.getKey();
             SpcStatisticalResultAlarmDto resultAlarmDto = keyToStatsDtoMap.get(key);
@@ -180,6 +186,7 @@ public class StatisticalTableModel implements TableModel {
         allChecked.setValue(false);
         editorRowKey.clear();
         keyToStatsDtoMap.clear();
+        errorEditorCell.clear();
     }
 
     /**
@@ -357,6 +364,9 @@ public class StatisticalTableModel implements TableModel {
         if (editorCell.contains(rowKey + "-" + column)) {
             tableCell.setStyle("-fx-text-fill: #f38400");
         }
+        if (errorEditorCell.contains(rowKey + "-" + column)) {
+            tableCell.setStyle("-fx-border-color: #ea2028;-fx-border-with:1 1 1 1");
+        }
 
         SpcStatisticalResultAlarmDto spcStatsDto = keyToStatsDtoMap.get(rowKey);
         Map<String, StatisticalAlarmDto> statisticalAlarmDtoMap = spcStatsDto.getStatisticalAlarmDtoMap();
@@ -383,17 +393,17 @@ public class StatisticalTableModel implements TableModel {
     }
 
     @Override
-    public void setAllCheckBox(CheckBox checkBox) {
-        this.allCheckBox = checkBox;
-    }
-
-    @Override
     public void setTableView(TableView<String> tableView) {
         this.tableView = tableView;
     }
 
     public CheckBox getAllCheckBox() {
         return allCheckBox;
+    }
+
+    @Override
+    public void setAllCheckBox(CheckBox checkBox) {
+        this.allCheckBox = checkBox;
     }
 
     /**
@@ -429,7 +439,6 @@ public class StatisticalTableModel implements TableModel {
         SourceObjectProperty valueProperty = new SourceObjectProperty<>(value);
         if (columnName.equals(STATISTICAL_TITLE[7]) || columnName.equals(STATISTICAL_TITLE[8])) {
             valueProperty.addListener((ov, b1, b2) -> {
-                spcStatsDto.getStatisticalAlarmDtoMap().get(columnName).setValue(Double.valueOf((String) b2));
                 if (!valueProperty.getSourceValue().equals(b2)) {
                     editorCell.add(rowKey + "-" + columnName);
                     editorRowKey.add(rowKey);
@@ -437,6 +446,10 @@ public class StatisticalTableModel implements TableModel {
                     editorCell.remove(rowKey + "-" + columnName);
                     editorRowKey.remove(rowKey);
                 }
+                if (errorEditorCell.contains(rowKey + "-" + columnName)) {
+                    return;
+                }
+                spcStatsDto.getStatisticalAlarmDtoMap().get(columnName).setValue(Double.valueOf((String) b2));
             });
         }
         valueMap.put(rowKey + "-" + columnName, valueProperty);
@@ -474,7 +487,7 @@ public class StatisticalTableModel implements TableModel {
     }
 
     private String showValue(String key, StatisticalAlarmDto statisticalAlarmDto) {
-        if (statisticalAlarmDto == null || statisticalAlarmDto.getValue() == null) {
+        if (statisticalAlarmDto == null || DAPDoubleUtils.isSpecialNumber(statisticalAlarmDto.getValue())) {
             return "-";
         }
         if (!key.equals(STATISTICAL_TITLE[2]) && !key.equals(STATISTICAL_TITLE[7]) && !key.equals(STATISTICAL_TITLE[8])) {
@@ -531,9 +544,64 @@ public class StatisticalTableModel implements TableModel {
      * @return boolean
      */
     public boolean isMenuEventEnable(String rowKey) {
-        if (emptyResultKeys.contains(rowKey)) {
+        return !emptyResultKeys.contains(rowKey);
+    }
+
+    @Override
+    public boolean isTextInputError(TextField textField, String oldText, String newText, String rowKey, String columnName) {
+        if (newText.length() > 255) {
+            textField.setText(oldText);
+            return true;
+        }
+        if (!ValidateUtils.validatePattern(newText, ValidateUtils.DOUBLE_PATTERN)) {
+            textField.setText(oldText);
+            return true;
+        }
+        if (DAPStringUtils.isBlank(newText)) {
+            errorEditorCell.add(rowKey + "-" + columnName);
+            if (!textField.getStyleClass().contains("text-field-error")) {
+                textField.getStyleClass().add("text-field-error");
+            }
+            TooltipUtil.installWarnTooltip(textField, SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_USL_LSL_EMPTY));
+            return true;
+        }
+        SpcStatisticalResultAlarmDto spcStatsDto = keyToStatsDtoMap.get(rowKey);
+        Map<String, StatisticalAlarmDto> statisticalAlarmDtoMap = spcStatsDto.getStatisticalAlarmDtoMap();
+        if (columnName.equals(STATISTICAL_TITLE[7])) {
+            StatisticalAlarmDto statisticalAlarmDto = statisticalAlarmDtoMap.get(SpcStatisticalResultKey.USL.getCode());
+            Double usl = statisticalAlarmDto.getValue();
+            if (Double.valueOf(newText) >= usl) {
+                errorEditorCell.add(rowKey + "-" + columnName);
+                if (!textField.getStyleClass().contains("text-field-error")) {
+                    textField.getStyleClass().add("text-field-error");
+                }
+                TooltipUtil.installWarnTooltip(textField, SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_LSL_MORE_THEN_USL));
+                return true;
+            }
+        } else if (columnName.equals(STATISTICAL_TITLE[8])) {
+            StatisticalAlarmDto statisticalAlarmDto = statisticalAlarmDtoMap.get(SpcStatisticalResultKey.LSL.getCode());
+            Double lsl = statisticalAlarmDto.getValue();
+            if (Double.valueOf(newText) <= lsl) {
+                errorEditorCell.add(rowKey + "-" + columnName);
+                if (!textField.getStyleClass().contains("text-field-error")) {
+                    textField.getStyleClass().add("text-field-error");
+                }
+                TooltipUtil.installWarnTooltip(textField, SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_USL_LESS_THEN_LSL));
+                return true;
+            }
+        }
+        if (errorEditorCell.contains(rowKey + "-" + columnName)) {
+            errorEditorCell.remove(rowKey + "-" + columnName);
+            textField.getStyleClass().removeAll("text-field-error");
+            TooltipUtil.uninstallWarnTooltip(textField);
             return false;
         }
-        return true;
+        textField.getStyleClass().removeAll("text-field-error");
+        TooltipUtil.uninstallWarnTooltip(textField);
+        return false;
+    }
+
+    public boolean hasErrorEditValue() {
+        return errorEditorCell.size() != 0;
     }
 }

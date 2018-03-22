@@ -76,7 +76,7 @@ public class DAPStringUtils extends StringUtils {
      * @return result
      */
     public static String formatDouble(Double value, int digit) {
-        return String.format("%" + digit + "f", value);
+        return String.format("%." + digit + "f", value);
     }
 
     /**

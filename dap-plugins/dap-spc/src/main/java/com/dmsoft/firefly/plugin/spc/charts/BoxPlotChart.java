@@ -72,11 +72,13 @@ public class BoxPlotChart extends XYChart<Number, Number> {
      */
     public void setData(List<BoxPlotChartData> boxPlotChartDataList, ChartTooltip chartTooltip) {
         this.removeAllChildren();
-        if (boxPlotChartDataList == null) return;
+        if (boxPlotChartDataList == null) {
+            return;
+        }
         boxPlotChartDataList.forEach(boxPlotChartData -> createChartSeries(boxPlotChartData, chartTooltip));
     }
 
-    public void createChartSeries(BoxPlotChartData chartData, ChartTooltip chartTooltip) {
+    private void createChartSeries(BoxPlotChartData chartData, ChartTooltip chartTooltip) {
 //        1.设置箱子数据
 //        2.设置线的数据
 //        3.设置点的数据
@@ -90,6 +92,14 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         this.seriesUniqueKeyMap.put(uniqueKey, series);
         this.getData().add(series);
         this.setDataNodeStyleAndTooltip(series, color, chartTooltip == null ? null : chartTooltip.getChartBoxTooltip());
+    }
+
+    public void removeAllChildren() {
+        ObservableList<Node> nodes = getPlotChildren();
+        getPlotChildren().removeAll(nodes);
+        getData().setAll(FXCollections.observableArrayList());
+        seriesUniqueKeyMap.clear();
+        outliers.setAll(FXCollections.observableArrayList());
     }
 
     private Series buildSeries(IBoxAndWhiskerData data, String seriesName) {
@@ -209,14 +219,6 @@ public class BoxPlotChart extends XYChart<Number, Number> {
             circle.setCenterY(y);
             circle.setRadius(2);
         }
-    }
-
-    public void removeAllChildren() {
-        ObservableList<Node> nodes = getPlotChildren();
-        getPlotChildren().removeAll(nodes);
-        getData().setAll(FXCollections.observableArrayList());
-        seriesUniqueKeyMap.clear();
-        outliers.setAll(FXCollections.observableArrayList());
     }
 
     private void addSymbol(Data<Number, Number> symbol, Color color) {

@@ -7,6 +7,12 @@ import static java.lang.Double.NaN;
  */
 public class MathUtils {
 
+    /**
+     * Get max value by double array
+     *
+     * @param array double array
+     * @return max value
+     */
     public static Double getMax(Double[] array) {
         if (array == null || array.length <= 0) {
             return null;
@@ -25,6 +31,12 @@ public class MathUtils {
         return max;
     }
 
+    /**
+     * Get min value by double array
+     *
+     * @param array double array
+     * @return min value
+     */
     public static Double getMin(Double[] array) {
         if (array == null || array.length <= 0) {
             return null;
@@ -43,6 +55,12 @@ public class MathUtils {
         return min;
     }
 
+    /**
+     * Get max value by more double array
+     *
+     * @param array more double array
+     * @return max value
+     */
     public static Double getMax(Double[]... array) {
         if (array == null || array.length <= 0) {
             return null;
@@ -63,6 +81,12 @@ public class MathUtils {
         return max;
     }
 
+    /**
+     * Get min value by more double array
+     *
+     * @param array more double array
+     * @return min value
+     */
     public static Double getMin(Double[]... array) {
         if (array == null || array.length <= 0) {
             return null;

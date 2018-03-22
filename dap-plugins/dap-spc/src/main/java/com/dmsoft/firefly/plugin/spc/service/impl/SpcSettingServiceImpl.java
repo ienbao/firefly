@@ -13,6 +13,7 @@ import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.utils.ControlRuleConfigUtil;
 import com.dmsoft.firefly.plugin.spc.utils.enums.JudgeRuleType;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcStatisticalResultKey;
+import com.dmsoft.firefly.sdk.utils.DAPDoubleUtils;
 import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
@@ -296,7 +297,7 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
     }
 
     private String getAbilityAlarmLevel(String name, Double value, Map<String, Double[]> abilityAlarmRule) {
-        if (value == null) {
+        if (DAPDoubleUtils.isSpecialNumber(value)) {
             return null;
         }
         Double[] alarmData = abilityAlarmRule.get(name);
@@ -330,7 +331,7 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
     }
 
     private String getCustomAlarmLevel(String name, Double value, List<CustomAlarmDto> customAlarmDtoList) {
-        if (value == null || customAlarmDtoList == null) {
+        if (DAPDoubleUtils.isSpecialNumber(value) || customAlarmDtoList == null) {
             return null;
         }
         String level = null;

@@ -429,6 +429,7 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
             tSource.setTotalVariation(engine.eval("sourceResult[7, 5]").asDouble());
             tSource.setTotalTolerance(engine.eval("sourceResult[7, 6]").asDouble());
             sourceDtoList.add(tSource);
+            result.setGrrSourceDtos(sourceDtoList);
 
             Double ndc = NDC_RATE * pSource.getSigma() / gSource.getSigma();
             result.setNumberOfDc(ndc);
@@ -464,6 +465,7 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
             tSource.setTotalVariation(engine.eval("sourceResult[5, 5]").asDouble());
             tSource.setTotalTolerance(engine.eval("sourceResult[5, 6]").asDouble());
             sourceDtoList.add(tSource);
+            result.setGrrSourceDtos(sourceDtoList);
 
             Double ndc = NDC_RATE * pSource.getSigma() / gSource.getSigma();
             result.setNumberOfDc(ndc);

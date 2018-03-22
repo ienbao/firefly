@@ -29,7 +29,6 @@ public class SpcExportServiceImpl {
         String exportPath = exportConfig.getExportPath();
 //        String exportType = exportConfig.getExportType();
         Map<String, Boolean> exportDataItem = exportConfig.getExportDataItem();
-//        int digitNum = globalSettingService.findGlobalSetting("default").getDecimalDigit();
         if (DAPStringUtils.isBlank(exportPath)) {
             basePath[0] = savePath;
         } else {
@@ -68,6 +67,8 @@ public class SpcExportServiceImpl {
         if (spcStatisticDtoToExport.size() != 0) {
             spcExportBuildDetail(exportParamDto, chartImage, spcStatisticDtoToExport, exportConfig, exportTimes);
         }
+        String savePicPath = FileUtils.getAbsolutePath("../export/temp");
+        FileUtils.deleteDir(savePicPath);
         return dirSavePath;
     }
 
@@ -79,13 +80,9 @@ public class SpcExportServiceImpl {
         spcExportWorker.setExcelItemCapacity(exportParamDto.getExcelCapacity());
         String excelPath = exportParamDto.getDirSavePath() + "/" + exportParamDto.getDirName() + "_" + (exportTimes) + ".xlsx";
         spcExportWorker.initWorkbook();
-        spcExportWorker.setDigNum(exportParamDto.getDigitNum());
         spcExportWorker.buildSPCMultiItem(chartImage, spcStatisticalResultDtos, spcUserActionAttributesDto);
         spcExportBuilder.drawSpcExcel(excelPath, spcExportWorker);
         logger.info("Export complete.");
-        String savePicPath = FileUtils.getAbsolutePath("../export/temp");
-//        File file = new File(savePicPath);
-        FileUtils.deleteDir(savePicPath);
         spcExportBuilder.clear();
         spcExportWorker.cleanExportWorker();
         return true;

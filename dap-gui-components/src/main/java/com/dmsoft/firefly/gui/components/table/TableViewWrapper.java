@@ -1,7 +1,5 @@
 package com.dmsoft.firefly.gui.components.table;
 
-import com.dmsoft.firefly.gui.components.utils.TextFieldWrapper;
-import com.dmsoft.firefly.gui.components.utils.ValidateRule;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
@@ -119,7 +117,6 @@ public class TableViewWrapper {
             TableColumn<String, String> column = new TableColumn<>(s);
             column.getStyleClass().add("editable-header");
             column.setCellValueFactory(cell -> model.getCellData(cell.getValue(), s));
-            final ValidateRule rule = model.getValidateRule();
             column.setCellFactory(tableColumn ->
                     new CustomTextFieldTableCell<String, String>(new DefaultStringConverter()) {
                         @Override
@@ -135,17 +132,18 @@ public class TableViewWrapper {
                         @Override
                         public <T> TextField createTextField(Cell<T> cell, StringConverter<T> converter) {
                             TextField tf = super.createTextField(cell, converter);
-                            TextFieldWrapper.decorate(tf, rule);
                             tf.textProperty().addListener((ov, s1, s2) -> {
-                                if (model.isTextInputError(s2, this.getTableView().getItems().get(this.getIndex()), s)) {
-                                    if (!tf.getStyleClass().contains(rule.getErrorStyle())) {
-                                        tf.getStyleClass().add(rule.getErrorStyle());
-                                    }
-                                } else {
-                                    tf.getStyleClass().removeAll(rule.getErrorStyle());
-                                }
+                                model.isTextInputError(tf, s1, s2, this.getTableView().getItems().get(this.getIndex()), s);
                             });
                             return tf;
+                        }
+
+                        @Override
+                        public void startEdit() {
+                            if (getTextField() != null) {
+                                model.isTextInputError(getTextField(), getText(), getText(), this.getTableView().getItems().get(this.getIndex()), s);
+                            }
+                            super.startEdit();
                         }
                     });
             column.setComparator(getComparator());

@@ -132,7 +132,6 @@ public class GrrItemController implements Initializable {
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
 
-
     /**
      * init main controller
      *
@@ -200,10 +199,10 @@ public class GrrItemController implements Initializable {
         initPartAndAppraiserDatas();
         initGrrBasicParam();
         GrrValidateUtil.validateGrr(partTxt, appraiserTxt, trialTxt, partCombox);
-        partTxt.textProperty().addListener((obVal, oldVal, newVal)->{
+        partTxt.textProperty().addListener((obVal, oldVal, newVal) -> {
             updatePartLbl();
         });
-        appraiserTxt.textProperty().addListener((obVal, oldVal, newVal)->{
+        appraiserTxt.textProperty().addListener((obVal, oldVal, newVal) -> {
             updateAppraiserLbl();
         });
         getWarnLblIcon();
@@ -274,9 +273,9 @@ public class GrrItemController implements Initializable {
         if (grrParamDto != null && grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty()) {
             Set<String> selectedParts = grrParamDto.getParts();
             if (selectedParts != null) {
-                partListView.getItems().forEach(listViewModel->{
+                partListView.getItems().forEach(listViewModel -> {
                     listViewModel.setErrorMsg(null);
-                    if (selectedParts.contains(listViewModel.getName())){
+                    if (selectedParts.contains(listViewModel.getName())) {
                         listViewModel.setIsChecked(true);
                     }
                 });
@@ -285,9 +284,9 @@ public class GrrItemController implements Initializable {
 
             Set<String> selectedAppraisers = grrParamDto.getAppraisers();
             if (selectedAppraisers != null) {
-                appraiserListView.getItems().forEach(listViewModel->{
+                appraiserListView.getItems().forEach(listViewModel -> {
                     listViewModel.setErrorMsg(null);
-                    if (selectedAppraisers != null && selectedAppraisers.contains(listViewModel.getName())){
+                    if (selectedAppraisers != null && selectedAppraisers.contains(listViewModel.getName())) {
                         listViewModel.setIsChecked(true);
                     }
                 });
@@ -301,9 +300,9 @@ public class GrrItemController implements Initializable {
 
     private void getTooltipMsg(ListView<ListViewModel> listView, GrrParamDto grrParamDto, boolean isSlot) {
         Map<String, String> errorMsgs = grrParamDto.getErrors();
-        listView.getItems().forEach(listViewModel->{
+        listView.getItems().forEach(listViewModel -> {
             StringBuilder errorMsg = new StringBuilder();
-            errorMsgs.keySet().forEach(key->{
+            errorMsgs.keySet().forEach(key -> {
                 String[] keys = key.split(UIConstant.SPLIT_FLAG);
                 if (keys != null) {
                     if (isSlot) {
@@ -323,11 +322,11 @@ public class GrrItemController implements Initializable {
     }
 
     private void resetPartOrAppraiserListView() {
-        partListView.getItems().forEach(listViewModel->{
+        partListView.getItems().forEach(listViewModel -> {
             listViewModel.setIsChecked(false);
             listViewModel.setErrorMsg(null);
         });
-        appraiserListView.getItems().forEach(listViewModel->{
+        appraiserListView.getItems().forEach(listViewModel -> {
             listViewModel.setIsChecked(false);
             listViewModel.setErrorMsg(null);
         });
@@ -344,7 +343,7 @@ public class GrrItemController implements Initializable {
                 } else {
                     HBox cell;
                     CheckBox checkBox = new CheckBox();
-                    checkBox.setPrefSize(12,12);
+                    checkBox.setPrefSize(12, 12);
                     if (item.isIsChecked()) {
                         checkBox.setSelected(true);
                     } else {
@@ -393,7 +392,7 @@ public class GrrItemController implements Initializable {
             if (count != 0) {
                 partLbl.setText(count + "/-");
                 TooltipUtil.installNormalTooltip(partLbl, GrrFxmlAndLanguageUtils.getString("UI_GRR_ITEM_VALUE_COUNT_EXPECT_WARN"));
-            }  else {
+            } else {
                 clearPartLbl();
             }
         } else {
@@ -425,7 +424,7 @@ public class GrrItemController implements Initializable {
         if (StringUtils.isBlank(appraiserTxt.getText())) {
             if (count != 0) {
                 appraiserLbl.setText(count + "/-");
-            }  else {
+            } else {
                 clearAppraiserLbl();
             }
         } else {
@@ -457,7 +456,7 @@ public class GrrItemController implements Initializable {
         warnIconLbl1.setStyle("-fx-padding: 0 26 0 0;");
     }
 
-    private void clearPartLbl(){
+    private void clearPartLbl() {
         partLbl.setText("");
         partLbl.setGraphic(null);
         partLbl.setStyle("");
@@ -465,7 +464,7 @@ public class GrrItemController implements Initializable {
         TooltipUtil.uninstallNormalTooltip(partLbl);
     }
 
-    private void clearAppraiserLbl(){
+    private void clearAppraiserLbl() {
         appraiserLbl.setText("");
         appraiserLbl.setStyle("");
         appraiserLbl.setGraphic(null);
@@ -658,7 +657,7 @@ public class GrrItemController implements Initializable {
     }
 
     private boolean checkSubmitParam(Integer itemNumbers) {
-        if (itemNumbers ==  null || itemNumbers <= 0) {
+        if (itemNumbers == null || itemNumbers <= 0) {
             RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_ANALYSIS_ITEM_EMPTY"));
             return false;
         }
@@ -678,7 +677,7 @@ public class GrrItemController implements Initializable {
             return false;
         }
 
-        if ((appraiserCombox.getValue() != null) &&  (appraiserListView.getItems().size() > 0 && appraiserListView.getItems().size() < Integer.valueOf(appraiserTxt.getText()))) {
+        if ((appraiserCombox.getValue() != null) && (appraiserListView.getItems().size() > 0 && appraiserListView.getItems().size() < Integer.valueOf(appraiserTxt.getText()))) {
             RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_MAX_NUMBER_NOT_MATCH"));
             return false;
         }
@@ -735,9 +734,9 @@ public class GrrItemController implements Initializable {
         File file = fileChooser.showOpenDialog(fileStage);
 
         if (file != null) {
-            clearLeftConfig();
             GrrLeftConfigDto grrLeftConfigDto = leftConfigService.importGrrConfig(file);
             if (grrLeftConfigDto != null) {
+                clearLeftConfig();
                 if (grrLeftConfigDto.getItems() != null && grrLeftConfigDto.getItems().size() > 0) {
                     items.forEach(testItem -> {
                         if (grrLeftConfigDto.getItems().contains(testItem.getItem())) {
@@ -769,11 +768,11 @@ public class GrrItemController implements Initializable {
                     appraiserCombox.setValue(grrLeftConfigDto.getAppraiser());
                 }
 
-                if (grrLeftConfigDto.getParts() != null &&!grrLeftConfigDto.getParts().isEmpty()) {
+                if (grrLeftConfigDto.getParts() != null && !grrLeftConfigDto.getParts().isEmpty()) {
                     updatePartListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getParts()), true);
                 }
 
-                if (grrLeftConfigDto.getAppraisers() != null &&!grrLeftConfigDto.getAppraisers().isEmpty()) {
+                if (grrLeftConfigDto.getAppraisers() != null && !grrLeftConfigDto.getAppraisers().isEmpty()) {
                     updatePartListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getAppraisers()), true);
                 }
             }
@@ -845,7 +844,7 @@ public class GrrItemController implements Initializable {
         String timePattern = null;
         try {
             TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
-            if(timePatternDto != null) {
+            if (timePatternDto != null) {
                 timeKeys = timePatternDto.getTimeKeys();
                 timePattern = timePatternDto.getPattern();
             }

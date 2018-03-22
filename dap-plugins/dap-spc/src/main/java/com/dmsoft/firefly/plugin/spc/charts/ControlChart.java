@@ -5,7 +5,6 @@ import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.ControlChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
 import com.dmsoft.firefly.plugin.spc.charts.utils.PointClickCallBack;
-import com.dmsoft.firefly.plugin.spc.utils.XYData;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
@@ -66,74 +65,19 @@ public class ControlChart<X, Y> extends LineChart {
      * @param chartTooltip         chart data tooltip
      */
     public void setData(List<ControlChartData> controlChartDataList, ChartTooltip chartTooltip) {
-        removeAllChildren();
+        this.removeAllChildren();
+        if (controlChartDataList == null) {
+            return;
+        }
         controlChartDataList.forEach(controlChartData -> createChartSeriesData(controlChartData, chartTooltip));
     }
 
-    public void createChartSeriesData(ControlChartData controlChartData, ChartTooltip chartTooltip) {
-//        1. 设置画图数据, 图的颜色、样式、悬浮提示
-//        2. 设置画直线数据， 线的颜色，样式
-//        3. 设置画折线数据， 折线的颜色，样式
-        if (controlChartData == null) return;
-        Color color = controlChartData.getColor();
-        String seriesName = controlChartData.getSeriesName();
-        String uniqueKey = controlChartData.getUniqueKey();
-        List<ILineData> lineDataList = controlChartData.getLineData();
-        List<IPathData> pathDataList = controlChartData.getBrokenLineData();
-        Function<PointRule, PointStyle> rulePointStyleFunction = controlChartData.getPointFunction();
-//        Build series data
-        XYChart.Series series = this.buildSeries(controlChartData.getXyOneChartData(), seriesName);
-//        Set series for chart
-        this.getData().add(series);
-
-        if (pointClick) {
-            this.dataClickEvent(series);
-        }
-//        Set chart series and data color, data tooltip
-        this.setDataNodeStyleAndTooltip(series, color, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
-//        Set chart line
-        if (lineDataList != null) {
-            ValueMarker valueMarker = new ValueMarker();
-            lineDataList.forEach(oneLineData -> {
-                Line line = valueMarker.buildValueMarker(oneLineData, color, seriesName, chartTooltip == null ? null : chartTooltip.getLineTooltip());
-                getPlotChildren().add(line);
-            });
-            valueMarkerMap.put(uniqueKey, valueMarker);
-        }
-//       Set chart path
-        if (pathDataList != null) {
-            PathMarker pathMarker = new PathMarker();
-            pathDataList.forEach(onePathData -> {
-                Path path = pathMarker.buildPathMarker(onePathData);
-                getPlotChildren().add(path);
-            });
-            pathMarkerMap.put(uniqueKey, pathMarker);
-        }
-
-        this.seriesUniqueKeyMap.put(uniqueKey, series);
-        this.seriesColorMap.put(series, color);
-        this.seriesPointRuleMap.put(uniqueKey, rulePointStyleFunction);
-    }
-
-    private XYChart.Series buildSeries(IXYChartData<X, Y> xyOneChartData, String seriesName) {
-        XYChart.Series oneSeries = new XYChart.Series();
-        oneSeries.setName(seriesName);
-        int length = xyOneChartData.getLen();
-        for (int i = 0; i < length; i++) {
-            X xValue = xyOneChartData.getXValueByIndex(i);
-            Y yValue = xyOneChartData.getYValueByIndex(i);
-            if (xValue == null || yValue == null) {
-                continue;
-            }
-            XYChart.Data data = new XYChart.Data<>(xValue, yValue);
-            Object extraValue = xyOneChartData.getExtraValueByIndex(i) == null ? "" :
-                    xyOneChartData.getExtraValueByIndex(i);
-            data.setExtraValue(extraValue);
-            oneSeries.getData().add(data);
-        }
-        return oneSeries;
-    }
-
+    /**
+     * Update chart node color
+     *
+     * @param unique unique key
+     * @param color  color
+     */
     public void updateChartColor(String unique, Color color) {
 //        update chart color
         if (seriesUniqueKeyMap.containsKey(unique)) {
@@ -151,6 +95,11 @@ public class ControlChart<X, Y> extends LineChart {
         }
     }
 
+    /**
+     * Clear annotation
+     *
+     * @param data data
+     */
     public void clearAnnotation(List<Data<X, Y>> data) {
         data.forEach(dateItem -> {
             dateItem.getNode().getStyleClass().clear();
@@ -168,6 +117,12 @@ public class ControlChart<X, Y> extends LineChart {
         });
     }
 
+    /**
+     * Toggle series path show or hide
+     *
+     * @param series series name
+     * @param showed whether it show or not
+     */
     public void toggleSeriesLine(XYChart.Series<X, Y> series, boolean showed) {
         if (!showed) {
             series.getNode().getStyleClass().add("chart-series-hidden-line");
@@ -176,6 +131,12 @@ public class ControlChart<X, Y> extends LineChart {
         }
     }
 
+    /**
+     * Toggle point show or hide
+     *
+     * @param data   data
+     * @param showed whether it show or not
+     */
     public void toggleSeriesPoint(XYChart.Data<X, Y> data, boolean showed) {
         if (!showed) {
             data.getNode().getStyleClass().add("chart-line-hidden-symbol");
@@ -184,15 +145,27 @@ public class ControlChart<X, Y> extends LineChart {
         }
     }
 
+    /**
+     * Toggle line show or hide
+     *
+     * @param lineName line name
+     * @param showed   whether it show or not
+     */
     public void toggleValueMarker(String lineName, boolean showed) {
         for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
             valueMarkerEntry.getValue().toggleValueMarker(lineName, showed);
         }
     }
 
-    public void togglePathMarker(String lineName, boolean showed) {
+    /**
+     * Toggle shoe path value or not
+     *
+     * @param pathName path name
+     * @param showed   whether it show or not
+     */
+    public void togglePathMarker(String pathName, boolean showed) {
         for (Map.Entry<String, PathMarker> valueMarkerEntry : pathMarkerMap.entrySet()) {
-            valueMarkerEntry.getValue().togglePathMarker(lineName, showed);
+            valueMarkerEntry.getValue().togglePathMarker(pathName, showed);
         }
     }
 
@@ -269,6 +242,98 @@ public class ControlChart<X, Y> extends LineChart {
         });
     }
 
+    /**
+     * Remove all chart node and clear chart data
+     */
+    public void removeAllChildren() {
+        this.seriesUniqueKeyMap.clear();
+        this.seriesPointRuleMap.clear();
+        this.seriesColorMap.clear();
+        for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
+            valueMarkerEntry.getValue().clear();
+        }
+        for (Map.Entry<String, PathMarker> pathMarkerEntry : pathMarkerMap.entrySet()) {
+            pathMarkerEntry.getValue().clear();
+        }
+        this.valueMarkerMap.clear();
+        this.pathMarkerMap.clear();
+        this.getData().setAll(FXCollections.observableArrayList());
+        this.getPlotChildren().removeAll(this.getPlotChildren());
+    }
+
+    /**
+     * Active point click fire event
+     *
+     * @param flag if true
+     */
+    public void activePointClickEvent(boolean flag) {
+        this.pointClick = flag;
+    }
+
+    private void createChartSeriesData(ControlChartData controlChartData, ChartTooltip chartTooltip) {
+//        1. 设置画图数据, 图的颜色、样式、悬浮提示
+//        2. 设置画直线数据， 线的颜色，样式
+//        3. 设置画折线数据， 折线的颜色，样式
+        if (controlChartData == null) return;
+        Color color = controlChartData.getColor();
+        String seriesName = controlChartData.getSeriesName();
+        String uniqueKey = controlChartData.getUniqueKey();
+        List<ILineData> lineDataList = controlChartData.getLineData();
+        List<IPathData> pathDataList = controlChartData.getBrokenLineData();
+        Function<PointRule, PointStyle> rulePointStyleFunction = controlChartData.getPointFunction();
+//        Build series data
+        XYChart.Series series = this.buildSeries(controlChartData.getXyOneChartData(), seriesName);
+//        Set series for chart
+        this.getData().add(series);
+
+        if (pointClick) {
+            this.dataClickEvent(series);
+        }
+//        Set chart series and data color, data tooltip
+        this.setDataNodeStyleAndTooltip(series, color, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
+//        Set chart line
+        if (lineDataList != null) {
+            ValueMarker valueMarker = new ValueMarker();
+            lineDataList.forEach(oneLineData -> {
+                Line line = valueMarker.buildValueMarker(oneLineData, color, seriesName, chartTooltip == null ? null : chartTooltip.getLineTooltip());
+                getPlotChildren().add(line);
+            });
+            valueMarkerMap.put(uniqueKey, valueMarker);
+        }
+//       Set chart path
+        if (pathDataList != null) {
+            PathMarker pathMarker = new PathMarker();
+            pathDataList.forEach(onePathData -> {
+                Path path = pathMarker.buildPathMarker(onePathData);
+                getPlotChildren().add(path);
+            });
+            pathMarkerMap.put(uniqueKey, pathMarker);
+        }
+
+        this.seriesUniqueKeyMap.put(uniqueKey, series);
+        this.seriesColorMap.put(series, color);
+        this.seriesPointRuleMap.put(uniqueKey, rulePointStyleFunction);
+    }
+
+    private XYChart.Series buildSeries(IXYChartData<X, Y> xyOneChartData, String seriesName) {
+        XYChart.Series oneSeries = new XYChart.Series();
+        oneSeries.setName(seriesName);
+        int length = xyOneChartData.getLen();
+        for (int i = 0; i < length; i++) {
+            X xValue = xyOneChartData.getXValueByIndex(i);
+            Y yValue = xyOneChartData.getYValueByIndex(i);
+            if (xValue == null || yValue == null) {
+                continue;
+            }
+            XYChart.Data data = new XYChart.Data<>(xValue, yValue);
+            Object extraValue = xyOneChartData.getExtraValueByIndex(i) == null ? "" :
+                    xyOneChartData.getExtraValueByIndex(i);
+            data.setExtraValue(extraValue);
+            oneSeries.getData().add(data);
+        }
+        return oneSeries;
+    }
+
     private void setNodeAnnotation(Data<X, Y> data, String value, String textColor) {
         data.getNode().getStyleClass().clear();
         data.getNode().getStyleClass().add("chart-symbol-triangle");
@@ -328,26 +393,6 @@ public class ControlChart<X, Y> extends LineChart {
         });
     }
 
-
-    /**
-     * Remove all chart node and clear chart data
-     */
-    public void removeAllChildren() {
-        this.seriesUniqueKeyMap.clear();
-        this.seriesPointRuleMap.clear();
-        this.seriesColorMap.clear();
-        for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
-            valueMarkerEntry.getValue().clear();
-        }
-        for (Map.Entry<String, PathMarker> pathMarkerEntry : pathMarkerMap.entrySet()) {
-            pathMarkerEntry.getValue().clear();
-        }
-        this.valueMarkerMap.clear();
-        this.pathMarkerMap.clear();
-        this.getData().setAll(FXCollections.observableArrayList());
-        this.getPlotChildren().removeAll(this.getPlotChildren());
-    }
-
     @Override
     protected void layoutPlotChildren() {
 
@@ -359,14 +404,6 @@ public class ControlChart<X, Y> extends LineChart {
         for (Map.Entry<String, PathMarker> pathMarkerEntry : pathMarkerMap.entrySet()) {
             pathMarkerEntry.getValue().paintPathMarker(this);
         }
-    }
-
-    /**
-     * Active point click fire event
-     * @param flag if true
-     */
-    public void activePointClickEvent(boolean flag) {
-        this.pointClick = flag;
     }
 
     private void dataClickEvent(XYChart.Series<X, Y> series) {
