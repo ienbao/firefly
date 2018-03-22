@@ -124,8 +124,26 @@ public class ResolverSelectController implements Initializable {
             Stage fileStage = null;
             List<File> files = fileChooser.showOpenMultipleDialog(fileStage);
             if (files != null && files.size() != 0) {
+                List<String> fileNames = Lists.newArrayList();
+                controller.getChooseTableRowDataObservableList().forEach(v -> {
+                    fileNames.add(v.getValue());
+                });
+                List<String> fileNameExits = Lists.newArrayList();
                 files.forEach(file -> {
-                    importDataSource(file.getPath(), file.getName(), resolverName);
+                    if (fileNames.contains(file.getName())) {
+                        fileNameExits.add(file.getName());
+                    } else {
+                        importDataSource(file.getPath(), file.getName(), resolverName);
+                    }
+                });
+                Platform.runLater(() -> {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append("DataSource" + " ");
+                    fileNameExits.forEach(v -> {
+                        stringBuilder.append(v + " ");
+                    });
+                    stringBuilder.append("Repeat");
+                    WindowMessageFactory.createWindowMessage("DataSource Repeat", stringBuilder.toString());
                 });
             }
         });
@@ -144,6 +162,7 @@ public class ResolverSelectController implements Initializable {
             });
         });
         controller.getChooseTableRowDataObservableList().add(chooseTableRowData);
+
         new Thread(() -> {
             manager.doJobASyn(job, returnValue -> {
                 if (returnValue != null && returnValue instanceof Throwable) {
