@@ -15,6 +15,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -49,6 +50,8 @@ public class GrrSettingController {
     @FXML
     private ComboBox<String> sort;
     @FXML
+    private ComboBox<String> exportTemplate;
+    @FXML
     private TextField levelGood;
     @FXML
     private TextField levelBad;
@@ -68,8 +71,18 @@ public class GrrSettingController {
     @FXML
     private void initialize() {
         initLabelStyle();
+        ValidateRule rule = new ValidateRule();
+        rule.setMaxLength(255);
+        rule.setPattern("^[+]?\\d*[.]?\\d*$");
+        rule.setMaxValue(1.0);
+        rule.setMinValue(0.0);
+        rule.setErrorStyle("text-field-error");
+        rule.setEmptyErrorMsg("Can not be empty");
+        rule.setRangErrorMsg("Number must between 0 to 1");
+        TextFieldWrapper.decorate(sign, rule);
         exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_setting_normal.png")));
-
+        exportTemplate.setItems(FXCollections.observableArrayList(GrrFxmlAndLanguageUtils.getString(ResourceMassages.GEE_EXPORT_TEMPLATE)));
+        exportTemplate.setValue(GrrFxmlAndLanguageUtils.getString(ResourceMassages.GEE_EXPORT_TEMPLATE));
         anova.setToggleGroup(group);
         anova.setSelected(true);
         xbar.setToggleGroup(group);
@@ -169,6 +182,10 @@ public class GrrSettingController {
                 WindowMessageFactory.createWindowMessageHasCancel("Message", "Bad level must be bigger than Good level.");
                 return;
             }
+            if (sign.getStyleClass().contains("text-field-error")) {
+                WindowMessageFactory.createWindowMessageHasCancel("Message", "Significance Level input error.");
+                return;
+            }
             saveGrrSetting();
             StageMap.closeStage("grrSetting");
         });
@@ -176,6 +193,18 @@ public class GrrSettingController {
             StageMap.closeStage("grrSetting");
         });
         apply.setOnAction(event -> {
+            if (DAPStringUtils.isEmpty(levelBad.getText()) || DAPStringUtils.isEmpty(levelGood.getText())) {
+                WindowMessageFactory.createWindowMessageHasCancel("Message", "Bad level and Good level can not be empty.");
+                return;
+            }
+            if (levelBad.getStyleClass().contains("text-field-error") || levelGood.getStyleClass().contains("text-field-error")) {
+                WindowMessageFactory.createWindowMessageHasCancel("Message", "Bad level must be bigger than Good level.");
+                return;
+            }
+            if (sign.getStyleClass().contains("text-field-error")) {
+                WindowMessageFactory.createWindowMessageHasCancel("Message", "Significance Level input error.");
+                return;
+            }
             saveGrrSetting();
         });
     }
