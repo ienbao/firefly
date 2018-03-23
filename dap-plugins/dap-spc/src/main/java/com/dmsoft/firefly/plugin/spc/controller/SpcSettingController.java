@@ -392,7 +392,7 @@ public class SpcSettingController implements Initializable {
         }
         testItemRowDataFilteredList.setPredicate(p -> {
             String testItem = p.getName();
-            return testItem.contains(filterTf);
+            return testItem.toLowerCase().contains(filterTf.toLowerCase());
         });
     }
 

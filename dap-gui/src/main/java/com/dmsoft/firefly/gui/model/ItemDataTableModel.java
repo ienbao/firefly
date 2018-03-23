@@ -30,7 +30,7 @@ public class ItemDataTableModel implements TableModel {
     private ObjectProperty<Boolean> allChecked = new SimpleObjectProperty<>(false);
     private List<String> trueSet = new ArrayList<>();
     private List<String> falseSet = new ArrayList<>();
-    private CheckBox allCheckBox = null;
+    private CheckBox allCheckBox = new CheckBox();
 
     /**
      * constructor
@@ -56,14 +56,23 @@ public class ItemDataTableModel implements TableModel {
         }
 
         int i = 0;
+        int k = 3;
         if (rowDataDtos != null && !rowDataDtos.isEmpty()) {
             for (RowDataDto rowDataDto : rowDataDtos) {
-                // rowKey.add( rowDataDto.getRowKey() );
                 rowKey.add(String.valueOf(i));
-                i++;
+                checkMap.put(String.valueOf(i), new SimpleObjectProperty<>(rowDataDto.getInUsed()));
+                if (i > 2 && rowDataDto.getInUsed()) {
+                    k++;
+                }
                 rowDataDtoList.add(rowDataDto);
+                i++;
             }
         }
+
+        if (k == rowDataDtos.size() && k != 3) {
+            allChecked.setValue(true);
+        }
+
     }
 
     @Override
@@ -101,31 +110,19 @@ public class ItemDataTableModel implements TableModel {
 
     @Override
     public ObjectProperty<Boolean> getCheckValue(String rowKey, String columnName) {
-        if (checkMap.get(rowKey) == null) {
-            SimpleObjectProperty<Boolean> b = new SimpleObjectProperty<>(true);
-            if (rowDataDtoList != null && !rowDataDtoList.isEmpty()) {
-                b.set(rowDataDtoList.get(Integer.parseInt(rowKey)).getInUsed());
-            }
-            checkMap.put(rowKey, b);
-            trueSet.add(rowKey);
-            allChecked.setValue(true);
-            b.addListener((ov, b1, b2) -> {
-                if (!b2) {
-//                    if(trueSet.contains(rowKey )){
-//                        trueSet.remove(rowKey);
-//                    }
-                    falseSet.add(rowKey);
-                    allChecked.setValue(false);
-                } else {
-                    if (falseSet.contains(rowKey)) {
-                        falseSet.remove(rowKey);
-                    }
-//                    trueSet.add( rowKey );
-                    allChecked.setValue(true);
+        SimpleObjectProperty<Boolean> b = checkMap.get(rowKey);
+        b.addListener((ov, b1, b2) -> {
+            if (!b2) {
+                falseSet.add(rowKey);
+                allChecked.setValue(false);
+            } else {
+                if (falseSet.contains(rowKey)) {
+                    falseSet.remove(rowKey);
                 }
-            });
-        }
-        return checkMap.get(rowKey);
+                allChecked.setValue(true);
+            }
+        });
+        return b;
     }
 
     @Override
@@ -148,11 +145,6 @@ public class ItemDataTableModel implements TableModel {
             tableCell.setGraphic(null);
             return tableCell;
         }
-
-//        if (column.isEmpty() && falseSet.contains(rowKey)) {
-//            tableCell.setStyle("-fx-text-fill: #f38400");
-//            return tableCell;
-//        }
 
         if (DAPStringUtils.isNumeric(rowDataDtoList.get(0).getData().get(column))) {
             usl = Double.valueOf(rowDataDtoList.get(0).getData().get(column));

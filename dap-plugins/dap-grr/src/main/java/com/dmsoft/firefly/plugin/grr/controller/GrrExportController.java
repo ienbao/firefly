@@ -22,10 +22,7 @@ import com.dmsoft.firefly.plugin.grr.service.GrrExportService;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrExportServiceImpl;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrLeftConfigServiceImpl;
-import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
-import com.dmsoft.firefly.plugin.grr.utils.GrrValidateUtil;
-import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
-import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
+import com.dmsoft.firefly.plugin.grr.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -68,10 +65,8 @@ import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by Garen.Pang on 2018/3/13.
@@ -722,15 +717,21 @@ public class GrrExportController {
                 WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
                 return;
             }
+            if (!checkSubmitParam(getSelectedItem().size())) {
+                WindowMessageFactory.createWindowMessageHasOk("Export", "GRR Config param error.");
+                return;
+            }
             StageMap.closeStage("grrExport");
-            Platform.runLater(() -> {
+            Thread thread = new Thread(() -> {
+                String savePath = locationPath.getText() + "/GRR_" + getTimeString();
                 List<String> projectNameList = envService.findActivatedProjectName();
                 if (eachFile.isSelected()) {
-                    projectNameList.forEach(projectName -> export(Lists.newArrayList(projectName)));
+                    projectNameList.forEach(projectName -> export(Lists.newArrayList(projectName), savePath));
                 } else {
-                    export(projectNameList);
+                    export(projectNameList, savePath);
                 }
             });
+            thread.start();
         });
         print.setOnAction(event -> {
             if (StringUtils.isEmpty(locationPath.getText())) {
@@ -741,12 +742,42 @@ public class GrrExportController {
                 WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
                 return;
             }
+
             StageMap.closeStage("grrExport");
 
+            Thread thread = new Thread(() -> {
+                PdfPrintUtil.getPrintService();
+
+                String savePath = locationPath.getText() + "/GRR_" + getTimeString();
+                List<String> projectNameList = envService.findActivatedProjectName();
+                if (eachFile.isSelected()) {
+                    projectNameList.forEach(projectName -> export(Lists.newArrayList(projectName), savePath));
+                } else {
+                    export(projectNameList, savePath);
+                }
+                boolean isSucceed = false;
+                try {
+                    isSucceed = new ExcelToPdfUtil().excelToPdf(savePath);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (isSucceed) {
+//                    exportProcessDialogView.getTaProgress().append("Print success...\n");
+//                    exportProcessDialogView.dispose();
+                    PdfPrintUtil.printPdf(savePath);
+                }
+            });
+            thread.start();
         });
         cancel.setOnAction(event -> {
             StageMap.closeStage("grrExport");
         });
+    }
+
+    private String getTimeString() {
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        return sdf.format(d);
     }
 
     private List<String> getSelectedItem() {
@@ -833,7 +864,7 @@ public class GrrExportController {
         return selectItems;
     }
 
-    private void export(List<String> projectNameList) {
+    private void export(List<String> projectNameList, String savePath) {
         List<TestItemWithTypeDto> testItemWithTypeDtoList = getSelectedItemDto();
         List<TestItemWithTypeDto> itemDto = Lists.newArrayList();
         if (projectNameList.size() == 1) {
@@ -852,7 +883,7 @@ public class GrrExportController {
 //            List<Double> level = grrConfigDto.getAlarmSetting();
 
             GrrExportConfigDto grrExportConfigDto = new GrrExportConfigDto();
-            grrExportConfigDto.setExportPath(locationPath.getText());
+            grrExportConfigDto.setExportPath(savePath);
             grrExportConfigDto.setUserName(envService.getUserName());
             grrExportConfigDto.setGrrConfigDto(grrConfigDto);
             grrExportConfigDto.setDigNum(envService.findActivatedTemplate().getDecimalDigit());

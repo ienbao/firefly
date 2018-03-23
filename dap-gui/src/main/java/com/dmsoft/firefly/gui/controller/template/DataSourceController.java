@@ -9,6 +9,7 @@ import com.dmsoft.firefly.core.utils.DataFormat;
 import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageController;
@@ -60,14 +61,14 @@ import static com.google.common.io.Resources.getResource;
 public class DataSourceController implements Initializable {
 
     @FXML
-    private Button addFile, ok, cancel, search, delete;
+    private Button addFile, ok, cancel, delete;
     @FXML
     private Label errorInfo;
     @FXML
     private TableView dataSourceTable;
 
     @FXML
-    private TextField filterTf;
+    private TextFieldFilter filterTf;
 
     @FXML
     private TableColumn<ChooseTableRowData, CheckBox> chooseCheckBoxColumn;
@@ -89,7 +90,7 @@ public class DataSourceController implements Initializable {
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
     private void initTable() {
-        search.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
+//        search.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
         delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
 //        errorInfo.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_tips_warning.png")));
         errorInfo.getStyleClass().add("message-tip-warn-mark");
@@ -336,7 +337,7 @@ public class DataSourceController implements Initializable {
         });
 
         allCheckBox.setOnAction(event -> getAllSelectEvent());
-        search.setOnAction(event -> {
+        filterTf.getTextField().textProperty().addListener((observable, oldValue, newValue) -> {
             getFilterTextFieldEvent();
         });
         List<String> deleteProjects = Lists.newArrayList();
@@ -383,7 +384,7 @@ public class DataSourceController implements Initializable {
 
     private void updateProjectOrder() {
         UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
-        userPreferenceDto.setUserName("admin");
+        userPreferenceDto.setUserName(envService.getUserName());
         userPreferenceDto.setCode("projectOrder");
         List<String> order = Lists.newArrayList();
         chooseTableRowDataObservableList.forEach(v -> {
@@ -461,7 +462,7 @@ public class DataSourceController implements Initializable {
 
     private void getFilterTextFieldEvent() {
         chooseTableRowDataFilteredList.setPredicate(p ->
-                p.containsRex(filterTf.getText())
+                p.containsRex(filterTf.getTextField().getText())
         );
     }
 

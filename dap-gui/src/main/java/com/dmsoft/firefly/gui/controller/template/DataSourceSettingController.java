@@ -203,6 +203,11 @@ public class DataSourceSettingController {
                 } else {
                     checkMap.put(key, new SimpleObjectProperty<>(itemDataTableModel.getAllCheckBox().isSelected()));
                 }
+
+                if(!itemDataTableModel.getAllCheckBox().isSelected()){
+                    itemDataTableModel.getFalseSet().add(key);
+                }
+                
             }
         }
     }

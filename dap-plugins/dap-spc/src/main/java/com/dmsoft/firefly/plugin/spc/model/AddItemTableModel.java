@@ -95,7 +95,7 @@ public class AddItemTableModel implements TableModel {
     public void filterTestItem(String filterTf) {
         addItemRowDataFilteredList.setPredicate(p -> {
             String testItem = p;
-            return testItem.contains(filterTf);
+            return testItem.toLowerCase().contains(filterTf.toLowerCase());
         });
     }
 

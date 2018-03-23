@@ -15,15 +15,12 @@ import com.dmsoft.firefly.plugin.grr.utils.enums.GrrResultName;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -118,9 +115,9 @@ public class GrrExportWorker implements ExWorker {
     private List<ExCell> buildSummaryHead(String performer) {
         List<ExCell> exCellList = Lists.newArrayList();
 
-        DateTimeFormatter formatDir = DateTimeFormat.forPattern("yyyy/MM/dd");
-        DateTime nowDir = new DateTime();
-        String nowDate = nowDir.toString(formatDir);
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        String nowDate = sdf.format(d);
         //Person Data
         exCellList.add(ExUtil.fillToCell(new Integer[]{headIndex[0], headIndex[0]}, "Date",
                 ExCellType.TEXT, mapCellStyle.get(CellStyleType.head_lightBlue.toString())));

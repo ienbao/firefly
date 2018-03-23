@@ -22,18 +22,18 @@ public class UIConstant {
     public static final String CHART_TYPE_SPC_SCT_BOX = "BoxC";
 
     public static final String[] SPC_SR_ALL = new String[]{
-            "Test Item", "Condition", "Samples", "AVG", "Max", "Min", "StDev", "LSL", "USL", "Center", "CPK", "Range", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness",
+            "Test Item", "Condition", "Samples", "AVG", "Max", "Min", "StDev", "LSL", "USL", "Center", "CPK", "Range", "μ-3SIGMA", "μ+3SIGMA", "Kurtosis", "Skewness",
             "CA(%)", "CP", "CPL", "CPU", "Within PPM", "PP", "PPK", "PPL", "PPU", "OverAll PPM"};
 
     public static final String[] SPC_STATISTICAL_FIX_COLUMN = new String[]{"", "Test Item", "Condition"};
 
     public static final String[] SPC_CHOOSE_RESULT = new String[]{
-            "Samples", "AVG", "Max", "Min", "StDev", "LSL", "USL", "Center", "CPK", "Range", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness",
+            "Samples", "AVG", "Max", "Min", "StDev", "LSL", "USL", "Center", "CPK", "Range", "μ-3SIGMA", "μ+3SIGMA", "Kurtosis", "Skewness",
             "CA(%)", "CP", "CPL", "CPU", "Within PPM", "PP", "PPK", "PPL", "PPU", "OverAll PPM"
     };
 
     public static final String[] SPC_STATISTICAL = new String[]{
-            "Samples", "AVG", "Max", "Min", "StDev", "Range", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness"
+            "Samples", "AVG", "Max", "Min", "StDev", "Range", "μ-3SIGMA", "μ+3SIGMA", "Kurtosis", "Skewness"
     };
     public static final String[] SPC_CAPABILITY = new String[]{
             "CPK", "CA", "CP", "CPL", "CPU", "Within PPM"
@@ -45,7 +45,7 @@ public class UIConstant {
             "CA", "CPK", "CP", "CPL", "CPU", "Within PPM", "PPK", "PP", "PPL", "PPU", "OverAll PPM"
     };
     public static final String[] SPC_EXPORT_B = new String[]{
-            "Samples", "AVG", "Max", "Min", "Center", "Range", "StDev", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness"
+            "Samples", "AVG", "Max", "Min", "Center", "Range", "StDev", "μ-3SIGMA", "μ+3SIGMA", "Kurtosis", "Skewness"
     };
 
     public static final String[] SPC_LEVEL_RESULT = new String[]{
@@ -64,23 +64,23 @@ public class UIConstant {
     public static final String SPC_CHART_MR = "MR Chart";
 
     public static final String[] SPC_CHART_NAME = new String[]{"ND Chart", "Run Chart", "X-bar Chart", "Range Chart", "SD Chart", "Median Chart", "Box Chart", "MR Chart"};
-    public static final String[] EXPORT_NDC_SECOND_LABELS = {"Item Name", "Search Condition", "Samples", "AVG", "Max", "Min", "USL", "LSL", "Center", "Range", "StDev", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness",
+    public static final String[] EXPORT_NDC_SECOND_LABELS = {"Item Name", "Search Condition", "Samples", "AVG", "Max", "Min", "USL", "LSL", "Center", "Range", "StDev", "μ-3SIGMA", "μ+3SIGMA", "Kurtosis", "Skewness",
             "CA", "CPK", "CP", "CPL", "CPU", "Within PPM", "PPK", "PP", "PPL", "PPU", "Overall PPM"};
 
-    //    "LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL"
-    public static final String[] SPC_CHART_XBAR_EXTERN_MENU = new String[]{"LCL", "μ", "UCL", "Point", "Connect Line"};
-    public static final String[] SPC_CHART_NDC_EXTERN_MENU = new String[]{"USL", "LSL", "UCL", "2σ", "σ", "μ", "-σ", "-2σ", "LCL", "Histogram", "Normal Curve"};
-    public static final String[] SPC_CHART_RUN_EXTERN_MENU = new String[]{"USL", "LSL", "LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL", "Point", "Connect Line"};
-    public static final String[] SPC_CHART_BOX_EXTERN_MENU = new String[]{"CL", "Grid Line"};
+    //    "LCL", "-2SIGMA", "-SIGMA", "μ", "SIGMA", "2SIGMA", "UCL"
+//    public static final String[] SPC_CHART_XBAR_EXTERN_MENU = new String[]{"LCL", "μ", "UCL", "Point", "Connect Line"};
+//    public static final String[] SPC_CHART_NDC_EXTERN_MENU = new String[]{"USL", "LSL", "UCL", "2SIGMA", "SIGMA", "μ", "-SIGMA", "-2SIGMA", "LCL", "Histogram", "Normal Curve"};
+//    public static final String[] SPC_CHART_RUN_EXTERN_MENU = new String[]{"USL", "LSL", "LCL", "-2SIGMA", "-SIGMA", "μ", "SIGMA", "2SIGMA", "UCL", "Point", "Connect Line"};
+//    public static final String[] SPC_CHART_BOX_EXTERN_MENU = new String[]{"CL", "Grid Line"};
 
-    public static final String[] SPC_CHART_LINE_NAME = new String[]{"USL", "LSL", "LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL"};
+//    public static final String[] SPC_CHART_LINE_NAME = new String[]{"USL", "LSL", "LCL", "-2SIGMA", "-SIGMA", "μ", "SIGMA", "2SIGMA", "UCL"};
     public static final String[] SPC_XBARCHART_LINE_NAME = new String[]{"LCL", "μ", "UCL"};
-    public static final String[] SPC_NDCCHART_LINE_NAME = new String[]{"UCL", "USL", "2σ", "σ", "μ", "-σ", "-2σ", "LSL", "LCL"};
+    public static final String[] SPC_NDCCHART_LINE_NAME = new String[]{"UCL", "USL", "2SIGMA", "SIGMA", "μ", "-SIGMA", "-2SIGMA", "LSL", "LCL"};
 
-    public static final String[] SPC_RULE_R = new String[]{"R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"};
+//    public static final String[] SPC_RULE_R = new String[]{"R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"};
 
     public static final String[] EXPORT_SPC_NDC_LABELS = {"CA", "CPK", "CP", "CPL", "CPU", "Within PPM"};
-    public static final String[] EXPORT_SPC_DESCRIPTIVE = {"Descriptive Statistics", "Samples", "AVG", "Max", "Min", "Center", "Range", "StDev", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness"};
+    public static final String[] EXPORT_SPC_DESCRIPTIVE = {"Descriptive Statistics", "Samples", "AVG", "Max", "Min", "Center", "Range", "StDev", "μ-3SIGMA", "μ+3SIGMA", "Kurtosis", "Skewness"};
     public static final String[] EXPORT_SPC_PERFORMANCE = {"Performace Cability Index", "PPK", "PP", "PPL", "PPU", "OverAll PPM"};
     public static final String[] SPC_USL_LSL = new String[]{"USL", "LSL"};
     public static final String[] SPC_UCL_LCL = new String[]{"UCL", "LCL"};
@@ -95,4 +95,63 @@ public class UIConstant {
     public static final String[] CONTROL_ALARM_RULE_HEADER = new String[]{"Is Use", "Rule Name", "n", "m", "s"};
 
     public static final double FACTOR = 0.20;
+
+    public static final String[] SPC_CHART_NDC_EXTERN_MENU = new String[] {
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_USL"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_LSL"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_UCL"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_2_SIGMA"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_SIGMA"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_AVERAGE"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_NEGATIVE_SIGMA"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_NEGATIVE_2_SIGMA"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_LCL"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_Histogram"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_Curve")};
+
+    public static final String[] SPC_CHART_RUN_EXTERN_MENU = new String[] {
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_USL"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_LSL"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_LCL"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_NEGATIVE_2_SIGMA"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_NEGATIVE_SIGMA"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_AVERAGE"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_SIGMA"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_2_SIGMA"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_UCL"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_POINT"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_LINE")};
+
+    public static final String[] SPC_CHART_CONTROL_EXTERN_MENU = new String[] {
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_CONTROL_EXTERN_MENU_LCL"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_CONTROL_EXTERN_MENU_AVERAGE"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_CONTROL_EXTERN_MENU_UCL"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_CONTROL_EXTERN_MENU_POINT"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_CONTROL_EXTERN_MENU_CONNECT_LINE")};
+
+    public static final String[] SPC_CHART_BOX_EXTERN_MENU = new String[] {
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_BOX_EXTERN_MENU_CL"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_BOX_EXTERN_MENU_Line")};
+
+    public static final String[] SPC_CHART_LINE_NAME = new String[] {
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_LINE_NAME_USL"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_LINE_NAME_LSL"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_LINE_NAME_LCL"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_LINE_NAME_NEGATIVE_2_SIGMA"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_LINE_NAME_NEGATIVE_SIGMA"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_LINE_NAME_AVERAGE"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_LINE_NAME_SIGMA"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_LINE_NAME_2_SIGMA"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_LINE_NAME_UCL")};
+
+    public static final String[] SPC_RULE_R = new String[] {
+            SpcFxmlAndLanguageUtils.getString("SPC_RULE_R_R1"),
+            SpcFxmlAndLanguageUtils.getString("SPC_RULE_R_R2"),
+            SpcFxmlAndLanguageUtils.getString("SPC_RULE_R_R3"),
+            SpcFxmlAndLanguageUtils.getString("SPC_RULE_R_R4"),
+            SpcFxmlAndLanguageUtils.getString("SPC_RULE_R_R5"),
+            SpcFxmlAndLanguageUtils.getString("SPC_RULE_R_R6"),
+            SpcFxmlAndLanguageUtils.getString("SPC_RULE_R_R7"),
+            SpcFxmlAndLanguageUtils.getString("SPC_RULE_R_R8"),
+            SpcFxmlAndLanguageUtils.getString("SPC_RULE_R_R9")};
 }

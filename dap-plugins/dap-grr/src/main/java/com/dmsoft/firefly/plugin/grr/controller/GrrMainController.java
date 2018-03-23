@@ -72,6 +72,7 @@ public class GrrMainController implements Initializable {
 
     private void initComponentEvents() {
         exportBtn.setOnAction(event -> getExportBtnEvent());
+        printBtn.setOnAction(event -> getExportBtnEvent());
 
         refreshBtn.setOnAction(event -> {
             grrResultController.refreshGrrResult();

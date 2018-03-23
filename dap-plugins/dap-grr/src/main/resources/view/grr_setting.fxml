@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<?import com.dmsoft.firefly.gui.components.utils.NumberTextField?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="505.0" prefWidth="800.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.grr.controller.GrrSettingController">
+<?import javafx.scene.control.TextField?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="505.0" prefWidth="800.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.grr.controller.GrrSettingController">
    <children>
       <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="780.0" style="-fx-border-color: #DCDCDC;">
          <children>
@@ -31,7 +37,7 @@
                </children></VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Label text="Default Setting" VBox.vgrow="ALWAYS">
+                  <Label style="-fx-font-weight: bold;" text="Default Setting" VBox.vgrow="ALWAYS">
                      <font>
                         <Font name="Arial Bold" size="12.0" />
                      </font>
@@ -69,11 +75,11 @@
                   <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
                      <children>
                         <Label text="Significance Level" />
-                        <NumberTextField fx:id="sign" prefWidth="70.0">
+                        <TextField fx:id="sign" prefWidth="70.0">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
-                        </NumberTextField>
+                        </TextField>
                      </children>
                      <VBox.margin>
                         <Insets top="10.0" />
@@ -97,7 +103,7 @@
                         <Insets top="10.0" />
                      </VBox.margin>
                   </HBox>
-                  <Label text="GRR Alarm Setting">
+                  <Label style="-fx-font-weight: bold;" text="GRR Alarm Setting">
                      <VBox.margin>
                         <Insets top="20.0" />
                      </VBox.margin>
@@ -120,11 +126,11 @@
                            </padding>
                         </Label>
                         <Label text="&lt;" />
-                        <NumberTextField fx:id="levelGood" prefWidth="50.0">
+                        <TextField fx:id="levelGood" prefWidth="50.0">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
-                        </NumberTextField>
+                        </TextField>
                         <Label text="≤" />
                         <Label prefHeight="22.0" prefWidth="70.0" style="-fx-background-color: #487CF4; -fx-text-fill: #FFFFFF;" text="Adequate">
                            <HBox.margin>
@@ -135,11 +141,11 @@
                            </padding>
                         </Label>
                         <Label text="&lt;" />
-                        <NumberTextField fx:id="levelBad" prefWidth="60.0">
+                        <TextField fx:id="levelBad" prefWidth="60.0">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
-                        </NumberTextField>
+                        </TextField>
                         <Label text="≤" />
                         <Label prefHeight="22.0" prefWidth="70.0" style="-fx-background-color: #EA2028; -fx-text-fill: #FFFFFF;" text="Bad">
                            <HBox.margin>
@@ -151,7 +157,7 @@
                         </Label>
                      </children>
                   </HBox>
-                  <Label text="Export Mode">
+                  <Label style="-fx-font-weight: bold;" text="Export Mode">
                      <font>
                         <Font name="Arial Bold" size="12.0" />
                      </font>
@@ -162,7 +168,7 @@
                   <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
                      <children>
                         <Label text="Active Template" />
-                        <ComboBox fx:id="template" prefWidth="150.0">
+                        <ComboBox fx:id="exportTemplate" prefWidth="150.0">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>

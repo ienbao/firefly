@@ -56,10 +56,12 @@ public class SpcExportWorker implements ExWorker {
      * @param spcStatisticalResultDtos   spc static result data
      * @param chartPicPaths              chartPicPaths
      * @param spcUserActionAttributesDto spc user action and config dto
+     * @param runChartRule spc run chart warn rules
      */
-    public void buildSPCMultiItem(Map<String, Map<String, String>> chartPicPaths, List<SpcStatisticalResultAlarmDto> spcStatisticalResultDtos, SpcUserActionAttributesDto spcUserActionAttributesDto) {
-        Map<String, String> rRules = Maps.newHashMap();
-        rRules.put("analysisKey0", "R1,R2");
+    public void buildSPCMultiItem(Map<String, Map<String, String>> chartPicPaths,
+                                  List<SpcStatisticalResultAlarmDto> spcStatisticalResultDtos,
+                                  SpcUserActionAttributesDto spcUserActionAttributesDto,
+                                  Map<String, String> runChartRule) {
         String perfomer = spcUserActionAttributesDto.getPerformer();
         digNum = spcUserActionAttributesDto.getDigNum();
         Map<String, Boolean> exportDataItem = spcUserActionAttributesDto.getExportDataItem();
@@ -180,7 +182,7 @@ public class SpcExportWorker implements ExWorker {
                         firstChart = true;
                     }
                     if (!SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode().equals(condition)) {
-                        rcCellList = buildRChart(rRules.get(key), chartPicPath.get(UIConstant.SPC_CHART_RUN), "Run Chart");
+                        rcCellList = buildRChart(runChartRule.get(key), chartPicPath.get(UIConstant.SPC_CHART_RUN), "Run Chart");
                         chartFlag = true;
                         rcCellListAll.addAll(rcCellList);
                         count++;

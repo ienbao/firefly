@@ -17,6 +17,7 @@ import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -125,17 +126,18 @@ public class BuildChart {
             BuildChart.setBoxChartData(box, Lists.newArrayList(iBoxChartData));
             BuildChart.setControlChartData(mr, Lists.newArrayList(mrChartData));
 
-
-            Map<String, String> chartPath = Maps.newHashMap();
-            chartPath.put(UIConstant.SPC_CHART_NAME[0], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[0], nd));
-            chartPath.put(UIConstant.SPC_CHART_NAME[1], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[1], run));
-            chartPath.put(UIConstant.SPC_CHART_NAME[2], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[2], xbar));
-            chartPath.put(UIConstant.SPC_CHART_NAME[3], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[3], range));
-            chartPath.put(UIConstant.SPC_CHART_NAME[4], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[4], sd));
-            chartPath.put(UIConstant.SPC_CHART_NAME[5], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[5], med));
-            chartPath.put(UIConstant.SPC_CHART_NAME[6], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[6], box));
-            chartPath.put(UIConstant.SPC_CHART_NAME[7], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[7], mr));
-            result.put(key, chartPath);
+            Platform.runLater(() -> {
+                Map<String, String> chartPath = Maps.newHashMap();
+                chartPath.put(UIConstant.SPC_CHART_NAME[0], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[0], nd));
+                chartPath.put(UIConstant.SPC_CHART_NAME[1], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[1], run));
+                chartPath.put(UIConstant.SPC_CHART_NAME[2], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[2], xbar));
+                chartPath.put(UIConstant.SPC_CHART_NAME[3], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[3], range));
+                chartPath.put(UIConstant.SPC_CHART_NAME[4], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[4], sd));
+                chartPath.put(UIConstant.SPC_CHART_NAME[5], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[5], med));
+                chartPath.put(UIConstant.SPC_CHART_NAME[6], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[6], box));
+                chartPath.put(UIConstant.SPC_CHART_NAME[7], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[7], mr));
+                result.put(key, chartPath);
+            });
 
             if (search > 1 && (i + 1) % search == 0) {
                 BuildChart.setNdChartData(nd, ndcChartDataList);
@@ -154,17 +156,18 @@ public class BuildChart {
                 boxChartDataList.clear();
                 BuildChart.setControlChartData(mr, mrChartDataList);
                 mrChartDataList.clear();
-
-                Map<String, String> summaryPath = Maps.newHashMap();
-                summaryPath.put(UIConstant.SPC_CHART_NAME[0], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[0], nd));
-                summaryPath.put(UIConstant.SPC_CHART_NAME[1], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[1], run));
-                summaryPath.put(UIConstant.SPC_CHART_NAME[2], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[2], xbar));
-                summaryPath.put(UIConstant.SPC_CHART_NAME[3], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[3], range));
-                summaryPath.put(UIConstant.SPC_CHART_NAME[4], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[4], sd));
-                summaryPath.put(UIConstant.SPC_CHART_NAME[5], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[5], med));
-                summaryPath.put(UIConstant.SPC_CHART_NAME[6], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[6], box));
-                summaryPath.put(UIConstant.SPC_CHART_NAME[7], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[7], mr));
-                result.put(key + "SubSummary", summaryPath);
+                Platform.runLater(() -> {
+                    Map<String, String> summaryPath = Maps.newHashMap();
+                    summaryPath.put(UIConstant.SPC_CHART_NAME[0], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[0], nd));
+                    summaryPath.put(UIConstant.SPC_CHART_NAME[1], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[1], run));
+                    summaryPath.put(UIConstant.SPC_CHART_NAME[2], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[2], xbar));
+                    summaryPath.put(UIConstant.SPC_CHART_NAME[3], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[3], range));
+                    summaryPath.put(UIConstant.SPC_CHART_NAME[4], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[4], sd));
+                    summaryPath.put(UIConstant.SPC_CHART_NAME[5], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[5], med));
+                    summaryPath.put(UIConstant.SPC_CHART_NAME[6], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[6], box));
+                    summaryPath.put(UIConstant.SPC_CHART_NAME[7], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[7], mr));
+                    result.put(key + "SubSummary", summaryPath);
+                });
             }
             i++;
         }

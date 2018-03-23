@@ -19,6 +19,7 @@ import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.*;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.SpcChartToolTip;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -212,7 +213,7 @@ public class ChartResultController implements Initializable {
     private ChartPanel buildControlChartPane() {
         ChartOperateButton button = new ChartOperateButton(true);
         button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
-        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_XBAR_EXTERN_MENU));
+        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
         button.setListViewSize(140, 120);
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
@@ -226,15 +227,15 @@ public class ChartResultController implements Initializable {
         ChartPanel chartPanel = new ChartPanel<>(chart);
         chartPanel.getCustomPane().getChildren().add(button);
         button.setSelectCallBack((name, selected, selectedNames) -> {
-            if (UIConstant.SPC_CHART_XBAR_EXTERN_MENU[4].equalsIgnoreCase(name)) {
+            if (UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[4].equalsIgnoreCase(name)) {
                 ObservableList<XYChart.Series> series = chart.getData();
                 series.forEach(oneSeries -> chart.toggleSeriesLine(oneSeries, selected));
-            } else if (UIConstant.SPC_CHART_XBAR_EXTERN_MENU[3].equalsIgnoreCase(name)) {
+            } else if (UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[3].equalsIgnoreCase(name)) {
                 ObservableList<XYChart.Series<Number, Number>> series = chart.getData();
                 series.forEach(oneSeries -> oneSeries.getData().forEach(dataItem -> {
                     chart.toggleSeriesPoint(dataItem, selected);
                 }));
-            } else if (UIConstant.SPC_CHART_XBAR_EXTERN_MENU[1].equalsIgnoreCase(name)) {
+            } else if (UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[1].equalsIgnoreCase(name)) {
                 chart.toggleValueMarker(name, selected);
             } else {
                 chart.togglePathMarker(name, selected);
@@ -362,10 +363,13 @@ public class ChartResultController implements Initializable {
             yLower[i] = (Double) ndChartData.get(i).getYLowerBound();
             yUpper[i] = (Double) ndChartData.get(i).getYUpperBound();
         }
-        double xMax = MathUtils.getMax(xUpper);
-        double xMin = MathUtils.getMin(xLower);
-        double yMax = MathUtils.getMax(yUpper);
-        double yMin = MathUtils.getMin(yLower);
+        Double xMax = MathUtils.getMax(xUpper);
+        Double xMin = MathUtils.getMin(xLower);
+        Double yMax = MathUtils.getMax(yUpper);
+        Double yMin = MathUtils.getMin(yLower);
+        if (xMax == null || xMin == null || yMax == null || yMin == null) {
+            return;
+        }
         NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
         double yReserve = (yMax - yMin) * UIConstant.FACTOR;
@@ -395,10 +399,13 @@ public class ChartResultController implements Initializable {
             yLower[i] = (Double) runChartData.get(i).getYLowerBound();
             yUpper[i] = (Double) runChartData.get(i).getYUpperBound();
         }
-        double xMax = MathUtils.getMax(xUpper);
-        double xMin = MathUtils.getMin(xLower);
-        double yMax = MathUtils.getMax(yUpper);
-        double yMin = MathUtils.getMin(yLower);
+        Double xMax = MathUtils.getMax(xUpper);
+        Double xMin = MathUtils.getMin(xLower);
+        Double yMax = MathUtils.getMax(yUpper);
+        Double yMin = MathUtils.getMin(yLower);
+        if (xMax == null || xMin == null || yMax == null || yMin == null) {
+            return;
+        }
         NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
         double yReserve = (yMax - yMin) * UIConstant.FACTOR;
@@ -430,10 +437,13 @@ public class ChartResultController implements Initializable {
                 yLower[i] = (Double) controlChartData.get(i).getYLowerBound();
                 yUpper[i] = (Double) controlChartData.get(i).getYUpperBound();
             }
-            double xMax = MathUtils.getMax(xUpper);
-            double xMin = MathUtils.getMin(xLower);
-            double yMax = MathUtils.getMax(yUpper);
-            double yMin = MathUtils.getMin(yLower);
+            Double xMax = MathUtils.getMax(xUpper);
+            Double xMin = MathUtils.getMin(xLower);
+            Double yMax = MathUtils.getMax(yUpper);
+            Double yMin = MathUtils.getMin(yLower);
+            if (xMax == null || xMin == null || yMax == null || yMin == null) {
+                return;
+            }
             NumberAxis xAxis = (NumberAxis) controlChart.getXAxis();
             NumberAxis yAxis = (NumberAxis) controlChart.getYAxis();
             double yReserve = (yMax - yMin) * UIConstant.FACTOR;
@@ -464,10 +474,13 @@ public class ChartResultController implements Initializable {
             yLower[i] = (Double) boxChartData.get(i).getYLowerBound();
             yUpper[i] = (Double) boxChartData.get(i).getYUpperBound();
         }
-        double xMax = MathUtils.getMax(xUpper);
-        double xMin = MathUtils.getMin(xLower);
-        double yMax = MathUtils.getMax(yUpper);
-        double yMin = MathUtils.getMin(yLower);
+        Double xMax = MathUtils.getMax(xUpper);
+        Double xMin = MathUtils.getMin(xLower);
+        Double yMax = MathUtils.getMax(yUpper);
+        Double yMin = MathUtils.getMin(yLower);
+        if (xMax == null || xMin == null || yMax == null || yMin == null) {
+            return;
+        }
         NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
         double yReserve = (yMax - yMin) * UIConstant.FACTOR;
