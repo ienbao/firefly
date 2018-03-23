@@ -61,7 +61,6 @@ public class StatisticalTableModel implements TableModel {
 
     private Set<String> editorCell = new HashSet<>();
     private List<String> editorRowKey = Lists.newArrayList();
-    private ValidateRule rule;
 
     private Set<String> errorEditorCell = new HashSet<>();
 
@@ -582,7 +581,7 @@ public class StatisticalTableModel implements TableModel {
             SourceObjectProperty uslProperty = valueMap.get(rowKey + "-" + STATISTICAL_TITLE[8]);
             StatisticalAlarmDto statisticalAlarmDto = statisticalAlarmDtoMap.get(SpcStatisticalResultKey.USL.getCode());
             Double usl = Double.valueOf((String) uslProperty.getValue());
-            if (Double.valueOf(newText) >= usl) {
+            if (!DAPStringUtils.isNumeric(newText) || Double.valueOf(newText) >= usl) {
                 errorEditorCell.add(rowKey + "-" + columnName);
                 if (!textField.getStyleClass().contains("text-field-error")) {
                     textField.getStyleClass().add("text-field-error");

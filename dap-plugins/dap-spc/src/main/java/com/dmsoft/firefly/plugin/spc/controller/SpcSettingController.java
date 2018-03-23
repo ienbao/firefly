@@ -15,6 +15,7 @@ import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.model.ControlAlarmRuleTableModel;
 import com.dmsoft.firefly.plugin.spc.model.CustomAlarmTestItemRowData;
 import com.dmsoft.firefly.plugin.spc.model.StatisticsResultRuleRowData;
+import com.dmsoft.firefly.plugin.spc.model.StatisticsRuleModel;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcCustomAlarmKey;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcProCapAlarmKey;
@@ -79,20 +80,18 @@ public class SpcSettingController implements Initializable {
     @FXML
     private Label testItemNameLabel;
     @FXML
-    private TableView<StatisticsResultRuleRowData> statisticalResultAlarmSetTable;
-    @FXML
-    private TableColumn<StatisticsResultRuleRowData, String> statisticsColumn;
-    @FXML
-    private TableColumn<StatisticsResultRuleRowData, String> lowerLimitColumn;
-    @FXML
-    private TableColumn<StatisticsResultRuleRowData, String> upperLimitColumn;
+    private TableView statisticalResultAlarmSetTable;
+//    @FXML
+//    private TableColumn<StatisticsResultRuleRowData, String> statisticsColumn;
+//    @FXML
+//    private TableColumn<StatisticsResultRuleRowData, String> lowerLimitColumn;
+//    @FXML
+//    private TableColumn<StatisticsResultRuleRowData, String> upperLimitColumn;
 
     //control Alarm Rule
     @FXML
     private TableView controlAlarmRuleTable;
     private ControlAlarmRuleTableModel controlAlarmRuleTableModel;
-    @FXML
-    private TextArea ruleInstructionTextArea;
 
     //Export Template Setting
     @FXML
@@ -107,7 +106,8 @@ public class SpcSettingController implements Initializable {
 
     private ObservableList<CustomAlarmTestItemRowData> testItemRowDataObservableList;
     private FilteredList<CustomAlarmTestItemRowData> testItemRowDataFilteredList;
-    private ObservableList<StatisticsResultRuleRowData> statisticsRuleRowDataObservableList;
+    //    private ObservableList<StatisticsResultRuleRowData> statisticsRuleRowDataObservableList;
+    private StatisticsRuleModel statisticsRuleModel;
 
     private SpcExportSettingController spcExportSettingController;
     private AddItemController addItemController;
@@ -128,13 +128,16 @@ public class SpcSettingController implements Initializable {
         testItemRowDataFilteredList = testItemRowDataObservableList.filtered(p -> true);
         customAlarmTable.setItems(testItemRowDataFilteredList);
 
-        statisticsColumn.setCellValueFactory(cellData -> cellData.getValue().statisticNameProperty());
-        lowerLimitColumn.setCellValueFactory(cellData -> cellData.getValue().lowerLimitProperty());
-        upperLimitColumn.setCellValueFactory(cellData -> cellData.getValue().upperLimitProperty());
-        lowerLimitColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        upperLimitColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        statisticsRuleRowDataObservableList = FXCollections.observableArrayList();
-        statisticalResultAlarmSetTable.setItems(statisticsRuleRowDataObservableList);
+//        statisticsColumn.setCellValueFactory(cellData -> cellData.getValue().statisticNameProperty());
+//        lowerLimitColumn.setCellValueFactory(cellData -> cellData.getValue().lowerLimitProperty());
+//        upperLimitColumn.setCellValueFactory(cellData -> cellData.getValue().upperLimitProperty());
+//        lowerLimitColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+//        upperLimitColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+//        statisticsRuleRowDataObservableList = FXCollections.observableArrayList();
+//        statisticalResultAlarmSetTable.setItems(statisticsRuleRowDataObservableList);
+
+        statisticsRuleModel = new StatisticsRuleModel();
+        TableViewWrapper.decorate(statisticalResultAlarmSetTable, statisticsRuleModel);
 
         controlAlarmRuleTableModel = new ControlAlarmRuleTableModel();
         TableViewWrapper.decorate(controlAlarmRuleTable, controlAlarmRuleTableModel);
@@ -288,18 +291,19 @@ public class SpcSettingController implements Initializable {
             testItemRowDataObservableList.add(testItemRowData);
         }
         if (testItemRowDataObservableList != null && testItemRowDataObservableList.size() != 0) {
-            statisticsRuleRowDataObservableList.clear();
+//            statisticsRuleRowDataObservableList.clear();
             CustomAlarmTestItemRowData customAlarmTestItemRowData = testItemRowDataObservableList.get(0);
             if (customAlarmTestItemRowData == null) {
                 return;
             }
             List<CustomAlarmDto> customAlarmDtoList = customAlarmTestItemRowData.getCustomAlarmDtoList();
-            if (customAlarmDtoList == null) {
-                return;
-            }
-            for (CustomAlarmDto customAlarmDto : customAlarmDtoList) {
-                statisticsRuleRowDataObservableList.add(new StatisticsResultRuleRowData(customAlarmDto));
-            }
+//            if (customAlarmDtoList == null) {
+//                return;
+//            }
+//            for (CustomAlarmDto customAlarmDto : customAlarmDtoList) {
+//                statisticsRuleRowDataObservableList.add(new StatisticsResultRuleRowData(customAlarmDto));
+//            }
+            statisticsRuleModel.initData(customAlarmDtoList);
             testItemNameLabel.setText(customAlarmTestItemRowData.getName());
         }
     }
@@ -372,16 +376,17 @@ public class SpcSettingController implements Initializable {
     }
 
     private void getCustomAlarmTableChangeEvent(CustomAlarmTestItemRowData customAlarmTestItemRowData) {
-        statisticsRuleRowDataObservableList.clear();
+//        statisticsRuleRowDataObservableList.clear();
         testItemNameLabel.setText("");
         if (customAlarmTestItemRowData != null) {
             List<CustomAlarmDto> customAlarmDtoList = customAlarmTestItemRowData.getCustomAlarmDtoList();
-            if (customAlarmDtoList == null) {
-                return;
-            }
-            for (CustomAlarmDto customAlarmDto : customAlarmDtoList) {
-                statisticsRuleRowDataObservableList.add(new StatisticsResultRuleRowData(customAlarmDto));
-            }
+//            if (customAlarmDtoList == null) {
+//                return;
+//            }
+//            for (CustomAlarmDto customAlarmDto : customAlarmDtoList) {
+//                statisticsRuleRowDataObservableList.add(new StatisticsResultRuleRowData(customAlarmDto));
+//            }
+            statisticsRuleModel.initData(customAlarmDtoList);
             testItemNameLabel.setText(customAlarmTestItemRowData.getName());
         }
     }
@@ -397,15 +402,12 @@ public class SpcSettingController implements Initializable {
     }
 
     private void getApplyBtnEvent() {
-        boolean result = SpcSettingValidateUtil.newInstance().getResult();
-        if (!result) {
-            WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER), SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_SETTING_APPLY_WARN_MESSAGE));
+        if (!isSave()) {
             return;
         }
         SpcSettingDto spcSettingDto = this.buildSaveSettingData();
         Job job = new Job(ParamKeys.SAVE_SPC_SETTING_DATA_JOP_PIPELINE);
         manager.doJobSyn(job, spcSettingDto);
-
     }
 
     private void getCancelBtnEvent() {
@@ -413,8 +415,24 @@ public class SpcSettingController implements Initializable {
     }
 
     private void getOkBtnEvent() {
-        this.getApplyBtnEvent();
+        if (!isSave()) {
+            return;
+        }
+        SpcSettingDto spcSettingDto = this.buildSaveSettingData();
+        Job job = new Job(ParamKeys.SAVE_SPC_SETTING_DATA_JOP_PIPELINE);
+        manager.doJobSyn(job, spcSettingDto);
         StageMap.closeStage(StateKey.SPC_SETTING);
+    }
+
+    private boolean isSave() {
+        boolean result = SpcSettingValidateUtil.newInstance().hasErrorResult();
+        boolean controlAlarmHasError = controlAlarmRuleTableModel.hasErrorEditValue();
+        boolean statisticalAlarmHasError = statisticsRuleModel.hasErrorEditValue();
+        if (result || controlAlarmHasError || statisticalAlarmHasError) {
+            WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER), SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_SETTING_APPLY_WARN_MESSAGE));
+            return false;
+        }
+        return true;
     }
 
     private void getAddTestItemEvent() {
