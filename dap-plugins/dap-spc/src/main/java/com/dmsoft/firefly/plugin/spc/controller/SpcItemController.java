@@ -7,7 +7,6 @@ import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
-import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.spc.dto.*;
@@ -373,10 +372,13 @@ public class SpcItemController implements Initializable {
     }
 
     private void getAnalysisBtnEvent() {
-
+        List<TestItemWithTypeDto> selectedItemDto = this.getSelectedItemDto();
+        if (selectedItemDto.size() == 0) {
+            //todo add message tip
+            return;
+        }
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         List<String> projectNameList = envService.findActivatedProjectName();
-        List<TestItemWithTypeDto> selectedItemDto = this.getSelectedItemDto();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
         List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(selectedItemDto);
         SpcAnalysisConfigDto spcAnalysisConfigDto = this.buildSpcAnalysisConfigData();
