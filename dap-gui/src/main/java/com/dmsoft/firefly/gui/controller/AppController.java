@@ -44,6 +44,7 @@ public class AppController {
 
     @FXML
     private void initialize() {
+        menuSystem.getMenus().clear();
         updateMenuSystem();
         initMenuBar();
     }
@@ -74,8 +75,7 @@ public class AppController {
     }
 
     public void resetMenu() {
-        updateMenuSystem();
-        menuPane.addColumn(0, menuSystem);
+        initialize();
     }
 
     public void updateMenuSystem() {
@@ -132,7 +132,22 @@ public class AppController {
                         secondNames.add(name);
                     }
                 } else {
-                    secondNames.add(name);
+                    boolean isExist = false;
+                    for (Menu tempMenu :menuSystem.getMenus()) {
+                        if (isExist) {
+                            break;
+                        }
+                        for (MenuItem menuItem :tempMenu.getItems()) {
+                            MenuItem menuItem1 = (MenuItem) menu.getMenu();
+                            if (menuItem.getText().equals(menuItem1.getText())) {
+                                isExist = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!isExist) {
+                        secondNames.add(name);
+                    }
                 }
             }
         });
@@ -210,7 +225,7 @@ public class AppController {
     public void importAllConfig() {
         String str = System.getProperty("user.home");
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Spc Config export");
+        fileChooser.setTitle(GuiFxmlAndLanguageUtils.getString("GLOBAL_TITLE_EXPORT_CONFIG"));
         fileChooser.setInitialDirectory(new File(str));
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")

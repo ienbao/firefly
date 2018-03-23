@@ -82,16 +82,14 @@ public class GuiApplication extends Application {
             updateProcessorBar();
         }
 
+        MenuFactory.initMenu();
+
         DAPApplication.startPlugin(Lists.newArrayList(plugins));
         RuntimeContext.registerBean(IMessageManager.class, new MessageManagerFactory());
         LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
-        if (languageType == null) {
-            RuntimeContext.getBean(EnvService.class).setLanguageType(LanguageType.EN);
-        } else {
+        if (languageType != null) {
             RuntimeContext.getBean(EnvService.class).setLanguageType(RuntimeContext.getBean(EnvService.class).getLanguageType());
         }
-
-        MenuFactory.initMenu();
 
         FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/app_menu.fxml");
         FXMLLoader fxmlLoader1 = GuiFxmlAndLanguageUtils.getLoaderFXML("view/main.fxml");

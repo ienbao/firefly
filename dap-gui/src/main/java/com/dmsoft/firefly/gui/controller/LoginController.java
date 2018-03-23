@@ -8,7 +8,9 @@ import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.UserDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserService;
+import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -64,6 +66,10 @@ public class LoginController {
         if (userDto != null) {
             UserModel userModel = UserModel.getInstance();
             userModel.setUser(userDto);
+            LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+            if (languageType == null) {
+                RuntimeContext.getBean(EnvService.class).setLanguageType(LanguageType.EN);
+            }
             return true;
         } else {
             loginBtn.getStyleClass().removeAll("btn-primary-loading");
