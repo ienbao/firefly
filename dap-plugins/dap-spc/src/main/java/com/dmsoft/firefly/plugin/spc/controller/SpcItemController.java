@@ -375,29 +375,6 @@ public class SpcItemController implements Initializable {
     private void getAnalysisBtnEvent() {
 
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
-        windowProgressTipController.addProcessMonitorListener(new WindowCustomListener() {
-            @Override
-            public boolean onShowCustomEvent() {
-                System.out.println("show");
-
-                return false;
-            }
-
-            @Override
-            public boolean onCloseAndCancelCustomEvent() {
-                //to do
-                System.out.println("close");
-                return false;
-            }
-
-            @Override
-            public boolean onOkCustomEvent() {
-                System.out.println("ok");
-
-                return false;
-            }
-        });
-        spcMainController.clearAnalysisSubShowData();
         List<String> projectNameList = envService.findActivatedProjectName();
         List<TestItemWithTypeDto> selectedItemDto = this.getSelectedItemDto();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
@@ -439,7 +416,9 @@ public class SpcItemController implements Initializable {
                             //todo message tip
                             ((Exception) returnValue).printStackTrace();
                         } else {
-
+                            Platform.runLater(() -> {
+                                spcMainController.clearAnalysisSubShowData();
+                            });
                             SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
                             SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
                             List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
