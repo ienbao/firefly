@@ -59,11 +59,16 @@ public class SearchTabController {
 
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
+    private boolean isMulti = true;
 
     @FXML
     private void initialize() {
         initBtnIcon();
-        basicSearch.getChildren().add(new BasicSearchPane("Group1"));
+        if (isMulti) {
+            basicSearch.getChildren().add(new BasicSearchPane("Group1"));
+        } else {
+            basicSearch.getChildren().add(new BasicSearchPane());
+        }
         initEvent();
         initItemData();
     }
@@ -81,7 +86,11 @@ public class SearchTabController {
         groupAdd.setOnAction(event -> basicSearch.getChildren().add(new BasicSearchPane("Group" + (basicSearch.getChildren().size() + 1))));
         groupRemove.setOnAction(event -> {
             basicSearch.getChildren().clear();
-            basicSearch.getChildren().add(new BasicSearchPane("Group" + (basicSearch.getChildren().size() + 1)));
+            if (isMulti) {
+                basicSearch.getChildren().add(new BasicSearchPane("Group" + (basicSearch.getChildren().size() + 1)));
+            } else {
+                basicSearch.getChildren().add(new BasicSearchPane());
+            }
         });
         help.setOnAction(event -> buildAdvanceHelpDia());
     }
@@ -289,5 +298,9 @@ public class SearchTabController {
      */
     public void hiddenGroupAdd() {
         groupAdd.setVisible(false);
+    }
+
+    public void setMulti(boolean multi) {
+        isMulti = multi;
     }
 }

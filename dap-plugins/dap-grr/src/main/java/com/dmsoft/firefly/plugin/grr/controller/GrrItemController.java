@@ -151,7 +151,7 @@ public class GrrItemController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        searchTab = new SearchTab();
+        searchTab = new SearchTab(false);
         searchTab.hiddenGroupAdd();
         searchTab.getGroup1().setVisible(false);
         searchTab.getGroup2().setVisible(false);

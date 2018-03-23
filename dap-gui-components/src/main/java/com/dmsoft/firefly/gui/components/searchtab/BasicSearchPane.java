@@ -33,6 +33,32 @@ public class BasicSearchPane extends VBox {
     private List<String> timeKey;
     private String pattern;
 
+    /**
+     * constructor
+     */
+    public BasicSearchPane() {
+        if (envService.findActivatedTemplate() != null && envService.findActivatedTemplate().getTimePatternDto() != null) {
+            timeKey = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
+            pattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
+        }
+        this.setStyle("-fx-border-color: #DCDCDC; -fx-border-width: 0 0 1 0");
+
+        addSearch = new Button();
+        this.getChildren().add(addSearch);
+        VBox.setVgrow(addSearch, Priority.ALWAYS);
+        VBox.setMargin(addSearch, new Insets(10, 10, 10, 8));
+        addSearch.setPrefSize(160, 22);
+        addSearch.setMaxWidth(Double.MAX_VALUE);
+
+        addSearch.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
+        addSearch.setOnAction(event -> addBasicSearch());
+    }
+
+    /**
+     * constructor
+     *
+     * @param title title str
+     */
     public BasicSearchPane(String title) {
         if (envService.findActivatedTemplate() != null && envService.findActivatedTemplate().getTimePatternDto() != null) {
             timeKey = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
@@ -141,11 +167,11 @@ public class BasicSearchPane extends VBox {
         searchComboBox.setValue(value);
     }
 
-    public void setTitle(String title) {
-        groupTitle.setText(title);
-    }
-
     public String getTitle() {
         return groupTitle.getText();
+    }
+
+    public void setTitle(String title) {
+        groupTitle.setText(title);
     }
 }

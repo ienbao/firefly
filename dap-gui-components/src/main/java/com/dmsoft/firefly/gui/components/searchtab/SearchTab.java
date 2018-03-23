@@ -6,8 +6,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.util.LinkedHashMap;
@@ -20,9 +18,22 @@ import java.util.List;
 public class SearchTab extends VBox {
     private SearchTabController controller;
 
+    /**
+     * constructor
+     */
     public SearchTab() {
+        this(true);
+    }
+
+    /**
+     * constructor
+     *
+     * @param isMulti is multi or not
+     */
+    public SearchTab(boolean isMulti) {
         FXMLLoader fxmlLoader = FxmlAndLanguageUtils.getLoaderFXML("view/search_tab.fxml");
         controller = new SearchTabController();
+        controller.setMulti(isMulti);
         fxmlLoader.setController(controller);
         TabPane root = null;
         try {
@@ -69,7 +80,7 @@ public class SearchTab extends VBox {
         return controller.getBasicSearch();
     }
 
-    public void setBasicSearch(LinkedHashMap<String, List<BasicSearchDto>> basicSearchDtoMaps){
+    public void setBasicSearch(LinkedHashMap<String, List<BasicSearchDto>> basicSearchDtoMaps) {
         controller.setBasicSearch(basicSearchDtoMaps);
     }
 }

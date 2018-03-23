@@ -6,7 +6,6 @@ package com.dmsoft.firefly.plugin.spc.model;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
-import com.dmsoft.firefly.gui.components.utils.ValidateRule;
 import com.dmsoft.firefly.gui.components.utils.ValidateUtils;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
 import com.dmsoft.firefly.plugin.spc.dto.StatisticalAlarmDto;
