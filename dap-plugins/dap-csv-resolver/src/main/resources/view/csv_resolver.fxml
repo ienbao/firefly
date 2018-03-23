@@ -58,7 +58,6 @@
             <GridPane prefHeight="180.0" prefWidth="760.0">
                <children>
                   <Label text="Header" />
-                  <Label text="Test Items Name" GridPane.columnIndex="1" />
                   <Label text="USL" GridPane.columnIndex="2" />
                   <Label text="LSL" GridPane.columnIndex="3">
                      <GridPane.margin>
@@ -66,7 +65,6 @@
                      </GridPane.margin>
                   </Label>
                   <Label text="Measure Unit" GridPane.rowIndex="2" />
-                  <Label text="Test Data" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <ComboBox fx:id="header" prefWidth="160.0" GridPane.rowIndex="1" />
                   <ComboBox fx:id="item" prefWidth="160.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <GridPane.margin>
@@ -93,6 +91,17 @@
                         <Insets />
                      </GridPane.margin>
                   </ComboBox>
+                  <HBox alignment="CENTER_LEFT" maxHeight="35.0" minHeight="35.0" prefHeight="35.0" prefWidth="170.0" GridPane.columnIndex="1">
+                     <children>
+                        <Label text="Test Items Name" />
+                        <Label style="-fx-text-fill: #EA2028;" text="*" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" maxHeight="35.0" minHeight="35.0" prefHeight="35.0" prefWidth="170.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <children>
+                        <Label text="Test Data" />
+                        <Label style="-fx-text-fill: #EA2028;" text="*" />
+                     </children></HBox>
                </children>
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="170.0" minWidth="170.0" prefWidth="170.0" />

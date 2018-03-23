@@ -28,8 +28,11 @@ public class GuiFxmlAndLanguageUtils {
 
     private static ResourceBundle getResourceBundle() {
         LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+        if (languageType == null) {
+            languageType = LanguageType.EN;
+        }
         String bundleKey = "i18n.message_en_US_";
-        if (languageType.equals(LanguageType.ZH)) {
+        if (LanguageType.ZH.equals(languageType)) {
             bundleKey = "i18n.message_zh_CN_";
         }
         bundleKey = bundleKey + ModuleType.GUI.name();

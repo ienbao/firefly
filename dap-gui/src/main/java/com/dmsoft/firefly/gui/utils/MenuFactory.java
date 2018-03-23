@@ -103,7 +103,7 @@ public class MenuFactory {
         Menu language = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_LANGUAGE"));
         RadioMenuItem zh = new RadioMenuItem(GuiFxmlAndLanguageUtils.getString("LANGUAGE_ZH"));
         RadioMenuItem en = new RadioMenuItem(GuiFxmlAndLanguageUtils.getString("LANGUAGE_EN"));
-        if (envService.getLanguageType().equals(LanguageType.ZH)) {
+        if (LanguageType.ZH.equals(envService.getLanguageType())) {
             zh.setSelected(true);
         } else {
             en.setSelected(true);

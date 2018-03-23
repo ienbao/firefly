@@ -84,18 +84,19 @@ public class MainController {
     private void initialize() {
         scrollPaneTooltip = new ScrollPane();
         dataSourceTooltip = new CustomerTooltip();
-        templateSettingDto =  envService.findActivatedTemplate();
         contentStackPane = new ContentStackPane();
         grpContent.add(contentStackPane, 0, 1);
         this.initToolBar();
         this.initStateBar();
-
         this.updateStateBarIcon();
-        this.initDataSource();
-        this.initDataSourceTooltip();
-        this.initTemplate();
-        this.initTemplatePopup();
-        this.initComponentEvent();
+        if (isLogin()) {
+            templateSettingDto =  envService.findActivatedTemplate();
+            this.initDataSource();
+            this.initDataSourceTooltip();
+            this.initTemplate();
+            this.initTemplatePopup();
+            this.initComponentEvent();
+        }
     }
 
     private void initToolBar() {
@@ -407,6 +408,7 @@ public class MainController {
     }
 
     public void initTemplate() {
+
         List<StateBarTemplateModel> stateBarTemplateModels = Lists.newLinkedList();
         List<TemplateSettingDto> allTemplates = templateService.findAllTemplate();
         if (allTemplates != null) {

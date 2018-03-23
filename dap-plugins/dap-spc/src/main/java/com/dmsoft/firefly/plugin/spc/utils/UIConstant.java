@@ -92,6 +92,7 @@ public class UIConstant {
     public static final String EXPORT_SUMMARY_BAD = "RECTIFICATION";
     public static final String EXPORT_SUMMARY_NULL = "-";
 
+    public static final String[] STATISTICAL_RESULT_RULE_HEADER = new String[]{"Statistics", "Lower Limit", "Upper Limit"};
     public static final String[] CONTROL_ALARM_RULE_HEADER = new String[]{"Is Use", "Rule Name", "n", "m", "s"};
 
     public static final double FACTOR = 0.20;

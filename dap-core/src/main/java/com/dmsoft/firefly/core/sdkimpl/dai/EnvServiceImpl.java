@@ -8,6 +8,7 @@ import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import com.google.common.collect.Lists;
 
@@ -18,13 +19,12 @@ import java.util.List;
  * Created by Lucien.Chen on 2018/2/10.
  */
 public class EnvServiceImpl implements EnvService {
-    private String userName = "admin";
+    private String userName;
     private String templateName;
     private LinkedHashMap<String, TestItemWithTypeDto> testItemDtos;
     private List<String> projectNames;
     private List<String> plugNames;
     private JsonMapper mapper = JsonMapper.defaultMapper();
-    private LanguageType languageType;
 
     @Override
     public String getUserName() {
@@ -103,11 +103,11 @@ public class EnvServiceImpl implements EnvService {
 
     @Override
     public LanguageType getLanguageType() {
-        if (languageType == null) {
-            String languageString = RuntimeContext.getBean(UserPreferenceService.class).findPreferenceByUserId("languageType", userName);
-            languageType = LanguageType.valueOf(mapper.fromJson(languageString, String.class));
+        String languageType = RuntimeContext.getBean(UserPreferenceService.class).findPreferenceByUserId("languageType", userName);
+        if (DAPStringUtils.isBlank(languageType)) {
+            return null;
         }
-        return languageType;
+        return LanguageType.valueOf(mapper.fromJson(languageType, String.class));
 
     }
 
@@ -118,7 +118,6 @@ public class EnvServiceImpl implements EnvService {
         userPreferenceDto.setUserName(userName);
         userPreferenceDto.setValue(languageType);
         getUserPreferenceService().updatePreference(userPreferenceDto);
-        this.languageType = languageType;
     }
 
     private UserPreferenceService getUserPreferenceService() {
