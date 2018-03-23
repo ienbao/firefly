@@ -50,6 +50,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
@@ -104,7 +106,7 @@ public class SpcItemController implements Initializable {
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
-
+    private final Logger logger = LoggerFactory.getLogger(SpcItemController.class);
     // cached items for user preference
     private List<String> stickyOnTopItems = Lists.newArrayList();
 
@@ -409,12 +411,21 @@ public class SpcItemController implements Initializable {
                     @Override
                     protected Integer call() throws Exception {
                         Thread.sleep(100);
+                        Job findSpcSettingJob = new Job(ParamKeys.FIND_SPC_SETTING_DATA_JOP_PIPELINE);
+                        Object settingDto = manager.doJobSyn(findSpcSettingJob);
+                        if (settingDto == null || settingDto instanceof Exception) {
+                            logger.debug("spc setting data is null");
+                            ((Exception) settingDto).printStackTrace();
+                        }
+                        spcMainController.setSpcSettingDto((SpcSettingDto) settingDto);
+
                         Job job = new Job(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
                         job.addProcessMonitorListener(event -> {
                             System.out.println("event*****" + event.getPoint());
                             updateProgress(event.getPoint(), 100);
                         });
                         Map<String, Object> paramMap = Maps.newHashMap();
+                        paramMap.put(ParamKeys.SPC_SETTING_FILE_NAME, settingDto);
                         paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
                         paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
                         paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);

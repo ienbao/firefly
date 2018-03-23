@@ -33,10 +33,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.List;
@@ -47,6 +48,7 @@ import java.util.ResourceBundle;
  * Created by Ethan.Yang on 2018/3/13.
  */
 public class SpcSettingController implements Initializable {
+    private final Logger logger = LoggerFactory.getLogger(SpcSettingController.class);
     @FXML
     private Label defaultSetting;
     @FXML
@@ -150,8 +152,13 @@ public class SpcSettingController implements Initializable {
     public void initData() {
         Job job = new Job(ParamKeys.FIND_SPC_SETTING_DATA_JOP_PIPELINE);
         Object returnValue = manager.doJobSyn(job);
-        if (returnValue == null || returnValue instanceof SpcSettingDto) {
-            //todo message tip
+        if (returnValue == null) {
+            logger.debug("Spc setting data is null");
+            return;
+        }
+        if (returnValue instanceof Exception) {
+            ((Exception) returnValue).printStackTrace();
+            return;
         }
         SpcSettingDto spcSettingDto = (SpcSettingDto) returnValue;
 

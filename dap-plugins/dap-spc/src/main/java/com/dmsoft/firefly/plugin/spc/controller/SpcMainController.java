@@ -62,6 +62,7 @@ public class SpcMainController implements Initializable {
     private SearchDataFrame dataFrame;
     private SpcAnalysisConfigDto analysisConfigDto;
     private List<SearchConditionDto> initSearchConditionDtoList;
+    private SpcSettingDto spcSettingDto;
 
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private SpcSettingService spcSettingService = RuntimeContext.getBean(SpcSettingService.class);
@@ -180,6 +181,7 @@ public class SpcMainController implements Initializable {
                             updateProgress(event.getPoint(), 100);
                         });
                         Map paramMap = Maps.newHashMap();
+                        paramMap.put(ParamKeys.SPC_SETTING_FILE_NAME, spcSettingDto);
                         paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, initSearchConditionDtoList);
                         paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
                         paramMap.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
@@ -391,6 +393,7 @@ public class SpcMainController implements Initializable {
         SearchDataFrame subDataFrame = this.buildSubSearchDataFrame(rowKeyList, searchConditionDtoList);
         Job job = new Job(ParamKeys.SPC_REFRESH_STATISTICAL_JOB_PIPELINE);
         Map paramMap = Maps.newHashMap();
+        paramMap.put(ParamKeys.SPC_SETTING_FILE_NAME, spcSettingDto);
         paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
         paramMap.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
@@ -424,6 +427,7 @@ public class SpcMainController implements Initializable {
         }
         Job job = new Job(ParamKeys.SPC_REFRESH_CHART_JOB_PIPELINE);
         Map paramMap = Maps.newHashMap();
+        paramMap.put(ParamKeys.SPC_SETTING_FILE_NAME, spcSettingDto);
         paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
 
@@ -465,6 +469,7 @@ public class SpcMainController implements Initializable {
 
         Job job = new Job(ParamKeys.SPC_REFRESH_ANALYSIS_JOB_PIPELINE);
         Map paramMap = Maps.newHashMap();
+        paramMap.put(ParamKeys.SPC_SETTING_FILE_NAME, spcSettingDto);
         paramMap.put(ParamKeys.STATISTICAL_SEARCH_DATA_FRAME, statisticalDataFrame);
         paramMap.put(ParamKeys.STATISTICAL_SEARCH_CONDITION_DTO_LIST, statisticalSearchConditionDtoList);
         paramMap.put(ParamKeys.CHART_SEARCH_DATA_FRAME, chartDataFrame);
@@ -493,4 +498,11 @@ public class SpcMainController implements Initializable {
     }
 
 
+    public SpcSettingDto getSpcSettingDto() {
+        return spcSettingDto;
+    }
+
+    public void setSpcSettingDto(SpcSettingDto spcSettingDto) {
+        this.spcSettingDto = spcSettingDto;
+    }
 }
