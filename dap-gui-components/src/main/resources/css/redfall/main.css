@@ -1337,7 +1337,6 @@
 }
 
 .table-view .combo-box {
-    -fx-background-color: yellow;
     -fx-pref-height: 16;
     -fx-min-height: 16;
     -fx-max-height: 16;
