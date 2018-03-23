@@ -80,8 +80,8 @@ public class GrrSummaryModel implements TableModel {
                             return;
                         }
                         if (!errorEditorRow.contains(summaryDto.getItemName())) {
-                            String tolerence = valueMap.get(selectedItemName + UIConstant.SPLIT_FLAG + UIConstant.GRR_SUMMARY_TITLE[3]).getValue();
-                            radioClickListener.executeAnalyzeDetail(summaryDto, tolerence);
+                            String tolerance = valueMap.get(selectedItemName + UIConstant.SPLIT_FLAG + UIConstant.GRR_SUMMARY_TITLE[3]).getValue();
+                            radioClickListener.executeAnalyzeDetail(summaryDto, tolerance);
                         }
                     }
                 });
@@ -353,49 +353,47 @@ public class GrrSummaryModel implements TableModel {
     public boolean isTextInputError(TextField textField, String oldText, String newText, String rowKey, String columnName) {
         if (newText.length() > 255) {
             textField.setText(oldText);
-            errorEditorRow.add(rowKey);
             return true;
         }
         if (!ValidateUtils.validatePattern(newText, ValidateUtils.DOUBLE_PATTERN)) {
             textField.setText(oldText);
-            errorEditorRow.add(rowKey);
             return true;
         }
         if (DAPStringUtils.isBlank(newText) || "-".equals(newText)) {
-            errorEditorCell.add(rowKey + "-" + columnName);
+            errorEditorRow.add(rowKey);
+            errorEditorCell.add(rowKey + UIConstant.SPLIT_FLAG + columnName);
             if (!textField.getStyleClass().contains("text-field-error")) {
                 textField.getStyleClass().add("text-field-error");
             }
             TooltipUtil.installWarnTooltip(textField, GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_USL_LSL_EMPTY"));
-            errorEditorRow.add(rowKey);
             return true;
         }
         GrrSummaryDto summaryDto = rowKeyDataMap.get(rowKey);
         if (columnName.equals(UIConstant.GRR_SUMMARY_TITLE[1])) {
             Double usl = summaryDto.getSummaryResultDto().getUsl();
             if (Double.valueOf(newText) >= usl) {
-                errorEditorCell.add(rowKey + "-" + columnName);
+                errorEditorRow.add(rowKey);
+                errorEditorCell.add(rowKey + UIConstant.SPLIT_FLAG + columnName);
                 if (!textField.getStyleClass().contains("text-field-error")) {
                     textField.getStyleClass().add("text-field-error");
                 }
                 TooltipUtil.installWarnTooltip(textField, GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_LSL_MORE_THEN_USL"));
-                errorEditorRow.add(rowKey);
                 return true;
             }
         } else if (columnName.equals(UIConstant.GRR_SUMMARY_TITLE[2])) {
             Double lsl = summaryDto.getSummaryResultDto().getLsl();
             if (Double.valueOf(newText) <= lsl) {
-                errorEditorCell.add(rowKey + "-" + columnName);
+                errorEditorRow.add(rowKey);
+                errorEditorCell.add(rowKey + UIConstant.SPLIT_FLAG + columnName);
                 if (!textField.getStyleClass().contains("text-field-error")) {
                     textField.getStyleClass().add("text-field-error");
                 }
                 TooltipUtil.installWarnTooltip(textField, GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_USL_LESS_THEN_LSL"));
-                errorEditorRow.add(rowKey);
                 return true;
             }
         }
-        if (errorEditorCell.contains(rowKey + "-" + columnName)) {
-            errorEditorCell.remove(rowKey + "-" + columnName);
+        if (errorEditorCell.contains(rowKey + UIConstant.SPLIT_FLAG + columnName)) {
+            errorEditorCell.remove(rowKey + UIConstant.SPLIT_FLAG + columnName);
             textField.getStyleClass().removeAll("text-field-error");
             TooltipUtil.uninstallWarnTooltip(textField);
             return false;
@@ -424,5 +422,13 @@ public class GrrSummaryModel implements TableModel {
     public void setRules(List<Double> rules) {
         this.rules.clear();
         this.rules = rules;
+    }
+
+    public String getToleranceCellValue(String rowKey) {
+        int digNum = DigNumInstance.newInstance().getDigNum();
+        String value = "-";
+        value = rowKeyDataMap.containsKey(rowKey) ?
+                this.formatterNormalValue(rowKeyDataMap.get(rowKey).getSummaryResultDto().getTolerance(), digNum) : value;
+        return value;
     }
 }

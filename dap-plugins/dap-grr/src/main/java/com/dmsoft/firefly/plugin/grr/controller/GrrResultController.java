@@ -109,12 +109,6 @@ public class GrrResultController implements Initializable {
 
     public void refreshGrrResult() {
 
-        List<TestItemWithTypeDto> selectTestItemWithTypeDtos = grrMainController.getSearchConditionDto().getSelectedTestItemDtos();
-        List<TestItemWithTypeDto> changedTestItemWithTypeDtos = summaryModel.getEditTestItem();
-        if (changedTestItemWithTypeDtos.isEmpty() || selectTestItemWithTypeDtos.isEmpty()) {
-            System.out.println("not need refresh");
-            return;
-        }
         if (summaryModel.hasErrorEditValue()) {
             WindowMessageController messageController = WindowMessageFactory.createWindowMessageHasOkAndCancel(GrrFxmlAndLanguageUtils.getString("UI_MESSAGE_TIP_WARNING_TITLE"),
                     GrrFxmlAndLanguageUtils.getString(GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_ERROR_EDIT_MESSAGE")));
@@ -136,6 +130,13 @@ public class GrrResultController implements Initializable {
                 }
             });
         } else {
+
+            List<TestItemWithTypeDto> selectTestItemWithTypeDtos = grrMainController.getSearchConditionDto().getSelectedTestItemDtos();
+            List<TestItemWithTypeDto> changedTestItemWithTypeDtos = summaryModel.getEditTestItem();
+            if (changedTestItemWithTypeDtos.isEmpty() || selectTestItemWithTypeDtos.isEmpty()) {
+                System.out.println("not need refresh");
+                return;
+            }
             refreshEvent();
         }
 
@@ -198,7 +199,7 @@ public class GrrResultController implements Initializable {
                                     grrMainController.getSearchConditionDto(),
                                     selectedItem);
                             this.setAnalysisItemResultData(grrDetailDto);
-                            this.setToleranceValue(summaryModel.getRowKeyDataMap().get(selectedItem).getSummaryResultDto().getTolerance() + "");
+                            this.setToleranceValue(summaryModel.getToleranceCellValue(selectedItem));
                         }
                     }
                 });
