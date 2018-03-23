@@ -67,7 +67,7 @@ public class XYChartPanelApp extends Application {
 
         VBox vBox = new VBox();
         HBox hBox = new HBox();
-        String[] lineCharts = UIConstant.SPC_CHART_XBAR_EXTERN_MENU;
+        String[] lineCharts = UIConstant.SPC_CHART_CONTROL_EXTERN_MENU;
         lclBtn = new Button(lineCharts[0]);
         uBtn = new Button(lineCharts[1]);
         uclBtn = new Button(lineCharts[2]);
@@ -175,7 +175,7 @@ public class XYChartPanelApp extends Application {
         yAxis.setUpperBound(3000D);
         xAxis.setTickMarkVisible(false);
         yAxis.setTickMarkVisible(false);
-        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_XBAR_EXTERN_MENU));
+        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
         button.setListViewSize(140, 150);
         xBarChar = new LinearChart(xAxis, yAxis);
         xBarChar.setAnimated(false);
