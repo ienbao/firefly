@@ -4,6 +4,7 @@
 
 package com.dmsoft.firefly.plugin.grr.controller;
 
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
@@ -17,9 +18,7 @@ import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrSummaryResultDto;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.grr.model.ListViewModel;
-import com.dmsoft.firefly.plugin.grr.service.GrrAnalysisService;
 import com.dmsoft.firefly.plugin.grr.service.GrrExportService;
-import com.dmsoft.firefly.plugin.grr.service.GrrService;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrExportServiceImpl;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrLeftConfigServiceImpl;
@@ -30,18 +29,24 @@ import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.dmsoft.firefly.sdk.event.EventContext;
+import com.dmsoft.firefly.sdk.event.PlatformEvent;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
+import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -49,6 +54,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -58,6 +64,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -68,15 +75,16 @@ import java.util.Set;
 
 /**
  * Created by Garen.Pang on 2018/3/13.
+ * Updated by Can Guan on 2018/3/23
  */
 public class GrrExportController {
-
+    private static final String STICKY_ON_TOP_CODE = "stick_on_top";
     @FXML
     private TextFieldFilter itemFilter;
     @FXML
     private Tab itemTab;
     @FXML
-    private TableView itemTable;
+    private TableView<ItemTableModel> itemTable;
     @FXML
     private Tab configTab;
     @FXML
@@ -147,8 +155,15 @@ public class GrrExportController {
     private GrrConfigServiceImpl grrConfigService = new GrrConfigServiceImpl();
     private GrrExportService grrExportService = new GrrExportServiceImpl();
     private GrrLeftConfigServiceImpl leftConfigService = new GrrLeftConfigServiceImpl();
+    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
 
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
+    private JsonMapper mapper = JsonMapper.defaultMapper();
+
+    // cached items for user preference
+    private List<String> stickyOnTopItems = Lists.newArrayList();
+
+    private List<String> originalItems = Lists.newArrayList();
 
     @FXML
     private void initialize() {
@@ -160,7 +175,7 @@ public class GrrExportController {
         allFile.setToggleGroup(group);
         initBtnIcon();
         initEvent();
-        itemFilter.getTextField().setPromptText("Test Item");
+        itemFilter.getTextField().setPromptText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
                 filteredList.setPredicate(p -> p.getItem().contains(itemFilter.getTextField().getText()))
         );
@@ -184,6 +199,30 @@ public class GrrExportController {
         });
         select.setGraphic(box);
         select.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
+        select.setCellFactory(new Callback<TableColumn<ItemTableModel, CheckBox>, TableCell<ItemTableModel, CheckBox>>() {
+            @Override
+            public TableCell<ItemTableModel, CheckBox> call(TableColumn<ItemTableModel, CheckBox> param) {
+                return new TableCell<ItemTableModel, CheckBox>() {
+                    @Override
+                    protected void updateItem(CheckBox item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setStyle(null);
+                        if (!isEmpty()) {
+                            if (getTableRow() != null && getIndex() > -1) {
+                                if (getTableView().getItems().get(getIndex()).getOnTop()) {
+                                    this.setStyle("-fx-background-color: #dff0cf");
+                                }
+                            }
+                        }
+                        if (item == null) {
+                            super.setGraphic(null);
+                        } else {
+                            super.setGraphic(item);
+                        }
+                    }
+                };
+            }
+        });
         Button is = new Button();
         is.setPrefSize(22, 22);
         is.setMinSize(22, 22);
@@ -191,7 +230,7 @@ public class GrrExportController {
         is.setOnMousePressed(event -> createPopMenu(is, event));
         is.getStyleClass().add("filter-normal");
 
-        item.setText("Test Item");
+        item.setText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
         item.setGraphic(is);
         item.getStyleClass().add("filter-header");
         item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
@@ -201,6 +240,61 @@ public class GrrExportController {
                 is.relocate(w2.doubleValue() - 21, 0);
             });
         });
+        item.sortTypeProperty().addListener((ov, sort1, sort2) -> {
+            if (sort2.equals(TableColumn.SortType.DESCENDING)) {
+                item.setComparator((o1, o2) -> {
+                    boolean o1OnTop = stickyOnTopItems.contains(o1.getTestItemName());
+                    boolean o2OnTop = stickyOnTopItems.contains(o2.getTestItemName());
+                    if (o1OnTop == o2OnTop) {
+                        return -o2.getTestItemName().compareTo(o1.getTestItemName());
+                    } else if (o1OnTop) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                });
+            } else {
+                item.setComparator((o1, o2) -> {
+                    boolean o1OnTop = stickyOnTopItems.contains(o1.getTestItemName());
+                    boolean o2OnTop = stickyOnTopItems.contains(o2.getTestItemName());
+                    if (o1OnTop == o2OnTop) {
+                        return -o2.getTestItemName().compareTo(o1.getTestItemName());
+                    } else if (o1OnTop) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                });
+            }
+        });
+        item.setCellFactory(new Callback<TableColumn<ItemTableModel, TestItemWithTypeDto>, TableCell<ItemTableModel, TestItemWithTypeDto>>() {
+            public TableCell call(TableColumn<ItemTableModel, TestItemWithTypeDto> param) {
+                return new TableCell<ItemTableModel, TestItemWithTypeDto>() {
+                    private ObservableValue ov;
+
+                    @Override
+                    public void updateItem(TestItemWithTypeDto item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setStyle(null);
+                        if (!isEmpty()) {
+                            if (getTableRow() != null && getIndex() > -1) {
+                                if (item.getTestItemType().equals(TestItemType.ATTRIBUTE) && getTableView().getItems().get(getIndex()).getOnTop()) {
+                                    this.setStyle("-fx-text-fill: #009bff; -fx-background-color: #dff0cf");
+                                } else if (item.getTestItemType().equals(TestItemType.ATTRIBUTE)) {
+                                    this.setStyle("-fx-text-fill: #009bff");
+                                } else if (getTableView().getItems().get(getIndex()).getOnTop()) {
+                                    this.setStyle("-fx-background-color: #dff0cf");
+                                }
+                            }
+                            setText(item.getTestItemName());
+                        } else {
+                            setText(null);
+                        }
+                    }
+                };
+            }
+        });
+        itemTable.setContextMenu(createTableRightMenu());
         initPartAndAppraiserDatas();
         GrrValidateUtil.validateGrr(partTxt, appraiserTxt, trialTxt, partCombox);
         partTxt.textProperty().addListener((obVal, oldVal, newVal) -> {
@@ -311,12 +405,37 @@ public class GrrExportController {
 
     private void initItemData() {
         items.clear();
+        stickyOnTopItems.clear();
+        String s = userPreferenceService.findPreferenceByUserId(STICKY_ON_TOP_CODE, envService.getUserName());
+        if (s != null) {
+            List<String> onTopItems = mapper.fromJson(mapper.fromJson(s, String.class), mapper.buildCollectionType(List.class, String.class));
+            stickyOnTopItems.addAll(onTopItems);
+        }
+        originalItems.clear();
         List<TestItemWithTypeDto> itemDtos = envService.findTestItems();
         if (itemDtos != null) {
+            List<ItemTableModel> modelList = Lists.newArrayList();
             for (TestItemWithTypeDto dto : itemDtos) {
                 ItemTableModel tableModel = new ItemTableModel(dto);
-                items.add(tableModel);
+
+                originalItems.add(dto.getTestItemName());
+                if (stickyOnTopItems.contains(dto.getTestItemName())) {
+                    tableModel.setOnTop(true);
+                }
+                modelList.add(tableModel);
             }
+            modelList.sort((o1, o2) -> {
+                if (o1.getOnTop() == o2.getOnTop()) {
+                    return originalItems.indexOf(o1.getItem()) - originalItems.indexOf(o2.getItem());
+                } else if (o1.getOnTop()) {
+                    return -1;
+                } else if (o2.getOnTop()) {
+                    return 1;
+                }
+                return 0;
+            });
+            items.addAll(modelList);
+            personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
             itemTable.setItems(personSortedList);
             personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
         }
@@ -527,6 +646,48 @@ public class GrrExportController {
         return pop;
     }
 
+    private ContextMenu createTableRightMenu() {
+        MenuItem top = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.STICKY_ON_TOP));
+        ContextMenu right = new ContextMenu() {
+            @Override
+            public void show(Node anchor, double screenX, double screenY) {
+                if (itemTable.getSelectionModel().getSelectedItem().getOnTop()) {
+                    top.setText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.REMOVE_FROM_TOP));
+                } else {
+                    top.setText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.STICKY_ON_TOP));
+                }
+                super.show(anchor, screenX, screenY);
+            }
+        };
+
+        top.setOnAction(event -> {
+            ItemTableModel selectedItems = itemTable.getSelectionModel().getSelectedItem();
+            boolean former = selectedItems.getOnTop();
+            String itemName = selectedItems.getItem();
+            if (former) {
+                stickyOnTopItems.remove(itemName);
+                items.remove(selectedItems);
+                int newSite = findNewSite(items, selectedItems);
+                items.add(newSite, selectedItems);
+            } else {
+                stickyOnTopItems.add(itemName);
+                items.remove(selectedItems);
+                items.add(0, selectedItems);
+            }
+            UserPreferenceDto<String> preferenceDto = new UserPreferenceDto<>();
+            preferenceDto.setCode(STICKY_ON_TOP_CODE);
+            preferenceDto.setUserName(envService.getUserName());
+            preferenceDto.setValue(mapper.toJson(stickyOnTopItems));
+            userPreferenceService.updatePreference(preferenceDto);
+            selectedItems.setOnTop(!former);
+            itemTable.refresh();
+        });
+        MenuItem specSetting = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.SPECIFICATION_SETTING));
+        specSetting.setOnAction(event -> RuntimeContext.getBean(EventContext.class).pushEvent(new PlatformEvent(null, "Template_Show")));
+        right.getItems().addAll(top, specSetting);
+        return right;
+    }
+
     private void initEvent() {
         importBtn.setOnAction(event -> importLeftConfig());
         browse.setOnAction(event -> {
@@ -632,7 +793,8 @@ public class GrrExportController {
             controller.setDataFrame(dataFrame);
             fxmlLoader.setController(controller);
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrExportViewData", GrrFxmlAndLanguageUtils.getString(ResourceMassages.VIEW_DATA), root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrExportViewData",
+                    GrrFxmlAndLanguageUtils.getString(ResourceMassages.VIEW_DATA), root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
             stage.show();
 
         } catch (Exception ex) {
@@ -645,7 +807,8 @@ public class GrrExportController {
         try {
             FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_export_setting.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrExportSetting", GrrFxmlAndLanguageUtils.getString(ResourceMassages.GRR_EXPORT_SETTING_TITLE), root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrExportSetting",
+                    GrrFxmlAndLanguageUtils.getString(ResourceMassages.GRR_EXPORT_SETTING_TITLE), root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
             stage.show();
 
         } catch (Exception ex) {
@@ -885,5 +1048,17 @@ public class GrrExportController {
             model.getSelector().setValue(false);
         }
         searchTab.clearSearchTab();
+    }
+
+    private int findNewSite(List<ItemTableModel> modelList, ItemTableModel model) {
+        int site = originalItems.indexOf(model.getItem());
+        for (int i = 0; i < modelList.size() - 1; i++) {
+            if (!modelList.get(i).getOnTop()) {
+                if (originalItems.indexOf(modelList.get(i).getItem()) < site && originalItems.indexOf(modelList.get(i + 1).getItem()) > site) {
+                    return i + 1;
+                }
+            }
+        }
+        return site == 0 ? 0 : modelList.size();
     }
 }

@@ -1336,6 +1336,16 @@
     -fx-pref-width: 160;
 }
 
+.table-view .combo-box {
+    -fx-background-color: yellow;
+    -fx-pref-height: 16;
+    -fx-min-height: 16;
+    -fx-max-height: 16;
+    -fx-background-insets: -1 -11 -1 -11;
+    -fx-border-insets: -1 -11 -1 -11;
+    -fx-padding: -3 -8 -3 -8;
+}
+
 /*******************************************************************************
  *                                                                             *
  * ScrollBar                                                                   *

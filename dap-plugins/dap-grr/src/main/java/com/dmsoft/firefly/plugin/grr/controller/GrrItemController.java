@@ -19,6 +19,7 @@ import com.dmsoft.firefly.plugin.grr.model.ListViewModel;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.GrrValidateUtil;
+import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -27,6 +28,8 @@ import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
+import com.dmsoft.firefly.sdk.event.EventContext;
+import com.dmsoft.firefly.sdk.event.PlatformEvent;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
@@ -45,6 +48,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -54,7 +58,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
-import org.mockito.internal.util.StringUtil;
 
 import java.io.File;
 import java.net.URL;
@@ -62,8 +65,10 @@ import java.util.*;
 
 /**
  * Created by Ethan.Yang on 2018/2/6.
+ * Updated by Can Guan on 2018/3/23
  */
 public class GrrItemController implements Initializable {
+    private static final String STICKY_ON_TOP_CODE = "stick_on_top";
     @FXML
     private TextFieldFilter itemFilter;
     @FXML
@@ -83,7 +88,7 @@ public class GrrItemController implements Initializable {
     @FXML
     private TableColumn<ItemTableModel, TestItemWithTypeDto> item;
     @FXML
-    private TableView itemTable;
+    private TableView<ItemTableModel> itemTable;
     @FXML
     private TextField partTxt;
     @FXML
@@ -132,6 +137,11 @@ public class GrrItemController implements Initializable {
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
 
+    // cached items for user preference
+    private List<String> stickyOnTopItems = Lists.newArrayList();
+
+    private List<String> originalItems = Lists.newArrayList();
+
     /**
      * init main controller
      *
@@ -150,7 +160,7 @@ public class GrrItemController implements Initializable {
         searchTab.getAutoDivideLbl().setVisible(false);
         split.getItems().add(searchTab);
         initBtnIcon();
-        itemFilter.getTextField().setPromptText("Test Item");
+        itemFilter.getTextField().setPromptText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
                 filteredList.setPredicate(p -> p.getItem().contains(itemFilter.getTextField().getText()))
         );
@@ -184,7 +194,7 @@ public class GrrItemController implements Initializable {
 
 //        is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
 
-        item.setText("Test Item");
+        item.setText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
         item.setGraphic(is);
         item.getStyleClass().add("filter-header");
         item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
@@ -196,6 +206,34 @@ public class GrrItemController implements Initializable {
                 is.relocate(w2.doubleValue() - 21, 0);
             });
         });
+        item.sortTypeProperty().addListener((ov, sort1, sort2) -> {
+            if (sort2.equals(TableColumn.SortType.DESCENDING)) {
+                item.setComparator((o1, o2) -> {
+                    boolean o1OnTop = stickyOnTopItems.contains(o1.getTestItemName());
+                    boolean o2OnTop = stickyOnTopItems.contains(o2.getTestItemName());
+                    if (o1OnTop == o2OnTop) {
+                        return -o2.getTestItemName().compareTo(o1.getTestItemName());
+                    } else if (o1OnTop) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                });
+            } else {
+                item.setComparator((o1, o2) -> {
+                    boolean o1OnTop = stickyOnTopItems.contains(o1.getTestItemName());
+                    boolean o2OnTop = stickyOnTopItems.contains(o2.getTestItemName());
+                    if (o1OnTop == o2OnTop) {
+                        return -o2.getTestItemName().compareTo(o1.getTestItemName());
+                    } else if (o1OnTop) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                });
+            }
+        });
+        itemTable.setContextMenu(createTableRightMenu());
         initPartAndAppraiserDatas();
         initGrrBasicParam();
         GrrValidateUtil.validateGrr(partTxt, appraiserTxt, trialTxt, partCombox);
@@ -505,6 +543,49 @@ public class GrrItemController implements Initializable {
         return pop;
     }
 
+
+    private ContextMenu createTableRightMenu() {
+        MenuItem top = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.STICKY_ON_TOP));
+        ContextMenu right = new ContextMenu() {
+            @Override
+            public void show(Node anchor, double screenX, double screenY) {
+                if (itemTable.getSelectionModel().getSelectedItem().getOnTop()) {
+                    top.setText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.REMOVE_FROM_TOP));
+                } else {
+                    top.setText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.STICKY_ON_TOP));
+                }
+                super.show(anchor, screenX, screenY);
+            }
+        };
+
+        top.setOnAction(event -> {
+            ItemTableModel selectedItems = itemTable.getSelectionModel().getSelectedItem();
+            boolean former = selectedItems.getOnTop();
+            String itemName = selectedItems.getItem();
+            if (former) {
+                stickyOnTopItems.remove(itemName);
+                items.remove(selectedItems);
+                int newSite = findNewSite(items, selectedItems);
+                items.add(newSite, selectedItems);
+            } else {
+                stickyOnTopItems.add(itemName);
+                items.remove(selectedItems);
+                items.add(0, selectedItems);
+            }
+            UserPreferenceDto<String> preferenceDto = new UserPreferenceDto<>();
+            preferenceDto.setCode(STICKY_ON_TOP_CODE);
+            preferenceDto.setUserName(envService.getUserName());
+            preferenceDto.setValue(mapper.toJson(stickyOnTopItems));
+            userPreferenceService.updatePreference(preferenceDto);
+            selectedItems.setOnTop(!former);
+            itemTable.refresh();
+        });
+        MenuItem setting = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.SPECIFICATION_SETTING));
+        setting.setOnAction(event -> RuntimeContext.getBean(EventContext.class).pushEvent(new PlatformEvent(null, "Template_Show")));
+        right.getItems().addAll(top, setting);
+        return right;
+    }
+
     private void initComponentEvent() {
         analysisBtn.setOnAction(event -> getAnalysisBtnEvent());
         importBtn.setOnAction(event -> importLeftConfig());
@@ -517,18 +598,44 @@ public class GrrItemController implements Initializable {
                     @Override
                     public void updateItem(TestItemWithTypeDto item, boolean empty) {
                         super.updateItem(item, empty);
+                        setStyle(null);
                         if (!isEmpty()) {
-
-                            if (getTableRow() != null && item.getTestItemType().equals(TestItemType.ATTRIBUTE)) {
-                                this.setStyle("-fx-text-fill: #009bff");
+                            if (getTableRow() != null && getIndex() > -1) {
+                                if (item.getTestItemType().equals(TestItemType.ATTRIBUTE) && getTableView().getItems().get(getIndex()).getOnTop()) {
+                                    this.setStyle("-fx-text-fill: #009bff; -fx-background-color: #dff0cf");
+                                } else if (item.getTestItemType().equals(TestItemType.ATTRIBUTE)) {
+                                    this.setStyle("-fx-text-fill: #009bff");
+                                } else if (getTableView().getItems().get(getIndex()).getOnTop()) {
+                                    this.setStyle("-fx-background-color: #dff0cf");
+                                }
                             }
-                            if (getTableRow() != null && StringUtils.isNotEmpty(itemFilter.getTextField().getText()) && item.getTestItemName().contains(itemFilter.getTextField().getText())) {
-                                this.setStyle("-fx-text-fill: red");
-                            }
-                            // Get fancy and change color based on data
                             setText(item.getTestItemName());
                         } else {
                             setText(null);
+                        }
+                    }
+                };
+            }
+        });
+        select.setCellFactory(new Callback<TableColumn<ItemTableModel, CheckBox>, TableCell<ItemTableModel, CheckBox>>() {
+            @Override
+            public TableCell<ItemTableModel, CheckBox> call(TableColumn<ItemTableModel, CheckBox> param) {
+                return new TableCell<ItemTableModel, CheckBox>() {
+                    @Override
+                    protected void updateItem(CheckBox item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setStyle(null);
+                        if (!isEmpty()) {
+                            if (getTableRow() != null && getIndex() > -1) {
+                                if (getTableView().getItems().get(getIndex()).getOnTop()) {
+                                    this.setStyle("-fx-background-color: #dff0cf");
+                                }
+                            }
+                        }
+                        if (item == null) {
+                            super.setGraphic(null);
+                        } else {
+                            super.setGraphic(item);
                         }
                     }
                 };
@@ -539,12 +646,37 @@ public class GrrItemController implements Initializable {
     @SuppressWarnings("unchecked")
     private void initItemData() {
         items.clear();
+        stickyOnTopItems.clear();
+        String s = userPreferenceService.findPreferenceByUserId(STICKY_ON_TOP_CODE, envService.getUserName());
+        if (s != null) {
+            List<String> onTopItems = mapper.fromJson(mapper.fromJson(s, String.class), mapper.buildCollectionType(List.class, String.class));
+            stickyOnTopItems.addAll(onTopItems);
+        }
+        originalItems.clear();
         List<TestItemWithTypeDto> itemDtos = envService.findTestItems();
         if (itemDtos != null) {
+            List<ItemTableModel> modelList = Lists.newArrayList();
             for (TestItemWithTypeDto dto : itemDtos) {
                 ItemTableModel tableModel = new ItemTableModel(dto);
-                items.add(tableModel);
+
+                originalItems.add(dto.getTestItemName());
+                if (stickyOnTopItems.contains(dto.getTestItemName())) {
+                    tableModel.setOnTop(true);
+                }
+                modelList.add(tableModel);
             }
+            modelList.sort((o1, o2) -> {
+                if (o1.getOnTop() == o2.getOnTop()) {
+                    return originalItems.indexOf(o1.getItem()) - originalItems.indexOf(o2.getItem());
+                } else if (o1.getOnTop()) {
+                    return -1;
+                } else if (o2.getOnTop()) {
+                    return 1;
+                }
+                return 0;
+            });
+            items.addAll(modelList);
+            personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
             itemTable.setItems(personSortedList);
             personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
         }
@@ -563,10 +695,10 @@ public class GrrItemController implements Initializable {
             List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
             paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
             paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
-            SearchConditionDto searchConditionDto = this.initSearchConditionDto();
-            searchConditionDto.setSelectedTestItemDtos(selectedItemDto);
-            paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, searchConditionDto);
-            updateGrrPreference(searchConditionDto);
+            SearchConditionDto conditionDto = this.initSearchConditionDto();
+            conditionDto.setSelectedTestItemDtos(selectedItemDto);
+            paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, conditionDto);
+            updateGrrPreference(conditionDto);
             Platform.runLater(() -> {
                 manager.doJobASyn(job, new JobDoComplete() {
                     @Override
@@ -658,27 +790,37 @@ public class GrrItemController implements Initializable {
 
     private boolean checkSubmitParam(Integer itemNumbers) {
         if (itemNumbers == null || itemNumbers <= 0) {
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_ANALYSIS_ITEM_EMPTY"));
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                    GrrFxmlAndLanguageUtils.getString("UI_GRR_ANALYSIS_ITEM_EMPTY"));
             return false;
         }
 
         if (!GrrValidateUtil.validateResult(partTxt, appraiserTxt, trialTxt, partCombox)) {
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                    GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
             return false;
         }
 
         if (appraiserLbl.getGraphic() != null || partLbl.getGraphic() != null) {
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                    GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
             return false;
         }
 
         if (partListView.getItems().size() > 0 && partListView.getItems().size() < Integer.valueOf(partTxt.getText())) {
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_MAX_NUMBER_NOT_MATCH"));
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                    GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_MAX_NUMBER_NOT_MATCH"));
             return false;
         }
 
         if ((appraiserCombox.getValue() != null) && (appraiserListView.getItems().size() > 0 && appraiserListView.getItems().size() < Integer.valueOf(appraiserTxt.getText()))) {
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_MAX_NUMBER_NOT_MATCH"));
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                    GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_MAX_NUMBER_NOT_MATCH"));
             return false;
         }
 
@@ -883,5 +1025,18 @@ public class GrrItemController implements Initializable {
 
     public void setInitSelectTestItemDtos(List<TestItemWithTypeDto> initSelectTestItemDtos) {
         this.initSelectTestItemDtos = initSelectTestItemDtos;
+    }
+
+
+    private int findNewSite(List<ItemTableModel> modelList, ItemTableModel model) {
+        int site = originalItems.indexOf(model.getItem());
+        for (int i = 0; i < modelList.size() - 1; i++) {
+            if (!modelList.get(i).getOnTop()) {
+                if (originalItems.indexOf(modelList.get(i).getItem()) < site && originalItems.indexOf(modelList.get(i + 1).getItem()) > site) {
+                    return i + 1;
+                }
+            }
+        }
+        return site == 0 ? 0 : modelList.size();
     }
 }

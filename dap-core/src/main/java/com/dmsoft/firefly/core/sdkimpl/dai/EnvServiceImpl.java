@@ -24,6 +24,7 @@ public class EnvServiceImpl implements EnvService {
     private List<String> projectNames;
     private List<String> plugNames;
     private JsonMapper mapper = JsonMapper.defaultMapper();
+    private LanguageType languageType;
 
     @Override
     public String getUserName() {
@@ -102,8 +103,11 @@ public class EnvServiceImpl implements EnvService {
 
     @Override
     public LanguageType getLanguageType() {
-        String languageType = RuntimeContext.getBean(UserPreferenceService.class).findPreferenceByUserId("languageType", userName);
-        return LanguageType.valueOf(mapper.fromJson(languageType, String.class));
+        if (languageType == null) {
+            String languageString = RuntimeContext.getBean(UserPreferenceService.class).findPreferenceByUserId("languageType", userName);
+            languageType = LanguageType.valueOf(mapper.fromJson(languageString, String.class));
+        }
+        return languageType;
 
     }
 
@@ -114,6 +118,7 @@ public class EnvServiceImpl implements EnvService {
         userPreferenceDto.setUserName(userName);
         userPreferenceDto.setValue(languageType);
         getUserPreferenceService().updatePreference(userPreferenceDto);
+        this.languageType = languageType;
     }
 
     private UserPreferenceService getUserPreferenceService() {
