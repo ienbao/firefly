@@ -60,12 +60,21 @@ public class UserPreferenceServiceImpl implements UserPreferenceService {
         for (UserPreferenceDto userPreferenceDto : list) {
             if (DAPStringUtils.isBlank(userPreferenceDto.getUserName()) || DAPStringUtils.isBlank(userName)) {
                 if (userPreferenceDto.getCode().equals(code)) {
-                    result = mapper.toJson(userPreferenceDto.getValue());
+                    if (userPreferenceDto.getValue() instanceof String) {
+                        result = (String) userPreferenceDto.getValue();
+                    } else {
+                        result = mapper.toJson(userPreferenceDto.getValue());
+                    }
+
                     break;
                 }
             } else {
                 if (userPreferenceDto.getCode().equals(code) && userPreferenceDto.getUserName().equals(userName)) {
-                    result = mapper.toJson(userPreferenceDto.getValue());
+                    if (userPreferenceDto.getValue() instanceof String) {
+                        result = (String) userPreferenceDto.getValue();
+                    } else {
+                        result = mapper.toJson(userPreferenceDto.getValue());
+                    }
                     break;
                 }
             }
