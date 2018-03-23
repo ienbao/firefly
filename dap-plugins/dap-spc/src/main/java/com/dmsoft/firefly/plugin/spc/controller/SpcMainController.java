@@ -138,7 +138,7 @@ public class SpcMainController implements Initializable {
 
     private void initComponentEvent() {
         resetBtn.setOnAction(event -> getResetBtnEvent());
-        printBtn.setOnAction(event -> getPrintBtnEvent());
+        printBtn.setOnAction(event -> getExportBtnEvent());
         exportBtn.setOnAction(event -> getExportBtnEvent());
         chooseBtn.setOnAction(event -> getChooseBtnEvent());
     }
@@ -201,10 +201,6 @@ public class SpcMainController implements Initializable {
         };
         windowProgressTipController.getTaskProgress().progressProperty().bind(service.progressProperty());
         service.start();
-    }
-
-    private void getPrintBtnEvent() {
-
     }
 
     private void getExportBtnEvent() {

@@ -62,12 +62,6 @@
         </dependency>
 
         <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>2.9.9</version>
-        </dependency>
-
-        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
@@ -77,7 +71,16 @@
             <artifactId>poi-ooxml</artifactId>
             <version>3.15</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>fakepath</groupId>
+            <artifactId>aspose-cells</artifactId>
+            <version>8.6.2</version>
+        </dependency>
     </dependencies>
 
     <build>

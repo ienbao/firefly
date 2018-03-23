@@ -15,6 +15,7 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.sun.javafx.charts.Legend;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
@@ -46,6 +47,7 @@ public class BuildChart {
     private static Group vBox;
     private static Scene scene;
     private static int digNum = 6;
+
     public static GrrImageDto buildImage(GrrDetailResultDto grrDetailResultDto, List<String> parts, List<String> appraisers) {
         digNum = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getDecimalDigit();
         vBox = new Group();
@@ -57,29 +59,32 @@ public class BuildChart {
         partAppraiserChart.setAnimated(false);
         partAppraiserChart.setLegendVisible(false);
         setPartAppraiserChart(partAppraiserChart, grrDetailResultDto.getPartAppraiserChartDto(), parts, appraisers);
-        images.setGrrAPlotImagePath(exportImages("partAppraiserChart", partAppraiserChart));
 
         LinearChart xBarAppraiserChart = buildControlChart(parts);
         setControlChartData(grrDetailResultDto.getXbarAppraiserChartDto(), xBarAppraiserChart, parts, appraisers);
-        images.setGrrXBarImagePath(exportImages("xBarAppraiserChart", xBarAppraiserChart));
 
         LinearChart rangeAppraiserChart = buildControlChart(parts);
         setControlChartData(grrDetailResultDto.getRangeAppraiserChartDto(), rangeAppraiserChart, parts, appraisers);
-        images.setGrrRChartImagePath(exportImages("rangeAppraiserChart", rangeAppraiserChart));
 
         LineChart rrByAppraiserChart = buildScatterChart();
         setScatterChartData(grrDetailResultDto.getRrbyAppraiserChartDto(), rrByAppraiserChart);
-        images.setGrrRPlotChartAppImagePath(exportImages("rrByAppraiserChart", rrByAppraiserChart));
 
         LineChart rrbyPartChart = buildScatterChart();
         setScatterChartData(grrDetailResultDto.getRrbyPartChartDto(), rrbyPartChart);
-        images.setGrrRPlotChartPartImagePath(exportImages("rrbyPartChart", rrbyPartChart));
 
         BarChart componentChart = new BarChart(new CategoryAxis(), new NumberAxis());
         componentChart.setAnimated(false);
         componentChart.setLegendVisible(false);
         setComponentChart(grrDetailResultDto.getComponentChartDto(), componentChart);
-        images.setGrrComponentsImagePath(exportImages("componentChart", componentChart));
+
+        Platform.runLater(() -> {
+            images.setGrrAPlotImagePath(exportImages("partAppraiserChart", partAppraiserChart));
+            images.setGrrXBarImagePath(exportImages("xBarAppraiserChart", xBarAppraiserChart));
+            images.setGrrRChartImagePath(exportImages("rangeAppraiserChart", rangeAppraiserChart));
+            images.setGrrRPlotChartAppImagePath(exportImages("rrByAppraiserChart", rrByAppraiserChart));
+            images.setGrrRPlotChartPartImagePath(exportImages("rrbyPartChart", rrbyPartChart));
+            images.setGrrComponentsImagePath(exportImages("componentChart", componentChart));
+        });
 
         return images;
     }
