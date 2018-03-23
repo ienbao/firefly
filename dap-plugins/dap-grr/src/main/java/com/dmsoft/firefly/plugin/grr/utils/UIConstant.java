@@ -25,7 +25,9 @@ public class UIConstant {
     public static final Color COLOR_ACCEPTABLE = Color.rgb(243, 132, 0);
     public static final Color COLOR_RECTIFICATION = Color.rgb(233, 68, 41);
     public static final Color COLOR_EDIT_CHANGE = Color.rgb(243, 132, 0);
-    public static final Color COLOR_EDIT_RESET = Color.rgb(47, 33, 33);
+    public static final Color COLOR_EDIT_ERROR = Color.rgb(234, 32, 40);
+    public static final Color COLOR_MEAN_RANGE = Color.grayRgb(242);
+    public static final Color COLOR_TOTAL_MEAN_RANGE = Color.grayRgb(229);
 
     public static final String MEAN = "Mean";
     public static final String RANGE = "Range";

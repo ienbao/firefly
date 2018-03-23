@@ -9,6 +9,7 @@ import com.dmsoft.firefly.plugin.grr.utils.DigNumInstance;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -172,6 +173,15 @@ public class ItemResultModel implements TableModel {
 
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
+        if (rowKey.contains(UIConstant.SPLIT_FLAG + UIConstant.MEAN)) {
+            tableCell.setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_MEAN_RANGE));
+        } else if (rowKey.contains(UIConstant.SPLIT_FLAG + UIConstant.RANGE)) {
+            tableCell.setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_MEAN_RANGE));
+        } else if (rowKey.contains(UIConstant.TOTAL_MEAN)) {
+            tableCell.setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_TOTAL_MEAN_RANGE));
+        } else if (rowKey.contains(UIConstant.TOTAL_RANGE)) {
+            tableCell.setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_TOTAL_MEAN_RANGE));
+        }
         return null;
     }
 

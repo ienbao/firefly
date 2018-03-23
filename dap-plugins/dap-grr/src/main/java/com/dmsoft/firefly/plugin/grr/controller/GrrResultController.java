@@ -626,11 +626,6 @@ public class GrrResultController implements Initializable {
         summaryItemTf.getTextField().setPrefWidth(INPUT_WIDTH);
         summaryItemTf.getTextField().setFocusTraversable(false);
         summaryTb.setEditable(true);
-//        TableRender tableRender = new TableRender(summaryTb);
-//        tableRender.buildRadioCellByIndex(0, buildRadioCallBack());
-//        tableRender.buildEditCellByIndex(2, buildEditCallBack());
-//        tableRender.buildEditCellByIndex(3, buildEditCallBack());
-//        tableRender.buildSpecialCellByIndex(7, buildGrrCallBack());
 //        componentChart.setBarGap(10);
 //        componentChart.setCategoryGap(50);
         xBarAppraiserChart.setLegendVisible(false);
