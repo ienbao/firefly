@@ -23,9 +23,15 @@ public class ResourceMassages {
     public static final String HIGH_LIGHT_TABLE_MENU = "HIGH_LIGHT_TABLE_MENU";
     public static final String DETAIL_TABLE_MENU = "DETAIL_TABLE_MENU";
     public static final String REMOVE_TABLE_MENU = "REMOVE_TABLE_MENU";
-    public static final String TEST_ITEMS = "TEST_ITEMS";
+    public static final String TEST_ITEM = "TEST_ITEM";
     public static final String VALUES = "VALUES";
-
+    public static final String ALL_TEST_ITEMS = "ALL_TEST_ITEMS";
+    public static final String TEST_ITEMS_WITH_USL_LSL = "TEST_ITEMS_WITH_USL_LSL";
+    public static final String STICKY_ON_TOP = "STICKY_ON_TOP";
+    public static final String SPECIFICATION_SETTING = "SPECIFICATION_SETTING";
+    public static final String SPC_CONFIG_IMPORT = "SPC_CONFIG_IMPORT";
+    public static final String SPC_CONFIG_EXPORT = "SPC_CONFIG_EXPORT";
+    public static final String REMOVE_FROM_TOP = "REMOVE_FROM_TOP";
 
     //Spc setting
     public static final String FILTER_TEXTFIELD_PROMPT = "FILTER_TEXTFIELD_PROMPT";
@@ -37,7 +43,7 @@ public class ResourceMassages {
     public static final String ALARM_RULE_ORDER = "ALARM_RULE_ORDER";
 
     //tip header
-    public static final String TIP_WARN_HEADER= "TIP_WARN_HEADER";
+    public static final String TIP_WARN_HEADER = "TIP_WARN_HEADER";
     //warn message
     public static final String SPC_SETTING_APPLY_WARN_MESSAGE = "SPC_SETTING_APPLY_WARN_MESSAGE";
     public static final String SPC_STATISTICAL_USL_LSL_EMPTY = "SPC_STATISTICAL_USL_LSL_EMPTY";

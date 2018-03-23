@@ -11,7 +11,6 @@ import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.spc.dto.*;
-import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
@@ -24,10 +23,8 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
-import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.event.EventContext;
-import com.dmsoft.firefly.sdk.event.EventType;
 import com.dmsoft.firefly.sdk.event.PlatformEvent;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
@@ -37,7 +34,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -47,6 +43,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
@@ -56,13 +53,18 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 
 /**
  * Created by Ethan.Yang on 2018/2/6.
+ * Updated by Can Guan on 2018/3/23
  */
 public class SpcItemController implements Initializable {
+    private static final String STICKY_ON_TOP_CODE = "stick_on_top";
     @FXML
     private TextFieldFilter itemFilter;
     @FXML
@@ -82,31 +84,31 @@ public class SpcItemController implements Initializable {
     @FXML
     private TableColumn<ItemTableModel, TestItemWithTypeDto> item;
     @FXML
-    private TableView itemTable;
+    private TableView<ItemTableModel> itemTable;
     @FXML
     private TextField subGroup;
     @FXML
     private TextField ndGroup;
-
     @FXML
     private SplitPane split;
     private SearchTab searchTab;
-
     private CheckBox box;
-
     private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
-
     private SpcMainController spcMainController;
     private ContextMenu pop;
-
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SpcLeftConfigServiceImpl leftConfigService = new SpcLeftConfigServiceImpl();
     private SpcSettingService spcSettingService = RuntimeContext.getBean(SpcSettingServiceImpl.class);
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
+
+    // cached items for user preference
+    private List<String> stickyOnTopItems = Lists.newArrayList();
+
+    private List<String> originalItems = Lists.newArrayList();
 
     /**
      * init main controller
@@ -119,14 +121,15 @@ public class SpcItemController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        initBtnIcon();
         searchTab = new SearchTab();
         split.getItems().add(searchTab);
-        initBtnIcon();
-        itemFilter.getTextField().setPromptText("Test Item");
+        itemFilter.getTextField().setPromptText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
                 filteredList.setPredicate(p -> p.getItem().contains(itemFilter.getTextField().getText()))
         );
-        this.initComponentEvent();
+
+        // test item table init
         itemTable.setOnMouseEntered(event -> {
             itemTable.focusModelProperty();
         });
@@ -137,6 +140,9 @@ public class SpcItemController implements Initializable {
                 TableViewWrapper.decorateSkinForSortHeader((TableViewSkin) s2, itemTable);
             });
         }
+        itemTable.setContextMenu(createTableRightMenu());
+
+        // select column in test item table
         box = new CheckBox();
         box.setOnAction(event -> {
             if (items != null) {
@@ -147,6 +153,32 @@ public class SpcItemController implements Initializable {
         });
         select.setGraphic(box);
         select.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
+        select.setCellFactory(new Callback<TableColumn<ItemTableModel, CheckBox>, TableCell<ItemTableModel, CheckBox>>() {
+            @Override
+            public TableCell<ItemTableModel, CheckBox> call(TableColumn<ItemTableModel, CheckBox> param) {
+                return new TableCell<ItemTableModel, CheckBox>() {
+                    @Override
+                    protected void updateItem(CheckBox item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setStyle(null);
+                        if (!isEmpty()) {
+                            if (getTableRow() != null && getIndex() > -1) {
+                                if (getTableView().getItems().get(getIndex()).getOnTop()) {
+                                    this.setStyle("-fx-background-color: #dff0cf");
+                                }
+                            }
+                        }
+                        if (item == null) {
+                            super.setGraphic(null);
+                        } else {
+                            super.setGraphic(item);
+                        }
+                    }
+                };
+            }
+        });
+
+        // test item column in test item table
         Button is = new Button();
         is.setPrefSize(22, 22);
         is.setMinSize(22, 22);
@@ -154,21 +186,69 @@ public class SpcItemController implements Initializable {
         is.setOnMousePressed(event -> createPopMenu(is, event));
         is.getStyleClass().add("filter-normal");
 
-//        is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
-
-        item.setText("Test Item");
+        item.setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
         item.setGraphic(is);
         item.getStyleClass().add("filter-header");
         item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
-        initItemData();
-
-        item.widthProperty().addListener((ov, w1, w2) -> {
-            Platform.runLater(() -> {
-                is.relocate(w2.doubleValue() - 21, 0);
-            });
+        item.setCellFactory(new Callback<TableColumn<ItemTableModel, TestItemWithTypeDto>, TableCell<ItemTableModel, TestItemWithTypeDto>>() {
+            public TableCell<ItemTableModel, TestItemWithTypeDto> call(TableColumn<ItemTableModel, TestItemWithTypeDto> param) {
+                return new TableCell<ItemTableModel, TestItemWithTypeDto>() {
+                    @Override
+                    public void updateItem(TestItemWithTypeDto item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setStyle(null);
+                        if (!isEmpty()) {
+                            if (getTableRow() != null && getIndex() > -1) {
+                                if (item.getTestItemType().equals(TestItemType.ATTRIBUTE) && getTableView().getItems().get(getIndex()).getOnTop()) {
+                                    this.setStyle("-fx-text-fill: #009bff; -fx-background-color: #dff0cf");
+                                } else if (item.getTestItemType().equals(TestItemType.ATTRIBUTE)) {
+                                    this.setStyle("-fx-text-fill: #009bff");
+                                } else if (getTableView().getItems().get(getIndex()).getOnTop()) {
+                                    this.setStyle("-fx-background-color: #dff0cf");
+                                }
+                            }
+                            setText(item.getTestItemName());
+                        } else {
+                            setText(null);
+                        }
+                    }
+                };
+            }
         });
-        itemTable.setContextMenu(createTableRightMenu());
-      this.initSpcConfig();
+        item.widthProperty().addListener((ov, w1, w2) -> {
+            Platform.runLater(() -> is.relocate(w2.doubleValue() - 21, 0));
+        });
+        item.sortTypeProperty().addListener((ov, sort1, sort2) -> {
+            if (sort2.equals(TableColumn.SortType.DESCENDING)) {
+                item.setComparator((o1, o2) -> {
+                    boolean o1OnTop = stickyOnTopItems.contains(o1.getTestItemName());
+                    boolean o2OnTop = stickyOnTopItems.contains(o2.getTestItemName());
+                    if (o1OnTop == o2OnTop) {
+                        return -o2.getTestItemName().compareTo(o1.getTestItemName());
+                    } else if (o1OnTop) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                });
+            } else {
+                item.setComparator((o1, o2) -> {
+                    boolean o1OnTop = stickyOnTopItems.contains(o1.getTestItemName());
+                    boolean o2OnTop = stickyOnTopItems.contains(o2.getTestItemName());
+                    if (o1OnTop == o2OnTop) {
+                        return -o2.getTestItemName().compareTo(o1.getTestItemName());
+                    } else if (o1OnTop) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                });
+            }
+        });
+
+        initComponentEvent();
+        initItemData();
+        initSpcConfig();
     }
 
     private void initBtnIcon() {
@@ -183,14 +263,14 @@ public class SpcItemController implements Initializable {
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
         if (pop == null) {
             pop = new ContextMenu();
-            MenuItem all = new MenuItem("All Test Items");
+            MenuItem all = new MenuItem(SpcFxmlAndLanguageUtils.getString(ResourceMassages.ALL_TEST_ITEMS));
             all.setOnAction(event -> {
                 filteredList.setPredicate(p -> p.getItem().startsWith(""));
                 is.getStyleClass().remove("filter-active");
                 is.getStyleClass().add("filter-normal");
                 is.setGraphic(null);
             });
-            MenuItem show = new MenuItem("Test Items with USL/LSL");
+            MenuItem show = new MenuItem(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS_WITH_USL_LSL));
             show.setOnAction(event -> {
                 filteredList.setPredicate(p -> StringUtils.isNotEmpty(p.getItemDto().getLsl()) || StringUtils.isNotEmpty(p.getItemDto().getUsl()));
                 is.getStyleClass().remove("filter-normal");
@@ -201,20 +281,47 @@ public class SpcItemController implements Initializable {
         }
         Bounds bounds = is.localToScreen(is.getBoundsInLocal());
         pop.show(is, bounds.getMinX(), bounds.getMinY() + 22);
-//        pop.show(is, e.getScreenX(), e.getScreenY());
         return pop;
     }
 
     private ContextMenu createTableRightMenu() {
-        ContextMenu right = new ContextMenu();
-        MenuItem top = new MenuItem("Sticky On Top");
-        top.setOnAction(event -> {
+        MenuItem top = new MenuItem(SpcFxmlAndLanguageUtils.getString(ResourceMassages.STICKY_ON_TOP));
+        ContextMenu right = new ContextMenu() {
+            @Override
+            public void show(Node anchor, double screenX, double screenY) {
+                if (itemTable.getSelectionModel().getSelectedItem().getOnTop()) {
+                    top.setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.REMOVE_FROM_TOP));
+                } else {
+                    top.setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.STICKY_ON_TOP));
+                }
+                super.show(anchor, screenX, screenY);
+            }
+        };
 
+        top.setOnAction(event -> {
+            ItemTableModel selectedItems = itemTable.getSelectionModel().getSelectedItem();
+            boolean former = selectedItems.getOnTop();
+            String itemName = selectedItems.getItem();
+            if (former) {
+                stickyOnTopItems.remove(itemName);
+                items.remove(selectedItems);
+                int newSite = findNewSite(items, selectedItems);
+                items.add(newSite, selectedItems);
+            } else {
+                stickyOnTopItems.add(itemName);
+                items.remove(selectedItems);
+                items.add(0, selectedItems);
+            }
+            UserPreferenceDto<String> preferenceDto = new UserPreferenceDto<>();
+            preferenceDto.setCode(STICKY_ON_TOP_CODE);
+            preferenceDto.setUserName(envService.getUserName());
+            preferenceDto.setValue(mapper.toJson(stickyOnTopItems));
+            userPreferenceService.updatePreference(preferenceDto);
+            selectedItems.setOnTop(!former);
+            itemTable.refresh();
         });
-        MenuItem setting = new MenuItem("Specification Setting");
-        setting.setOnAction(event -> {
-            RuntimeContext.getBean(EventContext.class).pushEvent(new PlatformEvent(null, "Template_Show"));
-        });
+        MenuItem setting = new MenuItem(SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPECIFICATION_SETTING));
+        setting.setOnAction(event -> RuntimeContext.getBean(EventContext.class).pushEvent(new PlatformEvent(null, "Template_Show")));
         right.getItems().addAll(top, setting);
         return right;
     }
@@ -223,42 +330,41 @@ public class SpcItemController implements Initializable {
         analysisBtn.setOnAction(event -> getAnalysisBtnEvent());
         importBtn.setOnAction(event -> importLeftConfig());
         exportBtn.setOnAction(event -> exportLeftConfig());
-        item.setCellFactory(new Callback<TableColumn<ItemTableModel, TestItemWithTypeDto>, TableCell<ItemTableModel, TestItemWithTypeDto>>() {
-            public TableCell call(TableColumn<ItemTableModel, TestItemWithTypeDto> param) {
-                return new TableCell<ItemTableModel, TestItemWithTypeDto>() {
-                    private ObservableValue ov;
-
-                    @Override
-                    public void updateItem(TestItemWithTypeDto item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (!isEmpty()) {
-
-                            if (getTableRow() != null && item.getTestItemType().equals(TestItemType.ATTRIBUTE)) {
-                                this.setStyle("-fx-text-fill: #009bff");
-                            }
-                            if (getTableRow() != null && StringUtils.isNotEmpty(itemFilter.getTextField().getText()) && item.getTestItemName().contains(itemFilter.getTextField().getText())) {
-                                this.setStyle("-fx-text-fill: red");
-                            }
-                            // Get fancy and change color based on data
-                            setText(item.getTestItemName());
-                        } else {
-                            setText(null);
-                        }
-                    }
-                };
-            }
-        });
     }
 
     @SuppressWarnings("unchecked")
     private void initItemData() {
         items.clear();
+        stickyOnTopItems.clear();
+        String s = userPreferenceService.findPreferenceByUserId(STICKY_ON_TOP_CODE, envService.getUserName());
+        if (s != null) {
+            List<String> onTopItems = mapper.fromJson(mapper.fromJson(s, String.class), mapper.buildCollectionType(List.class, String.class));
+            stickyOnTopItems.addAll(onTopItems);
+        }
+        originalItems.clear();
         List<TestItemWithTypeDto> itemDtos = envService.findTestItems();
         if (itemDtos != null) {
+            List<ItemTableModel> modelList = Lists.newArrayList();
             for (TestItemWithTypeDto dto : itemDtos) {
                 ItemTableModel tableModel = new ItemTableModel(dto);
-                items.add(tableModel);
+
+                originalItems.add(dto.getTestItemName());
+                if (stickyOnTopItems.contains(dto.getTestItemName())) {
+                    tableModel.setOnTop(true);
+                }
+                modelList.add(tableModel);
             }
+            modelList.sort((o1, o2) -> {
+                if (o1.getOnTop() == o2.getOnTop()) {
+                    return originalItems.indexOf(o1.getItem()) - originalItems.indexOf(o2.getItem());
+                } else if (o1.getOnTop()) {
+                    return -1;
+                } else if (o2.getOnTop()) {
+                    return 1;
+                }
+                return 0;
+            });
+            items.addAll(modelList);
             itemTable.setItems(personSortedList);
             personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
         }
@@ -308,7 +414,7 @@ public class SpcItemController implements Initializable {
                             System.out.println("event*****" + event.getPoint());
                             updateProgress(event.getPoint(), 100);
                         });
-                        Map paramMap = Maps.newHashMap();
+                        Map<String, Object> paramMap = Maps.newHashMap();
                         paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
                         paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
                         paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
@@ -339,12 +445,7 @@ public class SpcItemController implements Initializable {
         service.start();
     }
 
-    /**
-     * get selected test items
-     *
-     * @return test items
-     */
-    public List<String> getSelectedItem() {
+    private List<String> getSelectedItem() {
         List<String> selectItems = Lists.newArrayList();
         if (items != null) {
             for (ItemTableModel model : items) {
@@ -356,12 +457,7 @@ public class SpcItemController implements Initializable {
         return selectItems;
     }
 
-    /**
-     * get selected test items
-     *
-     * @return test items
-     */
-    public List<TestItemWithTypeDto> getSelectedItemDto() {
+    private List<TestItemWithTypeDto> getSelectedItemDto() {
         List<TestItemWithTypeDto> selectItems = Lists.newArrayList();
         if (items != null) {
             for (ItemTableModel model : items) {
@@ -373,7 +469,7 @@ public class SpcItemController implements Initializable {
         return selectItems;
     }
 
-    private void initSpcConfig(){
+    private void initSpcConfig() {
         String customGroupNumber = null;
         String chartIntervalNumber = null;
         SpcAnalysisConfigDto spcAnalysisConfigDto = this.getSpcConfigPreference();
@@ -395,7 +491,7 @@ public class SpcItemController implements Initializable {
         String str = System.getProperty("user.home");
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Spc config import");
+        fileChooser.setTitle(SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_CONFIG_IMPORT));
         fileChooser.setInitialDirectory(new File(str));
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
@@ -445,13 +541,12 @@ public class SpcItemController implements Initializable {
 
         String str = System.getProperty("user.home");
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Spc Config export");
+        fileChooser.setTitle(SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_CONFIG_EXPORT));
         fileChooser.setInitialDirectory(new File(str));
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
         );
-        Stage fileStage = null;
-        File file = fileChooser.showSaveDialog(fileStage);
+        File file = fileChooser.showSaveDialog(null);
 
         if (file != null) {
             leftConfigService.exportSpcConfig(leftConfigDto, file);
@@ -471,10 +566,10 @@ public class SpcItemController implements Initializable {
     private SpcAnalysisConfigDto buildSpcAnalysisConfigData() {
         SpcAnalysisConfigDto spcAnalysisConfigDto = new SpcAnalysisConfigDto();
         if (StringUtils.isNumeric(subGroup.getText())) {
-            spcAnalysisConfigDto.setSubgroupSize(Integer.valueOf(subGroup.getText()));
+            spcAnalysisConfigDto.setSubgroupSize(Integer.parseInt(subGroup.getText()));
         }
         if (StringUtils.isNumeric(ndGroup.getText())) {
-            spcAnalysisConfigDto.setIntervalNumber(Integer.valueOf(ndGroup.getText()));
+            spcAnalysisConfigDto.setIntervalNumber(Integer.parseInt(ndGroup.getText()));
         }
         return spcAnalysisConfigDto;
     }
@@ -552,7 +647,7 @@ public class SpcItemController implements Initializable {
     }
 
     private void updateSpcConfigPreference(SpcAnalysisConfigDto configDto) {
-        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+        UserPreferenceDto<SpcAnalysisConfigDto> userPreferenceDto = new UserPreferenceDto<>();
         userPreferenceDto.setUserName(envService.getUserName());
         userPreferenceDto.setCode("spc_config_preference");
         userPreferenceDto.setValue(configDto);
@@ -566,5 +661,17 @@ public class SpcItemController implements Initializable {
         } else {
             return null;
         }
+    }
+
+    private int findNewSite(List<ItemTableModel> modelList, ItemTableModel model) {
+        int site = originalItems.indexOf(model.getItem());
+        for (int i = 0; i < modelList.size() - 1; i++) {
+            if (!modelList.get(i).getOnTop()) {
+                if (originalItems.indexOf(modelList.get(i).getItem()) < site && originalItems.indexOf(modelList.get(i + 1).getItem()) > site) {
+                    return i + 1;
+                }
+            }
+        }
+        return site == 0 ? 0 : modelList.size();
     }
 }

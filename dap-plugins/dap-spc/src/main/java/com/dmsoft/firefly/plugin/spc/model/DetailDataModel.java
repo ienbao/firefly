@@ -43,7 +43,7 @@ public class DetailDataModel implements TableModel {
      */
     public DetailDataModel(RowDataDto rowDataDto, List<TestItemWithTypeDto> typeDtoList) {
         this.rowDataDto = rowDataDto;
-        this.testItems = SpcFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS);
+        this.testItems = SpcFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM);
         this.values = SpcFxmlAndLanguageUtils.getString(ResourceMassages.VALUES);
         this.testItemMap = Maps.newHashMap();
         this.valueMap = Maps.newHashMap();

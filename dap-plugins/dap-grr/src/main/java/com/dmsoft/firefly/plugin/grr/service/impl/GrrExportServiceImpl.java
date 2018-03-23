@@ -14,13 +14,12 @@ import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -53,9 +52,8 @@ public class GrrExportServiceImpl implements GrrExportService {
             if (StringUtils.isBlank(exportPath)) {
                 exportPath = FileUtils.getAbsolutePath(propertyConfig.getDefaultExportPath());
             }
-            DateTimeFormatter formatDir = DateTimeFormat.forPattern("yyyyMMddHHmmss");
-            DateTime nowDir = new DateTime();
-            String fixDir = "Grr_" + nowDir.toString(formatDir);
+
+            String fixDir = "Grr_" + getTimeString();
             File file = new File(exportPath);
             if (!file.exists()) {
                 boolean mkDirSucc = file.mkdirs();
@@ -102,9 +100,8 @@ public class GrrExportServiceImpl implements GrrExportService {
             if (StringUtils.isBlank(exportPath)) {
                 exportPath = FileUtils.getAbsolutePath(propertyConfig.getDefaultExportPath());
             }
-            DateTimeFormatter formatDir = DateTimeFormat.forPattern("yyyyMMddHHmmss");
-            DateTime nowDir = new DateTime();
-            String fixDir = "Grr_" + nowDir.toString(formatDir);
+
+            String fixDir = "Grr_" + getTimeString();
             File file = new File(exportPath);
             if (!file.exists()) {
                 boolean mkDirSucc = file.mkdirs();
@@ -178,5 +175,12 @@ public class GrrExportServiceImpl implements GrrExportService {
             e.printStackTrace();
             return null;
         }
+    }
+
+
+    private String getTimeString() {
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        return sdf.format(d);
     }
 }

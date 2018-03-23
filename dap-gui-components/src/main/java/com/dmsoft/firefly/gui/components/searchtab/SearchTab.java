@@ -49,11 +49,11 @@ public class SearchTab extends VBox {
         return controller.getAdvanceText();
     }
 
-    public ComboBox getGroup1() {
+    public ComboBox<String> getGroup1() {
         return controller.getGroup1();
     }
 
-    public ComboBox getGroup2() {
+    public ComboBox<String> getGroup2() {
         return controller.getGroup2();
     }
 

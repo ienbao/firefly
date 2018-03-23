@@ -8,7 +8,6 @@
     -fx-border-color: #DCDCDC;
 }
 
-
 .mytext_ok {
     -fx-background-color: Red;
 }
@@ -61,6 +60,7 @@
 .column-header.filter-header .button {
     -fx-min-width: 17;
     -fx-min-height: 21;
+    -fx-pref-height: 21;
     -fx-border-width: 0 0 0 1;
     -fx-background-color: transparent;
     -fx-border-color: transparent;
@@ -169,35 +169,39 @@ table
 /*
 *Spc setting
 */
-.alarm-excellent{
+.alarm-excellent {
     -fx-alignment: center;
     -fx-pref-width: 22;
     -fx-pref-height: 22;
     -fx-text-fill: white;
     -fx-background-color: #4ebe11;
 }
-.alarm-good{
+
+.alarm-good {
     -fx-alignment: center;
     -fx-pref-width: 22;
     -fx-pref-height: 22;
     -fx-text-fill: white;
     -fx-background-color: #27b5b3;
 }
-.alarm-acceptable{
+
+.alarm-acceptable {
     -fx-alignment: center;
     -fx-pref-width: 22;
     -fx-pref-height: 22;
     -fx-text-fill: white;
     -fx-background-color: #487cf4;
 }
-.alarm-rectification{
+
+.alarm-rectification {
     -fx-alignment: center;
     -fx-pref-width: 22;
     -fx-pref-height: 22;
     -fx-text-fill: white;
     -fx-background-color: #f38400;
 }
-.alarm-bad{
+
+.alarm-bad {
     -fx-alignment: center;
     -fx-pref-width: 22;
     -fx-pref-height: 22;

@@ -303,10 +303,10 @@ public class GrrSummaryModel implements TableModel {
             return tableCell;
         }
         if (editorCell.contains(rowKey + UIConstant.SPLIT_FLAG + column)) {
-            tableCell.setStyle("-fx-text-fill: #f38400");
+            tableCell.setStyle("-fx-text-fill: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_EDIT_CHANGE));
         }
         if (errorEditorCell.contains(rowKey + UIConstant.SPLIT_FLAG + column)) {
-            tableCell.setStyle("-fx-border-color: #ea2028;-fx-border-with:1 1 1 1");
+            tableCell.setStyle("-fx-border-with:1 1 1 1;-fx-border-color: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_EDIT_ERROR));
         }
         if (column.equals(UIConstant.GRR_SUMMARY_TITLE[6])) {
             int size = rules.size();
