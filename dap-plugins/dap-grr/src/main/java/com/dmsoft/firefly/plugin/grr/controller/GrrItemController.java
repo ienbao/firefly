@@ -54,7 +54,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 
@@ -524,14 +523,14 @@ public class GrrItemController implements Initializable {
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
         if (pop == null) {
             pop = new ContextMenu();
-            MenuItem all = new MenuItem("All Test Items");
+            MenuItem all = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.ALL_TEST_ITEMS));
             all.setOnAction(event -> {
                 filteredList.setPredicate(p -> p.getItem().startsWith(""));
                 is.getStyleClass().remove("filter-active");
                 is.getStyleClass().add("filter-normal");
                 is.setGraphic(null);
             });
-            MenuItem show = new MenuItem("Test Items with USL/LSL");
+            MenuItem show = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS_WITH_USL_LSL));
             show.setOnAction(event -> {
                 filteredList.setPredicate(p -> StringUtils.isNotEmpty(p.getItemDto().getLsl()) || StringUtils.isNotEmpty(p.getItemDto().getUsl()));
                 is.getStyleClass().remove("filter-normal");
@@ -824,12 +823,7 @@ public class GrrItemController implements Initializable {
         return true;
     }
 
-    /**
-     * get selected test items
-     *
-     * @return test items
-     */
-    public List<String> getSelectedItem() {
+    private List<String> getSelectedItem() {
         List<String> selectItems = Lists.newArrayList();
         if (items != null) {
             for (ItemTableModel model : items) {
@@ -841,12 +835,7 @@ public class GrrItemController implements Initializable {
         return selectItems;
     }
 
-    /**
-     * get selected test items
-     *
-     * @return test items
-     */
-    public List<TestItemWithTypeDto> initSelectedItemDto() {
+    private List<TestItemWithTypeDto> initSelectedItemDto() {
         List<TestItemWithTypeDto> selectTestItemDtos = Lists.newLinkedList();
         initSelectTestItemDtos.clear();
         if (items != null) {
@@ -864,7 +853,7 @@ public class GrrItemController implements Initializable {
         String str = System.getProperty("user.home");
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Grr config import");
+        fileChooser.setTitle(GrrFxmlAndLanguageUtils.getString(ResourceMassages.GRR_CONFIG_IMPORT));
         fileChooser.setInitialDirectory(new File(str));
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
@@ -937,7 +926,7 @@ public class GrrItemController implements Initializable {
 
             String str = System.getProperty("user.home");
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Grr Config export");
+            fileChooser.setTitle(GrrFxmlAndLanguageUtils.getString(ResourceMassages.GRR_CONFIG_EXPORT));
             fileChooser.setInitialDirectory(new File(str));
             fileChooser.setInitialFileName("GrrConfig.json");
             fileChooser.getExtensionFilters().addAll(

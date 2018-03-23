@@ -328,10 +328,10 @@ intspc.normal.getXBCResult <- function(x, SubGroupSize, XBCenterLine = NaN, RCen
         }
         Values <- apply(SubGroups, 2, mean, na.rm = T)
         if (is.na(SDCenterLine)) {
-            SDCenterLine <- mean(apply(SubGroups, 2, sd, na.rm = T))
+            SDCenterLine <- mean(apply(SubGroups, 2, sd, na.rm = T), na.rm = T)
         }
         if (is.na(RCenterLine)) {
-            RCenterLine <- mean(apply(SubGroups, 2, intspc.normal.range.fun))
+            RCenterLine <- mean(apply(SubGroups, 2, intspc.normal.range.fun), na.rm = T)
         }
     }else {
         if (length(x) == 1) {
@@ -368,7 +368,7 @@ intspc.normal.getMECResult <- function(x, SubGroupSize, MECenterLine = NaN, RCen
         }
         Values <- apply(SubGroups, 2, median, na.rm = T)
         if (is.na(RCenterLine)) {
-            RCenterLine <- mean(apply(SubGroups, 2, intspc.normal.range.fun))
+            RCenterLine <- mean(apply(SubGroups, 2, intspc.normal.range.fun), na.rm = T)
         }
     }else {
         if (length(x) == 1) {
