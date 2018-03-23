@@ -223,6 +223,7 @@ public class PluginManageController implements Initializable {
                             coverList.add(file.getPath() + ":coverPath:" + pluginInfo.getFolderPath());
                         } else {
                             FileUtils.unZipFiles(file, pluginFolderPath + "/");
+                            context.installPlugin(scannedPlugins.get(0));
                             PluginTableRowData chooseTableRowData = new PluginTableRowData(false, installPlugins.getName(), installPlugins);
                             pluginTableRowDataObservableList.add(chooseTableRowData);
                         }

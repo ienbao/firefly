@@ -9,8 +9,6 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import javafx.fxml.FXMLLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
@@ -19,7 +17,6 @@ import java.util.ResourceBundle;
  * Created by Ethan.Yang on 2018/2/11.
  */
 public class GrrFxmlAndLanguageUtils {
-    private static final Logger logger = LoggerFactory.getLogger(GrrFxmlAndLanguageUtils.class);
 
     public static boolean isDebug = false;
 
@@ -33,9 +30,9 @@ public class GrrFxmlAndLanguageUtils {
             bundleKey = "i18n.message_zh_CN_";
         }
         bundleKey = bundleKey + ModuleType.GRR.name();
-        logger.debug("Language: {}", bundleKey);
         return ResourceBundle.getBundle(bundleKey);
     }
+
     /**
      * get loaderFxml
      *

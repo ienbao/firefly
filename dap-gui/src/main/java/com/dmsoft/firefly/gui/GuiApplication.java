@@ -182,4 +182,8 @@ public class GuiApplication extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    public void stop() throws Exception {
+        RuntimeContext.getBean(JobManager.class).getExecutorService().shutdownNow();
+    }
 }

@@ -42,12 +42,14 @@ public class RefreshAnalysisDataHandler implements JobInboundHandler {
             ProcessMonitorAuto monitor = (ProcessMonitorAuto) spcService;
             monitor.addProcessMonitorListener(context.getContextProcessMonitorListenerIfExists());
         }
+        SpcSettingDto spcSettingDto = (SpcSettingDto) param.get(ParamKeys.SPC_SETTING_FILE_NAME);
         List<SpcStatsDto> spcStatsDtoList = spcService.getStatisticalResult(statisticalDataFrame, statisticalSearchConditionDtoList, analysisConfigDto);
-        List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = RuntimeContext.getBean(SpcSettingService.class).setStatisticalResultAlarm(spcStatsDtoList);
+        List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = RuntimeContext.getBean(SpcSettingService.class).setStatisticalResultAlarm(spcStatsDtoList, spcSettingDto);
 
         SearchDataFrame chartDtaFrame = (SearchDataFrame) param.get(ParamKeys.CHART_SEARCH_DATA_FRAME);
         List<SearchConditionDto> chartSearchConditionDtoList = (List<SearchConditionDto>) param.get(ParamKeys.CHART_SEARCH_CONDITION_DTO_LIST);
         List<SpcChartDto> spcChartDtoList = spcService.getChartResult(chartDtaFrame, chartSearchConditionDtoList, analysisConfigDto);
+        RuntimeContext.getBean(SpcSettingService.class).setControlChartRuleAlarm(spcChartDtoList, spcSettingDto);
 
         Map<String, Object> analysisResultMap = Maps.newHashMap();
         analysisResultMap.put(ParamKeys.STATISTICAL_ANALYSIS_RESULT, spcStatisticalResultAlarmDtoList);

@@ -6,7 +6,6 @@ package com.dmsoft.firefly.plugin.spc.model;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
-import com.dmsoft.firefly.gui.components.utils.ValidateRule;
 import com.dmsoft.firefly.gui.components.utils.ValidateUtils;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
 import com.dmsoft.firefly.plugin.spc.dto.StatisticalAlarmDto;
@@ -61,7 +60,6 @@ public class StatisticalTableModel implements TableModel {
 
     private Set<String> editorCell = new HashSet<>();
     private List<String> editorRowKey = Lists.newArrayList();
-    private ValidateRule rule;
 
     private Set<String> errorEditorCell = new HashSet<>();
 
@@ -582,7 +580,7 @@ public class StatisticalTableModel implements TableModel {
             SourceObjectProperty uslProperty = valueMap.get(rowKey + "-" + STATISTICAL_TITLE[8]);
             StatisticalAlarmDto statisticalAlarmDto = statisticalAlarmDtoMap.get(SpcStatisticalResultKey.USL.getCode());
             Double usl = Double.valueOf((String) uslProperty.getValue());
-            if (Double.valueOf(newText) >= usl) {
+            if (!DAPStringUtils.isNumeric(newText) || Double.valueOf(newText) >= usl) {
                 errorEditorCell.add(rowKey + "-" + columnName);
                 if (!textField.getStyleClass().contains("text-field-error")) {
                     textField.getStyleClass().add("text-field-error");

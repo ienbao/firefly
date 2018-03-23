@@ -11,7 +11,10 @@ import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
 import com.dmsoft.firefly.gui.model.TemplateItemModel;
-import com.dmsoft.firefly.gui.utils.*;
+import com.dmsoft.firefly.gui.utils.GuiConst;
+import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
+import com.dmsoft.firefly.gui.utils.MenuFactory;
+import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.SpecificationDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
@@ -21,8 +24,6 @@ import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.utils.DeepCopy;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -38,7 +39,10 @@ import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.ResourceBundle;
 
 import static com.google.common.io.Resources.getResource;
 
@@ -58,7 +62,7 @@ public class TemplateController {
     @FXML
     private VBox timeKeys;
     @FXML
-    private TableView itemTable;
+    private TableView<TemplateItemModel> itemTable;
     @FXML
     private TableColumn<TemplateItemModel, String> testItem;
     @FXML
@@ -76,7 +80,7 @@ public class TemplateController {
     @FXML
     private TextFieldFilter nameFilter;
     @FXML
-    private ListView templateName;
+    private ListView<String> templateName;
     private ObservableList<String> templateNames = FXCollections.observableArrayList();
     private FilteredList<String> nameFilterList = templateNames.filtered(p -> p.startsWith(""));
     private SortedList<String> nameSortedList = new SortedList<>(nameFilterList);
@@ -89,7 +93,7 @@ public class TemplateController {
 
     @FXML
     private void initialize() {
-        decimal.setItems(FXCollections.observableArrayList(Arrays.asList(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9})));
+        decimal.setItems(FXCollections.observableArrayList(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9)));
         initButton();
         initDefault();
         itemTable.setItems(personSortedList);
@@ -113,7 +117,6 @@ public class TemplateController {
         add.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
         copy.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_copy_normal.png")));
         delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
-//        deleteTime.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_delete_normal.png")));
         addTime.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
         addRow.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
         pattern.getStyleClass().add("message-tip-question");
@@ -131,12 +134,7 @@ public class TemplateController {
             });
         }
         initData(GuiConst.DEFAULT_TEMPLATE_NAME);
-        templateName.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                initData(newValue.toString());
-            }
-        });
+        templateName.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> initData(newValue));
         templateName.getSelectionModel().select(0);
     }
 
@@ -165,9 +163,8 @@ public class TemplateController {
         delete.setOnAction(event -> {
             if (templateName.getSelectionModel().getSelectedItem() != null
                     && !templateName.getSelectionModel().getSelectedItem().equals(GuiConst.DEFAULT_TEMPLATE_NAME)) {
-                allTemplate.remove(templateName.getSelectionModel().getSelectedItem().toString());
-                templateNames.remove(templateName.getSelectionModel().getSelectedItem().toString());
-//                currTemplate = null;
+                allTemplate.remove(templateName.getSelectionModel().getSelectedItem());
+                templateNames.remove(templateName.getSelectionModel().getSelectedItem());
             }
         });
         pattern.setOnAction(event -> buildPatternDia());
@@ -225,7 +222,7 @@ public class TemplateController {
 
     private void saveCache() {
         if (currTemplate != null) {
-            currTemplate.setDecimalDigit(decimal.getValue().intValue());
+            currTemplate.setDecimalDigit(decimal.getValue());
 
             List<String> timeKeyItem = Lists.newArrayList();
             for (int i = 0; i < timeKeys.getChildren().size(); i++) {
@@ -237,7 +234,7 @@ public class TemplateController {
                 currTemplate.setTimePatternDto(timePatternDto);
             }
             currTemplate.getTimePatternDto().setTimeKeys(timeKeyItem);
-            currTemplate.getTimePatternDto().setPattern(patternText.getText().toString());
+            currTemplate.getTimePatternDto().setPattern(patternText.getText());
             if (currTemplate.getSpecificationDatas() == null) {
                 LinkedHashMap<String, SpecificationDataDto> map = Maps.newLinkedHashMap();
                 currTemplate.setSpecificationDatas(map);
@@ -250,7 +247,6 @@ public class TemplateController {
                 dataDto.setUslPass(model.getUslPass());
                 currTemplate.getSpecificationDatas().put(model.getTestItemName(), dataDto);
             });
-//            allTemplate.put(currTemplate.getName(), currTemplate);
         }
     }
 
@@ -263,8 +259,7 @@ public class TemplateController {
     }
 
     private void buildNewTemplateDialog() {
-//        if (newStage == null) {
-        Pane root = null;
+        Pane root;
         try {
             FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
             NewNameController newNameController = new NewNameController();
@@ -293,13 +288,11 @@ public class TemplateController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        }
 
     }
 
     private void buildRenameTemplateDialog() {
-//        if (renameStage == null) {
-        Pane root = null;
+        Pane root;
         try {
             FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
             NewNameController renameTemplateController = new NewNameController();
@@ -309,9 +302,9 @@ public class TemplateController {
             root = loader.load();
             renameTemplateController.getOk().setOnAction(event -> {
                 TextField n = renameTemplateController.getName();
-                if (StringUtils.isNotEmpty(n.getText()) && !n.getText().equals(templateName.getSelectionModel().getSelectedItem().toString())) {
+                if (StringUtils.isNotEmpty(n.getText()) && !n.getText().equals(templateName.getSelectionModel().getSelectedItem())) {
                     for (int i = 0; i < templateNames.size(); i++) {
-                        if (templateNames.get(i).equals(templateName.getSelectionModel().getSelectedItem().toString())) {
+                        if (templateNames.get(i).equals(templateName.getSelectionModel().getSelectedItem())) {
                             allTemplate.put(n.getText(), allTemplate.get(templateNames.get(i)));
                             allTemplate.remove(templateNames.get(i));
                             templateNames.set(i, n.getText());
@@ -321,18 +314,16 @@ public class TemplateController {
                 StageMap.closeStage("renameTemplate");
             });
             Stage renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameTemplate", "Rename Template", root);
-            renameTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem().toString());
+            renameTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem());
             renameStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        }
 
     }
 
     private void buildCopyTemplateDialog() {
-//        if (copyStage == null) {
-        Pane root = null;
+        Pane root;
         try {
             FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
             NewNameController copyTemplateController = new NewNameController();
@@ -347,36 +338,29 @@ public class TemplateController {
                         TemplateSettingDto copyDto = new TemplateSettingDto();
                         try {
                             copyDto = (TemplateSettingDto) DeepCopy.deepCopy(currTemplate);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (ClassNotFoundException e) {
+                        } catch (IOException | ClassNotFoundException e) {
                             e.printStackTrace();
                         }
-//                            BeanUtils.copyProperties(currTemplate, copyDto);
                         copyDto.setName(n.getText());
                         allTemplate.put(n.getText(), copyDto);
                         templateNames.add(n.getText());
                         templateName.getSelectionModel().select(n.getText());
-//                            currTemplate = copyDto;
                     }
                 }
                 n.setText("");
                 StageMap.closeStage("copyTemplate");
             });
             Stage copyStage = WindowFactory.createOrUpdateSimpleWindowAsModel("copyTemplate", "Copy Template", root);
-            copyTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem().toString());
+            copyTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem());
             copyStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        }
-
     }
 
     private void buildPatternDia() {
-        Pane root = null;
+        Pane root;
         try {
-            //root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/pattern.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/pattern.fxml");
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createSimpleWindowAsModel("pattern", GuiFxmlAndLanguageUtils.getString(ResourceMassages.TIME_PATTERN), root, getResource("css/platform_app.css").toExternalForm());
@@ -387,9 +371,8 @@ public class TemplateController {
     }
 
     private void buildAddItemDia() {
-        Pane root = null;
+        Pane root;
         try {
-            //FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/additem.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/additem.fxml");
 
             AddItemController addItem = new AddItemController();
@@ -407,7 +390,7 @@ public class TemplateController {
 
     private void refreshMainTemplate() {
         ObservableList<StateBarTemplateModel> templateList = FXCollections.observableArrayList();
-        TemplateSettingDto templateSettingDto =  envService.findActivatedTemplate();
+        TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
         if (allTemplate != null) {
             allTemplate.keySet().forEach(name -> {
                 StateBarTemplateModel stateBarTemplateModel = new StateBarTemplateModel(name, false);
@@ -417,8 +400,6 @@ public class TemplateController {
                 templateList.add(stateBarTemplateModel);
             });
             MenuFactory.getMainController().refreshTemplate(templateList);
-            //MenuFactory.getMainController().updateTemplateText(currTemplate.getName());
-            //envService.setActivatedTemplate(currTemplate.getName());
         }
     }
 
