@@ -8,6 +8,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.transformation.SortedList;
+import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
@@ -148,7 +149,22 @@ public class TableViewWrapper {
 
                         @Override
                         public void commitEdit(String newValue) {
+                            if (!isEditing()) {
+                                final TableView<String> table = getTableView();
+                                if (table != null) {
+                                    TableColumn.CellEditEvent editEvent = new TableColumn.CellEditEvent(
+                                            table,
+                                            new TablePosition(getTableView(), getIndex(), getTableColumn()),
+                                            TableColumn.editCommitEvent(),
+                                            newValue
+                                    );
+
+                                    Event.fireEvent(getTableColumn(), editEvent);
+                                }
+                            }
                             super.commitEdit(newValue);
+                            updateItem(newValue, false);
+
                             getTableView().refresh();
                         }
                     });
