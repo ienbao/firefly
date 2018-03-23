@@ -43,7 +43,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -111,11 +110,11 @@ public class GrrExportController {
     @FXML
     private Label partLbl;
     @FXML
-    private ComboBox partCombox;
+    private ComboBox<String> partCombox;
     @FXML
     private Label appraiserLbl;
     @FXML
-    private ComboBox appraiserCombox;
+    private ComboBox<String> appraiserCombox;
     @FXML
     private GridPane grrConfigPane;
     @FXML
@@ -230,11 +229,7 @@ public class GrrExportController {
         item.getStyleClass().add("filter-header");
         item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
         initItemData();
-        item.widthProperty().addListener((ov, w1, w2) -> {
-            Platform.runLater(() -> {
-                is.relocate(w2.doubleValue() - 21, 0);
-            });
-        });
+        item.widthProperty().addListener((ov, w1, w2) -> Platform.runLater(() -> is.relocate(w2.doubleValue() - 21, 0)));
         item.sortTypeProperty().addListener((ov, sort1, sort2) -> {
             if (sort2.equals(TableColumn.SortType.DESCENDING)) {
                 item.setComparator((o1, o2) -> {
@@ -263,10 +258,8 @@ public class GrrExportController {
             }
         });
         item.setCellFactory(new Callback<TableColumn<ItemTableModel, TestItemWithTypeDto>, TableCell<ItemTableModel, TestItemWithTypeDto>>() {
-            public TableCell call(TableColumn<ItemTableModel, TestItemWithTypeDto> param) {
+            public TableCell<ItemTableModel, TestItemWithTypeDto> call(TableColumn<ItemTableModel, TestItemWithTypeDto> param) {
                 return new TableCell<ItemTableModel, TestItemWithTypeDto>() {
-                    private ObservableValue ov;
-
                     @Override
                     public void updateItem(TestItemWithTypeDto item, boolean empty) {
                         super.updateItem(item, empty);
@@ -319,12 +312,12 @@ public class GrrExportController {
             if (count != 0 && count != expectInt) {
                 partLbl.setText(count + "/" + expectInt);
                 String[] params = new String[]{expectInt.toString()};
-                if (count < Integer.valueOf(expectInt)) {
+                if (count < expectInt) {
                     TooltipUtil.installNormalTooltip(partLbl, GrrFxmlAndLanguageUtils.getString("UI_GRR_ITEM_VALUE_COUNT_LESS_WARN", params));
                 } else {
                     TooltipUtil.installNormalTooltip(partLbl, GrrFxmlAndLanguageUtils.getString("UI_GRR_ITEM_VALUE_COUNT_MORE_WARN", params));
                 }
-            } else if (count != 0 && count == Integer.valueOf(partTxt.getText())) {
+            } else if (count != 0 && count == Integer.parseInt(partTxt.getText())) {
                 partLbl.setText(count + "/" + partTxt.getText());
                 partLbl.setGraphic(null);
                 partLbl.setStyle("");
@@ -347,16 +340,16 @@ public class GrrExportController {
                 clearAppraiserLbl();
             }
         } else {
-            Integer expectInt = Integer.valueOf(appraiserTxt.getText());
+            Integer expectInt = Integer.parseInt(appraiserTxt.getText());
             if (count != 0 && count != expectInt) {
                 appraiserLbl.setText(count + "/" + expectInt);
                 String[] params = new String[]{expectInt.toString()};
-                if (count < Integer.valueOf(expectInt)) {
+                if (count < expectInt) {
                     TooltipUtil.installNormalTooltip(appraiserLbl, GrrFxmlAndLanguageUtils.getString("UI_GRR_ITEM_VALUE_COUNT_LESS_WARN", params));
                 } else {
                     TooltipUtil.installNormalTooltip(appraiserLbl, GrrFxmlAndLanguageUtils.getString("UI_GRR_ITEM_VALUE_COUNT_MORE_WARN", params));
                 }
-            } else if (count != 0 && count == Integer.valueOf(appraiserTxt.getText())) {
+            } else if (count != 0 && count == Integer.parseInt(appraiserTxt.getText())) {
                 appraiserLbl.setText(count + "/" + appraiserTxt.getText());
                 appraiserLbl.setGraphic(null);
                 appraiserLbl.setStyle("");
@@ -399,7 +392,9 @@ public class GrrExportController {
     }
 
     private void initItemData() {
-        items.clear();
+        if (items != null) {
+            items.clear();
+        }
         stickyOnTopItems.clear();
         String s = userPreferenceService.findPreferenceByUserId(STICKY_ON_TOP_CODE, envService.getUserName());
         if (s != null) {
@@ -549,15 +544,13 @@ public class GrrExportController {
             StringBuilder errorMsg = new StringBuilder();
             errorMsgs.keySet().forEach(key -> {
                 String[] keys = key.split(UIConstant.SPLIT_FLAG);
-                if (keys != null) {
-                    if (isSlot) {
-                        if (keys[1].equals(listViewModel.getName())) {
-                            errorMsg.append(errorMsgs.get(key)).append("\n");
-                        }
-                    } else {
-                        if (keys[0].equals(listViewModel.getName())) {
-                            errorMsg.append(errorMsgs.get(key)).append("\n");
-                        }
+                if (isSlot) {
+                    if (keys[1].equals(listViewModel.getName())) {
+                        errorMsg.append(errorMsgs.get(key)).append("\n");
+                    }
+                } else {
+                    if (keys[0].equals(listViewModel.getName())) {
+                        errorMsg.append(errorMsgs.get(key)).append("\n");
                     }
                 }
             });
@@ -637,7 +630,6 @@ public class GrrExportController {
         }
         Bounds bounds = is.localToScreen(is.getBoundsInLocal());
         pop.show(is, bounds.getMinX(), bounds.getMinY() + 22);
-//        pop.show(is, e.getScreenX(), e.getScreenY());
         return pop;
     }
 
@@ -690,8 +682,7 @@ public class GrrExportController {
             DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setTitle("Grr Config export");
             directoryChooser.setInitialDirectory(new File(str));
-            Stage fileStage = null;
-            File file = directoryChooser.showDialog(fileStage);
+            File file = directoryChooser.showDialog(null);
 
             if (file != null) {
                 locationPath.setText(file.getPath());
@@ -762,8 +753,6 @@ public class GrrExportController {
                     e.printStackTrace();
                 }
                 if (isSucceed) {
-//                    exportProcessDialogView.getTaProgress().append("Print success...\n");
-//                    exportProcessDialogView.dispose();
                     PdfPrintUtil.printPdf(savePath);
                 }
             });
@@ -811,7 +800,6 @@ public class GrrExportController {
             List<RowDataDto> rowDataDtoList = dataService.findTestData(envService.findActivatedProjectName(), selectItem);
             dataFrame = RuntimeContext.getBean(DataFrameFactory.class).createSearchDataFrame(selectItemDto, rowDataDtoList);
             dataFrame.addSearchCondition(searchTab.getSearch());
-//            dataFrame.subDataFrame(searchTab.getSearch(), selectItem);
         }
     }
 
@@ -847,12 +835,7 @@ public class GrrExportController {
         }
     }
 
-    /**
-     * get selected test items
-     *
-     * @return test items
-     */
-    public List<TestItemWithTypeDto> getSelectedItemDto() {
+    private List<TestItemWithTypeDto> getSelectedItemDto() {
         List<TestItemWithTypeDto> selectItems = Lists.newArrayList();
         if (items != null) {
             for (ItemTableModel model : items) {
@@ -880,7 +863,6 @@ public class GrrExportController {
         if (checkSubmitParam(itemDto.size())) {
             GrrConfigDto grrConfigDto = grrConfigService.findGrrConfig();
             Boolean detail = grrConfigDto.getExport().get("Export detail sheet of each selected items");
-//            List<Double> level = grrConfigDto.getAlarmSetting();
 
             GrrExportConfigDto grrExportConfigDto = new GrrExportConfigDto();
             grrExportConfigDto.setExportPath(savePath);
@@ -895,7 +877,7 @@ public class GrrExportController {
                 testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(appraiserCombox.getValue().toString()));
             }
 
-            Map paramMap = Maps.newHashMap();
+            Map<String, Object> paramMap = Maps.newHashMap();
             paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
             paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
             SearchConditionDto searchConditionDto = this.initSearchConditionDto();
@@ -955,7 +937,7 @@ public class GrrExportController {
 
     private SearchConditionDto initSearchConditionDto() {
         SearchConditionDto searchConditionDto = new SearchConditionDto();
-        searchConditionDto.setPart(partCombox.getValue().toString());
+        searchConditionDto.setPart(partCombox.getValue());
         searchConditionDto.setPartInt(Integer.valueOf(partTxt.getText()));
         searchConditionDto.setAppraiserInt(Integer.valueOf(appraiserTxt.getText()));
         searchConditionDto.setTrialInt(Integer.valueOf(trialTxt.getText()));
@@ -968,7 +950,7 @@ public class GrrExportController {
         searchConditionDto.setParts(parts);
 
         if (appraiserCombox.getValue() != null) {
-            searchConditionDto.setAppraiser(appraiserCombox.getValue().toString());
+            searchConditionDto.setAppraiser(appraiserCombox.getValue());
             List<String> appraisers = Lists.newLinkedList();
             appraiserList.forEach(listViewModel -> {
                 if (listViewModel.isIsChecked()) {
@@ -1001,12 +983,12 @@ public class GrrExportController {
             return false;
         }
 
-        if (partListView.getItems().size() > 0 && partListView.getItems().size() < Integer.valueOf(partTxt.getText())) {
+        if (partListView.getItems().size() > 0 && partListView.getItems().size() < Integer.parseInt(partTxt.getText())) {
             RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_MAX_NUMBER_NOT_MATCH"));
             return false;
         }
 
-        if ((appraiserCombox.getValue() != null) && (appraiserListView.getItems().size() > 0 && appraiserListView.getItems().size() < Integer.valueOf(appraiserTxt.getText()))) {
+        if ((appraiserCombox.getValue() != null) && (appraiserListView.getItems().size() > 0 && appraiserListView.getItems().size() < Integer.parseInt(appraiserTxt.getText()))) {
             RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_MAX_NUMBER_NOT_MATCH"));
             return false;
         }
@@ -1023,8 +1005,7 @@ public class GrrExportController {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
         );
-        Stage fileStage = null;
-        File file = fileChooser.showOpenDialog(fileStage);
+        File file = fileChooser.showOpenDialog(null);
 
         if (file != null) {
             GrrLeftConfigDto grrLeftConfigDto = leftConfigService.importGrrConfig(file);

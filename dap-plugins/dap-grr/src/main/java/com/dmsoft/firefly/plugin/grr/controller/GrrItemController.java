@@ -41,7 +41,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -96,11 +95,11 @@ public class GrrItemController implements Initializable {
     @FXML
     private TextField trialTxt;
     @FXML
-    private ComboBox partCombox;
+    private ComboBox<String> partCombox;
     @FXML
     private Label partLbl;
     @FXML
-    private ComboBox appraiserCombox;
+    private ComboBox<String> appraiserCombox;
     @FXML
     private Label appraiserLbl;
     @FXML
@@ -308,31 +307,33 @@ public class GrrItemController implements Initializable {
     }
 
     private void refreshPartOrAppraiserListView(GrrParamDto grrParamDto) {
-        if (grrParamDto != null && grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty()) {
-            Set<String> selectedParts = grrParamDto.getParts();
-            if (selectedParts != null) {
-                partListView.getItems().forEach(listViewModel -> {
-                    listViewModel.setErrorMsg(null);
-                    if (selectedParts.contains(listViewModel.getName())) {
-                        listViewModel.setIsChecked(true);
-                    }
-                });
-                partListView.refresh();
-            }
+        if (grrParamDto != null) {
+            if (grrParamDto.getErrors() != null && !grrParamDto.getErrors().isEmpty()) {
+                Set<String> selectedParts = grrParamDto.getParts();
+                if (selectedParts != null) {
+                    partListView.getItems().forEach(listViewModel -> {
+                        listViewModel.setErrorMsg(null);
+                        if (selectedParts.contains(listViewModel.getName())) {
+                            listViewModel.setIsChecked(true);
+                        }
+                    });
+                    partListView.refresh();
+                }
 
-            Set<String> selectedAppraisers = grrParamDto.getAppraisers();
-            if (selectedAppraisers != null) {
-                appraiserListView.getItems().forEach(listViewModel -> {
-                    listViewModel.setErrorMsg(null);
-                    if (selectedAppraisers != null && selectedAppraisers.contains(listViewModel.getName())) {
-                        listViewModel.setIsChecked(true);
-                    }
-                });
-                appraiserListView.refresh();
+                Set<String> selectedAppraisers = grrParamDto.getAppraisers();
+                if (selectedAppraisers != null) {
+                    appraiserListView.getItems().forEach(listViewModel -> {
+                        listViewModel.setErrorMsg(null);
+                        if (selectedAppraisers != null && selectedAppraisers.contains(listViewModel.getName())) {
+                            listViewModel.setIsChecked(true);
+                        }
+                    });
+                    appraiserListView.refresh();
+                }
+            } else {
+                getTooltipMsg(partListView, grrParamDto, false);
+                getTooltipMsg(appraiserListView, grrParamDto, true);
             }
-        } else {
-            getTooltipMsg(partListView, grrParamDto, false);
-            getTooltipMsg(appraiserListView, grrParamDto, true);
         }
     }
 
@@ -434,16 +435,16 @@ public class GrrItemController implements Initializable {
                 clearPartLbl();
             }
         } else {
-            Integer expectInt = Integer.valueOf(partTxt.getText());
+            Integer expectInt = Integer.parseInt(partTxt.getText());
             if (count != 0 && count != expectInt) {
                 partLbl.setText(count + "/" + expectInt);
                 String[] params = new String[]{expectInt.toString()};
-                if (count < Integer.valueOf(expectInt)) {
+                if (count < expectInt) {
                     TooltipUtil.installNormalTooltip(partLbl, GrrFxmlAndLanguageUtils.getString("UI_GRR_ITEM_VALUE_COUNT_LESS_WARN", params));
                 } else {
                     TooltipUtil.installNormalTooltip(partLbl, GrrFxmlAndLanguageUtils.getString("UI_GRR_ITEM_VALUE_COUNT_MORE_WARN", params));
                 }
-            } else if (count != 0 && count == Integer.valueOf(partTxt.getText())) {
+            } else if (count != 0 && count == Integer.parseInt(partTxt.getText())) {
                 partLbl.setText(count + "/" + partTxt.getText());
                 partLbl.setGraphic(null);
                 partLbl.setStyle("");
@@ -466,16 +467,16 @@ public class GrrItemController implements Initializable {
                 clearAppraiserLbl();
             }
         } else {
-            Integer expectInt = Integer.valueOf(appraiserTxt.getText());
+            Integer expectInt = Integer.parseInt(appraiserTxt.getText());
             if (count != 0 && count != expectInt) {
                 appraiserLbl.setText(count + "/" + expectInt);
                 String[] params = new String[]{expectInt.toString()};
-                if (count < Integer.valueOf(expectInt)) {
+                if (count < expectInt) {
                     TooltipUtil.installNormalTooltip(appraiserLbl, GrrFxmlAndLanguageUtils.getString("UI_GRR_ITEM_VALUE_COUNT_LESS_WARN", params));
                 } else {
                     TooltipUtil.installNormalTooltip(appraiserLbl, GrrFxmlAndLanguageUtils.getString("UI_GRR_ITEM_VALUE_COUNT_MORE_WARN", params));
                 }
-            } else if (count != 0 && count == Integer.valueOf(appraiserTxt.getText())) {
+            } else if (count != 0 && count == Integer.parseInt(appraiserTxt.getText())) {
                 appraiserLbl.setText(count + "/" + appraiserTxt.getText());
                 appraiserLbl.setGraphic(null);
                 appraiserLbl.setStyle("");
@@ -593,8 +594,6 @@ public class GrrItemController implements Initializable {
         item.setCellFactory(new Callback<TableColumn<ItemTableModel, TestItemWithTypeDto>, TableCell<ItemTableModel, TestItemWithTypeDto>>() {
             public TableCell call(TableColumn<ItemTableModel, TestItemWithTypeDto> param) {
                 return new TableCell<ItemTableModel, TestItemWithTypeDto>() {
-                    private ObservableValue ov;
-
                     @Override
                     public void updateItem(TestItemWithTypeDto item, boolean empty) {
                         super.updateItem(item, empty);
@@ -685,12 +684,10 @@ public class GrrItemController implements Initializable {
     private void getAnalysisBtnEvent() {
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
         if (checkSubmitParam(selectedItemDto.size())) {
-//            WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
             Job job = new Job(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE);
             job.addProcessMonitorListener(event -> {
-//            windowProgressTipController.refreshProgress(event.getPoint());
             });
-            Map paramMap = Maps.newHashMap();
+            Map<String, Object> paramMap = Maps.newHashMap();
             List<String> projectNameList = envService.findActivatedProjectName();
             List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
             paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
@@ -740,7 +737,7 @@ public class GrrItemController implements Initializable {
         grrPreferenceDto.setAppraiserInt(searchConditionDto.getAppraiserInt());
         grrPreferenceDto.setTrialInt(searchConditionDto.getTrialInt());
 
-        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+        UserPreferenceDto<GrrPreferenceDto> userPreferenceDto = new UserPreferenceDto<>();
         userPreferenceDto.setUserName(envService.getUserName());
         userPreferenceDto.setCode("grr_param_preference");
         userPreferenceDto.setValue(grrPreferenceDto);
@@ -758,7 +755,7 @@ public class GrrItemController implements Initializable {
 
     private SearchConditionDto initSearchConditionDto() {
         searchConditionDto = new SearchConditionDto();
-        searchConditionDto.setPart(partCombox.getValue().toString());
+        searchConditionDto.setPart(partCombox.getValue());
         searchConditionDto.setPartInt(Integer.valueOf(partTxt.getText()));
         searchConditionDto.setAppraiserInt(Integer.valueOf(appraiserTxt.getText()));
         searchConditionDto.setTrialInt(Integer.valueOf(trialTxt.getText()));
@@ -771,7 +768,7 @@ public class GrrItemController implements Initializable {
         searchConditionDto.setParts(parts);
 
         if (appraiserCombox.getValue() != null) {
-            searchConditionDto.setAppraiser(appraiserCombox.getValue().toString());
+            searchConditionDto.setAppraiser(appraiserCombox.getValue());
             List<String> appraisers = Lists.newLinkedList();
             appraiserList.forEach(listViewModel -> {
                 if (listViewModel.isIsChecked()) {
@@ -810,14 +807,14 @@ public class GrrItemController implements Initializable {
             return false;
         }
 
-        if (partListView.getItems().size() > 0 && partListView.getItems().size() < Integer.valueOf(partTxt.getText())) {
+        if (partListView.getItems().size() > 0 && partListView.getItems().size() < Integer.parseInt(partTxt.getText())) {
             RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
                     GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                     GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_MAX_NUMBER_NOT_MATCH"));
             return false;
         }
 
-        if ((appraiserCombox.getValue() != null) && (appraiserListView.getItems().size() > 0 && appraiserListView.getItems().size() < Integer.valueOf(appraiserTxt.getText()))) {
+        if ((appraiserCombox.getValue() != null) && (appraiserListView.getItems().size() > 0 && appraiserListView.getItems().size() < Integer.parseInt(appraiserTxt.getText()))) {
             RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
                     GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                     GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_MAX_NUMBER_NOT_MATCH"));
@@ -872,8 +869,7 @@ public class GrrItemController implements Initializable {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
         );
-        Stage fileStage = null;
-        File file = fileChooser.showOpenDialog(fileStage);
+        File file = fileChooser.showOpenDialog(null);
 
         if (file != null) {
             GrrLeftConfigDto grrLeftConfigDto = leftConfigService.importGrrConfig(file);
@@ -936,7 +932,7 @@ public class GrrItemController implements Initializable {
             leftConfigDto.setAppraisers(searchConditionDto.getAppraisers());
             leftConfigDto.setBasicSearchs(searchTab.getBasicSearch());
             if (searchTab.getAdvanceText().getText() != null) {
-                leftConfigDto.setAdvanceSearch(searchTab.getAdvanceText().getText().toString());
+                leftConfigDto.setAdvanceSearch(searchTab.getAdvanceText().getText());
             }
 
             String str = System.getProperty("user.home");
@@ -947,8 +943,7 @@ public class GrrItemController implements Initializable {
             fileChooser.getExtensionFilters().addAll(
                     new FileChooser.ExtensionFilter("JSON", "*.json")
             );
-            Stage fileStage = null;
-            File file = fileChooser.showSaveDialog(fileStage);
+            File file = fileChooser.showSaveDialog(null);
 
             if (file != null) {
                 leftConfigService.exportGrrConfig(leftConfigDto, file);
@@ -993,9 +988,9 @@ public class GrrItemController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        conditionTestItemList.add(partCombox.getValue().toString());
+        conditionTestItemList.add(partCombox.getValue());
         if (appraiserCombox.getValue() != null) {
-            conditionTestItemList.add(appraiserCombox.getValue().toString());
+            conditionTestItemList.add(appraiserCombox.getValue());
         }
 
         FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
