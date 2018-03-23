@@ -8,6 +8,7 @@ import com.dmsoft.firefly.gui.components.utils.JsonFileUtil;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.RunCResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcStatsResultDto;
+import com.dmsoft.firefly.plugin.spc.dto.chart.SpcSettingJsonDto;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.utils.ControlRuleConfigUtil;
@@ -15,7 +16,6 @@ import com.dmsoft.firefly.plugin.spc.utils.enums.JudgeRuleType;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcStatisticalResultKey;
 import com.dmsoft.firefly.sdk.utils.DAPDoubleUtils;
 import com.dmsoft.firefly.sdk.utils.RangeUtils;
-import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
@@ -32,7 +32,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Arrays.asList;
 
 /**
  * Created by Ethan.Yang on 2018/3/12.
@@ -73,12 +72,11 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
 
     @ExcludeMethod
     @Override
-    public List<SpcStatisticalResultAlarmDto> setStatisticalResultAlarm(List<SpcStatsDto> spcStatsDtoList) {
-        if (spcStatsDtoList == null) {
-            logger.debug("The statistical result is null");
+    public List<SpcStatisticalResultAlarmDto> setStatisticalResultAlarm(List<SpcStatsDto> spcStatsDtoList, SpcSettingDto spcSettingDto) {
+        if (spcStatsDtoList == null || spcSettingDto == null) {
+            logger.debug("The statistical result or setting data is null");
             return null;
         }
-        SpcSettingDto spcSettingDto = this.findSpcSetting();
         Map<String, Double[]> abilityAlarmRule = spcSettingDto.getAbilityAlarmRule();
         Map<String, List<CustomAlarmDto>> statisticalAlarmSetting = spcSettingDto.getStatisticalAlarmSetting();
         SpcStatisticalResultKey[] spcStatisticalResultKeys = SpcStatisticalResultKey.values();
@@ -170,12 +168,11 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
 
     @ExcludeMethod
     @Override
-    public void setControlChartRuleAlarm(List<SpcChartDto> spcChartDtoList) {
-        if (spcChartDtoList == null) {
-            logger.debug("The chart result is null");
+    public void setControlChartRuleAlarm(List<SpcChartDto> spcChartDtoList, SpcSettingDto spcSettingDto) {
+        if (spcChartDtoList == null || spcSettingDto == null) {
+            logger.debug("The chart result or setting data is null");
             return;
         }
-        SpcSettingDto spcSettingDto = this.findSpcSetting();
         List<ControlRuleDto> controlRuleDtoList = spcSettingDto.getControlChartRule();
         for (SpcChartDto spcChartDto : spcChartDtoList) {
             if (spcChartDto.getResultDto() == null || spcChartDto.getResultDto().getRunCResult() == null) {
@@ -277,11 +274,11 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
     public byte[] exportConfig() {
         SpcSettingDto spcSettingDto = findSpcSetting();
         Map<String, Boolean> exportSetting = findSpcExportTemplateSetting();
-        Map<String, Object> settingMap = Maps.newHashMap();
+        SpcSettingJsonDto spcSettingJsonDto = new SpcSettingJsonDto();
         if (spcSettingDto != null || exportSetting != null) {
-            settingMap.put(ParamKeys.SPC_SETTING_FILE_NAME, spcSettingDto);
-            settingMap.put(ParamKeys.SPC_EXPORT_SETTING_FILE_NAME, exportSetting);
-            return jsonMapper.toJson(settingMap).getBytes();
+            spcSettingJsonDto.setSpcSettingDto(spcSettingDto);
+            spcSettingJsonDto.setExportSetting(exportSetting);
+            return jsonMapper.toJson(spcSettingJsonDto).getBytes();
         }
         return new byte[0];
     }
@@ -291,9 +288,9 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
         if (config == null) {
             return;
         }
-        Map<String, Object> settingMap = jsonMapper.fromJson(new String(config), Map.class);
-        saveSpcSetting((SpcSettingDto) settingMap.get(ParamKeys.SPC_SETTING_FILE_NAME));
-        saveSpcExportTemplateSetting((Map<String, Boolean>) settingMap.get(ParamKeys.SPC_EXPORT_SETTING_FILE_NAME));
+        SpcSettingJsonDto spcSettingJsonDto = jsonMapper.fromJson(new String(config), SpcSettingJsonDto.class);
+        saveSpcSetting(spcSettingJsonDto.getSpcSettingDto());
+        saveSpcExportTemplateSetting(spcSettingJsonDto.getExportSetting());
     }
 
     private String getAbilityAlarmLevel(String name, Double value, Map<String, Double[]> abilityAlarmRule) {
