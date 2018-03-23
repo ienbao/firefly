@@ -12,6 +12,7 @@ import com.dmsoft.firefly.gui.model.UserModel;
 import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
@@ -45,6 +46,7 @@ public class ResolverSelectController implements Initializable {
 
     private DataSourceController controller;
     private ObservableList resolverData;
+    private EnvService envService = RuntimeContext.getBean(EnvService.class);
 
     public ResolverSelectController(DataSourceController controller) {
         this.controller = controller;
@@ -78,7 +80,7 @@ public class ResolverSelectController implements Initializable {
         resolverData = FXCollections.observableArrayList(name);
         resolver.setItems(resolverData);
         if (name.size() > 0) {
-            String defaultResolver = userPreferenceService.findPreferenceByUserId("defaultResolver", "admin");
+            String defaultResolver = userPreferenceService.findPreferenceByUserId("defaultResolver", envService.getUserName());
             String resolverName;
             if (DAPStringUtils.isNotBlank(defaultResolver)) {
                 resolverName = mapper.fromJson(defaultResolver, String.class);

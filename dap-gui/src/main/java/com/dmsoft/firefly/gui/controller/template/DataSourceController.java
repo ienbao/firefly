@@ -384,7 +384,7 @@ public class DataSourceController implements Initializable {
 
     private void updateProjectOrder() {
         UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
-        userPreferenceDto.setUserName("admin");
+        userPreferenceDto.setUserName(envService.getUserName());
         userPreferenceDto.setCode("projectOrder");
         List<String> order = Lists.newArrayList();
         chooseTableRowDataObservableList.forEach(v -> {
