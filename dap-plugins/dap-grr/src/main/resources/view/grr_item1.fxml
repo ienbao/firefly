@@ -53,10 +53,10 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Label text="Model*" />
-                                    <Label text="Part" GridPane.rowIndex="1" />
-                                    <Label text="Appraisers" GridPane.rowIndex="2" />
-                                    <Label text="Trial" GridPane.rowIndex="3" />
+                                    <Label text="%GRR_MODEL" />
+                                    <Label text="%PART" GridPane.rowIndex="1" />
+                                    <Label text="%APPRAISER" GridPane.rowIndex="2" />
+                                    <Label text="%TRAIL" GridPane.rowIndex="3" />
                                     <TextField fx:id="partTxt" maxHeight="22.0" maxWidth="70.0" minHeight="22.0" minWidth="70.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="22.0" prefWidth="70.0" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                        <GridPane.margin>
                                           <Insets />
@@ -72,9 +72,9 @@
                                           <Insets />
                                        </GridPane.margin>
                                     </TextField>
-                                    <Label alignment="CENTER" contentDisplay="CENTER" text="Part*" GridPane.rowIndex="5" />
+                                    <Label alignment="CENTER" contentDisplay="CENTER" text="%GRR_PARTS" GridPane.rowIndex="5" />
                                     <ComboBox fx:id="partCombox" maxHeight="22.0" maxWidth="500.0" minHeight="22.0" prefHeight="22.0" prefWidth="159.0" GridPane.rowIndex="6" />
-                                    <Label text="Appraisers" GridPane.rowIndex="9" />
+                                    <Label text="%GRR_APPRAISERS" GridPane.rowIndex="9" />
                                     <ComboBox fx:id="appraiserCombox" maxHeight="22.0" maxWidth="500.0" minHeight="22.0" prefHeight="22.0" prefWidth="159.0" GridPane.rowIndex="10" />
                                     <ListView fx:id="partListView" minHeight="0.0" GridPane.rowIndex="7" />
                                     <ListView fx:id="appraiserListView" minHeight="0.0" GridPane.rowIndex="11" />
@@ -131,9 +131,9 @@
       </SplitPane>
       <GridPane maxWidth="500.0" minWidth="180.0" style="-fx-background-color: #ffffff; -fx-border-width: 1 0 0 0; -fx-border-color: #DCDCDC;">
          <children>
-            <Button fx:id="exportBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-txt" text="Button" GridPane.columnIndex="3" GridPane.halignment="LEFT" />
-            <Button fx:id="importBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-txt" text="Button" GridPane.columnIndex="2" />
-            <Button fx:id="analysisBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-primary" text="Button" GridPane.halignment="RIGHT" />
+            <Button fx:id="exportBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-txt" text="" GridPane.columnIndex="3" GridPane.halignment="LEFT" />
+            <Button fx:id="importBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-txt" text="" GridPane.columnIndex="2" />
+            <Button fx:id="analysisBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-primary" text="" GridPane.halignment="RIGHT" />
          </children>
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
@@ -148,3 +148,4 @@
       </GridPane>
    </children>
 </VBox>
+

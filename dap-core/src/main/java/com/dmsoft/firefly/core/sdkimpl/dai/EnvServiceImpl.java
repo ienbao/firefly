@@ -107,7 +107,7 @@ public class EnvServiceImpl implements EnvService {
         if (DAPStringUtils.isBlank(languageType)) {
             return null;
         }
-        return LanguageType.valueOf(mapper.fromJson(languageType, String.class));
+        return LanguageType.valueOf(languageType);
 
     }
 

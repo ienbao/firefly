@@ -338,26 +338,28 @@ public class GrrItemController implements Initializable {
     }
 
     private void getTooltipMsg(ListView<ListViewModel> listView, GrrParamDto grrParamDto, boolean isSlot) {
-        Map<String, String> errorMsgs = grrParamDto.getErrors();
-        listView.getItems().forEach(listViewModel -> {
-            StringBuilder errorMsg = new StringBuilder();
-            errorMsgs.keySet().forEach(key -> {
-                String[] keys = key.split(UIConstant.SPLIT_FLAG);
-                if (keys != null) {
-                    if (isSlot) {
-                        if (keys[1].equals(listViewModel.getName())) {
-                            errorMsg.append(errorMsgs.get(key)).append("\n");
-                        }
-                    } else {
-                        if (keys[0].equals(listViewModel.getName())) {
-                            errorMsg.append(errorMsgs.get(key)).append("\n");
+        if (grrParamDto.getErrors() != null && !grrParamDto.getErrors().isEmpty()) {
+            Map<String, String> errorMsgs = grrParamDto.getErrors();
+            listView.getItems().forEach(listViewModel -> {
+                StringBuilder errorMsg = new StringBuilder();
+                errorMsgs.keySet().forEach(key -> {
+                    String[] keys = key.split(UIConstant.SPLIT_FLAG);
+                    if (keys != null) {
+                        if (isSlot) {
+                            if (keys[1].equals(listViewModel.getName())) {
+                                errorMsg.append(errorMsgs.get(key)).append("\n");
+                            }
+                        } else {
+                            if (keys[0].equals(listViewModel.getName())) {
+                                errorMsg.append(errorMsgs.get(key)).append("\n");
+                            }
                         }
                     }
-                }
+                });
+                listViewModel.setErrorMsg(errorMsg.toString());
             });
-            listViewModel.setErrorMsg(errorMsg.toString());
-        });
-        listView.refresh();
+            listView.refresh();
+        }
     }
 
     private void resetPartOrAppraiserListView() {

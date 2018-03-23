@@ -75,10 +75,8 @@ public class MainController {
     private Map<String, TabPane> tabPaneMap = new LinkedHashMap<>();
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
-
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
-    private TemplateSettingDto templateSettingDto;
-
+    private PluginUIContext pc = RuntimeContext.getBean(PluginUIContext.class);
 
     @FXML
     private void initialize() {
@@ -90,19 +88,17 @@ public class MainController {
         this.initStateBar();
         this.updateStateBarIcon();
         if (isLogin()) {
-            templateSettingDto =  envService.findActivatedTemplate();
-            this.initDataSource();
-            this.initDataSourceTooltip();
             this.initTemplate();
             this.initTemplatePopup();
+            this.initDataSource();
+            this.initDataSourceTooltip();
+            this.setActiveFirstTab(pc);
             this.initComponentEvent();
         }
     }
 
     private void initToolBar() {
-        PluginUIContext pc = RuntimeContext.getBean(PluginUIContext.class);
         Set<String> names = pc.getAllMainBodyNames();
-        final int[] i = {0};
         names.forEach(name -> {
             Button btn = new Button(name);
             btn.setId(name);
@@ -118,25 +114,8 @@ public class MainController {
                 setActiveBtnStyle(btn);
             });
             tbaSystem.getItems().add(btn);
-            if (i[0] == 0) {
-                setActiveMain(name, (Button) tbaSystem.getItems().get(0), pc);
-            }
-            i[0]++;
         });
-    }
-
-    private void setActiveMain(String name, Button activeBtn, PluginUIContext pc) {
-        if (isLogin()) {
-            grpContent.setDisable(false);
-            if (activeBtn.getId().equals(name)) {
-                setActiveBtnStyle(activeBtn);
-                Pane pane = pc.getMainBodyPane(name).getNewPane();
-                pane.setId(name);
-                initTab(name, pane);
-            }
-        } else {
-            grpContent.setDisable(true);
-        }
+        grpContent.setDisable(true);
     }
 
     private void setActiveBtnStyle(Button btn) {
@@ -146,6 +125,15 @@ public class MainController {
                 node.setStyle(null);
             }
         }
+    }
+
+    private void setActiveFirstTab(PluginUIContext pc) {
+        Button firstTabBtn = (Button) tbaSystem.getItems().get(0);
+        grpContent.setDisable(false);
+        setActiveBtnStyle(firstTabBtn);
+        Pane pane = pc.getMainBodyPane(firstTabBtn.getId()).getNewPane();
+        pane.setId(firstTabBtn.getId());
+        initTab(firstTabBtn.getId(), pane);
     }
 
     public void resetMain() {
@@ -200,8 +188,6 @@ public class MainController {
         templateBtn.setStyle("-fx-padding: 0 3 0 5");
         stateBar.addColumn(3, templateBtn);
 
-        initStateBarText();
-
         ProgressBar progressBar = new ProgressBar();
         progressBar.setPrefHeight(10);
         progressBar.setMaxHeight(10);
@@ -230,14 +216,13 @@ public class MainController {
         stateBar.addColumn(5, lblVersion);
     }
 
-    private void initStateBarText() {
+    private void initStateBarText(List<String> activeProjectNames, String activeTemplateName) {
         if (isLogin()) {
-            List<String> activeProjectNames = envService.findActivatedProjectName();
             if (activeProjectNames != null && !activeProjectNames.isEmpty()) {
                 dataSourceBtn.setText(activeProjectNames.size() +" "+ GuiFxmlAndLanguageUtils.getString("STATE_BAR_FILE_SELECTED"));
             }
-            if (templateSettingDto != null) {
-                templateBtn.setText(templateSettingDto.getName());
+            if (DAPStringUtils.isNotBlank(activeTemplateName)) {
+                templateBtn.setText(activeTemplateName);
             }
         } else {
             dataSourceBtn.setText("");
@@ -368,6 +353,10 @@ public class MainController {
                 newValue.setIsChecked(true);
                 templateBtn.setText(newValue.getTemplateName());
                 envService.setActivatedTemplate(newValue.getTemplateName());
+                List<String> projectName = envService.findActivatedProjectName();
+                Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
+                LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, newValue.getTemplateName());
+                envService.setTestItems(itemWithTypeDtoMap);
             }
             resetMain();
         });
@@ -396,40 +385,28 @@ public class MainController {
 
     public void initDataSource() {
         List<String> projectName = envService.findActivatedProjectName();
-        if (projectName != null) {
-            Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
-            LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, GuiConst.DEFAULT_TEMPLATE_NAME);
-            envService.setTestItems(itemWithTypeDtoMap);
-            envService.setActivatedProjectName(projectName);
-        } else {
+        TemplateSettingDto activeTemplate = envService.findActivatedTemplate();
+        if (projectName == null) {
             projectName = Lists.newArrayList();
         }
         dataSourceList = FXCollections.observableArrayList(projectName);
+        initStateBarText(projectName, activeTemplate.getName());
     }
 
     public void initTemplate() {
-
         List<StateBarTemplateModel> stateBarTemplateModels = Lists.newLinkedList();
         List<TemplateSettingDto> allTemplates = templateService.findAllTemplate();
+        TemplateSettingDto templateSettingDto =  envService.findActivatedTemplate();
         if (allTemplates != null) {
             allTemplates.forEach(dto -> {
                 StateBarTemplateModel stateBarTemplateModel = new StateBarTemplateModel(dto.getName(), false);
-                if (templateSettingDto != null) {
-                    if (templateSettingDto.getName().equals(stateBarTemplateModel.getTemplateName())) {
-                        stateBarTemplateModel.setIsChecked(true);
-                    }
-                } else {
-                    if (DAPStringUtils.isNotBlank(dto.getName()) && dto.getName().equals(GuiConst.DEFAULT_TEMPLATE_NAME)) {
-                        stateBarTemplateModel.setIsChecked(true);
-                    }
+                if (templateSettingDto.getName().equals(stateBarTemplateModel.getTemplateName())) {
+                    stateBarTemplateModel.setIsChecked(true);
                 }
                 stateBarTemplateModels.add(stateBarTemplateModel);
             });
         }
         templateList = FXCollections.observableArrayList(stateBarTemplateModels);
-        if (templateSettingDto == null) {
-            envService.setActivatedTemplate(GuiConst.DEFAULT_TEMPLATE_NAME);
-        }
     }
 
     public void refreshDataSource(ObservableList<String> dataSourceList) {
