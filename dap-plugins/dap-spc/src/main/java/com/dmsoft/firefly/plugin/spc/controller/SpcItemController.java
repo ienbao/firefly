@@ -477,6 +477,14 @@ public class SpcItemController implements Initializable {
         }
         subGroup.setText(customGroupNumber);
         ndGroup.setText(chartIntervalNumber);
+
+//        ValidateRule rule = new ValidateRule();
+//        rule.setMaxLength(SpcSettingValidateUtil.ANALYSIS_SETTING_MAX_INT);
+//        rule.setPattern("^[+]?\\d*[.]?\\d*$");
+//        rule.setErrorStyle("text-field-error");
+//        rule.setEmptyErrorMsg(SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_VALIDATE_NOT_BE_EMPTY));
+//        TextFieldWrapper.decorate(subGroup, rule);
+//        TextFieldWrapper.decorate(ndGroup, rule);
     }
 
     private void importLeftConfig() {
@@ -614,17 +622,13 @@ public class SpcItemController implements Initializable {
     private List<String> getConditionTestItem() {
         List<String> conditionList = searchTab.getSearch();
         List<String> testItemList = getSelectedItem();
+        TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
         List<String> conditionTestItemList = Lists.newArrayList();
         List<String> timeKeys = Lists.newArrayList();
         String timePattern = null;
-        try {
-            TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
-            if (timePatternDto != null) {
-                timeKeys = timePatternDto.getTimeKeys();
-                timePattern = timePatternDto.getPattern();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(timePatternDto != null) {
+            timeKeys = timePatternDto.getTimeKeys();
+            timePattern = timePatternDto.getPattern();
         }
         FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         for (String condition : conditionList) {

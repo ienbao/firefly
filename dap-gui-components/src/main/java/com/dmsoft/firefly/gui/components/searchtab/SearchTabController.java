@@ -199,14 +199,8 @@ public class SearchTabController {
     public List<String> getConditionTestItem() {
         List<String> conditionList = getSearch();
         List<String> conditionTestItemList = Lists.newArrayList();
-        List<String> timeKeys = Lists.newArrayList();
-        String timePattern = null;
-        try {
-            timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
-            timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
-        } catch (Exception ignored) {
-
-        }
+        List<String> timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
+        String timePattern = envService.findActivatedTemplate().getTimePattern();
         FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         for (String condition : conditionList) {
             Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);

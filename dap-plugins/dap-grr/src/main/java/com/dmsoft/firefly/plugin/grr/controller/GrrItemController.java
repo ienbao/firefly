@@ -962,17 +962,9 @@ public class GrrItemController implements Initializable {
         conditionList.remove("");
         List<String> testItemList = getSelectedItem();
         List<String> conditionTestItemList = Lists.newArrayList();
-        List<String> timeKeys = Lists.newArrayList();
-        String timePattern = null;
-        try {
-            TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
-            if (timePatternDto != null) {
-                timeKeys = timePatternDto.getTimeKeys();
-                timePattern = timePatternDto.getPattern();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
+        List<String> timeKeys = timePatternDto.getTimeKeys();
+        String timePattern = timePatternDto.getPattern();
         conditionTestItemList.add(partCombox.getValue());
         if (appraiserCombox.getValue() != null) {
             conditionTestItemList.add(appraiserCombox.getValue());

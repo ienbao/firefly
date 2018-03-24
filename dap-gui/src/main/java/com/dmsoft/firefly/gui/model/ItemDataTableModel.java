@@ -63,6 +63,8 @@ public class ItemDataTableModel implements TableModel {
                 checkMap.put(String.valueOf(i), new SimpleObjectProperty<>(rowDataDto.getInUsed()));
                 if (i > 2 && rowDataDto.getInUsed()) {
                     k++;
+                }else {
+                    falseSet.add(String.valueOf(i));
                 }
                 rowDataDtoList.add(rowDataDto);
                 i++;
@@ -115,14 +117,17 @@ public class ItemDataTableModel implements TableModel {
             if (!b2) {
                 falseSet.add(rowKey);
                 allChecked.setValue(false);
+                checkMap.put(rowKey,b);
             } else {
                 if (falseSet.contains(rowKey)) {
                     falseSet.remove(rowKey);
+                    checkMap.put(rowKey,b);
                 }
                 allChecked.setValue(true);
             }
         });
-        return b;
+        
+        return checkMap.get(rowKey);
     }
 
     @Override

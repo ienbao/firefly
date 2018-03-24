@@ -16,8 +16,11 @@ import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
 import com.dmsoft.firefly.plugin.spc.charts.view.VerticalTabPane;
+import com.dmsoft.firefly.plugin.spc.dto.ControlRuleDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcSettingDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
+import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcControlChartDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.*;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.SpcChartToolTip;
@@ -151,6 +154,7 @@ public class ChartResultController implements Initializable {
         String value = envService.findPreference(UIConstant.CHART_PERFORMANCE_CODE);
         Map data = mapper.fromJson(value, mapper.buildMapType(Map.class, String.class, Map.class));
         if (data == null || data.isEmpty()) {
+            this.initChartPerformance();
             return;
         }
         for (Map.Entry<String, ChartOperateButton> chartOperateButtonEntry : chartButtonMap.entrySet()) {
@@ -169,6 +173,31 @@ public class ChartResultController implements Initializable {
                 rRuleBtn.setSelectedSets(Sets.newHashSet(chartPerformance.get(UIConstant.CHART_PERFORMANCE_KEY_RULE)));
             }
         }
+    }
+
+    private void initChartPerformance() {
+        Map<String, Map<String, List<String>>> performanceMap = Maps.newHashMap();
+        for (String name : UIConstant.SPC_CHART_NAME) {
+            Map<String, List<String>> operatePerformance = Maps.newHashMap();
+            if (name.equals(UIConstant.SPC_CHART_NAME[0])) {
+                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));
+            } else if (name.equals(UIConstant.SPC_CHART_NAME[1])) {
+                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_RUN_EXTERN_MENU));
+                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_RULE, Lists.newArrayList());
+            } else if (name.equals(UIConstant.SPC_CHART_NAME[2]) || name.equals(UIConstant.SPC_CHART_NAME[3]) || name.equals(UIConstant.SPC_CHART_NAME[4]) || name.equals(UIConstant.SPC_CHART_NAME[5]) || name.equals(UIConstant.SPC_CHART_NAME[7])) {
+                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
+            } else if (name.equals(UIConstant.SPC_CHART_NAME[6])) {
+                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_BOX_EXTERN_MENU));
+            }
+            performanceMap.put(name, operatePerformance);
+
+            List<String> operateNames = chartOperateNameMap.get(name);
+        }
+        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+        userPreferenceDto.setUserName(envService.getUserName());
+        userPreferenceDto.setCode(UIConstant.CHART_PERFORMANCE_CODE);
+        userPreferenceDto.setValue(performanceMap);
+        userPreferenceService.updatePreference(userPreferenceDto);
     }
 
     private ChartOperateButton buildChartOperateButton(String charName) {
@@ -237,27 +266,6 @@ public class ChartResultController implements Initializable {
         userPreferenceDto.setCode(UIConstant.CHART_PERFORMANCE_CODE);
         userPreferenceDto.setValue(performValue);
         userPreferenceService.updatePreference(userPreferenceDto);
-
-//        Map<String, Map<String, List<String>>> performanceMap = Maps.newHashMap();
-//        for (String name : UIConstant.SPC_CHART_NAME) {
-//            Map<String, List<String>> operatePerformance = Maps.newHashMap();
-//            if (name.equals(UIConstant.SPC_CHART_NAME[0])) {
-//                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));
-//            } else if (name.equals(UIConstant.SPC_CHART_NAME[1])) {
-//                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_RUN_EXTERN_MENU));
-//                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_RULE, Lists.newArrayList());
-//            } else if (name.equals(UIConstant.SPC_CHART_NAME[2]) || name.equals(UIConstant.SPC_CHART_NAME[3]) || name.equals(UIConstant.SPC_CHART_NAME[4]) || name.equals(UIConstant.SPC_CHART_NAME[5]) || name.equals(UIConstant.SPC_CHART_NAME[7])) {
-//                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
-//            } else if (name.equals(UIConstant.SPC_CHART_NAME[6])) {
-//                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_BOX_EXTERN_MENU));
-//            }
-//            performanceMap.put(name, operatePerformance);
-//        }
-//        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
-//        userPreferenceDto.setUserName(envService.getUserName());
-//        userPreferenceDto.setCode(UIConstant.CHART_PERFORMANCE_CODE);
-//        userPreferenceDto.setValue(performanceMap);
-//        userPreferenceService.updatePreference(userPreferenceDto);
     }
 
     private AnnotationFetch buildAnnotationFetch() {
@@ -434,7 +442,7 @@ public class ChartResultController implements Initializable {
         this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
     }
 
-    public void setNdChartData(String chartName, List<NDBarChartData> ndChartData) {
+    private void setNdChartData(String chartName, List<NDBarChartData> ndChartData) {
         NDChart chart = ndChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
@@ -472,13 +480,16 @@ public class ChartResultController implements Initializable {
         ndChartPane.activeChartDragging();
     }
 
-    public void setRunChartData(String chartName, List<ControlChartData> runChartData) {
+    private void setRunChartData(String chartName, List<ControlChartData> runChartData) {
         ControlChart chart = runChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
             chart.removeAllChildren();
         } else {
             chartMap.put(chartName, chart);
+        }
+        if (runChartData == null) {
+            return;
         }
         Double[] xLower = new Double[runChartData.size()];
         Double[] xUpper = new Double[runChartData.size()];
@@ -510,7 +521,25 @@ public class ChartResultController implements Initializable {
         runChartPane.activeChartDragging();
     }
 
-    public void setControlChartData(String chartName, List<ControlChartData> controlChartData) {
+    public void setDisableRulesByConfig() {
+        Set ruleNames = Sets.newLinkedHashSet();
+        SpcSettingDto spcSettingDto = spcMainController.getSpcSettingDto();
+        if (spcSettingDto == null) {
+            return;
+        }
+        List<ControlRuleDto> controlChartRules = spcSettingDto.getControlChartRule();
+        if (controlChartRules == null) {
+            return;
+        }
+        controlChartRules.forEach(controlRuleDto -> {
+            if (!controlRuleDto.isUsed()) {
+                ruleNames.add(controlRuleDto.getRuleName());
+            }
+        });
+        rRuleBtn.setDisableRules(ruleNames);
+    }
+
+    private void setControlChartData(String chartName, List<ControlChartData> controlChartData) {
 
         ControlChart controlChart = (ControlChart) chartNodeMap.get(chartName);
         if (chartMap.containsKey(chartName)) {
@@ -554,7 +583,7 @@ public class ChartResultController implements Initializable {
         chartPanelMap.get(chartName).activeChartDragging();
     }
 
-    public void setBoxChartData(String chartName, List<BoxPlotChartData> boxChartData) {
+    private void setBoxChartData(String chartName, List<BoxPlotChartData> boxChartData) {
         BoxPlotChart chart = boxChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
@@ -683,28 +712,6 @@ public class ChartResultController implements Initializable {
             }
         }
     }
-
-//    private Object getChartByName(String name) {
-//        if (UIConstant.SPC_CHART_NAME[0].equals(name)) {
-//            return ndChartPane.getChart();
-//        } else if (UIConstant.SPC_CHART_NAME[1].equals(name)) {
-//            return runChartPane.getChart();
-//        } else if (UIConstant.SPC_CHART_NAME[2].equals(name)) {
-//            return xBarChartPane.getChart();
-//        } else if (UIConstant.SPC_CHART_NAME[3].equals(name)) {
-//            return rangeChartPane.getChart();
-//        } else if (UIConstant.SPC_CHART_NAME[4].equals(name)) {
-//            return sdChartPane.getChart();
-//        } else if (UIConstant.SPC_CHART_NAME[5].equals(name)) {
-//            return medianChartPane.getChart();
-//        } else if (UIConstant.SPC_CHART_NAME[6].equals(name)) {
-//            return boxChartPane.getChart();
-//        } else if (UIConstant.SPC_CHART_NAME[7].equals(name)) {
-//            return mrChartPane.getChart();
-//        } else {
-//            return null;
-//        }
-//    }
 
     private void initChartOperatorMap() {
         chartOperateNameMap.put(UIConstant.SPC_CHART_NAME[0], Lists.newArrayList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));

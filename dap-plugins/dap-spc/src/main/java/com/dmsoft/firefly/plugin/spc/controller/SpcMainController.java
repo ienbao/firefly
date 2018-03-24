@@ -8,10 +8,7 @@ import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.utils.*;
-import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
-import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.job.Job;
@@ -31,16 +28,19 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.Color;
+import java.awt.*;
 import java.net.URL;
-import java.util.*;
 import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 /**
  * Created by Ethan.Yang on 2018/2/2.
  */
 public class SpcMainController implements Initializable {
 
+    private static Logger logger = LoggerFactory.getLogger(SpcMainController.class);
     @FXML
     private Button resetBtn;
     @FXML
@@ -49,7 +49,6 @@ public class SpcMainController implements Initializable {
     private Button exportBtn;
     @FXML
     private Button chooseBtn;
-
     @FXML
     private SpcItemController spcItemController;
     @FXML
@@ -58,16 +57,13 @@ public class SpcMainController implements Initializable {
     private ViewDataController viewDataController;
     @FXML
     private ChartResultController chartResultController;
-
     private SearchDataFrame dataFrame;
     private SpcAnalysisConfigDto analysisConfigDto;
     private List<SearchConditionDto> initSearchConditionDtoList;
     private SpcSettingDto spcSettingDto;
-
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private SpcSettingService spcSettingService = RuntimeContext.getBean(SpcSettingService.class);
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
-    private static Logger logger = LoggerFactory.getLogger(SpcMainController.class);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -117,6 +113,10 @@ public class SpcMainController implements Initializable {
         viewDataController.setViewData(null, null);
     }
 
+    public void setDisableRulesByConfig() {
+        chartResultController.setDisableRulesByConfig();
+    }
+
     /**
      * change chart color
      *
@@ -143,6 +143,7 @@ public class SpcMainController implements Initializable {
         chooseBtn.setOnAction(event -> getChooseBtnEvent());
     }
 
+    @SuppressWarnings("unchecked")
     private void getResetBtnEvent() {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         Service<Integer> service = new Service<Integer>() {
@@ -157,7 +158,7 @@ public class SpcMainController implements Initializable {
                             System.out.println("event*****" + event.getPoint());
                             updateProgress(event.getPoint(), 100);
                         });
-                        Map paramMap = Maps.newHashMap();
+                        Map<String, Object> paramMap = Maps.newHashMap();
                         paramMap.put(ParamKeys.SPC_SETTING_FILE_NAME, spcSettingDto);
                         paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, initSearchConditionDtoList);
                         paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
@@ -313,17 +314,8 @@ public class SpcMainController implements Initializable {
             return null;
         }
         List<String> testItemNameList = Lists.newArrayList();
-        List<String> timeKeys = Lists.newArrayList();
-        String timePattern = null;
-        try {
-            TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
-            if (timePatternDto != null) {
-                timeKeys = timePatternDto.getTimeKeys();
-                timePattern = timePatternDto.getPattern();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<String> timeKeys = envService.findActivatedTemplate().getTimeKeys();
+        String timePattern = envService.findActivatedTemplate().getTimePattern();
         FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         for (SearchConditionDto searchConditionDto : searchConditionDtoList) {
             if (!testItemNameList.contains(searchConditionDto.getItemName())) {
@@ -337,17 +329,12 @@ public class SpcMainController implements Initializable {
                 }
             }
         }
-        SearchDataFrame subDataFrame = dataFrame.subDataFrame(rowKeyList, testItemNameList);
-        return subDataFrame;
+        return dataFrame.subDataFrame(rowKeyList, testItemNameList);
     }
 
     private boolean resultSelectIsChange(List<String> newList, List<String> oldList) {
         if (oldList == null) {
-            if (newList.size() == 0) {
-                return false;
-            } else {
-                return true;
-            }
+            return newList.size() != 0;
         }
         if (newList.size() != oldList.size()) {
             return true;
@@ -360,6 +347,7 @@ public class SpcMainController implements Initializable {
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     private void refreshStatisticalResult(SpcRefreshJudgeUtil spcRefreshJudgeUtil) {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         Service<Integer> service = new Service<Integer>() {
@@ -373,9 +361,7 @@ public class SpcMainController implements Initializable {
                         List<String> currentStatisticalSelectRowKeyList = spcRefreshJudgeUtil.getCurrentStatisticalSelectRowKeyList();
                         List<String> statisticalSelectRowKeyListCache = spcRefreshJudgeUtil.getStatisticalSelectRowKeyListCache();
                         if (currentStatisticalSelectRowKeyList.size() == 0) {
-                            Platform.runLater(() -> {
-                                clearAnalysisSubShowData();
-                            });
+                            Platform.runLater(SpcMainController.this::clearAnalysisSubShowData);
                         }
                         List<String> rowKeyList = statisticalSelectRowKeyListCache == null ? dataFrame.getAllRowKeys() : statisticalSelectRowKeyListCache;
 
@@ -383,7 +369,7 @@ public class SpcMainController implements Initializable {
                         List<SearchConditionDto> searchConditionDtoList = buildRefreshSearchConditionData(editRowDataList);
                         SearchDataFrame subDataFrame = buildSubSearchDataFrame(rowKeyList, searchConditionDtoList);
                         Job job = new Job(ParamKeys.SPC_REFRESH_STATISTICAL_JOB_PIPELINE);
-                        Map paramMap = Maps.newHashMap();
+                        Map<String, Object> paramMap = Maps.newHashMap();
                         paramMap.put(ParamKeys.SPC_SETTING_FILE_NAME, spcSettingDto);
                         paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
                         paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
@@ -395,10 +381,8 @@ public class SpcMainController implements Initializable {
                             logger.error(((Exception) returnValue).getMessage());
                             return null;
                         } else {
-//                clearAnalysisSubShowData();
                             List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
                             statisticalResultController.refreshStatisticalResult(spcStatisticalResultAlarmDtoList);
-//            this.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
                         }
                         return null;
                     }
@@ -432,7 +416,7 @@ public class SpcMainController implements Initializable {
                             return null;
                         }
                         Job job = new Job(ParamKeys.SPC_REFRESH_CHART_JOB_PIPELINE);
-                        Map paramMap = Maps.newHashMap();
+                        Map<String, Object> paramMap = Maps.newHashMap();
                         paramMap.put(ParamKeys.SPC_SETTING_FILE_NAME, spcSettingDto);
                         paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
                         paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
@@ -447,9 +431,11 @@ public class SpcMainController implements Initializable {
                             return null;
                         }
                         List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
+                        System.out.println("ASDF");
                         Platform.runLater(() -> {
                             chartResultController.initSpcChartData(spcChartDtoList);
 
+                            System.out.println("SDFSF");
                             SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getAllRowKeys(), searchConditionDtoList);
                             viewDataController.setViewData(viewDataFrame, rowKeyList);
                         });
@@ -462,6 +448,7 @@ public class SpcMainController implements Initializable {
         service.start();
     }
 
+    @SuppressWarnings("unchecked")
     private void refreshAllAnalysisResult(SpcRefreshJudgeUtil spcRefreshJudgeUtil) {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         Service<Integer> service = new Service<Integer>() {
@@ -491,7 +478,7 @@ public class SpcMainController implements Initializable {
                         SearchDataFrame chartDataFrame = buildSubSearchDataFrame(currentViewDataSelectRowKeyList, chartSearchConditionDtoList);
 
                         Job job = new Job(ParamKeys.SPC_REFRESH_ANALYSIS_JOB_PIPELINE);
-                        Map paramMap = Maps.newHashMap();
+                        Map<String, Object> paramMap = Maps.newHashMap();
                         paramMap.put(ParamKeys.SPC_SETTING_FILE_NAME, spcSettingDto);
                         paramMap.put(ParamKeys.STATISTICAL_SEARCH_DATA_FRAME, statisticalDataFrame);
                         paramMap.put(ParamKeys.STATISTICAL_SEARCH_CONDITION_DTO_LIST, statisticalSearchConditionDtoList);
@@ -508,10 +495,12 @@ public class SpcMainController implements Initializable {
                         Map<String, Object> analysisResultMap = (Map) returnValue;
                         List<SpcStatisticalResultAlarmDto> statisticalAnaysisResult = (List<SpcStatisticalResultAlarmDto>) analysisResultMap.get(ParamKeys.STATISTICAL_ANALYSIS_RESULT);
                         List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) analysisResultMap.get(ParamKeys.CHART_ANALYSIS_RESULT);
+                        System.out.println("ASDF");
                         Platform.runLater(() -> {
                             //set statistical data
                             statisticalResultController.refreshStatisticalResult(statisticalAnaysisResult);
 
+                            System.out.println("SDFSF");
                             //set chart data
                             chartResultController.initSpcChartData(spcChartDtoList);
 
