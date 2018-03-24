@@ -616,8 +616,12 @@ public class SpcItemController implements Initializable {
         List<String> testItemList = getSelectedItem();
         TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
         List<String> conditionTestItemList = Lists.newArrayList();
-        List<String> timeKeys = timePatternDto.getTimeKeys();
-        String timePattern = timePatternDto.getPattern();
+        List<String> timeKeys = Lists.newArrayList();
+        String timePattern = null;
+        if(timePatternDto != null) {
+            timeKeys = timePatternDto.getTimeKeys();
+            timePattern = timePatternDto.getPattern();
+        }
         FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         for (String condition : conditionList) {
             Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);
