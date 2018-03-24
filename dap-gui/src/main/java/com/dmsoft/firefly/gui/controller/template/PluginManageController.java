@@ -210,7 +210,7 @@ public class PluginManageController implements Initializable {
                             return;
                         }
 
-                        Map<String, PluginInfo> allInstallPlugins = context.getAllInstalledPluginInfo() == null ? Maps.newHashMap() : context.getAllInstalledPluginInfo();
+                        Map<String, PluginInfo> allInstallPlugins = context.getAllEnabledPluginInfo() == null ? Maps.newHashMap() : context.getAllEnabledPluginInfo();
 
                         if (isExists(scannedPlugins.get(0), allInstallPlugins)) {
                             WindowMessageFactory.createWindowMessageNoBtnHasOk("Install Error", "Plugin Exist.");

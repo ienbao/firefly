@@ -1,8 +1,6 @@
-/*
- * Copyright (c) 2017. For Intelligent Group.
- */
 package com.dmsoft.firefly.plugin.spc.dto.chart;
 
+import com.dmsoft.firefly.plugin.spc.charts.data.ControlChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.ILineData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IPathData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IPoint;
@@ -11,34 +9,34 @@ import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcControlChartDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.pel.LineData;
 import com.dmsoft.firefly.plugin.spc.dto.chart.pel.SpcXYChartData;
+import com.dmsoft.firefly.plugin.spc.utils.ChartDataUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
+import com.dmsoft.firefly.plugin.spc.utils.XYData;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
+import javafx.geometry.Orientation;
 import javafx.scene.paint.Color;
-
 import java.util.List;
 
 /**
- * Created by Ethan.Yang on 2018/3/10.
+ * Created by cherry on 2018/3/21.
  */
-public class SpcControlChartData implements IControlChartData {
+public class SpcControlChartData implements ControlChartData {
+
     private SpcControlChartDto spcControlChartDto;
     private SpcXYChartData xyChartData;
-    private String key;
-    private Color color;
     private List<ILineData> lineDataList = Lists.newArrayList();
     private List<IPathData> breakLineList = Lists.newArrayList();
+    private String seriesName;
+    private String key;
+    private Color color;
     private Double minX;
     private Double maxX;
     private Double minY;
     private Double maxY;
+    private Double[] uclValue;
+    private Double[] lclValue;
 
-    /**
-     * constructor
-     *
-     * @param key                key
-     * @param spcControlChartDto control chart dto
-     * @param color              color
-     */
     public SpcControlChartData(String key, SpcControlChartDto spcControlChartDto, Color color) {
         this.spcControlChartDto = spcControlChartDto;
         this.key = key;
@@ -52,21 +50,22 @@ public class SpcControlChartData implements IControlChartData {
         }
         Double[] x = spcControlChartDto.getX();
         Double[] y = spcControlChartDto.getY();
-        xyChartData = new SpcXYChartData(x, y);
-
         //init lines data
         Double cl = spcControlChartDto.getCl();
         if (cl != null) {
-            ILineData uslData = new LineData(cl, UIConstant.SPC_CHART_CL);
+            ILineData uslData = new LineData(cl, UIConstant.SPC_CHART_CL, Orientation.HORIZONTAL);
             lineDataList.add(uslData);
         }
         String[] uclLclName = UIConstant.SPC_UCL_LCL;
-        Double[] ucl = spcControlChartDto.getUcl();
-        Double[] lcl = spcControlChartDto.getLcl();
+        uclValue = spcControlChartDto.getUcl();
+        lclValue = spcControlChartDto.getLcl();
+        XYData ucl = ChartDataUtils.foldCLData(uclValue);
+        XYData lcl = ChartDataUtils.foldCLData(lclValue);
+        xyChartData = new SpcXYChartData(x, y);
         IPathData uclData = new IPathData() {
             @Override
             public IPoint getPoints() {
-                return new SpcPointData(x, ucl);
+                return new SpcPointData(x, spcControlChartDto.getUcl());
             }
 
             @Override
@@ -82,7 +81,7 @@ public class SpcControlChartData implements IControlChartData {
         IPathData lclData = new IPathData() {
             @Override
             public IPoint getPoints() {
-                return new SpcPointData(x, lcl);
+                return new SpcPointData(x, spcControlChartDto.getLcl());
             }
 
             @Override
@@ -97,15 +96,14 @@ public class SpcControlChartData implements IControlChartData {
         };
         breakLineList.add(uclData);
         breakLineList.add(lclData);
-
-        maxY = MathUtils.getMax(y, ucl, lcl, new Double[]{cl});
-        minY = MathUtils.getMin(y, ucl, lcl, new Double[]{cl});
+        maxY = MathUtils.getMax(y, ucl.getY(), lcl.getY(), new Double[]{cl});
+        minY = MathUtils.getMin(y, ucl.getY(), lcl.getY(), new Double[]{cl});
         maxX = MathUtils.getMax(x);
         minX = MathUtils.getMin(x);
     }
 
     @Override
-    public IXYChartData getChartData() {
+    public IXYChartData getXyOneChartData() {
         return xyChartData;
     }
 
@@ -130,23 +128,42 @@ public class SpcControlChartData implements IControlChartData {
     }
 
     @Override
-    public Number getXLowerBound() {
+    public String getSeriesName() {
+        return seriesName;
+    }
+
+    @Override
+    public Double getXLowerBound() {
         return minX;
     }
 
     @Override
-    public Number getXUpperBound() {
+    public Double getXUpperBound() {
         return maxX;
     }
 
     @Override
-    public Number getYLowerBound() {
+    public Double getYLowerBound() {
         return minY;
     }
 
     @Override
-    public Number getYUpperBound() {
+    public Double getYUpperBound() {
         return maxY;
+    }
+
+    public void setSeriesName(String seriesName) {
+        this.seriesName = seriesName;
+    }
+
+    @Override
+    public Double[] getUclData() {
+        return uclValue;
+    }
+
+    @Override
+    public Double[] getLclData() {
+        return lclValue;
     }
 
     class SpcPointData implements IPoint {
@@ -166,12 +183,12 @@ public class SpcControlChartData implements IControlChartData {
 
         @Override
         public Object getXByIndex(int index) {
-            return x[index];
+            return DAPStringUtils.isInfinityAndNaN(x[index]) ? null : x[index];
         }
 
         @Override
         public Object getYByIndex(int index) {
-            return y[index];
+            return DAPStringUtils.isInfinityAndNaN(y[index]) ? null : y[index];
         }
 
         @Override
