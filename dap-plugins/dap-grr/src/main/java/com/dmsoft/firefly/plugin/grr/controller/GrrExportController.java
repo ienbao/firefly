@@ -66,6 +66,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by Garen.Pang on 2018/3/13.
@@ -926,7 +927,19 @@ public class GrrExportController {
                         GrrExportResultDto exportResultDto = new GrrExportResultDto();
                         exportResultDto.setItemName(dto.getItemName());
                         exportResultDto.setGrrAnovaAndSourceResultDto(dto.getExportDetailDto().getAnovaAndSourceResultDto());
-                        exportResultDto.setGrrImageDto(BuildChart.buildImage(dto.getExportDetailDto(), searchConditionDto.getParts(), searchConditionDto.getAppraisers()));
+                        CountDownLatch count = new CountDownLatch(1);
+                        Platform.runLater(() -> {
+                            try {
+                                exportResultDto.setGrrImageDto(BuildChart.buildImage(dto.getExportDetailDto(), searchConditionDto.getParts(), searchConditionDto.getAppraisers()));
+                            } finally {
+                                count.countDown();
+                            }
+                        });
+                        try {
+                            count.await();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         grrExportResultDtos.add(exportResultDto);
                     }
                     grrExportService.exportGrrSummaryDetail(grrExportConfigDto, summaryDtos, grrExportResultDtos);

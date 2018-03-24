@@ -163,6 +163,7 @@ public class DataSourceSettingController {
      * init Table Data
      */
     private void initTableData() {
+        List<RowDataDto> rowDataDtoList = new ArrayList<>();
         projectNames = envService.findActivatedProjectName();
         testItemWithTypeDtos = envService.findTestItems();
         if (testItemWithTypeDtos != null && !testItemWithTypeDtos.isEmpty()) {
@@ -170,9 +171,11 @@ public class DataSourceSettingController {
                 testItems.add(dto.getTestItemName());
             }
         }
-        List<RowDataDto> rowDataDtos = sourceDataService.findTestData(projectNames, testItems, null);
-        List<RowDataDto> rowDataDtoList = this.addRowData(testItems);
-        rowDataDtoList.addAll(rowDataDtos);
+        if (projectNames != null && !projectNames.isEmpty()) {
+            List<RowDataDto> rowDataDtos = sourceDataService.findTestData(projectNames, testItems, null);
+            rowDataDtoList = this.addRowData(testItems);
+            rowDataDtoList.addAll(rowDataDtos);
+        }
 
         itemDataTableModel = new ItemDataTableModel(testItems, rowDataDtoList);
         TableViewWrapper.decorate(itemDataTable, itemDataTableModel);
