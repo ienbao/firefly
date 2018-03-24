@@ -25,6 +25,7 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.event.PlatformEvent;
+import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.utils.FilterUtils;
@@ -371,6 +372,7 @@ public class SpcItemController implements Initializable {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void getAnalysisBtnEvent() {
         List<TestItemWithTypeDto> selectedItemDto = this.getSelectedItemDto();
         if (selectedItemDto.size() == 0) {
@@ -394,7 +396,14 @@ public class SpcItemController implements Initializable {
                         Object settingDto = manager.doJobSyn(findSpcSettingJob);
                         if (settingDto == null || settingDto instanceof Exception) {
                             logger.debug("spc setting data is null");
-                            ((Exception) settingDto).printStackTrace();
+                            if (settingDto != null) {
+                                ((Exception) settingDto).printStackTrace();
+                            } else {
+                                throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_20001));
+                            }
+                        }
+                        if (!(settingDto instanceof SpcSettingDto)) {
+                            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_20001));
                         }
                         spcMainController.setSpcSettingDto((SpcSettingDto) settingDto);
 
@@ -520,15 +529,15 @@ public class SpcItemController implements Initializable {
         leftConfigDto.setItems(getSelectedItem());
         leftConfigDto.setBasicSearchs(searchTab.getBasicSearch());
         if (searchTab.getAdvanceText().getText() != null) {
-            leftConfigDto.setAdvanceSearch(searchTab.getAdvanceText().getText().toString());
+            leftConfigDto.setAdvanceSearch(searchTab.getAdvanceText().getText());
         }
         leftConfigDto.setNdNumber(ndGroup.getText());
         leftConfigDto.setSubGroup(subGroup.getText());
         if (searchTab.getGroup1().getValue() != null) {
-            leftConfigDto.setAutoGroup1(searchTab.getGroup1().getValue().toString());
+            leftConfigDto.setAutoGroup1(searchTab.getGroup1().getValue());
         }
         if (searchTab.getGroup2().getValue() != null) {
-            leftConfigDto.setAutoGroup2(searchTab.getGroup2().getValue().toString());
+            leftConfigDto.setAutoGroup2(searchTab.getGroup2().getValue());
         }
 
         String str = System.getProperty("user.home");

@@ -35,6 +35,9 @@ public class TemplateSettingDto implements Serializable {
     }
 
     public TimePatternDto getTimePatternDto() {
+        if (timePatternDto == null) {
+            return new TimePatternDto();
+        }
         return timePatternDto;
     }
 

@@ -8,7 +8,6 @@ import com.dmsoft.firefly.plugin.grr.model.GrrViewDataDFBackupModel;
 import com.dmsoft.firefly.plugin.grr.model.GrrViewDataDFIncludeModel;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -17,7 +16,6 @@ import javafx.scene.control.TableView;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -105,6 +103,10 @@ public class GrrViewDataController implements Initializable {
         return isChanged;
     }
 
+    public void setChanged(boolean changed) {
+        isChanged = changed;
+    }
+
     /**
      * method to set grr data frame
      */
@@ -164,31 +166,6 @@ public class GrrViewDataController implements Initializable {
     public GrrDataFrameDto getChangedGrrDFDto() {
         GrrDataFrameDto result = new GrrDataFrameDto();
         result.setDataFrame(this.grrDataFrameDto.getDataFrame());
-
-//        Map<String, GrrViewDataDto> viewDataDtoMap = Maps.newHashMap();
-//        if (this.grrDataFrameDto.getIncludeDatas() != null) {
-//            for (GrrViewDataDto grrViewDataDto : this.grrDataFrameDto.getIncludeDatas()) {
-//                viewDataDtoMap.put(grrViewDataDto.getRowKey(), grrViewDataDto);
-//            }
-//        }
-//        if (this.grrDataFrameDto.getBackupDatas() != null) {
-//            for (GrrViewDataDto grrViewDataDto : this.grrDataFrameDto.getIncludeDatas()) {
-//                viewDataDtoMap.put(grrViewDataDto.getRowKey(), grrViewDataDto);
-//            }
-//        }
-//        List<GrrViewDataDto> includeDataDto = Lists.newArrayList();
-//        if (analysisDataTB.getItems() != null && !analysisDataTB.getItems().isEmpty()) {
-//            for (String s : analysisDataTB.getItems()) {
-//                includeDataDto.add(viewDataDtoMap.get(s));
-//            }
-//        }
-//        List<GrrViewDataDto> backupDataDto = Lists.newArrayList();
-//        if (this.backupModel.getAllRowKeys() != null) {
-//            for (String s : this.backupModel.getAllRowKeys()) {
-//
-//                backupDataDto.add(viewDataDtoMap.get(s));
-//            }
-//        }
         List<GrrViewDataDto> includeDataDto = Lists.newArrayList();
         List<GrrViewDataDto> backupDataDto = Lists.newArrayList();
         if (this.includeModel.getRowKeyArray() != null) {

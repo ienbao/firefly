@@ -17,8 +17,6 @@ import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.dai.service.UserService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
-import com.google.common.collect.Lists;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -100,14 +98,14 @@ public class LoginController {
             envService.setLanguageType(LanguageType.EN);
         }
 
-        TemplateSettingDto templateSettingDto =  envService.findActivatedTemplate();
+        TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
         String activeTemplateName = null;
-       if (templateSettingDto == null || DAPStringUtils.isBlank(templateSettingDto.getName())) {
-           envService.setActivatedTemplate(GuiConst.DEFAULT_TEMPLATE_NAME);
-           activeTemplateName = GuiConst.DEFAULT_TEMPLATE_NAME;
-       } else {
-           activeTemplateName = templateSettingDto.getName();
-       }
+        if (templateSettingDto == null || DAPStringUtils.isBlank(templateSettingDto.getName())) {
+            envService.setActivatedTemplate(GuiConst.DEFAULT_TEMPLATE_NAME);
+            activeTemplateName = GuiConst.DEFAULT_TEMPLATE_NAME;
+        } else {
+            activeTemplateName = templateSettingDto.getName();
+        }
 
         List<String> projectName = envService.findActivatedProjectName();
         if (projectName != null && !projectName.isEmpty()) {

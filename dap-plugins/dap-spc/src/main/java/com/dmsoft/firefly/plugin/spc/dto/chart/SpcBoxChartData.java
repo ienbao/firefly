@@ -56,11 +56,11 @@ public class SpcBoxChartData implements BoxPlotChartData {
             boxY.add(singleBoxDataDto.getQ3());
             boxY.add(singleBoxDataDto.getLowerWhisker());
             boxY.add(singleBoxDataDto.getUpperWhisker());
-            xPoint.add(singleBoxDataDto.getX());
             if (singleBoxDataDto.getAbnormalPoints() == null) {
                 continue;
             }
             for (int j = 0; j < singleBoxDataDto.getAbnormalPoints().length; j++) {
+                xPoint.add(singleBoxDataDto.getX());
                 yPoint.add(singleBoxDataDto.getAbnormalPoints()[j]);
             }
         }

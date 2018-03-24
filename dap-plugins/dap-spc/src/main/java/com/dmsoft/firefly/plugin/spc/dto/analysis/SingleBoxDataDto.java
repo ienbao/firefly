@@ -2,6 +2,11 @@ package com.dmsoft.firefly.plugin.spc.dto.analysis;
 
 import com.dmsoft.bamboo.common.dto.AbstractValueObject;
 
+/**
+ * box chart dto for single box
+ *
+ * @author Can Guan
+ */
 public class SingleBoxDataDto extends AbstractValueObject {
     private Double x;
     private Double median;

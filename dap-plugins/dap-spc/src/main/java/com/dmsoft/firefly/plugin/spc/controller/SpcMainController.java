@@ -151,7 +151,6 @@ public class SpcMainController implements Initializable {
                         Thread.sleep(100);
                         Job job = new Job(ParamKeys.SPC_RESET_JOB_PIPELINE);
                         job.addProcessMonitorListener(event -> {
-                            System.out.println("event*****" + event.getPoint());
                             updateProgress(event.getPoint(), 100);
                         });
                         Map<String, Object> paramMap = Maps.newHashMap();
@@ -170,9 +169,7 @@ public class SpcMainController implements Initializable {
                             SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
                             List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
                             setStatisticalResultData(spcStatisticalResultAlarmDtoList);
-                            Platform.runLater(() -> {
-                                clearAnalysisSubShowData();
-                            });
+                            Platform.runLater(SpcMainController.this::clearAnalysisSubShowData);
                         }
                         return null;
                     }
@@ -237,7 +234,6 @@ public class SpcMainController implements Initializable {
                     spcRefreshJudgeUtil.setViewDataIsBlank(true);
                     spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
                 }
-                System.out.println("not need refresh");
                 break;
             case REFRESH_STATISTICAL_RESULT:
                 //refresh statistical result
@@ -427,11 +423,8 @@ public class SpcMainController implements Initializable {
                             return null;
                         }
                         List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
-                        System.out.println("ASDF");
                         Platform.runLater(() -> {
                             chartResultController.initSpcChartData(spcChartDtoList);
-
-                            System.out.println("SDFSF");
                             SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getAllRowKeys(), searchConditionDtoList);
                             viewDataController.setViewData(viewDataFrame, rowKeyList);
                         });
@@ -491,12 +484,10 @@ public class SpcMainController implements Initializable {
                         Map<String, Object> analysisResultMap = (Map) returnValue;
                         List<SpcStatisticalResultAlarmDto> statisticalAnaysisResult = (List<SpcStatisticalResultAlarmDto>) analysisResultMap.get(ParamKeys.STATISTICAL_ANALYSIS_RESULT);
                         List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) analysisResultMap.get(ParamKeys.CHART_ANALYSIS_RESULT);
-                        System.out.println("ASDF");
                         Platform.runLater(() -> {
                             //set statistical data
                             statisticalResultController.refreshStatisticalResult(statisticalAnaysisResult);
 
-                            System.out.println("SDFSF");
                             //set chart data
                             chartResultController.initSpcChartData(spcChartDtoList);
 
