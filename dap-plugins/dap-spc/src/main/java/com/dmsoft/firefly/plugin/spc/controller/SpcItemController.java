@@ -7,8 +7,6 @@ import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
-import com.dmsoft.firefly.gui.components.utils.TextFieldWrapper;
-import com.dmsoft.firefly.gui.components.utils.ValidateRule;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.spc.dto.*;
@@ -68,7 +66,6 @@ import java.util.Set;
  */
 public class SpcItemController implements Initializable {
     private static final String STICKY_ON_TOP_CODE = "stick_on_top";
-    private final Logger logger = LoggerFactory.getLogger(SpcItemController.class);
     @FXML
     private TextFieldFilter itemFilter;
     @FXML
@@ -108,6 +105,7 @@ public class SpcItemController implements Initializable {
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
+    private final Logger logger = LoggerFactory.getLogger(SpcItemController.class);
     // cached items for user preference
     private List<String> stickyOnTopItems = Lists.newArrayList();
 
@@ -422,14 +420,13 @@ public class SpcItemController implements Initializable {
                         } else {
                             Platform.runLater(() -> {
                                 spcMainController.clearAnalysisSubShowData();
+                                SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
+                                SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
+                                List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
+                                TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
+                                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
+                                spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
                             });
-                            SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
-                            SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
-                            List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
-                            TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
-                            DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
-                            spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
-                            spcMainController.setDisableRulesByConfig();
                         }
                         return null;
                     }
