@@ -66,6 +66,7 @@ import java.util.Set;
  */
 public class SpcItemController implements Initializable {
     private static final String STICKY_ON_TOP_CODE = "stick_on_top";
+    private final Logger logger = LoggerFactory.getLogger(SpcItemController.class);
     @FXML
     private TextFieldFilter itemFilter;
     @FXML
@@ -105,7 +106,6 @@ public class SpcItemController implements Initializable {
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
-    private final Logger logger = LoggerFactory.getLogger(SpcItemController.class);
     // cached items for user preference
     private List<String> stickyOnTopItems = Lists.newArrayList();
 
@@ -614,18 +614,10 @@ public class SpcItemController implements Initializable {
     private List<String> getConditionTestItem() {
         List<String> conditionList = searchTab.getSearch();
         List<String> testItemList = getSelectedItem();
+        TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
         List<String> conditionTestItemList = Lists.newArrayList();
-        List<String> timeKeys = Lists.newArrayList();
-        String timePattern = null;
-        try {
-            TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
-            if (timePatternDto != null) {
-                timeKeys = timePatternDto.getTimeKeys();
-                timePattern = timePatternDto.getPattern();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<String> timeKeys = timePatternDto.getTimeKeys();
+        String timePattern = timePatternDto.getPattern();
         FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         for (String condition : conditionList) {
             Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);

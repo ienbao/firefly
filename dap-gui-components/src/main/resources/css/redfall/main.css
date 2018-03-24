@@ -655,6 +655,44 @@
 
 /*******************************************************************************
  *                                                                             *
+ * Text Area                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+.text-area {
+    -fx-border-color: #cccccc;
+    -fx-background-color: #ffffff;
+    -fx-font: 12 arial;
+}
+
+.text-area .content {
+    -fx-background-color: #ffffff;
+}
+
+.text-area:focused {
+    -fx-border-color: #33abff;
+    -fx-background-color: #fff;
+    -fx-text-fill: #222;
+    -fx-highlight-fill: #0096ff;
+    -fx-highlight-text-fill: #fff;
+}
+
+.text-area .content:focused {
+    -fx-background-color: #fff;
+}
+
+.text-area:disabled {
+    -fx-border-color: #dcdcdc;
+    -fx-background-color: #fafafa;
+    -fx-text-fill: #cccccc;
+    -fx-opacity: 1;
+}
+
+.text-area .content:disabled {
+    -fx-background-color: #fafafa;
+}
+
+/*******************************************************************************
+ *                                                                             *
  * Combo box                                                                   *
  *                                                                             *
  ******************************************************************************/
@@ -1316,6 +1354,7 @@
     -fx-border-color: transparent;
     -fx-text-fill: transparent;
     -fx-border-width: 0;
+    -fx-background-color: #ffffff;
 }
 
 .table-view .placeholder .label:focused,
