@@ -15,6 +15,7 @@ import com.dmsoft.firefly.plugin.spc.utils.ControlRuleConfigUtil;
 import com.dmsoft.firefly.plugin.spc.utils.enums.JudgeRuleType;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcStatisticalResultKey;
 import com.dmsoft.firefly.sdk.utils.DAPDoubleUtils;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -182,6 +183,9 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
             RunCResultDto runCResultDto = spcChartDto.getResultDto().getRunCResult();
             controlRuleConfigUtil.setAnalyseData(runCResultDto.getY());
             Double[] clValue = runCResultDto.getCls();
+            if (DAPDoubleUtils.isBlank(clValue[3]) || DAPDoubleUtils.isBlank(clValue[4])) {
+                continue;
+            }
             double avgValue = clValue[3];
             double sigma = clValue[4] - avgValue;
             Double usl = runCResultDto.getUsl();
@@ -189,7 +193,7 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
 
             Map<String, RuleResultDto> ruleResultDtoMap = Maps.newHashMap();
             for (ControlRuleDto controlRuleDto : controlRuleDtoList) {
-                if(!controlRuleDto.isUsed()){
+                if (!controlRuleDto.isUsed()) {
                     continue;
                 }
                 RuleResultDto ruleResultDto = null;

@@ -20,8 +20,8 @@ import java.util.regex.Pattern;
  */
 public class SpcSettingValidateUtil {
 
-    private static final Integer ANALYSIS_SETTING_MAX_INT = 255;
-    private static final String ANALYSIS_SETTING_REG_TYPE = "^([1-9]|[1-1][0-9]|20)$";
+    public static final Integer ANALYSIS_SETTING_MAX_INT = 255;
+    public static final String ANALYSIS_SETTING_REG_TYPE = "^([1-9]|[1-1][0-9]|20)$";
 
     private static final String RULE_NUMBER_REG = "^[-+]?\\d+(\\.\\d+)?$";
 
