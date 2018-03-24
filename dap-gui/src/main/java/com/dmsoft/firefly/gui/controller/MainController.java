@@ -2,11 +2,14 @@ package com.dmsoft.firefly.gui.controller;
 
 import com.dmsoft.firefly.gui.component.ContentStackPane;
 import com.dmsoft.firefly.gui.component.CustomerTooltip;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
+import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowMessageController;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.controller.template.DataSourceController;
 import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
 import com.dmsoft.firefly.gui.model.UserModel;
-import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.gui.utils.TabUtils;
@@ -20,8 +23,11 @@ import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -31,15 +37,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
 import java.util.*;
 
 import static com.google.common.io.Resources.getResource;
@@ -59,6 +65,7 @@ public class MainController {
 
     @FXML
     private GridPane stateBar;
+    private ProgressBar progressBar;
 
     private Button dataSourceBtn;
     private Button templateBtn;
@@ -87,6 +94,7 @@ public class MainController {
         this.initToolBar();
         this.initStateBar();
         this.updateStateBarIcon();
+        this.updateMemoryState();
         if (isLogin()) {
             this.initTemplate();
             this.initTemplatePopup();
@@ -188,7 +196,7 @@ public class MainController {
         templateBtn.setStyle("-fx-padding: 0 3 0 5");
         stateBar.addColumn(3, templateBtn);
 
-        ProgressBar progressBar = new ProgressBar();
+        progressBar = new ProgressBar();
         progressBar.setPrefHeight(10);
         progressBar.setMaxHeight(10);
         progressBar.setMinHeight(10);
@@ -196,7 +204,7 @@ public class MainController {
         progressBar.setMaxWidth(110);
         progressBar.setMinWidth(110);
         progressBar.getStyleClass().setAll("progress-bar-lg-green");
-        progressBar.setProgress(0.4);
+        progressBar.setProgress(0);
 
         Label lblMemory = new Label(GuiFxmlAndLanguageUtils.getString("STATE_BAR_MEMORY"), progressBar);
         lblMemory.setPrefHeight(20);
@@ -254,6 +262,30 @@ public class MainController {
         templateBtn.setOnAction(event -> this.getTemplateBtnEvent());
         templateBtn.setOnMouseEntered(event -> this.getTemplateLblEvent());
         templateView.setOnMouseExited(event -> this.getHidePopupEvent());
+        progressBar.setOnMouseClicked(event -> this.getProgressEvent());
+    }
+
+    private void getProgressEvent() {
+        WindowMessageController messageController = WindowMessageFactory.createWindowMessageHasOkAndCancel(GuiFxmlAndLanguageUtils.getString("GLOBAL_TITLE_MESSAGE"),
+                GuiFxmlAndLanguageUtils.getString(GuiFxmlAndLanguageUtils.getString("GLOBAL_FREE_SYTEM_MEMORY")));
+        messageController.addProcessMonitorListener(new WindowCustomListener() {
+            @Override
+            public boolean onShowCustomEvent() {
+                return false;
+            }
+
+            @Override
+            public boolean onCloseAndCancelCustomEvent() {
+                return false;
+            }
+
+            @Override
+            public boolean onOkCustomEvent() {
+                Runtime.getRuntime().gc();
+                progressBar.getStyleClass().setAll("progress-bar-md-green");
+                return false;
+            }
+        });
     }
 
     private void getHidePopupEvent() {
@@ -471,6 +503,61 @@ public class MainController {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * Get memory state
+     *
+     */
+    public void updateMemoryState() {
+        boolean flag = true;
+        final double memoryLimit = 2.0 * Math.pow(2, 20);
+        final double warningPercent = 70;
+
+        Service<Integer> service = new Service<Integer>() {
+            @Override
+            protected Task<Integer> createTask() {
+                return new Task<Integer>() {
+                    @Override
+                    protected Integer call() throws Exception {
+                        while (flag) {
+                            try {
+                                Thread.sleep(1000);
+                                int progress = (int) (getHeapUsed() / memoryLimit * 100);
+                                updateProgress(progress, 100);
+                                Platform.runLater(() -> {
+                                    try {
+                                        if (progress < warningPercent) {
+                                            progressBar.getStyleClass().setAll("progress-bar-md-green");
+                                        } else {
+                                            progressBar.getStyleClass().setAll("progress-bar-md-red");
+                                        }
+                                        TooltipUtil.installNormalTooltip(progressBar, progress + "%");
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                });
+
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        return null;
+                    }
+                };
+            }
+        };
+
+        progressBar.progressProperty().bind(service.progressProperty());
+        service.start();
+    }
+
+    private double getHeapUsed() throws Exception {
+        MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+        MemoryUsage heap = memoryMXBean.getHeapMemoryUsage();
+        return heap.getUsed() / Math.pow(2, 10);
     }
 
     private boolean isLogin() {

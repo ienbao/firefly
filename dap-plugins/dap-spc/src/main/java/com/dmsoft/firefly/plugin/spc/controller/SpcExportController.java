@@ -61,6 +61,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -518,6 +519,7 @@ public class SpcExportController {
         spcConfig.setDigNum(envService.findActivatedTemplate().getDecimalDigit());
         spcConfig.setExportDataItem(exportDataItem);
 
+        SpcSettingDto spcSettingDto = RuntimeContext.getBean(SpcSettingServiceImpl.class).findSpcSetting();
         if (exportEachFile) {
             String result = "";
             for (String projectName : projectNameList) {
@@ -535,7 +537,7 @@ public class SpcExportController {
                 searchTab.getConditionTestItem().forEach(item -> {
                     itemDto.add(envService.findTestItemNameByItemName(item));
                 });
-                result = exportFile(project, itemDto, searchConditionDtoList, spcAnalysisConfigDto, spcConfig);
+                result = exportFile(project, spcSettingDto, itemDto, searchConditionDtoList, spcAnalysisConfigDto, spcConfig);
             }
             return result;
         } else {
@@ -544,7 +546,7 @@ public class SpcExportController {
             searchTab.getConditionTestItem().forEach(item -> {
                 testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(item));
             });
-            return exportFile(projectNameList, testItemWithTypeDtoList, searchConditionDtoList, spcAnalysisConfigDto, spcConfig);
+            return exportFile(projectNameList, spcSettingDto, testItemWithTypeDtoList, searchConditionDtoList, spcAnalysisConfigDto, spcConfig);
         }
     }
 
@@ -556,6 +558,7 @@ public class SpcExportController {
 
     @SuppressWarnings("unchecked")
     private String exportFile(List<String> projectNameList,
+                              SpcSettingDto spcSettingDto,
                               List<TestItemWithTypeDto> testItemWithTypeDtoList,
                               List<SearchConditionDto> searchConditionDtoList,
                               SpcAnalysisConfigDto spcAnalysisConfigDto,
@@ -564,6 +567,7 @@ public class SpcExportController {
         Job job = new Job(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
 
         Map<String, Object> paramMap = Maps.newHashMap();
+        paramMap.put(ParamKeys.SPC_SETTING_FILE_NAME, spcSettingDto);
         paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
         paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
@@ -595,10 +599,20 @@ public class SpcExportController {
             }
             if (returnValue != null) {
                 List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
+                CountDownLatch count = new CountDownLatch(1);
                 Platform.runLater(() -> {
-                    chartPath = initSpcChartData(spcChartDtoList);
-
+                    try {
+                        chartPath = initSpcChartData(spcChartDtoList);
+                    } finally {
+                        count.countDown();
+                    }
                 });
+                try {
+                    count.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 for (SpcChartDto dto : spcChartDtoList) {
                     if (dto.getResultDto() != null && dto.getResultDto().getRunCResult() != null && dto.getResultDto().getRunCResult().getRuleResultDtoMap() != null) {
                         Map<String, RuleResultDto> rule = dto.getResultDto().getRunCResult().getRuleResultDtoMap();
