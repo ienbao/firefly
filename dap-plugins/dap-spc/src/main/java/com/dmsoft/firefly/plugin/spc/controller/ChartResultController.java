@@ -16,8 +16,11 @@ import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
 import com.dmsoft.firefly.plugin.spc.charts.view.VerticalTabPane;
+import com.dmsoft.firefly.plugin.spc.dto.ControlRuleDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcSettingDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
+import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcControlChartDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.*;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.SpcChartToolTip;
@@ -439,7 +442,7 @@ public class ChartResultController implements Initializable {
         this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
     }
 
-    public void setNdChartData(String chartName, List<NDBarChartData> ndChartData) {
+    private void setNdChartData(String chartName, List<NDBarChartData> ndChartData) {
         NDChart chart = ndChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
@@ -477,13 +480,16 @@ public class ChartResultController implements Initializable {
         ndChartPane.activeChartDragging();
     }
 
-    public void setRunChartData(String chartName, List<ControlChartData> runChartData) {
+    private void setRunChartData(String chartName, List<ControlChartData> runChartData) {
         ControlChart chart = runChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
             chart.removeAllChildren();
         } else {
             chartMap.put(chartName, chart);
+        }
+        if (runChartData == null) {
+            return;
         }
         Double[] xLower = new Double[runChartData.size()];
         Double[] xUpper = new Double[runChartData.size()];
@@ -515,7 +521,25 @@ public class ChartResultController implements Initializable {
         runChartPane.activeChartDragging();
     }
 
-    public void setControlChartData(String chartName, List<ControlChartData> controlChartData) {
+    public void setDisableRulesByConfig() {
+        Set ruleNames = Sets.newLinkedHashSet();
+        SpcSettingDto spcSettingDto = spcMainController.getSpcSettingDto();
+        if (spcSettingDto == null) {
+            return;
+        }
+        List<ControlRuleDto> controlChartRules = spcSettingDto.getControlChartRule();
+        if (controlChartRules == null) {
+            return;
+        }
+        controlChartRules.forEach(controlRuleDto -> {
+            if (!controlRuleDto.isUsed()) {
+                ruleNames.add(controlRuleDto.getRuleName());
+            }
+        });
+        rRuleBtn.setDisableRules(ruleNames);
+    }
+
+    private void setControlChartData(String chartName, List<ControlChartData> controlChartData) {
 
         ControlChart controlChart = (ControlChart) chartNodeMap.get(chartName);
         if (chartMap.containsKey(chartName)) {
@@ -559,7 +583,7 @@ public class ChartResultController implements Initializable {
         chartPanelMap.get(chartName).activeChartDragging();
     }
 
-    public void setBoxChartData(String chartName, List<BoxPlotChartData> boxChartData) {
+    private void setBoxChartData(String chartName, List<BoxPlotChartData> boxChartData) {
         BoxPlotChart chart = boxChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
@@ -688,28 +712,6 @@ public class ChartResultController implements Initializable {
             }
         }
     }
-
-//    private Object getChartByName(String name) {
-//        if (UIConstant.SPC_CHART_NAME[0].equals(name)) {
-//            return ndChartPane.getChart();
-//        } else if (UIConstant.SPC_CHART_NAME[1].equals(name)) {
-//            return runChartPane.getChart();
-//        } else if (UIConstant.SPC_CHART_NAME[2].equals(name)) {
-//            return xBarChartPane.getChart();
-//        } else if (UIConstant.SPC_CHART_NAME[3].equals(name)) {
-//            return rangeChartPane.getChart();
-//        } else if (UIConstant.SPC_CHART_NAME[4].equals(name)) {
-//            return sdChartPane.getChart();
-//        } else if (UIConstant.SPC_CHART_NAME[5].equals(name)) {
-//            return medianChartPane.getChart();
-//        } else if (UIConstant.SPC_CHART_NAME[6].equals(name)) {
-//            return boxChartPane.getChart();
-//        } else if (UIConstant.SPC_CHART_NAME[7].equals(name)) {
-//            return mrChartPane.getChart();
-//        } else {
-//            return null;
-//        }
-//    }
 
     private void initChartOperatorMap() {
         chartOperateNameMap.put(UIConstant.SPC_CHART_NAME[0], Lists.newArrayList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));

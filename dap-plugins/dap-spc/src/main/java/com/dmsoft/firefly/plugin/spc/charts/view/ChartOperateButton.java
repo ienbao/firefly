@@ -8,8 +8,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.layout.HBox;
 import javafx.stage.Popup;
-import javafx.util.Callback;
 
 import java.util.List;
 import java.util.Set;
@@ -23,13 +23,14 @@ public class ChartOperateButton extends Button {
     private ListView<String> listView;
     private SelectCallBack selectCallBack;
 
-    private boolean selected = defaultSelected;
-    private Orientation orientation = defaultOrientation;
-
-    private final static Orientation defaultOrientation = Orientation.UPLEFT;
-    private final static boolean defaultSelected = false;
     private final double threshold = 6;
-    private Set<String> selectedSets = Sets.newHashSet();
+    private boolean selected = defaultSelected;
+    private final static boolean defaultSelected = false;
+    private Orientation orientation = defaultOrientation;
+    private final static Orientation defaultOrientation = Orientation.UPLEFT;
+
+    private Set<String> selectedSets = Sets.newLinkedHashSet();
+    private Set<String> disableRules = Sets.newLinkedHashSet();
 
     public ChartOperateButton() {
         this(defaultSelected, defaultOrientation);
@@ -52,7 +53,7 @@ public class ChartOperateButton extends Button {
         this.selected = selected;
         this.orientation = orientation;
         listView = new ListView<>();
-        listView.setCellFactory(buildCallback());
+        listView.setCellFactory(e -> buildCallback());
         popup = new Popup();
         popup.getContent().addAll(listView);
         popup.setAutoHide(true);
@@ -88,19 +89,49 @@ public class ChartOperateButton extends Button {
         popup.show(button, x, y);
     }
 
-    private Callback buildCallback() {
-        return CheckBoxListCell.forListView(item -> {
-            boolean selected = selectedSets.contains(item);
-            BooleanProperty observable = new SimpleBooleanProperty(selected);
-            observable.setValue(selected);
-            observable.addListener((obs, wasSelected, isNowSelected) -> {
-                updateSelectedSets(isNowSelected, (String) item);
-                if (selectCallBack != null) {
-                    selectCallBack.execute((String) item, isNowSelected, selectedSets);
+    private ListCell buildCallback() {
+
+        return new ListCell() {
+            @Override
+            protected void updateItem(Object item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty == true) {
+                    setGraphic(null);
+                    setText(null);
+                } else {
+                    CheckBox checkBox = new CheckBox();
+                    Label label = new Label(item == null ? "" : String.valueOf(item));
+                    boolean selected = selectedSets.contains(item);
+                    boolean disabled = disableRules.contains(item);
+                    BooleanProperty observable = new SimpleBooleanProperty(selected);
+                    observable.setValue(selected);
+                    checkBox.selectedProperty().bindBidirectional(observable);
+                    observable.addListener((obs, wasSelected, isNowSelected) -> {
+                        updateSelectedSets(isNowSelected, (String) item);
+                        if (selectCallBack != null) {
+                            selectCallBack.execute((String) item, isNowSelected, selectedSets);
+                        }
+                    });
+                    if (disabled) {
+                        checkBox.setDisable(true);
+                    }
+                    HBox cell = new HBox(checkBox, label);
+                    setGraphic(cell);
                 }
-            });
-            return observable;
-        });
+            }
+        };
+//        return CheckBoxListCell.forListView(item -> {
+//            boolean selected = selectedSets.contains(item);
+//            BooleanProperty observable = new SimpleBooleanProperty(selected);
+//            observable.setValue(selected);
+//            observable.addListener((obs, wasSelected, isNowSelected) -> {
+//                updateSelectedSets(isNowSelected, (String) item);
+//                if (selectCallBack != null) {
+//                    selectCallBack.execute((String) item, isNowSelected, selectedSets);
+//                }
+//            });
+//            return observable;
+//        });
     }
 
     private void updateSelectedSets(boolean isNowSelected, String item) {
@@ -130,11 +161,18 @@ public class ChartOperateButton extends Button {
     }
 
     public void setSelectedSets(Set<String> selectedSets) {
+        this.selectedSets.clear();
         this.selectedSets = selectedSets;
         this.listView.refresh();
     }
 
     public Set<String> getSelectedSets() {
         return selectedSets;
+    }
+
+    public void setDisableRules(Set<String> disableRules) {
+        this.disableRules.clear();
+        this.disableRules = disableRules;
+        this.listView.refresh();
     }
 }

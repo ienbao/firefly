@@ -427,6 +427,7 @@ public class SpcItemController implements Initializable {
                             TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
                             DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
                             spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
+                            spcMainController.setDisableRulesByConfig();
                         }
                         return null;
                     }

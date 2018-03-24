@@ -113,6 +113,10 @@ public class SpcMainController implements Initializable {
         viewDataController.setViewData(null, null);
     }
 
+    public void setDisableRulesByConfig() {
+        chartResultController.setDisableRulesByConfig();
+    }
+
     /**
      * change chart color
      *
