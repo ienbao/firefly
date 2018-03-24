@@ -7,6 +7,8 @@ import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
+import com.dmsoft.firefly.gui.components.utils.TextFieldWrapper;
+import com.dmsoft.firefly.gui.components.utils.ValidateRule;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.spc.dto.*;
@@ -477,6 +479,14 @@ public class SpcItemController implements Initializable {
         }
         subGroup.setText(customGroupNumber);
         ndGroup.setText(chartIntervalNumber);
+
+//        ValidateRule rule = new ValidateRule();
+//        rule.setMaxLength(SpcSettingValidateUtil.ANALYSIS_SETTING_MAX_INT);
+//        rule.setPattern("^[+]?\\d*[.]?\\d*$");
+//        rule.setErrorStyle("text-field-error");
+//        rule.setEmptyErrorMsg(SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_VALIDATE_NOT_BE_EMPTY));
+//        TextFieldWrapper.decorate(subGroup, rule);
+//        TextFieldWrapper.decorate(ndGroup, rule);
     }
 
     private void importLeftConfig() {
