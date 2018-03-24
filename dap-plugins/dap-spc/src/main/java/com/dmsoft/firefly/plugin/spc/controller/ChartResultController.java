@@ -151,6 +151,7 @@ public class ChartResultController implements Initializable {
         String value = envService.findPreference(UIConstant.CHART_PERFORMANCE_CODE);
         Map data = mapper.fromJson(value, mapper.buildMapType(Map.class, String.class, Map.class));
         if (data == null || data.isEmpty()) {
+            this.initChartPerformance();
             return;
         }
         for (Map.Entry<String, ChartOperateButton> chartOperateButtonEntry : chartButtonMap.entrySet()) {
@@ -169,6 +170,31 @@ public class ChartResultController implements Initializable {
                 rRuleBtn.setSelectedSets(Sets.newHashSet(chartPerformance.get(UIConstant.CHART_PERFORMANCE_KEY_RULE)));
             }
         }
+    }
+
+    private void initChartPerformance() {
+        Map<String, Map<String, List<String>>> performanceMap = Maps.newHashMap();
+        for (String name : UIConstant.SPC_CHART_NAME) {
+            Map<String, List<String>> operatePerformance = Maps.newHashMap();
+            if (name.equals(UIConstant.SPC_CHART_NAME[0])) {
+                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));
+            } else if (name.equals(UIConstant.SPC_CHART_NAME[1])) {
+                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_RUN_EXTERN_MENU));
+                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_RULE, Lists.newArrayList());
+            } else if (name.equals(UIConstant.SPC_CHART_NAME[2]) || name.equals(UIConstant.SPC_CHART_NAME[3]) || name.equals(UIConstant.SPC_CHART_NAME[4]) || name.equals(UIConstant.SPC_CHART_NAME[5]) || name.equals(UIConstant.SPC_CHART_NAME[7])) {
+                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
+            } else if (name.equals(UIConstant.SPC_CHART_NAME[6])) {
+                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_BOX_EXTERN_MENU));
+            }
+            performanceMap.put(name, operatePerformance);
+
+            List<String> operateNames = chartOperateNameMap.get(name);
+        }
+        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+        userPreferenceDto.setUserName(envService.getUserName());
+        userPreferenceDto.setCode(UIConstant.CHART_PERFORMANCE_CODE);
+        userPreferenceDto.setValue(performanceMap);
+        userPreferenceService.updatePreference(userPreferenceDto);
     }
 
     private ChartOperateButton buildChartOperateButton(String charName) {
@@ -237,27 +263,6 @@ public class ChartResultController implements Initializable {
         userPreferenceDto.setCode(UIConstant.CHART_PERFORMANCE_CODE);
         userPreferenceDto.setValue(performValue);
         userPreferenceService.updatePreference(userPreferenceDto);
-
-//        Map<String, Map<String, List<String>>> performanceMap = Maps.newHashMap();
-//        for (String name : UIConstant.SPC_CHART_NAME) {
-//            Map<String, List<String>> operatePerformance = Maps.newHashMap();
-//            if (name.equals(UIConstant.SPC_CHART_NAME[0])) {
-//                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));
-//            } else if (name.equals(UIConstant.SPC_CHART_NAME[1])) {
-//                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_RUN_EXTERN_MENU));
-//                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_RULE, Lists.newArrayList());
-//            } else if (name.equals(UIConstant.SPC_CHART_NAME[2]) || name.equals(UIConstant.SPC_CHART_NAME[3]) || name.equals(UIConstant.SPC_CHART_NAME[4]) || name.equals(UIConstant.SPC_CHART_NAME[5]) || name.equals(UIConstant.SPC_CHART_NAME[7])) {
-//                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
-//            } else if (name.equals(UIConstant.SPC_CHART_NAME[6])) {
-//                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_BOX_EXTERN_MENU));
-//            }
-//            performanceMap.put(name, operatePerformance);
-//        }
-//        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
-//        userPreferenceDto.setUserName(envService.getUserName());
-//        userPreferenceDto.setCode(UIConstant.CHART_PERFORMANCE_CODE);
-//        userPreferenceDto.setValue(performanceMap);
-//        userPreferenceService.updatePreference(userPreferenceDto);
     }
 
     private AnnotationFetch buildAnnotationFetch() {

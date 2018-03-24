@@ -1,5 +1,7 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.gui.components.skin.ExpandableTableViewSkin;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
@@ -8,6 +10,7 @@ import com.dmsoft.firefly.gui.components.window.WindowMessageController;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.grr.charts.ChartOperateButton;
 import com.dmsoft.firefly.plugin.grr.charts.LinearChart;
+import com.dmsoft.firefly.plugin.grr.charts.SelectCallBack;
 import com.dmsoft.firefly.plugin.grr.charts.data.RuleLineData;
 import com.dmsoft.firefly.plugin.grr.charts.data.VerticalCutLine;
 import com.dmsoft.firefly.plugin.grr.charts.data.ILineData;
@@ -21,6 +24,9 @@ import com.dmsoft.firefly.plugin.grr.utils.charts.ChartUtils;
 import com.dmsoft.firefly.plugin.grr.utils.charts.LegendUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
@@ -56,6 +62,9 @@ import java.util.function.Function;
  */
 public class GrrResultController implements Initializable {
 
+    private Set<String> parts = Sets.newLinkedHashSet();
+    private Set<String> appraisers = Sets.newLinkedHashSet();
+
     private GrrSummaryModel summaryModel = new GrrSummaryModel();
     private ItemResultModel itemResultModel = new ItemResultModel();
     private GrrAnovaModel anovaModel = new GrrAnovaModel();
@@ -63,8 +72,9 @@ public class GrrResultController implements Initializable {
 
     private GrrMainController grrMainController;
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
-    private Set<String> parts = Sets.newLinkedHashSet();
-    private Set<String> appraisers = Sets.newLinkedHashSet();
+    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+    private JsonMapper mapper = JsonMapper.defaultMapper();
 
     /**
      * Init grr main controller
@@ -81,6 +91,7 @@ public class GrrResultController implements Initializable {
         this.initData();
         this.initComponentsRender();
         this.initComponentEvents();
+        this.initPerformanceSelected();
     }
 
     public void analyzeGrrResult(List<GrrSummaryDto> grrSummaryDtos, GrrDetailDto grrDetailDto) {
@@ -301,12 +312,14 @@ public class GrrResultController implements Initializable {
                 xBarAppraiserChartBtn,
                 Lists.newArrayList(parts),
                 Lists.newArrayList(appraisers));
+        this.setBarChartPerformance();
         setControlChartData(grrDetailDto.getGrrDetailResultDto().getRangeAppraiserChartDto(),
                 rangeAppraiserBp,
                 rangeAppraiserChart,
                 rangeAppraiserChartBtn,
                 Lists.newArrayList(parts),
                 Lists.newArrayList(appraisers));
+        this.setRangeChartPerformance();
         setScatterChartData(grrDetailDto.getGrrDetailResultDto().getRrbyAppraiserChartDto(), rrByAppraiserChart);
         setScatterChartData(grrDetailDto.getGrrDetailResultDto().getRrbyPartChartDto(), rrbyPartChart);
         setAnovaAndSourceTb(grrDetailDto.getGrrDetailResultDto().getAnovaAndSourceResultDto());
@@ -542,9 +555,11 @@ public class GrrResultController implements Initializable {
         resultBasedCmb.getItems().addAll(GRR_RESULT_TYPE);
         resultBasedCmb.setValue(GRR_RESULT_TYPE[0]);
         summaryModel.initColumn(Lists.newArrayList(UIConstant.GRR_SUMMARY_TITLE));
-//        summaryTb.getColumns().addAll(buildSummaryTbColumn());
         anovaTb.getColumns().addAll(buildAnovaTbColumn());
         sourceTb.getColumns().addAll(buildSourceTbColumn());
+
+        //table自适应列宽
+        itemDetailTb.setSkin(new ExpandableTableViewSkin(itemDetailTb));
 
         componentChart.setAnimated(false);
         partAppraiserChart.setAnimated(false);
@@ -677,15 +692,56 @@ public class GrrResultController implements Initializable {
             summaryTb.refresh();
         });
         summaryItemTf.getTextField().textProperty().addListener(observable -> summaryModel.filterTestItem(summaryItemTf.getTextField().getText()));
-        xBarAppraiserChartBtn.setSelectCallBack((name, selected, selectedNames) ->
-                xBarAppraiserChart.toggleValueMarker(name, selected));
-        rangeAppraiserChartBtn.setSelectCallBack((name, selected, selectedNames) ->
-                rangeAppraiserChart.toggleValueMarker(name, selected));
+        xBarAppraiserChartBtn.setSelectCallBack(buildSelectCallBack(UIConstant.GRR_CHART_XBAR_APPRAISER, xBarAppraiserChart));
+        rangeAppraiserChartBtn.setSelectCallBack(buildSelectCallBack(UIConstant.GRR_CHART_RANGE_APPRAISER, rangeAppraiserChart));
         summaryModel.setRadioClickListener((grrSummaryDto, tolerance) -> grrMainController.getSearchConditionDto().getSelectedTestItemDtos().forEach(testItemWithTypeDto -> {
             if (grrSummaryDto.getItemName().equals(testItemWithTypeDto.getTestItemName())) {
                 analyzeGrrSubResult(testItemWithTypeDto, tolerance);
             }
         }));
+    }
+
+    private SelectCallBack buildSelectCallBack(String chartName, LinearChart chart) {
+        return (name, selected, selectedNames) -> {
+            chart.toggleValueMarker(name, selected);
+            this.updatePerformance(chartName, selectedNames);
+        };
+    }
+
+    private void updatePerformance(String chartName, Set<String> selectedNames) {
+        String value = envService.findPreference(UIConstant.CHART_PERFORMANCE_CODE);
+        Map data = mapper.fromJson(value, mapper.buildMapType(Map.class, String.class, Map.class));
+        data = data == null ? Maps.newLinkedHashMap() : data;
+        Map<String, List> operateMap = data.containsKey(chartName) && data.get(chartName) instanceof Map ?
+                (Map<String, List>) data.get(chartName) : Maps.newHashMap();
+        operateMap.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(selectedNames));
+        data.put(chartName, operateMap);
+        String performValue = mapper.toJson(data);
+        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+        userPreferenceDto.setUserName(envService.getUserName());
+        userPreferenceDto.setCode(UIConstant.CHART_PERFORMANCE_CODE);
+        userPreferenceDto.setValue(performValue);
+        userPreferenceService.updatePreference(userPreferenceDto);
+    }
+
+    private void setBarChartPerformance() {
+        List<String> barHiddenLines = Lists.newArrayList();
+        for (String operateName : UIConstant.CHART_OPERATE_NAME) {
+            if (!xBarAppraiserChartBtn.getSelectedSets().contains(operateName)) {
+                barHiddenLines.add(operateName);
+            }
+        }
+        xBarAppraiserChart.hiddenValueMarkers(barHiddenLines);
+    }
+
+    private void setRangeChartPerformance() {
+        List<String> rangeHiddenLines = Lists.newArrayList();
+        for (String operateName : UIConstant.CHART_OPERATE_NAME) {
+            if (!rangeAppraiserChartBtn.getSelectedSets().contains(operateName)) {
+                rangeHiddenLines.add(operateName);
+            }
+        }
+        rangeAppraiserChart.hiddenValueMarkers(rangeHiddenLines);
     }
 
     private void initData() {
@@ -694,6 +750,46 @@ public class GrrResultController implements Initializable {
         sourceTb.setItems(sourceModel.getSources());
         xBarAppraiserChartBtn.setListViewData(Lists.newArrayList(UIConstant.CHART_OPERATE_NAME));
         rangeAppraiserChartBtn.setListViewData(Lists.newArrayList(UIConstant.CHART_OPERATE_NAME));
+    }
+
+    private void initPerformanceSelected() {
+        String value = envService.findPreference(UIConstant.CHART_PERFORMANCE_CODE);
+        Map data = mapper.fromJson(value, mapper.buildMapType(Map.class, String.class, Map.class));
+        if (data == null || data.isEmpty()) {
+            this.initChartPerformance();
+            return;
+        }
+        if (data.containsKey(UIConstant.GRR_CHART_XBAR_APPRAISER) && data.get(UIConstant.GRR_CHART_XBAR_APPRAISER) instanceof Map) {
+            Map<String, List<String>> operateMap = (Map<String, List<String>>) data.get(UIConstant.GRR_CHART_XBAR_APPRAISER);
+            if (operateMap.containsKey(UIConstant.CHART_PERFORMANCE_KEY_OPERATE) && operateMap.get(UIConstant.CHART_PERFORMANCE_KEY_OPERATE) instanceof List) {
+                xBarAppraiserChartBtn.setSelectedSets(Sets.newHashSet(operateMap.get(UIConstant.CHART_PERFORMANCE_KEY_OPERATE)));
+            }
+        }
+        if (data.containsKey(UIConstant.GRR_CHART_RANGE_APPRAISER) && data.get(UIConstant.GRR_CHART_RANGE_APPRAISER) instanceof Map) {
+            Map<String, List<String>> operateMap = (Map<String, List<String>>) data.get(UIConstant.GRR_CHART_RANGE_APPRAISER);
+            if (operateMap.containsKey(UIConstant.CHART_PERFORMANCE_KEY_OPERATE) && operateMap.get(UIConstant.CHART_PERFORMANCE_KEY_OPERATE) instanceof List) {
+                rangeAppraiserChartBtn.setSelectedSets(Sets.newHashSet(operateMap.get(UIConstant.CHART_PERFORMANCE_KEY_OPERATE)));
+            }
+        }
+    }
+
+    private void initChartPerformance() {
+        Map<String, Map<String, List<String>>> performanceMap = Maps.newHashMap();
+        Map<String, List<String>> barOperatePerformance = Maps.newHashMap();
+        Map<String, List<String>> rangeOperatePerformance = Maps.newHashMap();
+        String barChartName = UIConstant.GRR_CHART_XBAR_APPRAISER;
+        String rangeChartName = UIConstant.GRR_CHART_RANGE_APPRAISER;
+        barOperatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.CHART_OPERATE_NAME));
+        rangeOperatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.CHART_OPERATE_NAME));
+        performanceMap.put(barChartName, barOperatePerformance);
+        performanceMap.put(rangeChartName, rangeOperatePerformance);
+        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+        userPreferenceDto.setUserName(envService.getUserName());
+        userPreferenceDto.setCode(UIConstant.CHART_PERFORMANCE_CODE);
+        userPreferenceDto.setValue(performanceMap);
+        userPreferenceService.updatePreference(userPreferenceDto);
+        xBarAppraiserChartBtn.setSelectedSets(Sets.newHashSet(UIConstant.CHART_OPERATE_NAME));
+        rangeAppraiserChartBtn.setSelectedSets(Sets.newHashSet(UIConstant.CHART_OPERATE_NAME));
     }
 
     private ObservableList buildAnovaTbColumn() {

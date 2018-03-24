@@ -36,4 +36,10 @@ public class UIConstant {
 
     public static final String ANALYSIS_RESULT_SUMMARY = "SummaryResult";
     public static final String ANALYSIS_RESULT_DETAIL = "DetailResult";
+
+    public static final String CHART_PERFORMANCE_CODE="GRR_CHARTS";
+    public static final String CHART_PERFORMANCE_KEY_OPERATE="GRR_CHART_OPERATE";
+
+    public static final String GRR_CHART_XBAR_APPRAISER = "X-bar by Appraiser";
+    public static final String GRR_CHART_RANGE_APPRAISER = "Range by Appraiser";
 }
