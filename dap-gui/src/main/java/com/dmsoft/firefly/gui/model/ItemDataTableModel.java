@@ -141,6 +141,11 @@ public class ItemDataTableModel implements TableModel {
         Double usl = null;
         Double lsl = null;
 
+//        if(falseSet.contains(rowKey)){
+//            tableCell.setStyle( "-fx-text-fill: #f38400" );
+//            return tableCell;
+//        }
+
         if (column.isEmpty() && (Integer.parseInt(rowKey) == 0 || Integer.parseInt(rowKey) == 1 || Integer.parseInt(rowKey) == 2)) {
             tableCell.setGraphic(null);
             return tableCell;

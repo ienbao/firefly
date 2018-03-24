@@ -118,6 +118,14 @@ public class ControlChart<X, Y> extends LineChart {
     }
 
     /**
+     * Hidden all series lines
+     */
+    public void hiddenAllSeriesLine() {
+        ObservableList<XYChart.Series<X, Y>> seriesObservableList = this.getData();
+        seriesObservableList.forEach(oneSeries -> toggleSeriesLine(oneSeries, false));
+    }
+
+    /**
      * Toggle series path show or hide
      *
      * @param series series name
@@ -132,6 +140,16 @@ public class ControlChart<X, Y> extends LineChart {
     }
 
     /**
+     * Hidden all series point
+     */
+    public void hiddenAllSeriesPoint() {
+        ObservableList<XYChart.Series<X, Y>> seriesObservableList = this.getData();
+        seriesObservableList.forEach(oneSeries -> oneSeries.getData().forEach(dataItem -> {
+            toggleSeriesPoint(dataItem, false);
+        }));
+    }
+
+    /**
      * Toggle point show or hide
      *
      * @param data   data
@@ -142,6 +160,17 @@ public class ControlChart<X, Y> extends LineChart {
             data.getNode().getStyleClass().add("chart-line-hidden-symbol");
         } else {
             data.getNode().getStyleClass().remove("chart-line-hidden-symbol");
+        }
+    }
+
+    /**
+     * Hidden lines for line names
+     *
+     * @param lineNames line names
+     */
+    public void hiddenValueMarkers(List<String> lineNames) {
+        for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
+            lineNames.forEach(lineName -> valueMarkerEntry.getValue().hiddenValueMarker(lineName));
         }
     }
 
@@ -214,8 +243,8 @@ public class ControlChart<X, Y> extends LineChart {
             Y data = series.getData().get(i).getYValue();
             if (data instanceof Double) {
                 Double value = (Double) data;
-                boolean flagMoreValid = moreData != null && !DAPStringUtils.isInfinityAndNaN(moreData[i]) && value > moreData[i];
-                boolean flagLessValid = lessData != null && !DAPStringUtils.isInfinityAndNaN(lessData[i]) && value < lessData[i];
+                boolean flagMoreValid = moreData != null && i < moreData.length && !DAPStringUtils.isInfinityAndNaN(moreData[i]) && value > moreData[i];
+                boolean flagLessValid = lessData != null && i < lessData.length && !DAPStringUtils.isInfinityAndNaN(lessData[i]) && value < lessData[i];
                 if (flagLessValid || flagMoreValid) {
                     series.getData().get(i).getNode().setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(Color.RED));
                 }
