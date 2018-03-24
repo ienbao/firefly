@@ -39,6 +39,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by GuangLi on 2018/3/14.
@@ -126,18 +128,17 @@ public class BuildChart {
             BuildChart.setBoxChartData(box, Lists.newArrayList(iBoxChartData));
             BuildChart.setControlChartData(mr, Lists.newArrayList(mrChartData));
 
-            Platform.runLater(() -> {
-                Map<String, String> chartPath = Maps.newHashMap();
-                chartPath.put(UIConstant.SPC_CHART_NAME[0], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[0], nd));
-                chartPath.put(UIConstant.SPC_CHART_NAME[1], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[1], run));
-                chartPath.put(UIConstant.SPC_CHART_NAME[2], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[2], xbar));
-                chartPath.put(UIConstant.SPC_CHART_NAME[3], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[3], range));
-                chartPath.put(UIConstant.SPC_CHART_NAME[4], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[4], sd));
-                chartPath.put(UIConstant.SPC_CHART_NAME[5], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[5], med));
-                chartPath.put(UIConstant.SPC_CHART_NAME[6], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[6], box));
-                chartPath.put(UIConstant.SPC_CHART_NAME[7], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[7], mr));
-                result.put(key, chartPath);
-            });
+            Map<String, String> chartPath = Maps.newHashMap();
+            chartPath.put(UIConstant.SPC_CHART_NAME[0], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[0], nd));
+            chartPath.put(UIConstant.SPC_CHART_NAME[1], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[1], run));
+            chartPath.put(UIConstant.SPC_CHART_NAME[2], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[2], xbar));
+            chartPath.put(UIConstant.SPC_CHART_NAME[3], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[3], range));
+            chartPath.put(UIConstant.SPC_CHART_NAME[4], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[4], sd));
+            chartPath.put(UIConstant.SPC_CHART_NAME[5], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[5], med));
+            chartPath.put(UIConstant.SPC_CHART_NAME[6], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[6], box));
+            chartPath.put(UIConstant.SPC_CHART_NAME[7], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[7], mr));
+            result.put(key, chartPath);
+
 
             if (search > 1 && (i + 1) % search == 0) {
                 BuildChart.setNdChartData(nd, ndcChartDataList);
@@ -156,18 +157,16 @@ public class BuildChart {
                 boxChartDataList.clear();
                 BuildChart.setControlChartData(mr, mrChartDataList);
                 mrChartDataList.clear();
-                Platform.runLater(() -> {
-                    Map<String, String> summaryPath = Maps.newHashMap();
-                    summaryPath.put(UIConstant.SPC_CHART_NAME[0], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[0], nd));
-                    summaryPath.put(UIConstant.SPC_CHART_NAME[1], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[1], run));
-                    summaryPath.put(UIConstant.SPC_CHART_NAME[2], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[2], xbar));
-                    summaryPath.put(UIConstant.SPC_CHART_NAME[3], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[3], range));
-                    summaryPath.put(UIConstant.SPC_CHART_NAME[4], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[4], sd));
-                    summaryPath.put(UIConstant.SPC_CHART_NAME[5], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[5], med));
-                    summaryPath.put(UIConstant.SPC_CHART_NAME[6], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[6], box));
-                    summaryPath.put(UIConstant.SPC_CHART_NAME[7], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[7], mr));
-                    result.put(key + "SubSummary", summaryPath);
-                });
+                Map<String, String> summaryPath = Maps.newHashMap();
+                summaryPath.put(UIConstant.SPC_CHART_NAME[0], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[0], nd));
+                summaryPath.put(UIConstant.SPC_CHART_NAME[1], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[1], run));
+                summaryPath.put(UIConstant.SPC_CHART_NAME[2], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[2], xbar));
+                summaryPath.put(UIConstant.SPC_CHART_NAME[3], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[3], range));
+                summaryPath.put(UIConstant.SPC_CHART_NAME[4], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[4], sd));
+                summaryPath.put(UIConstant.SPC_CHART_NAME[5], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[5], med));
+                summaryPath.put(UIConstant.SPC_CHART_NAME[6], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[6], box));
+                summaryPath.put(UIConstant.SPC_CHART_NAME[7], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[7], mr));
+                result.put(key + "SubSummary", summaryPath);
             }
             i++;
         }
@@ -197,6 +196,7 @@ public class BuildChart {
         xAxis.setMinorTickVisible(false);
         yAxis.setMinorTickVisible(false);
         yAxis.setAutoRanging(false);
+        yAxis.setForceZeroInRange(false);
 
         ControlChart runChart = new ControlChart(xAxis, yAxis);
         runChart.setAnimated(false);
@@ -236,22 +236,6 @@ public class BuildChart {
 
     }
 
-    private static void setNdChartData(NDChart chart, INdcChartData chartData) {
-//        chart.removeAllChildren();
-        IBarChartData barChartData = chartData.getBarData();
-        IXYChartData curveData = chartData.getCurveData();
-        List<ILineData> lineData = chartData.getLineData();
-//          add area data
-//        chart.addAreaSeries(curveData, "ALL", chartData.getColor());
-////          add bar chart data
-//        chart.createChartSeries(barChartData, "ALL", chartData.getColor());
-////                add line data
-//        if (lineData != null) {
-//            chart.addValueMarker(lineData, "ALL");
-//        }
-    }
-
-
     private static void setNdChartData(NDChart chart, List<NDBarChartData> ndChartData) {
         Double[] xLower = new Double[ndChartData.size()];
         Double[] xUpper = new Double[ndChartData.size()];
@@ -289,10 +273,13 @@ public class BuildChart {
             yLower[i] = (Double) runChartData.get(i).getYLowerBound();
             yUpper[i] = (Double) runChartData.get(i).getYUpperBound();
         }
-        double xMax = MathUtils.getMax(xUpper);
-        double xMin = MathUtils.getMin(xLower);
-        double yMax = MathUtils.getMax(yUpper);
-        double yMin = MathUtils.getMin(yLower);
+        Double xMax = MathUtils.getMax(xUpper);
+        Double xMin = MathUtils.getMin(xLower);
+        Double yMax = MathUtils.getMax(yUpper);
+        Double yMin = MathUtils.getMin(yLower);
+        if (xMax == null || xMin == null || yMax == null || yMin == null) {
+            return;
+        }
         NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
         double yReserve = (yMax - yMin) * UIConstant.FACTOR;
@@ -348,10 +335,13 @@ public class BuildChart {
             yLower[i] = (Double) boxChartData.get(i).getYLowerBound();
             yUpper[i] = (Double) boxChartData.get(i).getYUpperBound();
         }
-        double xMax = MathUtils.getMax(xUpper);
-        double xMin = MathUtils.getMin(xLower);
-        double yMax = MathUtils.getMax(yUpper);
-        double yMin = MathUtils.getMin(yLower);
+        Double xMax = MathUtils.getMax(xUpper);
+        Double xMin = MathUtils.getMin(xLower);
+        Double yMax = MathUtils.getMax(yUpper);
+        Double yMin = MathUtils.getMin(yLower);
+//        if (xMax == null || xMin == null || yMax == null || yMin == null) {
+//            return;
+//        }
         NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
         double yReserve = (yMax - yMin) * UIConstant.FACTOR;
@@ -361,7 +351,6 @@ public class BuildChart {
         yAxis.setLowerBound(yMin - yReserve);
         yAxis.setUpperBound(yMax + yReserve);
 
-        chart.removeAllChildren();
         chart.setData(boxChartData, null);
     }
 

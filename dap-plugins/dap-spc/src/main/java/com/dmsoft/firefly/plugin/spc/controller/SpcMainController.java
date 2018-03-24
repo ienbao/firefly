@@ -169,6 +169,8 @@ public class SpcMainController implements Initializable {
                             ((Exception) returnValue).printStackTrace();
                             logger.error(((Exception) returnValue).getMessage());
                         } else {
+                            SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
+                            SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
                             List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
                             setStatisticalResultData(spcStatisticalResultAlarmDtoList);
                             Platform.runLater(() -> {

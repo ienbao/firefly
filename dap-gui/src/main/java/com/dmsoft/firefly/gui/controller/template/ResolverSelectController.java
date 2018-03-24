@@ -141,11 +141,15 @@ public class ResolverSelectController implements Initializable {
                 Platform.runLater(() -> {
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.append("DataSource" + " ");
+                    List<String> stringList = Lists.newArrayList();
                     fileNameExits.forEach(v -> {
                         stringBuilder.append(v + " ");
+                        stringList.add(v);
                     });
-                    stringBuilder.append("Repeat");
-                    WindowMessageFactory.createWindowMessage("DataSource Repeat", stringBuilder.toString());
+                    if (stringList.size() > 0) {
+                        stringBuilder.append("Repeat");
+                        WindowMessageFactory.createWindowMessage("DataSource Repeat", stringBuilder.toString());
+                    }
                 });
             }
         });
