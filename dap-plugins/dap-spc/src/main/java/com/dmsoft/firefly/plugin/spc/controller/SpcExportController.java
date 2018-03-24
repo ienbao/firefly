@@ -61,6 +61,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by GuangLi on 2018/3/7.
@@ -137,6 +139,8 @@ public class SpcExportController {
     private List<String> stickyOnTopItems = Lists.newArrayList();
 
     private List<String> originalItems = Lists.newArrayList();
+
+    Map<String, Map<String, String>> chartPath = Maps.newHashMap();
 
     @FXML
     private void initialize() {
@@ -456,7 +460,7 @@ public class SpcExportController {
         }
     }
 
-    private String export(String savePath) {
+    private synchronized String export(String savePath) {
 //        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
 //        windowProgressTipController.addProcessMonitorListener(new WindowCustomListener() {
 //            @Override
@@ -567,7 +571,6 @@ public class SpcExportController {
         spcStatsDtoList = (List<SpcStatisticalResultAlarmDto>) manager.doJobSyn(job, paramMap, null);
 
         //build chart
-        Map<String, Map<String, String>> chartPath = Maps.newHashMap();
         Map<String, String> runChartRule = Maps.newHashMap();
 
         if (spcConfig.getExportDataItem().get(SpcExportItemKey.EXPORT_CHARTS.getCode())) {
@@ -592,7 +595,10 @@ public class SpcExportController {
             }
             if (returnValue != null) {
                 List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
-                chartPath = initSpcChartData(spcChartDtoList);
+                Platform.runLater(() -> {
+                    chartPath = initSpcChartData(spcChartDtoList);
+
+                });
                 for (SpcChartDto dto : spcChartDtoList) {
                     if (dto.getResultDto() != null && dto.getResultDto().getRunCResult() != null && dto.getResultDto().getRunCResult().getRuleResultDtoMap() != null) {
                         Map<String, RuleResultDto> rule = dto.getResultDto().getRunCResult().getRuleResultDtoMap();
