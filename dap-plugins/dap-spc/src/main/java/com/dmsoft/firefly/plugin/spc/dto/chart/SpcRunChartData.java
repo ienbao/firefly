@@ -98,8 +98,11 @@ public class SpcRunChartData implements ControlChartData {
             Color pointColor = pointRule.getNormalColor();
             Double y = (Double) pointRule.getData().getYValue();
             Double x = (Double) pointRule.getData().getXValue();
-            if (activeRuleList != null) {
+            if (runCResultDto.getRuleResultDtoMap() != null && activeRuleList != null) {
                 for (String rule : activeRuleList) {
+                    if (!runCResultDto.getRuleResultDtoMap().containsKey(rule)) {
+                        continue;
+                    }
                     RuleResultDto ruleResultDto = runCResultDto.getRuleResultDtoMap().get(rule);
                     Double[] abnormalX = ruleResultDto.getX();
                     Double[] abnormalY = ruleResultDto.getY();

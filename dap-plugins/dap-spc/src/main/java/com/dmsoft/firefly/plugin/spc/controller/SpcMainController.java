@@ -114,6 +114,13 @@ public class SpcMainController implements Initializable {
     }
 
     /**
+     * Set no used rules in disabled
+     */
+    public void setDisableRulesByConfig() {
+        chartResultController.setDisableRulesByConfig();
+    }
+
+    /**
      * change chart color
      *
      * @param key   key

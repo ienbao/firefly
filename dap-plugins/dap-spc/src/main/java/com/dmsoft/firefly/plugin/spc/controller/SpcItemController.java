@@ -67,7 +67,6 @@ import java.util.Set;
  */
 public class SpcItemController implements Initializable {
     private static final String STICKY_ON_TOP_CODE = "stick_on_top";
-    private final Logger logger = LoggerFactory.getLogger(SpcItemController.class);
     @FXML
     private TextFieldFilter itemFilter;
     @FXML
@@ -107,6 +106,7 @@ public class SpcItemController implements Initializable {
     private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
+    private final Logger logger = LoggerFactory.getLogger(SpcItemController.class);
     // cached items for user preference
     private List<String> stickyOnTopItems = Lists.newArrayList();
 
@@ -429,13 +429,13 @@ public class SpcItemController implements Initializable {
                         } else {
                             Platform.runLater(() -> {
                                 spcMainController.clearAnalysisSubShowData();
+                                SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
+                                SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
+                                List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
+                                TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
+                                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
+                                spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
                             });
-                            SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
-                            SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
-                            List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
-                            TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
-                            DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
-                            spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
                         }
                         return null;
                     }
@@ -486,6 +486,14 @@ public class SpcItemController implements Initializable {
         }
         subGroup.setText(customGroupNumber);
         ndGroup.setText(chartIntervalNumber);
+
+//        ValidateRule rule = new ValidateRule();
+//        rule.setMaxLength(SpcSettingValidateUtil.ANALYSIS_SETTING_MAX_INT);
+//        rule.setPattern("^[+]?\\d*[.]?\\d*$");
+//        rule.setErrorStyle("text-field-error");
+//        rule.setEmptyErrorMsg(SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_VALIDATE_NOT_BE_EMPTY));
+//        TextFieldWrapper.decorate(subGroup, rule);
+//        TextFieldWrapper.decorate(ndGroup, rule);
     }
 
     private void importLeftConfig() {
@@ -625,8 +633,12 @@ public class SpcItemController implements Initializable {
         List<String> testItemList = getSelectedItem();
         TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
         List<String> conditionTestItemList = Lists.newArrayList();
-        List<String> timeKeys = timePatternDto.getTimeKeys();
-        String timePattern = timePatternDto.getPattern();
+        List<String> timeKeys = Lists.newArrayList();
+        String timePattern = null;
+        if(timePatternDto != null) {
+            timeKeys = timePatternDto.getTimeKeys();
+            timePattern = timePatternDto.getPattern();
+        }
         FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         for (String condition : conditionList) {
             Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);

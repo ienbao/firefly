@@ -18,6 +18,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
+
 import java.util.List;
 
 /**
@@ -54,10 +55,21 @@ public class ChartAnnotationButton extends Button {
         this.initData();
     }
 
+    /**
+     * Set annotation data
+     *
+     * @param data data
+     */
     public void setData(List<String> data) {
         this.setData(data, defaultSelectedIndex);
     }
 
+    /**
+     * Set annotation data
+     *
+     * @param data          data
+     * @param selectedIndex current selected index
+     */
     public void setData(List<String> data, int selectedIndex) {
         if (data != null) {
             for (int i = 0; i < data.size(); i++) {
@@ -66,6 +78,15 @@ public class ChartAnnotationButton extends Button {
             }
         }
         dataListView.setItems(filteredData);
+    }
+
+    /**
+     * Set button tooltip content
+     *
+     * @param content
+     */
+    public void setButtonTooltipContent(String content) {
+        Tooltip.install(this, new Tooltip(content));
     }
 
     private void initComponent() {
