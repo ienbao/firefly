@@ -73,19 +73,145 @@ public class ChartResultController implements Initializable {
     private List<XYChart.Data> annotationData = Lists.newArrayList();
     private ChartTooltip chartTooltip = new SpcChartToolTip();
     private String legend = "- - - LSL, USL  —— m Line   —— 6s Line";
-
-    private Map<String, ChartOperatePaneSize> chartOperatePaneSizeMap = Maps.newHashMap();
-    private Map<String, List<String>> chartOperateNameMap = Maps.newHashMap();
-    private Map<String, SelectCallBack> chartOperateSelectCallBackMap = Maps.newHashMap();
-    private Map<String, XYChart> chartNodeMap = Maps.newHashMap();
-    private Map<String, ChartOperateButton> chartButtonMap = Maps.newHashMap();
-    private Map<String, ChartPanel> chartPanelMap = Maps.newHashMap();
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initChartOperatorMap();
         this.initChartPane();
+    }
+
+    /**
+     * init main controller
+     *
+     * @param spcMainController main controller
+     */
+    public void init(SpcMainController spcMainController) {
+        this.spcMainController = spcMainController;
+    }
+
+    /**
+     * Set no used rules in disabled
+     */
+    public void setDisableRulesByConfig() {
+        Set ruleNames = Sets.newLinkedHashSet();
+        SpcSettingDto spcSettingDto = spcMainController.getSpcSettingDto();
+        if (spcSettingDto == null) {
+            return;
+        }
+        List<ControlRuleDto> controlChartRules = spcSettingDto.getControlChartRule();
+        if (controlChartRules == null) {
+            return;
+        }
+        controlChartRules.forEach(controlRuleDto -> {
+            if (!controlRuleDto.isUsed()) {
+                ruleNames.add(controlRuleDto.getRuleName());
+            }
+        });
+        rRuleBtn.setDisableRules(ruleNames);
+    }
+
+    /**
+     * init spc chart data
+     *
+     * @param spcChartDtoList the list of chart data
+     */
+    public void initSpcChartData(List<SpcChartDto> spcChartDtoList) {
+        Map<String, java.awt.Color> colorCache = spcMainController.getColorCache();
+        List<NDBarChartData> ndcChartDataList = Lists.newArrayList();
+        List<ControlChartData> xBarChartDataList = Lists.newArrayList();
+        List<ControlChartData> rangeChartDataList = Lists.newArrayList();
+        List<ControlChartData> runChartDataList = Lists.newArrayList();
+        List<ControlChartData> sdChartDataList = Lists.newArrayList();
+        List<ControlChartData> medianChartDataList = Lists.newArrayList();
+        List<BoxPlotChartData> boxChartDataList = Lists.newArrayList();
+        List<ControlChartData> mrChartDataList = Lists.newArrayList();
+        for (SpcChartDto spcChartDto : spcChartDtoList) {
+            String key = spcChartDto.getKey();
+            String condition = (DAPStringUtils.isBlank(spcChartDto.getCondition())) ? "All" : spcChartDto.getCondition();
+            String seriesName = spcChartDto.getItemName() + "::" + condition;
+            Color color = ColorUtils.toFxColorFromAwtColor(colorCache.get(key));
+            SpcChartResultDto spcChartResultDto = spcChartDto.getResultDto();
+            List<String> analyzedRowKeys = spcChartDto.getAnalyzedRowKeys();
+            if (spcChartResultDto == null) {
+                continue;
+            }
+            //nd chart
+            SpcNdChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
+            iNdcChartData.setSeriesName(seriesName);
+            ndcChartDataList.add(iNdcChartData);
+            //run chart
+            SpcRunChartData runChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), analyzedRowKeys, color);
+            runChartData.setSeriesName(seriesName);
+            runChartDataList.add(runChartData);
+            SpcControlChartData xBarChartData = new SpcControlChartData(key, spcChartResultDto.getXbarCResult(), color);
+            xBarChartData.setSeriesName(seriesName);
+            xBarChartDataList.add(xBarChartData);
+            //range chart
+            SpcControlChartData rangeChartData = new SpcControlChartData(key, spcChartResultDto.getRangeCResult(), color);
+            rangeChartData.setSeriesName(seriesName);
+            rangeChartDataList.add(rangeChartData);
+            //sd chart
+            SpcControlChartData sdChartData = new SpcControlChartData(key, spcChartResultDto.getSdCResult(), color);
+            sdChartData.setSeriesName(seriesName);
+            sdChartDataList.add(sdChartData);
+            //median chart
+            SpcControlChartData medianChartData = new SpcControlChartData(key, spcChartResultDto.getMedianCResult(), color);
+            medianChartData.setSeriesName(seriesName);
+            medianChartDataList.add(medianChartData);
+            //box chart
+            SpcBoxChartData boxChartData = new SpcBoxChartData(key, spcChartResultDto.getBoxCResult(), color);
+            boxChartData.setSeriesName(seriesName);
+            boxChartDataList.add(boxChartData);
+            //mr chart
+            SpcControlChartData mrChartData = new SpcControlChartData(key, spcChartResultDto.getMrCResult(), color);
+            mrChartData.setSeriesName(seriesName);
+            mrChartDataList.add(mrChartData);
+        }
+
+        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
+        this.setRunChartData(UIConstant.SPC_CHART_NAME[1], runChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[2], xBarChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[4], sdChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[5], medianChartDataList);
+        this.setBoxChartData(UIConstant.SPC_CHART_NAME[6], boxChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
+    }
+
+    public void clearChartData() {
+        for (Map.Entry<String, XYChart> chart : chartMap.entrySet()) {
+            if (chart.getValue() instanceof NDChart) {
+                ((NDChart) chart.getValue()).removeAllChildren();
+            } else if (chart.getValue() instanceof ControlChart) {
+                ((ControlChart) chart.getValue()).removeAllChildren();
+            } else if (chart.getValue() instanceof BoxPlotChart) {
+                ((BoxPlotChart) chart.getValue()).removeAllChildren();
+            }
+        }
+    }
+
+    /**
+     * Update chart color
+     *
+     * @param unique unique key
+     * @param color  color
+     */
+    public void updateChartColor(String unique, Color color) {
+        ndChartPane.getChart().updateChartColor(unique, color);
+        runChartPane.getChart().updateChartColor(unique, color);
+        xBarChartPane.getChart().updateChartColor(unique, color);
+        rangeChartPane.getChart().updateChartColor(unique, color);
+        sdChartPane.getChart().updateChartColor(unique, color);
+        medianChartPane.getChart().updateChartColor(unique, color);
+        boxChartPane.getChart().updateChartColor(unique, color);
+        mrChartPane.getChart().updateChartColor(unique, color);
+    }
+
+    private void toggleChartCustomButtonDisable(boolean flag) {
+        for (Map.Entry<String, ChartPanel> chartPanelEntry : chartPanelMap.entrySet()) {
+            chartPanelEntry.getValue().toggleCustomButtonDisable(flag);
+        }
     }
 
     private void initChartPane() {
@@ -124,10 +250,12 @@ public class ChartResultController implements Initializable {
         //mr chart
         mrOperateBtn = this.buildChartOperateButton(UIConstant.SPC_CHART_NAME[7]);
         mrChartPane.getCustomPane().getChildren().add(mrOperateBtn);
-
-        //init user performance
+        //init chart button map
         this.initChartButtonMap();
+        //init user performance
         this.initPerformanceSelected();
+        //disable chart operate button
+        this.toggleChartCustomButtonDisable(true);
 
         chartTabPane = new VerticalTabPane();
         ndChartPane.setId(UIConstant.SPC_CHART_NAME[0]);
@@ -202,11 +330,12 @@ public class ChartResultController implements Initializable {
 
     private ChartOperateButton buildChartOperateButton(String charName) {
         ChartOperateButton button = new ChartOperateButton(true);
+        button.getStyleClass().add("btn-icon-b");
         button.setListViewData(chartOperateNameMap.get(charName));
+        button.setButtonTooltipContent(UIConstant.BTN_CHART_CHOOSE_LINES);
+        button.setSelectCallBack(chartOperateSelectCallBackMap.get(charName));
         button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
         button.setListViewSize(chartOperatePaneSizeMap.get(charName).getWidth(), chartOperatePaneSizeMap.get(charName).getHeight());
-        button.getStyleClass().add("btn-icon-b");
-        button.setSelectCallBack(chartOperateSelectCallBackMap.get(charName));
         return button;
     }
 
@@ -340,11 +469,13 @@ public class ChartResultController implements Initializable {
         rRuleBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rule_normal.png")));
         rRuleBtn.setListViewData(Arrays.asList(UIConstant.SPC_RULE_R));
         rRuleBtn.setListViewSize(140, 211);
+        rRuleBtn.setButtonTooltipContent(UIConstant.BTN_RUN_CHART_CHOOSE_RULES);
         rRuleBtn.setSelectCallBack(this.buildRunChartRRuleSelectCallBack(chart));
 
         List<String> itemNames = Lists.newArrayList("");
         itemNames.addAll(envService.findTestItemNames());
         editBtn = new ChartAnnotationButton();
+        editBtn.setButtonTooltipContent(UIConstant.BTN_RUN_CHART_CHOOSE_ANNOTATION_ITEM);
         editBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_tracing_point_normal.png")));
         editBtn.setData(itemNames.size() < 2 ? Lists.newArrayList("") : itemNames);
         editBtn.setCallBack(() -> chart.clearAnnotation(annotationData));
@@ -362,84 +493,6 @@ public class ChartResultController implements Initializable {
             spcMainController.setViewDataFocusRowData(key);
         });
         chart.setSeriesAnnotationEvent(buildAnnotationFetch());
-    }
-
-    /**
-     * init main controller
-     *
-     * @param spcMainController main controller
-     */
-    public void init(SpcMainController spcMainController) {
-        this.spcMainController = spcMainController;
-    }
-
-    /**
-     * init spc chart data
-     *
-     * @param spcChartDtoList the list of chart data
-     */
-    public void initSpcChartData(List<SpcChartDto> spcChartDtoList) {
-        Map<String, java.awt.Color> colorCache = spcMainController.getColorCache();
-        List<NDBarChartData> ndcChartDataList = Lists.newArrayList();
-        List<ControlChartData> xBarChartDataList = Lists.newArrayList();
-        List<ControlChartData> rangeChartDataList = Lists.newArrayList();
-        List<ControlChartData> runChartDataList = Lists.newArrayList();
-        List<ControlChartData> sdChartDataList = Lists.newArrayList();
-        List<ControlChartData> medianChartDataList = Lists.newArrayList();
-        List<BoxPlotChartData> boxChartDataList = Lists.newArrayList();
-        List<ControlChartData> mrChartDataList = Lists.newArrayList();
-        for (SpcChartDto spcChartDto : spcChartDtoList) {
-            String key = spcChartDto.getKey();
-            String condition = (DAPStringUtils.isBlank(spcChartDto.getCondition())) ? "All" : spcChartDto.getCondition();
-            String seriesName = spcChartDto.getItemName() + "::" + condition;
-            Color color = ColorUtils.toFxColorFromAwtColor(colorCache.get(key));
-            SpcChartResultDto spcChartResultDto = spcChartDto.getResultDto();
-            List<String> analyzedRowKeys = spcChartDto.getAnalyzedRowKeys();
-            if (spcChartResultDto == null) {
-                continue;
-            }
-            //nd chart
-            SpcNdChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
-            iNdcChartData.setSeriesName(seriesName);
-            ndcChartDataList.add(iNdcChartData);
-            //run chart
-            SpcRunChartData runChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), analyzedRowKeys, color);
-            runChartData.setSeriesName(seriesName);
-            runChartDataList.add(runChartData);
-            SpcControlChartData xBarChartData = new SpcControlChartData(key, spcChartResultDto.getXbarCResult(), color);
-            xBarChartData.setSeriesName(seriesName);
-            xBarChartDataList.add(xBarChartData);
-            //range chart
-            SpcControlChartData rangeChartData = new SpcControlChartData(key, spcChartResultDto.getRangeCResult(), color);
-            rangeChartData.setSeriesName(seriesName);
-            rangeChartDataList.add(rangeChartData);
-            //sd chart
-            SpcControlChartData sdChartData = new SpcControlChartData(key, spcChartResultDto.getSdCResult(), color);
-            sdChartData.setSeriesName(seriesName);
-            sdChartDataList.add(sdChartData);
-            //median chart
-            SpcControlChartData medianChartData = new SpcControlChartData(key, spcChartResultDto.getMedianCResult(), color);
-            medianChartData.setSeriesName(seriesName);
-            medianChartDataList.add(medianChartData);
-            //box chart
-            SpcBoxChartData boxChartData = new SpcBoxChartData(key, spcChartResultDto.getBoxCResult(), color);
-            boxChartData.setSeriesName(seriesName);
-            boxChartDataList.add(boxChartData);
-            //mr chart
-            SpcControlChartData mrChartData = new SpcControlChartData(key, spcChartResultDto.getMrCResult(), color);
-            mrChartData.setSeriesName(seriesName);
-            mrChartDataList.add(mrChartData);
-
-        }
-
-        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
-        this.setRunChartData(UIConstant.SPC_CHART_NAME[1], runChartDataList);
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[2], xBarChartDataList);
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList);
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[4], sdChartDataList);
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[5], medianChartDataList);
-        this.setBoxChartData(UIConstant.SPC_CHART_NAME[6], boxChartDataList);
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
     }
 
     private void setNdChartData(String chartName, List<NDBarChartData> ndChartData) {
@@ -478,6 +531,7 @@ public class ChartResultController implements Initializable {
         chart.setData(ndChartData, chartTooltip);
         this.setNdChartPerformance();
         ndChartPane.activeChartDragging();
+        ndChartPane.toggleCustomButtonDisable(false);
     }
 
     private void setRunChartData(String chartName, List<ControlChartData> runChartData) {
@@ -519,24 +573,7 @@ public class ChartResultController implements Initializable {
         chart.setData(runChartData, chartTooltip);
         this.setRunChartPerformance();
         runChartPane.activeChartDragging();
-    }
-
-    public void setDisableRulesByConfig() {
-        Set ruleNames = Sets.newLinkedHashSet();
-        SpcSettingDto spcSettingDto = spcMainController.getSpcSettingDto();
-        if (spcSettingDto == null) {
-            return;
-        }
-        List<ControlRuleDto> controlChartRules = spcSettingDto.getControlChartRule();
-        if (controlChartRules == null) {
-            return;
-        }
-        controlChartRules.forEach(controlRuleDto -> {
-            if (!controlRuleDto.isUsed()) {
-                ruleNames.add(controlRuleDto.getRuleName());
-            }
-        });
-        rRuleBtn.setDisableRules(ruleNames);
+        runChartPane.toggleCustomButtonDisable(false);
     }
 
     private void setControlChartData(String chartName, List<ControlChartData> controlChartData) {
@@ -581,6 +618,7 @@ public class ChartResultController implements Initializable {
         });
         this.setControlChartPerformance(controlChart);
         chartPanelMap.get(chartName).activeChartDragging();
+        chartPanelMap.get(chartName).toggleCustomButtonDisable(false);
     }
 
     private void setBoxChartData(String chartName, List<BoxPlotChartData> boxChartData) {
@@ -619,29 +657,7 @@ public class ChartResultController implements Initializable {
         chart.setData(boxChartData, chartTooltip);
         this.setBoxChartPerformance();
         boxChartPane.activeChartDragging();
-    }
-
-    public void clearChartData() {
-        for (Map.Entry<String, XYChart> chart : chartMap.entrySet()) {
-            if (chart.getValue() instanceof NDChart) {
-                ((NDChart) chart.getValue()).removeAllChildren();
-            } else if (chart.getValue() instanceof ControlChart) {
-                ((ControlChart) chart.getValue()).removeAllChildren();
-            } else if (chart.getValue() instanceof BoxPlotChart) {
-                ((BoxPlotChart) chart.getValue()).removeAllChildren();
-            }
-        }
-    }
-
-    public void updateChartColor(String unique, Color color) {
-        ndChartPane.getChart().updateChartColor(unique, color);
-        runChartPane.getChart().updateChartColor(unique, color);
-        xBarChartPane.getChart().updateChartColor(unique, color);
-        rangeChartPane.getChart().updateChartColor(unique, color);
-        sdChartPane.getChart().updateChartColor(unique, color);
-        medianChartPane.getChart().updateChartColor(unique, color);
-        boxChartPane.getChart().updateChartColor(unique, color);
-        mrChartPane.getChart().updateChartColor(unique, color);
+        boxChartPane.toggleCustomButtonDisable(false);
     }
 
     private void setNdChartPerformance() {
@@ -751,7 +767,7 @@ public class ChartResultController implements Initializable {
         chartButtonMap.put(UIConstant.SPC_CHART_NAME[7], mrOperateBtn);
         chartPanelMap.put(UIConstant.SPC_CHART_NAME[0], ndChartPane);
         chartPanelMap.put(UIConstant.SPC_CHART_NAME[1], runChartPane);
-        chartPanelMap.put(UIConstant.SPC_CHART_NAME[2], boxChartPane);
+        chartPanelMap.put(UIConstant.SPC_CHART_NAME[2], xBarChartPane);
         chartPanelMap.put(UIConstant.SPC_CHART_NAME[3], rangeChartPane);
         chartPanelMap.put(UIConstant.SPC_CHART_NAME[4], sdChartPane);
         chartPanelMap.put(UIConstant.SPC_CHART_NAME[5], medianChartPane);
@@ -808,4 +824,16 @@ public class ChartResultController implements Initializable {
     private ChartOperateButton boxOperateBtn;
     private ChartOperateButton mrOperateBtn;
     private ChartOperateButton rRuleBtn;
+    //chart name---chart operate pane size
+    private Map<String, ChartOperatePaneSize> chartOperatePaneSizeMap = Maps.newHashMap();
+    //chart name---chart operate names
+    private Map<String, List<String>> chartOperateNameMap = Maps.newHashMap();
+    //chart name---chart operate select call back
+    private Map<String, SelectCallBack> chartOperateSelectCallBackMap = Maps.newHashMap();
+    //chart name---chart node
+    private Map<String, XYChart> chartNodeMap = Maps.newHashMap();
+    //chart name---chart operate button node
+    private Map<String, ChartOperateButton> chartButtonMap = Maps.newHashMap();
+    //chart name---chart pane
+    private Map<String, ChartPanel> chartPanelMap = Maps.newHashMap();
 }

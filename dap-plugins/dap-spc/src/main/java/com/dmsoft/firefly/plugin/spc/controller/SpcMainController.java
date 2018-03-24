@@ -113,6 +113,9 @@ public class SpcMainController implements Initializable {
         viewDataController.setViewData(null, null);
     }
 
+    /**
+     * Set no used rules in disabled
+     */
     public void setDisableRulesByConfig() {
         chartResultController.setDisableRulesByConfig();
     }

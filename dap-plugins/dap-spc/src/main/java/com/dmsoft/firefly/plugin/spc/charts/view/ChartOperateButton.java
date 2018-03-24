@@ -63,10 +63,17 @@ public class ChartOperateButton extends Button {
         this.setMaxHeight(20);
         this.setMinHeight(20);
         this.setPrefHeight(20);
-//        this.setDisable(true);
         this.getStyleClass().add("btn-icon-b");
         Button button = this;
         this.setOnMousePressed(event -> showPopupForButton(button));
+    }
+
+    /**
+     * Set button tooltip content
+     * @param content
+     */
+    public void setButtonTooltipContent(String content) {
+        Tooltip.install(this, new Tooltip(content));
     }
 
     private void showPopupForButton(Button button) {
@@ -120,18 +127,6 @@ public class ChartOperateButton extends Button {
                 }
             }
         };
-//        return CheckBoxListCell.forListView(item -> {
-//            boolean selected = selectedSets.contains(item);
-//            BooleanProperty observable = new SimpleBooleanProperty(selected);
-//            observable.setValue(selected);
-//            observable.addListener((obs, wasSelected, isNowSelected) -> {
-//                updateSelectedSets(isNowSelected, (String) item);
-//                if (selectCallBack != null) {
-//                    selectCallBack.execute((String) item, isNowSelected, selectedSets);
-//                }
-//            });
-//            return observable;
-//        });
     }
 
     private void updateSelectedSets(boolean isNowSelected, String item) {

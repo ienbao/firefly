@@ -2,6 +2,7 @@ package com.dmsoft.firefly.plugin.spc.charts.view;
 
 import com.dmsoft.firefly.gui.components.chart.ChartUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import javafx.geometry.Insets;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
@@ -33,9 +34,13 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
         this.chart = chart;
         this.initComponents();
         this.initComponentRender();
+        this.setComponentsTooltip();
         this.initEvent();
     }
 
+    /**
+     * Active chart draggable
+     */
     public void activeChartDragging() {
         if (chartUtils == null) {
             chartUtils = new ChartUtils(chart);
@@ -130,6 +135,12 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
         chart.setLegendVisible(false);
     }
 
+    private void setComponentsTooltip() {
+        Tooltip.install(zoomInBtn, new Tooltip(UIConstant.BTN_CHART_ZOOM_IN));
+        Tooltip.install(zoomOutBtn, new Tooltip(UIConstant.BTN_CHART_ZOOM_OUT));
+        Tooltip.install(menuBar, new Tooltip(UIConstant.BTN_CHART_EXTENSION_MENU));
+    }
+
     private void initEvent() {
 
         zoomInBtn.setOnAction(event -> {
@@ -182,6 +193,23 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
 //        });
     }
 
+    public void toggleCustomButtonDisable(boolean flag) {
+        customPane.getChildren().forEach(node -> {
+            if (node instanceof Button) {
+                Button button = (Button) node;
+                button.setDisable(flag);
+            }
+        });
+        zoomInBtn.setDisable(flag);
+        zoomOutBtn.setDisable(flag);
+        extensionMenu.setDisable(flag);
+    }
+
+    /**
+     * Set chart legend
+     *
+     * @param legend legend content
+     */
     public void setLegend(String legend) {
         legendLbl.setText(legend);
         Tooltip.install(legendBtn, new Tooltip(legendLbl.getText()));
