@@ -118,6 +118,18 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         line.setStyle("-fx-stroke:" + colorStr);
     }
 
+    /**
+     * Hidden lines for line names
+     *
+     * @param lineNames line names
+     */
+    public void hiddenValueMarkers(List<String> lineNames) {
+        if (lineNames == null) {
+            return;
+        }
+        lineNames.forEach(lineName -> toggleValueMarker(lineName, false));
+    }
+
     public void toggleValueMarker(String lineName, boolean showed) {
 
         if (showed) {
