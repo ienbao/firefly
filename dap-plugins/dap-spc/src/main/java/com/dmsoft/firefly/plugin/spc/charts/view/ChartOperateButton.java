@@ -64,9 +64,7 @@ public class ChartOperateButton extends Button {
         this.setPrefHeight(20);
         this.getStyleClass().add("btn-icon-b");
         Button button = this;
-        this.setOnMousePressed(event -> {
-            showPopupForButton(button);
-        });
+        this.setOnMousePressed(event -> showPopupForButton(button));
     }
 
     private void showPopupForButton(Button button) {
@@ -91,6 +89,7 @@ public class ChartOperateButton extends Button {
 
     private Callback buildCallback() {
         return CheckBoxListCell.forListView(item -> {
+            boolean selected = selectedSets.contains(item);
             BooleanProperty observable = new SimpleBooleanProperty(selected);
             observable.setValue(selected);
             observable.addListener((obs, wasSelected, isNowSelected) -> {
@@ -104,7 +103,6 @@ public class ChartOperateButton extends Button {
     }
 
     private void updateSelectedSets(boolean isNowSelected, String item) {
-
         if (isNowSelected) {
             selectedSets.add(item);
         } else {
@@ -128,5 +126,14 @@ public class ChartOperateButton extends Button {
 
     public void setOrientation(Orientation orientation) {
         this.orientation = orientation;
+    }
+
+    public void setSelectedSets(Set<String> selectedSets) {
+        this.selectedSets = selectedSets;
+        this.listView.refresh();
+    }
+
+    public Set<String> getSelectedSets() {
+        return selectedSets;
     }
 }

@@ -77,14 +77,12 @@ public class BuildChart {
         componentChart.setLegendVisible(false);
         setComponentChart(grrDetailResultDto.getComponentChartDto(), componentChart);
 
-        Platform.runLater(() -> {
-            images.setGrrAPlotImagePath(exportImages("partAppraiserChart", partAppraiserChart));
-            images.setGrrXBarImagePath(exportImages("xBarAppraiserChart", xBarAppraiserChart));
-            images.setGrrRChartImagePath(exportImages("rangeAppraiserChart", rangeAppraiserChart));
-            images.setGrrRPlotChartAppImagePath(exportImages("rrByAppraiserChart", rrByAppraiserChart));
-            images.setGrrRPlotChartPartImagePath(exportImages("rrbyPartChart", rrbyPartChart));
-            images.setGrrComponentsImagePath(exportImages("componentChart", componentChart));
-        });
+        images.setGrrAPlotImagePath(exportImages("partAppraiserChart", partAppraiserChart));
+        images.setGrrXBarImagePath(exportImages("xBarAppraiserChart", xBarAppraiserChart));
+        images.setGrrRChartImagePath(exportImages("rangeAppraiserChart", rangeAppraiserChart));
+        images.setGrrRPlotChartAppImagePath(exportImages("rrByAppraiserChart", rrByAppraiserChart));
+        images.setGrrRPlotChartPartImagePath(exportImages("rrbyPartChart", rrbyPartChart));
+        images.setGrrComponentsImagePath(exportImages("componentChart", componentChart));
 
         return images;
     }
