@@ -62,6 +62,7 @@ public class ChartOperateButton extends Button {
         this.setMaxHeight(20);
         this.setMinHeight(20);
         this.setPrefHeight(20);
+//        this.setDisable(true);
         this.getStyleClass().add("btn-icon-b");
         Button button = this;
         this.setOnMousePressed(event -> showPopupForButton(button));
