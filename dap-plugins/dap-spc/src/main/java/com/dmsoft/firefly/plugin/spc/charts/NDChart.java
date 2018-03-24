@@ -33,20 +33,18 @@ import java.util.function.Function;
  * Created by cherry on 2018/3/1.
  */
 public class NDChart<X, Y> extends XYChart<X, Y> {
-
-    //    private AreaSeriesNode<X, Y> areaSeriesNode = new AreaSeriesNode<>();
     private Map<Series, Map<Object, Data<X, Y>>> seriesCategoryMap = new HashMap<>();
     private Map<XYChart.Data, BarCategoryData<X, Y>> barCategoryDataMap = Maps.newHashMap();
     private Data<X, Y> dataItemBeingRemoved = null;
     private Series<X, Y> seriesOfDataRemoved = null;
-
+    //    unique key---area group
     private Map<String, Group> groupMap = Maps.newHashMap();
+    //    unique key---bar series
     private Map<String, XYChart.Series> seriesUniqueKeyMap = Maps.newHashMap();
-
-    //    private ValueMarker valueMarker = new ValueMarker();
+    //    unique key----value marker
     private Map<String, ValueMarker> valueMarkerMap = Maps.newHashMap();
+    //    unique key----area series
     private Map<String, AreaSeriesNode> areaSeriesNodeMap = Maps.newHashMap();
-
     private ValueAxis valueAxis;
     private Timeline dataRemoveTimeline;
     private TreeSet categories = new TreeSet();
@@ -126,6 +124,17 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     }
 
     /**
+     * Hidden lines for line names
+     *
+     * @param lineNames line names
+     */
+    public void hiddenValueMarkers(List<String> lineNames) {
+        for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
+            lineNames.forEach(lineName -> valueMarkerEntry.getValue().hiddenValueMarker(lineName));
+        }
+    }
+
+    /**
      * Toggle line show or hide
      *
      * @param lineName line name
@@ -135,6 +144,14 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
             valueMarkerEntry.getValue().toggleValueMarker(lineName, showed);
         }
+    }
+
+    /**
+     * Hidden all bar series
+     */
+    public void hiddenAllBarSeries() {
+        ObservableList<XYChart.Series<X, Y>> series = this.getData();
+        series.forEach(oneSeries -> toggleBarSeries(oneSeries, false));
     }
 
     /**
@@ -175,23 +192,29 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         String uniqueKey = chartData.getUniqueKey();
         String seriesName = chartData.getSeriesName();
         Color color = chartData.getColor();
-        this.createAreaGroup(chartData.getXYChartData(), uniqueKey, color);
-        XYChart.Series series = this.buildSeries(chartData.getBarChartData(), seriesName);
-        List<ILineData> lineDataList = chartData.getLineData();
-        if (lineDataList != null) {
+        if (chartData.getXYChartData() != null) {
+            this.createAreaGroup(chartData.getXYChartData(), uniqueKey, color);
+        }
+        if (chartData.getBarChartData() != null) {
+            XYChart.Series series = this.buildSeries(chartData.getBarChartData(), seriesName);
+            if (series == null) {
+                return;
+            }
+            this.getData().add(series);
+            this.setSeriesDataStyle(series, color);
+            this.setSeriesDataTooltip(series, chartTooltip == null ? null : chartTooltip.getChartBarToolTip());
+            this.seriesUniqueKeyMap.put(uniqueKey, series);
+        }
+
+        if (chartData.getLineData() != null) {
             ValueMarker valueMarker = new ValueMarker();
-            lineDataList.forEach(lineData -> {
-                Line line = valueMarker.buildValueMarker(lineData, color, seriesName, (chartTooltip == null) ? null : chartTooltip.getLineTooltip());
+            chartData.getLineData().forEach(lineData -> {
+                Line line = valueMarker.buildValueMarker(lineData, color, seriesName, (chartTooltip == null) ?
+                        null : chartTooltip.getLineTooltip());
                 getPlotChildren().add(line);
             });
             valueMarkerMap.put(uniqueKey, valueMarker);
         }
-        if (series == null) return;
-        this.getData().add(series);
-        this.setSeriesDataStyle(series, color);
-        this.setSeriesDataTooltip(series, chartTooltip == null ? null : chartTooltip.getChartBarToolTip());
-        this.seriesUniqueKeyMap.put(uniqueKey, series);
-
     }
 
     private XYChart.Series buildSeries(IBarChartData<X, Y> barData, String seriesName) {

@@ -83,35 +83,35 @@ public class BuildChart {
                 continue;
             }
             //nd chart
-            SpcNdChartData1 iNdcChartData = new SpcNdChartData1(key, spcChartResultDto.getNdcResult(), color);
+            SpcNdChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
             iNdcChartData.setSeriesName(seriesName);
             ndcChartDataList.add(iNdcChartData);
             //run chart
-            SpcRunChartData1 iRunChartData = new SpcRunChartData1(key, spcChartResultDto.getRunCResult(), null, color);
+            SpcRunChartData iRunChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), null, color);
             iRunChartData.setSeriesName(seriesName);
             runChartDataList.add(iRunChartData);
             //x bar chart
-            SpcControlChartData1 xBarChartData = new SpcControlChartData1(key, spcChartResultDto.getXbarCResult(), color);
+            SpcControlChartData xBarChartData = new SpcControlChartData(key, spcChartResultDto.getXbarCResult(), color);
             xBarChartData.setSeriesName(seriesName);
             xBarChartDataList.add(xBarChartData);
             //range chart
-            SpcControlChartData1 rangeChartData = new SpcControlChartData1(key, spcChartResultDto.getRangeCResult(), color);
+            SpcControlChartData rangeChartData = new SpcControlChartData(key, spcChartResultDto.getRangeCResult(), color);
             rangeChartData.setSeriesName(seriesName);
             rangeChartDataList.add(rangeChartData);
             //sd chart
-            SpcControlChartData1 sdChartData = new SpcControlChartData1(key, spcChartResultDto.getSdCResult(), color);
+            SpcControlChartData sdChartData = new SpcControlChartData(key, spcChartResultDto.getSdCResult(), color);
             sdChartData.setSeriesName(seriesName);
             sdChartDataList.add(sdChartData);
             //median chart
-            SpcControlChartData1 medianChartData = new SpcControlChartData1(key, spcChartResultDto.getMedianCResult(), color);
+            SpcControlChartData medianChartData = new SpcControlChartData(key, spcChartResultDto.getMedianCResult(), color);
             medianChartData.setSeriesName(seriesName);
             medianChartDataList.add(medianChartData);
             //box chart
-            SpcBoxChartData1 iBoxChartData = new SpcBoxChartData1(key, spcChartResultDto.getBoxCResult(), color);
+            SpcBoxChartData iBoxChartData = new SpcBoxChartData(key, spcChartResultDto.getBoxCResult(), color);
             iBoxChartData.setSeriesName(seriesName);
             boxChartDataList.add(iBoxChartData);
             //mr chart
-            SpcControlChartData1 mrChartData = new SpcControlChartData1(key, spcChartResultDto.getMrCResult(), color);
+            SpcControlChartData mrChartData = new SpcControlChartData(key, spcChartResultDto.getMrCResult(), color);
             mrChartData.setSeriesName(seriesName);
             mrChartDataList.add(mrChartData);
 
