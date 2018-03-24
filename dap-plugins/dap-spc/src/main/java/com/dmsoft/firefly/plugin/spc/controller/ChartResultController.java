@@ -3,12 +3,14 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.plugin.spc.charts.*;
 import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationFetch;
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxPlotChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.ControlChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.NDBarChartData;
+import com.dmsoft.firefly.plugin.spc.charts.select.SelectCallBack;
 import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
@@ -19,15 +21,17 @@ import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.*;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.SpcChartToolTip;
-import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -45,20 +49,16 @@ import java.util.*;
 public class ChartResultController implements Initializable {
 
     private SpcMainController spcMainController;
-
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
+    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
 
     @FXML
     private Tab analysisChartTab;
-
     private VerticalTabPane chartTabPane;
-
     private ChartAnnotationButton editBtn;
-
     private Map<String, XYChart> chartMap = Maps.newHashMap();
     private Map<String, String> testItemValue = Maps.newHashMap();
-
     private ChartPanel<NDChart> ndChartPane;
     private ChartPanel<ControlChart> runChartPane;
     private ChartPanel<ControlChart> xBarChartPane;
@@ -67,31 +67,65 @@ public class ChartResultController implements Initializable {
     private ChartPanel<ControlChart> medianChartPane;
     private ChartPanel<BoxPlotChart> boxChartPane;
     private ChartPanel<ControlChart> mrChartPane;
-
     private List<XYChart.Data> annotationData = Lists.newArrayList();
-
     private ChartTooltip chartTooltip = new SpcChartToolTip();
-
-    private String seriesName = "A1::All";
-    private String pointName = "Point";
-    private String connectLine = "Connect Line";
-
     private String legend = "- - - LSL, USL  —— m Line   —— 6s Line";
+
+    private Map<String, ChartOperatePaneSize> chartOperatePaneSizeMap = Maps.newHashMap();
+    private Map<String, List<String>> chartOperateNameMap = Maps.newHashMap();
+    private Map<String, SelectCallBack> chartOperateSelectCallBackMap = Maps.newHashMap();
+    private Map<String, XYChart> chartNodeMap = Maps.newHashMap();
+    private Map<String, ChartOperateButton> chartButtonMap = Maps.newHashMap();
+    private Map<String, ChartPanel> chartPanelMap = Maps.newHashMap();
+    private JsonMapper mapper = JsonMapper.defaultMapper();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.initChartOperatorMap();
         this.initChartPane();
     }
 
     private void initChartPane() {
-        this.initNDChartPane();
-        this.initRunChartPane();
-        xBarChartPane = this.buildControlChartPane();
-        rangeChartPane = this.buildControlChartPane();
-        sdChartPane = this.buildControlChartPane();
-        medianChartPane = this.buildControlChartPane();
-        mrChartPane = this.buildControlChartPane();
-        this.initBoxChartPane();
+
+        ndChartPane = new ChartPanel<>((NDChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[0]));
+        runChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[1]));
+        xBarChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[2]));
+        rangeChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[3]));
+        sdChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[4]));
+        medianChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[5]));
+        boxChartPane = new ChartPanel<>((BoxPlotChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[6]));
+        mrChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[7]));
+
+        this.initChartOperateSelectCallBackMap();
+        //nd chart
+        ndOperateBtn = this.buildChartOperateButton(UIConstant.SPC_CHART_NAME[0]);
+        ndChartPane.getCustomPane().getChildren().add(ndOperateBtn);
+        ndChartPane.setLegend(legend);
+        //run chart
+        this.initRunChartPane((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[1]));
+        //bar chart
+        barOperateBtn = this.buildChartOperateButton(UIConstant.SPC_CHART_NAME[2]);
+        xBarChartPane.getCustomPane().getChildren().add(barOperateBtn);
+        //range chart
+        rangeOperateBtn = this.buildChartOperateButton(UIConstant.SPC_CHART_NAME[3]);
+        rangeChartPane.getCustomPane().getChildren().add(rangeOperateBtn);
+        //sd chart
+        sdOperateBtn = this.buildChartOperateButton(UIConstant.SPC_CHART_NAME[4]);
+        sdChartPane.getCustomPane().getChildren().add(sdOperateBtn);
+        //median chart
+        medianOperateBtn = this.buildChartOperateButton(UIConstant.SPC_CHART_NAME[5]);
+        medianChartPane.getCustomPane().getChildren().add(medianOperateBtn);
+        //box chart
+        boxOperateBtn = this.buildChartOperateButton(UIConstant.SPC_CHART_NAME[6]);
+        boxChartPane.getCustomPane().getChildren().add(boxOperateBtn);
+        //mr chart
+        mrOperateBtn = this.buildChartOperateButton(UIConstant.SPC_CHART_NAME[7]);
+        mrChartPane.getCustomPane().getChildren().add(mrOperateBtn);
+
+        //init user performance
+        this.initChartButtonMap();
+        this.initPerformanceSelected();
+
         chartTabPane = new VerticalTabPane();
         ndChartPane.setId(UIConstant.SPC_CHART_NAME[0]);
         runChartPane.setId(UIConstant.SPC_CHART_NAME[1]);
@@ -113,120 +147,42 @@ public class ChartResultController implements Initializable {
         analysisChartTab.setContent(chartTabPane);
     }
 
-    private void initNDChartPane() {
+    private void initPerformanceSelected() {
+        String value = envService.findPreference(UIConstant.CHART_PERFORMANCE_CODE);
+        Map data = mapper.fromJson(value, mapper.buildMapType(Map.class, String.class, Map.class));
+        if (data == null || data.isEmpty()) {
+            return;
+        }
+        for (Map.Entry<String, ChartOperateButton> chartOperateButtonEntry : chartButtonMap.entrySet()) {
+            String chartName = chartOperateButtonEntry.getKey();
+            if (data.containsKey(chartName) && data.get(chartName) instanceof Map) {
+                Map<String, List<String>> chartPerformance = (Map<String, List<String>>) data.get(chartName);
+                if (chartPerformance.containsKey(UIConstant.CHART_PERFORMANCE_KEY_OPERATE)) {
+                    chartOperateButtonEntry.getValue().setSelectedSets(Sets.newHashSet(chartPerformance.get(UIConstant.CHART_PERFORMANCE_KEY_OPERATE)));
+                }
+            }
+        }
+        //run chart performance
+        if (data.containsKey(UIConstant.SPC_CHART_NAME[1]) && data.get(UIConstant.SPC_CHART_NAME[1]) instanceof Map) {
+            Map<String, List<String>> chartPerformance = (Map<String, List<String>>) data.get(UIConstant.SPC_CHART_NAME[1]);
+            if (chartPerformance.containsKey(UIConstant.CHART_PERFORMANCE_KEY_RULE)) {
+                rRuleBtn.setSelectedSets(Sets.newHashSet(chartPerformance.get(UIConstant.CHART_PERFORMANCE_KEY_RULE)));
+            }
+        }
+    }
 
+    private ChartOperateButton buildChartOperateButton(String charName) {
         ChartOperateButton button = new ChartOperateButton(true);
+        button.setListViewData(chartOperateNameMap.get(charName));
         button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
-        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));
-        button.setListViewSize(140, 257);
+        button.setListViewSize(chartOperatePaneSizeMap.get(charName).getWidth(), chartOperatePaneSizeMap.get(charName).getHeight());
         button.getStyleClass().add("btn-icon-b");
-        NumberAxis xAxis = new NumberAxis();
-        NumberAxis yAxis = new NumberAxis();
-        xAxis.setTickMarkVisible(false);
-        yAxis.setTickMarkVisible(false);
-        yAxis.setMinorTickVisible(false);
-        xAxis.setAutoRanging(false);
-//        yAxis.setAutoRanging(false);
-        button.setSelectCallBack((name, selected, selectedNames) -> {
-            if (UIConstant.SPC_CHART_NDC_EXTERN_MENU[9].equalsIgnoreCase(name)) {
-                ObservableList<XYChart.Series> series = ndChartPane.getChart().getData();
-                series.forEach(oneSeries -> {
-                    ndChartPane.getChart().toggleBarSeries(oneSeries, selected);
-                });
-            } else if (UIConstant.SPC_CHART_NDC_EXTERN_MENU[10].equalsIgnoreCase(name)) {
-                ndChartPane.getChart().toggleAreaSeries(selected);
-            } else {
-                ndChartPane.getChart().toggleValueMarker(name, selected);
-            }
-        });
-        yAxis.setAutoRanging(false);
-        NDChart<Double, Double> ndChart = new NDChart(xAxis, yAxis);
-        ndChartPane = new ChartPanel(ndChart);
-        ndChartPane.setLegend(legend);
-        ndChartPane.getCustomPane().getChildren().add(button);
+        button.setSelectCallBack(chartOperateSelectCallBackMap.get(charName));
+        return button;
     }
 
-    private void initRunChartPane() {
-        ChartOperateButton button = new ChartOperateButton(true);
-        editBtn = new ChartAnnotationButton();
-        ChartOperateButton rRuleBtn = new ChartOperateButton(false, com.dmsoft.firefly.plugin.spc.charts.utils.enums.Orientation.BOTTOMLEFT);
-        button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
-        rRuleBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rule_normal.png")));
-        editBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_tracing_point_normal.png")));
-        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_RUN_EXTERN_MENU));
-        rRuleBtn.setListViewData(Arrays.asList(UIConstant.SPC_RULE_R));
-        List<String> itemNames = Lists.newArrayList("");
-        itemNames.addAll(envService.findTestItemNames());
-        editBtn.setData(itemNames.size() < 2 ? Lists.newArrayList("") : itemNames);
-        editBtn.setSelectCallBack((name, selected, selectedNames) -> {
-            if (DAPStringUtils.isNotBlank(name)) {
-                testItemValue.clear();
-                testItemValue = sourceDataService.findTestData(envService.findActivatedProjectName(), name);
-            }
-        });
-        button.setListViewSize(140, 260);
-        rRuleBtn.setListViewSize(140, 211);
-        NumberAxis xAxis = new NumberAxis();
-        NumberAxis yAxis = new NumberAxis();
-        xAxis.setTickMarkVisible(false);
-        xAxis.setMinorTickVisible(false);
-        xAxis.setForceZeroInRange(false);
-        yAxis.setTickMarkVisible(false);
-        yAxis.setMinorTickVisible(false);
-        yAxis.setAutoRanging(false);
-        yAxis.setForceZeroInRange(false);
-        ControlChart runChart = new ControlChart(xAxis, yAxis);
-        runChartPane = new ChartPanel<>(runChart);
-        runChartPane.setLegend(legend);
-        runChartPane.getCustomPane().getChildren().add(rRuleBtn);
-        runChartPane.getCustomPane().getChildren().add(button);
-        runChartPane.getCustomPane().getChildren().add(editBtn);
-        runChartPane.getCustomPane().setMargin(editBtn, new Insets(0, 0, 0, 5));
-        runChartPane.getCustomPane().setMargin(button, new Insets(0, 0, 0, 5));
-        runChartPane.getCustomPane().setMargin(rRuleBtn, new Insets(0, 0, 0, 5));
-        editBtn.setCallBack(() -> runChart.clearAnnotation(annotationData));
-        button.setSelectCallBack((name, selected, selectedNames) -> {
-            if (UIConstant.SPC_CHART_RUN_EXTERN_MENU[10].equalsIgnoreCase(name)) {
-                ObservableList<XYChart.Series> series = runChart.getData();
-                series.forEach(oneSeries -> runChart.toggleSeriesLine(oneSeries, selected));
-            } else if (UIConstant.SPC_CHART_RUN_EXTERN_MENU[9].equalsIgnoreCase(name)) {
-                ObservableList<XYChart.Series<Number, Number>> series = runChart.getData();
-                series.forEach(oneSeries -> oneSeries.getData().forEach(dataItem -> {
-                    runChart.toggleSeriesPoint(dataItem, selected);
-                }));
-            } else {
-                runChart.toggleValueMarker(name, selected);
-            }
-        });
-
-        rRuleBtn.setSelectCallBack(((name, selected, selectedNames) -> {
-            ObservableList<XYChart.Series> series = runChart.getData();
-            series.forEach(oneSeries -> runChart.setSeriesDataStyleByRule(Lists.newArrayList(selectedNames)));
-        }));
-        runChart.activePointClickEvent(true);
-        runChart.setPointClickCallBack(id -> {
-            String key = (String) id;
-            spcMainController.setViewDataFocusRowData(key);
-        });
-    }
-
-    private ChartPanel buildControlChartPane() {
-        ChartOperateButton button = new ChartOperateButton(true);
-        button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
-        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
-        button.setListViewSize(140, 120);
-        NumberAxis xAxis = new NumberAxis();
-        NumberAxis yAxis = new NumberAxis();
-        xAxis.setTickMarkVisible(false);
-        yAxis.setTickMarkVisible(false);
-        xAxis.setMinorTickVisible(false);
-        yAxis.setMinorTickVisible(false);
-        xAxis.setAutoRanging(false);
-        yAxis.setAutoRanging(false);
-        ControlChart chart = new ControlChart(xAxis, yAxis);
-        ChartPanel chartPanel = new ChartPanel<>(chart);
-        chartPanel.getCustomPane().getChildren().add(button);
-        button.setSelectCallBack((name, selected, selectedNames) -> {
+    private SelectCallBack buildControlChartSelectCallBack(ControlChart chart, String chartName) {
+        return (name, selected, selectedNames) -> {
             if (UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[4].equalsIgnoreCase(name)) {
                 ObservableList<XYChart.Series> series = chart.getData();
                 series.forEach(oneSeries -> chart.toggleSeriesLine(oneSeries, selected));
@@ -240,15 +196,122 @@ public class ChartResultController implements Initializable {
             } else {
                 chart.togglePathMarker(name, selected);
             }
-        });
-        return chartPanel;
+            //update user performance
+            updatePerformance(chartName, selectedNames, false);
+        };
     }
 
-    private void initBoxChartPane() {
-        ChartOperateButton button = new ChartOperateButton(true);
-        button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
-        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_BOX_EXTERN_MENU));
-        button.setListViewSize(140, 50);
+    private SelectCallBack buildRunChartAnnotationEditSelectCallBack() {
+        return (name, selected, selectedNames) -> {
+            if (DAPStringUtils.isNotBlank(name)) {
+                testItemValue.clear();
+                testItemValue = sourceDataService.findTestData(envService.findActivatedProjectName(), name);
+            }
+        };
+    }
+
+    private SelectCallBack buildRunChartRRuleSelectCallBack(ControlChart chart) {
+        return ((name, selected, selectedNames) -> {
+            ObservableList<XYChart.Series> series = chart.getData();
+            series.forEach(oneSeries -> chart.setSeriesDataStyleByRule(Lists.newArrayList(selectedNames)));
+            updatePerformance(UIConstant.SPC_CHART_NAME[1], selectedNames, true);
+        });
+    }
+
+    private void updatePerformance(String chartName, Set<String> selectedNames, boolean ruled) {
+
+        String value = envService.findPreference(UIConstant.CHART_PERFORMANCE_CODE);
+        Map data = mapper.fromJson(value, mapper.buildMapType(Map.class, String.class, Map.class));
+        data = data == null ? Maps.newLinkedHashMap() : data;
+        Map<String, List> operateMap = data.containsKey(chartName) && data.get(chartName) instanceof Map ?
+                (Map<String, List>) data.get(chartName) : Maps.newHashMap();
+        if (ruled) {
+            operateMap.put(UIConstant.CHART_PERFORMANCE_KEY_RULE, Lists.newArrayList(selectedNames));
+        } else {
+            operateMap.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(selectedNames));
+        }
+        data.put(chartName, operateMap);
+        String performValue = mapper.toJson(data);
+        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+        userPreferenceDto.setUserName(envService.getUserName());
+        userPreferenceDto.setCode(UIConstant.CHART_PERFORMANCE_CODE);
+        userPreferenceDto.setValue(performValue);
+        userPreferenceService.updatePreference(userPreferenceDto);
+
+//        Map<String, Map<String, List<String>>> performanceMap = Maps.newHashMap();
+//        for (String name : UIConstant.SPC_CHART_NAME) {
+//            Map<String, List<String>> operatePerformance = Maps.newHashMap();
+//            if (name.equals(UIConstant.SPC_CHART_NAME[0])) {
+//                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));
+//            } else if (name.equals(UIConstant.SPC_CHART_NAME[1])) {
+//                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_RUN_EXTERN_MENU));
+//                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_RULE, Lists.newArrayList());
+//            } else if (name.equals(UIConstant.SPC_CHART_NAME[2]) || name.equals(UIConstant.SPC_CHART_NAME[3]) || name.equals(UIConstant.SPC_CHART_NAME[4]) || name.equals(UIConstant.SPC_CHART_NAME[5]) || name.equals(UIConstant.SPC_CHART_NAME[7])) {
+//                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
+//            } else if (name.equals(UIConstant.SPC_CHART_NAME[6])) {
+//                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_BOX_EXTERN_MENU));
+//            }
+//            performanceMap.put(name, operatePerformance);
+//        }
+//        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+//        userPreferenceDto.setUserName(envService.getUserName());
+//        userPreferenceDto.setCode(UIConstant.CHART_PERFORMANCE_CODE);
+//        userPreferenceDto.setValue(performanceMap);
+//        userPreferenceService.updatePreference(userPreferenceDto);
+    }
+
+    private AnnotationFetch buildAnnotationFetch() {
+        return new AnnotationFetch() {
+            @Override
+            public String getValue(Object id) {
+                String rowKey = (String) id;
+                return testItemValue.get(rowKey);
+            }
+
+            @Override
+            public String getTextColor() {
+                return ColorUtils.toHexFromFXColor(Color.RED);
+            }
+
+            @Override
+            public boolean showedAnnotation() {
+                return editBtn.isShowAnnotation();
+            }
+
+            @Override
+            public void addData(XYChart.Data data) {
+                annotationData.add(data);
+            }
+        };
+    }
+
+    private NDChart buildNDChart() {
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setTickMarkVisible(false);
+        yAxis.setTickMarkVisible(false);
+        yAxis.setMinorTickVisible(false);
+        xAxis.setAutoRanging(false);
+        yAxis.setAutoRanging(false);
+        NDChart<Double, Double> ndChart = new NDChart(xAxis, yAxis);
+        return ndChart;
+    }
+
+    private ControlChart buildControlChart() {
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setTickMarkVisible(false);
+        xAxis.setMinorTickVisible(false);
+        xAxis.setForceZeroInRange(false);
+        yAxis.setTickMarkVisible(false);
+        yAxis.setMinorTickVisible(false);
+        yAxis.setAutoRanging(false);
+        yAxis.setForceZeroInRange(false);
+        ControlChart controlChart = new ControlChart(xAxis, yAxis);
+        return controlChart;
+    }
+
+    private BoxPlotChart buildBoxPlotChart() {
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setTickMarkVisible(false);
@@ -258,13 +321,39 @@ public class ChartResultController implements Initializable {
         xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
         BoxPlotChart boxPlotChart = new BoxPlotChart(xAxis, yAxis);
-        boxChartPane = new ChartPanel<>(boxPlotChart);
-        boxChartPane.getCustomPane().getChildren().add(button);
-        button.setSelectCallBack((name, selected, selectedNames) -> {
-            if (name.equalsIgnoreCase(UIConstant.SPC_CHART_BOX_EXTERN_MENU[0])) {
-                boxPlotChart.toggleStroke(selected);
-            }
+        return boxPlotChart;
+    }
+
+    private void initRunChartPane(ControlChart chart) {
+
+        runOperateBtn = this.buildChartOperateButton(UIConstant.SPC_CHART_NAME[1]);
+
+        rRuleBtn = new ChartOperateButton(false, com.dmsoft.firefly.plugin.spc.charts.utils.enums.Orientation.BOTTOMLEFT);
+        rRuleBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rule_normal.png")));
+        rRuleBtn.setListViewData(Arrays.asList(UIConstant.SPC_RULE_R));
+        rRuleBtn.setListViewSize(140, 211);
+        rRuleBtn.setSelectCallBack(this.buildRunChartRRuleSelectCallBack(chart));
+
+        List<String> itemNames = Lists.newArrayList("");
+        itemNames.addAll(envService.findTestItemNames());
+        editBtn = new ChartAnnotationButton();
+        editBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_tracing_point_normal.png")));
+        editBtn.setData(itemNames.size() < 2 ? Lists.newArrayList("") : itemNames);
+        editBtn.setCallBack(() -> chart.clearAnnotation(annotationData));
+        editBtn.setSelectCallBack(this.buildRunChartAnnotationEditSelectCallBack());
+        runChartPane.getCustomPane().getChildren().add(rRuleBtn);
+        runChartPane.getCustomPane().getChildren().add(runOperateBtn);
+        runChartPane.getCustomPane().getChildren().add(editBtn);
+        runChartPane.getCustomPane().setMargin(editBtn, new Insets(0, 0, 0, 5));
+        runChartPane.getCustomPane().setMargin(runOperateBtn, new Insets(0, 0, 0, 5));
+        runChartPane.getCustomPane().setMargin(rRuleBtn, new Insets(0, 0, 0, 5));
+        runChartPane.setLegend(legend);
+        chart.activePointClickEvent(true);
+        chart.setPointClickCallBack(id -> {
+            String key = (String) id;
+            spcMainController.setViewDataFocusRowData(key);
         });
+        chart.setSeriesAnnotationEvent(buildAnnotationFetch());
     }
 
     /**
@@ -302,34 +391,34 @@ public class ChartResultController implements Initializable {
                 continue;
             }
             //nd chart
-            SpcNdChartData1 iNdcChartData = new SpcNdChartData1(key, spcChartResultDto.getNdcResult(), color);
+            SpcNdChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
             iNdcChartData.setSeriesName(seriesName);
             ndcChartDataList.add(iNdcChartData);
             //run chart
-            SpcRunChartData1 runChartData = new SpcRunChartData1(key, spcChartResultDto.getRunCResult(), analyzedRowKeys, color);
+            SpcRunChartData runChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), analyzedRowKeys, color);
             runChartData.setSeriesName(seriesName);
             runChartDataList.add(runChartData);
-            SpcControlChartData1 xBarChartData = new SpcControlChartData1(key, spcChartResultDto.getXbarCResult(), color);
+            SpcControlChartData xBarChartData = new SpcControlChartData(key, spcChartResultDto.getXbarCResult(), color);
             xBarChartData.setSeriesName(seriesName);
             xBarChartDataList.add(xBarChartData);
             //range chart
-            SpcControlChartData1 rangeChartData = new SpcControlChartData1(key, spcChartResultDto.getRangeCResult(), color);
+            SpcControlChartData rangeChartData = new SpcControlChartData(key, spcChartResultDto.getRangeCResult(), color);
             rangeChartData.setSeriesName(seriesName);
             rangeChartDataList.add(rangeChartData);
             //sd chart
-            SpcControlChartData1 sdChartData = new SpcControlChartData1(key, spcChartResultDto.getSdCResult(), color);
+            SpcControlChartData sdChartData = new SpcControlChartData(key, spcChartResultDto.getSdCResult(), color);
             sdChartData.setSeriesName(seriesName);
             sdChartDataList.add(sdChartData);
             //median chart
-            SpcControlChartData1 medianChartData = new SpcControlChartData1(key, spcChartResultDto.getMedianCResult(), color);
+            SpcControlChartData medianChartData = new SpcControlChartData(key, spcChartResultDto.getMedianCResult(), color);
             medianChartData.setSeriesName(seriesName);
             medianChartDataList.add(medianChartData);
             //box chart
-            SpcBoxChartData1 boxChartData = new SpcBoxChartData1(key, spcChartResultDto.getBoxCResult(), color);
+            SpcBoxChartData boxChartData = new SpcBoxChartData(key, spcChartResultDto.getBoxCResult(), color);
             boxChartData.setSeriesName(seriesName);
             boxChartDataList.add(boxChartData);
             //mr chart
-            SpcControlChartData1 mrChartData = new SpcControlChartData1(key, spcChartResultDto.getMrCResult(), color);
+            SpcControlChartData mrChartData = new SpcControlChartData(key, spcChartResultDto.getMrCResult(), color);
             mrChartData.setSeriesName(seriesName);
             mrChartDataList.add(mrChartData);
 
@@ -378,7 +467,9 @@ public class ChartResultController implements Initializable {
         xAxis.setUpperBound(xMax + xReserve);
         yAxis.setLowerBound(yMin);
         yAxis.setUpperBound(yMax + yReserve);
-        setNdChartData(ndChartData);
+        chart.setData(ndChartData, chartTooltip);
+        this.setNdChartPerformance();
+        ndChartPane.activeChartDragging();
     }
 
     public void setRunChartData(String chartName, List<ControlChartData> runChartData) {
@@ -414,46 +505,53 @@ public class ChartResultController implements Initializable {
         xAxis.setUpperBound(xMax + xReserve);
         yAxis.setLowerBound(yMin - yReserve);
         yAxis.setUpperBound(yMax + yReserve);
-        setRunChartData(runChartData);
+        chart.setData(runChartData, chartTooltip);
+        this.setRunChartPerformance();
+        runChartPane.activeChartDragging();
     }
 
     public void setControlChartData(String chartName, List<ControlChartData> controlChartData) {
-        Object chart = getChartByName(chartName);
-        if (chart != null && chart instanceof ControlChart) {
-            ControlChart controlChart = (ControlChart) chart;
-            if (chartMap.containsKey(chartName)) {
+
+        ControlChart controlChart = (ControlChart) chartNodeMap.get(chartName);
+        if (chartMap.containsKey(chartName)) {
 //            clear chart
-                controlChart.removeAllChildren();
-            } else {
-                chartMap.put(chartName, controlChart);
-            }
-            Double[] xLower = new Double[controlChartData.size()];
-            Double[] xUpper = new Double[controlChartData.size()];
-            Double[] yLower = new Double[controlChartData.size()];
-            Double[] yUpper = new Double[controlChartData.size()];
-            for (int i = 0; i < controlChartData.size(); i++) {
-                xLower[i] = (Double) controlChartData.get(i).getXLowerBound();
-                xUpper[i] = (Double) controlChartData.get(i).getXUpperBound();
-                yLower[i] = (Double) controlChartData.get(i).getYLowerBound();
-                yUpper[i] = (Double) controlChartData.get(i).getYUpperBound();
-            }
-            Double xMax = MathUtils.getMax(xUpper);
-            Double xMin = MathUtils.getMin(xLower);
-            Double yMax = MathUtils.getMax(yUpper);
-            Double yMin = MathUtils.getMin(yLower);
-            if (xMax == null || xMin == null || yMax == null || yMin == null) {
-                return;
-            }
-            NumberAxis xAxis = (NumberAxis) controlChart.getXAxis();
-            NumberAxis yAxis = (NumberAxis) controlChart.getYAxis();
-            double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-            double xReserve = (xMax - xMin) * UIConstant.FACTOR;
-            xAxis.setLowerBound(xMin - xReserve);
-            xAxis.setUpperBound(xMax + xReserve);
-            yAxis.setLowerBound(yMin - yReserve);
-            yAxis.setUpperBound(yMax + yReserve);
-            setControlChartData(controlChart, controlChartData);
+            controlChart.removeAllChildren();
+        } else {
+            chartMap.put(chartName, controlChart);
         }
+        Double[] xLower = new Double[controlChartData.size()];
+        Double[] xUpper = new Double[controlChartData.size()];
+        Double[] yLower = new Double[controlChartData.size()];
+        Double[] yUpper = new Double[controlChartData.size()];
+        for (int i = 0; i < controlChartData.size(); i++) {
+            xLower[i] = (Double) controlChartData.get(i).getXLowerBound();
+            xUpper[i] = (Double) controlChartData.get(i).getXUpperBound();
+            yLower[i] = (Double) controlChartData.get(i).getYLowerBound();
+            yUpper[i] = (Double) controlChartData.get(i).getYUpperBound();
+        }
+        Double xMax = MathUtils.getMax(xUpper);
+        Double xMin = MathUtils.getMin(xLower);
+        Double yMax = MathUtils.getMax(yUpper);
+        Double yMin = MathUtils.getMin(yLower);
+        if (xMax == null || xMin == null || yMax == null || yMin == null) {
+            return;
+        }
+        NumberAxis xAxis = (NumberAxis) controlChart.getXAxis();
+        NumberAxis yAxis = (NumberAxis) controlChart.getYAxis();
+        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
+        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
+        xAxis.setLowerBound(xMin - xReserve);
+        xAxis.setUpperBound(xMax + xReserve);
+        yAxis.setLowerBound(yMin - yReserve);
+        yAxis.setUpperBound(yMax + yReserve);
+        controlChart.setData(controlChartData, chartTooltip);
+        controlChartData.forEach(controlChartData1 -> {
+            Double[] ucl = controlChartData1.getUclData();
+            Double[] lcl = controlChartData1.getLclData();
+            controlChart.setSeriesDataStyleByRule(controlChartData1.getUniqueKey(), ucl, lcl);
+        });
+        this.setControlChartPerformance(controlChart);
+        chartPanelMap.get(chartName).activeChartDragging();
     }
 
     public void setBoxChartData(String chartName, List<BoxPlotChartData> boxChartData) {
@@ -489,7 +587,9 @@ public class ChartResultController implements Initializable {
         xAxis.setUpperBound(xMax + xReserve);
         yAxis.setLowerBound(yMin - yReserve);
         yAxis.setUpperBound(yMax + yReserve);
-        setBoxPlotChartData(boxChartData);
+        chart.setData(boxChartData, chartTooltip);
+        this.setBoxChartPerformance();
+        boxChartPane.activeChartDragging();
     }
 
     public void clearChartData() {
@@ -515,76 +615,190 @@ public class ChartResultController implements Initializable {
         mrChartPane.getChart().updateChartColor(unique, color);
     }
 
-    private void setNdChartData(List<NDBarChartData> ndChartData) {
-        NDChart chart = ndChartPane.getChart();
-        chart.setData(ndChartData, chartTooltip);
+    private void setNdChartPerformance() {
+        List<String> hiddenLines = Lists.newArrayList();
+        for (String operateName : UIConstant.SPC_CHART_NDC_EXTERN_MENU) {
+            if (!ndOperateBtn.getSelectedSets().contains(operateName)) {
+                if (operateName.equals(UIConstant.SPC_CHART_NDC_EXTERN_MENU[9])) {
+                    ndChartPane.getChart().hiddenAllBarSeries();
+                    continue;
+                }
+                if (operateName.equals(UIConstant.SPC_CHART_NDC_EXTERN_MENU[10])) {
+                    ndChartPane.getChart().toggleAreaSeries(false);
+                    continue;
+                }
+                hiddenLines.add(operateName);
+            }
+        }
+        ndChartPane.getChart().hiddenValueMarkers(hiddenLines);
     }
 
-    private void setRunChartData(List<ControlChartData> runChartData) {
-        ControlChart chart = runChartPane.getChart();
-        chart.setData(runChartData, chartTooltip);
-        runChartPane.activeChartDragging();
-        chart.setSeriesAnnotationEvent(new AnnotationFetch() {
-            @Override
-            public String getValue(Object id) {
-                String rowKey = (String) id;
-                System.out.println(rowKey);
-                System.out.println(testItemValue.get(rowKey));
-                return testItemValue.get(rowKey);
+    private void setRunChartPerformance() {
+        List<String> hiddenLines = Lists.newArrayList();
+        for (String operateName : UIConstant.SPC_CHART_RUN_EXTERN_MENU) {
+            if (!runOperateBtn.getSelectedSets().contains(operateName)) {
+                if (operateName.equals(UIConstant.SPC_CHART_RUN_EXTERN_MENU[9])) {
+                    runChartPane.getChart().hiddenAllSeriesPoint();
+                    continue;
+                }
+                if (operateName.equals(UIConstant.SPC_CHART_RUN_EXTERN_MENU[10])) {
+                    runChartPane.getChart().hiddenAllSeriesLine();
+                    continue;
+                }
+                hiddenLines.add(operateName);
             }
-
-            @Override
-            public String getTextColor() {
-                return ColorUtils.toHexFromFXColor(Color.RED);
-            }
-
-            @Override
-            public boolean showedAnnotation() {
-                return editBtn.isShowAnnotation();
-            }
-
-            @Override
-            public void addData(XYChart.Data data) {
-                annotationData.add(data);
-            }
-        });
+        }
+        runChartPane.getChart().hiddenValueMarkers(hiddenLines);
+        runChartPane.getChart().setSeriesDataStyleByRule(Lists.newArrayList(rRuleBtn.getSelectedSets()));
     }
 
-    private void setControlChartData(ControlChart chart, List<ControlChartData> controlChartData) {
-        chart.setData(controlChartData, chartTooltip);
-        controlChartData.forEach(controlChartData1 -> {
-            Double[] ucl = controlChartData1.getUclData();
-            Double[] lcl = controlChartData1.getLclData();
-            chart.setSeriesDataStyleByRule(controlChartData1.getUniqueKey(), ucl, lcl);
-        });
-        runChartPane.activeChartDragging();
+    private void setControlChartPerformance(ControlChart controlChart) {
+        List<String> hiddenLines = Lists.newArrayList();
+        for (String operateName : UIConstant.SPC_CHART_CONTROL_EXTERN_MENU) {
+            if (!runOperateBtn.getSelectedSets().contains(operateName)) {
+                if (operateName.equals(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[3])) {
+                    controlChart.hiddenAllSeriesPoint();
+                    continue;
+                }
+                if (operateName.equals(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[4])) {
+                    controlChart.hiddenAllSeriesLine();
+                    continue;
+                }
+                hiddenLines.add(operateName);
+            }
+        }
+        controlChart.hiddenValueMarkers(hiddenLines);
     }
 
-    private void setBoxPlotChartData(List<BoxPlotChartData> boxPlotChartData) {
-        BoxPlotChart chart = boxChartPane.getChart();
-        boxChartPane.activeChartDragging();
-        chart.setData(boxPlotChartData, chartTooltip);
-    }
+    private void setBoxChartPerformance() {
+        for (String operateName : UIConstant.SPC_CHART_BOX_EXTERN_MENU) {
+            if (!runOperateBtn.getSelectedSets().contains(operateName)) {
+                if (operateName.equals(UIConstant.SPC_CHART_BOX_EXTERN_MENU[0])) {
+                    boxChartPane.getChart().removeStroke();
+                    continue;
+                }
+                if (operateName.equals(UIConstant.SPC_CHART_BOX_EXTERN_MENU[1])) {
 
-    private Object getChartByName(String name) {
-        if (UIConstant.SPC_CHART_NAME[0].equals(name)) {
-            return ndChartPane.getChart();
-        } else if (UIConstant.SPC_CHART_NAME[1].equals(name)) {
-            return runChartPane.getChart();
-        } else if (UIConstant.SPC_CHART_NAME[2].equals(name)) {
-            return xBarChartPane.getChart();
-        } else if (UIConstant.SPC_CHART_NAME[3].equals(name)) {
-            return rangeChartPane.getChart();
-        } else if (UIConstant.SPC_CHART_NAME[4].equals(name)) {
-            return sdChartPane.getChart();
-        } else if (UIConstant.SPC_CHART_NAME[5].equals(name)) {
-            return medianChartPane.getChart();
-        } else if (UIConstant.SPC_CHART_NAME[6].equals(name)) {
-            return boxChartPane.getChart();
-        } else if (UIConstant.SPC_CHART_NAME[7].equals(name)) {
-            return mrChartPane.getChart();
-        } else {
-            return null;
+                }
+            }
         }
     }
+
+//    private Object getChartByName(String name) {
+//        if (UIConstant.SPC_CHART_NAME[0].equals(name)) {
+//            return ndChartPane.getChart();
+//        } else if (UIConstant.SPC_CHART_NAME[1].equals(name)) {
+//            return runChartPane.getChart();
+//        } else if (UIConstant.SPC_CHART_NAME[2].equals(name)) {
+//            return xBarChartPane.getChart();
+//        } else if (UIConstant.SPC_CHART_NAME[3].equals(name)) {
+//            return rangeChartPane.getChart();
+//        } else if (UIConstant.SPC_CHART_NAME[4].equals(name)) {
+//            return sdChartPane.getChart();
+//        } else if (UIConstant.SPC_CHART_NAME[5].equals(name)) {
+//            return medianChartPane.getChart();
+//        } else if (UIConstant.SPC_CHART_NAME[6].equals(name)) {
+//            return boxChartPane.getChart();
+//        } else if (UIConstant.SPC_CHART_NAME[7].equals(name)) {
+//            return mrChartPane.getChart();
+//        } else {
+//            return null;
+//        }
+//    }
+
+    private void initChartOperatorMap() {
+        chartOperateNameMap.put(UIConstant.SPC_CHART_NAME[0], Lists.newArrayList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));
+        chartOperateNameMap.put(UIConstant.SPC_CHART_NAME[1], Lists.newArrayList(UIConstant.SPC_CHART_RUN_EXTERN_MENU));
+        chartOperateNameMap.put(UIConstant.SPC_CHART_NAME[2], Lists.newArrayList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
+        chartOperateNameMap.put(UIConstant.SPC_CHART_NAME[3], Lists.newArrayList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
+        chartOperateNameMap.put(UIConstant.SPC_CHART_NAME[4], Lists.newArrayList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
+        chartOperateNameMap.put(UIConstant.SPC_CHART_NAME[5], Lists.newArrayList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
+        chartOperateNameMap.put(UIConstant.SPC_CHART_NAME[6], Lists.newArrayList(UIConstant.SPC_CHART_BOX_EXTERN_MENU));
+        chartOperateNameMap.put(UIConstant.SPC_CHART_NAME[7], Lists.newArrayList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
+        chartOperatePaneSizeMap.put(UIConstant.SPC_CHART_NAME[0], new ChartOperatePaneSize(140, 257));
+        chartOperatePaneSizeMap.put(UIConstant.SPC_CHART_NAME[1], new ChartOperatePaneSize(140, 260));
+        chartOperatePaneSizeMap.put(UIConstant.SPC_CHART_NAME[2], new ChartOperatePaneSize(140, 120));
+        chartOperatePaneSizeMap.put(UIConstant.SPC_CHART_NAME[3], new ChartOperatePaneSize(140, 120));
+        chartOperatePaneSizeMap.put(UIConstant.SPC_CHART_NAME[4], new ChartOperatePaneSize(140, 120));
+        chartOperatePaneSizeMap.put(UIConstant.SPC_CHART_NAME[5], new ChartOperatePaneSize(140, 120));
+        chartOperatePaneSizeMap.put(UIConstant.SPC_CHART_NAME[6], new ChartOperatePaneSize(140, 50));
+        chartOperatePaneSizeMap.put(UIConstant.SPC_CHART_NAME[7], new ChartOperatePaneSize(140, 120));
+        chartNodeMap.put(UIConstant.SPC_CHART_NAME[0], buildNDChart());
+        chartNodeMap.put(UIConstant.SPC_CHART_NAME[1], buildControlChart());
+        chartNodeMap.put(UIConstant.SPC_CHART_NAME[2], buildControlChart());
+        chartNodeMap.put(UIConstant.SPC_CHART_NAME[3], buildControlChart());
+        chartNodeMap.put(UIConstant.SPC_CHART_NAME[4], buildControlChart());
+        chartNodeMap.put(UIConstant.SPC_CHART_NAME[5], buildControlChart());
+        chartNodeMap.put(UIConstant.SPC_CHART_NAME[6], buildBoxPlotChart());
+        chartNodeMap.put(UIConstant.SPC_CHART_NAME[7], buildControlChart());
+    }
+
+    private void initChartButtonMap() {
+        chartButtonMap.put(UIConstant.SPC_CHART_NAME[0], ndOperateBtn);
+        chartButtonMap.put(UIConstant.SPC_CHART_NAME[1], runOperateBtn);
+        chartButtonMap.put(UIConstant.SPC_CHART_NAME[2], barOperateBtn);
+        chartButtonMap.put(UIConstant.SPC_CHART_NAME[3], rangeOperateBtn);
+        chartButtonMap.put(UIConstant.SPC_CHART_NAME[4], sdOperateBtn);
+        chartButtonMap.put(UIConstant.SPC_CHART_NAME[5], medianOperateBtn);
+        chartButtonMap.put(UIConstant.SPC_CHART_NAME[6], boxOperateBtn);
+        chartButtonMap.put(UIConstant.SPC_CHART_NAME[7], mrOperateBtn);
+        chartPanelMap.put(UIConstant.SPC_CHART_NAME[0], ndChartPane);
+        chartPanelMap.put(UIConstant.SPC_CHART_NAME[1], runChartPane);
+        chartPanelMap.put(UIConstant.SPC_CHART_NAME[2], boxChartPane);
+        chartPanelMap.put(UIConstant.SPC_CHART_NAME[3], rangeChartPane);
+        chartPanelMap.put(UIConstant.SPC_CHART_NAME[4], sdChartPane);
+        chartPanelMap.put(UIConstant.SPC_CHART_NAME[5], medianChartPane);
+        chartPanelMap.put(UIConstant.SPC_CHART_NAME[6], boxChartPane);
+        chartPanelMap.put(UIConstant.SPC_CHART_NAME[7], mrChartPane);
+    }
+
+    private void initChartOperateSelectCallBackMap() {
+        chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[0], (name, selected, selectedNames) -> {
+            if (UIConstant.SPC_CHART_NDC_EXTERN_MENU[9].equalsIgnoreCase(name)) {
+                ObservableList<XYChart.Series> series = ndChartPane.getChart().getData();
+                series.forEach(oneSeries -> ndChartPane.getChart().toggleBarSeries(oneSeries, selected));
+            } else if (UIConstant.SPC_CHART_NDC_EXTERN_MENU[10].equalsIgnoreCase(name)) {
+                ndChartPane.getChart().toggleAreaSeries(selected);
+            } else {
+                ndChartPane.getChart().toggleValueMarker(name, selected);
+            }
+            updatePerformance(UIConstant.SPC_CHART_NAME[0], selectedNames, false);
+        });
+        chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[1], (name, selected, selectedNames) -> {
+            ControlChart runChart = runChartPane.getChart();
+            if (UIConstant.SPC_CHART_RUN_EXTERN_MENU[10].equalsIgnoreCase(name)) {
+                ObservableList<XYChart.Series> series = runChart.getData();
+                series.forEach(oneSeries -> runChart.toggleSeriesLine(oneSeries, selected));
+            } else if (UIConstant.SPC_CHART_RUN_EXTERN_MENU[9].equalsIgnoreCase(name)) {
+                ObservableList<XYChart.Series<Number, Number>> series = runChart.getData();
+                series.forEach(oneSeries -> oneSeries.getData().forEach(dataItem -> {
+                    runChart.toggleSeriesPoint(dataItem, selected);
+                }));
+            } else {
+                runChart.toggleValueMarker(name, selected);
+            }
+            updatePerformance(UIConstant.SPC_CHART_NAME[1], selectedNames, false);
+        });
+        chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[2], buildControlChartSelectCallBack(xBarChartPane.getChart(), UIConstant.SPC_CHART_NAME[2]));
+        chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[3], buildControlChartSelectCallBack(rangeChartPane.getChart(), UIConstant.SPC_CHART_NAME[3]));
+        chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[4], buildControlChartSelectCallBack(sdChartPane.getChart(), UIConstant.SPC_CHART_NAME[4]));
+        chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[5], buildControlChartSelectCallBack(medianChartPane.getChart(), UIConstant.SPC_CHART_NAME[5]));
+        chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[6], (name, selected, selectedNames) -> {
+            BoxPlotChart boxPlotChart = boxChartPane.getChart();
+            if (name.equalsIgnoreCase(UIConstant.SPC_CHART_BOX_EXTERN_MENU[0])) {
+                boxPlotChart.toggleStroke(selected);
+            }
+        });
+        chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[7], buildControlChartSelectCallBack(mrChartPane.getChart(), UIConstant.SPC_CHART_NAME[7]));
+    }
+
+    private ChartOperateButton ndOperateBtn;
+    private ChartOperateButton runOperateBtn;
+    private ChartOperateButton barOperateBtn;
+    private ChartOperateButton rangeOperateBtn;
+    private ChartOperateButton sdOperateBtn;
+    private ChartOperateButton medianOperateBtn;
+    private ChartOperateButton boxOperateBtn;
+    private ChartOperateButton mrOperateBtn;
+    private ChartOperateButton rRuleBtn;
 }
