@@ -420,13 +420,13 @@ public class SpcItemController implements Initializable {
                         } else {
                             Platform.runLater(() -> {
                                 spcMainController.clearAnalysisSubShowData();
+                                SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
+                                SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
+                                List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
+                                TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
+                                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
+                                spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
                             });
-                            SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
-                            SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
-                            List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
-                            TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
-                            DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
-                            spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
                         }
                         return null;
                     }

@@ -697,36 +697,30 @@ public class GrrItemController implements Initializable {
             conditionDto.setSelectedTestItemDtos(selectedItemDto);
             paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, conditionDto);
             updateGrrPreference(conditionDto);
-            Platform.runLater(() -> {
-                manager.doJobASyn(job, new JobDoComplete() {
-                    @Override
-                    public void doComplete(Object returnValue) {
-                        try {
-                            Platform.runLater(() -> {
-                                if (returnValue == null) {
-                                    //todo message tip
-                                    return;
-                                }
-//                                grrMainController.updateGrrViewData();
-//                                grrMainController.updateGrrSummaryAndDetail();
-
-                                GrrParamDto grrParamDto = grrMainController.getGrrParamDto();
-                                refreshPartOrAppraiserListView(grrParamDto);
-                                if (grrParamDto != null && (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty())) {
-                                    grrMainController.updateGrrViewData();
-                                    grrMainController.updateGrrSummaryAndDetail();
-                                } else {
-                                    //to do
-                                    System.out.println(returnValue);
-                                }
-                            });
-                        } catch (ApplicationException excption) {
-                            excption.printStackTrace();
-                        }
-
+            manager.doJobASyn(job, new JobDoComplete() {
+                @Override
+                public void doComplete(Object returnValue) {
+                    try {
+                        Platform.runLater(() -> {
+                            if (returnValue == null) {
+                                //todo message tip
+                                return;
+                            }
+                            GrrParamDto grrParamDto = grrMainController.getGrrParamDto();
+                            refreshPartOrAppraiserListView(grrParamDto);
+                            if (grrParamDto != null && (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty())) {
+                                grrMainController.updateGrrViewData();
+                                grrMainController.updateGrrSummaryAndDetail();
+                            } else {
+                                System.out.println(returnValue);
+                            }
+                        });
+                    } catch (ApplicationException excption) {
+                        excption.printStackTrace();
                     }
-                }, paramMap, grrMainController);
-            });
+
+                }
+            }, paramMap, grrMainController);
         }
     }
 
