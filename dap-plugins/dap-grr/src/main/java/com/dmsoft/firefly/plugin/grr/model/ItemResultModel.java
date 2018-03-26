@@ -52,6 +52,10 @@ public class ItemResultModel implements TableModel {
         this.itemResultDto = itemResultDto;
     }
 
+    public void clearData() {
+        this.dataFrame = null;
+    }
+
     @Override
     public ObservableList<String> getHeaderArray() {
         return headerArray;

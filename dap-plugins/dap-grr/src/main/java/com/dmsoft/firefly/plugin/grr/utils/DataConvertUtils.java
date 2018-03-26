@@ -4,12 +4,12 @@ import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrItemResultDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrViewDataDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrMeanAndRangeDto;
-import com.dmsoft.firefly.sdk.dataframe.CellData;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -51,15 +51,14 @@ public class DataConvertUtils {
         partRowKeys.forEach((partRowKey, rowKeys) -> {
             List<String> data = dataFrame.subDataFrame(rowKeys, Lists.newArrayList(itemName)).
                     getDataColumn(itemName, null).getData();
-            double[] array = new double[data.size()];
-            int i = 0;
+            List<Double> cellValue = Lists.newArrayList();
             data.forEach(cellData -> {
-                if (!DAPStringUtils.isBlankWithSpecialNumber(cellData)) {
-                    array[i] = Double.valueOf(cellData);
+                if (DAPStringUtils.isNumeric(cellData) && !DAPStringUtils.isBlankWithSpecialNumber(cellData)) {
+                    cellValue.add(Double.valueOf(cellData));
                 }
             });
-            totalMeans.put(partRowKey, getAverage(array));
-            totalRanges.put(partRowKey, getRange(MathUtils.getMax(array), MathUtils.getMin(array)));
+            totalMeans.put(partRowKey, getAverage(cellValue));
+            totalRanges.put(partRowKey, getRange(Collections.max(cellValue), Collections.min(cellValue)));
         });
 
         //Get mean and range
@@ -69,15 +68,14 @@ public class DataConvertUtils {
             String appraiserValue = partAppraiserKey.split(splitFlag)[1];
             List<String> data = dataFrame.subDataFrame(rowKeys, Lists.newArrayList(itemName)).
                     getDataColumn(itemName, null).getData();
-            double[] array = new double[data.size()];
-            int i = 0;
+            List<Double> cellValue = Lists.newArrayList();
             data.forEach(cellData -> {
-                if (!DAPStringUtils.isBlankWithSpecialNumber(cellData)) {
-                    array[i] = Double.valueOf(cellData);
+                if (DAPStringUtils.isNumeric(cellData) && !DAPStringUtils.isBlankWithSpecialNumber(cellData)) {
+                    cellValue.add(Double.valueOf(cellData));
                 }
             });
-            String mean = getAverage(array);
-            String range = getRange(MathUtils.getMax(array), MathUtils.getMin(array));
+            String mean = getAverage(cellValue);
+            String range = getRange(Collections.max(cellValue), Collections.min(cellValue));
             if (meanAndRange.containsKey(appraiserValue)) {
                 GrrMeanAndRangeDto grrMeanAndRangeDto = meanAndRange.get(appraiserValue);
                 grrMeanAndRangeDto.getMeans().put(partValue, mean);
@@ -134,6 +132,24 @@ public class DataConvertUtils {
                 continue;
             }
             sum += array[i];
+            count++;
+        }
+        if (count == 0) {
+            return "-";
+        }
+        return DAPStringUtils.formatBigDecimal(String.valueOf(sum / count));
+    }
+
+    private static String getAverage(List<Double> value) {
+        double sum = 0, count = 0;
+        if (value == null || value.size() == 0) {
+            return "-";
+        }
+        for (int i = 0; i < value.size(); i++) {
+            if (DAPStringUtils.isBlankWithSpecialNumber(String.valueOf(value.get(i)))) {
+                continue;
+            }
+            sum += value.get(i);
             count++;
         }
         if (count == 0) {

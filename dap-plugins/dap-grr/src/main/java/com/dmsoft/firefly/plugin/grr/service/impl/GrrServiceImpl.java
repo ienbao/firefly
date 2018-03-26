@@ -69,6 +69,9 @@ public class GrrServiceImpl implements GrrService {
         GrrAnalysisDataDto grrAnalysisDataDto = new GrrAnalysisDataDto();
         List<String> datas = dataColumn.getData(rowKeysToByAnalyzed);
         List<Double> doubleList = convertData(datas);
+        if (datas == null || doubleList == null || datas.size() != doubleList.size()) {
+            return null;
+        }
         if (testItemDto.getLsl() != null) {
             grrAnalysisDataDto.setLsl(testItemDto.getLsl());
         } else {
@@ -96,6 +99,9 @@ public class GrrServiceImpl implements GrrService {
         GrrAnalysisDataDto grrAnalysisDataDto = new GrrAnalysisDataDto();
         List<String> datas = dataColumn.getData(rowKeysToByAnalyzed);
         List<Double> doubleList = convertData(datas);
+        if (datas == null || doubleList == null || datas.size() != doubleList.size()) {
+            return null;
+        }
         if (testItemDto.getLsl() != null) {
             grrAnalysisDataDto.setLsl(testItemDto.getLsl());
         } else {

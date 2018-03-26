@@ -7,5 +7,5 @@ import com.dmsoft.firefly.plugin.grr.dto.GrrSummaryDto;
  */
 public interface SummaryRadioClickListener {
 
-    void executeAnalyzeDetail(GrrSummaryDto grrSummaryDto, String tolerence);
+    void executeAnalyzeDetail(GrrSummaryDto grrSummaryDto, String tolerance, boolean validGrr);
 }

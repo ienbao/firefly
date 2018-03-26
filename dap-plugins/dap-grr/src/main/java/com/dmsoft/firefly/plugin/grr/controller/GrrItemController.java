@@ -696,6 +696,7 @@ public class GrrItemController implements Initializable {
             SearchConditionDto conditionDto = this.initSearchConditionDto();
             conditionDto.setSelectedTestItemDtos(selectedItemDto);
             paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, conditionDto);
+            paramMap.put(ParamKeys.SEARCH_GRR_SUMMARY_TYPE, grrMainController.getResultBasedCmbIndex());
             updateGrrPreference(conditionDto);
             manager.doJobASyn(job, new JobDoComplete() {
                 @Override
@@ -963,8 +964,12 @@ public class GrrItemController implements Initializable {
         List<String> testItemList = getSelectedItem();
         List<String> conditionTestItemList = Lists.newArrayList();
         TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
-        List<String> timeKeys = timePatternDto.getTimeKeys();
-        String timePattern = timePatternDto.getPattern();
+        List<String> timeKeys = Lists.newArrayList();
+        String timePattern = null;
+        if(timePatternDto != null) {
+            timeKeys = timePatternDto.getTimeKeys();
+            timePattern = timePatternDto.getPattern();
+        }
         conditionTestItemList.add(partCombox.getValue());
         if (appraiserCombox.getValue() != null) {
             conditionTestItemList.add(appraiserCombox.getValue());
