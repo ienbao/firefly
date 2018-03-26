@@ -78,6 +78,8 @@ public class StatisticalTableModel implements TableModel {
      * @param spcStatsDtoList data list
      */
     public void initData(List<SpcStatisticalResultAlarmDto> spcStatsDtoList) {
+        tableView.getSortOrder().clear();
+        tableView.sort();
         this.spcStatsDtoList = spcStatsDtoList;
         this.clearTableData();
         if (spcStatsDtoList != null) {
