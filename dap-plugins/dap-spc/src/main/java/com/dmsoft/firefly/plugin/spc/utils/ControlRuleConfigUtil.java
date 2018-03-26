@@ -404,7 +404,7 @@ public class ControlRuleConfigUtil {
             return null;
         } else {
 
-            ruleResultDto.setRuleName(JudgeRuleType.R1.getCode());
+            ruleResultDto.setRuleName(JudgeRuleType.R9.getCode());
 
             List<Double> xList = Lists.newArrayList();
             List<Double> yList = Lists.newArrayList();

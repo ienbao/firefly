@@ -201,6 +201,9 @@ public class StatisticalTableModel implements TableModel {
      */
     public void filterTestItem(String filterTf) {
         statisticalTableRowDataFilteredList.setPredicate(p -> {
+            if (keyToStatsDtoMap.get(p) == null) {
+                return false;
+            }
             String testItem = keyToStatsDtoMap.get(p).getItemName();
             return testItem.toLowerCase().contains(filterTf.toLowerCase());
         });

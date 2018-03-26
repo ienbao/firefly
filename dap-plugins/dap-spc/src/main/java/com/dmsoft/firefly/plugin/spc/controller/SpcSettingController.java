@@ -49,8 +49,8 @@ import java.util.ResourceBundle;
  */
 public class SpcSettingController implements Initializable {
     private final Logger logger = LoggerFactory.getLogger(SpcSettingController.class);
-    @FXML
-    private Label defaultSetting;
+//    @FXML
+//    private Label defaultSetting;
     @FXML
     private Label alarmSetting;
     @FXML
@@ -65,10 +65,10 @@ public class SpcSettingController implements Initializable {
     private Button ok;
 
     //analysis setting
-    @FXML
-    private TextField subgroupSizeTf;
-    @FXML
-    private TextField ndChartNumberTf;
+//    @FXML
+//    private TextField subgroupSizeTf;
+//    @FXML
+//    private TextField ndChartNumberTf;
 
     //alarm setting
     @FXML
@@ -162,7 +162,7 @@ public class SpcSettingController implements Initializable {
         }
         SpcSettingDto spcSettingDto = (SpcSettingDto) returnValue;
 
-        this.setAnalysisSettingData(spcSettingDto.getCustomGroupNumber(), spcSettingDto.getChartIntervalNumber());
+//        this.setAnalysisSettingData(spcSettingDto.getCustomGroupNumber(), spcSettingDto.getChartIntervalNumber());
         this.setProcessAlarmSettingData(spcSettingDto.getAbilityAlarmRule());
         this.setCustomAlarmSettingData(spcSettingDto.getStatisticalAlarmSetting());
         this.setControlAlarmSettingData(spcSettingDto.getControlChartRule());
@@ -199,7 +199,7 @@ public class SpcSettingController implements Initializable {
     }
 
     private void initValidate() {
-        SpcSettingValidateUtil.newInstance().validateSpcAnalysisSetting(subgroupSizeTf, ndChartNumberTf);
+//        SpcSettingValidateUtil.newInstance().validateSpcAnalysisSetting(subgroupSizeTf, ndChartNumberTf);
         SpcSettingValidateUtil.BindNode caBindNode = SpcSettingValidateUtil.newInstance().new BindNode(SpcSettingValidateUtil.BindNode.ASC, caExcellentTf, caAcceptableTf, caRectificationTf);
         SpcSettingValidateUtil.BindNode cpBindNode = SpcSettingValidateUtil.newInstance().new BindNode(cpExcellentTf, cpGoodTf, cpAcceptableTf, cpRectificationTf);
         SpcSettingValidateUtil.BindNode cpkBindNode = SpcSettingValidateUtil.newInstance().new BindNode(cpkExcellentTf, cpkGoodTf, cpkAcceptableTf, cpkRectificationTf);
@@ -227,10 +227,10 @@ public class SpcSettingController implements Initializable {
         return customAlarmDtoList;
     }
 
-    private void setAnalysisSettingData(int customGroupNumber, int chartIntervalNumber) {
-        subgroupSizeTf.setText(String.valueOf(customGroupNumber));
-        ndChartNumberTf.setText(String.valueOf(chartIntervalNumber));
-    }
+//    private void setAnalysisSettingData(int customGroupNumber, int chartIntervalNumber) {
+//        subgroupSizeTf.setText(String.valueOf(customGroupNumber));
+//        ndChartNumberTf.setText(String.valueOf(chartIntervalNumber));
+//    }
 
     private void setProcessAlarmSettingData(Map<String, Double[]> abilityAlarmRule) {
         SpcProCapAlarmKey[] proCapAlarmKeys = SpcProCapAlarmKey.values();
@@ -344,7 +344,7 @@ public class SpcSettingController implements Initializable {
             }
         });
 
-        defaultSetting.setOnMousePressed(defaultSetting -> getDefaultSettingMousePressedEvent());
+//        defaultSetting.setOnMousePressed(defaultSetting -> getDefaultSettingMousePressedEvent());
         alarmSetting.setOnMousePressed(defaultSetting -> getAlarmSettingMousePressedEvent());
         controlAlarmRule.setOnMousePressed(defaultSetting -> getControlAlarmRuleMousePressedEvent());
         exportSetting.setOnMousePressed(defaultSetting -> getExportSettingMousePressedEvent());
@@ -352,7 +352,7 @@ public class SpcSettingController implements Initializable {
 
     private void getDefaultSettingMousePressedEvent() {
         ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, defaultSettingVBox);
-        defaultSetting.setStyle("-fx-background-color: #FFFFFF");
+//        defaultSetting.setStyle("-fx-background-color: #FFFFFF");
         alarmSetting.setStyle("-fx-background-color: #F0F0F0");
         controlAlarmRule.setStyle("-fx-background-color: #F0F0F0");
         exportSetting.setStyle("-fx-background-color: #F0F0F0");
@@ -360,7 +360,7 @@ public class SpcSettingController implements Initializable {
 
     private void getAlarmSettingMousePressedEvent() {
         ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, alarmSettingVBox);
-        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
+//        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
         alarmSetting.setStyle("-fx-background-color: #FFFFFF");
         controlAlarmRule.setStyle("-fx-background-color: #F0F0F0");
         exportSetting.setStyle("-fx-background-color: #F0F0F0");
@@ -368,7 +368,7 @@ public class SpcSettingController implements Initializable {
 
     private void getControlAlarmRuleMousePressedEvent() {
         ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, controlAlarmRuleVBox);
-        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
+//        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
         alarmSetting.setStyle("-fx-background-color: #F0F0F0");
         controlAlarmRule.setStyle("-fx-background-color: #FFFFFF");
         exportSetting.setStyle("-fx-background-color: #F0F0F0");
@@ -376,7 +376,7 @@ public class SpcSettingController implements Initializable {
 
     private void getExportSettingMousePressedEvent() {
         ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, exportSettingVBox);
-        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
+//        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
         alarmSetting.setStyle("-fx-background-color: #F0F0F0");
         controlAlarmRule.setStyle("-fx-background-color: #F0F0F0");
         exportSetting.setStyle("-fx-background-color: #FFFFFF");
@@ -489,8 +489,8 @@ public class SpcSettingController implements Initializable {
 
     private SpcSettingDto buildSaveSettingData() {
         SpcSettingDto spcSettingDto = new SpcSettingDto();
-        spcSettingDto.setCustomGroupNumber(Integer.valueOf(subgroupSizeTf.getText()));
-        spcSettingDto.setChartIntervalNumber(Integer.valueOf(ndChartNumberTf.getText()));
+//        spcSettingDto.setCustomGroupNumber(Integer.valueOf(subgroupSizeTf.getText()));
+//        spcSettingDto.setChartIntervalNumber(Integer.valueOf(ndChartNumberTf.getText()));
 
         spcSettingDto.setAbilityAlarmRule(this.buildProcessAlarmData());
         spcSettingDto.setStatisticalAlarmSetting(this.buildStatisticalAlarmData());

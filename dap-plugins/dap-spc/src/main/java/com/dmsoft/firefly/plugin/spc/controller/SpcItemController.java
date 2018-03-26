@@ -482,19 +482,16 @@ public class SpcItemController implements Initializable {
     }
 
     private void initSpcConfig() {
-        String customGroupNumber = null;
-        String chartIntervalNumber = null;
         SpcAnalysisConfigDto spcAnalysisConfigDto = this.getSpcConfigPreference();
-        if (spcAnalysisConfigDto != null) {
-            chartIntervalNumber = String.valueOf(spcAnalysisConfigDto.getIntervalNumber());
-            customGroupNumber = String.valueOf(spcAnalysisConfigDto.getSubgroupSize());
-        } else {
-            SpcSettingDto settingDto = spcSettingService.findSpcSetting();
-            if (settingDto != null) {
-                chartIntervalNumber = String.valueOf(settingDto.getChartIntervalNumber());
-                customGroupNumber = String.valueOf(settingDto.getCustomGroupNumber());
-            }
+        if (spcAnalysisConfigDto == null) {
+            spcAnalysisConfigDto = new SpcAnalysisConfigDto();
+            spcAnalysisConfigDto.setIntervalNumber(PropertiesResource.SPC_CONFIG_INTERVAL_NUMBER);
+            spcAnalysisConfigDto.setSubgroupSize(PropertiesResource.SPC_CONFIG_SUBGROUP_SIZE);
+            this.updateSpcConfigPreference(spcAnalysisConfigDto);
         }
+        String chartIntervalNumber = String.valueOf(spcAnalysisConfigDto.getIntervalNumber());
+        String customGroupNumber = String.valueOf(spcAnalysisConfigDto.getSubgroupSize());
+
         subGroup.setText(customGroupNumber);
         ndGroup.setText(chartIntervalNumber);
 
