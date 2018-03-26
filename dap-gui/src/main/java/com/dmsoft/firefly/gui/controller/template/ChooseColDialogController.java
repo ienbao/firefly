@@ -127,7 +127,7 @@ public class ChooseColDialogController implements Initializable {
 
     private void getFilterValueEvent() {
         chooseTableRowDataFilteredList.setPredicate( p ->
-                p.getValue().contains( chooseFilterTf.getTextField().getText() )
+                p.getValue().toLowerCase().contains( chooseFilterTf.getTextField().getText().toLowerCase() )
         );
     }
 

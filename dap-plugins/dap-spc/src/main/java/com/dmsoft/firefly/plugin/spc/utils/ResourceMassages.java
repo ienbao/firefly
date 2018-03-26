@@ -45,12 +45,15 @@ public class ResourceMassages {
     //tip header
     public static final String TIP_WARN_HEADER = "TIP_WARN_HEADER";
     //warn message
-    public static final String SPC_VALIDATE_NOT_BE_EMPTY= "VALIDATE_NOT_BE_EMPTY";
+    public static final String SPC_VALIDATE_NOT_BE_EMPTY = "VALIDATE_NOT_BE_EMPTY";
     public static final String SPC_SETTING_APPLY_WARN_MESSAGE = "SPC_SETTING_APPLY_WARN_MESSAGE";
     public static final String SPC_STATISTICAL_USL_LSL_EMPTY = "SPC_STATISTICAL_USL_LSL_EMPTY";
     public static final String SPC_STATISTICAL_USL_LESS_THEN_LSL = "SPC_STATISTICAL_USL_LESS_THEN_LSL";
     public static final String SPC_STATISTICAL_LSL_MORE_THEN_USL = "SPC_STATISTICAL_LSL_MORE_THEN_USL";
 
     public static final String SPC_STATISTICAL_ERROR_EDIT_MESSAGE = "SPC_STATISTICAL_ERROR_EDIT_MESSAGE";
+    public static final String RANGE_NUMBER_WARNING_MESSAGE = "RANGE_NUMBER_WARNING_MESSAGE";
+    public static final String SPC_CONFIG_ERROR_MESSAGE = "SPC_CONFIG_ERROR_MESSAGE";
+    public static final String UI_SPC_ANALYSIS_ITEM_EMPTY = "UI_SPC_ANALYSIS_ITEM_EMPTY";
 
 }
