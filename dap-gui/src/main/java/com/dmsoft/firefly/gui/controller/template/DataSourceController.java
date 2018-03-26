@@ -205,33 +205,37 @@ public class DataSourceController implements Initializable {
                                 renameStage.show();
                             });
                             deleteOne.setOnAction(event -> {
-                                WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Delete DataSource", "Are you sure to delete this file?");
-                                controller.addProcessMonitorListener(new WindowCustomListener() {
-                                    @Override
-                                    public boolean onShowCustomEvent() {
-                                        return false;
-                                    }
-
-                                    @Override
-                                    public boolean onCloseAndCancelCustomEvent() {
-                                        return false;
-                                    }
-
-                                    @Override
-                                    public boolean onOkCustomEvent() {
-                                        List<String> deleteProjects = Lists.newArrayList();
-                                        List<String> activeProject = envService.findActivatedProjectName();
-                                        activeProject.remove(item.getValue());
-                                        deleteProjects.add(item.getValue());
-                                        if (!item.isError()) {
-                                            sourceDataService.deleteProject(deleteProjects);
+                                if (!item.isImport()) {
+                                    WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Delete DataSource", "Are you sure to delete this file?");
+                                    controller.addProcessMonitorListener(new WindowCustomListener() {
+                                        @Override
+                                        public boolean onShowCustomEvent() {
+                                            return false;
                                         }
-                                        envService.setActivatedProjectName(activeProject);
-                                        chooseTableRowDataObservableList.remove(item);
-                                        updateProjectOrder();
-                                        return false;
-                                    }
-                                });
+
+                                        @Override
+                                        public boolean onCloseAndCancelCustomEvent() {
+                                            return false;
+                                        }
+
+                                        @Override
+                                        public boolean onOkCustomEvent() {
+                                            List<String> deleteProjects = Lists.newArrayList();
+                                            List<String> activeProject = envService.findActivatedProjectName();
+                                            if (activeProject != null && activeProject.contains(item.getValue())) {
+                                                activeProject.remove(item.getValue());
+                                            }
+                                            deleteProjects.add(item.getValue());
+                                            if (!item.isError()) {
+                                                sourceDataService.deleteProject(deleteProjects);
+                                            }
+                                            envService.setActivatedProjectName(activeProject);
+                                            chooseTableRowDataObservableList.remove(item);
+                                            updateProjectOrder();
+                                            return false;
+                                        }
+                                    });
+                                }
 
                             });
                             this.setGraphic(hBox);
