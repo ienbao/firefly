@@ -78,7 +78,7 @@ public class MainController {
     private ListView<StateBarTemplateModel> templateView;
     private ObservableList<StateBarTemplateModel> templateList = FXCollections.observableArrayList();
 
-    private ContentStackPane contentStackPane;
+    private StackPane contentStackPane;
     private Map<String, TabPane> tabPaneMap = new LinkedHashMap<>();
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
@@ -117,7 +117,12 @@ public class MainController {
                     pane.setId(name);
                     initTab(name, pane);
                 } else {
-                    contentStackPane.navTo(name);
+                    contentStackPane.getChildren().forEach(node -> {
+                        node.setVisible(false);
+                        if (node.getId().equals(name)) {
+                            node.setVisible(true);
+                        }
+                    });
                 }
                 setActiveBtnStyle(btn);
             });
@@ -146,7 +151,7 @@ public class MainController {
 
     public void resetMain() {
         grpContent.getChildren().remove(contentStackPane);
-        contentStackPane.removeAll();
+        contentStackPane.getChildren().clear();
         tabPaneMap.clear();
         tbaSystem.getItems().clear();
         stateBar.getChildren().clear();
@@ -162,8 +167,7 @@ public class MainController {
         tab.setText(name + "_1");
         tab.setContent(pane);
         tabPane.getTabs().add(tab);
-        contentStackPane.add(tabPane);
-        contentStackPane.navTo(name);
+        contentStackPane.getChildren().add(tabPane);
         tabPaneMap.put(name, tabPane);
         TabUtils.disableCloseTab(tabPane);
         TabUtils.tabSelectedListener(tab, tabPane);
