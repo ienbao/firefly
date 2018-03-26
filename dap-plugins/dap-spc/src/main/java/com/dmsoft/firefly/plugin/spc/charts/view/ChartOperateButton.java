@@ -111,14 +111,20 @@ public class ChartOperateButton extends Button {
                     boolean selected = selectedSets.contains(item);
                     boolean disabled = disableRules.contains(item);
                     BooleanProperty observable = new SimpleBooleanProperty(selected);
-                    observable.setValue(selected);
                     checkBox.selectedProperty().bindBidirectional(observable);
-                    observable.addListener((obs, wasSelected, isNowSelected) -> {
-                        updateSelectedSets(isNowSelected, (String) item);
+                    observable.setValue(selected);
+                    checkBox.setOnMouseClicked(event -> {
+                        updateSelectedSets(checkBox.isSelected(), (String) item);
                         if (selectCallBack != null) {
-                            selectCallBack.execute((String) item, isNowSelected, selectedSets);
+                            selectCallBack.execute((String) item, checkBox.isSelected(), selectedSets);
                         }
                     });
+//                    observable.addListener((obs, wasSelected, isNowSelected) -> {
+//                        updateSelectedSets(isNowSelected, (String) item);
+//                        if (selectCallBack != null) {
+//                            selectCallBack.execute((String) item, isNowSelected, selectedSets);
+//                        }
+//                    });
                     if (disabled) {
                         checkBox.setDisable(true);
                     }
@@ -140,6 +146,15 @@ public class ChartOperateButton extends Button {
     public void setListViewData(List<String> data) {
         data = (data == null) ? Lists.newArrayList() : data;
         listView.getItems().addAll(data);
+    }
+
+    public void removeData(List<String> data) {
+        if (!listView.getItems().isEmpty()) {
+            listView.getItems().removeAll(data);
+            selectedSets.removeAll(data);
+            disableRules.removeAll(data);
+            listView.refresh();
+        }
     }
 
     public void setListViewSize(double width, double height) {

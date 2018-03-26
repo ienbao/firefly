@@ -11,10 +11,12 @@ import com.dmsoft.firefly.plugin.spc.dto.chart.pel.LineData;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import javafx.geometry.Orientation;
 import javafx.scene.paint.Color;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -41,6 +43,19 @@ public class SpcRunChartData implements ControlChartData {
         this.key = key;
         this.color = color;
         this.initData();
+    }
+
+    public Set<String> getNotObserveRules() {
+        Set<String> strings = Sets.newLinkedHashSet();
+        if (runCResultDto == null || runCResultDto.getRuleResultDtoMap() == null) {
+            return strings;
+        }
+        runCResultDto.getRuleResultDtoMap().forEach((key, value) -> {
+            if (value.getX() == null || value.getX().length == 0) {
+                strings.add(key);
+            }
+        });
+        return strings;
     }
 
     private void initData() {
@@ -113,7 +128,7 @@ public class SpcRunChartData implements ControlChartData {
                         if (abnormalY[i] == null || abnormalX[i] == null) {
                             continue;
                         }
-                        if (abnormalY[i] == y && abnormalX[i] == x) {
+                        if (abnormalY[i].equals(y) && abnormalX[i].equals(x)) {
                             pointColor = Color.RED;
                         }
                     }

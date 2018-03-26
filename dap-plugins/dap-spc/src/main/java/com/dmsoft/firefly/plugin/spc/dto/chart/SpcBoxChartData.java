@@ -46,10 +46,12 @@ public class SpcBoxChartData implements BoxPlotChartData {
         List<Double> xPoint = Lists.newArrayList();
         List<Double> yPoint = Lists.newArrayList();
         List<Double> boxY = Lists.newArrayList();
+        List<Double> boxX = Lists.newArrayList();
         for (SingleBoxDataDto singleBoxDataDto : boxCResultDto.getBoxData()) {
             BoxExtraData boxExtraData = new BoxExtraData(singleBoxDataDto.getX(), singleBoxDataDto.getCl(), singleBoxDataDto.getQ3(), singleBoxDataDto.getQ1(),
                     singleBoxDataDto.getUpperWhisker(), singleBoxDataDto.getLowerWhisker(), singleBoxDataDto.getMedian());
             data.add(boxExtraData);
+            boxX.add(singleBoxDataDto.getX());
             boxY.add(singleBoxDataDto.getCl());
             boxY.add(singleBoxDataDto.getMedian());
             boxY.add(singleBoxDataDto.getQ1());
@@ -85,8 +87,8 @@ public class SpcBoxChartData implements BoxPlotChartData {
 
         maxY = MathUtils.getMax(yPoint.toArray(new Double[0]), boxY.toArray(new Double[0]));
         minY = MathUtils.getMin(yPoint.toArray(new Double[0]), boxY.toArray(new Double[0]));
-        maxX = MathUtils.getMax(xPoint.toArray(new Double[0]));
-        minX = MathUtils.getMin(xPoint.toArray(new Double[0]));
+        maxX = MathUtils.getMax(xPoint.toArray(new Double[0]), boxX.toArray(new Double[0]));
+        minX = MathUtils.getMin(xPoint.toArray(new Double[0]), boxX.toArray(new Double[0]));
     }
 
     @Override
