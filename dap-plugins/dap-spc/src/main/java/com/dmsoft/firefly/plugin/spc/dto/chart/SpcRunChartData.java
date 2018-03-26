@@ -75,11 +75,11 @@ public class SpcRunChartData implements ControlChartData {
         Double[] uslAndlsl = new Double[]{usl, lsl};
         String[] lineNames = UIConstant.SPC_CHART_LINE_NAME;
         if (usl != null) {
-            ILineData uslData = new LineData(usl, lineNames[1], Orientation.HORIZONTAL);
+            ILineData uslData = new LineData(usl, lineNames[0], Orientation.HORIZONTAL);
             lineDataList.add(uslData);
         }
         if (lsl != null) {
-            ILineData lslData = new LineData(lsl, lineNames[0], Orientation.HORIZONTAL);
+            ILineData lslData = new LineData(lsl, lineNames[1], Orientation.HORIZONTAL);
             lineDataList.add(lslData);
         }
         Double[] cls = runCResultDto.getCls();

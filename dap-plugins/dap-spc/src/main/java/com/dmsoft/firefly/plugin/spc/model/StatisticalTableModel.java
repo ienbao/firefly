@@ -78,6 +78,8 @@ public class StatisticalTableModel implements TableModel {
      * @param spcStatsDtoList data list
      */
     public void initData(List<SpcStatisticalResultAlarmDto> spcStatsDtoList) {
+        tableView.getSortOrder().clear();
+        tableView.sort();
         this.spcStatsDtoList = spcStatsDtoList;
         this.clearTableData();
         if (spcStatsDtoList != null) {
@@ -201,6 +203,9 @@ public class StatisticalTableModel implements TableModel {
      */
     public void filterTestItem(String filterTf) {
         statisticalTableRowDataFilteredList.setPredicate(p -> {
+            if (keyToStatsDtoMap.get(p) == null) {
+                return false;
+            }
             String testItem = keyToStatsDtoMap.get(p).getItemName();
             return testItem.toLowerCase().contains(filterTf.toLowerCase());
         });

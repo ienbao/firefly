@@ -352,10 +352,11 @@ public class SpcMainController implements Initializable {
                         //refresh statistical result
                         List<String> currentStatisticalSelectRowKeyList = spcRefreshJudgeUtil.getCurrentStatisticalSelectRowKeyList();
                         List<String> statisticalSelectRowKeyListCache = spcRefreshJudgeUtil.getStatisticalSelectRowKeyListCache();
+                        List<String> viewDataSelectRowKeyListCache = spcRefreshJudgeUtil.getViewDataSelectRowKeyListCache();
                         if (currentStatisticalSelectRowKeyList.size() == 0) {
                             Platform.runLater(SpcMainController.this::clearAnalysisSubShowData);
                         }
-                        List<String> rowKeyList = statisticalSelectRowKeyListCache == null ? dataFrame.getAllRowKeys() : statisticalSelectRowKeyListCache;
+                        List<String> rowKeyList = viewDataSelectRowKeyListCache == null ? dataFrame.getAllRowKeys() : viewDataSelectRowKeyListCache;
 
                         List<SpcStatisticalResultAlarmDto> editRowDataList = statisticalResultController.getEditRowStatsData();
                         List<SearchConditionDto> searchConditionDtoList = buildRefreshSearchConditionData(editRowDataList);
@@ -374,7 +375,9 @@ public class SpcMainController implements Initializable {
                             return null;
                         } else {
                             List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
-                            statisticalResultController.refreshStatisticalResult(spcStatisticalResultAlarmDtoList);
+                            Platform.runLater(() -> {
+                                statisticalResultController.refreshStatisticalResult(spcStatisticalResultAlarmDtoList);
+                            });
                         }
                         return null;
                     }
