@@ -883,6 +883,11 @@ public class JobThreadPoolExecutor extends AbstractExecutorService {
                     beforeExecute(wt, task);
                     Throwable thrown = null;
                     try {
+                        if (task instanceof JobThread) {
+                            ((JobThread) Thread.currentThread()).setCurrentProcess(((JobThread) task).getCurrentProcess());
+                            ((JobThread) Thread.currentThread()).setWeight(((JobThread) task).getWeight());
+                            ((JobThread) Thread.currentThread()).addProcessMonitorListener(((JobThread) task).getListener());
+                        }
                         task.run();
                     } catch (RuntimeException x) {
                         thrown = x;

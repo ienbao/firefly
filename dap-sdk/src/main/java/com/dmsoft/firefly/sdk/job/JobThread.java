@@ -163,6 +163,14 @@ public class JobThread extends Thread implements ProcessMonitorAuto, JobWorkProc
         this.currentProcess = currentProcess;
     }
 
+    public int getCurrentProcess() {
+        return currentProcess;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
     public void setWeight(int weight) {
         this.weight = weight;
     }

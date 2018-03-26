@@ -7,6 +7,8 @@ import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
+import com.dmsoft.firefly.gui.components.utils.TextFieldWrapper;
+import com.dmsoft.firefly.gui.components.utils.ValidateRule;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.spc.dto.*;
@@ -28,6 +30,7 @@ import com.dmsoft.firefly.sdk.event.PlatformEvent;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
@@ -374,9 +377,17 @@ public class SpcItemController implements Initializable {
 
     @SuppressWarnings("unchecked")
     private void getAnalysisBtnEvent() {
+        if (isConfigError()) {
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                    SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER),
+                    SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_CONFIG_ERROR_MESSAGE));
+            return;
+        }
         List<TestItemWithTypeDto> selectedItemDto = this.getSelectedItemDto();
         if (selectedItemDto.size() == 0) {
-            //todo add message tip
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                    SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER),
+                    SpcFxmlAndLanguageUtils.getString(ResourceMassages.UI_SPC_ANALYSIS_ITEM_EMPTY));
             return;
         }
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
@@ -487,13 +498,24 @@ public class SpcItemController implements Initializable {
         subGroup.setText(customGroupNumber);
         ndGroup.setText(chartIntervalNumber);
 
-//        ValidateRule rule = new ValidateRule();
-//        rule.setMaxLength(SpcSettingValidateUtil.ANALYSIS_SETTING_MAX_INT);
-//        rule.setPattern("^[+]?\\d*[.]?\\d*$");
-//        rule.setErrorStyle("text-field-error");
-//        rule.setEmptyErrorMsg(SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_VALIDATE_NOT_BE_EMPTY));
-//        TextFieldWrapper.decorate(subGroup, rule);
-//        TextFieldWrapper.decorate(ndGroup, rule);
+        ValidateRule rule = new ValidateRule();
+        rule.setMaxLength(SpcSettingValidateUtil.ANALYSIS_SETTING_MAX_INT);
+        rule.setPattern("^\\+?\\d*$");
+        rule.setErrorStyle("text-field-error");
+        rule.setMaxValue(20d);
+        rule.setMinValue(1d);
+        String[] params = new String[]{rule.getMinValue().toString(), rule.getMaxValue().toString()};
+        rule.setRangErrorMsg(SpcFxmlAndLanguageUtils.getString(ResourceMassages.RANGE_NUMBER_WARNING_MESSAGE, params));
+        rule.setEmptyErrorMsg(SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_VALIDATE_NOT_BE_EMPTY));
+        TextFieldWrapper.decorate(subGroup, rule);
+        TextFieldWrapper.decorate(ndGroup, rule);
+    }
+
+    private boolean isConfigError() {
+        if (subGroup.getStyleClass().contains("text-field-error") || ndGroup.getStyleClass().contains("text-field-error")) {
+            return true;
+        }
+        return false;
     }
 
     private void importLeftConfig() {
@@ -635,7 +657,7 @@ public class SpcItemController implements Initializable {
         List<String> conditionTestItemList = Lists.newArrayList();
         List<String> timeKeys = Lists.newArrayList();
         String timePattern = null;
-        if(timePatternDto != null) {
+        if (timePatternDto != null) {
             timeKeys = timePatternDto.getTimeKeys();
             timePattern = timePatternDto.getPattern();
         }
