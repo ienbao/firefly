@@ -58,7 +58,8 @@ public class DataConvertUtils {
                 }
             });
             totalMeans.put(partRowKey, getAverage(cellValue));
-            totalRanges.put(partRowKey, getRange(Collections.max(cellValue), Collections.min(cellValue)));
+            totalRanges.put(partRowKey, (cellValue == null || cellValue.isEmpty()) ? "-" :
+                    getRange(Collections.max(cellValue), Collections.min(cellValue)));
         });
 
         //Get mean and range
@@ -75,7 +76,7 @@ public class DataConvertUtils {
                 }
             });
             String mean = getAverage(cellValue);
-            String range = getRange(Collections.max(cellValue), Collections.min(cellValue));
+            String range = (cellValue == null || cellValue.isEmpty()) ? "-" : getRange(Collections.max(cellValue), Collections.min(cellValue));
             if (meanAndRange.containsKey(appraiserValue)) {
                 GrrMeanAndRangeDto grrMeanAndRangeDto = meanAndRange.get(appraiserValue);
                 grrMeanAndRangeDto.getMeans().put(partValue, mean);

@@ -27,6 +27,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
+import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
@@ -111,17 +112,17 @@ public class GrrResultController implements Initializable {
             parts.add(viewDataDto.getPart());
             appraisers.add(viewDataDto.getOperator());
         });
-        this.removeAllResultData();
-        this.summaryModel.setRules(grrMainController.getGrrConfigDto().getAlarmSetting());
-        String selectedName = grrDetailDto == null ? null : grrDetailDto.getItemName();
-        this.setSummaryData(grrSummaryDtos, selectedName);
         if (grrSummaryDtos == null || grrSummaryDtos.isEmpty()) {
             return;
         }
-        if (DAPStringUtils.isNotBlank(selectedName)) {
+        String selectedName = grrSummaryDtos.get(0).getItemName();
+        this.removeAllResultData();
+        this.summaryModel.setRules(grrMainController.getGrrConfigDto().getAlarmSetting());
+        this.setSummaryData(grrSummaryDtos, selectedName);
+        this.setToleranceValue(summaryModel.getToleranceCellValue(selectedName));
+        if (grrDetailDto != null) {
             this.setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), selectedName);
             this.setAnalysisItemResultData(grrDetailDto);
-            this.setToleranceValue(summaryModel.getToleranceCellValue(selectedName));
         } else {
             RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
                     GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
@@ -200,19 +201,19 @@ public class GrrResultController implements Initializable {
     }
 
     private void submitGrrResult(String selectedItem) {
-        Job job = new Job(ParamKeys.GRR_REFRESH_JOB_PIPELINE);
         Map paramMap = Maps.newHashMap();
+        Job job = new Job(ParamKeys.GRR_REFRESH_JOB_PIPELINE);
         paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, grrMainController.getSearchConditionDto());
         paramMap.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrMainController.getGrrDataFrame());
         if (DAPStringUtils.isNotBlank(selectedItem)) {
             paramMap.put(ParamKeys.TEST_ITEM_NAME, selectedItem);
         }
-
         Platform.runLater(() -> manager.doJobASyn(job, returnValue -> {
             try {
                 Platform.runLater(() -> {
-                    if (returnValue == null) {
-                        //todo message tip
+                    if (returnValue instanceof ApplicationException) {
+                        //TODO exception tip
+                        System.out.println("GRR_REFRESH_JOB_PIPELINE exception tip");
                         return;
                     }
                     if (returnValue instanceof Map) {
@@ -223,6 +224,7 @@ public class GrrResultController implements Initializable {
                             summaryTb.getSortOrder().clear();
                             summaryTb.sort();
                             summaryModel.setData(summaryDtos, selectedItem);
+                            this.setToleranceValue(summaryModel.getToleranceCellValue(selectedItem));
                             summaryTb.refresh();
                         }
                         if (value.containsKey(UIConstant.ANALYSIS_RESULT_DETAIL)) {
@@ -234,11 +236,8 @@ public class GrrResultController implements Initializable {
                                         GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
                                 return;
                             }
-                            this.setItemResultData(grrMainController.getGrrDataFrame(),
-                                    grrMainController.getSearchConditionDto(),
-                                    selectedItem);
+                            this.setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), selectedItem);
                             this.setAnalysisItemResultData(grrDetailDto);
-                            this.setToleranceValue(summaryModel.getToleranceCellValue(selectedItem));
                         }
                     }
                 });
@@ -251,27 +250,43 @@ public class GrrResultController implements Initializable {
     private void analyzeGrrSubResult(TestItemWithTypeDto testItemDto, String tolerance) {
         Map detailParamMap = Maps.newHashMap();
         Job detailJob = new Job(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE);
-        detailParamMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, grrMainController.getSearchConditionDto());
+        detailParamMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, buildSearchConditionDto(testItemDto));
         detailParamMap.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrMainController.getGrrDataFrame());
-        detailParamMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, Lists.newArrayList(testItemDto));
-        detailParamMap.put(ParamKeys.TEST_ITEM_NAME, testItemDto.getTestItemName());
         this.removeSubResultData();
-        this.setItemResultData(grrMainController.getGrrDataFrame(),
-                grrMainController.getSearchConditionDto(),
-                testItemDto.getTestItemName());
         this.setToleranceValue(tolerance);
-
         Platform.runLater(() -> manager.doJobASyn(detailJob, returnValue -> {
-            if (returnValue == null) {
-                //todo message tip
+            if (returnValue instanceof ApplicationException) {
+                //TODO exception tip
+                System.out.println("GRR_DETAIL_ANALYSIS_JOB_PIPELINE exception tip");
                 return;
             }
             Platform.runLater(() -> {
+                this.removeSubResultData();
+                if (returnValue == null) {
+                    RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                            GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                            GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
+                }
                 if (returnValue instanceof GrrDetailDto) {
-                    setAnalysisItemResultData((GrrDetailDto) returnValue);
+                    this.setAnalysisItemResultData((GrrDetailDto) returnValue);
+                    this.setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), testItemDto.getTestItemName());
                 }
             });
         }, detailParamMap, grrMainController));
+    }
+
+    private SearchConditionDto buildSearchConditionDto(TestItemWithTypeDto testItemDto) {
+        SearchConditionDto searchConditionDto = new SearchConditionDto();
+        searchConditionDto.setSelectedTestItemDtos(Lists.newArrayList(testItemDto));
+        searchConditionDto.setAppraiser(grrMainController.getSearchConditionDto().getAppraiser());
+        searchConditionDto.setAppraiserInt(grrMainController.getSearchConditionDto().getAppraiserInt());
+        searchConditionDto.setAppraisers(grrMainController.getSearchConditionDto().getAppraisers());
+        searchConditionDto.setTrialInt(grrMainController.getSearchConditionDto().getTrialInt());
+        searchConditionDto.setPart(grrMainController.getSearchConditionDto().getPart());
+        searchConditionDto.setPartInt(grrMainController.getSearchConditionDto().getPartInt());
+        searchConditionDto.setParts(grrMainController.getSearchConditionDto().getParts());
+        searchConditionDto.setSearchCondition(grrMainController.getSearchConditionDto().getSearchCondition());
+        return searchConditionDto;
     }
 
     private void setSummaryData(List<GrrSummaryDto> summaryData, String selectedItemName) {
@@ -282,7 +297,6 @@ public class GrrResultController implements Initializable {
     }
 
     private void setItemResultData(GrrDataFrameDto grrDataFrameDto, SearchConditionDto conditionDto, String itemName) {
-
         GrrItemResultDto itemResultDto = DataConvertUtils.convertToItemResult(grrDataFrameDto, itemName);
         Set<String> headerArray = Sets.newLinkedHashSet();
         headerArray.add(appKey);
@@ -409,7 +423,7 @@ public class GrrResultController implements Initializable {
             XYChart.Series series = (XYChart.Series) componentChart.getData().get(i);
             series.setName(CHART_COMPONENT_CATEGORY[i]);
         }
-        Legend legend = LegendUtils.buildLegend(componentChart.getData(),  "bar-legend-symbol", "chart-bar");
+        Legend legend = LegendUtils.buildLegend(componentChart.getData(), "bar-legend-symbol", "chart-bar");
         componentBp.setLeft(legend);
         componentBp.setMargin(legend, new Insets(0, 0, 1, 0));
 
@@ -748,12 +762,11 @@ public class GrrResultController implements Initializable {
         grrResultBtn.setOnAction(event -> fireResultBtnEvent());
         resultBasedCmb.setOnAction(event -> {
             summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
-            if (summaryModel.checkSelectedRowKeyInValid()) {
-                this.removeSubResultData();
-                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                        GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
-            }
+            grrMainController.getSearchConditionDto().getSelectedTestItemDtos().forEach(testItemWithTypeDto -> {
+                if (summaryModel.getSelectedItemName().equals(testItemWithTypeDto.getTestItemName())) {
+                    analyzeGrrSubResult(testItemWithTypeDto, summaryModel.getToleranceCellValue(summaryModel.getSelectedItemName()));
+                }
+            });
             summaryTb.refresh();
         });
         summaryItemTf.getTextField().textProperty().addListener(observable -> summaryModel.filterTestItem(summaryItemTf.getTextField().getText()));
