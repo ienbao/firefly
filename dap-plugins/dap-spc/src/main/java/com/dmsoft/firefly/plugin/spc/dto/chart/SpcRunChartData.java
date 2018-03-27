@@ -75,18 +75,18 @@ public class SpcRunChartData implements ControlChartData {
         Double[] uslAndlsl = new Double[]{usl, lsl};
         String[] lineNames = UIConstant.SPC_CHART_LINE_NAME;
         if (usl != null) {
-            ILineData uslData = new LineData(usl, lineNames[0], Orientation.HORIZONTAL);
+            ILineData uslData = new LineData(usl, lineNames[0], Orientation.HORIZONTAL, LineType.DASHED);
             lineDataList.add(uslData);
         }
         if (lsl != null) {
-            ILineData lslData = new LineData(lsl, lineNames[1], Orientation.HORIZONTAL);
+            ILineData lslData = new LineData(lsl, lineNames[1], Orientation.HORIZONTAL, LineType.DASHED);
             lineDataList.add(lslData);
         }
         Double[] cls = runCResultDto.getCls();
         if (cls != null) {
             for (int i = 0; i < cls.length; i++) {
-                LineType lineType = lineNames[i + 2].equals(lineNames[5]) ? LineType.SOLID : LineType.DASHED;
-                ILineData lineData = new LineData(cls[i], lineNames[i + 2], Orientation.HORIZONTAL, lineType);
+//                LineType lineType = lineNames[i + 2].equals(lineNames[5]) ? LineType.DASHED : LineType.SOLID;
+                ILineData lineData = new LineData(cls[i], lineNames[i + 2], Orientation.HORIZONTAL);
                 lineDataList.add(lineData);
             }
         }

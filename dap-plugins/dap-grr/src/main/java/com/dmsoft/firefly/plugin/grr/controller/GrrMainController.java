@@ -197,7 +197,4 @@ public class GrrMainController implements Initializable {
         this.backGrrDataFrame = backGrrDataFrame;
     }
 
-    public int getResultBasedCmbIndex() {
-        return grrResultController.getResultBasedCmbIndex();
-    }
 }
