@@ -38,6 +38,7 @@ import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -143,6 +144,7 @@ public class GrrExportController {
     private SearchDataFrame dataFrame;
     private SearchTab searchTab;
     private ContextMenu pop;
+    private boolean isFilterUslOrLsl = false;
     private ToggleGroup group = new ToggleGroup();
 
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
@@ -188,7 +190,13 @@ public class GrrExportController {
         box.setOnAction(event -> {
             if (items != null) {
                 for (ItemTableModel model : items) {
-                    model.getSelector().setValue(box.isSelected());
+                    if (isFilterUslOrLsl) {
+                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
+                            model.getSelector().setValue(box.isSelected());
+                        }
+                    } else {
+                        model.getSelector().setValue(box.isSelected());
+                    }
                 }
             }
         });
@@ -306,7 +314,7 @@ public class GrrExportController {
                 partLbl.setText(count + "/-");
                 TooltipUtil.installNormalTooltip(partLbl, GrrFxmlAndLanguageUtils.getString("UI_GRR_ITEM_VALUE_COUNT_EXPECT_WARN"));
             } else {
-                clearPartLbl();
+                clearLbl(partLbl);
             }
         } else {
             Integer expectInt = Integer.valueOf(partTxt.getText());
@@ -323,7 +331,7 @@ public class GrrExportController {
                 partLbl.setGraphic(null);
                 partLbl.setStyle("");
             } else {
-                clearPartLbl();
+                clearLbl(partLbl);
             }
         }
     }
@@ -338,7 +346,7 @@ public class GrrExportController {
             if (count != 0) {
                 appraiserLbl.setText(count + "/-");
             } else {
-                clearAppraiserLbl();
+                clearLbl(appraiserLbl);
             }
         } else {
             Integer expectInt = Integer.parseInt(appraiserTxt.getText());
@@ -355,7 +363,7 @@ public class GrrExportController {
                 appraiserLbl.setGraphic(null);
                 appraiserLbl.setStyle("");
             } else {
-                clearAppraiserLbl();
+                clearLbl(appraiserLbl);
             }
         }
     }
@@ -369,21 +377,12 @@ public class GrrExportController {
         warnIconLbl1.setStyle("-fx-padding: 0 26 0 0;");
     }
 
-    private void clearPartLbl() {
-        partLbl.setText("");
-        partLbl.setGraphic(null);
-        partLbl.setStyle("");
-        partLbl.setVisible(false);
-        TooltipUtil.uninstallNormalTooltip(partLbl);
-    }
-
-    private void clearAppraiserLbl() {
-        appraiserLbl.setText("");
-        appraiserLbl.setStyle("");
-        appraiserLbl.setGraphic(null);
-        appraiserLbl.setVisible(false);
-        TooltipUtil.uninstallNormalTooltip(appraiserLbl);
-
+    private void clearLbl(Label label) {
+        label.setText("");
+        label.setGraphic(null);
+        label.setStyle("");
+        label.setVisible(false);
+        TooltipUtil.uninstallNormalTooltip(label);
     }
 
     private void initBtnIcon() {
@@ -398,8 +397,8 @@ public class GrrExportController {
         }
         stickyOnTopItems.clear();
         String s = userPreferenceService.findPreferenceByUserId(STICKY_ON_TOP_CODE, envService.getUserName());
-        if (s != null) {
-            List<String> onTopItems = mapper.fromJson(mapper.fromJson(s, String.class), mapper.buildCollectionType(List.class, String.class));
+        if (DAPStringUtils.isNotBlank(s)) {
+            List<String> onTopItems = mapper.fromJson(s, mapper.buildCollectionType(List.class, String.class));
             stickyOnTopItems.addAll(onTopItems);
         }
         originalItems.clear();
@@ -431,60 +430,43 @@ public class GrrExportController {
             personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
         }
 
-        ObservableList<String> datas = FXCollections.observableArrayList();
-        if (items != null) {
-            for (ItemTableModel model : items) {
-                datas.add(model.getItem());
-            }
-        }
-        partCombox.setItems(datas);
-        appraiserCombox.setItems(datas);
-        initListView(partListView);
-        initListView(appraiserListView);
-        this.partCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
-            values.forEach(value -> {
-                partList.add(new ListViewModel(value, false, ""));
-            });
-            partListView.setItems(partList);
-        });
-
-        this.appraiserCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
-            values.forEach(value -> {
-                appraiserList.add(new ListViewModel(value, false, ""));
-            });
-            appraiserListView.setItems(appraiserList);
-        });
-
-
     }
 
     private void initPartAndAppraiserDatas() {
         ObservableList<String> datas = FXCollections.observableArrayList();
-        if (items != null) {
-            for (ItemTableModel model : items) {
-                datas.add(model.getItem());
-            }
-        }
+        datas.add("");
+        datas.addAll(originalItems);
+//        if (items != null) {
+//            for (ItemTableModel model : items) {
+//                datas.add(model.getItem());
+//            }
+//        }
         partCombox.setItems(datas);
         appraiserCombox.setItems(datas);
 
         initListView(partListView);
         initListView(appraiserListView);
-
+        Set<String> empty = new HashSet<String>();
         this.partCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
             partList.clear();
-            clearPartLbl();
-            Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
-            updatePartListViewDatas(values, false);
+            clearLbl(partLbl);
+            if (DAPStringUtils.isBlank(newValue)) {
+                updatePartListViewDatas(empty, false);
+            } else {
+                Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
+                updatePartListViewDatas(values, false);
+            }
         });
 
         this.appraiserCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
             appraiserList.clear();
-            clearAppraiserLbl();
-            Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
-            updateAppraiserListViewDatas(values, false);
+            clearLbl(appraiserLbl);
+            if (DAPStringUtils.isBlank(newValue)) {
+                updateAppraiserListViewDatas(empty, false);
+            } else {
+                Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
+                updateAppraiserListViewDatas(values, false);
+            }
         });
     }
 
@@ -619,6 +601,7 @@ public class GrrExportController {
                 is.getStyleClass().remove("filter-active");
                 is.getStyleClass().add("filter-normal");
                 is.setGraphic(null);
+                isFilterUslOrLsl = false;
             });
             MenuItem show = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS_WITH_USL_LSL));
             show.setOnAction(event -> {
@@ -626,6 +609,7 @@ public class GrrExportController {
                 is.getStyleClass().remove("filter-normal");
                 is.getStyleClass().add("filter-active");
                 is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
+                isFilterUslOrLsl = true;
             });
             pop.getItems().addAll(all, show);
         }
@@ -772,8 +756,8 @@ public class GrrExportController {
 
     private List<String> getSelectedItem() {
         List<String> selectItems = Lists.newArrayList();
-        if (items != null) {
-            for (ItemTableModel model : items) {
+        if (itemTable.getItems() != null) {
+            for (ItemTableModel model : itemTable.getItems()) {
                 if (model.getSelector().isSelected()) {
                     selectItems.add(model.getItem());
                 }
@@ -838,8 +822,8 @@ public class GrrExportController {
 
     private List<TestItemWithTypeDto> getSelectedItemDto() {
         List<TestItemWithTypeDto> selectItems = Lists.newArrayList();
-        if (items != null) {
-            for (ItemTableModel model : items) {
+        if (itemTable.getItems() != null) {
+            for (ItemTableModel model : itemTable.getItems()) {
                 if (model.getSelector().isSelected()) {
                     selectItems.add(model.getItemDto());
                 }
