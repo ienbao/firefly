@@ -157,6 +157,7 @@ public class ViewDataController implements Initializable {
     public void setFocusRowData(String rowKey) {
         if (viewDataTable != null && viewDataTable.getItems() != null) {
             this.viewDataTable.getSelectionModel().focus(viewDataTable.getItems().indexOf(rowKey));
+            this.viewDataTable.scrollTo(viewDataTable.getItems().indexOf(rowKey));
         }
     }
 
@@ -249,6 +250,7 @@ public class ViewDataController implements Initializable {
                 quickSearchController.getStage().close();
             });
             if (stage != null) {
+                stage.toFront();
                 stage.show();
             }
         });

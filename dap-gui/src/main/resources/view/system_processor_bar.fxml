@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
@@ -31,23 +30,23 @@
                      <RowConstraints minHeight="10.0" prefHeight="20.0" valignment="CENTER" vgrow="SOMETIMES" />
                  </rowConstraints>
                   <children>
-                     <Label styleClass="login-label-lg" text="DM Soft" GridPane.rowIndex="1">
+                     <Label styleClass="login-label-lg" text="%GLOBAL_SYSTEM_PROCESS_TITLE" GridPane.rowIndex="1">
                         <font>
                            <Font name="Arial" size="28.0" />
                         </font>
                      </Label>
-                     <Label styleClass="login-label-md" text="Data Analysis Platform" GridPane.rowIndex="2">
+                     <Label styleClass="login-label-md" text="%GLOBAL_SYSTEM_PROCESS_NAME" GridPane.rowIndex="2">
                         <font>
                            <Font name="Arial" size="22.0" />
                         </font>
                      </Label>
                      <ProgressBar fx:id="progressBar" maxHeight="2.0" maxWidth="350.0" minHeight="2.0" minWidth="350.0" prefHeight="2.0" prefWidth="350.0" progress="0.45" GridPane.rowIndex="3" />
-                     <Label prefHeight="16.0" prefWidth="360.0" text="Initializing UI..." GridPane.rowIndex="4">
+                     <Label prefHeight="16.0" prefWidth="360.0" text="%GLOBAL_SYSTEM_PROCESS_INIT" GridPane.rowIndex="4">
                         <font>
                            <Font name="Arial" size="12.0" />
                         </font>
                      </Label>
-                     <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="350.0" text="V2.5.0" GridPane.rowIndex="5">
+                     <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="350.0" text="%STATE_BAR_VERSION" GridPane.rowIndex="5">
                         <font>
                            <Font name="Arial" size="12.0" />
                         </font>

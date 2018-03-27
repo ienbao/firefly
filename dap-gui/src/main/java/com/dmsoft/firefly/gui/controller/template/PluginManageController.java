@@ -35,6 +35,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -58,7 +60,7 @@ public class PluginManageController implements Initializable {
     private TableView pluginTable;
 
     @FXML
-    private TextArea explain;
+    private TextFlow explain;
 
     @FXML
     private TableColumn<PluginTableRowData, CheckBox> pluginActivated;
@@ -86,7 +88,7 @@ public class PluginManageController implements Initializable {
 
     private void initTable() {
 
-        explain.setEditable(false);
+//        explain.setEditable(false);
 
         pluginActivated.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
         pluginName.setCellValueFactory(cellData -> cellData.getValue().valueProperty());
@@ -142,7 +144,12 @@ public class PluginManageController implements Initializable {
             row.setOnMouseClicked(event -> {
                 if (pluginTable.getSelectionModel().getSelectedIndex() != -1) {
                     PluginTableRowData pluginTableRowData = pluginTableRowDataObservableList.get(pluginTable.getSelectionModel().getSelectedIndex());
-                    explain.setText(pluginTableRowData.getInfo().getDescription());
+                    explain.getChildren().remove(0, explain.getChildren().size());
+                    Text version = new Text(pluginTableRowData.getInfo().getVersion() + "\n");
+                    Text description = new Text((DAPStringUtils.isEmpty(pluginTableRowData.getInfo().getDescription()) ? "" : pluginTableRowData.getInfo().getDescription()));
+                    Text name = new Text(pluginTableRowData.getInfo().getName() + "\n");
+                    name.setStyle("-fx-font-weight: bold");
+                    explain.getChildren().addAll(name, version, description);
                 }
             });
 
@@ -210,7 +217,7 @@ public class PluginManageController implements Initializable {
                             return;
                         }
 
-                        Map<String, PluginInfo> allInstallPlugins = context.getAllInstalledPluginInfo() == null ? Maps.newHashMap() : context.getAllInstalledPluginInfo();
+                        Map<String, PluginInfo> allInstallPlugins = context.getAllEnabledPluginInfo() == null ? Maps.newHashMap() : context.getAllEnabledPluginInfo();
 
                         if (isExists(scannedPlugins.get(0), allInstallPlugins)) {
                             WindowMessageFactory.createWindowMessageNoBtnHasOk("Install Error", "Plugin Exist.");
@@ -223,6 +230,7 @@ public class PluginManageController implements Initializable {
                             coverList.add(file.getPath() + ":coverPath:" + pluginInfo.getFolderPath());
                         } else {
                             FileUtils.unZipFiles(file, pluginFolderPath + "/");
+                            context.installPlugin(scannedPlugins.get(0));
                             PluginTableRowData chooseTableRowData = new PluginTableRowData(false, installPlugins.getName(), installPlugins);
                             pluginTableRowDataObservableList.add(chooseTableRowData);
                         }

@@ -25,7 +25,9 @@ public class UIConstant {
     public static final Color COLOR_ACCEPTABLE = Color.rgb(243, 132, 0);
     public static final Color COLOR_RECTIFICATION = Color.rgb(233, 68, 41);
     public static final Color COLOR_EDIT_CHANGE = Color.rgb(243, 132, 0);
-    public static final Color COLOR_EDIT_RESET = Color.rgb(47, 33, 33);
+    public static final Color COLOR_EDIT_ERROR = Color.rgb(234, 32, 40);
+    public static final Color COLOR_MEAN_RANGE = Color.grayRgb(242);
+    public static final Color COLOR_TOTAL_MEAN_RANGE = Color.grayRgb(229);
 
     public static final String MEAN = "Mean";
     public static final String RANGE = "Range";
@@ -34,4 +36,10 @@ public class UIConstant {
 
     public static final String ANALYSIS_RESULT_SUMMARY = "SummaryResult";
     public static final String ANALYSIS_RESULT_DETAIL = "DetailResult";
+
+    public static final String CHART_PERFORMANCE_CODE="GRR_CHARTS";
+    public static final String CHART_PERFORMANCE_KEY_OPERATE="GRR_CHART_OPERATE";
+
+    public static final String GRR_CHART_XBAR_APPRAISER = "X-bar by Appraiser";
+    public static final String GRR_CHART_RANGE_APPRAISER = "Range by Appraiser";
 }

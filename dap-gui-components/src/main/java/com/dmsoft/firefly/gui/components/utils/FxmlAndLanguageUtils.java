@@ -79,9 +79,12 @@ public class FxmlAndLanguageUtils {
 
 
     public static ResourceBundle getBundle(ModuleType moduleKey) {
-        LanguageType languageType = LanguageType.EN;
+        LanguageType languageType = null;
         if (IS_DEBUG == false) {
             languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+        }
+        if (languageType == null) {
+            languageType = LanguageType.EN;
         }
         String bundleKey = "i18n.message_en_US_";
         if (languageType.equals(LanguageType.ZH)) {

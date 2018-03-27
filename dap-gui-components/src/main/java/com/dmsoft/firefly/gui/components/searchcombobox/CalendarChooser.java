@@ -84,7 +84,7 @@ public class CalendarChooser extends GridPane {
         RowConstraints r0 = new RowConstraints(10, 10, 10);
         RowConstraints r1 = new RowConstraints(22, 22, 22);
         RowConstraints r2 = new RowConstraints(10, 10, 10);
-        RowConstraints r3 = new RowConstraints(207, 207, 207);
+        RowConstraints r3 = new RowConstraints(239, 239, 239);
         RowConstraints r4 = new RowConstraints(32, 32, 32);
         this.getColumnConstraints().addAll(c0, c1, c2);
         this.getRowConstraints().addAll(r0, r1, r2, r3, r4);
@@ -173,7 +173,7 @@ public class CalendarChooser extends GridPane {
 
     private void updatePane() {
         this.getChildren().remove(this.pane);
-        this.add(printCalendar(), 1, 2);
+        this.add(printCalendar(), 1, 3);
     }
 
     private VBox printCalendar() {
@@ -195,8 +195,9 @@ public class CalendarChooser extends GridPane {
         RowConstraints r2 = new RowConstraints(22, 22, 22);
         RowConstraints r3 = new RowConstraints(22, 22, 22);
         RowConstraints r4 = new RowConstraints(22, 22, 22);
+        RowConstraints r5 = new RowConstraints(22, 22, 22);
         dayPane.getColumnConstraints().addAll(c0, c1, c2, c3, c4, c5, c6);
-        dayPane.getRowConstraints().addAll(r0, r1, r2, r3, r4);
+        dayPane.getRowConstraints().addAll(r0, r1, r2, r3, r4, r5);
         int year2 = calendar.get(Calendar.YEAR);
         int month2 = calendar.get(Calendar.MONTH);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -259,16 +260,12 @@ public class CalendarChooser extends GridPane {
         currBtn.getStyleClass().setAll(redBtnClass);
         int day1 = Integer.parseInt(currBtn.getText());
         this.calendar.set(Calendar.DAY_OF_MONTH, day1);
-        String sb = String.valueOf(this.calendar.get(Calendar.YEAR)) + "-" +
-                this.formatDay(this.calendar.get(Calendar.MONTH) + 1) +
-                "-" +
-                this.formatDay(this.calendar.get(Calendar.DAY_OF_MONTH)) +
-                " " +
-                this.formatDay(this.calendar.get(Calendar.HOUR_OF_DAY)) +
-                ":" +
-                this.formatDay(this.calendar.get(Calendar.MINUTE)) +
-                ":" +
-                this.formatDay(this.calendar.get(Calendar.SECOND));
+        String sb = String.valueOf(this.calendar.get(Calendar.YEAR)) + "-"
+                + this.formatDay(this.calendar.get(Calendar.MONTH) + 1)
+                + "-" + this.formatDay(this.calendar.get(Calendar.DAY_OF_MONTH))
+                + " " + this.formatDay(this.calendar.get(Calendar.HOUR_OF_DAY))
+                + ":" + this.formatDay(this.calendar.get(Calendar.MINUTE))
+                + ":" + this.formatDay(this.calendar.get(Calendar.SECOND));
         this.setInfo(sb);
     }
 

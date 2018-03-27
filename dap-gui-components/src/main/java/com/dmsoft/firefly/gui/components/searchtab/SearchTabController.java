@@ -31,6 +31,7 @@ import static com.google.common.io.Resources.getResource;
 
 /**
  * Created by GuangLi on 2018/3/9.
+ * Updated by Can Guan on 2018/3/23
  */
 public class SearchTabController {
     @FXML
@@ -48,9 +49,9 @@ public class SearchTabController {
     @FXML
     private Button help;
     @FXML
-    private ComboBox group1;
+    private ComboBox<String> group1;
     @FXML
-    private ComboBox group2;
+    private ComboBox<String> group2;
     @FXML
     private Label autoDivideLbl;
 
@@ -58,11 +59,16 @@ public class SearchTabController {
 
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
+    private boolean isMulti = true;
 
     @FXML
     private void initialize() {
         initBtnIcon();
-        basicSearch.getChildren().add(new BasicSearchPane("Group1"));
+        if (isMulti) {
+            basicSearch.getChildren().add(new BasicSearchPane("Group1"));
+        } else {
+            basicSearch.getChildren().add(new BasicSearchPane());
+        }
         initEvent();
         initItemData();
     }
@@ -80,7 +86,11 @@ public class SearchTabController {
         groupAdd.setOnAction(event -> basicSearch.getChildren().add(new BasicSearchPane("Group" + (basicSearch.getChildren().size() + 1))));
         groupRemove.setOnAction(event -> {
             basicSearch.getChildren().clear();
-            basicSearch.getChildren().add(new BasicSearchPane("Group" + (basicSearch.getChildren().size() + 1)));
+            if (isMulti) {
+                basicSearch.getChildren().add(new BasicSearchPane("Group" + (basicSearch.getChildren().size() + 1)));
+            } else {
+                basicSearch.getChildren().add(new BasicSearchPane());
+            }
         });
         help.setOnAction(event -> buildAdvanceHelpDia());
     }
@@ -104,6 +114,7 @@ public class SearchTabController {
         try {
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createSimpleWindowAsModel("advance", FxmlAndLanguageUtils.getString(ResourceMassages.ADVANCE), root, getResource("css/redfall/main.css").toExternalForm());
+            stage.toFront();
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -131,11 +142,11 @@ public class SearchTabController {
             advancedInput.append(advanceText.getText());
             List<String> autoCondition1 = Lists.newArrayList();
             List<String> autoCondition2 = Lists.newArrayList();
-            if (group1.getValue() != null && !StringUtils.isBlank(group1.getValue().toString())) {
-                Set<String> valueList = dataService.findUniqueTestData(envService.findActivatedProjectName(), group1.getValue().toString());
+            if (group1.getValue() != null && !StringUtils.isBlank(group1.getValue())) {
+                Set<String> valueList = dataService.findUniqueTestData(envService.findActivatedProjectName(), group1.getValue());
                 if (valueList != null && !valueList.isEmpty()) {
                     for (String value : valueList) {
-                        String condition1 = "\"" + group1.getValue().toString() + "\"" + " = " + "\"" + value + "\"";
+                        String condition1 = "\"" + group1.getValue() + "\"" + " = " + "\"" + value + "\"";
                         if (StringUtils.isBlank(advancedInput.toString())) {
                             autoCondition1.add(condition1);
                         } else {
@@ -144,12 +155,12 @@ public class SearchTabController {
                     }
                 }
             }
-            if (group2.getValue() != null && !StringUtils.isBlank(group2.getValue().toString())) {
-                Set<String> valueList = dataService.findUniqueTestData(envService.findActivatedProjectName(), group2.getValue().toString());
+            if (group2.getValue() != null && !StringUtils.isBlank(group2.getValue())) {
+                Set<String> valueList = dataService.findUniqueTestData(envService.findActivatedProjectName(), group2.getValue());
                 if (valueList != null && !valueList.isEmpty()) {
                     if (autoCondition1.isEmpty()) {
                         for (String value : valueList) {
-                            String condition1 = "\"" + group2.getValue().toString() + "\"" + " = " + "\"" + value + "\"";
+                            String condition1 = "\"" + group2.getValue() + "\"" + " = " + "\"" + value + "\"";
                             if (StringUtils.isBlank(advancedInput.toString())) {
                                 autoCondition2.add(condition1);
                             } else {
@@ -159,7 +170,7 @@ public class SearchTabController {
                     } else {
                         for (String condition : autoCondition1) {
                             for (String value : valueList) {
-                                String condition1 = "\"" + group2.getValue().toString() + "\"" + " = " + "\"" + value + "\"";
+                                String condition1 = "\"" + group2.getValue() + "\"" + " = " + "\"" + value + "\"";
                                 autoCondition2.add(condition + " & " + condition1);
                             }
                         }
@@ -181,27 +192,27 @@ public class SearchTabController {
         return search;
     }
 
+    /**
+     * method to get test items form condition
+     *
+     * @return list of test items
+     */
     public List<String> getConditionTestItem() {
         List<String> conditionList = getSearch();
         List<String> conditionTestItemList = Lists.newArrayList();
-        List<String> timeKeys = Lists.newArrayList();
-        String timePattern = null;
-        try {
-            timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
-            timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
-        } catch (Exception e) {
-
-        }
+        List<String> timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
+        String timePattern = envService.findActivatedTemplate().getTimePattern();
         FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         for (String condition : conditionList) {
             Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);
-            for (String conditionTestItem : conditionTestItemSet) {
-                conditionTestItemList.add(conditionTestItem);
-            }
+            conditionTestItemList.addAll(conditionTestItemSet);
         }
         return conditionTestItemList;
     }
 
+    /**
+     * method to clear search tab
+     */
     public void clearSearchTab() {
         basicSearch.getChildren().clear();
         advanceText.setText(null);
@@ -209,6 +220,11 @@ public class SearchTabController {
         group2.setValue(null);
     }
 
+    /**
+     * method to get basic search dto
+     *
+     * @return map
+     */
     public LinkedHashMap<String, List<BasicSearchDto>> getBasicSearch() {
         if (basicSearch.getChildren().size() > 0) {
             LinkedHashMap<String, List<BasicSearchDto>> basicSearchDtos = Maps.newLinkedHashMap();
@@ -236,6 +252,11 @@ public class SearchTabController {
         return null;
     }
 
+    /**
+     * method to set basic search condition dto
+     *
+     * @param basicSearchDtoMaps map of basic search dto
+     */
     public void setBasicSearch(LinkedHashMap<String, List<BasicSearchDto>> basicSearchDtoMaps) {
         if (basicSearchDtoMaps != null && basicSearchDtoMaps.size() > 0) {
             for (String title : basicSearchDtoMaps.keySet()) {
@@ -267,7 +288,14 @@ public class SearchTabController {
         return autoDivideLbl;
     }
 
+    /**
+     * method to hide group add
+     */
     public void hiddenGroupAdd() {
         groupAdd.setVisible(false);
+    }
+
+    public void setMulti(boolean multi) {
+        isMulti = multi;
     }
 }

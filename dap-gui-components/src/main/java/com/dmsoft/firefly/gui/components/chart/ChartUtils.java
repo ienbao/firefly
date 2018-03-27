@@ -32,7 +32,7 @@ public class ChartUtils {
      * @param chart xy chart
      */
     public ChartUtils(XYChart chart) {
-        this(chart, 4);
+        this(chart, 16);
     }
 
     /**

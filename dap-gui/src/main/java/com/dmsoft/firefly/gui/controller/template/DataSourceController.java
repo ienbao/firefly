@@ -15,6 +15,7 @@ import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageController;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
+import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
@@ -202,36 +203,41 @@ public class DataSourceController implements Initializable {
 
                                 }
                                 renameTemplateController.getName().setText(item.getValue());
+                                renameStage.toFront();
                                 renameStage.show();
                             });
                             deleteOne.setOnAction(event -> {
-                                WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Delete DataSource", "Are you sure to delete this file?");
-                                controller.addProcessMonitorListener(new WindowCustomListener() {
-                                    @Override
-                                    public boolean onShowCustomEvent() {
-                                        return false;
-                                    }
-
-                                    @Override
-                                    public boolean onCloseAndCancelCustomEvent() {
-                                        return false;
-                                    }
-
-                                    @Override
-                                    public boolean onOkCustomEvent() {
-                                        List<String> deleteProjects = Lists.newArrayList();
-                                        List<String> activeProject = envService.findActivatedProjectName();
-                                        activeProject.remove(item.getValue());
-                                        deleteProjects.add(item.getValue());
-                                        if (!item.isError()) {
-                                            sourceDataService.deleteProject(deleteProjects);
+                                if (!item.isImport()) {
+                                    WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Delete DataSource", "Are you sure to delete this file?");
+                                    controller.addProcessMonitorListener(new WindowCustomListener() {
+                                        @Override
+                                        public boolean onShowCustomEvent() {
+                                            return false;
                                         }
-                                        envService.setActivatedProjectName(activeProject);
-                                        chooseTableRowDataObservableList.remove(item);
-                                        updateProjectOrder();
-                                        return false;
-                                    }
-                                });
+
+                                        @Override
+                                        public boolean onCloseAndCancelCustomEvent() {
+                                            return false;
+                                        }
+
+                                        @Override
+                                        public boolean onOkCustomEvent() {
+                                            List<String> deleteProjects = Lists.newArrayList();
+                                            List<String> activeProject = envService.findActivatedProjectName();
+                                            if (activeProject != null && activeProject.contains(item.getValue())) {
+                                                activeProject.remove(item.getValue());
+                                            }
+                                            deleteProjects.add(item.getValue());
+                                            if (!item.isError()) {
+                                                sourceDataService.deleteProject(deleteProjects);
+                                            }
+                                            envService.setActivatedProjectName(activeProject);
+                                            chooseTableRowDataObservableList.remove(item);
+                                            updateProjectOrder();
+                                            return false;
+                                        }
+                                    });
+                                }
 
                             });
                             this.setGraphic(hBox);
@@ -384,7 +390,7 @@ public class DataSourceController implements Initializable {
 
     private void updateProjectOrder() {
         UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
-        userPreferenceDto.setUserName("admin");
+        userPreferenceDto.setUserName(envService.getUserName());
         userPreferenceDto.setCode("projectOrder");
         List<String> order = Lists.newArrayList();
         chooseTableRowDataObservableList.forEach(v -> {
@@ -404,11 +410,12 @@ public class DataSourceController implements Initializable {
     private void buildDataSourceDialog() {
         Pane root = null;
         try {
-            FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/resolver.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-            loader.setController(new ResolverSelectController(this));
-            root = loader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("resolver", "select Resolver", root, getResource("css/platform_app.css").toExternalForm());
+            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/resolver.fxml");
+            fxmlLoader.setController(new ResolverSelectController(this));
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("resolver", GuiFxmlAndLanguageUtils.getString("DATA_SOURCE_SELECT_RESOLVER"), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
+            stage.toFront();
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();

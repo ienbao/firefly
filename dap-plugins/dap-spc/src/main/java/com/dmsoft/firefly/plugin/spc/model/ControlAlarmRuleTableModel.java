@@ -5,8 +5,13 @@ package com.dmsoft.firefly.plugin.spc.model;
 
 import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
+import com.dmsoft.firefly.gui.components.utils.ValidateUtils;
 import com.dmsoft.firefly.plugin.spc.dto.ControlRuleDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
+import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
+import com.dmsoft.firefly.plugin.spc.utils.SourceObjectProperty;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
@@ -17,11 +22,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Ethan.Yang on 2018/3/14.
@@ -37,7 +40,8 @@ public class ControlAlarmRuleTableModel implements TableModel {
     private Map<String, ControlRuleDto> dataMap = new HashMap<>();
     private Map<String, SimpleObjectProperty<String>> valueMap = new HashMap<>();
     private Map<String, SimpleObjectProperty<Boolean>> checkMap = new HashMap<>();
-
+    private Set<String> errorEditorCell = new HashSet<>();
+    private Set<String> editorCell = new HashSet<>();
     /**
      * constructor
      */
@@ -67,6 +71,8 @@ public class ControlAlarmRuleTableModel implements TableModel {
         dataMap.clear();
         valueMap.clear();
         checkMap.clear();
+        errorEditorCell.clear();
+        editorCell.clear();
     }
 
     @Override
@@ -82,41 +88,27 @@ public class ControlAlarmRuleTableModel implements TableModel {
             }
             ControlRuleDto controlRuleDto = dataMap.get(rowKey);
             Object value = "";
-            SimpleObjectProperty objectProperty = new SimpleObjectProperty();
+
             if (columnName.equals(HEADER[0])) {
                 value = controlRuleDto.isUsed();
             } else if (columnName.equals(HEADER[1])) {
                 value = controlRuleDto.getRuleName();
             } else if (columnName.equals(HEADER[2])) {
                 value = controlRuleDto.getnValue();
-                objectProperty.addListener((ov, b1, b2) -> {
-                    if (!DAPStringUtils.isNumeric(String.valueOf(b2)) || DAPStringUtils.isBlank(String.valueOf(b2))) {
-                        return;
-                    }
-                    controlRuleDto.setnValue(Integer.parseInt((String) b2));
-                });
             } else if (columnName.equals(HEADER[3])) {
                 value = controlRuleDto.getmValue();
-                objectProperty.addListener((ov, b1, b2) -> {
-                    if (!DAPStringUtils.isNumeric(String.valueOf(b2)) || DAPStringUtils.isBlank(String.valueOf(b2))) {
-                        return;
-                    }
-                    controlRuleDto.setmValue(Integer.parseInt((String) b2));
-                });
             } else if (columnName.equals(HEADER[4])) {
                 value = controlRuleDto.getsValue();
-                objectProperty.addListener((ov, b1, b2) -> {
-                    if (!DAPStringUtils.isNumeric(String.valueOf(b2)) || DAPStringUtils.isBlank(String.valueOf(b2))) {
-                        return;
-                    }
-                    controlRuleDto.setsValue(Integer.parseInt((String) b2));
-                });
             }
-            objectProperty.setValue(value == null ? "" : String.valueOf(value));
+            SourceObjectProperty objectProperty = new SourceObjectProperty(value == null ? "" : String.valueOf(value));
             objectProperty.addListener((ov, b1, b2) -> {
-                if (!DAPStringUtils.isNumeric((String) b2)) {
-                    objectProperty.set(b1);
+                if (DAPStringUtils.isBlank((String) b2)) {
                     return;
+                }
+                if (!DAPStringUtils.isEqualsString((String) objectProperty.getSourceValue(), (String) b2)) {
+                    editorCell.add(rowKey + "-" + columnName);
+                } else {
+                    editorCell.remove(rowKey + "-" + columnName);
                 }
                 if (columnName.equals(HEADER[2])) {
                     controlRuleDto.setnValue(Integer.valueOf((String) b2));
@@ -187,6 +179,12 @@ public class ControlAlarmRuleTableModel implements TableModel {
                 tableCell.setStyle("-fx-background-color: #f5f5f5");
             } else {
                 tableCell.setStyle("-fx-background-color: #ffffff");
+                if (editorCell.contains(rowKey + "-" + column)) {
+                    tableCell.setStyle("-fx-background-color: #ffffff;-fx-text-fill: #f38400");
+                }
+                if (errorEditorCell.contains(rowKey + "-" + column)) {
+                    tableCell.setStyle("-fx-background-color: #ffffff;-fx-border-color: #ea2028;-fx-border-with:1 1 1 1");
+                }
             }
             tableCell.getTableColumn().setStyle("-fx-background-color: #f2f2f2");
         } else if (column.equals(HEADER[3])) {
@@ -195,6 +193,12 @@ public class ControlAlarmRuleTableModel implements TableModel {
                 tableCell.setStyle("-fx-background-color: #f5f5f5");
             } else {
                 tableCell.setStyle("-fx-background-color: #ffffff");
+                if (editorCell.contains(rowKey + "-" + column)) {
+                    tableCell.setStyle("-fx-background-color: #ffffff;-fx-text-fill: #f38400");
+                }
+                if (errorEditorCell.contains(rowKey + "-" + column)) {
+                    tableCell.setStyle("-fx-background-color: #ffffff;-fx-border-color: #ea2028;-fx-border-with:1 1 1 1");
+                }
             }
             tableCell.getTableColumn().setStyle("-fx-background-color: #f2f2f2");
         } else if (column.equals(HEADER[4])) {
@@ -203,6 +207,13 @@ public class ControlAlarmRuleTableModel implements TableModel {
                 tableCell.setStyle("-fx-background-color: #f5f5f5");
             } else {
                 tableCell.setStyle("-fx-background-color: #ffffff");
+                if (editorCell.contains(rowKey + "-" + column)) {
+                    tableCell.setStyle("-fx-background-color: #ffffff;-fx-text-fill: #f38400");
+                }
+                if (errorEditorCell.contains(rowKey + "-" + column)) {
+                    tableCell.setStyle("-fx-background-color: #ffffff;-fx-border-color: #ea2028;-fx-border-with:1 1 1 1");
+                }
+
             }
             tableCell.getTableColumn().setStyle("-fx-background-color: #f2f2f2");
         }
@@ -234,5 +245,37 @@ public class ControlAlarmRuleTableModel implements TableModel {
             list.add(entry.getValue());
         }
         return list;
+    }
+
+    @Override
+    public boolean isTextInputError(TextField textField, String oldText, String newText, String rowKey, String columnName) {
+        if (newText.length() > 255) {
+            textField.setText(oldText);
+            return true;
+        }
+        if (!ValidateUtils.validatePattern(newText, ValidateUtils.POSITIVE_INTEGER_PATTERN)) {
+            textField.setText(oldText);
+            return true;
+        }
+        if (DAPStringUtils.isBlank(newText)) {
+            errorEditorCell.add(rowKey + "-" + columnName);
+            if (!textField.getStyleClass().contains("text-field-error")) {
+                textField.getStyleClass().add("text-field-error");
+            }
+            TooltipUtil.installWarnTooltip(textField, SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_USL_LSL_EMPTY));
+            return true;
+        }
+        if (textField.getStyleClass().contains("text-field-error")) {
+            textField.getStyleClass().removeAll("text-field-error");
+        }
+        if (errorEditorCell.contains(rowKey + "-" + columnName)) {
+            errorEditorCell.remove(rowKey + "-" + columnName);
+        }
+        TooltipUtil.uninstallWarnTooltip(textField);
+        return false;
+    }
+
+    public boolean hasErrorEditValue() {
+        return errorEditorCell.size() != 0;
     }
 }

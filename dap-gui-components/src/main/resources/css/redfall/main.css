@@ -173,6 +173,25 @@
     -fx-shape: "M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M25.7,11.7l-12,12C13.5,23.9,13.3,24,13,24s-0.5-0.1-0.7-0.3l-7-7c-0.4-0.4-0.4-1,0-1.4s1-0.4,1.4,0l6.3,6.3l11.3-11.3c0.4-0.4,1-0.4,1.4,0S26.1,11.3,25.7,11.7z";
 }
 
+.icon-ok-gray {
+     -fx-background-color: transparent;
+     -fx-background-image: url('/images/icon_choose_one_gray.png');
+     -fx-background-size: 16;
+     -fx-pref-height: 16;
+     -fx-pref-width: 16;
+     -fx-shape: null;
+     -fx-padding: 0 20 0 0;
+ }
+
+.icon-ok-white {
+    -fx-background-color: transparent;
+    -fx-background-image: url('/images/icon_choose_one_white.png.png');
+    -fx-background-size: 16;
+    -fx-pref-height: 16;
+    -fx-pref-width: 16;
+    -fx-shape: null;
+    -fx-padding: 0 20 0 0;
+}
 /*******************************************************************************
  *                                                                             *
  * Message tip                                                                 *
@@ -655,6 +674,44 @@
 
 /*******************************************************************************
  *                                                                             *
+ * Text Area                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+.text-area {
+    -fx-border-color: #cccccc;
+    -fx-background-color: #ffffff;
+    -fx-font: 12 arial;
+}
+
+.text-area .content {
+    -fx-background-color: #ffffff;
+}
+
+.text-area:focused {
+    -fx-border-color: #33abff;
+    -fx-background-color: #fff;
+    -fx-text-fill: #222;
+    -fx-highlight-fill: #0096ff;
+    -fx-highlight-text-fill: #fff;
+}
+
+.text-area .content:focused {
+    -fx-background-color: #fff;
+}
+
+.text-area:disabled {
+    -fx-border-color: #dcdcdc;
+    -fx-background-color: #fafafa;
+    -fx-text-fill: #cccccc;
+    -fx-opacity: 1;
+}
+
+.text-area .content:disabled {
+    -fx-background-color: #fafafa;
+}
+
+/*******************************************************************************
+ *                                                                             *
  * Combo box                                                                   *
  *                                                                             *
  ******************************************************************************/
@@ -1073,7 +1130,6 @@
     -fx-padding: 0;
     -fx-border-insets: 0;
     -fx-background-insets: 0;
-    -fx-border-image-insets: 0;
     -fx-spacing: 0;
 }
 
@@ -1082,7 +1138,6 @@
     -fx-border-image-insets: 0;
     -fx-border-insets: 0;
     -fx-background-insets: 0;
-    -fx-border-image-insets: 0;
     -fx-spacing: 0;
 }
 
@@ -1119,10 +1174,6 @@
     -fx-background-insets: 0;
     -fx-border-image-insets: 0;
     -fx-padding: 0;
-    -fx-border-insets: 0;
-    -fx-background-insets: 0;
-    -fx-border-image-insets: 0;
-    -fx-spacing: 0;
 }
 
 .tab-pane > .tab-header-area > .control-buttons-tab {
@@ -1322,6 +1373,7 @@
     -fx-border-color: transparent;
     -fx-text-fill: transparent;
     -fx-border-width: 0;
+    -fx-background-color: #ffffff;
 }
 
 .table-view .placeholder .label:focused,
@@ -1334,6 +1386,15 @@
 .table-context-menu {
     -fx-min-width: 160;
     -fx-pref-width: 160;
+}
+
+.table-view .combo-box {
+    -fx-pref-height: 16;
+    -fx-min-height: 16;
+    -fx-max-height: 16;
+    -fx-background-insets: -1 -11 -1 -11;
+    -fx-border-insets: -1 -11 -1 -11;
+    -fx-padding: -3 -8 -3 -8;
 }
 
 /*******************************************************************************
@@ -2142,7 +2203,7 @@
 .day-pane {
     -fx-padding: 10;
     -fx-border-color: #ccc;
-    -fx-border-width: 1
+    -fx-border-width: 1;
 }
 
 .calendar-chooser {

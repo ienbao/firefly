@@ -118,6 +118,14 @@ public class ControlChart<X, Y> extends LineChart {
     }
 
     /**
+     * Hidden all series lines
+     */
+    public void hiddenAllSeriesLine() {
+        ObservableList<XYChart.Series<X, Y>> seriesObservableList = this.getData();
+        seriesObservableList.forEach(oneSeries -> toggleSeriesLine(oneSeries, false));
+    }
+
+    /**
      * Toggle series path show or hide
      *
      * @param series series name
@@ -132,6 +140,16 @@ public class ControlChart<X, Y> extends LineChart {
     }
 
     /**
+     * Hidden all series point
+     */
+    public void hiddenAllSeriesPoint() {
+        ObservableList<XYChart.Series<X, Y>> seriesObservableList = this.getData();
+        seriesObservableList.forEach(oneSeries -> oneSeries.getData().forEach(dataItem -> {
+            toggleSeriesPoint(dataItem, false);
+        }));
+    }
+
+    /**
      * Toggle point show or hide
      *
      * @param data   data
@@ -139,9 +157,20 @@ public class ControlChart<X, Y> extends LineChart {
      */
     public void toggleSeriesPoint(XYChart.Data<X, Y> data, boolean showed) {
         if (!showed) {
-            data.getNode().getStyleClass().add("chart-line-hidden-symbol");
+            data.getNode().getStyleClass().setAll("chart-line-hidden-symbol");
         } else {
-            data.getNode().getStyleClass().remove("chart-line-hidden-symbol");
+            data.getNode().getStyleClass().setAll("chart-line-symbol");
+        }
+    }
+
+    /**
+     * Hidden lines for line names
+     *
+     * @param lineNames line names
+     */
+    public void hiddenValueMarkers(List<String> lineNames) {
+        for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
+            lineNames.forEach(lineName -> valueMarkerEntry.getValue().hiddenValueMarker(lineName));
         }
     }
 
@@ -214,8 +243,8 @@ public class ControlChart<X, Y> extends LineChart {
             Y data = series.getData().get(i).getYValue();
             if (data instanceof Double) {
                 Double value = (Double) data;
-                boolean flagMoreValid = moreData != null && !DAPStringUtils.isInfinityAndNaN(moreData[i]) && value > moreData[i];
-                boolean flagLessValid = lessData != null && !DAPStringUtils.isInfinityAndNaN(lessData[i]) && value < lessData[i];
+                boolean flagMoreValid = moreData != null && i < moreData.length && !DAPStringUtils.isInfinityAndNaN(moreData[i]) && value > moreData[i];
+                boolean flagLessValid = lessData != null && i < lessData.length && !DAPStringUtils.isInfinityAndNaN(lessData[i]) && value < lessData[i];
                 if (flagLessValid || flagMoreValid) {
                     series.getData().get(i).getNode().setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(Color.RED));
                 }
@@ -274,7 +303,9 @@ public class ControlChart<X, Y> extends LineChart {
 //        1. 设置画图数据, 图的颜色、样式、悬浮提示
 //        2. 设置画直线数据， 线的颜色，样式
 //        3. 设置画折线数据， 折线的颜色，样式
-        if (controlChartData == null) return;
+        if (controlChartData == null || controlChartData.getXyOneChartData() == null) {
+            return;
+        }
         Color color = controlChartData.getColor();
         String seriesName = controlChartData.getSeriesName();
         String uniqueKey = controlChartData.getUniqueKey();

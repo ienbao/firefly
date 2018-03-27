@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
+import com.dmsoft.firefly.gui.components.chart.ChartSaveUtils;
 import com.dmsoft.firefly.plugin.grr.charts.LinearChart;
 import com.dmsoft.firefly.plugin.grr.charts.data.ILineData;
 import com.dmsoft.firefly.plugin.grr.charts.data.RuleLineData;
@@ -15,6 +16,7 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.sun.javafx.charts.Legend;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
@@ -46,6 +48,7 @@ public class BuildChart {
     private static Group vBox;
     private static Scene scene;
     private static int digNum = 6;
+
     public static GrrImageDto buildImage(GrrDetailResultDto grrDetailResultDto, List<String> parts, List<String> appraisers) {
         digNum = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getDecimalDigit();
         vBox = new Group();
@@ -57,28 +60,29 @@ public class BuildChart {
         partAppraiserChart.setAnimated(false);
         partAppraiserChart.setLegendVisible(false);
         setPartAppraiserChart(partAppraiserChart, grrDetailResultDto.getPartAppraiserChartDto(), parts, appraisers);
-        images.setGrrAPlotImagePath(exportImages("partAppraiserChart", partAppraiserChart));
 
         LinearChart xBarAppraiserChart = buildControlChart(parts);
         setControlChartData(grrDetailResultDto.getXbarAppraiserChartDto(), xBarAppraiserChart, parts, appraisers);
-        images.setGrrXBarImagePath(exportImages("xBarAppraiserChart", xBarAppraiserChart));
 
         LinearChart rangeAppraiserChart = buildControlChart(parts);
         setControlChartData(grrDetailResultDto.getRangeAppraiserChartDto(), rangeAppraiserChart, parts, appraisers);
-        images.setGrrRChartImagePath(exportImages("rangeAppraiserChart", rangeAppraiserChart));
 
         LineChart rrByAppraiserChart = buildScatterChart();
         setScatterChartData(grrDetailResultDto.getRrbyAppraiserChartDto(), rrByAppraiserChart);
-        images.setGrrRPlotChartAppImagePath(exportImages("rrByAppraiserChart", rrByAppraiserChart));
 
         LineChart rrbyPartChart = buildScatterChart();
         setScatterChartData(grrDetailResultDto.getRrbyPartChartDto(), rrbyPartChart);
-        images.setGrrRPlotChartPartImagePath(exportImages("rrbyPartChart", rrbyPartChart));
 
         BarChart componentChart = new BarChart(new CategoryAxis(), new NumberAxis());
         componentChart.setAnimated(false);
         componentChart.setLegendVisible(false);
         setComponentChart(grrDetailResultDto.getComponentChartDto(), componentChart);
+
+        images.setGrrAPlotImagePath(exportImages("partAppraiserChart", partAppraiserChart));
+        images.setGrrXBarImagePath(exportImages("xBarAppraiserChart", xBarAppraiserChart));
+        images.setGrrRChartImagePath(exportImages("rangeAppraiserChart", rangeAppraiserChart));
+        images.setGrrRPlotChartAppImagePath(exportImages("rrByAppraiserChart", rrByAppraiserChart));
+        images.setGrrRPlotChartPartImagePath(exportImages("rrbyPartChart", rrbyPartChart));
         images.setGrrComponentsImagePath(exportImages("componentChart", componentChart));
 
         return images;
@@ -310,7 +314,7 @@ public class BuildChart {
 
         try {
             file = new File(path);
-            saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(exportImage, null), file, 0.9f);
+            ChartSaveUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(exportImage, null), file, 0.9f);
 //            AlertDialog.showAlertDialog("保存成功!");
         } catch (IOException ex) {
 //            AlertDialog.showAlertDialog("保存失败:" + ex.getMessage());
@@ -320,26 +324,26 @@ public class BuildChart {
         return path;
     }
 
-    public static void saveImageUsingJPGWithQuality(BufferedImage image,
-                                                    File filePath, float quality) throws Exception {
-
-        BufferedImage newBufferedImage = new BufferedImage(image.getWidth(),
-                image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-        newBufferedImage.getGraphics().drawImage(image, 0, 0, null);
-
-        Iterator iter = ImageIO
-                .getImageWritersByFormatName("jpeg");
-
-        ImageWriter imageWriter = (ImageWriter) iter.next();
-        ImageWriteParam iwp = imageWriter.getDefaultWriteParam();
-
-        iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        iwp.setCompressionQuality(quality);
-
-        FileImageOutputStream fileImageOutput = new FileImageOutputStream(filePath);
-        imageWriter.setOutput(fileImageOutput);
-        IIOImage jpgimage = new IIOImage(newBufferedImage, null, null);
-        imageWriter.write(null, jpgimage, iwp);
-        imageWriter.dispose();
-    }
+//    public static void saveImageUsingJPGWithQuality(BufferedImage image,
+//                                                    File filePath, float quality) throws Exception {
+//
+//        BufferedImage newBufferedImage = new BufferedImage(image.getWidth(),
+//                image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+//        newBufferedImage.getGraphics().drawImage(image, 0, 0, null);
+//
+//        Iterator iter = ImageIO
+//                .getImageWritersByFormatName("jpeg");
+//
+//        ImageWriter imageWriter = (ImageWriter) iter.next();
+//        ImageWriteParam iwp = imageWriter.getDefaultWriteParam();
+//
+//        iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+//        iwp.setCompressionQuality(quality);
+//
+//        FileImageOutputStream fileImageOutput = new FileImageOutputStream(filePath);
+//        imageWriter.setOutput(fileImageOutput);
+//        IIOImage jpgimage = new IIOImage(newBufferedImage, null, null);
+//        imageWriter.write(null, jpgimage, iwp);
+//        imageWriter.dispose();
+//    }
 }

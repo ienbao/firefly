@@ -8,7 +8,6 @@ import com.dmsoft.firefly.plugin.grr.utils.GrrExceptionCode;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
-import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.core.JobHandlerContext;
 import com.dmsoft.firefly.sdk.job.core.JobInboundHandler;
@@ -43,8 +42,8 @@ public class DetailResultHandler1 implements JobInboundHandler {
         grrDataFrameDto.getIncludeDatas().forEach(grrViewDataDto -> includeRows.add(grrViewDataDto.getRowKey()));
 
         GrrService grrService = RuntimeContext.getBean(GrrService.class);
-        String itemName = itemWithTypeDtos.get(0).getTestItemName();
-        GrrDetailDto grrDetailDto = grrService.getDetailResult(grrDataFrameDto.getDataFrame().getDataColumn(itemName, null),
+
+        GrrDetailDto grrDetailDto = grrService.getDetailResult(grrDataFrameDto.getDataFrame().getDataColumn(itemWithTypeDtos.get(0).getTestItemName(), null),
                 itemWithTypeDtos.get(0),
                 includeRows,
                 analysisConfigDto);

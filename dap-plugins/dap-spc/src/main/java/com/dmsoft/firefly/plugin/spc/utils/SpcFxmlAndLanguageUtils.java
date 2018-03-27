@@ -3,16 +3,12 @@
  */
 package com.dmsoft.firefly.plugin.spc.utils;
 
-import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.components.utils.ModuleType;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import javafx.fxml.FXMLLoader;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
@@ -21,18 +17,19 @@ import java.util.ResourceBundle;
  * Created by Ethan.Yang on 2018/2/11.
  */
 public class SpcFxmlAndLanguageUtils {
-    private static final Logger logger = LoggerFactory.getLogger(SpcFxmlAndLanguageUtils.class);
     public static boolean isDebug = false;
 
     private static ResourceBundle getResourceBundle() {
         LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+        if (languageType == null) {
+            languageType = LanguageType.EN;
+        }
         String bundleKey = "i18n.message_en_US_";
-        if (languageType.equals(LanguageType.ZH)) {
+        if (LanguageType.ZH.equals(languageType)) {
             bundleKey = "i18n.message_zh_CN_";
         }
         bundleKey = bundleKey + ModuleType.SPC.name();
         return ResourceBundle.getBundle(bundleKey);
-        //return FxmlAndLanguageUtils.getBundle(ModuleType.SPC);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.spc.charts.view;
 
 import com.dmsoft.firefly.gui.components.pane.ContentStackPane;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.google.common.collect.Maps;
 import javafx.event.EventHandler;
@@ -37,14 +38,14 @@ public class VerticalTabPane extends AnchorPane {
 
         VBox box = new VBox();
         leftBox = new VBox();
-        ndcBtn = new Button(UIConstant.SPC_CHART_NAME[0]);
-        runBtn = new Button(UIConstant.SPC_CHART_NAME[1]);
-        xBarBtn = new Button(UIConstant.SPC_CHART_NAME[2]);
-        rangeBtn = new Button(UIConstant.SPC_CHART_NAME[3]);
-        sdBtn = new Button(UIConstant.SPC_CHART_NAME[4]);
-        medianBtn = new Button(UIConstant.SPC_CHART_NAME[5]);
-        boxBtn = new Button(UIConstant.SPC_CHART_NAME[6]);
-        mrBtn = new Button(UIConstant.SPC_CHART_NAME[7]);
+        ndcBtn = new Button(SPC_CHART_NAME[0]);
+        runBtn = new Button(SPC_CHART_NAME[1]);
+        xBarBtn = new Button(SPC_CHART_NAME[2]);
+        rangeBtn = new Button(SPC_CHART_NAME[3]);
+        sdBtn = new Button(SPC_CHART_NAME[4]);
+        medianBtn = new Button(SPC_CHART_NAME[5]);
+        boxBtn = new Button(SPC_CHART_NAME[6]);
+        mrBtn = new Button(SPC_CHART_NAME[7]);
         leftBox.getChildren().add(ndcBtn);
         leftBox.getChildren().add(runBtn);
         leftBox.getChildren().add(xBarBtn);
@@ -141,21 +142,21 @@ public class VerticalTabPane extends AnchorPane {
         if (node instanceof Button) {
             Button button = (Button) node;
             String text = button.getText();
-            if (UIConstant.SPC_CHART_NAME[0].equals(text)) {
+            if (SPC_CHART_NAME[0].equals(text)) {
                 contentPane.navTo(nodeIdMap.get(0));
-            } else if (UIConstant.SPC_CHART_NAME[1].equals(text)) {
+            } else if (SPC_CHART_NAME[1].equals(text)) {
                 contentPane.navTo(nodeIdMap.get(1));
-            } else if (UIConstant.SPC_CHART_NAME[2].equals(text)) {
+            } else if (SPC_CHART_NAME[2].equals(text)) {
                 contentPane.navTo(nodeIdMap.get(2));
-            } else if (UIConstant.SPC_CHART_NAME[3].equals(text)) {
+            } else if (SPC_CHART_NAME[3].equals(text)) {
                 contentPane.navTo(nodeIdMap.get(3));
-            } else if (UIConstant.SPC_CHART_NAME[4].equals(text)) {
+            } else if (SPC_CHART_NAME[4].equals(text)) {
                 contentPane.navTo(nodeIdMap.get(4));
-            } else if (UIConstant.SPC_CHART_NAME[5].equals(text)) {
+            } else if (SPC_CHART_NAME[5].equals(text)) {
                 contentPane.navTo(nodeIdMap.get(5));
-            } else if (UIConstant.SPC_CHART_NAME[6].equals(text)) {
+            } else if (SPC_CHART_NAME[6].equals(text)) {
                 contentPane.navTo(nodeIdMap.get(6));
-            } else if (UIConstant.SPC_CHART_NAME[7].equals(text)) {
+            } else if (SPC_CHART_NAME[7].equals(text)) {
                 contentPane.navTo(nodeIdMap.get(7));
             }
         }
@@ -171,6 +172,16 @@ public class VerticalTabPane extends AnchorPane {
             }
         }
     }
+
+    private String[] SPC_CHART_NAME = new String[]{
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_NDC"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_BAR"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RANGE"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_SD"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_MEDIAN"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_BOX"),
+            SpcFxmlAndLanguageUtils.getString("SPC_CHART_MR")};
 
     private Button ndcBtn;
     private Button runBtn;

@@ -21,7 +21,7 @@
                            style="-fx-border-width: 1 0 0 0; -fx-border-color: #dcdcdc"
                            VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn minWidth="226.0" prefWidth="226.0" text="%TEST_ITEMS"/>
+                        <TableColumn minWidth="226.0" prefWidth="226.0" text="%TEST_ITEM"/>
                         <TableColumn minWidth="110.0" prefWidth="163.0" text="%VALUE"/>
                     </columns>
                 </TableView>

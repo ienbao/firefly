@@ -1,11 +1,13 @@
 package com.dmsoft.firefly.plugin.grr.handler;
 
 import com.dmsoft.firefly.plugin.grr.controller.GrrMainController;
+import com.dmsoft.firefly.plugin.grr.dto.GrrConfigDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrSummaryDto;
 import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnalysisConfigDto;
 import com.dmsoft.firefly.plugin.grr.service.GrrService;
+import com.dmsoft.firefly.plugin.grr.utils.DigNumInstance;
 import com.dmsoft.firefly.plugin.grr.utils.GrrExceptionCode;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -14,6 +16,7 @@ import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.core.JobHandlerContext;
 import com.dmsoft.firefly.sdk.job.core.JobInboundHandler;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -47,6 +50,7 @@ public class SummaryHandler1 implements JobInboundHandler {
                 itemWithTypeDtos,
                 includeRows,
                 grrAnalysisConfigDto);
+
         if (in[1] != null && in[1] instanceof GrrMainController) {
             GrrMainController grrMainController = (GrrMainController) in[1];
             grrMainController.setSummaryDtos(summaryDtos);
@@ -58,5 +62,16 @@ public class SummaryHandler1 implements JobInboundHandler {
     @Override
     public void exceptionCaught(JobHandlerContext context, Throwable cause) throws Exception {
 
+    }
+
+    private boolean validGrr(GrrSummaryDto summaryDto, int analysisType) {
+        boolean valid = true;
+        Double grr = analysisType == 1 ?
+                summaryDto.getSummaryResultDto().getGrrOnTolerance() :
+                summaryDto.getSummaryResultDto().getGrrOnContribution();
+        if (grr == null || DAPStringUtils.isInfinityAndNaN(grr)) {
+            valid = false;
+        }
+        return valid;
     }
 }

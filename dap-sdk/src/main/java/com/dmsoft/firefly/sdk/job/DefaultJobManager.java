@@ -186,7 +186,7 @@ public class DefaultJobManager implements JobManager {
     }
 
     public ExecutorService getExecutorService() {
-        return null;
+        return service;
     }
 
 

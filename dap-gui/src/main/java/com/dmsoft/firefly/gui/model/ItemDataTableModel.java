@@ -31,6 +31,7 @@ public class ItemDataTableModel implements TableModel {
     private List<String> trueSet = new ArrayList<>();
     private List<String> falseSet = new ArrayList<>();
     private CheckBox allCheckBox = new CheckBox();
+//    private TableView tableView;
 
     /**
      * constructor
@@ -63,6 +64,8 @@ public class ItemDataTableModel implements TableModel {
                 checkMap.put(String.valueOf(i), new SimpleObjectProperty<>(rowDataDto.getInUsed()));
                 if (i > 2 && rowDataDto.getInUsed()) {
                     k++;
+                } else {
+                    falseSet.add(String.valueOf(i));
                 }
                 rowDataDtoList.add(rowDataDto);
                 i++;
@@ -115,14 +118,18 @@ public class ItemDataTableModel implements TableModel {
             if (!b2) {
                 falseSet.add(rowKey);
                 allChecked.setValue(false);
+                checkMap.put(rowKey, b);
             } else {
                 if (falseSet.contains(rowKey)) {
                     falseSet.remove(rowKey);
+                    checkMap.put(rowKey, b);
                 }
                 allChecked.setValue(true);
             }
+//            this.tableView.refresh();
         });
-        return b;
+
+        return checkMap.get(rowKey);
     }
 
     @Override
@@ -140,6 +147,11 @@ public class ItemDataTableModel implements TableModel {
         Double dataValue = null;
         Double usl = null;
         Double lsl = null;
+
+//        if (Integer.parseInt(rowKey) > 2 && falseSet.contains(rowKey)) {
+//            tableCell.setStyle("-fx-text-fill: #dcdcdc");
+//            return tableCell;
+//        }
 
         if (column.isEmpty() && (Integer.parseInt(rowKey) == 0 || Integer.parseInt(rowKey) == 1 || Integer.parseInt(rowKey) == 2)) {
             tableCell.setGraphic(null);
@@ -189,6 +201,8 @@ public class ItemDataTableModel implements TableModel {
             }
 
         }
+
+//        this.tableView = tableView;
 
     }
 

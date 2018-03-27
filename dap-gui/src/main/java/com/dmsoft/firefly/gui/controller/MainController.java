@@ -2,11 +2,14 @@ package com.dmsoft.firefly.gui.controller;
 
 import com.dmsoft.firefly.gui.component.ContentStackPane;
 import com.dmsoft.firefly.gui.component.CustomerTooltip;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
+import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowMessageController;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.controller.template.DataSourceController;
 import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
 import com.dmsoft.firefly.gui.model.UserModel;
-import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.gui.utils.TabUtils;
@@ -20,8 +23,11 @@ import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -31,15 +37,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
 import java.util.*;
 
 import static com.google.common.io.Resources.getResource;
@@ -59,6 +65,7 @@ public class MainController {
 
     @FXML
     private GridPane stateBar;
+    private ProgressBar progressBar;
 
     private Button dataSourceBtn;
     private Button templateBtn;
@@ -71,37 +78,35 @@ public class MainController {
     private ListView<StateBarTemplateModel> templateView;
     private ObservableList<StateBarTemplateModel> templateList = FXCollections.observableArrayList();
 
-    private ContentStackPane contentStackPane;
+    private StackPane contentStackPane;
     private Map<String, TabPane> tabPaneMap = new LinkedHashMap<>();
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
-
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
-    private TemplateSettingDto templateSettingDto;
-
+    private PluginUIContext pc = RuntimeContext.getBean(PluginUIContext.class);
 
     @FXML
     private void initialize() {
         scrollPaneTooltip = new ScrollPane();
         dataSourceTooltip = new CustomerTooltip();
-        templateSettingDto =  envService.findActivatedTemplate();
         contentStackPane = new ContentStackPane();
         grpContent.add(contentStackPane, 0, 1);
         this.initToolBar();
         this.initStateBar();
-
         this.updateStateBarIcon();
-        this.initDataSource();
-        this.initDataSourceTooltip();
-        this.initTemplate();
-        this.initTemplatePopup();
-        this.initComponentEvent();
+        this.updateMemoryState();
+        if (isLogin()) {
+            this.initTemplate();
+            this.initTemplatePopup();
+            this.initDataSource();
+            this.initDataSourceTooltip();
+            this.setActiveFirstTab(pc);
+            this.initComponentEvent();
+        }
     }
 
     private void initToolBar() {
-        PluginUIContext pc = RuntimeContext.getBean(PluginUIContext.class);
         Set<String> names = pc.getAllMainBodyNames();
-        final int[] i = {0};
         names.forEach(name -> {
             Button btn = new Button(name);
             btn.setId(name);
@@ -112,30 +117,18 @@ public class MainController {
                     pane.setId(name);
                     initTab(name, pane);
                 } else {
-                    contentStackPane.navTo(name);
+                    contentStackPane.getChildren().forEach(node -> {
+                        node.setVisible(false);
+                        if (node.getId().equals(name)) {
+                            node.setVisible(true);
+                        }
+                    });
                 }
                 setActiveBtnStyle(btn);
             });
             tbaSystem.getItems().add(btn);
-            if (i[0] == 0) {
-                setActiveMain(name, (Button) tbaSystem.getItems().get(0), pc);
-            }
-            i[0]++;
         });
-    }
-
-    private void setActiveMain(String name, Button activeBtn, PluginUIContext pc) {
-        if (isLogin()) {
-            grpContent.setDisable(false);
-            if (activeBtn.getId().equals(name)) {
-                setActiveBtnStyle(activeBtn);
-                Pane pane = pc.getMainBodyPane(name).getNewPane();
-                pane.setId(name);
-                initTab(name, pane);
-            }
-        } else {
-            grpContent.setDisable(true);
-        }
+        grpContent.setDisable(true);
     }
 
     private void setActiveBtnStyle(Button btn) {
@@ -147,9 +140,18 @@ public class MainController {
         }
     }
 
+    private void setActiveFirstTab(PluginUIContext pc) {
+        Button firstTabBtn = (Button) tbaSystem.getItems().get(0);
+        grpContent.setDisable(false);
+        setActiveBtnStyle(firstTabBtn);
+        Pane pane = pc.getMainBodyPane(firstTabBtn.getId()).getNewPane();
+        pane.setId(firstTabBtn.getId());
+        initTab(firstTabBtn.getId(), pane);
+    }
+
     public void resetMain() {
         grpContent.getChildren().remove(contentStackPane);
-        contentStackPane.removeAll();
+        contentStackPane.getChildren().clear();
         tabPaneMap.clear();
         tbaSystem.getItems().clear();
         stateBar.getChildren().clear();
@@ -165,8 +167,7 @@ public class MainController {
         tab.setText(name + "_1");
         tab.setContent(pane);
         tabPane.getTabs().add(tab);
-        contentStackPane.add(tabPane);
-        contentStackPane.navTo(name);
+        contentStackPane.getChildren().add(tabPane);
         tabPaneMap.put(name, tabPane);
         TabUtils.disableCloseTab(tabPane);
         TabUtils.tabSelectedListener(tab, tabPane);
@@ -199,9 +200,7 @@ public class MainController {
         templateBtn.setStyle("-fx-padding: 0 3 0 5");
         stateBar.addColumn(3, templateBtn);
 
-        initStateBarText();
-
-        ProgressBar progressBar = new ProgressBar();
+        progressBar = new ProgressBar();
         progressBar.setPrefHeight(10);
         progressBar.setMaxHeight(10);
         progressBar.setMinHeight(10);
@@ -209,7 +208,7 @@ public class MainController {
         progressBar.setMaxWidth(110);
         progressBar.setMinWidth(110);
         progressBar.getStyleClass().setAll("progress-bar-lg-green");
-        progressBar.setProgress(0.4);
+        progressBar.setProgress(0);
 
         Label lblMemory = new Label(GuiFxmlAndLanguageUtils.getString("STATE_BAR_MEMORY"), progressBar);
         lblMemory.setPrefHeight(20);
@@ -229,14 +228,13 @@ public class MainController {
         stateBar.addColumn(5, lblVersion);
     }
 
-    private void initStateBarText() {
+    private void initStateBarText(List<String> activeProjectNames, String activeTemplateName) {
         if (isLogin()) {
-            List<String> activeProjectNames = envService.findActivatedProjectName();
             if (activeProjectNames != null && !activeProjectNames.isEmpty()) {
                 dataSourceBtn.setText(activeProjectNames.size() +" "+ GuiFxmlAndLanguageUtils.getString("STATE_BAR_FILE_SELECTED"));
             }
-            if (templateSettingDto != null) {
-                templateBtn.setText(templateSettingDto.getName());
+            if (DAPStringUtils.isNotBlank(activeTemplateName)) {
+                templateBtn.setText(activeTemplateName);
             }
         } else {
             dataSourceBtn.setText("");
@@ -268,6 +266,30 @@ public class MainController {
         templateBtn.setOnAction(event -> this.getTemplateBtnEvent());
         templateBtn.setOnMouseEntered(event -> this.getTemplateLblEvent());
         templateView.setOnMouseExited(event -> this.getHidePopupEvent());
+        progressBar.setOnMouseClicked(event -> this.getProgressEvent());
+    }
+
+    private void getProgressEvent() {
+        WindowMessageController messageController = WindowMessageFactory.createWindowMessageHasOkAndCancel(GuiFxmlAndLanguageUtils.getString("GLOBAL_TITLE_MESSAGE"),
+                GuiFxmlAndLanguageUtils.getString(GuiFxmlAndLanguageUtils.getString("GLOBAL_FREE_SYTEM_MEMORY")));
+        messageController.addProcessMonitorListener(new WindowCustomListener() {
+            @Override
+            public boolean onShowCustomEvent() {
+                return false;
+            }
+
+            @Override
+            public boolean onCloseAndCancelCustomEvent() {
+                return false;
+            }
+
+            @Override
+            public boolean onOkCustomEvent() {
+                Runtime.getRuntime().gc();
+                progressBar.getStyleClass().setAll("progress-bar-md-green");
+                return false;
+            }
+        });
     }
 
     private void getHidePopupEvent() {
@@ -367,6 +389,10 @@ public class MainController {
                 newValue.setIsChecked(true);
                 templateBtn.setText(newValue.getTemplateName());
                 envService.setActivatedTemplate(newValue.getTemplateName());
+                List<String> projectName = envService.findActivatedProjectName();
+                Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
+                LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, newValue.getTemplateName());
+                envService.setTestItems(itemWithTypeDtoMap);
             }
             resetMain();
         });
@@ -395,39 +421,28 @@ public class MainController {
 
     public void initDataSource() {
         List<String> projectName = envService.findActivatedProjectName();
-        if (projectName != null) {
-            Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
-            LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, GuiConst.DEFAULT_TEMPLATE_NAME);
-            envService.setTestItems(itemWithTypeDtoMap);
-            envService.setActivatedProjectName(projectName);
-        } else {
+        TemplateSettingDto activeTemplate = envService.findActivatedTemplate();
+        if (projectName == null) {
             projectName = Lists.newArrayList();
         }
         dataSourceList = FXCollections.observableArrayList(projectName);
+        initStateBarText(projectName, activeTemplate.getName());
     }
 
     public void initTemplate() {
         List<StateBarTemplateModel> stateBarTemplateModels = Lists.newLinkedList();
         List<TemplateSettingDto> allTemplates = templateService.findAllTemplate();
+        TemplateSettingDto templateSettingDto =  envService.findActivatedTemplate();
         if (allTemplates != null) {
             allTemplates.forEach(dto -> {
                 StateBarTemplateModel stateBarTemplateModel = new StateBarTemplateModel(dto.getName(), false);
-                if (templateSettingDto != null) {
-                    if (templateSettingDto.getName().equals(stateBarTemplateModel.getTemplateName())) {
-                        stateBarTemplateModel.setIsChecked(true);
-                    }
-                } else {
-                    if (DAPStringUtils.isNotBlank(dto.getName()) && dto.getName().equals(GuiConst.DEFAULT_TEMPLATE_NAME)) {
-                        stateBarTemplateModel.setIsChecked(true);
-                    }
+                if (templateSettingDto.getName().equals(stateBarTemplateModel.getTemplateName())) {
+                    stateBarTemplateModel.setIsChecked(true);
                 }
                 stateBarTemplateModels.add(stateBarTemplateModel);
             });
         }
         templateList = FXCollections.observableArrayList(stateBarTemplateModels);
-        if (templateSettingDto == null) {
-            envService.setActivatedTemplate(GuiConst.DEFAULT_TEMPLATE_NAME);
-        }
     }
 
     public void refreshDataSource(ObservableList<String> dataSourceList) {
@@ -488,10 +503,66 @@ public class MainController {
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("dataSource", GuiFxmlAndLanguageUtils.getString(ResourceMassages.DATASOURCE), root, getResource("css/platform_app.css").toExternalForm());
             stage.setOnCloseRequest(controller.getEventHandler());
             stage.setResizable(false);
+            stage.toFront();
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * Get memory state
+     *
+     */
+    public void updateMemoryState() {
+        boolean flag = true;
+        final double memoryLimit = 2.0 * Math.pow(2, 20);
+        final double warningPercent = 70;
+
+        Service<Integer> service = new Service<Integer>() {
+            @Override
+            protected Task<Integer> createTask() {
+                return new Task<Integer>() {
+                    @Override
+                    protected Integer call() throws Exception {
+                        while (flag) {
+                            try {
+                                Thread.sleep(1000);
+                                int progress = (int) (getHeapUsed() / memoryLimit * 100);
+                                updateProgress(progress, 100);
+                                Platform.runLater(() -> {
+                                    try {
+                                        if (progress < warningPercent) {
+                                            progressBar.getStyleClass().setAll("progress-bar-md-green");
+                                        } else {
+                                            progressBar.getStyleClass().setAll("progress-bar-md-red");
+                                        }
+                                        TooltipUtil.installNormalTooltip(progressBar, progress + "%");
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                });
+
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        return null;
+                    }
+                };
+            }
+        };
+
+        progressBar.progressProperty().bind(service.progressProperty());
+        service.start();
+    }
+
+    private double getHeapUsed() throws Exception {
+        MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+        MemoryUsage heap = memoryMXBean.getHeapMemoryUsage();
+        return heap.getUsed() / Math.pow(2, 10);
     }
 
     private boolean isLogin() {

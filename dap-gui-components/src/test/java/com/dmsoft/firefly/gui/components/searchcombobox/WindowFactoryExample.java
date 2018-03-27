@@ -12,6 +12,7 @@ public class WindowFactoryExample extends Application {
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("view/demo.fxml"));
         Stage stage = WindowFactory.createFullWindow("demo", "demo", fxmlLoader.load(), getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
+        stage.toFront();
         stage.show();
     }
 

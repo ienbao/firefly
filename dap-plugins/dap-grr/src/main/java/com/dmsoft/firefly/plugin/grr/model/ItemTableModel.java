@@ -9,11 +9,17 @@ import javafx.beans.property.StringProperty;
 /**
  * Created by GuangLi on 2018/2/8.
  */
-public class ItemTableModel implements Comparable<TestItemWithTypeDto> {
+public class ItemTableModel {
     private TableCheckBox selector = new TableCheckBox();
     private SimpleObjectProperty<TestItemWithTypeDto> itemDto;
     private StringProperty item;
+    private Boolean isOnTop = false;
 
+    /**
+     * constructor
+     *
+     * @param itemDto test item with type dto
+     */
     public ItemTableModel(TestItemWithTypeDto itemDto) {
 
         this.itemDto = new SimpleObjectProperty<>(itemDto);
@@ -32,10 +38,20 @@ public class ItemTableModel implements Comparable<TestItemWithTypeDto> {
         return item.get();
     }
 
+    /**
+     * method to set item
+     *
+     * @param item test item name
+     */
     public void setItem(String item) {
         this.item.set(item);
     }
 
+    /**
+     * method to get item property
+     *
+     * @return string property
+     */
     public StringProperty itemProperty() {
         return item;
     }
@@ -44,16 +60,29 @@ public class ItemTableModel implements Comparable<TestItemWithTypeDto> {
         return itemDto.get();
     }
 
-    public SimpleObjectProperty<TestItemWithTypeDto> itemDtoProperty() {
-        return itemDto;
-    }
-
+    /**
+     * method to set test item with type dto
+     *
+     * @param itemDto test item dto
+     */
     public void setItemDto(TestItemWithTypeDto itemDto) {
         this.itemDto.set(itemDto);
     }
 
-    @Override
-    public int compareTo(TestItemWithTypeDto o) {
-        return item.get().compareToIgnoreCase(o.getTestItemName());
+    /**
+     * method to get test item dto property
+     *
+     * @return simple object property for test item with type dto
+     */
+    public SimpleObjectProperty<TestItemWithTypeDto> itemDtoProperty() {
+        return itemDto;
+    }
+
+    public Boolean getOnTop() {
+        return isOnTop;
+    }
+
+    public void setOnTop(Boolean onTop) {
+        isOnTop = onTop;
     }
 }

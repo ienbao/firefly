@@ -23,7 +23,7 @@ public class LegendUtils {
             XYChart.Series series = data.get(seriesIndex);
             Legend.LegendItem legendItem = new Legend.LegendItem(series.getName());
             legendItem.getSymbol().getStyleClass().removeAll(classStyles);
-            legendItem.getSymbol().getStyleClass().add("default-color" + seriesIndex);
+            legendItem.getSymbol().getStyleClass().addAll("default-color"+seriesIndex);
             legendItem.getSymbol().getStyleClass().addAll(classStyles);
             legend.getItems().add(legendItem);
         }

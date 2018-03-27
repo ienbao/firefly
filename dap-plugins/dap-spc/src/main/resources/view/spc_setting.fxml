@@ -21,11 +21,11 @@
             <children>
                 <VBox style="-fx-background-color: #F0F0F0;">
                     <children>
-                        <Label fx:id="defaultSetting" prefHeight="22.0" prefWidth="160.0" text="Analysis Setting">
-                            <padding>
-                                <Insets left="10.0" />
-                            </padding>
-                        </Label>
+                        <!--<Label fx:id="defaultSetting" prefHeight="22.0" prefWidth="160.0" text="Analysis Setting">-->
+                            <!--<padding>-->
+                                <!--<Insets left="10.0" />-->
+                            <!--</padding>-->
+                        <!--</Label>-->
                         <Label fx:id="alarmSetting" prefHeight="22.0" prefWidth="160.0" text="Alarm Setting">
                             <padding>
                                 <Insets left="10.0" />
@@ -47,48 +47,48 @@
                     <content>
                         <VBox>
                             <children>
-                                <VBox fx:id="defaultSettingVBox">
-                                    <children>
-                                        <Label style="-fx-font-weight: bold" text="Analysis Setting">
-                                            <VBox.margin>
-                                                <Insets bottom="10.0" top="10.0" />
-                                            </VBox.margin>
-                                        </Label>
-                                        <HBox alignment="CENTER_LEFT">
-                                            <children>
-                                                <Label alignment="CENTER" contentDisplay="CENTER" text="Subgroup Size">
-                                                    <HBox.margin>
-                                                        <Insets right="10.0" />
-                                                    </HBox.margin>
-                                                </Label>
-                                                <TextField fx:id="subgroupSizeTf" prefHeight="22.0" prefWidth="70.0" />
-                                            </children>
-                                            <VBox.margin>
-                                                <Insets bottom="10.0" />
-                                            </VBox.margin>
-                                        </HBox>
-                                        <HBox alignment="CENTER_LEFT">
-                                            <children>
-                                                <Label text="ND Chart Interval Number">
-                                                    <HBox.margin>
-                                                        <Insets right="10.0" />
-                                                    </HBox.margin>
-                                                </Label>
-                                                <TextField fx:id="ndChartNumberTf" prefHeight="22.0" prefWidth="70.0">
-                                                    <HBox.margin>
-                                                        <Insets />
-                                                    </HBox.margin>
-                                                </TextField>
-                                            </children>
-                                            <VBox.margin>
-                                                <Insets bottom="10.0" />
-                                            </VBox.margin>
-                                        </HBox>
-                                    </children>
-                                    <VBox.margin>
-                                        <Insets bottom="10.0" />
-                                    </VBox.margin>
-                                </VBox>
+                                <!--<VBox fx:id="defaultSettingVBox">-->
+                                    <!--<children>-->
+                                        <!--<Label style="-fx-font-weight: bold" text="Analysis Setting">-->
+                                            <!--<VBox.margin>-->
+                                                <!--<Insets bottom="10.0" top="10.0" />-->
+                                            <!--</VBox.margin>-->
+                                        <!--</Label>-->
+                                        <!--<HBox alignment="CENTER_LEFT">-->
+                                            <!--<children>-->
+                                                <!--<Label alignment="CENTER" contentDisplay="CENTER" text="Subgroup Size">-->
+                                                    <!--<HBox.margin>-->
+                                                        <!--<Insets right="10.0" />-->
+                                                    <!--</HBox.margin>-->
+                                                <!--</Label>-->
+                                                <!--<TextField fx:id="subgroupSizeTf" prefHeight="22.0" prefWidth="70.0" />-->
+                                            <!--</children>-->
+                                            <!--<VBox.margin>-->
+                                                <!--<Insets bottom="10.0" />-->
+                                            <!--</VBox.margin>-->
+                                        <!--</HBox>-->
+                                        <!--<HBox alignment="CENTER_LEFT">-->
+                                            <!--<children>-->
+                                                <!--<Label text="ND Chart Interval Number">-->
+                                                    <!--<HBox.margin>-->
+                                                        <!--<Insets right="10.0" />-->
+                                                    <!--</HBox.margin>-->
+                                                <!--</Label>-->
+                                                <!--<TextField fx:id="ndChartNumberTf" prefHeight="22.0" prefWidth="70.0">-->
+                                                    <!--<HBox.margin>-->
+                                                        <!--<Insets />-->
+                                                    <!--</HBox.margin>-->
+                                                <!--</TextField>-->
+                                            <!--</children>-->
+                                            <!--<VBox.margin>-->
+                                                <!--<Insets bottom="10.0" />-->
+                                            <!--</VBox.margin>-->
+                                        <!--</HBox>-->
+                                    <!--</children>-->
+                                    <!--<VBox.margin>-->
+                                        <!--<Insets bottom="10.0" />-->
+                                    <!--</VBox.margin>-->
+                                <!--</VBox>-->
                                 <VBox fx:id="alarmSettingVBox">
                                     <children>
                                         <Label style="-fx-font-weight: bold" text="Alarm Setting">

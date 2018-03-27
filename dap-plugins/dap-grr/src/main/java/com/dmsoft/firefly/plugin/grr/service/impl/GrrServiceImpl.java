@@ -15,8 +15,10 @@ import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.plugin.apis.annotation.OpenService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * impl class for grr service
@@ -24,6 +26,9 @@ import java.util.List;
 @OpenService
 public class GrrServiceImpl implements GrrService {
     private GrrAnalysisService analysisService;
+
+    private static final String MAP_KEY_DATA = "data";
+    private static final String MAP_KEY_COUNT = "count";
 
     @Override
     public List<GrrSummaryDto> getSummaryResult(SearchDataFrame dataFrame, List<TestItemWithTypeDto> testItemDtoList, List<String> rowKeysToByAnalyzed, GrrAnalysisConfigDto configDto) {
@@ -35,7 +40,9 @@ public class GrrServiceImpl implements GrrService {
         for (TestItemWithTypeDto itemDto : testItemDtoList) {
             GrrAnalysisDataDto grrAnalysisDataDto = new GrrAnalysisDataDto();
             List<String> datas = dataFrame.getDataValue(itemDto.getTestItemName(), rowKeysToByAnalyzed);
-            List<Double> doubleList = convertData(datas);
+            Map<String, Object> dataMap = convertData(datas);
+            List<Double> doubleList = (List<Double>) dataMap.get(MAP_KEY_DATA);
+            Integer count = (Integer) dataMap.get(MAP_KEY_COUNT);
             if (itemDto.getLsl() != null) {
                 grrAnalysisDataDto.setLsl(itemDto.getLsl());
             } else {
@@ -46,14 +53,37 @@ public class GrrServiceImpl implements GrrService {
             } else {
                 grrAnalysisDataDto.setUsl(dataFrame.getTestItemWithTypeDto(itemDto.getTestItemName()).getUsl());
             }
-            grrAnalysisDataDto.setDataList(doubleList);
+            if (datas == null || doubleList == null || count == datas.size() || datas.size() != doubleList.size()) {
+                grrAnalysisDataDto.setDataList(null);
+            } else {
+                grrAnalysisDataDto.setDataList(doubleList);
+            }
             grrAnalysisDataDtoList.add(grrAnalysisDataDto);
         }
         for (int i = 0; i < grrAnalysisDataDtoList.size(); i++) {
-            GrrSummaryResultDto resultDto = getAnalysisService().analyzeSummaryResult(grrAnalysisDataDtoList.get(i), configDto);
             GrrSummaryDto summaryDto = new GrrSummaryDto();
-            summaryDto.setSummaryResultDto(resultDto);
             summaryDto.setItemName(testItemDtoList.get(i).getTestItemName());
+            if (grrAnalysisDataDtoList.get(i) == null) {
+                continue;
+            }
+            if (grrAnalysisDataDtoList.get(i).getDataList() == null) {
+                GrrSummaryResultDto grrSummaryResultDto = new GrrSummaryResultDto();
+                if (DAPStringUtils.isNumeric(grrAnalysisDataDtoList.get(i).getUsl())) {
+                    grrSummaryResultDto.setUsl(Double.valueOf(grrAnalysisDataDtoList.get(i).getUsl()));
+                } else {
+                    grrSummaryResultDto.setUsl(Double.NaN);
+                }
+                if (DAPStringUtils.isNumeric(grrAnalysisDataDtoList.get(i).getLsl())) {
+                    grrSummaryResultDto.setLsl(Double.valueOf(grrAnalysisDataDtoList.get(i).getLsl()));
+                } else {
+                    grrSummaryResultDto.setLsl(Double.NaN);
+                }
+                grrSummaryResultDto.setTolerance(grrSummaryResultDto.getUsl() - grrSummaryResultDto.getLsl());
+                summaryDto.setSummaryResultDto(grrSummaryResultDto);
+            } else {
+                GrrSummaryResultDto resultDto = getAnalysisService().analyzeSummaryResult(grrAnalysisDataDtoList.get(i), configDto);
+                summaryDto.setSummaryResultDto(resultDto);
+            }
             result.add(summaryDto);
         }
         return result;
@@ -68,7 +98,12 @@ public class GrrServiceImpl implements GrrService {
 
         GrrAnalysisDataDto grrAnalysisDataDto = new GrrAnalysisDataDto();
         List<String> datas = dataColumn.getData(rowKeysToByAnalyzed);
-        List<Double> doubleList = convertData(datas);
+        Map<String, Object> dataMap = convertData(datas);
+        List<Double> doubleList = (List<Double>) dataMap.get(MAP_KEY_DATA);
+        Integer count = (Integer) dataMap.get(MAP_KEY_COUNT);
+        if (datas == null || doubleList == null || count == datas.size() || datas.size() != doubleList.size()) {
+            return null;
+        }
         if (testItemDto.getLsl() != null) {
             grrAnalysisDataDto.setLsl(testItemDto.getLsl());
         } else {
@@ -95,7 +130,15 @@ public class GrrServiceImpl implements GrrService {
 
         GrrAnalysisDataDto grrAnalysisDataDto = new GrrAnalysisDataDto();
         List<String> datas = dataColumn.getData(rowKeysToByAnalyzed);
-        List<Double> doubleList = convertData(datas);
+        Map<String, Object> dataMap = convertData(datas);
+        List<Double> doubleList = (List<Double>) dataMap.get(MAP_KEY_DATA);
+        Integer count = (Integer) dataMap.get(MAP_KEY_COUNT);
+        if (datas == null || doubleList == null || count == datas.size() || datas.size() != doubleList.size()) {
+            return null;
+        }
+        if (datas == null || doubleList == null || datas.size() != doubleList.size()) {
+            return null;
+        }
         if (testItemDto.getLsl() != null) {
             grrAnalysisDataDto.setLsl(testItemDto.getLsl());
         } else {
@@ -113,16 +156,21 @@ public class GrrServiceImpl implements GrrService {
         return result;
     }
 
-    private List<Double> convertData(List<String> datas) {
+    private Map<String, Object> convertData(List<String> datas) {
         List<Double> doubleList = Lists.newArrayList();
+        Map<String, Object> data = Maps.newHashMap();
+        Integer nanCount = 0;
         for (String s : datas) {
             if (DAPStringUtils.isNumeric(s)) {
                 doubleList.add(Double.valueOf(s));
             } else if (s != null && DAPStringUtils.isSpecialBlank(s)) {
                 doubleList.add(Double.NaN);
+                nanCount++;
             }
         }
-        return doubleList;
+        data.put(MAP_KEY_DATA, doubleList);
+        data.put(MAP_KEY_COUNT, nanCount);
+        return data;
     }
 
     public GrrAnalysisService getAnalysisService() {

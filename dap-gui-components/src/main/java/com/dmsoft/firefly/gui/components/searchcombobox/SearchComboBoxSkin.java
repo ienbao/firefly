@@ -28,7 +28,11 @@ public class SearchComboBoxSkin<T> extends ComboBoxListViewSkin<T> {
         super(comboBox);
         popup = new Popup();
         popup.setAutoHide(true);
-        popup.setHeight(287);
+        comboBox.showingProperty().addListener((ov, b1, b2) -> {
+            if (b2 && arrowButton.getStyleClass().contains("arrow-calendar-button")) {
+                comboBox.hide();
+            }
+        });
         arrowButton.setOnMouseReleased(event -> {
             if (arrowButton.getStyleClass().contains("arrow-calendar-button")) {
                 comboBox.hide();
@@ -37,6 +41,7 @@ public class SearchComboBoxSkin<T> extends ComboBoxListViewSkin<T> {
                 Date date = getDate(comboBox.getEditor().getText(), timePattern);
                 popup.setWidth(comboBox.getWidth());
                 CalendarChooser calendarChooser = new CalendarChooser(date);
+                popup.getContent().clear();
                 popup.getContent().add(calendarChooser);
                 Bounds bounds = comboBox.localToScreen(comboBox.getBoundsInLocal());
                 double x = bounds.getMinX() - 1;

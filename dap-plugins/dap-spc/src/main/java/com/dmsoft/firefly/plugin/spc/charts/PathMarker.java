@@ -36,8 +36,11 @@ public class PathMarker {
             path.getElements().clear();
             int len = points.getLen();
             for (int i = 0; i < len; i++) {
-                double x = (double) points.getXByIndex(i);
-                double y = (double) points.getYByIndex(i);
+                Double x = (Double) points.getXByIndex(i);
+                Double y = (Double) points.getYByIndex(i);
+                if (x == null || y == null) {
+                    continue;
+                }
                 this.layoutPath(path, x, y, chart);
             }
         }

@@ -7,8 +7,16 @@ import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.dai.service.UserService;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -16,6 +24,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class LoginController {
@@ -35,6 +47,11 @@ public class LoginController {
 
     @FXML
     private Button loginBtn;
+
+    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
+    private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
+
 
     @FXML
     private void initialize() {
@@ -62,14 +79,41 @@ public class LoginController {
         loginFailHbox.getChildren().clear();
         UserDto userDto = userService.validateUser(userNameTxt.getText(), passwordField.getText());
         if (userDto != null) {
-            UserModel userModel = UserModel.getInstance();
-            userModel.setUser(userDto);
+            this.initEnvData(userDto);
             return true;
         } else {
             loginBtn.getStyleClass().removeAll("btn-primary-loading");
             addErrorTip();
         }
         return false;
+    }
+
+    private void initEnvData(UserDto userDto) {
+        UserModel userModel = UserModel.getInstance();
+        userModel.setUser(userDto);
+        envService.setUserName(userDto.getUserName());
+
+        LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+        if (languageType == null) {
+            envService.setLanguageType(LanguageType.EN);
+        }
+
+        TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
+        String activeTemplateName = null;
+        if (templateSettingDto == null || DAPStringUtils.isBlank(templateSettingDto.getName())) {
+            envService.setActivatedTemplate(GuiConst.DEFAULT_TEMPLATE_NAME);
+            activeTemplateName = GuiConst.DEFAULT_TEMPLATE_NAME;
+        } else {
+            activeTemplateName = templateSettingDto.getName();
+        }
+
+        List<String> projectName = envService.findActivatedProjectName();
+        if (projectName != null && !projectName.isEmpty()) {
+            Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
+            LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, activeTemplateName);
+            envService.setTestItems(itemWithTypeDtoMap);
+            envService.setActivatedProjectName(projectName);
+        }
     }
 
 

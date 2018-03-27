@@ -69,7 +69,7 @@ public class SpcExportServiceImpl {
         }
         String savePicPath = FileUtils.getAbsolutePath("../export/temp");
         FileUtils.deleteDir(savePicPath);
-        return dirSavePath;
+        return basePath[0];
     }
 
     private boolean spcExportBuildDetail(ExportParamDto exportParamDto, Map<String, Map<String, String>> chartImage, List<SpcStatisticalResultAlarmDto> spcStatisticalResultDtos,
@@ -89,12 +89,8 @@ public class SpcExportServiceImpl {
     }
 
     private String getTimeString() {
-//        DateTimeFormatter format = DateTimeFormat.forPattern("yyyyMMddHHmmss");
-//        DateTime now = new DateTime();
-//        return now.toString(format);
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         return sdf.format(d);
     }
-
 }

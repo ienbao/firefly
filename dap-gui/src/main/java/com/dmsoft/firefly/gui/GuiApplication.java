@@ -82,16 +82,14 @@ public class GuiApplication extends Application {
             updateProcessorBar();
         }
 
+        MenuFactory.initMenu();
+
         DAPApplication.startPlugin(Lists.newArrayList(plugins));
         RuntimeContext.registerBean(IMessageManager.class, new MessageManagerFactory());
         LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
-        if (languageType == null) {
-            RuntimeContext.getBean(EnvService.class).setLanguageType(LanguageType.EN);
-        } else {
+        if (languageType != null) {
             RuntimeContext.getBean(EnvService.class).setLanguageType(RuntimeContext.getBean(EnvService.class).getLanguageType());
         }
-
-        MenuFactory.initMenu();
 
         FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/app_menu.fxml");
         FXMLLoader fxmlLoader1 = GuiFxmlAndLanguageUtils.getLoaderFXML("view/main.fxml");
@@ -173,6 +171,7 @@ public class GuiApplication extends Application {
             stage.initStyle(StageStyle.TRANSPARENT);
             stage.setScene(tempScene);
             stage.setResizable(false);
+            stage.toFront();
             stage.show();
             StageMap.addStage(GuiConst.PLARTFORM_STAGE_PROCESS, stage);
         } catch (Exception ex) {
@@ -183,5 +182,9 @@ public class GuiApplication extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public void stop() throws Exception {
+        RuntimeContext.getBean(JobManager.class).getExecutorService().shutdownNow();
     }
 }

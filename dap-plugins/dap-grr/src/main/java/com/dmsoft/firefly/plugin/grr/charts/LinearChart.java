@@ -118,6 +118,18 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         line.setStyle("-fx-stroke:" + colorStr);
     }
 
+    /**
+     * Hidden lines for line names
+     *
+     * @param lineNames line names
+     */
+    public void hiddenValueMarkers(List<String> lineNames) {
+        if (lineNames == null) {
+            return;
+        }
+        lineNames.forEach(lineName -> toggleValueMarker(lineName, false));
+    }
+
     public void toggleValueMarker(String lineName, boolean showed) {
 
         if (showed) {
@@ -139,6 +151,16 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         if (lineMap.containsKey(lineName)) {
             lineMap.get(lineName).getStyleClass().remove("hidden-line");
         }
+    }
+
+    /**
+     * Remove all chart node and clear chart data
+     */
+    public void removeAllChildren() {
+        this.horizontalMarkers.setAll(FXCollections.observableArrayList());
+        this.verticalMarkers.setAll(FXCollections.observableArrayList());
+        this.getData().setAll(FXCollections.observableArrayList());
+        this.getPlotChildren().removeAll(this.getPlotChildren());
     }
 
     /**

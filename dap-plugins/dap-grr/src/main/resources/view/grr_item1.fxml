@@ -3,15 +3,16 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox fx:id="testItemPane" maxWidth="500.0" minWidth="180.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.grr.controller.GrrItemController">
+
+<VBox fx:id="testItemPane" maxWidth="820.0" minWidth="180.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.grr.controller.GrrItemController">
    <children>
-      <SplitPane fx:id="split" maxWidth="500.0" minWidth="180.0" orientation="VERTICAL" prefHeight="600.0" style="-fx-border-width: 0 0 0 0;" VBox.vgrow="ALWAYS">
+      <SplitPane fx:id="split" maxWidth="820.0" minWidth="180.0" orientation="VERTICAL" prefHeight="600.0" style="-fx-border-width: 0 0 0 0;" VBox.vgrow="ALWAYS">
          <items>
-            <TabPane maxWidth="500.0" minHeight="270.0" minWidth="180.0" prefHeight="270.0" prefWidth="180.0" style="-fx-border-width: 0 0 0 0;" tabClosingPolicy="UNAVAILABLE">
+            <TabPane maxWidth="820.0" minHeight="270.0" minWidth="180.0" prefHeight="270.0" prefWidth="180.0" style="-fx-border-width: 0 0 0 0;" tabClosingPolicy="UNAVAILABLE">
                <tabs>
                   <Tab fx:id="itemTab" style="-fx-pref-width: 45;">
                      <content>
-                        <BorderPane maxWidth="500.0" minHeight="250.0" minWidth="180.0" prefHeight="250.0" prefWidth="180.0">
+                        <BorderPane maxWidth="820.0" minHeight="250.0" minWidth="180.0" prefHeight="250.0" prefWidth="180.0">
                            <center>
                               <TableView fx:id="itemTable" minHeight="200.0" minWidth="180.0" prefHeight="200.0" prefWidth="180.0" style="-fx-border-width: 1 0 0 0;" BorderPane.alignment="CENTER">
                                  <columns>
@@ -30,7 +31,7 @@
                   </Tab>
                   <Tab fx:id="configTab" style="-fx-pref-width: 45;">
                      <content>
-                        <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="350.0">
+                        <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="445.0">
                            <content>
                               <GridPane fx:id="grrConfigPane" minWidth="160.0" prefHeight="350.0" prefWidth="160.0">
                                  <columnConstraints>
@@ -53,10 +54,10 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Label text="Model*" />
-                                    <Label text="Part" GridPane.rowIndex="1" />
-                                    <Label text="Appraisers" GridPane.rowIndex="2" />
-                                    <Label text="Trial" GridPane.rowIndex="3" />
+                                    <Label text="%GRR_MODEL" />
+                                    <Label text="%PART" GridPane.rowIndex="1" />
+                                    <Label text="%APPRAISER" GridPane.rowIndex="2" />
+                                    <Label text="%TRAIL" GridPane.rowIndex="3" />
                                     <TextField fx:id="partTxt" maxHeight="22.0" maxWidth="70.0" minHeight="22.0" minWidth="70.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="22.0" prefWidth="70.0" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                        <GridPane.margin>
                                           <Insets />
@@ -72,10 +73,10 @@
                                           <Insets />
                                        </GridPane.margin>
                                     </TextField>
-                                    <Label alignment="CENTER" contentDisplay="CENTER" text="Part*" GridPane.rowIndex="5" />
-                                    <ComboBox fx:id="partCombox" maxHeight="22.0" maxWidth="500.0" minHeight="22.0" prefHeight="22.0" prefWidth="159.0" GridPane.rowIndex="6" />
-                                    <Label text="Appraisers" GridPane.rowIndex="9" />
-                                    <ComboBox fx:id="appraiserCombox" maxHeight="22.0" maxWidth="500.0" minHeight="22.0" prefHeight="22.0" prefWidth="159.0" GridPane.rowIndex="10" />
+                                    <Label alignment="CENTER" contentDisplay="CENTER" text="%GRR_PARTS" GridPane.rowIndex="5" />
+                                    <ComboBox fx:id="partCombox" maxHeight="22.0" maxWidth="820.0" minHeight="22.0" prefHeight="22.0" prefWidth="159.0" GridPane.rowIndex="6" />
+                                    <Label text="%GRR_APPRAISERS" GridPane.rowIndex="9" />
+                                    <ComboBox fx:id="appraiserCombox" maxHeight="22.0" maxWidth="820.0" minHeight="22.0" prefHeight="22.0" prefWidth="159.0" GridPane.rowIndex="10" />
                                     <ListView fx:id="partListView" minHeight="0.0" GridPane.rowIndex="7" />
                                     <ListView fx:id="appraiserListView" minHeight="0.0" GridPane.rowIndex="11" />
                                     <Label fx:id="partLbl" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
@@ -89,51 +90,15 @@
                         </ScrollPane>
                      </content>
                   </Tab>
-                  <Tab fx:id="timeTab" style="-fx-pref-width: 45;">
-                     <content>
-                        <BorderPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <center>
-                              <GridPane BorderPane.alignment="CENTER">
-                                 <children>
-                                    <CheckBox mnemonicParsing="false" text="%ENABLED_TIMER">
-                                       <GridPane.margin>
-                                          <Insets left="10.0" right="10.0" />
-                                       </GridPane.margin>
-                                    </CheckBox>
-                                    <Label text="%REFRESH_CURRENT_TASK_EVERY" GridPane.rowIndex="1">
-                                       <GridPane.margin>
-                                          <Insets left="10.0" right="10.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <ComboBox maxWidth="500.0" minWidth="180.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
-                                       <GridPane.margin>
-                                          <Insets left="10.0" right="10.0" />
-                                       </GridPane.margin>
-                                    </ComboBox>
-                                 </children>
-                                 <columnConstraints>
-                                    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="22.0" minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                              </GridPane>
-                           </center>
-                        </BorderPane>
-                     </content>
-                  </Tab>
                </tabs>
             </TabPane>
          </items>
       </SplitPane>
-      <GridPane maxWidth="500.0" minWidth="180.0" style="-fx-background-color: #ffffff; -fx-border-width: 1 0 0 0; -fx-border-color: #DCDCDC;">
+      <GridPane maxWidth="820.0" minWidth="180.0" style="-fx-background-color: #ffffff; -fx-border-width: 1 0 0 0; -fx-border-color: #DCDCDC;">
          <children>
-            <Button fx:id="exportBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-txt" text="Button" GridPane.columnIndex="3" GridPane.halignment="LEFT" />
-            <Button fx:id="importBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-txt" text="Button" GridPane.columnIndex="2" />
-            <Button fx:id="analysisBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-primary" text="Button" GridPane.halignment="RIGHT" />
+            <Button fx:id="exportBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-txt" text="" GridPane.columnIndex="3" GridPane.halignment="LEFT" />
+            <Button fx:id="importBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-txt" text="" GridPane.columnIndex="2" />
+            <Button fx:id="analysisBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-primary" text="" GridPane.halignment="RIGHT" />
          </children>
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />

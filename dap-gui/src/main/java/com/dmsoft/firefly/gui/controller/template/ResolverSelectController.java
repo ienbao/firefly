@@ -12,6 +12,7 @@ import com.dmsoft.firefly.gui.model.UserModel;
 import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
@@ -32,7 +33,6 @@ import javafx.scene.control.ComboBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
@@ -45,6 +45,7 @@ public class ResolverSelectController implements Initializable {
 
     private DataSourceController controller;
     private ObservableList resolverData;
+    private EnvService envService = RuntimeContext.getBean(EnvService.class);
 
     public ResolverSelectController(DataSourceController controller) {
         this.controller = controller;
@@ -78,10 +79,14 @@ public class ResolverSelectController implements Initializable {
         resolverData = FXCollections.observableArrayList(name);
         resolver.setItems(resolverData);
         if (name.size() > 0) {
-            String defaultResolver = userPreferenceService.findPreferenceByUserId("defaultResolver", "admin");
+            String defaultResolver = userPreferenceService.findPreferenceByUserId("defaultResolver", envService.getUserName());
             String resolverName;
             if (DAPStringUtils.isNotBlank(defaultResolver)) {
-                resolverName = mapper.fromJson(defaultResolver, String.class);
+                if (defaultResolver instanceof String) {
+                    resolverName = defaultResolver;
+                } else {
+                    resolverName = mapper.fromJson(defaultResolver, String.class);
+                }
                 if (DAPStringUtils.isNotBlank(resolverName)) {
                     resolver.getSelectionModel().select(resolverName);
                 } else {
@@ -139,11 +144,15 @@ public class ResolverSelectController implements Initializable {
                 Platform.runLater(() -> {
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.append("DataSource" + " ");
+                    List<String> stringList = Lists.newArrayList();
                     fileNameExits.forEach(v -> {
                         stringBuilder.append(v + " ");
+                        stringList.add(v);
                     });
-                    stringBuilder.append("Repeat");
-                    WindowMessageFactory.createWindowMessage("DataSource Repeat", stringBuilder.toString());
+                    if (stringList.size() > 0) {
+                        stringBuilder.append("Repeat");
+                        WindowMessageFactory.createWindowMessage("DataSource Repeat", stringBuilder.toString());
+                    }
                 });
             }
         });
