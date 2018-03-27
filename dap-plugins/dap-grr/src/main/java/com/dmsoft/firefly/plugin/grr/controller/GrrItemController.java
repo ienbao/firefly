@@ -256,6 +256,7 @@ public class GrrItemController implements Initializable {
 
     private void initPartAndAppraiserDatas() {
         ObservableList<String> datas = FXCollections.observableArrayList();
+        datas.add("");
         if (items != null) {
             for (ItemTableModel model : items) {
                 datas.add(model.getItem());
