@@ -83,9 +83,9 @@ public class GrrSummaryModel implements TableModel {
                         boolean canAnalyze = !errorEditorRow.contains(summaryDto.getItemName());
                         canAnalyze = canAnalyze && valueMap.containsKey(valueKey);
                         canAnalyze = canAnalyze && valueMap.get(valueKey).getValue() != null;
-                        canAnalyze = canAnalyze && !"-".equals(valueMap.get(valueKey).getValue());
-                        String tolerance = valueMap.get(selectedItemName + UIConstant.SPLIT_FLAG + UIConstant.GRR_SUMMARY_TITLE[3]).getValue();
-                        radioClickListener.executeAnalyzeDetail(summaryDto, tolerance, canAnalyze);
+//                        canAnalyze = canAnalyze && !"-".equals(valueMap.get(valueKey).getValue());
+//                        String tolerance = valueMap.get(selectedItemName + UIConstant.SPLIT_FLAG + UIConstant.GRR_SUMMARY_TITLE[3]).getValue();
+                        radioClickListener.executeAnalyzeDetail(summaryDto, getToleranceCellValue(selectedItemName), canAnalyze);
                     }
                 });
                 summaryRadioButton.put(summaryDto.getItemName(), radioButton);

@@ -41,7 +41,6 @@ public class SummaryHandler1 implements JobInboundHandler {
 
         SearchDataFrame dataFrame = (SearchDataFrame) param.get(ParamKeys.SEARCH_DATA_FRAME);
         GrrDataFrameDto grrDataFrameDto = (GrrDataFrameDto) param.get(ParamKeys.SEARCH_VIEW_DATA_FRAME);
-        int analysisSummaryType = param != null && param.containsKey(ParamKeys.SEARCH_GRR_SUMMARY_TYPE) ? (int) param.get(ParamKeys.SEARCH_GRR_SUMMARY_TYPE) : -1;
 
         List<String> includeRows = Lists.newLinkedList();
         grrDataFrameDto.getIncludeDatas().forEach(grrViewDataDto -> includeRows.add(grrViewDataDto.getRowKey()));
@@ -51,19 +50,6 @@ public class SummaryHandler1 implements JobInboundHandler {
                 itemWithTypeDtos,
                 includeRows,
                 grrAnalysisConfigDto);
-
-        String selectedItemName = "";
-        if (summaryDtos != null && analysisSummaryType != -1) {
-            for (int i = 0; i < summaryDtos.size(); i++) {
-                GrrSummaryDto summaryDto = summaryDtos.get(i);
-                if (validGrr(summaryDto, analysisSummaryType)) {
-                    selectedItemName = summaryDto.getItemName();
-                    break;
-                }
-            }
-        }
-        //set selected test item
-        param.put(ParamKeys.TEST_ITEM_NAME, selectedItemName);
 
         if (in[1] != null && in[1] instanceof GrrMainController) {
             GrrMainController grrMainController = (GrrMainController) in[1];

@@ -207,7 +207,7 @@
                                                       <Insets bottom="6.0" left="10.0" top="6.0" />
                                                    </padding>
                                                 </HBox>
-                                                <BorderPane fx:id="rrbyAppraiserBp" maxHeight="29.0" minWidth="29.0" prefHeight="29.0" prefWidth="200.0" style="-fx-border-color: rgb(220,220,220); -fx-border-width: 0 0 1 0;" />
+                                                <BorderPane fx:id="rrbyAppraiserBp" maxHeight="29.0" minHeight="29.0" prefHeight="29.0" prefWidth="200.0" style="-fx-border-color: rgb(220,220,220); -fx-border-width: 0 0 1 0;" />
                                              </children>
                                           </VBox>
                                           <VBox fx:id="rrbyPartVBox" prefHeight="235.0" prefWidth="100.0" style="-fx-border-width: 1px; -fx-border-color: rgb(220,220,220);">

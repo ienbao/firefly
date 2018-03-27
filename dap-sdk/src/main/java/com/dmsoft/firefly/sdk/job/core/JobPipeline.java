@@ -103,38 +103,6 @@ public interface JobPipeline {
     JobHandler removeLast();
 
     /**
-     * replace
-     *
-     * @param oldHandler oldHandler
-     * @param newName    newName
-     * @param newHandler newHandler
-     * @return JobPipeline
-     */
-    JobPipeline replace(JobHandler oldHandler, String newName, JobHandler newHandler);
-
-    /**
-     * replace
-     *
-     * @param oldName    oldName
-     * @param newName    newName
-     * @param newHandler newHandler
-     * @return JobPipeline
-     */
-    JobHandler replace(String oldName, String newName, JobHandler newHandler);
-
-    /**
-     * replace
-     *
-     * @param oldHandlerType oldHandlerType
-     * @param newName        newName
-     * @param newHandler     newHandler
-     * @param <T>            JobHandler
-     * @return JobHandler
-     */
-    <T extends JobHandler> T replace(Class<T> oldHandlerType, String newName,
-                                     JobHandler newHandler);
-
-    /**
      * first
      *
      * @return

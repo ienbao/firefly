@@ -693,17 +693,16 @@ public class GrrItemController implements Initializable {
             SearchConditionDto conditionDto = this.initSearchConditionDto();
             conditionDto.setSelectedTestItemDtos(selectedItemDto);
             paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, conditionDto);
-            paramMap.put(ParamKeys.SEARCH_GRR_SUMMARY_TYPE, grrMainController.getResultBasedCmbIndex());
             updateGrrPreference(conditionDto);
             manager.doJobASyn(job, new JobDoComplete() {
                 @Override
                 public void doComplete(Object returnValue) {
                     try {
                         Platform.runLater(() -> {
-                            if (returnValue == null) {
-                                //todo message tip
-                                return;
-                            }
+//                            if (returnValue == null) {
+//                                //todo message tip
+//                                return;
+//                            }
                             GrrParamDto grrParamDto = grrMainController.getGrrParamDto();
                             refreshPartOrAppraiserListView(grrParamDto);
                             if (grrParamDto != null && (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty())) {
