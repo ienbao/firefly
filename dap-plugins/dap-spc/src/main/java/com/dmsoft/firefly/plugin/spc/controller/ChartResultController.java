@@ -91,27 +91,6 @@ public class ChartResultController implements Initializable {
     }
 
     /**
-     * Set no used rules in disabled
-     */
-    public void setDisableRulesByConfig() {
-        Set ruleNames = Sets.newLinkedHashSet();
-        SpcSettingDto spcSettingDto = spcMainController.getSpcSettingDto();
-        if (spcSettingDto == null) {
-            return;
-        }
-        List<ControlRuleDto> controlChartRules = spcSettingDto.getControlChartRule();
-        if (controlChartRules == null) {
-            return;
-        }
-        controlChartRules.forEach(controlRuleDto -> {
-            if (!controlRuleDto.isUsed()) {
-                ruleNames.add(controlRuleDto.getRuleName());
-            }
-        });
-        rRuleBtn.setDisableRules(ruleNames);
-    }
-
-    /**
      * init spc chart data
      *
      * @param spcChartDtoList the list of chart data

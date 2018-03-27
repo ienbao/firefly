@@ -12,6 +12,7 @@ import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.core.JobHandlerContext;
 import com.dmsoft.firefly.sdk.job.core.JobInboundHandler;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -43,11 +44,21 @@ public class DetailResultHandler1 implements JobInboundHandler {
         grrDataFrameDto.getIncludeDatas().forEach(grrViewDataDto -> includeRows.add(grrViewDataDto.getRowKey()));
 
         GrrService grrService = RuntimeContext.getBean(GrrService.class);
-        String itemName = itemWithTypeDtos.get(0).getTestItemName();
-        GrrDetailDto grrDetailDto = grrService.getDetailResult(grrDataFrameDto.getDataFrame().getDataColumn(itemName, null),
-                itemWithTypeDtos.get(0),
-                includeRows,
-                analysisConfigDto);
+        String itemName = (String) param.get(ParamKeys.TEST_ITEM_NAME);
+
+        GrrDetailDto grrDetailDto = null;
+        TestItemWithTypeDto itemWithTypeDto = new TestItemWithTypeDto();
+        if (DAPStringUtils.isNotBlank(itemName) && itemWithTypeDtos != null && !itemWithTypeDtos.isEmpty()) {
+            for (int i = 0; i < itemWithTypeDtos.size(); i++) {
+                if (itemName.equals(itemWithTypeDtos.get(i).getTestItemName())) {
+                    itemWithTypeDto = itemWithTypeDtos.get(i);
+                }
+            }
+            grrDetailDto = grrService.getDetailResult(grrDataFrameDto.getDataFrame().getDataColumn(itemName, null),
+                    itemWithTypeDto,
+                    includeRows,
+                    analysisConfigDto);
+        }
         if (in[1] != null && in[1] instanceof GrrMainController) {
             GrrMainController grrMainController = (GrrMainController) in[1];
             grrMainController.setGrrDetailDto(grrDetailDto);

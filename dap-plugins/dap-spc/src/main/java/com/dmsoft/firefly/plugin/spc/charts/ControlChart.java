@@ -303,7 +303,9 @@ public class ControlChart<X, Y> extends LineChart {
 //        1. 设置画图数据, 图的颜色、样式、悬浮提示
 //        2. 设置画直线数据， 线的颜色，样式
 //        3. 设置画折线数据， 折线的颜色，样式
-        if (controlChartData == null) return;
+        if (controlChartData == null || controlChartData.getXyOneChartData() == null) {
+            return;
+        }
         Color color = controlChartData.getColor();
         String seriesName = controlChartData.getSeriesName();
         String uniqueKey = controlChartData.getUniqueKey();

@@ -166,6 +166,18 @@ table
     -fx-cursor: inherit;
 }
 
+.cell .error .radio-button > .radio {
+    -fx-padding: 0.16em;
+    -fx-border-radius: 0.5em;
+    -fx-border-color: #ea2028;
+    -fx-background-color: #fde8e9;
+}
+
+.cell .error .radio-button {
+    -fx-opacity: 1;
+    -fx-cursor: hand;
+}
+
 /*
 *Spc setting
 */

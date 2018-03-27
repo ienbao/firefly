@@ -30,6 +30,7 @@ import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -94,6 +95,12 @@ public class GrrResultController implements Initializable {
         this.initPerformanceSelected();
     }
 
+    /**
+     * Analyze grr result
+     *
+     * @param grrSummaryDtos grr summary dto
+     * @param grrDetailDto   grr detail
+     */
     public void analyzeGrrResult(List<GrrSummaryDto> grrSummaryDtos, GrrDetailDto grrDetailDto) {
 //        Set digNum
         DigNumInstance.newInstance().setDigNum(grrMainController.getActiveTemplateSettingDto().getDecimalDigit());
@@ -106,20 +113,33 @@ public class GrrResultController implements Initializable {
         });
         this.removeAllResultData();
         this.summaryModel.setRules(grrMainController.getGrrConfigDto().getAlarmSetting());
-        this.setSummaryData(grrSummaryDtos);
-        this.setItemResultData(grrMainController.getGrrDataFrame(),
-                grrMainController.getSearchConditionDto(),
-                grrSummaryDtos.get(0).getItemName());
-        this.setAnalysisItemResultData(grrDetailDto);
-        this.setToleranceValue(grrSummaryDtos.get(0).getSummaryResultDto().getTolerance() + "");
+        String selectedName = grrDetailDto == null ? null : grrDetailDto.getItemName();
+        this.setSummaryData(grrSummaryDtos, selectedName);
+        if (grrSummaryDtos == null || grrSummaryDtos.isEmpty()) {
+            return;
+        }
+        if (DAPStringUtils.isNotBlank(selectedName)) {
+            this.setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), selectedName);
+            this.setAnalysisItemResultData(grrDetailDto);
+            this.setToleranceValue(summaryModel.getToleranceCellValue(selectedName));
+        } else {
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                    GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
+        }
     }
 
+    /**
+     * Change grr result when view data change submit
+     */
     public void changeGrrResult() {
-        submitGrrResult(grrMainController.getSearchConditionDto().getSelectedTestItemDtos().get(0).getTestItemName(), 0);
+        submitGrrResult(grrMainController.getSearchConditionDto().getSelectedTestItemDtos().get(0).getTestItemName());
     }
 
+    /**
+     * Refresh grr result
+     */
     public void refreshGrrResult() {
-
         if (summaryModel.hasErrorEditValue()) {
             WindowMessageController messageController = WindowMessageFactory.createWindowMessageHasOkAndCancel(GrrFxmlAndLanguageUtils.getString("UI_MESSAGE_TIP_WARNING_TITLE"),
                     GrrFxmlAndLanguageUtils.getString(GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_ERROR_EDIT_MESSAGE")));
@@ -136,7 +156,7 @@ public class GrrResultController implements Initializable {
 
                 @Override
                 public boolean onOkCustomEvent() {
-                    refreshEvent();
+                    refreshGrrResultEvent();
                     return false;
                 }
             });
@@ -148,12 +168,12 @@ public class GrrResultController implements Initializable {
                 System.out.println("not need refresh");
                 return;
             }
-            refreshEvent();
+            refreshGrrResultEvent();
         }
 
     }
 
-    private void refreshEvent() {
+    private void refreshGrrResultEvent() {
 //        set rules
         String selectedItem = summaryModel.getSelectedItemName();
         List<TestItemWithTypeDto> selectTestItemWithTypeDtos = grrMainController.getSearchConditionDto().getSelectedTestItemDtos();
@@ -167,19 +187,19 @@ public class GrrResultController implements Initializable {
             }
         }
         boolean hasSelectedItem = false;
-        int selectedIndex = -1;
         for (int i = 0; i < selectTestItemWithTypeDtos.size(); i++) {
             if (selectedItem.equals(selectTestItemWithTypeDtos.get(i).getTestItemName())) {
                 hasSelectedItem = true;
-                selectedIndex = i;
                 break;
             }
         }
         String itemName = hasSelectedItem ? selectedItem : "";
-        submitGrrResult(itemName, selectedIndex);
+        //clear summary edit data
+        summaryModel.clearEditData();
+        submitGrrResult(itemName);
     }
 
-    private void submitGrrResult(String selectedItem, int selectedIndex) {
+    private void submitGrrResult(String selectedItem) {
         Job job = new Job(ParamKeys.GRR_REFRESH_JOB_PIPELINE);
         Map paramMap = Maps.newHashMap();
         paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, grrMainController.getSearchConditionDto());
@@ -200,12 +220,20 @@ public class GrrResultController implements Initializable {
                         if (value.containsKey(UIConstant.ANALYSIS_RESULT_SUMMARY)) {
                             List<GrrSummaryDto> summaryDtos = (List<GrrSummaryDto>) value.get(UIConstant.ANALYSIS_RESULT_SUMMARY);
                             summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
+                            summaryTb.getSortOrder().clear();
+                            summaryTb.sort();
                             summaryModel.setData(summaryDtos, selectedItem);
                             summaryTb.refresh();
                         }
                         if (value.containsKey(UIConstant.ANALYSIS_RESULT_DETAIL)) {
                             GrrDetailDto grrDetailDto = (GrrDetailDto) value.get(UIConstant.ANALYSIS_RESULT_DETAIL);
                             this.removeSubResultData();
+                            if (grrDetailDto == null) {
+                                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                                        GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
+                                return;
+                            }
                             this.setItemResultData(grrMainController.getGrrDataFrame(),
                                     grrMainController.getSearchConditionDto(),
                                     selectedItem);
@@ -226,6 +254,7 @@ public class GrrResultController implements Initializable {
         detailParamMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, grrMainController.getSearchConditionDto());
         detailParamMap.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrMainController.getGrrDataFrame());
         detailParamMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, Lists.newArrayList(testItemDto));
+        detailParamMap.put(ParamKeys.TEST_ITEM_NAME, testItemDto.getTestItemName());
         this.removeSubResultData();
         this.setItemResultData(grrMainController.getGrrDataFrame(),
                 grrMainController.getSearchConditionDto(),
@@ -237,13 +266,19 @@ public class GrrResultController implements Initializable {
                 //todo message tip
                 return;
             }
-            Platform.runLater(() -> setAnalysisItemResultData((GrrDetailDto) returnValue));
+            Platform.runLater(() -> {
+                if (returnValue instanceof GrrDetailDto) {
+                    setAnalysisItemResultData((GrrDetailDto) returnValue);
+                }
+            });
         }, detailParamMap, grrMainController));
     }
 
-    private void setSummaryData(List<GrrSummaryDto> summaryData) {
+    private void setSummaryData(List<GrrSummaryDto> summaryData, String selectedItemName) {
+        summaryTb.getSortOrder().clear();
+        summaryTb.sort();
         summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
-        summaryModel.setData(summaryData, summaryData.get(0).getItemName());
+        summaryModel.setData(summaryData, selectedItemName);
     }
 
     private void setItemResultData(GrrDataFrameDto grrDataFrameDto, SearchConditionDto conditionDto, String itemName) {
@@ -303,6 +338,12 @@ public class GrrResultController implements Initializable {
     }
 
     private void setAnalysisItemResultData(GrrDetailDto grrDetailDto) {
+        if (grrDetailDto == null) {
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                    GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
+            return;
+        }
         setComponentChart(grrDetailDto.getGrrDetailResultDto().getComponentChartDto());
         setPartAppraiserChart(grrDetailDto.getGrrDetailResultDto().getPartAppraiserChartDto(),
                 Lists.newArrayList(parts), Lists.newArrayList(appraisers));
@@ -320,8 +361,8 @@ public class GrrResultController implements Initializable {
                 Lists.newArrayList(parts),
                 Lists.newArrayList(appraisers));
         this.setRangeChartPerformance();
-        setScatterChartData(grrDetailDto.getGrrDetailResultDto().getRrbyAppraiserChartDto(), rrByAppraiserChart);
-        setScatterChartData(grrDetailDto.getGrrDetailResultDto().getRrbyPartChartDto(), rrbyPartChart);
+        setScatterChartData(grrDetailDto.getGrrDetailResultDto().getRrbyAppraiserChartDto(), rrByAppraiserChart, rrbyAppraiserBp);
+        setScatterChartData(grrDetailDto.getGrrDetailResultDto().getRrbyPartChartDto(), rrbyPartChart, rrbyPartBp);
         setAnovaAndSourceTb(grrDetailDto.getGrrDetailResultDto().getAnovaAndSourceResultDto());
     }
 
@@ -331,6 +372,9 @@ public class GrrResultController implements Initializable {
     }
 
     private void setComponentChart(GrrComponentCResultDto componentCResult) {
+        if (componentCResult == null) {
+            return;
+        }
         XYChart.Series series1 = new XYChart.Series();
         XYChart.Series series2 = new XYChart.Series();
         XYChart.Series series3 = new XYChart.Series();
@@ -342,6 +386,7 @@ public class GrrResultController implements Initializable {
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodContri()) ? 0 : componentCResult.getReprodContri()));
         series1.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[3],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getPartContri()) ? 0 : componentCResult.getPartContri()));
+
         series2.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[0],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrVar()) ? 0 : componentCResult.getGrrVar()));
         series2.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[1],
@@ -350,29 +395,26 @@ public class GrrResultController implements Initializable {
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodVar()) ? 0 : componentCResult.getReprodVar()));
         series2.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[3],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getPartVar()) ? 0 : componentCResult.getPartVar()));
+
         series3.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[0],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrTol()) ? 0 : componentCResult.getGrrTol()));
         series3.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[1],
-                DAPStringUtils.isInfinityAndNaN(componentCResult.getRepeatVar()) ? 0 : componentCResult.getRepeatVar()));
+                DAPStringUtils.isInfinityAndNaN(componentCResult.getRepeatTol()) ? 0 : componentCResult.getRepeatTol()));
         series3.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[2],
-                DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodVar()) ? 0 : componentCResult.getReprodVar()));
+                DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodTol()) ? 0 : componentCResult.getReprodTol()));
         series3.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[3],
-                DAPStringUtils.isInfinityAndNaN(componentCResult.getPartVar()) ? 0 : componentCResult.getPartVar()));
+                DAPStringUtils.isInfinityAndNaN(componentCResult.getPartTol()) ? 0 : componentCResult.getPartTol()));
         componentChart.getData().addAll(series1, series2, series3);
-        String[] colors = new String[CHART_COMPONENT_CATEGORY.length + 2];
         for (int i = 0; i < CHART_COMPONENT_CATEGORY.length; i++) {
             XYChart.Series series = (XYChart.Series) componentChart.getData().get(i);
             series.setName(CHART_COMPONENT_CATEGORY[i]);
-            colors[i] = "default-color" + i;
         }
-        colors[CHART_COMPONENT_CATEGORY.length] = "bar-legend-symbol";
-        colors[CHART_COMPONENT_CATEGORY.length + 1] = "chart-bar";
-        Legend legend = LegendUtils.buildLegend(componentChart.getData(), colors);
+        Legend legend = LegendUtils.buildLegend(componentChart.getData(),  "bar-legend-symbol", "chart-bar");
         componentBp.setLeft(legend);
-        int digNum = DigNumInstance.newInstance().getDigNum() - 2 >= 0 ? DigNumInstance.newInstance().getDigNum() - 2 : 0;
         componentBp.setMargin(legend, new Insets(0, 0, 1, 0));
 
         //Chart text format
+        int digNum = DigNumInstance.newInstance().getDigNum() - 2 >= 0 ? DigNumInstance.newInstance().getDigNum() - 2 : 0;
         ChartUtils.setChartText(componentChart.getData(), s -> {
             if (DAPStringUtils.isNumeric(s)) {
                 Double value = Double.valueOf(s);
@@ -409,9 +451,10 @@ public class GrrResultController implements Initializable {
             seriesData.add(series);
         }
         partAppraiserChart.getData().addAll(seriesData);
-
         Legend legend = LegendUtils.buildLegend(partAppraiserChart.getData(),
                 "chart-line-symbol", "line-legend-symbol");
+        partAppraiserBp.setLeft(legend);
+        partAppraiserBp.setMargin(legend, new Insets(0, 0, 1, 0));
         ChartUtils.setChartToolTip(partAppraiserChart.getData(), pointTooltip -> {
             Double value = (Double) pointTooltip.getData().getYValue();
             int digNum = DigNumInstance.newInstance().getDigNum();
@@ -419,8 +462,6 @@ public class GrrResultController implements Initializable {
                     "(" + pointTooltip.getData().getExtraValue() + "," +
                             pointTooltip.getData().getXValue() + ")" + "=" + DAPStringUtils.formatDouble(value, digNum);
         });
-        partAppraiserBp.setLeft(legend);
-        partAppraiserBp.setMargin(legend, new Insets(0, 0, 1, 0));
     }
 
     private void setControlChartData(GrrControlChartDto chartData,
@@ -451,6 +492,7 @@ public class GrrResultController implements Initializable {
                 double value = (x[i] + x[i + 1]) / 2;
                 verticalLineData.add(new VerticalCutLine(value));
             }
+            series.setName("");
             series.getData().add(new XYChart.Data<>(x[i], y[i], parts.get(i % partCount)));
         }
 
@@ -484,13 +526,14 @@ public class GrrResultController implements Initializable {
                             pointTooltip.getData().getXValue() + ")" + "=" + DAPStringUtils.formatDouble(value, digNum);
         });
 
-        Legend legend = LegendUtils.buildLegend(chart.getData(),
-                "chart-line-symbol", "line-legend-symbol");
+        String legendContent = "- - - LCL,UCL   —— μ Line";
+        Label legend = new Label(legendContent);
+//        Legend legend = LegendUtils.buildLegend(chart.getData(), "chart-line-symbol", "line-legend-symbol");
         borderPane.setLeft(legend);
-        borderPane.setMargin(legend, new Insets(0, 0, 1, 0));
+        borderPane.setMargin(legend, new Insets(5, 0, 1, 10));
     }
 
-    private void setScatterChartData(GrrScatterChartDto scatterChartData, LineChart chart) {
+    private void setScatterChartData(GrrScatterChartDto scatterChartData, LineChart chart, BorderPane borderPane) {
 
         Double[] x = scatterChartData.getX();
         Double[] y = scatterChartData.getY();
@@ -506,6 +549,8 @@ public class GrrResultController implements Initializable {
         yAxis.setLowerBound(min - reserve);
         XYChart.Series scatterSeries = new XYChart.Series();
         XYChart.Series lineSeries = new XYChart.Series();
+        scatterSeries.setName("Value");
+        lineSeries.setName("AVG");
         for (int i = 0; i < x.length; i++) {
             scatterSeries.getData().add(new XYChart.Data<>(x[i], y[i]));
         }
@@ -520,6 +565,10 @@ public class GrrResultController implements Initializable {
                     "(" + DAPStringUtils.formatDouble(value, digNum) + ")";
         });
         scatterSeries.getNode().getStyleClass().add("chart-series-hidden-line");
+        Legend legend = LegendUtils.buildLegend(chart.getData(),
+                "chart-line-symbol", "line-legend-symbol");
+        borderPane.setLeft(legend);
+        borderPane.setMargin(legend, new Insets(0, 0, 1, 0));
     }
 
     private void setAnovaAndSourceTb(GrrAnovaAndSourceResultDto anovaAndSourceResultDto) {
@@ -535,16 +584,24 @@ public class GrrResultController implements Initializable {
         xBarAppraiserChart.clear();
         componentChart.getData().setAll(FXCollections.observableArrayList());
         partAppraiserChart.getData().setAll(FXCollections.observableArrayList());
-        xBarAppraiserChart.getData().setAll(FXCollections.observableArrayList());
         rrByAppraiserChart.getData().setAll(FXCollections.observableArrayList());
+        xBarAppraiserChart.removeAllChildren();
+        rangeAppraiserChart.removeAllChildren();
+        rrbyPartChart.getData().setAll(FXCollections.observableArrayList());
         componentBp.getChildren().remove(componentBp.getLeft());
         partAppraiserBp.getChildren().remove(partAppraiserBp.getLeft());
         xBarAppraiserBp.getChildren().remove(xBarAppraiserBp.getLeft());
         rangeAppraiserBp.getChildren().remove(rangeAppraiserBp.getLeft());
         rrbyAppraiserBp.getChildren().remove(rrbyAppraiserBp.getLeft());
         rrbyPartBp.getChildren().remove(rrbyPartBp.getLeft());
+        itemResultModel.setRowKeyArray(FXCollections.observableArrayList());
+        itemResultModel.setHeaderArray(FXCollections.observableArrayList());
+        itemResultModel.clearData();
+        itemDetailTb.refresh();
         anovaModel.setData(null);
         sourceModel.setData(null);
+        toleranceLbl.setText("");
+        categoryBtn.setText("");
     }
 
     private void initComponents() {
@@ -569,6 +626,7 @@ public class GrrResultController implements Initializable {
         xBarAppraiserChartBtn = new ChartOperateButton(true,
                 com.dmsoft.firefly.plugin.grr.utils.enums.Orientation.BOTTOMLEFT);
         xBarAppraiserBp.setRight(xBarAppraiserChartBtn);
+        xBarAppraiserBp.setMargin(xBarAppraiserChartBtn, new Insets(5, 0, 0, 0));
 
         rangeAppraiserChart = buildControlChart();
         rangeAppraiserChart.setAnimated(false);
@@ -576,6 +634,7 @@ public class GrrResultController implements Initializable {
         rangeAppraiserChartBtn = new ChartOperateButton(true,
                 com.dmsoft.firefly.plugin.grr.utils.enums.Orientation.BOTTOMLEFT);
         rangeAppraiserBp.setRight(rangeAppraiserChartBtn);
+        rangeAppraiserBp.setMargin(rangeAppraiserChartBtn, new Insets(5, 0, 0, 0));
 
         rrByAppraiserChart = buildScatterChart();
         rrByAppraiserChart.setAnimated(false);
@@ -689,16 +748,31 @@ public class GrrResultController implements Initializable {
         grrResultBtn.setOnAction(event -> fireResultBtnEvent());
         resultBasedCmb.setOnAction(event -> {
             summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
+            if (summaryModel.checkSelectedRowKeyInValid()) {
+                this.removeSubResultData();
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
+            }
             summaryTb.refresh();
         });
         summaryItemTf.getTextField().textProperty().addListener(observable -> summaryModel.filterTestItem(summaryItemTf.getTextField().getText()));
         xBarAppraiserChartBtn.setSelectCallBack(buildSelectCallBack(UIConstant.GRR_CHART_XBAR_APPRAISER, xBarAppraiserChart));
         rangeAppraiserChartBtn.setSelectCallBack(buildSelectCallBack(UIConstant.GRR_CHART_RANGE_APPRAISER, rangeAppraiserChart));
-        summaryModel.setRadioClickListener((grrSummaryDto, tolerance) -> grrMainController.getSearchConditionDto().getSelectedTestItemDtos().forEach(testItemWithTypeDto -> {
-            if (grrSummaryDto.getItemName().equals(testItemWithTypeDto.getTestItemName())) {
-                analyzeGrrSubResult(testItemWithTypeDto, tolerance);
+        summaryModel.setRadioClickListener((grrSummaryDto, tolerance, validGrr) -> {
+            if (!validGrr) {
+                removeSubResultData();
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
+                return;
             }
-        }));
+            grrMainController.getSearchConditionDto().getSelectedTestItemDtos().forEach(testItemWithTypeDto -> {
+                if (grrSummaryDto.getItemName().equals(testItemWithTypeDto.getTestItemName())) {
+                    analyzeGrrSubResult(testItemWithTypeDto, tolerance);
+                }
+            });
+        });
     }
 
     private SelectCallBack buildSelectCallBack(String chartName, LinearChart chart) {
@@ -826,6 +900,10 @@ public class GrrResultController implements Initializable {
 
     public void setToleranceValue(String toleranceText) {
         this.toleranceLbl.setText(toleranceText);
+    }
+
+    public int getResultBasedCmbIndex() {
+        return resultBasedCmb == null ? -1 : resultBasedCmb.getSelectionModel().getSelectedIndex();
     }
 
     /****** Summary *****/
