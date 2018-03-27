@@ -30,6 +30,7 @@ import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -122,7 +123,9 @@ public class GrrResultController implements Initializable {
             this.setAnalysisItemResultData(grrDetailDto);
             this.setToleranceValue(summaryModel.getToleranceCellValue(selectedName));
         } else {
-            //TODO 弹出异常框：不能分析grr detail
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                    GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
         }
     }
 
@@ -225,6 +228,12 @@ public class GrrResultController implements Initializable {
                         if (value.containsKey(UIConstant.ANALYSIS_RESULT_DETAIL)) {
                             GrrDetailDto grrDetailDto = (GrrDetailDto) value.get(UIConstant.ANALYSIS_RESULT_DETAIL);
                             this.removeSubResultData();
+                            if (grrDetailDto == null) {
+                                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                                        GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
+                                return;
+                            }
                             this.setItemResultData(grrMainController.getGrrDataFrame(),
                                     grrMainController.getSearchConditionDto(),
                                     selectedItem);
@@ -330,7 +339,10 @@ public class GrrResultController implements Initializable {
 
     private void setAnalysisItemResultData(GrrDetailDto grrDetailDto) {
         if (grrDetailDto == null) {
-            //TODO 弹出异常框：不能分析grr detail
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                    GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
+            return;
         }
         setComponentChart(grrDetailDto.getGrrDetailResultDto().getComponentChartDto());
         setPartAppraiserChart(grrDetailDto.getGrrDetailResultDto().getPartAppraiserChartDto(),
@@ -736,8 +748,11 @@ public class GrrResultController implements Initializable {
         grrResultBtn.setOnAction(event -> fireResultBtnEvent());
         resultBasedCmb.setOnAction(event -> {
             summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
-            if (summaryModel.checkSelectedRowKeyValid()) {
+            if (summaryModel.checkSelectedRowKeyInValid()) {
                 this.removeSubResultData();
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
             }
             summaryTb.refresh();
         });
@@ -746,9 +761,10 @@ public class GrrResultController implements Initializable {
         rangeAppraiserChartBtn.setSelectCallBack(buildSelectCallBack(UIConstant.GRR_CHART_RANGE_APPRAISER, rangeAppraiserChart));
         summaryModel.setRadioClickListener((grrSummaryDto, tolerance, validGrr) -> {
             if (!validGrr) {
-                //TODO 弹出异常框：不能分析grr detail
-                System.out.println("弹出异常框：不能分析grr detail");
                 removeSubResultData();
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
                 return;
             }
             grrMainController.getSearchConditionDto().getSelectedTestItemDtos().forEach(testItemWithTypeDto -> {

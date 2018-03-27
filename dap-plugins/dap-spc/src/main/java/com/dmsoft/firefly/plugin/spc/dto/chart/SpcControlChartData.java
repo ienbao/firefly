@@ -183,17 +183,17 @@ public class SpcControlChartData implements ControlChartData {
 
         @Override
         public Object getXByIndex(int index) {
-            return DAPStringUtils.isInfinityAndNaN(x[index]) ? null : x[index];
+            return index >= x.length && DAPStringUtils.isInfinityAndNaN(x[index]) ? null : x[index];
         }
 
         @Override
         public Object getYByIndex(int index) {
-            return DAPStringUtils.isInfinityAndNaN(y[index]) ? null : y[index];
+            return index >= y.length && DAPStringUtils.isInfinityAndNaN(y[index]) ? null : y[index];
         }
 
         @Override
         public int getLen() {
-            return x == null ? 0 : x.length;
+            return x == null || y == null ? 0 : (x.length > y.length ? y.length : x.length);
         }
     }
 }

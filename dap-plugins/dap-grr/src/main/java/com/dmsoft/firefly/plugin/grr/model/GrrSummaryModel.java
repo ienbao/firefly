@@ -384,9 +384,9 @@ public class GrrSummaryModel implements TableModel {
     /**
      * Check current selected row whether can analyze grr
      *
-     * @return can or not can analyze grr
+     * @return can or not can analyze grr, if true, can not analyze grr detail
      */
-    public boolean checkSelectedRowKeyValid() {
+    public boolean checkSelectedRowKeyInValid() {
         return disabledRowKeys == null ? true : disabledRowKeys.contains(selectedItemName);
     }
 
