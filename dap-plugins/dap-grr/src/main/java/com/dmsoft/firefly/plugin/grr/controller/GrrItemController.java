@@ -123,6 +123,7 @@ public class GrrItemController implements Initializable {
 
     private GrrMainController grrMainController;
     private ContextMenu pop;
+    private boolean isFilterUslOrLsl = false;
 
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
@@ -176,7 +177,13 @@ public class GrrItemController implements Initializable {
         box.setOnAction(event -> {
             if (items != null) {
                 for (ItemTableModel model : items) {
-                    model.getSelector().setValue(box.isSelected());
+                    if (isFilterUslOrLsl) {
+                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
+                            model.getSelector().setValue(box.isSelected());
+                        }
+                    } else {
+                        model.getSelector().setValue(box.isSelected());
+                    }
                 }
             }
         });
@@ -257,11 +264,13 @@ public class GrrItemController implements Initializable {
     private void initPartAndAppraiserDatas() {
         ObservableList<String> datas = FXCollections.observableArrayList();
         datas.add("");
-        if (items != null) {
+        datas.addAll(originalItems);
+       /* if (items != null) {
             for (ItemTableModel model : items) {
                 datas.add(model.getItem());
             }
-        }
+        }*/
+
         partCombox.setItems(datas);
         appraiserCombox.setItems(datas);
 
@@ -517,6 +526,7 @@ public class GrrItemController implements Initializable {
                 is.getStyleClass().remove("filter-active");
                 is.getStyleClass().add("filter-normal");
                 is.setGraphic(null);
+                isFilterUslOrLsl = false;
             });
             MenuItem show = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS_WITH_USL_LSL));
             show.setOnAction(event -> {
@@ -524,6 +534,7 @@ public class GrrItemController implements Initializable {
                 is.getStyleClass().remove("filter-normal");
                 is.getStyleClass().add("filter-active");
                 is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
+                isFilterUslOrLsl = true;
             });
             pop.getItems().addAll(all, show);
         }
@@ -634,8 +645,8 @@ public class GrrItemController implements Initializable {
         items.clear();
         stickyOnTopItems.clear();
         String s = userPreferenceService.findPreferenceByUserId(STICKY_ON_TOP_CODE, envService.getUserName());
-        if (s != null) {
-            List<String> onTopItems = mapper.fromJson(mapper.fromJson(s, String.class), mapper.buildCollectionType(List.class, String.class));
+        if (DAPStringUtils.isNotBlank(s)) {
+            List<String> onTopItems = mapper.fromJson(s, mapper.buildCollectionType(List.class, String.class));
             stickyOnTopItems.addAll(onTopItems);
         }
         originalItems.clear();
@@ -808,8 +819,8 @@ public class GrrItemController implements Initializable {
 
     private List<String> getSelectedItem() {
         List<String> selectItems = Lists.newArrayList();
-        if (items != null) {
-            for (ItemTableModel model : items) {
+        if (itemTable.getItems() != null) {
+            for (ItemTableModel model : itemTable.getItems()) {
                 if (model.getSelector().isSelected()) {
                     selectItems.add(model.getItem());
                 }
@@ -821,8 +832,8 @@ public class GrrItemController implements Initializable {
     private List<TestItemWithTypeDto> initSelectedItemDto() {
         List<TestItemWithTypeDto> selectTestItemDtos = Lists.newLinkedList();
         initSelectTestItemDtos.clear();
-        if (items != null) {
-            for (ItemTableModel model : items) {
+        if (itemTable.getItems() != null) {
+            for (ItemTableModel model : itemTable.getItems()) {
                 if (model.getSelector().isSelected()) {
                     selectTestItemDtos.add(model.getItemDto());
                     initSelectTestItemDtos.add(model.getItemDto());
