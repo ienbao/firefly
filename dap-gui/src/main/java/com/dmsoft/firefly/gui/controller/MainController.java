@@ -503,6 +503,7 @@ public class MainController {
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("dataSource", GuiFxmlAndLanguageUtils.getString(ResourceMassages.DATASOURCE), root, getResource("css/platform_app.css").toExternalForm());
             stage.setOnCloseRequest(controller.getEventHandler());
             stage.setResizable(false);
+            stage.toFront();
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();

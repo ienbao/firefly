@@ -25,6 +25,7 @@ public class DetailViewTest extends Application {
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setResizable(false);
         windowPane.init();
+        primaryStage.toFront();
         primaryStage.show();
     }
 }

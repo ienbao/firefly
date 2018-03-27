@@ -225,6 +225,7 @@ public final class StageMap {
      * @@return Whether to show success or not
      */
     public static boolean showStage(String name) {
+        getStage(name).toFront();
         getStage(name).show();
         return true;
     }

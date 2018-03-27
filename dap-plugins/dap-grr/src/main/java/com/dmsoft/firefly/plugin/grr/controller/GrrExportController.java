@@ -799,6 +799,7 @@ public class GrrExportController {
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrExportViewData",
                     GrrFxmlAndLanguageUtils.getString(ResourceMassages.VIEW_DATA), root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
+            stage.toFront();
             stage.show();
 
         } catch (Exception ex) {
@@ -813,6 +814,7 @@ public class GrrExportController {
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrExportSetting",
                     GrrFxmlAndLanguageUtils.getString(ResourceMassages.GRR_EXPORT_SETTING_TITLE), root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
+            stage.toFront();
             stage.show();
 
         } catch (Exception ex) {

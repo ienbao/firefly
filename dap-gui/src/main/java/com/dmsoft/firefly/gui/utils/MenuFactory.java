@@ -162,6 +162,7 @@ public class MenuFactory {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source_setting.fxml");
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("sourceSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.SOURCE_SETTING), root, getResource("css/platform_app.css").toExternalForm());
+            stage.toFront();
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -174,6 +175,7 @@ public class MenuFactory {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source.fxml");
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("dataSource", GuiFxmlAndLanguageUtils.getString(ResourceMassages.DataSource), root, getResource("css/platform_app.css").toExternalForm());
+            stage.toFront();
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -186,6 +188,7 @@ public class MenuFactory {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/export_setting.fxml");
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("exportSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.EXPORTSETTING), root, getResource("css/platform_app.css").toExternalForm());
+            stage.toFront();
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -200,6 +203,7 @@ public class MenuFactory {
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("pluginManage", GuiFxmlAndLanguageUtils.getString(ResourceMassages.PLUGIN_MANAGE), root, getResource("css/platform_app.css").toExternalForm());
             PluginManageController controller = fxmlLoader.getController();
             stage.setOnCloseRequest(controller.getOnCloseRequest());
+            stage.toFront();
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();

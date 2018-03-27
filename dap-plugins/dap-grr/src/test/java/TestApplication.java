@@ -72,6 +72,7 @@ public class TestApplication extends Application {
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/grr_chart.css").toExternalForm());
         primaryStage.setScene(scene);
+        primaryStage.toFront();
         primaryStage.show();
         initJob();
     }

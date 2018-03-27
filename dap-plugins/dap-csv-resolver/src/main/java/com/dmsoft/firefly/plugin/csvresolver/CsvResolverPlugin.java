@@ -56,6 +56,7 @@ public class CsvResolverPlugin extends Plugin {
             FXMLLoader fxmlLoader = CsvFxmlAndLanguageUtils.getLoaderFXML("view/csv_resolver.fxml");
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("csv", "CSV-Resolver", root, getClass().getClassLoader().getResource("css/csv_app.css").toExternalForm());
+            stage.toFront();
             stage.show();
 
         } catch (Exception ex) {

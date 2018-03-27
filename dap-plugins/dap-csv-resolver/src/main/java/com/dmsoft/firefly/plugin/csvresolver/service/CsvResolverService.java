@@ -119,13 +119,13 @@ public class CsvResolverService implements IDataParser {
                 TestItemDto testItemDto = new TestItemDto();
                 testItemDto.setTestItemName(items[i]);
                 if (lslRow != null) {
-                    testItemDto.setLsl(lslRow[i]);
+                    testItemDto.setLsl(DAPStringUtils.formatBigDecimal(lslRow[i]));
                 }
                 if (uslRow != null) {
-                    testItemDto.setUsl(uslRow[i]);
+                    testItemDto.setUsl(DAPStringUtils.formatBigDecimal(uslRow[i]));
                 }
                 if (unitRow != null) {
-                    testItemDto.setUnit(unitRow[i]);
+                    testItemDto.setUnit(DAPStringUtils.formatBigDecimal(unitRow[i]));
                 }
                 testItemDtoList.add(testItemDto);
             }
@@ -140,7 +140,7 @@ public class CsvResolverService implements IDataParser {
                 for (int j = 0; j < items.length; j++) {
                     String value = "";
                     try {
-                        value = data.get(j);
+                        value = DAPStringUtils.formatBigDecimal(data.get(j));
                         itemDatas.put(items[j], value);
                     } catch (IndexOutOfBoundsException e) {
 

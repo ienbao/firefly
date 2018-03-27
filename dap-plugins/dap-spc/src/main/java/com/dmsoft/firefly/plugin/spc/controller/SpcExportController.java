@@ -759,6 +759,7 @@ public class SpcExportController {
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("spcExportViewData",
                     SpcFxmlAndLanguageUtils.getString(ResourceMassages.VIEW_DATA), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            stage.toFront();
             stage.show();
 
         } catch (Exception ex) {
@@ -818,6 +819,7 @@ public class SpcExportController {
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.SPC_EXPORT_TEMPLATE_SETTING,
                     SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_SETTING_TITLE), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            stage.toFront();
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();

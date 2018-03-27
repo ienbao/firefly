@@ -15,6 +15,7 @@ import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageController;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
+import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
@@ -202,6 +203,7 @@ public class DataSourceController implements Initializable {
 
                                 }
                                 renameTemplateController.getName().setText(item.getValue());
+                                renameStage.toFront();
                                 renameStage.show();
                             });
                             deleteOne.setOnAction(event -> {
@@ -408,11 +410,12 @@ public class DataSourceController implements Initializable {
     private void buildDataSourceDialog() {
         Pane root = null;
         try {
-            FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/resolver.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
-            loader.setController(new ResolverSelectController(this));
-            root = loader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("resolver", "select Resolver", root, getResource("css/platform_app.css").toExternalForm());
+            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/resolver.fxml");
+            fxmlLoader.setController(new ResolverSelectController(this));
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("resolver", GuiFxmlAndLanguageUtils.getString("DATA_SOURCE_SELECT_RESOLVER"), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
+            stage.toFront();
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
