@@ -177,6 +177,9 @@ public class ItemResultModel implements TableModel {
 
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
+        if (dataFrame == null) {
+            return null;
+        }
         if (rowKey.contains(UIConstant.SPLIT_FLAG + UIConstant.MEAN)) {
             tableCell.setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_MEAN_RANGE));
         } else if (rowKey.contains(UIConstant.SPLIT_FLAG + UIConstant.RANGE)) {

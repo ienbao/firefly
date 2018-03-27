@@ -370,10 +370,24 @@ public class GrrSummaryModel implements TableModel {
 
     }
 
+    /**
+     * Set analysis type, need to refresh summary, update disabledRowKeys
+     *
+     * @param analysisType
+     */
     public void setAnalysisType(int analysisType) {
         this.analysisType = analysisType;
         this.updateValueMapByAnalysisType();
         this.updateDisabledRowKeys();
+    }
+
+    /**
+     * Check current selected row whether can analyze grr
+     *
+     * @return can or not can analyze grr
+     */
+    public boolean checkSelectedRowKeyValid() {
+        return disabledRowKeys == null ? true : disabledRowKeys.contains(selectedItemName);
     }
 
     private void updateDisabledRowKeys() {

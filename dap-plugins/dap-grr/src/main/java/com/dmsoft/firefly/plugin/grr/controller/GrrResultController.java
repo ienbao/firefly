@@ -349,8 +349,8 @@ public class GrrResultController implements Initializable {
                 Lists.newArrayList(parts),
                 Lists.newArrayList(appraisers));
         this.setRangeChartPerformance();
-        setScatterChartData(grrDetailDto.getGrrDetailResultDto().getRrbyAppraiserChartDto(), rrByAppraiserChart);
-        setScatterChartData(grrDetailDto.getGrrDetailResultDto().getRrbyPartChartDto(), rrbyPartChart);
+        setScatterChartData(grrDetailDto.getGrrDetailResultDto().getRrbyAppraiserChartDto(), rrByAppraiserChart, rrbyAppraiserBp);
+        setScatterChartData(grrDetailDto.getGrrDetailResultDto().getRrbyPartChartDto(), rrbyPartChart, rrbyPartBp);
         setAnovaAndSourceTb(grrDetailDto.getGrrDetailResultDto().getAnovaAndSourceResultDto());
     }
 
@@ -360,6 +360,9 @@ public class GrrResultController implements Initializable {
     }
 
     private void setComponentChart(GrrComponentCResultDto componentCResult) {
+        if (componentCResult == null) {
+            return;
+        }
         XYChart.Series series1 = new XYChart.Series();
         XYChart.Series series2 = new XYChart.Series();
         XYChart.Series series3 = new XYChart.Series();
@@ -390,20 +393,16 @@ public class GrrResultController implements Initializable {
         series3.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[3],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getPartTol()) ? 0 : componentCResult.getPartTol()));
         componentChart.getData().addAll(series1, series2, series3);
-        String[] colors = new String[CHART_COMPONENT_CATEGORY.length + 2];
         for (int i = 0; i < CHART_COMPONENT_CATEGORY.length; i++) {
             XYChart.Series series = (XYChart.Series) componentChart.getData().get(i);
             series.setName(CHART_COMPONENT_CATEGORY[i]);
-            colors[i] = "default-color" + i;
         }
-        colors[CHART_COMPONENT_CATEGORY.length] = "bar-legend-symbol";
-        colors[CHART_COMPONENT_CATEGORY.length + 1] = "chart-bar";
-        Legend legend = LegendUtils.buildLegend(componentChart.getData(), colors);
+        Legend legend = LegendUtils.buildLegend(componentChart.getData(),  "bar-legend-symbol", "chart-bar");
         componentBp.setLeft(legend);
-        int digNum = DigNumInstance.newInstance().getDigNum() - 2 >= 0 ? DigNumInstance.newInstance().getDigNum() - 2 : 0;
         componentBp.setMargin(legend, new Insets(0, 0, 1, 0));
 
         //Chart text format
+        int digNum = DigNumInstance.newInstance().getDigNum() - 2 >= 0 ? DigNumInstance.newInstance().getDigNum() - 2 : 0;
         ChartUtils.setChartText(componentChart.getData(), s -> {
             if (DAPStringUtils.isNumeric(s)) {
                 Double value = Double.valueOf(s);
@@ -440,9 +439,10 @@ public class GrrResultController implements Initializable {
             seriesData.add(series);
         }
         partAppraiserChart.getData().addAll(seriesData);
-
         Legend legend = LegendUtils.buildLegend(partAppraiserChart.getData(),
                 "chart-line-symbol", "line-legend-symbol");
+        partAppraiserBp.setLeft(legend);
+        partAppraiserBp.setMargin(legend, new Insets(0, 0, 1, 0));
         ChartUtils.setChartToolTip(partAppraiserChart.getData(), pointTooltip -> {
             Double value = (Double) pointTooltip.getData().getYValue();
             int digNum = DigNumInstance.newInstance().getDigNum();
@@ -450,8 +450,6 @@ public class GrrResultController implements Initializable {
                     "(" + pointTooltip.getData().getExtraValue() + "," +
                             pointTooltip.getData().getXValue() + ")" + "=" + DAPStringUtils.formatDouble(value, digNum);
         });
-        partAppraiserBp.setLeft(legend);
-        partAppraiserBp.setMargin(legend, new Insets(0, 0, 1, 0));
     }
 
     private void setControlChartData(GrrControlChartDto chartData,
@@ -482,6 +480,7 @@ public class GrrResultController implements Initializable {
                 double value = (x[i] + x[i + 1]) / 2;
                 verticalLineData.add(new VerticalCutLine(value));
             }
+            series.setName("");
             series.getData().add(new XYChart.Data<>(x[i], y[i], parts.get(i % partCount)));
         }
 
@@ -515,13 +514,14 @@ public class GrrResultController implements Initializable {
                             pointTooltip.getData().getXValue() + ")" + "=" + DAPStringUtils.formatDouble(value, digNum);
         });
 
-        Legend legend = LegendUtils.buildLegend(chart.getData(),
-                "chart-line-symbol", "line-legend-symbol");
+        String legendContent = "- - - LCL,UCL   —— μ Line";
+        Label legend = new Label(legendContent);
+//        Legend legend = LegendUtils.buildLegend(chart.getData(), "chart-line-symbol", "line-legend-symbol");
         borderPane.setLeft(legend);
-        borderPane.setMargin(legend, new Insets(0, 0, 1, 0));
+        borderPane.setMargin(legend, new Insets(5, 0, 1, 10));
     }
 
-    private void setScatterChartData(GrrScatterChartDto scatterChartData, LineChart chart) {
+    private void setScatterChartData(GrrScatterChartDto scatterChartData, LineChart chart, BorderPane borderPane) {
 
         Double[] x = scatterChartData.getX();
         Double[] y = scatterChartData.getY();
@@ -537,6 +537,8 @@ public class GrrResultController implements Initializable {
         yAxis.setLowerBound(min - reserve);
         XYChart.Series scatterSeries = new XYChart.Series();
         XYChart.Series lineSeries = new XYChart.Series();
+        scatterSeries.setName("Value");
+        lineSeries.setName("AVG");
         for (int i = 0; i < x.length; i++) {
             scatterSeries.getData().add(new XYChart.Data<>(x[i], y[i]));
         }
@@ -551,6 +553,10 @@ public class GrrResultController implements Initializable {
                     "(" + DAPStringUtils.formatDouble(value, digNum) + ")";
         });
         scatterSeries.getNode().getStyleClass().add("chart-series-hidden-line");
+        Legend legend = LegendUtils.buildLegend(chart.getData(),
+                "chart-line-symbol", "line-legend-symbol");
+        borderPane.setLeft(legend);
+        borderPane.setMargin(legend, new Insets(0, 0, 1, 0));
     }
 
     private void setAnovaAndSourceTb(GrrAnovaAndSourceResultDto anovaAndSourceResultDto) {
@@ -608,6 +614,7 @@ public class GrrResultController implements Initializable {
         xBarAppraiserChartBtn = new ChartOperateButton(true,
                 com.dmsoft.firefly.plugin.grr.utils.enums.Orientation.BOTTOMLEFT);
         xBarAppraiserBp.setRight(xBarAppraiserChartBtn);
+        xBarAppraiserBp.setMargin(xBarAppraiserChartBtn, new Insets(5, 0, 0, 0));
 
         rangeAppraiserChart = buildControlChart();
         rangeAppraiserChart.setAnimated(false);
@@ -615,6 +622,7 @@ public class GrrResultController implements Initializable {
         rangeAppraiserChartBtn = new ChartOperateButton(true,
                 com.dmsoft.firefly.plugin.grr.utils.enums.Orientation.BOTTOMLEFT);
         rangeAppraiserBp.setRight(rangeAppraiserChartBtn);
+        rangeAppraiserBp.setMargin(rangeAppraiserChartBtn, new Insets(5, 0, 0, 0));
 
         rrByAppraiserChart = buildScatterChart();
         rrByAppraiserChart.setAnimated(false);
@@ -728,6 +736,9 @@ public class GrrResultController implements Initializable {
         grrResultBtn.setOnAction(event -> fireResultBtnEvent());
         resultBasedCmb.setOnAction(event -> {
             summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
+            if (summaryModel.checkSelectedRowKeyValid()) {
+                this.removeSubResultData();
+            }
             summaryTb.refresh();
         });
         summaryItemTf.getTextField().textProperty().addListener(observable -> summaryModel.filterTestItem(summaryItemTf.getTextField().getText()));

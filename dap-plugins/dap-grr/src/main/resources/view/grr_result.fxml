@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -113,7 +114,7 @@
                                                       <Insets bottom="6.0" left="10.0" top="6.0" />
                                                    </padding>
                                                 </HBox>
-                                                <BorderPane fx:id="componentBp" prefHeight="29.0" prefWidth="200.0" style="-fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220);" />
+                                                <BorderPane fx:id="componentBp" maxHeight="29.0" minHeight="29.0" prefHeight="29.0" prefWidth="200.0" style="-fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220);" />
                                                 <BarChart fx:id="componentChart" legendVisible="false" VBox.vgrow="ALWAYS">
                                                   <xAxis>
                                                     <CategoryAxis side="BOTTOM" tickLabelGap="10.0" tickMarkVisible="false" />
@@ -140,7 +141,7 @@
                                                       <Insets bottom="6.0" left="10.0" top="6.0" />
                                                    </padding>
                                                 </HBox>
-                                                <BorderPane fx:id="partAppraiserBp" prefHeight="29.0" prefWidth="200.0" style="-fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220);" />
+                                                <BorderPane fx:id="partAppraiserBp" maxHeight="29.0" minHeight="29.0" prefHeight="29.0" prefWidth="200.0" style="-fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220);" />
                                                 <LineChart fx:id="partAppraiserChart" legendVisible="false">
                                                   <xAxis>
                                                     <CategoryAxis side="BOTTOM" tickMarkVisible="false" />
@@ -167,7 +168,7 @@
                                                       <Insets bottom="6.0" left="10.0" top="6.0" />
                                                    </padding>
                                                 </HBox>
-                                                <BorderPane prefHeight="29.0" prefWidth="200.0" style="-fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220);" fx:id="xBarAppraiserBp" />
+                                                <BorderPane maxHeight="29.0" minHeight="29.0" prefHeight="29.0" prefWidth="200.0" style="-fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220);" fx:id="xBarAppraiserBp" />
                                              </children>
                                           </VBox>
                                           <VBox fx:id="rangeAppraiserVBox" prefHeight="235.0" prefWidth="100.0" style="-fx-border-width: 1px; -fx-border-color: rgb(220,220,220);" VBox.vgrow="ALWAYS">
@@ -186,7 +187,7 @@
                                                       <Insets bottom="6.0" left="10.0" top="6.0" />
                                                    </padding>
                                                 </HBox>
-                                                <BorderPane fx:id="rangeAppraiserBp" prefHeight="200.0" prefWidth="200.0" style="-fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220);" />
+                                                <BorderPane fx:id="rangeAppraiserBp" maxHeight="29.0" minHeight="29.0" prefHeight="29.0" prefWidth="200.0" style="-fx-border-width: 0 0 1 0; -fx-border-color: rgb(220,220,220);" />
                                              </children>
                                           </VBox>
                                           <VBox fx:id="rrByAppraiserVBox" prefHeight="235.0" prefWidth="100.0" style="-fx-border-width: 1px; -fx-border-color: rgb(220,220,220);" VBox.vgrow="ALWAYS">
@@ -226,7 +227,7 @@
                                                       <Insets bottom="6.0" left="10.0" top="6.0" />
                                                    </padding>
                                                 </HBox>
-                                                <BorderPane fx:id="rrbyPartBp" prefHeight="29.0" prefWidth="200.0" style="-fx-border-color: rgb(220,220,220); -fx-border-width: 0 0 1 0;" />
+                                                <BorderPane fx:id="rrbyPartBp" maxHeight="29.0" minHeight="29.0" prefHeight="29.0" prefWidth="200.0" style="-fx-border-color: rgb(220,220,220); -fx-border-width: 0 0 1 0;" />
                                              </children>
                                           </VBox>
                                        </children>
