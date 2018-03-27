@@ -157,9 +157,9 @@ public class ControlChart<X, Y> extends LineChart {
      */
     public void toggleSeriesPoint(XYChart.Data<X, Y> data, boolean showed) {
         if (!showed) {
-            data.getNode().getStyleClass().add("chart-line-hidden-symbol");
+            data.getNode().getStyleClass().setAll("chart-line-hidden-symbol");
         } else {
-            data.getNode().getStyleClass().remove("chart-line-hidden-symbol");
+            data.getNode().getStyleClass().setAll("chart-line-symbol");
         }
     }
 

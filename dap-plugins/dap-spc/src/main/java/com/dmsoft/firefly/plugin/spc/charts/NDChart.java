@@ -189,6 +189,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
 //        5.设置曲线样式
 //        6.设置直线样式
 //        7.设置鼠标悬停提示
+        if (chartData == null) {
+            return;
+        }
         String uniqueKey = chartData.getUniqueKey();
         String seriesName = chartData.getSeriesName();
         Color color = chartData.getColor();
@@ -218,7 +221,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     }
 
     private XYChart.Series buildSeries(IBarChartData<X, Y> barData, String seriesName) {
-        if (barData == null) return null;
+        if (barData == null) {
+            return null;
+        }
         XYChart.Series oneSeries = new XYChart.Series();
         oneSeries.setName(seriesName);
         int length = barData.getLen();
@@ -474,15 +479,26 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
                 if (item != null) {
                     final Node bar = item.getNode();
                     final double categoryPos;
+                    final double endCategoryPos;
                     final double valPos;
                     double barWidthSize = (Double) barCategoryDataMap.get(item).getBarWidth();
                     X currentX = (X) ReflectionUtils.forceMethodCall(Data.class, "getCurrentX", item);
                     Y currentY = (Y) ReflectionUtils.forceMethodCall(Data.class, "getCurrentY", item);
                     if (orientation == Orientation.VERTICAL) {
+                        X endX = null;
+                        if (item.getExtraValue() != null && item.getExtraValue() instanceof Double) {
+                            endX = (X) item.getExtraValue();
+                        }
                         categoryPos = getXAxis().getDisplayPosition(currentX);
+                        endCategoryPos = getXAxis().getDisplayPosition(endX);
                         valPos = getYAxis().getDisplayPosition(currentY);
                     } else {
+                         Y endY = null;
+                        if (item.getExtraValue() != null && item.getExtraValue() instanceof Double) {
+                            endY = (Y) item.getExtraValue();
+                        }
                         categoryPos = getYAxis().getDisplayPosition(currentY);
+                        endCategoryPos = getYAxis().getDisplayPosition(endY);
                         valPos = getXAxis().getDisplayPosition(currentX);
                     }
                     if (Double.isNaN(categoryPos) || Double.isNaN(valPos)) {
@@ -493,11 +509,13 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
                     bottomPos = bottom;
                     if (orientation == Orientation.VERTICAL) {
                         bar.resizeRelocate(categoryPos + (barWidth * barWidthSize + getBarGap()) * index,
-                                bottom, barWidth * barWidthSize, top - bottom);
+                                bottom, (endCategoryPos - categoryPos), top - bottom);
                     } else {
                         //noinspection SuspiciousNameCombination
+//                        bar.resizeRelocate(bottom, categoryPos + (barWidth * barWidthSize + getBarGap()) * index,
+//                                top - bottom, barWidth * barWidthSize);
                         bar.resizeRelocate(bottom, categoryPos + (barWidth * barWidthSize + getBarGap()) * index,
-                                top - bottom, barWidth * barWidthSize);
+                                top - bottom, (endCategoryPos - categoryPos));
                     }
                     index++;
                 }
