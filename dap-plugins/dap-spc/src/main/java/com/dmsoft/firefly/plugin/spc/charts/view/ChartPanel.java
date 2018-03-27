@@ -1,12 +1,20 @@
 package com.dmsoft.firefly.plugin.spc.charts.view;
 
+import com.dmsoft.firefly.gui.components.chart.ChartSaveUtils;
 import com.dmsoft.firefly.gui.components.chart.ChartUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
+
+import java.io.File;
+import java.util.Date;
 
 /**
  * Created by cherry on 2018/2/8.
@@ -15,6 +23,8 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
 
     private T chart;
     private BorderPane titlePane;
+    private String chartName = "default";
+    private final String suffix = ".png";
 
     private ChartUtils chartUtils;
     private boolean chartSizeChangeEnable = true;
@@ -63,11 +73,12 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
         contextMenu = new ContextMenu();
         menuBar = new MenuBar();
         extensionMenu = new Menu();
-        copyMenuItem = new MenuItem("Save As");
-        saveMenuItem = new MenuItem("Print");
-        printMenuItem = new MenuItem("Copy");
+        copyMenuItem = new MenuItem("Copy");
+        saveMenuItem = new MenuItem("Save As");
+        printMenuItem = new MenuItem("Print");
         defaultRatioMenuItem = new RadioMenuItem("Default Display");
         oneToOneRatioMenuItem = new RadioMenuItem("1:1 Display");
+        oneToOneRatioMenuItem.setDisable(true);
         ratioMenu = new Menu("Show Ratio");
         final ToggleGroup toggleGroup = new ToggleGroup();
         defaultRatioMenuItem.setSelected(true);
@@ -76,7 +87,7 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
         ratioMenu.getItems().addAll(defaultRatioMenuItem, oneToOneRatioMenuItem);
         extensionMenu.getItems().addAll(saveMenuItem, printMenuItem, copyMenuItem, ratioMenu);
         menuBar.getMenus().addAll(extensionMenu);
-        contextMenu.getItems().addAll(saveMenuItem, printMenuItem, copyMenuItem, ratioMenu);
+//        contextMenu.getItems().addAll(saveMenuItem, printMenuItem, copyMenuItem, ratioMenu);
         Pane topPane = new Pane();
         topPane.setPrefHeight(3);
         topPane.setMinHeight(3);
@@ -178,6 +189,39 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
                     leftHBox.getChildren().setAll(legendBtn);
                 } else {
                     leftHBox.getChildren().setAll(legendLbl);
+                }
+            }
+        });
+
+        saveMenuItem.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save as spc chart");
+            fileChooser.setInitialDirectory(
+                    new File(System.getProperty("user.home"))
+            );
+            fileChooser.setInitialFileName(chartName);
+            FileChooser.ExtensionFilter pdfExtensionFilter =
+                    new FileChooser.ExtensionFilter(
+                            "PNG - Portable Network Graphics (.png)", "*.png");
+            fileChooser.getExtensionFilters().add(pdfExtensionFilter);
+            fileChooser.setSelectedExtensionFilter(pdfExtensionFilter);
+            File file = fileChooser.showSaveDialog(null);
+            if (file != null) {
+                try {
+                    String imagePath = file.getAbsolutePath();
+                    if (imagePath.contains(suffix)) {
+                        imagePath += suffix;
+                    }
+                    file = new File(imagePath);
+                    if (!file.exists()) {
+                        file.createNewFile();
+                    }
+                    WritableImage writableImage = chart.snapshot(new SnapshotParameters(), null);
+                    ChartSaveUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(writableImage, null), file, 0.9f);
+                    System.out.println(file.getAbsolutePath());
+                } catch (Exception e) {
+                    System.out.println("Save error, " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
         });

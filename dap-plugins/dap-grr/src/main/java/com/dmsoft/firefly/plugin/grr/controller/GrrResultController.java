@@ -420,7 +420,7 @@ public class GrrResultController implements Initializable {
         componentChart.getData().addAll(series1, series2, series3);
         for (int i = 0; i < CHART_COMPONENT_CATEGORY.length; i++) {
             XYChart.Series series = (XYChart.Series) componentChart.getData().get(i);
-            series.setName(CHART_COMPONENT_CATEGORY[i]);
+            series.setName("% " + CHART_COMPONENT_CATEGORY[i]);
         }
         Legend legend = LegendUtils.buildLegend(componentChart.getData(), "bar-legend-symbol", "chart-bar");
         componentBp.setLeft(legend);

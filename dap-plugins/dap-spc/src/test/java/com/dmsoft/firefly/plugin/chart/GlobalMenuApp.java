@@ -4,10 +4,7 @@ import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -19,15 +16,27 @@ public class GlobalMenuApp extends Application {
     public void start(Stage primaryStage) throws Exception {
 
 //        MenuButton menuButton = new MenuButton("ssss");
-        Button node = new Button("ssss");
+//        Button node = new Button("ssss");
 //        GlobalMenu.getInstance().show(menuButton, Side.BOTTOM,0,0);
 
-        node.setOnMouseClicked(event -> {
+//        node.setOnMouseClicked(event -> {
+//
+//            GlobalMenu.getInstance().show(node, Side.BOTTOM, 0, 0);
+//        });
 
-            GlobalMenu.getInstance().show(node, Side.BOTTOM, 0, 0);
+        Menu menu = new Menu("menu");
+        MenuItem menuItem1 = new MenuItem("aaaaa");
+        MenuItem menuItem2 = new MenuItem("bbbbb");
+        MenuItem menuItem3 = new MenuItem("ccccc");
+        MenuItem menuItem4 = new MenuItem("ddddd");
+        MenuItem menuItem5 = new MenuItem("eeeee");
+        menu.getItems().setAll(menuItem1, menuItem2, menuItem3, menuItem4, menuItem5);
+        MenuBar menuBar = new MenuBar(menu);
+        menuItem1.setOnAction(event -> {
+            System.out.println("ssssss");
         });
 
-        Scene scene = new Scene(node, 1280, 704);
+        Scene scene = new Scene(menuBar, 200, 100);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/charts.css").toExternalForm());
@@ -48,19 +57,19 @@ public class GlobalMenuApp extends Application {
         System.out.println("maxY" + maxY);
 
 
-        System.out.println("window" + node.getScene().getWindow().getX());
-        System.out.println("window" + node.getScene().getX());
-        System.out.println("window" + node.getScene().getWindow().getY());
-        System.out.println("window" + node.getScene().getY());
-
-        System.out.println("window" + node.getScene().getWidth());
-        System.out.println("window" + node.getScene().getHeight());
-
-
-        System.out.println("minX***" + node.getBoundsInLocal().getMinX());
-        System.out.println("minY***" + node.getBoundsInLocal().getMaxX());
-        System.out.println("maxX***" + node.getBoundsInLocal().getMinY());
-        System.out.println("maxY***" + node.getBoundsInLocal().getMaxY());
+//        System.out.println("window" + node.getScene().getWindow().getX());
+//        System.out.println("window" + node.getScene().getX());
+//        System.out.println("window" + node.getScene().getWindow().getY());
+//        System.out.println("window" + node.getScene().getY());
+//
+//        System.out.println("window" + node.getScene().getWidth());
+//        System.out.println("window" + node.getScene().getHeight());
+//
+//
+//        System.out.println("minX***" + node.getBoundsInLocal().getMinX());
+//        System.out.println("minY***" + node.getBoundsInLocal().getMaxX());
+//        System.out.println("maxX***" + node.getBoundsInLocal().getMinY());
+//        System.out.println("maxY***" + node.getBoundsInLocal().getMaxY());
 
 //        System.out.println("messageTip" + messageTip.getBoundsInParent().getMaxY());
 //        System.out.println("messageTip" + messageTip.getBoundsInParent().getMinY());

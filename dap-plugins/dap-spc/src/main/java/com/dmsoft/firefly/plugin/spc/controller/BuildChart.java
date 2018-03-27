@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.firefly.gui.components.chart.ChartSaveUtils;
 import com.dmsoft.firefly.plugin.spc.charts.BoxPlotChart;
 import com.dmsoft.firefly.plugin.spc.charts.ControlChart;
 import com.dmsoft.firefly.plugin.spc.charts.NDChart;
@@ -37,6 +38,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import static com.dmsoft.firefly.gui.components.chart.ChartSaveUtils.saveImageUsingJPGWithQuality;
 
 /**
  * Created by GuangLi on 2018/3/14.
@@ -376,7 +379,7 @@ public class BuildChart {
 
         try {
             file = new File(path);
-            saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(exportImage, null), file, 0.9f);
+            ChartSaveUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(exportImage, null), file, 0.9f);
 //            AlertDialog.showAlertDialog("保存成功!");
         } catch (IOException ex) {
 //            AlertDialog.showAlertDialog("保存失败:" + ex.getMessage());
@@ -386,26 +389,4 @@ public class BuildChart {
         return path;
     }
 
-    private static void saveImageUsingJPGWithQuality(BufferedImage image,
-                                                     File filePath, float quality) throws Exception {
-
-        BufferedImage newBufferedImage = new BufferedImage(image.getWidth(),
-                image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-        newBufferedImage.getGraphics().drawImage(image, 0, 0, null);
-
-        Iterator iter = ImageIO
-                .getImageWritersByFormatName("jpeg");
-
-        ImageWriter imageWriter = (ImageWriter) iter.next();
-        ImageWriteParam iwp = imageWriter.getDefaultWriteParam();
-
-        iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        iwp.setCompressionQuality(quality);
-
-        FileImageOutputStream fileImageOutput = new FileImageOutputStream(filePath);
-        imageWriter.setOutput(fileImageOutput);
-        IIOImage jpgimage = new IIOImage(newBufferedImage, null, null);
-        imageWriter.write(null, jpgimage, iwp);
-        imageWriter.dispose();
-    }
 }
