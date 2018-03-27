@@ -66,21 +66,21 @@ public class SpcNdChartData implements NDBarChartData {
         for (int i = 0; i < lineNames.length; i++) {
             if (lineNames[i].equalsIgnoreCase(lineNames[0])) {
                 if (!DAPStringUtils.isInfinityAndNaN(usl)) {
-                    ILineData lineData = new LineData(usl, lineNames[i]);
+                    ILineData lineData = new LineData(usl, lineNames[i], LineType.DASHED);
                     lineDataList.add(lineData);
                 }
                 continue;
             }
             if (lineNames[i].equalsIgnoreCase(lineNames[1])) {
                 if (!DAPStringUtils.isInfinityAndNaN(lsl)) {
-                    ILineData lineData = new LineData(lsl, lineNames[i]);
+                    ILineData lineData = new LineData(lsl, lineNames[i], LineType.DASHED);
                     lineDataList.add(lineData);
                 }
                 continue;
             }
             if (!DAPStringUtils.isInfinityAndNaN(cls[i - 2])) {
-                LineType lineType = lineNames[i].equalsIgnoreCase(UIConstant.SPC_CHART_LINE_NAME[5]) ? LineType.SOLID : LineType.DASHED;
-                LineData lineData = new LineData(cls[i - 2], lineNames[i], lineType);
+//                LineType lineType = lineNames[i].equalsIgnoreCase(UIConstant.SPC_CHART_LINE_NAME[5]) ? LineType.SOLID : LineType.DASHED;
+                LineData lineData = new LineData(cls[i - 2], lineNames[i]);
                 lineDataList.add(lineData);
             }
         }

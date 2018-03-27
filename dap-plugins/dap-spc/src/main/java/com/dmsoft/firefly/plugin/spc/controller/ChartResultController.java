@@ -281,13 +281,6 @@ public class ChartResultController implements Initializable {
                 }
             }
         }
-        //run chart performance
-        if (data.containsKey(UIConstant.SPC_CHART_NAME[1]) && data.get(UIConstant.SPC_CHART_NAME[1]) instanceof Map) {
-            Map<String, List<String>> chartPerformance = (Map<String, List<String>>) data.get(UIConstant.SPC_CHART_NAME[1]);
-            if (chartPerformance.containsKey(UIConstant.CHART_PERFORMANCE_KEY_RULE)) {
-                rRuleBtn.setSelectedSets(Sets.newHashSet(chartPerformance.get(UIConstant.CHART_PERFORMANCE_KEY_RULE)));
-            }
-        }
     }
 
     private void initChartPerformance() {
@@ -298,15 +291,13 @@ public class ChartResultController implements Initializable {
                 operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));
             } else if (name.equals(UIConstant.SPC_CHART_NAME[1])) {
                 operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_RUN_EXTERN_MENU));
-                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_RULE, Lists.newArrayList());
             } else if (name.equals(UIConstant.SPC_CHART_NAME[2]) || name.equals(UIConstant.SPC_CHART_NAME[3]) || name.equals(UIConstant.SPC_CHART_NAME[4]) || name.equals(UIConstant.SPC_CHART_NAME[5]) || name.equals(UIConstant.SPC_CHART_NAME[7])) {
                 operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
             } else if (name.equals(UIConstant.SPC_CHART_NAME[6])) {
                 operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_BOX_EXTERN_MENU));
             }
             performanceMap.put(name, operatePerformance);
-
-            List<String> operateNames = chartOperateNameMap.get(name);
+//            List<String> operateNames = chartOperateNameMap.get(name);
         }
         UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
         userPreferenceDto.setUserName(envService.getUserName());
@@ -342,7 +333,7 @@ public class ChartResultController implements Initializable {
                 chart.togglePathMarker(name, selected);
             }
             //update user performance
-            updatePerformance(chartName, selectedNames, false);
+            updatePerformance(chartName, selectedNames);
         };
     }
 
@@ -359,22 +350,17 @@ public class ChartResultController implements Initializable {
         return ((name, selected, selectedNames) -> {
             ObservableList<XYChart.Series> series = chart.getData();
             series.forEach(oneSeries -> chart.setSeriesDataStyleByRule(Lists.newArrayList(selectedNames)));
-            updatePerformance(UIConstant.SPC_CHART_NAME[1], selectedNames, true);
         });
     }
 
-    private void updatePerformance(String chartName, Set<String> selectedNames, boolean ruled) {
+    private void updatePerformance(String chartName, Set<String> selectedNames) {
 
         String value = envService.findPreference(UIConstant.CHART_PERFORMANCE_CODE);
         Map data = mapper.fromJson(value, mapper.buildMapType(Map.class, String.class, Map.class));
         data = data == null ? Maps.newLinkedHashMap() : data;
         Map<String, List> operateMap = data.containsKey(chartName) && data.get(chartName) instanceof Map ?
                 (Map<String, List>) data.get(chartName) : Maps.newHashMap();
-        if (ruled) {
-            operateMap.put(UIConstant.CHART_PERFORMANCE_KEY_RULE, Lists.newArrayList(selectedNames));
-        } else {
-            operateMap.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(selectedNames));
-        }
+        operateMap.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(selectedNames));
         data.put(chartName, operateMap);
         String performValue = mapper.toJson(data);
         UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
@@ -783,7 +769,7 @@ public class ChartResultController implements Initializable {
             } else {
                 ndChartPane.getChart().toggleValueMarker(name, selected);
             }
-            updatePerformance(UIConstant.SPC_CHART_NAME[0], selectedNames, false);
+            updatePerformance(UIConstant.SPC_CHART_NAME[0], selectedNames);
         });
         chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[1], (name, selected, selectedNames) -> {
             ControlChart runChart = runChartPane.getChart();
@@ -798,7 +784,7 @@ public class ChartResultController implements Initializable {
             } else {
                 runChart.toggleValueMarker(name, selected);
             }
-            updatePerformance(UIConstant.SPC_CHART_NAME[1], selectedNames, false);
+            updatePerformance(UIConstant.SPC_CHART_NAME[1], selectedNames);
         });
         chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[2], buildControlChartSelectCallBack(xBarChartPane.getChart(), UIConstant.SPC_CHART_NAME[2]));
         chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[3], buildControlChartSelectCallBack(rangeChartPane.getChart(), UIConstant.SPC_CHART_NAME[3]));

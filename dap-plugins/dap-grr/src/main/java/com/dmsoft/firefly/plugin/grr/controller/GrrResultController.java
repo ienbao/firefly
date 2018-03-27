@@ -782,32 +782,11 @@ public class GrrResultController implements Initializable {
         grrDataBtn.setOnAction(event -> fireDataBtnEvent());
         grrChartBtn.setOnAction(event -> fireChartBtnEvent());
         grrResultBtn.setOnAction(event -> fireResultBtnEvent());
-        resultBasedCmb.setOnAction(event -> {
-            summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
-            grrMainController.getSearchConditionDto().getSelectedTestItemDtos().forEach(testItemWithTypeDto -> {
-                if (summaryModel.getSelectedItemName().equals(testItemWithTypeDto.getTestItemName())) {
-                    analyzeGrrSubResult(testItemWithTypeDto, summaryModel.getToleranceCellValue(summaryModel.getSelectedItemName()));
-                }
-            });
-            summaryTb.refresh();
-        });
+        resultBasedCmb.setOnAction(event -> fireResultBasedCmbChangeEvent());
+        summaryModel.setRadioClickListener((grrSummaryDto, tolerance, validGrr) -> fireRadioBtnClickEvent(validGrr, tolerance, grrSummaryDto));
         summaryItemTf.getTextField().textProperty().addListener(observable -> summaryModel.filterTestItem(summaryItemTf.getTextField().getText()));
         xBarAppraiserChartBtn.setSelectCallBack(buildSelectCallBack(UIConstant.GRR_CHART_XBAR_APPRAISER, xBarAppraiserChart));
         rangeAppraiserChartBtn.setSelectCallBack(buildSelectCallBack(UIConstant.GRR_CHART_RANGE_APPRAISER, rangeAppraiserChart));
-        summaryModel.setRadioClickListener((grrSummaryDto, tolerance, validGrr) -> {
-            if (!validGrr) {
-                removeSubResultData();
-                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                        GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
-                return;
-            }
-            grrMainController.getSearchConditionDto().getSelectedTestItemDtos().forEach(testItemWithTypeDto -> {
-                if (grrSummaryDto.getItemName().equals(testItemWithTypeDto.getTestItemName())) {
-                    analyzeGrrSubResult(testItemWithTypeDto, tolerance);
-                }
-            });
-        });
     }
 
     private SelectCallBack buildSelectCallBack(String chartName, LinearChart chart) {
@@ -933,12 +912,33 @@ public class GrrResultController implements Initializable {
         ScrollPaneValueUtils.setScrollVerticalValue(grrResultScrollPane, resultVBox);
     }
 
-    public void setToleranceValue(String toleranceText) {
-        this.toleranceLbl.setText(toleranceText);
+    private void fireResultBasedCmbChangeEvent() {
+        summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
+        grrMainController.getSearchConditionDto().getSelectedTestItemDtos().forEach(testItemWithTypeDto -> {
+            if (summaryModel.getSelectedItemName().equals(testItemWithTypeDto.getTestItemName())) {
+                analyzeGrrSubResult(testItemWithTypeDto, summaryModel.getToleranceCellValue(summaryModel.getSelectedItemName()));
+            }
+        });
+        summaryTb.refresh();
     }
 
-    public int getResultBasedCmbIndex() {
-        return resultBasedCmb == null ? -1 : resultBasedCmb.getSelectionModel().getSelectedIndex();
+    private void fireRadioBtnClickEvent(boolean validGrr, String tolerance, GrrSummaryDto grrSummaryDto) {
+        if (!validGrr) {
+            removeSubResultData();
+            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                    GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
+            return;
+        }
+        grrMainController.getSearchConditionDto().getSelectedTestItemDtos().forEach(testItemWithTypeDto -> {
+            if (grrSummaryDto.getItemName().equals(testItemWithTypeDto.getTestItemName())) {
+                analyzeGrrSubResult(testItemWithTypeDto, tolerance);
+            }
+        });
+    }
+
+    private void setToleranceValue(String toleranceText) {
+        this.toleranceLbl.setText(toleranceText);
     }
 
     /****** Summary *****/
