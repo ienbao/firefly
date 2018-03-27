@@ -27,7 +27,6 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
-import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.Job;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
@@ -444,8 +443,11 @@ public class GrrResultController implements Initializable {
                                        List<String> parts,
                                        List<String> appraisers) {
         double[][] data = partAppraiserChartDto.getDatas();
-        double max = MathUtils.getMax(data);
-        double min = MathUtils.getMin(data);
+        Double max = MathUtils.getMax(data);
+        Double min = MathUtils.getMin(data);
+        if (DAPStringUtils.isInfinityAndNaN(max) || DAPStringUtils.isInfinityAndNaN(min)) {
+            return;
+        }
         NumberAxis yAxis = (NumberAxis) partAppraiserChart.getYAxis();
         final double factor = 0.20;
         double reserve = (max - min) * factor;
@@ -489,44 +491,55 @@ public class GrrResultController implements Initializable {
         Double[] x = chartData.getX();
         Double[] y = chartData.getY();
         Double[] ruleData = new Double[]{chartData.getUcl(), chartData.getCl(), chartData.getLcl()};
-        double max = MathUtils.getMax(y, ruleData);
-        double min = MathUtils.getMin(y, ruleData);
+        Double max = MathUtils.getMax(y, ruleData);
+        Double min = MathUtils.getMin(y, ruleData);
+        if (DAPStringUtils.isInfinityAndNaN(max) || DAPStringUtils.isInfinityAndNaN(min)) {
+            return;
+        }
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
         final double factor = 0.20;
         double reserve = (max - min) * factor;
         yAxis.setAutoRanging(false);
         yAxis.setUpperBound(max + reserve);
         yAxis.setLowerBound(min - reserve);
-        List<ILineData> horizonalLineData = Lists.newArrayList();
+        List<ILineData> horizontalLineData = Lists.newArrayList();
         List<ILineData> verticalLineData = Lists.newArrayList();
         XYChart.Series series = new XYChart.Series();
+        series.setName("");
 //        draw vertical line
         for (int i = 0; i < x.length; i++) {
             if ((i + 1) % partCount == 0 && i != x.length - 1) {
                 double value = (x[i] + x[i + 1]) / 2;
                 verticalLineData.add(new VerticalCutLine(value));
             }
-            series.setName("");
+            if (DAPStringUtils.isInfinityAndNaN(x[i]) || DAPStringUtils.isInfinityAndNaN(y[i])) {
+                continue;
+            }
             series.getData().add(new XYChart.Data<>(x[i], y[i], parts.get(i % partCount)));
         }
-
-        RuleLineData uclLineData = new RuleLineData(UIConstant.CHART_OPERATE_NAME[0], chartData.getUcl());
-        RuleLineData clLineData = new RuleLineData(UIConstant.CHART_OPERATE_NAME[1], chartData.getCl());
-        RuleLineData lclLineData = new RuleLineData(UIConstant.CHART_OPERATE_NAME[2], chartData.getLcl());
-        uclLineData.setColor(Color.rgb(102, 102, 102));
-        lclLineData.setColor(Color.rgb(178, 178, 178));
-        uclLineData.setLineClass("dashed2-line");
-        clLineData.setLineClass("solid-line");
-        lclLineData.setLineClass("dashed1-line");
-        horizonalLineData.add(uclLineData);
-        horizonalLineData.add(clLineData);
-        horizonalLineData.add(lclLineData);
+        if (!DAPStringUtils.isInfinityAndNaN(chartData.getUcl())) {
+            RuleLineData uclLineData = new RuleLineData(UIConstant.CHART_OPERATE_NAME[0], chartData.getUcl());
+            uclLineData.setColor(Color.rgb(102, 102, 102));
+            uclLineData.setLineClass("dashed2-line");
+            horizontalLineData.add(uclLineData);
+        }
+        if (!DAPStringUtils.isInfinityAndNaN(chartData.getCl())) {
+            RuleLineData clLineData = new RuleLineData(UIConstant.CHART_OPERATE_NAME[1], chartData.getCl());
+            clLineData.setLineClass("solid-line");
+            horizontalLineData.add(clLineData);
+        }
+        if (!DAPStringUtils.isInfinityAndNaN(chartData.getLcl())) {
+            RuleLineData lclLineData = new RuleLineData(UIConstant.CHART_OPERATE_NAME[2], chartData.getLcl());
+            lclLineData.setColor(Color.rgb(178, 178, 178));
+            lclLineData.setLineClass("dashed1-line");
+            horizontalLineData.add(lclLineData);
+        }
         int digNum = DigNumInstance.newInstance().getDigNum();
         chart.getData().add(series);
         button.setDisable(false);
 
         chart.buildValueMarkerWithoutTooltip(verticalLineData);
-        chart.buildValueMarkerWithTooltip(horizonalLineData, new Function<ILineData, String>() {
+        chart.buildValueMarkerWithTooltip(horizontalLineData, new Function<ILineData, String>() {
             @Override
             public String apply(ILineData oneLineData) {
                 return oneLineData.getTitle() + "\n" + oneLineData.getName() + "="
@@ -553,11 +566,14 @@ public class GrrResultController implements Initializable {
         Double[] y = scatterChartData.getY();
         Double[] clX = scatterChartData.getClX();
         Double[] clY = scatterChartData.getClY();
-        double max = MathUtils.getMax(y, clY);
-        double min = MathUtils.getMin(y, clY);
+        Double max = MathUtils.getMax(y, clY);
+        Double min = MathUtils.getMin(y, clY);
+        if (DAPStringUtils.isInfinityAndNaN(max) || DAPStringUtils.isInfinityAndNaN(min)) {
+            return;
+        }
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
         final double factor = 0.20;
-        double reserve = (max - min) * factor;
+        Double reserve = (max - min) * factor;
         yAxis.setAutoRanging(false);
         yAxis.setUpperBound(max + reserve);
         yAxis.setLowerBound(min - reserve);
@@ -566,9 +582,15 @@ public class GrrResultController implements Initializable {
         scatterSeries.setName("Value");
         lineSeries.setName("AVG");
         for (int i = 0; i < x.length; i++) {
+            if (DAPStringUtils.isInfinityAndNaN(x[i]) || DAPStringUtils.isInfinityAndNaN(y[i])) {
+                continue;
+            }
             scatterSeries.getData().add(new XYChart.Data<>(x[i], y[i]));
         }
         for (int i = 0; i < clX.length; i++) {
+            if (DAPStringUtils.isInfinityAndNaN(x[i]) || DAPStringUtils.isInfinityAndNaN(y[i])) {
+                continue;
+            }
             lineSeries.getData().add(new XYChart.Data<>(clX[i], clY[i]));
         }
         chart.getData().addAll(scatterSeries, lineSeries);
