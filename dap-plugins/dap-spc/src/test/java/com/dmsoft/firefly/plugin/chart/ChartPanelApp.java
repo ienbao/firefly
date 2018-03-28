@@ -21,9 +21,9 @@ public class ChartPanelApp extends Application {
 
         LineChart chart = new LineChart(new NumberAxis(), new NumberAxis());
         ChartPanel<XYChart> chartPanel = new ChartPanel<XYChart>(chart);
-        chartPanel.setMaxSize(1280,704);
+//        chartPanel.setMaxSize(1280,704);
         chartPanel.setLegend("- - - LSL, USL    —— m Line    —— 6s Line");
-        Scene scene = new Scene(chartPanel);
+        Scene scene = new Scene(chartPanel, 315, 315);
         primaryStage.setScene(scene);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());

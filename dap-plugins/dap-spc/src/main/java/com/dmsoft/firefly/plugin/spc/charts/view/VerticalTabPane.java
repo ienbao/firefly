@@ -21,7 +21,7 @@ public class VerticalTabPane extends AnchorPane {
     private Map<Integer, String> nodeIdMap = Maps.newHashMap();
 
     private final double LEFT_WIDTH = 100;
-    private final double RIGHT_WIDTH = 450;
+    private final double RIGHT_WIDTH = 315;
     private final double HEIGHT = 278;
     private final double BUTTON_HEIGHT = 20;
 

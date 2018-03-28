@@ -7,6 +7,7 @@ import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
@@ -42,21 +43,26 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
         this.chartSizeChangeEnable = chartSizeChangeEnable;
         this.chartDraggingEnable = chartDraggingEnable;
         this.chart = chart;
+        if (chart != null && chart.getXAxis() instanceof ValueAxis && chart.getYAxis() instanceof ValueAxis) {
+            this.chartUtils = new ChartUtils(chart);
+        }
         this.initComponents();
         this.initComponentRender();
         this.setComponentsTooltip();
         this.initEvent();
     }
 
-    /**
-     * Active chart draggable
-     */
-    public void activeChartDragging() {
-        if (chartUtils == null) {
-            chartUtils = new ChartUtils(chart);
-        }
-        if (chartDraggingEnable && chartUtils != null) {
-            chartUtils.activeChartDraggable();
+    public void updateChartData() {
+        if (chartUtils != null) {
+            ValueAxis xAxis = (ValueAxis) chart.getXAxis();
+            ValueAxis yAxis = (ValueAxis) chart.getYAxis();
+            chartUtils.setOriginalXUpper(xAxis.getUpperBound());
+            chartUtils.setOriginalXLower(xAxis.getLowerBound());
+            chartUtils.setOriginalYUpper(yAxis.getUpperBound());
+            chartUtils.setOriginalYLower(yAxis.getLowerBound());
+            if (chartDraggingEnable) {
+                chartUtils.activeChartDraggable();
+            }
         }
     }
 
@@ -155,19 +161,13 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
     private void initEvent() {
 
         zoomInBtn.setOnAction(event -> {
-            if (chartSizeChangeEnable) {
-                if (chartUtils == null) {
-                    chartUtils = new ChartUtils(chart);
-                }
+            if (chartSizeChangeEnable && chartUtils != null) {
                 chartUtils.zoomInChart();
             }
         });
 
         zoomOutBtn.setOnAction(event -> {
-            if (chartSizeChangeEnable) {
-                if (chartUtils == null) {
-                    chartUtils = new ChartUtils(chart);
-                }
+            if (chartSizeChangeEnable && chartUtils != null) {
                 chartUtils.zoomOutChart();
             }
         });
@@ -178,9 +178,7 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
             double legendLabelWidth = legendLbl.getWidth();
             double rightPaneWidth = rightHBox.getWidth();
             double totalWidth = legendLabelWidth + rightPaneWidth;
-
             if (titlePaneWidth > 0 && leftHBox.getWidth() > 0 && totalWidth > 0) {
-
 //                System.out.println("titlePaneWidth: " + titlePaneWidth);
 //                System.out.println("legendLabelWidth: " + legendLabelWidth);
 //                System.out.println("rightPaneWidth: " + rightPaneWidth);

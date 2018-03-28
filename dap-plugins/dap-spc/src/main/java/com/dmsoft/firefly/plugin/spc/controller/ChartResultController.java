@@ -166,6 +166,9 @@ public class ChartResultController implements Initializable {
         this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
     }
 
+    /**
+     * Remove chart children nodes and chart data
+     */
     public void clearChartData() {
         for (Map.Entry<String, XYChart> chart : chartMap.entrySet()) {
             if (chart.getValue() instanceof NDChart) {
@@ -503,7 +506,7 @@ public class ChartResultController implements Initializable {
         yAxis.setUpperBound(yMax + yReserve);
         chart.setData(ndChartData, chartTooltip);
         this.setNdChartPerformance();
-        ndChartPane.activeChartDragging();
+        ndChartPane.updateChartData();
         ndChartPane.toggleCustomButtonDisable(false);
     }
 
@@ -545,7 +548,8 @@ public class ChartResultController implements Initializable {
         yAxis.setUpperBound(yMax + yReserve);
         chart.setData(runChartData, chartTooltip);
         this.setRunChartPerformance();
-        runChartPane.activeChartDragging();
+        runChartPane.updateChartData();
+//        runChartPane.activeChartDragging();
         runChartPane.toggleCustomButtonDisable(false);
     }
 
@@ -590,7 +594,8 @@ public class ChartResultController implements Initializable {
             controlChart.setSeriesDataStyleByRule(controlChartData1.getUniqueKey(), ucl, lcl);
         });
         this.setControlChartPerformance(controlChart, chartName);
-        chartPanelMap.get(chartName).activeChartDragging();
+//        chartPanelMap.get(chartName).activeChartDragging();
+        chartPanelMap.get(chartName).updateChartData();
         chartPanelMap.get(chartName).toggleCustomButtonDisable(false);
     }
 
@@ -629,7 +634,8 @@ public class ChartResultController implements Initializable {
         yAxis.setUpperBound(yMax + yReserve);
         chart.setData(boxChartData, chartTooltip);
         this.setBoxChartPerformance();
-        boxChartPane.activeChartDragging();
+//        boxChartPane.activeChartDragging();
+        boxChartPane.updateChartData();
         boxChartPane.toggleCustomButtonDisable(false);
     }
 

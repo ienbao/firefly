@@ -9,6 +9,7 @@ import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowMessageController;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.grr.charts.ChartOperateButton;
+import com.dmsoft.firefly.plugin.grr.charts.ChartRightPane;
 import com.dmsoft.firefly.plugin.grr.charts.LinearChart;
 import com.dmsoft.firefly.plugin.grr.charts.SelectCallBack;
 import com.dmsoft.firefly.plugin.grr.charts.data.RuleLineData;
@@ -424,7 +425,6 @@ public class GrrResultController implements Initializable {
         }
         Legend legend = LegendUtils.buildLegend(componentChart.getData(), "bar-legend-symbol", "chart-bar");
         componentBp.setLeft(legend);
-        componentBp.setMargin(legend, new Insets(0, 0, 1, 0));
 
         //Chart text format
         int digNum = DigNumInstance.newInstance().getDigNum() - 2 >= 0 ? DigNumInstance.newInstance().getDigNum() - 2 : 0;
@@ -470,7 +470,7 @@ public class GrrResultController implements Initializable {
         Legend legend = LegendUtils.buildLegend(partAppraiserChart.getData(),
                 "chart-line-symbol", "line-legend-symbol");
         partAppraiserBp.setLeft(legend);
-        partAppraiserBp.setMargin(legend, new Insets(0, 0, 1, 0));
+//        partAppraiserBp.setMargin(legend, new Insets(0, 0, 1, 0));
         ChartUtils.setChartToolTip(partAppraiserChart.getData(), pointTooltip -> {
             Double value = (Double) pointTooltip.getData().getYValue();
             int digNum = DigNumInstance.newInstance().getDigNum();
@@ -555,9 +555,8 @@ public class GrrResultController implements Initializable {
 
         String legendContent = "- - - LCL,UCL   —— μ Line";
         Label legend = new Label(legendContent);
-//        Legend legend = LegendUtils.buildLegend(chart.getData(), "chart-line-symbol", "line-legend-symbol");
         borderPane.setLeft(legend);
-        borderPane.setMargin(legend, new Insets(5, 0, 1, 10));
+        borderPane.setMargin(legend, new Insets(1, 0, 0, 0));
     }
 
     private void setScatterChartData(GrrScatterChartDto scatterChartData, LineChart chart, BorderPane borderPane) {
@@ -604,7 +603,6 @@ public class GrrResultController implements Initializable {
         Legend legend = LegendUtils.buildLegend(chart.getData(),
                 "chart-line-symbol", "line-legend-symbol");
         borderPane.setLeft(legend);
-        borderPane.setMargin(legend, new Insets(0, 0, 1, 0));
     }
 
     private void setAnovaAndSourceTb(GrrAnovaAndSourceResultDto anovaAndSourceResultDto) {
@@ -641,44 +639,37 @@ public class GrrResultController implements Initializable {
     }
 
     private void initComponents() {
-        String testItemText = GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TEST_ITEM");
         summaryItemTf = new TextFieldFilter();
-        summaryItemTf.getTextField().setPromptText(testItemText);
         itemFilterHBox.getChildren().setAll(summaryItemTf);
-        resultBasedCmb.getItems().addAll(GRR_RESULT_TYPE);
-        resultBasedCmb.setValue(GRR_RESULT_TYPE[0]);
-        summaryModel.initColumn(Lists.newArrayList(UIConstant.GRR_SUMMARY_TITLE));
-        anovaTb.getColumns().addAll(buildAnovaTbColumn());
-        sourceTb.getColumns().addAll(buildSourceTbColumn());
-
-        //table自适应列宽
-        itemDetailTb.setSkin(new ExpandableTableViewSkin(itemDetailTb));
-
-        componentChart.setAnimated(false);
-        partAppraiserChart.setAnimated(false);
         xBarAppraiserChart = buildControlChart();
-        xBarAppraiserChart.setAnimated(false);
+        rangeAppraiserChart = buildControlChart();
+        rrByAppraiserChart = buildScatterChart();
+        rrbyPartChart = buildScatterChart();
         xBarAppraiserVBox.getChildren().add(xBarAppraiserChart);
+        rangeAppraiserVBox.getChildren().add(rangeAppraiserChart);
+        rrByAppraiserVBox.getChildren().add(rrByAppraiserChart);
+        rrbyPartVBox.getChildren().add(rrbyPartChart);
+
+        componentChartRightPane = new ChartRightPane(componentChart);
+        partAppraiserChartRightPane = new ChartRightPane(partAppraiserChart);
+        xBarAppraiserChartRightPane = new ChartRightPane(xBarAppraiserChart);
+        rangeAppraiserChartRightPane = new ChartRightPane(rangeAppraiserChart);
+        rrByAppraiserChartRightPane = new ChartRightPane(rrByAppraiserChart);
+        rrbyPartChartRightPane = new ChartRightPane(rrbyPartChart);
+
         xBarAppraiserChartBtn = new ChartOperateButton(true,
                 com.dmsoft.firefly.plugin.grr.utils.enums.Orientation.BOTTOMLEFT);
-        xBarAppraiserBp.setRight(xBarAppraiserChartBtn);
-        xBarAppraiserBp.setMargin(xBarAppraiserChartBtn, new Insets(5, 0, 0, 0));
-
-        rangeAppraiserChart = buildControlChart();
-        rangeAppraiserChart.setAnimated(false);
-        rangeAppraiserVBox.getChildren().add(rangeAppraiserChart);
         rangeAppraiserChartBtn = new ChartOperateButton(true,
                 com.dmsoft.firefly.plugin.grr.utils.enums.Orientation.BOTTOMLEFT);
-        rangeAppraiserBp.setRight(rangeAppraiserChartBtn);
-        rangeAppraiserBp.setMargin(rangeAppraiserChartBtn, new Insets(5, 0, 0, 0));
+        xBarAppraiserChartRightPane.addCustomPaneChildren(xBarAppraiserChartBtn);
+        rangeAppraiserChartRightPane.addCustomPaneChildren(rangeAppraiserChartBtn);
 
-        rrByAppraiserChart = buildScatterChart();
-        rrByAppraiserChart.setAnimated(false);
-        rrByAppraiserVBox.getChildren().add(rrByAppraiserChart);
-
-        rrbyPartChart = buildScatterChart();
-        rrbyPartChart.setAnimated(false);
-        rrbyPartVBox.getChildren().add(rrbyPartChart);
+        componentBp.setRight(componentChartRightPane);
+        partAppraiserBp.setRight(partAppraiserChartRightPane);
+        xBarAppraiserBp.setRight(xBarAppraiserChartRightPane);
+        rangeAppraiserBp.setRight(rangeAppraiserChartRightPane);
+        rrbyAppraiserBp.setRight(rrByAppraiserChartRightPane);
+        rrbyPartBp.setRight(rrbyPartChartRightPane);
     }
 
     private LinearChart buildControlChart() {
@@ -732,12 +723,25 @@ public class GrrResultController implements Initializable {
 
     private void initComponentsRender() {
         final double INPUT_WIDTH = 200;
+//        componentChart.setBarGap(10);
+//        componentChart.setCategoryGap(50);
+
         itemFilterHBox.setMargin(summaryItemTf, new Insets(4, 0, 4, 0));
+        String testItemText = GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TEST_ITEM");
+        summaryItemTf.getTextField().setPromptText(testItemText);
         summaryItemTf.getTextField().setPrefWidth(INPUT_WIDTH);
         summaryItemTf.getTextField().setFocusTraversable(false);
         summaryTb.setEditable(true);
-//        componentChart.setBarGap(10);
-//        componentChart.setCategoryGap(50);
+
+        //table自适应列宽
+        itemDetailTb.setSkin(new ExpandableTableViewSkin(itemDetailTb));
+        componentChart.setAnimated(false);
+        partAppraiserChart.setAnimated(false);
+        xBarAppraiserChart.setAnimated(false);
+        rangeAppraiserChart.setAnimated(false);
+        rrByAppraiserChart.setAnimated(false);
+        rrbyPartChart.setAnimated(false);
+
         xBarAppraiserChart.setLegendVisible(false);
         xBarAppraiserChart.setVerticalGridLinesVisible(false);
         xBarAppraiserChart.setHorizontalGridLinesVisible(false);
@@ -833,9 +837,14 @@ public class GrrResultController implements Initializable {
     }
 
     private void initData() {
+        resultBasedCmb.getItems().addAll(GRR_RESULT_TYPE);
+        resultBasedCmb.setValue(GRR_RESULT_TYPE[0]);
+        summaryModel.initColumn(Lists.newArrayList(UIConstant.GRR_SUMMARY_TITLE));
         TableViewWrapper.decorate(summaryTb, summaryModel);
         anovaTb.setItems(anovaModel.getAnovas());
+        anovaTb.getColumns().addAll(buildAnovaTbColumn());
         sourceTb.setItems(sourceModel.getSources());
+        sourceTb.getColumns().addAll(buildSourceTbColumn());
         xBarAppraiserChartBtn.setListViewData(Lists.newArrayList(UIConstant.CHART_OPERATE_NAME));
         rangeAppraiserChartBtn.setListViewData(Lists.newArrayList(UIConstant.CHART_OPERATE_NAME));
     }
@@ -998,6 +1007,14 @@ public class GrrResultController implements Initializable {
     private LinearChart rangeAppraiserChart;
     private LineChart rrByAppraiserChart;
     private LineChart rrbyPartChart;
+
+    private ChartRightPane componentChartRightPane;
+    private ChartRightPane partAppraiserChartRightPane;
+    private ChartRightPane xBarAppraiserChartRightPane;
+    private ChartRightPane rangeAppraiserChartRightPane;
+    private ChartRightPane rrByAppraiserChartRightPane;
+    private ChartRightPane rrbyPartChartRightPane;
+
     private ChartOperateButton xBarAppraiserChartBtn;
     private ChartOperateButton rangeAppraiserChartBtn;
     @FXML
