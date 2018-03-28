@@ -38,7 +38,7 @@ public class GrrSummaryModel implements TableModel {
     private FilteredList<String> filterRowKeyArray;
     private ToggleGroup group = new ToggleGroup();
     private String radioKey = "   ";
-    private int analysisType = 1;
+    private int analysisType = 0;
 
     private Set<String> disabledRowKeys = new HashSet<>();
 
@@ -97,7 +97,7 @@ public class GrrSummaryModel implements TableModel {
         boolean valid = true;
         int digNum = DigNumInstance.newInstance().getDigNum();
         int percentDigNum = digNum - 2 >= 0 ? digNum - 2 : 0;
-        Double grr = analysisType == 1 ?
+        Double grr = analysisType == 0 ?
                 summaryDto.getSummaryResultDto().getGrrOnTolerance() :
                 summaryDto.getSummaryResultDto().getGrrOnContribution();
         String value = this.formatterPercentValue(grr, percentDigNum);
@@ -178,21 +178,21 @@ public class GrrSummaryModel implements TableModel {
             String rowName = key.split(UIConstant.SPLIT_FLAG)[0];
             GrrSummaryDto summaryDto = rowKeyDataMap.get(rowName);
             if (UIConstant.GRR_SUMMARY_TITLE[4].equals(columnName)) {
-                Double repeatability = analysisType == 1 ?
+                Double repeatability = analysisType == 0 ?
                         summaryDto.getSummaryResultDto().getRepeatabilityOnTolerance() :
                         summaryDto.getSummaryResultDto().getRepeatabilityOnContribution();
                 String value = this.formatterPercentValue(repeatability, percentDigNum);
                 sourceObjectProperty.setValue(value);
             } else if (UIConstant.GRR_SUMMARY_TITLE[5].equals(columnName)) {
 
-                Double reproducibility = analysisType == 1 ?
+                Double reproducibility = analysisType == 0 ?
                         summaryDto.getSummaryResultDto().getReproducibilityOnTolerance() :
                         summaryDto.getSummaryResultDto().getReproducibilityOnContribution();
                 String value = this.formatterPercentValue(reproducibility, percentDigNum);
                 sourceObjectProperty.setValue(value);
             } else if (UIConstant.GRR_SUMMARY_TITLE[6].equals(columnName)) {
 
-                Double grr = analysisType == 1 ?
+                Double grr = analysisType == 0 ?
                         summaryDto.getSummaryResultDto().getGrrOnTolerance() :
                         summaryDto.getSummaryResultDto().getGrrOnContribution();
                 String value = this.formatterPercentValue(grr, percentDigNum);
@@ -224,19 +224,19 @@ public class GrrSummaryModel implements TableModel {
                 value = this.formatterNormalValue(tolerance, digNum);
             } else if (UIConstant.GRR_SUMMARY_TITLE[4].equals(columnName)) {
 
-                Double repeatability = analysisType == 1 ?
+                Double repeatability = analysisType == 0 ?
                         summaryDto.getSummaryResultDto().getRepeatabilityOnTolerance() :
                         summaryDto.getSummaryResultDto().getRepeatabilityOnContribution();
                 value = this.formatterPercentValue(repeatability, percentDigNum);
             } else if (UIConstant.GRR_SUMMARY_TITLE[5].equals(columnName)) {
 
-                Double reproducibility = analysisType == 1 ?
+                Double reproducibility = analysisType == 0 ?
                         summaryDto.getSummaryResultDto().getReproducibilityOnTolerance() :
                         summaryDto.getSummaryResultDto().getReproducibilityOnContribution();
                 value = this.formatterPercentValue(reproducibility, percentDigNum);
             } else if (UIConstant.GRR_SUMMARY_TITLE[6].equals(columnName)) {
 
-                Double grr = analysisType == 1 ?
+                Double grr = analysisType == 0 ?
                         summaryDto.getSummaryResultDto().getGrrOnTolerance() :
                         summaryDto.getSummaryResultDto().getGrrOnContribution();
                 value = this.formatterPercentValue(grr, percentDigNum);

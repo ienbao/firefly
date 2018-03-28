@@ -163,7 +163,7 @@ public class GrrServiceImpl implements GrrService {
         for (String s : datas) {
             if (DAPStringUtils.isNumeric(s)) {
                 doubleList.add(Double.valueOf(s));
-            } else if (s != null && DAPStringUtils.isSpecialBlank(s)) {
+            } else if (s != null && DAPStringUtils.isBlankWithSpecialNumber(s)) {
                 doubleList.add(Double.NaN);
                 nanCount++;
             }

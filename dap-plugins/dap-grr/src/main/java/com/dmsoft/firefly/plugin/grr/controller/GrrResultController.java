@@ -261,7 +261,6 @@ public class GrrResultController implements Initializable {
                 return;
             }
             Platform.runLater(() -> {
-                this.removeSubResultData();
                 if (returnValue == null) {
                     RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
                             GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
@@ -392,6 +391,16 @@ public class GrrResultController implements Initializable {
         XYChart.Series series1 = new XYChart.Series();
         XYChart.Series series2 = new XYChart.Series();
         XYChart.Series series3 = new XYChart.Series();
+        Double[] array = getArrayValue(componentCResult);
+        Double yMax = MathUtils.getMax(array);
+        Double yMin = MathUtils.getMin(array);
+        if (yMax == null || yMin == null) {
+            return;
+        }
+        NumberAxis yAxis = (NumberAxis) componentChart.getYAxis();
+        yAxis.setUpperBound(yMax + 20);
+        yAxis.setLowerBound(yMin);
+
         series1.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[0],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrContri()) ? 0 : componentCResult.getGrrContri()));
         series1.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[1],
@@ -742,6 +751,8 @@ public class GrrResultController implements Initializable {
         rrByAppraiserChart.setAnimated(false);
         rrbyPartChart.setAnimated(false);
 
+        componentChart.setVerticalGridLinesVisible(false);
+        componentChart.setHorizontalGridLinesVisible(false);
         xBarAppraiserChart.setLegendVisible(false);
         xBarAppraiserChart.setVerticalGridLinesVisible(false);
         xBarAppraiserChart.setHorizontalGridLinesVisible(false);
@@ -948,6 +959,23 @@ public class GrrResultController implements Initializable {
 
     private void setToleranceValue(String toleranceText) {
         this.toleranceLbl.setText(toleranceText);
+    }
+
+    private Double[] getArrayValue(GrrComponentCResultDto resultDto) {
+        Double[] value = new Double[12];
+        value[0] = resultDto.getGrrContri();
+        value[1] = resultDto.getGrrTol();
+        value[2] = resultDto.getGrrVar();
+        value[3] = resultDto.getPartContri();
+        value[4] = resultDto.getPartTol();
+        value[5] = resultDto.getPartVar();
+        value[6] = resultDto.getRepeatContri();
+        value[7] = resultDto.getRepeatTol();
+        value[8] = resultDto.getRepeatVar();
+        value[9] = resultDto.getReprodContri();
+        value[10] = resultDto.getReprodTol();
+        value[11] = resultDto.getReprodVar();
+        return value;
     }
 
     /****** Summary *****/
