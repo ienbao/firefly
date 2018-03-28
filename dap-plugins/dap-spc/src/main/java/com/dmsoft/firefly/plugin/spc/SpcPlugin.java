@@ -30,6 +30,9 @@ import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -88,8 +91,10 @@ public class SpcPlugin extends Plugin {
         LOGGER.info("Plugin-SPC started.");
 
         //register spc setting menu
-        MenuItem menuItem = new MenuItem("Spc Settings");
+        MenuItem menuItem = new MenuItem(SpcFxmlAndLanguageUtils.getString("MENU_SPC_SETTING"));
         menuItem.setId("spcSetting");
+        menuItem.setMnemonicParsing(true);
+        menuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
         menuItem.setOnAction(event -> {
             if (StageMap.getStage(StateKey.SPC_SETTING) == null) {
                 initSpcSettingDialog();

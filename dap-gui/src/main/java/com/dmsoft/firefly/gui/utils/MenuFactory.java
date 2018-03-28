@@ -12,6 +12,9 @@ import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -48,11 +51,22 @@ public class MenuFactory {
 
         Menu menu = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_FILE"));
         menu.setId(MenuBuilder.MENU_FILE);
+        menu.setMnemonicParsing(true);
         MenuItem selectDataSourceMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_SELECT_DATA_SOURCE"));
+        selectDataSourceMenuItem.setMnemonicParsing(true);
+        selectDataSourceMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
         MenuItem importMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_IMPORT_SETTING"));
+        importMenuItem.setMnemonicParsing(true);
+        importMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.I, KeyCombination.SHORTCUT_DOWN));
         MenuItem exportMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_EXPORT_SETTING"));
+        exportMenuItem.setMnemonicParsing(true);
+        exportMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN));
         MenuItem restoreMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_RESTORE_SETTING"));
+        restoreMenuItem.setMnemonicParsing(true);
+        restoreMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.R));
         MenuItem exitMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_EXIT"));
+        exitMenuItem.setMnemonicParsing(true);
+        exitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN));
         exitMenuItem.setOnAction(event -> {
             StageMap.getStage(GuiConst.PLARTFORM_STAGE_MAIN).close();
         });
@@ -71,23 +85,21 @@ public class MenuFactory {
     private static MenuBuilder createPreferenceMenu() {
         Menu menu = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_PREFERENCE"));
         menu.setId(MenuBuilder.MENU_PREFERENCE);
-
-       /* Label labelIcon = new Label(GuiFxmlAndLanguageUtils.getString("MENU_DATA_SOURCE_SETTING_QUICK"));
-        labelIcon.setContentDisplay(ContentDisplay.RIGHT);
-        labelIcon.setAlignment(Pos.CENTER_RIGHT);
-        Label label = new Label();
-        label.setGraphic(labelIcon);
-        label.setText(GuiFxmlAndLanguageUtils.getString("MENU_DATA_SOURCE_SETTING"));
-        label.setContentDisplay(ContentDisplay.RIGHT);*/
-
+        menu.setMnemonicParsing(true);
+        menu.setAccelerator(new KeyCodeCombination(KeyCode.P));
         MenuItem dataSourceSettingMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_DATA_SOURCE_SETTING"));
+        dataSourceSettingMenuItem.setMnemonicParsing(true);
+        dataSourceSettingMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.D, KeyCombination.SHORTCUT_DOWN));
         dataSourceSettingMenuItem.setOnAction(event -> buildSourceSettingDia());
 
-
         MenuItem analysisMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ANALYSIS_TEMPLATE"));
+        analysisMenuItem.setMnemonicParsing(true);
+        analysisMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.A, KeyCombination.SHORTCUT_DOWN));
         analysisMenuItem.setOnAction(event -> GuiFxmlAndLanguageUtils.buildTemplateDia());
 
         MenuItem pluginMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_PLUGIN_MANAGER"));
+        pluginMenuItem.setMnemonicParsing(true);
+        pluginMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
         pluginMenuItem.setOnAction(event -> {
             buildPluginManageDialog();
         });
@@ -135,6 +147,8 @@ public class MenuFactory {
 
     private static MenuBuilder createHelpMenu() {
         Menu menu = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_HELP"));
+        menu.setMnemonicParsing(true);
+        menu.setAccelerator(new KeyCodeCombination(KeyCode.H));
         menu.setId(MenuBuilder.MENU_HELP);
         MenuItem legalMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_LEGAL_NOTICE"));
         legalMenuItem.setOnAction(event -> {
