@@ -36,8 +36,11 @@ public class PathMarker {
             path.getElements().clear();
             int len = points.getLen();
             for (int i = 0; i < len; i++) {
-                double x = (double) points.getXByIndex(i);
-                double y = (double) points.getYByIndex(i);
+                Double x = (Double) points.getXByIndex(i);
+                Double y = (Double) points.getYByIndex(i);
+                if (x == null || y == null) {
+                    continue;
+                }
                 this.layoutPath(path, x, y, chart);
             }
         }
@@ -92,7 +95,7 @@ public class PathMarker {
     /**
      * Hidden path by path name
      *
-     * @param pathName
+     * @param pathName path name
      */
     public void hiddenPathMarker(String pathName) {
 
@@ -116,7 +119,7 @@ public class PathMarker {
     /**
      * Update all path color
      *
-     * @param color
+     * @param color line color
      */
     public void updateAllLineColor(Color color) {
         for (Map.Entry<String, Path> stringPathEntry : pathMap.entrySet()) {

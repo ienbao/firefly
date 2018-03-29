@@ -80,7 +80,11 @@ public class ResolverSelectController implements Initializable {
             String defaultResolver = userPreferenceService.findPreferenceByUserId("defaultResolver", envService.getUserName());
             String resolverName;
             if (DAPStringUtils.isNotBlank(defaultResolver)) {
-                resolverName = defaultResolver;
+                if (defaultResolver instanceof String) {
+                    resolverName = defaultResolver;
+                } else {
+                    resolverName = mapper.fromJson(defaultResolver, String.class);
+                }
                 if (DAPStringUtils.isNotBlank(resolverName)) {
                     resolver.getSelectionModel().select(resolverName);
                 } else {

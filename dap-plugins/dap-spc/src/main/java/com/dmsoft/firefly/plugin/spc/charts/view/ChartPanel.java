@@ -1,20 +1,36 @@
 package com.dmsoft.firefly.plugin.spc.charts.view;
 
+import com.dmsoft.firefly.gui.components.chart.ChartSaveUtils;
 import com.dmsoft.firefly.gui.components.chart.ChartUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
+
+import java.io.File;
 
 /**
  * Created by cherry on 2018/2/8.
+ */
+
+/**
+ * Chart pane
+ *
+ * @param <T> chart class
  */
 public class ChartPanel<T extends XYChart> extends BorderPane {
 
     private T chart;
     private BorderPane titlePane;
+    private String chartName = "default";
+    private final String suffix = ".png";
 
     private ChartUtils chartUtils;
     private boolean chartSizeChangeEnable = true;
@@ -23,15 +39,30 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
     private final double spacing = 10;
     private final double threshold = 1;
 
+    /**
+     * Constructor for ChartPanel
+     *
+     * @param chart chart
+     */
     public ChartPanel(T chart) {
         this(chart, true, true);
     }
 
+    /**
+     * Constructor for ChartPanel
+     *
+     * @param chart                 chart
+     * @param chartSizeChangeEnable enable change chart size
+     * @param chartDraggingEnable   enable drag chart
+     */
     public ChartPanel(T chart, boolean chartSizeChangeEnable, boolean chartDraggingEnable) {
 
         this.chartSizeChangeEnable = chartSizeChangeEnable;
         this.chartDraggingEnable = chartDraggingEnable;
         this.chart = chart;
+        if (chart != null && chart.getXAxis() instanceof ValueAxis && chart.getYAxis() instanceof ValueAxis) {
+            this.chartUtils = new ChartUtils(chart);
+        }
         this.initComponents();
         this.initComponentRender();
         this.setComponentsTooltip();
@@ -39,14 +70,19 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
     }
 
     /**
-     * Active chart draggable
+     * Update chart x, y lower and upper range
      */
-    public void activeChartDragging() {
-        if (chartUtils == null) {
-            chartUtils = new ChartUtils(chart);
-        }
-        if (chartDraggingEnable && chartUtils != null) {
-            chartUtils.activeChartDraggable();
+    public void updateChartData() {
+        if (chartUtils != null) {
+            ValueAxis xAxis = (ValueAxis) chart.getXAxis();
+            ValueAxis yAxis = (ValueAxis) chart.getYAxis();
+            chartUtils.setOriginalXUpper(xAxis.getUpperBound());
+            chartUtils.setOriginalXLower(xAxis.getLowerBound());
+            chartUtils.setOriginalYUpper(yAxis.getUpperBound());
+            chartUtils.setOriginalYLower(yAxis.getLowerBound());
+            if (chartDraggingEnable) {
+                chartUtils.activeChartDraggable();
+            }
         }
     }
 
@@ -63,20 +99,22 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
         contextMenu = new ContextMenu();
         menuBar = new MenuBar();
         extensionMenu = new Menu();
-        copyMenuItem = new MenuItem("Save As");
-        saveMenuItem = new MenuItem("Print");
-        printMenuItem = new MenuItem("Copy");
+        copyMenuItem = new MenuItem("Copy");
+        saveMenuItem = new MenuItem("Save As");
+        printMenuItem = new MenuItem("Print");
         defaultRatioMenuItem = new RadioMenuItem("Default Display");
         oneToOneRatioMenuItem = new RadioMenuItem("1:1 Display");
+        oneToOneRatioMenuItem.setDisable(true);
         ratioMenu = new Menu("Show Ratio");
         final ToggleGroup toggleGroup = new ToggleGroup();
         defaultRatioMenuItem.setSelected(true);
         defaultRatioMenuItem.setToggleGroup(toggleGroup);
         oneToOneRatioMenuItem.setToggleGroup(toggleGroup);
         ratioMenu.getItems().addAll(defaultRatioMenuItem, oneToOneRatioMenuItem);
-        extensionMenu.getItems().addAll(saveMenuItem, printMenuItem, copyMenuItem, ratioMenu);
+//        extensionMenu.getItems().addAll(saveMenuItem, printMenuItem, copyMenuItem, ratioMenu);
+        extensionMenu.getItems().addAll(saveMenuItem);
         menuBar.getMenus().addAll(extensionMenu);
-        contextMenu.getItems().addAll(saveMenuItem, printMenuItem, copyMenuItem, ratioMenu);
+//        contextMenu.getItems().addAll(saveMenuItem, printMenuItem, copyMenuItem, ratioMenu);
         Pane topPane = new Pane();
         topPane.setPrefHeight(3);
         topPane.setMinHeight(3);
@@ -144,19 +182,13 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
     private void initEvent() {
 
         zoomInBtn.setOnAction(event -> {
-            if (chartSizeChangeEnable) {
-                if (chartUtils == null) {
-                    chartUtils = new ChartUtils(chart);
-                }
+            if (chartSizeChangeEnable && chartUtils != null) {
                 chartUtils.zoomInChart();
             }
         });
 
         zoomOutBtn.setOnAction(event -> {
-            if (chartSizeChangeEnable) {
-                if (chartUtils == null) {
-                    chartUtils = new ChartUtils(chart);
-                }
+            if (chartSizeChangeEnable && chartUtils != null) {
                 chartUtils.zoomOutChart();
             }
         });
@@ -167,9 +199,7 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
             double legendLabelWidth = legendLbl.getWidth();
             double rightPaneWidth = rightHBox.getWidth();
             double totalWidth = legendLabelWidth + rightPaneWidth;
-
             if (titlePaneWidth > 0 && leftHBox.getWidth() > 0 && totalWidth > 0) {
-
 //                System.out.println("titlePaneWidth: " + titlePaneWidth);
 //                System.out.println("legendLabelWidth: " + legendLabelWidth);
 //                System.out.println("rightPaneWidth: " + rightPaneWidth);
@@ -178,6 +208,40 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
                     leftHBox.getChildren().setAll(legendBtn);
                 } else {
                     leftHBox.getChildren().setAll(legendLbl);
+                }
+            }
+        });
+
+        saveMenuItem.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save as spc chart");
+            fileChooser.setInitialDirectory(
+                    new File(System.getProperty("user.home"))
+            );
+            fileChooser.setInitialFileName(chartName);
+            FileChooser.ExtensionFilter pdfExtensionFilter =
+                    new FileChooser.ExtensionFilter(
+                            "PNG - Portable Network Graphics (.png)", "*.png");
+            fileChooser.getExtensionFilters().add(pdfExtensionFilter);
+            fileChooser.setSelectedExtensionFilter(pdfExtensionFilter);
+            File file = fileChooser.showSaveDialog(null);
+            if (file != null) {
+                try {
+                    String imagePath = file.getAbsolutePath();
+                    if (imagePath.contains(suffix)) {
+                        imagePath += suffix;
+                    }
+                    file = new File(imagePath);
+                    if (!file.exists()) {
+                        file.createNewFile();
+                    }
+                    final float quality = 0.9f;
+                    WritableImage writableImage = chart.snapshot(new SnapshotParameters(), null);
+                    ChartSaveUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(writableImage, null), file, quality);
+                    System.out.println(file.getAbsolutePath());
+                } catch (Exception e) {
+                    System.out.println("Save error, " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
         });
@@ -193,6 +257,11 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
 //        });
     }
 
+    /**
+     * Toggle disable custom button show or disabled
+     *
+     * @param flag if true, button disabled; if false, button relieve disabled
+     */
     public void toggleCustomButtonDisable(boolean flag) {
         customPane.getChildren().forEach(node -> {
             if (node instanceof Button) {

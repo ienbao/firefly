@@ -154,6 +154,16 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
     }
 
     /**
+     * Remove all chart node and clear chart data
+     */
+    public void removeAllChildren() {
+        this.horizontalMarkers.setAll(FXCollections.observableArrayList());
+        this.verticalMarkers.setAll(FXCollections.observableArrayList());
+        this.getData().setAll(FXCollections.observableArrayList());
+        this.getPlotChildren().removeAll(this.getPlotChildren());
+    }
+
+    /**
      * Update all line color
      *
      * @param color

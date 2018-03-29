@@ -83,6 +83,7 @@ public class GuiFxmlAndLanguageUtils {
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_LOGIN, "", root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
+            stage.toFront();
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -96,6 +97,7 @@ public class GuiFxmlAndLanguageUtils {
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_CHANGE_PASSWORD, GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
+            stage.toFront();
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -109,6 +111,7 @@ public class GuiFxmlAndLanguageUtils {
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_LEGAL, GuiFxmlAndLanguageUtils.getString(ResourceMassages.MENU_LEGAL_NOTICE), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
+            stage.toFront();
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -122,6 +125,7 @@ public class GuiFxmlAndLanguageUtils {
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_CHANGE_PASSWORD_BACK, GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
+            stage.toFront();
             stage.show();
             stage.setOnCloseRequest(event -> {
                 StageMap.getStage(GuiConst.PLARTFORM_STAGE_CHANGE_PASSWORD_BACK).close();
@@ -139,6 +143,7 @@ public class GuiFxmlAndLanguageUtils {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/template.fxml");
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("template", GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE), root, getResource("css/platform_app.css").toExternalForm());
+            stage.toFront();
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();

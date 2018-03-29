@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.utils;
 
-import static java.lang.Double.NaN;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 
 /**
  * Created by cherry on 2018/3/8.
@@ -67,10 +67,10 @@ public class MathUtils {
         Double max = null;
         for (int i = 0; i < array.length; i++) {
             for (int x = 0; x < array[i].length; x++) {
-                if (array[i][x] == null || array[i][x] == NaN) {
+                if (DAPStringUtils.isInfinityAndNaN(array[i][x])) {
                     continue;
                 }
-                if (max == null || max == NaN) {
+                if (DAPStringUtils.isInfinityAndNaN(max)) {
                     max = array[i][x];
                     continue;
                 }
@@ -87,10 +87,10 @@ public class MathUtils {
         Double min = null;
         for (int i = 0; i < array.length; i++) {
             for (int x = 0; x < array[i].length; x++) {
-                if (array[i][x] == null || array[i][x] == NaN) {
+                if (DAPStringUtils.isInfinityAndNaN(array[i][x])) {
                     continue;
                 }
-                if (min == null || min == NaN) {
+                if (DAPStringUtils.isInfinityAndNaN(min)) {
                     min = array[i][x];
                     continue;
                 }

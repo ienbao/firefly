@@ -3,7 +3,7 @@ package com.dmsoft.firefly.plugin.spc.utils;
 /**
  * Created by cherry on 2018/3/16.
  */
-public class DigNumInstance {
+public final class DigNumInstance {
 
     private static DigNumInstance instance = null;
     private int digNum = -1;
@@ -11,6 +11,11 @@ public class DigNumInstance {
     private DigNumInstance() {
     }
 
+    /**
+     * Get DigNumInstance instance
+     *
+     * @return DigNumInstance instance
+     */
     public static DigNumInstance newInstance() {
         if (null == instance) {
             instance = new DigNumInstance();

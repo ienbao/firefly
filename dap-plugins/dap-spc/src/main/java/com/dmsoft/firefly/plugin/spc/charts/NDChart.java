@@ -8,7 +8,6 @@ import com.dmsoft.firefly.plugin.spc.charts.utils.ReflectionUtils;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
-import com.sun.javafx.charts.Legend;
 import com.sun.javafx.css.converters.SizeConverter;
 import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
@@ -32,8 +31,15 @@ import java.util.function.Function;
 /**
  * Created by cherry on 2018/3/1.
  */
+
+/**
+ * Nd chart
+ *
+ * @param <X> first data class
+ * @param <Y> second data class
+ */
 public class NDChart<X, Y> extends XYChart<X, Y> {
-    private Map<Series, Map<Object, Data<X, Y>>> seriesCategoryMap = new HashMap<>();
+    private Map<Series<X, Y>, Map<Object, Data<X, Y>>> seriesCategoryMap = new HashMap<>();
     private Map<XYChart.Data, BarCategoryData<X, Y>> barCategoryDataMap = Maps.newHashMap();
     private Data<X, Y> dataItemBeingRemoved = null;
     private Series<X, Y> seriesOfDataRemoved = null;
@@ -50,7 +56,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     private TreeSet categories = new TreeSet();
     private boolean showTooltip = true;
     private double bottomPos = 0;
-    private static String NEGATIVE_STYLE = "negative";
+    private static final String NEGATIVE_STYLE = "negative";
     private final Orientation orientation;
 
     /**
@@ -189,6 +195,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
 //        5.设置曲线样式
 //        6.设置直线样式
 //        7.设置鼠标悬停提示
+        if (chartData == null) {
+            return;
+        }
         String uniqueKey = chartData.getUniqueKey();
         String seriesName = chartData.getSeriesName();
         Color color = chartData.getColor();
@@ -197,9 +206,6 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         }
         if (chartData.getBarChartData() != null) {
             XYChart.Series series = this.buildSeries(chartData.getBarChartData(), seriesName);
-            if (series == null) {
-                return;
-            }
             this.getData().add(series);
             this.setSeriesDataStyle(series, color);
             this.setSeriesDataTooltip(series, chartTooltip == null ? null : chartTooltip.getChartBarToolTip());
@@ -209,16 +215,17 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         if (chartData.getLineData() != null) {
             ValueMarker valueMarker = new ValueMarker();
             chartData.getLineData().forEach(lineData -> {
-                Line line = valueMarker.buildValueMarker(lineData, color, seriesName, (chartTooltip == null) ?
-                        null : chartTooltip.getLineTooltip());
-                getPlotChildren().add(line);
+                if (lineData.getValue() != null) {
+                    Line line = valueMarker.buildValueMarker(lineData, color, seriesName,
+                            (chartTooltip == null) ? null : chartTooltip.getLineTooltip());
+                    getPlotChildren().add(line);
+                }
             });
             valueMarkerMap.put(uniqueKey, valueMarker);
         }
     }
 
     private XYChart.Series buildSeries(IBarChartData<X, Y> barData, String seriesName) {
-        if (barData == null) return null;
         XYChart.Series oneSeries = new XYChart.Series();
         oneSeries.setName(seriesName);
         int length = barData.getLen();
@@ -242,7 +249,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         data.forEach(dataItem -> {
             dataItem.getNode().getStyleClass().setAll("chart-bar");
             if (color != null && DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
-                dataItem.getNode().setStyle("-fx-bar-fill: " + ColorUtils.toHexFromFXColor(color) + ";-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
+                StringBuilder nodeStyle = new StringBuilder("-fx-bar-fill: " + ColorUtils.toHexFromFXColor(color));
+                nodeStyle.append(";-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
+                dataItem.getNode().setStyle(nodeStyle.toString());
             }
         });
     }
@@ -389,15 +398,17 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
                 animateDataAdd(item, bar);
             } else {
                 // RT-21164 check if bar value is negative to add NEGATIVE_STYLE style class
-                double barVal = (orientation == Orientation.VERTICAL) ? ((Number) item.getYValue()).doubleValue() :
-                        ((Number) item.getXValue()).doubleValue();
+                double barVal = (orientation == Orientation.VERTICAL)
+                        ? ((Number) item.getYValue()).doubleValue() : ((Number) item.getXValue()).doubleValue();
                 if (barVal < 0) {
                     bar.getStyleClass().add(NEGATIVE_STYLE);
                 }
                 getPlotChildren().add(bar);
             }
         }
-        if (categoryMap.size() > 0) seriesCategoryMap.put(series, categoryMap);
+        if (categoryMap.size() > 0) {
+            seriesCategoryMap.put(series, categoryMap);
+        }
     }
 
     @Override
@@ -457,14 +468,15 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
 
     private void paintBarPlot() {
         double barWidth = 0;
+        final double defaultWidth = 0.5;
         SortedSet categoriesOnScreen = getCategoriesOnScreen();
         if (categoriesOnScreen == null) {
             return;
         }
         barWidth = calculateBarWidth(categoriesOnScreen);
-        barWidth = (barWidth == 0) ? 0.5 : barWidth;
-        final double zeroPos = (valueAxis.getLowerBound() > 0) ?
-                valueAxis.getDisplayPosition(valueAxis.getLowerBound()) : valueAxis.getZeroPosition();
+        barWidth = (barWidth == 0) ? defaultWidth : barWidth;
+        final double zeroPos = (valueAxis.getLowerBound() > 0)
+                ? valueAxis.getDisplayPosition(valueAxis.getLowerBound()) : valueAxis.getZeroPosition();
         int catIndex = 0;
         for (Object category : categories) {
             for (Iterator<Series<X, Y>> sit = getDisplayedSeriesIterator(); sit.hasNext(); ) {
@@ -474,15 +486,26 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
                 if (item != null) {
                     final Node bar = item.getNode();
                     final double categoryPos;
+                    final double endCategoryPos;
                     final double valPos;
                     double barWidthSize = (Double) barCategoryDataMap.get(item).getBarWidth();
                     X currentX = (X) ReflectionUtils.forceMethodCall(Data.class, "getCurrentX", item);
                     Y currentY = (Y) ReflectionUtils.forceMethodCall(Data.class, "getCurrentY", item);
                     if (orientation == Orientation.VERTICAL) {
+                        X endX = null;
+                        if (item.getExtraValue() != null && item.getExtraValue() instanceof Double) {
+                            endX = (X) item.getExtraValue();
+                        }
                         categoryPos = getXAxis().getDisplayPosition(currentX);
+                        endCategoryPos = getXAxis().getDisplayPosition(endX);
                         valPos = getYAxis().getDisplayPosition(currentY);
                     } else {
+                        Y endY = null;
+                        if (item.getExtraValue() != null && item.getExtraValue() instanceof Double) {
+                            endY = (Y) item.getExtraValue();
+                        }
                         categoryPos = getYAxis().getDisplayPosition(currentY);
+                        endCategoryPos = getYAxis().getDisplayPosition(endY);
                         valPos = getXAxis().getDisplayPosition(currentX);
                     }
                     if (Double.isNaN(categoryPos) || Double.isNaN(valPos)) {
@@ -493,11 +516,13 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
                     bottomPos = bottom;
                     if (orientation == Orientation.VERTICAL) {
                         bar.resizeRelocate(categoryPos + (barWidth * barWidthSize + getBarGap()) * index,
-                                bottom, barWidth * barWidthSize, top - bottom);
+                                bottom, (endCategoryPos - categoryPos), top - bottom);
                     } else {
                         //noinspection SuspiciousNameCombination
+//                        bar.resizeRelocate(bottom, categoryPos + (barWidth * barWidthSize + getBarGap()) * index,
+//                                top - bottom, barWidth * barWidthSize);
                         bar.resizeRelocate(bottom, categoryPos + (barWidth * barWidthSize + getBarGap()) * index,
-                                top - bottom, barWidth * barWidthSize);
+                                top - bottom, (endCategoryPos - categoryPos));
                     }
                     index++;
                 }
@@ -642,11 +667,11 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
             //colorBits.clear(clearIndex);
             BitSet colorBitsValue = (BitSet) ReflectionUtils.forceFieldCall(XYChart.class, "colorBits", this);
             // DEFAULT_COLOR
-            String DEFAULT_COLOR_VALUE = (String) ReflectionUtils.forceFieldCall(XYChart.class, "DEFAULT_COLOR", null);
+            String defaultColor = (String) ReflectionUtils.forceFieldCall(XYChart.class, "DEFAULT_COLOR", null);
             for (Data<X, Y> d : series.getData()) {
                 final Node bar = d.getNode();
                 if (bar != null) {
-                    bar.getStyleClass().remove(DEFAULT_COLOR_VALUE + clearIndex);
+                    bar.getStyleClass().remove(defaultColor + clearIndex);
                     colorBitsValue.clear(clearIndex);
                 }
             }
@@ -655,13 +680,14 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     }
 
     private void updateMap(Series series, Data item) {
-        final Object category = (orientation == Orientation.VERTICAL) ? item.getXValue() :
-                item.getYValue();
+        final Object category = (orientation == Orientation.VERTICAL) ? item.getXValue() : item.getYValue();
         Map<Object, Data<X, Y>> categoryMap = seriesCategoryMap.get(series);
         if (categoryMap != null) {
             categoryMap.remove(category);
             categories.remove(category);
-            if (categoryMap.isEmpty()) seriesCategoryMap.remove(series);
+            if (categoryMap.isEmpty()) {
+                seriesCategoryMap.remove(series);
+            }
         }
     }
 
@@ -688,14 +714,29 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         }
     };
 
+    /**
+     * Get bar gap
+     *
+     * @return bar gap
+     */
     public final double getBarGap() {
         return barGap.getValue();
     }
 
+    /**
+     * Set bar gap
+     *
+     * @param value bar gap
+     */
     public final void setBarGap(double value) {
         barGap.setValue(value);
     }
 
+    /**
+     * Get bar gap property
+     *
+     * @return bar gap property
+     */
     public final DoubleProperty barGapProperty() {
         return barGap;
     }
@@ -725,14 +766,29 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         }
     };
 
+    /**
+     * Get category bar gap
+     *
+     * @return category bar gap
+     */
     public final double getCategoryGap() {
         return categoryGap.getValue();
     }
 
+    /**
+     * Set category bar gap
+     *
+     * @param value category bar gap
+     */
     public final void setCategoryGap(double value) {
         categoryGap.setValue(value);
     }
 
+    /**
+     * Get category gap property
+     *
+     * @return category gap property
+     */
     public final DoubleProperty categoryGapProperty() {
         return categoryGap;
     }
@@ -740,7 +796,6 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     /**
      * Super-lazy instantiation pattern from Bill Pugh.
      *
-     * @treatAsPrivate implementation detail
      */
     private static class StyleableProperties {
         private static final CssMetaData<NDChart<?, ?>, Number> BAR_GAP =

@@ -27,6 +27,7 @@ import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.event.PlatformEvent;
 import com.dmsoft.firefly.sdk.job.core.*;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
@@ -71,8 +72,6 @@ public class GrrItemController implements Initializable {
     @FXML
     private Tab configTab;
     @FXML
-    private Tab timeTab;
-    @FXML
     private TableColumn<ItemTableModel, CheckBox> select;
     @FXML
     private TableColumn<ItemTableModel, TestItemWithTypeDto> item;
@@ -115,6 +114,7 @@ public class GrrItemController implements Initializable {
 
     private GrrMainController grrMainController;
     private ContextMenu pop;
+    private boolean isFilterUslOrLsl = false;
 
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
@@ -167,7 +167,13 @@ public class GrrItemController implements Initializable {
         box.setOnAction(event -> {
             if (items != null) {
                 for (ItemTableModel model : items) {
-                    model.getSelector().setValue(box.isSelected());
+                    if (isFilterUslOrLsl) {
+                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
+                            model.getSelector().setValue(box.isSelected());
+                        }
+                    } else {
+                        model.getSelector().setValue(box.isSelected());
+                    }
                 }
             }
         });
@@ -247,29 +253,39 @@ public class GrrItemController implements Initializable {
 
     private void initPartAndAppraiserDatas() {
         ObservableList<String> datas = FXCollections.observableArrayList();
-        if (items != null) {
+        datas.add("");
+        datas.addAll(originalItems);
+       /* if (items != null) {
             for (ItemTableModel model : items) {
                 datas.add(model.getItem());
             }
-        }
+        }*/
+
         partCombox.setItems(datas);
         appraiserCombox.setItems(datas);
 
         initListView(partListView);
         initListView(appraiserListView);
-
+        Set<String> empty = new HashSet<String>();
         this.partCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
             partList.clear();
-            clearPartLbl();
-            Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
-            updatePartListViewDatas(values, false);
+            clearLbl(partLbl);
+            if (DAPStringUtils.isBlank(newValue)) {
+                updatePartListViewDatas(empty, false);
+            } else {
+                Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
+                updatePartListViewDatas(values, false);
+            }
         });
-
         this.appraiserCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
             appraiserList.clear();
-            clearAppraiserLbl();
-            Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
-            updateAppraiserListViewDatas(values, false);
+            clearLbl(appraiserLbl);
+            if (DAPStringUtils.isBlank(newValue)) {
+                updateAppraiserListViewDatas(empty, false);
+            } else {
+                Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
+                updateAppraiserListViewDatas(values, false);
+            }
         });
     }
 
@@ -351,17 +367,6 @@ public class GrrItemController implements Initializable {
         }
     }
 
-    private void resetPartOrAppraiserListView() {
-        partListView.getItems().forEach(listViewModel -> {
-            listViewModel.setIsChecked(false);
-            listViewModel.setErrorMsg(null);
-        });
-        appraiserListView.getItems().forEach(listViewModel -> {
-            listViewModel.setIsChecked(false);
-            listViewModel.setErrorMsg(null);
-        });
-    }
-
     private void initListView(ListView<ListViewModel> listView) {
         listView.setCellFactory(e -> new ListCell<ListViewModel>() {
             @Override
@@ -423,7 +428,7 @@ public class GrrItemController implements Initializable {
                 partLbl.setText(count + "/-");
                 TooltipUtil.installNormalTooltip(partLbl, GrrFxmlAndLanguageUtils.getString("UI_GRR_ITEM_VALUE_COUNT_EXPECT_WARN"));
             } else {
-                clearPartLbl();
+                clearLbl(partLbl);
             }
         } else {
             Integer expectInt = Integer.parseInt(partTxt.getText());
@@ -440,7 +445,7 @@ public class GrrItemController implements Initializable {
                 partLbl.setGraphic(null);
                 partLbl.setStyle("");
             } else {
-                clearPartLbl();
+                clearLbl(partLbl);
             }
         }
     }
@@ -455,7 +460,7 @@ public class GrrItemController implements Initializable {
             if (count != 0) {
                 appraiserLbl.setText(count + "/-");
             } else {
-                clearAppraiserLbl();
+                clearLbl(appraiserLbl);
             }
         } else {
             Integer expectInt = Integer.parseInt(appraiserTxt.getText());
@@ -472,7 +477,7 @@ public class GrrItemController implements Initializable {
                 appraiserLbl.setGraphic(null);
                 appraiserLbl.setStyle("");
             } else {
-                clearAppraiserLbl();
+                clearLbl(appraiserLbl);
             }
         }
     }
@@ -486,21 +491,12 @@ public class GrrItemController implements Initializable {
         warnIconLbl1.setStyle("-fx-padding: 0 26 0 0;");
     }
 
-    private void clearPartLbl() {
-        partLbl.setText("");
-        partLbl.setGraphic(null);
-        partLbl.setStyle("");
-        partLbl.setVisible(false);
-        TooltipUtil.uninstallNormalTooltip(partLbl);
-    }
-
-    private void clearAppraiserLbl() {
-        appraiserLbl.setText("");
-        appraiserLbl.setStyle("");
-        appraiserLbl.setGraphic(null);
-        appraiserLbl.setVisible(false);
-        TooltipUtil.uninstallNormalTooltip(appraiserLbl);
-
+    private void clearLbl(Label label) {
+        label.setText("");
+        label.setGraphic(null);
+        label.setStyle("");
+        label.setVisible(false);
+        TooltipUtil.uninstallNormalTooltip(label);
     }
 
     private void initBtnIcon() {
@@ -509,7 +505,6 @@ public class GrrItemController implements Initializable {
         exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_save_normal.png")));
         itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_datasource_normal.png")));
         configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_config_normal.png")));
-        timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
     }
 
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
@@ -521,6 +516,7 @@ public class GrrItemController implements Initializable {
                 is.getStyleClass().remove("filter-active");
                 is.getStyleClass().add("filter-normal");
                 is.setGraphic(null);
+                isFilterUslOrLsl = false;
             });
             MenuItem show = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS_WITH_USL_LSL));
             show.setOnAction(event -> {
@@ -528,6 +524,7 @@ public class GrrItemController implements Initializable {
                 is.getStyleClass().remove("filter-normal");
                 is.getStyleClass().add("filter-active");
                 is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
+                isFilterUslOrLsl = true;
             });
             pop.getItems().addAll(all, show);
         }
@@ -638,8 +635,8 @@ public class GrrItemController implements Initializable {
         items.clear();
         stickyOnTopItems.clear();
         String s = userPreferenceService.findPreferenceByUserId(STICKY_ON_TOP_CODE, envService.getUserName());
-        if (s != null) {
-            List<String> onTopItems = mapper.fromJson(mapper.fromJson(s, String.class), mapper.buildCollectionType(List.class, String.class));
+        if (DAPStringUtils.isNotBlank(s)) {
+            List<String> onTopItems = mapper.fromJson(s, mapper.buildCollectionType(List.class, String.class));
             stickyOnTopItems.addAll(onTopItems);
         }
         originalItems.clear();
@@ -863,8 +860,8 @@ public class GrrItemController implements Initializable {
 
     private List<String> getSelectedItem() {
         List<String> selectItems = Lists.newArrayList();
-        if (items != null) {
-            for (ItemTableModel model : items) {
+        if (itemTable.getItems() != null) {
+            for (ItemTableModel model : itemTable.getItems()) {
                 if (model.getSelector().isSelected()) {
                     selectItems.add(model.getItem());
                 }
@@ -876,8 +873,8 @@ public class GrrItemController implements Initializable {
     private List<TestItemWithTypeDto> initSelectedItemDto() {
         List<TestItemWithTypeDto> selectTestItemDtos = Lists.newLinkedList();
         initSelectTestItemDtos.clear();
-        if (items != null) {
-            for (ItemTableModel model : items) {
+        if (itemTable.getItems() != null) {
+            for (ItemTableModel model : itemTable.getItems()) {
                 if (model.getSelector().isSelected()) {
                     selectTestItemDtos.add(model.getItemDto());
                     initSelectTestItemDtos.add(model.getItemDto());
@@ -1005,10 +1002,16 @@ public class GrrItemController implements Initializable {
         List<String> testItemList = getSelectedItem();
         List<String> conditionTestItemList = Lists.newArrayList();
         TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
-        List<String> timeKeys = timePatternDto.getTimeKeys();
-        String timePattern = timePatternDto.getPattern();
-        conditionTestItemList.add(partCombox.getValue());
-        if (appraiserCombox.getValue() != null) {
+        List<String> timeKeys = Lists.newArrayList();
+        String timePattern = null;
+        if(timePatternDto != null) {
+            timeKeys = timePatternDto.getTimeKeys();
+            timePattern = timePatternDto.getPattern();
+        }
+        if (DAPStringUtils.isNotBlank(partCombox.getValue())) {
+            conditionTestItemList.add(partCombox.getValue());
+        }
+        if (DAPStringUtils.isNotBlank(appraiserCombox.getValue())) {
             conditionTestItemList.add(appraiserCombox.getValue());
         }
 

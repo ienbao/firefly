@@ -2,6 +2,7 @@ package com.dmsoft.firefly.plugin.grr.model;
 
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableModel;
+import com.dmsoft.firefly.gui.components.utils.TableComparatorUtils;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.utils.ValidateUtils;
 import com.dmsoft.firefly.plugin.grr.dto.GrrSummaryDto;
@@ -29,10 +30,8 @@ import java.util.*;
 public class GrrSummaryModel implements TableModel {
 
     private Map<String, SourceObjectProperty<String>> valueMap = new HashMap<>();
-    private Map<String, SimpleObjectProperty<Boolean>> checkMap = new HashMap<>();
-    private Map<String, GrrSummaryDto> rowKeyDataMap = new HashMap<>();
-    private Map<String, RadioButton> summaryRadioButton = Maps.newHashMap();
-    private Map<RadioButton, String> radioButtonRowKey = Maps.newHashMap();
+    private Map<String, GrrSummaryDto> rowKeyDataMap = Maps.newLinkedHashMap();
+    private Map<String, RadioButton> summaryRadioButton = Maps.newLinkedHashMap();
     private ObservableList<String> headerArray;
     private ObservableList<String> rowKeyArray;
     private List<GrrSummaryDto> summaryDtos;
@@ -40,7 +39,9 @@ public class GrrSummaryModel implements TableModel {
     private FilteredList<String> filterRowKeyArray;
     private ToggleGroup group = new ToggleGroup();
     private String radioKey = "   ";
-    private int analysisType = 1;
+    private int analysisType = 0;
+
+    private Set<String> disabledRowKeys = new HashSet<>();
 
     private Set<String> editorCell = new HashSet<>();
     private Set<String> errorEditorCell = new HashSet<>();
@@ -62,33 +63,47 @@ public class GrrSummaryModel implements TableModel {
     public void setData(List<GrrSummaryDto> summaryDtos, String selectedRowKey) {
         this.clearTableData();
         if (summaryDtos != null) {
-            this.selectedItemName = selectedRowKey;
             this.summaryDtos = summaryDtos;
             this.summaryDtos.forEach(summaryDto -> {
                 rowKeyArray.add(summaryDto.getItemName());
                 rowKeyDataMap.put(summaryDto.getItemName(), summaryDto);
                 RadioButton radioButton = new RadioButton();
                 radioButton.setToggleGroup(group);
-                if (this.selectedItemName.equals(summaryDto.getItemName())) {
+                if (!grrResultValid(summaryDto)) {
+                    disabledRowKeys.add(summaryDto.getItemName());
+//                    radioButton.setDisable(true);
+                }
+                if (DAPStringUtils.isNotBlank(selectedRowKey) && selectedRowKey.equals(summaryDto.getItemName())) {
+                    this.selectedItemName = selectedRowKey;
                     radioButton.setSelected(true);
                 }
                 radioButton.setOnAction(event -> {
                     if (radioClickListener != null) {
                         selectedItemName = summaryDto.getItemName();
                         String valueKey = summaryDto.getItemName() + UIConstant.SPLIT_FLAG + headerArray.get(headerArray.size() - 1);
-                        if (!valueMap.containsKey(valueKey) || (valueMap.containsKey(valueKey) && "-".equals(valueMap.get(valueKey).getValue()))) {
-                            return;
-                        }
-                        if (!errorEditorRow.contains(summaryDto.getItemName())) {
-                            String tolerance = valueMap.get(selectedItemName + UIConstant.SPLIT_FLAG + UIConstant.GRR_SUMMARY_TITLE[3]).getValue();
-                            radioClickListener.executeAnalyzeDetail(summaryDto, tolerance);
-                        }
+                        boolean canAnalyze = !errorEditorRow.contains(summaryDto.getItemName());
+                        canAnalyze = canAnalyze && valueMap.containsKey(valueKey);
+                        canAnalyze = canAnalyze && valueMap.get(valueKey).getValue() != null;
+//                        canAnalyze = canAnalyze && !"-".equals(valueMap.get(valueKey).getValue());
+//                        String tolerance = valueMap.get(selectedItemName + UIConstant.SPLIT_FLAG + UIConstant.GRR_SUMMARY_TITLE[3]).getValue();
+                        radioClickListener.executeAnalyzeDetail(summaryDto, getToleranceCellValue(selectedItemName), canAnalyze);
                     }
                 });
-                radioButtonRowKey.put(radioButton, summaryDto.getItemName());
                 summaryRadioButton.put(summaryDto.getItemName(), radioButton);
             });
         }
+    }
+
+    private boolean grrResultValid(GrrSummaryDto summaryDto) {
+        boolean valid = true;
+        int digNum = DigNumInstance.newInstance().getDigNum();
+        int percentDigNum = digNum - 2 >= 0 ? digNum - 2 : 0;
+        Double grr = analysisType == 0 ?
+                summaryDto.getSummaryResultDto().getGrrOnTolerance() :
+                summaryDto.getSummaryResultDto().getGrrOnContribution();
+        String value = this.formatterPercentValue(grr, percentDigNum);
+        valid = "-".equals(value) ? false : valid;
+        return valid;
     }
 
     /**
@@ -97,12 +112,20 @@ public class GrrSummaryModel implements TableModel {
     public void clearTableData() {
         summaryDtos.clear();
         rowKeyArray.clear();
-        editTestItem.clear();
         valueMap.clear();
-        checkMap.clear();
         rowKeyDataMap.clear();
         summaryRadioButton.clear();
         filterRowKeyArray.clear();
+        this.clearEditData();
+//        editTestItem.clear();
+//        editorCell.clear();
+//        editorRowKey.clear();
+//        errorEditorCell.clear();
+//        errorEditorRow.clear();
+    }
+
+    public void clearEditData() {
+        editTestItem.clear();
         editorCell.clear();
         editorRowKey.clear();
         errorEditorCell.clear();
@@ -149,28 +172,28 @@ public class GrrSummaryModel implements TableModel {
     private void updateValueMapByAnalysisType() {
         int digNum = DigNumInstance.newInstance().getDigNum();
         int percentDigNum = digNum - 2 >= 0 ? digNum - 2 : 0;
-        for (Map.Entry<String, SourceObjectProperty<String>> sourceObjectPropertyEntry: valueMap.entrySet()) {
+        for (Map.Entry<String, SourceObjectProperty<String>> sourceObjectPropertyEntry : valueMap.entrySet()) {
             String key = sourceObjectPropertyEntry.getKey();
             SourceObjectProperty<String> sourceObjectProperty = sourceObjectPropertyEntry.getValue();
             String columnName = key.split(UIConstant.SPLIT_FLAG)[1];
             String rowName = key.split(UIConstant.SPLIT_FLAG)[0];
             GrrSummaryDto summaryDto = rowKeyDataMap.get(rowName);
             if (UIConstant.GRR_SUMMARY_TITLE[4].equals(columnName)) {
-                Double repeatability = analysisType == 1 ?
+                Double repeatability = analysisType == 0 ?
                         summaryDto.getSummaryResultDto().getRepeatabilityOnTolerance() :
                         summaryDto.getSummaryResultDto().getRepeatabilityOnContribution();
                 String value = this.formatterPercentValue(repeatability, percentDigNum);
                 sourceObjectProperty.setValue(value);
             } else if (UIConstant.GRR_SUMMARY_TITLE[5].equals(columnName)) {
 
-                Double reproducibility = analysisType == 1 ?
+                Double reproducibility = analysisType == 0 ?
                         summaryDto.getSummaryResultDto().getReproducibilityOnTolerance() :
                         summaryDto.getSummaryResultDto().getReproducibilityOnContribution();
                 String value = this.formatterPercentValue(reproducibility, percentDigNum);
                 sourceObjectProperty.setValue(value);
             } else if (UIConstant.GRR_SUMMARY_TITLE[6].equals(columnName)) {
 
-                Double grr = analysisType == 1 ?
+                Double grr = analysisType == 0 ?
                         summaryDto.getSummaryResultDto().getGrrOnTolerance() :
                         summaryDto.getSummaryResultDto().getGrrOnContribution();
                 String value = this.formatterPercentValue(grr, percentDigNum);
@@ -202,19 +225,19 @@ public class GrrSummaryModel implements TableModel {
                 value = this.formatterNormalValue(tolerance, digNum);
             } else if (UIConstant.GRR_SUMMARY_TITLE[4].equals(columnName)) {
 
-                Double repeatability = analysisType == 1 ?
+                Double repeatability = analysisType == 0 ?
                         summaryDto.getSummaryResultDto().getRepeatabilityOnTolerance() :
                         summaryDto.getSummaryResultDto().getRepeatabilityOnContribution();
                 value = this.formatterPercentValue(repeatability, percentDigNum);
             } else if (UIConstant.GRR_SUMMARY_TITLE[5].equals(columnName)) {
 
-                Double reproducibility = analysisType == 1 ?
+                Double reproducibility = analysisType == 0 ?
                         summaryDto.getSummaryResultDto().getReproducibilityOnTolerance() :
                         summaryDto.getSummaryResultDto().getReproducibilityOnContribution();
                 value = this.formatterPercentValue(reproducibility, percentDigNum);
             } else if (UIConstant.GRR_SUMMARY_TITLE[6].equals(columnName)) {
 
-                Double grr = analysisType == 1 ?
+                Double grr = analysisType == 0 ?
                         summaryDto.getSummaryResultDto().getGrrOnTolerance() :
                         summaryDto.getSummaryResultDto().getGrrOnContribution();
                 value = this.formatterPercentValue(grr, percentDigNum);
@@ -241,8 +264,10 @@ public class GrrSummaryModel implements TableModel {
                 }
                 TestItemWithTypeDto testItemWithTypeDto = new TestItemWithTypeDto();
                 testItemWithTypeDto.setTestItemName(summaryDto.getItemName());
-                testItemWithTypeDto.setUsl(summaryDto.getSummaryResultDto().getUsl() + "");
-                testItemWithTypeDto.setLsl(summaryDto.getSummaryResultDto().getLsl() + "");
+                testItemWithTypeDto.setUsl(summaryDto.getSummaryResultDto().getUsl() == null ? null :
+                        String.valueOf(summaryDto.getSummaryResultDto().getUsl()));
+                testItemWithTypeDto.setLsl(summaryDto.getSummaryResultDto().getLsl() == null ? null :
+                        String.valueOf(summaryDto.getSummaryResultDto().getLsl()));
                 editTestItem.add(testItemWithTypeDto);
             });
         }
@@ -297,6 +322,12 @@ public class GrrSummaryModel implements TableModel {
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
         tableCell.setStyle(null);
+        //can not analyze grr, radio button make red
+        if (disabledRowKeys != null && disabledRowKeys.contains(rowKey)) {
+            tableCell.getStyleClass().add("error");
+        } else {
+            tableCell.getStyleClass().remove("error");
+        }
         if (radioKey.equals(column)) {
             tableCell.setText(null);
             tableCell.setGraphic(summaryRadioButton.get(rowKey));
@@ -313,7 +344,7 @@ public class GrrSummaryModel implements TableModel {
             String grrStr = tableCell.getText();
             grrStr = grrStr.substring(0, grrStr.length() - 1);
             if (DAPStringUtils.isBlankWithSpecialNumber(grrStr)) {
-                tableCell.setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_EXCELLENT));
+                tableCell.setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_RECTIFICATION));
             } else {
                 double grr = Double.valueOf(grrStr);
                 if (rules != null && size >= 1 && grr <= rules.get(0)) {
@@ -326,6 +357,10 @@ public class GrrSummaryModel implements TableModel {
                     tableCell.setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_RECTIFICATION));
                 }
             }
+        }
+
+        if (column.equals(UIConstant.GRR_SUMMARY_TITLE[4]) || column.equals(UIConstant.GRR_SUMMARY_TITLE[5]) || column.equals(UIConstant.GRR_SUMMARY_TITLE[6])) {
+            tableCell.getTableColumn().setComparator((Comparator<T>) TableComparatorUtils.getContainsPercentColumnComparator());
         }
         return tableCell;
     }
@@ -340,9 +375,33 @@ public class GrrSummaryModel implements TableModel {
 
     }
 
+    /**
+     * Set analysis type, need to refresh summary, update disabledRowKeys
+     *
+     * @param analysisType
+     */
     public void setAnalysisType(int analysisType) {
         this.analysisType = analysisType;
         this.updateValueMapByAnalysisType();
+        this.updateDisabledRowKeys();
+    }
+
+    /**
+     * Check current selected row whether can analyze grr
+     *
+     * @return can or not can analyze grr, if true, can not analyze grr detail
+     */
+    public boolean checkSelectedRowKeyInValid() {
+        return disabledRowKeys == null ? true : disabledRowKeys.contains(selectedItemName);
+    }
+
+    private void updateDisabledRowKeys() {
+        disabledRowKeys.clear();
+        rowKeyDataMap.forEach((key, value) -> {
+            if (!grrResultValid(value)) {
+                disabledRowKeys.add(key);
+            }
+        });
     }
 
     public void setRadioClickListener(SummaryRadioClickListener radioClickListener) {
@@ -371,7 +430,7 @@ public class GrrSummaryModel implements TableModel {
         GrrSummaryDto summaryDto = rowKeyDataMap.get(rowKey);
         if (columnName.equals(UIConstant.GRR_SUMMARY_TITLE[1])) {
             Double usl = summaryDto.getSummaryResultDto().getUsl();
-            if (Double.valueOf(newText) >= usl) {
+            if (!DAPStringUtils.isInfinityAndNaN(usl) && Double.valueOf(newText) >= usl) {
                 errorEditorRow.add(rowKey);
                 errorEditorCell.add(rowKey + UIConstant.SPLIT_FLAG + columnName);
                 if (!textField.getStyleClass().contains("text-field-error")) {
@@ -382,7 +441,7 @@ public class GrrSummaryModel implements TableModel {
             }
         } else if (columnName.equals(UIConstant.GRR_SUMMARY_TITLE[2])) {
             Double lsl = summaryDto.getSummaryResultDto().getLsl();
-            if (Double.valueOf(newText) <= lsl) {
+            if (!DAPStringUtils.isInfinityAndNaN(lsl) && Double.valueOf(newText) <= lsl) {
                 errorEditorRow.add(rowKey);
                 errorEditorCell.add(rowKey + UIConstant.SPLIT_FLAG + columnName);
                 if (!textField.getStyleClass().contains("text-field-error")) {
@@ -405,10 +464,6 @@ public class GrrSummaryModel implements TableModel {
 
     public boolean hasErrorEditValue() {
         return errorEditorCell.size() != 0;
-    }
-
-    public Map<String, GrrSummaryDto> getRowKeyDataMap() {
-        return rowKeyDataMap;
     }
 
     public List<TestItemWithTypeDto> getEditTestItem() {

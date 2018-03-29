@@ -11,32 +11,50 @@ public class SimpleItemCheckModel {
     private SimpleStringProperty itemName;
     private SimpleBooleanProperty isChecked;
 
-    public SimpleItemCheckModel(String templateName, boolean isChecked) {
+    /**
+     * Constructor for SimpleItemCheckModel
+     *
+     * @param itemName  item name
+     * @param isChecked is checked or not
+     */
+    public SimpleItemCheckModel(String itemName, boolean isChecked) {
 
-        this.itemName = new SimpleStringProperty(templateName);
+        this.itemName = new SimpleStringProperty(itemName);
         this.isChecked = new SimpleBooleanProperty(isChecked);
     }
 
+    /**
+     * Get item name
+     *
+     * @return item name
+     */
     public String getItemName() {
         return itemName.get();
     }
 
-    public SimpleStringProperty itemNameProperty() {
-        return itemName;
-    }
-
+    /**
+     * Set item name
+     *
+     * @param itemName item name
+     */
     public void setItemName(String itemName) {
         this.itemName.set(itemName);
     }
 
+    /**
+     * Get check status
+     *
+     * @return check status
+     */
     public boolean isIsChecked() {
         return isChecked.get();
     }
 
-    public SimpleBooleanProperty isCheckedProperty() {
-        return isChecked;
-    }
-
+    /**
+     * Set check value
+     *
+     * @param isChecked check value
+     */
     public void setIsChecked(boolean isChecked) {
         this.isChecked.set(isChecked);
     }

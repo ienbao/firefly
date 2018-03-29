@@ -13,6 +13,7 @@ public class ParamKeys {
     public static final String SEARCH_GRR_CONFIG_DTO = "searchGrrConfigDto";
     public static final String SEARCH_GRR_ANALYSIS_CONFIG = "analysisGrrConfigDto";
     public static final String SEARCH_GRR_ANALYSIS_TESTITEM = "analysisGrrTestItem";
+    public static final String SEARCH_GRR_SUMMARY_TYPE = "analysisSummaryType";
     public static final String ANALYSIS_GRR_INCLUDE_ROWS = "includeRows";
     public static final String SEARCH_TEMPLATE_SETTING_DTO = "searchTemplateSettingDto";
     public static final String GRR_DETAIL_DTO = "grrDetailDto";
@@ -42,7 +43,7 @@ public class ParamKeys {
     public static final String GRR_FIND_EXPORT_DETAIL_HANDLER = "findGrrExportDetailHandler";
 
     //pipeline
-    public static final String GRR_ANALYSIS_JOB_PIPELINE = "grrAnalysisJobPipeline";
+//    public static final String GRR_ANALYSIS_JOB_PIPELINE = "grrAnalysisJobPipeline";
     public static final String GRR_DETAIL_ANALYSIS_JOB_PIPELINE = "grrDetailAnalysisJobPipeline";
     public static final String GRR_VIEW_DATA_JOB_PIPELINE = "grrViewDataJobPipeline";
     public static final String GRR_REFRESH_JOB_PIPELINE = "grrRefreshJobPipeline";

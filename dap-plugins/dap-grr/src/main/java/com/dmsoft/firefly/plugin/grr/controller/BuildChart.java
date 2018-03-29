@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
+import com.dmsoft.firefly.gui.components.chart.ChartSaveUtils;
 import com.dmsoft.firefly.plugin.grr.charts.LinearChart;
 import com.dmsoft.firefly.plugin.grr.charts.data.ILineData;
 import com.dmsoft.firefly.plugin.grr.charts.data.RuleLineData;
@@ -336,7 +337,7 @@ public class BuildChart {
         }
         try {
             file = new File(path);
-            saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(image.image, null), file, 0.9f);
+            ChartSaveUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(exportImage, null), file, 0.9f);
 //            AlertDialog.showAlertDialog("保存成功!");
         } catch (IOException ex) {
 //            AlertDialog.showAlertDialog("保存失败:" + ex.getMessage());
@@ -346,38 +347,26 @@ public class BuildChart {
         return path;
     }
 
-    /**
-     * method to save image
-     *
-     * @param image    image
-     * @param filePath file path
-     * @param quality  quality
-     * @throws Exception exception
-     */
-    public static void saveImageUsingJPGWithQuality(BufferedImage image,
-                                                    File filePath, float quality) throws Exception {
-
-        BufferedImage newBufferedImage = new BufferedImage(image.getWidth(),
-                image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-        newBufferedImage.getGraphics().drawImage(image, 0, 0, null);
-
-        Iterator iter = ImageIO
-                .getImageWritersByFormatName("jpeg");
-
-        ImageWriter imageWriter = (ImageWriter) iter.next();
-        ImageWriteParam iwp = imageWriter.getDefaultWriteParam();
-
-        iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        iwp.setCompressionQuality(quality);
-
-        FileImageOutputStream fileImageOutput = new FileImageOutputStream(filePath);
-        imageWriter.setOutput(fileImageOutput);
-        IIOImage jpgimage = new IIOImage(newBufferedImage, null, null);
-        imageWriter.write(null, jpgimage, iwp);
-        imageWriter.dispose();
-    }
-
-    private static class WriteImage {
-        WritableImage image;
-    }
+//    public static void saveImageUsingJPGWithQuality(BufferedImage image,
+//                                                    File filePath, float quality) throws Exception {
+//
+//        BufferedImage newBufferedImage = new BufferedImage(image.getWidth(),
+//                image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+//        newBufferedImage.getGraphics().drawImage(image, 0, 0, null);
+//
+//        Iterator iter = ImageIO
+//                .getImageWritersByFormatName("jpeg");
+//
+//        ImageWriter imageWriter = (ImageWriter) iter.next();
+//        ImageWriteParam iwp = imageWriter.getDefaultWriteParam();
+//
+//        iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+//        iwp.setCompressionQuality(quality);
+//
+//        FileImageOutputStream fileImageOutput = new FileImageOutputStream(filePath);
+//        imageWriter.setOutput(fileImageOutput);
+//        IIOImage jpgimage = new IIOImage(newBufferedImage, null, null);
+//        imageWriter.write(null, jpgimage, iwp);
+//        imageWriter.dispose();
+//    }
 }

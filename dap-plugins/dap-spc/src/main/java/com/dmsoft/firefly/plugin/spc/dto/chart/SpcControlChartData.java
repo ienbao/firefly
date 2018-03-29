@@ -16,6 +16,7 @@ import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import javafx.geometry.Orientation;
 import javafx.scene.paint.Color;
+
 import java.util.List;
 
 /**
@@ -37,6 +38,13 @@ public class SpcControlChartData implements ControlChartData {
     private Double[] uclValue;
     private Double[] lclValue;
 
+    /**
+     * Constructor for SpcControlChartData
+     *
+     * @param key                unique key
+     * @param spcControlChartDto control chart data
+     * @param color              chart color
+     */
     public SpcControlChartData(String key, SpcControlChartDto spcControlChartDto, Color color) {
         this.spcControlChartDto = spcControlChartDto;
         this.key = key;
@@ -52,10 +60,8 @@ public class SpcControlChartData implements ControlChartData {
         Double[] y = spcControlChartDto.getY();
         //init lines data
         Double cl = spcControlChartDto.getCl();
-        if (cl != null) {
-            ILineData uslData = new LineData(cl, UIConstant.SPC_CHART_CL, Orientation.HORIZONTAL);
-            lineDataList.add(uslData);
-        }
+        ILineData uslData = new LineData(cl, UIConstant.SPC_CHART_CL, Orientation.HORIZONTAL);
+        lineDataList.add(uslData);
         String[] uclLclName = UIConstant.SPC_UCL_LCL;
         uclValue = spcControlChartDto.getUcl();
         lclValue = spcControlChartDto.getLcl();
@@ -166,6 +172,9 @@ public class SpcControlChartData implements ControlChartData {
         return lclValue;
     }
 
+    /**
+     * Spc point data class
+     */
     class SpcPointData implements IPoint {
         private Double[] x;
         private Double[] y;
@@ -176,24 +185,24 @@ public class SpcControlChartData implements ControlChartData {
          * @param x x
          * @param y y
          */
-        public SpcPointData(Double[] x, Double[] y) {
+        SpcPointData(Double[] x, Double[] y) {
             this.x = x;
             this.y = y;
         }
 
         @Override
         public Object getXByIndex(int index) {
-            return DAPStringUtils.isInfinityAndNaN(x[index]) ? null : x[index];
+            return index >= x.length && DAPStringUtils.isInfinityAndNaN(x[index]) ? null : x[index];
         }
 
         @Override
         public Object getYByIndex(int index) {
-            return DAPStringUtils.isInfinityAndNaN(y[index]) ? null : y[index];
+            return index >= y.length && DAPStringUtils.isInfinityAndNaN(y[index]) ? null : y[index];
         }
 
         @Override
         public int getLen() {
-            return x == null ? 0 : x.length;
+            return x == null || y == null ? 0 : (x.length > y.length ? y.length : x.length);
         }
     }
 }

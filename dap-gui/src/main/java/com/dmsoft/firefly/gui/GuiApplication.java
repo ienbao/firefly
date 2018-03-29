@@ -176,6 +176,7 @@ public class GuiApplication extends Application {
             stage.initStyle(StageStyle.TRANSPARENT);
             stage.setScene(tempScene);
             stage.setResizable(false);
+            stage.toFront();
             stage.show();
             StageMap.addStage(GuiConst.PLARTFORM_STAGE_PROCESS, stage);
         } catch (Exception ex) {

@@ -261,11 +261,11 @@ public class TemplateController {
     private void buildNewTemplateDialog() {
         Pane root;
         try {
-            FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/new_template.fxml");
             NewNameController newNameController = new NewNameController();
             newNameController.setPaneName("newTemplate");
-            loader.setController(newNameController);
-            root = loader.load();
+            fxmlLoader.setController(newNameController);
+            root = fxmlLoader.load();
             newNameController.getOk().setOnAction(event -> {
                 TextField n = newNameController.getName();
                 if (StringUtils.isNotEmpty(n.getText())) {
@@ -283,6 +283,7 @@ public class TemplateController {
 
             Stage newStage = WindowFactory.createOrUpdateSimpleWindowAsModel("newTemplate", "New Template", root);
             newStage.setOnCloseRequest(event -> newNameController.getName().setText(""));
+            newStage.toFront();
             newStage.show();
 
         } catch (IOException e) {
@@ -294,12 +295,12 @@ public class TemplateController {
     private void buildRenameTemplateDialog() {
         Pane root;
         try {
-            FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/new_template.fxml");
             NewNameController renameTemplateController = new NewNameController();
             renameTemplateController.setPaneName("renameTemplate");
 
-            loader.setController(renameTemplateController);
-            root = loader.load();
+            fxmlLoader.setController(renameTemplateController);
+            root = fxmlLoader.load();
             renameTemplateController.getOk().setOnAction(event -> {
                 TextField n = renameTemplateController.getName();
                 if (StringUtils.isNotEmpty(n.getText()) && !n.getText().equals(templateName.getSelectionModel().getSelectedItem())) {
@@ -315,6 +316,7 @@ public class TemplateController {
             });
             Stage renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameTemplate", "Rename Template", root);
             renameTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem());
+            renameStage.toFront();
             renameStage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -325,12 +327,12 @@ public class TemplateController {
     private void buildCopyTemplateDialog() {
         Pane root;
         try {
-            FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/new_template.fxml");
             NewNameController copyTemplateController = new NewNameController();
             copyTemplateController.setPaneName("copyTemplate");
 
-            loader.setController(copyTemplateController);
-            root = loader.load();
+            fxmlLoader.setController(copyTemplateController);
+            root = fxmlLoader.load();
             copyTemplateController.getOk().setOnAction(event -> {
                 TextField n = copyTemplateController.getName();
                 if (StringUtils.isNotEmpty(n.getText())) {
@@ -352,6 +354,7 @@ public class TemplateController {
             });
             Stage copyStage = WindowFactory.createOrUpdateSimpleWindowAsModel("copyTemplate", "Copy Template", root);
             copyTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem());
+            copyStage.toFront();
             copyStage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -364,6 +367,7 @@ public class TemplateController {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/pattern.fxml");
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createSimpleWindowAsModel("pattern", GuiFxmlAndLanguageUtils.getString(ResourceMassages.TIME_PATTERN), root, getResource("css/platform_app.css").toExternalForm());
+            stage.toFront();
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -381,6 +385,7 @@ public class TemplateController {
             fxmlLoader.setController(addItem);
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("addItem", GuiFxmlAndLanguageUtils.getString(ResourceMassages.ADD_ITEM), root, getResource("css/platform_app.css").toExternalForm());
+            stage.toFront();
             stage.show();
 
         } catch (Exception ex) {

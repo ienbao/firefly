@@ -250,6 +250,7 @@ public class ViewDataController implements Initializable {
                 quickSearchController.getStage().close();
             });
             if (stage != null) {
+                stage.toFront();
                 stage.show();
             }
         });

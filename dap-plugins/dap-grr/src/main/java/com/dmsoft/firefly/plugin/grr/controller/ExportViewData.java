@@ -95,9 +95,9 @@ public class ExportViewData {
 
     private void initEvent() {
         ok.setOnAction(event -> {
-            StageMap.closeStage("spcExportViewData");
+            StageMap.closeStage("grrExportViewData");
         });
-        cancel.setOnAction(event -> StageMap.closeStage("spcExportViewData"));
+        cancel.setOnAction(event -> StageMap.closeStage("grrExportViewData"));
     }
 
     public void setDataFrame(SearchDataFrame dataFrame) {

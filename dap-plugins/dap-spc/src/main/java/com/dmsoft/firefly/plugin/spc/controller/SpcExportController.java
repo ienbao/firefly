@@ -5,6 +5,8 @@ import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
+import com.dmsoft.firefly.gui.components.utils.TextFieldWrapper;
+import com.dmsoft.firefly.gui.components.utils.ValidateRule;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
@@ -29,6 +31,7 @@ import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.event.PlatformEvent;
 import com.dmsoft.firefly.sdk.job.core.*;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -120,6 +123,8 @@ public class SpcExportController {
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
     private ContextMenu pop;
+    private boolean isFilterUslOrLsl = false;
+
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
     private SearchDataFrame dataFrame;
@@ -165,7 +170,13 @@ public class SpcExportController {
         box.setOnAction(event -> {
             if (items != null) {
                 for (ItemTableModel model : items) {
-                    model.getSelector().setValue(box.isSelected());
+                    if (isFilterUslOrLsl) {
+                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
+                            model.getSelector().setValue(box.isSelected());
+                        }
+                    } else {
+                        model.getSelector().setValue(box.isSelected());
+                    }
                 }
             }
         });
@@ -262,11 +273,20 @@ public class SpcExportController {
             }
         });
         itemTable.setContextMenu(createTableRightMenu());
-        SpcSettingDto settingDto = settingService.findSpcSetting();
-        if (settingDto != null) {
-            ndGroup.setText(String.valueOf(settingDto.getChartIntervalNumber()));
-            subGroup.setText(String.valueOf(settingDto.getCustomGroupNumber()));
-        }
+        ndGroup.setText(String.valueOf(PropertiesResource.SPC_CONFIG_INTERVAL_NUMBER));
+        subGroup.setText(String.valueOf(PropertiesResource.SPC_CONFIG_SUBGROUP_SIZE));
+        ValidateRule rule = new ValidateRule();
+        rule.setMaxLength(SpcSettingValidateUtil.ANALYSIS_SETTING_MAX_INT);
+        rule.setPattern("^\\+?\\d*$");
+        rule.setErrorStyle("text-field-error");
+        rule.setMaxValue(20d);
+        rule.setMinValue(1d);
+        String[] params = new String[]{rule.getMinValue().toString(), rule.getMaxValue().toString()};
+        rule.setRangErrorMsg(SpcFxmlAndLanguageUtils.getString(ResourceMassages.RANGE_NUMBER_WARNING_MESSAGE, params));
+        rule.setEmptyErrorMsg(SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_VALIDATE_NOT_BE_EMPTY));
+        TextFieldWrapper.decorate(subGroup, rule);
+        TextFieldWrapper.decorate(ndGroup, rule);
+
         initEvent();
         initItemData();
     }
@@ -311,6 +331,10 @@ public class SpcExportController {
                 WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
                 return;
             }
+            if (subGroup.getStyleClass().contains("text-field-error") || ndGroup.getStyleClass().contains("text-field-error")) {
+                WindowMessageFactory.createWindowMessageHasOk("Export", "Please Input correct config numbers.");
+                return;
+            }
             StageMap.closeStage("spcExport");
             String savePath = locationPath.getText() + "/SPC_" + getTimeString();
             export(savePath);
@@ -353,6 +377,7 @@ public class SpcExportController {
                 is.getStyleClass().remove("filter-active");
                 is.getStyleClass().add("filter-normal");
                 is.setGraphic(null);
+                isFilterUslOrLsl = false;
             });
             MenuItem show = new MenuItem(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS_WITH_USL_LSL));
             show.setOnAction(event -> {
@@ -360,6 +385,7 @@ public class SpcExportController {
                 is.getStyleClass().remove("filter-normal");
                 is.getStyleClass().add("filter-active");
                 is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
+                isFilterUslOrLsl = true;
             });
             pop.getItems().addAll(all, show);
         }
@@ -414,8 +440,8 @@ public class SpcExportController {
         items.clear();
         stickyOnTopItems.clear();
         String s = userPreferenceService.findPreferenceByUserId(STICKY_ON_TOP_CODE, envService.getUserName());
-        if (s != null) {
-            List<String> onTopItems = mapper.fromJson(mapper.fromJson(s, String.class), mapper.buildCollectionType(List.class, String.class));
+        if (DAPStringUtils.isNotBlank(s)) {
+            List<String> onTopItems = mapper.fromJson(s, mapper.buildCollectionType(List.class, String.class));
             stickyOnTopItems.addAll(onTopItems);
         }
         originalItems.clear();
@@ -718,8 +744,8 @@ public class SpcExportController {
 
     private List<String> getSelectedItem() {
         List<String> selectItems = Lists.newArrayList();
-        if (items != null) {
-            for (ItemTableModel model : items) {
+        if (itemTable.getItems() != null) {
+            for (ItemTableModel model : itemTable.getItems()) {
                 if (model.getSelector().isSelected()) {
                     selectItems.add(model.getItem());
                 }
@@ -730,8 +756,8 @@ public class SpcExportController {
 
     private List<TestItemWithTypeDto> getSelectedItemDto() {
         List<TestItemWithTypeDto> selectItems = Lists.newArrayList();
-        if (items != null) {
-            for (ItemTableModel model : items) {
+        if (itemTable.getItems() != null) {
+            for (ItemTableModel model : itemTable.getItems()) {
                 if (model.getSelector().isSelected()) {
                     selectItems.add(model.getItemDto());
                 }
@@ -771,6 +797,7 @@ public class SpcExportController {
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("spcExportViewData",
                     SpcFxmlAndLanguageUtils.getString(ResourceMassages.VIEW_DATA), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            stage.toFront();
             stage.show();
 
         } catch (Exception ex) {
@@ -830,6 +857,7 @@ public class SpcExportController {
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.SPC_EXPORT_TEMPLATE_SETTING,
                     SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_SETTING_TITLE), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            stage.toFront();
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();

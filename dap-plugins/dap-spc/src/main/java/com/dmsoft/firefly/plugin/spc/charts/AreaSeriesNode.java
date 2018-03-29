@@ -23,6 +23,13 @@ import java.util.*;
 /**
  * Created by cherry on 2018/3/5.
  */
+
+/**
+ * Area series node
+ *
+ * @param <X> x data class
+ * @param <Y> y data class
+ */
 public class AreaSeriesNode<X, Y> {
 
     private ObservableList<XYChart.Series<X, Y>> areaSeries = FXCollections.observableArrayList();
@@ -31,27 +38,36 @@ public class AreaSeriesNode<X, Y> {
 
     private Map<XYChart.Series, Color> colorMap = Maps.newHashMap();
 
+    /**
+     * Build area group node
+     *
+     * @param xyOneChartData area series data
+     * @param color          color
+     * @return group node
+     */
     public Group buildAreaGroup(IXYChartData<X, Y> xyOneChartData, Color color) {
         XYChart.Series series = this.buildSeries(xyOneChartData);
         Path seriesLine = new Path();
         Path fillPath = new Path();
         seriesLine.setStrokeLineJoin(StrokeLineJoin.MITER);
-//        fillPathMap.put(unique, fillPath);
-//        seriesPathMap.put(unique, seriesLine);
-
         fillPath.getStyleClass().add("chart-fill-area-line");
-        fillPath.setStyle("-fx-fill: " + ColorUtils.toHexFromFXColor(color));
-
         seriesLine.getStyleClass().add("chart-series-area-line");
-        seriesLine.setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
+        if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
+            fillPath.setStyle("-fx-fill: " + ColorUtils.toHexFromFXColor(color));
+            seriesLine.setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
+        }
         Group areaGroup = new Group(fillPath, seriesLine);
-
         this.areaSeries.add(series);
         colorMap.put(series, color);
         series.setNode(areaGroup);
         return areaGroup;
     }
 
+    /**
+     * Update all area series
+     *
+     * @param color color
+     */
     public void updateColor(Color color) {
         if (color == null || DAPStringUtils.isBlank(ColorUtils.toHexFromFXColor(color))) {
             return;
@@ -66,6 +82,11 @@ public class AreaSeriesNode<X, Y> {
         }
     }
 
+    /**
+     * Toggle area series show or hidden
+     *
+     * @param showed if true, show all area series; if false, hidden all area series
+     */
     public void toggleAreaSeries(boolean showed) {
 
         for (int seriesIndex = 0; seriesIndex < areaSeries.size(); seriesIndex++) {
@@ -84,6 +105,11 @@ public class AreaSeriesNode<X, Y> {
         }
     }
 
+    /**
+     * Paint area series for chart
+     *
+     * @param chart chart
+     */
     public void paintAreaSeries(XYChart chart) {
 
         List<LineTo> constructedPath = new ArrayList<>(areaSeries.size());
@@ -126,9 +152,7 @@ public class AreaSeriesNode<X, Y> {
                 final double yAxisZeroPos = chart.getYAxis().getZeroPosition();
                 final boolean isYAxisZeroPosVisible = !Double.isNaN(yAxisZeroPos);
                 final double yAxisHeight = chart.getYAxis().getHeight();
-                final double yFillPos = isYAxisZeroPosVisible ? yAxisZeroPos :
-                        numericYPos < 0 ? numericYPos - yAxisHeight : yAxisHeight;
-
+                final double yFillPos = isYAxisZeroPosVisible ? yAxisZeroPos : numericYPos < 0 ? numericYPos - yAxisHeight : yAxisHeight;
                 seriesLine.add(new MoveTo(first.getX(), displayYPos));
                 fillPath.add(new MoveTo(first.getX(), yFillPos));
                 seriesLine.addAll(constructedPath);
@@ -141,7 +165,7 @@ public class AreaSeriesNode<X, Y> {
     }
 
     private XYChart.Series buildSeries(IXYChartData<X, Y> xyOneChartData) {
-        XYChart.Series areaSeries = new XYChart.Series();
+        XYChart.Series<X, Y> series = new XYChart.Series();
         int length = xyOneChartData.getLen();
         for (int i = 0; i < length; i++) {
             X xValue = xyOneChartData.getXValueByIndex(i);
@@ -150,9 +174,9 @@ public class AreaSeriesNode<X, Y> {
                 continue;
             }
             XYChart.Data data = new XYChart.Data<>(xValue, yValue);
-            areaSeries.getData().add(data);
+            series.getData().add(data);
         }
-        return areaSeries;
+        return series;
     }
 
     //    Draw smooth line
@@ -201,6 +225,9 @@ public class AreaSeriesNode<X, Y> {
 
     /**
      * Calculate open-ended Bezier Spline Control Points.
+     *
+     * @param dataPoints 2d data points
+     * @return Pair
      */
     public static Pair<Point2D[], Point2D[]> calcCurveControlPoints(Point2D[] dataPoints) {
         Point2D[] firstControlPoints;
@@ -271,12 +298,14 @@ public class AreaSeriesNode<X, Y> {
         double[] x = new double[n];
         // Temp workspace.
         double[] tmp = new double[n];
+        final double defaultFirst = 4.0;
+        final double defaultSecond = 3.5;
         double b = 2.0;
         x[0] = rhs[0] / b;
         // Decomposition and forward substitution.
         for (int i = 1; i < n; i++) {
             tmp[i] = 1 / b;
-            b = (i < n - 1 ? 4.0 : 3.5) - tmp[i];
+            b = (i < n - 1 ? defaultFirst : defaultSecond) - tmp[i];
             x[i] = (rhs[i] - x[i - 1]) / b;
         }
         for (int i = 1; i < n; i++) {
@@ -304,6 +333,9 @@ public class AreaSeriesNode<X, Y> {
         return symbol;
     }
 
+    /**
+     * Clear series data
+     */
     public void clear() {
         areaSeries.setAll(FXCollections.observableArrayList());
         colorMap.clear();

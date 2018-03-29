@@ -3,6 +3,13 @@ package com.dmsoft.firefly.plugin.spc.charts;
 /**
  * Created by cherry on 2018/3/2.
  */
+
+/**
+ * Axis range
+ *
+ * @param <X> x data class
+ * @param <Y> y data class
+ */
 public interface AxisRange<X extends Number, Y extends Number> {
 
     /**

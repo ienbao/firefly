@@ -13,6 +13,7 @@ import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.utils.ControlRuleConfigUtil;
 import com.dmsoft.firefly.plugin.spc.utils.enums.JudgeRuleType;
+import com.dmsoft.firefly.plugin.spc.utils.enums.SpcCustomAlarmKey;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcStatisticalResultKey;
 import com.dmsoft.firefly.sdk.utils.DAPDoubleUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
@@ -149,9 +150,11 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
                 StatisticalAlarmDto statisticalAlarmDto = new StatisticalAlarmDto();
                 statisticalAlarmDto.setValue(value);
                 String level = null;
-                List<CustomAlarmDto> customAlarmDtoList = statisticalAlarmSetting.get(spcStatsDto.getItemName());
-                if (customAlarmDtoList != null && SpcStatisticalResultKey.isCustomAlarmResultName(statisticalResultName)) {
-                    level = this.getCustomAlarmLevel(statisticalResultName, value, customAlarmDtoList);
+                if (statisticalAlarmSetting != null) {
+                    List<CustomAlarmDto> customAlarmDtoList = statisticalAlarmSetting.get(spcStatsDto.getItemName());
+                    if (customAlarmDtoList != null && SpcStatisticalResultKey.isCustomAlarmResultName(statisticalResultName)) {
+                        level = this.getCustomAlarmLevel(statisticalResultName, value, customAlarmDtoList);
+                    }
                 }
 
                 if (SpcStatisticalResultKey.isAbilityAlarmResultName(statisticalResultName)) {
@@ -336,6 +339,11 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
             return null;
         }
         String level = null;
+        if (name.equals(SpcStatisticalResultKey.LCL.getCode())) {
+            name = SpcCustomAlarmKey.LCL.getCode();
+        } else if (name.equals(SpcStatisticalResultKey.UCL.getCode())) {
+            name = SpcCustomAlarmKey.UCL.getCode();
+        }
         for (CustomAlarmDto customAlarmDto : customAlarmDtoList) {
             if (name.equals(customAlarmDto.getStatisticName())) {
                 Double lowerLimit = customAlarmDto.getLowerLimit();

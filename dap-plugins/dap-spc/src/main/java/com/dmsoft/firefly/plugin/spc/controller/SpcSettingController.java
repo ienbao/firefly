@@ -535,6 +535,7 @@ public class SpcSettingController implements Initializable {
                 addItemController = fxmlLoader.getController();
                 addItemController.setSpcSettingController(this);
                 Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.SPC_SETTING_ADD_ITEM, SpcFxmlAndLanguageUtils.getString(ResourceMassages.ADD_TEST_ITEMS), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+                stage.toFront();
                 stage.show();
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -563,6 +564,7 @@ public class SpcSettingController implements Initializable {
             root = fxmlLoader.load();
             spcExportSettingController = fxmlLoader.getController();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.SPC_EXPORT_TEMPLATE_SETTING, SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_SETTING_TITLE), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            stage.toFront();
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();

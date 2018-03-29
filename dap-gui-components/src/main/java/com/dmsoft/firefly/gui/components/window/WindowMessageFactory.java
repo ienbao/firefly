@@ -78,6 +78,7 @@ public class WindowMessageFactory {
             windowMessageController.updateMsgLbl(msg);
             Stage newStage = WindowFactory.createOrUpdateWindowAsModelNoBtn(ResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE, title, root);
             newStage.setResizable(false);
+            newStage.toFront();
             newStage.show();
             newStage.setOnShowing(event -> {
                 windowMessageController.onShowingRequest();
@@ -105,6 +106,7 @@ public class WindowMessageFactory {
             newStage.setOnShowing(event -> {
                 windowMessageController.onShowingRequest();
             });
+            newStage.toFront();
             newStage.show();
             newStage.setOnCloseRequest(event -> {
                 windowMessageController.closeDialog();
@@ -128,6 +130,7 @@ public class WindowMessageFactory {
             newStage.setOnShowing(event -> {
                 windowProgressTipController.onShowingRequest();
             });
+            newStage.toFront();
             newStage.show();
 
             newStage.setOnCloseRequest(event -> {

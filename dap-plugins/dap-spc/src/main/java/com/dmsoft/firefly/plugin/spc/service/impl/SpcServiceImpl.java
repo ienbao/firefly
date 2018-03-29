@@ -55,8 +55,6 @@ public class SpcServiceImpl implements SpcService {
             for (String s : datas) {
                 if (DAPStringUtils.isNumeric(s)) {
                     doubleList.add(Double.valueOf(s));
-                } else if (DAPStringUtils.isSpecialBlank(s)) {
-                    doubleList.add(Double.NaN);
                 }
             }
             if (!DAPStringUtils.isSpecialBlank(searchConditionDto.getCusLsl())) {
@@ -123,8 +121,6 @@ public class SpcServiceImpl implements SpcService {
                     }
                     rowKeys.add(searchRowKeys.get(i));
                     doubleList.add(value);
-                } else if (DAPStringUtils.isSpecialBlank(datas.get(i))) {
-                    doubleList.add(Double.NaN);
                 }
             }
             spcAnalysisDataDto.setCalculable(flag);

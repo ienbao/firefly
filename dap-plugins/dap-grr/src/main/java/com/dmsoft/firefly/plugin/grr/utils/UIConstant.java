@@ -42,4 +42,9 @@ public class UIConstant {
 
     public static final String GRR_CHART_XBAR_APPRAISER = "X-bar by Appraiser";
     public static final String GRR_CHART_RANGE_APPRAISER = "Range by Appraiser";
+
+    public static final String BTN_CHART_CHOOSE_LINES = GrrFxmlAndLanguageUtils.getString("BTN_CHART_CHOOSE_LINES");
+    public static final String BTN_CHART_ZOOM_IN = GrrFxmlAndLanguageUtils.getString("BTN_CHART_ZOOM_IN");
+    public static final String BTN_CHART_ZOOM_OUT = GrrFxmlAndLanguageUtils.getString("BTN_CHART_ZOOM_OUT");
+    public static final String BTN_CHART_EXTENSION_MENU = GrrFxmlAndLanguageUtils.getString("BTN_CHART_EXTENSION_MENU");
 }
