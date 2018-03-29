@@ -78,7 +78,7 @@ public class SpcRunChartData implements ControlChartData {
         Double[] x = runCResultDto.getX();
         Double[] y = runCResultDto.getY();
         xyChartData = new SpcXYChartData(x, y);
-        xyChartData.setRuleResultDtoMap(runCResultDto.getRuleResultDtoMap());
+//        xyChartData.setRuleResultDtoMap(runCResultDto.getRuleResultDtoMap());
         if (analyzedRowKeys != null) {
             xyChartData.setIds(analyzedRowKeys.toArray(new Object[analyzedRowKeys.size()]));
         }
