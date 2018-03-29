@@ -3,7 +3,7 @@ package com.dmsoft.firefly.sdk.job.core;
 /**
  * basic impl for basic job handler
  *
- * @author Can Guan
+ * @author Can Guan, Garen Pang
  */
 public abstract class AbstractBasicJobHandler implements JobHandler {
     private Double weight = 100.0;

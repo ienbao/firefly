@@ -3,7 +3,7 @@ package com.dmsoft.firefly.sdk.job.core;
 /**
  * listable interface for job
  *
- * @author Can Guan
+ * @author Can Guan, Garen Pang
  */
 public interface JobListable {
 

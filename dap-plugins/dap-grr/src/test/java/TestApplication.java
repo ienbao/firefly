@@ -65,10 +65,5 @@ public class TestApplication extends Application {
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/grr_chart.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
-        initJob();
-    }
-
-    private void initJob() {
-        JobManager manager = RuntimeContext.getBean(JobManager.class);
     }
 }

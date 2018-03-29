@@ -2,6 +2,8 @@ package com.dmsoft.firefly.sdk.job.core;
 
 /**
  * listener for job event
+ *
+ * @author Can Guan, Garen Pang
  */
 @FunctionalInterface
 public interface JobEventListener {

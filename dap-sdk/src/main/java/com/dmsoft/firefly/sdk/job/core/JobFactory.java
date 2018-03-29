@@ -2,6 +2,8 @@ package com.dmsoft.firefly.sdk.job.core;
 
 /**
  * job context factory
+ *
+ * @author Can Guan, Garen Pang
  */
 public interface JobFactory {
     /**

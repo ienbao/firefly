@@ -152,9 +152,7 @@ public class SourceDataServiceImpl implements SourceDataService {
     public void saveTestData(String projectName, String rowKey, Map<String, String> rowData) {
         if (isProjectExist(projectName)) {
             try {
-                logger.debug("Saving test data (rowKey = {}) in project = {} ...", rowKey, projectName);
                 privateSaveTestData(projectName, rowKey, rowData, true);
-                logger.info("Save test data (rowKey = {}) in project = {} done.", rowKey, projectName);
             } catch (Exception e) {
                 logger.error("Save test data (rowKey = {}) in project = {} error! Exception = {}", rowKey, projectName, e.getMessage());
                 throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
@@ -204,9 +202,7 @@ public class SourceDataServiceImpl implements SourceDataService {
     @Override
     public boolean isProjectExist(String projectName) {
         try {
-            logger.debug("Finding project exist or not by project name = {}...", projectName);
             boolean flag = getMongoTemplate().exists(new Query(where(PROJECT_NAME_FIELD).is(projectName)), PROJECT_COLLECTION_NAME);
-            logger.info("Find project exist or not by project name = {} done.", projectName);
             return flag;
         } catch (Exception e) {
             logger.error("Find project exist or not by project name = {} error! Exception = {}", projectName, e.getMessage());
@@ -217,9 +213,7 @@ public class SourceDataServiceImpl implements SourceDataService {
     @Override
     public boolean isTestItemExist(String projectName, String testItemName) {
         try {
-            logger.debug("Finding test item exist or not by project name = {} and test item name = {}...", projectName, testItemName);
             boolean flag = getMongoTemplate().exists(new Query(where(PROJECT_NAME_FIELD).is(projectName).andOperator(where(TEST_ITEM_FIELD + "." + testItemName).exists(true))), PROJECT_COLLECTION_NAME);
-            logger.info("Find test item exist or not by project name = {} and test item name = {} done.", projectName, testItemName);
             return flag;
         } catch (Exception e) {
             logger.error("Find test item exist or not by project name = {} and test item name = {} error! Exception = {}", projectName, testItemName, e.getMessage());
@@ -231,10 +225,7 @@ public class SourceDataServiceImpl implements SourceDataService {
     public boolean isRowKeyExist(String rowKey) {
         String projectName = DoubleIdUtils.getId0(rowKey);
         try {
-            logger.debug("Finding row key exist or not by row key = {}...", rowKey);
-            boolean flag = getMongoTemplate().exists(new Query(where(ROW_KEY_FIELD).is(rowKey)), projectName);
-            logger.info("Find row key exist or not by row key = {} done.", rowKey);
-            return flag;
+            return getMongoTemplate().exists(new Query(where(ROW_KEY_FIELD).is(rowKey)), projectName);
         } catch (Exception e) {
             logger.error("Find row key exist or not by row key = {} error! Exception = {}", rowKey, e.getMessage());
             throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);

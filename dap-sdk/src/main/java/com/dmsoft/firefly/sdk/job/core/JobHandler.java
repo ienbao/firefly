@@ -3,7 +3,7 @@ package com.dmsoft.firefly.sdk.job.core;
 /**
  * interface class for job handler
  *
- * @author Can Guan
+ * @author Can Guan, Garen Pang
  */
 public interface JobHandler extends JobRunnable {
     /**

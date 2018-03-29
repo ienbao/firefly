@@ -7,9 +7,11 @@ package com.dmsoft.firefly.gui.controller.template;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.gui.handler.importcsv.CsvImportHandler;
+import com.dmsoft.firefly.gui.handler.importcsv.ParamKeys;
+import com.dmsoft.firefly.gui.handler.importcsv.ResolverSelectHandler;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.model.UserModel;
-import com.dmsoft.firefly.gui.newhandler.ParamKeys;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -42,6 +44,7 @@ import java.util.ResourceBundle;
  */
 public class ResolverSelectController implements Initializable {
 
+    private static final Double D100 = 100.0;
     private DataSourceController controller;
     private ObservableList resolverData;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
@@ -77,7 +80,7 @@ public class ResolverSelectController implements Initializable {
             String defaultResolver = userPreferenceService.findPreferenceByUserId("defaultResolver", envService.getUserName());
             String resolverName;
             if (DAPStringUtils.isNotBlank(defaultResolver)) {
-                resolverName = mapper.fromJson(defaultResolver, String.class);
+                resolverName = defaultResolver;
                 if (DAPStringUtils.isNotBlank(resolverName)) {
                     resolver.getSelectionModel().select(resolverName);
                 } else {
@@ -153,6 +156,8 @@ public class ResolverSelectController implements Initializable {
 
         ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, fileName);
         chooseTableRowData.setImport(true);
+        controller.getChooseTableRowDataObservableList().add(chooseTableRowData);
+        controller.getDataSourceTable().refresh();
         JobManager jobManager = RuntimeContext.getBean(JobManager.class);
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
         context.addJobEventListener(event -> {
@@ -161,8 +166,10 @@ public class ResolverSelectController implements Initializable {
         });
         context.put(ParamKeys.FILE_PATH, filePath);
         context.put(ParamKeys.RESOLVER_TEMPLATE_NAME, resolverName);
-        JobPipeline jobPipeline = jobManager.getPipeLine(ParamKeys.DATA_SOURCE_IMPORT_PIPELINE);
-        controller.getChooseTableRowDataObservableList().add(chooseTableRowData);
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobFactory.class).createJobPipeLine()
+                .addLast(new ResolverSelectHandler())
+                .addLast(new CsvImportHandler().setWeight(D100));
+
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
@@ -188,6 +195,7 @@ public class ResolverSelectController implements Initializable {
 //            });
 //        });
 //        controller.getChooseTableRowDataObservableList().add(chooseTableRowData);
+//        new Thread(() -> jobManager.fireJobASyn(jobPipeline, context)).start();
         jobManager.fireJobASyn(jobPipeline, context);
 //
 //        new Thread(() -> {

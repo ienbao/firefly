@@ -881,7 +881,7 @@ public class GrrExportController {
             context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
             context.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, searchConditionDto);
             context.put(ParamKeys.GRR_EXPORT_CONFIG_DTO, grrExportConfigDto);
-            //TODO : progcess
+            //TODO : progress
 
             if (!detail) {
                 JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_EXPORT_JOB_PIPELINE);

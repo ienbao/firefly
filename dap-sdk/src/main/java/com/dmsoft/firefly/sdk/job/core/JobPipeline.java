@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * interface class for pipeline
  *
- * @author Can Guan
+ * @author Can Guan, Garen Pang
  */
 public interface JobPipeline {
     /**

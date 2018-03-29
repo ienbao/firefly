@@ -3,7 +3,7 @@ package com.dmsoft.firefly.sdk.job.core;
 /**
  * basic class for job manager
  *
- * @author Can Guan
+ * @author Can Guan, Garen Pang
  */
 public interface JobManager {
     /**

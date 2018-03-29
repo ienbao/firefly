@@ -155,7 +155,7 @@ public class DataSourceController implements Initializable {
                                 progressBar.setVisible(true);
                             }
                             if (item.getProgress() != 0) {
-                                progressBar.setProgress(item.getProgress() / (double) 100);
+                                progressBar.setProgress(item.getProgress());
                             }
                             deleteOne.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
                             hBox.getChildren().add(textField);

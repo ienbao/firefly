@@ -3,7 +3,7 @@ package com.dmsoft.firefly.sdk.job.core;
 /**
  * job event
  *
- * @author Can Guan
+ * @author Can Guan, Garen Pang
  */
 public class JobEvent {
     private String eventName;

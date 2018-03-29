@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * interface class for job context
  *
- * @author Can Guan
+ * @author Can Guan, Garen Pang
  */
 public interface JobContext extends Map<String, Object>, JobListable {
     /**
@@ -76,7 +76,7 @@ public interface JobContext extends Map<String, Object>, JobListable {
     /**
      * method to get current process
      *
-     * @return current progcess
+     * @return current progress
      */
     Double getCurrentProgress();
 

@@ -9,15 +9,11 @@ import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.job.BasicJobFactory;
 import com.dmsoft.firefly.gui.job.BasicJobManager;
-import com.dmsoft.firefly.gui.newhandler.CsvImportHandler;
-import com.dmsoft.firefly.gui.newhandler.ResolverSelectHandler;
-import com.dmsoft.firefly.gui.newhandler.ParamKeys;
 import com.dmsoft.firefly.gui.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserService;
 import com.dmsoft.firefly.sdk.event.EventContext;
-import com.dmsoft.firefly.sdk.job.core.JobFactory;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
@@ -116,7 +112,6 @@ public class GuiApplication extends Application {
 
         WindowFactory.createFullWindow(GuiConst.PLARTFORM_STAGE_MAIN, root, main, getClass().getClassLoader().getResource("css/platform_app.css").toExternalForm());
 
-        initJob();
         NodeMap.addNode(GuiConst.PLARTFORM_NODE_MAIN, main);
 
         RuntimeContext.getBean(EventContext.class).addEventListener(event -> {
@@ -126,19 +121,9 @@ public class GuiApplication extends Application {
         });
     }
 
-    private void initJob() {
-//        JobManager manager = RuntimeContext.getBean(JobManager.class);
-//        manager.initializeJob(ParamKeys.DATA_SOURCE_IMPORT_PIPELINE, pipeline -> {
-//            pipeline.addLast(P.RESOLVER_HANDLER, new ResolverSelectHandler().setWeight(10));
-//            pipeline.addLast(GuiConst.IMPORT_HANDLER, new CsvImportHandler().setWeight(90));
-//        });
-        JobManager jobManager = RuntimeContext.getBean(JobManager.class);
-        JobFactory jobFactory = RuntimeContext.getBean(JobFactory.class);
-        jobManager.initializeJob(ParamKeys.DATA_SOURCE_IMPORT_PIPELINE, jobFactory.createJobPipeLine()
-                .addLast(new ResolverSelectHandler())
-                .addLast(new CsvImportHandler()));
-    }
-
+    /**
+     * method to update process bar
+     */
     public void updateProcessorBar() {
         Service<Integer> service = new Service<Integer>() {
             @Override

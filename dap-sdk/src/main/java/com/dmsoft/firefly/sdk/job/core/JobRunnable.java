@@ -1,5 +1,10 @@
 package com.dmsoft.firefly.sdk.job.core;
 
+/**
+ * runnable inter face
+ *
+ * @author Can Guan, Garen Pang
+ */
 @FunctionalInterface
 public interface JobRunnable {
     /**
