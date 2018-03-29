@@ -738,8 +738,8 @@ public class SpcExportController {
         return searchConditionDtoList;
     }
 
-    private Map<String, Map<String, String>> initSpcChartData(List<SpcChartDto> spcChartDtoList) {
-        return BuildChart.initSpcChartData(spcChartDtoList, searchTab.getSearch().size(), colorMap);
+    private Map<String, Map<String, String>> initSpcChartData(List<SpcChartDto> spcChartDtoList,  Map<String, Boolean> exportParam) {
+        return BuildChart.initSpcChartData(spcChartDtoList, searchTab.getSearch().size(), colorMap, exportParam);
     }
 
     private List<String> getSelectedItem() {

@@ -16,6 +16,7 @@ import com.dmsoft.firefly.plugin.spc.dto.chart.SpcNdChartData;
 import com.dmsoft.firefly.plugin.spc.dto.chart.SpcRunChartData;
 import com.dmsoft.firefly.plugin.spc.utils.FileUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
+import com.dmsoft.firefly.plugin.spc.utils.enums.SpcExportItemKey;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
@@ -36,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-import static java.awt.Event.F9;
+import static com.dmsoft.firefly.gui.components.chart.ChartSaveUtils.saveImageUsingJPGWithQuality;
 
 /**
  * Created by GuangLi on 2018/3/14.
@@ -46,15 +47,7 @@ public class BuildChart {
     private static Group vBox;
     private static Scene scene;
 
-    /**
-     * method to save chart data and export charts
-     *
-     * @param spcChartDtoList list of spc chart dto
-     * @param search          search
-     * @param colorCache      color cache
-     * @return map of chart paths
-     */
-    public static Map<String, Map<String, String>> initSpcChartData(List<SpcChartDto> spcChartDtoList, int search, Map<String, Color> colorCache) {
+    public static Map<String, Map<String, String>> initSpcChartData(List<SpcChartDto> spcChartDtoList, int search, Map<String, Color> colorCache, Map<String, Boolean> exportParam) {
         vBox = new Group();
         scene = new Scene(vBox);
         scene.getStylesheets().add(BuildChart.class.getClassLoader().getResource("css/charts.css").toExternalForm());
@@ -90,57 +83,72 @@ public class BuildChart {
             if (spcChartResultDto == null) {
                 continue;
             }
-            //nd chart
-            SpcNdChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
-            iNdcChartData.setSeriesName(seriesName);
-            ndcChartDataList.add(iNdcChartData);
-            //run chart
-            SpcRunChartData iRunChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), null, color);
-            iRunChartData.setSeriesName(seriesName);
-            runChartDataList.add(iRunChartData);
-            //x bar chart
-            SpcControlChartData xBarChartData = new SpcControlChartData(key, spcChartResultDto.getXbarCResult(), color);
-            xBarChartData.setSeriesName(seriesName);
-            xBarChartDataList.add(xBarChartData);
-            //range chart
-            SpcControlChartData rangeChartData = new SpcControlChartData(key, spcChartResultDto.getRangeCResult(), color);
-            rangeChartData.setSeriesName(seriesName);
-            rangeChartDataList.add(rangeChartData);
-            //sd chart
-            SpcControlChartData sdChartData = new SpcControlChartData(key, spcChartResultDto.getSdCResult(), color);
-            sdChartData.setSeriesName(seriesName);
-            sdChartDataList.add(sdChartData);
-            //median chart
-            SpcControlChartData medianChartData = new SpcControlChartData(key, spcChartResultDto.getMedianCResult(), color);
-            medianChartData.setSeriesName(seriesName);
-            medianChartDataList.add(medianChartData);
-            //box chart
-            SpcBoxChartData iBoxChartData = new SpcBoxChartData(key, spcChartResultDto.getBoxCResult(), color);
-            iBoxChartData.setSeriesName(seriesName);
-            boxChartDataList.add(iBoxChartData);
-            //mr chart
-            SpcControlChartData mrChartData = new SpcControlChartData(key, spcChartResultDto.getMrCResult(), color);
-            mrChartData.setSeriesName(seriesName);
-            mrChartDataList.add(mrChartData);
-
-            BuildChart.setNdChartData(nd, Lists.newArrayList(iNdcChartData));
-            BuildChart.setRunChartData(run, Lists.newArrayList(iRunChartData));
-            BuildChart.setControlChartData(xbar, Lists.newArrayList(xBarChartData));
-            BuildChart.setControlChartData(range, Lists.newArrayList(rangeChartData));
-            BuildChart.setControlChartData(sd, Lists.newArrayList(sdChartData));
-            BuildChart.setControlChartData(med, Lists.newArrayList(medianChartData));
-            BuildChart.setBoxChartData(box, Lists.newArrayList(iBoxChartData));
-            BuildChart.setControlChartData(mr, Lists.newArrayList(mrChartData));
 
             Map<String, String> chartPath = Maps.newHashMap();
-            chartPath.put(UIConstant.SPC_CHART_NAME[0], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[0], nd));
-            chartPath.put(UIConstant.SPC_CHART_NAME[1], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[1], run));
-            chartPath.put(UIConstant.SPC_CHART_NAME[2], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[2], xbar));
-            chartPath.put(UIConstant.SPC_CHART_NAME[3], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[3], range));
-            chartPath.put(UIConstant.SPC_CHART_NAME[4], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[4], sd));
-            chartPath.put(UIConstant.SPC_CHART_NAME[5], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[5], med));
-            chartPath.put(UIConstant.SPC_CHART_NAME[6], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[6], box));
-            chartPath.put(UIConstant.SPC_CHART_NAME[7], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[7], mr));
+            if (exportParam.get(SpcExportItemKey.ND_CHART.getCode())) {
+                //nd chart
+                SpcNdChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
+                iNdcChartData.setSeriesName(seriesName);
+                ndcChartDataList.add(iNdcChartData);
+                BuildChart.setNdChartData(nd, Lists.newArrayList(iNdcChartData));
+                chartPath.put(UIConstant.SPC_CHART_NAME[0], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[0], nd));
+            }
+            if (exportParam.get(SpcExportItemKey.RUN_CHART.getCode())) {
+                //run chart
+                SpcRunChartData iRunChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), null, color);
+                iRunChartData.setSeriesName(seriesName);
+                runChartDataList.add(iRunChartData);
+                BuildChart.setRunChartData(run, Lists.newArrayList(iRunChartData));
+                chartPath.put(UIConstant.SPC_CHART_NAME[1], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[1], run));
+            }
+            if (exportParam.get(SpcExportItemKey.X_BAR_CHART.getCode())) {
+                //x bar chart
+                SpcControlChartData xBarChartData = new SpcControlChartData(key, spcChartResultDto.getXbarCResult(), color);
+                xBarChartData.setSeriesName(seriesName);
+                xBarChartDataList.add(xBarChartData);
+                BuildChart.setControlChartData(xbar, Lists.newArrayList(xBarChartData));
+                chartPath.put(UIConstant.SPC_CHART_NAME[2], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[2], xbar));
+            }
+            if (exportParam.get(SpcExportItemKey.RANGE_CHART.getCode())) {
+                //range chart
+                SpcControlChartData rangeChartData = new SpcControlChartData(key, spcChartResultDto.getRangeCResult(), color);
+                rangeChartData.setSeriesName(seriesName);
+                rangeChartDataList.add(rangeChartData);
+                BuildChart.setControlChartData(range, Lists.newArrayList(rangeChartData));
+                chartPath.put(UIConstant.SPC_CHART_NAME[3], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[3], range));
+            }
+            if (exportParam.get(SpcExportItemKey.SD_CHART.getCode())) {
+                //sd chart
+                SpcControlChartData sdChartData = new SpcControlChartData(key, spcChartResultDto.getSdCResult(), color);
+                sdChartData.setSeriesName(seriesName);
+                sdChartDataList.add(sdChartData);
+                BuildChart.setControlChartData(sd, Lists.newArrayList(sdChartData));
+                chartPath.put(UIConstant.SPC_CHART_NAME[4], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[4], sd));
+            }
+            if (exportParam.get(SpcExportItemKey.MEDIAN_CHART.getCode())) {
+                //median chart
+                SpcControlChartData medianChartData = new SpcControlChartData(key, spcChartResultDto.getMedianCResult(), color);
+                medianChartData.setSeriesName(seriesName);
+                medianChartDataList.add(medianChartData);
+                BuildChart.setControlChartData(med, Lists.newArrayList(medianChartData));
+                chartPath.put(UIConstant.SPC_CHART_NAME[5], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[5], med));
+            }
+            if (exportParam.get(SpcExportItemKey.BOX_CHART.getCode())) {
+                //box chart
+                SpcBoxChartData iBoxChartData = new SpcBoxChartData(key, spcChartResultDto.getBoxCResult(), color);
+                iBoxChartData.setSeriesName(seriesName);
+                boxChartDataList.add(iBoxChartData);
+                BuildChart.setBoxChartData(box, Lists.newArrayList(iBoxChartData));
+                chartPath.put(UIConstant.SPC_CHART_NAME[6], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[6], box));
+            }
+            if (exportParam.get(SpcExportItemKey.MR_CHART.getCode())) {
+                //mr chart
+                SpcControlChartData mrChartData = new SpcControlChartData(key, spcChartResultDto.getMrCResult(), color);
+                mrChartData.setSeriesName(seriesName);
+                mrChartDataList.add(mrChartData);
+                BuildChart.setControlChartData(mr, Lists.newArrayList(mrChartData));
+                chartPath.put(UIConstant.SPC_CHART_NAME[7], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[7], mr));
+            }
             result.put(key, chartPath);
 
 
@@ -162,14 +170,30 @@ public class BuildChart {
                 BuildChart.setControlChartData(mr, mrChartDataList);
                 mrChartDataList.clear();
                 Map<String, String> summaryPath = Maps.newHashMap();
-                summaryPath.put(UIConstant.SPC_CHART_NAME[0], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[0], nd));
-                summaryPath.put(UIConstant.SPC_CHART_NAME[1], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[1], run));
-                summaryPath.put(UIConstant.SPC_CHART_NAME[2], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[2], xbar));
-                summaryPath.put(UIConstant.SPC_CHART_NAME[3], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[3], range));
-                summaryPath.put(UIConstant.SPC_CHART_NAME[4], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[4], sd));
-                summaryPath.put(UIConstant.SPC_CHART_NAME[5], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[5], med));
-                summaryPath.put(UIConstant.SPC_CHART_NAME[6], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[6], box));
-                summaryPath.put(UIConstant.SPC_CHART_NAME[7], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[7], mr));
+                if (exportParam.get(SpcExportItemKey.ND_CHART.getCode())) {
+                    summaryPath.put(UIConstant.SPC_CHART_NAME[0], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[0], nd));
+                }
+                if (exportParam.get(SpcExportItemKey.RUN_CHART.getCode())) {
+                    summaryPath.put(UIConstant.SPC_CHART_NAME[1], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[1], run));
+                }
+                if (exportParam.get(SpcExportItemKey.X_BAR_CHART.getCode())) {
+                    summaryPath.put(UIConstant.SPC_CHART_NAME[2], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[2], xbar));
+                }
+                if (exportParam.get(SpcExportItemKey.RANGE_CHART.getCode())) {
+                    summaryPath.put(UIConstant.SPC_CHART_NAME[3], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[3], range));
+                }
+                if (exportParam.get(SpcExportItemKey.SD_CHART.getCode())) {
+                    summaryPath.put(UIConstant.SPC_CHART_NAME[4], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[4], sd));
+                }
+                if (exportParam.get(SpcExportItemKey.MEDIAN_CHART.getCode())) {
+                    summaryPath.put(UIConstant.SPC_CHART_NAME[5], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[5], med));
+                }
+                if (exportParam.get(SpcExportItemKey.BOX_CHART.getCode())) {
+                    summaryPath.put(UIConstant.SPC_CHART_NAME[6], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[6], box));
+                }
+                if (exportParam.get(SpcExportItemKey.MR_CHART.getCode())) {
+                    summaryPath.put(UIConstant.SPC_CHART_NAME[7], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[7], mr));
+                }
                 result.put(key + "SubSummary", summaryPath);
             }
             i++;
