@@ -1,13 +1,13 @@
 package com.dmsoft.firefly.plugin.spc.dto.chart;
 
 import com.dmsoft.firefly.plugin.spc.charts.data.ControlChartData;
-import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
 import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.charts.utils.enums.LineType;
 import com.dmsoft.firefly.plugin.spc.dto.RuleResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.RunCResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.pel.LineData;
+import com.dmsoft.firefly.plugin.spc.dto.chart.pel.SpcXYChartData;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.google.common.collect.Lists;
@@ -24,7 +24,7 @@ import java.util.function.Function;
  */
 public class SpcRunChartData implements ControlChartData {
 
-    private XYChartData xyChartData;
+    private SpcXYChartData xyChartData;
     private RunCResultDto runCResultDto;
     private List<ILineData> lineDataList;
     private List<String> analyzedRowKeys;
@@ -64,7 +64,7 @@ public class SpcRunChartData implements ControlChartData {
         }
         Double[] x = runCResultDto.getX();
         Double[] y = runCResultDto.getY();
-        xyChartData = new XYChartData<>(x, y);
+        xyChartData = new SpcXYChartData(x, y);
         xyChartData.setRuleResultDtoMap(runCResultDto.getRuleResultDtoMap());
         if (analyzedRowKeys != null) {
             xyChartData.setIds(analyzedRowKeys.toArray(new Object[analyzedRowKeys.size()]));
