@@ -24,8 +24,14 @@ public class SpcBarChartData implements IBarChartData<Double, Double> {
     //    Series name
     private String seriesName;
 
+    /**
+     * Constructor for SpcBarChartData
+     *
+     * @param histX bar x coordinate
+     * @param histY bar y coordinate
+     */
     public SpcBarChartData(Double[] histX, Double[] histY) {
-        for (int i = 0; i < histX.length -1; i++) {
+        for (int i = 0; i < histX.length - 1; i++) {
             BarCategoryData data = new BarCategoryData();
             data.setStartValue(histX[i]);
             data.setEndValue(histX[i + 1]);
@@ -35,6 +41,11 @@ public class SpcBarChartData implements IBarChartData<Double, Double> {
         }
     }
 
+    /**
+     * Constructor for SpcBarChartData
+     *
+     * @param seriesName series name
+     */
     public SpcBarChartData(String seriesName) {
         this.seriesName = seriesName;
     }

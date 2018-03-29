@@ -667,11 +667,11 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
             //colorBits.clear(clearIndex);
             BitSet colorBitsValue = (BitSet) ReflectionUtils.forceFieldCall(XYChart.class, "colorBits", this);
             // DEFAULT_COLOR
-            String DEFAULT_COLOR_VALUE = (String) ReflectionUtils.forceFieldCall(XYChart.class, "DEFAULT_COLOR", null);
+            String defaultColor = (String) ReflectionUtils.forceFieldCall(XYChart.class, "DEFAULT_COLOR", null);
             for (Data<X, Y> d : series.getData()) {
                 final Node bar = d.getNode();
                 if (bar != null) {
-                    bar.getStyleClass().remove(DEFAULT_COLOR_VALUE + clearIndex);
+                    bar.getStyleClass().remove(defaultColor + clearIndex);
                     colorBitsValue.clear(clearIndex);
                 }
             }

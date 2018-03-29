@@ -16,6 +16,7 @@ import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import javafx.geometry.Orientation;
 import javafx.scene.paint.Color;
+
 import java.util.List;
 
 /**
@@ -37,6 +38,13 @@ public class SpcControlChartData implements ControlChartData {
     private Double[] uclValue;
     private Double[] lclValue;
 
+    /**
+     * Constructor for SpcControlChartData
+     *
+     * @param key                unique key
+     * @param spcControlChartDto control chart data
+     * @param color              chart color
+     */
     public SpcControlChartData(String key, SpcControlChartDto spcControlChartDto, Color color) {
         this.spcControlChartDto = spcControlChartDto;
         this.key = key;
@@ -164,6 +172,9 @@ public class SpcControlChartData implements ControlChartData {
         return lclValue;
     }
 
+    /**
+     * Spc point data class
+     */
     class SpcPointData implements IPoint {
         private Double[] x;
         private Double[] y;
@@ -174,7 +185,7 @@ public class SpcControlChartData implements ControlChartData {
          * @param x x
          * @param y y
          */
-        public SpcPointData(Double[] x, Double[] y) {
+        SpcPointData(Double[] x, Double[] y) {
             this.x = x;
             this.y = y;
         }

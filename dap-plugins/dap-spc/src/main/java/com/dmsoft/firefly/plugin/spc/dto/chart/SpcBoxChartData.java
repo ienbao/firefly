@@ -30,6 +30,13 @@ public class SpcBoxChartData implements BoxPlotChartData {
     private Double minY;
     private Double maxY;
 
+    /**
+     * Constructor for SpcBoxChartData
+     *
+     * @param key           unique key
+     * @param boxCResultDto box result data
+     * @param color         box color
+     */
     public SpcBoxChartData(String key, BoxCResultDto boxCResultDto, Color color) {
         this.key = key;
         this.boxCResultDto = boxCResultDto;
@@ -48,8 +55,9 @@ public class SpcBoxChartData implements BoxPlotChartData {
         List<Double> boxY = Lists.newArrayList();
         List<Double> boxX = Lists.newArrayList();
         for (SingleBoxDataDto singleBoxDataDto : boxCResultDto.getBoxData()) {
-            BoxExtraData boxExtraData = new BoxExtraData(singleBoxDataDto.getX(), singleBoxDataDto.getCl(), singleBoxDataDto.getQ3(), singleBoxDataDto.getQ1(),
-                    singleBoxDataDto.getUpperWhisker(), singleBoxDataDto.getLowerWhisker(), singleBoxDataDto.getMedian());
+            BoxExtraData boxExtraData = new BoxExtraData(singleBoxDataDto.getX(), singleBoxDataDto.getCl(),
+                    singleBoxDataDto.getQ3(), singleBoxDataDto.getQ1(), singleBoxDataDto.getUpperWhisker(),
+                    singleBoxDataDto.getLowerWhisker(), singleBoxDataDto.getMedian());
             data.add(boxExtraData);
             boxX.add(singleBoxDataDto.getX());
             boxY.add(singleBoxDataDto.getCl());
