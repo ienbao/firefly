@@ -253,7 +253,7 @@ intspc.normal.getRunCResult <- function(x, SD = NaN, Mean = NaN) {
         if (length(x) == 1) {
             Mean <- x
             SD <- NaN
-            cl <- c(NaN, NaN, NaN, Mean, NaN, NaN, NaN)
+            CLs <- c(NaN, NaN, NaN, Mean, NaN, NaN, NaN)
         }
     }
     if (! is.na(SD) && ! is.na(Mean)) {
