@@ -619,7 +619,7 @@ public class SpcItemController implements Initializable {
         List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
         int i = 0;
         for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtoList) {
-            if (conditionList != null || conditionList.size() == 0) {
+            if (conditionList != null && conditionList.size() != 0) {
                 for (String condition : conditionList) {
                     SearchConditionDto searchConditionDto = new SearchConditionDto();
                     searchConditionDto.setKey(ParamKeys.SPC_ANALYSIS_CONDITION_KEY + i);
