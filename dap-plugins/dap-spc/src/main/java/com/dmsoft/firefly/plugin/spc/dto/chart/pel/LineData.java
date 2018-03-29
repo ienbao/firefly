@@ -35,7 +35,7 @@ public class LineData implements ILineData {
         this();
         this.lineType = lineType;
         this.plotOrientation = plotOrientation;
-        this.value = (DAPDoubleUtils.isBlank(value) ? null : value);
+        this.value = value;
         this.name = name;
     }
 
@@ -45,7 +45,7 @@ public class LineData implements ILineData {
 
     public LineData(Double value, String name) {
         this();
-        this.value = (DAPDoubleUtils.isBlank(value) ? null : value);
+        this.value = value;
         this.name = name;
     }
 
@@ -85,7 +85,7 @@ public class LineData implements ILineData {
     }
 
     public Double getValue() {
-        return value;
+        return (DAPDoubleUtils.isBlank(value) ? null : value);
     }
 
     public void setValue(double value) {

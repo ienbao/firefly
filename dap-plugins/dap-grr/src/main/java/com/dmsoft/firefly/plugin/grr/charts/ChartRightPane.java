@@ -81,7 +81,8 @@ public class ChartRightPane extends HBox {
         defaultRatioMenuItem.setToggleGroup(toggleGroup);
         oneToOneRatioMenuItem.setToggleGroup(toggleGroup);
         ratioMenu.getItems().addAll(defaultRatioMenuItem, oneToOneRatioMenuItem);
-        extensionMenu.getItems().addAll(saveMenuItem, printMenuItem, copyMenuItem, ratioMenu);
+//        extensionMenu.getItems().addAll(saveMenuItem, printMenuItem, copyMenuItem, ratioMenu);
+        extensionMenu.getItems().addAll(saveMenuItem);
         menuBar.getMenus().addAll(extensionMenu);
 
         this.getChildren().add(customPane);

@@ -5,6 +5,8 @@ import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
+import com.dmsoft.firefly.gui.components.utils.TextFieldWrapper;
+import com.dmsoft.firefly.gui.components.utils.ValidateRule;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.spc.dto.*;
@@ -63,8 +65,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by GuangLi on 2018/3/7.
@@ -182,7 +182,8 @@ public class SpcExportController {
                         }
                     } else {
                         model.getSelector().setValue(box.isSelected());
-                    }                }
+                    }
+                }
             }
         });
         select.setGraphic(box);
@@ -278,11 +279,20 @@ public class SpcExportController {
             }
         });
         itemTable.setContextMenu(createTableRightMenu());
-        SpcSettingDto settingDto = settingService.findSpcSetting();
-        if (settingDto != null) {
-            ndGroup.setText(String.valueOf(settingDto.getChartIntervalNumber()));
-            subGroup.setText(String.valueOf(settingDto.getCustomGroupNumber()));
-        }
+        ndGroup.setText(String.valueOf(PropertiesResource.SPC_CONFIG_INTERVAL_NUMBER));
+        subGroup.setText(String.valueOf(PropertiesResource.SPC_CONFIG_SUBGROUP_SIZE));
+        ValidateRule rule = new ValidateRule();
+        rule.setMaxLength(SpcSettingValidateUtil.ANALYSIS_SETTING_MAX_INT);
+        rule.setPattern("^\\+?\\d*$");
+        rule.setErrorStyle("text-field-error");
+        rule.setMaxValue(20d);
+        rule.setMinValue(1d);
+        String[] params = new String[]{rule.getMinValue().toString(), rule.getMaxValue().toString()};
+        rule.setRangErrorMsg(SpcFxmlAndLanguageUtils.getString(ResourceMassages.RANGE_NUMBER_WARNING_MESSAGE, params));
+        rule.setEmptyErrorMsg(SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_VALIDATE_NOT_BE_EMPTY));
+        TextFieldWrapper.decorate(subGroup, rule);
+        TextFieldWrapper.decorate(ndGroup, rule);
+
         initEvent();
         initItemData();
     }
@@ -325,6 +335,10 @@ public class SpcExportController {
             }
             if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
                 WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                return;
+            }
+            if (subGroup.getStyleClass().contains("text-field-error") || ndGroup.getStyleClass().contains("text-field-error")) {
+                WindowMessageFactory.createWindowMessageHasOk("Export", "Please Input correct config numbers.");
                 return;
             }
             StageMap.closeStage("spcExport");

@@ -2,7 +2,6 @@ package com.dmsoft.firefly.plugin.chart;
 
 import com.dmsoft.firefly.plugin.spc.charts.NDChart;
 import com.dmsoft.firefly.plugin.spc.charts.data.NDBarChartData;
-import com.dmsoft.firefly.plugin.spc.charts.data.XYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.BarCategoryData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBarChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.ILineData;

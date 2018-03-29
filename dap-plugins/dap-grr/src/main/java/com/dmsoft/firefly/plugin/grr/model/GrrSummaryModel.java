@@ -2,6 +2,7 @@ package com.dmsoft.firefly.plugin.grr.model;
 
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableModel;
+import com.dmsoft.firefly.gui.components.utils.TableComparatorUtils;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.utils.ValidateUtils;
 import com.dmsoft.firefly.plugin.grr.dto.GrrSummaryDto;
@@ -356,6 +357,10 @@ public class GrrSummaryModel implements TableModel {
                     tableCell.setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_RECTIFICATION));
                 }
             }
+        }
+
+        if (column.equals(UIConstant.GRR_SUMMARY_TITLE[4]) || column.equals(UIConstant.GRR_SUMMARY_TITLE[5]) || column.equals(UIConstant.GRR_SUMMARY_TITLE[6])) {
+            tableCell.getTableColumn().setComparator((Comparator<T>) TableComparatorUtils.getContainsPercentColumnComparator());
         }
         return tableCell;
     }
