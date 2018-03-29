@@ -36,6 +36,14 @@ public class SpcRunChartData implements ControlChartData {
     private String seriesName;
     private Color color;
 
+    /**
+     * Constructor for SpcRunChartData
+     *
+     * @param key             unique key
+     * @param runCResultDto   spc run chart result data
+     * @param analyzedRowKeys analyzed row keys
+     * @param color           chart color
+     */
     public SpcRunChartData(String key, RunCResultDto runCResultDto, List<String> analyzedRowKeys, Color color) {
         this.runCResultDto = runCResultDto;
         this.analyzedRowKeys = analyzedRowKeys;
@@ -45,6 +53,11 @@ public class SpcRunChartData implements ControlChartData {
         this.initData();
     }
 
+    /**
+     * Get not observed rules
+     *
+     * @return not observed rules names
+     */
     public Set<String> getNotObserveRules() {
         Set<String> strings = Sets.newLinkedHashSet();
         if (runCResultDto == null || runCResultDto.getRuleResultDtoMap() == null) {
@@ -65,7 +78,7 @@ public class SpcRunChartData implements ControlChartData {
         Double[] x = runCResultDto.getX();
         Double[] y = runCResultDto.getY();
         xyChartData = new SpcXYChartData(x, y);
-        xyChartData.setRuleResultDtoMap(runCResultDto.getRuleResultDtoMap());
+//        xyChartData.setRuleResultDtoMap(runCResultDto.getRuleResultDtoMap());
         if (analyzedRowKeys != null) {
             xyChartData.setIds(analyzedRowKeys.toArray(new Object[analyzedRowKeys.size()]));
         }

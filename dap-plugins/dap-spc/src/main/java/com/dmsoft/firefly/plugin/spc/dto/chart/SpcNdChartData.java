@@ -37,6 +37,13 @@ public class SpcNdChartData implements NDBarChartData {
     private Double minY;
     private Double maxY;
 
+    /**
+     * Constructor for SpcNdChartData
+     *
+     * @param key          unique key
+     * @param ndcResultDto spc ndc result data
+     * @param color        ndc chart color
+     */
     public SpcNdChartData(String key, NDCResultDto ndcResultDto, Color color) {
         this.key = key;
         this.color = color;

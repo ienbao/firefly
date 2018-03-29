@@ -15,10 +15,15 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.util.Date;
 
 /**
  * Created by cherry on 2018/2/8.
+ */
+
+/**
+ * Chart pane
+ *
+ * @param <T> chart class
  */
 public class ChartPanel<T extends XYChart> extends BorderPane {
 
@@ -34,10 +39,22 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
     private final double spacing = 10;
     private final double threshold = 1;
 
+    /**
+     * Constructor for ChartPanel
+     *
+     * @param chart chart
+     */
     public ChartPanel(T chart) {
         this(chart, true, true);
     }
 
+    /**
+     * Constructor for ChartPanel
+     *
+     * @param chart                 chart
+     * @param chartSizeChangeEnable enable change chart size
+     * @param chartDraggingEnable   enable drag chart
+     */
     public ChartPanel(T chart, boolean chartSizeChangeEnable, boolean chartDraggingEnable) {
 
         this.chartSizeChangeEnable = chartSizeChangeEnable;
@@ -52,6 +69,9 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
         this.initEvent();
     }
 
+    /**
+     * Update chart x, y lower and upper range
+     */
     public void updateChartData() {
         if (chartUtils != null) {
             ValueAxis xAxis = (ValueAxis) chart.getXAxis();
@@ -215,8 +235,9 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
                     if (!file.exists()) {
                         file.createNewFile();
                     }
+                    final float quality = 0.9f;
                     WritableImage writableImage = chart.snapshot(new SnapshotParameters(), null);
-                    ChartSaveUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(writableImage, null), file, 0.9f);
+                    ChartSaveUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(writableImage, null), file, quality);
                     System.out.println(file.getAbsolutePath());
                 } catch (Exception e) {
                     System.out.println("Save error, " + e.getMessage());
@@ -236,6 +257,11 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
 //        });
     }
 
+    /**
+     * Toggle disable custom button show or disabled
+     *
+     * @param flag if true, button disabled; if false, button relieve disabled
+     */
     public void toggleCustomButtonDisable(boolean flag) {
         customPane.getChildren().forEach(node -> {
             if (node instanceof Button) {

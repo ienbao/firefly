@@ -19,23 +19,44 @@ public class Candle extends Group {
     private String dataStyleClass;
     private boolean openAboveClose = true;
 
+    /**
+     * Constructor
+     *
+     * @param seriesStyleClass series style class
+     * @param dataStyleClass   data style class
+     */
     public Candle(String seriesStyleClass, String dataStyleClass) {
         setAutoSizeChildren(false);
         getChildren().addAll(mediaVerticalLine, bar, topHorizontalLine, bottomHorizontalLine);
         this.seriesStyleClass = seriesStyleClass;
         this.dataStyleClass = dataStyleClass;
-        updateStyleClasses(null);
+        this.updateColor(null);
     }
 
+    /**
+     * Set series style class, data style class
+     *
+     * @param seriesStyleClass series style class
+     * @param dataStyleClass   data style class
+     */
     public void setSeriesAndDataStyleClasses(String seriesStyleClass, String dataStyleClass) {
         this.seriesStyleClass = seriesStyleClass;
         this.dataStyleClass = dataStyleClass;
-        updateStyleClasses(null);
+        this.updateColor(null);
     }
 
+    /**
+     * Update bar size
+     *
+     * @param closeOffset height
+     * @param highOffset  max value
+     * @param lowOffset   min value
+     * @param candleWidth width
+     * @param color       color
+     */
     public void update(double closeOffset, double highOffset, double lowOffset, double candleWidth, Color color) {
         openAboveClose = closeOffset > 0;
-        updateStyleClasses(color);
+        updateColor(color);
         mediaVerticalLine.setStartY(highOffset);
         mediaVerticalLine.setEndY(lowOffset);
         topHorizontalLine.setStartX(mediaVerticalLine.getStartX() - candleWidth / 4);
@@ -56,16 +77,24 @@ public class Candle extends Group {
         }
     }
 
-    public void updateStyleClasses(Color color) {
+    /**
+     * Update box color
+     *
+     * @param color color
+     */
+    public void updateColor(Color color) {
         String styleColor = (color == null) ? "#6fc1be" : ColorUtils.toHexFromFXColor(color);
         mediaVerticalLine.setStyle("-fx-stroke: " + styleColor);
         topHorizontalLine.setStyle("-fx-stroke: " + styleColor);
         bottomHorizontalLine.setStyle("-fx-stroke: " + styleColor);
-        bar.setStyle("-fx-padding: 5;-demo-bar-fill: " + styleColor + ";-fx-background-color: " +
-                "linear-gradient(derive(-demo-bar-fill, -30%), derive(-demo-bar-fill, -40%))," +
-                "linear-gradient(derive(-demo-bar-fill, 100%), derive(-demo-bar-fill, 10%))," +
-                "linear-gradient(derive(-demo-bar-fill, 10%), derive(-demo-bar-fill, -10%));" +
-                "-fx-background-insets: 0, 1, 1;");
+        StringBuilder barStyle = new StringBuilder("-fx-padding: 5;-demo-bar-fill: ");
+        barStyle.append(styleColor);
+        barStyle.append(";-fx-background-color: ");
+        barStyle.append("linear-gradient(derive(-demo-bar-fill, -30%), derive(-demo-bar-fill, -40%)),");
+        barStyle.append("linear-gradient(derive(-demo-bar-fill, 100%), derive(-demo-bar-fill, 10%)),");
+        barStyle.append("linear-gradient(derive(-demo-bar-fill, 10%), derive(-demo-bar-fill, -10%));");
+        barStyle.append("-fx-background-insets: 0, 1, 1;");
+        bar.setStyle(barStyle.toString());
         getStyleClass().setAll("candlestick-candle", seriesStyleClass, dataStyleClass);
         bar.getStyleClass().setAll("candlestick-bar", seriesStyleClass, dataStyleClass,
                 openAboveClose ? "open-above-close" : "close-above-open");

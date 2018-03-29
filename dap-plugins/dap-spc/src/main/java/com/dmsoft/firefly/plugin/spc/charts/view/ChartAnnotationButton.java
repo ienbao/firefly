@@ -42,11 +42,14 @@ public class ChartAnnotationButton extends Button {
     private boolean showAnnotation = false;
 
     private final int defaultSelectedIndex = 0;
-    public final Double MAX_HEIGHT = 275.0;
+    private static final Double MAX_HEIGHT = 275.0;
     private final double threshold = 4;
 
     private String listViewBorderStyle = "-fx-border-width: 1px 0px 1px 0px;";
 
+    /**
+     * No parameter constructor
+     */
     public ChartAnnotationButton() {
 
         this.initComponent();
@@ -83,7 +86,7 @@ public class ChartAnnotationButton extends Button {
     /**
      * Set button tooltip content
      *
-     * @param content
+     * @param content tooltip content
      */
     public void setButtonTooltipContent(String content) {
         Tooltip.install(this, new Tooltip(content));
@@ -150,13 +153,10 @@ public class ChartAnnotationButton extends Button {
             if (preHeight >= MAX_HEIGHT) {
                 preHeight = MAX_HEIGHT;
             }
-            double x = button.getScene().getWindow().getX() +
-                    button.getScene().getX() + button.localToScene(0, 0).getX();
-            double y = button.getScene().getWindow().getY() +
-                    button.getScene().getY() + button.localToScene(0, 0).getY() - preHeight - threshold;
+            double x = button.getScene().getWindow().getX() + button.getScene().getX() + button.localToScene(0, 0).getX();
+            double y = button.getScene().getWindow().getY() + button.getScene().getY() + button.localToScene(0, 0).getY() - preHeight - threshold;
             x -= vBox.getPrefWidth();
             x += button.getPrefWidth();
-
             popup.show(button, x, y);
         });
 
@@ -248,7 +248,7 @@ public class ChartAnnotationButton extends Button {
             @Override
             public void updateItem(SimpleItemCheckModel item, boolean empty) {
                 super.updateItem(item, empty);
-                if (item == null || empty == true) {
+                if (item == null || empty) {
                     setGraphic(null);
                     setText(null);
                 } else {
@@ -270,18 +270,38 @@ public class ChartAnnotationButton extends Button {
         return listCell;
     }
 
+    /**
+     * Get current selected item
+     *
+     * @return current selected item obj
+     */
     public Object getCurrentSelectItem() {
         return currentSelectItem;
     }
 
+    /**
+     * Get annotation showed state
+     *
+     * @return true or false
+     */
     public boolean isShowAnnotation() {
         return showAnnotation;
     }
 
+    /**
+     * Set clear button call back function
+     *
+     * @param callBack clear call back
+     */
     public void setCallBack(ClearCallBack callBack) {
         this.callBack = callBack;
     }
 
+    /**
+     * Set select item call back function
+     *
+     * @param selectCallBack select call back function
+     */
     public void setSelectCallBack(SelectCallBack selectCallBack) {
         this.selectCallBack = selectCallBack;
     }

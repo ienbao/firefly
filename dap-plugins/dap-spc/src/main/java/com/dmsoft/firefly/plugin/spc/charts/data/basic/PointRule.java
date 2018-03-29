@@ -14,14 +14,28 @@ public class PointRule {
     private Color normalColor;
     private List<String> activeRule;
 
+    /**
+     * Constructor for PointRule
+     */
     public PointRule() {
     }
 
+    /**
+     * Constructor for PointRule
+     *
+     * @param data        point node data
+     * @param normalColor original point color
+     */
     public PointRule(XYChart.Data data, Color normalColor) {
         this.data = data;
         this.normalColor = normalColor;
     }
 
+    /**
+     * Constructor for PointRule
+     *
+     * @param data point node data
+     */
     public PointRule(XYChart.Data data) {
         this.data = data;
     }

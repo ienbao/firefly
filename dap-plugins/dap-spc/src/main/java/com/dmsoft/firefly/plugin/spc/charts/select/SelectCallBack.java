@@ -7,5 +7,12 @@ import java.util.Set;
  */
 public interface SelectCallBack {
 
+    /**
+     * List item select call
+     *
+     * @param name          current operated item
+     * @param selected      is selected or not
+     * @param selectedNames all selected items
+     */
     void execute(String name, boolean selected, Set<String> selectedNames);
 }

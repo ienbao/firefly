@@ -6,9 +6,7 @@ import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.BoxTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBoxAndWhiskerData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IPoint;
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.PointTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.view.Candle;
-import com.dmsoft.firefly.plugin.spc.utils.BoxChartToolTipContent;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
@@ -69,6 +67,7 @@ public class BoxPlotChart extends XYChart<Number, Number> {
      * Set box plot chart data
      *
      * @param boxPlotChartDataList box plot chart data
+     * @param chartTooltip         chartTooltip
      */
     public void setData(List<BoxPlotChartData> boxPlotChartDataList, ChartTooltip chartTooltip) {
         this.removeAllChildren();
@@ -85,15 +84,23 @@ public class BoxPlotChart extends XYChart<Number, Number> {
 //        4.设置箱子样式
 //        5.设置线的样式
 //        6.设置点的样式
+        if (chartData == null) {
+            return;
+        }
         String uniqueKey = chartData.getUniqueKey();
         Color color = chartData.getColor();
-        XYChart.Series<Number, Number> series = buildSeries(chartData.getBoxAndWhiskerData(), chartData.getSeriesName());
         this.addPoints(chartData.getPoints());
-        this.seriesUniqueKeyMap.put(uniqueKey, series);
-        this.getData().add(series);
-        this.setDataNodeStyleAndTooltip(series, color, chartTooltip == null ? null : chartTooltip.getChartBoxTooltip());
+        if (chartData.getBoxAndWhiskerData() != null) {
+            XYChart.Series<Number, Number> series = buildSeries(chartData.getBoxAndWhiskerData(), chartData.getSeriesName());
+            this.seriesUniqueKeyMap.put(uniqueKey, series);
+            this.getData().add(series);
+            this.setDataNodeStyleAndTooltip(series, color, chartTooltip == null ? null : chartTooltip.getChartBoxTooltip());
+        }
     }
 
+    /**
+     * Remove all chart nodes and all chart data
+     */
     public void removeAllChildren() {
         ObservableList<Node> nodes = getPlotChildren();
         getPlotChildren().removeAll(nodes);
@@ -232,7 +239,9 @@ public class BoxPlotChart extends XYChart<Number, Number> {
     }
 
     private void addPoints(IPoint points) {
-        if (points == null) return;
+        if (points == null) {
+            return;
+        }
         int len = points.getLen();
         for (int i = 0; i < len; i++) {
             Data<Number, Number> data = new Data<>();
@@ -270,11 +279,14 @@ public class BoxPlotChart extends XYChart<Number, Number> {
 //            update box color
             series.getData().forEach(dataItem -> {
                 Candle candle = (Candle) dataItem.getNode();
-                candle.updateStyleClasses(color);
+                candle.updateColor(color);
             });
         }
     }
 
+    /**
+     * Add stroke
+     */
     public void addStroke() {
 
         if (showLined) {
@@ -304,11 +316,19 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         showLined = true;
     }
 
+    /**
+     * Remove stroke
+     */
     public void removeStroke() {
         showLined = false;
         layoutPlotChildren();
     }
 
+    /**
+     * Toggle stroke show or hide
+     *
+     * @param showLined if true, show stroke; if false, hidden stroke
+     */
     public void toggleStroke(boolean showLined) {
         if (showLined) {
             this.addStroke();
@@ -392,27 +412,16 @@ public class BoxPlotChart extends XYChart<Number, Number> {
             double y) {
 
         if (itemNode instanceof Candle && extra != null) {
-
             Candle candle = (Candle) itemNode;
+            final double threshold = 0.90;
             double q1 = getYAxis().getDisplayPosition(extra.getQ1());
             double max = getYAxis().getDisplayPosition(extra.getMaxRegularValue());
             double min = getYAxis().getDisplayPosition(extra.getMinRegularValue());
-
             // calculate candle width; if candleWidthByUnit, use 90% width between ticks
-            candleWidth = (getXAxis() instanceof NumberAxis && candleWidthByUnit) ?
-                    getXAxis().getDisplayPosition(((NumberAxis) getXAxis()).getTickUnit()) * 0.90 : candleWidth;
-
+            candleWidth = (getXAxis() instanceof NumberAxis && candleWidthByUnit)
+                    ? getXAxis().getDisplayPosition(((NumberAxis) getXAxis()).getTickUnit()) * threshold : candleWidth;
             // update candle
             candle.update(q1 - y, max - y, min - y, candleWidth, extra.getColor());
-//            candle.updateTooltip(
-//                    item.getXValue().doubleValue(),
-//                    extra.getMedian().doubleValue(),
-//                    extra.getMinRegularValue().doubleValue(),
-//                    extra.getMaxRegularValue().doubleValue(),
-//                    extra.getQ1().doubleValue(),
-//                    extra.getQ3().doubleValue()
-//            );
-
             // position the candle
             candle.setLayoutX(x);
             candle.setLayoutY(y);
@@ -499,6 +508,11 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         }
     }
 
+    /**
+     * Set candle width
+     *
+     * @param candleWidthByUnit width
+     */
     public void setCandleWidthByUnit(boolean candleWidthByUnit) {
         this.candleWidthByUnit = candleWidthByUnit;
     }
