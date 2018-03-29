@@ -250,7 +250,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
             dataItem.getNode().getStyleClass().setAll("chart-bar");
             if (color != null && DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
                 StringBuilder nodeStyle = new StringBuilder("-fx-bar-fill: " + ColorUtils.toHexFromFXColor(color));
-                nodeStyle.append("-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
+                nodeStyle.append(";-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
                 dataItem.getNode().setStyle(nodeStyle.toString());
             }
         });
