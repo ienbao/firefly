@@ -29,21 +29,14 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.image.WritableImage;
 
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.FileImageOutputStream;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-import static com.dmsoft.firefly.gui.components.chart.ChartSaveUtils.saveImageUsingJPGWithQuality;
+import static java.awt.Event.F9;
 
 /**
  * Created by GuangLi on 2018/3/14.
@@ -374,14 +367,18 @@ public class BuildChart {
     private static String exportImages(String name, Node node) {
         vBox.getChildren().clear();
         vBox.getChildren().add(node);
+        WriteImage image = new WriteImage();
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        Platform.runLater(() -> {
+            image.image = node.snapshot(new SnapshotParameters(), null);
+            countDownLatch.countDown();
+        });
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException ignored) {
+        }
 
-//        SnapshotParameters parameters = new SnapshotParameters();
-//        WritableImage image = node.snapshot(parameters, null);
-//        // 重置图片大小
-//        ImageView imageView = new ImageView(image);
-//        imageView.setFitWidth(600);
-//        imageView.setFitHeight(220);
-        WritableImage exportImage = node.snapshot(new SnapshotParameters(), null);
+
         String savePicPath = FileUtils.getAbsolutePath("../export/temp");
         File file = new File(savePicPath);
         if (!file.exists()) {
@@ -391,14 +388,15 @@ public class BuildChart {
 
         try {
             file = new File(path);
-            ChartSaveUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(exportImage, null), file, 0.9f);
-//            AlertDialog.showAlertDialog("保存成功!");
-        } catch (IOException ex) {
-//            AlertDialog.showAlertDialog("保存失败:" + ex.getMessage());
+            ChartSaveUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(image.image, null), file, F9);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return path;
+    }
+
+    private static class WriteImage {
+        private WritableImage image;
     }
 
 }

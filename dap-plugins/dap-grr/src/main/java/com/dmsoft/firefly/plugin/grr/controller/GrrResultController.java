@@ -29,6 +29,7 @@ import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.job.core.*;
+import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -60,6 +61,45 @@ import java.util.function.Function;
  */
 public class GrrResultController implements Initializable {
 
+    private static final String[] GRR_RESULT_TYPE = new String[]{
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_TOLERANCE"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_CONTRIBUTION")};
+    private static final String[] CHART_COMPONENT_LABEL = new String[]{
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_GAGE_R"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_REPEATABILITY"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_REPRODUCIBILITY"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_PART")};
+    private static final String[] CHART_COMPONENT_CATEGORY = new String[]{
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_TOLERANCE")};
+    private static final String[] CHART_OPERATE_NAME = new String[]{
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION")};
+    private static final String[] GRR_SUMMARY_TITLE = new String[]{
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_TESTITEM"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_LSL"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_USL"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_TOLERANCE"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_REPEATABILITY"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_REPRODUCIBILITY"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_GAUGE")};
+    private static final String[] GRR_ANOVA_TITLE = new String[]{
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_SOURCE"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_DF"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_SS"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_MS"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_F"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_PROB")};
+    private static final String[] GRR_SOURCE_TITLE = new String[]{
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_SOURCE_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_SIGMA"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_STUDY_VAR"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_SIGMA"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_TOLERANCE")};
     private Set<String> parts = Sets.newLinkedHashSet();
     private Set<String> appraisers = Sets.newLinkedHashSet();
     private GrrSummaryModel summaryModel = new GrrSummaryModel();
@@ -70,6 +110,75 @@ public class GrrResultController implements Initializable {
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
+    /****** Summary *****/
+    @FXML
+    private HBox itemFilterHBox;
+    @FXML
+    private ComboBox resultBasedCmb;
+    @FXML
+    private TableView<String> summaryTb;
+    @FXML
+    private TableView itemDetailTb;
+    @FXML
+    private TableView anovaTb;
+    @FXML
+    private TableView sourceTb;
+    @FXML
+    private Button categoryBtn;
+    @FXML
+    private Button grrDataBtn;
+    @FXML
+    private Button grrChartBtn;
+    @FXML
+    private Button grrResultBtn;
+    @FXML
+    private ScrollPane grrResultScrollPane;
+    @FXML
+    private VBox chartVBox;
+    @FXML
+    private VBox resultVBox;
+    private TextFieldFilter summaryItemTf;
+    /****** Chart ******/
+    @FXML
+    private VBox xBarAppraiserVBox;
+    @FXML
+    private VBox rangeAppraiserVBox;
+    @FXML
+    private VBox rrByAppraiserVBox;
+    @FXML
+    private VBox rrbyPartVBox;
+    @FXML
+    private BorderPane componentBp;
+    @FXML
+    private BorderPane partAppraiserBp;
+    @FXML
+    private BorderPane xBarAppraiserBp;
+    @FXML
+    private BorderPane rangeAppraiserBp;
+    @FXML
+    private BorderPane rrbyAppraiserBp;
+    @FXML
+    private BorderPane rrbyPartBp;
+    @FXML
+    private BarChart componentChart;
+    @FXML
+    private LineChart partAppraiserChart;
+    private LinearChart xBarAppraiserChart;
+    private LinearChart rangeAppraiserChart;
+    private LineChart rrByAppraiserChart;
+    private LineChart rrbyPartChart;
+    private ChartRightPane componentChartRightPane;
+    private ChartRightPane partAppraiserChartRightPane;
+    private ChartRightPane xBarAppraiserChartRightPane;
+    private ChartRightPane rangeAppraiserChartRightPane;
+    private ChartRightPane rrByAppraiserChartRightPane;
+    private ChartRightPane rrbyPartChartRightPane;
+    private ChartOperateButton xBarAppraiserChartBtn;
+    private ChartOperateButton rangeAppraiserChartBtn;
+    @FXML
+    private Label toleranceLbl;
+    private String appKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " ";
+    private String trailKey = GrrFxmlAndLanguageUtils.getString("TRAIL") + " ";
 
     /**
      * Init grr main controller
@@ -194,7 +303,7 @@ public class GrrResultController implements Initializable {
     }
 
     @SuppressWarnings("unchecked")
-    private void submitGrrResult(String selectedItem, int selectedIndex) {
+    private void submitGrrResult(String selectedItem) {
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
         context.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, grrMainController.getSearchConditionDto());
         context.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrMainController.getGrrDataFrame());
@@ -732,14 +841,12 @@ public class GrrResultController implements Initializable {
     }
 
     private void initComponentsRender() {
-        final double INPUT_WIDTH = 200;
-//        componentChart.setBarGap(10);
-//        componentChart.setCategoryGap(50);
+        final double inputWidth = 200;
 
         itemFilterHBox.setMargin(summaryItemTf, new Insets(4, 0, 4, 0));
         String testItemText = GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TEST_ITEM");
         summaryItemTf.getTextField().setPromptText(testItemText);
-        summaryItemTf.getTextField().setPrefWidth(INPUT_WIDTH);
+        summaryItemTf.getTextField().setPrefWidth(inputWidth);
         summaryItemTf.getTextField().setFocusTraversable(false);
         summaryTb.setEditable(true);
 
@@ -812,6 +919,7 @@ public class GrrResultController implements Initializable {
         };
     }
 
+    @SuppressWarnings("unchecked")
     private void updatePerformance(String chartName, Set<String> selectedNames) {
         String value = envService.findPreference(UIConstant.CHART_PERFORMANCE_CODE);
         Map data = mapper.fromJson(value, mapper.buildMapType(Map.class, String.class, Map.class));
@@ -978,116 +1086,4 @@ public class GrrResultController implements Initializable {
         value[11] = resultDto.getReprodVar();
         return value;
     }
-
-    /****** Summary *****/
-    @FXML
-    private HBox itemFilterHBox;
-    @FXML
-    private ComboBox resultBasedCmb;
-    @FXML
-    private TableView<String> summaryTb;
-    @FXML
-    private TableView itemDetailTb;
-    @FXML
-    private TableView anovaTb;
-    @FXML
-    private TableView sourceTb;
-    @FXML
-    private Button categoryBtn;
-    @FXML
-    private Button grrDataBtn;
-    @FXML
-    private Button grrChartBtn;
-    @FXML
-    private Button grrResultBtn;
-    @FXML
-    private ScrollPane grrResultScrollPane;
-    @FXML
-    private VBox chartVBox;
-    @FXML
-    private VBox resultVBox;
-    private TextFieldFilter summaryItemTf;
-    /****** Chart ******/
-    @FXML
-    private VBox xBarAppraiserVBox;
-    @FXML
-    private VBox rangeAppraiserVBox;
-    @FXML
-    private VBox rrByAppraiserVBox;
-    @FXML
-    private VBox rrbyPartVBox;
-    @FXML
-    private BorderPane componentBp;
-    @FXML
-    private BorderPane partAppraiserBp;
-    @FXML
-    private BorderPane xBarAppraiserBp;
-    @FXML
-    private BorderPane rangeAppraiserBp;
-    @FXML
-    private BorderPane rrbyAppraiserBp;
-    @FXML
-    private BorderPane rrbyPartBp;
-    @FXML
-    private BarChart componentChart;
-    @FXML
-    private LineChart partAppraiserChart;
-    private LinearChart xBarAppraiserChart;
-    private LinearChart rangeAppraiserChart;
-    private LineChart rrByAppraiserChart;
-    private LineChart rrbyPartChart;
-
-    private ChartRightPane componentChartRightPane;
-    private ChartRightPane partAppraiserChartRightPane;
-    private ChartRightPane xBarAppraiserChartRightPane;
-    private ChartRightPane rangeAppraiserChartRightPane;
-    private ChartRightPane rrByAppraiserChartRightPane;
-    private ChartRightPane rrbyPartChartRightPane;
-
-    private ChartOperateButton xBarAppraiserChartBtn;
-    private ChartOperateButton rangeAppraiserChartBtn;
-    @FXML
-    private Label toleranceLbl;
-
-    private String appKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " ";
-    private String trailKey = GrrFxmlAndLanguageUtils.getString("TRAIL") + " ";
-    private String[] GRR_RESULT_TYPE = new String[]{
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_TOLERANCE"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_CONTRIBUTION")};
-    private String[] CHART_COMPONENT_LABEL = new String[]{
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_GAGE_R"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_REPEATABILITY"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_REPRODUCIBILITY"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_PART")};
-    private String[] CHART_COMPONENT_CATEGORY = new String[]{
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_VARIATION"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_TOLERANCE")};
-    private String[] CHART_OPERATE_NAME = new String[]{
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION")};
-    private String[] GRR_SUMMARY_TITLE = new String[]{
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_TESTITEM"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_LSL"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_USL"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_TOLERANCE"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_REPEATABILITY"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_REPRODUCIBILITY"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_GAUGE")};
-    private String[] GRR_ANOVA_TITLE = new String[]{
-            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_SOURCE"),
-            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_DF"),
-            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_SS"),
-            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_MS"),
-            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_F"),
-            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_PROB")};
-    private String[] GRR_SOURCE_TITLE = new String[]{
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_SOURCE_VARIATION"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_SIGMA"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_STUDY_VAR"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_VARIATION"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_SIGMA"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_VARIATION"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_TOLERANCE")};
 }

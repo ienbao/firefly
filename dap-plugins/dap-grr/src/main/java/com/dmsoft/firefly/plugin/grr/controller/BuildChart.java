@@ -28,16 +28,9 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.FileImageOutputStream;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -45,6 +38,7 @@ import java.util.concurrent.CountDownLatch;
  * Created by GuangLi on 2018/3/19.
  */
 public class BuildChart {
+    private static final Float F9 = 0.9f;
     private static Group vBox;
     private static Scene scene;
     private static int digNum = 6;
@@ -311,19 +305,16 @@ public class BuildChart {
     public static String exportImages(String name, Node node) {
         vBox.getChildren().clear();
         vBox.getChildren().add(node);
-
-//        SnapshotParameters parameters = new SnapshotParameters();
-//        WritableImage image = node.snapshot(parameters, null);
-//        // 重置图片大小
-//        ImageView imageView = new ImageView(image);
-//        imageView.setFitWidth(600);
-//        imageView.setFitHeight(220);
         WriteImage image = new WriteImage();
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Platform.runLater(() -> {
             image.image = node.snapshot(new SnapshotParameters(), null);
             countDownLatch.countDown();
         });
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException ignored) {
+        }
 
         String savePicPath = FileUtils.getAbsolutePath("../export/temp");
         File file = new File(savePicPath);
@@ -331,42 +322,17 @@ public class BuildChart {
             file.mkdirs();
         }
         String path = savePicPath + "/" + name + new Date().getTime() + ".png";
-        try {
-            countDownLatch.await();
-        } catch (InterruptedException ignored) {
-        }
+
         try {
             file = new File(path);
-            ChartSaveUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(exportImage, null), file, 0.9f);
-//            AlertDialog.showAlertDialog("保存成功!");
-        } catch (IOException ex) {
-//            AlertDialog.showAlertDialog("保存失败:" + ex.getMessage());
+            ChartSaveUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(image.image, null), file, F9);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return path;
     }
 
-//    public static void saveImageUsingJPGWithQuality(BufferedImage image,
-//                                                    File filePath, float quality) throws Exception {
-//
-//        BufferedImage newBufferedImage = new BufferedImage(image.getWidth(),
-//                image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-//        newBufferedImage.getGraphics().drawImage(image, 0, 0, null);
-//
-//        Iterator iter = ImageIO
-//                .getImageWritersByFormatName("jpeg");
-//
-//        ImageWriter imageWriter = (ImageWriter) iter.next();
-//        ImageWriteParam iwp = imageWriter.getDefaultWriteParam();
-//
-//        iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-//        iwp.setCompressionQuality(quality);
-//
-//        FileImageOutputStream fileImageOutput = new FileImageOutputStream(filePath);
-//        imageWriter.setOutput(fileImageOutput);
-//        IIOImage jpgimage = new IIOImage(newBufferedImage, null, null);
-//        imageWriter.write(null, jpgimage, iwp);
-//        imageWriter.dispose();
-//    }
+    private static class WriteImage {
+        private WritableImage image;
+    }
 }
