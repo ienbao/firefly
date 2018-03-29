@@ -29,7 +29,6 @@ import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -332,6 +331,9 @@ public class BuildChart {
         return path;
     }
 
+    /**
+     * private class`
+     */
     private static class WriteImage {
         private WritableImage image;
     }

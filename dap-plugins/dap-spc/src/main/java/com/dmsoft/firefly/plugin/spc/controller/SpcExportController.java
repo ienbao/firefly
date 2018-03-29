@@ -647,7 +647,7 @@ public class SpcExportController {
             CountDownLatch count = new CountDownLatch(1);
             Thread thread = new Thread(() -> {
                 try {
-                    chartPath = initSpcChartData(spcChartDtoList);
+                    chartPath = initSpcChartData(spcChartDtoList, spcConfig.getExportDataItem());
                 } finally {
                     count.countDown();
                 }
@@ -738,7 +738,7 @@ public class SpcExportController {
         return searchConditionDtoList;
     }
 
-    private Map<String, Map<String, String>> initSpcChartData(List<SpcChartDto> spcChartDtoList,  Map<String, Boolean> exportParam) {
+    private Map<String, Map<String, String>> initSpcChartData(List<SpcChartDto> spcChartDtoList, Map<String, Boolean> exportParam) {
         return BuildChart.initSpcChartData(spcChartDtoList, searchTab.getSearch().size(), colorMap, exportParam);
     }
 

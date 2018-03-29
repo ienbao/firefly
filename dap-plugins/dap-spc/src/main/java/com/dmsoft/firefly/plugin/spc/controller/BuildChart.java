@@ -37,16 +37,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-import static com.dmsoft.firefly.gui.components.chart.ChartSaveUtils.saveImageUsingJPGWithQuality;
-
 /**
  * Created by GuangLi on 2018/3/14.
  */
 public class BuildChart {
 
+    private static final Float F9 = 0.9f;
     private static Group vBox;
     private static Scene scene;
 
+    /**
+     * init spc chart and export
+     *
+     * @param spcChartDtoList list of spc chart dtos
+     * @param search          search
+     * @param colorCache      color set
+     * @param exportParam     export param
+     * @return exported chart path
+     */
     public static Map<String, Map<String, String>> initSpcChartData(List<SpcChartDto> spcChartDtoList, int search, Map<String, Color> colorCache, Map<String, Boolean> exportParam) {
         vBox = new Group();
         scene = new Scene(vBox);
@@ -419,6 +427,9 @@ public class BuildChart {
         return path;
     }
 
+    /**
+     * private class
+     */
     private static class WriteImage {
         private WritableImage image;
     }
