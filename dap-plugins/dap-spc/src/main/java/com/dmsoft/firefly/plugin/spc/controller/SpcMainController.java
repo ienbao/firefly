@@ -114,6 +114,15 @@ public class SpcMainController implements Initializable {
     }
 
     /**
+     * clear all analysis data
+     */
+    public void clearAnalysisData(){
+        statisticalResultController.clearStatisticalResultData();
+        chartResultController.clearChartData();
+        viewDataController.setViewData(null, null);
+    }
+
+    /**
      * change chart color
      *
      * @param key   key

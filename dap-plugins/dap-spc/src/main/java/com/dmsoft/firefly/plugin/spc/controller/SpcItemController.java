@@ -399,6 +399,9 @@ public class SpcItemController implements Initializable {
                     SpcFxmlAndLanguageUtils.getString(ResourceMassages.UI_SPC_ANALYSIS_ITEM_EMPTY));
             return;
         }
+        //clear all analysis data
+        spcMainController.clearAnalysisData();
+
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         List<String> projectNameList = envService.findActivatedProjectName();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
@@ -417,19 +420,17 @@ public class SpcItemController implements Initializable {
                         if (settingDto == null || settingDto instanceof Exception) {
                             logger.debug("spc setting data is null");
                             if (settingDto != null) {
+                                logger.error(((Exception) settingDto).getMessage());
                                 ((Exception) settingDto).printStackTrace();
+                                throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_20001));
                             } else {
                                 throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_20001));
                             }
-                        }
-                        if (!(settingDto instanceof SpcSettingDto)) {
-                            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_20001));
                         }
                         spcMainController.setSpcSettingDto((SpcSettingDto) settingDto);
 
                         Job job = new Job(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
                         job.addProcessMonitorListener(event -> {
-                            System.out.println("event*****" + event.getPoint());
                             updateProgress(event.getPoint(), 100);
                         });
                         Map<String, Object> paramMap = Maps.newHashMap();
@@ -444,11 +445,10 @@ public class SpcItemController implements Initializable {
 
                         Object returnValue = manager.doJobSyn(job, paramMap, spcMainController);
                         if (returnValue instanceof Exception) {
-                            //todo message tip
+                            logger.error(((Exception) returnValue).getMessage());
                             ((Exception) returnValue).printStackTrace();
                         } else {
                             Platform.runLater(() -> {
-                                spcMainController.clearAnalysisSubShowData();
                                 SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
                                 SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
                                 List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
