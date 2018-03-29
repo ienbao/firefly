@@ -45,6 +45,17 @@ public class BoxExtraData extends AbstractValueObject {
 
     private Color color;
 
+    /**
+     * Constructor for BoxExtraData
+     *
+     * @param xPos            x position
+     * @param mean            mean value
+     * @param q3              q3 value
+     * @param q1              q1 value
+     * @param maxRegularValue max value
+     * @param minRegularValue min value
+     * @param median          median value
+     */
     public BoxExtraData(Double xPos,
                         Double mean,
                         Double q3,
@@ -62,13 +73,16 @@ public class BoxExtraData extends AbstractValueObject {
     }
 
     /**
-     * Creates a new box-and-whisker item.
-     * @param xPos
-     * @param median
-     * @param q1
-     * @param q3
-     * @param minRegularValue
-     * @param maxRegularValue
+     * Constructor for BoxExtraData
+     *
+     * @param xPos            x position
+     * @param mean            mean value
+     * @param q3              q3 value
+     * @param q1              q1 value
+     * @param maxRegularValue max value
+     * @param minRegularValue min value
+     * @param median          median value
+     * @param color           color
      */
     public BoxExtraData(Double xPos,
                         Double mean,
@@ -88,10 +102,20 @@ public class BoxExtraData extends AbstractValueObject {
         this.maxRegularValue = maxRegularValue;
     }
 
+    /**
+     * Get x position
+     *
+     * @return x position
+     */
     public Double getxPos() {
         return xPos;
     }
 
+    /**
+     * Set x position
+     *
+     * @param xPos x position
+     */
     public void setxPos(Double xPos) {
         this.xPos = xPos;
     }

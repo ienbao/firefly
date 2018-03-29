@@ -5,5 +5,8 @@ package com.dmsoft.firefly.plugin.spc.charts.select;
  */
 public interface ClearCallBack {
 
+    /**
+     * Execute clear button click
+     */
     void execute();
 }

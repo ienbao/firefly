@@ -10,9 +10,18 @@ public class PointTooltip {
     private String seriesName;
     private XYChart.Data data;
 
+    /**
+     * Constructor for PointTooltip
+     */
     public PointTooltip() {
     }
 
+    /**
+     * Constructor for PointTooltip
+     *
+     * @param seriesName series name
+     * @param data       point node data
+     */
     public PointTooltip(String seriesName, XYChart.Data data) {
         this.seriesName = seriesName;
         this.data = data;

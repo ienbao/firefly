@@ -7,7 +7,6 @@ import com.google.common.collect.Sets;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.HBox;
 import javafx.stage.Popup;
 
@@ -24,30 +23,56 @@ public class ChartOperateButton extends Button {
     private SelectCallBack selectCallBack;
 
     private final double threshold = 6;
-    private boolean selected = defaultSelected;
-    private final static boolean defaultSelected = false;
-    private Orientation orientation = defaultOrientation;
-    private final static Orientation defaultOrientation = Orientation.UPLEFT;
+    private boolean selected = DEFAULT_SELECTED;
+    private static final boolean DEFAULT_SELECTED = false;
+    private Orientation orientation = DEFAULT_ORIENTATION;
+    private static final Orientation DEFAULT_ORIENTATION = Orientation.UPLEFT;
 
     private Set<String> selectedSets = Sets.newLinkedHashSet();
     private Set<String> disableRules = Sets.newLinkedHashSet();
 
+    /**
+     * Constructor for ChartOperateButton
+     */
     public ChartOperateButton() {
-        this(defaultSelected, defaultOrientation);
+        this(DEFAULT_SELECTED, DEFAULT_ORIENTATION);
     }
 
+    /**
+     * Constructor for ChartOperateButton
+     *
+     * @param orientation popup of orientation
+     */
     public ChartOperateButton(Orientation orientation) {
-        this("", defaultSelected, orientation);
+        this("", DEFAULT_SELECTED, orientation);
     }
 
+    /**
+     * Constructor for ChartOperateButton
+     *
+     * @param selected list all data is checked
+     */
     public ChartOperateButton(boolean selected) {
-        this("", selected, defaultOrientation);
+        this("", selected, DEFAULT_ORIENTATION);
     }
 
+    /**
+     * Constructor for ChartOperateButton
+     *
+     * @param selected    list all data is checked
+     * @param orientation popup of orientation
+     */
     public ChartOperateButton(boolean selected, Orientation orientation) {
         this("", selected, orientation);
     }
 
+    /**
+     * Constructor for ChartOperateButton
+     *
+     * @param name        text of button
+     * @param selected    list all data is checked
+     * @param orientation popup of orientation
+     */
     public ChartOperateButton(String name, boolean selected, Orientation orientation) {
         super(name);
         this.selected = selected;
@@ -70,18 +95,16 @@ public class ChartOperateButton extends Button {
 
     /**
      * Set button tooltip content
-     * @param content
+     *
+     * @param content tooltip content
      */
     public void setButtonTooltipContent(String content) {
         Tooltip.install(this, new Tooltip(content));
     }
 
     private void showPopupForButton(Button button) {
-        double x = button.getScene().getWindow().getX() +
-                button.getScene().getX() + button.localToScene(0, 0).getX();
-        double y = button.getScene().getWindow().getY() +
-                button.getScene().getY() + button.localToScene(0, 0).getY();
-
+        double x = button.getScene().getWindow().getX() + button.getScene().getX() + button.localToScene(0, 0).getX();
+        double y = button.getScene().getWindow().getY() + button.getScene().getY() + button.localToScene(0, 0).getY();
         if (orientation.equals(Orientation.UPLEFT)) {
             x -= listView.getPrefWidth();
             x += button.getPrefWidth();
@@ -102,17 +125,17 @@ public class ChartOperateButton extends Button {
             @Override
             protected void updateItem(Object item, boolean empty) {
                 super.updateItem(item, empty);
-                if (item == null || empty == true) {
+                if (item == null || empty) {
                     setGraphic(null);
                     setText(null);
                 } else {
                     CheckBox checkBox = new CheckBox();
                     Label label = new Label(item == null ? "" : String.valueOf(item));
-                    boolean selected = selectedSets.contains(item);
+                    boolean selectedBool = selectedSets.contains(item);
                     boolean disabled = disableRules.contains(item);
-                    BooleanProperty observable = new SimpleBooleanProperty(selected);
+                    BooleanProperty observable = new SimpleBooleanProperty(selectedBool);
                     checkBox.selectedProperty().bindBidirectional(observable);
-                    observable.setValue(selected);
+                    observable.setValue(selectedBool);
                     checkBox.setOnMouseClicked(event -> {
                         updateSelectedSets(checkBox.isSelected(), (String) item);
                         if (selectCallBack != null) {
@@ -143,11 +166,21 @@ public class ChartOperateButton extends Button {
         }
     }
 
+    /**
+     * Set list view data
+     *
+     * @param data list view data
+     */
     public void setListViewData(List<String> data) {
         data = (data == null) ? Lists.newArrayList() : data;
         listView.getItems().addAll(data);
     }
 
+    /**
+     * Remove data
+     *
+     * @param data list item data
+     */
     public void removeData(List<String> data) {
         if (!listView.getItems().isEmpty()) {
             listView.getItems().removeAll(data);
@@ -157,6 +190,12 @@ public class ChartOperateButton extends Button {
         }
     }
 
+    /**
+     * Set list view size
+     *
+     * @param width  list width
+     * @param height list height
+     */
     public void setListViewSize(double width, double height) {
         listView.setPrefWidth(width);
         listView.setPrefHeight(height);
@@ -170,16 +209,31 @@ public class ChartOperateButton extends Button {
         this.orientation = orientation;
     }
 
+    /**
+     * Set selected items
+     *
+     * @param selectedSets selected items
+     */
     public void setSelectedSets(Set<String> selectedSets) {
         this.selectedSets.clear();
         this.selectedSets = selectedSets;
         this.listView.refresh();
     }
 
+    /**
+     * Get selected items
+     *
+     * @return selected items
+     */
     public Set<String> getSelectedSets() {
         return selectedSets;
     }
 
+    /**
+     * Set disable rule items
+     *
+     * @param disableRules disable rule items
+     */
     public void setDisableRules(Set<String> disableRules) {
         this.disableRules.clear();
         this.disableRules = disableRules;

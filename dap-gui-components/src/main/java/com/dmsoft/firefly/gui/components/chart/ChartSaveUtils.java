@@ -14,8 +14,16 @@ import java.util.Iterator;
  */
 public class ChartSaveUtils {
 
+    /**
+     * Save images for jpg formatter
+     *
+     * @param image    buffered image
+     * @param filePath filePath
+     * @param quality  quality
+     * @throws Exception IOException
+     */
     public static void saveImageUsingJPGWithQuality(BufferedImage image,
-                                                     File filePath, float quality) throws Exception {
+                                                    File filePath, float quality) throws Exception {
 
         BufferedImage newBufferedImage = new BufferedImage(image.getWidth(),
                 image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);

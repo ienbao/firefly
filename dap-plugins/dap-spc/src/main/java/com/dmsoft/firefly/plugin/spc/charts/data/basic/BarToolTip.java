@@ -3,6 +3,13 @@ package com.dmsoft.firefly.plugin.spc.charts.data.basic;
 /**
  * Created by cherry on 2018/3/20.
  */
+
+/**
+ * Bar tooltip
+ *
+ * @param <X> x data class
+ * @param <Y> y data class
+ */
 public class BarToolTip<X, Y> {
 
     private String seriesName;
@@ -10,9 +17,20 @@ public class BarToolTip<X, Y> {
     private X endValue;
     private Y value;
 
+    /**
+     * Constructor for BarToolTip
+     */
     public BarToolTip() {
     }
 
+    /**
+     * Constructor for BarToolTip
+     *
+     * @param seriesName series name
+     * @param startValue start value
+     * @param endValue   end value
+     * @param value      bar value
+     */
     public BarToolTip(String seriesName, X startValue, X endValue, Y value) {
         this.seriesName = seriesName;
         this.startValue = startValue;

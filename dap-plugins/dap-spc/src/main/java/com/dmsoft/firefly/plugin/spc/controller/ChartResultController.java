@@ -18,9 +18,7 @@ import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
 import com.dmsoft.firefly.plugin.spc.charts.view.VerticalTabPane;
 import com.dmsoft.firefly.plugin.spc.dto.ControlRuleDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
-import com.dmsoft.firefly.plugin.spc.dto.SpcSettingDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
-import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcControlChartDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.*;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.SpcChartToolTip;
@@ -294,7 +292,9 @@ public class ChartResultController implements Initializable {
                 operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));
             } else if (name.equals(UIConstant.SPC_CHART_NAME[1])) {
                 operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_RUN_EXTERN_MENU));
-            } else if (name.equals(UIConstant.SPC_CHART_NAME[2]) || name.equals(UIConstant.SPC_CHART_NAME[3]) || name.equals(UIConstant.SPC_CHART_NAME[4]) || name.equals(UIConstant.SPC_CHART_NAME[5]) || name.equals(UIConstant.SPC_CHART_NAME[7])) {
+            } else if (name.equals(UIConstant.SPC_CHART_NAME[2]) || name.equals(UIConstant.SPC_CHART_NAME[3])
+                    || name.equals(UIConstant.SPC_CHART_NAME[4]) || name.equals(UIConstant.SPC_CHART_NAME[5])
+                    || name.equals(UIConstant.SPC_CHART_NAME[7])) {
                 operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
             } else if (name.equals(UIConstant.SPC_CHART_NAME[6])) {
                 operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_BOX_EXTERN_MENU));
@@ -361,8 +361,8 @@ public class ChartResultController implements Initializable {
         String value = envService.findPreference(UIConstant.CHART_PERFORMANCE_CODE);
         Map data = mapper.fromJson(value, mapper.buildMapType(Map.class, String.class, Map.class));
         data = data == null ? Maps.newLinkedHashMap() : data;
-        Map<String, List> operateMap = data.containsKey(chartName) && data.get(chartName) instanceof Map ?
-                (Map<String, List>) data.get(chartName) : Maps.newHashMap();
+        Map<String, List> operateMap = data.containsKey(chartName) && data.get(chartName) instanceof Map
+                ? (Map<String, List>) data.get(chartName) : Maps.newHashMap();
         operateMap.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(selectedNames));
         data.put(chartName, operateMap);
         String performValue = mapper.toJson(data);
@@ -514,6 +514,7 @@ public class ChartResultController implements Initializable {
         ControlChart chart = runChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
+            annotationData.clear();
             chart.removeAllChildren();
         } else {
             chartMap.put(chartName, chart);
@@ -712,9 +713,9 @@ public class ChartResultController implements Initializable {
                     boxChartPane.getChart().removeStroke();
                     continue;
                 }
-                if (operateName.equals(UIConstant.SPC_CHART_BOX_EXTERN_MENU[1])) {
-
-                }
+//                if (operateName.equals(UIConstant.SPC_CHART_BOX_EXTERN_MENU[1])) {
+//
+//                }
             }
         }
     }

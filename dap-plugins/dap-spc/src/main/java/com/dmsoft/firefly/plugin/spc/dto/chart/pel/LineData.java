@@ -19,17 +19,32 @@ public class LineData implements ILineData {
     private LineType lineType;
     private Orientation plotOrientation;
 
+    /**
+     * Constructor for LineData
+     */
     public LineData() {
         this.lineType = LineType.SOLID;
         this.plotOrientation = Orientation.VERTICAL;
     }
 
+    /**
+     * Constructor for LineData
+     *
+     * @param value           line value
+     * @param name            line name
+     * @param plotOrientation line orientation
+     */
     public LineData(Double value, String name, Orientation plotOrientation) {
         this(value, name, plotOrientation, LineType.SOLID);
     }
 
     /**
-     * @param value
+     * Constructor for LineData
+     *
+     * @param value           line value
+     * @param name            line name
+     * @param plotOrientation line orientation
+     * @param lineType        line type
      */
     public LineData(Double value, String name, Orientation plotOrientation, LineType lineType) {
         this();
@@ -39,10 +54,23 @@ public class LineData implements ILineData {
         this.name = name;
     }
 
-    public LineData(Double value, String name,  LineType lineType) {
+    /**
+     * Constructor for LineData
+     *
+     * @param value    line value
+     * @param name     line name
+     * @param lineType line type
+     */
+    public LineData(Double value, String name, LineType lineType) {
         this(value, name, Orientation.VERTICAL, lineType);
     }
 
+    /**
+     * Constructor for LineData
+     *
+     * @param value line value
+     * @param name  line name
+     */
     public LineData(Double value, String name) {
         this();
         this.value = value;
@@ -50,11 +78,13 @@ public class LineData implements ILineData {
     }
 
     /**
-     * @param name
-     * @param title
-     * @param value
-     * @param color
-     * @param plotOrientation
+     * Constructor for LineData
+     *
+     * @param name            line name
+     * @param title           line title
+     * @param value           line value
+     * @param color           line color
+     * @param plotOrientation line orientation
      */
     public LineData(Double value,
                     String name,
