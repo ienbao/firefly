@@ -91,7 +91,8 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
         defaultRatioMenuItem.setToggleGroup(toggleGroup);
         oneToOneRatioMenuItem.setToggleGroup(toggleGroup);
         ratioMenu.getItems().addAll(defaultRatioMenuItem, oneToOneRatioMenuItem);
-        extensionMenu.getItems().addAll(saveMenuItem, printMenuItem, copyMenuItem, ratioMenu);
+//        extensionMenu.getItems().addAll(saveMenuItem, printMenuItem, copyMenuItem, ratioMenu);
+        extensionMenu.getItems().addAll(saveMenuItem);
         menuBar.getMenus().addAll(extensionMenu);
 //        contextMenu.getItems().addAll(saveMenuItem, printMenuItem, copyMenuItem, ratioMenu);
         Pane topPane = new Pane();
