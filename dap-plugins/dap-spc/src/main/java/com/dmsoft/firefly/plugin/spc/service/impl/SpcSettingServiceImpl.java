@@ -150,9 +150,11 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
                 StatisticalAlarmDto statisticalAlarmDto = new StatisticalAlarmDto();
                 statisticalAlarmDto.setValue(value);
                 String level = null;
-                List<CustomAlarmDto> customAlarmDtoList = statisticalAlarmSetting.get(spcStatsDto.getItemName());
-                if (customAlarmDtoList != null && SpcStatisticalResultKey.isCustomAlarmResultName(statisticalResultName)) {
-                    level = this.getCustomAlarmLevel(statisticalResultName, value, customAlarmDtoList);
+                if (statisticalAlarmSetting != null) {
+                    List<CustomAlarmDto> customAlarmDtoList = statisticalAlarmSetting.get(spcStatsDto.getItemName());
+                    if (customAlarmDtoList != null && SpcStatisticalResultKey.isCustomAlarmResultName(statisticalResultName)) {
+                        level = this.getCustomAlarmLevel(statisticalResultName, value, customAlarmDtoList);
+                    }
                 }
 
                 if (SpcStatisticalResultKey.isAbilityAlarmResultName(statisticalResultName)) {
