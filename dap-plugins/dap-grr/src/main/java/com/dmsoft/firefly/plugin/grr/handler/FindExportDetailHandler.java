@@ -1,42 +1,40 @@
 package com.dmsoft.firefly.plugin.grr.handler;
 
-import com.dmsoft.firefly.plugin.grr.controller.GrrMainController;
 import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
-import com.dmsoft.firefly.plugin.grr.dto.GrrDetailDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrExportDetailDto;
 import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnalysisConfigDto;
 import com.dmsoft.firefly.plugin.grr.service.GrrService;
-import com.dmsoft.firefly.plugin.grr.utils.GrrExceptionCode;
-import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
-import com.dmsoft.firefly.sdk.exception.ApplicationException;
-import com.dmsoft.firefly.sdk.job.core.JobHandlerContext;
-import com.dmsoft.firefly.sdk.job.core.JobInboundHandler;
+import com.dmsoft.firefly.sdk.job.core.AbstractBasicJobHandler;
+import com.dmsoft.firefly.sdk.job.core.JobContext;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by cherry on 2018/3/12.
+ * handler for detail export
+ *
+ * @author Can Guan, Cherry Peng
  */
-public class ExportDetailHandler implements JobInboundHandler {
+public class FindExportDetailHandler extends AbstractBasicJobHandler {
+    /**
+     * constructor
+     */
+    public FindExportDetailHandler() {
+        setName(ParamKeys.GRR_FIND_EXPORT_DETAIL_HANDLER);
+    }
 
     @Override
-    public void doJob(JobHandlerContext context, Object... in) throws Exception {
-        if (in == null || !(in[0] instanceof Map)) {
-            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
-        }
-        Map<String, Object> param = (Map) in[0];
+    public void doJob(JobContext context) {
 
-        SearchConditionDto searchConditionDto = (SearchConditionDto) param.get(ParamKeys.SEARCH_GRR_CONDITION_DTO);
-        GrrAnalysisConfigDto analysisConfigDto = (GrrAnalysisConfigDto) param.get(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG);
+        SearchConditionDto searchConditionDto = context.getParam(ParamKeys.SEARCH_GRR_CONDITION_DTO, SearchConditionDto.class);
+        GrrAnalysisConfigDto analysisConfigDto = context.getParam(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG, GrrAnalysisConfigDto.class);
         List<TestItemWithTypeDto> itemWithTypeDtos = searchConditionDto.getSelectedTestItemDtos();
-        GrrDataFrameDto grrDataFrameDto = (GrrDataFrameDto) param.get(ParamKeys.SEARCH_VIEW_DATA_FRAME);
+        GrrDataFrameDto grrDataFrameDto = context.getParam(ParamKeys.SEARCH_VIEW_DATA_FRAME, GrrDataFrameDto.class);
 
         List<String> includeRows = Lists.newLinkedList();
         Set<String> appraisers = Sets.newHashSet();
@@ -55,11 +53,6 @@ public class ExportDetailHandler implements JobInboundHandler {
                     analysisConfigDto);
             grrDetailDtos.add(grrDetailDto);
         }
-        context.returnValue(grrDetailDtos);
-    }
-
-    @Override
-    public void exceptionCaught(JobHandlerContext context, Throwable cause) throws Exception {
-
+        context.put(ParamKeys.GRR_DETAIL_DTO_LIST, grrDetailDtos);
     }
 }

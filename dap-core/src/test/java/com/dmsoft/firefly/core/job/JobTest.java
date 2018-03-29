@@ -5,9 +5,6 @@
 package com.dmsoft.firefly.core.job;
 
 import com.dmsoft.firefly.core.job.handler.*;
-import com.dmsoft.firefly.sdk.job.*;
-import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
-import com.dmsoft.firefly.sdk.job.core.JobManager;
 
 /**
  * Created by Garen.Pang on 2018/2/2.

@@ -1,8 +1,8 @@
 package com.dmsoft.firefly.plugin.spc.service.impl;
 
 import com.dmsoft.firefly.plugin.spc.dto.ExportParamDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcExportConfigDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
-import com.dmsoft.firefly.plugin.spc.dto.SpcUserActionAttributesDto;
 import com.dmsoft.firefly.plugin.spc.export.SpcExportBuilder;
 import com.dmsoft.firefly.plugin.spc.export.SpcExportWorker;
 import com.dmsoft.firefly.plugin.spc.utils.FileUtils;
@@ -23,7 +23,18 @@ import java.util.Map;
 public class SpcExportServiceImpl {
     private Logger logger = LoggerFactory.getLogger(SpcExportServiceImpl.class);
 
-    public String spcExport(SpcUserActionAttributesDto exportConfig, List<SpcStatisticalResultAlarmDto> spcStatsDtos, Map<String, Map<String, String>> chartImage, Map<String, String> runChartRule) {
+    /**
+     * method to export spc result
+     *
+     * @param exportConfig export config dto
+     * @param spcStatsDtos spc stats dto
+     * @param chartImage   chart path
+     * @param runChartRule run chart rules
+     * @return export path
+     */
+    public String spcExport(SpcExportConfigDto exportConfig, List<SpcStatisticalResultAlarmDto> spcStatsDtos,
+                            Map<String, Map<String, String>> chartImage, Map<String, String> runChartRule) {
+        //TODO : add context and progress
         String[] basePath = new String[1];
         String savePath = FileUtils.getAbsolutePath("../export/");
         String exportPath = exportConfig.getExportPath();
@@ -73,14 +84,14 @@ public class SpcExportServiceImpl {
     }
 
     private boolean spcExportBuildDetail(ExportParamDto exportParamDto, Map<String, Map<String, String>> chartImage, List<SpcStatisticalResultAlarmDto> spcStatisticalResultDtos,
-                                         SpcUserActionAttributesDto spcUserActionAttributesDto, int exportTimes, Map<String, String> runChartRule) {
+                                         SpcExportConfigDto spcExportConfigDto, int exportTimes, Map<String, String> runChartRule) {
         SpcExportBuilder spcExportBuilder = new SpcExportBuilder();
         SpcExportWorker spcExportWorker = new SpcExportWorker();
         spcExportWorker.setCurWrittenItemNum(0);
         spcExportWorker.setExcelItemCapacity(exportParamDto.getExcelCapacity());
         String excelPath = exportParamDto.getDirSavePath() + "/" + exportParamDto.getDirName() + "_" + (exportTimes) + ".xlsx";
         spcExportWorker.initWorkbook();
-        spcExportWorker.buildSPCMultiItem(chartImage, spcStatisticalResultDtos, spcUserActionAttributesDto, runChartRule);
+        spcExportWorker.buildSPCMultiItem(chartImage, spcStatisticalResultDtos, spcExportConfigDto, runChartRule);
         spcExportBuilder.drawSpcExcel(excelPath, spcExportWorker);
         logger.info("Export complete.");
         spcExportBuilder.clear();

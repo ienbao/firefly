@@ -8,10 +8,14 @@ import com.dmsoft.firefly.plugin.grr.service.GrrAnalysisService;
 import com.dmsoft.firefly.plugin.grr.service.GrrService;
 import com.dmsoft.firefly.plugin.grr.utils.GrrExceptionCode;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
+import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
+import com.dmsoft.firefly.sdk.job.core.JobContext;
+import com.dmsoft.firefly.sdk.job.core.JobEvent;
+import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.plugin.apis.annotation.OpenService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
@@ -32,6 +36,8 @@ public class GrrServiceImpl implements GrrService {
         }
         List<GrrSummaryDto> result = Lists.newArrayList();
         List<GrrAnalysisDataDto> grrAnalysisDataDtoList = Lists.newArrayList();
+        int n = 0;
+        double len = testItemDtoList.size();
         for (TestItemWithTypeDto itemDto : testItemDtoList) {
             GrrAnalysisDataDto grrAnalysisDataDto = new GrrAnalysisDataDto();
             List<String> datas = dataFrame.getDataValue(itemDto.getTestItemName(), rowKeysToByAnalyzed);
@@ -48,6 +54,8 @@ public class GrrServiceImpl implements GrrService {
             }
             grrAnalysisDataDto.setDataList(doubleList);
             grrAnalysisDataDtoList.add(grrAnalysisDataDto);
+            n++;
+            pushProgress((int) (n / len * 40));
         }
         for (int i = 0; i < grrAnalysisDataDtoList.size(); i++) {
             GrrSummaryResultDto resultDto = getAnalysisService().analyzeSummaryResult(grrAnalysisDataDtoList.get(i), configDto);
@@ -55,6 +63,7 @@ public class GrrServiceImpl implements GrrService {
             summaryDto.setSummaryResultDto(resultDto);
             summaryDto.setItemName(testItemDtoList.get(i).getTestItemName());
             result.add(summaryDto);
+            pushProgress((int) (40 + ((i + 1) / (double) (grrAnalysisDataDtoList.size())) * 60));
         }
         return result;
     }
@@ -80,9 +89,11 @@ public class GrrServiceImpl implements GrrService {
             grrAnalysisDataDto.setUsl(dataColumn.getTestItemWithTypeDto().getUsl());
         }
         grrAnalysisDataDto.setDataList(doubleList);
+        pushProgress(40);
         GrrDetailResultDto resultDto = getAnalysisService().analyzeDetailResult(grrAnalysisDataDto, configDto);
         result.setItemName(testItemDto.getTestItemName());
         result.setGrrDetailResultDto(resultDto);
+        pushProgress(100);
         return result;
     }
 
@@ -107,9 +118,11 @@ public class GrrServiceImpl implements GrrService {
             grrAnalysisDataDto.setUsl(dataColumn.getTestItemWithTypeDto().getUsl());
         }
         grrAnalysisDataDto.setDataList(doubleList);
+        pushProgress(40);
         GrrExportDetailResultDto resultDto = getAnalysisService().analyzeExportDetailResult(grrAnalysisDataDto, configDto);
         result.setItemName(testItemDto.getTestItemName());
         result.setExportDetailDto(resultDto);
+        pushProgress(100);
         return result;
     }
 
@@ -123,6 +136,14 @@ public class GrrServiceImpl implements GrrService {
             }
         }
         return doubleList;
+    }
+
+    private void pushProgress(int progress) {
+        if (Thread.currentThread() instanceof ProcessMonitorAuto) {
+            ((ProcessMonitorAuto) Thread.currentThread()).push(progress);
+        }
+        JobContext context = RuntimeContext.getBean(JobManager.class).findJobContext(Thread.currentThread());
+        context.pushEvent(new JobEvent("GrrService", progress + 0.0, null));
     }
 
     public GrrAnalysisService getAnalysisService() {

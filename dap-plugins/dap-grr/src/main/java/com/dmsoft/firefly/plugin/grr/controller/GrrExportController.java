@@ -14,13 +14,11 @@ import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.grr.dto.*;
-import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrSummaryResultDto;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.grr.model.ListViewModel;
 import com.dmsoft.firefly.plugin.grr.service.GrrExportService;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
-import com.dmsoft.firefly.plugin.grr.service.impl.GrrExportServiceImpl;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -34,13 +32,13 @@ import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.event.PlatformEvent;
-import com.dmsoft.firefly.sdk.exception.ApplicationException;
-import com.dmsoft.firefly.sdk.job.Job;
+import com.dmsoft.firefly.sdk.job.core.JobContext;
+import com.dmsoft.firefly.sdk.job.core.JobFactory;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.job.core.JobPipeline;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -66,7 +64,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by Garen.Pang on 2018/3/13.
@@ -148,11 +145,10 @@ public class GrrExportController {
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
     private GrrConfigServiceImpl grrConfigService = new GrrConfigServiceImpl();
-    private GrrExportService grrExportService = new GrrExportServiceImpl();
+    private GrrExportService grrExportService = RuntimeContext.getBean(GrrExportService.class);
     private GrrLeftConfigServiceImpl leftConfigService = new GrrLeftConfigServiceImpl();
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
 
-    private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
     // cached items for user preference
@@ -877,73 +873,22 @@ public class GrrExportController {
             if (appraiserCombox.getValue() != null) {
                 testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(appraiserCombox.getValue().toString()));
             }
-
-            Map<String, Object> paramMap = Maps.newHashMap();
-            paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
-            paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
             SearchConditionDto searchConditionDto = this.initSearchConditionDto();
             searchConditionDto.setSelectedTestItemDtos(itemDto);
-            paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, searchConditionDto);
+
+            JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+            context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
+            context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+            context.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, searchConditionDto);
+            context.put(ParamKeys.GRR_EXPORT_CONFIG_DTO, grrExportConfigDto);
+            //TODO : progcess
+
             if (!detail) {
-                Job job = new Job(ParamKeys.GRR_EXPORT_JOB_PIPELINE);
-                Object returnValue = manager.doJobSyn(job, paramMap, null);
-                if (returnValue instanceof ApplicationException) {
-
-                    return;
-                }
-                if (returnValue != null && !(returnValue instanceof GrrParamDto)) {
-                    List<GrrSummaryDto> grrSummaryDtoList = (List<GrrSummaryDto>) returnValue;
-                    grrExportService.exportGrrSummary(grrExportConfigDto, grrSummaryDtoList);
-                }
+                JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_EXPORT_JOB_PIPELINE);
+                RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
             } else {
-                Job job = new Job(ParamKeys.GRR_EXPORT_DETAIL_JOB_PIPELINE);
-                Object returnValue = manager.doJobSyn(job, paramMap, null);
-                if (returnValue instanceof ApplicationException) {
-
-                    return;
-                }
-                if (returnValue != null && !(returnValue instanceof GrrParamDto)) {
-                    List<GrrExportDetailDto> grrSummaryDtoList = (List<GrrExportDetailDto>) returnValue;
-//                    List<GrrExportDetailDto> grrSummaryDtoList = (List<GrrExportDetailDto>) manager.doJobSyn(job, paramMap, null);
-                    List<GrrSummaryDto> summaryDtos = Lists.newArrayList();
-                    List<GrrExportResultDto> grrExportResultDtos = Lists.newArrayList();
-                    for (GrrExportDetailDto dto : grrSummaryDtoList) {
-                        GrrSummaryDto summaryDto = new GrrSummaryDto();
-                        summaryDto.setItemName(dto.getItemName());
-                        GrrSummaryResultDto summaryResultDto = new GrrSummaryResultDto();
-                        summaryResultDto.setUsl(dto.getExportDetailDto().getUsl());
-                        summaryResultDto.setGrrOnContribution(dto.getExportDetailDto().getGrrOnContribution());
-                        summaryResultDto.setGrrOnTolerance(dto.getExportDetailDto().getGrrOnTolerance());
-                        summaryResultDto.setLsl(dto.getExportDetailDto().getLsl());
-                        summaryResultDto.setRepeatabilityOnContribution(dto.getExportDetailDto().getRepeatabilityOnContribution());
-                        summaryResultDto.setRepeatabilityOnTolerance(dto.getExportDetailDto().getRepeatabilityOnTolerance());
-                        summaryResultDto.setReproducibilityOnContribution(dto.getExportDetailDto().getReproducibilityOnContribution());
-                        summaryResultDto.setReproducibilityOnTolerance(dto.getExportDetailDto().getReproducibilityOnTolerance());
-                        summaryResultDto.setTolerance(dto.getExportDetailDto().getTolerance());
-
-                        summaryDto.setSummaryResultDto(summaryResultDto);
-                        summaryDtos.add(summaryDto);
-
-                        GrrExportResultDto exportResultDto = new GrrExportResultDto();
-                        exportResultDto.setItemName(dto.getItemName());
-                        exportResultDto.setGrrAnovaAndSourceResultDto(dto.getExportDetailDto().getAnovaAndSourceResultDto());
-                        CountDownLatch count = new CountDownLatch(1);
-                        Platform.runLater(() -> {
-                            try {
-                                exportResultDto.setGrrImageDto(BuildChart.buildImage(dto.getExportDetailDto(), searchConditionDto.getParts(), searchConditionDto.getAppraisers()));
-                            } finally {
-                                count.countDown();
-                            }
-                        });
-                        try {
-                            count.await();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        grrExportResultDtos.add(exportResultDto);
-                    }
-                    grrExportService.exportGrrSummaryDetail(grrExportConfigDto, summaryDtos, grrExportResultDtos);
-                }
+                JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_EXPORT_DETAIL_JOB_PIPELINE);
+                RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
             }
         }
     }

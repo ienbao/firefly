@@ -1,202 +1,128 @@
-/*
- * Copyright (c) 2017. For Intelligent Group.
- */
-
 package com.dmsoft.firefly.sdk.job.core;
 
+import java.util.List;
+
 /**
- * Created by Garen.Pang on 2018/2/2.
+ * interface class for pipeline
+ *
+ * @author Can Guan
  */
 public interface JobPipeline {
-
     /**
-     * addFirst
-     *
-     * @param name    name
-     * @param handler handler
-     * @return JobPipeline
-     */
-    JobPipeline addFirst(String name, JobHandler handler);
-
-    /**
-     * addFirst
-     *
-     * @param name    name
-     * @param handler handler
-     * @return JobPipeline
-     */
-    JobPipeline addLast(String name, JobHandler handler);
-
-    /**
-     * addFirst
-     *
-     * @param baseName baseName
-     * @param name     name
-     * @param handler  handler
-     * @return JobPipeline
-     */
-    JobPipeline addBefore(String baseName, String name, JobHandler handler);
-
-    /**
-     * addFirst
-     *
-     * @param baseName baseName
-     * @param name     name
-     * @param handler  handler
-     * @return JobPipeline
-     */
-    JobPipeline addAfter(String baseName, String name, JobHandler handler);
-
-    /**
-     * addFirst
-     *
-     * @param handlers handlers
-     * @return JobPipeline
-     */
-    JobPipeline addFirst(JobHandler... handlers);
-
-    /**
-     * addFirst
-     *
-     * @param handlers handlers
-     * @return JobPipeline
-     */
-    JobPipeline addLast(JobHandler... handlers);
-
-    /**
-     * addFirst
+     * method to add handler at first
      *
      * @param handler handler
-     * @return JobPipeline
+     * @return added pipeline
      */
-    JobPipeline remove(JobHandler handler);
+    JobPipeline addFirst(JobHandler handler);
 
     /**
-     * remove
+     * method to add handler at last
+     *
+     * @param handler handler
+     * @return added pipeline
+     */
+    JobPipeline addLast(JobHandler handler);
+
+    /**
+     * method to add handler before other handler
+     *
+     * @param handler    new handler
+     * @param beforeName which handler to add before
+     * @return added pipeline
+     */
+    JobPipeline addBefore(JobHandler handler, String beforeName);
+
+    /**
+     * method to add handler after other handler
+     *
+     * @param handler   new handler
+     * @param afterName which handler to add after
+     * @return added pipeline
+     */
+    JobPipeline addAfter(JobHandler handler, String afterName);
+
+    /**
+     * method to set complete handler
+     *
+     * @param handler complete handler
+     * @return added pipeline
+     */
+    JobPipeline setCompleteHandler(JobHandler handler);
+
+    /**
+     * method to get completed handler
+     *
+     * @return job handler
+     */
+    JobHandler getCompletedHandler();
+
+    /**
+     * method to get error handler
+     *
+     * @return job handler
+     */
+    JobHandler getErrorHandler();
+
+    /**
+     * method to set error handler
+     *
+     * @param handler error handler
+     * @return added pipeline
+     */
+    JobPipeline setErrorHandler(JobHandler handler);
+
+    /**
+     * method to get interrupt handler
+     *
+     * @return job handler
+     */
+    JobHandler getInterruptHandler();
+
+    /**
+     * method to set interrupt handler
+     *
+     * @param handler interrupted handler
+     * @return added pipeline
+     */
+    JobPipeline setInterruptHandler(JobHandler handler);
+
+    /**
+     * method to remove handler from pipe line
      *
      * @param name name
-     * @return JobHandler
+     * @return job handler
      */
-    JobHandler remove(String name);
+    boolean remove(String name);
 
     /**
-     * remove
+     * method to remove handler from pipe line
      *
-     * @param handlerType handlerType
-     * @param <T>         JobHandler
-     * @return JobHandler
+     * @param handler handler
+     * @return job handler
      */
-    <T extends JobHandler> T remove(Class<T> handlerType);
+    boolean remove(JobHandler handler);
 
     /**
-     * removeFirst
+     * method to replace handler by oldName
      *
-     * @return
+     * @param oldName old oldName
+     * @param handler new handler
+     * @return pipe line
      */
-    JobHandler removeFirst();
+    JobPipeline replace(String oldName, JobHandler handler);
 
     /**
-     * removeLast
+     * method get all job name
      *
-     * @return
+     * @return list of job name
      */
-    JobHandler removeLast();
+    List<String> getAllJobNames();
 
     /**
-     * replace
+     * method to get all handlers
      *
-     * @param oldHandler oldHandler
-     * @param newName    newName
-     * @param newHandler newHandler
-     * @return JobPipeline
+     * @return list of handlers
      */
-    JobPipeline replace(JobHandler oldHandler, String newName, JobHandler newHandler);
-
-    /**
-     * replace
-     *
-     * @param oldName    oldName
-     * @param newName    newName
-     * @param newHandler newHandler
-     * @return JobPipeline
-     */
-    JobHandler replace(String oldName, String newName, JobHandler newHandler);
-
-    /**
-     * replace
-     *
-     * @param oldHandlerType oldHandlerType
-     * @param newName        newName
-     * @param newHandler     newHandler
-     * @param <T>            JobHandler
-     * @return JobHandler
-     */
-    <T extends JobHandler> T replace(Class<T> oldHandlerType, String newName,
-                                     JobHandler newHandler);
-
-    /**
-     * first
-     *
-     * @return
-     */
-    JobHandler first();
-
-    /**
-     * last
-     *
-     * @return
-     */
-    JobHandler last();
-
-    /**
-     * get
-     *
-     * @param name name
-     * @return JobHandler
-     */
-    JobHandler get(String name);
-
-    /**
-     * get
-     *
-     * @param handlerType handlerType
-     * @param <T>         JobHandler
-     * @return JobHandler
-     */
-    <T extends JobHandler> T get(Class<T> handlerType);
-
-    /**
-     * fireDoJob
-     *
-     * @param param param
-     * @return JobPipeline
-     */
-    JobPipeline fireDoJob(Object... param);
-
-    /**
-     * returnValue
-     *
-     * @param returnValue returnValue
-     */
-    void returnValue(Object returnValue);
-
-    /**
-     * getResult
-     *
-     * @return
-     */
-    Object getResult();
-
-    /**
-     * setResult
-     *
-     * @param result result
-     */
-    void setResult(Object result);
-
-    int getCurrentProcess();
-
-    void addProcess(int process);
-
-    int getAllWeight();
+    List<JobHandler> getAllJobHandlers();
 }

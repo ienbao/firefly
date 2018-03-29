@@ -14,7 +14,6 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
-import com.sun.javafx.charts.Legend;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +21,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.*;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
@@ -38,7 +38,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by GuangLi on 2018/3/19.
@@ -48,6 +48,14 @@ public class BuildChart {
     private static Scene scene;
     private static int digNum = 6;
 
+    /**
+     * method to build image
+     *
+     * @param grrDetailResultDto grr detail result dto
+     * @param parts              parts
+     * @param appraisers         appraisers
+     * @return grr image dto
+     */
     public static GrrImageDto buildImage(GrrDetailResultDto grrDetailResultDto, List<String> parts, List<String> appraisers) {
         digNum = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getDecimalDigit();
         vBox = new Group();
@@ -292,7 +300,13 @@ public class BuildChart {
         scatterSeries.getNode().getStyleClass().add("chart-series-hidden-line");
     }
 
-
+    /**
+     * method to export image
+     *
+     * @param name name
+     * @param node node
+     * @return path
+     */
     public static String exportImages(String name, Node node) {
         vBox.getChildren().clear();
         vBox.getChildren().add(node);
@@ -303,17 +317,26 @@ public class BuildChart {
 //        ImageView imageView = new ImageView(image);
 //        imageView.setFitWidth(600);
 //        imageView.setFitHeight(220);
-        WritableImage exportImage = scene.snapshot(null);
+        WriteImage image = new WriteImage();
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        Platform.runLater(() -> {
+            image.image = node.snapshot(new SnapshotParameters(), null);
+            countDownLatch.countDown();
+        });
+
         String savePicPath = FileUtils.getAbsolutePath("../export/temp");
         File file = new File(savePicPath);
         if (!file.exists()) {
             file.mkdirs();
         }
         String path = savePicPath + "/" + name + new Date().getTime() + ".png";
-
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException ignored) {
+        }
         try {
             file = new File(path);
-            saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(exportImage, null), file, 0.9f);
+            saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(image.image, null), file, 0.9f);
 //            AlertDialog.showAlertDialog("保存成功!");
         } catch (IOException ex) {
 //            AlertDialog.showAlertDialog("保存失败:" + ex.getMessage());
@@ -323,6 +346,14 @@ public class BuildChart {
         return path;
     }
 
+    /**
+     * method to save image
+     *
+     * @param image    image
+     * @param filePath file path
+     * @param quality  quality
+     * @throws Exception exception
+     */
     public static void saveImageUsingJPGWithQuality(BufferedImage image,
                                                     File filePath, float quality) throws Exception {
 
@@ -344,5 +375,9 @@ public class BuildChart {
         IIOImage jpgimage = new IIOImage(newBufferedImage, null, null);
         imageWriter.write(null, jpgimage, iwp);
         imageWriter.dispose();
+    }
+
+    private static class WriteImage {
+        WritableImage image;
     }
 }

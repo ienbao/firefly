@@ -9,13 +9,17 @@ import com.dmsoft.firefly.plugin.spc.charts.data.NDBarChartData;
 import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
-import com.dmsoft.firefly.plugin.spc.dto.chart.*;
+import com.dmsoft.firefly.plugin.spc.dto.chart.SpcBoxChartData;
+import com.dmsoft.firefly.plugin.spc.dto.chart.SpcControlChartData;
+import com.dmsoft.firefly.plugin.spc.dto.chart.SpcNdChartData;
+import com.dmsoft.firefly.plugin.spc.dto.chart.SpcRunChartData;
 import com.dmsoft.firefly.plugin.spc.utils.FileUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -32,11 +36,11 @@ import javax.imageio.stream.FileImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by GuangLi on 2018/3/14.
@@ -46,6 +50,14 @@ public class BuildChart {
     private static Group vBox;
     private static Scene scene;
 
+    /**
+     * method to save chart data and export charts
+     *
+     * @param spcChartDtoList list of spc chart dto
+     * @param search          search
+     * @param colorCache      color cache
+     * @return map of chart paths
+     */
     public static Map<String, Map<String, String>> initSpcChartData(List<SpcChartDto> spcChartDtoList, int search, Map<String, Color> colorCache) {
         vBox = new Group();
         scene = new Scene(vBox);
@@ -366,22 +378,26 @@ public class BuildChart {
 //        ImageView imageView = new ImageView(image);
 //        imageView.setFitWidth(600);
 //        imageView.setFitHeight(220);
-        WritableImage exportImage = node.snapshot(new SnapshotParameters(), null);
+        WriteImage image = new WriteImage();
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        Platform.runLater(() -> {
+            image.image = node.snapshot(new SnapshotParameters(), null);
+            countDownLatch.countDown();
+        });
         String savePicPath = FileUtils.getAbsolutePath("../export/temp");
         File file = new File(savePicPath);
         if (!file.exists()) {
             file.mkdirs();
         }
         String path = savePicPath + "/" + name + new Date().getTime() + ".png";
-
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException ignored) {
+        }
         try {
             file = new File(path);
-            saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(exportImage, null), file, 0.9f);
-//            AlertDialog.showAlertDialog("保存成功!");
-        } catch (IOException ex) {
-//            AlertDialog.showAlertDialog("保存失败:" + ex.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
+            saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(image.image, null), file, 0.9f);
+        } catch (Exception ignored) {
         }
         return path;
     }
@@ -407,5 +423,9 @@ public class BuildChart {
         IIOImage jpgimage = new IIOImage(newBufferedImage, null, null);
         imageWriter.write(null, jpgimage, iwp);
         imageWriter.dispose();
+    }
+
+    private static class WriteImage {
+        WritableImage image;
     }
 }

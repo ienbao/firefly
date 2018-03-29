@@ -9,19 +9,14 @@ import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
-import com.dmsoft.firefly.plugin.grr.dto.GrrLeftConfigDto;
-import com.dmsoft.firefly.plugin.grr.dto.GrrParamDto;
-import com.dmsoft.firefly.plugin.grr.dto.GrrPreferenceDto;
-import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
+import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.grr.model.ListViewModel;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrLeftConfigServiceImpl;
-import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
-import com.dmsoft.firefly.plugin.grr.utils.GrrValidateUtil;
-import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
-import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
+import com.dmsoft.firefly.plugin.grr.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
@@ -30,15 +25,11 @@ import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.event.PlatformEvent;
-import com.dmsoft.firefly.sdk.exception.ApplicationException;
-import com.dmsoft.firefly.sdk.job.Job;
-import com.dmsoft.firefly.sdk.job.core.JobDoComplete;
-import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.job.core.*;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -129,7 +120,6 @@ public class GrrItemController implements Initializable {
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
     private GrrLeftConfigServiceImpl leftConfigService = new GrrLeftConfigServiceImpl();
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
-    private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private SearchConditionDto searchConditionDto = new SearchConditionDto();
     private List<TestItemWithTypeDto> initSelectTestItemDtos = Lists.newLinkedList();
     private JsonMapper mapper = JsonMapper.defaultMapper();
@@ -682,45 +672,97 @@ public class GrrItemController implements Initializable {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void getAnalysisBtnEvent() {
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
         if (checkSubmitParam(selectedItemDto.size())) {
-            Job job = new Job(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE);
-            job.addProcessMonitorListener(event -> {
-            });
-            Map<String, Object> paramMap = Maps.newHashMap();
+            JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
             List<String> projectNameList = envService.findActivatedProjectName();
             List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
-            paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
-            paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+            context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
+            context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
             SearchConditionDto conditionDto = this.initSearchConditionDto();
             conditionDto.setSelectedTestItemDtos(selectedItemDto);
-            paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, conditionDto);
+            context.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, conditionDto);
             updateGrrPreference(conditionDto);
-            manager.doJobASyn(job, new JobDoComplete() {
-                @Override
-                public void doComplete(Object returnValue) {
-                    try {
-                        Platform.runLater(() -> {
-                            if (returnValue == null) {
-                                //todo message tip
-                                return;
-                            }
-                            GrrParamDto grrParamDto = grrMainController.getGrrParamDto();
-                            refreshPartOrAppraiserListView(grrParamDto);
-                            if (grrParamDto != null && (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty())) {
-                                grrMainController.updateGrrViewData();
-                                grrMainController.updateGrrSummaryAndDetail();
-                            } else {
-                                System.out.println(returnValue);
-                            }
-                        });
-                    } catch (ApplicationException excption) {
-                        excption.printStackTrace();
+            JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE);
+            if (jobPipeline.getCompletedHandler() == null) {
+                jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+                    @Override
+                    public void doJob(JobContext context) {
+                        GrrParamDto grrParamDto = context.getParam(ParamKeys.GRR_PARAM_DTO, GrrParamDto.class);
+                        refreshPartOrAppraiserListView(grrParamDto);
+                        grrMainController.setGrrParamDto(grrParamDto);
+                        grrMainController.setGrrConfigDto(context.getParam(ParamKeys.SEARCH_GRR_CONFIG_DTO, GrrConfigDto.class));
+                        grrMainController.setActiveTemplateSettingDto(context.getParam(ParamKeys.SEARCH_TEMPLATE_SETTING_DTO, TemplateSettingDto.class));
+                        GrrDataFrameDto grrDataFrameDto = context.getParam(ParamKeys.SEARCH_VIEW_DATA_FRAME, GrrDataFrameDto.class);
+                        grrMainController.setGrrDataFrame(grrDataFrameDto);
+                        GrrDataFrameDto backDataFrame = new GrrDataFrameDto();
+                        backDataFrame.setDataFrame(grrDataFrameDto.getDataFrame());
+                        List<GrrViewDataDto> includeViewDataDtos = Lists.newArrayList(ListUtils.deepCopy(grrDataFrameDto.getIncludeDatas()));
+                        List<GrrViewDataDto> backViewDataDtos = Lists.newArrayList(ListUtils.deepCopy(grrDataFrameDto.getBackupDatas()));
+                        backDataFrame.setIncludeDatas(includeViewDataDtos);
+                        backDataFrame.setBackupDatas(backViewDataDtos);
+                        grrMainController.setBackGrrDataFrame(backDataFrame);
+                        grrMainController.setSummaryDtos((List<GrrSummaryDto>) context.get(ParamKeys.GRR_SUMMARY_DTO_LIST));
+                        grrMainController.setGrrDetailDto(context.getParam(ParamKeys.GRR_DETAIL_DTO, GrrDetailDto.class));
+                        if (grrParamDto != null && (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty())) {
+                            grrMainController.updateGrrViewData();
+                            grrMainController.updateGrrSummaryAndDetail();
+                        }
                     }
+                });
+                jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+                    @Override
+                    public void doJob(JobContext context) {
+                        //TODO
+                    }
+                });
+                jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+                    @Override
+                    public void doJob(JobContext context) {
+                        //TODO
+                    }
+                });
+            }
+            RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
 
-                }
-            }, paramMap, grrMainController);
+//            Job job = new Job(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE);
+//            job.addProcessMonitorListener(event -> {
+//            });
+//            Map<String, Object> paramMap = Maps.newHashMap();
+//            List<String> projectNameList = envService.findActivatedProjectName();
+//            List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
+//            paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
+//            paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+//            SearchConditionDto conditionDto = this.initSearchConditionDto();
+//            conditionDto.setSelectedTestItemDtos(selectedItemDto);
+//            paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, conditionDto);
+//            updateGrrPreference(conditionDto);
+//            manager.doJobASyn(job, new JobDoComplete() {
+//                @Override
+//                public void doComplete(Object returnValue) {
+//                    try {
+//                        Platform.runLater(() -> {
+//                            if (returnValue == null) {
+//                                //todo message tip
+//                                return;
+//                            }
+//                            GrrParamDto grrParamDto = grrMainController.getGrrParamDto();
+//                            refreshPartOrAppraiserListView(grrParamDto);
+//                            if (grrParamDto != null && (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty())) {
+//                                grrMainController.updateGrrViewData();
+//                                grrMainController.updateGrrSummaryAndDetail();
+//                            } else {
+//                                System.out.println(returnValue);
+//                            }
+//                        });
+//                    } catch (ApplicationException excption) {
+//                        excption.printStackTrace();
+//                    }
+//
+//                }
+//            }, paramMap, grrMainController);
         }
     }
 

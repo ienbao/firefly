@@ -1,40 +1,36 @@
-/*
- * Copyright (c) 2017. For Intelligent Group.
- */
-
 package com.dmsoft.firefly.sdk.job.core;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
- * Created by Garen.Pang on 2018/2/2.
+ * interface class for job handler
+ *
+ * @author Can Guan
  */
-public interface JobHandler {
-
-    Map<Object, Integer> WEIGHT = new ConcurrentHashMap<>();
+public interface JobHandler extends JobRunnable {
+    /**
+     * method to get weight
+     *
+     * @return weight
+     */
+    Double getWeight();
 
     /**
-     * exceptionCaught
+     * method to set weight
      *
-     * @param context context
-     * @param cause   cause
-     * @throws Exception Exception
+     * @param weight weight
      */
-    void exceptionCaught(JobHandlerContext context, Throwable cause) throws Exception;
+    JobHandler setWeight(Double weight);
 
-    default JobHandler setWeight(int weight) {
-        WEIGHT.put(this, weight);
-        return this;
-    }
+    /**
+     * method to get name
+     *
+     * @return handler name
+     */
+    String getName();
 
-    default int getWeight() {
-        return WEIGHT.containsKey(this) ? WEIGHT.get(this) : 0;
-    }
-
-    //have a bug :
-    default void remove() {
-        WEIGHT.remove(this);
-    }
-
+    /**
+     * method to set name
+     *
+     * @param name name
+     */
+    JobHandler setName(String name);
 }

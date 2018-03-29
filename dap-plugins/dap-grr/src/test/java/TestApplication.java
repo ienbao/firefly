@@ -5,18 +5,12 @@
 import com.dmsoft.firefly.core.sdkimpl.dai.EnvServiceImpl;
 import com.dmsoft.firefly.core.sdkimpl.dai.UserPreferenceServiceImpl;
 import com.dmsoft.firefly.core.sdkimpl.dataframe.BasicDataFrameFactoryImpl;
-import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
-import com.dmsoft.firefly.plugin.grr.pipeline.GrrDetailResultJobPipeline;
-import com.dmsoft.firefly.plugin.grr.pipeline.GrrSummaryJobPipeline;
-import com.dmsoft.firefly.plugin.grr.pipeline.GrrViewDataJobPipeline;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
-import com.dmsoft.firefly.sdk.job.DefaultJobManager;
-import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import com.google.common.collect.Maps;
 import javafx.application.Application;
@@ -26,7 +20,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.util.LinkedHashMap;
-import java.util.ResourceBundle;
 
 /**
  * Created by Ethan.Yang on 2018/1/29.
@@ -49,7 +42,6 @@ public class TestApplication extends Application {
                 return LanguageType.EN;
             }
         };
-        DefaultJobManager jobManager = new DefaultJobManager();
         LinkedHashMap<String, TestItemWithTypeDto> typeDtoList = Maps.newLinkedHashMap();
         for (int i = 0; i < 20; i++) {
             TestItemWithTypeDto testItemWithTypeDto = new TestItemWithTypeDto();
@@ -61,7 +53,7 @@ public class TestApplication extends Application {
         RuntimeContext.registerBean(EnvService.class, envService);
         RuntimeContext.registerBean(UserPreferenceService.class, userPreferenceService);
         RuntimeContext.registerBean(DataFrameFactory.class, dataFrameFactory);
-        RuntimeContext.registerBean(DefaultJobManager.class, jobManager);
+
 
         FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr.fxml");
         Parent root = fxmlLoader.load();
@@ -78,8 +70,5 @@ public class TestApplication extends Application {
 
     private void initJob() {
         JobManager manager = RuntimeContext.getBean(JobManager.class);
-        manager.initializeJob(ParamKeys.GRR_ANALYSIS_JOB_PIPELINE, new GrrSummaryJobPipeline());
-        manager.initializeJob(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE, new GrrDetailResultJobPipeline());
-        manager.initializeJob(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE, new GrrViewDataJobPipeline());
     }
 }
