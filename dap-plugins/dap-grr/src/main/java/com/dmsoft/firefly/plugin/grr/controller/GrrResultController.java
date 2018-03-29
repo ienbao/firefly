@@ -8,6 +8,7 @@ import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowMessageController;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.grr.charts.ChartOperateButton;
 import com.dmsoft.firefly.plugin.grr.charts.ChartRightPane;
 import com.dmsoft.firefly.plugin.grr.charts.LinearChart;
@@ -206,6 +207,7 @@ public class GrrResultController implements Initializable {
      */
     public void analyzeGrrResult(List<GrrSummaryDto> grrSummaryDtos, GrrDetailDto grrDetailDto) {
 //        Set digNum
+        this.removeAllResultData();
         DigNumInstance.newInstance().setDigNum(grrMainController.getActiveTemplateSettingDto().getDecimalDigit());
         List<GrrViewDataDto> viewDataDtos = grrMainController.getGrrDataFrame().getIncludeDatas();
         parts.clear();
@@ -218,7 +220,6 @@ public class GrrResultController implements Initializable {
             return;
         }
         String selectedName = grrSummaryDtos.get(0).getItemName();
-        this.removeAllResultData();
         this.summaryModel.setRules(grrMainController.getGrrConfigDto().getAlarmSetting());
         this.setSummaryData(grrSummaryDtos, selectedName);
         this.setToleranceValue(summaryModel.getToleranceCellValue(selectedName));
@@ -304,46 +305,50 @@ public class GrrResultController implements Initializable {
 
     @SuppressWarnings("unchecked")
     private void submitGrrResult(String selectedItem) {
+        this.removeAllResultData();
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         context.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, grrMainController.getSearchConditionDto());
         context.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrMainController.getGrrDataFrame());
         if (DAPStringUtils.isNotBlank(selectedItem)) {
             context.put(ParamKeys.TEST_ITEM_NAME, selectedItem);
         }
+        context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
+        windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_REFRESH_JOB_PIPELINE);
         if (jobPipeline.getCompletedHandler() == null) {
             jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
                 @Override
                 public void doJob(JobContext context) {
-                    grrMainController.setGrrConfigDto(context.getParam(ParamKeys.SEARCH_GRR_CONFIG_DTO, GrrConfigDto.class));
-                    grrMainController.setActiveTemplateSettingDto(context.getParam(ParamKeys.SEARCH_TEMPLATE_SETTING_DTO, TemplateSettingDto.class));
                     List<GrrSummaryDto> grrSummaryDtoList = (List<GrrSummaryDto>) context.get(ParamKeys.GRR_SUMMARY_DTO_LIST);
                     GrrDetailDto grrDetailDto = context.getParam(ParamKeys.GRR_DETAIL_DTO, GrrDetailDto.class);
                     if (grrSummaryDtoList != null) {
                         summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
                         summaryModel.setData(grrSummaryDtoList, selectedItem);
+                        setToleranceValue(summaryModel.getToleranceCellValue(selectedItem));
                         summaryTb.refresh();
                     }
                     if (grrDetailDto != null) {
-                        removeSubResultData();
-                        setItemResultData(grrMainController.getGrrDataFrame(),
-                                grrMainController.getSearchConditionDto(),
-                                selectedItem);
+                        setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), selectedItem);
                         setAnalysisItemResultData(grrDetailDto);
-                        setToleranceValue(summaryModel.getToleranceCellValue(selectedItem));
+                    } else {
+                        RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                                GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                                GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
                     }
+                    windowProgressTipController.closeDialog();
                 }
             });
             jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
                 @Override
                 public void doJob(JobContext context) {
-
+                    windowProgressTipController.updateFailProgress(context.getError().getMessage());
                 }
             });
             jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
                 @Override
                 public void doJob(JobContext context) {
-
+                    windowProgressTipController.closeDialog();
                 }
             });
         }
@@ -355,32 +360,39 @@ public class GrrResultController implements Initializable {
         this.removeSubResultData();
         this.setToleranceValue(tolerance);
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
-        context.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, grrMainController.getSearchConditionDto());
+        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+        context.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, buildSearchConditionDto(testItemDto));
         context.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrMainController.getGrrDataFrame());
-        context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, Lists.newArrayList(testItemDto));
+        context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
+        windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE);
         if (jobPipeline.getCompletedHandler() == null) {
             jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
                 @Override
                 public void doJob(JobContext context) {
-                    //TODO
-                    setAnalysisItemResultData(context.getParam(ParamKeys.GRR_DETAIL_DTO, GrrDetailDto.class));
-                    grrMainController.setGrrDetailDto(context.getParam(ParamKeys.GRR_DETAIL_DTO, GrrDetailDto.class));
-                    grrMainController.setGrrConfigDto(context.getParam(ParamKeys.SEARCH_GRR_CONFIG_DTO, GrrConfigDto.class));
-                    grrMainController.setActiveTemplateSettingDto(context.getParam(ParamKeys.SEARCH_TEMPLATE_SETTING_DTO, TemplateSettingDto.class));
+                    GrrDetailDto grrDetailDto = context.getParam(ParamKeys.GRR_DETAIL_DTO, GrrDetailDto.class);
+                    if (grrDetailDto == null) {
+                        RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                                GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                                GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
+                    } else {
+                        setAnalysisItemResultData(grrDetailDto);
+                        setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), testItemDto.getTestItemName());
+                    }
+                    windowProgressTipController.closeDialog();
                 }
             });
             jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
                 @Override
                 public void doJob(JobContext context) {
                     context.interruptBeforeNextJobHandler();
-                    //TODO
+                    windowProgressTipController.closeDialog();
                 }
             });
             jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
                 @Override
                 public void doJob(JobContext context) {
-                    //TODO
+                    windowProgressTipController.updateFailProgress(context.getError().getMessage());
                 }
             });
         }
@@ -406,6 +418,7 @@ public class GrrResultController implements Initializable {
         summaryTb.sort();
         summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
         summaryModel.setData(summaryData, selectedItemName);
+        summaryTb.refresh();
     }
 
     private void setItemResultData(GrrDataFrameDto grrDataFrameDto, SearchConditionDto conditionDto, String itemName) {

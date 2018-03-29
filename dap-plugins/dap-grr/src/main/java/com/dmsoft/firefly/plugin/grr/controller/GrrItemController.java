@@ -9,6 +9,8 @@ import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
@@ -674,6 +676,7 @@ public class GrrItemController implements Initializable {
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
         if (checkSubmitParam(selectedItemDto.size())) {
             JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+            WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
             List<String> projectNameList = envService.findActivatedProjectName();
             List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
             context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
@@ -681,6 +684,8 @@ public class GrrItemController implements Initializable {
             SearchConditionDto conditionDto = this.initSearchConditionDto();
             conditionDto.setSelectedTestItemDtos(selectedItemDto);
             context.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, conditionDto);
+            context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
+            windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
             updateGrrPreference(conditionDto);
             JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE);
             if (jobPipeline.getCompletedHandler() == null) {
@@ -707,18 +712,19 @@ public class GrrItemController implements Initializable {
                             grrMainController.updateGrrViewData();
                             grrMainController.updateGrrSummaryAndDetail();
                         }
+                        windowProgressTipController.closeDialog();
                     }
                 });
                 jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
                     @Override
                     public void doJob(JobContext context) {
-                        //TODO
+                        windowProgressTipController.closeDialog();
                     }
                 });
                 jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
                     @Override
                     public void doJob(JobContext context) {
-                        //TODO
+                        windowProgressTipController.updateFailProgress(context.getError().getMessage());
                     }
                 });
             }

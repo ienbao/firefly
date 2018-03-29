@@ -37,6 +37,7 @@ public class GrrServiceImpl implements GrrService {
     @Override
     public List<GrrSummaryDto> getSummaryResult(SearchDataFrame dataFrame, List<TestItemWithTypeDto> testItemDtoList, List<String> rowKeysToByAnalyzed, GrrAnalysisConfigDto configDto) {
         if (dataFrame == null || testItemDtoList == null || configDto == null) {
+            pushProgress(100);
             throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
         }
         List<GrrSummaryDto> result = Lists.newArrayList();
@@ -101,6 +102,7 @@ public class GrrServiceImpl implements GrrService {
     @Override
     public GrrDetailDto getDetailResult(DataColumn dataColumn, TestItemWithTypeDto testItemDto, List<String> rowKeysToByAnalyzed, GrrAnalysisConfigDto configDto) {
         if (dataColumn == null || testItemDto == null || configDto == null) {
+            pushProgress(100);
             throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
         }
         GrrDetailDto result = new GrrDetailDto();
@@ -110,7 +112,9 @@ public class GrrServiceImpl implements GrrService {
         Map<String, Object> dataMap = convertData(datas);
         List<Double> doubleList = (List<Double>) dataMap.get(MAP_KEY_DATA);
         Integer count = (Integer) dataMap.get(MAP_KEY_COUNT);
+        pushProgress(20);
         if (datas == null || doubleList == null || count == datas.size() || datas.size() != doubleList.size()) {
+            pushProgress(80);
             return null;
         }
         if (testItemDto.getLsl() != null) {
@@ -144,10 +148,9 @@ public class GrrServiceImpl implements GrrService {
         Map<String, Object> dataMap = convertData(datas);
         List<Double> doubleList = (List<Double>) dataMap.get(MAP_KEY_DATA);
         Integer count = (Integer) dataMap.get(MAP_KEY_COUNT);
+        pushProgress(20);
         if (datas == null || doubleList == null || count == datas.size() || datas.size() != doubleList.size()) {
-            return null;
-        }
-        if (datas == null || doubleList == null || datas.size() != doubleList.size()) {
+            pushProgress(80);
             return null;
         }
         if (testItemDto.getLsl() != null) {
