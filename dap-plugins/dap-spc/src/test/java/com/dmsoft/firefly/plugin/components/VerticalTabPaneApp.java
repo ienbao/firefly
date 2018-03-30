@@ -39,14 +39,6 @@ public class VerticalTabPaneApp extends Application {
         chartPanel6.setId(UIConstant.SPC_CHART_NAME[5]);
         chartPanel7.setId(UIConstant.SPC_CHART_NAME[6]);
         chartPanel8.setId(UIConstant.SPC_CHART_NAME[7]);
-        chartPanel1.setLegend("chart1");
-        chartPanel2.setLegend("chart2");
-        chartPanel3.setLegend("chart3");
-        chartPanel4.setLegend("chart4");
-        chartPanel5.setLegend("chart5");
-        chartPanel6.setLegend("chart6");
-        chartPanel7.setLegend("chart7");
-        chartPanel8.setLegend("chart8");
         tabPane.addNode(chartPanel1, 0);
         tabPane.addNode(chartPanel2, 1);
         tabPane.addNode(chartPanel3, 2);

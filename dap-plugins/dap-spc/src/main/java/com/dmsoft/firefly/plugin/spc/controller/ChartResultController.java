@@ -11,6 +11,7 @@ import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.ControlChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.NDBarChartData;
 import com.dmsoft.firefly.plugin.spc.charts.select.SelectCallBack;
+import com.dmsoft.firefly.plugin.spc.charts.utils.LegendUtils;
 import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
@@ -33,6 +34,7 @@ import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.sun.javafx.charts.Legend;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -204,8 +206,8 @@ public class ChartResultController implements Initializable {
 
     private void initChartPane() {
 
-        ndChartPane = new ChartPanel<>((NDChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[0]));
-        runChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[1]));
+        ndChartPane = new ChartPanel<>((NDChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[0]), true);
+        runChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[1]), true);
         xBarChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[2]));
         rangeChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[3]));
         sdChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[4]));
@@ -214,12 +216,20 @@ public class ChartResultController implements Initializable {
         mrChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[7]));
 
         this.initChartOperateSelectCallBackMap();
+
         //nd chart
         ndOperateBtn = this.buildChartOperateButton(UIConstant.SPC_CHART_NAME[0]);
         ndChartPane.getCustomPane().getChildren().add(ndOperateBtn);
-        ndChartPane.setLegend(legend);
+//        Legend ndLegend = LegendUtils.buildReferenceLineLegend();
+//        ndLegend.setPrefWidth(legendWidth);
+//        ndLegend.setPrefHeight(legendHeight);
+//        ndChartPane.setLegend(ndLegend);
         //run chart
         this.initRunChartPane((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[1]));
+//        Legend runLegend = LegendUtils.buildReferenceLineLegend();
+//        runLegend.setPrefWidth(legendWidth);
+//        runLegend.setPrefHeight(legendHeight);
+//        runChartPane.setLegend(runLegend);
         //bar chart
         barOperateBtn = this.buildChartOperateButton(UIConstant.SPC_CHART_NAME[2]);
         xBarChartPane.getCustomPane().getChildren().add(barOperateBtn);
@@ -462,7 +472,7 @@ public class ChartResultController implements Initializable {
         runChartPane.getCustomPane().setMargin(editBtn, new Insets(0, 0, 0, 5));
         runChartPane.getCustomPane().setMargin(runOperateBtn, new Insets(0, 0, 0, 5));
         runChartPane.getCustomPane().setMargin(rRuleBtn, new Insets(0, 0, 0, 5));
-        runChartPane.setLegend(legend);
+
         chart.activePointClickEvent(true);
         chart.setPointClickCallBack(id -> {
             String key = (String) id;
