@@ -24,4 +24,6 @@ public class ResourceMassages {
     public static final String GEE_EXPORT_TEMPLATE = "GEE_EXPORT_TEMPLATE";
 
     public static final String OPEN_EXPORT_FOLDER = "OPEN_EXPORT_FOLDER";
+    public static final String EXPORT = "EXPORT";
+    public static final String EXPORTING = "EXPORTING";
 }

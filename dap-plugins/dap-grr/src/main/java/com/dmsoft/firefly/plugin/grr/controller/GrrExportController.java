@@ -824,8 +824,9 @@ public class GrrExportController {
     }
 
     private void export(List<String> projectNameList, String savePath) {
-        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip(GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT));
         windowProgressTipController.setAutoHide(false);
+        windowProgressTipController.getAnalysisLB().setText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXPORTING));
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
         context.addJobEventListener(event -> {
             if ("Error".equals(event.getEventName())) {

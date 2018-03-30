@@ -146,31 +146,29 @@ public class SpcMainController implements Initializable {
         windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
 
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_RESET_JOB_PIPELINE);
-        if (jobPipeline.getCompletedHandler() == null) {
-            jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
-                @Override
-                public void doJob(JobContext context) {
-                    SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
-                    SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
-                    List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
-                    setStatisticalResultData(spcStatisticalResultAlarmDtoList);
-                    clearAnalysisSubShowData();
-                }
-            });
-            jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
-                @Override
-                public void doJob(JobContext context) {
-                    logger.error(context.getError().getMessage());
-                    windowProgressTipController.updateFailProgress(context.getError().getMessage());
-                }
-            });
-            jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
-                @Override
-                public void doJob(JobContext context) {
-                    windowProgressTipController.closeDialog();
-                }
-            });
-        }
+        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
+                SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
+                List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
+                setStatisticalResultData(spcStatisticalResultAlarmDtoList);
+                clearAnalysisSubShowData();
+            }
+        });
+        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                logger.error(context.getError().getMessage());
+                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+            }
+        });
+        jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                windowProgressTipController.closeDialog();
+            }
+        });
 //        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
 //        Service<Integer> service = new Service<Integer>() {
 //            @Override
@@ -392,29 +390,27 @@ public class SpcMainController implements Initializable {
         windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
 
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_REFRESH_STATISTICAL_JOB_PIPELINE);
-        if (jobPipeline.getCompletedHandler() == null) {
-            jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
-                @Override
-                public void doJob(JobContext context) {
-                    List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
-                    statisticalResultController.refreshStatisticalResult(spcStatisticalResultAlarmDtoList);
-                    windowProgressTipController.closeDialog();
-                }
-            });
-            jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
-                @Override
-                public void doJob(JobContext context) {
-                    logger.error(context.getError().getMessage());
-                    windowProgressTipController.updateFailProgress(context.getError().getMessage());
-                }
-            });
-            jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
-                @Override
-                public void doJob(JobContext context) {
-                    windowProgressTipController.closeDialog();
-                }
-            });
-        }
+        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
+                statisticalResultController.refreshStatisticalResult(spcStatisticalResultAlarmDtoList);
+                windowProgressTipController.closeDialog();
+            }
+        });
+        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                logger.error(context.getError().getMessage());
+                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+            }
+        });
+        jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                windowProgressTipController.closeDialog();
+            }
+        });
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
 
 //        Service<Integer> service = new Service<Integer>() {
@@ -490,32 +486,30 @@ public class SpcMainController implements Initializable {
         windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
 
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_REFRESH_CHART_JOB_PIPELINE);
-        if (jobPipeline.getCompletedHandler() == null) {
-            jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
-                @Override
-                public void doJob(JobContext context) {
-                    Platform.runLater(() -> {
-                        chartResultController.initSpcChartData((List<SpcChartDto>) context.get(ParamKeys.SPC_CHART_DTO_LIST));
-                        SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getAllRowKeys(), searchConditionDtoList);
-                        viewDataController.setViewData(viewDataFrame, rowKeyList);
-                        windowProgressTipController.closeDialog();
-                    });
-                }
-            });
-            jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
-                @Override
-                public void doJob(JobContext context) {
-                    logger.error(context.getError().getMessage());
-                    windowProgressTipController.updateFailProgress(context.getError().getMessage());
-                }
-            });
-            jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
-                @Override
-                public void doJob(JobContext context) {
+        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                Platform.runLater(() -> {
+                    chartResultController.initSpcChartData((List<SpcChartDto>) context.get(ParamKeys.SPC_CHART_DTO_LIST));
+                    SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getAllRowKeys(), searchConditionDtoList);
+                    viewDataController.setViewData(viewDataFrame, rowKeyList);
                     windowProgressTipController.closeDialog();
-                }
-            });
-        }
+                });
+            }
+        });
+        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                logger.error(context.getError().getMessage());
+                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+            }
+        });
+        jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                windowProgressTipController.closeDialog();
+            }
+        });
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
 //
 //
@@ -604,37 +598,35 @@ public class SpcMainController implements Initializable {
         windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
 
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_REFRESH_ANALYSIS_JOB_PIPELINE);
-        if (jobPipeline.getCompletedHandler() == null) {
-            jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
-                @Override
-                public void doJob(JobContext context) {
-                    List<SpcStatisticalResultAlarmDto> statisticalAnaysisResult = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.STATISTICAL_ANALYSIS_RESULT);
-                    List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) context.get(ParamKeys.CHART_ANALYSIS_RESULT);
-                    //set statistical data
-                    statisticalResultController.refreshStatisticalResult(statisticalAnaysisResult);
+        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                List<SpcStatisticalResultAlarmDto> statisticalAnaysisResult = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.STATISTICAL_ANALYSIS_RESULT);
+                List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) context.get(ParamKeys.CHART_ANALYSIS_RESULT);
+                //set statistical data
+                statisticalResultController.refreshStatisticalResult(statisticalAnaysisResult);
 
-                    //set chart data
-                    chartResultController.initSpcChartData(spcChartDtoList);
+                //set chart data
+                chartResultController.initSpcChartData(spcChartDtoList);
 
-                    //set view data
-                    SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getAllRowKeys(), chartSearchConditionDtoList);
-                    viewDataController.setViewData(viewDataFrame, currentViewDataSelectRowKeyList);
-                }
-            });
-            jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
-                @Override
-                public void doJob(JobContext context) {
-                    logger.error(context.getError().getMessage());
-                    windowProgressTipController.updateFailProgress(context.getError().getMessage());
-                }
-            });
-            jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
-                @Override
-                public void doJob(JobContext context) {
-                    windowProgressTipController.closeDialog();
-                }
-            });
-        }
+                //set view data
+                SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getAllRowKeys(), chartSearchConditionDtoList);
+                viewDataController.setViewData(viewDataFrame, currentViewDataSelectRowKeyList);
+            }
+        });
+        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                logger.error(context.getError().getMessage());
+                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+            }
+        });
+        jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                windowProgressTipController.closeDialog();
+            }
+        });
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
 
 //        Service<Integer> service = new Service<Integer>() {
