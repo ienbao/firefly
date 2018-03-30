@@ -6,18 +6,12 @@ package com.dmsoft.firefly.plugin.grr;
 
 
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
-import com.dmsoft.firefly.plugin.grr.pipeline.*;
-import com.dmsoft.firefly.plugin.grr.service.GrrAnalysisService;
-import com.dmsoft.firefly.plugin.grr.service.GrrConfigService;
-import com.dmsoft.firefly.plugin.grr.service.GrrFilterService;
-import com.dmsoft.firefly.plugin.grr.service.GrrService;
-import com.dmsoft.firefly.plugin.grr.service.impl.GrrAnalysisServiceImpl;
-import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
-import com.dmsoft.firefly.plugin.grr.service.impl.GrrFilterServiceImpl;
-import com.dmsoft.firefly.plugin.grr.service.impl.GrrServiceImpl;
+import com.dmsoft.firefly.plugin.grr.handler.*;
+import com.dmsoft.firefly.plugin.grr.service.*;
+import com.dmsoft.firefly.plugin.grr.service.impl.*;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.job.core.JobFactory;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.plugin.Plugin;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
@@ -46,6 +40,7 @@ public class GrrPlugin extends Plugin {
     public static final String GRR_SERVICE_RESULT_NAME = "GrrServiceImpl";
     public static final String GRR_SERVICE_CONFIG_NAME = "GrrConfigServiceImpl";
     public static final String GRR_SERVICE_FILTER = "GrrFilterServiceImpl";
+    private static final Double D100 = 100.0;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GrrPlugin.class);
 
@@ -61,6 +56,7 @@ public class GrrPlugin extends Plugin {
         RuntimeContext.registerBean(GrrConfigService.class, grrConfigService);
         RuntimeContext.registerBean(GrrAnalysisService.class, grrAnalysisService);
         RuntimeContext.registerBean(GrrFilterService.class, grrFilterService);
+        RuntimeContext.registerBean(GrrExportService.class, new GrrExportServiceImpl());
         RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_CONFIG_NAME, grrConfigService);
         RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_RESULT_NAME, grrService);
         RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_ANALYSIS_NAME, grrAnalysisService);
@@ -100,15 +96,43 @@ public class GrrPlugin extends Plugin {
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.GrrPlugin",
                 MenuBuilder.MenuType.MENU_ITEM, "Grr Settings", MenuBuilder.MENU_PREFERENCE).addMenu(menuItem));
 
-        JobManager manager = RuntimeContext.getBean(JobManager.class);
-//        manager.initializeJob(ParamKeys.GRR_ANALYSIS_JOB_PIPELINE, new GrrSummaryJobPipeline());
-        manager.initializeJob(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE, new GrrDetailResultJobPipeline());
-        manager.initializeJob(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE, new GrrViewDataJobPipeline());
-        manager.initializeJob(ParamKeys.GRR_EXPORT_JOB_PIPELINE, new GrrExportJobPipeline());
-        manager.initializeJob(ParamKeys.GRR_EXPORT_DETAIL_JOB_PIPELINE, new GrrExportDetailJobPipeline());
+        JobManager jobManager = RuntimeContext.getBean(JobManager.class);
+        JobFactory jobFactory = RuntimeContext.getBean(JobFactory.class);
 
-        manager.initializeJob(ParamKeys.GRR_REFRESH_JOB_PIPELINE, new GrrRefreshJobPipeline());
+        jobManager.initializeJob(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new GrrConfigHandler())
+                .addLast(new DetailResultHandler().setWeight(D100)));
 
+        jobManager.initializeJob(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new FindTestDataHandler())
+                .addLast(new DataFrameHandler())
+                .addLast(new ValidateParamHandler())
+                .addLast(new GrrConfigHandler())
+                .addLast(new ViewDataHandler())
+                .addLast(new SummaryHandler().setWeight(D100))
+                .addLast(new DetailResultHandler().setWeight(D100)));
+
+        jobManager.initializeJob(ParamKeys.GRR_EXPORT_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new FindTestDataHandler())
+                .addLast(new DataFrameHandler())
+                .addLast(new ValidateParamHandler())
+                .addLast(new GrrConfigHandler())
+                .addLast(new ViewDataHandler())
+                .addLast(new SummaryHandler().setWeight(D100))
+                .addLast(new ExportSummaryHandler().setWeight(D100)));
+
+        jobManager.initializeJob(ParamKeys.GRR_EXPORT_DETAIL_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new FindTestDataHandler())
+                .addLast(new DataFrameHandler())
+                .addLast(new ValidateParamHandler())
+                .addLast(new GrrConfigHandler())
+                .addLast(new ViewDataHandler())
+                .addLast(new FindExportDetailHandler().setWeight(D100))
+                .addLast(new ExportDetailResultHandler().setWeight(D100)));
+
+        jobManager.initializeJob(ParamKeys.GRR_REFRESH_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new GrrConfigHandler())
+                .addLast(new RefreshHandler().setWeight(D100)));
     }
 
     @Override

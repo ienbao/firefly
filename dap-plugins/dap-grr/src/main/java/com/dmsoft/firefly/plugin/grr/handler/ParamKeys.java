@@ -16,6 +16,11 @@ public class ParamKeys {
     public static final String SEARCH_GRR_SUMMARY_TYPE = "analysisSummaryType";
     public static final String ANALYSIS_GRR_INCLUDE_ROWS = "includeRows";
     public static final String SEARCH_TEMPLATE_SETTING_DTO = "searchTemplateSettingDto";
+    public static final String GRR_DETAIL_DTO = "grrDetailDto";
+    public static final String GRR_DETAIL_DTO_LIST = "grrDetailDtoList";
+    public static final String GRR_SUMMARY_DTO_LIST = "grrSummaryDtoList";
+    public static final String GRR_PARAM_DTO = "grrParamDto";
+    public static final String GRR_EXPORT_CONFIG_DTO = "grrExportConfigDto";
 
     public static final String SEARCH_GRR_LEFT_CONFIG_DTO = "searchGrrLeftConfigDto";
     public static final String SEARCH_GRR_CONDITION_DTO = "searchGrrConditionDto";
@@ -29,10 +34,13 @@ public class ParamKeys {
     public static final String GRR_REFRESH_HANDLER = "grrRefreshHandler";
     public static final String VALIDATE_PARAM_HANDLER = "validateParamHandler";
 
-    public static final String GRR_VIEW_DATA_RESULT_HANDLER = "grrViewDataHandler";
+    public static final String GRR_VIEW_DATA_RESULT_HANDLER = "grrViewDataResultHandler";
+    public static final String GRR_VIEW_DATA_HANDLER = "grrViewDataHandler";
     public static final String GRR_SUMMARY_RESULT_HANDLER = "grrSummaryHandler";
+    public static final String GRR_EXPORT_SUMMARY_RESULT_HANDLER = "grrExportSummaryHandler";
     public static final String GRR_DETAIL_RESULT_HANDLER = "grrDetailHandler";
     public static final String GRR_EXPORT_DETAIL_HANDLER = "grrExportDetailHandler";
+    public static final String GRR_FIND_EXPORT_DETAIL_HANDLER = "findGrrExportDetailHandler";
 
     //pipeline
 //    public static final String GRR_ANALYSIS_JOB_PIPELINE = "grrAnalysisJobPipeline";
@@ -44,5 +52,6 @@ public class ParamKeys {
 
 
     public static final String GRR_ANALYSIS_CONDITION_KEY = "analysisKey";
+    public static final String EXPORT_PATH = "exportPath";
 
 }

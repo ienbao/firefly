@@ -118,7 +118,7 @@
                                                    <padding>
                                                       <Insets bottom="2.0" top="3.0" />
                                                    </padding></BorderPane>
-                                                <BarChart fx:id="componentChart" legendVisible="false" VBox.vgrow="ALWAYS">
+                                                <BarChart fx:id="componentChart" horizontalZeroLineVisible="false" legendVisible="false" verticalZeroLineVisible="false" VBox.vgrow="ALWAYS">
                                                   <xAxis>
                                                     <CategoryAxis side="BOTTOM" tickLabelGap="10.0" tickMarkVisible="false" />
                                                   </xAxis>
@@ -148,7 +148,7 @@
                                                    <padding>
                                                       <Insets bottom="2.0" top="3.0" />
                                                    </padding></BorderPane>
-                                                <LineChart fx:id="partAppraiserChart" legendVisible="false">
+                                                <LineChart fx:id="partAppraiserChart" horizontalZeroLineVisible="false" legendVisible="false" verticalZeroLineVisible="false">
                                                   <xAxis>
                                                     <CategoryAxis side="BOTTOM" tickMarkVisible="false" />
                                                   </xAxis>

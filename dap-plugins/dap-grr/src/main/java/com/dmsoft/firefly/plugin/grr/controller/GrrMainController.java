@@ -5,9 +5,7 @@ import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.ListUtils;
-import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
-import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.google.common.collect.Lists;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +16,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -44,7 +41,6 @@ public class GrrMainController implements Initializable {
     @FXML
     private Tab grrResultTab;
 
-    private JobManager manager = RuntimeContext.getBean(JobManager.class);
 
     @FXML
     private Button exportBtn;
@@ -97,21 +93,13 @@ public class GrrMainController implements Initializable {
                 return;
             }
             newDataFrame.setDataFrame(backGrrDataFrame.getDataFrame());
-            List<GrrViewDataDto> includeViewDataDtos = null;
-            try {
-                includeViewDataDtos = Lists.newArrayList(ListUtils.deepCopy(backGrrDataFrame.getIncludeDatas()));
-                List<GrrViewDataDto> backViewDataDtos = Lists.newArrayList(ListUtils.deepCopy(backGrrDataFrame.getBackupDatas()));
-                newDataFrame.setIncludeDatas(includeViewDataDtos);
-                newDataFrame.setBackupDatas(backViewDataDtos);
-                this.grrDataFrame = newDataFrame;
-                this.grrViewDataController.refresh();
-                this.grrResultController.changeGrrResult();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
+            List<GrrViewDataDto> includeViewDataDtos = Lists.newArrayList(ListUtils.deepCopy(backGrrDataFrame.getIncludeDatas()));
+            List<GrrViewDataDto> backViewDataDtos = Lists.newArrayList(ListUtils.deepCopy(backGrrDataFrame.getBackupDatas()));
+            newDataFrame.setIncludeDatas(includeViewDataDtos);
+            newDataFrame.setBackupDatas(backViewDataDtos);
+            this.grrDataFrame = newDataFrame;
+            this.grrViewDataController.refresh();
+            this.grrResultController.changeGrrResult();
         });
     }
 

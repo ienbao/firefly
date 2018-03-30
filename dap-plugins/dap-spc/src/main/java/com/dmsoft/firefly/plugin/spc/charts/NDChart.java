@@ -73,6 +73,8 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         this.setAnimated(false);
         this.orientation = Orientation.VERTICAL;
         this.valueAxis = (ValueAxis) yAxis;
+        this.setHorizontalZeroLineVisible(false);
+        this.setVerticalZeroLineVisible(false);
         this.pseudoClassStateChanged(HORIZONTAL_PSEUDOCLASS_STATE, orientation == Orientation.HORIZONTAL);
         this.pseudoClassStateChanged(VERTICAL_PSEUDOCLASS_STATE, orientation == Orientation.VERTICAL);
         this.setData(FXCollections.observableArrayList());

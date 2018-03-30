@@ -6,7 +6,9 @@ import com.dmsoft.firefly.gui.components.utils.StageMap;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -27,17 +29,18 @@ public class WindowProgressTipController {
     private Stage stage;
 
     private WindowCustomListener windowCustomListener;
+    private boolean autoHide = true;
 
     @FXML
-    private void initialize(){
+    private void initialize() {
         initCancelBtn();
         errorTxt.setEditable(false);
         errorTxt.setVisible(false);
         errorTxt.setMaxHeight(0);
         taskProgress.getStyleClass().setAll("progress-bar-lg-green");
         taskProgress.setProgress(0);
-        taskProgress.progressProperty().addListener(e->{
-            if (taskProgress.getProgress() >= 1) {
+        taskProgress.progressProperty().addListener(e -> {
+            if (taskProgress.getProgress() >= 1 && autoHide) {
                 closeDialog();
             }
         });
@@ -117,9 +120,9 @@ public class WindowProgressTipController {
 
     private void initCancelBtn() {
         cancelBtn.setText(FxmlAndLanguageUtils.getString("GLOBAL_BTN_CANCEL"));
-        cancelBtn.setOnAction(event -> {
-            closeDialog();
-        });
+//        cancelBtn.setOnAction(event -> {
+//            closeDialog();
+//        });
     }
 
     public void closeDialog() {
@@ -130,7 +133,7 @@ public class WindowProgressTipController {
         if (!isOverride) {
             StageMap.closeStage(ResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
             Stage stage = StageMap.getStage(ResourceMassages.PLARTFORM_STAGE_MAIN);
-            if (stage != null &&  stage.getScene() != null &&  stage.getScene().lookup("#grpContent") != null) {
+            if (stage != null && stage.getScene() != null && stage.getScene().lookup("#grpContent") != null) {
                 stage.getScene().lookup("#grpContent").setDisable(false);
                 stage.getScene().lookup("#tbaSystem").setDisable(false);
                 stage.getScene().lookup("#menuPane").setDisable(false);
@@ -144,5 +147,13 @@ public class WindowProgressTipController {
 
     public ProgressBar getTaskProgress() {
         return taskProgress;
+    }
+
+    public Button getCancelBtn() {
+        return cancelBtn;
+    }
+
+    public void setAutoHide(boolean autoHide) {
+        this.autoHide = autoHide;
     }
 }

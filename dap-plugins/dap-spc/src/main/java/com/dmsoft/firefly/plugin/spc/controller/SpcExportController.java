@@ -9,6 +9,7 @@ import com.dmsoft.firefly.gui.components.utils.TextFieldWrapper;
 import com.dmsoft.firefly.gui.components.utils.ValidateRule;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
@@ -28,9 +29,7 @@ import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.event.PlatformEvent;
-import com.dmsoft.firefly.sdk.exception.ApplicationException;
-import com.dmsoft.firefly.sdk.job.Job;
-import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.job.core.*;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
@@ -72,6 +71,13 @@ import java.util.concurrent.CountDownLatch;
  */
 public class SpcExportController {
     private static final String STICKY_ON_TOP_CODE = "stick_on_top";
+    private static final Double D100 = 100.0d;
+    private static final Double D90 = 90.0d;
+    private static final Double D10 = 10.0d;
+    private static final Double D30 = 30.0d;
+    private static final Double D70 = 70.0d;
+    private static final Double D40 = 40.0d;
+    private Map<String, Map<String, String>> chartPath = Maps.newHashMap();
     @FXML
     private TextFieldFilter itemFilter;
     @FXML
@@ -96,7 +102,6 @@ public class SpcExportController {
     private Button print;
     @FXML
     private Button cancel;
-
     @FXML
     private Button browse;
     @FXML
@@ -109,41 +114,30 @@ public class SpcExportController {
     private TextField subGroup;
     @FXML
     private TextField ndGroup;
-
     @FXML
     private SplitPane split;
     private SearchTab searchTab;
     private CheckBox box;
     private ToggleGroup group = new ToggleGroup();
-
     private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
-
     private ContextMenu pop;
     private boolean isFilterUslOrLsl = false;
 
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
-
-    private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private SearchDataFrame dataFrame;
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
-
     private SpcSettingServiceImpl settingService = RuntimeContext.getBean(SpcSettingServiceImpl.class);
     private SpcExportServiceImpl spcExportService = new SpcExportServiceImpl();
     private SpcLeftConfigServiceImpl leftConfigService = new SpcLeftConfigServiceImpl();
-
     private List<SpcStatisticalResultAlarmDto> spcStatsDtoList;
     private Map<String, Color> colorMap = Maps.newHashMap();
-
     // cached items for user preference
     private List<String> stickyOnTopItems = Lists.newArrayList();
-
     private List<String> originalItems = Lists.newArrayList();
-
-    Map<String, Map<String, String>> chartPath = Maps.newHashMap();
 
     @FXML
     private void initialize() {
@@ -342,11 +336,8 @@ public class SpcExportController {
                 return;
             }
             StageMap.closeStage("spcExport");
-            Thread thread = new Thread(() -> {
-                String savePath = locationPath.getText() + "/SPC_" + getTimeString();
-                export(savePath);
-            });
-            thread.start();
+            String savePath = locationPath.getText() + "/SPC_" + getTimeString();
+            export(savePath);
         });
         print.setOnAction(event -> {
             if (StringUtils.isEmpty(locationPath.getText())) {
@@ -358,22 +349,20 @@ public class SpcExportController {
                 return;
             }
             StageMap.closeStage("spcExport");
-            Thread thread = new Thread(() -> {
-                String savePath = locationPath.getText() + "/SPC_" + getTimeString();
-                PdfPrintUtil.getPrintService();
-                export(savePath);
-                boolean isSucceed = false;
-                try {
-                    isSucceed = new ExcelToPdfUtil().excelToPdf(savePath);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (isSucceed) {
-                    PdfPrintUtil.printPdf(savePath);
-                }
-            });
-            thread.start();
+            String savePath = locationPath.getText() + "/SPC_" + getTimeString();
+            PdfPrintUtil.getPrintService();
+            export(savePath);
+            boolean isSucceed = false;
+            try {
+                isSucceed = new ExcelToPdfUtil().excelToPdf(savePath);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (isSucceed) {
+                PdfPrintUtil.printPdf(savePath);
+            }
         });
+        //TODO : change cancel text
         cancel.setOnAction(event -> {
             StageMap.closeStage("spcExport");
         });
@@ -484,30 +473,18 @@ public class SpcExportController {
         }
     }
 
-    private synchronized String export(String savePath) {
-//        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
-//        windowProgressTipController.addProcessMonitorListener(new WindowCustomListener() {
-//            @Override
-//            public boolean onShowCustomEvent() {
-//                System.out.println("show");
-//
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onCloseAndCancelCustomEvent() {
-//                //to do
-//                System.out.println("close");
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onOkCustomEvent() {
-//                System.out.println("ok");
-//
-//                return false;
-//            }
-//        });
+    private synchronized void export(String savePath) {
+        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+        windowProgressTipController.setAutoHide(false);
+        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        context.addJobEventListener(event -> {
+            if ("Error".equals(event.getEventName())) {
+                windowProgressTipController.updateFailProgress(event.getProgress(), event.getEventObject().toString());
+            } else {
+                windowProgressTipController.getTaskProgress().setProgress(event.getProgress());
+            }
+        });
+
         Boolean exportEachFile = false;
         if (eachFile.isSelected()) {
             exportEachFile = true;
@@ -515,7 +492,7 @@ public class SpcExportController {
         List<String> projectNameList = envService.findActivatedProjectName();
 
         SpcAnalysisConfigDto spcAnalysisConfigDto = new SpcAnalysisConfigDto();
-//        spcAnalysisConfigDto.setSubgroupSize();
+
         //todo delete
         spcAnalysisConfigDto.setSubgroupSize(Integer.parseInt(subGroup.getText()));
         spcAnalysisConfigDto.setIntervalNumber(Integer.parseInt(ndGroup.getText()));
@@ -536,41 +513,82 @@ public class SpcExportController {
                 exportDataItem.put(UIConstant.SPC_PERFORMANCE[i], false);
             }
         }
-        SpcUserActionAttributesDto spcConfig = new SpcUserActionAttributesDto();
+        SpcExportConfigDto spcConfig = new SpcExportConfigDto();
         spcConfig.setExportPath(savePath);
         spcConfig.setPerformer(envService.getUserName());
         spcConfig.setDigNum(envService.findActivatedTemplate().getDecimalDigit());
         spcConfig.setExportDataItem(exportDataItem);
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobFactory.class).createJobPipeLine();
+        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                context.pushEvent(new JobEvent("Export done", D100, null));
+                String path = context.get(ParamKeys.EXPORT_PATH).toString();
+                windowProgressTipController.getCancelBtn().setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.OPEN_EXPORT_FOLDER));
+                windowProgressTipController.getCancelBtn().setOnAction(event -> {
+                    try {
+                        Desktop.getDesktop().open(new File(path));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                });
+            }
+        });
+        jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                windowProgressTipController.closeDialog();
+            }
+        });
+        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+            }
+        });
 
         SpcSettingDto spcSettingDto = RuntimeContext.getBean(SpcSettingServiceImpl.class).findSpcSetting();
         if (exportEachFile) {
-            String result = "";
+            int i = 0;
             for (String projectName : projectNameList) {
-                List<String> project = Lists.newArrayList(projectName);
-                List<TestItemWithTypeDto> itemDto = Lists.newArrayList();
-                List<String> allItem = dataService.findAllTestItemName(project);
-                List<TestItemWithTypeDto> selectItem = getSelectedItemDto();
-                for (TestItemWithTypeDto i : selectItem) {
-                    if (allItem.contains(i.getTestItemName())) {
-                        itemDto.add(i);
+                jobPipeline.addLast(new AbstractBasicJobHandler(projectName + i) {
+                    @Override
+                    public void doJob(JobContext context) {
+                        List<String> project = Lists.newArrayList(projectName);
+                        List<TestItemWithTypeDto> itemDto = Lists.newArrayList();
+                        List<String> allItem = dataService.findAllTestItemName(project);
+                        List<TestItemWithTypeDto> selectItem = getSelectedItemDto();
+                        for (TestItemWithTypeDto i : selectItem) {
+                            if (allItem.contains(i.getTestItemName())) {
+                                itemDto.add(i);
+                            }
+                        }
+                        List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(itemDto);
+                        searchTab.getConditionTestItem().forEach(item -> itemDto.add(envService.findTestItemNameByItemName(item)));
+                        String result = exportFile(project, spcSettingDto, itemDto, searchConditionDtoList, spcAnalysisConfigDto, spcConfig, context);
+                        context.put(ParamKeys.EXPORT_PATH, result);
                     }
-                }
-                List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(itemDto);
-
-                searchTab.getConditionTestItem().forEach(item -> {
-                    itemDto.add(envService.findTestItemNameByItemName(item));
-                });
-                result = exportFile(project, spcSettingDto, itemDto, searchConditionDtoList, spcAnalysisConfigDto, spcConfig);
+                }.setWeight(D100));
+                i++;
             }
-            return result;
         } else {
-            List<TestItemWithTypeDto> testItemWithTypeDtoList = getSelectedItemDto();
-            List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(testItemWithTypeDtoList);
-            searchTab.getConditionTestItem().forEach(item -> {
-                testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(item));
-            });
-            return exportFile(projectNameList, spcSettingDto, testItemWithTypeDtoList, searchConditionDtoList, spcAnalysisConfigDto, spcConfig);
+            jobPipeline.addLast(new AbstractBasicJobHandler("Export file") {
+                @Override
+                public void doJob(JobContext context) {
+
+                    List<TestItemWithTypeDto> testItemWithTypeDtoList = getSelectedItemDto();
+                    List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(testItemWithTypeDtoList);
+                    searchTab.getConditionTestItem().forEach(item -> {
+                        testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(item));
+                    });
+                    String result = exportFile(projectNameList, spcSettingDto, testItemWithTypeDtoList, searchConditionDtoList, spcAnalysisConfigDto, spcConfig, context);
+                    context.put(ParamKeys.EXPORT_PATH, result);
+                }
+            }.setWeight(D100));
         }
+
+        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
     }
 
     private String getTimeString() {
@@ -585,27 +603,40 @@ public class SpcExportController {
                               List<TestItemWithTypeDto> testItemWithTypeDtoList,
                               List<SearchConditionDto> searchConditionDtoList,
                               SpcAnalysisConfigDto spcAnalysisConfigDto,
-                              SpcUserActionAttributesDto spcConfig) {
+                              SpcExportConfigDto spcConfig, JobContext context) {
+        JobContext singleJobContext = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_ANALYSIS_EXPORT_JOB_PIPELINE);
+        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context1) {
+                context.pushEvent(new JobEvent("Error", context.getCurrentProgress(), context1.getError()));
+            }
+        }.setWeight(D100));
+        singleJobContext.put(ParamKeys.SPC_SETTING_DTO, spcSettingDto);
+        singleJobContext.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
+        singleJobContext.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+        singleJobContext.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
+        singleJobContext.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+        RuntimeContext.getBean(JobManager.class).fireJobSyn(jobPipeline, singleJobContext);
 
-        Job job = new Job(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
-
-        Map<String, Object> paramMap = Maps.newHashMap();
-        paramMap.put(ParamKeys.SPC_SETTING_FILE_NAME, spcSettingDto);
-        paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
-        paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
-        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
-        paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
-        spcStatsDtoList = (List<SpcStatisticalResultAlarmDto>) manager.doJobSyn(job, paramMap, null);
+        spcStatsDtoList = (List<SpcStatisticalResultAlarmDto>) singleJobContext.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
+        context.pushEvent(new JobEvent("Get Stats & Alarm Result", D30, null));
 
         //build chart
         Map<String, String> runChartRule = Maps.newHashMap();
 
         if (spcConfig.getExportDataItem().get(SpcExportItemKey.EXPORT_CHARTS.getCode())) {
-            Job chartJob = new Job(ParamKeys.SPC_REFRESH_CHART_JOB_PIPELINE);
-
-            Map<String, Object> chartParamMap = Maps.newHashMap();
-            chartParamMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
-            chartParamMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
+            JobContext singleJobContext4Chart = RuntimeContext.getBean(JobFactory.class).createJobContext();
+            JobPipeline jobPipeline4Chart = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_REFRESH_CHART_EXPORT_JOB_PIPELINE);
+            jobPipeline4Chart.setErrorHandler(new AbstractBasicJobHandler() {
+                @Override
+                public void doJob(JobContext context1) {
+                    context.pushEvent(new JobEvent("Error", context.getCurrentProgress(), context1.getError()));
+                }
+            });
+            singleJobContext4Chart.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+            singleJobContext4Chart.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
+            singleJobContext4Chart.put(ParamKeys.SPC_SETTING_DTO, spcSettingDto);
 
 //            buildViewData();
             List<String> selectItem = Lists.newArrayList();
@@ -614,42 +645,41 @@ public class SpcExportController {
             dataFrame = RuntimeContext.getBean(DataFrameFactory.class).createSearchDataFrame(testItemWithTypeDtoList, rowDataDtoList);
             dataFrame.addSearchCondition(searchTab.getSearch());
 
-            chartParamMap.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
+            singleJobContext4Chart.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
 
-            Object returnValue = manager.doJobSyn(chartJob, chartParamMap);
-            if (returnValue instanceof ApplicationException) {
-                return null;
-            }
-            if (returnValue != null) {
-                List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
-                CountDownLatch count = new CountDownLatch(1);
-                Platform.runLater(() -> {
-                    try {
-                        chartPath = initSpcChartData(spcChartDtoList);
-                    } finally {
-                        count.countDown();
-                    }
-                });
+            RuntimeContext.getBean(JobManager.class).fireJobSyn(jobPipeline4Chart, singleJobContext4Chart);
+            List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) singleJobContext4Chart.get(ParamKeys.SPC_CHART_DTO_LIST);
+            CountDownLatch count = new CountDownLatch(1);
+            Thread thread = new Thread(() -> {
                 try {
-                    count.await();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    chartPath = initSpcChartData(spcChartDtoList, spcConfig.getExportDataItem());
+                } finally {
+                    count.countDown();
                 }
+            });
+            thread.start();
 
-                for (SpcChartDto dto : spcChartDtoList) {
-                    if (dto.getResultDto() != null && dto.getResultDto().getRunCResult() != null && dto.getResultDto().getRunCResult().getRuleResultDtoMap() != null) {
-                        Map<String, RuleResultDto> rule = dto.getResultDto().getRunCResult().getRuleResultDtoMap();
-                        StringBuilder s = new StringBuilder();
-                        for (Map.Entry<String, RuleResultDto> entry : rule.entrySet()) {
-                            if (entry.getValue() != null && entry.getValue().getX() != null && entry.getValue().getX().length > 0) {
-                                if (s.length() > 0) {
-                                    s.append(",");
-                                }
-                                s.append(entry.getKey());
+            try {
+                count.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            context.pushEvent(new JobEvent("Export Chart done", D70, null));
+
+            for (SpcChartDto dto : spcChartDtoList) {
+                if (dto.getResultDto() != null && dto.getResultDto().getRunCResult() != null && dto.getResultDto().getRunCResult().getRuleResultDtoMap() != null) {
+                    Map<String, RuleResultDto> rule = dto.getResultDto().getRunCResult().getRuleResultDtoMap();
+                    StringBuilder s = new StringBuilder();
+                    for (Map.Entry<String, RuleResultDto> entry : rule.entrySet()) {
+                        if (entry.getValue() != null && entry.getValue().getX() != null && entry.getValue().getX().length > 0) {
+                            if (s.length() > 0) {
+                                s.append(",");
                             }
+                            s.append(entry.getKey());
                         }
-                        runChartRule.put(dto.getKey(), s.toString());
                     }
+                    runChartRule.put(dto.getKey(), s.toString());
                 }
             }
         }
@@ -674,7 +704,8 @@ public class SpcExportController {
             }
         }
 
-        return spcExportService.spcExport(spcConfig, spcStatisticalResultDtosToExport, chartPath, runChartRule);
+        String result = spcExportService.spcExport(spcConfig, spcStatisticalResultDtosToExport, chartPath, runChartRule);
+        return result;
     }
 
     private List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
@@ -712,8 +743,8 @@ public class SpcExportController {
         return searchConditionDtoList;
     }
 
-    private Map<String, Map<String, String>> initSpcChartData(List<SpcChartDto> spcChartDtoList) {
-        return BuildChart.initSpcChartData(spcChartDtoList, searchTab.getSearch().size(), colorMap);
+    private Map<String, Map<String, String>> initSpcChartData(List<SpcChartDto> spcChartDtoList, Map<String, Boolean> exportParam) {
+        return BuildChart.initSpcChartData(spcChartDtoList, searchTab.getSearch().size(), colorMap, exportParam);
     }
 
     private List<String> getSelectedItem() {
@@ -753,9 +784,7 @@ public class SpcExportController {
                     }
                 });
             }
-            selectItem.forEach(itemName -> {
-                selectItemDto.add(envService.findTestItemNameByItemName(itemName));
-            });
+            selectItem.forEach(itemName -> selectItemDto.add(envService.findTestItemNameByItemName(itemName)));
             List<RowDataDto> rowDataDtoList = dataService.findTestData(envService.findActivatedProjectName(), selectItem);
             dataFrame = RuntimeContext.getBean(DataFrameFactory.class).createSearchDataFrame(selectItemDto, rowDataDtoList);
             dataFrame.addSearchCondition(searchTab.getSearch());

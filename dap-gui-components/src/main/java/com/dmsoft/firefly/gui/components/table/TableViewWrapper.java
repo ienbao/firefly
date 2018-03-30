@@ -89,7 +89,7 @@ public class TableViewWrapper {
                 menuItem.setOnAction(event1 -> {
                     String rowKey = tableView.getSelectionModel().getSelectedItem();
                     event.handleAction(rowKey, event1);
-                    tableView.impl_updatePeer();
+                    tableView.refresh();
                 });
                 menu.getItems().add(menuItem);
             }

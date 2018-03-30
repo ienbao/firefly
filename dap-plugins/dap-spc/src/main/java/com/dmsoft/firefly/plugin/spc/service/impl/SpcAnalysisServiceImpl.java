@@ -457,6 +457,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         RunCResultDto result = new RunCResultDto();
         double[] runy = engine.eval("RunCResult$Values").asDoubleArray();
         double[] runcls = engine.eval("RunCResult$CLs").asDoubleArray();
+
         result.setY(convert(runy));
         result.setX(generate(runy.length));
         result.setCls(convert(runcls));
@@ -530,7 +531,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
     }
 
     private SpcControlChartDto getMrCResult(Rengine engine) {
-        engine.eval("MECResult <- intspc.normal.getMECResult(x, subgroupSize)");
+        engine.eval("MECResult <- intspc.normal.getMRCResult(x, subgroupSize)");
         SpcControlChartDto result = new SpcControlChartDto();
         double[] mey = engine.eval("MECResult$Values").asDoubleArray();
         double mecl = engine.eval("MECResult$CenterLine").asDouble();

@@ -8,36 +8,34 @@ import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowMessageController;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.grr.charts.ChartOperateButton;
 import com.dmsoft.firefly.plugin.grr.charts.ChartRightPane;
 import com.dmsoft.firefly.plugin.grr.charts.LinearChart;
 import com.dmsoft.firefly.plugin.grr.charts.SelectCallBack;
+import com.dmsoft.firefly.plugin.grr.charts.data.ILineData;
 import com.dmsoft.firefly.plugin.grr.charts.data.RuleLineData;
 import com.dmsoft.firefly.plugin.grr.charts.data.VerticalCutLine;
-import com.dmsoft.firefly.plugin.grr.charts.data.ILineData;
 import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
-import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnovaAndSourceResultDto;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.*;
 import com.dmsoft.firefly.plugin.grr.utils.*;
 import com.dmsoft.firefly.plugin.grr.utils.charts.ChartUtils;
 import com.dmsoft.firefly.plugin.grr.utils.charts.LegendUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
-import com.dmsoft.firefly.sdk.exception.ApplicationException;
-import com.dmsoft.firefly.sdk.job.Job;
-import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.job.core.*;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.sun.javafx.charts.Legend;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -64,19 +62,124 @@ import java.util.function.Function;
  */
 public class GrrResultController implements Initializable {
 
+    private static final String[] GRR_RESULT_TYPE = new String[]{
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_TOLERANCE"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_CONTRIBUTION")};
+    private static final String[] CHART_COMPONENT_LABEL = new String[]{
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_GAGE_R"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_REPEATABILITY"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_REPRODUCIBILITY"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_PART")};
+    private static final String[] CHART_COMPONENT_CATEGORY = new String[]{
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_TOLERANCE")};
+    private static final String[] CHART_OPERATE_NAME = new String[]{
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION")};
+    private static final String[] GRR_SUMMARY_TITLE = new String[]{
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_TESTITEM"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_LSL"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_USL"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_TOLERANCE"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_REPEATABILITY"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_REPRODUCIBILITY"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_GAUGE")};
+    private static final String[] GRR_ANOVA_TITLE = new String[]{
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_SOURCE"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_DF"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_SS"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_MS"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_F"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_PROB")};
+    private static final String[] GRR_SOURCE_TITLE = new String[]{
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_SOURCE_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_SIGMA"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_STUDY_VAR"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_SIGMA"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_TOLERANCE")};
     private Set<String> parts = Sets.newLinkedHashSet();
     private Set<String> appraisers = Sets.newLinkedHashSet();
-
     private GrrSummaryModel summaryModel = new GrrSummaryModel();
     private ItemResultModel itemResultModel = new ItemResultModel();
     private GrrAnovaModel anovaModel = new GrrAnovaModel();
     private GrrSourceModel sourceModel = new GrrSourceModel();
-
     private GrrMainController grrMainController;
-    private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
+    /****** Summary *****/
+    @FXML
+    private HBox itemFilterHBox;
+    @FXML
+    private ComboBox resultBasedCmb;
+    @FXML
+    private TableView<String> summaryTb;
+    @FXML
+    private TableView itemDetailTb;
+    @FXML
+    private TableView anovaTb;
+    @FXML
+    private TableView sourceTb;
+    @FXML
+    private Button categoryBtn;
+    @FXML
+    private Button grrDataBtn;
+    @FXML
+    private Button grrChartBtn;
+    @FXML
+    private Button grrResultBtn;
+    @FXML
+    private ScrollPane grrResultScrollPane;
+    @FXML
+    private VBox chartVBox;
+    @FXML
+    private VBox resultVBox;
+    private TextFieldFilter summaryItemTf;
+    /****** Chart ******/
+    @FXML
+    private VBox xBarAppraiserVBox;
+    @FXML
+    private VBox rangeAppraiserVBox;
+    @FXML
+    private VBox rrByAppraiserVBox;
+    @FXML
+    private VBox rrbyPartVBox;
+    @FXML
+    private BorderPane componentBp;
+    @FXML
+    private BorderPane partAppraiserBp;
+    @FXML
+    private BorderPane xBarAppraiserBp;
+    @FXML
+    private BorderPane rangeAppraiserBp;
+    @FXML
+    private BorderPane rrbyAppraiserBp;
+    @FXML
+    private BorderPane rrbyPartBp;
+    @FXML
+    private BarChart componentChart;
+    @FXML
+    private LineChart partAppraiserChart;
+    private LinearChart xBarAppraiserChart;
+    private LinearChart rangeAppraiserChart;
+    private LineChart rrByAppraiserChart;
+    private LineChart rrbyPartChart;
+    private ChartRightPane componentChartRightPane;
+    private ChartRightPane partAppraiserChartRightPane;
+    private ChartRightPane xBarAppraiserChartRightPane;
+    private ChartRightPane rangeAppraiserChartRightPane;
+    private ChartRightPane rrByAppraiserChartRightPane;
+    private ChartRightPane rrbyPartChartRightPane;
+    private ChartOperateButton xBarAppraiserChartBtn;
+    private ChartOperateButton rangeAppraiserChartBtn;
+    @FXML
+    private Label toleranceLbl;
+    private String appKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " ";
+    private String trailKey = GrrFxmlAndLanguageUtils.getString("TRAIL") + " ";
 
     /**
      * Init grr main controller
@@ -104,6 +207,7 @@ public class GrrResultController implements Initializable {
      */
     public void analyzeGrrResult(List<GrrSummaryDto> grrSummaryDtos, GrrDetailDto grrDetailDto) {
 //        Set digNum
+        this.removeAllResultData();
         DigNumInstance.newInstance().setDigNum(grrMainController.getActiveTemplateSettingDto().getDecimalDigit());
         List<GrrViewDataDto> viewDataDtos = grrMainController.getGrrDataFrame().getIncludeDatas();
         parts.clear();
@@ -116,7 +220,6 @@ public class GrrResultController implements Initializable {
             return;
         }
         String selectedName = grrSummaryDtos.get(0).getItemName();
-        this.removeAllResultData();
         this.summaryModel.setRules(grrMainController.getGrrConfigDto().getAlarmSetting());
         this.setSummaryData(grrSummaryDtos, selectedName);
         this.setToleranceValue(summaryModel.getToleranceCellValue(selectedName));
@@ -134,7 +237,7 @@ public class GrrResultController implements Initializable {
      * Change grr result when view data change submit
      */
     public void changeGrrResult() {
-        submitGrrResult(grrMainController.getSearchConditionDto().getSelectedTestItemDtos().get(0).getTestItemName());
+        submitGrrResult(grrMainController.getSearchConditionDto().getSelectedTestItemDtos().get(0).getTestItemName(), true);
     }
 
     /**
@@ -166,7 +269,9 @@ public class GrrResultController implements Initializable {
             List<TestItemWithTypeDto> selectTestItemWithTypeDtos = grrMainController.getSearchConditionDto().getSelectedTestItemDtos();
             List<TestItemWithTypeDto> changedTestItemWithTypeDtos = summaryModel.getEditTestItem();
             if (changedTestItemWithTypeDtos.isEmpty() || selectTestItemWithTypeDtos.isEmpty()) {
-                System.out.println("not need refresh");
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_REFRESH_RESULT"));
                 return;
             }
             refreshGrrResultEvent();
@@ -188,90 +293,116 @@ public class GrrResultController implements Initializable {
             }
         }
         boolean hasSelectedItem = false;
-        for (int i = 0; i < selectTestItemWithTypeDtos.size(); i++) {
-            if (selectedItem.equals(selectTestItemWithTypeDtos.get(i).getTestItemName())) {
+        for (int i = 0; i < changedTestItemWithTypeDtos.size(); i++) {
+            if (selectedItem.equals(changedTestItemWithTypeDtos.get(i).getTestItemName())) {
                 hasSelectedItem = true;
                 break;
             }
         }
-        String itemName = hasSelectedItem ? selectedItem : "";
         //clear summary edit data
         summaryModel.clearEditData();
-        submitGrrResult(itemName);
+        summaryTb.refresh();
+        submitGrrResult(selectedItem, hasSelectedItem);
     }
 
-    private void submitGrrResult(String selectedItem) {
-        Map paramMap = Maps.newHashMap();
-        Job job = new Job(ParamKeys.GRR_REFRESH_JOB_PIPELINE);
-        paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, grrMainController.getSearchConditionDto());
-        paramMap.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrMainController.getGrrDataFrame());
-        if (DAPStringUtils.isNotBlank(selectedItem)) {
-            paramMap.put(ParamKeys.TEST_ITEM_NAME, selectedItem);
+    @SuppressWarnings("unchecked")
+    private void submitGrrResult(String selectedItem, Boolean analyseSubResult) {
+        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+        context.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, grrMainController.getSearchConditionDto());
+        context.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrMainController.getGrrDataFrame());
+        if (DAPStringUtils.isNotBlank(selectedItem) && analyseSubResult) {
+            context.put(ParamKeys.TEST_ITEM_NAME, selectedItem);
         }
-        Platform.runLater(() -> manager.doJobASyn(job, returnValue -> {
-            try {
-                Platform.runLater(() -> {
-                    if (returnValue instanceof ApplicationException) {
-                        //TODO exception tip
-                        System.out.println("GRR_REFRESH_JOB_PIPELINE exception tip");
+        context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
+        windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_REFRESH_JOB_PIPELINE);
+        if (jobPipeline.getCompletedHandler() == null) {
+            jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+                @Override
+                public void doJob(JobContext context) {
+                    List<GrrSummaryDto> grrSummaryDtoList = (List<GrrSummaryDto>) context.get(ParamKeys.GRR_SUMMARY_DTO_LIST);
+                    if (grrSummaryDtoList == null || grrSummaryDtoList.isEmpty()) {
                         return;
                     }
-                    if (returnValue instanceof Map) {
-                        Map<String, Object> value = (Map<String, Object>) returnValue;
-                        if (value.containsKey(UIConstant.ANALYSIS_RESULT_SUMMARY)) {
-                            List<GrrSummaryDto> summaryDtos = (List<GrrSummaryDto>) value.get(UIConstant.ANALYSIS_RESULT_SUMMARY);
-                            summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
-                            summaryTb.getSortOrder().clear();
-                            summaryTb.sort();
-                            summaryModel.setData(summaryDtos, selectedItem);
-                            this.setToleranceValue(summaryModel.getToleranceCellValue(selectedItem));
-                            summaryTb.refresh();
-                        }
-                        if (value.containsKey(UIConstant.ANALYSIS_RESULT_DETAIL)) {
-                            GrrDetailDto grrDetailDto = (GrrDetailDto) value.get(UIConstant.ANALYSIS_RESULT_DETAIL);
-                            this.removeSubResultData();
-                            if (grrDetailDto == null) {
-                                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                                        GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
-                                return;
-                            }
-                            this.setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), selectedItem);
-                            this.setAnalysisItemResultData(grrDetailDto);
+                    String itemName = context.containsKey(ParamKeys.GRR_DETAIL_DTO) ? (String) context.get(ParamKeys.TEST_ITEM_NAME) : summaryModel.getSelectedItemName();
+                    summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
+                    summaryModel.setData(grrSummaryDtoList, itemName);
+                    summaryTb.refresh();
+                    if (context.containsKey(ParamKeys.GRR_DETAIL_DTO)) {
+                        removeSubResultData();
+                        setToleranceValue(summaryModel.getToleranceCellValue(selectedItem));
+                        GrrDetailDto grrDetailDto = context.getParam(ParamKeys.GRR_DETAIL_DTO, GrrDetailDto.class);
+                        if (grrDetailDto != null) {
+                            setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), selectedItem);
+                            setAnalysisItemResultData(grrDetailDto);
+                        } else {
+                            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                                    GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
                         }
                     }
-                });
-            } catch (ApplicationException exception) {
-                exception.printStackTrace();
-            }
-        }, paramMap, grrMainController));
+                    windowProgressTipController.closeDialog();
+                }
+            });
+            jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+                @Override
+                public void doJob(JobContext context) {
+                    windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                }
+            });
+            jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+                @Override
+                public void doJob(JobContext context) {
+                    windowProgressTipController.closeDialog();
+                }
+            });
+        }
+        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+
     }
 
     private void analyzeGrrSubResult(TestItemWithTypeDto testItemDto, String tolerance) {
-        Map detailParamMap = Maps.newHashMap();
-        Job detailJob = new Job(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE);
-        detailParamMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, buildSearchConditionDto(testItemDto));
-        detailParamMap.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrMainController.getGrrDataFrame());
         this.removeSubResultData();
         this.setToleranceValue(tolerance);
-        Platform.runLater(() -> manager.doJobASyn(detailJob, returnValue -> {
-            if (returnValue instanceof ApplicationException) {
-                //TODO exception tip
-                System.out.println("GRR_DETAIL_ANALYSIS_JOB_PIPELINE exception tip");
-                return;
-            }
-            Platform.runLater(() -> {
-                if (returnValue == null) {
-                    RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                            GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                            GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
-                }
-                if (returnValue instanceof GrrDetailDto) {
-                    this.setAnalysisItemResultData((GrrDetailDto) returnValue);
-                    this.setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), testItemDto.getTestItemName());
+        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+        context.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, buildSearchConditionDto(testItemDto));
+        context.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrMainController.getGrrDataFrame());
+        context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
+        windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE);
+        if (jobPipeline.getCompletedHandler() == null) {
+            jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+                @Override
+                public void doJob(JobContext context) {
+                    GrrDetailDto grrDetailDto = context.getParam(ParamKeys.GRR_DETAIL_DTO, GrrDetailDto.class);
+                    if (grrDetailDto == null) {
+                        RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                                GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                                GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
+                    } else {
+                        setAnalysisItemResultData(grrDetailDto);
+                        setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), testItemDto.getTestItemName());
+                    }
+                    windowProgressTipController.closeDialog();
                 }
             });
-        }, detailParamMap, grrMainController));
+            jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+                @Override
+                public void doJob(JobContext context) {
+                    context.interruptBeforeNextJobHandler();
+                    windowProgressTipController.closeDialog();
+                }
+            });
+            jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+                @Override
+                public void doJob(JobContext context) {
+                    windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                }
+            });
+        }
+        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
     }
 
     private SearchConditionDto buildSearchConditionDto(TestItemWithTypeDto testItemDto) {
@@ -293,6 +424,7 @@ public class GrrResultController implements Initializable {
         summaryTb.sort();
         summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
         summaryModel.setData(summaryData, selectedItemName);
+        summaryTb.refresh();
     }
 
     private void setItemResultData(GrrDataFrameDto grrDataFrameDto, SearchConditionDto conditionDto, String itemName) {
@@ -483,9 +615,8 @@ public class GrrResultController implements Initializable {
         ChartUtils.setChartToolTip(partAppraiserChart.getData(), pointTooltip -> {
             Double value = (Double) pointTooltip.getData().getYValue();
             int digNum = DigNumInstance.newInstance().getDigNum();
-            return pointTooltip == null ? "" :
-                    "(" + pointTooltip.getData().getExtraValue() + "," +
-                            pointTooltip.getData().getXValue() + ")" + "=" + DAPStringUtils.formatDouble(value, digNum);
+            return pointTooltip == null ? "" : "(" + pointTooltip.getData().getExtraValue() + ","
+                    + pointTooltip.getData().getXValue() + ")" + "=" + DAPStringUtils.formatDouble(value, digNum);
         });
     }
 
@@ -557,9 +688,8 @@ public class GrrResultController implements Initializable {
         });
         ChartUtils.setChartToolTip(chart.getData(), pointTooltip -> {
             Double value = (Double) pointTooltip.getData().getYValue();
-            return pointTooltip == null ? "" :
-                    "(" + pointTooltip.getData().getExtraValue() + "," +
-                            pointTooltip.getData().getXValue() + ")" + "=" + DAPStringUtils.formatDouble(value, digNum);
+            return pointTooltip == null ? "" : "(" + pointTooltip.getData().getExtraValue() + ","
+                    + pointTooltip.getData().getXValue() + ")" + "=" + DAPStringUtils.formatDouble(value, digNum);
         });
 
         String legendContent = "- - - LCL,UCL   —— μ Line";
@@ -605,8 +735,7 @@ public class GrrResultController implements Initializable {
         ChartUtils.setChartToolTip(chart.getData(), pointTooltip -> {
             Double value = (Double) pointTooltip.getData().getYValue();
             int digNum = DigNumInstance.newInstance().getDigNum();
-            return pointTooltip == null ? "" :
-                    "(" + DAPStringUtils.formatDouble(value, digNum) + ")";
+            return pointTooltip == null ? "" : "(" + DAPStringUtils.formatDouble(value, digNum) + ")";
         });
         scatterSeries.getNode().getStyleClass().add("chart-series-hidden-line");
         Legend legend = LegendUtils.buildLegend(chart.getData(),
@@ -731,14 +860,12 @@ public class GrrResultController implements Initializable {
     }
 
     private void initComponentsRender() {
-        final double INPUT_WIDTH = 200;
-//        componentChart.setBarGap(10);
-//        componentChart.setCategoryGap(50);
+        final double inputWidth = 200;
 
         itemFilterHBox.setMargin(summaryItemTf, new Insets(4, 0, 4, 0));
         String testItemText = GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TEST_ITEM");
         summaryItemTf.getTextField().setPromptText(testItemText);
-        summaryItemTf.getTextField().setPrefWidth(INPUT_WIDTH);
+        summaryItemTf.getTextField().setPrefWidth(inputWidth);
         summaryItemTf.getTextField().setFocusTraversable(false);
         summaryTb.setEditable(true);
 
@@ -750,6 +877,15 @@ public class GrrResultController implements Initializable {
         rangeAppraiserChart.setAnimated(false);
         rrByAppraiserChart.setAnimated(false);
         rrbyPartChart.setAnimated(false);
+
+        xBarAppraiserChart.setHorizontalZeroLineVisible(false);
+        xBarAppraiserChart.setVerticalZeroLineVisible(false);
+        rangeAppraiserChart.setHorizontalZeroLineVisible(false);
+        rangeAppraiserChart.setVerticalZeroLineVisible(false);
+        rrByAppraiserChart.setHorizontalZeroLineVisible(false);
+        rrByAppraiserChart.setVerticalZeroLineVisible(false);
+        rrbyPartChart.setHorizontalZeroLineVisible(false);
+        rrbyPartChart.setVerticalZeroLineVisible(false);
 
         componentChart.setVerticalGridLinesVisible(false);
         componentChart.setHorizontalGridLinesVisible(false);
@@ -811,6 +947,7 @@ public class GrrResultController implements Initializable {
         };
     }
 
+    @SuppressWarnings("unchecked")
     private void updatePerformance(String chartName, Set<String> selectedNames) {
         String value = envService.findPreference(UIConstant.CHART_PERFORMANCE_CODE);
         Map data = mapper.fromJson(value, mapper.buildMapType(Map.class, String.class, Map.class));
@@ -977,116 +1114,4 @@ public class GrrResultController implements Initializable {
         value[11] = resultDto.getReprodVar();
         return value;
     }
-
-    /****** Summary *****/
-    @FXML
-    private HBox itemFilterHBox;
-    @FXML
-    private ComboBox resultBasedCmb;
-    @FXML
-    private TableView<String> summaryTb;
-    @FXML
-    private TableView itemDetailTb;
-    @FXML
-    private TableView anovaTb;
-    @FXML
-    private TableView sourceTb;
-    @FXML
-    private Button categoryBtn;
-    @FXML
-    private Button grrDataBtn;
-    @FXML
-    private Button grrChartBtn;
-    @FXML
-    private Button grrResultBtn;
-    @FXML
-    private ScrollPane grrResultScrollPane;
-    @FXML
-    private VBox chartVBox;
-    @FXML
-    private VBox resultVBox;
-    private TextFieldFilter summaryItemTf;
-    /****** Chart ******/
-    @FXML
-    private VBox xBarAppraiserVBox;
-    @FXML
-    private VBox rangeAppraiserVBox;
-    @FXML
-    private VBox rrByAppraiserVBox;
-    @FXML
-    private VBox rrbyPartVBox;
-    @FXML
-    private BorderPane componentBp;
-    @FXML
-    private BorderPane partAppraiserBp;
-    @FXML
-    private BorderPane xBarAppraiserBp;
-    @FXML
-    private BorderPane rangeAppraiserBp;
-    @FXML
-    private BorderPane rrbyAppraiserBp;
-    @FXML
-    private BorderPane rrbyPartBp;
-    @FXML
-    private BarChart componentChart;
-    @FXML
-    private LineChart partAppraiserChart;
-    private LinearChart xBarAppraiserChart;
-    private LinearChart rangeAppraiserChart;
-    private LineChart rrByAppraiserChart;
-    private LineChart rrbyPartChart;
-
-    private ChartRightPane componentChartRightPane;
-    private ChartRightPane partAppraiserChartRightPane;
-    private ChartRightPane xBarAppraiserChartRightPane;
-    private ChartRightPane rangeAppraiserChartRightPane;
-    private ChartRightPane rrByAppraiserChartRightPane;
-    private ChartRightPane rrbyPartChartRightPane;
-
-    private ChartOperateButton xBarAppraiserChartBtn;
-    private ChartOperateButton rangeAppraiserChartBtn;
-    @FXML
-    private Label toleranceLbl;
-
-    private String appKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " ";
-    private String trailKey = GrrFxmlAndLanguageUtils.getString("TRAIL") + " ";
-    private String[] GRR_RESULT_TYPE = new String[]{
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_TOLERANCE"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_CONTRIBUTION")};
-    private String[] CHART_COMPONENT_LABEL = new String[]{
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_GAGE_R"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_REPEATABILITY"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_REPRODUCIBILITY"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_PART")};
-    private String[] CHART_COMPONENT_CATEGORY = new String[]{
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_VARIATION"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_TOLERANCE")};
-    private String[] CHART_OPERATE_NAME = new String[]{
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION")};
-    private String[] GRR_SUMMARY_TITLE = new String[]{
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_TESTITEM"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_LSL"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_USL"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_TOLERANCE"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_REPEATABILITY"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_REPRODUCIBILITY"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_GAUGE")};
-    private String[] GRR_ANOVA_TITLE = new String[]{
-            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_SOURCE"),
-            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_DF"),
-            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_SS"),
-            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_MS"),
-            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_F"),
-            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_PROB")};
-    private String[] GRR_SOURCE_TITLE = new String[]{
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_SOURCE_VARIATION"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_SIGMA"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_STUDY_VAR"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_VARIATION"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_SIGMA"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_VARIATION"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_TOLERANCE")};
 }

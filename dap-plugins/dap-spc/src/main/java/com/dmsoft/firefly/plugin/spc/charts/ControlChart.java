@@ -63,6 +63,8 @@ public class ControlChart<X, Y> extends LineChart {
         super(xAxis, yAxis, FXCollections.observableArrayList());
         super.setLegendVisible(false);
         super.setAnimated(false);
+        super.setHorizontalZeroLineVisible(false);
+        super.setVerticalZeroLineVisible(false);
     }
 
     /**

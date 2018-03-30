@@ -20,7 +20,8 @@ import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcCustomAlarmKey;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcProCapAlarmKey;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.job.Job;
+import com.dmsoft.firefly.sdk.job.core.JobContext;
+import com.dmsoft.firefly.sdk.job.core.JobFactory;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -49,7 +50,7 @@ import java.util.ResourceBundle;
  */
 public class SpcSettingController implements Initializable {
     private final Logger logger = LoggerFactory.getLogger(SpcSettingController.class);
-//    @FXML
+    //    @FXML
 //    private Label defaultSetting;
     @FXML
     private Label alarmSetting;
@@ -104,8 +105,6 @@ public class SpcSettingController implements Initializable {
     @FXML
     private ScrollPane settingScrollPane;
 
-    private JobManager manager = RuntimeContext.getBean(JobManager.class);
-
     private ObservableList<CustomAlarmTestItemRowData> testItemRowDataObservableList;
     private FilteredList<CustomAlarmTestItemRowData> testItemRowDataFilteredList;
     //    private ObservableList<StatisticsResultRuleRowData> statisticsRuleRowDataObservableList;
@@ -113,6 +112,93 @@ public class SpcSettingController implements Initializable {
 
     private SpcExportSettingController spcExportSettingController;
     private AddItemController addItemController;
+    //Process Capability alarm Setting
+    //CA
+    @FXML
+    private TextField caExcellentTf;
+    @FXML
+    private TextField caAcceptableTf;
+    @FXML
+    private TextField caRectificationTf;
+    //CP
+    @FXML
+    private TextField cpExcellentTf;
+    @FXML
+    private TextField cpGoodTf;
+    @FXML
+    private TextField cpAcceptableTf;
+
+    //    private void setAnalysisSettingData(int customGroupNumber, int chartIntervalNumber) {
+//        subgroupSizeTf.setText(String.valueOf(customGroupNumber));
+//        ndChartNumberTf.setText(String.valueOf(chartIntervalNumber));
+//    }
+    @FXML
+    private TextField cpRectificationTf;
+    //CPK
+    @FXML
+    private TextField cpkExcellentTf;
+    @FXML
+    private TextField cpkGoodTf;
+    @FXML
+    private TextField cpkAcceptableTf;
+    @FXML
+    private TextField cpkRectificationTf;
+    //CPL
+    @FXML
+    private TextField cplExcellentTf;
+    @FXML
+    private TextField cplGoodTf;
+    @FXML
+    private TextField cplAcceptableTf;
+    @FXML
+    private TextField cplRectificationTf;
+    //CPU
+    @FXML
+    private TextField cpuExcellentTf;
+    @FXML
+    private TextField cpuGoodTf;
+    @FXML
+    private TextField cpuAcceptableTf;
+    @FXML
+    private TextField cpuRectificationTf;
+    //PP
+    @FXML
+    private TextField ppExcellentTf;
+    @FXML
+    private TextField ppGoodTf;
+    @FXML
+    private TextField ppAcceptableTf;
+    @FXML
+    private TextField ppRectificationTf;
+    //PPK
+    @FXML
+    private TextField ppkExcellentTf;
+    @FXML
+    private TextField ppkGoodTf;
+    @FXML
+    private TextField ppkAcceptableTf;
+    @FXML
+    private TextField ppkRectificationTf;
+    //PPL
+    @FXML
+    private TextField pplExcellentTf;
+    @FXML
+    private TextField pplGoodTf;
+    @FXML
+    private TextField pplAcceptableTf;
+    @FXML
+    private TextField pplRectificationTf;
+    //PPU
+    @FXML
+    private TextField ppuExcellentTf;
+    @FXML
+    private TextField ppuGoodTf;
+    @FXML
+    private TextField ppuAcceptableTf;
+    @FXML
+    private TextField ppuRectificationTf;
+    @FXML
+    private VBox defaultSettingVBox, alarmSettingVBox, controlAlarmRuleVBox, exportSettingVBox;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -150,17 +236,19 @@ public class SpcSettingController implements Initializable {
      * init data
      */
     public void initData() {
-        Job job = new Job(ParamKeys.FIND_SPC_SETTING_DATA_JOP_PIPELINE);
-        Object returnValue = manager.doJobSyn(job);
-        if (returnValue == null) {
-            logger.debug("Spc setting data is null");
-            return;
-        }
-        if (returnValue instanceof Exception) {
-            ((Exception) returnValue).printStackTrace();
-            return;
-        }
-        SpcSettingDto spcSettingDto = (SpcSettingDto) returnValue;
+        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        RuntimeContext.getBean(JobManager.class).fireJobSyn(ParamKeys.FIND_SPC_SETTING_DATA_JOP_PIPELINE, context);
+//        Job job = new Job(ParamKeys.FIND_SPC_SETTING_DATA_JOP_PIPELINE);
+//        Object returnValue = manager.doJobSyn(job);
+//        if (returnValue == null) {
+//            logger.debug("Spc setting data is null");
+//            return;
+//        }
+//        if (returnValue instanceof Exception) {
+//            ((Exception) returnValue).printStackTrace();
+//            return;
+//        }
+        SpcSettingDto spcSettingDto = context.getParam(ParamKeys.SPC_SETTING_DTO, SpcSettingDto.class);
 
 //        this.setAnalysisSettingData(spcSettingDto.getCustomGroupNumber(), spcSettingDto.getChartIntervalNumber());
         this.setProcessAlarmSettingData(spcSettingDto.getAbilityAlarmRule());
@@ -226,11 +314,6 @@ public class SpcSettingController implements Initializable {
         }
         return customAlarmDtoList;
     }
-
-//    private void setAnalysisSettingData(int customGroupNumber, int chartIntervalNumber) {
-//        subgroupSizeTf.setText(String.valueOf(customGroupNumber));
-//        ndChartNumberTf.setText(String.valueOf(chartIntervalNumber));
-//    }
 
     private void setProcessAlarmSettingData(Map<String, Double[]> abilityAlarmRule) {
         SpcProCapAlarmKey[] proCapAlarmKeys = SpcProCapAlarmKey.values();
@@ -326,7 +409,6 @@ public class SpcSettingController implements Initializable {
         exportTemplateCb.setValue(exportTemplateName);
     }
 
-
     private void initComponentEvent() {
         apply.setOnAction(event -> getApplyBtnEvent());
         cancel.setOnAction(event -> getCancelBtnEvent());
@@ -412,9 +494,9 @@ public class SpcSettingController implements Initializable {
         if (!isSave()) {
             return;
         }
-        SpcSettingDto spcSettingDto = this.buildSaveSettingData();
-        Job job = new Job(ParamKeys.SAVE_SPC_SETTING_DATA_JOP_PIPELINE);
-        manager.doJobSyn(job, spcSettingDto);
+        saveSetting();
+//        Job job = new Job(ParamKeys.SAVE_SPC_SETTING_DATA_JOP_PIPELINE);
+//        manager.doJobSyn(job, spcSettingDto);
     }
 
     private void getCancelBtnEvent() {
@@ -425,9 +507,9 @@ public class SpcSettingController implements Initializable {
         if (!isSave()) {
             return;
         }
-        SpcSettingDto spcSettingDto = this.buildSaveSettingData();
-        Job job = new Job(ParamKeys.SAVE_SPC_SETTING_DATA_JOP_PIPELINE);
-        manager.doJobSyn(job, spcSettingDto);
+        saveSetting();
+//        Job job = new Job(ParamKeys.SAVE_SPC_SETTING_DATA_JOP_PIPELINE);
+//        manager.doJobSyn(job, spcSettingDto);
         StageMap.closeStage(StateKey.SPC_SETTING);
     }
 
@@ -596,96 +678,11 @@ public class SpcSettingController implements Initializable {
         return testItem;
     }
 
-    //Process Capability alarm Setting
-    //CA
-    @FXML
-    private TextField caExcellentTf;
-    @FXML
-    private TextField caAcceptableTf;
-    @FXML
-    private TextField caRectificationTf;
-
-    //CP
-    @FXML
-    private TextField cpExcellentTf;
-    @FXML
-    private TextField cpGoodTf;
-    @FXML
-    private TextField cpAcceptableTf;
-    @FXML
-    private TextField cpRectificationTf;
-
-    //CPK
-    @FXML
-    private TextField cpkExcellentTf;
-    @FXML
-    private TextField cpkGoodTf;
-    @FXML
-    private TextField cpkAcceptableTf;
-    @FXML
-    private TextField cpkRectificationTf;
-
-    //CPL
-    @FXML
-    private TextField cplExcellentTf;
-    @FXML
-    private TextField cplGoodTf;
-    @FXML
-    private TextField cplAcceptableTf;
-    @FXML
-    private TextField cplRectificationTf;
-
-    //CPU
-    @FXML
-    private TextField cpuExcellentTf;
-    @FXML
-    private TextField cpuGoodTf;
-    @FXML
-    private TextField cpuAcceptableTf;
-    @FXML
-    private TextField cpuRectificationTf;
-
-    //PP
-    @FXML
-    private TextField ppExcellentTf;
-    @FXML
-    private TextField ppGoodTf;
-    @FXML
-    private TextField ppAcceptableTf;
-    @FXML
-    private TextField ppRectificationTf;
-
-    //PPK
-    @FXML
-    private TextField ppkExcellentTf;
-    @FXML
-    private TextField ppkGoodTf;
-    @FXML
-    private TextField ppkAcceptableTf;
-    @FXML
-    private TextField ppkRectificationTf;
-
-    //PPL
-    @FXML
-    private TextField pplExcellentTf;
-    @FXML
-    private TextField pplGoodTf;
-    @FXML
-    private TextField pplAcceptableTf;
-    @FXML
-    private TextField pplRectificationTf;
-
-    //PPU
-    @FXML
-    private TextField ppuExcellentTf;
-    @FXML
-    private TextField ppuGoodTf;
-    @FXML
-    private TextField ppuAcceptableTf;
-    @FXML
-    private TextField ppuRectificationTf;
-
-    @FXML
-    private VBox defaultSettingVBox, alarmSettingVBox, controlAlarmRuleVBox, exportSettingVBox;
+    private void saveSetting() {
+        SpcSettingDto spcSettingDto = this.buildSaveSettingData();
+        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        context.put(ParamKeys.SPC_SETTING_DTO, spcSettingDto);
+        RuntimeContext.getBean(JobManager.class).fireJobSyn(ParamKeys.SAVE_SPC_SETTING_DATA_JOP_PIPELINE, context);
+    }
 
 }

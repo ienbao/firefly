@@ -7,15 +7,16 @@ package com.dmsoft.firefly.gui.controller.template;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.gui.handler.importcsv.CsvImportHandler;
+import com.dmsoft.firefly.gui.handler.importcsv.ParamKeys;
+import com.dmsoft.firefly.gui.handler.importcsv.ResolverSelectHandler;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.model.UserModel;
-import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
-import com.dmsoft.firefly.sdk.job.Job;
-import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.job.core.*;
 import com.dmsoft.firefly.sdk.plugin.PluginClass;
 import com.dmsoft.firefly.sdk.plugin.PluginClassType;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
@@ -43,25 +44,22 @@ import java.util.ResourceBundle;
  */
 public class ResolverSelectController implements Initializable {
 
+    private static final Double D100 = 100.0;
     private DataSourceController controller;
     private ObservableList resolverData;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    @FXML
+    private ComboBox resolver;
+    @FXML
+    private Button nextStep;
+    @FXML
+    private CheckBox defaultTemplate;
+    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+    private JsonMapper mapper = JsonMapper.defaultMapper();
 
     public ResolverSelectController(DataSourceController controller) {
         this.controller = controller;
     }
-
-    @FXML
-    private ComboBox resolver;
-
-    @FXML
-    private Button nextStep;
-
-    @FXML
-    private CheckBox defaultTemplate;
-
-    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
-    private JsonMapper mapper = JsonMapper.defaultMapper();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -158,35 +156,67 @@ public class ResolverSelectController implements Initializable {
         });
     }
 
-    private void importDataSource(String filPath, String fileName, String resolverName) {
+    private void importDataSource(String filePath, String fileName, String resolverName) {
 
         ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, fileName);
         chooseTableRowData.setImport(true);
-        JobManager manager = RuntimeContext.getBean(JobManager.class);
-        Job job = new Job(GuiConst.DATASOURCE_IMPORT);
-        job.addProcessMonitorListener(event -> {
-            chooseTableRowData.setProgress(event.getPoint());
-            Platform.runLater(() -> {
-                controller.getDataSourceTable().refresh();
-            });
-        });
         controller.getChooseTableRowDataObservableList().add(chooseTableRowData);
+        controller.getDataSourceTable().refresh();
+        JobManager jobManager = RuntimeContext.getBean(JobManager.class);
+        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        context.addJobEventListener(event -> {
+            chooseTableRowData.setProgress(event.getProgress());
+            controller.getDataSourceTable().refresh();
+        });
+        context.put(ParamKeys.FILE_PATH, filePath);
+        context.put(ParamKeys.RESOLVER_TEMPLATE_NAME, resolverName);
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobFactory.class).createJobPipeLine()
+                .addLast(new ResolverSelectHandler())
+                .addLast(new CsvImportHandler().setWeight(D100));
 
-        new Thread(() -> {
-            manager.doJobASyn(job, returnValue -> {
-                if (returnValue != null && returnValue instanceof Throwable) {
-                    chooseTableRowData.setError(true);
-                    chooseTableRowData.setImport(false);
-                    Platform.runLater(() -> {
-                        controller.getDataSourceTable().refresh();
-                        controller.getErrorInfo().setVisible(true);
-                    });
-//                    controller.getChooseTableRowDataObservableList().remove(chooseTableRowData);
-                } else {
-                    chooseTableRowData.setImport(false);
-                    controller.getDataSourceTable().refresh();
-                }
-            }, filPath, resolverName);
-        }).start();
+        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                chooseTableRowData.setImport(false);
+                controller.getDataSourceTable().refresh();
+            }
+        });
+        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                chooseTableRowData.setError(true);
+                chooseTableRowData.setImport(false);
+                controller.getDataSourceTable().refresh();
+                controller.getErrorInfo().setVisible(true);
+            }
+        });
+//        JobManager manager = RuntimeContext.getBean(JobManager.class);
+//        Job job = new Job(GuiConst.DATASOURCE_IMPORT);
+//        job.addProcessMonitorListener(event -> {
+//            chooseTableRowData.setProgress(event.getPoint());
+//            Platform.runLater(() -> {
+//                controller.getDataSourceTable().refresh();
+//            });
+//        });
+//        controller.getChooseTableRowDataObservableList().add(chooseTableRowData);
+//        new Thread(() -> jobManager.fireJobASyn(jobPipeline, context)).start();
+        jobManager.fireJobASyn(jobPipeline, context);
+//
+//        new Thread(() -> {
+//            manager.doJobASyn(job, returnValue -> {
+//                if (returnValue != null && returnValue instanceof Throwable) {
+//                    chooseTableRowData.setError(true);
+//                    chooseTableRowData.setImport(false);
+//                    Platform.runLater(() -> {
+//                        controller.getDataSourceTable().refresh();
+//                        controller.getErrorInfo().setVisible(true);
+//                    });
+////                    controller.getChooseTableRowDataObservableList().remove(chooseTableRowData);
+//                } else {
+//                    chooseTableRowData.setImport(false);
+//                    controller.getDataSourceTable().refresh();
+//                }
+//            }, filePath, resolverName);
+//        }).start();
     }
 }

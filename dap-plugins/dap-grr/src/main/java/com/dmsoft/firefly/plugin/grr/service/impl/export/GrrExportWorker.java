@@ -4,7 +4,10 @@
 
 package com.dmsoft.firefly.plugin.grr.service.impl.export;
 
-import com.dmsoft.firefly.plugin.grr.dto.*;
+import com.dmsoft.firefly.plugin.grr.dto.GrrExportConfigDto;
+import com.dmsoft.firefly.plugin.grr.dto.GrrExportResultDto;
+import com.dmsoft.firefly.plugin.grr.dto.GrrImageDto;
+import com.dmsoft.firefly.plugin.grr.dto.GrrSummaryDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnovaAndSourceResultDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrAnovaDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrSourceDto;
@@ -289,8 +292,8 @@ public class GrrExportWorker implements ExWorker {
         String name = grrSummaryResultDto.getItemName();
         GrrSummaryResultDto grrSummary = grrSummaryResultDto.getSummaryResultDto();
         //getProcess
-        String usl = grrSummary.getUsl().toString();
-        String lsl = grrSummary.getLsl().toString();
+        String usl = grrSummary.getUsl() == null ? "-" : grrSummary.getUsl().toString();
+        String lsl = grrSummary.getLsl() == null ? "-" : grrSummary.getLsl().toString();
         String tolerance = grrSummary.getTolerance() == null ? "-" : DAPStringUtils.formatDouble(grrSummary.getTolerance(), digNum);
         String grr = "";
         String result = "";
