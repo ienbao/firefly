@@ -111,7 +111,7 @@ public class DetailDataModel implements TableModel {
         if (values.equals(column)) {
             if (!RangeUtils.isPass(valueMap.get(rowKey).get(), testItemDtoMap.get(rowKey))) {
                 tableCell.setStyle("-fx-background-color: red; -fx-text-fill: white");
-            } else if ((valueMap.get(rowKey).get() != null && !DAPStringUtils.isNumeric(valueMap.get(rowKey).get())) || !testItemDtoMap.containsKey(rowKey)) {
+            } else if ((valueMap.get(rowKey).get() != null && !DAPStringUtils.isNumeric(valueMap.get(rowKey).get())) || (testItemDtoMap != null && !testItemDtoMap.containsKey(rowKey))) {
                 tableCell.setStyle("-fx-text-fill: #aaaaaa");
             }
         }

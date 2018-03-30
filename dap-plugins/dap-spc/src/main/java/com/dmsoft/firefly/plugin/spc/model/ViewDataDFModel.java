@@ -232,7 +232,7 @@ public class ViewDataDFModel implements TableModel {
             tableCell.setStyle("-fx-background-color: #f8d251; -fx-text-fill: #aaaaaa");
         } else if (this.highLightRowKeys.contains(rowKey)) {
             tableCell.setStyle("-fx-background-color: #f8d251");
-        } else if ((dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column))) || !testItemDtoMap.containsKey(column)) {
+        } else if ((dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column))) || (testItemDtoMap != null && !testItemDtoMap.containsKey(column))) {
             tableCell.setStyle("-fx-text-fill: #aaaaaa");
         }
         return tableCell;
