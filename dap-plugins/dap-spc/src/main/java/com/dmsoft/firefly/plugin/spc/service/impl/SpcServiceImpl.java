@@ -57,16 +57,8 @@ public class SpcServiceImpl implements SpcService {
                     doubleList.add(Double.valueOf(s));
                 }
             }
-            if (!DAPStringUtils.isSpecialBlank(searchConditionDto.getCusLsl())) {
-                spcAnalysisDataDto.setLsl(searchConditionDto.getCusLsl());
-            } else {
-                spcAnalysisDataDto.setLsl(searchDataFrame.getTestItemWithTypeDto(searchConditionDto.getItemName()).getLsl());
-            }
-            if (!DAPStringUtils.isSpecialBlank(searchConditionDto.getCusUsl())) {
-                spcAnalysisDataDto.setUsl(searchConditionDto.getCusUsl());
-            } else {
-                spcAnalysisDataDto.setUsl(searchDataFrame.getTestItemWithTypeDto(searchConditionDto.getItemName()).getUsl());
-            }
+            spcAnalysisDataDto.setLsl(searchConditionDto.getCusLsl());
+            spcAnalysisDataDto.setUsl(searchConditionDto.getCusUsl());
             spcAnalysisDataDto.setDataList(doubleList);
             spcAnalysisDataDtoList.add(spcAnalysisDataDto);
             n++;
@@ -125,16 +117,8 @@ public class SpcServiceImpl implements SpcService {
             }
             spcAnalysisDataDto.setCalculable(flag);
             analyzedRowKeys.add(rowKeys);
-            if (searchConditionDto.getCusLsl() != null) {
-                spcAnalysisDataDto.setLsl(searchConditionDto.getCusLsl());
-            } else {
-                spcAnalysisDataDto.setLsl(searchDataFrame.getTestItemWithTypeDto(searchConditionDto.getItemName()).getLsl());
-            }
-            if (searchConditionDto.getCusUsl() != null) {
-                spcAnalysisDataDto.setUsl(searchConditionDto.getCusUsl());
-            } else {
-                spcAnalysisDataDto.setUsl(searchDataFrame.getTestItemWithTypeDto(searchConditionDto.getItemName()).getUsl());
-            }
+            spcAnalysisDataDto.setLsl(searchConditionDto.getCusLsl());
+            spcAnalysisDataDto.setUsl(searchConditionDto.getCusUsl());
             spcAnalysisDataDto.setDataList(doubleList);
             spcAnalysisDataDtoList.add(spcAnalysisDataDto);
             n++;

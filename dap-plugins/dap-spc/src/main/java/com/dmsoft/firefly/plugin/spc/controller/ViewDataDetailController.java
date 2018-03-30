@@ -11,6 +11,7 @@ import javafx.scene.control.TableView;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -25,11 +26,11 @@ public class ViewDataDetailController implements Initializable {
     private TextFieldFilter filterTF;
 
     private RowDataDto rowDataDto;
-    private List<TestItemWithTypeDto> typeDtoList;
+    private Map<String, TestItemWithTypeDto> testItemDtoMap;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        DetailDataModel model = new DetailDataModel(rowDataDto, typeDtoList);
+        DetailDataModel model = new DetailDataModel(rowDataDto, testItemDtoMap);
         TableViewWrapper.decorate(detailTB, model);
         detailTB.getColumns().get(0).setPrefWidth(226);
         detailTB.getColumns().get(1).setPrefWidth(163);
@@ -39,7 +40,11 @@ public class ViewDataDetailController implements Initializable {
         this.rowDataDto = rowDataDto;
     }
 
-    public void setTypeDtoList(List<TestItemWithTypeDto> typeDtoList) {
-        this.typeDtoList = typeDtoList;
+    public Map<String, TestItemWithTypeDto> getTestItemDtoMap() {
+        return testItemDtoMap;
+    }
+
+    public void setTestItemDtoMap(Map<String, TestItemWithTypeDto> testItemDtoMap) {
+        this.testItemDtoMap = testItemDtoMap;
     }
 }
