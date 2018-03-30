@@ -132,7 +132,6 @@ public class GrrServiceImpl implements GrrService {
         GrrDetailResultDto resultDto = getAnalysisService().analyzeDetailResult(grrAnalysisDataDto, configDto);
         result.setItemName(testItemDto.getTestItemName());
         result.setGrrDetailResultDto(resultDto);
-        pushProgress(100);
         return result;
     }
 
@@ -168,7 +167,6 @@ public class GrrServiceImpl implements GrrService {
         GrrExportDetailResultDto resultDto = getAnalysisService().analyzeExportDetailResult(grrAnalysisDataDto, configDto);
         result.setItemName(testItemDto.getTestItemName());
         result.setExportDetailDto(resultDto);
-        pushProgress(100);
         return result;
     }
 

@@ -56,6 +56,7 @@ public class ExportDetailResultHandler extends AbstractBasicJobHandler {
             exportResultDto.setGrrImageDto(BuildChart.buildImage(dto.getExportDetailDto(), searchConditionDto.getParts(), searchConditionDto.getAppraisers()));
             grrExportResultDtos.add(exportResultDto);
         }
-        RuntimeContext.getBean(GrrExportService.class).exportGrrSummaryDetail(configDto, summaryDtos, grrExportResultDtos);
+        String path = RuntimeContext.getBean(GrrExportService.class).exportGrrSummaryDetail(configDto, summaryDtos, grrExportResultDtos);
+        context.put(ParamKeys.EXPORT_PATH, path);
     }
 }

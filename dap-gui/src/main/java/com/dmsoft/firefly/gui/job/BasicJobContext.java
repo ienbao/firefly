@@ -85,6 +85,10 @@ public class BasicJobContext extends HashMap<String, Object> implements JobConte
 
     @Override
     public void addDoneHandlerName(String jobName) {
+        Double currentWeight = getCurrentWeight();
+        if (currentWeight != null && !Double.isNaN(currentWeight)) {
+            this.currentProgress += currentWeight / totalWeight;
+        }
         this.doneJobNames.add(jobName);
     }
 
@@ -101,7 +105,7 @@ public class BasicJobContext extends HashMap<String, Object> implements JobConte
     void setAllHandlers(List<JobHandler> handlers) {
         this.handlers = handlers;
         for (JobHandler handler : handlers) {
-            if (handler.getWeight() != null && handler.getWeight() != Double.NaN) {
+            if (handler.getWeight() != null && !Double.isNaN(handler.getWeight())) {
                 totalWeight += handler.getWeight();
             }
         }
@@ -112,15 +116,12 @@ public class BasicJobContext extends HashMap<String, Object> implements JobConte
         event1.setEventName(event.getEventName());
         event1.setEventObject(event.getEventObject());
         Double currentWeight = getCurrentWeight();
-        if (currentWeight != null && currentWeight != Double.NaN) {
+        if (currentWeight != null && !Double.isNaN(currentWeight)) {
             event1.setProgress(currentProgress + event.getProgress() * currentWeight / (totalWeight * 100));
         } else if (totalWeight == 0d) {
-            event1.setProgress(event.getProgress());
+            event1.setProgress(event.getProgress() * 100);
         } else {
-            event1.setProgress(event.getProgress() / totalWeight);
-        }
-        if (event.getProgress() == 100) {
-            this.currentProgress += getCurrentWeight() / totalWeight;
+            event1.setProgress(event.getProgress() * 100 / totalWeight);
         }
         return event1;
     }
@@ -128,6 +129,9 @@ public class BasicJobContext extends HashMap<String, Object> implements JobConte
     private Double getCurrentWeight() {
         if (handlers == null) {
             return null;
+        }
+        if (this.doneJobNames.isEmpty()) {
+            return 0.0;
         }
         for (JobHandler handler : handlers) {
             if (handler.getName().equals(this.doneJobNames.get(this.doneJobNames.size() - 1))) {

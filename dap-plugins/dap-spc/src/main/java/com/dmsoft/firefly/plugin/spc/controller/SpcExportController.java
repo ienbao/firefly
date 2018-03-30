@@ -478,7 +478,6 @@ public class SpcExportController {
         windowProgressTipController.setAutoHide(false);
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
         context.addJobEventListener(event -> {
-            System.out.println(event.getProgress());
             if ("Error".equals(event.getEventName())) {
                 windowProgressTipController.updateFailProgress(event.getProgress(), event.getEventObject().toString());
             } else {
@@ -486,7 +485,6 @@ public class SpcExportController {
             }
         });
 
-        //TODO : complete
         Boolean exportEachFile = false;
         if (eachFile.isSelected()) {
             exportEachFile = true;
@@ -524,8 +522,17 @@ public class SpcExportController {
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
-                //TODO
-                windowProgressTipController.getCancelBtn().setText("ASDF");
+                context.pushEvent(new JobEvent("Export done", D100, null));
+                String path = context.get(ParamKeys.EXPORT_PATH).toString();
+                windowProgressTipController.getCancelBtn().setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.OPEN_EXPORT_FOLDER));
+                windowProgressTipController.getCancelBtn().setOnAction(event -> {
+                    try {
+                        Desktop.getDesktop().open(new File(path));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                });
             }
         });
         jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
@@ -561,7 +568,6 @@ public class SpcExportController {
                         searchTab.getConditionTestItem().forEach(item -> itemDto.add(envService.findTestItemNameByItemName(item)));
                         String result = exportFile(project, spcSettingDto, itemDto, searchConditionDtoList, spcAnalysisConfigDto, spcConfig, context);
                         context.put(ParamKeys.EXPORT_PATH, result);
-                        context.pushEvent(new JobEvent("Export done " + projectName, D100, null));
                     }
                 }.setWeight(D100));
                 i++;
@@ -578,7 +584,6 @@ public class SpcExportController {
                     });
                     String result = exportFile(projectNameList, spcSettingDto, testItemWithTypeDtoList, searchConditionDtoList, spcAnalysisConfigDto, spcConfig, context);
                     context.put(ParamKeys.EXPORT_PATH, result);
-                    context.pushEvent(new JobEvent("Export done", D100, null));
                 }
             }.setWeight(D100));
         }

@@ -56,4 +56,5 @@ public class ResourceMassages {
     public static final String SPC_CONFIG_ERROR_MESSAGE = "SPC_CONFIG_ERROR_MESSAGE";
     public static final String UI_SPC_ANALYSIS_ITEM_EMPTY = "UI_SPC_ANALYSIS_ITEM_EMPTY";
 
+    public static final String OPEN_EXPORT_FOLDER = "OPEN_EXPORT_FOLDER";
 }

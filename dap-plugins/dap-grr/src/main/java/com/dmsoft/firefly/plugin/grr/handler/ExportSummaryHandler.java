@@ -27,6 +27,7 @@ public class ExportSummaryHandler extends AbstractBasicJobHandler {
     public void doJob(JobContext context) {
         List<GrrSummaryDto> summaryDtoList = (List<GrrSummaryDto>) context.get(ParamKeys.GRR_SUMMARY_DTO_LIST);
         GrrExportConfigDto grrExportConfigDto = context.getParam(ParamKeys.GRR_EXPORT_CONFIG_DTO, GrrExportConfigDto.class);
-        RuntimeContext.getBean(GrrExportService.class).exportGrrSummary(grrExportConfigDto, summaryDtoList);
+        String path = RuntimeContext.getBean(GrrExportService.class).exportGrrSummary(grrExportConfigDto, summaryDtoList);
+        context.put(ParamKeys.EXPORT_PATH, path);
     }
 }
