@@ -342,7 +342,6 @@ public class GrrResultController implements Initializable {
                                     GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
                         }
                     }
-
                     windowProgressTipController.closeDialog();
                 }
             });
@@ -878,6 +877,15 @@ public class GrrResultController implements Initializable {
         rangeAppraiserChart.setAnimated(false);
         rrByAppraiserChart.setAnimated(false);
         rrbyPartChart.setAnimated(false);
+
+        xBarAppraiserChart.setHorizontalZeroLineVisible(false);
+        xBarAppraiserChart.setVerticalZeroLineVisible(false);
+        rangeAppraiserChart.setHorizontalZeroLineVisible(false);
+        rangeAppraiserChart.setVerticalZeroLineVisible(false);
+        rrByAppraiserChart.setHorizontalZeroLineVisible(false);
+        rrByAppraiserChart.setVerticalZeroLineVisible(false);
+        rrbyPartChart.setHorizontalZeroLineVisible(false);
+        rrbyPartChart.setVerticalZeroLineVisible(false);
 
         componentChart.setVerticalGridLinesVisible(false);
         componentChart.setHorizontalGridLinesVisible(false);
