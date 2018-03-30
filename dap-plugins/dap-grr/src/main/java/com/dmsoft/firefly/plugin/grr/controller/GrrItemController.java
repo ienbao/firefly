@@ -688,7 +688,6 @@ public class GrrItemController implements Initializable {
             windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
             updateGrrPreference(conditionDto);
             JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE);
-            if (jobPipeline.getCompletedHandler() == null) {
                 jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
                     @Override
                     public void doJob(JobContext context) {
@@ -727,7 +726,6 @@ public class GrrItemController implements Initializable {
                         windowProgressTipController.updateFailProgress(context.getError().getMessage());
                     }
                 });
-            }
             RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
 
 //            Job job = new Job(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE);
