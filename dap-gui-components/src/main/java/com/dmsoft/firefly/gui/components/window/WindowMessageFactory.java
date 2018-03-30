@@ -130,6 +130,8 @@ public class WindowMessageFactory {
             newStage.setOnShowing(event -> {
                 windowProgressTipController.onShowingRequest();
             });
+            newStage.setHeight(140);
+            newStage.setWidth(430);
             newStage.toFront();
             newStage.show();
 

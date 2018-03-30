@@ -12,11 +12,11 @@
   ~ Copyright (c) 2017. For Intelligent Group.
   -->
 
-<VBox xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<VBox xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:id="vbox">
    <children>
       <HBox prefHeight="20.0" prefWidth="200.0">
          <children>
-            <Label text="Analyzing">
+            <Label fx:id="analysisLB" text="Analyzing">
                <HBox.margin>
                   <Insets />
                </HBox.margin></Label>
@@ -36,14 +36,14 @@
             <TextArea fx:id="errorTxt" prefHeight="240.0" prefWidth="240.0" HBox.hgrow="ALWAYS" />
          </children>
          <VBox.margin>
-            <Insets left="10.0" right="10.0" top="5.0" />
+            <Insets left="10.0" right="10.0" top="5.0" bottom="-5.0"/>
          </VBox.margin></HBox>
       <HBox alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="200.0">
          <children>
             <Button fx:id="cancelBtn" mnemonicParsing="false" text="Button" />
          </children>
          <VBox.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
+            <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
          </VBox.margin></HBox>
    </children>
 </VBox>

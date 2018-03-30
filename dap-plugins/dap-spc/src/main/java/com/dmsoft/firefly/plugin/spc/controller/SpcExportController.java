@@ -474,8 +474,9 @@ public class SpcExportController {
     }
 
     private synchronized void export(String savePath) {
-        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT));
         windowProgressTipController.setAutoHide(false);
+        windowProgressTipController.getAnalysisLB().setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORTING));
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
         context.addJobEventListener(event -> {
             if ("Error".equals(event.getEventName())) {

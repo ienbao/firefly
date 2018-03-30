@@ -57,4 +57,6 @@ public class ResourceMassages {
     public static final String UI_SPC_ANALYSIS_ITEM_EMPTY = "UI_SPC_ANALYSIS_ITEM_EMPTY";
 
     public static final String OPEN_EXPORT_FOLDER = "OPEN_EXPORT_FOLDER";
+    public static final String EXPORT = "EXPORT";
+    public static final String EXPORTING = "EXPORTING";
 }

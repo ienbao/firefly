@@ -688,46 +688,44 @@ public class GrrItemController implements Initializable {
             windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
             updateGrrPreference(conditionDto);
             JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE);
-            if (jobPipeline.getCompletedHandler() == null) {
-                jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
-                    @Override
-                    public void doJob(JobContext context) {
-                        GrrParamDto grrParamDto = context.getParam(ParamKeys.GRR_PARAM_DTO, GrrParamDto.class);
-                        refreshPartOrAppraiserListView(grrParamDto);
-                        grrMainController.setGrrParamDto(grrParamDto);
-                        grrMainController.setGrrConfigDto(context.getParam(ParamKeys.SEARCH_GRR_CONFIG_DTO, GrrConfigDto.class));
-                        grrMainController.setActiveTemplateSettingDto(context.getParam(ParamKeys.SEARCH_TEMPLATE_SETTING_DTO, TemplateSettingDto.class));
-                        GrrDataFrameDto grrDataFrameDto = context.getParam(ParamKeys.SEARCH_VIEW_DATA_FRAME, GrrDataFrameDto.class);
-                        grrMainController.setGrrDataFrame(grrDataFrameDto);
-                        GrrDataFrameDto backDataFrame = new GrrDataFrameDto();
-                        backDataFrame.setDataFrame(grrDataFrameDto.getDataFrame());
-                        List<GrrViewDataDto> includeViewDataDtos = Lists.newArrayList(ListUtils.deepCopy(grrDataFrameDto.getIncludeDatas()));
-                        List<GrrViewDataDto> backViewDataDtos = Lists.newArrayList(ListUtils.deepCopy(grrDataFrameDto.getBackupDatas()));
-                        backDataFrame.setIncludeDatas(includeViewDataDtos);
-                        backDataFrame.setBackupDatas(backViewDataDtos);
-                        grrMainController.setBackGrrDataFrame(backDataFrame);
-                        grrMainController.setSummaryDtos((List<GrrSummaryDto>) context.get(ParamKeys.GRR_SUMMARY_DTO_LIST));
-                        grrMainController.setGrrDetailDto(context.getParam(ParamKeys.GRR_DETAIL_DTO, GrrDetailDto.class));
-                        if (grrParamDto != null && (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty())) {
-                            grrMainController.updateGrrViewData();
-                            grrMainController.updateGrrSummaryAndDetail();
-                        }
-                        windowProgressTipController.closeDialog();
+            jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+                @Override
+                public void doJob(JobContext context) {
+                    GrrParamDto grrParamDto = context.getParam(ParamKeys.GRR_PARAM_DTO, GrrParamDto.class);
+                    refreshPartOrAppraiserListView(grrParamDto);
+                    grrMainController.setGrrParamDto(grrParamDto);
+                    grrMainController.setGrrConfigDto(context.getParam(ParamKeys.SEARCH_GRR_CONFIG_DTO, GrrConfigDto.class));
+                    grrMainController.setActiveTemplateSettingDto(context.getParam(ParamKeys.SEARCH_TEMPLATE_SETTING_DTO, TemplateSettingDto.class));
+                    GrrDataFrameDto grrDataFrameDto = context.getParam(ParamKeys.SEARCH_VIEW_DATA_FRAME, GrrDataFrameDto.class);
+                    grrMainController.setGrrDataFrame(grrDataFrameDto);
+                    GrrDataFrameDto backDataFrame = new GrrDataFrameDto();
+                    backDataFrame.setDataFrame(grrDataFrameDto.getDataFrame());
+                    List<GrrViewDataDto> includeViewDataDtos = Lists.newArrayList(ListUtils.deepCopy(grrDataFrameDto.getIncludeDatas()));
+                    List<GrrViewDataDto> backViewDataDtos = Lists.newArrayList(ListUtils.deepCopy(grrDataFrameDto.getBackupDatas()));
+                    backDataFrame.setIncludeDatas(includeViewDataDtos);
+                    backDataFrame.setBackupDatas(backViewDataDtos);
+                    grrMainController.setBackGrrDataFrame(backDataFrame);
+                    grrMainController.setSummaryDtos((List<GrrSummaryDto>) context.get(ParamKeys.GRR_SUMMARY_DTO_LIST));
+                    grrMainController.setGrrDetailDto(context.getParam(ParamKeys.GRR_DETAIL_DTO, GrrDetailDto.class));
+                    if (grrParamDto != null && (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty())) {
+                        grrMainController.updateGrrViewData();
+                        grrMainController.updateGrrSummaryAndDetail();
                     }
-                });
-                jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
-                    @Override
-                    public void doJob(JobContext context) {
-                        windowProgressTipController.closeDialog();
-                    }
-                });
-                jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
-                    @Override
-                    public void doJob(JobContext context) {
-                        windowProgressTipController.updateFailProgress(context.getError().getMessage());
-                    }
-                });
-            }
+                    windowProgressTipController.closeDialog();
+                }
+            });
+            jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+                @Override
+                public void doJob(JobContext context) {
+                    windowProgressTipController.closeDialog();
+                }
+            });
+            jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+                @Override
+                public void doJob(JobContext context) {
+                    windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                }
+            });
             RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
 
 //            Job job = new Job(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE);

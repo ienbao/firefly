@@ -394,7 +394,7 @@ public class SpcItemController implements Initializable {
                     SpcFxmlAndLanguageUtils.getString(ResourceMassages.UI_SPC_ANALYSIS_ITEM_EMPTY));
             return;
         }
-
+        spcMainController.clearAnalysisData();
         List<String> projectNameList = envService.findActivatedProjectName();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
         List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(selectedItemDto);
@@ -412,38 +412,36 @@ public class SpcItemController implements Initializable {
         });
         windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
-        if (jobPipeline.getCompletedHandler() == null) {
-            jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
-                @Override
-                public void doJob(JobContext context) {
-                    spcMainController.setSpcSettingDto(context.getParam(ParamKeys.SPC_SETTING_DTO, SpcSettingDto.class));
-                    spcMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
-                    spcMainController.setInitSearchConditionDtoList(searchConditionDtoList);
-                    spcMainController.clearAnalysisSubShowData();
-                    SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
-                    SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
-                    List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
-                    TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
-                    DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
-                    spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
-                    spcMainController.setDataFrame(context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class));
-                    windowProgressTipController.closeDialog();
-                }
-            });
-            jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
-                @Override
-                public void doJob(JobContext context) {
-                    logger.error(context.getError().getMessage());
-                    windowProgressTipController.updateFailProgress(context.getError().getMessage());
-                }
-            });
-            jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
-                @Override
-                public void doJob(JobContext context) {
-                    windowProgressTipController.closeDialog();
-                }
-            });
-        }
+        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                spcMainController.setSpcSettingDto(context.getParam(ParamKeys.SPC_SETTING_DTO, SpcSettingDto.class));
+                spcMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
+                spcMainController.setInitSearchConditionDtoList(searchConditionDtoList);
+//                    spcMainController.clearAnalysisSubShowData();
+                SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
+                SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
+                List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
+                TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
+                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
+                spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
+                spcMainController.setDataFrame(context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class));
+                windowProgressTipController.closeDialog();
+            }
+        });
+        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                logger.error(context.getError().getMessage());
+                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+            }
+        });
+        jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                windowProgressTipController.closeDialog();
+            }
+        });
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
 //        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
 //        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);

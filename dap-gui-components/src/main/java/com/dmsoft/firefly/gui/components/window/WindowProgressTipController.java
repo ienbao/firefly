@@ -7,9 +7,12 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -25,6 +28,12 @@ public class WindowProgressTipController {
     private ProgressBar taskProgress;
     @FXML
     private TextArea errorTxt;
+    @FXML
+    private Label analysisLB;
+    @FXML
+    private VBox vbox;
+    @FXML
+    private HBox hbox;
 
     private Stage stage;
 
@@ -37,6 +46,7 @@ public class WindowProgressTipController {
         errorTxt.setEditable(false);
         errorTxt.setVisible(false);
         errorTxt.setMaxHeight(0);
+        vbox.getChildren().remove(hbox);
         taskProgress.getStyleClass().setAll("progress-bar-lg-green");
         taskProgress.setProgress(0);
         taskProgress.progressProperty().addListener(e -> {
@@ -86,6 +96,11 @@ public class WindowProgressTipController {
     public void updateFailProgress(double progressValue, String errorText) {
         taskProgress.getStyleClass().setAll("progress-bar-lg-red");
         taskProgress.setProgress(progressValue / 100);
+        Platform.runLater(() -> {
+            if (!vbox.getChildren().contains(hbox)) {
+                vbox.getChildren().add(2, hbox);
+            }
+        });
         errorTxt.setVisible(true);
         errorTxt.setMinHeight(245);
         errorTxt.appendText(errorText);
@@ -151,6 +166,10 @@ public class WindowProgressTipController {
 
     public Button getCancelBtn() {
         return cancelBtn;
+    }
+
+    public Label getAnalysisLB() {
+        return analysisLB;
     }
 
     public void setAutoHide(boolean autoHide) {
