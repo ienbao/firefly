@@ -1,7 +1,9 @@
 package com.dmsoft.firefly.gui.components.messagetip;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Popup;
@@ -31,7 +33,11 @@ public class MessageTipControl {
     private Label contentLbl;
 
     @FXML
+    private Button linkBtn;
+
+    @FXML
     private void initialize() {
+        linkBtn.setVisible(false);
     }
 
 
@@ -52,6 +58,11 @@ public class MessageTipControl {
         contentLbl.setText(msg);
         messageTip.getStyleClass().add("message-tip-warn");
         iconLbl.getStyleClass().add("message-tip-warn-mark");
+        linkBtn.setText("fdsf");
+        linkBtn.setVisible(true);
+        linkBtn.setOnAction(event -> {
+            System.out.println("fds");
+        });
         return messageTip;
     }
 

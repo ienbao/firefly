@@ -394,7 +394,7 @@ public class SpcItemController implements Initializable {
                     SpcFxmlAndLanguageUtils.getString(ResourceMassages.UI_SPC_ANALYSIS_ITEM_EMPTY));
             return;
         }
-
+        spcMainController.clearAnalysisData();
         List<String> projectNameList = envService.findActivatedProjectName();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
         List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(selectedItemDto);
@@ -418,7 +418,7 @@ public class SpcItemController implements Initializable {
                 spcMainController.setSpcSettingDto(context.getParam(ParamKeys.SPC_SETTING_DTO, SpcSettingDto.class));
                 spcMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
                 spcMainController.setInitSearchConditionDtoList(searchConditionDtoList);
-                spcMainController.clearAnalysisSubShowData();
+//                    spcMainController.clearAnalysisSubShowData();
                 SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
                 SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
                 List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
@@ -437,11 +437,11 @@ public class SpcItemController implements Initializable {
             }
         });
         jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
-                @Override
-                public void doJob(JobContext context) {
-                    windowProgressTipController.closeDialog();
-                }
-            });
+            @Override
+            public void doJob(JobContext context) {
+                windowProgressTipController.closeDialog();
+            }
+        });
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
 //        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
 //        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
