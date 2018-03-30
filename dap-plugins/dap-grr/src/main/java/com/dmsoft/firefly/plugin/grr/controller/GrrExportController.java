@@ -496,31 +496,33 @@ public class GrrExportController {
     }
 
     private void refreshPartOrAppraiserListView(GrrParamDto grrParamDto) {
-        if (grrParamDto != null && grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty()) {
-            Set<String> selectedParts = grrParamDto.getParts();
-            if (selectedParts != null) {
-                partListView.getItems().forEach(listViewModel -> {
-                    listViewModel.setErrorMsg(null);
-                    if (selectedParts.contains(listViewModel.getName())) {
-                        listViewModel.setIsChecked(true);
-                    }
-                });
-                partListView.refresh();
-            }
+        if (grrParamDto != null) {
+            if (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty()) {
+                Set<String> selectedParts = grrParamDto.getParts();
+                if (selectedParts != null) {
+                    partListView.getItems().forEach(listViewModel -> {
+                        listViewModel.setErrorMsg(null);
+                        if (selectedParts.contains(listViewModel.getName())) {
+                            listViewModel.setIsChecked(true);
+                        }
+                    });
+                    partListView.refresh();
+                }
 
-            Set<String> selectedAppraisers = grrParamDto.getAppraisers();
-            if (selectedAppraisers != null) {
-                appraiserListView.getItems().forEach(listViewModel -> {
-                    listViewModel.setErrorMsg(null);
-                    if (selectedAppraisers != null && selectedAppraisers.contains(listViewModel.getName())) {
-                        listViewModel.setIsChecked(true);
-                    }
-                });
-                appraiserListView.refresh();
+                Set<String> selectedAppraisers = grrParamDto.getAppraisers();
+                if (selectedAppraisers != null) {
+                    appraiserListView.getItems().forEach(listViewModel -> {
+                        listViewModel.setErrorMsg(null);
+                        if (selectedAppraisers != null && selectedAppraisers.contains(listViewModel.getName())) {
+                            listViewModel.setIsChecked(true);
+                        }
+                    });
+                    appraiserListView.refresh();
+                }
+            } else {
+                getTooltipMsg(partListView, grrParamDto, false);
+                getTooltipMsg(appraiserListView, grrParamDto, true);
             }
-        } else {
-            getTooltipMsg(partListView, grrParamDto, false);
-            getTooltipMsg(appraiserListView, grrParamDto, true);
         }
     }
 
