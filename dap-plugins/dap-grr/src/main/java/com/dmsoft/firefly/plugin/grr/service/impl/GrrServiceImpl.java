@@ -29,10 +29,9 @@ import java.util.Map;
  */
 @OpenService
 public class GrrServiceImpl implements GrrService {
-    private GrrAnalysisService analysisService;
-
     private static final String MAP_KEY_DATA = "data";
     private static final String MAP_KEY_COUNT = "count";
+    private GrrAnalysisService analysisService;
 
     @Override
     public List<GrrSummaryDto> getSummaryResult(SearchDataFrame dataFrame, List<TestItemWithTypeDto> testItemDtoList, List<String> rowKeysToByAnalyzed, GrrAnalysisConfigDto configDto) {
@@ -134,7 +133,17 @@ public class GrrServiceImpl implements GrrService {
         pushProgress(20);
         if (datas == null || doubleList == null || count == datas.size() || datas.size() != doubleList.size()) {
             pushProgress(80);
-            return null;
+            GrrExportDetailDto emptyResult = new GrrExportDetailDto();
+            emptyResult.setItemName(testItemDto.getTestItemName());
+            GrrExportDetailResultDto emptyDetailResult = new GrrExportDetailResultDto();
+            if (DAPStringUtils.isNumeric(testItemDto.getLsl())) {
+                emptyDetailResult.setLsl(Double.valueOf(testItemDto.getLsl()));
+            }
+            if (DAPStringUtils.isNumeric(testItemDto.getUsl())) {
+                emptyDetailResult.setUsl(Double.valueOf(testItemDto.getUsl()));
+            }
+            emptyResult.setExportDetailDto(emptyDetailResult);
+            return emptyResult;
         }
         grrAnalysisDataDto.setLsl(testItemDto.getLsl());
         grrAnalysisDataDto.setUsl(testItemDto.getUsl());
