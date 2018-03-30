@@ -907,6 +907,10 @@ public class GrrExportController {
                     grrExportConfigDto.setUserName(envService.getUserName());
                     grrExportConfigDto.setGrrConfigDto(grrConfigDto);
                     grrExportConfigDto.setDigNum(envService.findActivatedTemplate().getDecimalDigit());
+                    grrExportConfigDto.setParts(Integer.valueOf(partTxt.getText()));
+                    grrExportConfigDto.setAppraisers(Integer.valueOf(appraiserTxt.getText()));
+                    grrExportConfigDto.setTrials(Integer.valueOf(trialTxt.getText()));
+
                     searchTab.getConditionTestItem().forEach(item -> testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(item)));
                     testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(partCombox.getValue()));
                     if (appraiserCombox.getValue() != null) {
