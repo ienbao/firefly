@@ -54,7 +54,9 @@ public class BoxPlotChart extends XYChart<Number, Number> {
     public BoxPlotChart(Axis<Number> xAxis, Axis<Number> yAxis) {
         super(xAxis, yAxis);
         super.setData(FXCollections.observableArrayList());
-        setAnimated(false);
+        super.setHorizontalZeroLineVisible(false);
+        super.setVerticalZeroLineVisible(false);
+        super.setAnimated(false);
         xAxis.setAnimated(false);
         yAxis.setAnimated(false);
         outliers = FXCollections.observableArrayList(d -> new Observable[]{d.YValueProperty()});
