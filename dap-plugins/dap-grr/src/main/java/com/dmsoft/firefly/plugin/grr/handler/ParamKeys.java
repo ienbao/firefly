@@ -52,5 +52,6 @@ public class ParamKeys {
 
 
     public static final String GRR_ANALYSIS_CONDITION_KEY = "analysisKey";
+    public static final String EXPORT_PATH = "exportPath";
 
 }

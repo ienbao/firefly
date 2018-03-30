@@ -119,7 +119,7 @@ public class GrrPlugin extends Plugin {
                 .addLast(new GrrConfigHandler())
                 .addLast(new ViewDataHandler())
                 .addLast(new SummaryHandler().setWeight(D100))
-                .addLast(new ExportSummaryHandler()));
+                .addLast(new ExportSummaryHandler().setWeight(D100)));
 
         jobManager.initializeJob(ParamKeys.GRR_EXPORT_DETAIL_JOB_PIPELINE, jobFactory.createJobPipeLine()
                 .addLast(new FindTestDataHandler())
@@ -127,8 +127,8 @@ public class GrrPlugin extends Plugin {
                 .addLast(new ValidateParamHandler())
                 .addLast(new GrrConfigHandler())
                 .addLast(new ViewDataHandler())
-                .addLast(new FindExportDetailHandler())
-                .addLast(new ExportDetailResultHandler()));
+                .addLast(new FindExportDetailHandler().setWeight(D100))
+                .addLast(new ExportDetailResultHandler().setWeight(D100)));
 
         jobManager.initializeJob(ParamKeys.GRR_REFRESH_JOB_PIPELINE, jobFactory.createJobPipeLine()
                 .addLast(new GrrConfigHandler())

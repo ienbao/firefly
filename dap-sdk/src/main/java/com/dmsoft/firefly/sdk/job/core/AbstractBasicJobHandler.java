@@ -6,7 +6,7 @@ package com.dmsoft.firefly.sdk.job.core;
  * @author Can Guan, Garen Pang
  */
 public abstract class AbstractBasicJobHandler implements JobHandler {
-    private Double weight = 100.0;
+    private Double weight = Double.NaN;
     private String name;
 
     /**
@@ -17,7 +17,8 @@ public abstract class AbstractBasicJobHandler implements JobHandler {
 
     /**
      * constructor
-     * @param name
+     *
+     * @param name name
      */
     public AbstractBasicJobHandler(String name) {
         this.name = name;

@@ -113,17 +113,17 @@ public class SpcPlugin extends Plugin {
                 .addLast(new FindSpcSettingDataHandler())
                 .addLast(new FindTestDataHandler())
                 .addLast(new DataFrameHandler())
-                .addLast(new GetSpcStatsResultHandler()));
+                .addLast(new GetSpcStatsResultHandler().setWeight(D100)));
         jobManager.initializeJob(ParamKeys.SPC_ANALYSIS_EXPORT_JOB_PIPELINE, jobFactory.createJobPipeLine()
                 .addLast(new FindSpcSettingDataHandler())
                 .addLast(new FindTestDataHandler())
                 .addLast(new DataFrameHandler())
-                .addLast(new GetSpcStatsResultHandler()));
+                .addLast(new GetSpcStatsResultHandler().setWeight(D100)));
 
         jobManager.initializeJob(ParamKeys.SPC_REFRESH_CHART_JOB_PIPELINE, jobFactory.createJobPipeLine()
-                .addLast(new GetSpcChartResultHandler()));
+                .addLast(new GetSpcChartResultHandler().setWeight(D100)));
         jobManager.initializeJob(ParamKeys.SPC_REFRESH_CHART_EXPORT_JOB_PIPELINE, jobFactory.createJobPipeLine()
-                .addLast(new GetSpcChartResultHandler()));
+                .addLast(new GetSpcChartResultHandler().setWeight(D100)));
 
         jobManager.initializeJob(ParamKeys.SPC_RESET_JOB_PIPELINE, jobFactory.createJobPipeLine()
                 .addLast(new GetSpcStatsResultHandler().setWeight(D100)));
