@@ -57,35 +57,40 @@ public class BuildChart {
         scene.getStylesheets().add(BuildChart.class.getClassLoader().getResource("css/grr_chart.css").toExternalForm());
         GrrImageDto images = new GrrImageDto();
 //        LineChart partAppraiserChart = buildScatterChart();
-        LineChart partAppraiserChart = new LineChart(new CategoryAxis(), new NumberAxis());
-        partAppraiserChart.setAnimated(false);
-        partAppraiserChart.setLegendVisible(false);
-        setPartAppraiserChart(partAppraiserChart, grrDetailResultDto.getPartAppraiserChartDto(), parts, appraisers);
-
-        LinearChart xBarAppraiserChart = buildControlChart(parts);
-        setControlChartData(grrDetailResultDto.getXbarAppraiserChartDto(), xBarAppraiserChart, parts, appraisers);
-
-        LinearChart rangeAppraiserChart = buildControlChart(parts);
-        setControlChartData(grrDetailResultDto.getRangeAppraiserChartDto(), rangeAppraiserChart, parts, appraisers);
-
-        LineChart rrByAppraiserChart = buildScatterChart();
-        setScatterChartData(grrDetailResultDto.getRrbyAppraiserChartDto(), rrByAppraiserChart);
-
-        LineChart rrbyPartChart = buildScatterChart();
-        setScatterChartData(grrDetailResultDto.getRrbyPartChartDto(), rrbyPartChart);
-
-        BarChart componentChart = new BarChart(new CategoryAxis(), new NumberAxis());
-        componentChart.setAnimated(false);
-        componentChart.setLegendVisible(false);
-        setComponentChart(grrDetailResultDto.getComponentChartDto(), componentChart);
-
-        images.setGrrAPlotImagePath(exportImages("partAppraiserChart", partAppraiserChart));
-        images.setGrrXBarImagePath(exportImages("xBarAppraiserChart", xBarAppraiserChart));
-        images.setGrrRChartImagePath(exportImages("rangeAppraiserChart", rangeAppraiserChart));
-        images.setGrrRPlotChartAppImagePath(exportImages("rrByAppraiserChart", rrByAppraiserChart));
-        images.setGrrRPlotChartPartImagePath(exportImages("rrbyPartChart", rrbyPartChart));
-        images.setGrrComponentsImagePath(exportImages("componentChart", componentChart));
-
+        if (grrDetailResultDto.getPartAppraiserChartDto() != null) {
+            LineChart partAppraiserChart = new LineChart(new CategoryAxis(), new NumberAxis());
+            partAppraiserChart.setAnimated(false);
+            partAppraiserChart.setLegendVisible(false);
+            setPartAppraiserChart(partAppraiserChart, grrDetailResultDto.getPartAppraiserChartDto(), parts, appraisers);
+            images.setGrrAPlotImagePath(exportImages("partAppraiserChart", partAppraiserChart));
+        }
+        if (grrDetailResultDto.getXbarAppraiserChartDto() != null) {
+            LinearChart xBarAppraiserChart = buildControlChart(parts);
+            setControlChartData(grrDetailResultDto.getXbarAppraiserChartDto(), xBarAppraiserChart, parts, appraisers);
+            images.setGrrXBarImagePath(exportImages("xBarAppraiserChart", xBarAppraiserChart));
+        }
+        if (grrDetailResultDto.getRangeAppraiserChartDto() != null) {
+            LinearChart rangeAppraiserChart = buildControlChart(parts);
+            setControlChartData(grrDetailResultDto.getRangeAppraiserChartDto(), rangeAppraiserChart, parts, appraisers);
+            images.setGrrRChartImagePath(exportImages("rangeAppraiserChart", rangeAppraiserChart));
+        }
+        if (grrDetailResultDto.getRrbyAppraiserChartDto() != null) {
+            LineChart rrByAppraiserChart = buildScatterChart();
+            setScatterChartData(grrDetailResultDto.getRrbyAppraiserChartDto(), rrByAppraiserChart);
+            images.setGrrRPlotChartAppImagePath(exportImages("rrByAppraiserChart", rrByAppraiserChart));
+        }
+        if (grrDetailResultDto.getRrbyPartChartDto() != null) {
+            LineChart rrbyPartChart = buildScatterChart();
+            setScatterChartData(grrDetailResultDto.getRrbyPartChartDto(), rrbyPartChart);
+            images.setGrrRPlotChartPartImagePath(exportImages("rrbyPartChart", rrbyPartChart));
+        }
+        if (grrDetailResultDto.getComponentChartDto() != null) {
+            BarChart componentChart = new BarChart(new CategoryAxis(), new NumberAxis());
+            componentChart.setAnimated(false);
+            componentChart.setLegendVisible(false);
+            setComponentChart(grrDetailResultDto.getComponentChartDto(), componentChart);
+            images.setGrrComponentsImagePath(exportImages("componentChart", componentChart));
+        }
         return images;
     }
 

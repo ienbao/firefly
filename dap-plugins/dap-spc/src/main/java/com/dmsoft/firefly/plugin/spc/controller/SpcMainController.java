@@ -147,7 +147,7 @@ public class SpcMainController implements Initializable {
     private void getResetBtnEvent() {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
-        context.put(ParamKeys.SPC_SETTING_FILE_NAME, spcSettingDto);
+        context.put(ParamKeys.SPC_SETTING_DTO, spcSettingDto);
         context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, initSearchConditionDtoList);
         context.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
         context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
@@ -391,7 +391,7 @@ public class SpcMainController implements Initializable {
         List<SearchConditionDto> searchConditionDtoList = buildRefreshSearchConditionData(editRowDataList);
         SearchDataFrame subDataFrame = buildSubSearchDataFrame(rowKeyList, searchConditionDtoList);
 
-        context.put(ParamKeys.SPC_SETTING_FILE_NAME, spcSettingDto);
+        context.put(ParamKeys.SPC_SETTING_DTO, spcSettingDto);
         context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         context.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
         context.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
@@ -485,7 +485,7 @@ public class SpcMainController implements Initializable {
         }
 
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
-        context.put(ParamKeys.SPC_SETTING_FILE_NAME, spcSettingDto);
+        context.put(ParamKeys.SPC_SETTING_DTO, spcSettingDto);
         context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         context.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
 
@@ -596,7 +596,7 @@ public class SpcMainController implements Initializable {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
 
-        context.put(ParamKeys.SPC_SETTING_FILE_NAME, spcSettingDto);
+        context.put(ParamKeys.SPC_SETTING_DTO, spcSettingDto);
         context.put(ParamKeys.STATISTICAL_SEARCH_DATA_FRAME, statisticalDataFrame);
         context.put(ParamKeys.STATISTICAL_SEARCH_CONDITION_DTO_LIST, statisticalSearchConditionDtoList);
         context.put(ParamKeys.CHART_SEARCH_DATA_FRAME, chartDataFrame);

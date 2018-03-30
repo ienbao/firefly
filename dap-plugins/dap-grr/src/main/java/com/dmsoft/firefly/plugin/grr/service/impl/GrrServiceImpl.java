@@ -29,10 +29,9 @@ import java.util.Map;
  */
 @OpenService
 public class GrrServiceImpl implements GrrService {
-    private GrrAnalysisService analysisService;
-
     private static final String MAP_KEY_DATA = "data";
     private static final String MAP_KEY_COUNT = "count";
+    private GrrAnalysisService analysisService;
 
     @Override
     public List<GrrSummaryDto> getSummaryResult(SearchDataFrame dataFrame, List<TestItemWithTypeDto> testItemDtoList, List<String> rowKeysToByAnalyzed, GrrAnalysisConfigDto configDto) {
@@ -50,16 +49,8 @@ public class GrrServiceImpl implements GrrService {
             Map<String, Object> dataMap = convertData(datas);
             List<Double> doubleList = (List<Double>) dataMap.get(MAP_KEY_DATA);
             Integer count = (Integer) dataMap.get(MAP_KEY_COUNT);
-            if (itemDto.getLsl() != null) {
-                grrAnalysisDataDto.setLsl(itemDto.getLsl());
-            } else {
-                grrAnalysisDataDto.setLsl(dataFrame.getTestItemWithTypeDto(itemDto.getTestItemName()).getLsl());
-            }
-            if (itemDto.getUsl() != null) {
-                grrAnalysisDataDto.setUsl(itemDto.getUsl());
-            } else {
-                grrAnalysisDataDto.setUsl(dataFrame.getTestItemWithTypeDto(itemDto.getTestItemName()).getUsl());
-            }
+            grrAnalysisDataDto.setLsl(itemDto.getLsl());
+            grrAnalysisDataDto.setUsl(itemDto.getUsl());
             if (datas == null || doubleList == null || count == datas.size() || datas.size() != doubleList.size()) {
                 grrAnalysisDataDto.setDataList(null);
             } else {
@@ -117,16 +108,8 @@ public class GrrServiceImpl implements GrrService {
             pushProgress(80);
             return null;
         }
-        if (testItemDto.getLsl() != null) {
-            grrAnalysisDataDto.setLsl(testItemDto.getLsl());
-        } else {
-            grrAnalysisDataDto.setLsl(dataColumn.getTestItemWithTypeDto().getLsl());
-        }
-        if (testItemDto.getUsl() != null) {
-            grrAnalysisDataDto.setUsl(testItemDto.getUsl());
-        } else {
-            grrAnalysisDataDto.setUsl(dataColumn.getTestItemWithTypeDto().getUsl());
-        }
+        grrAnalysisDataDto.setLsl(testItemDto.getLsl());
+        grrAnalysisDataDto.setUsl(testItemDto.getUsl());
         grrAnalysisDataDto.setDataList(doubleList);
         pushProgress(40);
         GrrDetailResultDto resultDto = getAnalysisService().analyzeDetailResult(grrAnalysisDataDto, configDto);
@@ -150,18 +133,20 @@ public class GrrServiceImpl implements GrrService {
         pushProgress(20);
         if (datas == null || doubleList == null || count == datas.size() || datas.size() != doubleList.size()) {
             pushProgress(80);
-            return null;
+            GrrExportDetailDto emptyResult = new GrrExportDetailDto();
+            emptyResult.setItemName(testItemDto.getTestItemName());
+            GrrExportDetailResultDto emptyDetailResult = new GrrExportDetailResultDto();
+            if (DAPStringUtils.isNumeric(testItemDto.getLsl())) {
+                emptyDetailResult.setLsl(Double.valueOf(testItemDto.getLsl()));
+            }
+            if (DAPStringUtils.isNumeric(testItemDto.getUsl())) {
+                emptyDetailResult.setUsl(Double.valueOf(testItemDto.getUsl()));
+            }
+            emptyResult.setExportDetailDto(emptyDetailResult);
+            return emptyResult;
         }
-        if (testItemDto.getLsl() != null) {
-            grrAnalysisDataDto.setLsl(testItemDto.getLsl());
-        } else {
-            grrAnalysisDataDto.setLsl(dataColumn.getTestItemWithTypeDto().getLsl());
-        }
-        if (testItemDto.getUsl() != null) {
-            grrAnalysisDataDto.setUsl(testItemDto.getUsl());
-        } else {
-            grrAnalysisDataDto.setUsl(dataColumn.getTestItemWithTypeDto().getUsl());
-        }
+        grrAnalysisDataDto.setLsl(testItemDto.getLsl());
+        grrAnalysisDataDto.setUsl(testItemDto.getUsl());
         grrAnalysisDataDto.setDataList(doubleList);
         pushProgress(40);
         GrrExportDetailResultDto resultDto = getAnalysisService().analyzeExportDetailResult(grrAnalysisDataDto, configDto);
