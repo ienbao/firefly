@@ -237,7 +237,7 @@ public class GrrResultController implements Initializable {
      * Change grr result when view data change submit
      */
     public void changeGrrResult() {
-        submitGrrResult(grrMainController.getSearchConditionDto().getSelectedTestItemDtos().get(0).getTestItemName());
+        submitGrrResult(grrMainController.getSearchConditionDto().getSelectedTestItemDtos().get(0).getTestItemName(), true);
     }
 
     /**
@@ -269,7 +269,9 @@ public class GrrResultController implements Initializable {
             List<TestItemWithTypeDto> selectTestItemWithTypeDtos = grrMainController.getSearchConditionDto().getSelectedTestItemDtos();
             List<TestItemWithTypeDto> changedTestItemWithTypeDtos = summaryModel.getEditTestItem();
             if (changedTestItemWithTypeDtos.isEmpty() || selectTestItemWithTypeDtos.isEmpty()) {
-                System.out.println("not need refresh");
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_REFRESH_RESULT"));
                 return;
             }
             refreshGrrResultEvent();
@@ -291,26 +293,25 @@ public class GrrResultController implements Initializable {
             }
         }
         boolean hasSelectedItem = false;
-        for (int i = 0; i < selectTestItemWithTypeDtos.size(); i++) {
-            if (selectedItem.equals(selectTestItemWithTypeDtos.get(i).getTestItemName())) {
+        for (int i = 0; i < changedTestItemWithTypeDtos.size(); i++) {
+            if (selectedItem.equals(changedTestItemWithTypeDtos.get(i).getTestItemName())) {
                 hasSelectedItem = true;
                 break;
             }
         }
-        String itemName = hasSelectedItem ? selectedItem : "";
         //clear summary edit data
         summaryModel.clearEditData();
-        submitGrrResult(itemName);
+        summaryTb.refresh();
+        submitGrrResult(selectedItem, hasSelectedItem);
     }
 
     @SuppressWarnings("unchecked")
-    private void submitGrrResult(String selectedItem) {
-        this.removeAllResultData();
+    private void submitGrrResult(String selectedItem, Boolean analyseSubResult) {
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         context.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, grrMainController.getSearchConditionDto());
         context.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrMainController.getGrrDataFrame());
-        if (DAPStringUtils.isNotBlank(selectedItem)) {
+        if (DAPStringUtils.isNotBlank(selectedItem) && analyseSubResult) {
             context.put(ParamKeys.TEST_ITEM_NAME, selectedItem);
         }
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
@@ -321,21 +322,27 @@ public class GrrResultController implements Initializable {
                 @Override
                 public void doJob(JobContext context) {
                     List<GrrSummaryDto> grrSummaryDtoList = (List<GrrSummaryDto>) context.get(ParamKeys.GRR_SUMMARY_DTO_LIST);
-                    GrrDetailDto grrDetailDto = context.getParam(ParamKeys.GRR_DETAIL_DTO, GrrDetailDto.class);
-                    if (grrSummaryDtoList != null) {
-                        summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
-                        summaryModel.setData(grrSummaryDtoList, selectedItem);
+                    if (grrSummaryDtoList == null || grrSummaryDtoList.isEmpty()) {
+                        return;
+                    }
+                    String itemName = context.containsKey(ParamKeys.GRR_DETAIL_DTO) ? (String) context.get(ParamKeys.TEST_ITEM_NAME) : summaryModel.getSelectedItemName();
+                    summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
+                    summaryModel.setData(grrSummaryDtoList, itemName);
+                    summaryTb.refresh();
+                    if (context.containsKey(ParamKeys.GRR_DETAIL_DTO)) {
+                        removeSubResultData();
                         setToleranceValue(summaryModel.getToleranceCellValue(selectedItem));
-                        summaryTb.refresh();
+                        GrrDetailDto grrDetailDto = context.getParam(ParamKeys.GRR_DETAIL_DTO, GrrDetailDto.class);
+                        if (grrDetailDto != null) {
+                            setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), selectedItem);
+                            setAnalysisItemResultData(grrDetailDto);
+                        } else {
+                            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                                    GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
+                        }
                     }
-                    if (grrDetailDto != null) {
-                        setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), selectedItem);
-                        setAnalysisItemResultData(grrDetailDto);
-                    } else {
-                        RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                                GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                                GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
-                    }
+
                     windowProgressTipController.closeDialog();
                 }
             });
