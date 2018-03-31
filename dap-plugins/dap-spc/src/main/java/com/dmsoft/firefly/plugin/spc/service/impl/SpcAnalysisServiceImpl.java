@@ -37,6 +37,12 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
         SpcStatsResultDto resultDto = new SpcStatsResultDto();
         try {
             if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
+                if (DAPStringUtils.isNumeric(dataDto.getLsl())) {
+                    resultDto.setLsl(Double.parseDouble(dataDto.getLsl()));
+                }
+                if (DAPStringUtils.isNumeric(dataDto.getUsl())) {
+                    resultDto.setUsl(Double.parseDouble(dataDto.getUsl()));
+                }
                 return resultDto;
             }
             Rengine engine = prepareEngine(dataDto.getDataList(), configDto);
