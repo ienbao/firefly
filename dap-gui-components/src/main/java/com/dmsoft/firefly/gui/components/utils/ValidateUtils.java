@@ -49,7 +49,7 @@ public class ValidateUtils {
      * @return true : match pattern, false : no match pattern
      */
     public static boolean validatePattern(String str, String patternStr) {
-        return DAPStringUtils.isBlank(patternStr) || Pattern.matches(patternStr, str);
+        return DAPStringUtils.isBlank(str) || Pattern.matches(patternStr, str);
     }
 
     /**

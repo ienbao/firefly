@@ -168,6 +168,9 @@ public class BasicSearchPane extends VBox {
     }
 
     public String getTitle() {
+        if (groupTitle == null) {
+            return "Group1";
+        }
         return groupTitle.getText();
     }
 

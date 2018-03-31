@@ -154,19 +154,19 @@ public class MenuFactory {
         legalMenuItem.setOnAction(event -> {
             GuiFxmlAndLanguageUtils.buildLegalDialog();
         });
-        MenuItem dapMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ABOUT_DAP"));
-        MenuItem updateMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_CHECK_UPDATE"));
+//        MenuItem dapMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ABOUT_DAP"));
+//        MenuItem updateMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_CHECK_UPDATE"));
 
-        dapMenuItem.setOnAction(event -> {
-            System.out.println("dap");
-        });
-
-        updateMenuItem.setOnAction(event -> {
-            System.out.println("update");
-        });
+//        dapMenuItem.setOnAction(event -> {
+//            System.out.println("dap");
+//        });
+//
+//        updateMenuItem.setOnAction(event -> {
+//            System.out.println("update");
+//        });
         menu.getItems().add(legalMenuItem);
-        menu.getItems().add(dapMenuItem);
-        menu.getItems().add(updateMenuItem);
+//        menu.getItems().add(dapMenuItem);
+//        menu.getItems().add(updateMenuItem);
         return getParentMenuBuilder().setParentLocation(ROOT_MENU).addMenu(menu);
     }
 

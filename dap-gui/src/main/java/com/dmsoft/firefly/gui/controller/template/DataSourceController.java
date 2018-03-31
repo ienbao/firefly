@@ -7,9 +7,7 @@ package com.dmsoft.firefly.gui.controller.template;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.core.utils.DataFormat;
 import com.dmsoft.firefly.gui.GuiApplication;
-import com.dmsoft.firefly.gui.components.utils.ImageUtils;
-import com.dmsoft.firefly.gui.components.utils.StageMap;
-import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
+import com.dmsoft.firefly.gui.components.utils.*;
 import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageController;
@@ -324,6 +322,11 @@ public class DataSourceController implements Initializable {
                 }
                 projectOrder.add(v.getValue());
             });
+            if (selectProject.isEmpty()) {
+                WindowMessageFactory.createWindowMessageHasOk(FxmlAndLanguageUtils.getString(ResourceMassages.MESSAGE),
+                        FxmlAndLanguageUtils.getString(ResourceMassages.PLEASE_SELECT_FILE));
+                return;
+            }
             Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(selectProject);
 
             envService.setActivatedProjectName(selectProject);

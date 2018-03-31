@@ -92,6 +92,7 @@ public class ViewDataController implements Initializable {
         this.statisticalSearchConditionDtoList = statisticalSearchConditionDtoList;
         this.selectedRowKeys = selectedRowKey;
         Platform.runLater(() -> {
+            this.dataFrame = dataFrame;
             if (dataFrame == null) {
                 Platform.runLater(() -> {
                     viewDataTable.getColumns().clear();
@@ -107,7 +108,6 @@ public class ViewDataController implements Initializable {
                 });
                 return;
             }
-            this.dataFrame = dataFrame;
             this.model = new ViewDataDFModel(dataFrame, selectedRowKey);
             this.model.setStatisticalSearchConditionDtoList(statisticalSearchConditionDtoList);
             this.model.setMainController(spcMainController);
@@ -172,7 +172,7 @@ public class ViewDataController implements Initializable {
         if (this.model != null) {
             return this.model.getSelectedRowKeys();
         } else {
-            return Lists.newArrayList();
+            return null;
         }
     }
 

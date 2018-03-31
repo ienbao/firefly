@@ -7,6 +7,11 @@ package com.dmsoft.firefly.plugin.spc.utils;
  * Created by Ethan.Yang on 2018/2/6.
  */
 public class UIConstant {
+    public static final String UI_MESSAGE_TIP_SUCCESS_TITLE = "UI_MESSAGE_TIP_SUCCESS_TITLE";
+    public static final String UI_MESSAGE_TIP_WARNING_TITLE = "UI_MESSAGE_TIP_WARNING_TITLE";
+    public static final String UI_MESSAGE_TIP_INFO_TITLE = "UI_MESSAGE_TIP_INFO_TITLE";
+    public static final String UI_MESSAGE_TIP_LOCATION = "UI_MESSAGE_TIP_LOCATION";
+
     public static final String GLOBAL_NAN = "NaN";
     public static final String GLOBAL_SPLIT = " : : ";
     public static final int EXPORT_IMG_WEIGHT = 600;

@@ -140,6 +140,10 @@ public class SearchTab extends VBox {
         return controller.getBasicSearch();
     }
 
+    public List<BasicSearchDto> getOneBasicSearch() {
+        return controller.getOneBasicSearch();
+    }
+
     /**
      * method to search basic search
      *
@@ -147,5 +151,14 @@ public class SearchTab extends VBox {
      */
     public void setBasicSearch(LinkedHashMap<String, List<BasicSearchDto>> basicSearchDtoMaps) {
         controller.setBasicSearch(basicSearchDtoMaps);
+    }
+
+    /**
+     * method to search one group basic search
+     *
+     * @param basicSearchDtoMaps basic search dto map
+     */
+    public void setOneBasicSearch(List<BasicSearchDto> basicSearchDtoMaps) {
+        controller.setOneBasicSearch(basicSearchDtoMaps);
     }
 }

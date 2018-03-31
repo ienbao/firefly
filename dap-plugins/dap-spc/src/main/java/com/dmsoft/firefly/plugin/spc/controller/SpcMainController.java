@@ -223,6 +223,8 @@ public class SpcMainController implements Initializable {
             FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML("view/spc_export.fxml");
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("spcExport", "Spc Export", root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            SpcLeftConfigDto leftConfigDto = spcItemController.getCurrentConfigData();
+            ((SpcExportController)fxmlLoader.getController()).initSpcExportLeftConfig(leftConfigDto);
             stage.setResizable(false);
             stage.toFront();
             stage.show();
@@ -588,8 +590,10 @@ public class SpcMainController implements Initializable {
 
         List<String> currentStatisticalSelectRowKeyList = spcRefreshJudgeUtil.getCurrentStatisticalSelectRowKeyList();
         List<String> currentViewDataSelectRowKeyList = spcRefreshJudgeUtil.getCurrentViewDataSelectRowKeyList();
+
+        List<String> countViewDataRowKeyList = currentViewDataSelectRowKeyList == null ? dataFrame.getAllRowKeys() : currentViewDataSelectRowKeyList;
         spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
-        spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(currentViewDataSelectRowKeyList);
+        spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(countViewDataRowKeyList);
 
         //statistical data
         List<SpcStatisticalResultAlarmDto> editRowDataList = statisticalResultController.getAllRowStatsData();
@@ -597,12 +601,12 @@ public class SpcMainController implements Initializable {
         if (statisticalSearchConditionDtoList.size() == 0) {
             return;
         }
-        SearchDataFrame statisticalDataFrame = buildSubSearchDataFrame(currentViewDataSelectRowKeyList, statisticalSearchConditionDtoList);
+        SearchDataFrame statisticalDataFrame = buildSubSearchDataFrame(countViewDataRowKeyList, statisticalSearchConditionDtoList);
 
         //chart data
         List<SpcStatisticalResultAlarmDto> chooseRowDataList = statisticalResultController.getSelectStatsData();
         List<SearchConditionDto> chartSearchConditionDtoList = buildRefreshSearchConditionData(chooseRowDataList);
-        SearchDataFrame chartDataFrame = buildSubSearchDataFrame(currentViewDataSelectRowKeyList, chartSearchConditionDtoList);
+        SearchDataFrame chartDataFrame = buildSubSearchDataFrame(countViewDataRowKeyList, chartSearchConditionDtoList);
 
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
@@ -631,7 +635,7 @@ public class SpcMainController implements Initializable {
 
                 //set view data
                 SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getAllRowKeys(), chartSearchConditionDtoList);
-                viewDataController.setViewData(viewDataFrame, currentViewDataSelectRowKeyList,statisticalSearchConditionDtoList);
+                viewDataController.setViewData(viewDataFrame, countViewDataRowKeyList,statisticalSearchConditionDtoList);
             }
         });
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
