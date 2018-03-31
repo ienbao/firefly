@@ -335,6 +335,9 @@ public class SpcExportController {
                 WindowMessageFactory.createWindowMessageHasOk("Export", "Please Input correct config numbers.");
                 return;
             }
+            if (!searchTab.verifySearchTextArea()) {
+                return;
+            }
             StageMap.closeStage("spcExport");
             String savePath = locationPath.getText() + "/SPC_" + getTimeString();
             export(savePath);
@@ -803,6 +806,7 @@ public class SpcExportController {
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("spcExportViewData",
                     SpcFxmlAndLanguageUtils.getString(ResourceMassages.VIEW_DATA), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            stage.setResizable(false);
             stage.toFront();
             stage.show();
 
