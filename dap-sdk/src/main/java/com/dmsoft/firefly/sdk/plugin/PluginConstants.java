@@ -44,6 +44,11 @@ public class PluginConstants {
     public static final String XML_REQUIRE = "require";
 
     /**
+     * xml node name : description
+     */
+    public static final String XML_DESCRIPTION = "description";
+
+    /**
      * xml attribute name : id
      */
     public static final String XML_ID = "id";

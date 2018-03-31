@@ -66,7 +66,7 @@ public class GrrPlugin extends Plugin {
 
     @Override
     public void start() {
-        RuntimeContext.getBean(PluginUIContext.class).registerMainBody("grr", new IMainBodyPane() {
+        RuntimeContext.getBean(PluginUIContext.class).registerMainBody("GRR", new IMainBodyPane() {
             @Override
             public Pane getNewPane() {
                 Pane root = null;

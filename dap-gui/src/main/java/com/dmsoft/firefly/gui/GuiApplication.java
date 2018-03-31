@@ -80,7 +80,6 @@ public class GuiApplication extends Application {
             Method method = cla.getMethod("setDockIconImage", Image.class);
             ResourceFinder finder = new ResourceFinder();
             method.invoke(o, new ImageIcon(finder.findResource("images/desktop_mac_logo.png")).getImage());
-        } else {
         }
         String json = JsonFileUtil.readJsonFile(parentPath, GuiConst.ACTIVE_PLUGIN);
         List<KeyValueDto> activePlugin = Lists.newArrayList();
