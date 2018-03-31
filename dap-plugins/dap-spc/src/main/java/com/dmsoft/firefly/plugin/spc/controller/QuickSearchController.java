@@ -3,7 +3,12 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.firefly.gui.components.utils.TextFieldWrapper;
+import com.dmsoft.firefly.gui.components.utils.ValidateRule;
 import com.dmsoft.firefly.plugin.spc.utils.FilterType;
+import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.SpcSettingValidateUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -46,6 +51,20 @@ public class QuickSearchController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initComponentEvent();
+        this.validRangeText();
+    }
+
+    private void validRangeText(){
+        ValidateRule rule = new ValidateRule();
+        rule.setMaxLength(SpcSettingValidateUtil.ANALYSIS_SETTING_MAX_INT);
+        rule.setPattern("^[+]?\\d*[.]?\\d*$");
+        rule.setErrorStyle("text-field-error");
+        rule.setEmptyErrorMsg(SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_VALIDATE_NOT_BE_EMPTY));
+        TextFieldWrapper.decorate(withinLowerTf, rule);
+        TextFieldWrapper.decorate(withinUpperTf, rule);
+
+        TextFieldWrapper.decorate(withoutLowerTf, rule);
+        TextFieldWrapper.decorate(withoutUpperTf, rule);
     }
 
     private void initComponentEvent() {
@@ -141,5 +160,18 @@ public class QuickSearchController implements Initializable {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public boolean isError(){
+        if(withinRangeRadioBtn.isSelected()){
+            if (withinUpperTf.getStyleClass().contains("text-field-error") || withinLowerTf.getStyleClass().contains("text-field-error")) {
+                return true;
+            }
+        } else if(withinRangeRadioBtn.isSelected()){
+            if (withoutLowerTf.getStyleClass().contains("text-field-error") || withoutUpperTf.getStyleClass().contains("text-field-error")) {
+                return true;
+            }
+        }
+        return false;
     }
 }
