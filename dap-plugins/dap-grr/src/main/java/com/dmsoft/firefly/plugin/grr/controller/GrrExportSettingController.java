@@ -94,10 +94,9 @@ public class GrrExportSettingController {
     private void toggleAllCheckDisable(boolean flag) {
         for (int i = 0; i < pane.getChildren().size(); i++) {
             Node paneNode = pane.getChildren().get(i);
-            if (i != 0 && paneNode instanceof CheckBox) {
+            if (i != 0 && (paneNode instanceof CheckBox)) {
                 paneNode.setDisable(flag);
             }
-            i++;
         }
         this.toggleChartCheckDisable(flag);
     }
