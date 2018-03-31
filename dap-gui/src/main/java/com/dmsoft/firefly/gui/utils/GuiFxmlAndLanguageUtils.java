@@ -143,6 +143,7 @@ public class GuiFxmlAndLanguageUtils {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/template.fxml");
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("template", GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE), root, getResource("css/platform_app.css").toExternalForm());
+            stage.setResizable(false);
             stage.toFront();
             stage.show();
         } catch (Exception ex) {
