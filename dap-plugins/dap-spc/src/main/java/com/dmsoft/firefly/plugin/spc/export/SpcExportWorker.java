@@ -55,16 +55,16 @@ public class SpcExportWorker implements ExWorker {
      *
      * @param spcStatisticalResultDtos   spc static result data
      * @param chartPicPaths              chartPicPaths
-     * @param spcUserActionAttributesDto spc user action and config dto
+     * @param spcExportConfigDto spc user action and config dto
      * @param runChartRule spc run chart warn rules
      */
     public void buildSPCMultiItem(Map<String, Map<String, String>> chartPicPaths,
                                   List<SpcStatisticalResultAlarmDto> spcStatisticalResultDtos,
-                                  SpcUserActionAttributesDto spcUserActionAttributesDto,
+                                  SpcExportConfigDto spcExportConfigDto,
                                   Map<String, String> runChartRule) {
-        String perfomer = spcUserActionAttributesDto.getPerformer();
-        digNum = spcUserActionAttributesDto.getDigNum();
-        Map<String, Boolean> exportDataItem = spcUserActionAttributesDto.getExportDataItem();
+        String perfomer = spcExportConfigDto.getPerformer();
+        digNum = spcExportConfigDto.getDigNum();
+        Map<String, Boolean> exportDataItem = spcExportConfigDto.getExportDataItem();
         exportDataItem.put("Center", true);
 
         //summary sheet

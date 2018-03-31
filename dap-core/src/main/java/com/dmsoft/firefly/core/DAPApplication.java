@@ -18,8 +18,6 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.*;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.event.EventContext;
-import com.dmsoft.firefly.sdk.job.DefaultJobManager;
-import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
@@ -46,7 +44,7 @@ import java.util.Properties;
  */
 public class DAPApplication {
 
-    private  static Logger logger = LoggerFactory.getLogger(DAPApplication.class);
+    private static Logger logger = LoggerFactory.getLogger(DAPApplication.class);
 
     /**
      * methdod to init env
@@ -58,7 +56,6 @@ public class DAPApplication {
         pluginInfoContextImpl.addListener(pluginImageContext);
         PluginProxyMethodFactoryImpl pluginProxy = new PluginProxyMethodFactoryImpl();
         PluginUIContextImpl pluginUIContext = new PluginUIContextImpl();
-        DefaultJobManager jobManager = new DefaultJobManager();
         TemplateServiceImpl templateService = new TemplateServiceImpl();
         UserPreferenceServiceImpl userPreferenceService = new UserPreferenceServiceImpl();
         UserServiceImpl userService = new UserServiceImpl();
@@ -69,11 +66,11 @@ public class DAPApplication {
         SourceDataServiceImpl sourceDataService = new SourceDataServiceImpl();
         TestDataCacheFactory factory = new TestDataCacheFactory();
 
+
         RuntimeContext.registerBean(PluginContext.class, pluginInfoContextImpl);
         RuntimeContext.registerBean(PluginImageContext.class, pluginImageContext);
         RuntimeContext.registerBean(PluginProxyMethodFactory.class, pluginProxy);
         RuntimeContext.registerBean(PluginUIContext.class, pluginUIContext);
-        RuntimeContext.registerBean(JobManager.class, jobManager);
         RuntimeContext.registerBean(TemplateService.class, templateService);
         RuntimeContext.registerBean(UserPreferenceService.class, userPreferenceService);
         RuntimeContext.registerBean(UserService.class, userService);
@@ -86,6 +83,7 @@ public class DAPApplication {
         RuntimeContext.registerBean(DataFrameFactory.class, dataFrameFactory);
         RuntimeContext.registerBean(SourceDataService.class, sourceDataService);
         RuntimeContext.registerBean(TestDataCacheFactory.class, factory);
+
     }
 
     /**

@@ -7,12 +7,8 @@ import com.dmsoft.firefly.core.utils.JsonFileUtil;
 import com.dmsoft.firefly.gui.components.utils.NodeMap;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.gui.handler.importcsv.CsvImportHandler;
-import com.dmsoft.firefly.gui.handler.importcsv.ResolverSelectHandler;
-import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
-import com.dmsoft.firefly.gui.utils.KeyValueDto;
-import com.dmsoft.firefly.gui.utils.MenuFactory;
-import com.dmsoft.firefly.gui.utils.MessageManagerFactory;
+import com.dmsoft.firefly.gui.job.BasicJobFactory;
+import com.dmsoft.firefly.gui.job.BasicJobManager;
 import com.dmsoft.firefly.gui.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -37,24 +33,35 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.util.List;
-
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.ManagementFactory;
+import java.util.List;
 
 import static com.google.common.io.Resources.getResource;
 
+/**
+ * GUI Application
+ */
 public class GuiApplication extends Application {
 
-    private UserService userService;
     public static final int TOTAL_LOAD_CLASS = 5700;
-    private SystemProcessorController systemProcessorController;
-
-    private final String parentPath = ApplicationPathUtil.getPath(GuiConst.CONFIG_PATH);
-    private JsonMapper mapper = JsonMapper.defaultMapper();
 
     static {
         System.getProperties().put("javafx.pseudoClassOverrideEnabled", "true");
+    }
+
+    private final String parentPath = ApplicationPathUtil.getPath(GuiConst.CONFIG_PATH);
+    private UserService userService;
+    private SystemProcessorController systemProcessorController;
+    private JsonMapper mapper = JsonMapper.defaultMapper();
+
+    /**
+     * main method
+     *
+     * @param args arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
     }
 
     @Override
@@ -75,6 +82,10 @@ public class GuiApplication extends Application {
         }
 //        DAPApplication.run(Lists.newArrayList(plugins));
         DAPApplication.initEnv();
+        BasicJobManager jobManager1 = new BasicJobManager();
+        BasicJobFactory jobFactory = new BasicJobFactory();
+        RuntimeContext.registerBean(JobManager.class, jobManager1);
+        RuntimeContext.registerBean(BasicJobFactory.class, jobFactory);
         userService = RuntimeContext.getBean(UserService.class);
 
         buildProcessorBarDialog();
@@ -101,7 +112,6 @@ public class GuiApplication extends Application {
 
         WindowFactory.createFullWindow(GuiConst.PLARTFORM_STAGE_MAIN, root, main, getClass().getClassLoader().getResource("css/platform_app.css").toExternalForm());
 
-        initJob();
         NodeMap.addNode(GuiConst.PLARTFORM_NODE_MAIN, main);
 
         RuntimeContext.getBean(EventContext.class).addEventListener(event -> {
@@ -111,14 +121,9 @@ public class GuiApplication extends Application {
         });
     }
 
-    private void initJob() {
-        JobManager manager = RuntimeContext.getBean(JobManager.class);
-        manager.initializeJob(GuiConst.DATASOURCE_IMPORT, pipeline -> {
-            pipeline.addLast(GuiConst.RESOLVER_HANDLER, new ResolverSelectHandler().setWeight(10));
-            pipeline.addLast(GuiConst.IMPORT_HANDLER, new CsvImportHandler().setWeight(90));
-        });
-    }
-
+    /**
+     * method to update process bar
+     */
     public void updateProcessorBar() {
         Service<Integer> service = new Service<Integer>() {
             @Override
@@ -177,14 +182,5 @@ public class GuiApplication extends Application {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
-
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    public void stop() throws Exception {
-        RuntimeContext.getBean(JobManager.class).getExecutorService().shutdownNow();
     }
 }

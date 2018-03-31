@@ -2,7 +2,6 @@ package com.dmsoft.firefly.plugin.spc.charts.view;
 
 import com.dmsoft.firefly.gui.components.pane.ContentStackPane;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
-import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.google.common.collect.Maps;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -20,21 +19,23 @@ public class VerticalTabPane extends AnchorPane {
     private ContentStackPane contentPane;
     private Map<Integer, String> nodeIdMap = Maps.newHashMap();
 
-    private final double LEFT_WIDTH = 100;
-    private final double RIGHT_WIDTH = 450;
-    private final double HEIGHT = 278;
-    private final double BUTTON_HEIGHT = 20;
+    private static final double LEFT_WIDTH = 100;
+    private static final double RIGHT_WIDTH = 315;
+    private static final double HEIGHT = 278;
+    private static final double BUTTON_HEIGHT = 20;
+    private static final String BORDER_COLOR = "#e7e7e7";
+    private static final String BACKGROUND_COLOR = "#f0f0f0";
 
-    private final String BORDER_COLOR = "#e7e7e7";
-    private final String BACKGROUND_COLOR = "#f0f0f0";
-
+    /**
+     * Constructor for VerticalTabPane
+     */
     public VerticalTabPane() {
         this.initComponents();
         this.initComponentsRender();
         this.initEvent();
     }
 
-    public void initComponents() {
+    private void initComponents() {
 
         VBox box = new VBox();
         leftBox = new VBox();
@@ -56,16 +57,23 @@ public class VerticalTabPane extends AnchorPane {
         leftBox.getChildren().add(mrBtn);
         leftBox.getChildren().add(box);
 
+        final double offsetValue = 0.1;
         contentPane = new ContentStackPane();
         this.getChildren().addAll(leftBox, contentPane);
-        AnchorPane.setBottomAnchor(leftBox, 0.1);
-        AnchorPane.setTopAnchor(leftBox, 0.1);
-        AnchorPane.setBottomAnchor(contentPane, 0.1);
-        AnchorPane.setRightAnchor(contentPane, 0.1);
-        AnchorPane.setTopAnchor(contentPane, 0.1);
+        AnchorPane.setBottomAnchor(leftBox, offsetValue);
+        AnchorPane.setTopAnchor(leftBox, offsetValue);
+        AnchorPane.setBottomAnchor(contentPane, offsetValue);
+        AnchorPane.setRightAnchor(contentPane, offsetValue);
+        AnchorPane.setTopAnchor(contentPane, offsetValue);
         AnchorPane.setLeftAnchor(contentPane, LEFT_WIDTH);
     }
 
+    /**
+     * Add node to content pane for index
+     *
+     * @param node  node
+     * @param index index
+     */
     public void addNode(Node node, int index) {
         if (node != null && node.getId() != null) {
             contentPane.add(node);
@@ -73,6 +81,10 @@ public class VerticalTabPane extends AnchorPane {
         }
     }
 
+    /**
+     * Active tab by index
+     * @param index index
+     */
     public void activeTabByIndex(int index) {
         if (index < 0 || !nodeIdMap.keySet().contains(index)) {
             return;
@@ -86,7 +98,7 @@ public class VerticalTabPane extends AnchorPane {
         }
     }
 
-    public void initComponentsRender() {
+    private void initComponentsRender() {
         leftBox.setPrefWidth(LEFT_WIDTH);
         leftBox.setMinWidth(LEFT_WIDTH);
         leftBox.setMaxWidth(LEFT_WIDTH);
@@ -104,7 +116,7 @@ public class VerticalTabPane extends AnchorPane {
         }
     }
 
-    public void initEvent() {
+    private void initEvent() {
         for (int i = 0; i < leftBox.getChildren().size(); i++) {
             Node node = leftBox.getChildren().get(i);
             if (node instanceof Button) {
@@ -114,7 +126,6 @@ public class VerticalTabPane extends AnchorPane {
     }
 
     private void setButtonStyle(Button button) {
-
         button.getStyleClass().removeAll("btn-tab");
         button.getStyleClass().add("btn-tab");
         button.setPrefWidth(LEFT_WIDTH);
@@ -173,7 +184,7 @@ public class VerticalTabPane extends AnchorPane {
         }
     }
 
-    private String[] SPC_CHART_NAME = new String[]{
+    private static final String[] SPC_CHART_NAME = new String[]{
             SpcFxmlAndLanguageUtils.getString("SPC_CHART_NDC"),
             SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN"),
             SpcFxmlAndLanguageUtils.getString("SPC_CHART_BAR"),

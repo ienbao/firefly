@@ -22,10 +22,17 @@ import java.util.function.Function;
 /**
  * Created by cherry on 2018/2/27.
  */
+
+/**
+ * Value marker
+ *
+ * @param <X> x data class
+ * @param <Y> y data class
+ */
 public class ValueMarker<X, Y> {
 
-    public final static Orientation horizontalType = Orientation.HORIZONTAL;
-    public final static Orientation verticalType = Orientation.VERTICAL;
+    public static final Orientation HORIZONTALTYPE = Orientation.HORIZONTAL;
+    public static final Orientation VERTICALTYPE = Orientation.VERTICAL;
     private ObservableList<XYChart.Data<X, Y>> horizontalMarkers;
     private ObservableList<XYChart.Data<X, Y>> verticalMarkers;
 
@@ -90,15 +97,14 @@ public class ValueMarker<X, Y> {
 
         Line line = new Line();
         Orientation orientationType = lineData.getPlotOrientation();
-        XYChart.Data marker = horizontalType == orientationType ?
-                new XYChart.Data(0, lineData.getValue()) :
-                new XYChart.Data(lineData.getValue(), 0);
+        XYChart.Data marker = HORIZONTALTYPE == orientationType
+                ? new XYChart.Data(0, lineData.getValue()) : new XYChart.Data(lineData.getValue(), 0);
         marker.setNode(line);
         lineMap.put(lineData.getName(), line);
-        if (horizontalType == orientationType) {
+        if (HORIZONTALTYPE == orientationType) {
             horizontalMarkers.add(marker);
         }
-        if (verticalType == orientationType) {
+        if (VERTICALTYPE == orientationType) {
             verticalMarkers.add(marker);
         }
 
@@ -131,7 +137,6 @@ public class ValueMarker<X, Y> {
      * @param showed   whether it show or not
      */
     public void toggleValueMarker(String lineName, boolean showed) {
-
         if (showed) {
             showValueMarker(lineName);
         } else {
@@ -145,7 +150,6 @@ public class ValueMarker<X, Y> {
      * @param lineName line name
      */
     public void hiddenValueMarker(String lineName) {
-
         if (lineMap.containsKey(lineName)) {
             lineMap.get(lineName).getStyleClass().add("hidden-line");
         }
@@ -157,7 +161,6 @@ public class ValueMarker<X, Y> {
      * @param lineName line name
      */
     public void showValueMarker(String lineName) {
-
         if (lineMap.containsKey(lineName)) {
             lineMap.get(lineName).getStyleClass().remove("hidden-line");
         }
@@ -166,7 +169,7 @@ public class ValueMarker<X, Y> {
     /**
      * Update all line color
      *
-     * @param color
+     * @param color line color
      */
     public void updateAllLineColor(Color color) {
         for (Map.Entry<String, Line> stringLineMap : lineMap.entrySet()) {

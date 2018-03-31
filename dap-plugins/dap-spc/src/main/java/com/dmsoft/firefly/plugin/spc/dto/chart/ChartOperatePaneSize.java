@@ -8,9 +8,18 @@ public class ChartOperatePaneSize {
     private double width;
     private double height;
 
+    /**
+     * Constructor for ChartOperatePaneSize
+     */
     public ChartOperatePaneSize() {
     }
 
+    /**
+     * Constructor for ChartOperatePaneSize
+     *
+     * @param width  pane width
+     * @param height pane height
+     */
     public ChartOperatePaneSize(double width, double height) {
         this.width = width;
         this.height = height;

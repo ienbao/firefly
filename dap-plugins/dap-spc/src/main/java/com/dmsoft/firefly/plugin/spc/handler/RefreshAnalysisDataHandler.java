@@ -1,65 +1,46 @@
-/*
- * Copyright (c) 2017. For Intelligent Group.
- */
 package com.dmsoft.firefly.plugin.spc.handler;
 
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.service.SpcService;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
-import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionCode;
-import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
-import com.dmsoft.firefly.sdk.exception.ApplicationException;
-import com.dmsoft.firefly.sdk.job.AbstractProcessMonitorAutoAdd;
-import com.dmsoft.firefly.sdk.job.ProcessMonitorAuto;
-import com.dmsoft.firefly.sdk.job.core.JobHandlerContext;
-import com.dmsoft.firefly.sdk.job.core.JobInboundHandler;
-import com.google.common.collect.Maps;
+import com.dmsoft.firefly.sdk.job.core.AbstractBasicJobHandler;
+import com.dmsoft.firefly.sdk.job.core.JobContext;
 
 import java.util.List;
-import java.util.Map;
 
 /**
- * Created by Ethan.Yang on 2018/3/16.
+ * handler for new refresh analysis data handler
+ *
+ * @author Can Guan, Ethan Yang
  */
-public class RefreshAnalysisDataHandler implements JobInboundHandler {
-
-    @Override
-    public void doJob(JobHandlerContext context, Object... in) throws Exception {
-        if (in == null || !(in[0] instanceof Map)) {
-            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11002));
-        }
-        Map<String, Object> param = (Map) in[0];
-        SpcAnalysisConfigDto analysisConfigDto = (SpcAnalysisConfigDto) param.get(ParamKeys.SPC_ANALYSIS_CONFIG_DTO);
-
-        SearchDataFrame statisticalDataFrame = (SearchDataFrame) param.get(ParamKeys.STATISTICAL_SEARCH_DATA_FRAME);
-        List<SearchConditionDto> statisticalSearchConditionDtoList = (List<SearchConditionDto>) param.get(ParamKeys.STATISTICAL_SEARCH_CONDITION_DTO_LIST);
-
-        // progress
-        SpcService spcService = RuntimeContext.getBean(SpcService.class);
-        if (spcService instanceof AbstractProcessMonitorAutoAdd) {
-            ProcessMonitorAuto monitor = (ProcessMonitorAuto) spcService;
-            monitor.addProcessMonitorListener(context.getContextProcessMonitorListenerIfExists());
-        }
-        SpcSettingDto spcSettingDto = (SpcSettingDto) param.get(ParamKeys.SPC_SETTING_FILE_NAME);
-        List<SpcStatsDto> spcStatsDtoList = spcService.getStatisticalResult(statisticalDataFrame, statisticalSearchConditionDtoList, analysisConfigDto);
-        List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = RuntimeContext.getBean(SpcSettingService.class).setStatisticalResultAlarm(spcStatsDtoList, spcSettingDto);
-
-        SearchDataFrame chartDtaFrame = (SearchDataFrame) param.get(ParamKeys.CHART_SEARCH_DATA_FRAME);
-        List<SearchConditionDto> chartSearchConditionDtoList = (List<SearchConditionDto>) param.get(ParamKeys.CHART_SEARCH_CONDITION_DTO_LIST);
-        List<SpcChartDto> spcChartDtoList = spcService.getChartResult(chartDtaFrame, chartSearchConditionDtoList, analysisConfigDto);
-        RuntimeContext.getBean(SpcSettingService.class).setControlChartRuleAlarm(spcChartDtoList, spcSettingDto);
-
-        Map<String, Object> analysisResultMap = Maps.newHashMap();
-        analysisResultMap.put(ParamKeys.STATISTICAL_ANALYSIS_RESULT, spcStatisticalResultAlarmDtoList);
-        analysisResultMap.put(ParamKeys.CHART_ANALYSIS_RESULT, spcChartDtoList);
-
-        context.returnValue(analysisResultMap);
+public class RefreshAnalysisDataHandler extends AbstractBasicJobHandler {
+    /**
+     * constructor
+     */
+    public RefreshAnalysisDataHandler() {
+        setName(ParamKeys.SPC_REFRESH_RESULT_HANDLER);
     }
 
     @Override
-    public void exceptionCaught(JobHandlerContext context, Throwable cause) throws Exception {
+    @SuppressWarnings("unchecked")
+    public void doJob(JobContext context) {
+        SpcAnalysisConfigDto analysisConfigDto = context.getParam(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, SpcAnalysisConfigDto.class);
+        SearchDataFrame statisticalDataFrame = context.getParam(ParamKeys.STATISTICAL_SEARCH_DATA_FRAME, SearchDataFrame.class);
+        List<SearchConditionDto> statisticalSearchConditionDtoList = (List<SearchConditionDto>) context.get(ParamKeys.STATISTICAL_SEARCH_CONDITION_DTO_LIST);
 
+        SpcService spcService = RuntimeContext.getBean(SpcService.class);
+        SpcSettingDto spcSettingDto = context.getParam(ParamKeys.SPC_SETTING_DTO, SpcSettingDto.class);
+        List<SpcStatsDto> spcStatsDtoList = spcService.getStatisticalResult(statisticalDataFrame, statisticalSearchConditionDtoList, analysisConfigDto);
+        List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = RuntimeContext.getBean(SpcSettingService.class).setStatisticalResultAlarm(spcStatsDtoList, spcSettingDto);
+
+        SearchDataFrame chartDtaFrame = context.getParam(ParamKeys.CHART_SEARCH_DATA_FRAME, SearchDataFrame.class);
+        List<SearchConditionDto> chartSearchConditionDtoList = (List<SearchConditionDto>) context.get(ParamKeys.CHART_SEARCH_CONDITION_DTO_LIST);
+        List<SpcChartDto> spcChartDtoList = spcService.getChartResult(chartDtaFrame, chartSearchConditionDtoList, analysisConfigDto);
+        RuntimeContext.getBean(SpcSettingService.class).setControlChartRuleAlarm(spcChartDtoList, spcSettingDto);
+
+        context.put(ParamKeys.STATISTICAL_ANALYSIS_RESULT, spcStatisticalResultAlarmDtoList);
+        context.put(ParamKeys.CHART_ANALYSIS_RESULT, spcChartDtoList);
     }
 }

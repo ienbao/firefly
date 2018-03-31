@@ -9,9 +9,19 @@ public class LineTooltip {
     private String name;
     private Double value;
 
+    /**
+     * Constructor for LineTooltip
+     */
     public LineTooltip() {
     }
 
+    /**
+     * Constructor for LineTooltip
+     *
+     * @param externalName external name
+     * @param name         line name
+     * @param value        line value
+     */
     public LineTooltip(String externalName, String name, Double value) {
         this.externalName = externalName;
         this.name = name;

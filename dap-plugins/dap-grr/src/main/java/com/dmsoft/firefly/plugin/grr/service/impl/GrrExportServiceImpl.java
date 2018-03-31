@@ -11,7 +11,11 @@ import com.dmsoft.firefly.plugin.grr.service.impl.export.GrrExportWorker;
 import com.dmsoft.firefly.plugin.grr.utils.FileUtils;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
+import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
+import com.dmsoft.firefly.sdk.job.core.JobContext;
+import com.dmsoft.firefly.sdk.job.core.JobEvent;
+import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -53,6 +57,7 @@ public class GrrExportServiceImpl implements GrrExportService {
                 exportPath = FileUtils.getAbsolutePath(propertyConfig.getDefaultExportPath());
             }
 
+            pushProgress(30);
             String fixDir = "Grr_" + getTimeString();
             File file = new File(exportPath);
             if (!file.exists()) {
@@ -68,10 +73,12 @@ public class GrrExportServiceImpl implements GrrExportService {
             factory.buildGrrSummary(grrExportConfigDto, grrSummaryExportDtos);
             GrrExcelBuilder grrExcelBuilder = new GrrExcelBuilder(null, null);
             FileUtils.createDir(exportFilePath);
+            pushProgress(50);
             logger.info("Export grr only result to filepath:{}", exportFilePath);
             String filePath = exportFilePath + "/" + fixDir + ".xlsx";
             grrExcelBuilder.drawExcel(filePath, factory);
             factory.cleanExportWorker();
+            pushProgress(100);
             return exportFilePath;
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,6 +117,7 @@ public class GrrExportServiceImpl implements GrrExportService {
                     throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXCEPTION_GRR_PARAMETER_INVALID));
                 }
             }
+            pushProgress(30);
             String exportFilePath = exportPath + "/" + fixDir;
             FileUtils.createDir(exportFilePath);
             //Build grr excel
@@ -139,6 +147,7 @@ public class GrrExportServiceImpl implements GrrExportService {
                 excelIndex += 1;
             }
 
+            pushProgress(50);
             for (GrrExportResultDto grrExportResultDto : grrExportResultDtos) {
                 GrrImageDto grrImageDto = grrExportResultDto.getGrrImageDto();
                 if (grrImageDto != null) {
@@ -168,6 +177,7 @@ public class GrrExportServiceImpl implements GrrExportService {
                     }
                 }
             }
+            pushProgress(100);
 
             logger.info("Finished excel to filepath" + exportFilePath + "\n");
             return exportFilePath;
@@ -177,6 +187,10 @@ public class GrrExportServiceImpl implements GrrExportService {
         }
     }
 
+    private void pushProgress(int progress) {
+        JobContext context = RuntimeContext.getBean(JobManager.class).findJobContext(Thread.currentThread());
+        context.pushEvent(new JobEvent("GrrExportService", progress + 0.0, null));
+    }
 
     private String getTimeString() {
         Date d = new Date();

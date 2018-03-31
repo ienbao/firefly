@@ -2,6 +2,7 @@ package com.dmsoft.firefly.plugin.grr.model;
 
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableModel;
+import com.dmsoft.firefly.gui.components.utils.TableComparatorUtils;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.utils.ValidateUtils;
 import com.dmsoft.firefly.plugin.grr.dto.GrrSummaryDto;
@@ -38,10 +39,9 @@ public class GrrSummaryModel implements TableModel {
     private FilteredList<String> filterRowKeyArray;
     private ToggleGroup group = new ToggleGroup();
     private String radioKey = "   ";
-    private int analysisType = 1;
+    private int analysisType = 0;
 
-    private Set<String> disabledRowKeys = new HashSet<>();
-
+    private Set<String> disabledRowKeys = new LinkedHashSet<>();
     private Set<String> editorCell = new HashSet<>();
     private Set<String> errorEditorCell = new HashSet<>();
     private Set<String> errorEditorRow = new HashSet<>();
@@ -70,7 +70,6 @@ public class GrrSummaryModel implements TableModel {
                 radioButton.setToggleGroup(group);
                 if (!grrResultValid(summaryDto)) {
                     disabledRowKeys.add(summaryDto.getItemName());
-//                    radioButton.setDisable(true);
                 }
                 if (DAPStringUtils.isNotBlank(selectedRowKey) && selectedRowKey.equals(summaryDto.getItemName())) {
                     this.selectedItemName = selectedRowKey;
@@ -83,8 +82,6 @@ public class GrrSummaryModel implements TableModel {
                         boolean canAnalyze = !errorEditorRow.contains(summaryDto.getItemName());
                         canAnalyze = canAnalyze && valueMap.containsKey(valueKey);
                         canAnalyze = canAnalyze && valueMap.get(valueKey).getValue() != null;
-//                        canAnalyze = canAnalyze && !"-".equals(valueMap.get(valueKey).getValue());
-//                        String tolerance = valueMap.get(selectedItemName + UIConstant.SPLIT_FLAG + UIConstant.GRR_SUMMARY_TITLE[3]).getValue();
                         radioClickListener.executeAnalyzeDetail(summaryDto, getToleranceCellValue(selectedItemName), canAnalyze);
                     }
                 });
@@ -97,9 +94,8 @@ public class GrrSummaryModel implements TableModel {
         boolean valid = true;
         int digNum = DigNumInstance.newInstance().getDigNum();
         int percentDigNum = digNum - 2 >= 0 ? digNum - 2 : 0;
-        Double grr = analysisType == 1 ?
-                summaryDto.getSummaryResultDto().getGrrOnTolerance() :
-                summaryDto.getSummaryResultDto().getGrrOnContribution();
+        Double grr = analysisType == 0 ? summaryDto.getSummaryResultDto().getGrrOnTolerance()
+                : summaryDto.getSummaryResultDto().getGrrOnContribution();
         String value = this.formatterPercentValue(grr, percentDigNum);
         valid = "-".equals(value) ? false : valid;
         return valid;
@@ -109,6 +105,7 @@ public class GrrSummaryModel implements TableModel {
      * clear table
      */
     public void clearTableData() {
+        disabledRowKeys.clear();
         summaryDtos.clear();
         rowKeyArray.clear();
         valueMap.clear();
@@ -178,23 +175,20 @@ public class GrrSummaryModel implements TableModel {
             String rowName = key.split(UIConstant.SPLIT_FLAG)[0];
             GrrSummaryDto summaryDto = rowKeyDataMap.get(rowName);
             if (UIConstant.GRR_SUMMARY_TITLE[4].equals(columnName)) {
-                Double repeatability = analysisType == 1 ?
-                        summaryDto.getSummaryResultDto().getRepeatabilityOnTolerance() :
-                        summaryDto.getSummaryResultDto().getRepeatabilityOnContribution();
+                Double repeatability = analysisType == 0 ? summaryDto.getSummaryResultDto().getRepeatabilityOnTolerance()
+                        : summaryDto.getSummaryResultDto().getRepeatabilityOnContribution();
                 String value = this.formatterPercentValue(repeatability, percentDigNum);
                 sourceObjectProperty.setValue(value);
             } else if (UIConstant.GRR_SUMMARY_TITLE[5].equals(columnName)) {
 
-                Double reproducibility = analysisType == 1 ?
-                        summaryDto.getSummaryResultDto().getReproducibilityOnTolerance() :
-                        summaryDto.getSummaryResultDto().getReproducibilityOnContribution();
+                Double reproducibility = analysisType == 0 ? summaryDto.getSummaryResultDto().getReproducibilityOnTolerance()
+                        : summaryDto.getSummaryResultDto().getReproducibilityOnContribution();
                 String value = this.formatterPercentValue(reproducibility, percentDigNum);
                 sourceObjectProperty.setValue(value);
             } else if (UIConstant.GRR_SUMMARY_TITLE[6].equals(columnName)) {
 
-                Double grr = analysisType == 1 ?
-                        summaryDto.getSummaryResultDto().getGrrOnTolerance() :
-                        summaryDto.getSummaryResultDto().getGrrOnContribution();
+                Double grr = analysisType == 0 ? summaryDto.getSummaryResultDto().getGrrOnTolerance()
+                        : summaryDto.getSummaryResultDto().getGrrOnContribution();
                 String value = this.formatterPercentValue(grr, percentDigNum);
                 sourceObjectProperty.setValue(value);
             }
@@ -224,21 +218,18 @@ public class GrrSummaryModel implements TableModel {
                 value = this.formatterNormalValue(tolerance, digNum);
             } else if (UIConstant.GRR_SUMMARY_TITLE[4].equals(columnName)) {
 
-                Double repeatability = analysisType == 1 ?
-                        summaryDto.getSummaryResultDto().getRepeatabilityOnTolerance() :
-                        summaryDto.getSummaryResultDto().getRepeatabilityOnContribution();
+                Double repeatability = analysisType == 0 ? summaryDto.getSummaryResultDto().getRepeatabilityOnTolerance()
+                        : summaryDto.getSummaryResultDto().getRepeatabilityOnContribution();
                 value = this.formatterPercentValue(repeatability, percentDigNum);
             } else if (UIConstant.GRR_SUMMARY_TITLE[5].equals(columnName)) {
 
-                Double reproducibility = analysisType == 1 ?
-                        summaryDto.getSummaryResultDto().getReproducibilityOnTolerance() :
-                        summaryDto.getSummaryResultDto().getReproducibilityOnContribution();
+                Double reproducibility = analysisType == 0 ? summaryDto.getSummaryResultDto().getReproducibilityOnTolerance()
+                        : summaryDto.getSummaryResultDto().getReproducibilityOnContribution();
                 value = this.formatterPercentValue(reproducibility, percentDigNum);
             } else if (UIConstant.GRR_SUMMARY_TITLE[6].equals(columnName)) {
 
-                Double grr = analysisType == 1 ?
-                        summaryDto.getSummaryResultDto().getGrrOnTolerance() :
-                        summaryDto.getSummaryResultDto().getGrrOnContribution();
+                Double grr = analysisType == 0 ? summaryDto.getSummaryResultDto().getGrrOnTolerance()
+                        : summaryDto.getSummaryResultDto().getGrrOnContribution();
                 value = this.formatterPercentValue(grr, percentDigNum);
             }
         }
@@ -263,10 +254,8 @@ public class GrrSummaryModel implements TableModel {
                 }
                 TestItemWithTypeDto testItemWithTypeDto = new TestItemWithTypeDto();
                 testItemWithTypeDto.setTestItemName(summaryDto.getItemName());
-                testItemWithTypeDto.setUsl(summaryDto.getSummaryResultDto().getUsl() == null ? null :
-                        String.valueOf(summaryDto.getSummaryResultDto().getUsl()));
-                testItemWithTypeDto.setLsl(summaryDto.getSummaryResultDto().getLsl() == null ? null :
-                        String.valueOf(summaryDto.getSummaryResultDto().getLsl()));
+                testItemWithTypeDto.setUsl(summaryDto.getSummaryResultDto().getUsl() == null ? null : String.valueOf(summaryDto.getSummaryResultDto().getUsl()));
+                testItemWithTypeDto.setLsl(summaryDto.getSummaryResultDto().getLsl() == null ? null : String.valueOf(summaryDto.getSummaryResultDto().getLsl()));
                 editTestItem.add(testItemWithTypeDto);
             });
         }
@@ -325,7 +314,7 @@ public class GrrSummaryModel implements TableModel {
         if (disabledRowKeys != null && disabledRowKeys.contains(rowKey)) {
             tableCell.getStyleClass().add("error");
         } else {
-            tableCell.getStyleClass().remove("error");
+            tableCell.getStyleClass().removeAll("error");
         }
         if (radioKey.equals(column)) {
             tableCell.setText(null);
@@ -357,6 +346,9 @@ public class GrrSummaryModel implements TableModel {
                 }
             }
         }
+        if (column.equals(UIConstant.GRR_SUMMARY_TITLE[4]) || column.equals(UIConstant.GRR_SUMMARY_TITLE[5]) || column.equals(UIConstant.GRR_SUMMARY_TITLE[6])) {
+            tableCell.getTableColumn().setComparator((Comparator<T>) TableComparatorUtils.getContainsPercentColumnComparator());
+        }
         return tableCell;
     }
 
@@ -379,15 +371,6 @@ public class GrrSummaryModel implements TableModel {
         this.analysisType = analysisType;
         this.updateValueMapByAnalysisType();
         this.updateDisabledRowKeys();
-    }
-
-    /**
-     * Check current selected row whether can analyze grr
-     *
-     * @return can or not can analyze grr, if true, can not analyze grr detail
-     */
-    public boolean checkSelectedRowKeyInValid() {
-        return disabledRowKeys == null ? true : disabledRowKeys.contains(selectedItemName);
     }
 
     private void updateDisabledRowKeys() {

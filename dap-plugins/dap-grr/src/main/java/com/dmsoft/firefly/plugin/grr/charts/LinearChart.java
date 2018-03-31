@@ -34,6 +34,8 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
 
     public LinearChart(Axis<X> xAxis, Axis<Y> yAxis) {
         super(xAxis, yAxis);
+        super.setHorizontalZeroLineVisible(false);
+        super.setVerticalZeroLineVisible(false);
         horizontalMarkers = FXCollections.observableArrayList(d -> new Observable[]{d.YValueProperty()});
         verticalMarkers = FXCollections.observableArrayList(d -> new Observable[]{d.YValueProperty()});
     }

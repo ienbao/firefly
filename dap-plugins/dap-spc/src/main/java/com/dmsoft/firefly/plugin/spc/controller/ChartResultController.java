@@ -11,6 +11,7 @@ import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.ControlChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.NDBarChartData;
 import com.dmsoft.firefly.plugin.spc.charts.select.SelectCallBack;
+import com.dmsoft.firefly.plugin.spc.charts.utils.LegendUtils;
 import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
@@ -18,9 +19,7 @@ import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
 import com.dmsoft.firefly.plugin.spc.charts.view.VerticalTabPane;
 import com.dmsoft.firefly.plugin.spc.dto.ControlRuleDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
-import com.dmsoft.firefly.plugin.spc.dto.SpcSettingDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
-import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcControlChartDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.*;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.SpcChartToolTip;
@@ -35,6 +34,7 @@ import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.sun.javafx.charts.Legend;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -166,6 +166,9 @@ public class ChartResultController implements Initializable {
         this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
     }
 
+    /**
+     * Remove chart children nodes and chart data
+     */
     public void clearChartData() {
         for (Map.Entry<String, XYChart> chart : chartMap.entrySet()) {
             if (chart.getValue() instanceof NDChart) {
@@ -203,8 +206,8 @@ public class ChartResultController implements Initializable {
 
     private void initChartPane() {
 
-        ndChartPane = new ChartPanel<>((NDChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[0]));
-        runChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[1]));
+        ndChartPane = new ChartPanel<>((NDChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[0]), true);
+        runChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[1]), true);
         xBarChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[2]));
         rangeChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[3]));
         sdChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[4]));
@@ -213,12 +216,20 @@ public class ChartResultController implements Initializable {
         mrChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[7]));
 
         this.initChartOperateSelectCallBackMap();
+
         //nd chart
         ndOperateBtn = this.buildChartOperateButton(UIConstant.SPC_CHART_NAME[0]);
         ndChartPane.getCustomPane().getChildren().add(ndOperateBtn);
-        ndChartPane.setLegend(legend);
+//        Legend ndLegend = LegendUtils.buildReferenceLineLegend();
+//        ndLegend.setPrefWidth(legendWidth);
+//        ndLegend.setPrefHeight(legendHeight);
+//        ndChartPane.setLegend(ndLegend);
         //run chart
         this.initRunChartPane((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[1]));
+//        Legend runLegend = LegendUtils.buildReferenceLineLegend();
+//        runLegend.setPrefWidth(legendWidth);
+//        runLegend.setPrefHeight(legendHeight);
+//        runChartPane.setLegend(runLegend);
         //bar chart
         barOperateBtn = this.buildChartOperateButton(UIConstant.SPC_CHART_NAME[2]);
         xBarChartPane.getCustomPane().getChildren().add(barOperateBtn);
@@ -291,7 +302,9 @@ public class ChartResultController implements Initializable {
                 operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));
             } else if (name.equals(UIConstant.SPC_CHART_NAME[1])) {
                 operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_RUN_EXTERN_MENU));
-            } else if (name.equals(UIConstant.SPC_CHART_NAME[2]) || name.equals(UIConstant.SPC_CHART_NAME[3]) || name.equals(UIConstant.SPC_CHART_NAME[4]) || name.equals(UIConstant.SPC_CHART_NAME[5]) || name.equals(UIConstant.SPC_CHART_NAME[7])) {
+            } else if (name.equals(UIConstant.SPC_CHART_NAME[2]) || name.equals(UIConstant.SPC_CHART_NAME[3])
+                    || name.equals(UIConstant.SPC_CHART_NAME[4]) || name.equals(UIConstant.SPC_CHART_NAME[5])
+                    || name.equals(UIConstant.SPC_CHART_NAME[7])) {
                 operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
             } else if (name.equals(UIConstant.SPC_CHART_NAME[6])) {
                 operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_BOX_EXTERN_MENU));
@@ -358,8 +371,8 @@ public class ChartResultController implements Initializable {
         String value = envService.findPreference(UIConstant.CHART_PERFORMANCE_CODE);
         Map data = mapper.fromJson(value, mapper.buildMapType(Map.class, String.class, Map.class));
         data = data == null ? Maps.newLinkedHashMap() : data;
-        Map<String, List> operateMap = data.containsKey(chartName) && data.get(chartName) instanceof Map ?
-                (Map<String, List>) data.get(chartName) : Maps.newHashMap();
+        Map<String, List> operateMap = data.containsKey(chartName) && data.get(chartName) instanceof Map
+                ? (Map<String, List>) data.get(chartName) : Maps.newHashMap();
         operateMap.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(selectedNames));
         data.put(chartName, operateMap);
         String performValue = mapper.toJson(data);
@@ -459,7 +472,7 @@ public class ChartResultController implements Initializable {
         runChartPane.getCustomPane().setMargin(editBtn, new Insets(0, 0, 0, 5));
         runChartPane.getCustomPane().setMargin(runOperateBtn, new Insets(0, 0, 0, 5));
         runChartPane.getCustomPane().setMargin(rRuleBtn, new Insets(0, 0, 0, 5));
-        runChartPane.setLegend(legend);
+
         chart.activePointClickEvent(true);
         chart.setPointClickCallBack(id -> {
             String key = (String) id;
@@ -503,7 +516,7 @@ public class ChartResultController implements Initializable {
         yAxis.setUpperBound(yMax + yReserve);
         chart.setData(ndChartData, chartTooltip);
         this.setNdChartPerformance();
-        ndChartPane.activeChartDragging();
+        ndChartPane.updateChartData();
         ndChartPane.toggleCustomButtonDisable(false);
     }
 
@@ -511,6 +524,7 @@ public class ChartResultController implements Initializable {
         ControlChart chart = runChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
+            annotationData.clear();
             chart.removeAllChildren();
         } else {
             chartMap.put(chartName, chart);
@@ -545,7 +559,8 @@ public class ChartResultController implements Initializable {
         yAxis.setUpperBound(yMax + yReserve);
         chart.setData(runChartData, chartTooltip);
         this.setRunChartPerformance();
-        runChartPane.activeChartDragging();
+        runChartPane.updateChartData();
+//        runChartPane.activeChartDragging();
         runChartPane.toggleCustomButtonDisable(false);
     }
 
@@ -590,7 +605,8 @@ public class ChartResultController implements Initializable {
             controlChart.setSeriesDataStyleByRule(controlChartData1.getUniqueKey(), ucl, lcl);
         });
         this.setControlChartPerformance(controlChart, chartName);
-        chartPanelMap.get(chartName).activeChartDragging();
+//        chartPanelMap.get(chartName).activeChartDragging();
+        chartPanelMap.get(chartName).updateChartData();
         chartPanelMap.get(chartName).toggleCustomButtonDisable(false);
     }
 
@@ -629,7 +645,8 @@ public class ChartResultController implements Initializable {
         yAxis.setUpperBound(yMax + yReserve);
         chart.setData(boxChartData, chartTooltip);
         this.setBoxChartPerformance();
-        boxChartPane.activeChartDragging();
+//        boxChartPane.activeChartDragging();
+        boxChartPane.updateChartData();
         boxChartPane.toggleCustomButtonDisable(false);
     }
 
@@ -706,9 +723,9 @@ public class ChartResultController implements Initializable {
                     boxChartPane.getChart().removeStroke();
                     continue;
                 }
-                if (operateName.equals(UIConstant.SPC_CHART_BOX_EXTERN_MENU[1])) {
-
-                }
+//                if (operateName.equals(UIConstant.SPC_CHART_BOX_EXTERN_MENU[1])) {
+//
+//                }
             }
         }
     }

@@ -31,6 +31,13 @@ import java.util.function.Function;
 /**
  * Created by cherry on 2018/3/20.
  */
+
+/**
+ * Control chart
+ *
+ * @param <X> x data class
+ * @param <Y> y data class
+ */
 public class ControlChart<X, Y> extends LineChart {
     //    折线
     private Map<String, PathMarker> pathMarkerMap = Maps.newHashMap();
@@ -56,6 +63,8 @@ public class ControlChart<X, Y> extends LineChart {
         super(xAxis, yAxis, FXCollections.observableArrayList());
         super.setLegendVisible(false);
         super.setAnimated(false);
+        super.setHorizontalZeroLineVisible(false);
+        super.setVerticalZeroLineVisible(false);
     }
 
     /**
@@ -237,7 +246,9 @@ public class ControlChart<X, Y> extends LineChart {
      * @param lessData  lcl data
      */
     public void setSeriesDataStyleByRule(String uniqueKey, Double[] moreData, Double[] lessData) {
-        if (!seriesUniqueKeyMap.containsKey(uniqueKey) || (moreData == null && lessData == null)) return;
+        if (!seriesUniqueKeyMap.containsKey(uniqueKey) || (moreData == null && lessData == null)) {
+            return;
+        }
         XYChart.Series<X, Y> series = seriesUniqueKeyMap.get(uniqueKey);
         for (int i = 0; i < series.getData().size(); i++) {
             Y data = series.getData().get(i).getYValue();
@@ -255,7 +266,7 @@ public class ControlChart<X, Y> extends LineChart {
     /**
      * Set chart all series annotation
      *
-     * @param fetch
+     * @param fetch annotation fetch function
      */
     public void setSeriesAnnotationEvent(AnnotationFetch fetch) {
         ObservableList<Series<X, Y>> seriesObservableList = this.getData();
@@ -303,7 +314,7 @@ public class ControlChart<X, Y> extends LineChart {
 //        1. 设置画图数据, 图的颜色、样式、悬浮提示
 //        2. 设置画直线数据， 线的颜色，样式
 //        3. 设置画折线数据， 折线的颜色，样式
-        if (controlChartData == null || controlChartData.getXyOneChartData() == null) {
+        if (controlChartData == null) {
             return;
         }
         Color color = controlChartData.getColor();
@@ -312,22 +323,29 @@ public class ControlChart<X, Y> extends LineChart {
         List<ILineData> lineDataList = controlChartData.getLineData();
         List<IPathData> pathDataList = controlChartData.getBrokenLineData();
         Function<PointRule, PointStyle> rulePointStyleFunction = controlChartData.getPointFunction();
-//        Build series data
-        XYChart.Series series = this.buildSeries(controlChartData.getXyOneChartData(), seriesName);
-//        Set series for chart
-        this.getData().add(series);
 
-        if (pointClick) {
-            this.dataClickEvent(series);
-        }
+        if (controlChartData.getXyOneChartData() != null) {
+//        Build series data
+            XYChart.Series series = this.buildSeries(controlChartData.getXyOneChartData(), seriesName);
+//        Set series for chart
+            this.getData().add(series);
+            if (pointClick) {
+                this.dataClickEvent(series);
+            }
 //        Set chart series and data color, data tooltip
-        this.setDataNodeStyleAndTooltip(series, color, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
+            this.setDataNodeStyleAndTooltip(series, color, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
+            this.seriesUniqueKeyMap.put(uniqueKey, series);
+            this.seriesColorMap.put(series, color);
+            this.seriesPointRuleMap.put(uniqueKey, rulePointStyleFunction);
+        }
 //        Set chart line
         if (lineDataList != null) {
             ValueMarker valueMarker = new ValueMarker();
             lineDataList.forEach(oneLineData -> {
-                Line line = valueMarker.buildValueMarker(oneLineData, color, seriesName, chartTooltip == null ? null : chartTooltip.getLineTooltip());
-                getPlotChildren().add(line);
+                if (oneLineData.getValue() != null) {
+                    Line line = valueMarker.buildValueMarker(oneLineData, color, seriesName, chartTooltip == null ? null : chartTooltip.getLineTooltip());
+                    getPlotChildren().add(line);
+                }
             });
             valueMarkerMap.put(uniqueKey, valueMarker);
         }
@@ -340,10 +358,6 @@ public class ControlChart<X, Y> extends LineChart {
             });
             pathMarkerMap.put(uniqueKey, pathMarker);
         }
-
-        this.seriesUniqueKeyMap.put(uniqueKey, series);
-        this.seriesColorMap.put(series, color);
-        this.seriesPointRuleMap.put(uniqueKey, rulePointStyleFunction);
     }
 
     private XYChart.Series buildSeries(IXYChartData<X, Y> xyOneChartData, String seriesName) {
@@ -357,8 +371,7 @@ public class ControlChart<X, Y> extends LineChart {
                 continue;
             }
             XYChart.Data data = new XYChart.Data<>(xValue, yValue);
-            Object extraValue = xyOneChartData.getExtraValueByIndex(i) == null ? "" :
-                    xyOneChartData.getExtraValueByIndex(i);
+            Object extraValue = xyOneChartData.getExtraValueByIndex(i) == null ? "" : xyOneChartData.getExtraValueByIndex(i);
             data.setExtraValue(extraValue);
             oneSeries.getData().add(data);
         }

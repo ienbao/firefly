@@ -7,10 +7,7 @@ package com.dmsoft.firefly.plugin.spc;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.controller.SpcSettingController;
-import com.dmsoft.firefly.plugin.spc.handler.FindSpcSettingDataHandler;
-import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
-import com.dmsoft.firefly.plugin.spc.handler.SaveSpcSettingDataHandler;
-import com.dmsoft.firefly.plugin.spc.pipeline.*;
+import com.dmsoft.firefly.plugin.spc.handler.*;
 import com.dmsoft.firefly.plugin.spc.service.SpcAnalysisService;
 import com.dmsoft.firefly.plugin.spc.service.SpcService;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
@@ -21,6 +18,7 @@ import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.StateKey;
 import com.dmsoft.firefly.plugin.spc.utils.ViewResource;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.job.core.JobFactory;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.plugin.Plugin;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
@@ -30,6 +28,9 @@ import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -41,6 +42,7 @@ import org.slf4j.LoggerFactory;
 public class SpcPlugin extends Plugin {
     public static final String SPC_PLUGIN_NAME = "com.dmsoft.dap.SpcPlugin";
     private static final Logger LOGGER = LoggerFactory.getLogger(SpcPlugin.class);
+    private static final Double D100 = 100.0;
     private SpcSettingController spcSettingController;
 
     @Override
@@ -88,8 +90,10 @@ public class SpcPlugin extends Plugin {
         LOGGER.info("Plugin-SPC started.");
 
         //register spc setting menu
-        MenuItem menuItem = new MenuItem("Spc Settings");
+        MenuItem menuItem = new MenuItem(SpcFxmlAndLanguageUtils.getString("MENU_SPC_SETTING"));
         menuItem.setId("spcSetting");
+        menuItem.setMnemonicParsing(true);
+        menuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
         menuItem.setOnAction(event -> {
             if (StageMap.getStage(StateKey.SPC_SETTING) == null) {
                 initSpcSettingDialog();
@@ -103,18 +107,38 @@ public class SpcPlugin extends Plugin {
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.SpcPlugin",
                 MenuBuilder.MenuType.MENU_ITEM, "Spc Settings", MenuBuilder.MENU_PREFERENCE).addMenu(menuItem));
 
-        JobManager manager = RuntimeContext.getBean(JobManager.class);
-        manager.initializeJob(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE, new SpcAnalysisJobPipeline());
-        manager.initializeJob(ParamKeys.SPC_REFRESH_CHART_JOB_PIPELINE, new SpcRefreshChartJobPipeline());
-        manager.initializeJob(ParamKeys.SPC_RESET_JOB_PIPELINE, new SpcResetJobPipeline());
-        manager.initializeJob(ParamKeys.SPC_REFRESH_STATISTICAL_JOB_PIPELINE, new SpcRefreshStatisticalJobPipeline());
-        manager.initializeJob(ParamKeys.SPC_REFRESH_ANALYSIS_JOB_PIPELINE, new SpcRefreshJobPipeline());
-        manager.initializeJob(ParamKeys.FIND_SPC_SETTING_DATA_JOP_PIPELINE, pipeline -> {
-            pipeline.addLast(ParamKeys.FIND_SPC_SETTING_HANDLER, new FindSpcSettingDataHandler());
-        });
-        manager.initializeJob(ParamKeys.SAVE_SPC_SETTING_DATA_JOP_PIPELINE, pipeline -> {
-            pipeline.addLast(ParamKeys.SAVE_SPC_SETTING_HANDLER, new SaveSpcSettingDataHandler());
-        });
+        JobManager jobManager = RuntimeContext.getBean(JobManager.class);
+        JobFactory jobFactory = RuntimeContext.getBean(JobFactory.class);
+        jobManager.initializeJob(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new FindSpcSettingDataHandler())
+                .addLast(new FindTestDataHandler())
+                .addLast(new DataFrameHandler())
+                .addLast(new GetSpcStatsResultHandler().setWeight(D100)));
+        jobManager.initializeJob(ParamKeys.SPC_ANALYSIS_EXPORT_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new FindSpcSettingDataHandler())
+                .addLast(new FindTestDataHandler())
+                .addLast(new DataFrameHandler())
+                .addLast(new GetSpcStatsResultHandler().setWeight(D100)));
+
+        jobManager.initializeJob(ParamKeys.SPC_REFRESH_CHART_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new GetSpcChartResultHandler().setWeight(D100)));
+        jobManager.initializeJob(ParamKeys.SPC_REFRESH_CHART_EXPORT_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new GetSpcChartResultHandler().setWeight(D100)));
+
+        jobManager.initializeJob(ParamKeys.SPC_RESET_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new GetSpcStatsResultHandler().setWeight(D100)));
+
+        jobManager.initializeJob(ParamKeys.SPC_REFRESH_STATISTICAL_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new GetSpcStatsResultHandler().setWeight(D100)));
+
+        jobManager.initializeJob(ParamKeys.SPC_REFRESH_ANALYSIS_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new RefreshAnalysisDataHandler().setWeight(D100)));
+
+        jobManager.initializeJob(ParamKeys.FIND_SPC_SETTING_DATA_JOP_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new FindSpcSettingDataHandler()));
+
+        jobManager.initializeJob(ParamKeys.SAVE_SPC_SETTING_DATA_JOP_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new SaveSpcSettingDataHandler()));
     }
 
     @Override

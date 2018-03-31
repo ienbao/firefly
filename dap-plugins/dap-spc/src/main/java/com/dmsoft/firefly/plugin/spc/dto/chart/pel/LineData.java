@@ -19,42 +19,72 @@ public class LineData implements ILineData {
     private LineType lineType;
     private Orientation plotOrientation;
 
+    /**
+     * Constructor for LineData
+     */
     public LineData() {
         this.lineType = LineType.SOLID;
         this.plotOrientation = Orientation.VERTICAL;
     }
 
+    /**
+     * Constructor for LineData
+     *
+     * @param value           line value
+     * @param name            line name
+     * @param plotOrientation line orientation
+     */
     public LineData(Double value, String name, Orientation plotOrientation) {
         this(value, name, plotOrientation, LineType.SOLID);
     }
 
     /**
-     * @param value
+     * Constructor for LineData
+     *
+     * @param value           line value
+     * @param name            line name
+     * @param plotOrientation line orientation
+     * @param lineType        line type
      */
     public LineData(Double value, String name, Orientation plotOrientation, LineType lineType) {
         this();
         this.lineType = lineType;
         this.plotOrientation = plotOrientation;
-        this.value = (DAPDoubleUtils.isBlank(value) ? null : value);
-        this.name = name;
-    }
-
-    public LineData(Double value, String name,  LineType lineType) {
-        this(value, name, Orientation.VERTICAL, lineType);
-    }
-
-    public LineData(Double value, String name) {
-        this();
-        this.value = (DAPDoubleUtils.isBlank(value) ? null : value);
+        this.value = value;
         this.name = name;
     }
 
     /**
-     * @param name
-     * @param title
-     * @param value
-     * @param color
-     * @param plotOrientation
+     * Constructor for LineData
+     *
+     * @param value    line value
+     * @param name     line name
+     * @param lineType line type
+     */
+    public LineData(Double value, String name, LineType lineType) {
+        this(value, name, Orientation.VERTICAL, lineType);
+    }
+
+    /**
+     * Constructor for LineData
+     *
+     * @param value line value
+     * @param name  line name
+     */
+    public LineData(Double value, String name) {
+        this();
+        this.value = value;
+        this.name = name;
+    }
+
+    /**
+     * Constructor for LineData
+     *
+     * @param name            line name
+     * @param title           line title
+     * @param value           line value
+     * @param color           line color
+     * @param plotOrientation line orientation
      */
     public LineData(Double value,
                     String name,
@@ -85,7 +115,7 @@ public class LineData implements ILineData {
     }
 
     public Double getValue() {
-        return value;
+        return (DAPDoubleUtils.isBlank(value) ? null : value);
     }
 
     public void setValue(double value) {

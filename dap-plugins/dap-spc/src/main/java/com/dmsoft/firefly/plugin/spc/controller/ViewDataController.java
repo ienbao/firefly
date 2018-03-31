@@ -6,6 +6,7 @@ package com.dmsoft.firefly.plugin.spc.controller;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.plugin.spc.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
 import com.dmsoft.firefly.plugin.spc.model.ViewDataDFModel;
 import com.dmsoft.firefly.plugin.spc.utils.*;
@@ -65,6 +66,7 @@ public class ViewDataController implements Initializable {
     private List<String> selectedRowKeys;
 
     private ChooseDialogController chooseDialogController;
+    private List<SearchConditionDto> statisticalSearchConditionDtoList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -88,7 +90,8 @@ public class ViewDataController implements Initializable {
      * @param dataFrame      search data frame
      * @param selectedRowKey selected row key
      */
-    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey) {
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey,List<SearchConditionDto> statisticalSearchConditionDtoList) {
+        this.statisticalSearchConditionDtoList = statisticalSearchConditionDtoList;
         this.selectedRowKeys = selectedRowKey;
         Platform.runLater(() -> {
             if (dataFrame == null) {
@@ -108,6 +111,7 @@ public class ViewDataController implements Initializable {
             }
             this.dataFrame = dataFrame;
             this.model = new ViewDataDFModel(dataFrame, selectedRowKey);
+            this.model.setStatisticalSearchConditionDtoList(statisticalSearchConditionDtoList);
             this.model.setMainController(spcMainController);
             TableViewWrapper.decorate(viewDataTable, model);
             model.getAllCheckBox().setOnMouseClicked(event -> {
@@ -305,7 +309,7 @@ public class ViewDataController implements Initializable {
                     dataFrame.removeColumns(Lists.newArrayList(typeDto.getTestItemName()));
                 }
             }
-            setViewData(this.dataFrame, getSelectedRowKeys());
+            setViewData(this.dataFrame, getSelectedRowKeys(),statisticalSearchConditionDtoList);
         });
         unSelectedCheckBox.setOnAction(event -> getInvertCheckBoxEvent());
     }
@@ -465,6 +469,18 @@ public class ViewDataController implements Initializable {
 
         void setFilterBtn(Button filterBtn) {
             this.filterBtn = filterBtn;
+        }
+
+    }
+
+    public List<SearchConditionDto> getStatisticalSearchCondition() {
+        return statisticalSearchConditionDtoList;
+    }
+
+    public void updateStatisticalSearchCondition(List<SearchConditionDto> statisticalSearchConditionDtoList) {
+        this.statisticalSearchConditionDtoList = statisticalSearchConditionDtoList;
+        if(model != null){
+            model.setStatisticalSearchConditionDtoList(statisticalSearchConditionDtoList);
         }
     }
 }

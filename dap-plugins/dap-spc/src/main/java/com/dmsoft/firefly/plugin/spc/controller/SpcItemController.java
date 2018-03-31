@@ -25,25 +25,21 @@ import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
+import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.event.PlatformEvent;
-import com.dmsoft.firefly.sdk.exception.ApplicationException;
-import com.dmsoft.firefly.sdk.job.Job;
-import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.job.core.*;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
@@ -60,7 +56,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -71,6 +66,7 @@ import java.util.Set;
  */
 public class SpcItemController implements Initializable {
     private static final String STICKY_ON_TOP_CODE = "stick_on_top";
+    private final Logger logger = LoggerFactory.getLogger(SpcItemController.class);
     @FXML
     private TextFieldFilter itemFilter;
     @FXML
@@ -108,10 +104,8 @@ public class SpcItemController implements Initializable {
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SpcLeftConfigServiceImpl leftConfigService = new SpcLeftConfigServiceImpl();
     private SpcSettingService spcSettingService = RuntimeContext.getBean(SpcSettingServiceImpl.class);
-    private JobManager manager = RuntimeContext.getBean(JobManager.class);
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
-    private final Logger logger = LoggerFactory.getLogger(SpcItemController.class);
     // cached items for user preference
     private List<String> stickyOnTopItems = Lists.newArrayList();
 
@@ -133,7 +127,7 @@ public class SpcItemController implements Initializable {
         split.getItems().add(searchTab);
         itemFilter.getTextField().setPromptText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
-                filteredList.setPredicate(p -> p.getItem().contains(itemFilter.getTextField().getText()))
+                filteredList.setPredicate(p -> p.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase()))
         );
 
         // test item table init
@@ -160,7 +154,8 @@ public class SpcItemController implements Initializable {
                         }
                     } else {
                         model.getSelector().setValue(box.isSelected());
-                    }                }
+                    }
+                }
             }
         });
         select.setGraphic(box);
@@ -399,71 +394,116 @@ public class SpcItemController implements Initializable {
                     SpcFxmlAndLanguageUtils.getString(ResourceMassages.UI_SPC_ANALYSIS_ITEM_EMPTY));
             return;
         }
-        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+        spcMainController.clearAnalysisData();
         List<String> projectNameList = envService.findActivatedProjectName();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
         List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(selectedItemDto);
         SpcAnalysisConfigDto spcAnalysisConfigDto = this.buildSpcAnalysisConfigData();
         this.updateSpcConfigPreference(spcAnalysisConfigDto);
-        Service<Integer> service = new Service<Integer>() {
+        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
+        context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+        context.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
+        context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+        context.addJobEventListener(event -> {
+            windowProgressTipController.getTaskProgress().setProgress(event.getProgress());
+            System.out.println(event.getEventName() + " : " + event.getProgress());
+        });
+        windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
+        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
-            protected Task<Integer> createTask() {
-                return new Task<Integer>() {
-                    @Override
-                    protected Integer call() throws Exception {
-                        Thread.sleep(100);
-                        Job findSpcSettingJob = new Job(ParamKeys.FIND_SPC_SETTING_DATA_JOP_PIPELINE);
-                        Object settingDto = manager.doJobSyn(findSpcSettingJob);
-                        if (settingDto == null || settingDto instanceof Exception) {
-                            logger.debug("spc setting data is null");
-                            if (settingDto != null) {
-                                ((Exception) settingDto).printStackTrace();
-                            } else {
-                                throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_20001));
-                            }
-                        }
-                        if (!(settingDto instanceof SpcSettingDto)) {
-                            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_20001));
-                        }
-                        spcMainController.setSpcSettingDto((SpcSettingDto) settingDto);
-
-                        Job job = new Job(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
-                        job.addProcessMonitorListener(event -> {
-                            System.out.println("event*****" + event.getPoint());
-                            updateProgress(event.getPoint(), 100);
-                        });
-                        Map<String, Object> paramMap = Maps.newHashMap();
-                        paramMap.put(ParamKeys.SPC_SETTING_FILE_NAME, settingDto);
-                        paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
-                        paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
-                        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
-                        paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
-
-                        spcMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
-                        spcMainController.setInitSearchConditionDtoList(searchConditionDtoList);
-
-                        Object returnValue = manager.doJobSyn(job, paramMap, spcMainController);
-                        if (returnValue instanceof Exception) {
-                            //todo message tip
-                            ((Exception) returnValue).printStackTrace();
-                        } else {
-                            Platform.runLater(() -> {
-                                spcMainController.clearAnalysisSubShowData();
-                                SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
-                                SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
-                                List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
-                                TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
-                                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
-                                spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
-                            });
-                        }
-                        return null;
-                    }
-                };
+            public void doJob(JobContext context) {
+                spcMainController.setSpcSettingDto(context.getParam(ParamKeys.SPC_SETTING_DTO, SpcSettingDto.class));
+                spcMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
+                spcMainController.setInitSearchConditionDtoList(searchConditionDtoList);
+//                    spcMainController.clearAnalysisSubShowData();
+                SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
+                SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
+                List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
+                TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
+                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
+                spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
+                spcMainController.setDataFrame(context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class));
+                windowProgressTipController.closeDialog();
             }
-        };
-        windowProgressTipController.getTaskProgress().progressProperty().bind(service.progressProperty());
-        service.start();
+        });
+        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                logger.error(context.getError().getMessage());
+                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+            }
+        });
+        jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                windowProgressTipController.closeDialog();
+            }
+        });
+        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+//        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+//        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+//        Service<Integer> service = new Service<Integer>() {
+//            @Override
+//            protected Task<Integer> createTask() {
+//                return new Task<Integer>() {
+//                    @Override
+//                    protected Integer call() throws Exception {
+//                        Thread.sleep(100);
+//                        Job findSpcSettingJob = new Job(ParamKeys.FIND_SPC_SETTING_DATA_JOP_PIPELINE);
+//                        Object settingDto = manager.doJobSyn(findSpcSettingJob);
+//                        if (settingDto == null || settingDto instanceof Exception) {
+//                            logger.debug("spc setting data is null");
+//                            if (settingDto != null) {
+//                                ((Exception) settingDto).printStackTrace();
+//                            } else {
+//                                throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_20001));
+//                            }
+//                        }
+//                        if (!(settingDto instanceof SpcSettingDto)) {
+//                            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_20001));
+//                        }
+//                        spcMainController.setSpcSettingDto((SpcSettingDto) settingDto);
+//
+//                        Job job = new Job(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
+//                        job.addProcessMonitorListener(event -> {
+//                            System.out.println("event*****" + event.getPoint());
+//                            updateProgress(event.getPoint(), 100);
+//                        });
+//                        Map<String, Object> paramMap = Maps.newHashMap();
+//                        paramMap.put(ParamKeys.SPC_SETTING_FILE_NAME, settingDto);
+//                        paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
+//                        paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+//                        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
+//                        paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+//
+//                        spcMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
+//                        spcMainController.setInitSearchConditionDtoList(searchConditionDtoList);
+//
+//                        Object returnValue = manager.doJobSyn(job, paramMap, spcMainController);
+//                        if (returnValue instanceof Exception) {
+//                            //todo message tip
+//                            ((Exception) returnValue).printStackTrace();
+//                        } else {
+//                            Platform.runLater(() -> {
+//                                spcMainController.clearAnalysisSubShowData();
+//                                SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
+//                                SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
+//                                List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
+//                                TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
+//                                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
+//                                spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
+//                            });
+//                        }
+//                        return null;
+//                    }
+//                };
+//            }
+//        };
+//        windowProgressTipController.getTaskProgress().progressProperty().bind(service.progressProperty());
+//        service.start();
     }
 
     private List<String> getSelectedItem() {
@@ -619,7 +659,7 @@ public class SpcItemController implements Initializable {
         List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
         int i = 0;
         for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtoList) {
-            if (conditionList != null) {
+            if (conditionList != null && conditionList.size() != 0) {
                 for (String condition : conditionList) {
                     SearchConditionDto searchConditionDto = new SearchConditionDto();
                     searchConditionDto.setKey(ParamKeys.SPC_ANALYSIS_CONDITION_KEY + i);

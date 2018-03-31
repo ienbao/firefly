@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.components;
 
-import com.dmsoft.firefly.plugin.spc.charts.LinearChart;
+import com.dmsoft.firefly.plugin.spc.charts.ControlChart;
+import com.dmsoft.firefly.plugin.spc.charts.ControlChart;
 import com.dmsoft.firefly.plugin.spc.charts.NDChart;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
 import com.dmsoft.firefly.plugin.spc.charts.view.VerticalTabPane;
@@ -22,14 +23,14 @@ public class VerticalTabPaneApp extends Application {
     public Parent createContent() {
 
         VerticalTabPane tabPane = new VerticalTabPane();
-        ChartPanel<LinearChart> chartPanel1 = new ChartPanel(new LinearChart(new NumberAxis(), new NumberAxis()));
-        ChartPanel<NDChart> chartPanel2 = new ChartPanel(new LinearChart(new NumberAxis(), new NumberAxis()));
-        ChartPanel<LinearChart> chartPanel3 = new ChartPanel(new LinearChart(new NumberAxis(), new NumberAxis()));
-        ChartPanel<LinearChart> chartPanel4 = new ChartPanel(new LinearChart(new NumberAxis(), new NumberAxis()));
-        ChartPanel<LinearChart> chartPanel5 = new ChartPanel(new LinearChart(new NumberAxis(), new NumberAxis()));
-        ChartPanel<LinearChart> chartPanel6 = new ChartPanel(new LinearChart(new NumberAxis(), new NumberAxis()));
-        ChartPanel<LinearChart> chartPanel7 = new ChartPanel(new LinearChart(new NumberAxis(), new NumberAxis()));
-        ChartPanel<LinearChart> chartPanel8 = new ChartPanel(new LinearChart(new NumberAxis(), new NumberAxis()));
+        ChartPanel<ControlChart> chartPanel1 = new ChartPanel(new ControlChart(new NumberAxis(), new NumberAxis()));
+        ChartPanel<NDChart> chartPanel2 = new ChartPanel(new ControlChart(new NumberAxis(), new NumberAxis()));
+        ChartPanel<ControlChart> chartPanel3 = new ChartPanel(new ControlChart(new NumberAxis(), new NumberAxis()));
+        ChartPanel<ControlChart> chartPanel4 = new ChartPanel(new ControlChart(new NumberAxis(), new NumberAxis()));
+        ChartPanel<ControlChart> chartPanel5 = new ChartPanel(new ControlChart(new NumberAxis(), new NumberAxis()));
+        ChartPanel<ControlChart> chartPanel6 = new ChartPanel(new ControlChart(new NumberAxis(), new NumberAxis()));
+        ChartPanel<ControlChart> chartPanel7 = new ChartPanel(new ControlChart(new NumberAxis(), new NumberAxis()));
+        ChartPanel<ControlChart> chartPanel8 = new ChartPanel(new ControlChart(new NumberAxis(), new NumberAxis()));
         chartPanel1.setId(UIConstant.SPC_CHART_NAME[0]);
         chartPanel2.setId(UIConstant.SPC_CHART_NAME[1]);
         chartPanel3.setId(UIConstant.SPC_CHART_NAME[2]);
@@ -38,14 +39,6 @@ public class VerticalTabPaneApp extends Application {
         chartPanel6.setId(UIConstant.SPC_CHART_NAME[5]);
         chartPanel7.setId(UIConstant.SPC_CHART_NAME[6]);
         chartPanel8.setId(UIConstant.SPC_CHART_NAME[7]);
-        chartPanel1.setLegend("chart1");
-        chartPanel2.setLegend("chart2");
-        chartPanel3.setLegend("chart3");
-        chartPanel4.setLegend("chart4");
-        chartPanel5.setLegend("chart5");
-        chartPanel6.setLegend("chart6");
-        chartPanel7.setLegend("chart7");
-        chartPanel8.setLegend("chart8");
         tabPane.addNode(chartPanel1, 0);
         tabPane.addNode(chartPanel2, 1);
         tabPane.addNode(chartPanel3, 2);

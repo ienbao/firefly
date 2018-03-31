@@ -1,76 +1,67 @@
-/*
- * Copyright (c) 2017. For Intelligent Group.
- */
-
 package com.dmsoft.firefly.sdk.job.core;
-
-import com.dmsoft.bamboo.common.monitor.ProcessMonitorListener;
-import com.dmsoft.firefly.sdk.job.Job;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * basic class for job manager
  *
- * @author Can Guan
+ * @author Can Guan, Garen Pang
  */
 public interface JobManager {
+    /**
+     * method to initialize job pipe line
+     *
+     * @param pipelineName job pipe name
+     * @param jobPipeline  pipe line
+     */
+    void initializeJob(String pipelineName, JobPipeline jobPipeline);
 
     /**
-     * createJob
+     * method to get pipeline
      *
-     * @param jobName  jobName
-     * @param pipeline pipeline
+     * @param pipelineName pipe line name
+     * @return pipe line
      */
-    void initializeJob(String jobName, InitJobPipeline pipeline);
-
-    void addJobEventListenerByName(String jobName, JobEventListener listener);
-
-    void removeJobEventListener(String jobName, JobEventListener listener);
-
-    @Deprecated
-    void addJobProcessListener(String jobName, ProcessMonitorListener listener);
-
-    @Deprecated
-    void removeJobProcessListener(String jobName, ProcessMonitorListener listener);
+    JobPipeline getPipeLine(String pipelineName);
 
     /**
-     * doJobSyn
+     * method to do job synchronously
      *
-     * @param job    job
-     * @param object object
-     * @return Object
+     * @param pipelineName job pipe line name
+     * @param context      job context
+     * @return result
      */
-    Object doJobSyn(Job job, Object... object);
+    JobContext fireJobSyn(String pipelineName, JobContext context);
 
     /**
-     * doJobSyn
+     * method to do job synchronously
      *
-     * @param job     job
-     * @param object  object
-     * @param timeout timeout
-     * @param unit    unit
-     * @return Object
+     * @param jobPipeline job pipe line
+     * @param context  job context
+     * @return job context
      */
-    Object doJobSyn(Job job, long timeout, TimeUnit unit, Object... object);
+    JobContext fireJobSyn(JobPipeline jobPipeline, JobContext context);
 
     /**
-     * doJobASyn
+     * method to do job anti-synchronously
      *
-     * @param job      job
-     * @param object   object
-     * @param complete complete
+     * @param pipelineName job pipe line name
+     * @param context      job context
+     * @return result
      */
-    void doJobASyn(Job job, JobDoComplete complete, Object... object);
-
-    void doJobASyn(Job job, Object... object);
+    void fireJobASyn(String pipelineName, JobContext context);
 
     /**
-     * getExecutorService
+     * method to do job anti-synchronously
      *
-     * @return
+     * @param jobPipeline pipe line
+     * @param context  job context
      */
-    ExecutorService getExecutorService();
+    void fireJobASyn(JobPipeline jobPipeline, JobContext context);
 
+    /**
+     * method to find job context by thread
+     *
+     * @param thread thread
+     * @return job context
+     */
+    JobContext findJobContext(Thread thread);
 }

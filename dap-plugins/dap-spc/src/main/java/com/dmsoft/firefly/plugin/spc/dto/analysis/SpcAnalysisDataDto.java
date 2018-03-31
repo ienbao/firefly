@@ -15,6 +15,7 @@ public class SpcAnalysisDataDto extends AbstractValueObject {
     private String lsl;
     private Double ndcMax;
     private Double ndcMin;
+    private boolean isCalculable;
 
     public List<Double> getDataList() {
         return dataList;
@@ -54,5 +55,13 @@ public class SpcAnalysisDataDto extends AbstractValueObject {
 
     public void setNdcMin(Double ndcMin) {
         this.ndcMin = ndcMin;
+    }
+
+    public boolean isCalculable() {
+        return isCalculable;
+    }
+
+    public void setCalculable(boolean calculable) {
+        isCalculable = calculable;
     }
 }

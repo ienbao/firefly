@@ -4,8 +4,11 @@ import com.dmsoft.firefly.gui.components.messagetip.MessageTipFactory;
 import com.dmsoft.firefly.gui.components.utils.NodeMap;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.message.MessageTipType;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -21,6 +24,7 @@ public class MessageManagerFactory implements IMessageManager{
 
     private List<Popup> popupList = Lists.newLinkedList();
     private List<Double> popupHeightList = Lists.newLinkedList();
+    private boolean isHasLink = false;
 
     public MessageManagerFactory() {
     }
@@ -47,31 +51,85 @@ public class MessageManagerFactory implements IMessageManager{
 
     @Override
     public void showSuccessMsg(String title, String msg) {
+        isHasLink = false;
         initSuccessTip(title, msg);
     }
 
     @Override
+    public void showSuccessMsg(String title, String msg, String linkMsg, EventHandler<ActionEvent> linkEvent) {
+        isHasLink = true;
+        initSuccessTip(title, msg, linkMsg, linkEvent);
+    }
+
+    @Override
     public void showWarnMsg(String title, String msg) {
+        isHasLink = false;
         initWarnTip(title, msg);
     }
 
     @Override
+    public void showWarnMsg(String title, String msg, String linkMsg, EventHandler<ActionEvent> linkEvent) {
+        isHasLink = true;
+        initWarnTip(title, msg, linkMsg, linkEvent);
+    }
+
+    @Override
     public void showInfoMsg(String title, String msg) {
+        isHasLink = false;
         initNormalTip(title, msg);
     }
 
+    @Override
+    public void showInfoMsg(String title, String msg, String linkMsg, EventHandler<ActionEvent> linkEvent) {
+        isHasLink = true;
+        initNormalTip(title, msg, linkMsg, linkEvent);
+    }
+
     private void initSuccessTip(String title, String msg) {
+        if (DAPStringUtils.isBlank(title)) {
+            title = GuiFxmlAndLanguageUtils.getString("GLOBAL_MESSAGE_TIP_SUCCESS_TITLE");
+        }
        Popup popup = MessageTipFactory.getSuccessTip(title, msg);
         doPopup(popup, msg);
     }
 
+    private void initSuccessTip(String title, String msg,  String linkMsg, EventHandler<ActionEvent> linkEvent) {
+        if (DAPStringUtils.isBlank(title)) {
+            title = GuiFxmlAndLanguageUtils.getString("GLOBAL_MESSAGE_TIP_SUCCESS_TITLE");
+        }
+        Popup popup = MessageTipFactory.getSuccessTip(title, msg, linkMsg, linkEvent);
+        doPopup(popup, msg);
+    }
+
     private void initWarnTip(String title, String msg) {
+        if (DAPStringUtils.isBlank(title)) {
+            title = GuiFxmlAndLanguageUtils.getString("GLOBAL_MESSAGE_TIP_WARNING_TITLE");
+        }
         Popup popup = MessageTipFactory.getWarnTip(title, msg);
         doPopup(popup, msg);
     }
 
+    private void initWarnTip(String title, String msg,  String linkMsg, EventHandler<ActionEvent> linkEvent) {
+        if (DAPStringUtils.isBlank(title)) {
+            title = GuiFxmlAndLanguageUtils.getString("GLOBAL_MESSAGE_TIP_WARNING_TITLE");
+        }
+        Popup popup = MessageTipFactory.getWarnTip(title, msg, linkMsg, linkEvent);
+        doPopup(popup, msg);
+    }
+
     private void initNormalTip(String title, String msg) {
+        if (DAPStringUtils.isBlank(title)) {
+            title = GuiFxmlAndLanguageUtils.getString("GLOBAL_MESSAGE_TIP_INFO_TITLE");
+        }
         Popup  popup = MessageTipFactory.getNormalTip(title, msg);
+        doPopup(popup, msg);
+    }
+
+    private void initNormalTip(String title, String msg,  String linkMsg, EventHandler<ActionEvent> linkEvent) {
+        if (DAPStringUtils.isBlank(title)) {
+            title = GuiFxmlAndLanguageUtils.getString("GLOBAL_MESSAGE_TIP_INFO_TITLE");
+        }
+        Popup popup = MessageTipFactory.getNormalTip(title, msg, linkMsg, linkEvent);
         doPopup(popup, msg);
     }
 
@@ -129,7 +187,12 @@ public class MessageManagerFactory implements IMessageManager{
     private void setLocation(Popup popup, String msg) {
         if (StringUtils.isNotBlank(msg)) {
             Double length = Double.valueOf(msg.getBytes().length);
-            Double preHeight = Math.ceil((double) (length/30.0)) * 16 + 40;
+            Double preHeight = 0.0;
+            if (isHasLink) {
+                preHeight = Math.ceil((double) (length/30.0)) * 16 + 61;
+            } else  {
+                preHeight = Math.ceil((double) (length/30.0)) * 16 + 23;
+            }
             popupHeightList.add(preHeight);
         }
         Double exPreHeight = 0.0;
@@ -140,9 +203,7 @@ public class MessageManagerFactory implements IMessageManager{
         Node node  = NodeMap.getNode(GuiConst.PLARTFORM_NODE_MAIN);
         popupList.add(popup);
         double screenX = node.getScene().getWindow().getX() + node.getBoundsInLocal().getMaxX() - 240;
-        double screenY = node.getScene().getWindow().getY() + node.getBoundsInLocal().getMaxY() - exPreHeight - 12;
+        double screenY = node.getScene().getWindow().getY() + node.getBoundsInLocal().getMaxY() - exPreHeight - 8 ;
         popup.show(node, screenX, screenY);
     }
-
-
 }
