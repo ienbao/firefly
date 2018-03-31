@@ -72,7 +72,7 @@ public class SpcRefreshJudgeUtil {
     }
 
     private boolean isViewDataSelectRowChange() {
-        if (viewDataSelectRowKeyListCache == null || (viewDataSelectRowKeyListCache != null && !this.resultSelectIsChange(currentViewDataSelectRowKeyList, viewDataSelectRowKeyListCache))) {
+        if (viewDataSelectRowKeyListCache == null || (currentViewDataSelectRowKeyList != null && viewDataSelectRowKeyListCache != null && !this.resultSelectIsChange(currentViewDataSelectRowKeyList, viewDataSelectRowKeyListCache))) {
             return false;
         }
         return true;
