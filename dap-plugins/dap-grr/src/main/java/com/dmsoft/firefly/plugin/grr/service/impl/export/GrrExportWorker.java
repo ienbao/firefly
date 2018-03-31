@@ -156,7 +156,7 @@ public class GrrExportWorker implements ExWorker {
             String name = grrSummaryResultDtos.get(i).getItemName();
             GrrSummaryDto grrSummaryDto = grrSummaryResultDtos.get(i);
             GrrSummaryResultDto grrSummary = grrSummaryDto.getSummaryResultDto();
-            String tolerance = grrSummaryDto.getSummaryResultDto().getTolerance().toString();
+//            String tolerance = grrSummaryDto.getSummaryResultDto().getTolerance().toString();
             String repeat = "";
             String reprod = "";
             String grr = "";

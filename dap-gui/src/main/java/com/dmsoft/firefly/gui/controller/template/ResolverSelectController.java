@@ -124,7 +124,7 @@ public class ResolverSelectController implements Initializable {
             fileChooser.getExtensionFilters().addAll(
                     new FileChooser.ExtensionFilter("CSV", "*.csv")
             );
-            Stage fileStage = null;
+            Stage fileStage = StageMap.getStage("dataSource");
             List<File> files = fileChooser.showOpenMultipleDialog(fileStage);
             if (files != null && files.size() != 0) {
                 List<String> fileNames = Lists.newArrayList();

@@ -4,6 +4,8 @@
 
 package com.dmsoft.firefly.core.utils;
 
+import java.net.URLDecoder;
+
 /**
  * Created by Peter on 2016/7/15.
  */
@@ -46,7 +48,12 @@ public class ApplicationPathUtil {
         if (OS_NAME.toLowerCase().startsWith(OS_WIN)) {
             path = path.substring(1, path.length());
         }
-        return path;
+        try {
+            String result = URLDecoder.decode(path, "UTF-8");
+            return result;
+        } catch (Exception e) {
+            return path;
+        }
     }
 
     public static String getPath(String fileName) {
@@ -57,6 +64,11 @@ public class ApplicationPathUtil {
         if (OS_NAME.toLowerCase().startsWith(OS_WIN)) {
             path = path.substring(1, path.length());
         }
-        return path;
+        try {
+            String result = URLDecoder.decode(path, "UTF-8");
+            return result;
+        } catch (Exception e) {
+            return path;
+        }
     }
 }

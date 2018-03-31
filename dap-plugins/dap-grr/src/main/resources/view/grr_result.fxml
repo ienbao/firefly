@@ -46,7 +46,10 @@
                               <Insets bottom="4.0" top="4.0" />
                            </padding>
                                 </BorderPane>
-                        <TableView fx:id="summaryTb" editable="true" prefHeight="200.0" prefWidth="820.0" VBox.vgrow="ALWAYS" />
+                        <TableView fx:id="summaryTb" editable="true" prefHeight="200.0" VBox.vgrow="ALWAYS">
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy></TableView>
                             </children>
                         </VBox>
                     </children>
@@ -68,7 +71,7 @@
                               <Insets bottom="10.0" />
                            </VBox.margin>
                                 </HBox>
-                                <ScrollPane fx:id="grrResultScrollPane" fitToWidth="true" hbarPolicy="NEVER" pannable="true" prefHeight="385.0" prefWidth="820.0" style="-fx-border-width: 0px; -fx-border-color: transparent;" VBox.vgrow="ALWAYS">
+                                <ScrollPane fx:id="grrResultScrollPane" fitToWidth="true" hbarPolicy="NEVER" pannable="true" prefWidth="820.0" style="-fx-border-width: 0px; -fx-border-color: transparent;" VBox.vgrow="ALWAYS">
                                     <content>
                                         <VBox prefWidth="820.0" style="-fx-border-width: 0px;">
                                              <children>
@@ -265,7 +268,10 @@
                                                       <Insets bottom="6.0" left="10.0" top="6.0" />
                                                    </padding>
                                                 </HBox>
-                                                <TableView fx:id="anovaTb" prefHeight="126.0" prefWidth="200.0" />
+                                                <TableView fx:id="anovaTb" prefHeight="126.0" prefWidth="200.0">
+                                                   <columnResizePolicy>
+                                                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                                   </columnResizePolicy></TableView>
                                              </children>
                                           </VBox>
                                           <VBox prefHeight="210.0" prefWidth="100.0">
@@ -278,7 +284,10 @@
                                                       <Insets bottom="6.0" left="10.0" top="6.0" />
                                                    </padding>
                                                 </HBox>
-                                                <TableView fx:id="sourceTb" prefHeight="150.0" prefWidth="200.0" />
+                                                <TableView fx:id="sourceTb" prefHeight="150.0" prefWidth="200.0">
+                                                   <columnResizePolicy>
+                                                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                                   </columnResizePolicy></TableView>
                                                 <HBox maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: rgb(248,248,248); -fx-border-width: 0 1 1 1; -fx-border-color: rgb(220,220,220);">
                                                    <children>
                                                       <Label text="%GRR_RESULT_NUMBER_CATEGORY" />

@@ -690,6 +690,9 @@ public class GrrItemController implements Initializable {
     @SuppressWarnings("unchecked")
     private void getAnalysisBtnEvent() {
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
+        if (!searchTab.verifySearchTextArea()) {
+            return;
+        }
         if (checkSubmitParam(selectedItemDto.size())) {
             JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
             WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
@@ -739,7 +742,7 @@ public class GrrItemController implements Initializable {
             jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
                 @Override
                 public void doJob(JobContext context) {
-                    windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                    windowProgressTipController.updateFailProgress(context.getError().toString());
                 }
             });
             RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
@@ -1086,7 +1089,7 @@ public class GrrItemController implements Initializable {
         TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
         List<String> timeKeys = Lists.newArrayList();
         String timePattern = null;
-        if(timePatternDto != null) {
+        if (timePatternDto != null) {
             timeKeys = timePatternDto.getTimeKeys();
             timePattern = timePatternDto.getPattern();
         }

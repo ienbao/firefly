@@ -507,6 +507,9 @@ public class StatisticalTableModel implements TableModel {
         if (!key.equals(STATISTICAL_TITLE[2]) && !key.equals(STATISTICAL_TITLE[7]) && !key.equals(STATISTICAL_TITLE[8])) {
             return DAPStringUtils.formatDouble(statisticalAlarmDto.getValue(), DigNumInstance.newInstance().getDigNum());
         }
+        if(key.equals(STATISTICAL_TITLE[2])){
+            return Integer.valueOf(statisticalAlarmDto.getValue().toString()).toString();
+        }
 
         return statisticalAlarmDto.getValue().toString();
     }

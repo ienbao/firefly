@@ -722,6 +722,26 @@
     -fx-background-color: #fafafa;
 }
 
+.text-area-error {
+    -fx-border-color: #ea2028;
+}
+
+.text-area-error .content {
+    -fx-background-color: #fde8e9;
+}
+
+.text-area-error:hover .content {
+    -fx-background-color: #fef4f4;
+}
+
+.text-area-error:focused {
+    -fx-border-color: #33abff;
+}
+
+.text-area-error:focused .content {
+    -fx-background-color: #fef4f4;
+}
+
 /*******************************************************************************
  *                                                                             *
  * Combo box                                                                   *

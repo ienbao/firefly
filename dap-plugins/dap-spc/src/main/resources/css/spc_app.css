@@ -121,7 +121,6 @@
     -fx-alignment: center-left;
 }
 
-
 /**
 table
 **/
@@ -139,44 +138,49 @@ table
     -fx-opacity: 1;
     -fx-cursor: hand;
 }
+
 /*.cell .error .check-box > .box > .mark {*/
-    /*-fx-scale-shape: false;*/
-    /*-fx-padding: 5px;*/
-    /*-fx-shape: "M -1 0.5 L 4 -4.5 L 5.5 -3 L -1 3.5 L -4.5 -0 L -3.5 -2 Z";*/
+/*-fx-scale-shape: false;*/
+/*-fx-padding: 5px;*/
+/*-fx-shape: "M -1 0.5 L 4 -4.5 L 5.5 -3 L -1 3.5 L -4.5 -0 L -3.5 -2 Z";*/
 /*}*/
 
 /*
 *Spc setting
 */
-.alarm-excellent{
+.alarm-excellent {
     -fx-alignment: center;
     -fx-pref-width: 22;
     -fx-pref-height: 22;
     -fx-text-fill: white;
     -fx-background-color: #4ebe11;
 }
-.alarm-good{
+
+.alarm-good {
     -fx-alignment: center;
     -fx-pref-width: 22;
     -fx-pref-height: 22;
     -fx-text-fill: white;
     -fx-background-color: #27b5b3;
 }
-.alarm-acceptable{
+
+.alarm-acceptable {
     -fx-alignment: center;
     -fx-pref-width: 22;
     -fx-pref-height: 22;
     -fx-text-fill: white;
     -fx-background-color: #487cf4;
 }
-.alarm-rectification{
+
+.alarm-rectification {
     -fx-alignment: center;
     -fx-pref-width: 22;
     -fx-pref-height: 22;
     -fx-text-fill: white;
     -fx-background-color: #f38400;
 }
-.alarm-bad{
+
+.alarm-bad {
     -fx-alignment: center;
     -fx-pref-width: 22;
     -fx-pref-height: 22;

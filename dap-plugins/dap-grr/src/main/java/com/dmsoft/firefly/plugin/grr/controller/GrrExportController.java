@@ -716,6 +716,9 @@ public class GrrExportController {
                 WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
                 return;
             }
+            if (!searchTab.verifySearchTextArea()) {
+                return;
+            }
 
             StageMap.closeStage("grrExport");
 
@@ -868,7 +871,7 @@ public class GrrExportController {
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
-                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                windowProgressTipController.updateFailProgress(context.getError().toString());
             }
         });
         if (exportEachFile) {

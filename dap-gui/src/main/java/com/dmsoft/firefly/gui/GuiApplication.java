@@ -4,9 +4,11 @@ import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.core.DAPApplication;
 import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
 import com.dmsoft.firefly.core.utils.JsonFileUtil;
+import com.dmsoft.firefly.core.utils.ResourceFinder;
 import com.dmsoft.firefly.gui.components.utils.NodeMap;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowPane;
 import com.dmsoft.firefly.gui.job.BasicJobFactory;
 import com.dmsoft.firefly.gui.job.BasicJobManager;
 import com.dmsoft.firefly.gui.utils.*;
@@ -28,15 +30,16 @@ import javafx.scene.Scene;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import javax.swing.*;
+import java.awt.*;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.ManagementFactory;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import static com.google.common.io.Resources.getResource;
@@ -69,6 +72,16 @@ public class GuiApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        String os = System.getProperty("os.name");
+        if (!os.toLowerCase().startsWith("win")) {
+            Class cla = Class.forName("com.apple.eawt.Application");
+            Method method1 = cla.getMethod("getApplication");
+            Object o = method1.invoke(cla);
+            Method method = cla.getMethod("setDockIconImage", Image.class);
+            ResourceFinder finder = new ResourceFinder();
+            method.invoke(o, new ImageIcon(finder.findResource("images/desktop_mac_logo.png")).getImage());
+        } else {
+        }
         String json = JsonFileUtil.readJsonFile(parentPath, GuiConst.ACTIVE_PLUGIN);
         List<KeyValueDto> activePlugin = Lists.newArrayList();
         if (DAPStringUtils.isNotBlank(json)) {
@@ -144,9 +157,13 @@ public class GuiApplication extends Application {
                                     if (!userService.findLegal()) {
                                         GuiFxmlAndLanguageUtils.buildLegalDialog();
                                     } else {
-                                        Stage stageMain = StageMap.getStage(GuiConst.PLARTFORM_STAGE_MAIN);
-                                        stageMain.getIcons().add(new Image("file:/" + ApplicationPathUtil.getPath("images") + "/login_logo.png"));
-                                        stageMain.show();
+                                        StageMap.showStage(GuiConst.PLARTFORM_STAGE_MAIN);
+                                        Stage stage = StageMap.getStage(GuiConst.PLARTFORM_STAGE_MAIN);
+                                        if (stage.getScene().getRoot() instanceof WindowPane) {
+                                            WindowPane windowPane = (WindowPane) stage.getScene().getRoot();
+                                            windowPane.getController().maximizePropertyProperty().set(true);
+                                            System.out.println(true);
+                                        }
                                         GuiFxmlAndLanguageUtils.buildLoginDialog();
                                     }
                                 });
