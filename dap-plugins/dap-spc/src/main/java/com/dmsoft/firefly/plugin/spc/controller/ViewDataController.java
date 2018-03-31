@@ -21,7 +21,6 @@ import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -29,7 +28,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -319,6 +317,8 @@ public class ViewDataController implements Initializable {
             fsg.setWithoutLowerLimit(null);
             fsg.setWithoutUpperLimit(null);
         }
+        model.getRowKeyArray().clear();
+        model.getRowKeyArray().addAll(dataFrame.getAllRowKeys());
     }
 
     private void filterTF() {
