@@ -165,10 +165,12 @@ public class ViewDataDFModel implements TableModel {
 
             @Override
             public void handleAction(String rowKey, ActionEvent event) {
+                rowKeyArray.remove(rowKey);
                 RuntimeContext.getBean(SourceDataService.class).changeRowDataInUsed(Lists.newArrayList(rowKey), false);
                 if (mainController != null) {
                     mainController.removeDataFrameRow(rowKey);
                 }
+                tableView.refresh();
             }
         };
         this.menuRowEvents.add(highLight);

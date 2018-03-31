@@ -178,7 +178,7 @@ public class SpcMainController implements Initializable {
                 windowProgressTipController.closeDialog();
             }
         });
-//        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
 //        Service<Integer> service = new Service<Integer>() {
 //            @Override
 //            protected Task<Integer> createTask() {
