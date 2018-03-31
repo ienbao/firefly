@@ -1032,9 +1032,7 @@ public class GrrExportController {
                         }
                     });
                 }
-                if (grrLeftConfigDto.getBasicSearchs() != null && grrLeftConfigDto.getBasicSearchs().size() > 0) {
-                    searchTab.setBasicSearch(grrLeftConfigDto.getBasicSearchs());
-                }
+                searchTab.setOneBasicSearch(grrLeftConfigDto.getBasicSearchs());
                 searchTab.getAdvanceText().setText(grrLeftConfigDto.getAdvanceSearch());
                 if (grrLeftConfigDto.getPartInt() != null) {
                     partTxt.setText(grrLeftConfigDto.getPartInt().toString());
@@ -1063,6 +1061,10 @@ public class GrrExportController {
                 if (grrLeftConfigDto.getAppraisers() != null && !grrLeftConfigDto.getAppraisers().isEmpty()) {
                     updatePartListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getAppraisers()), true);
                 }
+            } else {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                    GrrFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
             }
 
         }
