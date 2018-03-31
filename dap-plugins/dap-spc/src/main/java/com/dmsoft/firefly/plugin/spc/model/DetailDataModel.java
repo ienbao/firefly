@@ -2,6 +2,7 @@ package com.dmsoft.firefly.plugin.spc.model;
 
 import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
@@ -39,18 +40,16 @@ public class DetailDataModel implements TableModel {
      * constructor
      *
      * @param rowDataDto  row data dto
-     * @param typeDtoList list of test item with type dto
+     * @param testItemDtoMap list of test item with type dto
      */
-    public DetailDataModel(RowDataDto rowDataDto, List<TestItemWithTypeDto> typeDtoList) {
+    public DetailDataModel(RowDataDto rowDataDto, Map<String, TestItemWithTypeDto> testItemDtoMap) {
         this.rowDataDto = rowDataDto;
         this.testItems = SpcFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM);
         this.values = SpcFxmlAndLanguageUtils.getString(ResourceMassages.VALUES);
         this.testItemMap = Maps.newHashMap();
         this.valueMap = Maps.newHashMap();
-        this.testItemDtoMap = Maps.newHashMap();
-        for (TestItemWithTypeDto testItemWithTypeDto : typeDtoList) {
-            testItemDtoMap.put(testItemWithTypeDto.getTestItemName(), testItemWithTypeDto);
-        }
+        this.testItemDtoMap = testItemDtoMap;
+
         this.headerArray = FXCollections.observableArrayList(testItems, values);
         this.rowKeyArray = FXCollections.observableArrayList(rowDataDto.getData().keySet());
     }
@@ -112,6 +111,8 @@ public class DetailDataModel implements TableModel {
         if (values.equals(column)) {
             if (!RangeUtils.isPass(valueMap.get(rowKey).get(), testItemDtoMap.get(rowKey))) {
                 tableCell.setStyle("-fx-background-color: red; -fx-text-fill: white");
+            } else if ((valueMap.get(rowKey).get() != null && !DAPStringUtils.isNumeric(valueMap.get(rowKey).get())) || (testItemDtoMap != null && !testItemDtoMap.containsKey(rowKey))) {
+                tableCell.setStyle("-fx-text-fill: #aaaaaa");
             }
         }
         return tableCell;

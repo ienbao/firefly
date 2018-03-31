@@ -275,6 +275,23 @@
     -fx-padding: 0em 0em 0em -0.63em;
 }
 
+.legend {
+    -fx-background-color: white;
+    -fx-border-width: 0;
+}
+
+.chart-legend-tooltip {
+    -fx-text-fill: rgb(34, 34, 34);
+    -fx-font-size: 12px;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+}
+
+.chart-legend-tooltip .chart-legend-item {
+    -fx-text-fill: rgb(34, 34, 34);
+}
+
+
 
 
 

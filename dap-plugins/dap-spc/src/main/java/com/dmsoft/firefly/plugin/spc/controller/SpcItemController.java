@@ -127,7 +127,7 @@ public class SpcItemController implements Initializable {
         split.getItems().add(searchTab);
         itemFilter.getTextField().setPromptText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
-                filteredList.setPredicate(p -> p.getItem().contains(itemFilter.getTextField().getText()))
+                filteredList.setPredicate(p -> p.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase()))
         );
 
         // test item table init

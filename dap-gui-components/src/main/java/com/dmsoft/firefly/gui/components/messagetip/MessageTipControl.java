@@ -1,5 +1,8 @@
 package com.dmsoft.firefly.gui.components.messagetip;
 
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -9,6 +12,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Popup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.*;
 
 
 /**
@@ -38,6 +43,9 @@ public class MessageTipControl {
     @FXML
     private void initialize() {
         linkBtn.setVisible(false);
+        messageTip.getRowConstraints().get(2).setMinHeight(10);
+        messageTip.getRowConstraints().get(2).setPrefHeight(10);
+        messageTip.getRowConstraints().get(2).setMaxHeight(10);
     }
 
 
@@ -51,6 +59,12 @@ public class MessageTipControl {
         return messageTip;
     }
 
+    public GridPane initInfo(Popup popup, String title, String msg, String linkMsg, EventHandler<ActionEvent> linkEvent) {
+        initInfo(popup, title, msg);
+        initLinkBtn(linkMsg, linkEvent);
+        return messageTip;
+    }
+
     public GridPane initWarn(Popup popup, String title, String msg) {
         clearAll();
         this.closeBtnEvent(popup);
@@ -58,11 +72,12 @@ public class MessageTipControl {
         contentLbl.setText(msg);
         messageTip.getStyleClass().add("message-tip-warn");
         iconLbl.getStyleClass().add("message-tip-warn-mark");
-        linkBtn.setText("fdsf");
-        linkBtn.setVisible(true);
-        linkBtn.setOnAction(event -> {
-            System.out.println("fds");
-        });
+        return messageTip;
+    }
+
+    public GridPane initWarn(Popup popup, String title, String msg, String linkMsg, EventHandler<ActionEvent> linkEvent) {
+        initWarn(popup, title, msg);
+        initLinkBtn(linkMsg, linkEvent);
         return messageTip;
     }
 
@@ -76,6 +91,23 @@ public class MessageTipControl {
         return messageTip;
     }
 
+    public GridPane initNormal(Popup popup, String title, String msg, String linkMsg, EventHandler<ActionEvent> linkEvent) {
+        initNormal(popup, title, msg);
+        initLinkBtn(linkMsg, linkEvent);
+        return messageTip;
+    }
+
+    private void initLinkBtn(String linkMsg, EventHandler<ActionEvent> linkEvent) {
+        if (DAPStringUtils.isNotBlank(linkMsg)) {
+            messageTip.getRowConstraints().get(2).setMinHeight(32);
+            messageTip.getRowConstraints().get(2).setPrefHeight(32);
+            messageTip.getRowConstraints().get(2).setMaxHeight(32);
+            linkBtn.setText(linkMsg);
+            linkBtn.setVisible(true);
+            linkBtn.setOnAction(linkEvent);
+        }
+    }
+
     private void clearAll() {
         titleLbl.setText("");
         contentLbl.setText("");
@@ -87,5 +119,13 @@ public class MessageTipControl {
         closeBtn.setOnAction(event -> {
             popup.hide();
         });
+    }
+
+    public Button getLinkBtn() {
+        return linkBtn;
+    }
+
+    public void setLinkBtn(Button linkBtn) {
+        this.linkBtn = linkBtn;
     }
 }

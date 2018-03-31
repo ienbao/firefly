@@ -105,16 +105,16 @@ public class SpcMainController implements Initializable {
      */
     public void clearAnalysisSubShowData() {
         chartResultController.clearChartData();
-        viewDataController.setViewData(null, null);
+        viewDataController.setViewData(null, null,null);
     }
 
     /**
      * clear all analysis data
      */
-    public void clearAnalysisData(){
+    public void clearAnalysisData() {
         statisticalResultController.clearStatisticalResultData();
         chartResultController.clearChartData();
-        viewDataController.setViewData(null, null);
+        viewDataController.setViewData(null, null,null);
     }
 
     /**
@@ -404,6 +404,12 @@ public class SpcMainController implements Initializable {
             public void doJob(JobContext context) {
                 List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
                 statisticalResultController.refreshStatisticalResult(spcStatisticalResultAlarmDtoList);
+
+                if (editRowDataList != null && editRowDataList.size() != 0) {
+                    List<SpcStatisticalResultAlarmDto> allRowDataList = statisticalResultController.getAllRowStatsData();
+                    List<SearchConditionDto> statisticalSearchConditionDtoList = buildRefreshSearchConditionData(allRowDataList);
+                    viewDataController.updateStatisticalSearchCondition(statisticalSearchConditionDtoList);
+                }
                 windowProgressTipController.closeDialog();
             }
         });
@@ -501,7 +507,11 @@ public class SpcMainController implements Initializable {
                 Platform.runLater(() -> {
                     chartResultController.initSpcChartData((List<SpcChartDto>) context.get(ParamKeys.SPC_CHART_DTO_LIST));
                     SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getAllRowKeys(), searchConditionDtoList);
-                    viewDataController.setViewData(viewDataFrame, rowKeyList);
+
+                    List<SpcStatisticalResultAlarmDto> allRowDataList = statisticalResultController.getAllRowStatsData();
+                    List<SearchConditionDto> statisticalSearchConditionDtoList = buildRefreshSearchConditionData(allRowDataList);
+                    viewDataController.setViewData(viewDataFrame, rowKeyList,statisticalSearchConditionDtoList);
+
                     windowProgressTipController.closeDialog();
                 });
             }
@@ -620,7 +630,7 @@ public class SpcMainController implements Initializable {
 
                 //set view data
                 SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getAllRowKeys(), chartSearchConditionDtoList);
-                viewDataController.setViewData(viewDataFrame, currentViewDataSelectRowKeyList);
+                viewDataController.setViewData(viewDataFrame, currentViewDataSelectRowKeyList,statisticalSearchConditionDtoList);
             }
         });
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {

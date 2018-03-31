@@ -39,6 +39,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -69,6 +71,8 @@ public class GrrItemController implements Initializable {
     private Button importBtn;
     @FXML
     private Button exportBtn;
+    @FXML
+    private TabPane rightTabPane;
     @FXML
     private Tab itemTab;
     @FXML
@@ -152,7 +156,7 @@ public class GrrItemController implements Initializable {
         initBtnIcon();
         itemFilter.getTextField().setPromptText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
-                filteredList.setPredicate(p -> p.getItem().contains(itemFilter.getTextField().getText()))
+                filteredList.setPredicate(p -> p.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase()))
         );
         this.initComponentEvent();
         itemTable.setOnMouseEntered(event -> {
@@ -315,7 +319,7 @@ public class GrrItemController implements Initializable {
 
     private void refreshPartOrAppraiserListView(GrrParamDto grrParamDto) {
         if (grrParamDto != null) {
-            if (grrParamDto.getErrors() != null && !grrParamDto.getErrors().isEmpty()) {
+            if (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty()) {
                 Set<String> selectedParts = grrParamDto.getParts();
                 if (selectedParts != null) {
                     partListView.getItems().forEach(listViewModel -> {
@@ -340,6 +344,16 @@ public class GrrItemController implements Initializable {
             } else {
                 getTooltipMsg(partListView, grrParamDto, false);
                 getTooltipMsg(appraiserListView, grrParamDto, true);
+                if (configTab.isSelected()) {
+                    RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                            GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                            GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+                } else {
+                    RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                            GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                            GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"),
+                            GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
+                }
             }
         }
     }
@@ -825,41 +839,100 @@ public class GrrItemController implements Initializable {
 
     private boolean checkSubmitParam(Integer itemNumbers) {
         if (itemNumbers == null || itemNumbers <= 0) {
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("UI_GRR_ANALYSIS_ITEM_EMPTY"));
+            if (itemTab.isSelected()) {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_ANALYSIS_ITEM_EMPTY"));
+            } else {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_ANALYSIS_ITEM_EMPTY"),
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_TEST_ITEM")}), grrItemEvent());
+            }
+
             return false;
         }
 
         if (!GrrValidateUtil.validateResult(partTxt, appraiserTxt, trialTxt, partCombox)) {
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+            if (configTab.isSelected()) {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+            } else {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"),
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
+            }
+
             return false;
         }
 
         if (appraiserLbl.getGraphic() != null || partLbl.getGraphic() != null) {
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+            if (configTab.isSelected()) {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+            } else {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"),
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
+            }
+
             return false;
         }
 
         if (partListView.getItems().size() > 0 && partListView.getItems().size() < Integer.parseInt(partTxt.getText())) {
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_MAX_NUMBER_NOT_MATCH"));
+            if (configTab.isSelected()) {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_MAX_NUMBER_NOT_MATCH"));
+            } else {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_MAX_NUMBER_NOT_MATCH"),
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
+            }
+
             return false;
         }
 
         if ((appraiserCombox.getValue() != null) && (appraiserListView.getItems().size() > 0 && appraiserListView.getItems().size() < Integer.parseInt(appraiserTxt.getText()))) {
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_MAX_NUMBER_NOT_MATCH"));
+            if (configTab.isSelected()) {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_MAX_NUMBER_NOT_MATCH"));
+            } else {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_MAX_NUMBER_NOT_MATCH"),
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
+            }
             return false;
         }
-
         return true;
+    }
+
+    private EventHandler<ActionEvent> grrItemEvent() {
+        EventHandler<ActionEvent> eventHandler = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                rightTabPane.getSelectionModel().select(itemTab);
+
+            }
+        };
+        return eventHandler;
+    }
+
+    private EventHandler<ActionEvent> grrConfigEvent() {
+        EventHandler<ActionEvent> eventHandler = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                rightTabPane.getSelectionModel().select(configTab);
+            }
+        };
+        return eventHandler;
     }
 
     private List<String> getSelectedItem() {

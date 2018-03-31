@@ -177,7 +177,7 @@ public class GrrExportController {
         initEvent();
         itemFilter.getTextField().setPromptText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
-                filteredList.setPredicate(p -> p.getItem().contains(itemFilter.getTextField().getText()))
+                filteredList.setPredicate(p -> p.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase()))
         );
         itemTable.setOnMouseEntered(event -> {
             itemTable.focusModelProperty();
@@ -496,31 +496,33 @@ public class GrrExportController {
     }
 
     private void refreshPartOrAppraiserListView(GrrParamDto grrParamDto) {
-        if (grrParamDto != null && grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty()) {
-            Set<String> selectedParts = grrParamDto.getParts();
-            if (selectedParts != null) {
-                partListView.getItems().forEach(listViewModel -> {
-                    listViewModel.setErrorMsg(null);
-                    if (selectedParts.contains(listViewModel.getName())) {
-                        listViewModel.setIsChecked(true);
-                    }
-                });
-                partListView.refresh();
-            }
+        if (grrParamDto != null) {
+            if (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty()) {
+                Set<String> selectedParts = grrParamDto.getParts();
+                if (selectedParts != null) {
+                    partListView.getItems().forEach(listViewModel -> {
+                        listViewModel.setErrorMsg(null);
+                        if (selectedParts.contains(listViewModel.getName())) {
+                            listViewModel.setIsChecked(true);
+                        }
+                    });
+                    partListView.refresh();
+                }
 
-            Set<String> selectedAppraisers = grrParamDto.getAppraisers();
-            if (selectedAppraisers != null) {
-                appraiserListView.getItems().forEach(listViewModel -> {
-                    listViewModel.setErrorMsg(null);
-                    if (selectedAppraisers != null && selectedAppraisers.contains(listViewModel.getName())) {
-                        listViewModel.setIsChecked(true);
-                    }
-                });
-                appraiserListView.refresh();
+                Set<String> selectedAppraisers = grrParamDto.getAppraisers();
+                if (selectedAppraisers != null) {
+                    appraiserListView.getItems().forEach(listViewModel -> {
+                        listViewModel.setErrorMsg(null);
+                        if (selectedAppraisers != null && selectedAppraisers.contains(listViewModel.getName())) {
+                            listViewModel.setIsChecked(true);
+                        }
+                    });
+                    appraiserListView.refresh();
+                }
+            } else {
+                getTooltipMsg(partListView, grrParamDto, false);
+                getTooltipMsg(appraiserListView, grrParamDto, true);
             }
-        } else {
-            getTooltipMsg(partListView, grrParamDto, false);
-            getTooltipMsg(appraiserListView, grrParamDto, true);
         }
     }
 
@@ -907,6 +909,10 @@ public class GrrExportController {
                     grrExportConfigDto.setUserName(envService.getUserName());
                     grrExportConfigDto.setGrrConfigDto(grrConfigDto);
                     grrExportConfigDto.setDigNum(envService.findActivatedTemplate().getDecimalDigit());
+                    grrExportConfigDto.setParts(Integer.valueOf(partTxt.getText()));
+                    grrExportConfigDto.setAppraisers(Integer.valueOf(appraiserTxt.getText()));
+                    grrExportConfigDto.setTrials(Integer.valueOf(trialTxt.getText()));
+
                     searchTab.getConditionTestItem().forEach(item -> testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(item)));
                     testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(partCombox.getValue()));
                     if (appraiserCombox.getValue() != null) {
