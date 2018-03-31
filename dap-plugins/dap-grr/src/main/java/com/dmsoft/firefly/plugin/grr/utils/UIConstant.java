@@ -89,4 +89,15 @@ public class UIConstant {
             GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_SIGMA"),
             GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_VARIATION"),
             GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_TOLERANCE")};
+
+    public static final String[] GRR_EXPORT_CONFIG_KEY = new String[]{
+            GrrFxmlAndLanguageUtils.getString("EXPORT_DETIAL"),
+            GrrFxmlAndLanguageUtils.getString("EXPORT_SOURCE"),
+            GrrFxmlAndLanguageUtils.getString("EXPORT_CHARTS"),
+            GrrFxmlAndLanguageUtils.getString("CHART_1"),
+            GrrFxmlAndLanguageUtils.getString("CHART_2"),
+            GrrFxmlAndLanguageUtils.getString("CHART_3"),
+            GrrFxmlAndLanguageUtils.getString("CHART_4"),
+            GrrFxmlAndLanguageUtils.getString("CHART_5"),
+            GrrFxmlAndLanguageUtils.getString("CHART_6")};
 }
