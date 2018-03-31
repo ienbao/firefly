@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin id="com.dmsoft.dap.GrrPlugin" name="GRR" version="1.0.0" author="dmsoft"
+        description="Gauge Repeatability and Reproducibility measures the amount of variability induced in measurements by the measurement system itself, and compass it to the total viability of the measurement system. There are several factors affecting a measurement system, including: measuring instruments, operators, test methods, specification, parts and specimens."
         scanPath="com.dmsoft.firefly.plugin.grr" pluginClassName="com.dmsoft.firefly.plugin.grr.GrrPlugin">
     <runtime path="com.dmsoft.dap.GrrPlugin.jar"></runtime>
 </plugin>

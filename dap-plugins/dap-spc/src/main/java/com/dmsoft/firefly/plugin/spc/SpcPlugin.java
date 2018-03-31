@@ -67,7 +67,7 @@ public class SpcPlugin extends Plugin {
 
     @Override
     public void start() {
-        RuntimeContext.getBean(PluginUIContext.class).registerMainBody("spc", new IMainBodyPane() {
+        RuntimeContext.getBean(PluginUIContext.class).registerMainBody("SPC", new IMainBodyPane() {
             @Override
             public Pane getNewPane() {
                 FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML(ViewResource.SPC_VIEW_RES);

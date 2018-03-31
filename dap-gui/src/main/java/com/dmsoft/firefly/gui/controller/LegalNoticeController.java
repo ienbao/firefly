@@ -9,6 +9,7 @@ import com.dmsoft.firefly.sdk.dai.service.UserService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
 
@@ -21,13 +22,24 @@ public class LegalNoticeController {
     private Button legalOkBtn;
 
     @FXML
+    private TextArea legalNoticeTextArea;
+
+    @FXML
     private void initialize() {
+        legalNoticeTextArea.setText(GuiFxmlAndLanguageUtils.getString("LEGAL_NOTICE_CONTENT"));
+        legalNoticeTextArea.setMaxWidth(390);
+        legalNoticeTextArea.setWrapText(true);
+        legalNoticeTextArea.setMouseTransparent(false);
+        legalNoticeTextArea.setFocusTraversable(false);
+        acceptCkb.setFocusTraversable(false);
+        legalOkBtn.setFocusTraversable(false);
+        legalOkBtn.setDisable(true);
         if (userService.findLegal()) {
             acceptCkb.setVisible(false);
             acceptCkb.setSelected(true);
-            //legalOkBtn.setVisible(false);
+            legalOkBtn.setDisable(false);
         }
-        legalOkBtn.setDisable(true);
+
         acceptCkb.setOnAction(event -> {
             if (acceptCkb.isSelected()) {
                 legalOkBtn.setDisable(false);
@@ -36,15 +48,20 @@ public class LegalNoticeController {
             }
         });
         legalOkBtn.setOnAction(event -> {
-            userService.updateLegal(acceptCkb.isSelected());
-            StageMap.getStage(GuiConst.PLARTFORM_STAGE_LEGAL).close();
-            StageMap.showStage(GuiConst.PLARTFORM_STAGE_MAIN);
-            Stage stage = StageMap.getStage(GuiConst.PLARTFORM_STAGE_MAIN);
-            if (stage.getScene().getRoot() instanceof WindowPane) {
-                WindowPane windowPane = (WindowPane) stage.getScene().getRoot();
-                windowPane.getController().maximizePropertyProperty().set(true);
+            if (!userService.findLegal()) {
+                userService.updateLegal(acceptCkb.isSelected());
+                StageMap.getStage(GuiConst.PLARTFORM_STAGE_LEGAL).close();
+                StageMap.showStage(GuiConst.PLARTFORM_STAGE_MAIN);
+                Stage stage = StageMap.getStage(GuiConst.PLARTFORM_STAGE_MAIN);
+                if (stage.getScene().getRoot() instanceof WindowPane) {
+                    WindowPane windowPane = (WindowPane) stage.getScene().getRoot();
+                    windowPane.getController().maximizePropertyProperty().set(true);
+                }
+                GuiFxmlAndLanguageUtils.buildLoginDialog();
+            } else {
+                StageMap.getStage(GuiConst.PLARTFORM_STAGE_LEGAL).close();
             }
-            GuiFxmlAndLanguageUtils.buildLoginDialog();
+
         });
     }
 

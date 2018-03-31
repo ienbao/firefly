@@ -9,7 +9,7 @@
         <VBox AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
             <children>
             <Label text="%GLOBAL_LBL_LEGAL" />
-            <TextArea editable="false" prefHeight="200.0" prefWidth="390.0" text="fdfsfsssssssssssssssssssssssssssssfsdfsfsfsssssssssssssssffsdfdsff&#10;fdfsfssssssssssssssssssssssssssssssssssssssssssssssfdsfsffsdf&#10;fdfsfsssssssssssssssssssssssssssssssssssssssssssfsdfsssssffsdf&#10;fdfsfsssssssssssssssssssssssssssssssssssssssssssfsdfsssssffsdf&#10;fdfsfssssssssssssssssssssssssssssssssssssssssssfdsfsssssffsdf&#10;fdfsfsssssssssssssssssssssssssssssssssssssssssssssssffsdf&#10;fdfsfsssssssssssssssssssssssssssssssssssssssssssssssffsdf&#10;fdfsfsssssssssssssssssssssssssssssssssssssssssssssssffsdf&#10;&#10;fdfsfsssssssssssssssssssssssssssssssssssssssssssssssffsdf&#10;fdfsfsssssssssssssssssssssssssssssssssssssssssssssssffsdf&#10;&#10;&#10;fdfsfsssssssssssssssssssssssssssssssssssssssssssssssffsdf&#10;fdfsfsssssssssssssssssssssssssssssssssssssssssssssssffsdf&#10;fdfsfsssssssssssssssssssssssssssssssssssssssssssssssffsdf&#10;fdfsfsssssssssssssssssssssssssssssssssssffsdf&#10;fdfsfsssssssssssssssssssssssssssssssssssssssssssssssffsdf">
+            <TextArea fx:id="legalNoticeTextArea" editable="false" prefHeight="200.0" prefWidth="390.0" text="">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
