@@ -34,12 +34,12 @@ set ID=
 
     IF NOT EXIST "%LOG%" (
         ECHO "%LOG%" is not exist.
-        md %~dp0"%LOG%"
+        md "%~dp0%LOG%"
         ECHO New "%LOG%" success.
     )
 
     set now=%date:~,4%%date:~5,2%%date:~8,2%
     echo iSPC is running...
-	java -Djava.library.path=%R_HOME%\library\rJava\jri -jar %APP_JAR% >> log/ispc_%now%.log
+	java -Djava.library.path="%R_HOME%\library\rJava\jri" -jar %APP_JAR% >> log/ispc_%now%.log
 :stopApp
     taskkill /F /IM java > nul
