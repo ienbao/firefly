@@ -168,8 +168,8 @@ public class SpcMainController implements Initializable {
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
-                logger.error(context.getError().getMessage());
-                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                logger.error(context.getError().toString());
+                windowProgressTipController.updateFailProgress(context.getError().toString());
             }
         });
         jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
@@ -416,8 +416,8 @@ public class SpcMainController implements Initializable {
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
-                logger.error(context.getError().getMessage());
-                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                logger.error(context.getError().toString());
+                windowProgressTipController.updateFailProgress(context.getError().toString());
             }
         });
         jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
@@ -520,7 +520,7 @@ public class SpcMainController implements Initializable {
             @Override
             public void doJob(JobContext context) {
                 logger.error(context.getError().getMessage());
-                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                windowProgressTipController.updateFailProgress(context.getError().toString());
             }
         });
         jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {

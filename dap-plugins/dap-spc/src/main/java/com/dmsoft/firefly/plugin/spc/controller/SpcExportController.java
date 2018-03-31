@@ -335,6 +335,9 @@ public class SpcExportController {
                 WindowMessageFactory.createWindowMessageHasOk("Export", "Please Input correct config numbers.");
                 return;
             }
+            if (!searchTab.verifySearchTextArea()) {
+                return;
+            }
             StageMap.closeStage("spcExport");
             String savePath = locationPath.getText() + "/SPC_" + getTimeString();
             export(savePath);

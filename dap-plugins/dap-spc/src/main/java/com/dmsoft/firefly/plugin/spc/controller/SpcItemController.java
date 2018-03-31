@@ -394,6 +394,9 @@ public class SpcItemController implements Initializable {
                     SpcFxmlAndLanguageUtils.getString(ResourceMassages.UI_SPC_ANALYSIS_ITEM_EMPTY));
             return;
         }
+        if (!searchTab.verifySearchTextArea()) {
+            return;
+        }
         spcMainController.clearAnalysisData();
         List<String> projectNameList = envService.findActivatedProjectName();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
@@ -433,7 +436,7 @@ public class SpcItemController implements Initializable {
             @Override
             public void doJob(JobContext context) {
                 logger.error(context.getError().getMessage());
-                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                windowProgressTipController.updateFailProgress(context.getError().toString());
             }
         });
         jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
