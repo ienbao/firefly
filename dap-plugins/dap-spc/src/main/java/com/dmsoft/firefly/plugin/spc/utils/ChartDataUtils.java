@@ -24,7 +24,7 @@ public class ChartDataUtils {
             total = total + d;
         }
         Double min = normalCurveY[0];
-        Double rate = total / (normalCurveY[normalCurveY.length / 2] - min);
+        Double rate = total * 0.33 / (normalCurveY[normalCurveY.length / 2] - min);
         for (int i = 0; i < normalCurveY.length; i++) {
             result[i] = (normalCurveY[i] - min) > 0 ? (normalCurveY[i] - min) * rate : 0;
         }
