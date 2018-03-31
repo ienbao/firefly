@@ -1029,9 +1029,7 @@ public class GrrExportController {
                         }
                     });
                 }
-                if (grrLeftConfigDto.getBasicSearchs() != null && grrLeftConfigDto.getBasicSearchs().size() > 0) {
-                    searchTab.setBasicSearch(grrLeftConfigDto.getBasicSearchs());
-                }
+                searchTab.setOneBasicSearch(grrLeftConfigDto.getBasicSearchs());
                 searchTab.getAdvanceText().setText(grrLeftConfigDto.getAdvanceSearch());
                 if (grrLeftConfigDto.getPartInt() != null) {
                     partTxt.setText(grrLeftConfigDto.getPartInt().toString());

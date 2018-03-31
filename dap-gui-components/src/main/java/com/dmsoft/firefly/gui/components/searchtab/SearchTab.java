@@ -80,7 +80,16 @@ public class SearchTab extends VBox {
         return controller.getBasicSearch();
     }
 
+
+    public List<BasicSearchDto> getOneBasicSearch() {
+        return controller.getOneBasicSearch();
+    }
+
     public void setBasicSearch(LinkedHashMap<String, List<BasicSearchDto>> basicSearchDtoMaps) {
         controller.setBasicSearch(basicSearchDtoMaps);
+    }
+
+    public void setOneBasicSearch(List<BasicSearchDto> basicSearchDtoMaps) {
+        controller.setOneBasicSearch(basicSearchDtoMaps);
     }
 }

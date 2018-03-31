@@ -28,11 +28,13 @@ import javafx.scene.Scene;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import javax.swing.*;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.ManagementFactory;
 import java.util.List;
@@ -142,7 +144,9 @@ public class GuiApplication extends Application {
                                     if (!userService.findLegal()) {
                                         GuiFxmlAndLanguageUtils.buildLegalDialog();
                                     } else {
-                                        StageMap.showStage(GuiConst.PLARTFORM_STAGE_MAIN);
+                                        Stage stageMain = StageMap.getStage(GuiConst.PLARTFORM_STAGE_MAIN);
+                                        stageMain.getIcons().add(new Image("file:/" + ApplicationPathUtil.getPath("images") + "/login_logo.png"));
+                                        stageMain.show();
                                         GuiFxmlAndLanguageUtils.buildLoginDialog();
                                     }
                                 });

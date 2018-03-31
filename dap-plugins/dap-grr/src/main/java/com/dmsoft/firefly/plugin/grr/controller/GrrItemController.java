@@ -261,12 +261,6 @@ public class GrrItemController implements Initializable {
         ObservableList<String> datas = FXCollections.observableArrayList();
         datas.add("");
         datas.addAll(originalItems);
-       /* if (items != null) {
-            for (ItemTableModel model : items) {
-                datas.add(model.getItem());
-            }
-        }*/
-
         partCombox.setItems(datas);
         appraiserCombox.setItems(datas);
 
@@ -296,25 +290,33 @@ public class GrrItemController implements Initializable {
     }
 
     private void updatePartListViewDatas(Set<String> parts, boolean isSelected) {
+        partListView.getItems().clear();
+        partList.clear();
         parts.forEach(value -> {
             partList.add(new ListViewModel(value, isSelected, ""));
         });
         partListView.setItems(partList);
-        RowConstraints row7 = grrConfigPane.getRowConstraints().get(7);
-        row7.setPrefHeight(112);
-        row7.setMaxHeight(112);
-        row7.setMinHeight(112);
+        if (!parts.isEmpty()) {
+            RowConstraints row7 = grrConfigPane.getRowConstraints().get(7);
+            row7.setPrefHeight(112);
+            row7.setMaxHeight(112);
+            row7.setMinHeight(112);
+        }
     }
 
     private void updateAppraiserListViewDatas(Set<String> appraisers, boolean isSelected) {
+        appraiserListView.getItems().clear();
+        appraiserList.clear();
         appraisers.forEach(value -> {
             appraiserList.add(new ListViewModel(value, isSelected, ""));
         });
         appraiserListView.setItems(appraiserList);
-        RowConstraints row11 = grrConfigPane.getRowConstraints().get(11);
-        row11.setPrefHeight(112);
-        row11.setMaxHeight(112);
-        row11.setMinHeight(112);
+        if (!appraisers.isEmpty()) {
+            RowConstraints row11 = grrConfigPane.getRowConstraints().get(11);
+            row11.setPrefHeight(112);
+            row11.setMaxHeight(112);
+            row11.setMinHeight(112);
+        }
     }
 
     private void refreshPartOrAppraiserListView(GrrParamDto grrParamDto) {
@@ -983,9 +985,8 @@ public class GrrItemController implements Initializable {
                         }
                     });
                 }
-                if (grrLeftConfigDto.getBasicSearchs() != null && grrLeftConfigDto.getBasicSearchs().size() > 0) {
-                    searchTab.setBasicSearch(grrLeftConfigDto.getBasicSearchs());
-                }
+                searchTab.setOneBasicSearch(grrLeftConfigDto.getBasicSearchs());
+
                 searchTab.getAdvanceText().setText(grrLeftConfigDto.getAdvanceSearch());
                 if (grrLeftConfigDto.getPartInt() != null) {
                     partTxt.setText(grrLeftConfigDto.getPartInt().toString());
@@ -1012,8 +1013,12 @@ public class GrrItemController implements Initializable {
                 }
 
                 if (grrLeftConfigDto.getAppraisers() != null && !grrLeftConfigDto.getAppraisers().isEmpty()) {
-                    updatePartListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getAppraisers()), true);
+                    updateAppraiserListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getAppraisers()), true);
                 }
+            } else {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
             }
 
         }
@@ -1031,7 +1036,7 @@ public class GrrItemController implements Initializable {
             leftConfigDto.setTrialInt(searchConditionDto.getTrialInt());
             leftConfigDto.setParts(searchConditionDto.getParts());
             leftConfigDto.setAppraisers(searchConditionDto.getAppraisers());
-            leftConfigDto.setBasicSearchs(searchTab.getBasicSearch());
+            leftConfigDto.setBasicSearchs(searchTab.getOneBasicSearch());
             if (searchTab.getAdvanceText().getText() != null) {
                 leftConfigDto.setAdvanceSearch(searchTab.getAdvanceText().getText());
             }
