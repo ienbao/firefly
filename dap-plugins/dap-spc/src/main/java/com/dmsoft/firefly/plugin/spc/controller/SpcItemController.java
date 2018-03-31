@@ -258,6 +258,24 @@ public class SpcItemController implements Initializable {
         initSpcConfig();
     }
 
+    public SpcLeftConfigDto getCurrentConfigData(){
+        SpcLeftConfigDto leftConfigDto = new SpcLeftConfigDto();
+        leftConfigDto.setItems(getSelectedItem());
+        leftConfigDto.setBasicSearchs(searchTab.getBasicSearch());
+        if (searchTab.getAdvanceText().getText() != null) {
+            leftConfigDto.setAdvanceSearch(searchTab.getAdvanceText().getText());
+        }
+        leftConfigDto.setNdNumber(ndGroup.getText());
+        leftConfigDto.setSubGroup(subGroup.getText());
+        if (searchTab.getGroup1().getValue() != null) {
+            leftConfigDto.setAutoGroup1(searchTab.getGroup1().getValue());
+        }
+        if (searchTab.getGroup2().getValue() != null) {
+            leftConfigDto.setAutoGroup2(searchTab.getGroup2().getValue());
+        }
+        return leftConfigDto;
+    }
+
     private void initBtnIcon() {
         analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
         importBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_load_script_normal.png")));
@@ -598,26 +616,17 @@ public class SpcItemController implements Initializable {
                 searchTab.getAdvanceText().setText(spcLeftConfigDto.getAdvanceSearch());
                 searchTab.getGroup1().setValue(spcLeftConfigDto.getAutoGroup1());
                 searchTab.getGroup2().setValue(spcLeftConfigDto.getAutoGroup2());
+            } else {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                    SpcFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                    SpcFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
             }
 
         }
     }
 
     private void exportLeftConfig() {
-        SpcLeftConfigDto leftConfigDto = new SpcLeftConfigDto();
-        leftConfigDto.setItems(getSelectedItem());
-        leftConfigDto.setBasicSearchs(searchTab.getBasicSearch());
-        if (searchTab.getAdvanceText().getText() != null) {
-            leftConfigDto.setAdvanceSearch(searchTab.getAdvanceText().getText());
-        }
-        leftConfigDto.setNdNumber(ndGroup.getText());
-        leftConfigDto.setSubGroup(subGroup.getText());
-        if (searchTab.getGroup1().getValue() != null) {
-            leftConfigDto.setAutoGroup1(searchTab.getGroup1().getValue());
-        }
-        if (searchTab.getGroup2().getValue() != null) {
-            leftConfigDto.setAutoGroup2(searchTab.getGroup2().getValue());
-        }
+        SpcLeftConfigDto leftConfigDto = this.getCurrentConfigData();
 
         String str = System.getProperty("user.home");
         FileChooser fileChooser = new FileChooser();

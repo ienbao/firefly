@@ -124,6 +124,8 @@ public final class StageMap {
 
 
             Stage tempStage = new Stage();
+            Image image = new Image("/images/desktop_mac_logo.png");
+            tempStage.getIcons().addAll(image);
             if (modality) {
                 tempStage.initModality(Modality.APPLICATION_MODAL);
             }

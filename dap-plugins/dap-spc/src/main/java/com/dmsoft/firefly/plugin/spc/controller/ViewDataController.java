@@ -18,6 +18,7 @@ import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -92,6 +93,7 @@ public class ViewDataController implements Initializable {
         this.statisticalSearchConditionDtoList = statisticalSearchConditionDtoList;
         this.selectedRowKeys = selectedRowKey;
         Platform.runLater(() -> {
+            this.dataFrame = dataFrame;
             if (dataFrame == null) {
                 Platform.runLater(() -> {
                     viewDataTable.getColumns().clear();
@@ -107,7 +109,6 @@ public class ViewDataController implements Initializable {
                 });
                 return;
             }
-            this.dataFrame = dataFrame;
             this.model = new ViewDataDFModel(dataFrame, selectedRowKey);
             this.model.setStatisticalSearchConditionDtoList(statisticalSearchConditionDtoList);
             this.model.setMainController(spcMainController);
@@ -172,7 +173,7 @@ public class ViewDataController implements Initializable {
         if (this.model != null) {
             return this.model.getSelectedRowKeys();
         } else {
-            return Lists.newArrayList();
+            return null;
         }
     }
 
@@ -217,6 +218,12 @@ public class ViewDataController implements Initializable {
                     break;
             }
             quickSearchController.getSearchBtn().setOnAction(event1 -> {
+                if(quickSearchController.isError()){
+                    RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                            SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER),
+                            SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_QUICK_SEARCH_MESSAGE));
+                    return;
+                }
                 FilterType type1 = quickSearchController.getFilterType();
                 switch (type1) {
                     case ALL_DATA:

@@ -23,4 +23,6 @@ public class ResourceMassages {
     public static final String ADVANCE = "ADVANCE";
     public static final String ILLEGAL_INPUT_SEARCH_CONDITION = "ILLEGAL_INPUT_SEARCH_CONDITION";
     public static final String UNABLE_TO_FIND_TEST_ITEM = "UNABLE_TO_FIND_TEST_ITEM";
+    public static final String MESSAGE = "MESSAGE";
+    public static final String PLEASE_SELECT_FILE = "PLEASE_SELECT_FILE";
 }

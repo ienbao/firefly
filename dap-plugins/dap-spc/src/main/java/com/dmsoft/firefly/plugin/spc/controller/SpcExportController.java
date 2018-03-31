@@ -30,6 +30,7 @@ import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.event.PlatformEvent;
 import com.dmsoft.firefly.sdk.job.core.*;
+import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
@@ -830,24 +831,35 @@ public class SpcExportController {
         if (file != null) {
             SpcLeftConfigDto spcLeftConfigDto = leftConfigService.importSpcConfig(file);
             if (spcLeftConfigDto != null) {
-                clearLeftConfig();
-                if (spcLeftConfigDto.getItems() != null && spcLeftConfigDto.getItems().size() > 0) {
-                    items.forEach(testItem -> {
-                        if (spcLeftConfigDto.getItems().contains(testItem.getItem())) {
-                            testItem.getSelector().setValue(true);
-                        }
-                    });
-                }
-                if (spcLeftConfigDto.getBasicSearchs() != null && spcLeftConfigDto.getBasicSearchs().size() > 0) {
-                    searchTab.setBasicSearch(spcLeftConfigDto.getBasicSearchs());
-                }
-                ndGroup.setText(spcLeftConfigDto.getNdNumber());
-                subGroup.setText(spcLeftConfigDto.getSubGroup());
-                searchTab.getAdvanceText().setText(spcLeftConfigDto.getAdvanceSearch());
-                searchTab.getGroup1().setValue(spcLeftConfigDto.getAutoGroup1());
-                searchTab.getGroup2().setValue(spcLeftConfigDto.getAutoGroup2());
+                this.initSpcExportLeftConfig(spcLeftConfigDto);
+            } else {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                    SpcFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                    SpcFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
             }
         }
+    }
+
+    public void initSpcExportLeftConfig(SpcLeftConfigDto spcLeftConfigDto){
+        if(spcLeftConfigDto == null){
+            return;
+        }
+        clearLeftConfig();
+        if (spcLeftConfigDto.getItems() != null && spcLeftConfigDto.getItems().size() > 0) {
+            items.forEach(testItem -> {
+                if (spcLeftConfigDto.getItems().contains(testItem.getItem())) {
+                    testItem.getSelector().setValue(true);
+                }
+            });
+        }
+        if (spcLeftConfigDto.getBasicSearchs() != null && spcLeftConfigDto.getBasicSearchs().size() > 0) {
+            searchTab.setBasicSearch(spcLeftConfigDto.getBasicSearchs());
+        }
+        ndGroup.setText(spcLeftConfigDto.getNdNumber());
+        subGroup.setText(spcLeftConfigDto.getSubGroup());
+        searchTab.getAdvanceText().setText(spcLeftConfigDto.getAdvanceSearch());
+        searchTab.getGroup1().setValue(spcLeftConfigDto.getAutoGroup1());
+        searchTab.getGroup2().setValue(spcLeftConfigDto.getAutoGroup2());
     }
 
     private void clearLeftConfig() {

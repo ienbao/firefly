@@ -4,6 +4,7 @@ import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
 import com.google.common.collect.Maps;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
@@ -71,7 +72,41 @@ public class GrrExportSettingController {
                     }
                 }
             });
+
+            if (pane.getChildren().size() >= 1) {
+                Node node = pane.getChildren().get(0);
+                if (node instanceof CheckBox) {
+                    CheckBox checkBox = (CheckBox) node;
+                    toggleAllCheckDisable(!checkBox.isSelected());
+                }
+            }
+
+            if (pane.getChildren().size() >= 3) {
+                Node node = pane.getChildren().get(2);
+                if (node instanceof CheckBox) {
+                    CheckBox checkBox = (CheckBox) node;
+                    this.toggleChartCheckDisable(!checkBox.isSelected());
+                }
+            }
         }
+    }
+
+    private void toggleAllCheckDisable(boolean flag) {
+        for (int i = 0; i < pane.getChildren().size(); i++) {
+            Node paneNode = pane.getChildren().get(i);
+            if (i != 0 && (paneNode instanceof CheckBox)) {
+                paneNode.setDisable(flag);
+            }
+        }
+        this.toggleChartCheckDisable(flag);
+    }
+
+    private void toggleChartCheckDisable(boolean flag) {
+        chartPane.getChildren().forEach(chartNode -> {
+            if (chartNode instanceof CheckBox) {
+                chartNode.setDisable(flag);
+            }
+        });
     }
 
     private void initEvent() {

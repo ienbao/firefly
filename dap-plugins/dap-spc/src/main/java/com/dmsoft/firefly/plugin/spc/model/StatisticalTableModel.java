@@ -29,6 +29,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
 
@@ -508,7 +509,8 @@ public class StatisticalTableModel implements TableModel {
             return DAPStringUtils.formatDouble(statisticalAlarmDto.getValue(), DigNumInstance.newInstance().getDigNum());
         }
         if(key.equals(STATISTICAL_TITLE[2])){
-            return Integer.valueOf(statisticalAlarmDto.getValue().toString()).toString();
+            DecimalFormat df = new DecimalFormat("######0");
+            return Integer.valueOf(df.format(statisticalAlarmDto.getValue())).toString();
         }
 
         return statisticalAlarmDto.getValue().toString();

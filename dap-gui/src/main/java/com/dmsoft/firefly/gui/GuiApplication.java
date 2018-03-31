@@ -193,6 +193,8 @@ public class GuiApplication extends Application {
             tempScene.getStylesheets().add(getResource("css/platform_app.css").toExternalForm());
             tempScene.setFill(Color.TRANSPARENT);
             Stage stage = new Stage();
+            javafx.scene.image.Image image = new javafx.scene.image.Image("/images/desktop_mac_logo.png");
+            stage.getIcons().addAll(image);
             stage.initStyle(StageStyle.TRANSPARENT);
             stage.setScene(tempScene);
             stage.setResizable(false);
