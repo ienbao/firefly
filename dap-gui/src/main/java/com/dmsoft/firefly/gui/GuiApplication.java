@@ -8,6 +8,7 @@ import com.dmsoft.firefly.core.utils.ResourceFinder;
 import com.dmsoft.firefly.gui.components.utils.NodeMap;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowPane;
 import com.dmsoft.firefly.gui.job.BasicJobFactory;
 import com.dmsoft.firefly.gui.job.BasicJobManager;
 import com.dmsoft.firefly.gui.utils.*;
@@ -157,6 +158,12 @@ public class GuiApplication extends Application {
                                         GuiFxmlAndLanguageUtils.buildLegalDialog();
                                     } else {
                                         StageMap.showStage(GuiConst.PLARTFORM_STAGE_MAIN);
+                                        Stage stage = StageMap.getStage(GuiConst.PLARTFORM_STAGE_MAIN);
+                                        if (stage.getScene().getRoot() instanceof WindowPane) {
+                                            WindowPane windowPane = (WindowPane) stage.getScene().getRoot();
+                                            windowPane.getController().maximizePropertyProperty().set(true);
+                                            System.out.println(true);
+                                        }
                                         GuiFxmlAndLanguageUtils.buildLoginDialog();
                                     }
                                 });
