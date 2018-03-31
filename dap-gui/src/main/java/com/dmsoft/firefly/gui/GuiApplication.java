@@ -4,6 +4,7 @@ import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.core.DAPApplication;
 import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
 import com.dmsoft.firefly.core.utils.JsonFileUtil;
+import com.dmsoft.firefly.core.utils.ResourceFinder;
 import com.dmsoft.firefly.gui.components.utils.NodeMap;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -33,8 +34,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import javax.swing.*;
+import java.awt.*;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.ManagementFactory;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import static com.google.common.io.Resources.getResource;
@@ -67,6 +71,16 @@ public class GuiApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        String os = System.getProperty("os.name");
+        if (!os.toLowerCase().startsWith("win")) {
+            Class cla = Class.forName("com.apple.eawt.Application");
+            Method method1 = cla.getMethod("getApplication");
+            Object o = method1.invoke(cla);
+            Method method = cla.getMethod("setDockIconImage", Image.class);
+            ResourceFinder finder = new ResourceFinder();
+            method.invoke(o, new ImageIcon(finder.findResource("images/desktop_mac_logo.png")).getImage());
+        } else {
+        }
         String json = JsonFileUtil.readJsonFile(parentPath, GuiConst.ACTIVE_PLUGIN);
         List<KeyValueDto> activePlugin = Lists.newArrayList();
         if (DAPStringUtils.isNotBlank(json)) {
