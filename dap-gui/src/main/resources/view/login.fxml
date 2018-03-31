@@ -24,7 +24,7 @@
               </rowConstraints>
                <children>
                   <TextField fx:id="userNameTxt" style="-fx-pref-height: 26; -fx-min-height: 26;" text="admin" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Button fx:id="loginBtn" alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="230.0" styleClass="btn-primary" text="Logining" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Button fx:id="loginBtn" alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="230.0" styleClass="btn-primary" text="%LOGIN_BTN" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <ImageView fx:id="loginImageView" fitHeight="40.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets bottom="15.0" />
