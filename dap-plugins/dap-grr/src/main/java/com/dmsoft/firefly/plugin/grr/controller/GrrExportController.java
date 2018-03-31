@@ -1061,6 +1061,10 @@ public class GrrExportController {
                 if (grrLeftConfigDto.getAppraisers() != null && !grrLeftConfigDto.getAppraisers().isEmpty()) {
                     updatePartListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getAppraisers()), true);
                 }
+            } else {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                    GrrFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
             }
 
         }

@@ -1020,8 +1020,8 @@ public class GrrItemController implements Initializable {
                 }
             } else {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                        GrrFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
+                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                    GrrFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
             }
 
         }

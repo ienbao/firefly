@@ -600,8 +600,8 @@ public class SpcItemController implements Initializable {
                 searchTab.getGroup2().setValue(spcLeftConfigDto.getAutoGroup2());
             } else {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                        SpcFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                        SpcFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
+                    SpcFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                    SpcFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
             }
 
         }
