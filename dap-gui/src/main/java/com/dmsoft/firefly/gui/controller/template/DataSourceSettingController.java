@@ -243,6 +243,9 @@ public class DataSourceSettingController {
      * get Search Condition Event
      */
     private void getSearchConditionEvent() {
+        if (!searchTab.verifySearchTextArea()) {
+            return;
+        }
         List<String> columKey = new LinkedList<>();
         if (itemDataTableModel.getHeaderArray() != null && !itemDataTableModel.getHeaderArray().isEmpty()) {
             for (int i = 0; i < itemDataTableModel.getHeaderArray().size(); i++) {

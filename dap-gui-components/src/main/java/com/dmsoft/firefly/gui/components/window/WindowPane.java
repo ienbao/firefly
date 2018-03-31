@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.gui.components.window;
 
 import com.dmsoft.bamboo.common.utils.base.Platforms;
+import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
@@ -16,6 +17,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -350,10 +352,20 @@ public class WindowPane extends GridPane {
         if (cusTitle instanceof String) {
             Label label = new Label((String) cusTitle);
             label.setStyle("-fx-border-insets: 0 0 0 10");
-            label.setStyle("-fx-background-insets: 0 0 0 10");
+            label.setStyle("-fx-background-insets: 0 0 0 10;-fx-font-weight: bold");
             initTitlePane(label);
         } else {
-            initTitlePane((Pane) cusTitle);
+            if (Platforms.IS_WINDOWS) {
+                HBox hBox = new HBox();
+                hBox.setSpacing(10);
+                ImageView logo = ImageUtils.getImageView(getClass().getResourceAsStream("/images/top_title_logo.png"));
+                hBox.setAlignment(Pos.CENTER_LEFT);
+                hBox.getChildren().add(logo);
+                hBox.getChildren().add((Pane) cusTitle);
+                initTitlePane(hBox);
+            } else {
+                initTitlePane((Pane) cusTitle);
+            }
         }
 
         initBodyPane();
