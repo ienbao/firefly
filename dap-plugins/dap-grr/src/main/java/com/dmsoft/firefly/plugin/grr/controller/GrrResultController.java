@@ -347,7 +347,7 @@ public class GrrResultController implements Initializable {
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
-                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                windowProgressTipController.updateFailProgress(context.getError().toString());
             }
         });
         jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
@@ -395,7 +395,7 @@ public class GrrResultController implements Initializable {
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
-                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                windowProgressTipController.updateFailProgress(context.getError().toString());
             }
         });
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);

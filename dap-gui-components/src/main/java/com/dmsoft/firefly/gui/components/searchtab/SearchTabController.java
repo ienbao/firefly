@@ -277,6 +277,10 @@ public class SearchTabController {
         return advanceText;
     }
 
+    public Tab getAdvanceTab() {
+        return advanceTab;
+    }
+
     public ComboBox getGroup1() {
         return group1;
     }
