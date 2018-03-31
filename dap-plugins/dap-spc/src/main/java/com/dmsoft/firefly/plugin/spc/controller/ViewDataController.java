@@ -193,6 +193,7 @@ public class ViewDataController implements Initializable {
             try {
                 root = fxmlLoader.load();
                 stage = WindowFactory.createOrUpdateSimpleWindowAsModel("spcQuickSearch", SpcFxmlAndLanguageUtils.getString(ResourceMassages.QUICK_SEARCH), root);
+                stage.setResizable(false);
             } catch (IOException e) {
                 e.printStackTrace();
             }

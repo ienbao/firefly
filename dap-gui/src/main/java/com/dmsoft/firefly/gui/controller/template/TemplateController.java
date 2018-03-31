@@ -385,6 +385,7 @@ public class TemplateController {
             fxmlLoader.setController(addItem);
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("addItem", GuiFxmlAndLanguageUtils.getString(ResourceMassages.ADD_ITEM), root, getResource("css/platform_app.css").toExternalForm());
+            stage.setResizable(false);
             stage.toFront();
             stage.show();
 
