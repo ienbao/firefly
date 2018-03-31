@@ -153,6 +153,7 @@ public class SpcPlugin extends Plugin {
             root = fxmlLoader.load();
             spcSettingController = fxmlLoader.getController();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.SPC_SETTING, "Spc Setting", root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            stage.setResizable(false);
             stage.toFront();
             stage.show();
 
