@@ -16,8 +16,8 @@ public class ResourceMassages {
 
     public static final String COMPONENT_STAGE_WINDOW_MESSAGE = COMPONENT_STAGE + "window_message";
     public static final String COMPONENT_STAGE_WINDOW_PROGRESS_TIP = COMPONENT_STAGE + "window_progress_tip";
-    public static final String PLARTFORM_STAGE = "platform_stage_";
-    public static final String PLARTFORM_STAGE_MAIN = PLARTFORM_STAGE + "main";
+    public static final String PLATFORM_STAGE = "platform_stage_";
+    public static final String PLATFORM_STAGE_MAIN = PLATFORM_STAGE + "main";
 
 
     public static final String ADVANCE = "ADVANCE";
