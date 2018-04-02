@@ -109,8 +109,8 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         xAxis.setUpperBound(xMax + xReserve);
         yAxis.setLowerBound(yMin - yReserve);
         yAxis.setUpperBound(yMax + yReserve);
-        xAxis.setTickUnit((xMax - xMin) / boxPlotChartDataList.size());
-        yAxis.setTickUnit((yMax - yMin) / boxPlotChartDataList.size());
+        xAxis.setTickUnit((xAxis.getUpperBound() - xAxis.getLowerBound()) / boxPlotChartDataList.size());
+        yAxis.setTickUnit((yAxis.getUpperBound() - yAxis.getUpperBound()) / boxPlotChartDataList.size());
     }
 
     private void createChartSeries(BoxPlotChartData chartData, ChartTooltip chartTooltip) {

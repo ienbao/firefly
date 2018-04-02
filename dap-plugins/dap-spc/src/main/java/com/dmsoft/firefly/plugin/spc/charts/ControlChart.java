@@ -108,8 +108,8 @@ public class ControlChart<X, Y> extends LineChart {
         xAxis.setUpperBound(xMax + xReserve);
         yAxis.setLowerBound(yMin - yReserve);
         yAxis.setUpperBound(yMax + yReserve);
-        xAxis.setTickUnit((xMax - xMin) / controlChartDataList.size());
-        yAxis.setTickUnit((yMax - yMin) / controlChartDataList.size());
+        xAxis.setTickUnit((xAxis.getUpperBound() - xAxis.getLowerBound()) / controlChartDataList.size());
+        yAxis.setTickUnit((yAxis.getUpperBound() - yAxis.getLowerBound()) / controlChartDataList.size());
     }
 
     /**

@@ -72,7 +72,6 @@ public class ChartResultController implements Initializable {
     private ChartPanel<ControlChart> mrChartPane;
     private List<XYChart.Data> annotationData = Lists.newArrayList();
     private ChartTooltip chartTooltip = new SpcChartToolTip();
-    private String legend = "- - - LSL, USL  —— m Line   —— 6s Line";
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
     @Override
@@ -220,16 +219,10 @@ public class ChartResultController implements Initializable {
         //nd chart
         ndOperateBtn = this.buildChartOperateButton(UIConstant.SPC_CHART_NAME[0]);
         ndChartPane.getCustomPane().getChildren().add(ndOperateBtn);
-//        Legend ndLegend = LegendUtils.buildReferenceLineLegend();
-//        ndLegend.setPrefWidth(legendWidth);
-//        ndLegend.setPrefHeight(legendHeight);
-//        ndChartPane.setLegend(ndLegend);
+
         //run chart
         this.initRunChartPane((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[1]));
-//        Legend runLegend = LegendUtils.buildReferenceLineLegend();
-//        runLegend.setPrefWidth(legendWidth);
-//        runLegend.setPrefHeight(legendHeight);
-//        runChartPane.setLegend(runLegend);
+
         //bar chart
         barOperateBtn = this.buildChartOperateButton(UIConstant.SPC_CHART_NAME[2]);
         xBarChartPane.getCustomPane().getChildren().add(barOperateBtn);
@@ -310,7 +303,6 @@ public class ChartResultController implements Initializable {
                 operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_BOX_EXTERN_MENU));
             }
             performanceMap.put(name, operatePerformance);
-//            List<String> operateNames = chartOperateNameMap.get(name);
         }
         UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
         userPreferenceDto.setUserName(envService.getUserName());

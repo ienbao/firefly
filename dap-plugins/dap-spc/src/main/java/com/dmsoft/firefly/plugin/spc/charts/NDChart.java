@@ -123,10 +123,10 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         double xReserve = (xMax - xMin) * UIConstant.FACTOR;
         xAxis.setLowerBound(xMin - xReserve);
         xAxis.setUpperBound(xMax + xReserve);
-        xAxis.setTickUnit((xMax - xMin) / barChartDataList.size());
         yAxis.setLowerBound(0);
         yAxis.setUpperBound(yMax + yReserve);
-        xAxis.setTickUnit((yMax) / barChartDataList.size());
+        xAxis.setTickUnit((xAxis.getUpperBound() - xAxis.getLowerBound()) / barChartDataList.size());
+        xAxis.setTickUnit((yAxis.getUpperBound() - yAxis.getLowerBound()) / barChartDataList.size());
     }
 
     /**
