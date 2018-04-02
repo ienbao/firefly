@@ -20,4 +20,10 @@ public class ResourceMassages {
     public static final String PLUGIN_MANAGE = "PLUGIN_MANAGE";
 
     public static final String CHOOSE_ITEMS_TITLE = "Choose Test Items";
+
+    //template
+    public static final String WARN_HEADER = "WARN_HEADER";
+    public static final String TEMPLATE_NAME_EMPTY_WARN = "TEMPLATE_NAME_EMPTY_WARN";
+    public static final String TEMPLATE_NAME_REPEAT_WARN = "TEMPLATE_NAME_REPEAT_WARN";
+    public static final String TEMPLATE_NAME_DELETE_WARN = "TEMPLATE_NAME_DELETE_WARN";
 }
