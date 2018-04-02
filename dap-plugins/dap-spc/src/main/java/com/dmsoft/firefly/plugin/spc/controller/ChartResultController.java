@@ -429,6 +429,7 @@ public class ChartResultController implements Initializable {
         yAxis.setTickMarkVisible(false);
         yAxis.setMinorTickVisible(false);
         yAxis.setAutoRanging(false);
+        xAxis.setAutoRanging(false);
         yAxis.setForceZeroInRange(false);
         ControlChart controlChart = new ControlChart(xAxis, yAxis);
         return controlChart;
@@ -487,31 +488,6 @@ public class ChartResultController implements Initializable {
         } else {
             chartMap.put(chartName, chart);
         }
-        Double[] xLower = new Double[ndChartData.size()];
-        Double[] xUpper = new Double[ndChartData.size()];
-        Double[] yLower = new Double[ndChartData.size()];
-        Double[] yUpper = new Double[ndChartData.size()];
-        for (int i = 0; i < ndChartData.size(); i++) {
-            xLower[i] = (Double) ndChartData.get(i).getXLowerBound();
-            xUpper[i] = (Double) ndChartData.get(i).getXUpperBound();
-            yLower[i] = (Double) ndChartData.get(i).getYLowerBound();
-            yUpper[i] = (Double) ndChartData.get(i).getYUpperBound();
-        }
-        Double xMax = MathUtils.getMax(xUpper);
-        Double xMin = MathUtils.getMin(xLower);
-        Double yMax = MathUtils.getMax(yUpper);
-        Double yMin = MathUtils.getMin(yLower);
-        if (xMax == null || xMin == null || yMax == null || yMin == null) {
-            return;
-        }
-        NumberAxis xAxis = (NumberAxis) chart.getXAxis();
-        NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
-        xAxis.setLowerBound(xMin - xReserve);
-        xAxis.setUpperBound(xMax + xReserve);
-        yAxis.setLowerBound(yMin);
-        yAxis.setUpperBound(yMax + yReserve);
         chart.setData(ndChartData, chartTooltip);
         this.setNdChartPerformance();
         ndChartPane.updateChartData();
@@ -530,31 +506,6 @@ public class ChartResultController implements Initializable {
         if (runChartData == null) {
             return;
         }
-        Double[] xLower = new Double[runChartData.size()];
-        Double[] xUpper = new Double[runChartData.size()];
-        Double[] yLower = new Double[runChartData.size()];
-        Double[] yUpper = new Double[runChartData.size()];
-        for (int i = 0; i < runChartData.size(); i++) {
-            xLower[i] = (Double) runChartData.get(i).getXLowerBound();
-            xUpper[i] = (Double) runChartData.get(i).getXUpperBound();
-            yLower[i] = (Double) runChartData.get(i).getYLowerBound();
-            yUpper[i] = (Double) runChartData.get(i).getYUpperBound();
-        }
-        Double xMax = MathUtils.getMax(xUpper);
-        Double xMin = MathUtils.getMin(xLower);
-        Double yMax = MathUtils.getMax(yUpper);
-        Double yMin = MathUtils.getMin(yLower);
-        if (xMax == null || xMin == null || yMax == null || yMin == null) {
-            return;
-        }
-        NumberAxis xAxis = (NumberAxis) chart.getXAxis();
-        NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
-        xAxis.setLowerBound(xMin - xReserve);
-        xAxis.setUpperBound(xMax + xReserve);
-        yAxis.setLowerBound(yMin - yReserve);
-        yAxis.setUpperBound(yMax + yReserve);
         chart.setData(runChartData, chartTooltip);
         chart.setSeriesAnnotationEvent(buildAnnotationFetch());
         this.setRunChartPerformance();
@@ -571,31 +522,6 @@ public class ChartResultController implements Initializable {
         } else {
             chartMap.put(chartName, controlChart);
         }
-        Double[] xLower = new Double[controlChartData.size()];
-        Double[] xUpper = new Double[controlChartData.size()];
-        Double[] yLower = new Double[controlChartData.size()];
-        Double[] yUpper = new Double[controlChartData.size()];
-        for (int i = 0; i < controlChartData.size(); i++) {
-            xLower[i] = (Double) controlChartData.get(i).getXLowerBound();
-            xUpper[i] = (Double) controlChartData.get(i).getXUpperBound();
-            yLower[i] = (Double) controlChartData.get(i).getYLowerBound();
-            yUpper[i] = (Double) controlChartData.get(i).getYUpperBound();
-        }
-        Double xMax = MathUtils.getMax(xUpper);
-        Double xMin = MathUtils.getMin(xLower);
-        Double yMax = MathUtils.getMax(yUpper);
-        Double yMin = MathUtils.getMin(yLower);
-        if (xMax == null || xMin == null || yMax == null || yMin == null) {
-            return;
-        }
-        NumberAxis xAxis = (NumberAxis) controlChart.getXAxis();
-        NumberAxis yAxis = (NumberAxis) controlChart.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
-        xAxis.setLowerBound(xMin - xReserve);
-        xAxis.setUpperBound(xMax + xReserve);
-        yAxis.setLowerBound(yMin - yReserve);
-        yAxis.setUpperBound(yMax + yReserve);
         controlChart.setData(controlChartData, chartTooltip);
         controlChartData.forEach(controlChartData1 -> {
             Double[] ucl = controlChartData1.getUclData();
@@ -616,34 +542,8 @@ public class ChartResultController implements Initializable {
         } else {
             chartMap.put(chartName, chart);
         }
-        Double[] xLower = new Double[boxChartData.size()];
-        Double[] xUpper = new Double[boxChartData.size()];
-        Double[] yLower = new Double[boxChartData.size()];
-        Double[] yUpper = new Double[boxChartData.size()];
-        for (int i = 0; i < boxChartData.size(); i++) {
-            xLower[i] = (Double) boxChartData.get(i).getXLowerBound();
-            xUpper[i] = (Double) boxChartData.get(i).getXUpperBound();
-            yLower[i] = (Double) boxChartData.get(i).getYLowerBound();
-            yUpper[i] = (Double) boxChartData.get(i).getYUpperBound();
-        }
-        Double xMax = MathUtils.getMax(xUpper);
-        Double xMin = MathUtils.getMin(xLower);
-        Double yMax = MathUtils.getMax(yUpper);
-        Double yMin = MathUtils.getMin(yLower);
-        if (xMax == null || xMin == null || yMax == null || yMin == null) {
-            return;
-        }
-        NumberAxis xAxis = (NumberAxis) chart.getXAxis();
-        NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
-        xAxis.setLowerBound(xMin - xReserve);
-        xAxis.setUpperBound(xMax + xReserve);
-        yAxis.setLowerBound(yMin - yReserve);
-        yAxis.setUpperBound(yMax + yReserve);
         chart.setData(boxChartData, chartTooltip);
         this.setBoxChartPerformance();
-//        boxChartPane.activeChartDragging();
         boxChartPane.updateChartData();
         boxChartPane.toggleCustomButtonDisable(false);
     }
@@ -692,6 +592,7 @@ public class ChartResultController implements Initializable {
             });
         }
         rRuleBtn.removeData(removeRules);
+        rRuleBtn.setSelectedSets(Sets.newLinkedHashSet());
         runChartPane.getChart().hiddenValueMarkers(hiddenLines);
         runChartPane.getChart().setSeriesDataStyleByRule(Lists.newArrayList(rRuleBtn.getSelectedSets()));
     }

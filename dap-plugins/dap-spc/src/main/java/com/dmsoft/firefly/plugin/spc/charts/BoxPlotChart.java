@@ -6,7 +6,9 @@ import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.BoxTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBoxAndWhiskerData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IPoint;
+import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.charts.view.Candle;
+import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
@@ -19,6 +21,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
@@ -76,7 +79,38 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         if (boxPlotChartDataList == null) {
             return;
         }
+        setAxisRange(boxPlotChartDataList);
         boxPlotChartDataList.forEach(boxPlotChartData -> createChartSeries(boxPlotChartData, chartTooltip));
+    }
+
+    private void setAxisRange(List<BoxPlotChartData> boxPlotChartDataList) {
+        Double[] xLower = new Double[boxPlotChartDataList.size()];
+        Double[] xUpper = new Double[boxPlotChartDataList.size()];
+        Double[] yLower = new Double[boxPlotChartDataList.size()];
+        Double[] yUpper = new Double[boxPlotChartDataList.size()];
+        for (int i = 0; i < boxPlotChartDataList.size(); i++) {
+            xLower[i] = (Double) boxPlotChartDataList.get(i).getXLowerBound();
+            xUpper[i] = (Double) boxPlotChartDataList.get(i).getXUpperBound();
+            yLower[i] = (Double) boxPlotChartDataList.get(i).getYLowerBound();
+            yUpper[i] = (Double) boxPlotChartDataList.get(i).getYUpperBound();
+        }
+        Double xMax = MathUtils.getMax(xUpper);
+        Double xMin = MathUtils.getMin(xLower);
+        Double yMax = MathUtils.getMax(yUpper);
+        Double yMin = MathUtils.getMin(yLower);
+        if (xMax == null || xMin == null || yMax == null || yMin == null) {
+            return;
+        }
+        NumberAxis xAxis = (NumberAxis) this.getXAxis();
+        NumberAxis yAxis = (NumberAxis) this.getYAxis();
+        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
+        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
+        xAxis.setLowerBound(xMin - xReserve);
+        xAxis.setUpperBound(xMax + xReserve);
+        yAxis.setLowerBound(yMin - yReserve);
+        yAxis.setUpperBound(yMax + yReserve);
+        xAxis.setTickUnit((xMax - xMin) / boxPlotChartDataList.size());
+        yAxis.setTickUnit((yMax - yMin) / boxPlotChartDataList.size());
     }
 
     private void createChartSeries(BoxPlotChartData chartData, ChartTooltip chartTooltip) {
