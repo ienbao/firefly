@@ -40,7 +40,8 @@ public class TextFieldWrapper {
                     textField.getStyleClass().add(validateRule.getErrorStyle());
                 }
                 TooltipUtil.installWarnTooltip(textField, validateRule.getEmptyErrorMsg());
-            } else if (!ValidateUtils.validateWithinRange(s2, validateRule.getMaxValue(), validateRule.getMinValue())) {
+            } else if (validateRule.getMaxValue() != null && validateRule.getMinValue() != null &&
+                    !ValidateUtils.validateWithinRange(s2, validateRule.getMaxValue(), validateRule.getMinValue())) {
                 if (!textField.getStyleClass().contains(validateRule.getErrorStyle())) {
                     textField.getStyleClass().add(validateRule.getErrorStyle());
                 }

@@ -425,8 +425,12 @@ public class MainController {
         if (projectName == null) {
             projectName = Lists.newArrayList();
         }
+        String activeTemplateName = "";
+        if(activeTemplate != null){
+            activeTemplateName = activeTemplate.getName();
+        }
         dataSourceList = FXCollections.observableArrayList(projectName);
-        initStateBarText(projectName, activeTemplate.getName());
+        initStateBarText(projectName, activeTemplateName);
     }
 
     public void initTemplate() {
@@ -436,7 +440,7 @@ public class MainController {
         if (allTemplates != null) {
             allTemplates.forEach(dto -> {
                 StateBarTemplateModel stateBarTemplateModel = new StateBarTemplateModel(dto.getName(), false);
-                if (templateSettingDto.getName().equals(stateBarTemplateModel.getTemplateName())) {
+                if (templateSettingDto != null && templateSettingDto.getName().equals(stateBarTemplateModel.getTemplateName())) {
                     stateBarTemplateModel.setIsChecked(true);
                 }
                 stateBarTemplateModels.add(stateBarTemplateModel);
