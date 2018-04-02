@@ -4,7 +4,9 @@ import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationFetch;
 import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.ControlChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
+import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.charts.utils.PointClickCallBack;
+import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
@@ -13,9 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.chart.Axis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -78,7 +78,38 @@ public class ControlChart<X, Y> extends LineChart {
         if (controlChartDataList == null) {
             return;
         }
+        setAxisRange(controlChartDataList);
         controlChartDataList.forEach(controlChartData -> createChartSeriesData(controlChartData, chartTooltip));
+    }
+
+    private void setAxisRange(List<ControlChartData> controlChartDataList) {
+        Double[] xLower = new Double[controlChartDataList.size()];
+        Double[] xUpper = new Double[controlChartDataList.size()];
+        Double[] yLower = new Double[controlChartDataList.size()];
+        Double[] yUpper = new Double[controlChartDataList.size()];
+        for (int i = 0; i < controlChartDataList.size(); i++) {
+            xLower[i] = (Double) controlChartDataList.get(i).getXLowerBound();
+            xUpper[i] = (Double) controlChartDataList.get(i).getXUpperBound();
+            yLower[i] = (Double) controlChartDataList.get(i).getYLowerBound();
+            yUpper[i] = (Double) controlChartDataList.get(i).getYUpperBound();
+        }
+        Double xMax = MathUtils.getMax(xUpper);
+        Double xMin = MathUtils.getMin(xLower);
+        Double yMax = MathUtils.getMax(yUpper);
+        Double yMin = MathUtils.getMin(yLower);
+        if (xMax == null || xMin == null || yMax == null || yMin == null) {
+            return;
+        }
+        NumberAxis xAxis = (NumberAxis) this.getXAxis();
+        NumberAxis yAxis = (NumberAxis) this.getYAxis();
+        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
+        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
+        xAxis.setLowerBound(xMin - xReserve);
+        xAxis.setUpperBound(xMax + xReserve);
+        yAxis.setLowerBound(yMin - yReserve);
+        yAxis.setUpperBound(yMax + yReserve);
+        xAxis.setTickUnit((xAxis.getUpperBound() - xAxis.getLowerBound()) / controlChartDataList.size());
+        yAxis.setTickUnit((yAxis.getUpperBound() - yAxis.getLowerBound()) / controlChartDataList.size());
     }
 
     /**
