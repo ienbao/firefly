@@ -49,7 +49,7 @@ import static com.google.common.io.Resources.getResource;
  */
 public class GuiApplication extends Application {
 
-    public static final int TOTAL_LOAD_CLASS = 5700;
+    public static final int TOTAL_LOAD_CLASS = 3700;
 
     static {
         System.getProperties().put("javafx.pseudoClassOverrideEnabled", "true");
