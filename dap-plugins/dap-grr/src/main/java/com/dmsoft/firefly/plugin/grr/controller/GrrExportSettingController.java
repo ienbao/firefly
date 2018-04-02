@@ -81,13 +81,7 @@ public class GrrExportSettingController {
                 }
             }
 
-            if (pane.getChildren().size() >= 3) {
-                Node node = pane.getChildren().get(2);
-                if (node instanceof CheckBox) {
-                    CheckBox checkBox = (CheckBox) node;
-                    this.toggleChartCheckDisable(!checkBox.isSelected());
-                }
-            }
+            this.setChartCheckBox();
         }
     }
 
@@ -109,6 +103,17 @@ public class GrrExportSettingController {
         });
     }
 
+    private void setChartCheckBox() {
+        if (pane.getChildren().size() >= 3) {
+            Node node = pane.getChildren().get(2);
+            if (node instanceof CheckBox) {
+                CheckBox checkBox = (CheckBox) node;
+                boolean flag = checkBox.isDisable() ? true : !checkBox.isSelected();
+                this.toggleChartCheckDisable(flag);
+            }
+        }
+    }
+
     private void initEvent() {
         eds.setOnAction(event -> {
             if (eds.isSelected()) {
@@ -128,6 +133,7 @@ public class GrrExportSettingController {
                     }
                 });
             }
+            this.setChartCheckBox();
         });
         ec.setOnAction(event -> {
             if (ec.isSelected()) {
