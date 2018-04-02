@@ -155,7 +155,11 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         series.getNode().getStyleClass().add("candlestick-series");
         data.forEach(dataItem -> {
             if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
-                dataItem.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
+                if (dataItem.getNode() instanceof Candle) {
+                    Candle candle = (Candle) dataItem.getNode();
+                    candle.updateColor(color);
+                }
+//                dataItem.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
             }
             if (pointTooltipFunction != null) {
                 Node itemNode = dataItem.getNode();
@@ -184,7 +188,11 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         series.getNode().getStyleClass().add("candlestick-series");
         data.forEach(dataItem -> {
             if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
-                dataItem.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
+                if (dataItem.getNode() instanceof Candle) {
+                    Candle candle = (Candle) dataItem.getNode();
+                    candle.updateColor(color);
+                }
+//                dataItem.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
             }
         });
     }

@@ -26,7 +26,7 @@ public class PatternDiaController {
             new PatternHelpModel("d", "Day in month"),
             new PatternHelpModel("H", "Hour in day(0-23)"),
             new PatternHelpModel("m", "Minute in hour"),
-            new PatternHelpModel("s", "Secong in minute"),
+            new PatternHelpModel("s", "Second in minute"),
             new PatternHelpModel("S", "Microsecond")
     );
     @FXML
