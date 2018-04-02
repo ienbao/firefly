@@ -468,14 +468,14 @@ public class GrrExportController {
             trialTxt.setText("");
         }
 
-        if (StringUtils.isNotBlank(grrLeftConfigDto.getPart())) {
+        if (isContainValue(grrLeftConfigDto.getPart(), partCombox)) {
             partCombox.setValue(grrLeftConfigDto.getPart());
         } else {
             partCombox.getSelectionModel().select(-1);
 
         }
 
-        if (StringUtils.isNotBlank(grrLeftConfigDto.getAppraiser())) {
+        if (isContainValue(grrLeftConfigDto.getAppraiser(), appraiserCombox)) {
             appraiserCombox.setValue(grrLeftConfigDto.getAppraiser());
         } else {
             appraiserCombox.getSelectionModel().select(-1);
@@ -492,6 +492,7 @@ public class GrrExportController {
         } else {
             updateAppraiserListViewDatas(null, grrLeftConfigDto.getAppraiser());
         }
+        GrrValidateUtil.validateNotEqualResult(partCombox.getValue(), appraiserCombox.getValue(), partCombox, appraiserCombox);
     }
 
 
@@ -1182,8 +1183,8 @@ public class GrrExportController {
         return site == 0 ? 0 : modelList.size();
     }
 
-    private boolean isContainValue(String appraiser, ComboBox comboBox) {
-        if (DAPStringUtils.isNotBlank(appraiser) && comboBox.getItems() != null && comboBox.getItems().contains(appraiser)) {
+    private boolean isContainValue(String value, ComboBox comboBox) {
+        if (DAPStringUtils.isNotBlank(value) && comboBox.getItems() != null && comboBox.getItems().contains(value)) {
             return true;
         }
         return false;

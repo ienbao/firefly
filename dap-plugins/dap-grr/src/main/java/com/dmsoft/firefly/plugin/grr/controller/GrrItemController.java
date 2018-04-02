@@ -253,9 +253,14 @@ public class GrrItemController implements Initializable {
             partTxt.setText(grrPreferenceDto.getPartInt().toString());
             appraiserTxt.setText(grrPreferenceDto.getAppraiserInt().toString());
             trialTxt.setText(grrPreferenceDto.getTrialInt().toString());
-            partCombox.setValue(grrPreferenceDto.getPart());
-            appraiserCombox.setValue(grrPreferenceDto.getAppraiser());
+            if (isContainValue(grrPreferenceDto.getPart(), partCombox)) {
+                partCombox.setValue(grrPreferenceDto.getPart());
+            }
+            if (isContainValue(grrPreferenceDto.getAppraiser(), appraiserCombox)) {
+                appraiserCombox.setValue(grrPreferenceDto.getAppraiser());
+            }
         }
+        GrrValidateUtil.validateNotEqualResult(partCombox.getValue(), appraiserCombox.getValue(), partCombox, appraiserCombox);
     }
 
     private void initPartAndAppraiserDatas() {
@@ -831,7 +836,7 @@ public class GrrItemController implements Initializable {
         });
         searchConditionDto.setParts(parts);
 
-        if (appraiserCombox.getValue() != null) {
+        if (DAPStringUtils.isNotBlank(appraiserCombox.getValue())) {
             searchConditionDto.setAppraiser(appraiserCombox.getValue());
             List<String> appraisers = Lists.newLinkedList();
             appraiserList.forEach(listViewModel -> {
@@ -1199,8 +1204,8 @@ public class GrrItemController implements Initializable {
         return site == 0 ? 0 : modelList.size();
     }
 
-    private boolean isContainValue(String appraiser, ComboBox comboBox) {
-        if (DAPStringUtils.isNotBlank(appraiser) && comboBox.getItems() != null && comboBox.getItems().contains(appraiser)) {
+    private boolean isContainValue(String value, ComboBox comboBox) {
+        if (DAPStringUtils.isNotBlank(value) && comboBox.getItems() != null && comboBox.getItems().contains(value)) {
             return true;
         }
         return false;
