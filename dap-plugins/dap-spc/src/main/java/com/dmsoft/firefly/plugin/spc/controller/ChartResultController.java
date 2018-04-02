@@ -472,13 +472,11 @@ public class ChartResultController implements Initializable {
         runChartPane.getCustomPane().setMargin(editBtn, new Insets(0, 0, 0, 5));
         runChartPane.getCustomPane().setMargin(runOperateBtn, new Insets(0, 0, 0, 5));
         runChartPane.getCustomPane().setMargin(rRuleBtn, new Insets(0, 0, 0, 5));
-
         chart.activePointClickEvent(true);
         chart.setPointClickCallBack(id -> {
             String key = (String) id;
             spcMainController.setViewDataFocusRowData(key);
         });
-        chart.setSeriesAnnotationEvent(buildAnnotationFetch());
     }
 
     private void setNdChartData(String chartName, List<NDBarChartData> ndChartData) {
@@ -558,9 +556,9 @@ public class ChartResultController implements Initializable {
         yAxis.setLowerBound(yMin - yReserve);
         yAxis.setUpperBound(yMax + yReserve);
         chart.setData(runChartData, chartTooltip);
+        chart.setSeriesAnnotationEvent(buildAnnotationFetch());
         this.setRunChartPerformance();
         runChartPane.updateChartData();
-//        runChartPane.activeChartDragging();
         runChartPane.toggleCustomButtonDisable(false);
     }
 

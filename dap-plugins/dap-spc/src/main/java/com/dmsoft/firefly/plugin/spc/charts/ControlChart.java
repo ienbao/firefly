@@ -120,7 +120,7 @@ public class ControlChart<X, Y> extends LineChart {
             for (int i = 0; i < pane.getChildren().size(); i++) {
                 Node node = pane.getChildren().get(i);
                 if (node instanceof Text) {
-                    pane.getChildren().remove(node);
+                    pane.getChildren().removeAll(node);
                 }
             }
         });
@@ -278,6 +278,9 @@ public class ControlChart<X, Y> extends LineChart {
                     setNodeAnnotation(dataItem, value, fetch.getTextColor());
                     fetch.addData(dataItem);
                 }
+                if (pointClick && pointClickCallBack != null) {
+                    pointClickCallBack.execute(dataItem.getExtraValue());
+                }
             }));
         });
     }
@@ -329,9 +332,6 @@ public class ControlChart<X, Y> extends LineChart {
             XYChart.Series series = this.buildSeries(controlChartData.getXyOneChartData(), seriesName);
 //        Set series for chart
             this.getData().add(series);
-            if (pointClick) {
-                this.dataClickEvent(series);
-            }
 //        Set chart series and data color, data tooltip
             this.setDataNodeStyleAndTooltip(series, color, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
             this.seriesUniqueKeyMap.put(uniqueKey, series);
