@@ -10,7 +10,7 @@ public class ResourceMassages {
     public static final String TIME_PATTERN = "TIME_PATTERN";
     public static final String ADD_ITEM = "ADD_ITEM";
 
-    public static final String EXPORTSETTING = "EXPORTSETTING";
+    public static final String GLOBAL_EXPORT_SETTING = "GLOBAL_EXPORT_SETTING";
     public static final String SOURCE_SETTING = "DATA_SOURCE_SETTING";
     public static final String DataSource = "Data Source";
     public static final String TEMPLATE = "TEMPLATE";
