@@ -7,6 +7,8 @@ package com.dmsoft.firefly.gui.controller.template;
 import com.dmsoft.bamboo.common.utils.collection.ListUtil;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.core.utils.*;
+import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
+import com.dmsoft.firefly.gui.components.utils.ResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
@@ -43,35 +45,33 @@ import javafx.stage.WindowEvent;
 
 import java.io.*;
 import java.net.URL;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.ResourceBundle;
 
 /**
  * Created by Garen.Pang on 2018/3/7.
  */
 public class PluginManageController implements Initializable {
 
+    private static String restartStr = FxmlAndLanguageUtils.getString(ResourceMassages.RESTART);
+    private final String parentPath = ApplicationPathUtil.getPath(GuiConst.CONFIG_PATH);
     @FXML
     private Button ok, installPlugin, unInstallPlugin;
-
     @FXML
     private TextFieldFilter filterTf;
-
     @FXML
     private TableView pluginTable;
-
     @FXML
     private TextFlow explain;
-
     @FXML
     private TableColumn<PluginTableRowData, CheckBox> pluginActivated;
-
     @FXML
     private TableColumn<PluginTableRowData, String> pluginName;
-
     private ObservableList<PluginTableRowData> pluginTableRowDataObservableList;
     private FilteredList<PluginTableRowData> pluginTableRowDataFilteredList;
     private SortedList<PluginTableRowData> pluginTableRowDataSortedList;
-    private final String parentPath = ApplicationPathUtil.getPath(GuiConst.CONFIG_PATH);
     private JsonMapper mapper = JsonMapper.defaultMapper();
     private boolean isEdit = false;
     private List<String> deleteList = Lists.newArrayList();
@@ -87,8 +87,6 @@ public class PluginManageController implements Initializable {
     }
 
     private void initTable() {
-
-//        explain.setEditable(false);
 
         pluginActivated.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
         pluginName.setCellValueFactory(cellData -> cellData.getValue().valueProperty());
@@ -136,7 +134,7 @@ public class PluginManageController implements Initializable {
                     pluginTable.getSelectionModel().select(dropIndex);
                     event.consume();
                     isEdit = true;
-                    ok.setText("Restart");
+                    ok.setText(restartStr);
                     updateProjectOrder();
                 }
             });
@@ -213,14 +211,14 @@ public class PluginManageController implements Initializable {
                         PluginInfo installPlugins = ListUtil.isEmpty(scannedPlugins) ? null : scannedPlugins.get(0);
 
                         if (installPlugins == null) {
-                            WindowMessageFactory.createWindowMessageNoBtnHasOk("Install Error", "Install Plugin Illegal.");
+                            WindowMessageFactory.createWindowMessageNoBtnHasOk(FxmlAndLanguageUtils.getString(ResourceMassages.INSTALL_ERROR), FxmlAndLanguageUtils.getString(ResourceMassages.ILLEGAL_PLUGIN));
                             return;
                         }
 
                         Map<String, PluginInfo> allInstallPlugins = context.getAllEnabledPluginInfo() == null ? Maps.newHashMap() : context.getAllEnabledPluginInfo();
 
                         if (isExists(scannedPlugins.get(0), allInstallPlugins)) {
-                            WindowMessageFactory.createWindowMessageNoBtnHasOk("Install Error", "Plugin Exist.");
+                            WindowMessageFactory.createWindowMessageNoBtnHasOk(FxmlAndLanguageUtils.getString(ResourceMassages.INSTALL_ERROR), FxmlAndLanguageUtils.getString(ResourceMassages.PLUGIN_EXISTS));
                             FileUtils.deleteFolder(pluginFolderPath + "/temp/" + fileName);
                             return;
                         }
@@ -237,7 +235,7 @@ public class PluginManageController implements Initializable {
 
                         FileUtils.deleteFolder(pluginFolderPath + "/temp/" + fileName);
                         isEdit = true;
-                        ok.setText("Restart");
+                        ok.setText(restartStr);
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -266,7 +264,7 @@ public class PluginManageController implements Initializable {
                 context.uninstallPlugin(pluginTableRowData.getInfo().getId());
                 pluginTableRowDataObservableList.remove(pluginTableRowData);
                 isEdit = true;
-                ok.setText("Restart");
+                ok.setText(restartStr);
                 updateProjectOrder();
             }
         });
@@ -279,7 +277,8 @@ public class PluginManageController implements Initializable {
     }
 
     private void showRestart() {
-        WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOk("Restart Application", "The application needs to restart the configuration to take effect");
+        WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOk(FxmlAndLanguageUtils.getString(ResourceMassages.RESTART_APPLICATION),
+                FxmlAndLanguageUtils.getString(ResourceMassages.RESTART_APPLICATION_INFO));
         controller.addProcessMonitorListener(new WindowCustomListener() {
             @Override
             public boolean onShowCustomEvent() {
@@ -301,6 +300,7 @@ public class PluginManageController implements Initializable {
         });
     }
 
+    @SuppressWarnings("unchecked")
     private void restart() {
         List<KeyValueDto> activePlugin = Lists.newArrayList();
         pluginTableRowDataObservableList.forEach(v -> {
@@ -311,13 +311,9 @@ public class PluginManageController implements Initializable {
             public void run() {
                 try {
                     StringBuilder stringBuilder = new StringBuilder("java -jar dap-restart-1.0.0.jar");
-                    stringBuilder.append(" pluginFolderPath:" + pluginFolderPath);
-                    deleteList.forEach(v -> {
-                        stringBuilder.append(" delete:" + v);
-                    });
-                    coverList.forEach(v -> {
-                        stringBuilder.append(" cover:" + v);
-                    });
+                    stringBuilder.append(" pluginFolderPath:").append(pluginFolderPath);
+                    deleteList.forEach(v -> stringBuilder.append(" delete:").append(v));
+                    coverList.forEach(v -> stringBuilder.append(" cover:").append(v));
                     System.out.println(stringBuilder.toString());
                     Runtime.getRuntime().exec(stringBuilder.toString());
                 } catch (IOException e) {
@@ -337,9 +333,8 @@ public class PluginManageController implements Initializable {
             }
         }
 
-        for (int i = 0; i < allInstallPlugins.keySet().size(); i++) {
-            PluginInfo exist = allInstallPlugins.get(new ArrayList(allInstallPlugins.keySet()).get(i));
-            if (exist.getName().equals(pluginInfo.getName()) && !exist.getId().equals(pluginInfo.getId())) {
+        for (PluginInfo pluginInfo1 : allInstallPlugins.values()) {
+            if (pluginInfo1.getName().equals(pluginInfo.getName()) && !pluginInfo1.getId().equals(pluginInfo.getId())) {
                 return true;
             }
         }
@@ -361,11 +356,9 @@ public class PluginManageController implements Initializable {
             if (validateMap.containsKey(v.getInfo().getId())) {
                 if (validateMap.get(v.getInfo().getId()).booleanValue() != v.getSelector().isSelected()) {
                     isEdit = true;
-                    return;
                 }
             } else {
                 isEdit = true;
-                return;
             }
         });
     }
@@ -384,7 +377,7 @@ public class PluginManageController implements Initializable {
                 PluginTableRowData chooseTableRowData = new PluginTableRowData((Boolean) v.getValue(), map.get(v.getKey()).getName(), map.get(v.getKey()));
                 chooseTableRowData.setOnAction(event -> {
                     isEdit = true;
-                    ok.setText("Restart");
+                    ok.setText(restartStr);
                 });
                 pluginTableRowDataObservableList.add(chooseTableRowData);
                 validateMap.put(v.getKey(), (Boolean) v.getValue());
