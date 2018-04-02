@@ -139,9 +139,9 @@ public class TemplateController {
         if(templateSettingDto != null){
             selectName = templateSettingDto.getName();
         }
+        templateName.getSelectionModel().select(selectName);
         initData(selectName);
         templateName.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> initData(newValue));
-//        templateName.getSelectionModel().select(0);
     }
 
     private void initEvent() {
