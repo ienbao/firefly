@@ -204,7 +204,7 @@ public class PluginManageController implements Initializable {
                         pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
                         //validate
                         String fileNameZip = file.getName();
-                        String fileName = fileNameZip.substring(fileNameZip.lastIndexOf('\\') + 1, fileNameZip.lastIndexOf('.'));
+                        String fileName = fileNameZip.substring(fileNameZip.lastIndexOf(File.separator) + 1, fileNameZip.lastIndexOf('.'));
                         FileUtils.unZipFiles(file, pluginFolderPath + "/temp/" + fileName + "/");
                         PluginContext context = RuntimeContext.getBean(PluginContext.class);
                         List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath + "/temp/" + fileName + "/");
