@@ -5,6 +5,7 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.gui.components.searchtab.BasicSearchDto;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
@@ -38,6 +39,7 @@ import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -435,64 +437,129 @@ public class GrrExportController {
 
     }
 
+    public void initGrrExportLeftConfig(GrrLeftConfigDto grrLeftConfigDto){
+        if (grrLeftConfigDto == null) {
+            return;
+        }
+        clearLeftConfig();
+        if (grrLeftConfigDto.getItems() != null && grrLeftConfigDto.getItems().size() > 0) {
+            items.forEach(testItem -> {
+                if (grrLeftConfigDto.getItems().contains(testItem.getItem())) {
+                    testItem.getSelector().setValue(true);
+                }
+            });
+        }
+        searchTab.setOneBasicSearch(grrLeftConfigDto.getBasicSearchs());
+
+        searchTab.getAdvanceText().setText(grrLeftConfigDto.getAdvanceSearch());
+        if (grrLeftConfigDto.getPartInt() != null) {
+            partTxt.setText(grrLeftConfigDto.getPartInt().toString());
+        } else {
+            partTxt.setText("");
+        }
+
+        if (grrLeftConfigDto.getAppraiserInt() != null) {
+            appraiserTxt.setText(grrLeftConfigDto.getAppraiserInt().toString());
+        } else {
+            appraiserTxt.setText("");
+        }
+
+        if (grrLeftConfigDto.getTrialInt() != null) {
+            trialTxt.setText(grrLeftConfigDto.getTrialInt().toString());
+        } else {
+            trialTxt.setText("");
+        }
+
+        if (StringUtils.isNotBlank(grrLeftConfigDto.getPart())) {
+            partCombox.setValue(grrLeftConfigDto.getPart());
+        } else {
+            partCombox.getSelectionModel().select(-1);
+
+        }
+
+        if (StringUtils.isNotBlank(grrLeftConfigDto.getAppraiser())) {
+            appraiserCombox.setValue(grrLeftConfigDto.getAppraiser());
+        } else {
+            appraiserCombox.getSelectionModel().select(-1);
+        }
+
+        if (grrLeftConfigDto.getParts() != null && !grrLeftConfigDto.getParts().isEmpty()) {
+            updatePartListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getParts()), grrLeftConfigDto.getPart());
+        } else {
+            updatePartListViewDatas(null, grrLeftConfigDto.getPart());
+        }
+
+        if (grrLeftConfigDto.getAppraisers() != null && !grrLeftConfigDto.getAppraisers().isEmpty()) {
+            updateAppraiserListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getAppraisers()), grrLeftConfigDto.getAppraiser());
+        } else {
+            updateAppraiserListViewDatas(null, grrLeftConfigDto.getAppraiser());
+        }
+    }
+
+
     private void initPartAndAppraiserDatas() {
         ObservableList<String> datas = FXCollections.observableArrayList();
         datas.add("");
         datas.addAll(originalItems);
-//        if (items != null) {
-//            for (ItemTableModel model : items) {
-//                datas.add(model.getItem());
-//            }
-//        }
         partCombox.setItems(datas);
         appraiserCombox.setItems(datas);
 
         initListView(partListView);
         initListView(appraiserListView);
-        Set<String> empty = new HashSet<String>();
         this.partCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
             partList.clear();
             clearLbl(partLbl);
-            if (DAPStringUtils.isBlank(newValue)) {
-                updatePartListViewDatas(empty, false);
-            } else {
-                Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
-                updatePartListViewDatas(values, false);
-            }
+            updatePartListViewDatas(null, newValue);
         });
-
         this.appraiserCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
             appraiserList.clear();
             clearLbl(appraiserLbl);
-            if (DAPStringUtils.isBlank(newValue)) {
-                updateAppraiserListViewDatas(empty, false);
-            } else {
-                Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
-                updateAppraiserListViewDatas(values, false);
+            updateAppraiserListViewDatas(null, newValue);
+        });
+    }
+
+    private void updatePartListViewDatas(Set<String> selectedParts, String part) {
+        partListView.getItems().clear();
+        partList.clear();
+        if (isContainValue(part, partCombox)) {
+            Set<String> parts = dataService.findUniqueTestData(envService.findActivatedProjectName(), part);
+            if (parts != null && !parts.isEmpty()) {
+                parts.forEach(value -> {
+                    if (selectedParts != null && !selectedParts.isEmpty() && selectedParts.contains(value)) {
+                        partList.add(new ListViewModel(value, true, ""));
+                    } else {
+                        partList.add(new ListViewModel(value, false, ""));
+                    }
+                });
+                partListView.setItems(partList);
+                RowConstraints row7 = grrConfigPane.getRowConstraints().get(7);
+                row7.setPrefHeight(112);
+                row7.setMaxHeight(112);
+                row7.setMinHeight(112);
             }
-        });
+        }
     }
 
-    private void updatePartListViewDatas(Set<String> parts, boolean isSelected) {
-        parts.forEach(value -> {
-            partList.add(new ListViewModel(value, isSelected, ""));
-        });
-        partListView.setItems(partList);
-        RowConstraints row7 = grrConfigPane.getRowConstraints().get(7);
-        row7.setPrefHeight(112);
-        row7.setMaxHeight(112);
-        row7.setMinHeight(112);
-    }
-
-    private void updateAppraiserListViewDatas(Set<String> appraisers, boolean isSelected) {
-        appraisers.forEach(value -> {
-            appraiserList.add(new ListViewModel(value, isSelected, ""));
-        });
-        appraiserListView.setItems(appraiserList);
-        RowConstraints row11 = grrConfigPane.getRowConstraints().get(11);
-        row11.setPrefHeight(112);
-        row11.setMaxHeight(112);
-        row11.setMinHeight(112);
+    private void updateAppraiserListViewDatas(Set<String> selectedAppraisers,  String appraiser) {
+        appraiserListView.getItems().clear();
+        appraiserList.clear();
+        if (isContainValue(appraiser, appraiserCombox)) {
+            Set<String> appraisers = dataService.findUniqueTestData(envService.findActivatedProjectName(), appraiser);
+            if (appraisers != null && !appraisers.isEmpty()) {
+                appraisers.forEach(value -> {
+                    if (selectedAppraisers != null && !selectedAppraisers.isEmpty() && selectedAppraisers.contains(value)) {
+                        appraiserList.add(new ListViewModel(value, true, ""));
+                    } else {
+                        appraiserList.add(new ListViewModel(value, false, ""));
+                    }
+                });
+                appraiserListView.setItems(appraiserList);
+                RowConstraints row7 = grrConfigPane.getRowConstraints().get(11);
+                row7.setPrefHeight(112);
+                row7.setMaxHeight(112);
+                row7.setMinHeight(112);
+            }
+        }
     }
 
     private void refreshPartOrAppraiserListView(GrrParamDto grrParamDto) {
@@ -1055,11 +1122,15 @@ public class GrrExportController {
                 }
 
                 if (grrLeftConfigDto.getParts() != null && !grrLeftConfigDto.getParts().isEmpty()) {
-                    updatePartListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getParts()), true);
+                    updatePartListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getParts()), grrLeftConfigDto.getPart());
+                } else {
+                    updatePartListViewDatas(null, grrLeftConfigDto.getPart());
                 }
 
                 if (grrLeftConfigDto.getAppraisers() != null && !grrLeftConfigDto.getAppraisers().isEmpty()) {
-                    updatePartListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getAppraisers()), true);
+                    updateAppraiserListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getAppraisers()), grrLeftConfigDto.getAppraiser());
+                } else {
+                    updateAppraiserListViewDatas(null, grrLeftConfigDto.getAppraiser());
                 }
             } else {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
@@ -1088,5 +1159,12 @@ public class GrrExportController {
             }
         }
         return site == 0 ? 0 : modelList.size();
+    }
+
+    private boolean isContainValue(String appraiser, ComboBox comboBox) {
+        if (DAPStringUtils.isNotBlank(appraiser) && comboBox.getItems() != null && comboBox.getItems().contains(appraiser)) {
+            return true;
+        }
+        return false;
     }
 }
