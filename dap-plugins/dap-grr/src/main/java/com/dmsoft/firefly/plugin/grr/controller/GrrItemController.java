@@ -254,6 +254,7 @@ public class GrrItemController implements Initializable {
             trialTxt.setText(grrPreferenceDto.getTrialInt().toString());
             partCombox.setValue(grrPreferenceDto.getPart());
             appraiserCombox.setValue(grrPreferenceDto.getAppraiser());
+            initSearchConditionDto();
         }
     }
 
@@ -266,32 +267,35 @@ public class GrrItemController implements Initializable {
 
         initListView(partListView);
         initListView(appraiserListView);
-        Set<String> empty = new HashSet<String>();
+        Set<String> empty = new HashSet<>();
         this.partCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
             partList.clear();
             clearLbl(partLbl);
             if (DAPStringUtils.isBlank(newValue)) {
-                updatePartListViewDatas(empty, false);
+                updatePartListViewDatas(empty, newValue.toString(),false);
             } else {
                 Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
-                updatePartListViewDatas(values, false);
+                updatePartListViewDatas(values, newValue.toString(),false);
             }
         });
         this.appraiserCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
             appraiserList.clear();
             clearLbl(appraiserLbl);
             if (DAPStringUtils.isBlank(newValue)) {
-                updateAppraiserListViewDatas(empty, false);
+                updateAppraiserListViewDatas(empty, newValue.toString(),false);
             } else {
                 Set<String> values = dataService.findUniqueTestData(envService.findActivatedProjectName(), newValue.toString());
-                updateAppraiserListViewDatas(values, false);
+                updateAppraiserListViewDatas(values, newValue.toString(), false);
             }
         });
     }
 
-    private void updatePartListViewDatas(Set<String> parts, boolean isSelected) {
+    private void updatePartListViewDatas(Set<String> parts, String part, boolean isSelected) {
         partListView.getItems().clear();
         partList.clear();
+        if ((parts ==  null || parts.isEmpty()) && DAPStringUtils.isNotBlank(part)) {
+            parts = dataService.findUniqueTestData(envService.findActivatedProjectName(), part);
+        }
         parts.forEach(value -> {
             partList.add(new ListViewModel(value, isSelected, ""));
         });
@@ -304,9 +308,12 @@ public class GrrItemController implements Initializable {
         }
     }
 
-    private void updateAppraiserListViewDatas(Set<String> appraisers, boolean isSelected) {
+    private void updateAppraiserListViewDatas(Set<String> appraisers,  String appraiser, boolean isSelected) {
         appraiserListView.getItems().clear();
         appraiserList.clear();
+        if ((appraisers ==  null || appraisers.isEmpty()) && DAPStringUtils.isNotBlank(appraiser)) {
+            appraisers = dataService.findUniqueTestData(envService.findActivatedProjectName(), appraiser);
+        }
         appraisers.forEach(value -> {
             appraiserList.add(new ListViewModel(value, isSelected, ""));
         });
@@ -1012,11 +1019,15 @@ public class GrrItemController implements Initializable {
                 }
 
                 if (grrLeftConfigDto.getParts() != null && !grrLeftConfigDto.getParts().isEmpty()) {
-                    updatePartListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getParts()), true);
+                    updatePartListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getParts()), grrLeftConfigDto.getPart(),true);
+                } else {
+                    updatePartListViewDatas(null, grrLeftConfigDto.getPart(),false);
                 }
 
                 if (grrLeftConfigDto.getAppraisers() != null && !grrLeftConfigDto.getAppraisers().isEmpty()) {
-                    updateAppraiserListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getAppraisers()), true);
+                    updateAppraiserListViewDatas(new LinkedHashSet<>(grrLeftConfigDto.getAppraisers()), grrLeftConfigDto.getAppraiser(), true);
+                } else {
+                    updateAppraiserListViewDatas(null, grrLeftConfigDto.getAppraiser(),false);
                 }
             } else {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
@@ -1113,6 +1124,50 @@ public class GrrItemController implements Initializable {
         return conditionTestItemList;
     }
 
+    public GrrLeftConfigDto getGrrLeftConfigDto() {
+        List<String> selectedItems = this.getSelectedItem();
+        GrrLeftConfigDto grrLeftConfigDto = new GrrLeftConfigDto();
+        grrLeftConfigDto.setItems(selectedItems);
+        if (DAPStringUtils.isNotBlank(partCombox.getValue())) {
+            grrLeftConfigDto.setPart(partCombox.getValue());
+        }
+        if (DAPStringUtils.isNotBlank(partTxt.getText())) {
+            grrLeftConfigDto.setPartInt(Integer.valueOf(partTxt.getText()));
+        }
+        if (DAPStringUtils.isNotBlank(appraiserTxt.getText())) {
+            grrLeftConfigDto.setAppraiserInt(Integer.valueOf(appraiserTxt.getText()));
+        }
+
+        if (DAPStringUtils.isNotBlank(trialTxt.getText())) {
+            grrLeftConfigDto.setTrialInt(Integer.valueOf(trialTxt.getText()));
+        }
+        List<String> parts = Lists.newLinkedList();
+        partList.forEach(listViewModel -> {
+            if (listViewModel.isIsChecked()) {
+                parts.add(listViewModel.getName());
+            }
+        });
+        grrLeftConfigDto.setParts(parts);
+        if (appraiserCombox.getValue() != null) {
+            grrLeftConfigDto.setAppraiser(appraiserCombox.getValue());
+            List<String> appraisers = Lists.newLinkedList();
+            appraiserList.forEach(listViewModel -> {
+                if (listViewModel.isIsChecked()) {
+                    appraisers.add(listViewModel.getName());
+                }
+            });
+            if (!appraisers.isEmpty()) {
+                grrLeftConfigDto.setAppraisers(appraisers);
+            }
+        }
+        grrLeftConfigDto.setBasicSearchs(searchTab.getOneBasicSearch());
+        if (searchTab.getAdvanceText().getText() != null) {
+            grrLeftConfigDto.setAdvanceSearch(searchTab.getAdvanceText().getText());
+        }
+        return grrLeftConfigDto;
+    }
+
+
     public SearchConditionDto getSearchConditionDto() {
         return searchConditionDto;
     }
@@ -1124,11 +1179,6 @@ public class GrrItemController implements Initializable {
     public List<TestItemWithTypeDto> getInitSelectTestItemDtos() {
         return initSelectTestItemDtos;
     }
-
-    public void setInitSelectTestItemDtos(List<TestItemWithTypeDto> initSelectTestItemDtos) {
-        this.initSelectTestItemDtos = initSelectTestItemDtos;
-    }
-
 
     private int findNewSite(List<ItemTableModel> modelList, ItemTableModel model) {
         int site = originalItems.indexOf(model.getItem());
