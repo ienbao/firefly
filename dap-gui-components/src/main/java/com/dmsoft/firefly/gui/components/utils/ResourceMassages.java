@@ -25,4 +25,10 @@ public class ResourceMassages {
     public static final String UNABLE_TO_FIND_TEST_ITEM = "UNABLE_TO_FIND_TEST_ITEM";
     public static final String MESSAGE = "MESSAGE";
     public static final String PLEASE_SELECT_FILE = "PLEASE_SELECT_FILE";
+    public static final String RESTART = "RESTART";
+    public static final String INSTALL_ERROR = "INSTALL_ERROR";
+    public static final String ILLEGAL_PLUGIN = "ILLEGAL_PLUGIN";
+    public static final String PLUGIN_EXISTS = "PLUGIN_EXISTS";
+    public static final String RESTART_APPLICATION = "RESTART_APPLICATION";
+    public static final String RESTART_APPLICATION_INFO = "RESTART_APPLICATION_INFO";
 }
