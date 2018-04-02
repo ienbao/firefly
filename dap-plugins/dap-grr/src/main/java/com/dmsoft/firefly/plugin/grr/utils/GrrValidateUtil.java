@@ -9,6 +9,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
 
 /**
  * grr validate tool
@@ -20,6 +21,7 @@ public class GrrValidateUtil {
     private static Integer TEXT_GRR_MIN_INT = 1;
     private static Integer TEXT_GRR_MAX_INT = 20;
     private static String grrRegType = "^([1-9]|[1-1][0-9]|20)$";
+    private static String grrNumRegType = "^[+]?\\d*[.]?\\d*$";
 
     public static boolean validateGrr(Node... nodes) {
         if (nodes != null && nodes.length > 0) {
@@ -31,8 +33,12 @@ public class GrrValidateUtil {
                     result.set(validateResult(node));
                     textField.textProperty().addListener((obVal, oldVal, newVal) -> {
                         if (ValidateUtil.validateIsNotEmpty(newVal, textField)) {
-                            validateGrrReg(newVal, textField);
-                            result.set(validateResult(node));
+                            if (!Pattern.matches(grrNumRegType, newVal)) {
+                                textField.setText(oldVal);
+                            } else {
+                                validateGrrReg(newVal, textField);
+                                result.set(validateResult(node));
+                            }
                         } else {
                             result.set(validateResult(node));
                         }

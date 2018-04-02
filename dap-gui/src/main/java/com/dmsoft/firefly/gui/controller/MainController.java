@@ -457,6 +457,7 @@ public class MainController {
         this.templateList = templateList;
         templateView.setItems(templateList);
         templateView.refresh();
+        updateTemplateText(envService.findActivatedTemplate().getName());
     }
 
     private void getTemplateBtnEvent() {
