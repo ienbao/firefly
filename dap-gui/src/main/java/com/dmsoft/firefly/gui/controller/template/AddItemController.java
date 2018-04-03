@@ -54,8 +54,8 @@ public class AddItemController {
         TooltipUtil.installNormalTooltip(message, "Please use \"Tab\" or \"Enter\" to separate item names");
         CheckBox box = new CheckBox();
         box.setOnAction(event -> {
-            if (items != null) {
-                for (ItemTableModel model : items) {
+            if (filteredList != null) {
+                for (ItemTableModel model : filteredList) {
                     model.getSelector().setValue(box.isSelected());
                 }
             }
@@ -68,7 +68,7 @@ public class AddItemController {
         itemTable.setItems(personSortedList);
         personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
         filter.textProperty().addListener((observable, oldValue, newValue) ->
-                filteredList.setPredicate(p -> p.getItem().contains(filter.getText()))
+                filteredList.setPredicate(p -> p.getItem().toLowerCase().contains(filter.getText().toLowerCase()))
         );
         addItemOk.setOnAction(event -> {
             List<String> selectItems = getSelectItem();

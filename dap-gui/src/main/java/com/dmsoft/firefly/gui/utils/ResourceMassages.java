@@ -10,7 +10,7 @@ public class ResourceMassages {
     public static final String TIME_PATTERN = "TIME_PATTERN";
     public static final String ADD_ITEM = "ADD_ITEM";
 
-    public static final String EXPORTSETTING = "EXPORTSETTING";
+    public static final String GLOBAL_EXPORT_SETTING = "GLOBAL_EXPORT_SETTING";
     public static final String SOURCE_SETTING = "DATA_SOURCE_SETTING";
     public static final String DataSource = "Data Source";
     public static final String TEMPLATE = "TEMPLATE";
@@ -20,4 +20,10 @@ public class ResourceMassages {
     public static final String PLUGIN_MANAGE = "PLUGIN_MANAGE";
 
     public static final String CHOOSE_ITEMS_TITLE = "Choose Test Items";
+
+    //template
+    public static final String WARN_HEADER = "WARN_HEADER";
+    public static final String TEMPLATE_NAME_EMPTY_WARN = "TEMPLATE_NAME_EMPTY_WARN";
+    public static final String TEMPLATE_NAME_REPEAT_WARN = "TEMPLATE_NAME_REPEAT_WARN";
+    public static final String TEMPLATE_NAME_DELETE_WARN = "TEMPLATE_NAME_DELETE_WARN";
 }

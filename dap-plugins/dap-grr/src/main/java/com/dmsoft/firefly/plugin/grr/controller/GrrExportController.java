@@ -8,10 +8,7 @@ import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.searchtab.BasicSearchDto;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
-import com.dmsoft.firefly.gui.components.utils.ImageUtils;
-import com.dmsoft.firefly.gui.components.utils.StageMap;
-import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
-import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
+import com.dmsoft.firefly.gui.components.utils.*;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
@@ -23,6 +20,7 @@ import com.dmsoft.firefly.plugin.grr.service.GrrExportService;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.utils.*;
+import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -298,7 +296,7 @@ public class GrrExportController {
         });
         itemTable.setContextMenu(createTableRightMenu());
         initPartAndAppraiserDatas();
-        GrrValidateUtil.validateGrr(partTxt, appraiserTxt, trialTxt, partCombox);
+        GrrValidateUtil.validateGrr(partTxt, appraiserTxt, trialTxt);
         partTxt.textProperty().addListener((obVal, oldVal, newVal) -> {
             updatePartLbl();
         });
@@ -470,14 +468,14 @@ public class GrrExportController {
             trialTxt.setText("");
         }
 
-        if (StringUtils.isNotBlank(grrLeftConfigDto.getPart())) {
+        if (isContainValue(grrLeftConfigDto.getPart(), partCombox)) {
             partCombox.setValue(grrLeftConfigDto.getPart());
         } else {
             partCombox.getSelectionModel().select(-1);
 
         }
 
-        if (StringUtils.isNotBlank(grrLeftConfigDto.getAppraiser())) {
+        if (isContainValue(grrLeftConfigDto.getAppraiser(), appraiserCombox)) {
             appraiserCombox.setValue(grrLeftConfigDto.getAppraiser());
         } else {
             appraiserCombox.getSelectionModel().select(-1);
@@ -494,6 +492,7 @@ public class GrrExportController {
         } else {
             updateAppraiserListViewDatas(null, grrLeftConfigDto.getAppraiser());
         }
+        GrrValidateUtil.validateNotEqualResult(partCombox.getValue(), appraiserCombox.getValue(), partCombox, appraiserCombox);
     }
 
 
@@ -509,11 +508,13 @@ public class GrrExportController {
         this.partCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
             partList.clear();
             clearLbl(partLbl);
+            GrrValidateUtil.validateNotEqualResult(newValue, appraiserCombox.getValue(), partCombox, appraiserCombox);
             updatePartListViewDatas(null, newValue);
         });
         this.appraiserCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
             appraiserList.clear();
             clearLbl(appraiserLbl);
+            GrrValidateUtil.validateNotEqualResult(partCombox.getValue(), newValue, appraiserCombox, partCombox);
             updateAppraiserListViewDatas(null, newValue);
         });
     }
@@ -761,16 +762,16 @@ public class GrrExportController {
             build();
         });
         export.setOnAction(event -> {
-            if (StringUtils.isEmpty(locationPath.getText())) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export path.");
-                return;
-            }
             if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
                 WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
                 return;
             }
             if (!checkSubmitParam(getSelectedItem().size())) {
                 WindowMessageFactory.createWindowMessageHasOk("Export", "GRR Config param error.");
+                return;
+            }
+            if (StringUtils.isEmpty(locationPath.getText())) {
+                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export path.");
                 return;
             }
             StageMap.closeStage("grrExport");
@@ -1057,7 +1058,7 @@ public class GrrExportController {
             return false;
         }
 
-        if (!GrrValidateUtil.validateResult(partTxt, appraiserTxt, trialTxt, partCombox)) {
+        if (!GrrValidateUtil.validateResult(partTxt, appraiserTxt, trialTxt)) {
             WindowMessageFactory.createWindowMessage(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
 //            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
 //                    GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
@@ -1068,6 +1069,16 @@ public class GrrExportController {
             WindowMessageFactory.createWindowMessage(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
 //            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
 //                    GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+            return false;
+        }
+
+        if (partCombox.getStyleClass().contains(ValidateUtil.COMBO_BOX_ERROR_STYLE) || appraiserCombox.getStyleClass().contains(ValidateUtil.COMBO_BOX_ERROR_STYLE)) {
+            WindowMessageFactory.createWindowMessage(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_EQUAL_APPRAISER"));
+//            if (configTab.isSelected()) {
+//                WindowMessageFactory.createWindowMessage(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_EQUAL_APPRAISER"));
+//            } else {
+//                WindowMessageFactory.createWindowMessage(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_EQUAL_APPRAISER"));
+//            }
             return false;
         }
 
@@ -1172,8 +1183,8 @@ public class GrrExportController {
         return site == 0 ? 0 : modelList.size();
     }
 
-    private boolean isContainValue(String appraiser, ComboBox comboBox) {
-        if (DAPStringUtils.isNotBlank(appraiser) && comboBox.getItems() != null && comboBox.getItems().contains(appraiser)) {
+    private boolean isContainValue(String value, ComboBox comboBox) {
+        if (DAPStringUtils.isNotBlank(value) && comboBox.getItems() != null && comboBox.getItems().contains(value)) {
             return true;
         }
         return false;

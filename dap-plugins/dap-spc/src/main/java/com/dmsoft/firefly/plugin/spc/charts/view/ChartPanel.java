@@ -246,7 +246,7 @@ public class ChartPanel<T extends XYChart> extends VBox {
             if (file != null) {
                 try {
                     String imagePath = file.getAbsolutePath();
-                    if (imagePath.contains(suffix)) {
+                    if (!imagePath.contains(suffix)) {
                         imagePath += suffix;
                     }
                     file = new File(imagePath);

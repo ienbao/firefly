@@ -244,9 +244,7 @@ public final class StageMap {
      * @@return Whether to close success or not， true:success
      */
     public static boolean closeStage(String name) {
-        Platform.runLater(() -> {
-            getStage(name).close();
-        });
+        getStage(name).close();
         return true;
     }
 
