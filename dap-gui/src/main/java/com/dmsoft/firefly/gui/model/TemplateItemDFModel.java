@@ -91,7 +91,7 @@ public class TemplateItemDFModel implements TableModel {
         String type = specificationDataDto.getDataType();
         SourceObjectProperty typeProperty = new SourceObjectProperty(type);
         typeProperty.addListener((ov, b1, b2) -> {
-            specificationDataDto.setDataType((String) b2);
+            this.updateComboxValue(name,(String) b2);
         });
         String lsl = specificationDataDto.getLslFail() == null ? "" : specificationDataDto.getLslFail();
         String usl = specificationDataDto.getUslPass() == null ? "" : specificationDataDto.getUslPass();
@@ -112,7 +112,7 @@ public class TemplateItemDFModel implements TableModel {
             specificationDataDto.setUslPass((String) b2);
         });
         valueMap.put(name + "-" + HEADER[0],new SourceObjectProperty(name));
-        valueMap.put(name + "-" + HEADER[1],new SourceObjectProperty(type));
+        valueMap.put(name + "-" + HEADER[1],typeProperty);
         valueMap.put(name + "-" + HEADER[2],lslProperty);
         valueMap.put(name + "-" + HEADER[3],uslProperty);
     }
