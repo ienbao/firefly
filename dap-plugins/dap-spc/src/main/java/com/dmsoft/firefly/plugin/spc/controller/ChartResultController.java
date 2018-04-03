@@ -154,9 +154,9 @@ public class ChartResultController implements Initializable {
             mrChartDataList.add(mrChartData);
         }
 
-        rRuleBtn.setDisableRules(Sets.newLinkedHashSet(disabledRuleNames));
+
         this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
-        this.setRunChartData(UIConstant.SPC_CHART_NAME[1], runChartDataList);
+        this.setRunChartData(UIConstant.SPC_CHART_NAME[1], runChartDataList, Sets.newLinkedHashSet(disabledRuleNames));
         this.setControlChartData(UIConstant.SPC_CHART_NAME[2], xBarChartDataList);
         this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList);
         this.setControlChartData(UIConstant.SPC_CHART_NAME[4], sdChartDataList);
@@ -177,6 +177,7 @@ public class ChartResultController implements Initializable {
             } else if (chart.getValue() instanceof BoxPlotChart) {
                 ((BoxPlotChart) chart.getValue()).removeAllChildren();
             }
+            chartPanelMap.get(chart.getKey()).toggleCustomButtonDisable(true);
         }
     }
 
@@ -482,7 +483,7 @@ public class ChartResultController implements Initializable {
         ndChartPane.toggleCustomButtonDisable(false);
     }
 
-    private void setRunChartData(String chartName, List<ControlChartData> runChartData) {
+    private void setRunChartData(String chartName, List<ControlChartData> runChartData, Set<String> disabledRuleNames) {
         ControlChart chart = runChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
 //            clear chart
@@ -497,6 +498,7 @@ public class ChartResultController implements Initializable {
         chart.setData(runChartData, chartTooltip);
         chart.setSeriesAnnotationEvent(buildAnnotationFetch());
         this.setRunChartPerformance();
+        rRuleBtn.setDisableRules(disabledRuleNames);
         runChartPane.updateChartData();
         runChartPane.toggleCustomButtonDisable(false);
     }
@@ -569,18 +571,17 @@ public class ChartResultController implements Initializable {
                 hiddenLines.add(operateName);
             }
         }
-        //remove no used rules
-        List<String> removeRules = Lists.newArrayList();
+        //add used rules
+        List<String> usedRules = Lists.newArrayList();
         List<ControlRuleDto> controlRuleDtos = spcMainController.getSpcSettingDto().getControlChartRule();
         if (controlRuleDtos != null) {
             controlRuleDtos.forEach(controlRuleDto -> {
-                if (!controlRuleDto.isUsed()) {
-                    removeRules.add(controlRuleDto.getRuleName());
+                if (controlRuleDto.isUsed()) {
+                    usedRules.add(controlRuleDto.getRuleName());
                 }
             });
         }
-        rRuleBtn.removeData(removeRules);
-        rRuleBtn.setSelectedSets(Sets.newLinkedHashSet());
+        rRuleBtn.addRuleData(usedRules);
         runChartPane.getChart().hiddenValueMarkers(hiddenLines);
         runChartPane.getChart().setSeriesDataStyleByRule(Lists.newArrayList(rRuleBtn.getSelectedSets()));
     }

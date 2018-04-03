@@ -71,7 +71,7 @@ public class SpcControlChartData implements ControlChartData {
         IPathData uclData = new IPathData() {
             @Override
             public IPoint getPoints() {
-                return new SpcPointData(x, spcControlChartDto.getUcl());
+                return new SpcPointData(ucl.getX(), ucl.getY());
             }
 
             @Override
@@ -87,7 +87,7 @@ public class SpcControlChartData implements ControlChartData {
         IPathData lclData = new IPathData() {
             @Override
             public IPoint getPoints() {
-                return new SpcPointData(x, spcControlChartDto.getLcl());
+                return new SpcPointData(lcl.getX(), lcl.getY());
             }
 
             @Override
