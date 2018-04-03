@@ -41,6 +41,8 @@
 
     COLORFUL_LIGHT_RED: #fde8e9;
     COLORFUL_MIDDLE_RED: #fac8ca;
+    COLORFUL_DARK_RED: #F48F93;
+
 
     /*auxiliary color*/
     COLORFUL_AUXILIARY_BLUE: #0096ff;
@@ -328,16 +330,16 @@
 
 .btn-primary-loading {
     -fx-text-fill: FONT_LIGHT;
-    -fx-highlight-fill: COLORFUL_MIDDLE_RED;
-    -fx-border-color: COLORFUL_MIDDLE_RED;
-    -fx-background-color: COLORFUL_MIDDLE_RED;
+    -fx-highlight-fill: COLORFUL_DARK_RED;
+    -fx-border-color: COLORFUL_DARK_RED;
+    -fx-background-color: COLORFUL_DARK_RED;
 }
 
 .btn-primary-loading:hover, .btn-primary-loading:pressed {
     -fx-text-fill: FONT_LIGHT;
-    -fx-highlight-fill: COLORFUL_MIDDLE_RED;
-    -fx-border-color: COLORFUL_MIDDLE_RED;
-    -fx-background-color: COLORFUL_MIDDLE_RED;
+    -fx-highlight-fill: COLORFUL_DARK_RED;
+    -fx-border-color: COLORFUL_DARK_RED;
+    -fx-background-color: COLORFUL_DARK_RED;
 }
 
 .btn-success {
