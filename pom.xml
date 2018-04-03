@@ -6,9 +6,9 @@
 
     <groupId>com.dmsoft</groupId>
     <artifactId>firefly</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Firefly-DAP :: Data Analysis Platform (DAP)</name>
+    <name>Firefly-DAP :: Parent</name>
 
     <modules>
         <module>dap-plugins</module>
@@ -17,6 +17,7 @@
         <module>dap-core</module>
         <module>dap-restart</module>
         <module>dap-gui</module>
+        <module>dap-distribution</module>
     </modules>
 
     <properties>
@@ -56,6 +57,18 @@
             <dependency>
                 <groupId>com.dmsoft</groupId>
                 <artifactId>dap-gui</artifactId>
+                <version>${dap.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.dmsoft</groupId>
+                <artifactId>dap-gui-components</artifactId>
+                <version>${dap.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.dmsoft</groupId>
+                <artifactId>dap-restart</artifactId>
                 <version>${dap.version}</version>
             </dependency>
 

@@ -5,11 +5,13 @@
     <parent>
         <artifactId>firefly</artifactId>
         <groupId>com.dmsoft</groupId>
-        <version>1.0.0</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>dap-gui-components</artifactId>
+    <name>Firefly-DAP :: GUI Components</name>
+
     <dependencies>
         <dependency>
             <groupId>com.dmsoft</groupId>
