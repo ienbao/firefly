@@ -6,5 +6,15 @@ package com.dmsoft.firefly.sdk.utils.enums;
  * @author Can Guan
  */
 public enum TestItemType {
-    VARIABLE, ATTRIBUTE
+    VARIABLE("Variable"),
+    ATTRIBUTE("Attribute");
+    private String code;
+
+    TestItemType(String code) {
+        this.code = code;
+    }
+
+    public String getCode() {
+        return this.code;
+    }
 }

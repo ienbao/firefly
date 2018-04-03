@@ -4,12 +4,14 @@
 package com.dmsoft.firefly.gui.controller.template;
 
 import com.dmsoft.firefly.gui.GuiApplication;
+import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
+import com.dmsoft.firefly.gui.model.TemplateItemDFModel;
 import com.dmsoft.firefly.gui.model.TemplateItemModel;
 import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
@@ -22,6 +24,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.utils.DeepCopy;
+import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.collections.FXCollections;
@@ -32,17 +35,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.converter.DefaultStringConverter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import static com.google.common.io.Resources.getResource;
 
@@ -62,7 +64,7 @@ public class TemplateController {
     @FXML
     private VBox timeKeys;
     @FXML
-    private TableView<TemplateItemModel> itemTable;
+    private TableView itemTable;
     @FXML
     private TableColumn<TemplateItemModel, String> testItem;
     @FXML
@@ -73,9 +75,9 @@ public class TemplateController {
     private TableColumn<TemplateItemModel, String> usl;
     @FXML
     private TextFieldFilter itemFilter;
-    private ObservableList<TemplateItemModel> items = FXCollections.observableArrayList();
-    private FilteredList<TemplateItemModel> filteredList = items.filtered(p -> p.getTestItemName().startsWith(""));
-    private SortedList<TemplateItemModel> personSortedList = new SortedList<>(filteredList);
+//    private ObservableList<TemplateItemModel> items = FXCollections.observableArrayList();
+//    private FilteredList<TemplateItemModel> filteredList = items.filtered(p -> p.getTestItemName().startsWith(""));
+//    private SortedList<TemplateItemModel> personSortedList = new SortedList<>(filteredList);
 
     @FXML
     private TextFieldFilter nameFilter;
@@ -92,22 +94,26 @@ public class TemplateController {
     private TemplateSettingDto currTemplate;
     private TemplateSettingDto templateSettingDto;
 
+    private TemplateItemDFModel templateItemDFModel;
+
     @FXML
     private void initialize() {
         decimal.setItems(FXCollections.observableArrayList(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9)));
         initButton();
         initDefault();
-        itemTable.setItems(personSortedList);
-        personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
-        itemTable.setEditable(true);
-        testItem.setCellValueFactory(cellData -> cellData.getValue().testItemNameProperty());
-        type.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList("VARIABLE", "ATTRIBUTE")));
-        lsl.setCellFactory(TextFieldTableCell.forTableColumn());
-        usl.setCellFactory(TextFieldTableCell.forTableColumn());
+//        itemTable.setItems(personSortedList);
+//        personSortedList.comparatorProperty().bind(itemTable.comparatorProperty());
 
-        type.setCellValueFactory(cellData -> cellData.getValue().dataTypeProperty());
-        lsl.setCellValueFactory(cellData -> cellData.getValue().lslFailProperty());
-        usl.setCellValueFactory(cellData -> cellData.getValue().uslPassProperty());
+
+        itemTable.setEditable(true);
+//        testItem.setCellValueFactory(cellData -> cellData.getValue().testItemNameProperty());
+//        type.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList("VARIABLE", "ATTRIBUTE")));
+//        lsl.setCellFactory(TextFieldTableCell.forTableColumn());
+//        usl.setCellFactory(TextFieldTableCell.forTableColumn());
+//
+//        type.setCellValueFactory(cellData -> cellData.getValue().dataTypeProperty());
+//        lsl.setCellValueFactory(cellData -> cellData.getValue().lslFailProperty());
+//        usl.setCellValueFactory(cellData -> cellData.getValue().uslPassProperty());
 
         initEvent();
         templateName.setItems(nameSortedList);
@@ -136,10 +142,26 @@ public class TemplateController {
             });
         }
         String selectName = GuiConst.DEFAULT_TEMPLATE_NAME;
-        if(templateSettingDto != null){
+        if (templateSettingDto != null) {
             selectName = templateSettingDto.getName();
         }
-        templateName.getSelectionModel().select(selectName);
+        templateItemDFModel = new TemplateItemDFModel();
+        TableViewWrapper.decorate(itemTable, templateItemDFModel);
+
+//        ((TableColumn<String, String>)itemTable.getColumns().get(1)).setCellValueFactory(cell -> templateItemDFModel.getCellData(cell.getValue(), templateItemDFModel.getRowKeyArray().get(1)));
+        ComboBoxTableCell comboBoxTableCell = new ComboBoxTableCell<String,String>(){
+            @Override
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+//                if(this.getIndex() == -1 || this.getTableView().getItems().size() <= this.getIndex()){
+//                    return;
+//                }
+//                String rowKey = this.getTableView().getItems().get(this.getIndex());
+//                templateItemDFModel.updateComboxValue(rowKey,item);
+            }
+        };
+        ((TableColumn<String, String>)itemTable.getColumns().get(1)).setCellFactory(comboBoxTableCell.forTableColumn(FXCollections.observableArrayList(TestItemType.VARIABLE.getCode(), TestItemType.ATTRIBUTE.getCode())));
+
         initData(selectName);
         templateName.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> initData(newValue));
     }
@@ -148,8 +170,9 @@ public class TemplateController {
         nameFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
                 nameFilterList.setPredicate(p -> p.contains(nameFilter.getTextField().getText()))
         );
-        itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
-                filteredList.setPredicate(p -> p.getTestItemName().contains(itemFilter.getTextField().getText()))
+        itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) -> {
+                    templateItemDFModel.filterTestItem(newValue);
+                }
         );
         add.setOnAction(event -> buildNewTemplateDialog());
         rename.setOnAction(event -> {
@@ -169,7 +192,7 @@ public class TemplateController {
         delete.setOnAction(event -> {
             String selectTemplateName = templateName.getSelectionModel().getSelectedItem();
             if (selectTemplateName != null) {
-                if(templateSettingDto != null && selectTemplateName.equals(templateSettingDto.getName())){
+                if (templateSettingDto != null && selectTemplateName.equals(templateSettingDto.getName())) {
                     WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_DELETE_WARN));
                     return;
                 }
@@ -181,6 +204,10 @@ public class TemplateController {
         addRow.setOnAction(event -> buildAddItemDia());
         addTime.setOnAction(event -> timeKeys.getChildren().add(new TimePane()));
         ok.setOnAction(event -> {
+            if (templateItemDFModel.hasErrorEditValue()) {
+                WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_APPLY_WARN_MESSAGE));
+                return;
+            }
             saveCache();
             if (allTemplate != null) {
                 templateService.saveAllAnalysisTemplate(Lists.newArrayList(allTemplate.values()));
@@ -189,6 +216,10 @@ public class TemplateController {
             refreshMainTemplate();
         });
         apply.setOnAction(event -> {
+            if (templateItemDFModel.hasErrorEditValue()) {
+                WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_APPLY_WARN_MESSAGE));
+                return;
+            }
             saveCache();
             if (allTemplate != null) {
                 templateService.saveAllAnalysisTemplate(Lists.newArrayList(allTemplate.values()));
@@ -201,6 +232,7 @@ public class TemplateController {
     }
 
     private void initData(String name) {
+        templateName.getSelectionModel().select(name);
         saveCache();
         currTemplate = null;
         clear();
@@ -221,12 +253,13 @@ public class TemplateController {
                     patternText.setText("yyy/MM/dd HH:mm:ss SSSSSS");
                 }
             }
-            if (currTemplate.getSpecificationDatas() != null) {
-                currTemplate.getSpecificationDatas().values().forEach(data -> {
-                    TemplateItemModel model = new TemplateItemModel(data);
-                    items.add(model);
-                });
-            }
+//            if (currTemplate.getSpecificationDatas() != null) {
+//                currTemplate.getSpecificationDatas().values().forEach(data -> {
+//                    TemplateItemModel model = new TemplateItemModel(data);
+//                    items.add(model);
+//                });
+//            }
+            templateItemDFModel.initData(currTemplate.getSpecificationDatas());
         }
     }
 
@@ -249,14 +282,14 @@ public class TemplateController {
                 LinkedHashMap<String, SpecificationDataDto> map = Maps.newLinkedHashMap();
                 currTemplate.setSpecificationDatas(map);
             }
-            items.forEach(model -> {
-                SpecificationDataDto dataDto = new SpecificationDataDto();
-                dataDto.setTestItemName(model.getTestItemName());
-                dataDto.setDataType(model.getDataType());
-                dataDto.setLslFail(model.getLslFail());
-                dataDto.setUslPass(model.getUslPass());
-                currTemplate.getSpecificationDatas().put(model.getTestItemName(), dataDto);
-            });
+//            items.forEach(model -> {
+//                SpecificationDataDto dataDto = new SpecificationDataDto();
+//                dataDto.setTestItemName(model.getTestItemName());
+//                dataDto.setDataType(model.getDataType());
+//                dataDto.setLslFail(model.getLslFail());
+//                dataDto.setUslPass(model.getUslPass());
+//                currTemplate.getSpecificationDatas().put(model.getTestItemName(), dataDto);
+//            });
         }
     }
 
@@ -265,7 +298,7 @@ public class TemplateController {
         decimal.setValue(6);
         timeKeys.getChildren().clear();
         patternText.setText("yyy/MM/dd HH:mm:ss SSSSSS");
-        items.clear();
+//        items.clear();
     }
 
     private void buildNewTemplateDialog() {
@@ -277,12 +310,12 @@ public class TemplateController {
             fxmlLoader.setController(newNameController);
             root = fxmlLoader.load();
             newNameController.getOk().setOnAction(event -> {
-                if(newNameController.isError()){
+                if (newNameController.isError()) {
                     WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
                     return;
                 }
                 String newTemplateName = newNameController.getName().getText();
-                if(templateNames.contains(newTemplateName)){
+                if (templateNames.contains(newTemplateName)) {
                     WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_REPEAT_WARN));
                     return;
                 }
@@ -319,17 +352,17 @@ public class TemplateController {
             fxmlLoader.setController(renameTemplateController);
             root = fxmlLoader.load();
             renameTemplateController.getOk().setOnAction(event -> {
-                if(renameTemplateController.isError()){
+                if (renameTemplateController.isError()) {
                     WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
                     return;
                 }
                 String newTemplateName = renameTemplateController.getName().getText();
-                if(!newTemplateName.equals(templateName.getSelectionModel().getSelectedItem()) && templateNames.contains(newTemplateName)){
+                if (!newTemplateName.equals(templateName.getSelectionModel().getSelectedItem()) && templateNames.contains(newTemplateName)) {
                     WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_REPEAT_WARN));
                     return;
                 }
                 String selectTemplateName = templateName.getSelectionModel().getSelectedItem();
-                if(selectTemplateName.equals(templateSettingDto.getName())){
+                if (selectTemplateName.equals(templateSettingDto.getName())) {
                     templateSettingDto.setName(newTemplateName);
                 }
                 TemplateSettingDto selectDto = allTemplate.get(selectTemplateName);
@@ -373,12 +406,12 @@ public class TemplateController {
             fxmlLoader.setController(copyTemplateController);
             root = fxmlLoader.load();
             copyTemplateController.getOk().setOnAction(event -> {
-                if(copyTemplateController.isError()){
+                if (copyTemplateController.isError()) {
                     WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
                     return;
                 }
                 String newTemplateName = copyTemplateController.getName().getText();
-                if(templateNames.contains(newTemplateName)){
+                if (templateNames.contains(newTemplateName)) {
                     WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_REPEAT_WARN));
                     return;
                 }
@@ -426,11 +459,20 @@ public class TemplateController {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/additem.fxml");
 
             AddItemController addItem = new AddItemController();
-            addItem.setItemTableData(items);
-
+            addItem.setItemTableData(templateItemDFModel.getRowKeyArray());
             fxmlLoader.setController(addItem);
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("addItem", GuiFxmlAndLanguageUtils.getString(ResourceMassages.ADD_ITEM), root, getResource("css/platform_app.css").toExternalForm());
+            addItem.getAddItemOk().setOnAction(event -> {
+                List<String> selectItems = addItem.getSelectItem();
+                selectItems.forEach(item -> {
+                    SpecificationDataDto dataDto = new SpecificationDataDto();
+                    dataDto.setTestItemName(item);
+                    dataDto.setDataType(TestItemType.VARIABLE.getCode());
+                    templateItemDFModel.addTestItem(dataDto);
+                });
+                StageMap.closeStage("addItem");
+            });
             stage.setResizable(false);
             stage.toFront();
             stage.show();

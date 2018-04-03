@@ -334,6 +334,9 @@ public class ViewDataController implements Initializable {
     }
 
     private void filterTF() {
+        if(model == null){
+            return;
+        }
         model.getRowKeyArray().clear();
         for (String s : dataFrame.getAllRowKeys()) {
             List<String> datas = dataFrame.getDataRowList(s);

@@ -41,7 +41,7 @@ public class AddItemController {
     private TextField filter;
     @FXML
     private TextArea customizeItem;
-    private ObservableList<TemplateItemModel> itemTableData;
+    private ObservableList<String> selectTestItem;
     private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
@@ -70,24 +70,24 @@ public class AddItemController {
         filter.textProperty().addListener((observable, oldValue, newValue) ->
                 filteredList.setPredicate(p -> p.getItem().toLowerCase().contains(filter.getText().toLowerCase()))
         );
-        addItemOk.setOnAction(event -> {
-            List<String> selectItems = getSelectItem();
-            selectItems.forEach(item -> {
-                SpecificationDataDto dataDto = new SpecificationDataDto();
-                dataDto.setTestItemName(item);
-                dataDto.setDataType(TestItemType.VARIABLE.toString());
-                itemTableData.add(new TemplateItemModel(dataDto));
-            });
-            StageMap.closeStage("addItem");
-        });
+//        addItemOk.setOnAction(event -> {
+//            List<String> selectItems = getSelectItem();
+//            selectItems.forEach(item -> {
+//                SpecificationDataDto dataDto = new SpecificationDataDto();
+//                dataDto.setTestItemName(item);
+//                dataDto.setDataType(TestItemType.VARIABLE.toString());
+//                itemTableData.add(new TemplateItemModel(dataDto));
+//            });
+//            StageMap.closeStage("addItem");
+//        });
     }
 
     public void initData() {
         List<String> itemNames = envService.findTestItemNames();
         if (itemNames != null) {
             items.clear();
-            if (itemTableData != null) {
-                itemTableData.forEach(data -> itemNames.remove(data.getTestItemName()));
+            if (selectTestItem != null) {
+                selectTestItem.forEach(testItem -> itemNames.remove(testItem));
             }
             itemNames.forEach(item -> items.add(new ItemTableModel(item)));
         }
@@ -106,7 +106,11 @@ public class AddItemController {
         return selectItems;
     }
 
-    public void setItemTableData(ObservableList<TemplateItemModel> itemTableData) {
-        this.itemTableData = itemTableData;
+    public void setItemTableData(ObservableList<String> testItem) {
+        this.selectTestItem = testItem;
+    }
+
+    public Button getAddItemOk() {
+        return addItemOk;
     }
 }
