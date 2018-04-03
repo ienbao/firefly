@@ -141,12 +141,14 @@ public class MainController {
     }
 
     private void setActiveFirstTab(PluginUIContext pc) {
-        Button firstTabBtn = (Button) tbaSystem.getItems().get(0);
-        grpContent.setDisable(false);
-        setActiveBtnStyle(firstTabBtn);
-        Pane pane = pc.getMainBodyPane(firstTabBtn.getId()).getNewPane();
-        pane.setId(firstTabBtn.getId());
-        initTab(firstTabBtn.getId(), pane);
+        if (tbaSystem.getItems() != null && !tbaSystem.getItems().isEmpty()) {
+            Button firstTabBtn = (Button) tbaSystem.getItems().get(0);
+            grpContent.setDisable(false);
+            setActiveBtnStyle(firstTabBtn);
+            Pane pane = pc.getMainBodyPane(firstTabBtn.getId()).getNewPane();
+            pane.setId(firstTabBtn.getId());
+            initTab(firstTabBtn.getId(), pane);
+        }
     }
 
     public void resetMain() {
