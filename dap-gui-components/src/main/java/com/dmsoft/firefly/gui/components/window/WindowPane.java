@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.event.EventHandler;
 import javafx.geometry.BoundingBox;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
@@ -201,11 +202,10 @@ public class WindowPane extends GridPane {
             ColumnConstraints c2 = new ColumnConstraints();
             c2.setHgrow(Priority.NEVER);
             c2.setPrefWidth(STANDARD_MARGIN);
-            c2.setMaxWidth(STANDARD_MARGIN);
             c2.setMinWidth(STANDARD_MARGIN);
 
             ColumnConstraints c3 = new ColumnConstraints();
-            c2.setHgrow(Priority.NEVER);
+            c3.setHgrow(Priority.NEVER);
 
             this.titlePane.getColumnConstraints().addAll(c0, c1, c2, c3);
 
@@ -356,13 +356,18 @@ public class WindowPane extends GridPane {
             initTitlePane(label);
         } else {
             if (Platforms.IS_WINDOWS) {
-                HBox hBox = new HBox();
-                hBox.setSpacing(10);
+                GridPane gridPane = new GridPane();
+                RowConstraints r0 = new RowConstraints(WINDOW_TITLE_HEIGHT, WINDOW_TITLE_HEIGHT, WINDOW_TITLE_HEIGHT);
+                ColumnConstraints c0 = new ColumnConstraints(27, 27, 27);
+                c0.setHalignment(HPos.LEFT);
+                ColumnConstraints c1 = new ColumnConstraints();
+                c1.setHgrow(Priority.ALWAYS);
+                gridPane.getRowConstraints().add(r0);
+                gridPane.getColumnConstraints().addAll(c0, c1);
                 ImageView logo = ImageUtils.getImageView(getClass().getResourceAsStream("/images/top_title_logo.png"));
-                hBox.setAlignment(Pos.CENTER_LEFT);
-                hBox.getChildren().add(logo);
-                hBox.getChildren().add((Pane) cusTitle);
-                initTitlePane(hBox);
+                gridPane.add(logo, 0, 0);
+                gridPane.add((Pane) cusTitle, 1, 0);
+                initTitlePane(gridPane);
             } else {
                 initTitlePane((Pane) cusTitle);
             }
