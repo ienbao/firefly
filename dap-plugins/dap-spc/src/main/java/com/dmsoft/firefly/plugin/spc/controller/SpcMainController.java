@@ -347,8 +347,8 @@ public class SpcMainController implements Initializable {
             return null;
         }
         List<String> testItemNameList = Lists.newArrayList();
-        List<String> timeKeys = envService.findActivatedTemplate().getTimeKeys();
-        String timePattern = envService.findActivatedTemplate().getTimePattern();
+        List<String> timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
+        String timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
         FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         for (SearchConditionDto searchConditionDto : searchConditionDtoList) {
             if (!testItemNameList.contains(searchConditionDto.getItemName())) {

@@ -35,9 +35,6 @@ public class TemplateSettingDto implements Serializable {
     }
 
     public TimePatternDto getTimePatternDto() {
-        if (timePatternDto == null) {
-            return new TimePatternDto();
-        }
         return timePatternDto;
     }
 
@@ -51,29 +48,5 @@ public class TemplateSettingDto implements Serializable {
 
     public void setSpecificationDatas(LinkedHashMap<String, SpecificationDataDto> specificationDatas) {
         this.specificationDatas = specificationDatas;
-    }
-
-    /**
-     * method to get time keys
-     *
-     * @return list of time key
-     */
-    public List<String> getTimeKeys() {
-        if (getTimePatternDto() == null || getTimePatternDto().getTimeKeys() == null) {
-            return Lists.newArrayList();
-        }
-        return getTimePatternDto().getTimeKeys();
-    }
-
-    /**
-     * method to get time pattern
-     *
-     * @return time pattern
-     */
-    public String getTimePattern() {
-        if (getTimePatternDto() == null) {
-            return null;
-        }
-        return getTimePatternDto().getPattern();
     }
 }

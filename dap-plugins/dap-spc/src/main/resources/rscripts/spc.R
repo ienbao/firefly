@@ -233,6 +233,12 @@ intspc.normal.getNDCResult <- function(x, Intervals, Max = NaN, Min = NaN, SD = 
     if (length(x) > 1 && (is.na(SD) || is.na(Mean))) {
         Mean <- mean(x)
         SD <- sd(x)
+    } else {
+        if (length(x) == 1) {
+            Mean <- x
+            SD <- NaN
+            CLs <- c(NaN, NaN, NaN, Mean, NaN, NaN, NaN)
+        }
     }
     if (! is.na(SD) && ! is.na(Mean)) {
         cl <- c(- 3, - 2, - 1, 0, 1, 2, 3)

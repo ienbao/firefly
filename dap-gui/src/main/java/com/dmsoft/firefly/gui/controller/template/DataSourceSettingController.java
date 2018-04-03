@@ -264,8 +264,8 @@ public class DataSourceSettingController {
         Boolean flag = false;
         List<String> searchCondition = searchTab.getSearch();
         TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
-        List<String> timeKeys = templateSettingDto.getTimeKeys();
-        String timePattern = templateSettingDto.getTimePattern();
+        List<String> timeKeys = templateSettingDto.getTimePatternDto().getTimeKeys();
+        String timePattern = templateSettingDto.getTimePatternDto().getPattern();
         FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         if (!searchCondition.isEmpty()) {
             for (String condition : searchCondition) {

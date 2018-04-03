@@ -49,7 +49,7 @@ import static com.google.common.io.Resources.getResource;
  */
 public class GuiApplication extends Application {
 
-    public static final int TOTAL_LOAD_CLASS = 3700;
+    public static final int TOTAL_LOAD_CLASS = 4800;
 
     static {
         System.getProperties().put("javafx.pseudoClassOverrideEnabled", "true");
@@ -150,6 +150,7 @@ public class GuiApplication extends Application {
                             ClassLoadingMXBean classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
                             int process = (int) (classLoadingMXBean.getLoadedClassCount() * 1.0 / TOTAL_LOAD_CLASS * 100);
                             updateProgress(process, 100);
+                            System.out.println(classLoadingMXBean.getLoadedClassCount() + "sasdf");
                             if (process >= 100) {
                                 Platform.runLater(() -> {
                                     StageMap.getStage(GuiConst.PLARTFORM_STAGE_PROCESS).close();
