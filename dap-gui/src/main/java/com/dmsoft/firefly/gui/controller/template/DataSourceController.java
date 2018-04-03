@@ -453,7 +453,7 @@ public class DataSourceController implements Initializable {
         List<String> value = Lists.newArrayList();
         value.addAll(sourceDataService.findAllProjectName());
         value.forEach(v -> {
-            if (projectOrder != null && !projectOrder.contains(v)) {
+            if (projectOrder == null || !projectOrder.contains(v)) {
                 ChooseTableRowData chooseTableRowData;
                 if (selectProject != null && selectProject.contains(v)) {
                     chooseTableRowData = new ChooseTableRowData(true, v);
