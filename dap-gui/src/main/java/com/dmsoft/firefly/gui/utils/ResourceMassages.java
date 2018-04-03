@@ -26,4 +26,12 @@ public class ResourceMassages {
     public static final String TEMPLATE_NAME_EMPTY_WARN = "TEMPLATE_NAME_EMPTY_WARN";
     public static final String TEMPLATE_NAME_REPEAT_WARN = "TEMPLATE_NAME_REPEAT_WARN";
     public static final String TEMPLATE_NAME_DELETE_WARN = "TEMPLATE_NAME_DELETE_WARN";
+    public static final String TEMPLATE_TEST_ITEM = "TEMPLATE_TEST_ITEM";
+    public static final String TEMPLATE_DATA_TYPE = "TEMPLATE_DATA_TYPE";
+    public static final String TEMPLATE_LSL_FAIL = "TEMPLATE_LSL_FAIL";
+    public static final String TEMPLATE_USL_PASS = "TEMPLATE_USL_PASS";
+
+    public static final String TEMPLATE_USL_LESS_THEN_LSL = "TEMPLATE_USL_LESS_THEN_LSL";
+    public static final String TEMPLATE_LSL_MORE_THEN_USL = "TEMPLATE_LSL_MORE_THEN_USL";
+    public static final String TEMPLATE_APPLY_WARN_MESSAGE = "TEMPLATE_APPLY_WARN_MESSAGE";
 }
