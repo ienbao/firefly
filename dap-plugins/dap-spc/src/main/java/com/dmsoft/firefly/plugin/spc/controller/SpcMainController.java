@@ -168,8 +168,8 @@ public class SpcMainController implements Initializable {
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
-                logger.error(context.getError().getMessage());
-                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                logger.error(context.getError().toString());
+                windowProgressTipController.updateFailProgress(context.getError().toString());
             }
         });
         jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
@@ -178,7 +178,7 @@ public class SpcMainController implements Initializable {
                 windowProgressTipController.closeDialog();
             }
         });
-//        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
 //        Service<Integer> service = new Service<Integer>() {
 //            @Override
 //            protected Task<Integer> createTask() {
@@ -223,6 +223,9 @@ public class SpcMainController implements Initializable {
             FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML("view/spc_export.fxml");
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("spcExport", "Spc Export", root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            SpcLeftConfigDto leftConfigDto = spcItemController.getCurrentConfigData();
+            ((SpcExportController)fxmlLoader.getController()).initSpcExportLeftConfig(leftConfigDto);
+            stage.setResizable(false);
             stage.toFront();
             stage.show();
 
@@ -344,8 +347,8 @@ public class SpcMainController implements Initializable {
             return null;
         }
         List<String> testItemNameList = Lists.newArrayList();
-        List<String> timeKeys = envService.findActivatedTemplate().getTimeKeys();
-        String timePattern = envService.findActivatedTemplate().getTimePattern();
+        List<String> timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
+        String timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
         FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         for (SearchConditionDto searchConditionDto : searchConditionDtoList) {
             if (!testItemNameList.contains(searchConditionDto.getItemName())) {
@@ -416,8 +419,8 @@ public class SpcMainController implements Initializable {
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
-                logger.error(context.getError().getMessage());
-                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                logger.error(context.getError().toString());
+                windowProgressTipController.updateFailProgress(context.getError().toString());
             }
         });
         jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
@@ -520,7 +523,7 @@ public class SpcMainController implements Initializable {
             @Override
             public void doJob(JobContext context) {
                 logger.error(context.getError().getMessage());
-                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                windowProgressTipController.updateFailProgress(context.getError().toString());
             }
         });
         jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
@@ -587,8 +590,10 @@ public class SpcMainController implements Initializable {
 
         List<String> currentStatisticalSelectRowKeyList = spcRefreshJudgeUtil.getCurrentStatisticalSelectRowKeyList();
         List<String> currentViewDataSelectRowKeyList = spcRefreshJudgeUtil.getCurrentViewDataSelectRowKeyList();
+
+        List<String> countViewDataRowKeyList = currentViewDataSelectRowKeyList == null ? dataFrame.getAllRowKeys() : currentViewDataSelectRowKeyList;
         spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
-        spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(currentViewDataSelectRowKeyList);
+        spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(countViewDataRowKeyList);
 
         //statistical data
         List<SpcStatisticalResultAlarmDto> editRowDataList = statisticalResultController.getAllRowStatsData();
@@ -596,12 +601,12 @@ public class SpcMainController implements Initializable {
         if (statisticalSearchConditionDtoList.size() == 0) {
             return;
         }
-        SearchDataFrame statisticalDataFrame = buildSubSearchDataFrame(currentViewDataSelectRowKeyList, statisticalSearchConditionDtoList);
+        SearchDataFrame statisticalDataFrame = buildSubSearchDataFrame(countViewDataRowKeyList, statisticalSearchConditionDtoList);
 
         //chart data
         List<SpcStatisticalResultAlarmDto> chooseRowDataList = statisticalResultController.getSelectStatsData();
         List<SearchConditionDto> chartSearchConditionDtoList = buildRefreshSearchConditionData(chooseRowDataList);
-        SearchDataFrame chartDataFrame = buildSubSearchDataFrame(currentViewDataSelectRowKeyList, chartSearchConditionDtoList);
+        SearchDataFrame chartDataFrame = buildSubSearchDataFrame(countViewDataRowKeyList, chartSearchConditionDtoList);
 
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
@@ -630,7 +635,7 @@ public class SpcMainController implements Initializable {
 
                 //set view data
                 SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getAllRowKeys(), chartSearchConditionDtoList);
-                viewDataController.setViewData(viewDataFrame, currentViewDataSelectRowKeyList,statisticalSearchConditionDtoList);
+                viewDataController.setViewData(viewDataFrame, countViewDataRowKeyList,statisticalSearchConditionDtoList);
             }
         });
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {

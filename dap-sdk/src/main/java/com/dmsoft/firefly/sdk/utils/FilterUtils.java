@@ -17,7 +17,7 @@ import java.util.Set;
  * Created by Can.Guan on 2017/2/22.
  */
 public class FilterUtils {
-    private Logger logger = LoggerFactory.getLogger(FilterUtils.class);
+    private static Logger logger = LoggerFactory.getLogger(FilterUtils.class);
 
     private List<String> timeKeys = Lists.newArrayList();
     private String timePattern;
@@ -41,12 +41,28 @@ public class FilterUtils {
     }
 
     /**
+     * judge condition is legal or not
+     *
+     * @param condition string of condition
+     * @return true means legal
+     */
+    public static boolean isLegal(String condition) {
+        try {
+            FilterExpressionParser fep = new FilterExpressionParser();
+            SEPResult result = fep.doParser(condition);
+            return result != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
      * Parse the item names from conditions.
      *
      * @param condition search condition
      * @return the String set of test item names
      */
-    public Set<String> parseItemNameFromConditions(String condition) {
+    public static Set<String> parseItemNameFromConditions(String condition) {
         Set<String> resultList = new LinkedHashSet<>();
         if (DAPStringUtils.isBlank(condition)) {
             return resultList;
@@ -134,22 +150,6 @@ public class FilterUtils {
             return dto;
         } catch (Exception e) {
             return null;
-        }
-    }
-
-    /**
-     * judge condition is legal or not
-     *
-     * @param condition string of condition
-     * @return true means legal
-     */
-    public boolean isLegal(String condition) {
-        try {
-            FilterExpressionParser fep = new FilterExpressionParser();
-            fep.doParser(condition);
-            return true;
-        } catch (Exception e) {
-            return false;
         }
     }
 
@@ -351,7 +351,7 @@ public class FilterUtils {
 
 
     // parse item names from spe result
-    private List<Object> parseItemNameFromConditions(SEPResult result) {
+    private static List<Object> parseItemNameFromConditions(SEPResult result) {
         List<Object> resultList = Lists.newLinkedList();
         List<Object> leftList = Lists.newLinkedList();
         List<Object> rightList = Lists.newLinkedList();

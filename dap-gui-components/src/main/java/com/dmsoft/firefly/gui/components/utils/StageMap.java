@@ -4,6 +4,7 @@ import com.dmsoft.firefly.gui.components.window.WindowPane;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -77,6 +78,8 @@ public final class StageMap {
             tempScene.setFill(Color.TRANSPARENT);
 
             Stage tempStage = new Stage();
+            Image image = new Image("/images/desktop_mac_logo.png");
+            tempStage.getIcons().addAll(image);
             tempStage.setScene(tempScene);
 
             //set initStyle
@@ -121,6 +124,8 @@ public final class StageMap {
 
 
             Stage tempStage = new Stage();
+            Image image = new Image("/images/desktop_mac_logo.png");
+            tempStage.getIcons().addAll(image);
             if (modality) {
                 tempStage.initModality(Modality.APPLICATION_MODAL);
             }
@@ -182,6 +187,8 @@ public final class StageMap {
                     tempStage.initModality(Modality.APPLICATION_MODAL);
                 }
                 tempStage.setScene(tempScene);
+                Image image = new Image("/images/desktop_mac_logo.png");
+                tempStage.getIcons().addAll(image);
 
                 //set initStyle
                 for (StageStyle s : styles) {
@@ -237,9 +244,7 @@ public final class StageMap {
      * @@return Whether to close success or not， true:success
      */
     public static boolean closeStage(String name) {
-        Platform.runLater(() -> {
-            getStage(name).close();
-        });
+        getStage(name).close();
         return true;
     }
 
@@ -307,6 +312,8 @@ public final class StageMap {
 
 
             Stage tempStage = new Stage();
+            Image image = new Image("/images/desktop_mac_logo.png");
+            tempStage.getIcons().addAll(image);
             if (modality) {
                 tempStage.initModality(Modality.APPLICATION_MODAL);
             }

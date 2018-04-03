@@ -73,7 +73,7 @@ public class PluginXMLParser {
             }
 
             PluginXMLHandler pluginXMLHandler = new PluginXMLHandler();
-            sp.parse(pluginXMLFileUri, pluginXMLHandler);
+            sp.parse(pluginXMLFile, pluginXMLHandler);
             PluginInfo pluginInfo = pluginXMLHandler.getPluginInfo();
             pluginInfo.setFolderPath(pluginFolderUri);
 

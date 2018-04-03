@@ -10,6 +10,7 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -113,6 +114,7 @@ public class MenuFactory {
 
     private static Menu initLanguageMenu() {
         Menu language = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_LANGUAGE"));
+
         RadioMenuItem zh = new RadioMenuItem(GuiFxmlAndLanguageUtils.getString("LANGUAGE_ZH"));
         RadioMenuItem en = new RadioMenuItem(GuiFxmlAndLanguageUtils.getString("LANGUAGE_EN"));
         if (LanguageType.ZH.equals(envService.getLanguageType())) {
@@ -120,22 +122,66 @@ public class MenuFactory {
         } else {
             en.setSelected(true);
         }
-        en.setOnAction(event -> {
-            if (en.isSelected()) {
-                envService.setLanguageType(LanguageType.EN);
-                initMenu();
-                appController.resetMenu();
-                mainController.resetMain();
-                StageMap.getAllStage().clear();
+        en.selectedProperty().addListener((ov, b1, b2) -> {
+           if (b2) {
+               WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Message", GuiFxmlAndLanguageUtils.getString("GLOBAL_CHANGE_LANGUAGE"));
+               controller.addProcessMonitorListener(new WindowCustomListener() {
+                    @Override
+                    public boolean onShowCustomEvent() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onCloseAndCancelCustomEvent() {
+                        zh.setSelected(true);
+                        envService.setLanguageType(LanguageType.ZH);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onOkCustomEvent() {
+                        Platform.runLater(() -> {
+                            envService.setLanguageType(LanguageType.EN);
+                            initMenu();
+                            appController.resetMenu();
+                            mainController.resetMain();
+                            StageMap.getAllStage().clear();
+                        });
+                        return false;
+                    }
+               });
             }
         });
-        zh.setOnAction(event -> {
-            if (zh.isSelected()) {
-                envService.setLanguageType(LanguageType.ZH);
-                initMenu();
-                appController.resetMenu();
-                mainController.resetMain();
-                StageMap.getAllStage().clear();
+
+        zh.selectedProperty().addListener((ov, b1, b2) -> {
+            if (b2) {
+                WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Message", GuiFxmlAndLanguageUtils.getString("GLOBAL_CHANGE_LANGUAGE"));
+                controller.addProcessMonitorListener(new WindowCustomListener() {
+                    @Override
+                    public boolean onShowCustomEvent() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onCloseAndCancelCustomEvent() {
+                        en.setSelected(true);
+                        envService.setLanguageType(LanguageType.EN);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onOkCustomEvent() {
+                        Platform.runLater(() -> {
+                            envService.setLanguageType(LanguageType.ZH);
+                            initMenu();
+                            appController.resetMenu();
+                            mainController.resetMain();
+                            StageMap.getAllStage().clear();
+                        });
+
+                        return false;
+                    }
+                });
             }
         });
         ToggleGroup toggleGroup = new ToggleGroup();
@@ -154,19 +200,19 @@ public class MenuFactory {
         legalMenuItem.setOnAction(event -> {
             GuiFxmlAndLanguageUtils.buildLegalDialog();
         });
-        MenuItem dapMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ABOUT_DAP"));
-        MenuItem updateMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_CHECK_UPDATE"));
+//        MenuItem dapMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ABOUT_DAP"));
+//        MenuItem updateMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_CHECK_UPDATE"));
 
-        dapMenuItem.setOnAction(event -> {
-            System.out.println("dap");
-        });
-
-        updateMenuItem.setOnAction(event -> {
-            System.out.println("update");
-        });
+//        dapMenuItem.setOnAction(event -> {
+//            System.out.println("dap");
+//        });
+//
+//        updateMenuItem.setOnAction(event -> {
+//            System.out.println("update");
+//        });
         menu.getItems().add(legalMenuItem);
-        menu.getItems().add(dapMenuItem);
-        menu.getItems().add(updateMenuItem);
+//        menu.getItems().add(dapMenuItem);
+//        menu.getItems().add(updateMenuItem);
         return getParentMenuBuilder().setParentLocation(ROOT_MENU).addMenu(menu);
     }
 
@@ -201,7 +247,7 @@ public class MenuFactory {
         try {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/export_setting.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("exportSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.EXPORTSETTING), root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("exportSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.GLOBAL_EXPORT_SETTING), root, getResource("css/platform_app.css").toExternalForm());
             stage.toFront();
             stage.show();
         } catch (Exception ex) {

@@ -57,22 +57,35 @@ public class LoginController {
     private void initialize() {
         DecoratorTextFiledUtils.decoratorFixedLengthTextFiled(userNameTxt, 20);
         DecoratorTextFiledUtils.decoratorFixedLengthTextFiled(passwordField, 20);
-        ImageView imageReset = new ImageView(new Image("/images/icon_choose_one_gray.png"));
-        imageReset.setFitHeight(16);
-        imageReset.setFitWidth(16);
+        loginBtn.setStyle("-fx-font-weight: bold;");
         loginImageView.setImage(new Image("/images/top_title_logo.png"));
+        resetLoginBtn();
         loginBtn.setOnAction(event -> {
-            loginBtn.getStyleClass().add("btn-primary-loading");
+            loginingBtn();
             if (doLogin()) {
                 UserModel userModel = UserModel.getInstance();
                 if (userModel != null) {
-                    StageMap.getStage(GuiConst.PLARTFORM_STAGE_LOGIN).close();
                     MenuFactory.getAppController().resetMenu();
                     MenuFactory.getMainController().resetMain();
+                    StageMap.getStage(GuiConst.PLARTFORM_STAGE_LOGIN).close();
                 }
-                loginBtn.getStyleClass().removeAll("btn-primary-loading");
             }
         });
+    }
+
+    private void resetLoginBtn() {
+        loginBtn.setText(GuiFxmlAndLanguageUtils.getString("LOGIN_BTN"));
+        loginBtn.getStyleClass().removeAll("btn-primary-loading");
+        loginBtn.setGraphic(null);
+    }
+
+    private void loginingBtn() {
+        ImageView imageReset = new ImageView(new Image("/images/small_loading.gif"));
+        imageReset.setFitHeight(16);
+        imageReset.setFitWidth(16);
+        loginBtn.setText(GuiFxmlAndLanguageUtils.getString("LOGINING_BTN"));
+        loginBtn.setGraphic(imageReset);
+        loginBtn.getStyleClass().add("btn-primary-loading");
     }
 
     private boolean doLogin() {
@@ -82,7 +95,7 @@ public class LoginController {
             this.initEnvData(userDto);
             return true;
         } else {
-            loginBtn.getStyleClass().removeAll("btn-primary-loading");
+            resetLoginBtn();
             addErrorTip();
         }
         return false;

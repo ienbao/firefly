@@ -24,8 +24,7 @@ public class PropertiesUtils {
             return pluginsPath;
         } else {
             String pluginFolderName = props.getProperty(PropertiesConstants.KEY_PLUGINS_FOLDER_NAME, PropertiesConstants.VALUE_DEFAULT_PLUGINS_FOLDER_NAME);
-            ResourceFinder rf = new ResourceFinder();
-            return rf.findResource(pluginFolderName).getPath();
+            return ApplicationPathUtil.getPath(pluginFolderName);
         }
     }
 }

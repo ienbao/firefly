@@ -243,6 +243,9 @@ public class DataSourceSettingController {
      * get Search Condition Event
      */
     private void getSearchConditionEvent() {
+        if (!searchTab.verifySearchTextArea()) {
+            return;
+        }
         List<String> columKey = new LinkedList<>();
         if (itemDataTableModel.getHeaderArray() != null && !itemDataTableModel.getHeaderArray().isEmpty()) {
             for (int i = 0; i < itemDataTableModel.getHeaderArray().size(); i++) {
@@ -261,8 +264,8 @@ public class DataSourceSettingController {
         Boolean flag = false;
         List<String> searchCondition = searchTab.getSearch();
         TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
-        List<String> timeKeys = templateSettingDto.getTimeKeys();
-        String timePattern = templateSettingDto.getTimePattern();
+        List<String> timeKeys = templateSettingDto.getTimePatternDto().getTimeKeys();
+        String timePattern = templateSettingDto.getTimePatternDto().getPattern();
         FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         if (!searchCondition.isEmpty()) {
             for (String condition : searchCondition) {

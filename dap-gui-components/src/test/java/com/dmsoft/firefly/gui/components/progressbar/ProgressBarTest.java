@@ -5,8 +5,13 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class ProgressBarTest extends Application {
 
@@ -54,8 +59,9 @@ public class ProgressBarTest extends Application {
         root.getChildren().addAll(smRed, mdRed, mdGreed, lgRed, lgGreen);
         Scene scene = new Scene(root, 1000, 250, Color.WHITE);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
-
+        primaryStage.getIcons().setAll(new Image( "/images/logo_16.png"));
         primaryStage.setScene(scene);
+
         primaryStage.show();
     }
 }

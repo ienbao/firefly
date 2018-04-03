@@ -18,6 +18,7 @@ import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcSettingServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.*;
+import com.dmsoft.firefly.plugin.spc.utils.enums.TimerKeyType;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -55,9 +56,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -110,6 +109,14 @@ public class SpcItemController implements Initializable {
     private List<String> stickyOnTopItems = Lists.newArrayList();
 
     private List<String> originalItems = Lists.newArrayList();
+
+    @FXML
+    private CheckBox enabledTimerCheckBox;
+    @FXML
+    private ComboBox timeComboBox;
+
+    private boolean isTimer;
+    private boolean startTimer;
 
     /**
      * init main controller
@@ -256,6 +263,33 @@ public class SpcItemController implements Initializable {
         initComponentEvent();
         initItemData();
         initSpcConfig();
+        initSpcTimer();
+    }
+
+    public void initSpcTimer() {
+        isTimer = false;
+        startTimer = false;
+        enabledTimerCheckBox.setSelected(false);
+        timeComboBox.setItems(FXCollections.observableArrayList(TimerKeyType.FIVE_MIN.getCode(), TimerKeyType.TEN_MIN.getCode(), TimerKeyType.TEN_MIN.getCode()));
+        timeComboBox.setValue(TimerKeyType.FIVE_MIN.getCode());
+    }
+
+    public SpcLeftConfigDto getCurrentConfigData() {
+        SpcLeftConfigDto leftConfigDto = new SpcLeftConfigDto();
+        leftConfigDto.setItems(getSelectedItem());
+        leftConfigDto.setBasicSearchs(searchTab.getBasicSearch());
+        if (searchTab.getAdvanceText().getText() != null) {
+            leftConfigDto.setAdvanceSearch(searchTab.getAdvanceText().getText());
+        }
+        leftConfigDto.setNdNumber(ndGroup.getText());
+        leftConfigDto.setSubGroup(subGroup.getText());
+        if (searchTab.getGroup1().getValue() != null) {
+            leftConfigDto.setAutoGroup1(searchTab.getGroup1().getValue());
+        }
+        if (searchTab.getGroup2().getValue() != null) {
+            leftConfigDto.setAutoGroup2(searchTab.getGroup2().getValue());
+        }
+        return leftConfigDto;
     }
 
     private void initBtnIcon() {
@@ -339,6 +373,13 @@ public class SpcItemController implements Initializable {
         analysisBtn.setOnAction(event -> getAnalysisBtnEvent());
         importBtn.setOnAction(event -> importLeftConfig());
         exportBtn.setOnAction(event -> exportLeftConfig());
+        enabledTimerCheckBox.selectedProperty().addListener((ov, v1, v2) -> {
+            isTimer = v2;
+            if (!isTimer && startTimer) {
+                startTimer = false;
+            }
+            updateAnalysisBtnTimer();
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -381,19 +422,70 @@ public class SpcItemController implements Initializable {
 
     @SuppressWarnings("unchecked")
     private void getAnalysisBtnEvent() {
+        Timer timer = null;
+        if (isTimer) {
+            if (startTimer) {
+                startTimer = false;
+                if (timer != null) {
+                    timer.cancel();
+                }
+            } else {
+                if (!validAnalysisCondition()) {
+                    return;
+                }
+                startTimer = true;
+//                timer = this.startTimerAnalysis();
+            }
+            this.updateAnalysisBtnTimer();
+        } else {
+            if (validAnalysisCondition()) {
+                this.normalAnalysisEvent();
+            }
+        }
+    }
+
+    private Timer startTimerAnalysis() {
+        long intervalTime;
+        String currentRefreshTime = (String) timeComboBox.getValue();
+        if (currentRefreshTime.equals(TimerKeyType.FIVE_MIN.getCode())) {
+            intervalTime = 5 * 60000;
+        } else if (currentRefreshTime.equals(TimerKeyType.TEN_MIN.getCode())) {
+            intervalTime = 10 * 60000;
+        } else {
+            intervalTime = 30 * 60000;
+        }
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                normalAnalysisEvent();
+            }
+        }, 50000);
+        return timer;
+    }
+
+    private boolean validAnalysisCondition() {
         if (isConfigError()) {
             RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
                     SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER),
                     SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_CONFIG_ERROR_MESSAGE));
-            return;
+            return false;
         }
         List<TestItemWithTypeDto> selectedItemDto = this.getSelectedItemDto();
         if (selectedItemDto.size() == 0) {
             RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
                     SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER),
                     SpcFxmlAndLanguageUtils.getString(ResourceMassages.UI_SPC_ANALYSIS_ITEM_EMPTY));
-            return;
+            return false;
         }
+        if (!searchTab.verifySearchTextArea()) {
+            return false;
+        }
+        return true;
+    }
+
+    private void normalAnalysisEvent() {
+        List<TestItemWithTypeDto> selectedItemDto = this.getSelectedItemDto();
         spcMainController.clearAnalysisData();
         List<String> projectNameList = envService.findActivatedProjectName();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
@@ -433,7 +525,7 @@ public class SpcItemController implements Initializable {
             @Override
             public void doJob(JobContext context) {
                 logger.error(context.getError().getMessage());
-                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                windowProgressTipController.updateFailProgress(context.getError().toString());
             }
         });
         jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
@@ -505,6 +597,7 @@ public class SpcItemController implements Initializable {
 //        windowProgressTipController.getTaskProgress().progressProperty().bind(service.progressProperty());
 //        service.start();
     }
+
 
     private List<String> getSelectedItem() {
         List<String> selectItems = Lists.newArrayList();
@@ -595,26 +688,17 @@ public class SpcItemController implements Initializable {
                 searchTab.getAdvanceText().setText(spcLeftConfigDto.getAdvanceSearch());
                 searchTab.getGroup1().setValue(spcLeftConfigDto.getAutoGroup1());
                 searchTab.getGroup2().setValue(spcLeftConfigDto.getAutoGroup2());
+            } else {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        SpcFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        SpcFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
             }
 
         }
     }
 
     private void exportLeftConfig() {
-        SpcLeftConfigDto leftConfigDto = new SpcLeftConfigDto();
-        leftConfigDto.setItems(getSelectedItem());
-        leftConfigDto.setBasicSearchs(searchTab.getBasicSearch());
-        if (searchTab.getAdvanceText().getText() != null) {
-            leftConfigDto.setAdvanceSearch(searchTab.getAdvanceText().getText());
-        }
-        leftConfigDto.setNdNumber(ndGroup.getText());
-        leftConfigDto.setSubGroup(subGroup.getText());
-        if (searchTab.getGroup1().getValue() != null) {
-            leftConfigDto.setAutoGroup1(searchTab.getGroup1().getValue());
-        }
-        if (searchTab.getGroup2().getValue() != null) {
-            leftConfigDto.setAutoGroup2(searchTab.getGroup2().getValue());
-        }
+        SpcLeftConfigDto leftConfigDto = this.getCurrentConfigData();
 
         String str = System.getProperty("user.home");
         FileChooser fileChooser = new FileChooser();
@@ -746,5 +830,23 @@ public class SpcItemController implements Initializable {
             }
         }
         return site == 0 ? 0 : modelList.size();
+    }
+
+    private void updateAnalysisBtnTimer() {
+        if (isTimer) {
+            if (!startTimer) {
+                analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_play.png")));
+                analysisBtn.getStyleClass().remove("btn-primary");
+                analysisBtn.getStyleClass().add("btn-timer");
+            } else {
+                analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_stop.png")));
+                analysisBtn.getStyleClass().remove("btn-timer");
+                analysisBtn.getStyleClass().add("btn-primary");
+            }
+        } else {
+            analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
+            analysisBtn.getStyleClass().remove("btn-timer");
+            analysisBtn.getStyleClass().add("btn-primary");
+        }
     }
 }

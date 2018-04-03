@@ -27,7 +27,7 @@ public class FileUtils {
 
 //        ZipFile zip = new ZipFile(zipFile, Charset.forName("GBK"));
         ZipFile zip = new ZipFile(zipFile);
-        String name = zip.getName().substring(zip.getName().lastIndexOf('\\') + 1, zip.getName().lastIndexOf('.'));
+        String name = zip.getName().substring(zip.getName().lastIndexOf(File.separator) + 1, zip.getName().lastIndexOf('.'));
 
         File pathFile = new File(descDir + name);
         if (!pathFile.exists()) {

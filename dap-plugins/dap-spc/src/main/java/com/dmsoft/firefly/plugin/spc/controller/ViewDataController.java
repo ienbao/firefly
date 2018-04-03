@@ -18,11 +18,11 @@ import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -30,7 +30,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -94,6 +93,7 @@ public class ViewDataController implements Initializable {
         this.statisticalSearchConditionDtoList = statisticalSearchConditionDtoList;
         this.selectedRowKeys = selectedRowKey;
         Platform.runLater(() -> {
+            this.dataFrame = dataFrame;
             if (dataFrame == null) {
                 Platform.runLater(() -> {
                     viewDataTable.getColumns().clear();
@@ -109,7 +109,6 @@ public class ViewDataController implements Initializable {
                 });
                 return;
             }
-            this.dataFrame = dataFrame;
             this.model = new ViewDataDFModel(dataFrame, selectedRowKey);
             this.model.setStatisticalSearchConditionDtoList(statisticalSearchConditionDtoList);
             this.model.setMainController(spcMainController);
@@ -174,7 +173,7 @@ public class ViewDataController implements Initializable {
         if (this.model != null) {
             return this.model.getSelectedRowKeys();
         } else {
-            return Lists.newArrayList();
+            return null;
         }
     }
 
@@ -195,6 +194,7 @@ public class ViewDataController implements Initializable {
             try {
                 root = fxmlLoader.load();
                 stage = WindowFactory.createOrUpdateSimpleWindowAsModel("spcQuickSearch", SpcFxmlAndLanguageUtils.getString(ResourceMassages.QUICK_SEARCH), root);
+                stage.setResizable(false);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -218,6 +218,12 @@ public class ViewDataController implements Initializable {
                     break;
             }
             quickSearchController.getSearchBtn().setOnAction(event1 -> {
+                if(quickSearchController.isError()){
+                    RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                            SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER),
+                            SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_QUICK_SEARCH_MESSAGE));
+                    return;
+                }
                 FilterType type1 = quickSearchController.getFilterType();
                 switch (type1) {
                     case ALL_DATA:
@@ -323,9 +329,14 @@ public class ViewDataController implements Initializable {
             fsg.setWithoutLowerLimit(null);
             fsg.setWithoutUpperLimit(null);
         }
+        model.getRowKeyArray().clear();
+        model.getRowKeyArray().addAll(dataFrame.getAllRowKeys());
     }
 
     private void filterTF() {
+        if(model == null){
+            return;
+        }
         model.getRowKeyArray().clear();
         for (String s : dataFrame.getAllRowKeys()) {
             List<String> datas = dataFrame.getDataRowList(s);

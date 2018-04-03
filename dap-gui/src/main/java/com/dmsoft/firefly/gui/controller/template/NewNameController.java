@@ -1,6 +1,8 @@
 package com.dmsoft.firefly.gui.controller.template;
 
-import com.dmsoft.firefly.gui.components.utils.StageMap;
+
+import com.dmsoft.firefly.gui.components.utils.*;
+import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -18,6 +20,12 @@ public class NewNameController {
     @FXML
     private void initialize(){
         initEvent();
+        ValidateRule rule = new ValidateRule();
+        rule.setMaxLength(255);
+        rule.setPattern("[A-Za-z0-9]+");
+        rule.setErrorStyle("text-field-error");
+        rule.setEmptyErrorMsg(FxmlAndLanguageUtils.getString(ValidationAnno.GLOBAL_VALIDATE_NOT_BE_EMPTY));
+        TextFieldWrapper.decorate(name, rule);
     }
 
     private void initEvent(){
@@ -36,5 +44,12 @@ public class NewNameController {
 
     public TextField getName() {
         return name;
+    }
+
+    public boolean isError(){
+        if(name.getStyleClass().contains("text-field-error")){
+            return true;
+        }
+        return false;
     }
 }
