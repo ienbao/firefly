@@ -215,6 +215,9 @@ public class ChartOperateButton extends Button {
      * @param selectedSets selected items
      */
     public void setSelectedSets(Set<String> selectedSets) {
+        if (this.selectedSets == null) {
+            return;
+        }
         this.selectedSets.clear();
         this.selectedSets = selectedSets;
         this.listView.refresh();

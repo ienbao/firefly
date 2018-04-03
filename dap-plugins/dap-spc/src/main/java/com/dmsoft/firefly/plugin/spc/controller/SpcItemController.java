@@ -127,7 +127,7 @@ public class SpcItemController implements Initializable {
         split.getItems().add(searchTab);
         itemFilter.getTextField().setPromptText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
-                filteredList.setPredicate(p -> p.getItem().contains(itemFilter.getTextField().getText()))
+                filteredList.setPredicate(p -> p.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase()))
         );
 
         // test item table init
@@ -256,6 +256,24 @@ public class SpcItemController implements Initializable {
         initComponentEvent();
         initItemData();
         initSpcConfig();
+    }
+
+    public SpcLeftConfigDto getCurrentConfigData(){
+        SpcLeftConfigDto leftConfigDto = new SpcLeftConfigDto();
+        leftConfigDto.setItems(getSelectedItem());
+        leftConfigDto.setBasicSearchs(searchTab.getBasicSearch());
+        if (searchTab.getAdvanceText().getText() != null) {
+            leftConfigDto.setAdvanceSearch(searchTab.getAdvanceText().getText());
+        }
+        leftConfigDto.setNdNumber(ndGroup.getText());
+        leftConfigDto.setSubGroup(subGroup.getText());
+        if (searchTab.getGroup1().getValue() != null) {
+            leftConfigDto.setAutoGroup1(searchTab.getGroup1().getValue());
+        }
+        if (searchTab.getGroup2().getValue() != null) {
+            leftConfigDto.setAutoGroup2(searchTab.getGroup2().getValue());
+        }
+        return leftConfigDto;
     }
 
     private void initBtnIcon() {
@@ -394,6 +412,9 @@ public class SpcItemController implements Initializable {
                     SpcFxmlAndLanguageUtils.getString(ResourceMassages.UI_SPC_ANALYSIS_ITEM_EMPTY));
             return;
         }
+        if (!searchTab.verifySearchTextArea()) {
+            return;
+        }
         spcMainController.clearAnalysisData();
         List<String> projectNameList = envService.findActivatedProjectName();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
@@ -433,7 +454,7 @@ public class SpcItemController implements Initializable {
             @Override
             public void doJob(JobContext context) {
                 logger.error(context.getError().getMessage());
-                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                windowProgressTipController.updateFailProgress(context.getError().toString());
             }
         });
         jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
@@ -595,26 +616,17 @@ public class SpcItemController implements Initializable {
                 searchTab.getAdvanceText().setText(spcLeftConfigDto.getAdvanceSearch());
                 searchTab.getGroup1().setValue(spcLeftConfigDto.getAutoGroup1());
                 searchTab.getGroup2().setValue(spcLeftConfigDto.getAutoGroup2());
+            } else {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                    SpcFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                    SpcFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
             }
 
         }
     }
 
     private void exportLeftConfig() {
-        SpcLeftConfigDto leftConfigDto = new SpcLeftConfigDto();
-        leftConfigDto.setItems(getSelectedItem());
-        leftConfigDto.setBasicSearchs(searchTab.getBasicSearch());
-        if (searchTab.getAdvanceText().getText() != null) {
-            leftConfigDto.setAdvanceSearch(searchTab.getAdvanceText().getText());
-        }
-        leftConfigDto.setNdNumber(ndGroup.getText());
-        leftConfigDto.setSubGroup(subGroup.getText());
-        if (searchTab.getGroup1().getValue() != null) {
-            leftConfigDto.setAutoGroup1(searchTab.getGroup1().getValue());
-        }
-        if (searchTab.getGroup2().getValue() != null) {
-            leftConfigDto.setAutoGroup2(searchTab.getGroup2().getValue());
-        }
+        SpcLeftConfigDto leftConfigDto = this.getCurrentConfigData();
 
         String str = System.getProperty("user.home");
         FileChooser fileChooser = new FileChooser();

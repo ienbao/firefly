@@ -66,7 +66,7 @@ public class GrrPlugin extends Plugin {
 
     @Override
     public void start() {
-        RuntimeContext.getBean(PluginUIContext.class).registerMainBody("grr", new IMainBodyPane() {
+        RuntimeContext.getBean(PluginUIContext.class).registerMainBody("GRR", new IMainBodyPane() {
             @Override
             public Pane getNewPane() {
                 Pane root = null;
@@ -110,7 +110,7 @@ public class GrrPlugin extends Plugin {
                 .addLast(new GrrConfigHandler())
                 .addLast(new ViewDataHandler())
                 .addLast(new SummaryHandler().setWeight(D100))
-                .addLast(new DetailResultHandler().setWeight(D100)));
+                .addLast(new DetailResultHandler()));
 
         jobManager.initializeJob(ParamKeys.GRR_EXPORT_JOB_PIPELINE, jobFactory.createJobPipeLine()
                 .addLast(new FindTestDataHandler())
@@ -146,6 +146,7 @@ public class GrrPlugin extends Plugin {
             FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_setting.fxml");
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrSetting", "Grr Setting", root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
+            stage.setResizable(false);
             stage.toFront();
             stage.show();
 

@@ -94,7 +94,7 @@ public class BasicJobManager implements JobManager {
                             jobPipeline.getErrorHandler().doJob(context);
                         });
                     }
-                    break;
+                    return;
                 }
             } else if (context.isInterrupted()) {
                 if (jobPipeline.getInterruptHandler() != null) {
@@ -103,7 +103,7 @@ public class BasicJobManager implements JobManager {
                         jobPipeline.getInterruptHandler().doJob(context);
                     });
                 }
-                break;
+                return;
             }
         }
         if (jobPipeline.getCompletedHandler() != null) {

@@ -115,6 +115,7 @@ public class SearchTabController {
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createSimpleWindowAsModel("advance", FxmlAndLanguageUtils.getString(ResourceMassages.ADVANCE), root, getResource("css/redfall/main.css").toExternalForm());
             stage.toFront();
+            stage.setResizable(false);
             stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -201,7 +202,7 @@ public class SearchTabController {
         List<String> conditionList = getSearch();
         List<String> conditionTestItemList = Lists.newArrayList();
         List<String> timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
-        String timePattern = envService.findActivatedTemplate().getTimePattern();
+        String timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
         FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         for (String condition : conditionList) {
             Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);
@@ -253,6 +254,38 @@ public class SearchTabController {
     }
 
     /**
+     * method to get basic search dto
+     *
+     * @return map
+     */
+    public List<BasicSearchDto> getOneBasicSearch() {
+        if (basicSearch.getChildren().size() > 0) {
+            List<BasicSearchDto> basicSearchDtos = Lists.newLinkedList();
+
+            for (Node node : basicSearch.getChildren()) {
+                if (node instanceof BasicSearchPane) {
+                    BasicSearchPane basicSearchPane = ((BasicSearchPane) node);
+                    if (basicSearchPane.getChildren().size() > 0) {
+                        List<BasicSearchDto> dtos = Lists.newArrayList();
+                        for (Node n : basicSearchPane.getChildren()) {
+                            if (n instanceof SearchComboBox) {
+                                BasicSearchDto basicSearchDto = new BasicSearchDto();
+                                basicSearchDto.setTestItem(((SearchComboBox) n).getTestItem());
+                                basicSearchDto.setOperator(((SearchComboBox) n).getOperator());
+                                basicSearchDto.setValue(((SearchComboBox) n).getValue());
+                                dtos.add(basicSearchDto);
+                            }
+                        }
+                        basicSearchDtos.addAll(dtos);
+                    }
+                }
+            }
+            return basicSearchDtos;
+        }
+        return null;
+    }
+
+    /**
      * method to set basic search condition dto
      *
      * @param basicSearchDtoMaps map of basic search dto
@@ -272,8 +305,28 @@ public class SearchTabController {
         }
     }
 
+    /**
+     * method to set basic search condition dto
+     *
+     * @param basicSearchDtoMaps map of basic search dto
+     */
+    public void setOneBasicSearch(List<BasicSearchDto> basicSearchDtoMaps) {
+        BasicSearchPane basicSearchPane = new BasicSearchPane();
+        if (basicSearchDtoMaps != null && basicSearchDtoMaps.size() > 0) {
+            List<BasicSearchDto> basicSearchDtos = basicSearchDtoMaps;
+            basicSearchDtos.forEach(basicSearchDto -> {
+                basicSearchPane.setSearch(basicSearchDto.getTestItem(), basicSearchDto.getOperator(), basicSearchDto.getValue());
+            });
+        }
+        basicSearch.getChildren().add(basicSearchPane);
+    }
+
     public TextArea getAdvanceText() {
         return advanceText;
+    }
+
+    public Tab getAdvanceTab() {
+        return advanceTab;
     }
 
     public ComboBox getGroup1() {

@@ -7,9 +7,7 @@ package com.dmsoft.firefly.gui.controller.template;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.core.utils.DataFormat;
 import com.dmsoft.firefly.gui.GuiApplication;
-import com.dmsoft.firefly.gui.components.utils.ImageUtils;
-import com.dmsoft.firefly.gui.components.utils.StageMap;
-import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
+import com.dmsoft.firefly.gui.components.utils.*;
 import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageController;
@@ -324,6 +322,11 @@ public class DataSourceController implements Initializable {
                 }
                 projectOrder.add(v.getValue());
             });
+            if (selectProject.isEmpty()) {
+                WindowMessageFactory.createWindowMessageHasOk(FxmlAndLanguageUtils.getString(ResourceMassages.MESSAGE),
+                        FxmlAndLanguageUtils.getString(ResourceMassages.PLEASE_SELECT_FILE));
+                return;
+            }
             Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(selectProject);
 
             envService.setActivatedProjectName(selectProject);
@@ -446,22 +449,28 @@ public class DataSourceController implements Initializable {
                 }
                 chooseTableRowDataList.add(chooseTableRowData);
             });
-        } else {
-            List<String> value = Lists.newArrayList();
-            value.addAll(sourceDataService.findAllProjectName());
-            value.forEach(v -> {
-                ChooseTableRowData chooseTableRowData = null;
+        }
+        List<String> value = Lists.newArrayList();
+        value.addAll(sourceDataService.findAllProjectName());
+        value.forEach(v -> {
+            if (projectOrder == null || !projectOrder.contains(v)) {
+                ChooseTableRowData chooseTableRowData;
                 if (selectProject != null && selectProject.contains(v)) {
                     chooseTableRowData = new ChooseTableRowData(true, v);
                 } else {
                     chooseTableRowData = new ChooseTableRowData(false, v);
                 }
                 chooseTableRowDataList.add(chooseTableRowData);
-            });
-        }
+            }
+        });
         setTableData(chooseTableRowDataList);
     }
 
+    /**
+     * method to set table data
+     *
+     * @param chooseTableRowDataList list of choose table row data
+     */
     public void setTableData(List<ChooseTableRowData> chooseTableRowDataList) {
         chooseTableRowDataObservableList.clear();
         chooseTableRowDataObservableList.addAll(chooseTableRowDataList);
@@ -473,6 +482,11 @@ public class DataSourceController implements Initializable {
         );
     }
 
+    /**
+     * method to get event handler
+     *
+     * @return event handler
+     */
     public EventHandler<WindowEvent> getEventHandler() {
         if (eventHandler == null) {
             eventHandler = new EventHandler<WindowEvent>() {

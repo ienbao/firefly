@@ -1,10 +1,13 @@
 package com.dmsoft.firefly.plugin.spc.charts;
 
 import com.dmsoft.firefly.plugin.spc.charts.data.BarCategoryData;
+import com.dmsoft.firefly.plugin.spc.charts.data.BoxPlotChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.NDBarChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
+import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.charts.utils.ReflectionUtils;
+import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
@@ -92,7 +95,38 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         if (barChartDataList == null) {
             return;
         }
+        setAxisRange(barChartDataList);
         barChartDataList.forEach(ndBarChartData -> createChartSeriesData(ndBarChartData, chartTooltip));
+    }
+
+    private void setAxisRange(List<NDBarChartData> barChartDataList) {
+        Double[] xLower = new Double[barChartDataList.size()];
+        Double[] xUpper = new Double[barChartDataList.size()];
+        Double[] yLower = new Double[barChartDataList.size()];
+        Double[] yUpper = new Double[barChartDataList.size()];
+        for (int i = 0; i < barChartDataList.size(); i++) {
+            xLower[i] = (Double) barChartDataList.get(i).getXLowerBound();
+            xUpper[i] = (Double) barChartDataList.get(i).getXUpperBound();
+            yLower[i] = (Double) barChartDataList.get(i).getYLowerBound();
+            yUpper[i] = (Double) barChartDataList.get(i).getYUpperBound();
+        }
+        Double xMax = MathUtils.getMax(xUpper);
+        Double xMin = MathUtils.getMin(xLower);
+        Double yMax = MathUtils.getMax(yUpper);
+        Double yMin = MathUtils.getMin(yLower);
+        if (xMax == null || xMin == null || yMax == null || yMin == null) {
+            return;
+        }
+        NumberAxis xAxis = (NumberAxis) this.getXAxis();
+        NumberAxis yAxis = (NumberAxis) this.getYAxis();
+        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
+        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
+        xAxis.setLowerBound(xMin - xReserve);
+        xAxis.setUpperBound(xMax + xReserve);
+        yAxis.setLowerBound(0);
+        yAxis.setUpperBound(yMax + yReserve);
+        xAxis.setTickUnit((xAxis.getUpperBound() - xAxis.getLowerBound()) / barChartDataList.size());
+        xAxis.setTickUnit((yAxis.getUpperBound() - yAxis.getLowerBound()) / barChartDataList.size());
     }
 
     /**

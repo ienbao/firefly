@@ -2,10 +2,13 @@ package com.dmsoft.firefly.plugin.spc.charts.view;
 
 import com.dmsoft.firefly.gui.components.chart.ChartSaveUtils;
 import com.dmsoft.firefly.gui.components.chart.ChartUtils;
+import com.dmsoft.firefly.plugin.spc.charts.utils.LegendUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
+import com.sun.javafx.charts.Legend;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
@@ -25,7 +28,7 @@ import java.io.File;
  *
  * @param <T> chart class
  */
-public class ChartPanel<T extends XYChart> extends BorderPane {
+public class ChartPanel<T extends XYChart> extends VBox {
 
     private T chart;
     private BorderPane titlePane;
@@ -35,9 +38,12 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
     private ChartUtils chartUtils;
     private boolean chartSizeChangeEnable = true;
     private boolean chartDraggingEnable = true;
+    private boolean showLegend = false;
 
     private final double spacing = 10;
     private final double threshold = 1;
+    private final double legendWidth = 255;
+    private final double legendHeight = 25;
 
     /**
      * Constructor for ChartPanel
@@ -45,7 +51,17 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
      * @param chart chart
      */
     public ChartPanel(T chart) {
-        this(chart, true, true);
+        this(chart, false, true, true);
+    }
+
+    /**
+     * Constructor for ChartPanel
+     *
+     * @param chart      chart
+     * @param showLegend whether show legend or not
+     */
+    public ChartPanel(T chart, boolean showLegend) {
+        this(chart, true, true, true);
     }
 
     /**
@@ -55,8 +71,8 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
      * @param chartSizeChangeEnable enable change chart size
      * @param chartDraggingEnable   enable drag chart
      */
-    public ChartPanel(T chart, boolean chartSizeChangeEnable, boolean chartDraggingEnable) {
-
+    public ChartPanel(T chart, boolean showLegend, boolean chartSizeChangeEnable, boolean chartDraggingEnable) {
+        this.showLegend = showLegend;
         this.chartSizeChangeEnable = chartSizeChangeEnable;
         this.chartDraggingEnable = chartDraggingEnable;
         this.chart = chart;
@@ -87,8 +103,6 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
     }
 
     private void initComponents() {
-
-        legendLbl = new Label();
         legendBtn = new Button();
         leftHBox = new HBox();
         customPane = new HBox();
@@ -124,32 +138,31 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
         rightHBox.getChildren().add(zoomInBtn);
         rightHBox.getChildren().add(zoomOutBtn);
         rightHBox.getChildren().add(menuBar);
-        rightHBox.setMargin(zoomInBtn, new Insets(0, 0, 0, 5));
-        rightHBox.setMargin(zoomOutBtn, new Insets(0, 0, 0, 5));
-        rightHBox.setMargin(menuBar, new Insets(-3, 0, 0, 5));
-        leftHBox.getChildren().add(legendLbl);
-        titlePane.setTop(topPane);
+        legend = new LegendUtils().buildReferenceLineLegend();
+        if (showLegend) {
+            leftHBox.getChildren().add(legend);
+        }
         titlePane.setLeft(leftHBox);
         titlePane.setRight(rightHBox);
-        this.setTop(titlePane);
-        this.setCenter(chart);
+        this.getChildren().add(titlePane);
+        this.getChildren().add(chart);
     }
 
     private void initComponentRender() {
-
         zoomInBtn.getStyleClass().addAll("btn-icon-b");
         zoomOutBtn.getStyleClass().addAll("btn-icon-b");
         extensionBtn.getStyleClass().addAll("btn-icon-b");
         legendBtn.getStyleClass().setAll("btn-icon-b");
-
         extensionMenu.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_more_normal.png")));
         extensionBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_more_normal.png")));
         zoomInBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_zoom_normal.png")));
         zoomOutBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_narrow_normal.png")));
         legendBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_unfold_normal.png")));
-        legendBtn.setPadding(new Insets(0, 0, 0, 3));
-        legendLbl.setPadding(new Insets(3, 0, 0, 0));
-        leftHBox.setPadding(new Insets(0, 0, 0, spacing));
+        rightHBox.setMargin(zoomInBtn, new Insets(0, 0, 0, 5));
+        rightHBox.setMargin(zoomOutBtn, new Insets(0, 0, 0, 5));
+        rightHBox.setMargin(menuBar, new Insets(-3, 0, 0, 5));
+        titlePane.setMargin(leftHBox, new Insets(3, 0, 0, spacing));
+        titlePane.setMargin(rightHBox, new Insets(3, 0, 0, 0));
 
 //        extensionMenu.setStyle("-fx-padding: 0em 1em 0em -0.8em");
         menuBar.getStyleClass().removeAll("menu-icon");
@@ -171,6 +184,12 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
         legendBtn.setMaxHeight(25);
         legendBtn.setMinHeight(25);
         chart.setLegendVisible(false);
+        legend.setPrefWidth(legendWidth);
+        legend.setPrefHeight(legendHeight);
+        Tooltip tooltip = new Tooltip();
+        tooltip.setGraphic(legend);
+        tooltip.getStyleClass().add("chart-legend-tooltip");
+        Tooltip.install(legendBtn, tooltip);
     }
 
     private void setComponentsTooltip() {
@@ -194,9 +213,8 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
         });
 
         this.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
-
             double titlePaneWidth = titlePane.getWidth();
-            double legendLabelWidth = legendLbl.getWidth();
+            double legendLabelWidth = legend.getWidth();
             double rightPaneWidth = rightHBox.getWidth();
             double totalWidth = legendLabelWidth + rightPaneWidth;
             if (titlePaneWidth > 0 && leftHBox.getWidth() > 0 && totalWidth > 0) {
@@ -207,7 +225,7 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
                 if (titlePaneWidth <= totalWidth + spacing + threshold) {
                     leftHBox.getChildren().setAll(legendBtn);
                 } else {
-                    leftHBox.getChildren().setAll(legendLbl);
+                    leftHBox.getChildren().setAll(legend);
                 }
             }
         });
@@ -228,7 +246,7 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
             if (file != null) {
                 try {
                     String imagePath = file.getAbsolutePath();
-                    if (imagePath.contains(suffix)) {
+                    if (!imagePath.contains(suffix)) {
                         imagePath += suffix;
                     }
                     file = new File(imagePath);
@@ -274,18 +292,8 @@ public class ChartPanel<T extends XYChart> extends BorderPane {
         extensionMenu.setDisable(flag);
     }
 
-    /**
-     * Set chart legend
-     *
-     * @param legend legend content
-     */
-    public void setLegend(String legend) {
-        legendLbl.setText(legend);
-        Tooltip.install(legendBtn, new Tooltip(legendLbl.getText()));
-    }
-
     private Button legendBtn;
-    private Label legendLbl;
+    private Legend legend;
     private HBox leftHBox;
     private HBox rightHBox;
     private HBox customPane;

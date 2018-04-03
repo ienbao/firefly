@@ -57,6 +57,8 @@ public class PluginXMLHandler extends DefaultHandler {
                 pluginInfo.setScanPath(attributes.getValue(i));
             } else if (XML_PLUGIN_CLASS_NAME.equals(attributes.getQName(i))) {
                 pluginInfo.setPluginClassName(attributes.getValue(i));
+            } else if (XML_DESCRIPTION.equals(attributes.getQName(i))) {
+                pluginInfo.setDescription(attributes.getValue(i));
             }
         }
     }

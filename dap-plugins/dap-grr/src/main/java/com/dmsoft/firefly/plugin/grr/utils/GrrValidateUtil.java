@@ -1,12 +1,15 @@
 package com.dmsoft.firefly.plugin.grr.utils;
 
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.utils.ValidateUtil;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
 
 /**
  * grr validate tool
@@ -18,6 +21,7 @@ public class GrrValidateUtil {
     private static Integer TEXT_GRR_MIN_INT = 1;
     private static Integer TEXT_GRR_MAX_INT = 20;
     private static String grrRegType = "^([1-9]|[1-1][0-9]|20)$";
+    private static String grrNumRegType = "^[+]?\\d*[.]?\\d*$";
 
     public static boolean validateGrr(Node... nodes) {
         if (nodes != null && nodes.length > 0) {
@@ -29,17 +33,12 @@ public class GrrValidateUtil {
                     result.set(validateResult(node));
                     textField.textProperty().addListener((obVal, oldVal, newVal) -> {
                         if (ValidateUtil.validateIsNotEmpty(newVal, textField)) {
-                            validateGrrReg(newVal, textField);
-                            result.set(validateResult(node));
-                        } else {
-                            result.set(validateResult(node));
-                        }
-                    });
-
-                    textField.focusedProperty().addListener((obVal, oldVal, newVal) -> {
-                        if (ValidateUtil.validateIsNotEmpty(textField.getText(), textField)) {
-                            validateGrrReg(textField.getText(), textField);
-                            result.set(validateResult(node));
+                            if (!Pattern.matches(grrNumRegType, newVal)) {
+                                textField.setText(oldVal);
+                            } else {
+                                validateGrrReg(newVal, textField);
+                                result.set(validateResult(node));
+                            }
                         } else {
                             result.set(validateResult(node));
                         }
@@ -53,11 +52,6 @@ public class GrrValidateUtil {
 
                     comboBox.valueProperty().addListener((obVal, oldVal, newVal) -> {
                         ValidateUtil.validateIsNotEmpty(newVal, comboBox);
-                        result.set(validateResult(node));
-                    });
-
-                    comboBox.focusedProperty().addListener((obVal, oldVal, newVal) -> {
-                        ValidateUtil.validateIsNotEmpty(comboBox.getValue(), comboBox);
                         result.set(validateResult(node));
                     });
                 }
@@ -82,5 +76,45 @@ public class GrrValidateUtil {
             }
         }
         return true;
+    }
+
+    public static boolean validateNotEqualResult(String value, String value2, Node node1, Node node2) {
+        boolean result = false;
+        if (DAPStringUtils.isBlank(value)) {
+            if (node1 instanceof TextField) {
+                node1.getStyleClass().add(ValidateUtil.TEXT_FIELD_ERROR_STYLE);
+            } else if (node1 instanceof ComboBox) {
+                node1.getStyleClass().add(ValidateUtil.COMBO_BOX_ERROR_STYLE);
+            }
+            TooltipUtil.installWarnTooltip(node1, FxmlAndLanguageUtils.getString("GLOBAL_VALIDATE_NOT_BE_EMPTY"));
+            if (node2 instanceof TextField) {
+                node2.getStyleClass().removeAll(ValidateUtil.TEXT_FIELD_ERROR_STYLE);
+            } else if (node2 instanceof ComboBox) {
+                node2.getStyleClass().removeAll(ValidateUtil.COMBO_BOX_ERROR_STYLE);
+            }
+            TooltipUtil.uninstallWarnTooltip(node2);
+        } else if (DAPStringUtils.isNotBlank(value) && DAPStringUtils.isNotBlank(value2) && value.equals(value2)) {
+            if (node1 instanceof TextField) {
+                node1.getStyleClass().add(ValidateUtil.TEXT_FIELD_ERROR_STYLE);
+            } else if (node1 instanceof ComboBox) {
+                node1.getStyleClass().add(ValidateUtil.COMBO_BOX_ERROR_STYLE);
+            }
+            TooltipUtil.installWarnTooltip(node1, FxmlAndLanguageUtils.getString("CHANGE_VALIDATE_NOT_EQUAL"));
+        } else {
+            if (node1 instanceof TextField) {
+                node1.getStyleClass().removeAll(ValidateUtil.TEXT_FIELD_ERROR_STYLE);
+            } else if (node1 instanceof ComboBox) {
+                node1.getStyleClass().removeAll(ValidateUtil.COMBO_BOX_ERROR_STYLE);
+            }
+            if (node2 instanceof TextField) {
+                node2.getStyleClass().removeAll(ValidateUtil.TEXT_FIELD_ERROR_STYLE);
+            } else if (node2 instanceof ComboBox) {
+                node2.getStyleClass().removeAll(ValidateUtil.COMBO_BOX_ERROR_STYLE);
+            }
+            TooltipUtil.uninstallWarnTooltip(node1);
+            TooltipUtil.uninstallWarnTooltip(node2);
+            result = true;
+        }
+        return result;
     }
 }

@@ -88,11 +88,8 @@
 }
 
 .chart-broken-line {
-    -fx-stroke-width: 1px;
-}
-
-.chart-broken-line:hover {
     -fx-stroke-width: 2px;
+    -fx-stroke-dash-array: 5px;
 }
 
 .chart-broken-hidden-line {
@@ -111,6 +108,20 @@
 }
 
 .chart-line-hidden-symbol {
+    -fx-background-insets: 4px;
+}
+
+.chart-path-symbol {
+    -fx-padding: 4px;
+    -fx-cursor: hand;
+    -fx-background-insets: 4px;
+}
+
+.chart-path-symbol:hover {
+    -fx-background-insets: 1px;
+}
+
+.chart-path-hidden-symbol {
     -fx-background-insets: 4px;
 }
 
@@ -274,6 +285,23 @@
 .menu-icon > .container > .menu-button {
     -fx-padding: 0em 0em 0em -0.63em;
 }
+
+.legend {
+    -fx-background-color: white;
+    -fx-border-width: 0;
+}
+
+.chart-legend-tooltip {
+    -fx-text-fill: rgb(34, 34, 34);
+    -fx-font-size: 12px;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+}
+
+.chart-legend-tooltip .chart-legend-item {
+    -fx-text-fill: rgb(34, 34, 34);
+}
+
 
 
 

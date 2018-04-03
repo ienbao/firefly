@@ -141,12 +141,14 @@ public class MainController {
     }
 
     private void setActiveFirstTab(PluginUIContext pc) {
-        Button firstTabBtn = (Button) tbaSystem.getItems().get(0);
-        grpContent.setDisable(false);
-        setActiveBtnStyle(firstTabBtn);
-        Pane pane = pc.getMainBodyPane(firstTabBtn.getId()).getNewPane();
-        pane.setId(firstTabBtn.getId());
-        initTab(firstTabBtn.getId(), pane);
+        if (tbaSystem.getItems() != null && !tbaSystem.getItems().isEmpty()) {
+            Button firstTabBtn = (Button) tbaSystem.getItems().get(0);
+            grpContent.setDisable(false);
+            setActiveBtnStyle(firstTabBtn);
+            Pane pane = pc.getMainBodyPane(firstTabBtn.getId()).getNewPane();
+            pane.setId(firstTabBtn.getId());
+            initTab(firstTabBtn.getId(), pane);
+        }
     }
 
     public void resetMain() {
@@ -425,8 +427,12 @@ public class MainController {
         if (projectName == null) {
             projectName = Lists.newArrayList();
         }
+        String activeTemplateName = "";
+        if(activeTemplate != null){
+            activeTemplateName = activeTemplate.getName();
+        }
         dataSourceList = FXCollections.observableArrayList(projectName);
-        initStateBarText(projectName, activeTemplate.getName());
+        initStateBarText(projectName, activeTemplateName);
     }
 
     public void initTemplate() {
@@ -436,7 +442,7 @@ public class MainController {
         if (allTemplates != null) {
             allTemplates.forEach(dto -> {
                 StateBarTemplateModel stateBarTemplateModel = new StateBarTemplateModel(dto.getName(), false);
-                if (templateSettingDto.getName().equals(stateBarTemplateModel.getTemplateName())) {
+                if (templateSettingDto != null && templateSettingDto.getName().equals(stateBarTemplateModel.getTemplateName())) {
                     stateBarTemplateModel.setIsChecked(true);
                 }
                 stateBarTemplateModels.add(stateBarTemplateModel);
@@ -453,6 +459,7 @@ public class MainController {
         this.templateList = templateList;
         templateView.setItems(templateList);
         templateView.refresh();
+        updateTemplateText(envService.findActivatedTemplate().getName());
     }
 
     private void getTemplateBtnEvent() {

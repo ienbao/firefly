@@ -31,6 +31,7 @@ import javafx.util.StringConverter;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -50,42 +51,69 @@ public class BuildChart {
      * @param appraisers         appraisers
      * @return grr image dto
      */
-    public static GrrImageDto buildImage(GrrDetailResultDto grrDetailResultDto, List<String> parts, List<String> appraisers) {
+    public static GrrImageDto buildImage(GrrDetailResultDto grrDetailResultDto,
+                                         List<String> parts,
+                                         List<String> appraisers,
+                                         Map<String, Boolean> exportParam) {
         digNum = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getDecimalDigit();
         vBox = new Group();
         scene = new Scene(vBox);
         scene.getStylesheets().add(BuildChart.class.getClassLoader().getResource("css/grr_chart.css").toExternalForm());
         GrrImageDto images = new GrrImageDto();
 //        LineChart partAppraiserChart = buildScatterChart();
-        LineChart partAppraiserChart = new LineChart(new CategoryAxis(), new NumberAxis());
-        partAppraiserChart.setAnimated(false);
-        partAppraiserChart.setLegendVisible(false);
-        setPartAppraiserChart(partAppraiserChart, grrDetailResultDto.getPartAppraiserChartDto(), parts, appraisers);
+        boolean partAppraiserValid = exportParam.containsKey(UIConstant.GRR_EXPORT_CONFIG_KEY[7]);
+        partAppraiserValid = partAppraiserValid && exportParam.get(UIConstant.GRR_EXPORT_CONFIG_KEY[7]);
+        partAppraiserValid = partAppraiserValid && grrDetailResultDto.getPartAppraiserChartDto() != null;
+        if (partAppraiserValid) {
+            LineChart partAppraiserChart = new LineChart(new CategoryAxis(), new NumberAxis());
+            partAppraiserChart.setAnimated(false);
+            partAppraiserChart.setLegendVisible(false);
+            setPartAppraiserChart(partAppraiserChart, grrDetailResultDto.getPartAppraiserChartDto(), parts, appraisers);
+            images.setGrrAPlotImagePath(exportImages("partAppraiserChart", partAppraiserChart));
+        }
+        boolean xBarAppraiserValid = exportParam.containsKey(UIConstant.GRR_EXPORT_CONFIG_KEY[6]);
+        xBarAppraiserValid = xBarAppraiserValid && exportParam.get(UIConstant.GRR_EXPORT_CONFIG_KEY[6]);
+        xBarAppraiserValid = xBarAppraiserValid && grrDetailResultDto.getXbarAppraiserChartDto() != null;
+        if (xBarAppraiserValid) {
+            LinearChart xBarAppraiserChart = buildControlChart(parts);
+            setControlChartData(grrDetailResultDto.getXbarAppraiserChartDto(), xBarAppraiserChart, parts, appraisers);
+            images.setGrrXBarImagePath(exportImages("xBarAppraiserChart", xBarAppraiserChart));
+        }
 
-        LinearChart xBarAppraiserChart = buildControlChart(parts);
-        setControlChartData(grrDetailResultDto.getXbarAppraiserChartDto(), xBarAppraiserChart, parts, appraisers);
-
-        LinearChart rangeAppraiserChart = buildControlChart(parts);
-        setControlChartData(grrDetailResultDto.getRangeAppraiserChartDto(), rangeAppraiserChart, parts, appraisers);
-
-        LineChart rrByAppraiserChart = buildScatterChart();
-        setScatterChartData(grrDetailResultDto.getRrbyAppraiserChartDto(), rrByAppraiserChart);
-
-        LineChart rrbyPartChart = buildScatterChart();
-        setScatterChartData(grrDetailResultDto.getRrbyPartChartDto(), rrbyPartChart);
-
-        BarChart componentChart = new BarChart(new CategoryAxis(), new NumberAxis());
-        componentChart.setAnimated(false);
-        componentChart.setLegendVisible(false);
-        setComponentChart(grrDetailResultDto.getComponentChartDto(), componentChart);
-
-        images.setGrrAPlotImagePath(exportImages("partAppraiserChart", partAppraiserChart));
-        images.setGrrXBarImagePath(exportImages("xBarAppraiserChart", xBarAppraiserChart));
-        images.setGrrRChartImagePath(exportImages("rangeAppraiserChart", rangeAppraiserChart));
-        images.setGrrRPlotChartAppImagePath(exportImages("rrByAppraiserChart", rrByAppraiserChart));
-        images.setGrrRPlotChartPartImagePath(exportImages("rrbyPartChart", rrbyPartChart));
-        images.setGrrComponentsImagePath(exportImages("componentChart", componentChart));
-
+        boolean rangeAppraiserValid = exportParam.containsKey(UIConstant.GRR_EXPORT_CONFIG_KEY[5]);
+        rangeAppraiserValid = rangeAppraiserValid && exportParam.get(UIConstant.GRR_EXPORT_CONFIG_KEY[5]);
+        rangeAppraiserValid = rangeAppraiserValid && grrDetailResultDto.getRangeAppraiserChartDto() != null;
+        if (rangeAppraiserValid) {
+            LinearChart rangeAppraiserChart = buildControlChart(parts);
+            setControlChartData(grrDetailResultDto.getRangeAppraiserChartDto(), rangeAppraiserChart, parts, appraisers);
+            images.setGrrRChartImagePath(exportImages("rangeAppraiserChart", rangeAppraiserChart));
+        }
+        boolean rrByAppraiserValid = exportParam.containsKey(UIConstant.GRR_EXPORT_CONFIG_KEY[4]);
+        rrByAppraiserValid = rrByAppraiserValid && exportParam.get(UIConstant.GRR_EXPORT_CONFIG_KEY[4]);
+        rrByAppraiserValid = rrByAppraiserValid && grrDetailResultDto.getRrbyAppraiserChartDto() != null;
+        if (rrByAppraiserValid) {
+            LineChart rrByAppraiserChart = buildScatterChart();
+            setScatterChartData(grrDetailResultDto.getRrbyAppraiserChartDto(), rrByAppraiserChart);
+            images.setGrrRPlotChartAppImagePath(exportImages("rrByAppraiserChart", rrByAppraiserChart));
+        }
+        boolean rrByPartValid = exportParam.containsKey(UIConstant.GRR_EXPORT_CONFIG_KEY[3]);
+        rrByPartValid = rrByPartValid && exportParam.get(UIConstant.GRR_EXPORT_CONFIG_KEY[3]);
+        rrByPartValid = rrByPartValid && grrDetailResultDto.getRrbyPartChartDto() != null;
+        if (rrByPartValid) {
+            LineChart rrbyPartChart = buildScatterChart();
+            setScatterChartData(grrDetailResultDto.getRrbyPartChartDto(), rrbyPartChart);
+            images.setGrrRPlotChartPartImagePath(exportImages("rrbyPartChart", rrbyPartChart));
+        }
+        boolean componentValid = exportParam.containsKey(UIConstant.GRR_EXPORT_CONFIG_KEY[8]);
+        componentValid = componentValid && exportParam.get(UIConstant.GRR_EXPORT_CONFIG_KEY[8]);
+        componentValid = componentValid && grrDetailResultDto.getComponentChartDto() != null;
+        if (componentValid) {
+            BarChart componentChart = new BarChart(new CategoryAxis(), new NumberAxis());
+            componentChart.setAnimated(false);
+            componentChart.setLegendVisible(false);
+            setComponentChart(grrDetailResultDto.getComponentChartDto(), componentChart);
+            images.setGrrComponentsImagePath(exportImages("componentChart", componentChart));
+        }
         return images;
     }
 

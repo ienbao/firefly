@@ -128,11 +128,13 @@ public class SearchComboBox extends GridPane {
 
         this.testItemBox.valueProperty().addListener((ObservableValue<? extends String> ov, String s1, String s2) -> {
             if (this.searchComboBoxController.isTimeKey(s2)) {
-                if (!this.valueBox.lookup(".arrow-button").getStyleClass().contains("arrow-calendar-button")) {
+                if (this.valueBox.lookup(".arrow-button") != null && !this.valueBox.lookup(".arrow-button").getStyleClass().contains("arrow-calendar-button")) {
                     this.valueBox.lookup(".arrow-button").getStyleClass().add("arrow-calendar-button");
                 }
             } else {
-                this.valueBox.lookup(".arrow-button").getStyleClass().remove("arrow-calendar-button");
+                if (this.valueBox.lookup(".arrow-button") != null) {
+                    this.valueBox.lookup(".arrow-button").getStyleClass().remove("arrow-calendar-button");
+                }
             }
             this.valueDatas = searchComboBoxController.getValueForTestItem(s2);
             values.clear();
@@ -281,7 +283,9 @@ public class SearchComboBox extends GridPane {
      * @param testItem test item
      */
     public void setTestItem(String testItem) {
-        this.testItemBox.getEditor().setText(testItem);
+        if (testItemBox.getItems() != null && testItemBox.getItems().contains(testItem)) {
+            this.testItemBox.setValue(testItem);
+        }
     }
 
     public String getOperator() {
@@ -307,7 +311,9 @@ public class SearchComboBox extends GridPane {
      * @param value value
      */
     public void setValue(String value) {
-        this.valueBox.setValue(value);
+        if (valueBox.getItems() != null && valueBox.getItems().contains(value)) {
+            this.valueBox.setValue(value);
+        }
     }
 
     public Button getCloseBtn() {

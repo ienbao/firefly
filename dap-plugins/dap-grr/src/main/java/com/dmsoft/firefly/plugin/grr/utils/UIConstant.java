@@ -10,14 +10,16 @@ public class UIConstant {
     public static final String UI_MESSAGE_TIP_SUCCESS_TITLE = "UI_MESSAGE_TIP_SUCCESS_TITLE";
     public static final String UI_MESSAGE_TIP_WARNING_TITLE = "UI_MESSAGE_TIP_WARNING_TITLE";
     public static final String UI_MESSAGE_TIP_INFO_TITLE = "UI_MESSAGE_TIP_INFO_TITLE";
+    public static final String UI_MESSAGE_TIP_LOCATION = "UI_MESSAGE_TIP_LOCATION";
+
     public static final String EXCEPTION_GRR_MODEL = "EXCEPTION_GRR_MODEL";
-    public static final String[] GRR_RESULT_TYPE = new String[] {"process tolerance", "system contribution"};
-    public static final String[] GRR_SUMMARY_TITLE = new String[] {"TestItem", "LSL", "USL", "Tolerance", "%Repeatability", "%Reproducibility", "%Gauge R & R"};
-    public static final String[] GRR_ANOVA_TITLE = new String[] {"Source", "DF", "SS", "MS", "F", "Prob > F"};
-    public static final String[] GRR_SOURCE_TITLE = new String[] {"Source of Variation", "SIGMA", "Study Var 6", "Variation", "%Total Sigma", "%Total Variation", "%Total Tolerance"};
-    public static final String[] CHART_COMPONENT_LABEL = new String[]{ "Gage R&R","Repeatability", "Reproducibility", "Part to Part"};
-    public static final String[] CHART_COMPONENT_CATEGORY = new String[]{"Contribution", "Variation", "Tolerance"};
-    public static final String[] CHART_OPERATE_NAME = new String[]{"UCL", "μ", "LCL"};
+//    public static final String[] GRR_RESULT_TYPE = new String[] {"process tolerance", "system contribution"};
+//    public static final String[] GRR_SUMMARY_TITLE = new String[] {"TestItem", "LSL", "USL", "Tolerance", "%Repeatability", "%Reproducibility", "%Gauge R & R"};
+//    public static final String[] GRR_ANOVA_TITLE = new String[] {"Source", "DF", "SS", "MS", "F", "Prob > F"};
+//    public static final String[] GRR_SOURCE_TITLE = new String[] {"Source of Variation", "SIGMA", "Study Var 6", "Variation", "%Total Sigma", "%Total Variation", "%Total Tolerance"};
+//    public static final String[] CHART_COMPONENT_LABEL = new String[]{ "Gage R&R","Repeatability", "Reproducibility", "Part to Part"};
+//    public static final String[] CHART_COMPONENT_CATEGORY = new String[]{"Contribution", "Variation", "Tolerance"};
+//    public static final String[] CHART_OPERATE_NAME = new String[]{"UCL", "μ", "LCL"};
     public static final String SPLIT_FLAG = "!@#";
 
     public static final Color COLOR_EXCELLENT = Color.rgb(125, 174, 20);
@@ -47,4 +49,55 @@ public class UIConstant {
     public static final String BTN_CHART_ZOOM_IN = GrrFxmlAndLanguageUtils.getString("BTN_CHART_ZOOM_IN");
     public static final String BTN_CHART_ZOOM_OUT = GrrFxmlAndLanguageUtils.getString("BTN_CHART_ZOOM_OUT");
     public static final String BTN_CHART_EXTENSION_MENU = GrrFxmlAndLanguageUtils.getString("BTN_CHART_EXTENSION_MENU");
+
+    public static final String[] GRR_RESULT_TYPE = new String[]{
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_TOLERANCE"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_CONTRIBUTION")};
+    public static final String[] CHART_COMPONENT_LABEL = new String[]{
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_GAGE_R"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_REPEATABILITY"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_REPRODUCIBILITY"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_PART")};
+    public static final String[] CHART_COMPONENT_CATEGORY = new String[]{
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_TOLERANCE")};
+    public static final String[] CHART_OPERATE_NAME = new String[]{
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
+            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION")};
+    public static final String[] GRR_SUMMARY_TITLE = new String[]{
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_TESTITEM"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_LSL"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_USL"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_TOLERANCE"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_REPEATABILITY"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_REPRODUCIBILITY"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_GAUGE")};
+    public static final String[] GRR_ANOVA_TITLE = new String[]{
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_SOURCE"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_DF"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_SS"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_MS"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_F"),
+            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_PROB")};
+    public static final String[] GRR_SOURCE_TITLE = new String[]{
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_SOURCE_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_SIGMA"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_STUDY_VAR"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_SIGMA"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_VARIATION"),
+            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_TOLERANCE")};
+
+    public static final String[] GRR_EXPORT_CONFIG_KEY = new String[]{
+            GrrFxmlAndLanguageUtils.getString("EXPORT_DETIAL"),
+            GrrFxmlAndLanguageUtils.getString("EXPORT_SOURCE"),
+            GrrFxmlAndLanguageUtils.getString("EXPORT_CHARTS"),
+            GrrFxmlAndLanguageUtils.getString("CHART_1"),
+            GrrFxmlAndLanguageUtils.getString("CHART_2"),
+            GrrFxmlAndLanguageUtils.getString("CHART_3"),
+            GrrFxmlAndLanguageUtils.getString("CHART_4"),
+            GrrFxmlAndLanguageUtils.getString("CHART_5"),
+            GrrFxmlAndLanguageUtils.getString("CHART_6")};
 }

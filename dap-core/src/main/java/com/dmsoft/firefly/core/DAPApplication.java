@@ -94,7 +94,6 @@ public class DAPApplication {
     public static void startPlugin(List<String> activePlugins) {
         // prepare env done
         String propertiesURL = ApplicationPathUtil.getPath("application.properties");
-        System.out.println(propertiesURL);
 
         InputStream inputStream = null;
         try {

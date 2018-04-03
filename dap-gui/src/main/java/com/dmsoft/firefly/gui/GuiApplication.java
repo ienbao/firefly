@@ -4,9 +4,11 @@ import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.core.DAPApplication;
 import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
 import com.dmsoft.firefly.core.utils.JsonFileUtil;
+import com.dmsoft.firefly.core.utils.ResourceFinder;
 import com.dmsoft.firefly.gui.components.utils.NodeMap;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowPane;
 import com.dmsoft.firefly.gui.job.BasicJobFactory;
 import com.dmsoft.firefly.gui.job.BasicJobManager;
 import com.dmsoft.firefly.gui.utils.*;
@@ -33,8 +35,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import javax.swing.*;
+import java.awt.*;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.ManagementFactory;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import static com.google.common.io.Resources.getResource;
@@ -44,7 +49,7 @@ import static com.google.common.io.Resources.getResource;
  */
 public class GuiApplication extends Application {
 
-    public static final int TOTAL_LOAD_CLASS = 5700;
+    public static final int TOTAL_LOAD_CLASS = 4800;
 
     static {
         System.getProperties().put("javafx.pseudoClassOverrideEnabled", "true");
@@ -67,6 +72,15 @@ public class GuiApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        String os = System.getProperty("os.name");
+        if (!os.toLowerCase().startsWith("win")) {
+            Class cla = Class.forName("com.apple.eawt.Application");
+            Method method1 = cla.getMethod("getApplication");
+            Object o = method1.invoke(cla);
+            Method method = cla.getMethod("setDockIconImage", Image.class);
+            ResourceFinder finder = new ResourceFinder();
+            method.invoke(o, new ImageIcon(finder.findResource("images/desktop_mac_logo.png")).getImage());
+        }
         String json = JsonFileUtil.readJsonFile(parentPath, GuiConst.ACTIVE_PLUGIN);
         List<KeyValueDto> activePlugin = Lists.newArrayList();
         if (DAPStringUtils.isNotBlank(json)) {
@@ -136,6 +150,7 @@ public class GuiApplication extends Application {
                             ClassLoadingMXBean classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
                             int process = (int) (classLoadingMXBean.getLoadedClassCount() * 1.0 / TOTAL_LOAD_CLASS * 100);
                             updateProgress(process, 100);
+                            System.out.println(classLoadingMXBean.getLoadedClassCount() + "sasdf");
                             if (process >= 100) {
                                 Platform.runLater(() -> {
                                     StageMap.getStage(GuiConst.PLARTFORM_STAGE_PROCESS).close();
@@ -143,6 +158,12 @@ public class GuiApplication extends Application {
                                         GuiFxmlAndLanguageUtils.buildLegalDialog();
                                     } else {
                                         StageMap.showStage(GuiConst.PLARTFORM_STAGE_MAIN);
+                                        Stage stage = StageMap.getStage(GuiConst.PLARTFORM_STAGE_MAIN);
+                                        if (stage.getScene().getRoot() instanceof WindowPane) {
+                                            WindowPane windowPane = (WindowPane) stage.getScene().getRoot();
+                                            windowPane.getController().maximizePropertyProperty().set(true);
+                                            System.out.println(true);
+                                        }
                                         GuiFxmlAndLanguageUtils.buildLoginDialog();
                                     }
                                 });
@@ -173,6 +194,8 @@ public class GuiApplication extends Application {
             tempScene.getStylesheets().add(getResource("css/platform_app.css").toExternalForm());
             tempScene.setFill(Color.TRANSPARENT);
             Stage stage = new Stage();
+            javafx.scene.image.Image image = new javafx.scene.image.Image("/images/desktop_mac_logo.png");
+            stage.getIcons().addAll(image);
             stage.initStyle(StageStyle.TRANSPARENT);
             stage.setScene(tempScene);
             stage.setResizable(false);

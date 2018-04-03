@@ -41,6 +41,8 @@
 
     COLORFUL_LIGHT_RED: #fde8e9;
     COLORFUL_MIDDLE_RED: #fac8ca;
+    COLORFUL_DARK_RED: #F48F93;
+
 
     /*auxiliary color*/
     COLORFUL_AUXILIARY_BLUE: #0096ff;
@@ -328,16 +330,16 @@
 
 .btn-primary-loading {
     -fx-text-fill: FONT_LIGHT;
-    -fx-highlight-fill: COLORFUL_MIDDLE_RED;
-    -fx-border-color: COLORFUL_MIDDLE_RED;
-    -fx-background-color: COLORFUL_MIDDLE_RED;
+    -fx-highlight-fill: COLORFUL_DARK_RED;
+    -fx-border-color: COLORFUL_DARK_RED;
+    -fx-background-color: COLORFUL_DARK_RED;
 }
 
 .btn-primary-loading:hover, .btn-primary-loading:pressed {
     -fx-text-fill: FONT_LIGHT;
-    -fx-highlight-fill: COLORFUL_MIDDLE_RED;
-    -fx-border-color: COLORFUL_MIDDLE_RED;
-    -fx-background-color: COLORFUL_MIDDLE_RED;
+    -fx-highlight-fill: COLORFUL_DARK_RED;
+    -fx-border-color: COLORFUL_DARK_RED;
+    -fx-background-color: COLORFUL_DARK_RED;
 }
 
 .btn-success {
@@ -386,6 +388,17 @@
     -fx-background-color: COLORFUL_MIDDLE_RED;
 }
 
+.btn-link-icon, .btn-link-icon:hover, .btn-link-icon:pressed,
+.btn-link-icon:focused, .btn-link-icon:focused:hover {
+    -fx-min-height: 10;
+    -fx-min-width: 10;
+    -fx-border-width: 1;
+    -fx-border-color: transparent;
+    -fx-background-position: center;
+    -fx-background-color: null;
+    -fx-background-repeat: no-repeat;
+}
+
 .btn-icon {
     -fx-min-height: 10;
     -fx-min-width: 10;
@@ -397,11 +410,12 @@
 }
 
 .btn-icon:hover {
-    -fx-border-color: null;
+    -fx-border-color: transparent;
     -fx-background-color: COLOR_BLACK_Fill_5;
 }
 
 .btn-icon:pressed {
+    -fx-border-color: transparent;
     -fx-background-color: COLOR_BLACK_Fill_15;
 }
 
@@ -708,6 +722,26 @@
 
 .text-area .content:disabled {
     -fx-background-color: #fafafa;
+}
+
+.text-area-error {
+    -fx-border-color: #ea2028;
+}
+
+.text-area-error .content {
+    -fx-background-color: #fde8e9;
+}
+
+.text-area-error:hover .content {
+    -fx-background-color: #fef4f4;
+}
+
+.text-area-error:focused {
+    -fx-border-color: #33abff;
+}
+
+.text-area-error:focused .content {
+    -fx-background-color: #fef4f4;
 }
 
 /*******************************************************************************

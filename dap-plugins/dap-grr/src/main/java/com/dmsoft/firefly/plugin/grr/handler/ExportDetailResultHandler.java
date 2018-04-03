@@ -4,12 +4,14 @@ import com.dmsoft.firefly.plugin.grr.controller.BuildChart;
 import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrSummaryResultDto;
 import com.dmsoft.firefly.plugin.grr.service.GrrExportService;
+import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.job.core.AbstractBasicJobHandler;
 import com.dmsoft.firefly.sdk.job.core.JobContext;
 import com.google.common.collect.Lists;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * handler for detail result export
@@ -50,10 +52,32 @@ public class ExportDetailResultHandler extends AbstractBasicJobHandler {
             summaryDtos.add(summaryDto);
             GrrExportResultDto exportResultDto = new GrrExportResultDto();
             exportResultDto.setItemName(dto.getItemName());
-            exportResultDto.setGrrAnovaAndSourceResultDto(dto.getExportDetailDto().getAnovaAndSourceResultDto());
+            if (configDto.getGrrConfigDto() != null && configDto.getGrrConfigDto().getExport().containsKey(UIConstant.GRR_EXPORT_CONFIG_KEY[0])) {
+                Map<String, Boolean> data = configDto.getGrrConfigDto().getExport();
+                if (!data.get(UIConstant.GRR_EXPORT_CONFIG_KEY[0])) {
+                    exportResultDto.setGrrAnovaAndSourceResultDto(null);
+                    exportResultDto.setGrrImageDto(null);
+                } else {
 
+                    if (data.containsKey(UIConstant.GRR_EXPORT_CONFIG_KEY[1])) {
+                        if (data.get(UIConstant.GRR_EXPORT_CONFIG_KEY[1])) {
+                            exportResultDto.setGrrAnovaAndSourceResultDto(dto.getExportDetailDto().getAnovaAndSourceResultDto());
+                        } else {
+                            exportResultDto.setGrrAnovaAndSourceResultDto(null);
+                        }
+                    }
 
-            exportResultDto.setGrrImageDto(BuildChart.buildImage(dto.getExportDetailDto(), searchConditionDto.getParts(), searchConditionDto.getAppraisers()));
+                    if (data.containsKey(UIConstant.GRR_EXPORT_CONFIG_KEY[2])) {
+                        if (data.get(UIConstant.GRR_EXPORT_CONFIG_KEY[2])) {
+                            exportResultDto.setGrrImageDto(BuildChart.buildImage(dto.getExportDetailDto(), searchConditionDto.getParts(), searchConditionDto.getAppraisers(), configDto.getGrrConfigDto().getExport()));
+                        } else {
+                            exportResultDto.setGrrImageDto(null);
+                        }
+                    }
+                }
+            }
+//            exportResultDto.setGrrAnovaAndSourceResultDto(dto.getExportDetailDto().getAnovaAndSourceResultDto());
+//            exportResultDto.setGrrImageDto(BuildChart.buildImage(dto.getExportDetailDto(), searchConditionDto.getParts(), searchConditionDto.getAppraisers(), configDto.getGrrConfigDto().getExport()));
             grrExportResultDtos.add(exportResultDto);
         }
         String path = RuntimeContext.getBean(GrrExportService.class).exportGrrSummaryDetail(configDto, summaryDtos, grrExportResultDtos);

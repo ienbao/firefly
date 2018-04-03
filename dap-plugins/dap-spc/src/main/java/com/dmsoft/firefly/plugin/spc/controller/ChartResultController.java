@@ -11,6 +11,7 @@ import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.ControlChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.NDBarChartData;
 import com.dmsoft.firefly.plugin.spc.charts.select.SelectCallBack;
+import com.dmsoft.firefly.plugin.spc.charts.utils.LegendUtils;
 import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
@@ -33,6 +34,7 @@ import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.sun.javafx.charts.Legend;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -70,7 +72,6 @@ public class ChartResultController implements Initializable {
     private ChartPanel<ControlChart> mrChartPane;
     private List<XYChart.Data> annotationData = Lists.newArrayList();
     private ChartTooltip chartTooltip = new SpcChartToolTip();
-    private String legend = "- - - LSL, USL  —— m Line   —— 6s Line";
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
     @Override
@@ -204,8 +205,8 @@ public class ChartResultController implements Initializable {
 
     private void initChartPane() {
 
-        ndChartPane = new ChartPanel<>((NDChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[0]));
-        runChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[1]));
+        ndChartPane = new ChartPanel<>((NDChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[0]), true);
+        runChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[1]), true);
         xBarChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[2]));
         rangeChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[3]));
         sdChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[4]));
@@ -214,12 +215,14 @@ public class ChartResultController implements Initializable {
         mrChartPane = new ChartPanel<>((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[7]));
 
         this.initChartOperateSelectCallBackMap();
+
         //nd chart
         ndOperateBtn = this.buildChartOperateButton(UIConstant.SPC_CHART_NAME[0]);
         ndChartPane.getCustomPane().getChildren().add(ndOperateBtn);
-        ndChartPane.setLegend(legend);
+
         //run chart
         this.initRunChartPane((ControlChart) chartNodeMap.get(UIConstant.SPC_CHART_NAME[1]));
+
         //bar chart
         barOperateBtn = this.buildChartOperateButton(UIConstant.SPC_CHART_NAME[2]);
         xBarChartPane.getCustomPane().getChildren().add(barOperateBtn);
@@ -300,7 +303,6 @@ public class ChartResultController implements Initializable {
                 operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_BOX_EXTERN_MENU));
             }
             performanceMap.put(name, operatePerformance);
-//            List<String> operateNames = chartOperateNameMap.get(name);
         }
         UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
         userPreferenceDto.setUserName(envService.getUserName());
@@ -323,17 +325,13 @@ public class ChartResultController implements Initializable {
     private SelectCallBack buildControlChartSelectCallBack(ControlChart chart, String chartName) {
         return (name, selected, selectedNames) -> {
             if (UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[4].equalsIgnoreCase(name)) {
-                ObservableList<XYChart.Series> series = chart.getData();
-                series.forEach(oneSeries -> chart.toggleSeriesLine(oneSeries, selected));
+                chart.toggleDataAllSeriesLine(selected);
             } else if (UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[3].equalsIgnoreCase(name)) {
-                ObservableList<XYChart.Series<Number, Number>> series = chart.getData();
-                series.forEach(oneSeries -> oneSeries.getData().forEach(dataItem -> {
-                    chart.toggleSeriesPoint(dataItem, selected);
-                }));
+                chart.toggleDataAllSeriesPoint(selected);
             } else if (UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[1].equalsIgnoreCase(name)) {
                 chart.toggleValueMarker(name, selected);
             } else {
-                chart.togglePathMarker(name, selected);
+                chart.togglePathAllSeriesLine(name, selected);
             }
             //update user performance
             updatePerformance(chartName, selectedNames);
@@ -419,6 +417,7 @@ public class ChartResultController implements Initializable {
         yAxis.setTickMarkVisible(false);
         yAxis.setMinorTickVisible(false);
         yAxis.setAutoRanging(false);
+        xAxis.setAutoRanging(false);
         yAxis.setForceZeroInRange(false);
         ControlChart controlChart = new ControlChart(xAxis, yAxis);
         return controlChart;
@@ -462,13 +461,11 @@ public class ChartResultController implements Initializable {
         runChartPane.getCustomPane().setMargin(editBtn, new Insets(0, 0, 0, 5));
         runChartPane.getCustomPane().setMargin(runOperateBtn, new Insets(0, 0, 0, 5));
         runChartPane.getCustomPane().setMargin(rRuleBtn, new Insets(0, 0, 0, 5));
-        runChartPane.setLegend(legend);
         chart.activePointClickEvent(true);
         chart.setPointClickCallBack(id -> {
             String key = (String) id;
             spcMainController.setViewDataFocusRowData(key);
         });
-        chart.setSeriesAnnotationEvent(buildAnnotationFetch());
     }
 
     private void setNdChartData(String chartName, List<NDBarChartData> ndChartData) {
@@ -479,31 +476,6 @@ public class ChartResultController implements Initializable {
         } else {
             chartMap.put(chartName, chart);
         }
-        Double[] xLower = new Double[ndChartData.size()];
-        Double[] xUpper = new Double[ndChartData.size()];
-        Double[] yLower = new Double[ndChartData.size()];
-        Double[] yUpper = new Double[ndChartData.size()];
-        for (int i = 0; i < ndChartData.size(); i++) {
-            xLower[i] = (Double) ndChartData.get(i).getXLowerBound();
-            xUpper[i] = (Double) ndChartData.get(i).getXUpperBound();
-            yLower[i] = (Double) ndChartData.get(i).getYLowerBound();
-            yUpper[i] = (Double) ndChartData.get(i).getYUpperBound();
-        }
-        Double xMax = MathUtils.getMax(xUpper);
-        Double xMin = MathUtils.getMin(xLower);
-        Double yMax = MathUtils.getMax(yUpper);
-        Double yMin = MathUtils.getMin(yLower);
-        if (xMax == null || xMin == null || yMax == null || yMin == null) {
-            return;
-        }
-        NumberAxis xAxis = (NumberAxis) chart.getXAxis();
-        NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
-        xAxis.setLowerBound(xMin - xReserve);
-        xAxis.setUpperBound(xMax + xReserve);
-        yAxis.setLowerBound(yMin);
-        yAxis.setUpperBound(yMax + yReserve);
         chart.setData(ndChartData, chartTooltip);
         this.setNdChartPerformance();
         ndChartPane.updateChartData();
@@ -522,35 +494,10 @@ public class ChartResultController implements Initializable {
         if (runChartData == null) {
             return;
         }
-        Double[] xLower = new Double[runChartData.size()];
-        Double[] xUpper = new Double[runChartData.size()];
-        Double[] yLower = new Double[runChartData.size()];
-        Double[] yUpper = new Double[runChartData.size()];
-        for (int i = 0; i < runChartData.size(); i++) {
-            xLower[i] = (Double) runChartData.get(i).getXLowerBound();
-            xUpper[i] = (Double) runChartData.get(i).getXUpperBound();
-            yLower[i] = (Double) runChartData.get(i).getYLowerBound();
-            yUpper[i] = (Double) runChartData.get(i).getYUpperBound();
-        }
-        Double xMax = MathUtils.getMax(xUpper);
-        Double xMin = MathUtils.getMin(xLower);
-        Double yMax = MathUtils.getMax(yUpper);
-        Double yMin = MathUtils.getMin(yLower);
-        if (xMax == null || xMin == null || yMax == null || yMin == null) {
-            return;
-        }
-        NumberAxis xAxis = (NumberAxis) chart.getXAxis();
-        NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
-        xAxis.setLowerBound(xMin - xReserve);
-        xAxis.setUpperBound(xMax + xReserve);
-        yAxis.setLowerBound(yMin - yReserve);
-        yAxis.setUpperBound(yMax + yReserve);
         chart.setData(runChartData, chartTooltip);
+        chart.setSeriesAnnotationEvent(buildAnnotationFetch());
         this.setRunChartPerformance();
         runChartPane.updateChartData();
-//        runChartPane.activeChartDragging();
         runChartPane.toggleCustomButtonDisable(false);
     }
 
@@ -563,31 +510,6 @@ public class ChartResultController implements Initializable {
         } else {
             chartMap.put(chartName, controlChart);
         }
-        Double[] xLower = new Double[controlChartData.size()];
-        Double[] xUpper = new Double[controlChartData.size()];
-        Double[] yLower = new Double[controlChartData.size()];
-        Double[] yUpper = new Double[controlChartData.size()];
-        for (int i = 0; i < controlChartData.size(); i++) {
-            xLower[i] = (Double) controlChartData.get(i).getXLowerBound();
-            xUpper[i] = (Double) controlChartData.get(i).getXUpperBound();
-            yLower[i] = (Double) controlChartData.get(i).getYLowerBound();
-            yUpper[i] = (Double) controlChartData.get(i).getYUpperBound();
-        }
-        Double xMax = MathUtils.getMax(xUpper);
-        Double xMin = MathUtils.getMin(xLower);
-        Double yMax = MathUtils.getMax(yUpper);
-        Double yMin = MathUtils.getMin(yLower);
-        if (xMax == null || xMin == null || yMax == null || yMin == null) {
-            return;
-        }
-        NumberAxis xAxis = (NumberAxis) controlChart.getXAxis();
-        NumberAxis yAxis = (NumberAxis) controlChart.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
-        xAxis.setLowerBound(xMin - xReserve);
-        xAxis.setUpperBound(xMax + xReserve);
-        yAxis.setLowerBound(yMin - yReserve);
-        yAxis.setUpperBound(yMax + yReserve);
         controlChart.setData(controlChartData, chartTooltip);
         controlChartData.forEach(controlChartData1 -> {
             Double[] ucl = controlChartData1.getUclData();
@@ -608,34 +530,8 @@ public class ChartResultController implements Initializable {
         } else {
             chartMap.put(chartName, chart);
         }
-        Double[] xLower = new Double[boxChartData.size()];
-        Double[] xUpper = new Double[boxChartData.size()];
-        Double[] yLower = new Double[boxChartData.size()];
-        Double[] yUpper = new Double[boxChartData.size()];
-        for (int i = 0; i < boxChartData.size(); i++) {
-            xLower[i] = (Double) boxChartData.get(i).getXLowerBound();
-            xUpper[i] = (Double) boxChartData.get(i).getXUpperBound();
-            yLower[i] = (Double) boxChartData.get(i).getYLowerBound();
-            yUpper[i] = (Double) boxChartData.get(i).getYUpperBound();
-        }
-        Double xMax = MathUtils.getMax(xUpper);
-        Double xMin = MathUtils.getMin(xLower);
-        Double yMax = MathUtils.getMax(yUpper);
-        Double yMin = MathUtils.getMin(yLower);
-        if (xMax == null || xMin == null || yMax == null || yMin == null) {
-            return;
-        }
-        NumberAxis xAxis = (NumberAxis) chart.getXAxis();
-        NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
-        xAxis.setLowerBound(xMin - xReserve);
-        xAxis.setUpperBound(xMax + xReserve);
-        yAxis.setLowerBound(yMin - yReserve);
-        yAxis.setUpperBound(yMax + yReserve);
         chart.setData(boxChartData, chartTooltip);
         this.setBoxChartPerformance();
-//        boxChartPane.activeChartDragging();
         boxChartPane.updateChartData();
         boxChartPane.toggleCustomButtonDisable(false);
     }
@@ -663,11 +559,11 @@ public class ChartResultController implements Initializable {
         for (String operateName : UIConstant.SPC_CHART_RUN_EXTERN_MENU) {
             if (!runOperateBtn.getSelectedSets().contains(operateName)) {
                 if (operateName.equals(UIConstant.SPC_CHART_RUN_EXTERN_MENU[9])) {
-                    runChartPane.getChart().hiddenAllSeriesPoint();
+                    runChartPane.getChart().hiddenDataSeriesPoint();
                     continue;
                 }
                 if (operateName.equals(UIConstant.SPC_CHART_RUN_EXTERN_MENU[10])) {
-                    runChartPane.getChart().hiddenAllSeriesLine();
+                    runChartPane.getChart().hiddenDataSeriesLine();
                     continue;
                 }
                 hiddenLines.add(operateName);
@@ -684,6 +580,7 @@ public class ChartResultController implements Initializable {
             });
         }
         rRuleBtn.removeData(removeRules);
+        rRuleBtn.setSelectedSets(Sets.newLinkedHashSet());
         runChartPane.getChart().hiddenValueMarkers(hiddenLines);
         runChartPane.getChart().setSeriesDataStyleByRule(Lists.newArrayList(rRuleBtn.getSelectedSets()));
     }
@@ -693,11 +590,19 @@ public class ChartResultController implements Initializable {
         for (String operateName : UIConstant.SPC_CHART_CONTROL_EXTERN_MENU) {
             if (!chartButtonMap.get(chartName).getSelectedSets().contains(operateName)) {
                 if (operateName.equals(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[3])) {
-                    controlChart.hiddenAllSeriesPoint();
+                    controlChart.hiddenDataSeriesPoint();
                     continue;
                 }
                 if (operateName.equals(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[4])) {
-                    controlChart.hiddenAllSeriesLine();
+                    controlChart.hiddenDataSeriesLine();
+                    continue;
+                }
+                if (controlChart.equals(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[0])) {
+                    controlChart.hiddenPathSeriesLine(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[0]);
+                    continue;
+                }
+                if (controlChart.equals(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[2])) {
+                    controlChart.hiddenPathSeriesLine(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[2]);
                     continue;
                 }
                 hiddenLines.add(operateName);
@@ -781,13 +686,9 @@ public class ChartResultController implements Initializable {
         chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[1], (name, selected, selectedNames) -> {
             ControlChart runChart = runChartPane.getChart();
             if (UIConstant.SPC_CHART_RUN_EXTERN_MENU[10].equalsIgnoreCase(name)) {
-                ObservableList<XYChart.Series> series = runChart.getData();
-                series.forEach(oneSeries -> runChart.toggleSeriesLine(oneSeries, selected));
+                runChart.toggleDataAllSeriesLine(selected);
             } else if (UIConstant.SPC_CHART_RUN_EXTERN_MENU[9].equalsIgnoreCase(name)) {
-                ObservableList<XYChart.Series<Number, Number>> series = runChart.getData();
-                series.forEach(oneSeries -> oneSeries.getData().forEach(dataItem -> {
-                    runChart.toggleSeriesPoint(dataItem, selected);
-                }));
+                runChart.toggleDataAllSeriesPoint(selected);
             } else {
                 runChart.toggleValueMarker(name, selected);
             }
