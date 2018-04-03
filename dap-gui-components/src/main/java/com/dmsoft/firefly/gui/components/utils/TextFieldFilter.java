@@ -18,6 +18,9 @@ public class TextFieldFilter extends HBox {
     private ImageView searchIcon = ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png"));
     private ImageView clearIcon = ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_clear_click.png"));
 
+    /**
+     * constructor
+     */
     public TextFieldFilter() {
         textField = new TextField();
         textField.setPromptText("Filter");
