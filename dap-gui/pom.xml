@@ -68,7 +68,7 @@
                 </excludes>
             </resource>
             <resource>
-                <directory>../dap-plugins/distribution/target/distribution-1.0.0-bin</directory>
+                <directory>../dap-plugins/distribution/target/dap-plugin-bin</directory>
                 <includes>
                     <include>**/</include>
                 </includes>

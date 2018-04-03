@@ -59,7 +59,7 @@
         </fileSet>
 
         <fileSet>
-            <directory>../dap-plugins/distribution/target/distribution-1.0.0-bin/Plugins</directory>
+            <directory>../dap-plugins/distribution/target/dap-plugin-bin/Plugins</directory>
             <outputDirectory>Plugins</outputDirectory>
         </fileSet>
 

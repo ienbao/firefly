@@ -25,6 +25,9 @@
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <finalName>dap-plugin</finalName>
+                </configuration>
                 <executions>
                     <execution>
                         <id>distro-assembly</id>
