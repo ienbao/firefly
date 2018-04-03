@@ -103,7 +103,9 @@ public class SearchTab extends VBox {
                         }
                     }
                     if (errorTestItemName != null) {
-                        controller.getAdvanceText().getStyleClass().add("text-area-error");
+                        if (!controller.getAdvanceText().getStyleClass().contains("text-area-error")) {
+                            controller.getAdvanceText().getStyleClass().add("text-area-error");
+                        }
                         TooltipUtil.installWarnTooltip(controller.getAdvanceText(),
                                 FxmlAndLanguageUtils.getString(ResourceMassages.UNABLE_TO_FIND_TEST_ITEM) + errorTestItemName.substring(0, errorTestItemName.length() - 2));
                         return false;
@@ -112,6 +114,10 @@ public class SearchTab extends VBox {
                     TooltipUtil.uninstallWarnTooltip(controller.getAdvanceText());
                     return true;
                 }
+            } else {
+                controller.getAdvanceText().getStyleClass().removeAll("text-area-error");
+                TooltipUtil.uninstallWarnTooltip(controller.getAdvanceText());
+                return true;
             }
         }
         return true;

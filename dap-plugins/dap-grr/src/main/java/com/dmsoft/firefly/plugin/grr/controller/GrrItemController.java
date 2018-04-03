@@ -309,7 +309,7 @@ public class GrrItemController implements Initializable {
         }
     }
 
-    private void updateAppraiserListViewDatas(Set<String> selectedAppraisers,  String appraiser) {
+    private void updateAppraiserListViewDatas(Set<String> selectedAppraisers, String appraiser) {
         appraiserListView.getItems().clear();
         appraiserList.clear();
         if (isContainValue(appraiser, appraiserCombox)) {
@@ -708,6 +708,7 @@ public class GrrItemController implements Initializable {
         if (checkSubmitParam(selectedItemDto.size())) {
             JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
             WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+            windowProgressTipController.setAutoHide(false);
             List<String> projectNameList = envService.findActivatedProjectName();
             List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
             context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
@@ -1056,8 +1057,8 @@ public class GrrItemController implements Initializable {
                 }
             } else {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
             }
 
         }
