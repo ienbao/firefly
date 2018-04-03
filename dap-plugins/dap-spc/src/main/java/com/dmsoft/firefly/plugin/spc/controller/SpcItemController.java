@@ -118,6 +118,8 @@ public class SpcItemController implements Initializable {
     private boolean isTimer;
     private boolean startTimer;
 
+    private Timer timer;
+
     /**
      * init main controller
      *
@@ -422,7 +424,6 @@ public class SpcItemController implements Initializable {
 
     @SuppressWarnings("unchecked")
     private void getAnalysisBtnEvent() {
-        Timer timer = null;
         if (isTimer) {
             if (startTimer) {
                 startTimer = false;
@@ -434,7 +435,7 @@ public class SpcItemController implements Initializable {
                     return;
                 }
                 startTimer = true;
-//                timer = this.startTimerAnalysis();
+                timer = this.startTimerAnalysis();
             }
             this.updateAnalysisBtnTimer();
         } else {
@@ -458,9 +459,11 @@ public class SpcItemController implements Initializable {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                normalAnalysisEvent();
+                Platform.runLater(() -> {
+                    normalAnalysisEvent();
+                });
             }
-        }, 50000);
+        }, 0, intervalTime);
         return timer;
     }
 

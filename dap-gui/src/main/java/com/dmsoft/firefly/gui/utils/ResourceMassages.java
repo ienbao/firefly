@@ -34,4 +34,5 @@ public class ResourceMassages {
     public static final String TEMPLATE_USL_LESS_THEN_LSL = "TEMPLATE_USL_LESS_THEN_LSL";
     public static final String TEMPLATE_LSL_MORE_THEN_USL = "TEMPLATE_LSL_MORE_THEN_USL";
     public static final String TEMPLATE_APPLY_WARN_MESSAGE = "TEMPLATE_APPLY_WARN_MESSAGE";
+    public static final String TEMPLATE_DELETE_WARN_MESSAGE = "TEMPLATE_DELETE_WARN_MESSAGE";
 }

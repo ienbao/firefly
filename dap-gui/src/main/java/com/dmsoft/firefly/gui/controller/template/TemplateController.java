@@ -8,7 +8,9 @@ import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
+import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowMessageController;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
 import com.dmsoft.firefly.gui.model.TemplateItemDFModel;
@@ -148,19 +150,7 @@ public class TemplateController {
         templateItemDFModel = new TemplateItemDFModel();
         TableViewWrapper.decorate(itemTable, templateItemDFModel);
 
-//        ((TableColumn<String, String>)itemTable.getColumns().get(1)).setCellValueFactory(cell -> templateItemDFModel.getCellData(cell.getValue(), templateItemDFModel.getRowKeyArray().get(1)));
-        ComboBoxTableCell comboBoxTableCell = new ComboBoxTableCell<String,String>(){
-            @Override
-            public void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-//                if(this.getIndex() == -1 || this.getTableView().getItems().size() <= this.getIndex()){
-//                    return;
-//                }
-//                String rowKey = this.getTableView().getItems().get(this.getIndex());
-//                templateItemDFModel.updateComboxValue(rowKey,item);
-            }
-        };
-        ((TableColumn<String, String>)itemTable.getColumns().get(1)).setCellFactory(comboBoxTableCell.forTableColumn(FXCollections.observableArrayList(TestItemType.VARIABLE.getCode(), TestItemType.ATTRIBUTE.getCode())));
+        ((TableColumn<String, String>)itemTable.getColumns().get(1)).setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList(TestItemType.VARIABLE.getCode(), TestItemType.ATTRIBUTE.getCode())));
 
         initData(selectName);
         templateName.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> initData(newValue));
@@ -196,8 +186,27 @@ public class TemplateController {
                     WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_DELETE_WARN));
                     return;
                 }
-                allTemplate.remove(templateName.getSelectionModel().getSelectedItem());
-                templateNames.remove(templateName.getSelectionModel().getSelectedItem());
+                WindowMessageController messageController = WindowMessageFactory.createWindowMessageHasOkAndCancel(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER),
+                        GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_DELETE_WARN_MESSAGE));
+                messageController.addProcessMonitorListener(new WindowCustomListener() {
+                    @Override
+                    public boolean onShowCustomEvent() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onCloseAndCancelCustomEvent() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onOkCustomEvent() {
+                        allTemplate.remove(templateName.getSelectionModel().getSelectedItem());
+                        templateNames.remove(templateName.getSelectionModel().getSelectedItem());
+                        return false;
+                    }
+                });
+
             }
         });
         pattern.setOnAction(event -> buildPatternDia());
