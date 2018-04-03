@@ -9,6 +9,7 @@ import com.dmsoft.firefly.plugin.spc.charts.utils.PointClickCallBack;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +21,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Path;
 import javafx.scene.text.Text;
 
 import java.util.List;
@@ -40,7 +40,7 @@ import java.util.function.Function;
  */
 public class ControlChart<X, Y> extends LineChart {
     //    折线
-    private Map<String, PathMarker> pathMarkerMap = Maps.newHashMap();
+    private Map<String, List<XYChart.Series<X, Y>>> pathMarkerMap = Maps.newHashMap();
     //    unique key---直线
     private Map<String, ValueMarker> valueMarkerMap = Maps.newHashMap();
     //    图层---颜色
@@ -82,36 +82,6 @@ public class ControlChart<X, Y> extends LineChart {
         controlChartDataList.forEach(controlChartData -> createChartSeriesData(controlChartData, chartTooltip));
     }
 
-    private void setAxisRange(List<ControlChartData> controlChartDataList) {
-        Double[] xLower = new Double[controlChartDataList.size()];
-        Double[] xUpper = new Double[controlChartDataList.size()];
-        Double[] yLower = new Double[controlChartDataList.size()];
-        Double[] yUpper = new Double[controlChartDataList.size()];
-        for (int i = 0; i < controlChartDataList.size(); i++) {
-            xLower[i] = (Double) controlChartDataList.get(i).getXLowerBound();
-            xUpper[i] = (Double) controlChartDataList.get(i).getXUpperBound();
-            yLower[i] = (Double) controlChartDataList.get(i).getYLowerBound();
-            yUpper[i] = (Double) controlChartDataList.get(i).getYUpperBound();
-        }
-        Double xMax = MathUtils.getMax(xUpper);
-        Double xMin = MathUtils.getMin(xLower);
-        Double yMax = MathUtils.getMax(yUpper);
-        Double yMin = MathUtils.getMin(yLower);
-        if (xMax == null || xMin == null || yMax == null || yMin == null) {
-            return;
-        }
-        NumberAxis xAxis = (NumberAxis) this.getXAxis();
-        NumberAxis yAxis = (NumberAxis) this.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
-        xAxis.setLowerBound(xMin - xReserve);
-        xAxis.setUpperBound(xMax + xReserve);
-        yAxis.setLowerBound(yMin - yReserve);
-        yAxis.setUpperBound(yMax + yReserve);
-        xAxis.setTickUnit((xAxis.getUpperBound() - xAxis.getLowerBound()) / controlChartDataList.size());
-        yAxis.setTickUnit((yAxis.getUpperBound() - yAxis.getLowerBound()) / controlChartDataList.size());
-    }
-
     /**
      * Update chart node color
      *
@@ -130,8 +100,8 @@ public class ControlChart<X, Y> extends LineChart {
         }
 //        update path marker color
         if (pathMarkerMap.containsKey(unique)) {
-            PathMarker pathMarker = pathMarkerMap.get(unique);
-            pathMarker.updateAllLineColor(color);
+            List<XYChart.Series<X, Y>> seriesList = pathMarkerMap.get(unique);
+            seriesList.forEach(series -> this.updatePathColor(series, color));
         }
     }
 
@@ -158,20 +128,73 @@ public class ControlChart<X, Y> extends LineChart {
     }
 
     /**
-     * Hidden all series lines
+     * Hidden all data series lines
      */
-    public void hiddenAllSeriesLine() {
-        ObservableList<XYChart.Series<X, Y>> seriesObservableList = this.getData();
-        seriesObservableList.forEach(oneSeries -> toggleSeriesLine(oneSeries, false));
+    public void hiddenDataSeriesLine() {
+        this.toggleDataAllSeriesLine(false);
+    }
+
+    /**
+     * Hidden all path series lines and nodes
+     *
+     * @param pathName path name
+     */
+    public void hiddenPathSeriesLine(String pathName) {
+        this.togglePathAllSeriesLine(pathName, false);
+    }
+
+    /**
+     * Hidden all series point
+     */
+    public void hiddenDataSeriesPoint() {
+        this.toggleDataAllSeriesPoint(false);
+    }
+
+    /**
+     * Toggle all data series lines
+     *
+     * @param showed whether it show or hide
+     */
+    public void toggleDataAllSeriesLine(boolean showed) {
+        if (seriesUniqueKeyMap == null) {
+            return;
+        }
+        seriesUniqueKeyMap.forEach((key, value) -> this.toggleOneSeriesLine(value, showed));
     }
 
     /**
      * Toggle series path show or hide
      *
-     * @param series series name
      * @param showed whether it show or not
      */
-    public void toggleSeriesLine(XYChart.Series<X, Y> series, boolean showed) {
+    public void togglePathAllSeriesLine(String pathName, boolean showed) {
+        if (pathMarkerMap == null || DAPStringUtils.isBlank(pathName)) {
+            return;
+        }
+        pathMarkerMap.forEach((key, value) -> value.forEach(series -> {
+            if (pathName.equals(series.getName())) {
+                this.toggleOneSeriesPath(series, showed);
+                series.getData().forEach(dataItem -> this.toggleOnePathPoint(dataItem, showed));
+            }
+        }));
+    }
+
+    /**
+     * Toggle point show or hide
+     *
+     * @param showed whether it show or not
+     */
+    public void toggleDataAllSeriesPoint(boolean showed) {
+        if (seriesUniqueKeyMap == null) {
+            return;
+        }
+        seriesUniqueKeyMap.forEach((key, value) -> {
+            XYChart.Series<X, Y> series = value;
+            series.getData().forEach(dataItem -> this.toggleOneDataPoint(dataItem, showed));
+        });
+    }
+
+    private void toggleOneSeriesLine(XYChart.Series<X, Y> series, boolean showed) {
         if (!showed) {
             series.getNode().getStyleClass().add("chart-series-hidden-line");
         } else {
@@ -179,27 +202,27 @@ public class ControlChart<X, Y> extends LineChart {
         }
     }
 
-    /**
-     * Hidden all series point
-     */
-    public void hiddenAllSeriesPoint() {
-        ObservableList<XYChart.Series<X, Y>> seriesObservableList = this.getData();
-        seriesObservableList.forEach(oneSeries -> oneSeries.getData().forEach(dataItem -> {
-            toggleSeriesPoint(dataItem, false);
-        }));
+    private void toggleOneSeriesPath(XYChart.Series<X, Y> series, boolean showed) {
+        if (!showed) {
+            series.getNode().getStyleClass().add("chart-broken-hidden-line");
+        } else {
+            series.getNode().getStyleClass().remove("chart-broken-hidden-line");
+        }
     }
 
-    /**
-     * Toggle point show or hide
-     *
-     * @param data   data
-     * @param showed whether it show or not
-     */
-    public void toggleSeriesPoint(XYChart.Data<X, Y> data, boolean showed) {
+    private void toggleOneDataPoint(XYChart.Data dataItem, boolean showed) {
         if (!showed) {
-            data.getNode().getStyleClass().setAll("chart-line-hidden-symbol");
+            dataItem.getNode().getStyleClass().setAll("chart-line-hidden-symbol");
         } else {
-            data.getNode().getStyleClass().setAll("chart-line-symbol");
+            dataItem.getNode().getStyleClass().setAll("chart-line-symbol");
+        }
+    }
+
+    private void toggleOnePathPoint(XYChart.Data dataItem, boolean showed) {
+        if (!showed) {
+            dataItem.getNode().getStyleClass().setAll("chart-path-hidden-symbol");
+        } else {
+            dataItem.getNode().getStyleClass().setAll("chart-path-symbol");
         }
     }
 
@@ -223,18 +246,6 @@ public class ControlChart<X, Y> extends LineChart {
     public void toggleValueMarker(String lineName, boolean showed) {
         for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
             valueMarkerEntry.getValue().toggleValueMarker(lineName, showed);
-        }
-    }
-
-    /**
-     * Toggle shoe path value or not
-     *
-     * @param pathName path name
-     * @param showed   whether it show or not
-     */
-    public void togglePathMarker(String pathName, boolean showed) {
-        for (Map.Entry<String, PathMarker> valueMarkerEntry : pathMarkerMap.entrySet()) {
-            valueMarkerEntry.getValue().togglePathMarker(pathName, showed);
         }
     }
 
@@ -323,16 +334,11 @@ public class ControlChart<X, Y> extends LineChart {
         this.seriesUniqueKeyMap.clear();
         this.seriesPointRuleMap.clear();
         this.seriesColorMap.clear();
-        for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
-            valueMarkerEntry.getValue().clear();
-        }
-        for (Map.Entry<String, PathMarker> pathMarkerEntry : pathMarkerMap.entrySet()) {
-            pathMarkerEntry.getValue().clear();
-        }
         this.valueMarkerMap.clear();
         this.pathMarkerMap.clear();
         this.getData().setAll(FXCollections.observableArrayList());
         this.getPlotChildren().removeAll(this.getPlotChildren());
+        valueMarkerMap.forEach((key, value) -> value.clear());
     }
 
     /**
@@ -342,6 +348,36 @@ public class ControlChart<X, Y> extends LineChart {
      */
     public void activePointClickEvent(boolean flag) {
         this.pointClick = flag;
+    }
+
+    private void setAxisRange(List<ControlChartData> controlChartDataList) {
+        Double[] xLower = new Double[controlChartDataList.size()];
+        Double[] xUpper = new Double[controlChartDataList.size()];
+        Double[] yLower = new Double[controlChartDataList.size()];
+        Double[] yUpper = new Double[controlChartDataList.size()];
+        for (int i = 0; i < controlChartDataList.size(); i++) {
+            xLower[i] = (Double) controlChartDataList.get(i).getXLowerBound();
+            xUpper[i] = (Double) controlChartDataList.get(i).getXUpperBound();
+            yLower[i] = (Double) controlChartDataList.get(i).getYLowerBound();
+            yUpper[i] = (Double) controlChartDataList.get(i).getYUpperBound();
+        }
+        Double xMax = MathUtils.getMax(xUpper);
+        Double xMin = MathUtils.getMin(xLower);
+        Double yMax = MathUtils.getMax(yUpper);
+        Double yMin = MathUtils.getMin(yLower);
+        if (xMax == null || xMin == null || yMax == null || yMin == null) {
+            return;
+        }
+        NumberAxis xAxis = (NumberAxis) this.getXAxis();
+        NumberAxis yAxis = (NumberAxis) this.getYAxis();
+        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
+        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
+        xAxis.setLowerBound(xMin - xReserve);
+        xAxis.setUpperBound(xMax + xReserve);
+        yAxis.setLowerBound(yMin - yReserve);
+        yAxis.setUpperBound(yMax + yReserve);
+        xAxis.setTickUnit((xAxis.getUpperBound() - xAxis.getLowerBound()) / controlChartDataList.size());
+        yAxis.setTickUnit((yAxis.getUpperBound() - yAxis.getLowerBound()) / controlChartDataList.size());
     }
 
     private void createChartSeriesData(ControlChartData controlChartData, ChartTooltip chartTooltip) {
@@ -359,11 +395,8 @@ public class ControlChart<X, Y> extends LineChart {
         Function<PointRule, PointStyle> rulePointStyleFunction = controlChartData.getPointFunction();
 
         if (controlChartData.getXyOneChartData() != null) {
-//        Build series data
-            XYChart.Series series = this.buildSeries(controlChartData.getXyOneChartData(), seriesName);
-//        Set series for chart
+            XYChart.Series series = this.buildDataSeries(controlChartData.getXyOneChartData(), seriesName);
             this.getData().add(series);
-//        Set chart series and data color, data tooltip
             this.setDataNodeStyleAndTooltip(series, color, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
             this.seriesUniqueKeyMap.put(uniqueKey, series);
             this.seriesColorMap.put(series, color);
@@ -382,16 +415,22 @@ public class ControlChart<X, Y> extends LineChart {
         }
 //       Set chart path
         if (pathDataList != null) {
-            PathMarker pathMarker = new PathMarker();
+            List<XYChart.Series<X, Y>> seriesList = Lists.newArrayList();
             pathDataList.forEach(onePathData -> {
-                Path path = pathMarker.buildPathMarker(onePathData);
-                getPlotChildren().add(path);
+                if (onePathData != null) {
+                    XYChart.Series<X, Y> series = buildPathSeries(onePathData.getPoints(), onePathData.getPathName());
+                    if (series != null) {
+                        this.getData().add(series);
+                        this.setPathNodeStyleAndTooltip(series, color, seriesName, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
+                        seriesList.add(series);
+                    }
+                }
             });
-            pathMarkerMap.put(uniqueKey, pathMarker);
+            pathMarkerMap.put(uniqueKey, seriesList);
         }
     }
 
-    private XYChart.Series buildSeries(IXYChartData<X, Y> xyOneChartData, String seriesName) {
+    private XYChart.Series buildDataSeries(IXYChartData<X, Y> xyOneChartData, String seriesName) {
         XYChart.Series oneSeries = new XYChart.Series();
         oneSeries.setName(seriesName);
         int length = xyOneChartData.getLen();
@@ -404,6 +443,25 @@ public class ControlChart<X, Y> extends LineChart {
             XYChart.Data data = new XYChart.Data<>(xValue, yValue);
             Object extraValue = xyOneChartData.getExtraValueByIndex(i) == null ? "" : xyOneChartData.getExtraValueByIndex(i);
             data.setExtraValue(extraValue);
+            oneSeries.getData().add(data);
+        }
+        return oneSeries;
+    }
+
+    private XYChart.Series buildPathSeries(IPoint<X, Y> xyiPoint, String seriesName) {
+        if (xyiPoint == null) {
+            return null;
+        }
+        XYChart.Series oneSeries = new XYChart.Series();
+        oneSeries.setName(seriesName);
+        int length = xyiPoint.getLen();
+        for (int i = 0; i < length; i++) {
+            X xValue = xyiPoint.getXByIndex(i);
+            Y yValue = xyiPoint.getYByIndex(i);
+            if (xValue == null || yValue == null) {
+                continue;
+            }
+            XYChart.Data data = new XYChart.Data<>(xValue, yValue);
             oneSeries.getData().add(data);
         }
         return oneSeries;
@@ -446,6 +504,21 @@ public class ControlChart<X, Y> extends LineChart {
         });
     }
 
+    private void updatePathColor(XYChart.Series series, Color color) {
+
+        ObservableList<Data<X, Y>> data = series.getData();
+//        set series node color
+        if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
+            series.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color) + ";-fx-stroke-dash-array: 5px;");
+        }
+        data.forEach(dataItem -> {
+//            set data node color
+            if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
+                dataItem.getNode().setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
+            }
+        });
+    }
+
     private void setDataNodeStyleAndTooltip(XYChart.Series series,
                                             Color color,
                                             Function<PointTooltip, String> pointTooltipFunction) {
@@ -468,6 +541,30 @@ public class ControlChart<X, Y> extends LineChart {
         });
     }
 
+    private void setPathNodeStyleAndTooltip(XYChart.Series series,
+                                            Color color,
+                                            String key,
+                                            Function<PointTooltip, String> pointTooltipFunction) {
+
+        ObservableList<Data<X, Y>> data = series.getData();
+//        set series node color
+        if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
+            series.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color) + ";-fx-stroke-dash-array: 5px;");
+        }
+        data.forEach(dataItem -> {
+//            set data node color
+            if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
+                dataItem.getNode().setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
+                dataItem.getNode().getStyleClass().setAll("chart-path-symbol");
+            }
+//            set data node tooltip
+            if (pointTooltipFunction != null) {
+                String content = pointTooltipFunction.apply(new PointTooltip(key + " " + series.getName(), dataItem));
+                Tooltip.install(dataItem.getNode(), new Tooltip(content));
+            }
+        });
+    }
+
     @Override
     protected void layoutPlotChildren() {
 
@@ -476,19 +573,13 @@ public class ControlChart<X, Y> extends LineChart {
         for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
             valueMarkerEntry.getValue().paintValueMaker(this);
         }
-        for (Map.Entry<String, PathMarker> pathMarkerEntry : pathMarkerMap.entrySet()) {
-            pathMarkerEntry.getValue().paintPathMarker(this);
-        }
     }
 
-    private void dataClickEvent(XYChart.Series<X, Y> series) {
-        series.getData().forEach(oneData -> oneData.getNode().setOnMouseClicked(event -> {
-            if (pointClickCallBack != null) {
-                pointClickCallBack.execute(oneData.getExtraValue());
-            }
-        }));
-    }
-
+    /**
+     * Set point click call back
+     *
+     * @param pointClickCallBack point click call back
+     */
     public void setPointClickCallBack(PointClickCallBack pointClickCallBack) {
         this.pointClickCallBack = pointClickCallBack;
     }
