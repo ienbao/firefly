@@ -325,17 +325,13 @@ public class ChartResultController implements Initializable {
     private SelectCallBack buildControlChartSelectCallBack(ControlChart chart, String chartName) {
         return (name, selected, selectedNames) -> {
             if (UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[4].equalsIgnoreCase(name)) {
-                ObservableList<XYChart.Series> series = chart.getData();
-                series.forEach(oneSeries -> chart.toggleSeriesLine(oneSeries, selected));
+                chart.toggleDataAllSeriesLine(selected);
             } else if (UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[3].equalsIgnoreCase(name)) {
-                ObservableList<XYChart.Series<Number, Number>> series = chart.getData();
-                series.forEach(oneSeries -> oneSeries.getData().forEach(dataItem -> {
-                    chart.toggleSeriesPoint(dataItem, selected);
-                }));
+                chart.toggleDataAllSeriesPoint(selected);
             } else if (UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[1].equalsIgnoreCase(name)) {
                 chart.toggleValueMarker(name, selected);
             } else {
-                chart.togglePathMarker(name, selected);
+                chart.togglePathAllSeriesLine(name, selected);
             }
             //update user performance
             updatePerformance(chartName, selectedNames);
@@ -563,11 +559,11 @@ public class ChartResultController implements Initializable {
         for (String operateName : UIConstant.SPC_CHART_RUN_EXTERN_MENU) {
             if (!runOperateBtn.getSelectedSets().contains(operateName)) {
                 if (operateName.equals(UIConstant.SPC_CHART_RUN_EXTERN_MENU[9])) {
-                    runChartPane.getChart().hiddenAllSeriesPoint();
+                    runChartPane.getChart().hiddenDataSeriesPoint();
                     continue;
                 }
                 if (operateName.equals(UIConstant.SPC_CHART_RUN_EXTERN_MENU[10])) {
-                    runChartPane.getChart().hiddenAllSeriesLine();
+                    runChartPane.getChart().hiddenDataSeriesLine();
                     continue;
                 }
                 hiddenLines.add(operateName);
@@ -594,11 +590,19 @@ public class ChartResultController implements Initializable {
         for (String operateName : UIConstant.SPC_CHART_CONTROL_EXTERN_MENU) {
             if (!chartButtonMap.get(chartName).getSelectedSets().contains(operateName)) {
                 if (operateName.equals(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[3])) {
-                    controlChart.hiddenAllSeriesPoint();
+                    controlChart.hiddenDataSeriesPoint();
                     continue;
                 }
                 if (operateName.equals(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[4])) {
-                    controlChart.hiddenAllSeriesLine();
+                    controlChart.hiddenDataSeriesLine();
+                    continue;
+                }
+                if (controlChart.equals(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[0])) {
+                    controlChart.hiddenPathSeriesLine(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[0]);
+                    continue;
+                }
+                if (controlChart.equals(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[2])) {
+                    controlChart.hiddenPathSeriesLine(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[2]);
                     continue;
                 }
                 hiddenLines.add(operateName);
@@ -682,13 +686,9 @@ public class ChartResultController implements Initializable {
         chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[1], (name, selected, selectedNames) -> {
             ControlChart runChart = runChartPane.getChart();
             if (UIConstant.SPC_CHART_RUN_EXTERN_MENU[10].equalsIgnoreCase(name)) {
-                ObservableList<XYChart.Series> series = runChart.getData();
-                series.forEach(oneSeries -> runChart.toggleSeriesLine(oneSeries, selected));
+                runChart.toggleDataAllSeriesLine(selected);
             } else if (UIConstant.SPC_CHART_RUN_EXTERN_MENU[9].equalsIgnoreCase(name)) {
-                ObservableList<XYChart.Series<Number, Number>> series = runChart.getData();
-                series.forEach(oneSeries -> oneSeries.getData().forEach(dataItem -> {
-                    runChart.toggleSeriesPoint(dataItem, selected);
-                }));
+                runChart.toggleDataAllSeriesPoint(selected);
             } else {
                 runChart.toggleValueMarker(name, selected);
             }

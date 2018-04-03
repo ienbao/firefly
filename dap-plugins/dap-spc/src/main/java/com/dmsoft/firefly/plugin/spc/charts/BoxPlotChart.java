@@ -321,10 +321,10 @@ public class BoxPlotChart extends XYChart<Number, Number> {
 //            update path color
             setSeriesDataStyleByDefault(series, color);
 //            update box color
-            series.getData().forEach(dataItem -> {
-                Candle candle = (Candle) dataItem.getNode();
-                candle.updateColor(color);
-            });
+//            series.getData().forEach(dataItem -> {
+//                Candle candle = (Candle) dataItem.getNode();
+//                candle.updateColor(color);
+//            });
         }
     }
 
