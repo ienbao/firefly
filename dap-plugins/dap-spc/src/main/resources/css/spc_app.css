@@ -193,3 +193,39 @@ table
     -fx-pref-height: 0;
     -fx-min-height: 0;
 }
+
+
+
+.btn-timer {
+    -fx-text-fill: COLOR_LIGHT_FF;
+    -fx-highlight-fill: #5eb511;
+    -fx-border-color: #5eb511;
+    -fx-background-color: #5eb511;
+    -fx-border-insets: 1;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.btn-timer:hover {
+    -fx-highlight-fill: #5eb511;
+    -fx-border-color: #5eb511;
+    -fx-background-color: #5eb511;
+}
+
+.btn-timer:pressed {
+    -fx-highlight-fill: #5eb511;
+    -fx-border-color: #5eb511;
+    -fx-background-color: #5eb511;
+}
+
+.btn-timer:focused {
+    -fx-border-color: COLOR_LIGHT_FF;
+    -fx-border-style: dotted;
+    -fx-border-insets: 1;
+}
+
+.btn-timer:focused:hover {
+    -fx-border-color: COLOR_LIGHT_FF;
+    -fx-border-style: dotted;
+    -fx-border-insets: 1;
+}

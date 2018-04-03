@@ -89,19 +89,19 @@ public class TableViewWrapper {
                 menuItem.setOnAction(event1 -> {
                     String rowKey = tableView.getSelectionModel().getSelectedItem();
                     event.handleAction(rowKey, event1);
-                    tableView.refresh();
                 });
                 menu.getItems().add(menuItem);
             }
-            tableView.setRowFactory(tv -> {
-                TableRow<String> row = new TableRow<>();
-                row.setOnMouseClicked(event -> {
-                    if (!row.isEmpty() && model.isMenuEventEnable(row.getItem())) {
-                        row.setContextMenu(menu);
-                    }
-                });
-                return row;
-            });
+            tableView.setContextMenu(menu);
+//            tableView.setRowFactory(tv -> {
+//                TableRow<String> row = new TableRow<>();
+//                row.setOnMouseClicked(event -> {
+//                    if (!row.isEmpty() && model.isMenuEventEnable(row.getItem())) {
+//                        row.setContextMenu(menu);
+//                    }
+//                });
+//                return row;
+//            });
         }
         model.setTableView(tableView);
         if (tableView.getSkin() != null) {
