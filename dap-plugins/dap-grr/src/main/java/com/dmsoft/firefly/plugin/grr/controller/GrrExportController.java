@@ -176,9 +176,13 @@ public class GrrExportController {
         initBtnIcon();
         initEvent();
         itemFilter.getTextField().setPromptText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
-        itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
-                filteredList.setPredicate(p -> p.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase()))
-        );
+        itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->{
+            if (isFilterUslOrLsl) {
+                filteredList.setPredicate(p -> this.isFilterAndHasUslOrLsl(p));
+            } else {
+                filteredList.setPredicate(p -> this.isFilterAndAll(p));
+            }
+        });
         itemTable.setOnMouseEntered(event -> {
             itemTable.focusModelProperty();
         });
@@ -674,7 +678,7 @@ public class GrrExportController {
             pop = new ContextMenu();
             MenuItem all = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.ALL_TEST_ITEMS));
             all.setOnAction(event -> {
-                filteredList.setPredicate(p -> p.getItem().startsWith(""));
+                filteredList.setPredicate(p -> this.isFilterAndAll(p));
                 is.getStyleClass().remove("filter-active");
                 is.getStyleClass().add("filter-normal");
                 is.setGraphic(null);
@@ -682,7 +686,7 @@ public class GrrExportController {
             });
             MenuItem show = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS_WITH_USL_LSL));
             show.setOnAction(event -> {
-                filteredList.setPredicate(p -> StringUtils.isNotEmpty(p.getItemDto().getLsl()) || StringUtils.isNotEmpty(p.getItemDto().getUsl()));
+                filteredList.setPredicate(p -> this.isFilterAndHasUslOrLsl(p));
                 is.getStyleClass().remove("filter-normal");
                 is.getStyleClass().add("filter-active");
                 is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
@@ -822,10 +826,16 @@ public class GrrExportController {
 
     private List<String> getSelectedItem() {
         List<String> selectItems = Lists.newArrayList();
-        if (itemTable.getItems() != null) {
-            for (ItemTableModel model : itemTable.getItems()) {
+        if (items != null && !items.isEmpty()) {
+            for (ItemTableModel model : items) {
                 if (model.getSelector().isSelected()) {
-                    selectItems.add(model.getItem());
+                    if (isFilterUslOrLsl) {
+                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())){
+                            selectItems.add(model.getItem());
+                        }
+                    } else {
+                        selectItems.add(model.getItem());
+                    }
                 }
             }
         }
@@ -1185,6 +1195,23 @@ public class GrrExportController {
 
     private boolean isContainValue(String value, ComboBox comboBox) {
         if (DAPStringUtils.isNotBlank(value) && comboBox.getItems() != null && comboBox.getItems().contains(value)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isFilterAndHasUslOrLsl(ItemTableModel itemTableModel) {
+        if ((StringUtils.isNotEmpty(itemTableModel.getItemDto().getLsl()) || StringUtils.isNotEmpty(itemTableModel.getItemDto().getUsl()))
+                && (DAPStringUtils.isBlank(itemFilter.getTextField().getText()) || (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText())
+                && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())))) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isFilterAndAll(ItemTableModel itemTableModel) {
+        if (itemTableModel.getItem().startsWith("") && (DAPStringUtils.isBlank(itemFilter.getTextField().getText()) ||
+                (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText()) && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())))) {
             return true;
         }
         return false;
