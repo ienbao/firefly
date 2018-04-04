@@ -25,13 +25,13 @@ public class RangeUtils {
         Double valueD = Double.valueOf(value);
         if (DAPStringUtils.isNumeric(upperLimit)) {
             Double ul = Double.valueOf(upperLimit);
-            if (valueD >= ul) {
+            if (valueD > ul) {
                 return false;
             }
         }
         if (DAPStringUtils.isNumeric(lowerLimit)) {
             Double ll = Double.valueOf(lowerLimit);
-            return valueD > ll;
+            return valueD >= ll;
         }
         return true;
     }
@@ -51,13 +51,13 @@ public class RangeUtils {
         Double valueD = Double.valueOf(value);
         if (DAPStringUtils.isNumeric(upperLimit)) {
             Double ul = Double.valueOf(upperLimit);
-            if (valueD >= ul) {
+            if (valueD > ul) {
                 return true;
             }
         }
         if (DAPStringUtils.isNumeric(lowerLimit)) {
             Double ll = Double.valueOf(lowerLimit);
-            return valueD <= ll;
+            return valueD < ll;
         }
         return false;
     }
