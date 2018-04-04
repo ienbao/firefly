@@ -86,6 +86,24 @@ public class StatisticalResultController implements Initializable {
      * set statistical result table data
      *
      * @param list the data list
+     * @param isTimer isTimer
+     * @param selectRowKey selectRowKey
+     */
+    public void setTimerStatisticalResultTableData(List<SpcStatisticalResultAlarmDto> list,List<String> selectRowKey, boolean isTimer) {
+        List<String> columnList = statisticalTableModel.getColumnList();
+        statisticalTableModel = new StatisticalTableModel();
+        statisticalTableModel.setTimer(isTimer);
+        TableViewWrapper.decorate(statisticalResultTb, statisticalTableModel);
+
+        statisticalTableModel.initColumn(columnList);
+        statisticalTableModel.initData(list);
+        statisticalTableModel.setSelect(selectRowKey);
+    }
+
+    /**
+     * set statistical result table data
+     *
+     * @param list the data list
      */
     public void setStatisticalResultTableData(List<SpcStatisticalResultAlarmDto> list) {
         statisticalTableModel.initData(list);
@@ -225,7 +243,7 @@ public class StatisticalResultController implements Initializable {
     private void getChooseStatisticalResultEvent() {
         selectStatisticalResultName = chooseDialogController.getSelectResultName();
         statisticalResultTb.getColumns().remove(3, statisticalResultTb.getColumns().size());
-        statisticalTableModel.updateStatisticalResultColumn(selectStatisticalResultName);
+        statisticalTableModel.initColumn(selectStatisticalResultName);
 
         this.updateSpcStatisticalPreference(selectStatisticalResultName);
         chooseDialogController.getStage().close();
