@@ -64,7 +64,7 @@ public class UIConstant {
             GrrFxmlAndLanguageUtils.getString("COMPONENTS_TOLERANCE")};
     public static final String[] CHART_OPERATE_NAME = new String[]{
             GrrFxmlAndLanguageUtils.getString("CHART_LINE_NAME_UCL"),
-            GrrFxmlAndLanguageUtils.getString("CHART_LINE_NAME_Μ"),
+            GrrFxmlAndLanguageUtils.getString("CHART_LINE_NAME_AVG"),
             GrrFxmlAndLanguageUtils.getString("CHART_LINE_NAME_LCL")};
     public static final String[] GRR_SUMMARY_TITLE = new String[]{
             GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_TESTITEM"),
