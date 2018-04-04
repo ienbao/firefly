@@ -5,15 +5,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="testItemPane" maxWidth="820.0" minWidth="180.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.grr.controller.GrrItemController">
+<VBox fx:id="testItemPane" minWidth="180.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.grr.controller.GrrItemController">
 <children>
-   <SplitPane fx:id="split" maxWidth="820.0" minWidth="180.0" orientation="VERTICAL" prefHeight="600.0" style="-fx-border-width: 0 0 0 0;" VBox.vgrow="ALWAYS">
+   <SplitPane fx:id="split" minWidth="180.0" orientation="VERTICAL" prefHeight="600.0" style="-fx-border-width: 0 0 0 0;" VBox.vgrow="ALWAYS">
       <items>
-         <TabPane fx:id="rightTabPane" maxWidth="820.0" minHeight="270.0" minWidth="180.0" prefHeight="270.0" prefWidth="180.0" style="-fx-border-width: 0 0 0 0;" tabClosingPolicy="UNAVAILABLE">
+         <TabPane fx:id="rightTabPane" minHeight="270.0" minWidth="180.0" prefHeight="270.0" prefWidth="180.0" style="-fx-border-width: 0 0 0 0;" tabClosingPolicy="UNAVAILABLE">
             <tabs>
                <Tab fx:id="itemTab" style="-fx-pref-width: 45;">
                   <content>
-                     <BorderPane maxWidth="820.0" minHeight="250.0" minWidth="180.0" prefHeight="250.0" prefWidth="180.0">
+                     <BorderPane minHeight="250.0" minWidth="180.0" prefHeight="250.0" prefWidth="180.0">
                         <center>
                            <TableView fx:id="itemTable" minHeight="200.0" minWidth="180.0" prefHeight="200.0" prefWidth="180.0" style="-fx-border-width: 1 0 0 0;" BorderPane.alignment="CENTER">
                               <columns>
@@ -80,9 +80,9 @@
                                     </GridPane.margin>
                                  </TextField>
                                  <Label alignment="CENTER" contentDisplay="CENTER" text="%GRR_PARTS" GridPane.rowIndex="5" />
-                                 <ComboBox fx:id="partCombox" maxHeight="22.0" maxWidth="820.0" minHeight="22.0" prefHeight="22.0" prefWidth="159.0" GridPane.rowIndex="6" />
+                                 <ComboBox fx:id="partCombox" maxHeight="22.0" maxWidth="5000.0" minHeight="22.0" prefHeight="22.0" prefWidth="159.0" GridPane.rowIndex="6" />
                                  <Label text="%GRR_APPRAISERS" GridPane.rowIndex="9" />
-                                 <ComboBox fx:id="appraiserCombox" maxHeight="22.0" maxWidth="820.0" minHeight="22.0" prefHeight="22.0" prefWidth="159.0" GridPane.rowIndex="10" />
+                                 <ComboBox fx:id="appraiserCombox" maxHeight="22.0" maxWidth="5000.0" minHeight="22.0" prefHeight="22.0" prefWidth="159.0" GridPane.rowIndex="10" />
                                  <ListView fx:id="partListView" minHeight="0.0" GridPane.rowIndex="7" />
                                  <ListView fx:id="appraiserListView" minHeight="0.0" GridPane.rowIndex="11" />
                                  <Label fx:id="partLbl" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
@@ -100,7 +100,7 @@
          </TabPane>
       </items>
    </SplitPane>
-   <GridPane maxWidth="820.0" minWidth="180.0" style="-fx-background-color: #ffffff; -fx-border-width: 1 0 0 0; -fx-border-color: #DCDCDC;">
+   <GridPane minWidth="180.0" style="-fx-background-color: #ffffff; -fx-border-width: 1 0 0 0; -fx-border-color: #DCDCDC;">
       <children>
          <Button fx:id="exportBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-txt" text="" GridPane.columnIndex="3" GridPane.halignment="LEFT" />
          <Button fx:id="importBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-txt" text="" GridPane.columnIndex="2" />
