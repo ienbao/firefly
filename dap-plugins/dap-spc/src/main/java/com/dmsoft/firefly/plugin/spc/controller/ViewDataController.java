@@ -86,47 +86,56 @@ public class ViewDataController implements Initializable {
     /**
      * set view data table dataList
      *
-     * @param dataFrame      search data frame
-     * @param selectedRowKey selected row key
+     * @param dataFrame                         search data frame
+     * @param selectedRowKey                    selected row key
+     * @param statisticalSearchConditionDtoList statisticalSearchConditionDtoList
      */
-    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey,List<SearchConditionDto> statisticalSearchConditionDtoList) {
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList) {
+        this.setViewData(dataFrame, selectedRowKey, statisticalSearchConditionDtoList, false);
+    }
+
+    /**
+     * set view data table dataList
+     *
+     * @param dataFrame                         search data frame
+     * @param selectedRowKey                    selected row key
+     * @param statisticalSearchConditionDtoList statisticalSearchConditionDtoList
+     * @param isTimer                           isTimer
+     */
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList, boolean isTimer) {
         this.statisticalSearchConditionDtoList = statisticalSearchConditionDtoList;
         this.selectedRowKeys = selectedRowKey;
-        Platform.runLater(() -> {
-            this.dataFrame = dataFrame;
-            if (dataFrame == null) {
-                Platform.runLater(() -> {
-                    viewDataTable.getColumns().clear();
-                    chooseDialogController.setSelectResultName(Lists.newArrayList());
-                    try {
-                        if (model != null) {
-                            this.model.getRowKeyArray().clear();
-                        }
-                    } catch (NullPointerException ignored) {
-                        ignored.printStackTrace();
-                    }
-                    this.model = null;
-                });
-                return;
+        this.dataFrame = dataFrame;
+        if (dataFrame == null) {
+            viewDataTable.getColumns().clear();
+            chooseDialogController.setSelectResultName(Lists.newArrayList());
+            try {
+                if (model != null) {
+                    this.model.getRowKeyArray().clear();
+                }
+            } catch (NullPointerException ignored) {
+                ignored.printStackTrace();
             }
-            this.model = new ViewDataDFModel(dataFrame, selectedRowKey);
-            this.model.setStatisticalSearchConditionDtoList(statisticalSearchConditionDtoList);
-            this.model.setMainController(spcMainController);
-            TableViewWrapper.decorate(viewDataTable, model);
-            model.getAllCheckBox().setOnMouseClicked(event -> {
-                for (String s : model.getRowKeyArray()) {
-                    model.getCheckValue(s, "").setValue(model.getAllCheckBox().selectedProperty().getValue());
-                }
-            });
-            viewDataTable.getColumns().forEach(this::decorate);
-            for (ChooseTableRowData rowData : chooseTableRowDataList) {
-                if (dataFrame.isTestItemExist(rowData.getValue())) {
-                    rowData.getSelector().setValue(true);
-                } else {
-                    rowData.getSelector().setValue(false);
-                }
+            this.model = null;
+            return;
+        }
+        this.model = new ViewDataDFModel(dataFrame, selectedRowKey);
+        this.model.setStatisticalSearchConditionDtoList(statisticalSearchConditionDtoList);
+        this.model.setMainController(spcMainController);
+        TableViewWrapper.decorate(viewDataTable, model);
+        model.getAllCheckBox().setOnMouseClicked(event -> {
+            for (String s : model.getRowKeyArray()) {
+                model.getCheckValue(s, "").setValue(model.getAllCheckBox().selectedProperty().getValue());
             }
         });
+        viewDataTable.getColumns().forEach(this::decorate);
+        for (ChooseTableRowData rowData : chooseTableRowDataList) {
+            if (dataFrame.isTestItemExist(rowData.getValue())) {
+                rowData.getSelector().setValue(true);
+            } else {
+                rowData.getSelector().setValue(false);
+            }
+        }
     }
 
     /**
@@ -218,7 +227,7 @@ public class ViewDataController implements Initializable {
                     break;
             }
             quickSearchController.getSearchBtn().setOnAction(event1 -> {
-                if(quickSearchController.isError()){
+                if (quickSearchController.isError()) {
                     RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
                             SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER),
                             SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_QUICK_SEARCH_MESSAGE));
@@ -315,7 +324,7 @@ public class ViewDataController implements Initializable {
                     dataFrame.removeColumns(Lists.newArrayList(typeDto.getTestItemName()));
                 }
             }
-            setViewData(this.dataFrame, getSelectedRowKeys(),statisticalSearchConditionDtoList);
+            setViewData(this.dataFrame, getSelectedRowKeys(), statisticalSearchConditionDtoList);
         });
         unSelectedCheckBox.setOnAction(event -> getInvertCheckBoxEvent());
     }
@@ -334,7 +343,7 @@ public class ViewDataController implements Initializable {
     }
 
     private void filterTF() {
-        if(model == null){
+        if (model == null) {
             return;
         }
         model.getRowKeyArray().clear();
@@ -414,6 +423,22 @@ public class ViewDataController implements Initializable {
         chooseItemBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
     }
 
+    public List<SearchConditionDto> getStatisticalSearchCondition() {
+        return statisticalSearchConditionDtoList;
+    }
+
+    /**
+     * method to update stats search condition
+     *
+     * @param statisticalSearchConditionDtoList list of stats search condition dto
+     */
+    public void updateStatisticalSearchCondition(List<SearchConditionDto> statisticalSearchConditionDtoList) {
+        this.statisticalSearchConditionDtoList = statisticalSearchConditionDtoList;
+        if (model != null) {
+            model.setStatisticalSearchConditionDtoList(statisticalSearchConditionDtoList);
+        }
+    }
+
     /**
      * inner class for filter setting and graphic
      */
@@ -482,16 +507,5 @@ public class ViewDataController implements Initializable {
             this.filterBtn = filterBtn;
         }
 
-    }
-
-    public List<SearchConditionDto> getStatisticalSearchCondition() {
-        return statisticalSearchConditionDtoList;
-    }
-
-    public void updateStatisticalSearchCondition(List<SearchConditionDto> statisticalSearchConditionDtoList) {
-        this.statisticalSearchConditionDtoList = statisticalSearchConditionDtoList;
-        if(model != null){
-            model.setStatisticalSearchConditionDtoList(statisticalSearchConditionDtoList);
-        }
     }
 }

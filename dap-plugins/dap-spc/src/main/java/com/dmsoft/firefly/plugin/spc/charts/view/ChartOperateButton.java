@@ -190,6 +190,15 @@ public class ChartOperateButton extends Button {
         }
     }
 
+    public void addRuleData(List<String> data) {
+        listView.getItems().clear();
+        selectedSets.clear();
+        if (data != null) {
+            listView.getItems().addAll(data);
+        }
+        listView.refresh();
+    }
+
     /**
      * Set list view size
      *

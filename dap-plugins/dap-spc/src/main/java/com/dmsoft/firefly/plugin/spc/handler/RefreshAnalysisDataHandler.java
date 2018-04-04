@@ -37,8 +37,11 @@ public class RefreshAnalysisDataHandler extends AbstractBasicJobHandler {
 
         SearchDataFrame chartDtaFrame = context.getParam(ParamKeys.CHART_SEARCH_DATA_FRAME, SearchDataFrame.class);
         List<SearchConditionDto> chartSearchConditionDtoList = (List<SearchConditionDto>) context.get(ParamKeys.CHART_SEARCH_CONDITION_DTO_LIST);
-        List<SpcChartDto> spcChartDtoList = spcService.getChartResult(chartDtaFrame, chartSearchConditionDtoList, analysisConfigDto);
-        RuntimeContext.getBean(SpcSettingService.class).setControlChartRuleAlarm(spcChartDtoList, spcSettingDto);
+        List<SpcChartDto> spcChartDtoList = null;
+        if(chartSearchConditionDtoList != null) {
+            spcChartDtoList = spcService.getChartResult(chartDtaFrame, chartSearchConditionDtoList, analysisConfigDto);
+            RuntimeContext.getBean(SpcSettingService.class).setControlChartRuleAlarm(spcChartDtoList, spcSettingDto);
+        }
 
         context.put(ParamKeys.STATISTICAL_ANALYSIS_RESULT, spcStatisticalResultAlarmDtoList);
         context.put(ParamKeys.CHART_ANALYSIS_RESULT, spcChartDtoList);

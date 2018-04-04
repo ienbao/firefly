@@ -5,7 +5,6 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
-import com.dmsoft.firefly.gui.components.searchtab.BasicSearchDto;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.*;
@@ -22,13 +21,11 @@ import com.dmsoft.firefly.plugin.grr.service.impl.GrrLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.utils.*;
 import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
-import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.event.PlatformEvent;
@@ -37,7 +34,6 @@ import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -169,6 +165,7 @@ public class GrrExportController {
     private void initialize() {
         searchTab = new SearchTab(false);
         searchTab.hiddenGroupAdd();
+        searchTab.hiddenAutoDivided();
         split.getItems().add(searchTab);
         eachFile.setToggleGroup(group);
         eachFile.setSelected(true);
@@ -176,9 +173,13 @@ public class GrrExportController {
         initBtnIcon();
         initEvent();
         itemFilter.getTextField().setPromptText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
-        itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
-                filteredList.setPredicate(p -> p.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase()))
-        );
+        itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (isFilterUslOrLsl) {
+                filteredList.setPredicate(p -> this.isFilterAndHasUslOrLsl(p));
+            } else {
+                filteredList.setPredicate(p -> this.isFilterAndAll(p));
+            }
+        });
         itemTable.setOnMouseEntered(event -> {
             itemTable.focusModelProperty();
         });
@@ -435,7 +436,7 @@ public class GrrExportController {
 
     }
 
-    public void initGrrExportLeftConfig(GrrLeftConfigDto grrLeftConfigDto){
+    public void initGrrExportLeftConfig(GrrLeftConfigDto grrLeftConfigDto) {
         if (grrLeftConfigDto == null) {
             return;
         }
@@ -542,7 +543,7 @@ public class GrrExportController {
         updatePartLbl();
     }
 
-    private void updateAppraiserListViewDatas(Set<String> selectedAppraisers,  String appraiser) {
+    private void updateAppraiserListViewDatas(Set<String> selectedAppraisers, String appraiser) {
         appraiserListView.getItems().clear();
         appraiserList.clear();
         if (isContainValue(appraiser, appraiserCombox)) {
@@ -674,7 +675,7 @@ public class GrrExportController {
             pop = new ContextMenu();
             MenuItem all = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.ALL_TEST_ITEMS));
             all.setOnAction(event -> {
-                filteredList.setPredicate(p -> p.getItem().startsWith(""));
+                filteredList.setPredicate(p -> this.isFilterAndAll(p));
                 is.getStyleClass().remove("filter-active");
                 is.getStyleClass().add("filter-normal");
                 is.setGraphic(null);
@@ -682,7 +683,7 @@ public class GrrExportController {
             });
             MenuItem show = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS_WITH_USL_LSL));
             show.setOnAction(event -> {
-                filteredList.setPredicate(p -> StringUtils.isNotEmpty(p.getItemDto().getLsl()) || StringUtils.isNotEmpty(p.getItemDto().getUsl()));
+                filteredList.setPredicate(p -> this.isFilterAndHasUslOrLsl(p));
                 is.getStyleClass().remove("filter-normal");
                 is.getStyleClass().add("filter-active");
                 is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
@@ -756,7 +757,7 @@ public class GrrExportController {
                 WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
                 return;
             }
-            buildViewDataDia();
+            buildViewData();
         });
         setting.setOnAction(event -> {
             build();
@@ -822,14 +823,77 @@ public class GrrExportController {
 
     private List<String> getSelectedItem() {
         List<String> selectItems = Lists.newArrayList();
-        if (itemTable.getItems() != null) {
-            for (ItemTableModel model : itemTable.getItems()) {
+        if (items != null && !items.isEmpty()) {
+            for (ItemTableModel model : items) {
                 if (model.getSelector().isSelected()) {
-                    selectItems.add(model.getItem());
+                    if (isFilterUslOrLsl) {
+                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
+                            selectItems.add(model.getItem());
+                        }
+                    } else {
+                        selectItems.add(model.getItem());
+                    }
                 }
             }
         }
-        return selectItems;
+
+        if (itemTable.getScene().lookup(".ascending-label") != null) {
+            DAPStringUtils.sortListString(selectItems, false);
+        } else if (itemTable.getScene().lookup(".descending-label") != null) {
+            DAPStringUtils.sortListString(selectItems, true);
+        }
+        List<String> selectTestItemsResult = Lists.newLinkedList();
+        if (stickyOnTopItems != null && !stickyOnTopItems.isEmpty()) {
+            selectItems.forEach(selectedItem -> {
+                if (stickyOnTopItems.contains(selectedItem)) {
+                    selectTestItemsResult.add(selectedItem);
+                }
+            });
+        }
+
+        selectItems.forEach(selectedItem -> {
+            if (!selectTestItemsResult.contains(selectedItem)) {
+                selectTestItemsResult.add(selectedItem);
+            }
+        });
+        return selectTestItemsResult;
+    }
+
+    private List<TestItemWithTypeDto> initSelectedItemDto() {
+        List<TestItemWithTypeDto> selectTestItemDtos = Lists.newLinkedList();
+        if (items != null && !items.isEmpty()) {
+            for (ItemTableModel model : items) {
+                if (model.getSelector().isSelected()) {
+                    if (isFilterUslOrLsl) {
+                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
+                            selectTestItemDtos.add(model.getItemDto());
+                        }
+                    } else {
+                        selectTestItemDtos.add(model.getItemDto());
+                    }
+                }
+            }
+        }
+        if (itemTable.getScene().lookup(".ascending-label") != null) {
+            this.sortTestItemWithTypeDto(selectTestItemDtos, false);
+        } else if (itemTable.getScene().lookup(".descending-label") != null) {
+            this.sortTestItemWithTypeDto(selectTestItemDtos, true);
+        }
+        List<TestItemWithTypeDto> selectTestItemDtosResult = Lists.newLinkedList();
+        if (stickyOnTopItems != null && !stickyOnTopItems.isEmpty()) {
+            selectTestItemDtos.forEach(selectTestItemDto -> {
+                if (stickyOnTopItems.contains(selectTestItemDto.getTestItemName())) {
+                    selectTestItemDtosResult.add(selectTestItemDto);
+                }
+            });
+        }
+
+        selectTestItemDtos.forEach(selectTestItemDto -> {
+            if (!selectTestItemDtosResult.contains(selectTestItemDto)) {
+                selectTestItemDtosResult.add(selectTestItemDto);
+            }
+        });
+        return selectTestItemDtosResult;
     }
 
     private void buildViewData() {
@@ -845,22 +909,30 @@ public class GrrExportController {
                     }
                 });
             }
-            selectItem.forEach(itemName -> {
-                selectItemDto.add(envService.findTestItemNameByItemName(itemName));
+            selectItem.forEach(itemName -> selectItemDto.add(envService.findTestItemNameByItemName(itemName)));
+
+            JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+            context.put(ParamKeys.PROJECT_NAME_LIST, envService.findActivatedProjectName());
+            context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, selectItemDto);
+            JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_EXPORT_VIEW_DATA);
+            jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+                @Override
+                public void doJob(JobContext context) {
+                    dataFrame = context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
+                    buildViewDataDialog(conditionTestItem);
+                }
             });
-            List<RowDataDto> rowDataDtoList = dataService.findTestData(envService.findActivatedProjectName(), selectItem);
-            dataFrame = RuntimeContext.getBean(DataFrameFactory.class).createSearchDataFrame(selectItemDto, rowDataDtoList);
-            dataFrame.addSearchCondition(searchTab.getSearch());
+            RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
         }
     }
 
-    private void buildViewDataDia() {
-        buildViewData();
+    private void buildViewDataDialog(List<String> searchConditions) {
         Pane root = null;
         try {
             FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/export_view_data.fxml");
             ExportViewData controller = new ExportViewData();
             controller.setDataFrame(dataFrame);
+            controller.setSearchConditions(searchConditions);
             fxmlLoader.setController(controller);
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrExportViewData",
@@ -886,18 +958,6 @@ public class GrrExportController {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
-
-    private List<TestItemWithTypeDto> getSelectedItemDto() {
-        List<TestItemWithTypeDto> selectItems = Lists.newArrayList();
-        if (itemTable.getItems() != null) {
-            for (ItemTableModel model : itemTable.getItems()) {
-                if (model.getSelector().isSelected()) {
-                    selectItems.add(model.getItemDto());
-                }
-            }
-        }
-        return selectItems;
     }
 
     private void export(List<String> projectNameList, String savePath) {
@@ -948,24 +1008,24 @@ public class GrrExportController {
                 windowProgressTipController.updateFailProgress(context.getError().toString());
             }
         });
+        List<TestItemWithTypeDto> testItemWithTypeDtoList = initSelectedItemDto();
         if (exportEachFile) {
             int i = 0;
             for (String projectName : projectNameList) {
                 String handlerName = projectName + i;
-                addHandler(jobPipeline, Lists.newArrayList(projectName), handlerName, savePath);
+                addHandler(jobPipeline, Lists.newArrayList(projectName), handlerName, savePath, testItemWithTypeDtoList);
                 i++;
             }
         } else {
-            addHandler(jobPipeline, projectNameList, "Export Grr Reports", savePath);
+            addHandler(jobPipeline, projectNameList, "Export Grr Reports", savePath, testItemWithTypeDtoList);
         }
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
     }
 
-    private void addHandler(JobPipeline pipeline, List<String> projectNameList, String handlerName, String savePath) {
+    private void addHandler(JobPipeline pipeline, List<String> projectNameList, String handlerName, String savePath, List<TestItemWithTypeDto> testItemWithTypeDtoList) {
         pipeline.addLast(new AbstractBasicJobHandler(handlerName) {
             @Override
             public void doJob(JobContext context) {
-                List<TestItemWithTypeDto> testItemWithTypeDtoList = getSelectedItemDto();
                 List<TestItemWithTypeDto> itemDto = Lists.newArrayList();
                 if (projectNameList.size() == 1) {
                     List<String> allItem = dataService.findAllTestItemName(projectNameList);
@@ -1156,8 +1216,8 @@ public class GrrExportController {
                 }
             } else {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
             }
 
         }
@@ -1188,5 +1248,35 @@ public class GrrExportController {
             return true;
         }
         return false;
+    }
+
+    private boolean isFilterAndHasUslOrLsl(ItemTableModel itemTableModel) {
+        if ((StringUtils.isNotEmpty(itemTableModel.getItemDto().getLsl()) || StringUtils.isNotEmpty(itemTableModel.getItemDto().getUsl()))
+                && (DAPStringUtils.isBlank(itemFilter.getTextField().getText()) || (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText())
+                && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())))) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isFilterAndAll(ItemTableModel itemTableModel) {
+        if (itemTableModel.getItem().startsWith("") && (DAPStringUtils.isBlank(itemFilter.getTextField().getText()) ||
+                (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText()) && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())))) {
+            return true;
+        }
+        return false;
+    }
+
+    private void sortTestItemWithTypeDto(List<TestItemWithTypeDto> testItemWithTypeDtos, boolean isDES) {
+        Collections.sort(testItemWithTypeDtos, new Comparator<TestItemWithTypeDto>() {
+            @Override
+            public int compare(TestItemWithTypeDto o1, TestItemWithTypeDto o2) {
+                if (isDES) {
+                    return o2.getTestItemName().compareTo(o1.getTestItemName());
+                } else {
+                    return o1.getTestItemName().compareTo(o2.getTestItemName());
+                }
+            }
+        });
     }
 }

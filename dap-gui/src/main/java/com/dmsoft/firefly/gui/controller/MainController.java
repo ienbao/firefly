@@ -2,6 +2,8 @@ package com.dmsoft.firefly.gui.controller;
 
 import com.dmsoft.firefly.gui.component.ContentStackPane;
 import com.dmsoft.firefly.gui.component.CustomerTooltip;
+import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
+import com.dmsoft.firefly.gui.components.utils.ControlMap;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -188,6 +190,7 @@ public class MainController {
         dataSourceBtn.getStyleClass().add("btn-icon-b");
         dataSourceBtn.setStyle("-fx-padding: 0 3 0 5");
         stateBar.addColumn(1, dataSourceBtn);
+        ControlMap.addControl(CommonResourceMassages.PLATFORM_CONTROL_DATASOURCE_BTN, dataSourceBtn);
 
         Label lblAnalyze = new Label(GuiFxmlAndLanguageUtils.getString("STATE_BAR_ANALYZE"));
         lblAnalyze.getStyleClass().add("state-bar-lbl");
@@ -201,6 +204,7 @@ public class MainController {
         templateBtn.getStyleClass().add("btn-icon-b");
         templateBtn.setStyle("-fx-padding: 0 3 0 5");
         stateBar.addColumn(3, templateBtn);
+        ControlMap.addControl(CommonResourceMassages.PLATFORM_CONTROL_TEMPLATE_BTN, templateBtn);
 
         progressBar = new ProgressBar();
         progressBar.setPrefHeight(10);
@@ -579,5 +583,13 @@ public class MainController {
         } else {
            return false;
         }
+    }
+
+    public Button getDataSourceBtn() {
+        return dataSourceBtn;
+    }
+
+    public Button getTemplateBtn() {
+        return templateBtn;
     }
 }

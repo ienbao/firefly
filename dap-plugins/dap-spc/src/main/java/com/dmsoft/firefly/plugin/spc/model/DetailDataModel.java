@@ -1,13 +1,16 @@
 package com.dmsoft.firefly.plugin.spc.model;
 
-import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
-import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
-import com.dmsoft.firefly.sdk.utils.RangeUtils;
+import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
+import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.dmsoft.firefly.sdk.utils.RangeUtils;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -31,6 +34,7 @@ public class DetailDataModel implements TableModel {
     private ObservableList<String> rowKeyArray;
     private Map<String, ObjectProperty<String>> testItemMap;
     private Map<String, ObjectProperty<String>> valueMap;
+    private List<String> originalRowKeys;
     private String testItems;
     private String values;
     private TableView<String> tableView;
@@ -39,7 +43,7 @@ public class DetailDataModel implements TableModel {
     /**
      * constructor
      *
-     * @param rowDataDto  row data dto
+     * @param rowDataDto     row data dto
      * @param testItemDtoMap list of test item with type dto
      */
     public DetailDataModel(RowDataDto rowDataDto, Map<String, TestItemWithTypeDto> testItemDtoMap) {
@@ -48,10 +52,18 @@ public class DetailDataModel implements TableModel {
         this.values = SpcFxmlAndLanguageUtils.getString(ResourceMassages.VALUES);
         this.testItemMap = Maps.newHashMap();
         this.valueMap = Maps.newHashMap();
-        this.testItemDtoMap = testItemDtoMap;
+        this.testItemDtoMap = Maps.newHashMap(testItemDtoMap);
+        this.originalRowKeys = Lists.newArrayList(rowDataDto.getData().keySet());
 
         this.headerArray = FXCollections.observableArrayList(testItems, values);
         this.rowKeyArray = FXCollections.observableArrayList(rowDataDto.getData().keySet());
+        Map<String, TestItemWithTypeDto> itemMaps = RuntimeContext.getBean(EnvService.class).findTestItemsMap();
+        for (int i = 0; i < this.rowKeyArray.size(); i++) {
+            String s = this.rowKeyArray.get(i);
+            if (!this.testItemDtoMap.containsKey(s)) {
+                this.testItemDtoMap.put(s, itemMaps.get(s));
+            }
+        }
     }
 
     @Override
@@ -126,5 +138,19 @@ public class DetailDataModel implements TableModel {
     @Override
     public void setTableView(TableView<String> tableView) {
         this.tableView = tableView;
+    }
+
+    /**
+     * method to filter text
+     *
+     * @param s string
+     */
+    public void filterText(String s) {
+        this.rowKeyArray.clear();
+        for (String rowKey : originalRowKeys) {
+            if (rowKey.toLowerCase().contains(s) || rowDataDto.getData().get(rowKey).toLowerCase().contains(s)) {
+                this.rowKeyArray.add(rowKey);
+            }
+        }
     }
 }

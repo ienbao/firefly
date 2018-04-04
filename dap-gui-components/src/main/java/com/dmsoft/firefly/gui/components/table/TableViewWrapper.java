@@ -89,19 +89,10 @@ public class TableViewWrapper {
                 menuItem.setOnAction(event1 -> {
                     String rowKey = tableView.getSelectionModel().getSelectedItem();
                     event.handleAction(rowKey, event1);
-                    tableView.refresh();
                 });
                 menu.getItems().add(menuItem);
             }
-            tableView.setRowFactory(tv -> {
-                TableRow<String> row = new TableRow<>();
-                row.setOnMouseClicked(event -> {
-                    if (!row.isEmpty() && model.isMenuEventEnable(row.getItem())) {
-                        row.setContextMenu(menu);
-                    }
-                });
-                return row;
-            });
+            tableView.setContextMenu(menu);
         }
         model.setTableView(tableView);
         if (tableView.getSkin() != null) {
@@ -201,9 +192,6 @@ public class TableViewWrapper {
             column.setCellFactory(tableColumn -> new TableCell<String, CheckBox>() {
                 @Override
                 protected void updateItem(CheckBox item, boolean empty) {
-                    if (item != null && item.equals(getItem())) {
-                        return;
-                    }
                     super.updateItem(item, empty);
                     if (item == null) {
                         super.setText(null);
@@ -226,9 +214,6 @@ public class TableViewWrapper {
         column.setCellFactory(tableColumn -> new TableCell<String, String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
-                if (item != null && item.equals(getItem())) {
-                    return;
-                }
                 super.updateItem(item, empty);
                 if (item == null) {
                     super.setText(null);

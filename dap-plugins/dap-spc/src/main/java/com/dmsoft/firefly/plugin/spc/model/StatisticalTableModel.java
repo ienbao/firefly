@@ -64,6 +64,10 @@ public class StatisticalTableModel implements TableModel {
 
     private Set<String> errorEditorCell = new HashSet<>();
 
+    private boolean isTimer = false;
+    private List<String> columnList;
+
+
     /**
      * constructor
      */
@@ -98,12 +102,41 @@ public class StatisticalTableModel implements TableModel {
         }
     }
 
+    public void setSelect(List<String> selectRowList){
+        if(selectRowList == null || spcStatsDtoList  == null){
+            return;
+        }
+        for (SpcStatisticalResultAlarmDto dto : spcStatsDtoList) {
+            SimpleObjectProperty<Boolean> b = new SimpleObjectProperty<>(false);
+            if(selectRowList.contains(dto.getKey())){
+                b.set(true);
+            } else {
+                falseSet.add(dto.getKey());
+                allChecked.setValue(false);
+            }
+            checkMap.put(dto.getKey(), b);
+            b.addListener((ov, b1, b2) -> {
+                if (!b2) {
+                    falseSet.add(dto.getKey());
+                    allChecked.setValue(false);
+                } else {
+                    falseSet.remove(dto.getKey());
+                    if (falseSet.isEmpty()) {
+                        allChecked.setValue(true);
+                    }
+                }
+            });
+        }
+
+    }
+
     /**
      * init column
      *
      * @param columnList column list
      */
     public void initColumn(List<String> columnList) {
+        this.columnList = columnList;
         columnKey.clear();
         columnKey.addAll(Arrays.asList(SPC_STATISTICAL_FIX_COLUMN));
         columnKey.addAll(columnList);
@@ -212,15 +245,6 @@ public class StatisticalTableModel implements TableModel {
         });
     }
 
-    /**
-     * update column
-     *
-     * @param result column name
-     */
-    public void updateStatisticalResultColumn(List<String> result) {
-        columnKey.remove(3, columnKey.size());
-        columnKey.addAll(result);
-    }
 
     /**
      * get select data
@@ -312,7 +336,7 @@ public class StatisticalTableModel implements TableModel {
 
     @Override
     public boolean isEditableTextField(String columnName) {
-        if (columnName.equals(STATISTICAL_TITLE[7]) || columnName.equals(STATISTICAL_TITLE[8])) {
+        if (!isTimer && (columnName.equals(STATISTICAL_TITLE[7]) || columnName.equals(STATISTICAL_TITLE[8]))) {
             return true;
         }
         return false;
@@ -636,5 +660,13 @@ public class StatisticalTableModel implements TableModel {
 
     public boolean hasErrorEditValue() {
         return errorEditorCell.size() != 0;
+    }
+
+    public void setTimer(boolean timer) {
+        isTimer = timer;
+    }
+
+    public List<String> getColumnList() {
+        return columnList;
     }
 }

@@ -1,7 +1,7 @@
 package com.dmsoft.firefly.gui.components.searchtab;
 
+import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
-import com.dmsoft.firefly.gui.components.utils.ResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -88,7 +88,7 @@ public class SearchTab extends VBox {
                     if (!controller.getAdvanceText().getStyleClass().contains("text-area-error")) {
                         controller.getAdvanceText().getStyleClass().add("text-area-error");
                         TooltipUtil.installWarnTooltip(controller.getAdvanceText(),
-                                FxmlAndLanguageUtils.getString(ResourceMassages.ILLEGAL_INPUT_SEARCH_CONDITION));
+                                FxmlAndLanguageUtils.getString(CommonResourceMassages.ILLEGAL_INPUT_SEARCH_CONDITION));
                     }
                     return false;
                 } else {
@@ -107,7 +107,7 @@ public class SearchTab extends VBox {
                             controller.getAdvanceText().getStyleClass().add("text-area-error");
                         }
                         TooltipUtil.installWarnTooltip(controller.getAdvanceText(),
-                                FxmlAndLanguageUtils.getString(ResourceMassages.UNABLE_TO_FIND_TEST_ITEM) + errorTestItemName.substring(0, errorTestItemName.length() - 2));
+                                FxmlAndLanguageUtils.getString(CommonResourceMassages.UNABLE_TO_FIND_TEST_ITEM) + errorTestItemName.substring(0, errorTestItemName.length() - 2));
                         return false;
                     }
                     controller.getAdvanceText().getStyleClass().removeAll("text-area-error");
@@ -140,6 +140,13 @@ public class SearchTab extends VBox {
      */
     public void hiddenGroupAdd() {
         controller.hiddenGroupAdd();
+    }
+
+    /**
+     * method to hide auto divided
+     */
+    public void hiddenAutoDivided() {
+        controller.hiddenAutoDivided();
     }
 
     public LinkedHashMap<String, List<BasicSearchDto>> getBasicSearch() {

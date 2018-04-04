@@ -441,15 +441,15 @@ intspc.normal.getBoxCResult <- function(x, SubGroupSize) {
             }
             if (length(b$out) > 0) {
                 if (length(na.exclude(Outs)) == 0) {
-                    Outs <- c(i, b$out[1])
+                    Outs <- c(i - 1, b$out[1])
                     if (length(b$out) > 1) {
                         for (j in c(1 : length(b$out))) {
-                            Outs <- c(Outs, i, b$out[j])
+                            Outs <- c(Outs, i - 1, b$out[j])
                         }
                     }
                 }else {
                     for (j in c(1 : length(b$out))) {
-                        Outs <- c(Outs, i, b$out[j])
+                        Outs <- c(Outs, i - 1, b$out[j])
                     }
                 }
             }

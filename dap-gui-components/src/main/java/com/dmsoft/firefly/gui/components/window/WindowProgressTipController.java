@@ -1,7 +1,7 @@
 package com.dmsoft.firefly.gui.components.window;
 
+import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
-import com.dmsoft.firefly.gui.components.utils.ResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -104,7 +104,7 @@ public class WindowProgressTipController {
         errorTxt.setVisible(true);
         errorTxt.setMinHeight(245);
         errorTxt.appendText(errorText);
-        Stage stage = StageMap.getStage(ResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
+        Stage stage = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -124,7 +124,7 @@ public class WindowProgressTipController {
         }
 
         if (!isOverride) {
-            Stage stage = StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN);
+            Stage stage = StageMap.getStage(CommonResourceMassages.PLATFORM_STAGE_MAIN);
             if (stage != null && stage.getScene() != null && stage.getScene().lookup("#grpContent") != null) {
                 stage.getScene().lookup("#grpContent").setDisable(true);
                 stage.getScene().lookup("#tbaSystem").setDisable(true);
@@ -146,8 +146,8 @@ public class WindowProgressTipController {
             isOverride = windowCustomListener.onCloseAndCancelCustomEvent();
         }
         if (!isOverride) {
-            StageMap.closeStage(ResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
-            Stage stage = StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN);
+            StageMap.closeStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
+            Stage stage = StageMap.getStage(CommonResourceMassages.PLATFORM_STAGE_MAIN);
             if (stage != null && stage.getScene() != null && stage.getScene().lookup("#grpContent") != null) {
                 stage.getScene().lookup("#grpContent").setDisable(false);
                 stage.getScene().lookup("#tbaSystem").setDisable(false);

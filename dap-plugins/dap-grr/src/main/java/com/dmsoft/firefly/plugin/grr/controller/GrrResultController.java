@@ -498,7 +498,6 @@ public class GrrResultController implements Initializable {
         Legend legend = LegendUtils.buildLegend(partAppraiserChart.getData(),
                 "chart-line-symbol", "line-legend-symbol");
         partAppraiserBp.setLeft(legend);
-//        partAppraiserBp.setMargin(legend, new Insets(0, 0, 1, 0));
         ChartUtils.setChartToolTip(partAppraiserChart.getData(), pointTooltip -> {
             Double value = (Double) pointTooltip.getData().getYValue();
             int digNum = DigNumInstance.newInstance().getDigNum();
@@ -665,7 +664,6 @@ public class GrrResultController implements Initializable {
 
     private void initComponents() {
         summaryItemTf = new TextFieldFilter();
-        itemFilterHBox.getChildren().setAll(summaryItemTf);
         xBarAppraiserChart = buildControlChart();
         rangeAppraiserChart = buildControlChart();
         rrByAppraiserChart = buildScatterChart();
@@ -749,7 +747,6 @@ public class GrrResultController implements Initializable {
     private void initComponentsRender() {
         final double inputWidth = 200;
 
-        itemFilterHBox.setMargin(summaryItemTf, new Insets(4, 0, 4, 0));
         String testItemText = GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TEST_ITEM");
         summaryItemTf.getTextField().setPromptText(testItemText);
         summaryItemTf.getTextField().setPrefWidth(inputWidth);
@@ -758,6 +755,7 @@ public class GrrResultController implements Initializable {
 
         //table自适应列宽
         itemDetailTb.setSkin(new ExpandableTableViewSkin(itemDetailTb));
+//        summaryTb.setSkin(new ExpandableTableViewSkin(summaryTb));
         componentChart.setAnimated(false);
         partAppraiserChart.setAnimated(false);
         xBarAppraiserChart.setAnimated(false);
@@ -781,18 +779,17 @@ public class GrrResultController implements Initializable {
         xBarAppraiserChart.setHorizontalGridLinesVisible(false);
         rangeAppraiserChart.setVerticalGridLinesVisible(false);
         rangeAppraiserChart.setHorizontalGridLinesVisible(false);
-//        ObservableList<TableColumn<String, ?>> summaryTbColumns = summaryTb.getColumns();
+        ObservableList<TableColumn<String, ?>> summaryTbColumns = summaryTb.getColumns();
 //        ObservableList<TableColumn<GrrSingleAnova, ?>> anovaTbColumns = anovaTb.getColumns();
 //        ObservableList<TableColumn<GrrSingleSource, ?>> sourceTbColumns = sourceTb.getColumns();
-//        summaryTbColumns.get(0).setPrefWidth(30);
-//        summaryTbColumns.get(1).setPrefWidth(180);
-//        summaryTbColumns.get(2).setPrefWidth(80);
-//        summaryTbColumns.get(3).setPrefWidth(80);
-//        summaryTbColumns.get(4).setPrefWidth(100);
-//        summaryTbColumns.get(5).setPrefWidth(110);
-//        summaryTbColumns.get(6).setPrefWidth(110);
-//        summaryTbColumns.get(6).setPrefWidth(120);
-//        summaryTbColumns.get(7).setPrefWidth(110);
+        summaryTbColumns.get(0).prefWidthProperty().bind(summaryTb.widthProperty().divide(25));
+        summaryTbColumns.get(1).prefWidthProperty().bind(summaryTb.widthProperty().divide(4));
+        summaryTbColumns.get(2).prefWidthProperty().bind(summaryTb.widthProperty().divide(11));
+        summaryTbColumns.get(3).prefWidthProperty().bind(summaryTb.widthProperty().divide(11));
+        summaryTbColumns.get(4).prefWidthProperty().bind(summaryTb.widthProperty().divide(10));
+        summaryTbColumns.get(5).prefWidthProperty().bind(summaryTb.widthProperty().divide(7));
+        summaryTbColumns.get(6).prefWidthProperty().bind(summaryTb.widthProperty().divide(7));
+        summaryTbColumns.get(7).prefWidthProperty().bind(summaryTb.widthProperty().divide(7));
 //        anovaTbColumns.get(0).setPrefWidth(100);
 //        anovaTbColumns.get(1).setPrefWidth(140);
 //        anovaTbColumns.get(2).setPrefWidth(140);
@@ -814,6 +811,10 @@ public class GrrResultController implements Initializable {
         rangeAppraiserChartBtn.getStyleClass().add("btn-icon-b");
         xBarAppraiserChartBtn.setDisable(true);
         rangeAppraiserChartBtn.setDisable(true);
+
+        grrDataBtn.getStyleClass().add("btn-group");
+        grrChartBtn.getStyleClass().add("btn-group");
+        grrResultBtn.getStyleClass().add("btn-group-last");
     }
 
     private void initComponentEvents() {
@@ -958,6 +959,9 @@ public class GrrResultController implements Initializable {
 
     private void fireResultBasedCmbChangeEvent() {
         summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
+        if (grrMainController.getSearchConditionDto() == null || grrMainController.getSearchConditionDto().getSelectedTestItemDtos() == null) {
+            return;
+        }
         grrMainController.getSearchConditionDto().getSelectedTestItemDtos().forEach(testItemWithTypeDto -> {
             if (summaryModel.getSelectedItemName().equals(testItemWithTypeDto.getTestItemName())) {
                 analyzeGrrSubResult(testItemWithTypeDto, summaryModel.getToleranceCellValue(summaryModel.getSelectedItemName()));
@@ -1003,8 +1007,8 @@ public class GrrResultController implements Initializable {
     }
 
     /****** Summary *****/
-    @FXML
-    private HBox itemFilterHBox;
+//    @FXML
+//    private HBox itemFilterHBox;
     @FXML
     private ComboBox resultBasedCmb;
     @FXML
@@ -1029,6 +1033,7 @@ public class GrrResultController implements Initializable {
     private VBox chartVBox;
     @FXML
     private VBox resultVBox;
+    @FXML
     private TextFieldFilter summaryItemTf;
     /****** Chart ******/
     @FXML

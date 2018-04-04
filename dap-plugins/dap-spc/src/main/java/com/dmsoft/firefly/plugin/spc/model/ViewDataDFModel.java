@@ -12,13 +12,10 @@ import com.dmsoft.firefly.plugin.spc.utils.SpcExceptionCode;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ViewResource;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
-import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
-import com.dmsoft.firefly.sdk.utils.DAPDoubleUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.google.common.collect.Lists;
@@ -65,7 +62,7 @@ public class ViewDataDFModel implements TableModel {
     private SpcMainController mainController;
     private List<String> initSelectedRowKeys;
     private List<SearchConditionDto> statisticalSearchConditionDtoList;
-    private Map<String,TestItemWithTypeDto> testItemDtoMap;
+    private Map<String, TestItemWithTypeDto> testItemDtoMap;
 
     /**
      * constructor
@@ -119,15 +116,6 @@ public class ViewDataDFModel implements TableModel {
             public void handleAction(String rowKey, ActionEvent event) {
                 ViewDataDetailController controller = new ViewDataDetailController();
                 controller.setRowDataDto(RuntimeContext.getBean(SourceDataService.class).findTestData(rowKey));
-//                List<TestItemWithTypeDto> typeDtoList = RuntimeContext.getBean(EnvService.class).findTestItems();
-//                for (int j = 0; j < typeDtoList.size(); j++) {
-//                    TestItemWithTypeDto typeDto = typeDtoList.get(j);
-//                    if (dataFrame.getTestItemWithTypeDto(typeDto.getTestItemName()) != null) {
-//                        int i = typeDtoList.indexOf(typeDto);
-//                        typeDtoList.remove(i);
-//                        typeDtoList.add(i, dataFrame.getTestItemWithTypeDto(typeDto.getTestItemName()));
-//                    }
-//                }
                 controller.setTestItemDtoMap(testItemDtoMap);
                 FXMLLoader loader = SpcFxmlAndLanguageUtils.getLoaderFXML(ViewResource.SPC_VIEW_DATA_DETAIL);
                 loader.setController(controller);
@@ -278,26 +266,31 @@ public class ViewDataDFModel implements TableModel {
         return statisticalSearchConditionDtoList;
     }
 
+    /**
+     * method to set stats search condition dto list
+     *
+     * @param statisticalSearchConditionDtoList list of stats search condition dto
+     */
     public void setStatisticalSearchConditionDtoList(List<SearchConditionDto> statisticalSearchConditionDtoList) {
         this.statisticalSearchConditionDtoList = statisticalSearchConditionDtoList;
-        if(statisticalSearchConditionDtoList == null){
+        if (statisticalSearchConditionDtoList == null) {
             testItemDtoMap = null;
             return;
         }
         testItemDtoMap = Maps.newHashMap();
-        for(SearchConditionDto searchConditionDto : statisticalSearchConditionDtoList){
+        for (SearchConditionDto searchConditionDto : statisticalSearchConditionDtoList) {
             String testName = searchConditionDto.getItemName();
             String lsl = searchConditionDto.getCusLsl();
             String usl = searchConditionDto.getCusUsl();
-            if(testItemDtoMap.containsKey(testName)){
+            if (testItemDtoMap.containsKey(testName)) {
                 TestItemWithTypeDto testItemDto = testItemDtoMap.get(testName);
-                if(DAPStringUtils.isNumeric(lsl)){
-                    if((DAPStringUtils.isNumeric(testItemDto.getLsl()) && Double.valueOf(lsl) < Double.valueOf(testItemDto.getLsl())) || !DAPStringUtils.isNumeric(testItemDto.getLsl())){
+                if (DAPStringUtils.isNumeric(lsl)) {
+                    if (!DAPStringUtils.isNumeric(testItemDto.getLsl()) || Double.valueOf(lsl) < Double.valueOf(testItemDto.getLsl())) {
                         testItemDto.setLsl(lsl);
                     }
                 }
-                if(DAPStringUtils.isNumeric(usl)){
-                    if((DAPStringUtils.isNumeric(testItemDto.getUsl()) && Double.valueOf(usl) > Double.valueOf(testItemDto.getUsl())) || !DAPStringUtils.isNumeric(testItemDto.getUsl())){
+                if (DAPStringUtils.isNumeric(usl)) {
+                    if (!DAPStringUtils.isNumeric(testItemDto.getUsl()) || Double.valueOf(usl) > Double.valueOf(testItemDto.getUsl())) {
                         testItemDto.setUsl(usl);
                     }
                 }
@@ -306,7 +299,7 @@ public class ViewDataDFModel implements TableModel {
                 testItemDto.setUsl(usl);
                 testItemDto.setLsl(lsl);
                 testItemDto.setTestItemName(testName);
-                testItemDtoMap.put(testName,testItemDto);
+                testItemDtoMap.put(testName, testItemDto);
             }
         }
     }
