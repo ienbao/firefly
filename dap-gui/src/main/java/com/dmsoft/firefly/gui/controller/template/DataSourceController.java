@@ -323,8 +323,8 @@ public class DataSourceController implements Initializable {
                 projectOrder.add(v.getValue());
             });
             if (selectProject.isEmpty()) {
-                WindowMessageFactory.createWindowMessageHasOk(FxmlAndLanguageUtils.getString(ResourceMassages.MESSAGE),
-                        FxmlAndLanguageUtils.getString(ResourceMassages.PLEASE_SELECT_FILE));
+                WindowMessageFactory.createWindowMessageHasOk(FxmlAndLanguageUtils.getString(CommonResourceMassages.MESSAGE),
+                        FxmlAndLanguageUtils.getString(CommonResourceMassages.PLEASE_SELECT_FILE));
                 return;
             }
             Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(selectProject);

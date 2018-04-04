@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="testItemPane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcItemController">
+<VBox fx:id="testItemPane" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcItemController">
    <children>
       <SplitPane fx:id="split" orientation="VERTICAL" prefHeight="600.0" style="-fx-border-width: 0 0 0 0;" VBox.vgrow="ALWAYS">
          <items>
@@ -39,7 +39,7 @@
                               </TableView>
                            </center>
                            <top>
-                              <TextFieldFilter fx:id="itemFilter" BorderPane.alignment="CENTER">
+                              <TextFieldFilter fx:id="itemFilter" maxWidth="20000.0" BorderPane.alignment="CENTER">
                                  <BorderPane.margin>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </BorderPane.margin>

@@ -7,8 +7,8 @@ package com.dmsoft.firefly.gui.controller.template;
 import com.dmsoft.bamboo.common.utils.collection.ListUtil;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.core.utils.*;
+import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
-import com.dmsoft.firefly.gui.components.utils.ResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
@@ -55,7 +55,7 @@ import java.util.ResourceBundle;
  */
 public class PluginManageController implements Initializable {
 
-    private static String restartStr = FxmlAndLanguageUtils.getString(ResourceMassages.RESTART);
+    private static String restartStr = FxmlAndLanguageUtils.getString(CommonResourceMassages.RESTART);
     private final String parentPath = ApplicationPathUtil.getPath(GuiConst.CONFIG_PATH);
     @FXML
     private Button ok, installPlugin, unInstallPlugin;
@@ -211,14 +211,14 @@ public class PluginManageController implements Initializable {
                         PluginInfo installPlugins = ListUtil.isEmpty(scannedPlugins) ? null : scannedPlugins.get(0);
 
                         if (installPlugins == null) {
-                            WindowMessageFactory.createWindowMessageNoBtnHasOk(FxmlAndLanguageUtils.getString(ResourceMassages.INSTALL_ERROR), FxmlAndLanguageUtils.getString(ResourceMassages.ILLEGAL_PLUGIN));
+                            WindowMessageFactory.createWindowMessageNoBtnHasOk(FxmlAndLanguageUtils.getString(CommonResourceMassages.INSTALL_ERROR), FxmlAndLanguageUtils.getString(CommonResourceMassages.ILLEGAL_PLUGIN));
                             return;
                         }
 
                         Map<String, PluginInfo> allInstallPlugins = context.getAllEnabledPluginInfo() == null ? Maps.newHashMap() : context.getAllEnabledPluginInfo();
 
                         if (isExists(scannedPlugins.get(0), allInstallPlugins)) {
-                            WindowMessageFactory.createWindowMessageNoBtnHasOk(FxmlAndLanguageUtils.getString(ResourceMassages.INSTALL_ERROR), FxmlAndLanguageUtils.getString(ResourceMassages.PLUGIN_EXISTS));
+                            WindowMessageFactory.createWindowMessageNoBtnHasOk(FxmlAndLanguageUtils.getString(CommonResourceMassages.INSTALL_ERROR), FxmlAndLanguageUtils.getString(CommonResourceMassages.PLUGIN_EXISTS));
                             FileUtils.deleteFolder(pluginFolderPath + "/temp/" + fileName);
                             return;
                         }
@@ -277,8 +277,8 @@ public class PluginManageController implements Initializable {
     }
 
     private void showRestart() {
-        WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOk(FxmlAndLanguageUtils.getString(ResourceMassages.RESTART_APPLICATION),
-                FxmlAndLanguageUtils.getString(ResourceMassages.RESTART_APPLICATION_INFO));
+        WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOk(FxmlAndLanguageUtils.getString(CommonResourceMassages.RESTART_APPLICATION),
+                FxmlAndLanguageUtils.getString(CommonResourceMassages.RESTART_APPLICATION_INFO));
         controller.addProcessMonitorListener(new WindowCustomListener() {
             @Override
             public boolean onShowCustomEvent() {

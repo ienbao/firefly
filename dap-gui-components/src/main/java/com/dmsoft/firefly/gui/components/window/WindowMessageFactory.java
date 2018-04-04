@@ -1,7 +1,7 @@
 package com.dmsoft.firefly.gui.components.window;
 
+import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
-import com.dmsoft.firefly.gui.components.utils.ResourceMassages;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
@@ -76,7 +76,7 @@ public class WindowMessageFactory {
             fxmlLoader.setController(windowMessageController);
             root = fxmlLoader.load();
             windowMessageController.updateMsgLbl(msg);
-            Stage newStage = WindowFactory.createOrUpdateWindowAsModelNoBtn(ResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE, title, root);
+            Stage newStage = WindowFactory.createOrUpdateWindowAsModelNoBtn(CommonResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE, title, root);
             newStage.setResizable(false);
             newStage.toFront();
             newStage.show();
@@ -101,7 +101,7 @@ public class WindowMessageFactory {
             fxmlLoader.setController(windowMessageController);
             root = fxmlLoader.load();
             windowMessageController.updateMsgLbl(msg);
-            Stage newStage = WindowFactory.createOrUpdateSimpleWindowAsModel(ResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE, title, root);
+            Stage newStage = WindowFactory.createOrUpdateSimpleWindowAsModel(CommonResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE, title, root);
             newStage.setResizable(false);
             newStage.setOnShowing(event -> {
                 windowMessageController.onShowingRequest();
@@ -125,7 +125,7 @@ public class WindowMessageFactory {
             FXMLLoader fxmlLoader = FxmlAndLanguageUtils.getLoaderFXML("view/windows_progress.fxml");
             fxmlLoader.setController(windowProgressTipController);
             root = fxmlLoader.load();
-            Stage newStage = WindowFactory.createOrUpdateSimpleWindowAsModel(ResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP, title, root);
+            Stage newStage = WindowFactory.createOrUpdateSimpleWindowAsModel(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP, title, root);
             newStage.setResizable(false);
             newStage.setOnShowing(event -> {
                 windowProgressTipController.onShowingRequest();

@@ -47,7 +47,7 @@ public class GrrExportServiceImpl implements GrrExportService {
         propertyConfig.setDefaultExportPath("../export/");
         //Verify the validity of the parameters
         if (grrExportConfigDto == null || grrSummaryExportDtos == null || grrSummaryExportDtos.size() <= 0) {
-//            throw new ApplicationException(GrrExceptionCode.ERR_12001, GrrFxmlAndLanguageUtils.getString(ResourceMassages.VIEW_DATA));
+//            throw new ApplicationException(GrrExceptionCode.ERR_12001, GrrFxmlAndLanguageUtils.getString(CommonResourceMassages.VIEW_DATA));
             throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXCEPTION_GRR_PARAMETER_INVALID));
         }
         try {

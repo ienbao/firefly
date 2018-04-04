@@ -124,6 +124,9 @@ public class GuiApplication extends Application {
         MenuFactory.setMainController(fxmlLoader1.getController());
         MenuFactory.setAppController(fxmlLoader.getController());
 
+       /* RuntimeContext.registerBean(IController.class);
+        RuntimeContext.getBean(IController.class).registerController(CommonResourceMassages.PLATFORM_CONTROLLER_MAIN, fxmlLoader.getController());*/
+
         WindowFactory.createFullWindow(GuiConst.PLARTFORM_STAGE_MAIN, root, main, getClass().getClassLoader().getResource("css/platform_app.css").toExternalForm());
 
         NodeMap.addNode(GuiConst.PLARTFORM_NODE_MAIN, main);

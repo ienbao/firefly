@@ -86,10 +86,23 @@ public class ViewDataController implements Initializable {
     /**
      * set view data table dataList
      *
-     * @param dataFrame      search data frame
-     * @param selectedRowKey selected row key
+     * @param dataFrame                         search data frame
+     * @param selectedRowKey                    selected row key
+     * @param statisticalSearchConditionDtoList statisticalSearchConditionDtoList
      */
     public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList) {
+        this.setViewData(dataFrame, selectedRowKey, statisticalSearchConditionDtoList, false);
+    }
+
+    /**
+     * set view data table dataList
+     *
+     * @param dataFrame                         search data frame
+     * @param selectedRowKey                    selected row key
+     * @param statisticalSearchConditionDtoList statisticalSearchConditionDtoList
+     * @param isTimer                           isTimer
+     */
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList, boolean isTimer) {
         this.statisticalSearchConditionDtoList = statisticalSearchConditionDtoList;
         this.selectedRowKeys = selectedRowKey;
         this.dataFrame = dataFrame;
