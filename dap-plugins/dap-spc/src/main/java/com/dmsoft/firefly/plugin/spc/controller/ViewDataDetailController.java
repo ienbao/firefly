@@ -10,7 +10,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
 
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -31,6 +30,9 @@ public class ViewDataDetailController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         DetailDataModel model = new DetailDataModel(rowDataDto, testItemDtoMap);
+        filterTF.getTextField().textProperty().addListener((ov, s1, s2) -> {
+            model.filterText(s2);
+        });
         TableViewWrapper.decorate(detailTB, model);
         detailTB.getColumns().get(0).setPrefWidth(226);
         detailTB.getColumns().get(1).setPrefWidth(163);
