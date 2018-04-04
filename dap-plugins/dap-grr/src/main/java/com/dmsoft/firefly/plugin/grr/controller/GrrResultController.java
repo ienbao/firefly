@@ -749,7 +749,6 @@ public class GrrResultController implements Initializable {
     private void initComponentsRender() {
         final double inputWidth = 200;
 
-//        itemFilterHBox.setMargin(summaryItemTf, new Insets(4, 0, 4, 0));
         String testItemText = GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TEST_ITEM");
         summaryItemTf.getTextField().setPromptText(testItemText);
         summaryItemTf.getTextField().setPrefWidth(inputWidth);
@@ -758,6 +757,7 @@ public class GrrResultController implements Initializable {
 
         //table自适应列宽
         itemDetailTb.setSkin(new ExpandableTableViewSkin(itemDetailTb));
+//        summaryTb.setSkin(new ExpandableTableViewSkin(summaryTb));
         componentChart.setAnimated(false);
         partAppraiserChart.setAnimated(false);
         xBarAppraiserChart.setAnimated(false);
@@ -814,6 +814,10 @@ public class GrrResultController implements Initializable {
         rangeAppraiserChartBtn.getStyleClass().add("btn-icon-b");
         xBarAppraiserChartBtn.setDisable(true);
         rangeAppraiserChartBtn.setDisable(true);
+
+        grrDataBtn.getStyleClass().add("btn-group");
+        grrChartBtn.getStyleClass().add("btn-group");
+        grrResultBtn.getStyleClass().add("btn-group-last");
     }
 
     private void initComponentEvents() {

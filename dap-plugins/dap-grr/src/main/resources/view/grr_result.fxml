@@ -59,9 +59,9 @@
                     <children>
                         <HBox maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                             <children>
-                                <Button fx:id="grrDataBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="22.0" minHeight="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="119.0" style="-fx-border-width: 1 1 1 1;" text="%GRR_RESULT_DATA_SHEET" textAlignment="CENTER" />
-                                <Button fx:id="grrChartBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="22.0" minHeight="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="60.0" style="-fx-border-width: 1 1 1 1;" text="%GRR_RESULT_CHARTS" textAlignment="CENTER" />
-                                <Button fx:id="grrResultBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="22.0" minHeight="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="119.0" style="-fx-border-width: 1 1 1 1;" text="%GRR_ANALYSIS_RESULT" textAlignment="CENTER" />
+                                <Button fx:id="grrDataBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="22.0" minHeight="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="119.0" text="%GRR_RESULT_DATA_SHEET" textAlignment="CENTER" />
+                                <Button fx:id="grrChartBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="22.0" minHeight="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="60.0" text="%GRR_RESULT_CHARTS" textAlignment="CENTER" />
+                                <Button fx:id="grrResultBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="22.0" minHeight="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="119.0" text="%GRR_ANALYSIS_RESULT" textAlignment="CENTER" />
                             </children>
                             <padding>
                                 <Insets top="8.0" />
