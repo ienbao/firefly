@@ -3,7 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane prefHeight="705.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane prefHeight="705.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.dmsoft.firefly.plugin.grr.controller.GrrMainController">
     <children>
         <SplitPane dividerPositions="0.859375" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0"
@@ -46,7 +46,7 @@
                                         styleClass="btn-primary" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
                             </children>
                         </GridPane>
-                  <TabPane prefHeight="675.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+                  <TabPane prefWidth="200.0" minWidth="180.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
                       <Tab text="%GRR" fx:id="grrResultTab">
                         <content>
