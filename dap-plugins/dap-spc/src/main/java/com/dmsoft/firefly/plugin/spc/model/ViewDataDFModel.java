@@ -285,12 +285,12 @@ public class ViewDataDFModel implements TableModel {
             if (testItemDtoMap.containsKey(testName)) {
                 TestItemWithTypeDto testItemDto = testItemDtoMap.get(testName);
                 if (DAPStringUtils.isNumeric(lsl)) {
-                    if ((DAPStringUtils.isNumeric(testItemDto.getLsl()) && Double.valueOf(lsl) < Double.valueOf(testItemDto.getLsl())) || !DAPStringUtils.isNumeric(testItemDto.getLsl())) {
+                    if (!DAPStringUtils.isNumeric(testItemDto.getLsl()) || Double.valueOf(lsl) < Double.valueOf(testItemDto.getLsl())) {
                         testItemDto.setLsl(lsl);
                     }
                 }
                 if (DAPStringUtils.isNumeric(usl)) {
-                    if ((DAPStringUtils.isNumeric(testItemDto.getUsl()) && Double.valueOf(usl) > Double.valueOf(testItemDto.getUsl())) || !DAPStringUtils.isNumeric(testItemDto.getUsl())) {
+                    if (!DAPStringUtils.isNumeric(testItemDto.getUsl()) || Double.valueOf(usl) > Double.valueOf(testItemDto.getUsl())) {
                         testItemDto.setUsl(usl);
                     }
                 }

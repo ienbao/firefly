@@ -142,6 +142,13 @@ public class SearchTab extends VBox {
         controller.hiddenGroupAdd();
     }
 
+    /**
+     * method to hide auto divided
+     */
+    public void hiddenAutoDivided() {
+        controller.hiddenAutoDivided();
+    }
+
     public LinkedHashMap<String, List<BasicSearchDto>> getBasicSearch() {
         return controller.getBasicSearch();
     }
