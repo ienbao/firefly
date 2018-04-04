@@ -104,8 +104,8 @@ public class SpcControlChartData implements ControlChartData {
         breakLineList.add(lclData);
         maxY = MathUtils.getMax(y, ucl.getY(), lcl.getY(), new Double[]{cl});
         minY = MathUtils.getMin(y, ucl.getY(), lcl.getY(), new Double[]{cl});
-        maxX = MathUtils.getMax(x);
-        minX = MathUtils.getMin(x);
+        maxX = MathUtils.getMax(x, ucl.getX(), lcl.getX());
+        minX = MathUtils.getMin(x, ucl.getX(), lcl.getX());
     }
 
     @Override
