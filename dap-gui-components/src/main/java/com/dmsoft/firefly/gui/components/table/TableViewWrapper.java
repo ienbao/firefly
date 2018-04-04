@@ -93,15 +93,6 @@ public class TableViewWrapper {
                 menu.getItems().add(menuItem);
             }
             tableView.setContextMenu(menu);
-//            tableView.setRowFactory(tv -> {
-//                TableRow<String> row = new TableRow<>();
-//                row.setOnMouseClicked(event -> {
-//                    if (!row.isEmpty() && model.isMenuEventEnable(row.getItem())) {
-//                        row.setContextMenu(menu);
-//                    }
-//                });
-//                return row;
-//            });
         }
         model.setTableView(tableView);
         if (tableView.getSkin() != null) {
