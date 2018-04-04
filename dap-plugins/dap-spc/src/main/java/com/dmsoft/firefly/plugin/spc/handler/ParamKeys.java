@@ -46,6 +46,7 @@ public class ParamKeys {
     public static final String SPC_REFRESH_STATISTICAL_JOB_PIPELINE = "spcRefreshStatisticalJobPipeline";
     public static final String FIND_SPC_SETTING_DATA_JOP_PIPELINE = "findSpcSettingDataJobPipeline";
     public static final String SAVE_SPC_SETTING_DATA_JOP_PIPELINE = "saveSpcSettingDataJobPipeline";
+    public static final String SPC_EXPORT_VIEW_DATA = "spcExportViewData";
 
     public static final String SPC_ANALYSIS_CONDITION_KEY = "analysisKey";
 
