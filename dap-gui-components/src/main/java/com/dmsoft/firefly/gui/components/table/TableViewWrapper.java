@@ -192,9 +192,6 @@ public class TableViewWrapper {
             column.setCellFactory(tableColumn -> new TableCell<String, CheckBox>() {
                 @Override
                 protected void updateItem(CheckBox item, boolean empty) {
-                    if (item != null && item.equals(getItem())) {
-                        return;
-                    }
                     super.updateItem(item, empty);
                     if (item == null) {
                         super.setText(null);
@@ -217,9 +214,6 @@ public class TableViewWrapper {
         column.setCellFactory(tableColumn -> new TableCell<String, String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
-                if (item != null && item.equals(getItem())) {
-                    return;
-                }
                 super.updateItem(item, empty);
                 if (item == null) {
                     super.setText(null);
