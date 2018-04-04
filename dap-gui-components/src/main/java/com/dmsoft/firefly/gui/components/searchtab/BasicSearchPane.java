@@ -140,8 +140,10 @@ public class BasicSearchPane extends VBox {
         if (this.getChildren().size() > 0) {
             for (Node node : this.getChildren()) {
                 if (node instanceof SearchComboBox) {
-                    search.append(((SearchComboBox) node).getCondition());
-                    search.append(" & ");
+                    if (StringUtils.isNotBlank(((SearchComboBox) node).getCondition())) {
+                        search.append(((SearchComboBox) node).getCondition());
+                        search.append(" & ");
+                    }
                 }
             }
         }

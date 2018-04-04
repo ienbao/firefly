@@ -11,9 +11,11 @@ import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Lucien.Chen on 2018/2/10.
@@ -86,6 +88,11 @@ public class EnvServiceImpl implements EnvService {
             return Lists.newArrayList(testItemDtos.keySet());
         }
         return Lists.newArrayList();
+    }
+
+    @Override
+    public Map<String, TestItemWithTypeDto> findTestItemsMap() {
+        return Maps.newHashMap(testItemDtos);
     }
 
     @Override

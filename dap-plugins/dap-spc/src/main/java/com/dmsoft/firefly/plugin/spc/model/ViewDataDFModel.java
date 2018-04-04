@@ -116,15 +116,6 @@ public class ViewDataDFModel implements TableModel {
             public void handleAction(String rowKey, ActionEvent event) {
                 ViewDataDetailController controller = new ViewDataDetailController();
                 controller.setRowDataDto(RuntimeContext.getBean(SourceDataService.class).findTestData(rowKey));
-//                List<TestItemWithTypeDto> typeDtoList = RuntimeContext.getBean(EnvService.class).findTestItems();
-//                for (int j = 0; j < typeDtoList.size(); j++) {
-//                    TestItemWithTypeDto typeDto = typeDtoList.get(j);
-//                    if (dataFrame.getTestItemWithTypeDto(typeDto.getTestItemName()) != null) {
-//                        int i = typeDtoList.indexOf(typeDto);
-//                        typeDtoList.remove(i);
-//                        typeDtoList.add(i, dataFrame.getTestItemWithTypeDto(typeDto.getTestItemName()));
-//                    }
-//                }
                 controller.setTestItemDtoMap(testItemDtoMap);
                 FXMLLoader loader = SpcFxmlAndLanguageUtils.getLoaderFXML(ViewResource.SPC_VIEW_DATA_DETAIL);
                 loader.setController(controller);

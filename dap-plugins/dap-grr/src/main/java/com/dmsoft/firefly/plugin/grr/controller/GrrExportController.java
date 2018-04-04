@@ -839,7 +839,64 @@ public class GrrExportController {
                 }
             }
         }
-        return selectItems;
+
+        if (itemTable.getScene().lookup(".ascending-label") != null) {
+            DAPStringUtils.sortListString(selectItems, false);
+        } else if (itemTable.getScene().lookup(".descending-label") != null) {
+            DAPStringUtils.sortListString(selectItems, true);
+        }
+        List<String> selectTestItemsResult = Lists.newLinkedList();
+        if (stickyOnTopItems != null && !stickyOnTopItems.isEmpty()) {
+            selectItems.forEach(selectedItem->{
+                if (stickyOnTopItems.contains(selectedItem)) {
+                    selectTestItemsResult.add(selectedItem);
+                }
+            });
+        }
+
+        selectItems.forEach(selectedItem->{
+            if (!selectTestItemsResult.contains(selectedItem)) {
+                selectTestItemsResult.add(selectedItem);
+            }
+        });
+        return selectTestItemsResult;
+    }
+
+    private List<TestItemWithTypeDto> initSelectedItemDto() {
+        List<TestItemWithTypeDto> selectTestItemDtos = Lists.newLinkedList();
+        if (items != null && !items.isEmpty()) {
+            for (ItemTableModel model : items) {
+                if (model.getSelector().isSelected()) {
+                    if (isFilterUslOrLsl) {
+                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())){
+                            selectTestItemDtos.add(model.getItemDto());
+                        }
+                    } else {
+                        selectTestItemDtos.add(model.getItemDto());
+                    }
+                }
+            }
+        }
+        if (itemTable.getScene().lookup(".ascending-label") != null) {
+            this.sortTestItemWithTypeDto(selectTestItemDtos, false);
+        } else if (itemTable.getScene().lookup(".descending-label") != null) {
+            this.sortTestItemWithTypeDto(selectTestItemDtos, true);
+        }
+        List<TestItemWithTypeDto> selectTestItemDtosResult = Lists.newLinkedList();
+        if (stickyOnTopItems != null && !stickyOnTopItems.isEmpty()) {
+            selectTestItemDtos.forEach(selectTestItemDto->{
+                if (stickyOnTopItems.contains(selectTestItemDto.getTestItemName())) {
+                    selectTestItemDtosResult.add(selectTestItemDto);
+                }
+            });
+        }
+
+        selectTestItemDtos.forEach(selectTestItemDto->{
+            if (!selectTestItemDtosResult.contains(selectTestItemDto)) {
+                selectTestItemDtosResult.add(selectTestItemDto);
+            }
+        });
+        return selectTestItemDtosResult;
     }
 
     private void buildViewData() {
@@ -898,18 +955,6 @@ public class GrrExportController {
         }
     }
 
-    private List<TestItemWithTypeDto> getSelectedItemDto() {
-        List<TestItemWithTypeDto> selectItems = Lists.newArrayList();
-        if (itemTable.getItems() != null) {
-            for (ItemTableModel model : itemTable.getItems()) {
-                if (model.getSelector().isSelected()) {
-                    selectItems.add(model.getItemDto());
-                }
-            }
-        }
-        return selectItems;
-    }
-
     private void export(List<String> projectNameList, String savePath) {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip(GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT));
         windowProgressTipController.setAutoHide(false);
@@ -958,24 +1003,24 @@ public class GrrExportController {
                 windowProgressTipController.updateFailProgress(context.getError().toString());
             }
         });
+        List<TestItemWithTypeDto> testItemWithTypeDtoList = initSelectedItemDto();
         if (exportEachFile) {
             int i = 0;
             for (String projectName : projectNameList) {
                 String handlerName = projectName + i;
-                addHandler(jobPipeline, Lists.newArrayList(projectName), handlerName, savePath);
+                addHandler(jobPipeline, Lists.newArrayList(projectName), handlerName, savePath, testItemWithTypeDtoList);
                 i++;
             }
         } else {
-            addHandler(jobPipeline, projectNameList, "Export Grr Reports", savePath);
+            addHandler(jobPipeline, projectNameList, "Export Grr Reports", savePath, testItemWithTypeDtoList);
         }
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
     }
 
-    private void addHandler(JobPipeline pipeline, List<String> projectNameList, String handlerName, String savePath) {
+    private void addHandler(JobPipeline pipeline, List<String> projectNameList, String handlerName, String savePath, List<TestItemWithTypeDto> testItemWithTypeDtoList) {
         pipeline.addLast(new AbstractBasicJobHandler(handlerName) {
             @Override
             public void doJob(JobContext context) {
-                List<TestItemWithTypeDto> testItemWithTypeDtoList = getSelectedItemDto();
                 List<TestItemWithTypeDto> itemDto = Lists.newArrayList();
                 if (projectNameList.size() == 1) {
                     List<String> allItem = dataService.findAllTestItemName(projectNameList);
@@ -1215,5 +1260,18 @@ public class GrrExportController {
             return true;
         }
         return false;
+    }
+
+    private void sortTestItemWithTypeDto(List<TestItemWithTypeDto> testItemWithTypeDtos, boolean isDES) {
+        Collections.sort(testItemWithTypeDtos, new Comparator<TestItemWithTypeDto>() {
+            @Override
+            public int compare(TestItemWithTypeDto o1, TestItemWithTypeDto o2) {
+                if (isDES) {
+                    return o2.getTestItemName().compareTo(o1.getTestItemName());
+                } else {
+                    return o1.getTestItemName().compareTo(o2.getTestItemName());
+                }
+            }
+        });
     }
 }

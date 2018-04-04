@@ -9,6 +9,7 @@ import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Guang.Li on 2018/1/29.
@@ -77,6 +78,13 @@ public interface EnvService {
      * @return list of test item
      */
     List<String> findTestItemNames();
+
+    /**
+     * method to find test item map
+     *
+     * @return map, key : test item name, value : test item with type dto
+     */
+    Map<String, TestItemWithTypeDto> findTestItemsMap();
 
     /**
      * find test item by item name
