@@ -665,7 +665,7 @@ public class GrrResultController implements Initializable {
 
     private void initComponents() {
         summaryItemTf = new TextFieldFilter();
-        itemFilterHBox.getChildren().setAll(summaryItemTf);
+//        itemFilterHBox.getChildren().setAll(summaryItemTf);
         xBarAppraiserChart = buildControlChart();
         rangeAppraiserChart = buildControlChart();
         rrByAppraiserChart = buildScatterChart();
@@ -749,7 +749,7 @@ public class GrrResultController implements Initializable {
     private void initComponentsRender() {
         final double inputWidth = 200;
 
-        itemFilterHBox.setMargin(summaryItemTf, new Insets(4, 0, 4, 0));
+//        itemFilterHBox.setMargin(summaryItemTf, new Insets(4, 0, 4, 0));
         String testItemText = GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TEST_ITEM");
         summaryItemTf.getTextField().setPromptText(testItemText);
         summaryItemTf.getTextField().setPrefWidth(inputWidth);
@@ -958,6 +958,9 @@ public class GrrResultController implements Initializable {
 
     private void fireResultBasedCmbChangeEvent() {
         summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
+        if (grrMainController.getSearchConditionDto() == null || grrMainController.getSearchConditionDto().getSelectedTestItemDtos() == null) {
+            return;
+        }
         grrMainController.getSearchConditionDto().getSelectedTestItemDtos().forEach(testItemWithTypeDto -> {
             if (summaryModel.getSelectedItemName().equals(testItemWithTypeDto.getTestItemName())) {
                 analyzeGrrSubResult(testItemWithTypeDto, summaryModel.getToleranceCellValue(summaryModel.getSelectedItemName()));
@@ -1003,8 +1006,8 @@ public class GrrResultController implements Initializable {
     }
 
     /****** Summary *****/
-    @FXML
-    private HBox itemFilterHBox;
+//    @FXML
+//    private HBox itemFilterHBox;
     @FXML
     private ComboBox resultBasedCmb;
     @FXML
@@ -1029,6 +1032,7 @@ public class GrrResultController implements Initializable {
     private VBox chartVBox;
     @FXML
     private VBox resultVBox;
+    @FXML
     private TextFieldFilter summaryItemTf;
     /****** Chart ******/
     @FXML
