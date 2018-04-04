@@ -3,7 +3,6 @@
  */
 package com.dmsoft.firefly.gui.controller.template;
 
-import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
@@ -40,7 +39,6 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.converter.DefaultStringConverter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;

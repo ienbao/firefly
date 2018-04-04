@@ -1,9 +1,9 @@
 package com.dmsoft.firefly.gui.components.searchtab;
 
 import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
+import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
-import com.dmsoft.firefly.gui.components.utils.ResourceMassages;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -113,7 +113,7 @@ public class SearchTabController {
         Pane root = null;
         try {
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createSimpleWindowAsModel("advance", FxmlAndLanguageUtils.getString(ResourceMassages.ADVANCE), root, getResource("css/redfall/main.css").toExternalForm());
+            Stage stage = WindowFactory.createSimpleWindowAsModel("advance", FxmlAndLanguageUtils.getString(CommonResourceMassages.ADVANCE), root, getResource("css/redfall/main.css").toExternalForm());
             stage.toFront();
             stage.setResizable(false);
             stage.show();
