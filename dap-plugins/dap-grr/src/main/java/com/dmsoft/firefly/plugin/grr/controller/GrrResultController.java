@@ -783,14 +783,14 @@ public class GrrResultController implements Initializable {
 //        ObservableList<TableColumn<GrrSingleAnova, ?>> anovaTbColumns = anovaTb.getColumns();
 //        ObservableList<TableColumn<GrrSingleSource, ?>> sourceTbColumns = sourceTb.getColumns();
         summaryTbColumns.get(0).setPrefWidth(30);
-        summaryTbColumns.get(1).setPrefWidth(280);
+        summaryTbColumns.get(1).setPrefWidth(230);
         summaryTbColumns.get(2).setPrefWidth(80);
         summaryTbColumns.get(3).setPrefWidth(80);
         summaryTbColumns.get(4).setPrefWidth(100);
-        summaryTbColumns.get(5).setPrefWidth(110);
+        summaryTbColumns.get(5).setPrefWidth(100);
         summaryTbColumns.get(6).setPrefWidth(110);
-        summaryTbColumns.get(6).setPrefWidth(120);
-        summaryTbColumns.get(7).setPrefWidth(150);
+        summaryTbColumns.get(6).setPrefWidth(110);
+        summaryTbColumns.get(7).setPrefWidth(100);
 //        anovaTbColumns.get(0).setPrefWidth(100);
 //        anovaTbColumns.get(1).setPrefWidth(140);
 //        anovaTbColumns.get(2).setPrefWidth(140);
