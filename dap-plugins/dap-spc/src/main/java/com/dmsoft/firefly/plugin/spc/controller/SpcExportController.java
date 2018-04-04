@@ -61,9 +61,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.awt.*;
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -150,9 +149,13 @@ public class SpcExportController {
         split.getItems().add(searchTab);
 
         itemFilter.getTextField().setPromptText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
-        itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
-                filteredList.setPredicate(p -> p.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase()))
-        );
+        itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->{
+            if (isFilterUslOrLsl) {
+                filteredList.setPredicate(p -> this.isFilterAndHasUslOrLsl(p));
+            } else {
+                filteredList.setPredicate(p -> this.isFilterAndAll(p));
+            }
+        });
 
         // test item table init
         itemTable.setOnMouseEntered(event -> {
@@ -377,7 +380,7 @@ public class SpcExportController {
             pop = new ContextMenu();
             MenuItem all = new MenuItem(SpcFxmlAndLanguageUtils.getString(ResourceMassages.ALL_TEST_ITEMS));
             all.setOnAction(event -> {
-                filteredList.setPredicate(p -> p.getItem().startsWith(""));
+                filteredList.setPredicate(p -> this.isFilterAndAll(p));
                 is.getStyleClass().remove("filter-active");
                 is.getStyleClass().add("filter-normal");
                 is.setGraphic(null);
@@ -385,7 +388,7 @@ public class SpcExportController {
             });
             MenuItem show = new MenuItem(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS_WITH_USL_LSL));
             show.setOnAction(event -> {
-                filteredList.setPredicate(p -> StringUtils.isNotEmpty(p.getItemDto().getLsl()) || StringUtils.isNotEmpty(p.getItemDto().getUsl()));
+                filteredList.setPredicate(p -> this.isFilterAndHasUslOrLsl(p));
                 is.getStyleClass().remove("filter-normal");
                 is.getStyleClass().add("filter-active");
                 is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
@@ -554,6 +557,7 @@ public class SpcExportController {
         });
 
         SpcSettingDto spcSettingDto = RuntimeContext.getBean(SpcSettingServiceImpl.class).findSpcSetting();
+        List<TestItemWithTypeDto> testItemWithTypeDtoList = initSelectedItemDto();
         if (exportEachFile) {
             int i = 0;
             for (String projectName : projectNameList) {
@@ -563,8 +567,7 @@ public class SpcExportController {
                         List<String> project = Lists.newArrayList(projectName);
                         List<TestItemWithTypeDto> itemDto = Lists.newArrayList();
                         List<String> allItem = dataService.findAllTestItemName(project);
-                        List<TestItemWithTypeDto> selectItem = getSelectedItemDto();
-                        for (TestItemWithTypeDto i : selectItem) {
+                        for (TestItemWithTypeDto i : testItemWithTypeDtoList) {
                             if (allItem.contains(i.getTestItemName())) {
                                 itemDto.add(i);
                             }
@@ -581,8 +584,6 @@ public class SpcExportController {
             jobPipeline.addLast(new AbstractBasicJobHandler("Export file") {
                 @Override
                 public void doJob(JobContext context) {
-
-                    List<TestItemWithTypeDto> testItemWithTypeDtoList = getSelectedItemDto();
                     List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(testItemWithTypeDtoList);
                     searchTab.getConditionTestItem().forEach(item -> {
                         testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(item));
@@ -754,26 +755,77 @@ public class SpcExportController {
 
     private List<String> getSelectedItem() {
         List<String> selectItems = Lists.newArrayList();
-        if (itemTable.getItems() != null) {
-            for (ItemTableModel model : itemTable.getItems()) {
+        if (items != null && !items.isEmpty()) {
+            for (ItemTableModel model : items) {
                 if (model.getSelector().isSelected()) {
-                    selectItems.add(model.getItem());
+                    if (isFilterUslOrLsl) {
+                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())){
+                            selectItems.add(model.getItem());
+                        }
+                    } else {
+                        selectItems.add(model.getItem());
+                    }
                 }
             }
         }
-        return selectItems;
+
+        if (itemTable.getScene().lookup(".ascending-label") != null) {
+            DAPStringUtils.sortListString(selectItems, false);
+        } else if (itemTable.getScene().lookup(".descending-label") != null) {
+            DAPStringUtils.sortListString(selectItems, true);
+        }
+        List<String> selectTestItemsResult = Lists.newLinkedList();
+        if (stickyOnTopItems != null && !stickyOnTopItems.isEmpty()) {
+            selectItems.forEach(selectedItem->{
+                if (stickyOnTopItems.contains(selectedItem)) {
+                    selectTestItemsResult.add(selectedItem);
+                }
+            });
+        }
+
+        selectItems.forEach(selectedItem->{
+            if (!selectTestItemsResult.contains(selectedItem)) {
+                selectTestItemsResult.add(selectedItem);
+            }
+        });
+        return selectTestItemsResult;
     }
 
-    private List<TestItemWithTypeDto> getSelectedItemDto() {
-        List<TestItemWithTypeDto> selectItems = Lists.newArrayList();
-        if (itemTable.getItems() != null) {
-            for (ItemTableModel model : itemTable.getItems()) {
+    private List<TestItemWithTypeDto> initSelectedItemDto() {
+        List<TestItemWithTypeDto> selectTestItemDtos = Lists.newLinkedList();
+        if (items != null && !items.isEmpty()) {
+            for (ItemTableModel model : items) {
                 if (model.getSelector().isSelected()) {
-                    selectItems.add(model.getItemDto());
+                    if (isFilterUslOrLsl) {
+                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())){
+                            selectTestItemDtos.add(model.getItemDto());
+                        }
+                    } else {
+                        selectTestItemDtos.add(model.getItemDto());
+                    }
                 }
             }
         }
-        return selectItems;
+        if (itemTable.getScene().lookup(".ascending-label") != null) {
+            this.sortTestItemWithTypeDto(selectTestItemDtos, false);
+        } else if (itemTable.getScene().lookup(".descending-label") != null) {
+            this.sortTestItemWithTypeDto(selectTestItemDtos, true);
+        }
+        List<TestItemWithTypeDto> selectTestItemDtosResult = Lists.newLinkedList();
+        if (stickyOnTopItems != null && !stickyOnTopItems.isEmpty()) {
+            selectTestItemDtos.forEach(selectTestItemDto->{
+                if (stickyOnTopItems.contains(selectTestItemDto.getTestItemName())) {
+                    selectTestItemDtosResult.add(selectTestItemDto);
+                }
+            });
+        }
+
+        selectTestItemDtos.forEach(selectTestItemDto->{
+            if (!selectTestItemDtosResult.contains(selectTestItemDto)) {
+                selectTestItemDtosResult.add(selectTestItemDto);
+            }
+        });
+        return selectTestItemDtosResult;
     }
 
     private void buildViewData() {
@@ -897,5 +949,36 @@ public class SpcExportController {
             }
         }
         return site == 0 ? 0 : modelList.size();
+    }
+
+    private boolean isFilterAndHasUslOrLsl(ItemTableModel itemTableModel) {
+        if ((StringUtils.isNotEmpty(itemTableModel.getItemDto().getLsl()) || StringUtils.isNotEmpty(itemTableModel.getItemDto().getUsl()))
+                && (DAPStringUtils.isBlank(itemFilter.getTextField().getText()) || (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText())
+                && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())))) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isFilterAndAll(ItemTableModel itemTableModel) {
+        if (itemTableModel.getItem().startsWith("") && (DAPStringUtils.isBlank(itemFilter.getTextField().getText()) ||
+                (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText()) && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())))) {
+            return true;
+        }
+        return false;
+    }
+
+
+    private void sortTestItemWithTypeDto(List<TestItemWithTypeDto> testItemWithTypeDtos, boolean isDES) {
+        Collections.sort(testItemWithTypeDtos, new Comparator<TestItemWithTypeDto>() {
+            @Override
+            public int compare(TestItemWithTypeDto o1, TestItemWithTypeDto o2) {
+                if (isDES) {
+                    return o2.getTestItemName().compareTo(o1.getTestItemName());
+                } else {
+                    return o1.getTestItemName().compareTo(o2.getTestItemName());
+                }
+            }
+        });
     }
 }
