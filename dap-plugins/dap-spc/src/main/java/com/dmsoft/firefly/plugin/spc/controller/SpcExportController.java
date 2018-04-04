@@ -862,6 +862,7 @@ public class SpcExportController {
             FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML("view/export_view_data.fxml");
             ExportViewData controller = new ExportViewData();
             controller.setDataFrame(dataFrame);
+            controller.setSearchConditions(searchConditions);
             fxmlLoader.setController(controller);
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("spcExportViewData",

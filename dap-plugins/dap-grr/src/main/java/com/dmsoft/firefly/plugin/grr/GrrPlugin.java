@@ -133,6 +133,10 @@ public class GrrPlugin extends Plugin {
         jobManager.initializeJob(ParamKeys.GRR_REFRESH_JOB_PIPELINE, jobFactory.createJobPipeLine()
                 .addLast(new GrrConfigHandler())
                 .addLast(new RefreshHandler().setWeight(D100)));
+
+        jobManager.initializeJob(ParamKeys.GRR_EXPORT_VIEW_DATA, jobFactory.createJobPipeLine()
+                .addLast(new FindTestDataHandler())
+                .addLast(new DataFrameHandler()));
     }
 
     @Override
