@@ -156,9 +156,13 @@ public class GrrItemController implements Initializable {
         split.getItems().add(searchTab);
         initBtnIcon();
         itemFilter.getTextField().setPromptText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
-        itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
-                filteredList.setPredicate(p -> p.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase()))
-        );
+        itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->{
+            if (isFilterUslOrLsl) {
+                filteredList.setPredicate(p -> this.isFilterAndHasUslOrLsl(p));
+            } else {
+                filteredList.setPredicate(p -> this.isFilterAndAll(p));
+            }
+        });
         this.initComponentEvent();
         itemTable.setOnMouseEntered(event -> {
             itemTable.focusModelProperty();
@@ -542,7 +546,7 @@ public class GrrItemController implements Initializable {
             pop = new ContextMenu();
             MenuItem all = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.ALL_TEST_ITEMS));
             all.setOnAction(event -> {
-                filteredList.setPredicate(p -> p.getItem().startsWith(""));
+                filteredList.setPredicate(p -> this.isFilterAndAll(p));
                 is.getStyleClass().remove("filter-active");
                 is.getStyleClass().add("filter-normal");
                 is.setGraphic(null);
@@ -550,7 +554,7 @@ public class GrrItemController implements Initializable {
             });
             MenuItem show = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS_WITH_USL_LSL));
             show.setOnAction(event -> {
-                filteredList.setPredicate(p -> StringUtils.isNotEmpty(p.getItemDto().getLsl()) || StringUtils.isNotEmpty(p.getItemDto().getUsl()));
+                filteredList.setPredicate(p -> this.isFilterAndHasUslOrLsl(p));
                 is.getStyleClass().remove("filter-normal");
                 is.getStyleClass().add("filter-active");
                 is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
@@ -561,7 +565,6 @@ public class GrrItemController implements Initializable {
         pop.show(is, e.getScreenX(), e.getScreenY());
         return pop;
     }
-
 
     private ContextMenu createTableRightMenu() {
         MenuItem top = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.STICKY_ON_TOP));
@@ -759,43 +762,6 @@ public class GrrItemController implements Initializable {
                 }
             });
             RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
-
-//            Job job = new Job(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE);
-//            job.addProcessMonitorListener(event -> {
-//            });
-//            Map<String, Object> paramMap = Maps.newHashMap();
-//            List<String> projectNameList = envService.findActivatedProjectName();
-//            List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
-//            paramMap.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
-//            paramMap.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
-//            SearchConditionDto conditionDto = this.initSearchConditionDto();
-//            conditionDto.setSelectedTestItemDtos(selectedItemDto);
-//            paramMap.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, conditionDto);
-//            updateGrrPreference(conditionDto);
-//            manager.doJobASyn(job, new JobDoComplete() {
-//                @Override
-//                public void doComplete(Object returnValue) {
-//                    try {
-//                        Platform.runLater(() -> {
-//                            if (returnValue == null) {
-//                                //todo message tip
-//                                return;
-//                            }
-//                            GrrParamDto grrParamDto = grrMainController.getGrrParamDto();
-//                            refreshPartOrAppraiserListView(grrParamDto);
-//                            if (grrParamDto != null && (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty())) {
-//                                grrMainController.updateGrrViewData();
-//                                grrMainController.updateGrrSummaryAndDetail();
-//                            } else {
-//                                System.out.println(returnValue);
-//                            }
-//                        });
-//                    } catch (ApplicationException excption) {
-//                        excption.printStackTrace();
-//                    }
-//
-//                }
-//            }, paramMap, grrMainController);
         }
     }
 
@@ -965,10 +931,16 @@ public class GrrItemController implements Initializable {
 
     private List<String> getSelectedItem() {
         List<String> selectItems = Lists.newArrayList();
-        if (itemTable.getItems() != null) {
-            for (ItemTableModel model : itemTable.getItems()) {
+        if (items != null && !items.isEmpty()) {
+            for (ItemTableModel model : items) {
                 if (model.getSelector().isSelected()) {
-                    selectItems.add(model.getItem());
+                    if (isFilterUslOrLsl) {
+                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())){
+                            selectItems.add(model.getItem());
+                        }
+                    } else {
+                        selectItems.add(model.getItem());
+                    }
                 }
             }
         }
@@ -978,11 +950,18 @@ public class GrrItemController implements Initializable {
     private List<TestItemWithTypeDto> initSelectedItemDto() {
         List<TestItemWithTypeDto> selectTestItemDtos = Lists.newLinkedList();
         initSelectTestItemDtos.clear();
-        if (itemTable.getItems() != null) {
-            for (ItemTableModel model : itemTable.getItems()) {
+        if (items != null && !items.isEmpty()) {
+            for (ItemTableModel model : items) {
                 if (model.getSelector().isSelected()) {
-                    selectTestItemDtos.add(model.getItemDto());
-                    initSelectTestItemDtos.add(model.getItemDto());
+                    if (isFilterUslOrLsl) {
+                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())){
+                            selectTestItemDtos.add(model.getItemDto());
+                            initSelectTestItemDtos.add(model.getItemDto());
+                        }
+                    } else {
+                        selectTestItemDtos.add(model.getItemDto());
+                        initSelectTestItemDtos.add(model.getItemDto());
+                    }
                 }
             }
         }
@@ -1207,6 +1186,23 @@ public class GrrItemController implements Initializable {
 
     private boolean isContainValue(String value, ComboBox comboBox) {
         if (DAPStringUtils.isNotBlank(value) && comboBox.getItems() != null && comboBox.getItems().contains(value)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isFilterAndHasUslOrLsl(ItemTableModel itemTableModel) {
+        if ((StringUtils.isNotEmpty(itemTableModel.getItemDto().getLsl()) || StringUtils.isNotEmpty(itemTableModel.getItemDto().getUsl()))
+                && (DAPStringUtils.isBlank(itemFilter.getTextField().getText()) || (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText())
+                && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())))) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isFilterAndAll(ItemTableModel itemTableModel) {
+        if (itemTableModel.getItem().startsWith("") && (DAPStringUtils.isBlank(itemFilter.getTextField().getText()) ||
+                (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText()) && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())))) {
             return true;
         }
         return false;
