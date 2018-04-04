@@ -3,13 +3,13 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane prefHeight="705.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane prefHeight="705.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.dmsoft.firefly.plugin.grr.controller.GrrMainController">
     <children>
-        <SplitPane dividerPositions="0.859375" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0"
-                   AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
+        <SplitPane dividerPositions="0.82" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
-                <VBox prefWidth="1100.0">
+                <VBox minWidth="493.0">
                     <children>
                         <GridPane maxHeight="28.0" minHeight="28.0" prefHeight="28.0"
                                   style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
@@ -46,7 +46,7 @@
                                         styleClass="btn-primary" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
                             </children>
                         </GridPane>
-                  <TabPane prefWidth="200.0" minWidth="180.0" tabClosingPolicy="UNAVAILABLE">
+                  <TabPane tabClosingPolicy="UNAVAILABLE">
                     <tabs>
                       <Tab text="%GRR" fx:id="grrResultTab">
                         <content>
