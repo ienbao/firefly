@@ -17,7 +17,7 @@
     <children>
         <SplitPane dividerPositions="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
-                <VBox minWidth="493.0">
+                <VBox minWidth="180.0">
                     <children>
                         <GridPane maxHeight="28.0" minHeight="28.0" prefHeight="28.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
                             <columnConstraints>

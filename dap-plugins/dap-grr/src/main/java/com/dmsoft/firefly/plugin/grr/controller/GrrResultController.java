@@ -498,7 +498,6 @@ public class GrrResultController implements Initializable {
         Legend legend = LegendUtils.buildLegend(partAppraiserChart.getData(),
                 "chart-line-symbol", "line-legend-symbol");
         partAppraiserBp.setLeft(legend);
-//        partAppraiserBp.setMargin(legend, new Insets(0, 0, 1, 0));
         ChartUtils.setChartToolTip(partAppraiserChart.getData(), pointTooltip -> {
             Double value = (Double) pointTooltip.getData().getYValue();
             int digNum = DigNumInstance.newInstance().getDigNum();
@@ -665,7 +664,6 @@ public class GrrResultController implements Initializable {
 
     private void initComponents() {
         summaryItemTf = new TextFieldFilter();
-//        itemFilterHBox.getChildren().setAll(summaryItemTf);
         xBarAppraiserChart = buildControlChart();
         rangeAppraiserChart = buildControlChart();
         rrByAppraiserChart = buildScatterChart();
@@ -781,18 +779,18 @@ public class GrrResultController implements Initializable {
         xBarAppraiserChart.setHorizontalGridLinesVisible(false);
         rangeAppraiserChart.setVerticalGridLinesVisible(false);
         rangeAppraiserChart.setHorizontalGridLinesVisible(false);
-//        ObservableList<TableColumn<String, ?>> summaryTbColumns = summaryTb.getColumns();
+        ObservableList<TableColumn<String, ?>> summaryTbColumns = summaryTb.getColumns();
 //        ObservableList<TableColumn<GrrSingleAnova, ?>> anovaTbColumns = anovaTb.getColumns();
 //        ObservableList<TableColumn<GrrSingleSource, ?>> sourceTbColumns = sourceTb.getColumns();
-//        summaryTbColumns.get(0).setPrefWidth(30);
-//        summaryTbColumns.get(1).setPrefWidth(180);
-//        summaryTbColumns.get(2).setPrefWidth(80);
-//        summaryTbColumns.get(3).setPrefWidth(80);
-//        summaryTbColumns.get(4).setPrefWidth(100);
-//        summaryTbColumns.get(5).setPrefWidth(110);
-//        summaryTbColumns.get(6).setPrefWidth(110);
-//        summaryTbColumns.get(6).setPrefWidth(120);
-//        summaryTbColumns.get(7).setPrefWidth(110);
+        summaryTbColumns.get(0).setPrefWidth(30);
+        summaryTbColumns.get(1).setPrefWidth(280);
+        summaryTbColumns.get(2).setPrefWidth(80);
+        summaryTbColumns.get(3).setPrefWidth(80);
+        summaryTbColumns.get(4).setPrefWidth(100);
+        summaryTbColumns.get(5).setPrefWidth(110);
+        summaryTbColumns.get(6).setPrefWidth(110);
+        summaryTbColumns.get(6).setPrefWidth(120);
+        summaryTbColumns.get(7).setPrefWidth(150);
 //        anovaTbColumns.get(0).setPrefWidth(100);
 //        anovaTbColumns.get(1).setPrefWidth(140);
 //        anovaTbColumns.get(2).setPrefWidth(140);
