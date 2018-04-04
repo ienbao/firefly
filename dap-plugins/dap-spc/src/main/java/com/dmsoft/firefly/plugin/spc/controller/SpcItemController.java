@@ -6,9 +6,7 @@ package com.dmsoft.firefly.plugin.spc.controller;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
-import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
-import com.dmsoft.firefly.gui.components.utils.TextFieldWrapper;
-import com.dmsoft.firefly.gui.components.utils.ValidateRule;
+import com.dmsoft.firefly.gui.components.utils.*;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.spc.dto.*;
@@ -18,6 +16,7 @@ import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcSettingServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.*;
+import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.enums.TimerKeyType;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
@@ -517,7 +516,7 @@ public class SpcItemController implements Initializable {
                 if(spcChartDtoList != null){
                     spcMainController.setSpcChartData(spcChartDtoList);
                     //set view data
-                    spcMainController.setTimerViewData(searchDataFrame,chartSearchConditionDtoList,searchDataFrame.getAllRowKeys(),searchConditionDtoList);
+                    spcMainController.setTimerViewData(searchDataFrame,chartSearchConditionDtoList,searchDataFrame.getSearchedRowKey(),searchConditionDtoList);
                 }
                 windowProgressTipController.closeDialog();
             }
@@ -950,6 +949,8 @@ public class SpcItemController implements Initializable {
         split.setDisable(isTimer);
         spcMainController.setMainAnalysisTimerState(isTimer);
         importBtn.setDisable(isTimer);
-        importBtn.setDisable(isTimer);
+        exportBtn.setDisable(isTimer);
+        ControlMap.getControl(CommonResourceMassages.PLATFORM_CONTROL_DATASOURCE_BTN).setDisable(isTimer);
+        ControlMap.getControl(CommonResourceMassages.PLATFORM_CONTROL_TEMPLATE_BTN).setDisable(isTimer);
     }
 }

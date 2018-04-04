@@ -4,7 +4,7 @@ set JRE_HOME=%~dp0jre
 set PATH=%JRE_HOME%\bin;%JRE_HOME%\bin\server;%R_HOME%\bin\x64;%PATH%;%HOME%\bin
 set CLASSPATH=%CLASSPATH%;%JRE_HOME%\lib;%R_HOME%\library\rJava\jri
 
-set APP_JAR=dap-gui-1.0.0.jar
+set APP_JAR=dap-gui-2.5.0-SNAPSHOT.jar
 set LOG=log
 
 set ID=

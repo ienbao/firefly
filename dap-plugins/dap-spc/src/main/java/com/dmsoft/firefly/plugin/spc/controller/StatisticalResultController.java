@@ -93,11 +93,13 @@ public class StatisticalResultController implements Initializable {
         List<String> columnList = statisticalTableModel.getColumnList();
         statisticalTableModel = new StatisticalTableModel();
         statisticalTableModel.setTimer(isTimer);
+        statisticalTableModel.initColumn(columnList);
         TableViewWrapper.decorate(statisticalResultTb, statisticalTableModel);
 
-        statisticalTableModel.initColumn(columnList);
         statisticalTableModel.initData(list);
         statisticalTableModel.setSelect(selectRowKey);
+
+        statisticalTableModel.getAllCheckBox().setOnAction(event -> getAllCheckBoxEvent());
     }
 
     /**

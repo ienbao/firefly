@@ -103,7 +103,7 @@ public class SpcMainController implements Initializable {
 
     public void setTimerViewData(SearchDataFrame dataFrame, List<SearchConditionDto> chartSearchConditionDtoList, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList){
         //set view data
-        SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getAllRowKeys(), chartSearchConditionDtoList);
+        SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getSearchedRowKey(), chartSearchConditionDtoList);
         viewDataController.setViewData(viewDataFrame, selectedRowKey, statisticalSearchConditionDtoList,true);
 
     }
@@ -425,7 +425,7 @@ public class SpcMainController implements Initializable {
         if (currentStatisticalSelectRowKeyList.size() == 0) {
             Platform.runLater(SpcMainController.this::clearAnalysisSubShowData);
         }
-        List<String> rowKeyList = viewDataSelectRowKeyListCache == null ? dataFrame.getAllRowKeys() : viewDataSelectRowKeyListCache;
+        List<String> rowKeyList = viewDataSelectRowKeyListCache == null ? dataFrame.getSearchedRowKey() : viewDataSelectRowKeyListCache;
         List<SpcStatisticalResultAlarmDto> editRowDataList = statisticalResultController.getEditRowStatsData();
         List<SearchConditionDto> searchConditionDtoList = buildRefreshSearchConditionData(editRowDataList);
         SearchDataFrame subDataFrame = buildSubSearchDataFrame(rowKeyList, searchConditionDtoList);
@@ -519,7 +519,7 @@ public class SpcMainController implements Initializable {
         List<String> currentStatisticalSelectRowKeyList = spcRefreshJudgeUtil.getCurrentStatisticalSelectRowKeyList();
 
         List<String> viewDataSelectRowKeyListCache = spcRefreshJudgeUtil.getViewDataSelectRowKeyListCache();
-        List<String> rowKeyList = viewDataSelectRowKeyListCache == null ? dataFrame.getAllRowKeys() : viewDataSelectRowKeyListCache;
+        List<String> rowKeyList = viewDataSelectRowKeyListCache == null ? dataFrame.getSearchedRowKey() : viewDataSelectRowKeyListCache;
 
         spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
         spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(rowKeyList);
@@ -548,7 +548,7 @@ public class SpcMainController implements Initializable {
             public void doJob(JobContext context) {
                 Platform.runLater(() -> {
                     chartResultController.initSpcChartData((List<SpcChartDto>) context.get(ParamKeys.SPC_CHART_DTO_LIST));
-                    SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getAllRowKeys(), searchConditionDtoList);
+                    SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getSearchedRowKey(), searchConditionDtoList);
 
                     List<SpcStatisticalResultAlarmDto> allRowDataList = statisticalResultController.getAllRowStatsData();
                     List<SearchConditionDto> statisticalSearchConditionDtoList = buildRefreshSearchConditionData(allRowDataList);
@@ -630,7 +630,7 @@ public class SpcMainController implements Initializable {
         List<String> currentStatisticalSelectRowKeyList = spcRefreshJudgeUtil.getCurrentStatisticalSelectRowKeyList();
         List<String> currentViewDataSelectRowKeyList = spcRefreshJudgeUtil.getCurrentViewDataSelectRowKeyList();
 
-        List<String> countViewDataRowKeyList = currentViewDataSelectRowKeyList == null ? dataFrame.getAllRowKeys() : currentViewDataSelectRowKeyList;
+        List<String> countViewDataRowKeyList = currentViewDataSelectRowKeyList == null ? dataFrame.getSearchedRowKey() : currentViewDataSelectRowKeyList;
         spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
         spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(countViewDataRowKeyList);
 
@@ -677,7 +677,7 @@ public class SpcMainController implements Initializable {
                 chartResultController.initSpcChartData(spcChartDtoList);
 
                 //set view data
-                SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getAllRowKeys(), chartSearchConditionDtoList);
+                SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getSearchedRowKey(), chartSearchConditionDtoList);
                 viewDataController.setViewData(viewDataFrame, countViewDataRowKeyList, statisticalSearchConditionDtoList);
             }
         });

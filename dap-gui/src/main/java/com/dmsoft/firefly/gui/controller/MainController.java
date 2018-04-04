@@ -204,7 +204,7 @@ public class MainController {
         templateBtn.getStyleClass().add("btn-icon-b");
         templateBtn.setStyle("-fx-padding: 0 3 0 5");
         stateBar.addColumn(3, templateBtn);
-        ControlMap.addControl(CommonResourceMassages.PLATFORM_CONTROL_TEMPLATE_BTN, dataSourceBtn);
+        ControlMap.addControl(CommonResourceMassages.PLATFORM_CONTROL_TEMPLATE_BTN, templateBtn);
 
         progressBar = new ProgressBar();
         progressBar.setPrefHeight(10);
