@@ -944,7 +944,27 @@ public class GrrItemController implements Initializable {
                 }
             }
         }
-        return selectItems;
+
+        if (itemTable.getScene().lookup(".ascending-label") != null) {
+            DAPStringUtils.sortListString(selectItems, false);
+        } else if (itemTable.getScene().lookup(".descending-label") != null) {
+            DAPStringUtils.sortListString(selectItems, true);
+        }
+        List<String> selectTestItemsResult = Lists.newLinkedList();
+        if (stickyOnTopItems != null && !stickyOnTopItems.isEmpty()) {
+            selectItems.forEach(selectedItem->{
+                if (stickyOnTopItems.contains(selectedItem)) {
+                    selectTestItemsResult.add(selectedItem);
+                }
+            });
+        }
+
+        selectItems.forEach(selectedItem->{
+            if (!selectTestItemsResult.contains(selectedItem)) {
+                selectTestItemsResult.add(selectedItem);
+            }
+        });
+        return selectTestItemsResult;
     }
 
     private List<TestItemWithTypeDto> initSelectedItemDto() {
@@ -956,16 +976,35 @@ public class GrrItemController implements Initializable {
                     if (isFilterUslOrLsl) {
                         if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())){
                             selectTestItemDtos.add(model.getItemDto());
-                            initSelectTestItemDtos.add(model.getItemDto());
                         }
                     } else {
                         selectTestItemDtos.add(model.getItemDto());
-                        initSelectTestItemDtos.add(model.getItemDto());
                     }
                 }
             }
         }
-        return selectTestItemDtos;
+        if (itemTable.getScene().lookup(".ascending-label") != null) {
+            this.sortTestItemWithTypeDto(selectTestItemDtos, false);
+        } else if (itemTable.getScene().lookup(".descending-label") != null) {
+            this.sortTestItemWithTypeDto(selectTestItemDtos, true);
+        }
+        List<TestItemWithTypeDto> selectTestItemDtosResult = Lists.newLinkedList();
+        if (stickyOnTopItems != null && !stickyOnTopItems.isEmpty()) {
+            selectTestItemDtos.forEach(selectTestItemDto->{
+                if (stickyOnTopItems.contains(selectTestItemDto.getTestItemName())) {
+                    selectTestItemDtosResult.add(selectTestItemDto);
+                }
+            });
+        }
+
+        selectTestItemDtos.forEach(selectTestItemDto->{
+            if (!selectTestItemDtosResult.contains(selectTestItemDto)) {
+                selectTestItemDtosResult.add(selectTestItemDto);
+            }
+        });
+
+        initSelectTestItemDtos.addAll(selectTestItemDtosResult);
+        return selectTestItemDtosResult;
     }
 
     private void importLeftConfig() {
@@ -1206,5 +1245,18 @@ public class GrrItemController implements Initializable {
             return true;
         }
         return false;
+    }
+
+    private void sortTestItemWithTypeDto(List<TestItemWithTypeDto> testItemWithTypeDtos, boolean isDES) {
+        Collections.sort(testItemWithTypeDtos, new Comparator<TestItemWithTypeDto>() {
+            @Override
+            public int compare(TestItemWithTypeDto o1, TestItemWithTypeDto o2) {
+                if (isDES) {
+                    return o2.getTestItemName().compareTo(o1.getTestItemName());
+                } else {
+                    return o1.getTestItemName().compareTo(o2.getTestItemName());
+                }
+            }
+        });
     }
 }
