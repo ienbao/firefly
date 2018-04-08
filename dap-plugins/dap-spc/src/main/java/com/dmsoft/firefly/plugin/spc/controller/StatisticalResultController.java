@@ -115,6 +115,7 @@ public class StatisticalResultController implements Initializable {
      * clear statistical result data
      */
     public void clearStatisticalResultData() {
+        filterTestItemTf.getTextField().setText(null);
         statisticalTableModel.clearTableData();
     }
 

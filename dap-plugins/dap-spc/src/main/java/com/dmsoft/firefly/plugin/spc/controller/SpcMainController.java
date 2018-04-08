@@ -134,7 +134,7 @@ public class SpcMainController implements Initializable {
      */
     public void clearAnalysisSubShowData() {
         chartResultController.clearChartData();
-        viewDataController.setViewData(null, null, null);
+        viewDataController.clearViewData();
     }
 
     /**
@@ -143,7 +143,7 @@ public class SpcMainController implements Initializable {
     public void clearAnalysisData() {
         statisticalResultController.clearStatisticalResultData();
         chartResultController.clearChartData();
-        viewDataController.setViewData(null, null, null);
+        viewDataController.clearViewData();
     }
 
     /**

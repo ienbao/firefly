@@ -156,7 +156,7 @@ public class GrrItemController implements Initializable {
         split.getItems().add(searchTab);
         initBtnIcon();
         itemFilter.getTextField().setPromptText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
-        itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->{
+        itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) -> {
             if (isFilterUslOrLsl) {
                 filteredList.setPredicate(p -> this.isFilterAndHasUslOrLsl(p));
             } else {
@@ -210,6 +210,17 @@ public class GrrItemController implements Initializable {
             Platform.runLater(() -> {
                 is.relocate(w2.doubleValue() - 21, 0);
             });
+        });
+        item.setComparator((o1, o2) -> {
+            boolean o1OnTop = stickyOnTopItems.contains(o1.getTestItemName());
+            boolean o2OnTop = stickyOnTopItems.contains(o2.getTestItemName());
+            if (o1OnTop == o2OnTop) {
+                return -o2.getTestItemName().compareTo(o1.getTestItemName());
+            } else if (o1OnTop) {
+                return -1;
+            } else {
+                return 1;
+            }
         });
         item.sortTypeProperty().addListener((ov, sort1, sort2) -> {
             if (sort2.equals(TableColumn.SortType.DESCENDING)) {
@@ -825,13 +836,13 @@ public class GrrItemController implements Initializable {
         if (itemNumbers == null || itemNumbers <= 0) {
             if (itemTab.isSelected()) {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("UI_GRR_ANALYSIS_ITEM_EMPTY"));
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_ANALYSIS_ITEM_EMPTY"));
             } else {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("UI_GRR_ANALYSIS_ITEM_EMPTY"),
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_TEST_ITEM")}), grrItemEvent());
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_ANALYSIS_ITEM_EMPTY"),
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_TEST_ITEM")}), grrItemEvent());
             }
             return false;
         }
@@ -839,13 +850,13 @@ public class GrrItemController implements Initializable {
         if (!GrrValidateUtil.validateResult(partTxt, appraiserTxt, trialTxt)) {
             if (configTab.isSelected()) {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
             } else {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"),
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"),
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
             }
             return false;
         }
@@ -853,13 +864,13 @@ public class GrrItemController implements Initializable {
         if (appraiserLbl.getGraphic() != null || partLbl.getGraphic() != null) {
             if (configTab.isSelected()) {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
             } else {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"),
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"),
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
             }
             return false;
         }
@@ -867,13 +878,13 @@ public class GrrItemController implements Initializable {
         if (partCombox.getStyleClass().contains(ValidateUtil.COMBO_BOX_ERROR_STYLE) || appraiserCombox.getStyleClass().contains(ValidateUtil.COMBO_BOX_ERROR_STYLE)) {
             if (configTab.isSelected()) {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_EQUAL_APPRAISER"));
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_EQUAL_APPRAISER"));
             } else {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_EQUAL_APPRAISER"),
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_EQUAL_APPRAISER"),
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
             }
             return false;
         }
@@ -881,13 +892,13 @@ public class GrrItemController implements Initializable {
         if (partListView.getItems().size() > 0 && partListView.getItems().size() < Integer.parseInt(partTxt.getText())) {
             if (configTab.isSelected()) {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_MAX_NUMBER_NOT_MATCH"));
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_MAX_NUMBER_NOT_MATCH"));
             } else {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_MAX_NUMBER_NOT_MATCH"),
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_MAX_NUMBER_NOT_MATCH"),
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
             }
             return false;
         }
@@ -895,13 +906,13 @@ public class GrrItemController implements Initializable {
         if ((appraiserCombox.getValue() != null) && (appraiserListView.getItems().size() > 0 && appraiserListView.getItems().size() < Integer.parseInt(appraiserTxt.getText()))) {
             if (configTab.isSelected()) {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_MAX_NUMBER_NOT_MATCH"));
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_MAX_NUMBER_NOT_MATCH"));
             } else {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                    GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_MAX_NUMBER_NOT_MATCH"),
-                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_MAX_NUMBER_NOT_MATCH"),
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
             }
             return false;
         }
@@ -935,7 +946,7 @@ public class GrrItemController implements Initializable {
             for (ItemTableModel model : items) {
                 if (model.getSelector().isSelected()) {
                     if (isFilterUslOrLsl) {
-                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())){
+                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
                             selectItems.add(model.getItem());
                         }
                     } else {
@@ -952,14 +963,14 @@ public class GrrItemController implements Initializable {
         }
         List<String> selectTestItemsResult = Lists.newLinkedList();
         if (stickyOnTopItems != null && !stickyOnTopItems.isEmpty()) {
-            selectItems.forEach(selectedItem->{
+            selectItems.forEach(selectedItem -> {
                 if (stickyOnTopItems.contains(selectedItem)) {
                     selectTestItemsResult.add(selectedItem);
                 }
             });
         }
 
-        selectItems.forEach(selectedItem->{
+        selectItems.forEach(selectedItem -> {
             if (!selectTestItemsResult.contains(selectedItem)) {
                 selectTestItemsResult.add(selectedItem);
             }
@@ -974,7 +985,7 @@ public class GrrItemController implements Initializable {
             for (ItemTableModel model : items) {
                 if (model.getSelector().isSelected()) {
                     if (isFilterUslOrLsl) {
-                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())){
+                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
                             selectTestItemDtos.add(model.getItemDto());
                         }
                     } else {
@@ -990,14 +1001,14 @@ public class GrrItemController implements Initializable {
         }
         List<TestItemWithTypeDto> selectTestItemDtosResult = Lists.newLinkedList();
         if (stickyOnTopItems != null && !stickyOnTopItems.isEmpty()) {
-            selectTestItemDtos.forEach(selectTestItemDto->{
+            selectTestItemDtos.forEach(selectTestItemDto -> {
                 if (stickyOnTopItems.contains(selectTestItemDto.getTestItemName())) {
                     selectTestItemDtosResult.add(selectTestItemDto);
                 }
             });
         }
 
-        selectTestItemDtos.forEach(selectTestItemDto->{
+        selectTestItemDtos.forEach(selectTestItemDto -> {
             if (!selectTestItemDtosResult.contains(selectTestItemDto)) {
                 selectTestItemDtosResult.add(selectTestItemDto);
             }

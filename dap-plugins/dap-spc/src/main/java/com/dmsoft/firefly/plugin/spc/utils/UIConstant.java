@@ -69,7 +69,7 @@ public class UIConstant {
     public static final String SPC_CHART_MR = "MR Chart";
 
     public static final String[] SPC_CHART_NAME = new String[]{"ND Chart", "Run Chart", "X-bar Chart", "Range Chart", "SD Chart", "Median Chart", "Box Chart", "MR Chart"};
-    public static final String[] EXPORT_NDC_SECOND_LABELS = {"Item Name", "Search Condition", "Samples", "AVG", "Max", "Min", "USL", "LSL", "Center", "Range", "StDev", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness",
+    public static final String[] EXPORT_NDC_SECOND_LABELS = {"Item Name", "Search Condition", "Samples", "AVG", "Max", "Min", "USL", "LSL", "Center", "Range", "StDev", "AVG-3SD", "AVG+3SD", "Kurtosis", "Skewness",
             "CA", "CPK", "CP", "CPL", "CPU", "Within PPM", "PPK", "PP", "PPL", "PPU", "Overall PPM"};
 
     //    "LCL", "-2σ", "-σ", "μ", "σ", "2σ", "UCL"
@@ -85,7 +85,7 @@ public class UIConstant {
 //    public static final String[] SPC_RULE_R = new String[]{"R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"};
 
     public static final String[] EXPORT_SPC_NDC_LABELS = {"CA", "CPK", "CP", "CPL", "CPU", "Within PPM"};
-    public static final String[] EXPORT_SPC_DESCRIPTIVE = {"Descriptive Statistics", "Samples", "AVG", "Max", "Min", "Center", "Range", "StDev", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness"};
+    public static final String[] EXPORT_SPC_DESCRIPTIVE = {"Descriptive Statistics", "Samples", "AVG", "Max", "Min", "Center", "Range", "StDev", "AVG-3SD", "AVG+3SD", "Kurtosis", "Skewness"};
     public static final String[] EXPORT_SPC_PERFORMANCE = {"Performace Cability Index", "PPK", "PP", "PPL", "PPU", "OverAll PPM"};
     public static final String[] SPC_USL_LSL = new String[]{"USL", "LSL"};
     public static final String[] SPC_UCL_LCL = new String[]{"UCL", "LCL"};

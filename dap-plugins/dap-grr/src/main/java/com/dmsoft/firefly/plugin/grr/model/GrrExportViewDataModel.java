@@ -30,6 +30,7 @@ public class GrrExportViewDataModel implements TableModel {
     private ObservableList<String> headerArray;
     private ObservableList<String> rowKeyArray;
     private Map<String, TestItemWithTypeDto> testItemDtoMap;
+    private Map<String, ObjectProperty<String>> cellMap;
 
     /**
      * constructor
@@ -59,6 +60,7 @@ public class GrrExportViewDataModel implements TableModel {
             this.rowKeyArray.addAll(searchedRowKeys);
         }
         testItemDtoMap = Maps.newHashMap(RuntimeContext.getBean(EnvService.class).findTestItemsMap());
+        cellMap = Maps.newHashMap();
     }
 
     @Override
@@ -69,7 +71,10 @@ public class GrrExportViewDataModel implements TableModel {
     @Override
     public ObjectProperty<String> getCellData(String rowKey, String columnName) {
         if (dataFrame.isRowKeyExist(rowKey)) {
-            return new SimpleObjectProperty<>(dataFrame.getCellValue(rowKey, columnName));
+            if (!this.cellMap.containsKey(rowKey + " !@# " + columnName)) {
+                this.cellMap.put(rowKey + " !@# " + columnName, new SimpleObjectProperty<>(dataFrame.getCellValue(rowKey, columnName)));
+            }
+            return this.cellMap.get(rowKey + " !@# " + columnName);
         } else {
             if (headerArray.get(0).equals(columnName)) {
                 return new SimpleObjectProperty<>(rowKey);
