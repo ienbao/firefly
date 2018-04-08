@@ -9,7 +9,7 @@ public class ParamKeys {
     public static final String TEST_ITEM_WITH_TYPE_DTO_LIST = "testItemWithTypeDtoList";
     public static final String ROW_DATA_DTO_LIST = "rowDataDtoList";
     public static final String SEARCH_DATA_FRAME = "searchDataFrame";
-    public static final String TEST_ITEM_NAME = "testItemName";
+    public static final String TEST_ITEM_WITH_TYPE_DTO = "testItemWithTypeDto";
     public static final String SEARCH_GRR_CONFIG_DTO = "searchGrrConfigDto";
     public static final String SEARCH_GRR_ANALYSIS_CONFIG = "analysisGrrConfigDto";
     public static final String SEARCH_GRR_ANALYSIS_TESTITEM = "analysisGrrTestItem";
