@@ -11,6 +11,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
 
@@ -92,7 +93,19 @@ public class TableViewWrapper {
                 });
                 menu.getItems().add(menuItem);
             }
-            tableView.setContextMenu(menu);
+            tableView.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> {
+                if (event.isConsumed()) {
+                    return;
+                }
+                Object source = event.getSource();
+                if (source instanceof Control) {
+                    Control c = (Control) source;
+                    if (model.isMenuEventEnable(tableView.getSelectionModel().getSelectedItem())) {
+                        menu.show(c, event.getScreenX(), event.getScreenY());
+                        event.consume();
+                    }
+                }
+            });
         }
         model.setTableView(tableView);
         if (tableView.getSkin() != null) {
