@@ -16,7 +16,6 @@ import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -51,6 +50,9 @@ public class GrrSummaryModel implements TableModel {
 
     private SummaryRadioClickListener radioClickListener;
 
+    /**
+     * Construct a new GrrSummaryModel.
+     */
     public GrrSummaryModel() {
         headerArray = FXCollections.observableArrayList();
         rowKeyArray = FXCollections.observableArrayList();
@@ -59,6 +61,12 @@ public class GrrSummaryModel implements TableModel {
         rules = Lists.newArrayList();
     }
 
+    /**
+     * Set summary model data with given summaryDtos and selectedRowKey
+     *
+     * @param summaryDtos    summary model data source
+     * @param selectedRowKey current selected row key
+     */
     public void setData(List<GrrSummaryDto> summaryDtos, String selectedRowKey) {
         this.clearTableData();
         if (summaryDtos != null) {
@@ -113,13 +121,11 @@ public class GrrSummaryModel implements TableModel {
         summaryRadioButton.clear();
         filterRowKeyArray.clear();
         this.clearEditData();
-//        editTestItem.clear();
-//        editorCell.clear();
-//        editorRowKey.clear();
-//        errorEditorCell.clear();
-//        errorEditorRow.clear();
     }
 
+    /**
+     * Clear edit data
+     */
     public void clearEditData() {
         editTestItem.clear();
         editorCell.clear();
@@ -365,7 +371,7 @@ public class GrrSummaryModel implements TableModel {
     /**
      * Set analysis type, need to refresh summary, update disabledRowKeys
      *
-     * @param analysisType
+     * @param analysisType summary analysis type
      */
     public void setAnalysisType(int analysisType) {
         this.analysisType = analysisType;
@@ -440,6 +446,11 @@ public class GrrSummaryModel implements TableModel {
         return false;
     }
 
+    /**
+     * Whether it has error edit value
+     *
+     * @return Whether it true or false
+     */
     public boolean hasErrorEditValue() {
         return errorEditorCell.size() != 0;
     }
@@ -452,16 +463,27 @@ public class GrrSummaryModel implements TableModel {
         return selectedItemName;
     }
 
+    /**
+     * Set rule data
+     *
+     * @param rules rule data
+     */
     public void setRules(List<Double> rules) {
         this.rules.clear();
         this.rules = rules;
     }
 
+    /**
+     * Get tolerance cell value with given row key
+     *
+     * @param rowKey row key
+     * @return tolerance cell value
+     */
     public String getToleranceCellValue(String rowKey) {
         int digNum = DigNumInstance.newInstance().getDigNum();
         String value = "-";
-        value = rowKeyDataMap.containsKey(rowKey) ?
-                this.formatterNormalValue(rowKeyDataMap.get(rowKey).getSummaryResultDto().getTolerance(), digNum) : value;
+        value = rowKeyDataMap.containsKey(rowKey)
+                ? this.formatterNormalValue(rowKeyDataMap.get(rowKey).getSummaryResultDto().getTolerance(), digNum) : value;
         return value;
     }
 }

@@ -39,6 +39,8 @@
     </properties>
 
 
+
+
     <dependencyManagement>
         <dependencies>
 
@@ -125,6 +127,20 @@
 
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>test/*</exclude>
+                    <exclude>pro/*</exclude>
+                    <exclude>dev/*</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources/${profiles.active}</directory>
+            </resource>
+        </resources>
+
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -150,4 +166,28 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profiles.active>dev</profiles.active>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <profiles.active>test</profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profiles.active>prod</profiles.active>
+            </properties>
+        </profile>
+    </profiles>
 </project>

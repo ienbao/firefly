@@ -14,14 +14,28 @@ public class RuleLineData implements ILineData {
     private String lineClass;
     private Color color;
 
+    /**
+     * Construct a new RuleLineData
+     */
     public RuleLineData() {
 
     }
 
+    /**
+     * Construct a new RuleLineData with given value
+     *
+     * @param value line value
+     */
     public RuleLineData(double value) {
         this.value = value;
     }
 
+    /**
+     * Construct a new RuleLineData with given line name and value
+     *
+     * @param name  line name
+     * @param value line value
+     */
     public RuleLineData(String name, double value) {
         this.name = name;
         this.value = value;
@@ -49,7 +63,7 @@ public class RuleLineData implements ILineData {
 
     @Override
     public String getTooltipContent() {
-        return "(" + getName() + " = " + getValue() +  ")";
+        return "(" + getName() + " = " + getValue() + ")";
     }
 
     @Override
