@@ -216,17 +216,18 @@ public class GrrResultController implements Initializable {
                 if (grrSummaryDtoList == null || grrSummaryDtoList.isEmpty()) {
                     return;
                 }
-                String selectedItem = ((TestItemWithTypeDto) context.get(ParamKeys.TEST_ITEM_WITH_TYPE_DTO)).getTestItemName();
-                String itemName = context.containsKey(ParamKeys.GRR_DETAIL_DTO) ? selectedItem : summaryModel.getSelectedItemName();
+                String itemName = context.containsKey(ParamKeys.GRR_DETAIL_DTO)
+                        ? ((TestItemWithTypeDto) context.get(ParamKeys.TEST_ITEM_WITH_TYPE_DTO)).getTestItemName()
+                        : summaryModel.getSelectedItemName();
                 summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
                 summaryModel.setData(grrSummaryDtoList, itemName);
                 summaryTb.refresh();
                 if (context.containsKey(ParamKeys.GRR_DETAIL_DTO)) {
                     removeSubResultData();
-                    setToleranceValue(summaryModel.getToleranceCellValue(selectedItem));
+                    setToleranceValue(summaryModel.getToleranceCellValue(itemName));
                     GrrDetailDto grrDetailDto = context.getParam(ParamKeys.GRR_DETAIL_DTO, GrrDetailDto.class);
                     if (grrDetailDto != null) {
-                        setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), selectedItem);
+                        setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), itemName);
                         setAnalysisItemResultData(grrDetailDto);
                     } else {
                         RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
