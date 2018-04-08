@@ -35,4 +35,6 @@ public class CommonResourceMassages {
     public static final String PLUGIN_EXISTS = "PLUGIN_EXISTS";
     public static final String RESTART_APPLICATION = "RESTART_APPLICATION";
     public static final String RESTART_APPLICATION_INFO = "RESTART_APPLICATION_INFO";
+    public static final String INVERT = "INVERT";
+    public static final String TEST_ITEM = "TEST_ITEM";
 }
