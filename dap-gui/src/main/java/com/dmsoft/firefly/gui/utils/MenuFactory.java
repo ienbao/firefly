@@ -7,6 +7,7 @@ import com.dmsoft.firefly.gui.controller.MainController;
 import com.dmsoft.firefly.gui.controller.template.PluginManageController;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
@@ -26,6 +27,8 @@ public class MenuFactory {
     private static MainController mainController;
     private static AppController appController;
     private static EnvService envService = RuntimeContext.getBean(EnvService.class);
+    private static UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+
 
     public final static String ROOT_MENU = "root";
     public final static String PLATFORM_ID = "Platform";
@@ -65,6 +68,36 @@ public class MenuFactory {
         MenuItem restoreMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_RESTORE_SETTING"));
         restoreMenuItem.setMnemonicParsing(true);
         restoreMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.R));
+        restoreMenuItem.setOnAction(event -> {
+            WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Message", GuiFxmlAndLanguageUtils.getString("GLOBAL_RESTORE_SYSTEM"));
+            controller.addProcessMonitorListener(new WindowCustomListener() {
+                @Override
+                public boolean onShowCustomEvent() {
+                    return false;
+                }
+
+                @Override
+                public boolean onCloseAndCancelCustomEvent() {
+                    return false;
+                }
+
+                @Override
+                public boolean onOkCustomEvent() {
+                    Platform.runLater(() -> {
+                        userPreferenceService.resetPreference();
+                        envService.setActivatedTemplate(GuiConst.DEFAULT_TEMPLATE_NAME);
+                        envService.setActivatedProjectName(null);
+                        envService.setTestItems(null);
+                        envService.setLanguageType(LanguageType.EN);
+                        initMenu();
+                        appController.resetMenu();
+                        mainController.resetMain();
+                        StageMap.getAllStage().clear();
+                    });
+                    return false;
+                }
+            });
+        });
         MenuItem exitMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_EXIT"));
         exitMenuItem.setMnemonicParsing(true);
         exitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN));
