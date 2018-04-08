@@ -21,6 +21,8 @@ import java.util.List;
 public class UserPreferenceServiceImpl implements UserPreferenceService {
 
     private final String parentPath = ApplicationPathUtil.getPath("config");
+    private final String defaultParentPath = ApplicationPathUtil.getPath("default");
+
     private final String fileName = "userPreference";
     private Logger logger = LoggerFactory.getLogger(UserPreferenceServiceImpl.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
@@ -152,5 +154,11 @@ public class UserPreferenceServiceImpl implements UserPreferenceService {
         if (isExist) {
             JsonFileUtil.writeJsonFile(list, parentPath, fileName);
         }
+    }
+
+    @Override
+    public void resetPreference() {
+        JsonFileUtil.delFolder(parentPath);
+        JsonFileUtil.copyFolder(defaultParentPath, parentPath);
     }
 }
