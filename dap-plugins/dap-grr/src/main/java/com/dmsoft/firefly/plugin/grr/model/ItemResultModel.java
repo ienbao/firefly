@@ -15,7 +15,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
@@ -35,6 +34,9 @@ public class ItemResultModel implements TableModel {
     private ObservableList<String> rowKeyArray;
     private int digNum = -1;
 
+    /**
+     * Construct a new ItemResultModel.
+     */
     public ItemResultModel() {
         rowKeyArray = FXCollections.observableArrayList();
         headerArray = FXCollections.observableArrayList();
@@ -59,6 +61,9 @@ public class ItemResultModel implements TableModel {
         this.itemResultDto = itemResultDto;
     }
 
+    /**
+     * Clear item table data
+     */
     public void clearTableData() {
         if (rowKeyArray != null) {
             this.rowKeyArray.clear();
