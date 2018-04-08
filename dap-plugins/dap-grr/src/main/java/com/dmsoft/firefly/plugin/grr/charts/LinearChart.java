@@ -1,7 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.charts;
 
 import com.dmsoft.firefly.plugin.grr.charts.data.ILineData;
-import com.dmsoft.firefly.plugin.grr.charts.data.PointTooltip;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
@@ -24,14 +23,27 @@ import java.util.function.Function;
 /**
  * Created by cherry on 2018/3/14.
  */
+
+/**
+ * Linear Chart
+ *
+ * @param <X> first data class
+ * @param <Y> second data class
+ */
 public class LinearChart<X, Y> extends LineChart<X, Y> {
 
-    public final static Orientation horizontalType = Orientation.HORIZONTAL;
-    public final static Orientation verticalType = Orientation.VERTICAL;
+    public static final Orientation HORIZONTALTYPE = Orientation.HORIZONTAL;
+    public static final Orientation VERTICALTYPE = Orientation.VERTICAL;
     private ObservableList<Data<X, Y>> horizontalMarkers;
     private ObservableList<XYChart.Data<X, Y>> verticalMarkers;
     private Map<String, Line> lineMap = Maps.newHashMap();
 
+    /**
+     * Construct a new LinearChart with the given axis.
+     *
+     * @param xAxis x axis
+     * @param yAxis y axis
+     */
     public LinearChart(Axis<X> xAxis, Axis<Y> yAxis) {
         super(xAxis, yAxis);
         super.setHorizontalZeroLineVisible(false);
@@ -46,7 +58,7 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         paintValueMaker();
     }
 
-    public void paintValueMaker() {
+    private void paintValueMaker() {
         //        Draw horizontal markers
         for (XYChart.Data<X, Y> horizontalMarker : horizontalMarkers) {
             double lower = ((ValueAxis) this.getXAxis()).getLowerBound();
@@ -74,6 +86,12 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         }
     }
 
+    /**
+     * Build value marker with given line data and tooltip
+     *
+     * @param lineData             line data
+     * @param pointTooltipFunction point tooltip function
+     */
     public void buildValueMarkerWithTooltip(List<ILineData> lineData, Function<ILineData, String> pointTooltipFunction) {
         buildValueMarkerWithoutTooltip(lineData);
         lineData.forEach(oneLineData -> {
@@ -88,20 +106,24 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
 
     }
 
+    /**
+     * Build value marker with tooltip with line data
+     *
+     * @param lineData line data
+     */
     public void buildValueMarkerWithoutTooltip(List<ILineData> lineData) {
         lineData.forEach(oneLineData -> {
             Line line = new Line();
             Orientation orientationType = oneLineData.getPlotOrientation();
-            XYChart.Data marker = horizontalType == orientationType ?
-                    new XYChart.Data(0, oneLineData.getValue()) :
-                    new XYChart.Data(oneLineData.getValue(), 0);
+            XYChart.Data marker = HORIZONTALTYPE == orientationType
+                    ? new XYChart.Data(0, oneLineData.getValue()) : new XYChart.Data(oneLineData.getValue(), 0);
             marker.setNode(line);
             getPlotChildren().add(line);
             lineMap.put(oneLineData.getName(), line);
-            if (horizontalType == orientationType) {
+            if (HORIZONTALTYPE == orientationType) {
                 horizontalMarkers.add(marker);
             }
-            if (verticalType == orientationType) {
+            if (VERTICALTYPE == orientationType) {
                 verticalMarkers.add(marker);
             }
 
@@ -132,6 +154,12 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         lineNames.forEach(lineName -> toggleValueMarker(lineName, false));
     }
 
+    /**
+     * Toggle value marker show or hidden
+     *
+     * @param lineName line name
+     * @param showed   whether it show or hide
+     */
     public void toggleValueMarker(String lineName, boolean showed) {
 
         if (showed) {
@@ -141,6 +169,11 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         }
     }
 
+    /**
+     * Hidden value marker with given line name
+     *
+     * @param lineName line name
+     */
     public void hiddenValueMarker(String lineName) {
 
         if (lineMap.containsKey(lineName)) {
@@ -148,6 +181,11 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         }
     }
 
+    /**
+     * Show value marker with given line name
+     *
+     * @param lineName line name
+     */
     public void showValueMarker(String lineName) {
 
         if (lineMap.containsKey(lineName)) {
@@ -168,7 +206,7 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
     /**
      * Update all line color
      *
-     * @param color
+     * @param color color
      */
     public void updateAllLineColor(Color color) {
         for (Map.Entry<String, Line> stringLineMap : lineMap.entrySet()) {
@@ -176,6 +214,9 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
         }
     }
 
+    /**
+     * Clear chart nodes and data
+     */
     public void clear() {
         lineMap.clear();
         horizontalMarkers.setAll(FXCollections.observableArrayList());

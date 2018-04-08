@@ -86,6 +86,26 @@ public class StatisticalResultController implements Initializable {
      * set statistical result table data
      *
      * @param list the data list
+     * @param isTimer isTimer
+     * @param selectRowKey selectRowKey
+     */
+    public void setTimerStatisticalResultTableData(List<SpcStatisticalResultAlarmDto> list,List<String> selectRowKey, boolean isTimer) {
+        List<String> columnList = statisticalTableModel.getColumnList();
+        statisticalTableModel = new StatisticalTableModel();
+        statisticalTableModel.setTimer(isTimer);
+        statisticalTableModel.initColumn(columnList);
+        TableViewWrapper.decorate(statisticalResultTb, statisticalTableModel);
+
+        statisticalTableModel.initData(list);
+        statisticalTableModel.setSelect(selectRowKey);
+
+        statisticalTableModel.getAllCheckBox().setOnAction(event -> getAllCheckBoxEvent());
+    }
+
+    /**
+     * set statistical result table data
+     *
+     * @param list the data list
      */
     public void setStatisticalResultTableData(List<SpcStatisticalResultAlarmDto> list) {
         statisticalTableModel.initData(list);
@@ -95,6 +115,7 @@ public class StatisticalResultController implements Initializable {
      * clear statistical result data
      */
     public void clearStatisticalResultData() {
+        filterTestItemTf.getTextField().setText(null);
         statisticalTableModel.clearTableData();
     }
 
@@ -225,7 +246,7 @@ public class StatisticalResultController implements Initializable {
     private void getChooseStatisticalResultEvent() {
         selectStatisticalResultName = chooseDialogController.getSelectResultName();
         statisticalResultTb.getColumns().remove(3, statisticalResultTb.getColumns().size());
-        statisticalTableModel.updateStatisticalResultColumn(selectStatisticalResultName);
+        statisticalTableModel.initColumn(selectStatisticalResultName);
 
         this.updateSpcStatisticalPreference(selectStatisticalResultName);
         chooseDialogController.getStage().close();

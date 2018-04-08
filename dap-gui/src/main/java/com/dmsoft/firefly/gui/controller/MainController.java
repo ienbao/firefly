@@ -2,6 +2,8 @@ package com.dmsoft.firefly.gui.controller;
 
 import com.dmsoft.firefly.gui.component.ContentStackPane;
 import com.dmsoft.firefly.gui.component.CustomerTooltip;
+import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
+import com.dmsoft.firefly.gui.components.utils.ControlMap;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -47,6 +49,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.google.common.io.Resources.getResource;
 
@@ -77,6 +80,7 @@ public class MainController {
     private Popup templatePopup;
     private ListView<StateBarTemplateModel> templateView;
     private ObservableList<StateBarTemplateModel> templateList = FXCollections.observableArrayList();
+    private AtomicBoolean isShow = new AtomicBoolean(false);
 
     private StackPane contentStackPane;
     private Map<String, TabPane> tabPaneMap = new LinkedHashMap<>();
@@ -188,6 +192,7 @@ public class MainController {
         dataSourceBtn.getStyleClass().add("btn-icon-b");
         dataSourceBtn.setStyle("-fx-padding: 0 3 0 5");
         stateBar.addColumn(1, dataSourceBtn);
+        ControlMap.addControl(CommonResourceMassages.PLATFORM_CONTROL_DATASOURCE_BTN, dataSourceBtn);
 
         Label lblAnalyze = new Label(GuiFxmlAndLanguageUtils.getString("STATE_BAR_ANALYZE"));
         lblAnalyze.getStyleClass().add("state-bar-lbl");
@@ -201,6 +206,7 @@ public class MainController {
         templateBtn.getStyleClass().add("btn-icon-b");
         templateBtn.setStyle("-fx-padding: 0 3 0 5");
         stateBar.addColumn(3, templateBtn);
+        ControlMap.addControl(CommonResourceMassages.PLATFORM_CONTROL_TEMPLATE_BTN, templateBtn);
 
         progressBar = new ProgressBar();
         progressBar.setPrefHeight(10);
@@ -267,7 +273,11 @@ public class MainController {
         dataSourceBtn.setOnAction(event -> this.getDataSourceBtnEvent());
         templateBtn.setOnAction(event -> this.getTemplateBtnEvent());
         templateBtn.setOnMouseEntered(event -> this.getTemplateLblEvent());
+        templateBtn.setOnMouseExited(event -> this.timerHidePopup());
         templateView.setOnMouseExited(event -> this.getHidePopupEvent());
+        templateView.setOnMouseEntered(event -> {
+            isShow.set(true);
+        });
         progressBar.setOnMouseClicked(event -> this.getProgressEvent());
     }
 
@@ -296,6 +306,7 @@ public class MainController {
 
     private void getHidePopupEvent() {
         templatePopup.hide();
+        isShow.set(false);
     }
 
     private void getDataSourceBtnEvent() {
@@ -579,5 +590,34 @@ public class MainController {
         } else {
            return false;
         }
+    }
+
+    private void timerHidePopup() {
+        if (templatePopup.isShowing()) {
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                public void run() {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!isShow.get()) {
+                                templatePopup.hide();
+                            }
+                            timer.cancel();
+                        }
+
+                    });
+                }
+            }, 500);
+        }
+    }
+
+
+    public Button getDataSourceBtn() {
+        return dataSourceBtn;
+    }
+
+    public Button getTemplateBtn() {
+        return templateBtn;
     }
 }

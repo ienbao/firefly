@@ -69,10 +69,10 @@ public class SpcExportBuilder extends SampleExcelBuilder {
             for (int i = 0; sheets.hasNext(); i++) {
                 ExSheet currentSheet = sheets.next();
                 sheets.remove();
-                if (chartImgInformation != null && i == chartImgInformation[0]) {
-                    drawSpcSheet(currentWb, currentSheet, chartImgInformation);
-                    continue;
-                }
+//                if (chartImgInformation != null && i == chartImgInformation[0]) {
+//                    drawSpcSheet(currentWb, currentSheet, chartImgInformation);
+//                    continue;
+//                }
                 drawSpcSheet(currentWb, currentSheet, chartImgInformation);
                 if (!sheets.hasNext()) {
                     logger.debug("Writing excel.");

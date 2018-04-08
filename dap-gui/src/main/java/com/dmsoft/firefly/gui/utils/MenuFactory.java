@@ -7,6 +7,7 @@ import com.dmsoft.firefly.gui.controller.MainController;
 import com.dmsoft.firefly.gui.controller.template.PluginManageController;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
@@ -26,9 +27,13 @@ public class MenuFactory {
     private static MainController mainController;
     private static AppController appController;
     private static EnvService envService = RuntimeContext.getBean(EnvService.class);
+    private static UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+
 
     public final static String ROOT_MENU = "root";
     public final static String PLATFORM_ID = "Platform";
+    private static boolean isChangeEnLanguage = true;
+    private static boolean isChangeZhLanguage = true;
 
     public static String getParentMenuId() {
         return PLATFORM_ID + "_" + ROOT_MENU;
@@ -65,6 +70,37 @@ public class MenuFactory {
         MenuItem restoreMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_RESTORE_SETTING"));
         restoreMenuItem.setMnemonicParsing(true);
         restoreMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.R));
+        restoreMenuItem.setOnAction(event -> {
+            WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Message", GuiFxmlAndLanguageUtils.getString("GLOBAL_RESTORE_SYSTEM"));
+            controller.addProcessMonitorListener(new WindowCustomListener() {
+                @Override
+                public boolean onShowCustomEvent() {
+                    return false;
+                }
+
+                @Override
+                public boolean onCloseAndCancelCustomEvent() {
+                    return false;
+                }
+
+                @Override
+                public boolean onOkCustomEvent() {
+                    Platform.runLater(() -> {
+                        userPreferenceService.resetPreference();
+                        envService.setActivatedTemplate(GuiConst.DEFAULT_TEMPLATE_NAME);
+                        envService.setActivatedProjectName(null);
+                        envService.setTestItems(null);
+                        envService.setLanguageType(LanguageType.EN);
+                        Runtime.getRuntime().gc();
+                        initMenu();
+                        appController.resetMenu();
+                        mainController.resetMain();
+                        StageMap.getAllStage().clear();
+                    });
+                    return false;
+                }
+            });
+        });
         MenuItem exitMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_EXIT"));
         exitMenuItem.setMnemonicParsing(true);
         exitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN));
@@ -123,7 +159,7 @@ public class MenuFactory {
             en.setSelected(true);
         }
         en.selectedProperty().addListener((ov, b1, b2) -> {
-           if (b2) {
+           if (b2 && isChangeZhLanguage) {
                WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Message", GuiFxmlAndLanguageUtils.getString("GLOBAL_CHANGE_LANGUAGE"));
                controller.addProcessMonitorListener(new WindowCustomListener() {
                     @Override
@@ -133,6 +169,7 @@ public class MenuFactory {
 
                     @Override
                     public boolean onCloseAndCancelCustomEvent() {
+                        isChangeEnLanguage = false;
                         zh.setSelected(true);
                         envService.setLanguageType(LanguageType.ZH);
                         return false;
@@ -141,6 +178,7 @@ public class MenuFactory {
                     @Override
                     public boolean onOkCustomEvent() {
                         Platform.runLater(() -> {
+                            isChangeEnLanguage = true;
                             envService.setLanguageType(LanguageType.EN);
                             initMenu();
                             appController.resetMenu();
@@ -154,7 +192,7 @@ public class MenuFactory {
         });
 
         zh.selectedProperty().addListener((ov, b1, b2) -> {
-            if (b2) {
+            if (b2 && isChangeEnLanguage) {
                 WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Message", GuiFxmlAndLanguageUtils.getString("GLOBAL_CHANGE_LANGUAGE"));
                 controller.addProcessMonitorListener(new WindowCustomListener() {
                     @Override
@@ -164,6 +202,7 @@ public class MenuFactory {
 
                     @Override
                     public boolean onCloseAndCancelCustomEvent() {
+                        isChangeZhLanguage = false;
                         en.setSelected(true);
                         envService.setLanguageType(LanguageType.EN);
                         return false;
@@ -172,6 +211,7 @@ public class MenuFactory {
                     @Override
                     public boolean onOkCustomEvent() {
                         Platform.runLater(() -> {
+                            isChangeZhLanguage = true;
                             envService.setLanguageType(LanguageType.ZH);
                             initMenu();
                             appController.resetMenu();

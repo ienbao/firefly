@@ -6,18 +6,15 @@ package com.dmsoft.firefly.plugin.spc.controller;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
-import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
-import com.dmsoft.firefly.gui.components.utils.TextFieldWrapper;
-import com.dmsoft.firefly.gui.components.utils.ValidateRule;
+import com.dmsoft.firefly.gui.components.utils.*;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
-import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcLeftConfigServiceImpl;
-import com.dmsoft.firefly.plugin.spc.service.impl.SpcSettingServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.*;
+import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.enums.TimerKeyType;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
@@ -48,7 +45,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -102,7 +98,6 @@ public class SpcItemController implements Initializable {
     private boolean isFilterUslOrLsl = false;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SpcLeftConfigServiceImpl leftConfigService = new SpcLeftConfigServiceImpl();
-    private SpcSettingService spcSettingService = RuntimeContext.getBean(SpcSettingServiceImpl.class);
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
     // cached items for user preference
@@ -113,7 +108,7 @@ public class SpcItemController implements Initializable {
     @FXML
     private CheckBox enabledTimerCheckBox;
     @FXML
-    private ComboBox timeComboBox;
+    private ComboBox<String> timeComboBox;
 
     private boolean isTimer;
     private boolean startTimer;
@@ -135,7 +130,7 @@ public class SpcItemController implements Initializable {
         searchTab = new SearchTab();
         split.getItems().add(searchTab);
         itemFilter.getTextField().setPromptText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
-        itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->{
+        itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) -> {
             if (isFilterUslOrLsl) {
                 filteredList.setPredicate(p -> this.isFilterAndHasUslOrLsl(p));
             } else {
@@ -238,6 +233,17 @@ public class SpcItemController implements Initializable {
         item.widthProperty().addListener((ov, w1, w2) -> {
             Platform.runLater(() -> is.relocate(w2.doubleValue() - 21, 0));
         });
+        item.setComparator((o1, o2) -> {
+            boolean o1OnTop = stickyOnTopItems.contains(o1.getTestItemName());
+            boolean o2OnTop = stickyOnTopItems.contains(o2.getTestItemName());
+            if (o1OnTop == o2OnTop) {
+                return -o2.getTestItemName().compareTo(o1.getTestItemName());
+            } else if (o1OnTop) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
         item.sortTypeProperty().addListener((ov, sort1, sort2) -> {
             if (sort2.equals(TableColumn.SortType.DESCENDING)) {
                 item.setComparator((o1, o2) -> {
@@ -272,6 +278,9 @@ public class SpcItemController implements Initializable {
         initSpcTimer();
     }
 
+    /**
+     * init spc timer tab
+     */
     public void initSpcTimer() {
         isTimer = false;
         startTimer = false;
@@ -280,6 +289,11 @@ public class SpcItemController implements Initializable {
         timeComboBox.setValue(TimerKeyType.FIVE_MIN.getCode());
     }
 
+    /**
+     * method to get current config
+     *
+     * @return spc left config dto
+     */
     public SpcLeftConfigDto getCurrentConfigData() {
         SpcLeftConfigDto leftConfigDto = new SpcLeftConfigDto();
         leftConfigDto.setItems(getSelectedItem());
@@ -312,7 +326,7 @@ public class SpcItemController implements Initializable {
             pop = new ContextMenu();
             MenuItem all = new MenuItem(SpcFxmlAndLanguageUtils.getString(ResourceMassages.ALL_TEST_ITEMS));
             all.setOnAction(event -> {
-                filteredList.setPredicate(p -> this.isFilterAndAll(p));
+                filteredList.setPredicate(this::isFilterAndAll);
                 is.getStyleClass().remove("filter-active");
                 is.getStyleClass().add("filter-normal");
                 is.setGraphic(null);
@@ -320,7 +334,7 @@ public class SpcItemController implements Initializable {
             });
             MenuItem show = new MenuItem(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS_WITH_USL_LSL));
             show.setOnAction(event -> {
-                filteredList.setPredicate(p -> this.isFilterAndHasUslOrLsl(p));
+                filteredList.setPredicate(this::isFilterAndHasUslOrLsl);
                 is.getStyleClass().remove("filter-normal");
                 is.getStyleClass().add("filter-active");
                 is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
@@ -434,11 +448,13 @@ public class SpcItemController implements Initializable {
                 if (timer != null) {
                     timer.cancel();
                 }
+                this.setStartTimerState(startTimer);
             } else {
                 if (!validAnalysisCondition()) {
                     return;
                 }
                 startTimer = true;
+                this.setStartTimerState(startTimer);
                 timer = this.startTimerAnalysis();
             }
             this.updateAnalysisBtnTimer();
@@ -459,16 +475,80 @@ public class SpcItemController implements Initializable {
         } else {
             intervalTime = 30 * 60000;
         }
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
+        Timer timer1 = new Timer();
+        timer1.schedule(new TimerTask() {
             @Override
             public void run() {
-                Platform.runLater(() -> {
-                    normalAnalysisEvent();
-                });
+                Platform.runLater(() -> autoRefreshAnalysis());
             }
         }, 0, intervalTime);
-        return timer;
+        return timer1;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void autoRefreshAnalysis() {
+        List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
+        spcMainController.clearAnalysisData();
+        List<String> projectNameList = envService.findActivatedProjectName();
+        List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
+        List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(selectedItemDto);
+        SpcAnalysisConfigDto spcAnalysisConfigDto = this.buildSpcAnalysisConfigData();
+
+        List<SearchConditionDto> chartSearchConditionDtoList = spcMainController.getTimerSearchConditionDtoList();
+        this.updateSpcConfigPreference(spcAnalysisConfigDto);
+        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
+        context.put(ParamKeys.STATISTICAL_SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+        context.put(ParamKeys.CHART_SEARCH_CONDITION_DTO_LIST, chartSearchConditionDtoList);
+        context.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
+        context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+        context.addJobEventListener(event -> {
+            windowProgressTipController.getTaskProgress().setProgress(event.getProgress());
+            System.out.println(event.getEventName() + " : " + event.getProgress());
+        });
+        windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_TIMER_REFRESH_ANALYSIS_JOB_PIPELINE);
+        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                spcMainController.setSpcSettingDto(context.getParam(ParamKeys.SPC_SETTING_DTO, SpcSettingDto.class));
+                spcMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
+                spcMainController.setInitSearchConditionDtoList(searchConditionDtoList);
+                SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
+                SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
+                List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.STATISTICAL_ANALYSIS_RESULT);
+                TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
+                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
+                spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList, spcMainController.getTimerSearchKeyList(), true);
+
+                SearchDataFrame searchDataFrame = context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
+                spcMainController.setDataFrame(searchDataFrame);
+
+                //set chart data
+                List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) context.get(ParamKeys.CHART_ANALYSIS_RESULT);
+                if (spcChartDtoList != null) {
+                    spcMainController.setSpcChartData(spcChartDtoList);
+                    //set view data
+                    spcMainController.setTimerViewData(searchDataFrame, chartSearchConditionDtoList, searchDataFrame.getSearchedRowKey(), searchConditionDtoList);
+                }
+                windowProgressTipController.closeDialog();
+            }
+        });
+        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                logger.error(context.getError().getMessage());
+                windowProgressTipController.updateFailProgress(context.getError().toString());
+            }
+        });
+        jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                windowProgressTipController.closeDialog();
+            }
+        });
+        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
     }
 
     private boolean validAnalysisCondition() {
@@ -517,13 +597,12 @@ public class SpcItemController implements Initializable {
                 spcMainController.setSpcSettingDto(context.getParam(ParamKeys.SPC_SETTING_DTO, SpcSettingDto.class));
                 spcMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
                 spcMainController.setInitSearchConditionDtoList(searchConditionDtoList);
-//                    spcMainController.clearAnalysisSubShowData();
                 SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
                 SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
                 List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
                 TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
                 DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
-                spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList);
+                spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList, null, false);
                 spcMainController.setDataFrame(context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class));
                 windowProgressTipController.closeDialog();
             }
@@ -550,7 +629,7 @@ public class SpcItemController implements Initializable {
             for (ItemTableModel model : items) {
                 if (model.getSelector().isSelected()) {
                     if (isFilterUslOrLsl) {
-                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())){
+                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
                             selectItems.add(model.getItem());
                         }
                     } else {
@@ -567,14 +646,14 @@ public class SpcItemController implements Initializable {
         }
         List<String> selectTestItemsResult = Lists.newLinkedList();
         if (stickyOnTopItems != null && !stickyOnTopItems.isEmpty()) {
-            selectItems.forEach(selectedItem->{
+            selectItems.forEach(selectedItem -> {
                 if (stickyOnTopItems.contains(selectedItem)) {
                     selectTestItemsResult.add(selectedItem);
                 }
             });
         }
 
-        selectItems.forEach(selectedItem->{
+        selectItems.forEach(selectedItem -> {
             if (!selectTestItemsResult.contains(selectedItem)) {
                 selectTestItemsResult.add(selectedItem);
             }
@@ -588,7 +667,7 @@ public class SpcItemController implements Initializable {
             for (ItemTableModel model : items) {
                 if (model.getSelector().isSelected()) {
                     if (isFilterUslOrLsl) {
-                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())){
+                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
                             selectTestItemDtos.add(model.getItemDto());
                         }
                     } else {
@@ -604,14 +683,14 @@ public class SpcItemController implements Initializable {
         }
         List<TestItemWithTypeDto> selectTestItemDtosResult = Lists.newLinkedList();
         if (stickyOnTopItems != null && !stickyOnTopItems.isEmpty()) {
-            selectTestItemDtos.forEach(selectTestItemDto->{
+            selectTestItemDtos.forEach(selectTestItemDto -> {
                 if (stickyOnTopItems.contains(selectTestItemDto.getTestItemName())) {
                     selectTestItemDtosResult.add(selectTestItemDto);
                 }
             });
         }
 
-        selectTestItemDtos.forEach(selectTestItemDto->{
+        selectTestItemDtos.forEach(selectTestItemDto -> {
             if (!selectTestItemDtosResult.contains(selectTestItemDto)) {
                 selectTestItemDtosResult.add(selectTestItemDto);
             }
@@ -662,8 +741,7 @@ public class SpcItemController implements Initializable {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
         );
-        Stage fileStage = null;
-        File file = fileChooser.showOpenDialog(fileStage);
+        File file = fileChooser.showOpenDialog(null);
 
         if (file != null) {
             SpcLeftConfigDto spcLeftConfigDto = leftConfigService.importSpcConfig(file);
@@ -781,15 +859,8 @@ public class SpcItemController implements Initializable {
         List<String> testItemList = getSelectedItem();
         TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
         List<String> conditionTestItemList = Lists.newArrayList();
-        List<String> timeKeys = Lists.newArrayList();
-        String timePattern = null;
-        if (timePatternDto != null) {
-            timeKeys = timePatternDto.getTimeKeys();
-            timePattern = timePatternDto.getPattern();
-        }
-        FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
         for (String condition : conditionList) {
-            Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);
+            Set<String> conditionTestItemSet = FilterUtils.parseItemNameFromConditions(condition);
             for (String conditionTestItem : conditionTestItemSet) {
                 if (!testItemList.contains(conditionTestItem) && !conditionTestItemList.contains(conditionTestItem)) {
                     conditionTestItemList.add(conditionTestItem);
@@ -847,32 +918,36 @@ public class SpcItemController implements Initializable {
     }
 
     private boolean isFilterAndHasUslOrLsl(ItemTableModel itemTableModel) {
-        if ((StringUtils.isNotEmpty(itemTableModel.getItemDto().getLsl()) || StringUtils.isNotEmpty(itemTableModel.getItemDto().getUsl()))
+        return (StringUtils.isNotEmpty(itemTableModel.getItemDto().getLsl()) || StringUtils.isNotEmpty(itemTableModel.getItemDto().getUsl()))
                 && (DAPStringUtils.isBlank(itemFilter.getTextField().getText()) || (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText())
-                && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())))) {
-            return true;
-        }
-        return false;
+                && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())));
     }
 
     private boolean isFilterAndAll(ItemTableModel itemTableModel) {
-        if (itemTableModel.getItem().startsWith("") && (DAPStringUtils.isBlank(itemFilter.getTextField().getText()) ||
-                (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText()) && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())))) {
-            return true;
-        }
-        return false;
+        return itemTableModel.getItem().startsWith("") && (DAPStringUtils.isBlank(itemFilter.getTextField().getText())
+                || (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText()) && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())));
     }
 
     private void sortTestItemWithTypeDto(List<TestItemWithTypeDto> testItemWithTypeDtos, boolean isDES) {
-        Collections.sort(testItemWithTypeDtos, new Comparator<TestItemWithTypeDto>() {
-            @Override
-            public int compare(TestItemWithTypeDto o1, TestItemWithTypeDto o2) {
-                if (isDES) {
-                    return o2.getTestItemName().compareTo(o1.getTestItemName());
-                } else {
-                    return o1.getTestItemName().compareTo(o2.getTestItemName());
-                }
+        testItemWithTypeDtos.sort((o1, o2) -> {
+            if (isDES) {
+                return o2.getTestItemName().compareTo(o1.getTestItemName());
+            } else {
+                return o1.getTestItemName().compareTo(o2.getTestItemName());
             }
         });
+    }
+
+    public boolean isTimer() {
+        return isTimer;
+    }
+
+    private void setStartTimerState(boolean isTimer) {
+        split.setDisable(isTimer);
+        spcMainController.setMainAnalysisTimerState(isTimer);
+        importBtn.setDisable(isTimer);
+        exportBtn.setDisable(isTimer);
+        ControlMap.getControl(CommonResourceMassages.PLATFORM_CONTROL_DATASOURCE_BTN).setDisable(isTimer);
+        ControlMap.getControl(CommonResourceMassages.PLATFORM_CONTROL_TEMPLATE_BTN).setDisable(isTimer);
     }
 }

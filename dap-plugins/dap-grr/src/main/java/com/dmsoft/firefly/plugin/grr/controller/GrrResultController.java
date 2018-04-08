@@ -20,6 +20,7 @@ import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.*;
+import com.dmsoft.firefly.plugin.grr.service.GrrConfigService;
 import com.dmsoft.firefly.plugin.grr.utils.*;
 import com.dmsoft.firefly.plugin.grr.utils.charts.ChartUtils;
 import com.dmsoft.firefly.plugin.grr.utils.charts.LegendUtils;
@@ -45,9 +46,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
@@ -64,11 +63,12 @@ public class GrrResultController implements Initializable {
     private Set<String> appraisers = Sets.newLinkedHashSet();
     private GrrSummaryModel summaryModel = new GrrSummaryModel();
     private ItemResultModel itemResultModel = new ItemResultModel();
-    private GrrAnovaModel anovaModel = new GrrAnovaModel();
-    private GrrSourceModel sourceModel = new GrrSourceModel();
+    private GrrAnovaModel grrAnovaModel = new GrrAnovaModel();
+    private GrrSourceModel grrSourceModel = new GrrSourceModel();
     private GrrMainController grrMainController;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+    private GrrConfigService grrConfigService = RuntimeContext.getBean(GrrConfigService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
     /**
@@ -78,15 +78,15 @@ public class GrrResultController implements Initializable {
      */
     public void init(GrrMainController grrMainController) {
         this.grrMainController = grrMainController;
+        this.initData();
+        this.initComponentsRender();
+        this.initComponentEvents();
+        this.initPerformanceSelected();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initComponents();
-        this.initData();
-        this.initComponentsRender();
-        this.initComponentEvents();
-        this.initPerformanceSelected();
     }
 
     /**
@@ -127,7 +127,7 @@ public class GrrResultController implements Initializable {
      * Change grr result when view data change submit
      */
     public void changeGrrResult() {
-        submitGrrResult(grrMainController.getSearchConditionDto().getSelectedTestItemDtos().get(0).getTestItemName(), true);
+        submitGrrResult(grrMainController.getSearchConditionDto().getSelectedTestItemDtos().get(0), true);
     }
 
     /**
@@ -183,8 +183,10 @@ public class GrrResultController implements Initializable {
             }
         }
         boolean hasSelectedItem = false;
+        TestItemWithTypeDto testItemWithTypeDto = null;
         for (int i = 0; i < changedTestItemWithTypeDtos.size(); i++) {
             if (selectedItem.equals(changedTestItemWithTypeDtos.get(i).getTestItemName())) {
+                testItemWithTypeDto = changedTestItemWithTypeDtos.get(i);
                 hasSelectedItem = true;
                 break;
             }
@@ -192,17 +194,17 @@ public class GrrResultController implements Initializable {
         //clear summary edit data
         summaryModel.clearEditData();
         summaryTb.refresh();
-        submitGrrResult(selectedItem, hasSelectedItem);
+        submitGrrResult(testItemWithTypeDto, hasSelectedItem);
     }
 
     @SuppressWarnings("unchecked")
-    private void submitGrrResult(String selectedItem, Boolean analyseSubResult) {
+    private void submitGrrResult(TestItemWithTypeDto testItemWithTypeDto, Boolean analyseSubResult) {
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         context.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, grrMainController.getSearchConditionDto());
         context.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrMainController.getGrrDataFrame());
-        if (DAPStringUtils.isNotBlank(selectedItem) && analyseSubResult) {
-            context.put(ParamKeys.TEST_ITEM_NAME, selectedItem);
+        if (testItemWithTypeDto != null && analyseSubResult) {
+            context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO, testItemWithTypeDto);
         }
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
         windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
@@ -214,16 +216,18 @@ public class GrrResultController implements Initializable {
                 if (grrSummaryDtoList == null || grrSummaryDtoList.isEmpty()) {
                     return;
                 }
-                String itemName = context.containsKey(ParamKeys.GRR_DETAIL_DTO) ? (String) context.get(ParamKeys.TEST_ITEM_NAME) : summaryModel.getSelectedItemName();
+                String itemName = context.containsKey(ParamKeys.GRR_DETAIL_DTO)
+                        ? ((TestItemWithTypeDto) context.get(ParamKeys.TEST_ITEM_WITH_TYPE_DTO)).getTestItemName()
+                        : summaryModel.getSelectedItemName();
                 summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
                 summaryModel.setData(grrSummaryDtoList, itemName);
                 summaryTb.refresh();
                 if (context.containsKey(ParamKeys.GRR_DETAIL_DTO)) {
                     removeSubResultData();
-                    setToleranceValue(summaryModel.getToleranceCellValue(selectedItem));
+                    setToleranceValue(summaryModel.getToleranceCellValue(itemName));
                     GrrDetailDto grrDetailDto = context.getParam(ParamKeys.GRR_DETAIL_DTO, GrrDetailDto.class);
                     if (grrDetailDto != null) {
-                        setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), selectedItem);
+                        setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), itemName);
                         setAnalysisItemResultData(grrDetailDto);
                     } else {
                         RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
@@ -498,7 +502,6 @@ public class GrrResultController implements Initializable {
         Legend legend = LegendUtils.buildLegend(partAppraiserChart.getData(),
                 "chart-line-symbol", "line-legend-symbol");
         partAppraiserBp.setLeft(legend);
-//        partAppraiserBp.setMargin(legend, new Insets(0, 0, 1, 0));
         ChartUtils.setChartToolTip(partAppraiserChart.getData(), pointTooltip -> {
             Double value = (Double) pointTooltip.getData().getYValue();
             int digNum = DigNumInstance.newInstance().getDigNum();
@@ -631,41 +634,49 @@ public class GrrResultController implements Initializable {
     }
 
     private void setAnovaAndSourceTb(GrrAnovaAndSourceResultDto anovaAndSourceResultDto) {
+
+        anovaTb.getSortOrder().clear();
+        sourceTb.getSortOrder().clear();
+        anovaTb.sort();
+        sourceTb.sort();
+        grrAnovaModel.setData(anovaAndSourceResultDto.getGrrAnovaDtos());
+        grrSourceModel.initColumn(buildSourceTbColumn());
+        grrSourceModel.setData(anovaAndSourceResultDto.getGrrSourceDtos());
         int digNum = DigNumInstance.newInstance().getDigNum();
         String numberOfDc = digNum >= 0 ? DAPStringUtils.formatDouble(anovaAndSourceResultDto.getNumberOfDc(), digNum)
                 : String.valueOf(anovaAndSourceResultDto.getNumberOfDc());
-        anovaModel.setData(anovaAndSourceResultDto.getGrrAnovaDtos());
-        sourceModel.setData(anovaAndSourceResultDto.getGrrSourceDtos());
         categoryBtn.setText(DAPStringUtils.isBlankWithSpecialNumber(numberOfDc) ? "-" : numberOfDc);
     }
 
     private void removeSubResultData() {
         xBarAppraiserChart.clear();
-        componentChart.getData().setAll(FXCollections.observableArrayList());
-        partAppraiserChart.getData().setAll(FXCollections.observableArrayList());
-        rrByAppraiserChart.getData().setAll(FXCollections.observableArrayList());
         xBarAppraiserChart.removeAllChildren();
         rangeAppraiserChart.removeAllChildren();
-        rrbyPartChart.getData().setAll(FXCollections.observableArrayList());
+
         componentBp.getChildren().remove(componentBp.getLeft());
         partAppraiserBp.getChildren().remove(partAppraiserBp.getLeft());
         xBarAppraiserBp.getChildren().remove(xBarAppraiserBp.getLeft());
         rangeAppraiserBp.getChildren().remove(rangeAppraiserBp.getLeft());
         rrbyAppraiserBp.getChildren().remove(rrbyAppraiserBp.getLeft());
         rrbyPartBp.getChildren().remove(rrbyPartBp.getLeft());
-        itemResultModel.setRowKeyArray(FXCollections.observableArrayList());
-        itemResultModel.setHeaderArray(FXCollections.observableArrayList());
-        itemResultModel.clearData();
-        itemDetailTb.refresh();
-        anovaModel.setData(null);
-        sourceModel.setData(null);
+
+        componentChart.getData().setAll(FXCollections.observableArrayList());
+        partAppraiserChart.getData().setAll(FXCollections.observableArrayList());
+        rrByAppraiserChart.getData().setAll(FXCollections.observableArrayList());
+        rrbyPartChart.getData().setAll(FXCollections.observableArrayList());
+
+//        itemResultModel.setRowKeyArray(FXCollections.observableArrayList());
+//        itemResultModel.setHeaderArray(FXCollections.observableArrayList());
+        itemResultModel.clearTableData();
+        grrAnovaModel.clearTableData();
+        grrSourceModel.clearTableData();
         toleranceLbl.setText("");
         categoryBtn.setText("");
+        itemDetailTb.refresh();
     }
 
     private void initComponents() {
         summaryItemTf = new TextFieldFilter();
-//        itemFilterHBox.getChildren().setAll(summaryItemTf);
         xBarAppraiserChart = buildControlChart();
         rangeAppraiserChart = buildControlChart();
         rrByAppraiserChart = buildScatterChart();
@@ -749,7 +760,6 @@ public class GrrResultController implements Initializable {
     private void initComponentsRender() {
         final double inputWidth = 200;
 
-//        itemFilterHBox.setMargin(summaryItemTf, new Insets(4, 0, 4, 0));
         String testItemText = GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TEST_ITEM");
         summaryItemTf.getTextField().setPromptText(testItemText);
         summaryItemTf.getTextField().setPrefWidth(inputWidth);
@@ -781,18 +791,15 @@ public class GrrResultController implements Initializable {
         xBarAppraiserChart.setHorizontalGridLinesVisible(false);
         rangeAppraiserChart.setVerticalGridLinesVisible(false);
         rangeAppraiserChart.setHorizontalGridLinesVisible(false);
-//        ObservableList<TableColumn<String, ?>> summaryTbColumns = summaryTb.getColumns();
-//        ObservableList<TableColumn<GrrSingleAnova, ?>> anovaTbColumns = anovaTb.getColumns();
-//        ObservableList<TableColumn<GrrSingleSource, ?>> sourceTbColumns = sourceTb.getColumns();
-//        summaryTbColumns.get(0).setPrefWidth(30);
-//        summaryTbColumns.get(1).setPrefWidth(180);
-//        summaryTbColumns.get(2).setPrefWidth(80);
-//        summaryTbColumns.get(3).setPrefWidth(80);
-//        summaryTbColumns.get(4).setPrefWidth(100);
-//        summaryTbColumns.get(5).setPrefWidth(110);
-//        summaryTbColumns.get(6).setPrefWidth(110);
-//        summaryTbColumns.get(6).setPrefWidth(120);
-//        summaryTbColumns.get(7).setPrefWidth(110);
+        ObservableList<TableColumn<String, ?>> summaryTbColumns = summaryTb.getColumns();
+        summaryTbColumns.get(0).prefWidthProperty().bind(summaryTb.widthProperty().divide(25));
+        summaryTbColumns.get(1).prefWidthProperty().bind(summaryTb.widthProperty().divide(4));
+        summaryTbColumns.get(2).prefWidthProperty().bind(summaryTb.widthProperty().divide(11));
+        summaryTbColumns.get(3).prefWidthProperty().bind(summaryTb.widthProperty().divide(11));
+        summaryTbColumns.get(4).prefWidthProperty().bind(summaryTb.widthProperty().divide(10));
+        summaryTbColumns.get(5).prefWidthProperty().bind(summaryTb.widthProperty().divide(7));
+        summaryTbColumns.get(6).prefWidthProperty().bind(summaryTb.widthProperty().divide(7));
+        summaryTbColumns.get(7).prefWidthProperty().bind(summaryTb.widthProperty().divide(7));
 //        anovaTbColumns.get(0).setPrefWidth(100);
 //        anovaTbColumns.get(1).setPrefWidth(140);
 //        anovaTbColumns.get(2).setPrefWidth(140);
@@ -814,6 +821,10 @@ public class GrrResultController implements Initializable {
         rangeAppraiserChartBtn.getStyleClass().add("btn-icon-b");
         xBarAppraiserChartBtn.setDisable(true);
         rangeAppraiserChartBtn.setDisable(true);
+
+        grrDataBtn.getStyleClass().add("btn-group");
+        grrChartBtn.getStyleClass().add("btn-group");
+        grrResultBtn.getStyleClass().add("btn-group-last");
     }
 
     private void initComponentEvents() {
@@ -875,11 +886,11 @@ public class GrrResultController implements Initializable {
         resultBasedCmb.getItems().addAll(UIConstant.GRR_RESULT_TYPE);
         resultBasedCmb.setValue(UIConstant.GRR_RESULT_TYPE[0]);
         summaryModel.initColumn(Lists.newArrayList(UIConstant.GRR_SUMMARY_TITLE));
+        grrAnovaModel.initColumn(Lists.newArrayList(UIConstant.GRR_ANOVA_TITLE));
+        grrSourceModel.initColumn(buildSourceTbColumn());
         TableViewWrapper.decorate(summaryTb, summaryModel);
-        anovaTb.setItems(anovaModel.getAnovas());
-        anovaTb.getColumns().addAll(buildAnovaTbColumn());
-        sourceTb.setItems(sourceModel.getSources());
-        sourceTb.getColumns().addAll(buildSourceTbColumn());
+        TableViewWrapper.decorate(anovaTb, grrAnovaModel);
+        TableViewWrapper.decorate(sourceTb, grrSourceModel);
         xBarAppraiserChartBtn.setListViewData(Lists.newArrayList(UIConstant.CHART_OPERATE_NAME));
         rangeAppraiserChartBtn.setListViewData(Lists.newArrayList(UIConstant.CHART_OPERATE_NAME));
     }
@@ -924,22 +935,13 @@ public class GrrResultController implements Initializable {
         rangeAppraiserChartBtn.setSelectedSets(Sets.newHashSet(UIConstant.CHART_OPERATE_NAME));
     }
 
-    private ObservableList buildAnovaTbColumn() {
-        ObservableList<TableColumn> tableColumns = FXCollections.observableArrayList();
-        for (String name : UIConstant.GRR_ANOVA_TITLE) {
-            TableColumn tableColumn = new TableColumn(name);
-            tableColumn.setCellValueFactory(new PropertyValueFactory(GrrSingleAnova.propertyKeys.get(name)));
-            tableColumns.add(tableColumn);
-        }
-        return tableColumns;
-    }
-
-    private ObservableList buildSourceTbColumn() {
-        ObservableList<TableColumn> tableColumns = FXCollections.observableArrayList();
+    private List<String> buildSourceTbColumn() {
+        List<String> tableColumns = Lists.newArrayList();
+        GrrConfigDto grrConfigDto = grrConfigService.findGrrConfig();
+        double coverage = grrConfigDto == null || grrConfigDto.getCoverage() == null ? 6.0 : grrConfigDto.getCoverage();
         for (String name : UIConstant.GRR_SOURCE_TITLE) {
-            TableColumn tableColumn = new TableColumn(name);
-            tableColumn.setCellValueFactory(new PropertyValueFactory(GrrSingleSource.propertyKeys.get(name)));
-            tableColumns.add(tableColumn);
+            name = name.equals(UIConstant.GRR_SOURCE_TITLE[2]) ? name + " " + coverage : name;
+            tableColumns.add(name);
         }
         return tableColumns;
     }

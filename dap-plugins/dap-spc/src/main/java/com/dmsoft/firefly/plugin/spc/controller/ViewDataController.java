@@ -83,13 +83,32 @@ public class ViewDataController implements Initializable {
         this.selectedProjectNames = RuntimeContext.getBean(EnvService.class).findActivatedProjectName();
     }
 
+    public void clearViewData(){
+        unSelectedCheckBox.setSelected(false);
+        filterTf.getTextField().setText(null);
+        this.setViewData(null, null, null);
+    }
+
     /**
      * set view data table dataList
      *
-     * @param dataFrame      search data frame
-     * @param selectedRowKey selected row key
+     * @param dataFrame                         search data frame
+     * @param selectedRowKey                    selected row key
+     * @param statisticalSearchConditionDtoList statisticalSearchConditionDtoList
      */
     public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList) {
+        this.setViewData(dataFrame, selectedRowKey, statisticalSearchConditionDtoList, false);
+    }
+
+    /**
+     * set view data table dataList
+     *
+     * @param dataFrame                         search data frame
+     * @param selectedRowKey                    selected row key
+     * @param statisticalSearchConditionDtoList statisticalSearchConditionDtoList
+     * @param isTimer                           isTimer
+     */
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList, boolean isTimer) {
         this.statisticalSearchConditionDtoList = statisticalSearchConditionDtoList;
         this.selectedRowKeys = selectedRowKey;
         this.dataFrame = dataFrame;
@@ -346,6 +365,9 @@ public class ViewDataController implements Initializable {
     }
 
     private void filterHeaderBtn() {
+        if(model == null){
+            return;
+        }
         for (String testItem : model.getHeaderArray()) {
             if (columnFilterSetting.get(testItem) != null) {
                 FilterSettingAndGraphic fsg = columnFilterSetting.get(testItem);

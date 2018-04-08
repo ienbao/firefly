@@ -22,6 +22,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -63,6 +65,7 @@ public class ViewDataDFModel implements TableModel {
     private List<String> initSelectedRowKeys;
     private List<SearchConditionDto> statisticalSearchConditionDtoList;
     private Map<String, TestItemWithTypeDto> testItemDtoMap;
+    private Map<String, ReadOnlyStringProperty> cellMap;
 
     /**
      * constructor
@@ -165,6 +168,7 @@ public class ViewDataDFModel implements TableModel {
         this.menuRowEvents.add(highLight);
         this.menuRowEvents.add(detail);
         this.menuRowEvents.add(remove);
+        this.cellMap = Maps.newHashMap();
     }
 
     @Override
@@ -173,8 +177,11 @@ public class ViewDataDFModel implements TableModel {
     }
 
     @Override
-    public ObjectProperty<String> getCellData(String rowKey, String columnName) {
-        return new SimpleObjectProperty<>(dataFrame.getCellValue(rowKey, columnName));
+    public ReadOnlyStringProperty getCellData(String rowKey, String columnName) {
+        if (!this.cellMap.containsKey(rowKey + " !@# " + columnName)) {
+            this.cellMap.put(rowKey + " !@# " + columnName, new ReadOnlyStringWrapper(dataFrame.getCellValue(rowKey, columnName)).getReadOnlyProperty());
+        }
+        return this.cellMap.get(rowKey + " !@# " + columnName);
     }
 
     @Override
@@ -285,12 +292,12 @@ public class ViewDataDFModel implements TableModel {
             if (testItemDtoMap.containsKey(testName)) {
                 TestItemWithTypeDto testItemDto = testItemDtoMap.get(testName);
                 if (DAPStringUtils.isNumeric(lsl)) {
-                    if ((DAPStringUtils.isNumeric(testItemDto.getLsl()) && Double.valueOf(lsl) < Double.valueOf(testItemDto.getLsl())) || !DAPStringUtils.isNumeric(testItemDto.getLsl())) {
+                    if (!DAPStringUtils.isNumeric(testItemDto.getLsl()) || Double.valueOf(lsl) < Double.valueOf(testItemDto.getLsl())) {
                         testItemDto.setLsl(lsl);
                     }
                 }
                 if (DAPStringUtils.isNumeric(usl)) {
-                    if ((DAPStringUtils.isNumeric(testItemDto.getUsl()) && Double.valueOf(usl) > Double.valueOf(testItemDto.getUsl())) || !DAPStringUtils.isNumeric(testItemDto.getUsl())) {
+                    if (!DAPStringUtils.isNumeric(testItemDto.getUsl()) || Double.valueOf(usl) > Double.valueOf(testItemDto.getUsl())) {
                         testItemDto.setUsl(usl);
                     }
                 }

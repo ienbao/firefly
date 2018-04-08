@@ -1,9 +1,9 @@
 package com.dmsoft.firefly.gui.components.searchtab;
 
 import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
+import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
-import com.dmsoft.firefly.gui.components.utils.ResourceMassages;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -113,7 +113,7 @@ public class SearchTabController {
         Pane root = null;
         try {
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createSimpleWindowAsModel("advance", FxmlAndLanguageUtils.getString(ResourceMassages.ADVANCE), root, getResource("css/redfall/main.css").toExternalForm());
+            Stage stage = WindowFactory.createSimpleWindowAsModel("advance", FxmlAndLanguageUtils.getString(CommonResourceMassages.ADVANCE), root, getResource("css/redfall/main.css").toExternalForm());
             stage.toFront();
             stage.setResizable(false);
             stage.show();
@@ -254,6 +254,26 @@ public class SearchTabController {
     }
 
     /**
+     * method to set basic search condition dto
+     *
+     * @param basicSearchDtoMaps map of basic search dto
+     */
+    public void setBasicSearch(LinkedHashMap<String, List<BasicSearchDto>> basicSearchDtoMaps) {
+        if (basicSearchDtoMaps != null && basicSearchDtoMaps.size() > 0) {
+            for (String title : basicSearchDtoMaps.keySet()) {
+                List<BasicSearchDto> basicSearchDtos = basicSearchDtoMaps.get(title);
+                BasicSearchPane basicSearchPane = new BasicSearchPane(title);
+                if (basicSearchDtos != null && basicSearchDtos.size() > 0) {
+                    basicSearchDtos.forEach(basicSearchDto -> {
+                        basicSearchPane.setSearch(basicSearchDto.getTestItem(), basicSearchDto.getOperator(), basicSearchDto.getValue());
+                    });
+                }
+                basicSearch.getChildren().add(basicSearchPane);
+            }
+        }
+    }
+
+    /**
      * method to get basic search dto
      *
      * @return map
@@ -290,33 +310,10 @@ public class SearchTabController {
      *
      * @param basicSearchDtoMaps map of basic search dto
      */
-    public void setBasicSearch(LinkedHashMap<String, List<BasicSearchDto>> basicSearchDtoMaps) {
-        if (basicSearchDtoMaps != null && basicSearchDtoMaps.size() > 0) {
-            for (String title : basicSearchDtoMaps.keySet()) {
-                List<BasicSearchDto> basicSearchDtos = basicSearchDtoMaps.get(title);
-                BasicSearchPane basicSearchPane = new BasicSearchPane(title);
-                if (basicSearchDtos != null && basicSearchDtos.size() > 0) {
-                    basicSearchDtos.forEach(basicSearchDto -> {
-                        basicSearchPane.setSearch(basicSearchDto.getTestItem(), basicSearchDto.getOperator(), basicSearchDto.getValue());
-                    });
-                }
-                basicSearch.getChildren().add(basicSearchPane);
-            }
-        }
-    }
-
-    /**
-     * method to set basic search condition dto
-     *
-     * @param basicSearchDtoMaps map of basic search dto
-     */
     public void setOneBasicSearch(List<BasicSearchDto> basicSearchDtoMaps) {
         BasicSearchPane basicSearchPane = new BasicSearchPane();
         if (basicSearchDtoMaps != null && basicSearchDtoMaps.size() > 0) {
-            List<BasicSearchDto> basicSearchDtos = basicSearchDtoMaps;
-            basicSearchDtos.forEach(basicSearchDto -> {
-                basicSearchPane.setSearch(basicSearchDto.getTestItem(), basicSearchDto.getOperator(), basicSearchDto.getValue());
-            });
+            basicSearchDtoMaps.forEach(basicSearchDto -> basicSearchPane.setSearch(basicSearchDto.getTestItem(), basicSearchDto.getOperator(), basicSearchDto.getValue()));
         }
         basicSearch.getChildren().add(basicSearchPane);
     }
@@ -346,6 +343,15 @@ public class SearchTabController {
      */
     public void hiddenGroupAdd() {
         groupAdd.setVisible(false);
+    }
+
+    /**
+     * method to hide auto divided
+     */
+    public void hiddenAutoDivided() {
+        group1.setVisible(false);
+        group2.setVisible(false);
+        autoDivideLbl.setVisible(false);
     }
 
     public void setMulti(boolean multi) {

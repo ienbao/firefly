@@ -9,7 +9,7 @@ public class ParamKeys {
     public static final String TEST_ITEM_WITH_TYPE_DTO_LIST = "testItemWithTypeDtoList";
     public static final String ROW_DATA_DTO_LIST = "rowDataDtoList";
     public static final String SEARCH_DATA_FRAME = "searchDataFrame";
-    public static final String TEST_ITEM_NAME = "testItemName";
+    public static final String TEST_ITEM_WITH_TYPE_DTO = "testItemWithTypeDto";
     public static final String SEARCH_GRR_CONFIG_DTO = "searchGrrConfigDto";
     public static final String SEARCH_GRR_ANALYSIS_CONFIG = "analysisGrrConfigDto";
     public static final String SEARCH_GRR_ANALYSIS_TESTITEM = "analysisGrrTestItem";
@@ -49,6 +49,7 @@ public class ParamKeys {
     public static final String GRR_REFRESH_JOB_PIPELINE = "grrRefreshJobPipeline";
     public static final String GRR_EXPORT_JOB_PIPELINE = "grrExportJobPipeline";
     public static final String GRR_EXPORT_DETAIL_JOB_PIPELINE = "grrExportDetailJobPipeline";
+    public static final String GRR_EXPORT_VIEW_DATA = "grrExportViewData";
 
 
     public static final String GRR_ANALYSIS_CONDITION_KEY = "analysisKey";

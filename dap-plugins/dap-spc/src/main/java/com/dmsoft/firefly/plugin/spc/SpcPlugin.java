@@ -139,6 +139,17 @@ public class SpcPlugin extends Plugin {
 
         jobManager.initializeJob(ParamKeys.SAVE_SPC_SETTING_DATA_JOP_PIPELINE, jobFactory.createJobPipeLine()
                 .addLast(new SaveSpcSettingDataHandler()));
+
+        jobManager.initializeJob(ParamKeys.SPC_EXPORT_VIEW_DATA, jobFactory.createJobPipeLine()
+                .addLast(new FindTestDataHandler())
+                .addLast(new DataFrameHandler()));
+
+        jobManager.initializeJob(ParamKeys.SPC_TIMER_REFRESH_ANALYSIS_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new FindSpcSettingDataHandler())
+                .addLast(new FindTestDataHandler())
+                .addLast(new DataFrameHandler())
+                .addLast(new TimerRefreshAnalysisHandler())
+                .addLast(new RefreshAnalysisDataHandler().setWeight(D100)));
     }
 
     @Override

@@ -36,7 +36,7 @@ public class DataFrameHandler extends AbstractBasicJobHandler {
         SearchDataFrame dataFrame = dataFrameFactory.
                 createSearchDataFrame((List<TestItemWithTypeDto>) context.get(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST), rowDataDtoList);
 
-        List<String> searchConditions = searchConditionDto.getSearchCondition();
+        List<String> searchConditions = searchConditionDto == null ? null : searchConditionDto.getSearchCondition();
         if (searchConditions != null && !searchConditions.isEmpty()) {
             dataFrame.addSearchCondition(searchConditions);
             dataFrame.shrink();

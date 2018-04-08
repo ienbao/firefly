@@ -1,7 +1,7 @@
 package com.dmsoft.firefly.gui.components.window;
 
+import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
-import com.dmsoft.firefly.gui.components.utils.ResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -68,7 +68,7 @@ public class WindowMessageController {
 
     public void closeDialog() {
         smLbl.setText("");
-        StageMap.closeStage(ResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE);
+        StageMap.closeStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE);
         if (windowCustomListener != null) {
             windowCustomListener.onCloseAndCancelCustomEvent();
         }
@@ -93,7 +93,7 @@ public class WindowMessageController {
 
     private void okEvent() {
         smLbl.setText("");
-        StageMap.closeStage(ResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE);
+        StageMap.closeStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_MESSAGE);
         if (windowCustomListener != null) {
            windowCustomListener.onOkCustomEvent();
         }

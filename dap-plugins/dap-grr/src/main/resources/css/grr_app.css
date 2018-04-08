@@ -226,3 +226,23 @@ table
     -fx-pref-height: 0;
     -fx-min-height: 0;
 }
+
+.btn-group {
+    -fx-border-width: 1px 0px 1px 1px;
+}
+
+.btn-group-last {
+    -fx-border-width: 1px 1px 1px 1px;
+}
+
+.btn-group:hover,
+.btn-group:focused,
+.btn-group:pressed,
+.btn-group:focused:hover,
+.btn-group-last:hover,
+.btn-group-last:focused,
+.btn-group-last:pressed,
+.btn-group-last:focused:hover {
+    -fx-border-width: 1;
+    -fx-border-color: COLORFUL_AUXILIARY_BLUE;
+}
