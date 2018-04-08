@@ -27,4 +27,9 @@ public interface IConfig {
      * @param config config bytes
      */
     void importConfig(byte[] config);
+
+    /**
+     * method to restore config
+     */
+    void restoreConfig();
 }

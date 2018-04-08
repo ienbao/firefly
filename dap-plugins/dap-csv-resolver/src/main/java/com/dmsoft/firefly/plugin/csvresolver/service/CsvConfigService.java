@@ -34,4 +34,9 @@ public class CsvConfigService implements IConfig {
             csvResolverService.saveCsvTemplate(csvTemplateDto);
         }
     }
+
+    @Override
+    public void restoreConfig() {
+        //TODO
+    }
 }

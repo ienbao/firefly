@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.gui.components.table;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
@@ -30,7 +31,7 @@ public interface TableModel {
      * @param columnName column name
      * @return table view data
      */
-    ObjectProperty<String> getCellData(String rowKey, String columnName);
+    ObservableValue<String> getCellData(String rowKey, String columnName);
 
     /**
      * method to get row key string list

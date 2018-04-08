@@ -108,4 +108,9 @@ public class GrrConfigServiceImpl implements GrrConfigService, IConfig {
         }
         return result;
     }
+
+    @Override
+    public void restoreConfig() {
+        //TODO
+    }
 }
