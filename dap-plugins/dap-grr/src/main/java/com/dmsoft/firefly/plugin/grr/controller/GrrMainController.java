@@ -11,7 +11,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -109,7 +108,7 @@ public class GrrMainController implements Initializable {
             FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_export.fxml");
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrExport", "Grr Export", root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
-            ((GrrExportController)fxmlLoader.getController()).initGrrExportLeftConfig(grrItemController.getGrrLeftConfigDto());
+            ((GrrExportController) fxmlLoader.getController()).initGrrExportLeftConfig(grrItemController.getGrrLeftConfigDto());
             stage.setResizable(false);
             stage.toFront();
             stage.show();
@@ -148,10 +147,16 @@ public class GrrMainController implements Initializable {
         this.grrDetailDto = grrDetailDto;
     }
 
+    /**
+     * Update grr summary data and grr detail result data
+     */
     public void updateGrrSummaryAndDetail() {
         grrResultController.analyzeGrrResult(summaryDtos, grrDetailDto);
     }
 
+    /**
+     * Update grr view data
+     */
     public void updateGrrViewData() {
         grrViewDataController.refresh();
     }
