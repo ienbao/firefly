@@ -23,25 +23,18 @@ public class JsonFileUtil {
      * @return boolean
      */
     public static <T> boolean writeJsonFile(T object, String fileParentPath, String fileName) {
-        // 标记文件生成是否成功
         boolean flag = true;
-
-        // 拼接文件完整路径
         String fullPath = fileParentPath + File.separator + fileName + ".json";
-
-        // 生成json格式文件
         try {
-            // 保证创建一个新文件
             File file = new File(fullPath);
-            if (!file.getParentFile().exists()) { // 如果父目录不存在，创建父目录
+            if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }
-            if (file.exists()) { // 如果已存在,删除旧文件
+            if (file.exists()) {
                 file.delete();
             }
             file.createNewFile();
 
-            // 将格式化后的字符串写入文件
             Writer write = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
             write.write(mapper.toJson(object).toString());
             write.flush();
@@ -56,7 +49,9 @@ public class JsonFileUtil {
     }
 
     /**
-     * 读取.json格式文件
+     * get json file
+     * @param fileParentPath file path
+     * @param fileName file name
      */
     public static String readJsonFile(String fileParentPath, String fileName) {
         String json = null;
@@ -84,6 +79,103 @@ public class JsonFileUtil {
             e.printStackTrace();
         }
         return json;
+    }
+
+    /**
+     * delete folder
+     *
+     * @param folderPath String
+     * @return boolean
+     */
+    public static void delFolder(String folderPath) {
+        try {
+            delAllFile(folderPath);
+            String filePath = folderPath;
+            filePath = filePath.toString();
+            File myFilePath = new File(filePath);
+            myFilePath.delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * delete all file
+     *
+     * @param path String
+     * @return boolean
+     */
+    public static boolean delAllFile(String path) {
+        boolean flag = false;
+        File file = new File(path);
+        if (!file.exists()) {
+            return flag;
+        }
+        if (!file.isDirectory()) {
+            return flag;
+        }
+        String[] tempList = file.list();
+        File temp = null;
+        for (int i = 0; i < tempList.length; i++) {
+            if (path.endsWith(File.separator)) {
+                temp = new File(path + tempList[i]);
+            } else {
+                temp = new File(path + File.separator + tempList[i]);
+            }
+            if (temp.isFile()) {
+                temp.delete();
+            }
+            if (temp.isDirectory()) {
+                delAllFile(path + File.separator + tempList[i]);
+                delFolder(path + File.separator + tempList[i]);
+                flag = true;
+            }
+        }
+        return flag;
+    }
+
+    /**
+     * copy folder
+     *
+     * @param oldPath String
+     * @param newPath String
+     * @return boolean
+     */
+    public static void copyFolder(String oldPath, String newPath) {
+
+        try {
+            (new File(newPath)).mkdirs();
+            File a = new File(oldPath);
+            String[] file = a.list();
+            File temp = null;
+            for (int i = 0; i < file.length; i++) {
+                if (oldPath.endsWith(File.separator)) {
+                    temp = new File(oldPath + file[i]);
+                } else {
+                    temp = new File(oldPath + File.separator + file[i]);
+                }
+
+                if (temp.isFile()) {
+                    FileInputStream input = new FileInputStream(temp);
+                    FileOutputStream output = new FileOutputStream(newPath + File.separator +
+                            (temp.getName()).toString());
+                    byte[] b = new byte[1024 * 5];
+                    int len;
+                    while ((len = input.read(b)) != -1) {
+                        output.write(b, 0, len);
+                    }
+                    output.flush();
+                    output.close();
+                    input.close();
+                }
+                if (temp.isDirectory()) {
+                    copyFolder(oldPath + File.separator + file[i], newPath + File.separator + file[i]);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static void main(String[] args) {

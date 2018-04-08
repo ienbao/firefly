@@ -20,6 +20,7 @@ import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.*;
+import com.dmsoft.firefly.plugin.grr.service.GrrConfigService;
 import com.dmsoft.firefly.plugin.grr.utils.*;
 import com.dmsoft.firefly.plugin.grr.utils.charts.ChartUtils;
 import com.dmsoft.firefly.plugin.grr.utils.charts.LegendUtils;
@@ -45,9 +46,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
@@ -64,11 +63,12 @@ public class GrrResultController implements Initializable {
     private Set<String> appraisers = Sets.newLinkedHashSet();
     private GrrSummaryModel summaryModel = new GrrSummaryModel();
     private ItemResultModel itemResultModel = new ItemResultModel();
-    private GrrAnovaModel anovaModel = new GrrAnovaModel();
-    private GrrSourceModel sourceModel = new GrrSourceModel();
+    private GrrAnovaModel grrAnovaModel = new GrrAnovaModel();
+    private GrrSourceModel grrSourceModel = new GrrSourceModel();
     private GrrMainController grrMainController;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+    private GrrConfigService grrConfigService = RuntimeContext.getBean(GrrConfigService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
     /**
@@ -78,15 +78,15 @@ public class GrrResultController implements Initializable {
      */
     public void init(GrrMainController grrMainController) {
         this.grrMainController = grrMainController;
+        this.initData();
+        this.initComponentsRender();
+        this.initComponentEvents();
+        this.initPerformanceSelected();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initComponents();
-        this.initData();
-        this.initComponentsRender();
-        this.initComponentEvents();
-        this.initPerformanceSelected();
     }
 
     /**
@@ -630,36 +630,45 @@ public class GrrResultController implements Initializable {
     }
 
     private void setAnovaAndSourceTb(GrrAnovaAndSourceResultDto anovaAndSourceResultDto) {
+
+        anovaTb.getSortOrder().clear();
+        sourceTb.getSortOrder().clear();
+        anovaTb.sort();
+        sourceTb.sort();
+        grrAnovaModel.setData(anovaAndSourceResultDto.getGrrAnovaDtos());
+        grrSourceModel.initColumn(buildSourceTbColumn());
+        grrSourceModel.setData(anovaAndSourceResultDto.getGrrSourceDtos());
         int digNum = DigNumInstance.newInstance().getDigNum();
         String numberOfDc = digNum >= 0 ? DAPStringUtils.formatDouble(anovaAndSourceResultDto.getNumberOfDc(), digNum)
                 : String.valueOf(anovaAndSourceResultDto.getNumberOfDc());
-        anovaModel.setData(anovaAndSourceResultDto.getGrrAnovaDtos());
-        sourceModel.setData(anovaAndSourceResultDto.getGrrSourceDtos());
         categoryBtn.setText(DAPStringUtils.isBlankWithSpecialNumber(numberOfDc) ? "-" : numberOfDc);
     }
 
     private void removeSubResultData() {
         xBarAppraiserChart.clear();
-        componentChart.getData().setAll(FXCollections.observableArrayList());
-        partAppraiserChart.getData().setAll(FXCollections.observableArrayList());
-        rrByAppraiserChart.getData().setAll(FXCollections.observableArrayList());
         xBarAppraiserChart.removeAllChildren();
         rangeAppraiserChart.removeAllChildren();
-        rrbyPartChart.getData().setAll(FXCollections.observableArrayList());
+
         componentBp.getChildren().remove(componentBp.getLeft());
         partAppraiserBp.getChildren().remove(partAppraiserBp.getLeft());
         xBarAppraiserBp.getChildren().remove(xBarAppraiserBp.getLeft());
         rangeAppraiserBp.getChildren().remove(rangeAppraiserBp.getLeft());
         rrbyAppraiserBp.getChildren().remove(rrbyAppraiserBp.getLeft());
         rrbyPartBp.getChildren().remove(rrbyPartBp.getLeft());
-        itemResultModel.setRowKeyArray(FXCollections.observableArrayList());
-        itemResultModel.setHeaderArray(FXCollections.observableArrayList());
-        itemResultModel.clearData();
-        itemDetailTb.refresh();
-        anovaModel.setData(null);
-        sourceModel.setData(null);
+
+        componentChart.getData().setAll(FXCollections.observableArrayList());
+        partAppraiserChart.getData().setAll(FXCollections.observableArrayList());
+        rrByAppraiserChart.getData().setAll(FXCollections.observableArrayList());
+        rrbyPartChart.getData().setAll(FXCollections.observableArrayList());
+
+//        itemResultModel.setRowKeyArray(FXCollections.observableArrayList());
+//        itemResultModel.setHeaderArray(FXCollections.observableArrayList());
+        itemResultModel.clearTableData();
+        grrAnovaModel.clearTableData();
+        grrSourceModel.clearTableData();
         toleranceLbl.setText("");
         categoryBtn.setText("");
+        itemDetailTb.refresh();
     }
 
     private void initComponents() {
@@ -755,7 +764,6 @@ public class GrrResultController implements Initializable {
 
         //table自适应列宽
         itemDetailTb.setSkin(new ExpandableTableViewSkin(itemDetailTb));
-//        summaryTb.setSkin(new ExpandableTableViewSkin(summaryTb));
         componentChart.setAnimated(false);
         partAppraiserChart.setAnimated(false);
         xBarAppraiserChart.setAnimated(false);
@@ -780,8 +788,6 @@ public class GrrResultController implements Initializable {
         rangeAppraiserChart.setVerticalGridLinesVisible(false);
         rangeAppraiserChart.setHorizontalGridLinesVisible(false);
         ObservableList<TableColumn<String, ?>> summaryTbColumns = summaryTb.getColumns();
-//        ObservableList<TableColumn<GrrSingleAnova, ?>> anovaTbColumns = anovaTb.getColumns();
-//        ObservableList<TableColumn<GrrSingleSource, ?>> sourceTbColumns = sourceTb.getColumns();
         summaryTbColumns.get(0).prefWidthProperty().bind(summaryTb.widthProperty().divide(25));
         summaryTbColumns.get(1).prefWidthProperty().bind(summaryTb.widthProperty().divide(4));
         summaryTbColumns.get(2).prefWidthProperty().bind(summaryTb.widthProperty().divide(11));
@@ -876,11 +882,11 @@ public class GrrResultController implements Initializable {
         resultBasedCmb.getItems().addAll(UIConstant.GRR_RESULT_TYPE);
         resultBasedCmb.setValue(UIConstant.GRR_RESULT_TYPE[0]);
         summaryModel.initColumn(Lists.newArrayList(UIConstant.GRR_SUMMARY_TITLE));
+        grrAnovaModel.initColumn(Lists.newArrayList(UIConstant.GRR_ANOVA_TITLE));
+        grrSourceModel.initColumn(buildSourceTbColumn());
         TableViewWrapper.decorate(summaryTb, summaryModel);
-        anovaTb.setItems(anovaModel.getAnovas());
-        anovaTb.getColumns().addAll(buildAnovaTbColumn());
-        sourceTb.setItems(sourceModel.getSources());
-        sourceTb.getColumns().addAll(buildSourceTbColumn());
+        TableViewWrapper.decorate(anovaTb, grrAnovaModel);
+        TableViewWrapper.decorate(sourceTb, grrSourceModel);
         xBarAppraiserChartBtn.setListViewData(Lists.newArrayList(UIConstant.CHART_OPERATE_NAME));
         rangeAppraiserChartBtn.setListViewData(Lists.newArrayList(UIConstant.CHART_OPERATE_NAME));
     }
@@ -925,22 +931,13 @@ public class GrrResultController implements Initializable {
         rangeAppraiserChartBtn.setSelectedSets(Sets.newHashSet(UIConstant.CHART_OPERATE_NAME));
     }
 
-    private ObservableList buildAnovaTbColumn() {
-        ObservableList<TableColumn> tableColumns = FXCollections.observableArrayList();
-        for (String name : UIConstant.GRR_ANOVA_TITLE) {
-            TableColumn tableColumn = new TableColumn(name);
-            tableColumn.setCellValueFactory(new PropertyValueFactory(GrrSingleAnova.propertyKeys.get(name)));
-            tableColumns.add(tableColumn);
-        }
-        return tableColumns;
-    }
-
-    private ObservableList buildSourceTbColumn() {
-        ObservableList<TableColumn> tableColumns = FXCollections.observableArrayList();
+    private List<String> buildSourceTbColumn() {
+        List<String> tableColumns = Lists.newArrayList();
+        GrrConfigDto grrConfigDto = grrConfigService.findGrrConfig();
+        double coverage = grrConfigDto == null || grrConfigDto.getCoverage() == null ? 6.0 : grrConfigDto.getCoverage();
         for (String name : UIConstant.GRR_SOURCE_TITLE) {
-            TableColumn tableColumn = new TableColumn(name);
-            tableColumn.setCellValueFactory(new PropertyValueFactory(GrrSingleSource.propertyKeys.get(name)));
-            tableColumns.add(tableColumn);
+            name = name.equals(UIConstant.GRR_SOURCE_TITLE[2]) ? name + " " + coverage : name;
+            tableColumns.add(name);
         }
         return tableColumns;
     }

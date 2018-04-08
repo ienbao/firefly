@@ -20,11 +20,13 @@ public class ChartUtils {
     private double lastX;
     private double lastY;
     private double maxRate = 4;
-    private double currentRate = 1;
+    private double currentRate = DEFAULT_ORIGINAL_RATE;
     private double originalXUpper;
     private double originalXLower;
     private double originalYUpper;
     private double originalYLower;
+
+    public static final double DEFAULT_ORIGINAL_RATE = 1;
 
     /**
      * constructor
@@ -224,5 +226,9 @@ public class ChartUtils {
         dragging = false;
         xAxis.setAnimated(wasXAnimated);
         yAxis.setAnimated(wasYAnimated);
+    }
+
+    public void backToDefaultCurrentRate() {
+        this.currentRate = DEFAULT_ORIGINAL_RATE;
     }
 }

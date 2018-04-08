@@ -10,10 +10,18 @@ public class VerticalCutLine implements ILineData {
     private double value;
     private Color color = Color.rgb(237, 237, 237);
 
+    /**
+     * Construct a new VerticalCutLine
+     */
     public VerticalCutLine() {
 
     }
 
+    /**
+     * Construct a new VerticalCutLine with given value
+     *
+     * @param value line value
+     */
     public VerticalCutLine(double value) {
         this.value = value;
     }

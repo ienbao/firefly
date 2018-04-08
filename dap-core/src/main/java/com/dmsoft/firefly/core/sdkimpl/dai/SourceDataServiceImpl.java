@@ -261,20 +261,22 @@ public class SourceDataServiceImpl implements SourceDataService {
         Map<String, TestItemDto> result = Maps.newLinkedHashMap();
         try {
             logger.debug("Finding all test item by project names = {}...", StringUtils.join(projectNameList, ','));
-            for (String projectName : projectNameList) {
-                Project project = getMongoTemplate().findOne(new Query(where(PROJECT_NAME_FIELD).is(projectName)), Project.class, PROJECT_COLLECTION_NAME);
-                //project may be null, do not believe idea
-                if (project != null && project.getTestItems() != null) {
-                    for (TestItem testItem : project.getTestItems().values()) {
-                        if (!result.containsKey(testItem.getTestItemName())) {
-                            TestItemDto testItemDto = new TestItemDto();
-                            BeanUtils.copyProperties(testItem, testItemDto);
-                            result.put(testItem.getTestItemName(), testItemDto);
+            if (projectNameList != null && !projectNameList.isEmpty()) {
+                for (String projectName : projectNameList) {
+                    Project project = getMongoTemplate().findOne(new Query(where(PROJECT_NAME_FIELD).is(projectName)), Project.class, PROJECT_COLLECTION_NAME);
+                    //project may be null, do not believe idea
+                    if (project != null && project.getTestItems() != null) {
+                        for (TestItem testItem : project.getTestItems().values()) {
+                            if (!result.containsKey(testItem.getTestItemName())) {
+                                TestItemDto testItemDto = new TestItemDto();
+                                BeanUtils.copyProperties(testItem, testItemDto);
+                                result.put(testItem.getTestItemName(), testItemDto);
+                            }
                         }
                     }
                 }
+                logger.info("Find all test item by project names = {} done.", StringUtils.join(projectNameList, ','));
             }
-            logger.info("Find all test item by project names = {} done.", StringUtils.join(projectNameList, ','));
         } catch (Exception e) {
             logger.error("Find all test item by project names = {} error! Exception = {}", StringUtils.join(projectNameList, ','), e.getMessage());
             throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
