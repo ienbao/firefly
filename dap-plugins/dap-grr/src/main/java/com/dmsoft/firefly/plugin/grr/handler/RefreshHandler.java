@@ -30,15 +30,15 @@ public class RefreshHandler extends AbstractBasicJobHandler {
 
     @Override
     public void doJob(JobContext context) {
-        String itemName = "";
+        TestItemWithTypeDto testItemWithTypeDto = null;
         GrrAnalysisConfigDto analysisConfigDto = context.getParam(ParamKeys.SEARCH_GRR_ANALYSIS_CONFIG, GrrAnalysisConfigDto.class);
         GrrDataFrameDto grrDataFrameDto = context.getParam(ParamKeys.SEARCH_VIEW_DATA_FRAME, GrrDataFrameDto.class);
         SearchConditionDto searchConditionDto = context.getParam(ParamKeys.SEARCH_GRR_CONDITION_DTO, SearchConditionDto.class);
         List<TestItemWithTypeDto> itemWithTypeDtos = searchConditionDto.getSelectedTestItemDtos();
         List<String> includeRows = Lists.newLinkedList();
         grrDataFrameDto.getIncludeDatas().forEach(grrViewDataDto -> includeRows.add(grrViewDataDto.getRowKey()));
-        if (context.containsKey(ParamKeys.TEST_ITEM_NAME)) {
-            itemName = (String) context.get(ParamKeys.TEST_ITEM_NAME);
+        if (context.containsKey(ParamKeys.TEST_ITEM_WITH_TYPE_DTO)) {
+            testItemWithTypeDto = (TestItemWithTypeDto) context.get(ParamKeys.TEST_ITEM_WITH_TYPE_DTO);
         }
 
         GrrService grrService = RuntimeContext.getBean(GrrService.class);
@@ -47,9 +47,9 @@ public class RefreshHandler extends AbstractBasicJobHandler {
                 includeRows,
                 analysisConfigDto);
         context.put(ParamKeys.GRR_SUMMARY_DTO_LIST, summaryDtos);
-        if (DAPStringUtils.isNotBlank(itemName)) {
-            GrrDetailDto grrDetailDto = grrService.getDetailResult(grrDataFrameDto.getDataFrame().getDataColumn(itemName, null),
-                    itemWithTypeDtos.get(0),
+        if (testItemWithTypeDto != null) {
+            GrrDetailDto grrDetailDto = grrService.getDetailResult(grrDataFrameDto.getDataFrame().getDataColumn(testItemWithTypeDto.getTestItemName(), null),
+                    testItemWithTypeDto,
                     includeRows,
                     analysisConfigDto);
             context.put(ParamKeys.GRR_DETAIL_DTO, grrDetailDto);
