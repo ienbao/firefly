@@ -83,6 +83,12 @@ public class ViewDataController implements Initializable {
         this.selectedProjectNames = RuntimeContext.getBean(EnvService.class).findActivatedProjectName();
     }
 
+    public void clearViewData(){
+        unSelectedCheckBox.setSelected(false);
+        filterTf.getTextField().setText(null);
+        this.setViewData(null, null, null);
+    }
+
     /**
      * set view data table dataList
      *
