@@ -32,6 +32,8 @@ public class MenuFactory {
 
     public final static String ROOT_MENU = "root";
     public final static String PLATFORM_ID = "Platform";
+    private static boolean isChangeEnLanguage = true;
+    private static boolean isChangeZhLanguage = true;
 
     public static String getParentMenuId() {
         return PLATFORM_ID + "_" + ROOT_MENU;
@@ -157,7 +159,7 @@ public class MenuFactory {
             en.setSelected(true);
         }
         en.selectedProperty().addListener((ov, b1, b2) -> {
-           if (b2) {
+           if (b2 && isChangeZhLanguage) {
                WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Message", GuiFxmlAndLanguageUtils.getString("GLOBAL_CHANGE_LANGUAGE"));
                controller.addProcessMonitorListener(new WindowCustomListener() {
                     @Override
@@ -167,6 +169,7 @@ public class MenuFactory {
 
                     @Override
                     public boolean onCloseAndCancelCustomEvent() {
+                        isChangeEnLanguage = false;
                         zh.setSelected(true);
                         envService.setLanguageType(LanguageType.ZH);
                         return false;
@@ -175,6 +178,7 @@ public class MenuFactory {
                     @Override
                     public boolean onOkCustomEvent() {
                         Platform.runLater(() -> {
+                            isChangeEnLanguage = true;
                             envService.setLanguageType(LanguageType.EN);
                             initMenu();
                             appController.resetMenu();
@@ -188,7 +192,7 @@ public class MenuFactory {
         });
 
         zh.selectedProperty().addListener((ov, b1, b2) -> {
-            if (b2) {
+            if (b2 && isChangeEnLanguage) {
                 WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Message", GuiFxmlAndLanguageUtils.getString("GLOBAL_CHANGE_LANGUAGE"));
                 controller.addProcessMonitorListener(new WindowCustomListener() {
                     @Override
@@ -198,6 +202,7 @@ public class MenuFactory {
 
                     @Override
                     public boolean onCloseAndCancelCustomEvent() {
+                        isChangeZhLanguage = false;
                         en.setSelected(true);
                         envService.setLanguageType(LanguageType.EN);
                         return false;
@@ -206,6 +211,7 @@ public class MenuFactory {
                     @Override
                     public boolean onOkCustomEvent() {
                         Platform.runLater(() -> {
+                            isChangeZhLanguage = true;
                             envService.setLanguageType(LanguageType.ZH);
                             initMenu();
                             appController.resetMenu();
