@@ -106,8 +106,6 @@ public class DataSourceSettingController {
                     i++;
                 }
             }
-            System.out.println("============" + rowDataDtos.size() + "=======");
-            System.out.println("============" + falseSet.size());
             sourceDataService.changeRowDataInUsed(trueSet, true);
             sourceDataService.changeRowDataInUsed(falseSet, false);
             StageMap.closeStage("sourceSetting");
@@ -172,6 +170,7 @@ public class DataSourceSettingController {
     private void initTableData() {
         projectNames = envService.findActivatedProjectName();
         testItemWithTypeDtos = envService.findTestItems();
+
         SearchDataFrame dataFrame = getDataFrame(testItemWithTypeDtos);
         if (testItemWithTypeDtos != null && !testItemWithTypeDtos.isEmpty()) {
             for (TestItemWithTypeDto dto : testItemWithTypeDtos) {
@@ -182,7 +181,9 @@ public class DataSourceSettingController {
         rowDataDtoList = this.addRowData(testItems);
 
         itemDataTableModel = new ItemDataTableModel(dataFrame, rowDataDtoList);
+
         TableViewWrapper.decorate(itemDataTable, itemDataTableModel);
+
     }
 
     /**
@@ -335,11 +336,12 @@ public class DataSourceSettingController {
 
     /**
      * get Data Frame
+     *
      * @param testItemWithTypeDtoList
      * @return dataFrame
      */
 
-    private SearchDataFrame getDataFrame(List<TestItemWithTypeDto> testItemWithTypeDtoList){
+    private SearchDataFrame getDataFrame(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
 
         JobManager jobManager = RuntimeContext.getBean(JobManager.class);
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
