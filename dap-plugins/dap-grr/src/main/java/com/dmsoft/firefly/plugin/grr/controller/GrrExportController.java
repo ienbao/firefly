@@ -19,7 +19,6 @@ import com.dmsoft.firefly.plugin.grr.service.GrrExportService;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.utils.*;
-import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
@@ -447,6 +446,11 @@ public class GrrExportController {
 
     }
 
+    /**
+     * method to init grr exprot left config
+     *
+     * @param grrLeftConfigDto grr left config dto
+     */
     public void initGrrExportLeftConfig(GrrLeftConfigDto grrLeftConfigDto) {
         if (grrLeftConfigDto == null) {
             return;
