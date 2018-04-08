@@ -30,7 +30,7 @@
         </fileSet>
 
         <fileSet>
-            <directory>../dap-plugins/distribution/target/distribution-1.0.0-bin</directory>
+            <directory>../dap-plugins/distribution/target/dap-plugin-bin</directory>
             <outputDirectory></outputDirectory>
         </fileSet>
     </fileSets>
