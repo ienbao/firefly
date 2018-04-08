@@ -365,6 +365,9 @@ public class ViewDataController implements Initializable {
     }
 
     private void filterHeaderBtn() {
+        if(model == null){
+            return;
+        }
         for (String testItem : model.getHeaderArray()) {
             if (columnFilterSetting.get(testItem) != null) {
                 FilterSettingAndGraphic fsg = columnFilterSetting.get(testItem);

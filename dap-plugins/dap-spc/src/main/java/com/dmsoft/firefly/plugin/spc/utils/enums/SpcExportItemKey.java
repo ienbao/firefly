@@ -27,8 +27,8 @@ public enum SpcExportItemKey {
     RANGE("Range"),
     Max("Max"),
     Min("Min"),
-    LCL("AVG-3SD"),
-    UCL("AVG+3SD"),
+    LCL("μ-3σ"),
+    UCL("μ+3σ"),
     KURTOSIS("Kurtosis"),
     SKEWNESS("Skewness"),
 
