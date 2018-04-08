@@ -8,6 +8,7 @@ import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.handler.importcsv.*;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.model.ItemDataTableModel;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
@@ -18,6 +19,11 @@ import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
+import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.dmsoft.firefly.sdk.job.core.JobContext;
+import com.dmsoft.firefly.sdk.job.core.JobFactory;
+import com.dmsoft.firefly.sdk.job.core.JobManager;
+import com.dmsoft.firefly.sdk.job.core.JobPipeline;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.google.common.collect.Lists;
@@ -52,6 +58,7 @@ public class DataSourceSettingController {
     private List<String> selectTestItemName = Lists.newArrayList();
     private List<String> projectNames = new ArrayList<>();
     private List<TestItemWithTypeDto> testItemWithTypeDtos = Lists.newArrayList();
+    private static final Double D100 = 100.0;
 
     @FXML
     private void initialize() {
@@ -163,21 +170,18 @@ public class DataSourceSettingController {
      * init Table Data
      */
     private void initTableData() {
-        List<RowDataDto> rowDataDtoList = new ArrayList<>();
         projectNames = envService.findActivatedProjectName();
         testItemWithTypeDtos = envService.findTestItems();
+        SearchDataFrame dataFrame = getDataFrame(testItemWithTypeDtos);
         if (testItemWithTypeDtos != null && !testItemWithTypeDtos.isEmpty()) {
             for (TestItemWithTypeDto dto : testItemWithTypeDtos) {
                 testItems.add(dto.getTestItemName());
             }
         }
-        if (projectNames != null && !projectNames.isEmpty()) {
-            List<RowDataDto> rowDataDtos = sourceDataService.findTestData(projectNames, testItems, null);
-            rowDataDtoList = this.addRowData(testItems);
-            rowDataDtoList.addAll(rowDataDtos);
-        }
+        List<RowDataDto> rowDataDtoList = new ArrayList<>();
+        rowDataDtoList = this.addRowData(testItems);
 
-        itemDataTableModel = new ItemDataTableModel(testItems, rowDataDtoList);
+        itemDataTableModel = new ItemDataTableModel(dataFrame, rowDataDtoList);
         TableViewWrapper.decorate(itemDataTable, itemDataTableModel);
     }
 
@@ -223,8 +227,20 @@ public class DataSourceSettingController {
         itemDataTableModel.updateTestItemColumn(selectTestItemName);
         itemDataTableModel.setTableView(itemDataTable);
 
-        List<RowDataDto> rowDataDtos = sourceDataService.findTestData(projectNames, selectTestItemName, true);
+        List<TestItemWithTypeDto> testItemWithTypeDtoList = new LinkedList<>();
+        if (selectTestItemName != null && !selectTestItemName.isEmpty()) {
+            for (int i = 0; i < selectTestItemName.size(); i++) {
+                TestItemWithTypeDto testItemWithTypeDto = new TestItemWithTypeDto();
+                testItemWithTypeDto.setTestItemName(selectTestItemName.get(i));
+                testItemWithTypeDtoList.add(testItemWithTypeDto);
+
+            }
+        }
+
+        SearchDataFrame dataFrame = getDataFrame(testItemWithTypeDtoList);
+        List<RowDataDto> rowDataDtos = dataFrame.getAllDataRow();
         List<RowDataDto> rowDataDtoList = this.addRowData(testItems);
+
         if (itemDataTableModel.getRowDataDtoList() != null && !itemDataTableModel.getRowDataDtoList().isEmpty()) {
             for (int i = 0; i < itemDataTableModel.getRowDataDtoList().size(); i++) {
                 for (RowDataDto rowDataDto : rowDataDtos) {
@@ -246,38 +262,27 @@ public class DataSourceSettingController {
         if (!searchTab.verifySearchTextArea()) {
             return;
         }
+        List<TestItemWithTypeDto> testItemWithTypeDtoList = new LinkedList<>();
         List<String> columKey = new LinkedList<>();
         if (itemDataTableModel.getHeaderArray() != null && !itemDataTableModel.getHeaderArray().isEmpty()) {
             for (int i = 0; i < itemDataTableModel.getHeaderArray().size(); i++) {
                 if (i != 0) {
                     columKey.add(itemDataTableModel.getHeaderArray().get(i));
+
+                    TestItemWithTypeDto testItemWithTypeDto = new TestItemWithTypeDto();
+                    testItemWithTypeDto.setTestItemName(itemDataTableModel.getHeaderArray().get(i));
+                    testItemWithTypeDtoList.add(testItemWithTypeDto);
                 }
             }
         }
 
-
-        List<RowDataDto> rowDataDtoList = new LinkedList<>();
-        List<RowDataDto> rowDataDtos = sourceDataService.findTestData(projectNames, columKey, true);
-        rowDataDtoList.addAll(rowDataDtos);
-
-        List<RowDataDto> searchResultDtos = this.addRowData(columKey);
-        Boolean flag = false;
+        SearchDataFrame dataFrame = getDataFrame(testItemWithTypeDtoList);
         List<String> searchCondition = searchTab.getSearch();
-        TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
-        List<String> timeKeys = templateSettingDto.getTimePatternDto().getTimeKeys();
-        String timePattern = templateSettingDto.getTimePatternDto().getPattern();
-        FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
+        List<RowDataDto> rowDataDtoList = new LinkedList<>();
         if (!searchCondition.isEmpty()) {
-            for (String condition : searchCondition) {
-                if (!rowDataDtoList.isEmpty()) {
-                    for (RowDataDto rowDataDto : rowDataDtoList) {
-                        flag = filterUtils.filterData(condition, rowDataDto.getData());
-                        if (flag) {
-                            searchResultDtos.add(rowDataDto);
-                        }
-                    }
-                }
-            }
+            rowDataDtoList = dataFrame.getDataRowArray(searchCondition.get(0));
+            List<RowDataDto> searchResultDtos = this.addRowData(columKey);
+            searchResultDtos.addAll(rowDataDtoList);
             itemDataTableModel.updateRowDataList(searchResultDtos);
         }
     }
@@ -326,6 +331,29 @@ public class DataSourceSettingController {
         rowDataDtoList.add(lslDataDto);
         rowDataDtoList.add(unitDtaDto);
         return rowDataDtoList;
+    }
+
+    /**
+     * get Data Frame
+     * @param testItemWithTypeDtoList
+     * @return dataFrame
+     */
+
+    private SearchDataFrame getDataFrame(List<TestItemWithTypeDto> testItemWithTypeDtoList){
+
+        JobManager jobManager = RuntimeContext.getBean(JobManager.class);
+        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        context.put(ParamKeys.PROJECT_NAME_LIST, projectNames);
+        context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobFactory.class).createJobPipeLine()
+                .addLast(new FindTestDataHandler())
+                .addLast(new DataFrameHandler().setWeight(D100));
+
+        JobContext jobContext = jobManager.fireJobSyn(jobPipeline, context);
+        SearchDataFrame dataFrame = jobContext.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
+        return dataFrame;
+
     }
 
 }
