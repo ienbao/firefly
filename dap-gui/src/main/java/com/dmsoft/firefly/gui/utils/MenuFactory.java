@@ -89,6 +89,7 @@ public class MenuFactory {
                         envService.setActivatedProjectName(null);
                         envService.setTestItems(null);
                         envService.setLanguageType(LanguageType.EN);
+                        Runtime.getRuntime().gc();
                         initMenu();
                         appController.resetMenu();
                         mainController.resetMain();
