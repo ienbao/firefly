@@ -92,6 +92,7 @@ public class ChartPanel<T extends XYChart> extends VBox {
         if (chartUtils != null) {
             ValueAxis xAxis = (ValueAxis) chart.getXAxis();
             ValueAxis yAxis = (ValueAxis) chart.getYAxis();
+            chartUtils.backToDefaultCurrentRate();
             chartUtils.setOriginalXUpper(xAxis.getUpperBound());
             chartUtils.setOriginalXLower(xAxis.getLowerBound());
             chartUtils.setOriginalYUpper(yAxis.getUpperBound());
