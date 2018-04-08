@@ -62,7 +62,7 @@ public class GrrSummaryModel implements TableModel {
     }
 
     /**
-     * Set summary model data with given summaryDtos and selectedRowKey
+     * Set summary model data with given summaryDtos and selectedRowKey.
      *
      * @param summaryDtos    summary model data source
      * @param selectedRowKey current selected row key

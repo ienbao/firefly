@@ -13,7 +13,9 @@ import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
@@ -32,6 +34,11 @@ public class ItemResultModel implements TableModel {
     private ObservableList<String> headerArray;
     private ObservableList<String> rowKeyArray;
     private int digNum = -1;
+
+    public ItemResultModel() {
+        rowKeyArray = FXCollections.observableArrayList();
+        headerArray = FXCollections.observableArrayList();
+    }
 
     /**
      * Set item result model data
@@ -52,7 +59,13 @@ public class ItemResultModel implements TableModel {
         this.itemResultDto = itemResultDto;
     }
 
-    public void clearData() {
+    public void clearTableData() {
+        if (rowKeyArray != null) {
+            this.rowKeyArray.clear();
+        }
+        if (headerArray != null) {
+            this.headerArray.clear();
+        }
         this.dataFrame = null;
     }
 
