@@ -109,7 +109,7 @@ public class GuiFxmlAndLanguageUtils {
         try {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/legal_notice.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_LEGAL, GuiFxmlAndLanguageUtils.getString(ResourceMassages.MENU_LEGAL_NOTICE), root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_LEGAL, GuiFxmlAndLanguageUtils.getString(ResourceMassages.MENU_LEGAL_NOTICE), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
             stage.toFront();
             stage.show();
@@ -139,11 +139,24 @@ public class GuiFxmlAndLanguageUtils {
     public static void buildTemplateDia() {
         Pane root = null;
         try {
-            //root = FXMLLoader.load(GuiApplication.class.getClassLoader().getResource("view/template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/template.fxml");
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("template", GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
+            stage.toFront();
+            stage.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
+    public static void buildSelectDataSource(){
+        Pane root = null;
+        try {
+            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source.fxml");
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("dataSource", GuiFxmlAndLanguageUtils.getString(ResourceMassages.DataSource), root, getResource("css/platform_app.css").toExternalForm());
             stage.toFront();
             stage.show();
         } catch (Exception ex) {

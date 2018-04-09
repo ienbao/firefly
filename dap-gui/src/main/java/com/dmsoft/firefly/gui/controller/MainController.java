@@ -241,7 +241,10 @@ public class MainController {
         if (isLogin()) {
             if (activeProjectNames != null && !activeProjectNames.isEmpty()) {
                 dataSourceBtn.setText(activeProjectNames.size() +" "+ GuiFxmlAndLanguageUtils.getString("STATE_BAR_FILE_SELECTED"));
+            } else {
+                GuiFxmlAndLanguageUtils.buildSelectDataSource();
             }
+
             if (DAPStringUtils.isNotBlank(activeTemplateName)) {
                 templateBtn.setText(activeTemplateName);
             }
