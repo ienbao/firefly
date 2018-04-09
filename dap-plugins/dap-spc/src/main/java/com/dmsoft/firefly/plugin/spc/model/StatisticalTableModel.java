@@ -385,6 +385,11 @@ public class StatisticalTableModel implements TableModel {
 
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
+        if(!this.isEditableTextField(column)){
+            tableCell.setEditable(false);
+        } else {
+            tableCell.setEditable(true);
+        }
         tableCell.setStyle(null);
         tableCell.getStyleClass().remove("error");
         if (DAPStringUtils.isBlank(column)) {
