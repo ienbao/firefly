@@ -81,7 +81,6 @@ public class TableViewWrapper {
         SortedList<String> list = model.getRowKeyArray() instanceof SortedList ? (SortedList) model.getRowKeyArray() : new SortedList<>(model.getRowKeyArray());
         list.comparatorProperty().bind(tableView.comparatorProperty());
         tableView.setItems(list);
-
         if (model.getMenuEventList() != null && !model.getMenuEventList().isEmpty()) {
             ContextMenu menu = new ContextMenu();
             for (TableMenuRowEvent event : model.getMenuEventList()) {

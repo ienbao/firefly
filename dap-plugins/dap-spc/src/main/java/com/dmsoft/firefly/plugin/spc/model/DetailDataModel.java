@@ -148,7 +148,7 @@ public class DetailDataModel implements TableModel {
     public void filterText(String s) {
         this.rowKeyArray.clear();
         for (String rowKey : originalRowKeys) {
-            if (rowKey.toLowerCase().contains(s) || rowDataDto.getData().get(rowKey).toLowerCase().contains(s)) {
+            if (rowKey.toLowerCase().contains(s.toLowerCase()) || rowDataDto.getData().get(rowKey).toLowerCase().contains(s.toLowerCase())) {
                 this.rowKeyArray.add(rowKey);
             }
         }

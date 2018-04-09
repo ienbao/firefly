@@ -261,20 +261,22 @@ public class SpcSettingController implements Initializable {
      * add custom alarm data
      *
      * @param testItemList testItem list
-     * @param testItem     test Item
+     * @param customItemList     customItemList
      */
-    public void addCustomAlarmSettingData(List<String> testItemList, String testItem) {
-        if (testItem != null) {
+    public void addCustomAlarmSettingData(List<String> testItemList, List<String> customItemList) {
+        if (customItemList != null && customItemList.size() != 0) {
             List<CustomAlarmTestItemRowData> list = Lists.newArrayList();
             list.addAll(testItemRowDataObservableList);
-            for (CustomAlarmTestItemRowData customAlarmTestItemRowData : list) {
-                if (customAlarmTestItemRowData.getName().equals(testItem)) {
-                    testItemRowDataObservableList.remove(customAlarmTestItemRowData);
-                    break;
+            for (String customTtem : customItemList) {
+                for (CustomAlarmTestItemRowData customAlarmTestItemRowData : list) {
+                    if (customTtem.equals(customAlarmTestItemRowData.getName())) {
+                        testItemRowDataObservableList.remove(customAlarmTestItemRowData);
+                        break;
+                    }
                 }
+                CustomAlarmTestItemRowData newRowData = new CustomAlarmTestItemRowData(customTtem, this.initEmptyCustomDto());
+                testItemRowDataObservableList.add(0, newRowData);
             }
-            CustomAlarmTestItemRowData newRowData = new CustomAlarmTestItemRowData(testItem, this.initEmptyCustomDto());
-            testItemRowDataObservableList.add(0, newRowData);
         }
 
         if (testItemList != null) {
