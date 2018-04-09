@@ -9,6 +9,9 @@ import com.sun.javafx.scene.control.skin.ColorPickerSkin;
 import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
+
+import java.util.Locale;
 
 /**
  * Created by Ethan.Yang on 2018/3/6.
@@ -62,6 +65,17 @@ public class ColorPickerMenuSkin extends ColorPickerSkin {
             if (popupContent != null) {
 //                popupContent.updateSelection(getSkinnable().getValue());
             }
+        }
+    }
+
+    public static String formatHexString(Color c) {
+        if (c != null) {
+            return String.format((Locale) null, "#%02x%02x%02x",
+                    Math.round(c.getRed() * 255),
+                    Math.round(c.getGreen() * 255),
+                    Math.round(c.getBlue() * 255));
+        } else {
+            return null;
         }
     }
 

@@ -4,10 +4,6 @@
 package com.dmsoft.firefly.gui.components.colorpicker;
 
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
-import com.sun.javafx.scene.control.skin.ColorPalette;
-import com.sun.javafx.scene.control.skin.ColorPickerSkin;
-import com.sun.javafx.scene.control.skin.CustomColorDialog;
-import com.sun.javafx.scene.control.skin.Utils;
 import com.sun.javafx.scene.traversal.Algorithm;
 import com.sun.javafx.scene.traversal.Direction;
 import com.sun.javafx.scene.traversal.ParentTraversalEngine;
@@ -48,7 +44,7 @@ public class DColorPalette extends Region {
     // package protected for testing purposes
     ColorPickerGrid colorPickerGrid;
     final Hyperlink customColorLink = new Hyperlink(FxmlAndLanguageUtils.getString("CUSTOM_COLOR"));
-    CustomColorDialog customColorDialog = null;
+    DCustomColorDialog customColorDialog = null;
 
     private ColorPicker colorPicker;
     private final GridPane customColorGrid = new GridPane();
@@ -81,10 +77,10 @@ public class DColorPalette extends Region {
         customColorLink.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent t) {
                 if (customColorDialog == null) {
-                    customColorDialog = new CustomColorDialog(popupControl);
-//                    customColorDialog.customColorProperty().addListener((ov, t1, t2) -> {
-//                        colorPicker.setValue(customColorDialog.customColorProperty().get());
-//                    });
+                    customColorDialog = new DCustomColorDialog(popupControl);
+                    customColorDialog.customColorProperty().addListener((ov, t1, t2) -> {
+                        colorPicker.setValue(customColorDialog.customColorProperty().get());
+                    });
                     customColorDialog.setOnSave(() -> {
                         Color customColor = customColorDialog.getCustomColor();
                         buildCustomColors();
