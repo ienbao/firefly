@@ -127,7 +127,7 @@ public class GrrResultController implements Initializable {
      * Change grr result when view data change submit
      */
     public void changeGrrResult() {
-        submitGrrResult(grrMainController.getSearchConditionDto().getSelectedTestItemDtos().get(0).getTestItemName(), true);
+        submitGrrResult(grrMainController.getSearchConditionDto().getSelectedTestItemDtos().get(0), true);
     }
 
     /**
@@ -183,8 +183,10 @@ public class GrrResultController implements Initializable {
             }
         }
         boolean hasSelectedItem = false;
+        TestItemWithTypeDto testItemWithTypeDto = null;
         for (int i = 0; i < changedTestItemWithTypeDtos.size(); i++) {
             if (selectedItem.equals(changedTestItemWithTypeDtos.get(i).getTestItemName())) {
+                testItemWithTypeDto = changedTestItemWithTypeDtos.get(i);
                 hasSelectedItem = true;
                 break;
             }
@@ -192,17 +194,17 @@ public class GrrResultController implements Initializable {
         //clear summary edit data
         summaryModel.clearEditData();
         summaryTb.refresh();
-        submitGrrResult(selectedItem, hasSelectedItem);
+        submitGrrResult(testItemWithTypeDto, hasSelectedItem);
     }
 
     @SuppressWarnings("unchecked")
-    private void submitGrrResult(String selectedItem, Boolean analyseSubResult) {
+    private void submitGrrResult(TestItemWithTypeDto testItemWithTypeDto, Boolean analyseSubResult) {
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         context.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, grrMainController.getSearchConditionDto());
         context.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrMainController.getGrrDataFrame());
-        if (DAPStringUtils.isNotBlank(selectedItem) && analyseSubResult) {
-            context.put(ParamKeys.TEST_ITEM_NAME, selectedItem);
+        if (testItemWithTypeDto != null && analyseSubResult) {
+            context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO, testItemWithTypeDto);
         }
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
         windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
@@ -214,16 +216,18 @@ public class GrrResultController implements Initializable {
                 if (grrSummaryDtoList == null || grrSummaryDtoList.isEmpty()) {
                     return;
                 }
-                String itemName = context.containsKey(ParamKeys.GRR_DETAIL_DTO) ? (String) context.get(ParamKeys.TEST_ITEM_NAME) : summaryModel.getSelectedItemName();
+                String itemName = context.containsKey(ParamKeys.GRR_DETAIL_DTO)
+                        ? ((TestItemWithTypeDto) context.get(ParamKeys.TEST_ITEM_WITH_TYPE_DTO)).getTestItemName()
+                        : summaryModel.getSelectedItemName();
                 summaryModel.setAnalysisType(resultBasedCmb.getSelectionModel().getSelectedIndex());
                 summaryModel.setData(grrSummaryDtoList, itemName);
                 summaryTb.refresh();
                 if (context.containsKey(ParamKeys.GRR_DETAIL_DTO)) {
                     removeSubResultData();
-                    setToleranceValue(summaryModel.getToleranceCellValue(selectedItem));
+                    setToleranceValue(summaryModel.getToleranceCellValue(itemName));
                     GrrDetailDto grrDetailDto = context.getParam(ParamKeys.GRR_DETAIL_DTO, GrrDetailDto.class);
                     if (grrDetailDto != null) {
-                        setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), selectedItem);
+                        setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), itemName);
                         setAnalysisItemResultData(grrDetailDto);
                     } else {
                         RuntimeContext.getBean(IMessageManager.class).showWarnMsg(

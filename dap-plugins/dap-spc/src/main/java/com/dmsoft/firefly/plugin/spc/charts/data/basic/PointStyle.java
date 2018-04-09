@@ -9,6 +9,7 @@ public class PointStyle {
 
     private String style;
     private String tooltipContent;
+    private Boolean abnormal;
     private Set<String> classStyle;
 
     public String getStyle() {
@@ -33,5 +34,13 @@ public class PointStyle {
 
     public void setTooltipContent(String tooltipContent) {
         this.tooltipContent = tooltipContent;
+    }
+
+    public Boolean getAbnormal() {
+        return abnormal;
+    }
+
+    public void setAbnormal(Boolean abnormal) {
+        this.abnormal = abnormal;
     }
 }

@@ -6,6 +6,7 @@ package com.dmsoft.firefly.gui.model;
 import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
+import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
 import javafx.beans.property.ObjectProperty;
@@ -36,13 +37,19 @@ public class ItemDataTableModel implements TableModel {
     /**
      * constructor
      *
-     * @param headers     testItem
-     * @param rowDataDtos rowDataDtos
+     * @param dataFrame dataFrame
      */
-    public ItemDataTableModel(List<String> headers, List<RowDataDto> rowDataDtos) {
+    public ItemDataTableModel(SearchDataFrame dataFrame, List<RowDataDto> rowDataDtos) {
         rowKey.clear();
         columnKey.clear();
         valueMap = Maps.newHashMap();
+        List<String> headers = new LinkedList<>();
+        if (dataFrame != null) {
+            headers = dataFrame.getAllTestItemName();
+        }
+
+        List<RowDataDto> rowDataDtoListContext = dataFrame.getAllDataRow();
+        rowDataDtos.addAll(rowDataDtoListContext);
         if (headers != null && !headers.isEmpty()) {
             columnKey.add(0, "");
             if (headers.size() > 10) {
