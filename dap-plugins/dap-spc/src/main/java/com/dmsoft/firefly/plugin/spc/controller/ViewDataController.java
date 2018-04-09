@@ -3,6 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.firefly.gui.components.skin.ExpandableTableViewSkin;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -26,11 +27,14 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -53,6 +57,8 @@ public class ViewDataController implements Initializable {
     private TextFieldFilter filterTf;
     @FXML
     private TableView<String> viewDataTable;
+    @FXML
+    private VBox vbox;
     private SpcMainController spcMainController;
 
     private List<ChooseTableRowData> chooseTableRowDataList = Lists.newArrayList();
@@ -83,7 +89,7 @@ public class ViewDataController implements Initializable {
         this.selectedProjectNames = RuntimeContext.getBean(EnvService.class).findActivatedProjectName();
     }
 
-    public void clearViewData(){
+    public void clearViewData() {
         unSelectedCheckBox.setSelected(false);
         filterTf.getTextField().setText(null);
         this.setViewData(null, null, null);
@@ -125,6 +131,13 @@ public class ViewDataController implements Initializable {
             this.model = null;
             return;
         }
+        vbox.getChildren().remove(viewDataTable);
+        this.viewDataTable = new TableView<>();
+        this.viewDataTable.setSkin(new ExpandableTableViewSkin(this.viewDataTable));
+        this.viewDataTable.setStyle("-fx-border-width: 1 0 0 0");
+        VBox.setVgrow(viewDataTable, Priority.ALWAYS);
+        this.vbox.setAlignment(Pos.CENTER);
+        this.vbox.getChildren().add(viewDataTable);
         this.model = new ViewDataDFModel(dataFrame, selectedRowKey);
         this.model.setStatisticalSearchConditionDtoList(statisticalSearchConditionDtoList);
         this.model.setMainController(spcMainController);
@@ -365,7 +378,7 @@ public class ViewDataController implements Initializable {
     }
 
     private void filterHeaderBtn() {
-        if(model == null){
+        if (model == null) {
             return;
         }
         for (String testItem : model.getHeaderArray()) {

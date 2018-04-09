@@ -13,7 +13,7 @@
             <tabs>
                 <Tab text="%VIEW_DATA">
                     <content>
-                        <VBox minHeight="0.0" minWidth="0.0">
+                        <VBox fx:id="vbox" minHeight="0.0" minWidth="0.0">
                             <GridPane AnchorPane.bottomAnchor="242.0" AnchorPane.rightAnchor="0.0"
                                       AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
                                 <columnConstraints>
