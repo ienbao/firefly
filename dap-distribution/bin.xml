@@ -48,6 +48,14 @@
             </includes>
         </fileSet>
 
+        <fileSet>
+            <directory>../dap-gui/src/main/resources/default</directory>
+            <outputDirectory>default</outputDirectory>
+            <includes>
+                <include>*.json</include>
+            </includes>
+        </fileSet>
+
         <!--<fileSet>-->
             <!--<directory>${project.basedir}/src/main/resources/images</directory>-->
             <!--<outputDirectory>images</outputDirectory>-->

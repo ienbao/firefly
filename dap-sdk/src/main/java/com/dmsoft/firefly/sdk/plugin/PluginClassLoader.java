@@ -6,7 +6,7 @@ package com.dmsoft.firefly.sdk.plugin;
 
 
 import com.dmsoft.firefly.sdk.utils.ArrayUtils;
-import com.dmsoft.firefly.sdk.utils.FilePathUtils;
+import com.dmsoft.firefly.sdk.utils.FileUtils;
 
 import java.io.File;
 import java.net.URL;
@@ -66,7 +66,7 @@ public class PluginClassLoader extends URLClassLoader {
      * @return array of urls
      */
     public static URL[] parseToURL(PluginInfo pluginInfo) {
-        String libPath = FilePathUtils.buildFilePath(pluginInfo.getFolderPath(), PluginConstants.FOLDER_NAME_LIB);
+        String libPath = FileUtils.buildFilePath(pluginInfo.getFolderPath(), PluginConstants.FOLDER_NAME_LIB);
         List<URL> result = new ArrayList<>();
         File file = new File(libPath);
         File[] files = file.listFiles();

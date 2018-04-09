@@ -9,6 +9,7 @@ import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.dmsoft.firefly.sdk.utils.FileUtils;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -158,7 +159,7 @@ public class UserPreferenceServiceImpl implements UserPreferenceService {
 
     @Override
     public void resetPreference() {
-        JsonFileUtil.delFolder(parentPath);
-        JsonFileUtil.copyFolder(defaultParentPath, parentPath);
+        FileUtils.delFolder(parentPath);
+        FileUtils.copyFolder(defaultParentPath, parentPath);
     }
 }

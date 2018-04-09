@@ -22,6 +22,7 @@ import com.dmsoft.firefly.sdk.plugin.apis.IConfig;
 import com.dmsoft.firefly.sdk.plugin.apis.annotation.Config;
 import com.dmsoft.firefly.sdk.plugin.apis.annotation.ExcludeMethod;
 import com.dmsoft.firefly.sdk.utils.DAPDoubleUtils;
+import com.dmsoft.firefly.sdk.utils.FileUtils;
 import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -301,7 +302,10 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
 
     @Override
     public void restoreConfig() {
-        //TODO
+        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.SpcPlugin").getFolderPath() + File.separator + "config";
+        String defaultParentPath = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.SpcPlugin").getFolderPath() + File.separator + "default";
+        FileUtils.delFolder(path);
+        FileUtils.copyFolder(defaultParentPath, path);
     }
 
     private String getAbilityAlarmLevel(String name, Double value, Map<String, Double[]> abilityAlarmRule) {

@@ -51,8 +51,8 @@ public class LegalNoticeController {
             if (!userService.findLegal()) {
                 userService.updateLegal(acceptCkb.isSelected());
                 StageMap.getStage(GuiConst.PLARTFORM_STAGE_LEGAL).close();
-                StageMap.showStage(GuiConst.PLARTFORM_STAGE_MAIN);
-                Stage stage = StageMap.getStage(GuiConst.PLARTFORM_STAGE_MAIN);
+                Stage stage = StageMap.getPrimaryStage(GuiConst.PLARTFORM_STAGE_MAIN);
+                stage.show();
                 if (stage.getScene().getRoot() instanceof WindowPane) {
                     WindowPane windowPane = (WindowPane) stage.getScene().getRoot();
                     windowPane.getController().maximizePropertyProperty().set(true);
