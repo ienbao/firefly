@@ -11,6 +11,9 @@ import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
+import com.dmsoft.firefly.sdk.job.core.JobContext;
+import com.dmsoft.firefly.sdk.job.core.JobEvent;
+import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mongodb.MongoNamespace;
@@ -365,6 +368,7 @@ public class SourceDataServiceImpl implements SourceDataService {
                     query.fields().include(DATA_FIELD + "." + testItemName);
                 }
             }
+            int len = projectNameList.size(), i = 0;
             for (String projectName : projectNameList) {
                 logger.debug("Finding Test Data for project name = {}...", projectName);
                 List<RowData> rowDataList = getMongoTemplate().find(query, RowData.class, projectName);
@@ -374,6 +378,8 @@ public class SourceDataServiceImpl implements SourceDataService {
                     rowDataDtoList.add(rowDataDto);
                 }
                 logger.info("Find Test Data for project name = {} done.", projectName);
+                i++;
+                pushProgress((int) ((i + 0.0) / len * 100));
             }
             logger.info("Find Test Data done.");
         } catch (Exception e) {
@@ -396,7 +402,6 @@ public class SourceDataServiceImpl implements SourceDataService {
                 List<RowData> rowDataList = getMongoTemplate().find(query, RowData.class, projectName);
                 for (RowData rowData : rowDataList) {
                     result.put(rowData.getRowKey(), rowData.getData().get(testItemName));
-//                    result.putAll(rowData.getData());
                 }
                 logger.info("Find Test Data for project name = {} done.", projectName);
             }
@@ -456,6 +461,11 @@ public class SourceDataServiceImpl implements SourceDataService {
             logger.error("Delete project error! Exception = {}", e.getMessage());
             throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
         }
+    }
+
+    private void pushProgress(int progress) {
+        JobContext context = RuntimeContext.getBean(JobManager.class).findJobContext(Thread.currentThread());
+        context.pushEvent(new JobEvent("SourceDataService", progress + 0.0, null));
     }
 
     private MongoTemplate getMongoTemplate() {

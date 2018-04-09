@@ -12,7 +12,7 @@ public class WindowFactory {
 
     private static final String PLATFORM_CSS_PATH = WindowFactory.class.getClassLoader().getResource("css/redfall/main.css").toExternalForm();
 
-    private static List<String> checkStyles(String... styles) {
+    public static List<String> checkStyles(String... styles) {
         List list = Lists.newArrayList();
         list.add(PLATFORM_CSS_PATH);
         if (styles != null && styles.length > 0) {
