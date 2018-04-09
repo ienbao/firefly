@@ -25,7 +25,7 @@ import java.util.List;
  * ui class for choose items dialog
  */
 public class ChooseTestItemPane extends GridPane {
-    private List<ChooseTestItemModel> items;
+    private ObservableList<ChooseTestItemModel> items;
     private int maxLength = 50;
     private Button okBtn;
     private FilteredList<ChooseTestItemModel> filteredList;
@@ -45,7 +45,7 @@ public class ChooseTestItemPane extends GridPane {
      * @param maxLength     max length
      */
     ChooseTestItemPane(List<String> items, List<String> selectedItems, int maxLength) {
-        this.items = Lists.newArrayList();
+        this.items = FXCollections.observableArrayList();
         List<String> selecteds = Lists.newArrayList();
         if (selectedItems != null) {
             selecteds.addAll(selectedItems);
@@ -57,8 +57,7 @@ public class ChooseTestItemPane extends GridPane {
                 this.items.add(item);
             }
         }
-        ObservableList<ChooseTestItemModel> observableItemsList = FXCollections.observableArrayList(this.items);
-        this.filteredList = observableItemsList.filtered(p -> true);
+        this.filteredList = this.items.filtered(p -> true);
         this.sortedList = new SortedList<>(filteredList);
         if (maxLength > 0) {
             this.maxLength = maxLength;
@@ -177,6 +176,9 @@ public class ChooseTestItemPane extends GridPane {
             infoIcon.getStyleClass().add("message-tip-warn-mark");
             Label infoLB = new Label(FxmlAndLanguageUtils.getString(CommonResourceMassages.MAX_CHOICES, new Object[]{maxLength}), infoIcon);
             okBtn = new Button(FxmlAndLanguageUtils.getString(CommonResourceMassages.GLOBAL_BTN_OK));
+            okBtn.setMaxWidth(80);
+            okBtn.setMinWidth(80);
+            okBtn.setPrefWidth(80);
             ColumnConstraints c0 = new ColumnConstraints(310, 310, 310);
             ColumnConstraints c1 = new ColumnConstraints(80, 80, 80);
             RowConstraints r0 = new RowConstraints(22, 22, 22);
@@ -233,13 +235,13 @@ public class ChooseTestItemPane extends GridPane {
         }
     }
 
-    private void handleNumberChangeEvent() {
+    void handleNumberChangeEvent() {
         okBtn.setDisable(false);
         errorLabel.setVisible(false);
 
         int total = 0;
-        for (ChooseTestItemModel item : items) {
-            if (item.selectedProperty().get()) {
+        for (int i = 0, max = items.size(); i < max; i++) {
+            if (items.get(i).selectedProperty().get()) {
                 total++;
             }
         }
@@ -257,9 +259,9 @@ public class ChooseTestItemPane extends GridPane {
      */
     public List<String> getSelectedItems() {
         List<String> result = Lists.newArrayList();
-        for (ChooseTestItemModel item : items) {
-            if (item.selectedProperty().getValue()) {
-                result.add(item.itemNameProperty().getValue());
+        for (int i = 0, max = items.size(); i < max; i++) {
+            if (items.get(i).selectedProperty().getValue()) {
+                result.add(items.get(i).itemNameProperty().getValue());
             }
         }
         return result;
@@ -267,5 +269,9 @@ public class ChooseTestItemPane extends GridPane {
 
     public Button getOkBtn() {
         return okBtn;
+    }
+
+    public ObservableList<ChooseTestItemModel> getItems() {
+        return items;
     }
 }

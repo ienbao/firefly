@@ -465,7 +465,9 @@ public class SourceDataServiceImpl implements SourceDataService {
 
     private void pushProgress(int progress) {
         JobContext context = RuntimeContext.getBean(JobManager.class).findJobContext(Thread.currentThread());
-        context.pushEvent(new JobEvent("SourceDataService", progress + 0.0, null));
+        if (context != null) {
+            context.pushEvent(new JobEvent("SourceDataService", progress + 0.0, null));
+        }
     }
 
     private MongoTemplate getMongoTemplate() {

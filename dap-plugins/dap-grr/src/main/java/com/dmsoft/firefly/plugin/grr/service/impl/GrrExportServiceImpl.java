@@ -189,7 +189,9 @@ public class GrrExportServiceImpl implements GrrExportService {
 
     private void pushProgress(int progress) {
         JobContext context = RuntimeContext.getBean(JobManager.class).findJobContext(Thread.currentThread());
-        context.pushEvent(new JobEvent("GrrExportService", progress + 0.0, null));
+        if (context != null) {
+            context.pushEvent(new JobEvent("GrrExportService", progress + 0.0, null));
+        }
     }
 
     private String getTimeString() {
