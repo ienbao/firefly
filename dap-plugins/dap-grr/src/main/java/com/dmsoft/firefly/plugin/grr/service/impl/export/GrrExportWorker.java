@@ -161,17 +161,29 @@ public class GrrExportWorker implements ExWorker {
             String reprod = "";
             String grr = "";
             String result = "";
+            int digNumber = digNum <= 2 ? 0 : digNum - 2;
             if (!grrExportConfigDto.isTolerance()) {
-                repeat = grrSummary.getRepeatabilityOnContribution().toString();
-                reprod = grrSummary.getReproducibilityOnContribution().toString();
-                grr = grrSummary.getGrrOnContribution().toString();
+                repeat = DAPStringUtils.formatDouble(grrSummary.getRepeatabilityOnContribution(), digNumber);
+                reprod = DAPStringUtils.formatDouble(grrSummary.getReproducibilityOnContribution(), digNumber);
+                grr = DAPStringUtils.formatDouble(grrSummary.getGrrOnContribution(), digNumber);
                 result = buildGrrLevel(grrExportConfigDto.getLevel(), grrSummary.getGrrOnContribution());
             } else {
-                repeat = grrSummary.getRepeatabilityOnTolerance().toString();
-                reprod = grrSummary.getReproducibilityOnTolerance().toString();
-                grr = grrSummary.getGrrOnTolerance().toString();
+                repeat = DAPStringUtils.formatDouble(grrSummary.getRepeatabilityOnTolerance(), digNumber);
+                reprod = DAPStringUtils.formatDouble(grrSummary.getReproducibilityOnTolerance(), digNumber);
+                grr = DAPStringUtils.formatDouble(grrSummary.getGrrOnTolerance(), digNumber);
                 result = buildGrrLevel(grrExportConfigDto.getLevel(), grrSummary.getGrrOnTolerance());
             }
+//            if (!grrExportConfigDto.isTolerance()) {
+//                repeat = grrSummary.getRepeatabilityOnContribution().toString();
+//                reprod = grrSummary.getReproducibilityOnContribution().toString();
+//                grr = grrSummary.getGrrOnContribution().toString();
+//                result = buildGrrLevel(grrExportConfigDto.getLevel(), grrSummary.getGrrOnContribution());
+//            } else {
+//                repeat = grrSummary.getRepeatabilityOnTolerance().toString();
+//                reprod = grrSummary.getReproducibilityOnTolerance().toString();
+//                grr = grrSummary.getGrrOnTolerance().toString();
+//                result = buildGrrLevel(grrExportConfigDto.getLevel(), grrSummary.getGrrOnTolerance());
+//            }
 
             String[] arr = {name, repeat, reprod, grr};
 

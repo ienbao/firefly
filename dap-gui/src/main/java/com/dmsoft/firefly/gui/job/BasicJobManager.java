@@ -102,7 +102,7 @@ public class BasicJobManager implements JobManager {
             ((BasicJobContext) context).setAllHandlers(jobPipeline.getAllJobHandlers());
         }
         for (JobHandler handler : jobPipeline.getAllJobHandlers()) {
-            if (!context.isError() && !context.isInterrupted()) {
+            if ((!context.isError() && !context.isInterrupted()) || (context.isError() && skipError)) {
                 try {
                     context.addDoneHandlerName(handler.getName());
                     handler.doJob(context);

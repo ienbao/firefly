@@ -28,6 +28,7 @@ import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.event.PlatformEvent;
+import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.core.*;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
@@ -1028,16 +1029,16 @@ public class GrrExportController {
             int i = 0;
             for (String projectName : projectNameList) {
                 String handlerName = projectName + i;
-                addHandler(jobPipeline, Lists.newArrayList(projectName), handlerName, savePath, testItemWithTypeDtoList);
+                addHandler(jobPipeline, context, Lists.newArrayList(projectName), handlerName, savePath, testItemWithTypeDtoList);
                 i++;
             }
         } else {
-            addHandler(jobPipeline, projectNameList, "Export Grr Reports", savePath, testItemWithTypeDtoList);
+            addHandler(jobPipeline, context, projectNameList, "Export Grr Reports", savePath, testItemWithTypeDtoList);
         }
-        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context, true);
     }
 
-    private void addHandler(JobPipeline pipeline, List<String> projectNameList, String handlerName, String savePath, List<TestItemWithTypeDto> testItemWithTypeDtoList) {
+    private void addHandler(JobPipeline pipeline, JobContext context2, List<String> projectNameList, String handlerName, String savePath, List<TestItemWithTypeDto> testItemWithTypeDtoList) {
         pipeline.addLast(new AbstractBasicJobHandler(handlerName) {
             @Override
             public void doJob(JobContext context) {
@@ -1052,7 +1053,7 @@ public class GrrExportController {
                 } else {
                     itemDto = testItemWithTypeDtoList;
                 }
-                if (checkSubmitParam(itemDto.size())) {
+                if (checkSubmitParam(projectNameList.get(0), itemDto.size(), context2)) {
                     GrrConfigDto grrConfigDto = grrConfigService.findGrrConfig();
                     Boolean detail = grrConfigDto.getExport().get("Export detail sheet of each selected items");
 
@@ -1123,6 +1124,36 @@ public class GrrExportController {
         conditionList.remove("");
         searchConditionDto.setSearchCondition(conditionList);
         return searchConditionDto;
+    }
+
+    private boolean checkSubmitParam(String projectName, Integer itemNumbers, JobContext context) {
+
+        if (itemNumbers == null || itemNumbers <= 0) {
+            throw new ApplicationException(projectName + GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+        }
+
+        if (!GrrValidateUtil.validateResult(partTxt, appraiserTxt, trialTxt)) {
+            throw new ApplicationException(projectName + GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+        }
+
+        if (appraiserLbl.getGraphic() != null || partLbl.getGraphic() != null) {
+            throw new ApplicationException(projectName + GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+        }
+
+        if (partCombox.getStyleClass().contains(ValidateUtil.COMBO_BOX_ERROR_STYLE) || appraiserCombox.getStyleClass().contains(ValidateUtil.COMBO_BOX_ERROR_STYLE)) {
+            throw new ApplicationException(projectName + GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+        }
+
+        if (partListView.getItems().size() > 0 && partListView.getItems().size() < Integer.parseInt(partTxt.getText())) {
+            throw new ApplicationException(projectName + GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+//                    GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_MAX_NUMBER_NOT_MATCH"));
+        }
+
+        if ((appraiserCombox.getValue() != null) && (appraiserListView.getItems().size() > 0 && appraiserListView.getItems().size() < Integer.parseInt(appraiserTxt.getText()))) {
+            throw new ApplicationException(projectName + GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+        }
+
+        return true;
     }
 
     private boolean checkSubmitParam(Integer itemNumbers) {
