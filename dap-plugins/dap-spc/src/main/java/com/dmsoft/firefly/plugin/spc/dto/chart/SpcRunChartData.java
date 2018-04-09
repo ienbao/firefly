@@ -149,6 +149,7 @@ public class SpcRunChartData implements ControlChartData {
             }
             PointStyle pointStyle = new PointStyle();
             pointStyle.setStyle("-fx-background-color:" + ColorUtils.toHexFromFXColor(pointColor));
+            pointStyle.setAbnormal(pointColor == Color.RED);
             return pointStyle;
         };
     }

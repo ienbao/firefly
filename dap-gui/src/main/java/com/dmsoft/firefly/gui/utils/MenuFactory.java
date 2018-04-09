@@ -21,6 +21,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 
+import java.util.List;
+
 import static com.google.common.io.Resources.getResource;
 
 public class MenuFactory {
@@ -107,7 +109,7 @@ public class MenuFactory {
         exitMenuItem.setOnAction(event -> {
             StageMap.getStage(GuiConst.PLARTFORM_STAGE_MAIN).close();
         });
-        selectDataSourceMenuItem.setOnAction(event -> buildSelectDataSource());
+        selectDataSourceMenuItem.setOnAction(event -> GuiFxmlAndLanguageUtils.buildSelectDataSource());
         importMenuItem.setOnAction(event -> appController.importAllConfig());
         exportMenuItem.setOnAction(event -> buildeSettingExportDia());
         menu.getItems().add(selectDataSourceMenuItem);
@@ -257,28 +259,20 @@ public class MenuFactory {
     }
 
     private static void buildSourceSettingDia(){
-        Pane root = null;
-        try {
-            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source_setting.fxml");
-            root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("sourceSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.SOURCE_SETTING), root, getResource("css/platform_app.css").toExternalForm());
-            stage.toFront();
-            stage.show();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private static void buildSelectDataSource(){
-        Pane root = null;
-        try {
-            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source.fxml");
-            root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("dataSource", GuiFxmlAndLanguageUtils.getString(ResourceMassages.DataSource), root, getResource("css/platform_app.css").toExternalForm());
-            stage.toFront();
-            stage.show();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        List<String> projectNames= envService.findActivatedProjectName();
+        if (projectNames == null || projectNames.isEmpty()) {
+           WindowMessageFactory.createWindowMessageHasOk("Message", GuiFxmlAndLanguageUtils.getString("DATA_SOURCE_SETTING_NO_SELECT_FILE"));
+        } else {
+            Pane root = null;
+            try {
+                FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source_setting.fxml");
+                root = fxmlLoader.load();
+                Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("sourceSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.SOURCE_SETTING), root, getResource("css/platform_app.css").toExternalForm());
+                stage.toFront();
+                stage.show();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
     

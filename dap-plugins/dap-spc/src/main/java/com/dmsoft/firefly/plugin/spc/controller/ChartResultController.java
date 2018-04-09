@@ -519,7 +519,6 @@ public class ChartResultController implements Initializable {
             controlChart.setSeriesDataStyleByRule(controlChartData1.getUniqueKey(), ucl, lcl);
         });
         this.setControlChartPerformance(controlChart, chartName);
-//        chartPanelMap.get(chartName).activeChartDragging();
         chartPanelMap.get(chartName).updateChartData();
         chartPanelMap.get(chartName).toggleCustomButtonDisable(false);
     }

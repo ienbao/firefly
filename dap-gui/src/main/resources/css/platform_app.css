@@ -17,20 +17,12 @@
 
 .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
     -fx-padding: 4 0 4 5;
-    /* No alternate highlighting */
     -fx-background: -fx-control-inner-background;
 }
 
 .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover {
     -fx-background: -fx-accent;
     -fx-background-color: #0096ff;
-}
-
-.list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
-.list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
-    -fx-background: -fx-accent;
-    -fx-background-color: #0096ff;
-    -fx-background-insets: 0, 1, 2;
 }
 
 /*******************************************************************************
