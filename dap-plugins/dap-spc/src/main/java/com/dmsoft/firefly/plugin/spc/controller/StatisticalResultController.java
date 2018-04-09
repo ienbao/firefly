@@ -4,6 +4,7 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.gui.components.colorpicker.ColorPickerMenuSkin;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
@@ -90,16 +91,21 @@ public class StatisticalResultController implements Initializable {
      * @param selectRowKey selectRowKey
      */
     public void setTimerStatisticalResultTableData(List<SpcStatisticalResultAlarmDto> list,List<String> selectRowKey, boolean isTimer) {
-        List<String> columnList = statisticalTableModel.getColumnList();
-        statisticalTableModel = new StatisticalTableModel();
-        statisticalTableModel.setTimer(isTimer);
-        statisticalTableModel.initColumn(columnList);
-        TableViewWrapper.decorate(statisticalResultTb, statisticalTableModel);
-
+//        List<String> columnList = statisticalTableModel.getColumnList();
+//        statisticalTableModel = new StatisticalTableModel();
+//        statisticalTableModel.setTimer(isTimer);
+//        statisticalTableModel.initColumn(columnList);
+//        this.initTableMenuEvent();
+//        TableViewWrapper.decorate(statisticalResultTb, statisticalTableModel);
+//
+//        statisticalTableModel.initData(list);
+//        statisticalTableModel.setSelect(selectRowKey);
+//
+//        statisticalTableModel.getAllCheckBox().setOnAction(event -> getAllCheckBoxEvent());
         statisticalTableModel.initData(list);
         statisticalTableModel.setSelect(selectRowKey);
-
-        statisticalTableModel.getAllCheckBox().setOnAction(event -> getAllCheckBoxEvent());
+        statisticalTableModel.setTimer(isTimer);
+        statisticalTableModel.filterTestItem(filterTestItemTf.getTextField().getText());
     }
 
     /**
@@ -115,7 +121,6 @@ public class StatisticalResultController implements Initializable {
      * clear statistical result data
      */
     public void clearStatisticalResultData() {
-        filterTestItemTf.getTextField().setText(null);
         statisticalTableModel.clearTableData();
     }
 
@@ -294,7 +299,7 @@ public class StatisticalResultController implements Initializable {
         public Node getMenuNode() {
             colorPicker = new ColorPicker(javafx.scene.paint.Color.RED);
             colorPicker.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
-
+            colorPicker.setSkin(new ColorPickerMenuSkin(colorPicker));
             colorPicker.getCustomColors().addAll(
                     ColorUtils.toFxColorFromAwtColor(Colur.RAW_VALUES)
             );

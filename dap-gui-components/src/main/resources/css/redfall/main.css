@@ -2257,7 +2257,7 @@
  ******************************************************************************/
 .color-picker {
     -fx-border-width: 0;
-    -fx-skin: "com.dmsoft.firefly.gui.components.colorpicker.ColorPickerMenuSkin";
+    /*-fx-skin: "com.dmsoft.firefly.gui.components.colorpicker.ColorPickerMenuSkin";*/
     -fx-background-color: transparent;
 }
 
