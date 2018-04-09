@@ -37,13 +37,17 @@ public class ItemDataTableModel implements TableModel {
     /**
      * constructor
      *
-     * @param dataFrame     dataFrame
+     * @param dataFrame dataFrame
      */
-    public ItemDataTableModel(SearchDataFrame dataFrame,List<RowDataDto> rowDataDtos) {
+    public ItemDataTableModel(SearchDataFrame dataFrame, List<RowDataDto> rowDataDtos) {
         rowKey.clear();
         columnKey.clear();
         valueMap = Maps.newHashMap();
-        List<String> headers = dataFrame.getAllTestItemName();
+        List<String> headers = new LinkedList<>();
+        if (dataFrame != null) {
+            headers = dataFrame.getAllTestItemName();
+        }
+
         List<RowDataDto> rowDataDtoListContext = dataFrame.getAllDataRow();
         rowDataDtos.addAll(rowDataDtoListContext);
         if (headers != null && !headers.isEmpty()) {
