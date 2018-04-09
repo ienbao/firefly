@@ -21,7 +21,7 @@
                <children>
                   <VBox>
                      <children>
-                        <Label text="Choose Test Item">
+                        <Label text="%CHOOSE_TEST_ITEM">
                            <VBox.margin>
                               <Insets bottom="10.0" />
                            </VBox.margin>
@@ -54,7 +54,7 @@
                             <RowConstraints vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label text="Customize Test Items">
+                              <Label text="%CUSTOMIZE_TEST_ITEM">
                                  <GridPane.margin>
                                     <Insets bottom="10.0" />
                                  </GridPane.margin>
@@ -62,7 +62,7 @@
                               <Label fx:id="tipLabel" GridPane.columnIndex="1" />
                            </children>
                         </GridPane>
-                        <TextArea fx:id="textAreaTestItem" minHeight="257.0" minWidth="190.0" prefHeight="257.0" prefWidth="190.0" />
+                        <TextArea fx:id="textAreaTestItem" minHeight="257.0" minWidth="190.0" prefHeight="257.0" prefWidth="190.0" promptText="%AREA_TEST_ITEM_PROMPT" />
                      </children>
                   </VBox>
                </children>

@@ -6,17 +6,21 @@ package com.dmsoft.firefly.plugin.spc.controller;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.plugin.spc.model.AddItemTableModel;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.google.common.collect.Lists;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -85,11 +89,16 @@ public class AddItemController implements Initializable {
             StageMap.closeStage(SPC_SETTING_ADD_ITEM);
             return;
         }
-        String value = null;
+        List<String> customItemList = Lists.newArrayList();
         if (!DAPStringUtils.isBlank(textAreaTestItem.getText()) && !testItem.contains(textAreaTestItem.getText())) {
-            value = textAreaTestItem.getText();
+            Arrays.asList(textAreaTestItem.getText().replaceAll("\t", "\n").split("\n")).forEach( item -> {
+                if(!testItem.contains(item)){
+                    customItemList.add(item);
+                }
+            });
+            textAreaTestItem.setText("");
         }
-        spcSettingController.addCustomAlarmSettingData(testItem, value);
+        spcSettingController.addCustomAlarmSettingData(testItem, customItemList);
         StageMap.closeStage(SPC_SETTING_ADD_ITEM);
     }
 
@@ -108,6 +117,9 @@ public class AddItemController implements Initializable {
     }
 
     private void initBtnIcon() {
+        tipLabel.getStyleClass().add("message-tip-question");
+        tipLabel.setStyle("-fx-background-color: #0096ff");
+        TooltipUtil.installNormalTooltip(tipLabel, "Please use \"Tab\" or \"Enter\" to separate item names");
 //        tipLabel.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
     }
 
