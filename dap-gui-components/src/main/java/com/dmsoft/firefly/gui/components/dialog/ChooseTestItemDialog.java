@@ -20,6 +20,17 @@ import static com.google.common.io.Resources.getResource;
  * @author Can Guan
  */
 public class ChooseTestItemDialog extends Stage {
+
+    /**
+     * constructor
+     *
+     * @param items         items
+     * @param selectedItems selected items
+     */
+    public ChooseTestItemDialog(List<String> items, List<String> selectedItems) {
+        this(items, selectedItems, 50);
+    }
+
     /**
      * constructor
      *

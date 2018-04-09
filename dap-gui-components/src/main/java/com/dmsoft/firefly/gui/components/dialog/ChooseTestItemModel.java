@@ -17,7 +17,7 @@ public class ChooseTestItemModel {
      * @param itemName item name
      * @param selected selected or not
      */
-    public ChooseTestItemModel(String itemName, boolean selected) {
+    ChooseTestItemModel(String itemName, boolean selected) {
         this.itemName = new SimpleStringProperty(itemName);
         this.selected = new SimpleBooleanProperty(selected);
     }
@@ -33,6 +33,7 @@ public class ChooseTestItemModel {
 
     /**
      * method to get item name property
+     *
      * @return item name property
      */
     public ObservableValue<String> itemNameProperty() {

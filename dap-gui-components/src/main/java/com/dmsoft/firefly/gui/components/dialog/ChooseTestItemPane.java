@@ -44,7 +44,7 @@ public class ChooseTestItemPane extends GridPane {
      * @param selectedItems selected item list
      * @param maxLength     max length
      */
-    public ChooseTestItemPane(List<String> items, List<String> selectedItems, int maxLength) {
+    ChooseTestItemPane(List<String> items, List<String> selectedItems, int maxLength) {
         this.items = Lists.newArrayList();
         List<String> selecteds = Lists.newArrayList();
         if (selectedItems != null) {
