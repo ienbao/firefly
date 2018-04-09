@@ -11,7 +11,7 @@
     </formats>
     <fileSets>
         <fileSet>
-            <directory>../dap-gui//src/main/resources</directory>
+            <directory>../dap-gui/src/main/resources</directory>
             <outputDirectory></outputDirectory>
             <includes>
                 <include>README</include>
@@ -21,6 +21,14 @@
             <excludes>
                 <exclude>assembly.xml</exclude>
             </excludes>
+        </fileSet>
+
+        <fileSet>
+            <directory>../dap-gui/src/main/resources/${profiles.active}</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>*.properties</include>
+            </includes>
         </fileSet>
 
         <fileSet>

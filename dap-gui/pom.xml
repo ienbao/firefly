@@ -112,6 +112,7 @@
                         <exclude>*.properties</exclude>
                         <exclude>config/</exclude>
                         <exclude>default/</exclude>
+                        <exclude>security/</exclude>
                         <exclude>scripts/</exclude>
                         <exclude>Plugins/</exclude>
                     </excludes>
