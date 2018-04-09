@@ -2,14 +2,20 @@ package com.dmsoft.firefly.plugin.csvresolver.service;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.plugin.csvresolver.dto.CsvTemplateDto;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.apis.IConfig;
 import com.dmsoft.firefly.sdk.plugin.apis.annotation.Config;
+import com.dmsoft.firefly.sdk.utils.FileUtils;
+
+import java.io.File;
 
 /**
  * Created by GuangLi on 2018/3/9.
  */
 @Config
 public class CsvConfigService implements IConfig {
+    private PluginContext pluginContext = RuntimeContext.getBean(PluginContext.class);
     private CsvResolverService csvResolverService = new CsvResolverService();
     private JsonMapper jsonMapper = JsonMapper.defaultMapper();
 
@@ -37,6 +43,9 @@ public class CsvConfigService implements IConfig {
 
     @Override
     public void restoreConfig() {
-        //TODO
+        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.CsvResolverPlugin").getFolderPath() + File.separator + "config";
+        String defaultParentPath = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.CsvResolverPlugin").getFolderPath() + File.separator + "default";
+        FileUtils.delFolder(path);
+        FileUtils.copyFolder(defaultParentPath, path);
     }
 }

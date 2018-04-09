@@ -126,9 +126,7 @@ public class GuiApplication extends Application {
 
        /* RuntimeContext.registerBean(IController.class);
         RuntimeContext.getBean(IController.class).registerController(CommonResourceMassages.PLATFORM_CONTROLLER_MAIN, fxmlLoader.getController());*/
-
-        WindowFactory.createFullWindow(GuiConst.PLARTFORM_STAGE_MAIN, root, main, getClass().getClassLoader().getResource("css/platform_app.css").toExternalForm());
-
+        StageMap.setPrimaryStage(GuiConst.PLARTFORM_STAGE_MAIN, WindowFactory.createFullWindow(GuiConst.PLARTFORM_STAGE_MAIN, root, main, getClass().getClassLoader().getResource("css/platform_app.css").toExternalForm()));
         NodeMap.addNode(GuiConst.PLARTFORM_NODE_MAIN, main);
 
         RuntimeContext.getBean(EventContext.class).addEventListener(event -> {
@@ -160,12 +158,11 @@ public class GuiApplication extends Application {
                                     if (!userService.findLegal()) {
                                         GuiFxmlAndLanguageUtils.buildLegalDialog();
                                     } else {
-                                        StageMap.showStage(GuiConst.PLARTFORM_STAGE_MAIN);
-                                        Stage stage = StageMap.getStage(GuiConst.PLARTFORM_STAGE_MAIN);
+                                        Stage stage = StageMap.getPrimaryStage(GuiConst.PLARTFORM_STAGE_MAIN);
+                                        stage.show();
                                         if (stage.getScene().getRoot() instanceof WindowPane) {
                                             WindowPane windowPane = (WindowPane) stage.getScene().getRoot();
                                             windowPane.getController().maximizePropertyProperty().set(true);
-                                            System.out.println(true);
                                         }
                                         GuiFxmlAndLanguageUtils.buildLoginDialog();
                                     }

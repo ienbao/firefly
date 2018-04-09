@@ -8,9 +8,14 @@ import com.dmsoft.firefly.gui.controller.template.PluginManageController;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
+import com.dmsoft.firefly.sdk.plugin.PluginClass;
+import com.dmsoft.firefly.sdk.plugin.PluginClassType;
+import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
+import com.dmsoft.firefly.sdk.plugin.apis.IConfig;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
+import com.google.common.collect.Maps;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -19,9 +24,11 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
 
 
 import java.util.List;
+import java.util.Map;
 
 import static com.google.common.io.Resources.getResource;
 
@@ -30,7 +37,6 @@ public class MenuFactory {
     private static AppController appController;
     private static EnvService envService = RuntimeContext.getBean(EnvService.class);
     private static UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
-
 
     public final static String ROOT_MENU = "root";
     public final static String PLATFORM_ID = "Platform";
@@ -87,8 +93,15 @@ public class MenuFactory {
 
                 @Override
                 public boolean onOkCustomEvent() {
+                    PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
+                    List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.CONFIG);
                     Platform.runLater(() -> {
+                        StageMap.getAllStage().clear();
                         userPreferenceService.resetPreference();
+                        pluginClasses.forEach(v -> {
+                            IConfig service = (IConfig) v.getInstance();
+                            service.restoreConfig();
+                        });
                         envService.setActivatedTemplate(GuiConst.DEFAULT_TEMPLATE_NAME);
                         envService.setActivatedProjectName(null);
                         envService.setTestItems(null);
@@ -97,7 +110,6 @@ public class MenuFactory {
                         initMenu();
                         appController.resetMenu();
                         mainController.resetMain();
-                        StageMap.getAllStage().clear();
                     });
                     return false;
                 }
@@ -107,7 +119,8 @@ public class MenuFactory {
         exitMenuItem.setMnemonicParsing(true);
         exitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN));
         exitMenuItem.setOnAction(event -> {
-            StageMap.getStage(GuiConst.PLARTFORM_STAGE_MAIN).close();
+            Stage stage = StageMap.getPrimaryStage(GuiConst.PLARTFORM_STAGE_MAIN);
+            stage.close();
         });
         selectDataSourceMenuItem.setOnAction(event -> GuiFxmlAndLanguageUtils.buildSelectDataSource());
         importMenuItem.setOnAction(event -> appController.importAllConfig());
@@ -180,12 +193,12 @@ public class MenuFactory {
                     @Override
                     public boolean onOkCustomEvent() {
                         Platform.runLater(() -> {
+                            StageMap.getAllStage().clear();
                             isChangeEnLanguage = true;
                             envService.setLanguageType(LanguageType.EN);
                             initMenu();
                             appController.resetMenu();
                             mainController.resetMain();
-                            StageMap.getAllStage().clear();
                         });
                         return false;
                     }
@@ -213,12 +226,12 @@ public class MenuFactory {
                     @Override
                     public boolean onOkCustomEvent() {
                         Platform.runLater(() -> {
+                            StageMap.getAllStage().clear();
                             isChangeZhLanguage = true;
                             envService.setLanguageType(LanguageType.ZH);
                             initMenu();
                             appController.resetMenu();
                             mainController.resetMain();
-                            StageMap.getAllStage().clear();
                         });
 
                         return false;

@@ -6,7 +6,7 @@ package com.dmsoft.firefly.core.utils;
 
 import com.dmsoft.firefly.sdk.plugin.PluginConstants;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
-import com.dmsoft.firefly.sdk.utils.FilePathUtils;
+import com.dmsoft.firefly.sdk.utils.FileUtils;
 import com.google.common.collect.Lists;
 import org.xml.sax.SAXException;
 
@@ -64,7 +64,7 @@ public class PluginXMLParser {
     private static PluginInfo parserXML(String pluginFolderUri, SAXParser sp) {
         try {
             // get plugin xml file uri
-            String pluginXMLFileUri = FilePathUtils.buildFilePath(pluginFolderUri, PluginConstants.FILE_NAME_PLUGIN);
+            String pluginXMLFileUri = FileUtils.buildFilePath(pluginFolderUri, PluginConstants.FILE_NAME_PLUGIN);
 
             // judge file exist or not
             File pluginXMLFile = new File(pluginXMLFileUri);
@@ -78,7 +78,7 @@ public class PluginXMLParser {
             pluginInfo.setFolderPath(pluginFolderUri);
 
             // get config xml file uri
-            String configXMLFileUri = FilePathUtils.buildFilePath(pluginFolderUri, PluginConstants.FOLDER_NAME_CONFIG, PluginConstants.FILE_NAME_CONFIG);
+            String configXMLFileUri = FileUtils.buildFilePath(pluginFolderUri, PluginConstants.FOLDER_NAME_CONFIG, PluginConstants.FILE_NAME_CONFIG);
 
             // judge file exist or not
             File configXMLFile = new File(configXMLFileUri);

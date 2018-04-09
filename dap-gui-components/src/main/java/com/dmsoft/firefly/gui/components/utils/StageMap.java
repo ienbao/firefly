@@ -22,6 +22,8 @@ public final class StageMap {
 
     //For storing Stage objects
     private static HashMap<String, Stage> stages = new HashMap<String, Stage>();
+    private static HashMap<String, Stage> primaryStages = new HashMap<String, Stage>();
+
 
     /**
      * method to add stage
@@ -46,13 +48,22 @@ public final class StageMap {
     /**
      * method to set primary stage by name
      *
-     * @param primaryStageName name
+     * @param name  name
      * @param primaryStage     primaryStage
      */
-    public static void setPrimaryStage(String primaryStageName, Stage primaryStage) {
-        addStage(primaryStageName, primaryStage);
+    public static void setPrimaryStage(String name, Stage primaryStage) {
+        primaryStages.put(name, primaryStage);
     }
 
+    /**
+     * method to get primary stage by name
+     *
+     * @param name name
+     * @return stage stage
+     */
+    public static Stage getPrimaryStage(String name) {
+        return primaryStages.get(name);
+    }
 
     /**
      * method to set primary stage by name
