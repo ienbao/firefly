@@ -15,7 +15,6 @@ import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
-import com.dmsoft.firefly.plugin.spc.utils.enums.TimerKeyType;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -285,8 +284,18 @@ public class SpcItemController implements Initializable {
         isTimer = false;
         startTimer = false;
         enabledTimerCheckBox.setSelected(false);
-        timeComboBox.setItems(FXCollections.observableArrayList(TimerKeyType.FIVE_MIN.getCode(), TimerKeyType.TEN_MIN.getCode(), TimerKeyType.TEN_MIN.getCode()));
-        timeComboBox.setValue(TimerKeyType.FIVE_MIN.getCode());
+        List<String> timerList = leftConfigService.findSpcTimerTime();
+        if(timerList == null){
+            return;
+        }
+        ObservableList<String> showTimeList = FXCollections.observableArrayList();
+        for(String time : timerList) {
+            showTimeList.add(time+SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIMER_MIN));
+        }
+        timeComboBox.setItems(showTimeList);
+        if(showTimeList.size() > 0) {
+            timeComboBox.setValue(showTimeList.get(0));
+        }
     }
 
     /**
@@ -466,15 +475,13 @@ public class SpcItemController implements Initializable {
     }
 
     private Timer startTimerAnalysis() {
-        long intervalTime;
+
         String currentRefreshTime = (String) timeComboBox.getValue();
-        if (currentRefreshTime.equals(TimerKeyType.FIVE_MIN.getCode())) {
-            intervalTime = 5 * 60000;
-        } else if (currentRefreshTime.equals(TimerKeyType.TEN_MIN.getCode())) {
-            intervalTime = 10 * 60000;
-        } else {
-            intervalTime = 30 * 60000;
+        String time = currentRefreshTime.replace(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIMER_MIN),"");
+        if(!StringUtils.isNumeric(time)){
+            return null;
         }
+        long intervalTime = Long.valueOf(time) * 60000;
         Timer timer1 = new Timer();
         timer1.schedule(new TimerTask() {
             @Override
