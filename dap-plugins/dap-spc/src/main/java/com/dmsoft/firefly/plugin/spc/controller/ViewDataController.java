@@ -7,6 +7,7 @@ import com.dmsoft.firefly.gui.components.skin.ExpandableTableViewSkin;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.spc.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
 import com.dmsoft.firefly.plugin.spc.model.ViewDataDFModel;
@@ -247,9 +248,7 @@ public class ViewDataController implements Initializable {
             }
             quickSearchController.getSearchBtn().setOnAction(event1 -> {
                 if (quickSearchController.isError()) {
-                    RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                            SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER),
-                            SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_QUICK_SEARCH_MESSAGE));
+                    WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER), SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_QUICK_SEARCH_MESSAGE));
                     return;
                 }
                 FilterType type1 = quickSearchController.getFilterType();
@@ -362,7 +361,7 @@ public class ViewDataController implements Initializable {
     }
 
     private void filterTF() {
-        if (model == null) {
+        if (model == null || filterTf.getTextField().getText() == null) {
             return;
         }
         model.getRowKeyArray().clear();
