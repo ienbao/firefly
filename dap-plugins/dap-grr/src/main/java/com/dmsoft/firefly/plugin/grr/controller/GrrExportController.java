@@ -926,6 +926,9 @@ public class GrrExportController {
                 });
             }
             selectItem.forEach(itemName -> selectItemDto.add(envService.findTestItemNameByItemName(itemName)));
+            if (selectItemDto.size() > 50) {
+                selectItemDto.removeAll(selectItemDto.subList(50, selectItemDto.size()));
+            }
 
             JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
             context.put(ParamKeys.PROJECT_NAME_LIST, envService.findActivatedProjectName());
