@@ -622,6 +622,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     private double calculateBarWidth(SortedSet categories) {
         ValueAxis xAxis = (ValueAxis) getXAxis();
         double firstValue = (double) categories.first();
+        if (firstValue == 0) {
+            return firstValue;
+        }
         double mark = xAxis.getDisplayPosition(firstValue) / firstValue;
         return mark;
     }
