@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.charts;
 
-import com.dmsoft.firefly.gui.components.chart.ChartSaveUtils;
+import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.gui.components.chart.ChartUtils;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
@@ -173,7 +173,7 @@ public class ChartRightPane extends HBox {
                         file.createNewFile();
                     }
                     WritableImage writableImage = chart.snapshot(new SnapshotParameters(), null);
-                    ChartSaveUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(writableImage, null), file, quality);
+                    ChartOperatorUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(writableImage, null), file, quality);
                 } catch (Exception e) {
                     System.out.println("Save error, " + e.getMessage());
                     e.printStackTrace();

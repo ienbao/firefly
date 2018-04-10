@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.charts;
 
+import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.data.BarCategoryData;
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxPlotChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
@@ -77,7 +78,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         this.orientation = Orientation.VERTICAL;
         this.valueAxis = (ValueAxis) yAxis;
         this.setHorizontalZeroLineVisible(false);
+        this.setHorizontalGridLinesVisible(false);
         this.setVerticalZeroLineVisible(false);
+        this.setVerticalGridLinesVisible(false);
         this.pseudoClassStateChanged(HORIZONTAL_PSEUDOCLASS_STATE, orientation == Orientation.HORIZONTAL);
         this.pseudoClassStateChanged(VERTICAL_PSEUDOCLASS_STATE, orientation == Orientation.VERTICAL);
         this.setData(FXCollections.observableArrayList());
@@ -125,8 +128,8 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         xAxis.setUpperBound(xMax + xReserve);
         yAxis.setLowerBound(0);
         yAxis.setUpperBound(yMax + yReserve);
-        xAxis.setTickUnit((xAxis.getUpperBound() - xAxis.getLowerBound()) / barChartDataList.size());
-        xAxis.setTickUnit((yAxis.getUpperBound() - yAxis.getLowerBound()) / barChartDataList.size());
+        ChartOperatorUtils.updateAxisTickUnit(xAxis);
+        ChartOperatorUtils.updateAxisTickUnit(yAxis);
     }
 
     /**
@@ -187,30 +190,6 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
             valueMarkerEntry.getValue().toggleValueMarker(lineName, showed);
         }
     }
-
-    /**
-     * Hidden all bar series
-     */
-//    public void hiddenAllBarSeries() {
-//        ObservableList<XYChart.Series<X, Y>> series = this.getData();
-//        series.forEach(oneSeries -> toggleBarSeries(oneSeries, false));
-//    }
-
-    /**
-     * Toggle bar series show or hide
-     *
-     * @param series bar series
-     * @param showed whether it show or not
-     */
-//    public void toggleBarSeries(XYChart.Series<X, Y> series, boolean showed) {
-//        series.getData().forEach(dataItem -> {
-//            if (!showed) {
-//                dataItem.getNode().getStyleClass().add("chart-hidden-bar");
-//            } else {
-//                dataItem.getNode().getStyleClass().remove("chart-hidden-bar");
-//            }
-//        });
-//    }
 
     /**
      * Toggle bar series show or hide

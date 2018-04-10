@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.charts.view;
 
-import com.dmsoft.firefly.gui.components.chart.ChartSaveUtils;
+import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.gui.components.chart.ChartUtils;
 import com.dmsoft.firefly.plugin.spc.charts.utils.LegendUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
@@ -8,7 +8,6 @@ import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.sun.javafx.charts.Legend;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
@@ -61,7 +60,7 @@ public class ChartPanel<T extends XYChart> extends VBox {
      * @param showLegend whether show legend or not
      */
     public ChartPanel(T chart, boolean showLegend) {
-        this(chart, true, true, true);
+        this(chart, showLegend, true, true);
     }
 
     /**
@@ -256,10 +255,8 @@ public class ChartPanel<T extends XYChart> extends VBox {
                     }
                     final float quality = 0.9f;
                     WritableImage writableImage = chart.snapshot(new SnapshotParameters(), null);
-                    ChartSaveUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(writableImage, null), file, quality);
-                    System.out.println(file.getAbsolutePath());
+                    ChartOperatorUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(writableImage, null), file, quality);
                 } catch (Exception e) {
-                    System.out.println("Save error, " + e.getMessage());
                     e.printStackTrace();
                 }
             }

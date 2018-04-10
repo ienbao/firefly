@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -54,6 +55,7 @@ public class ChooseTestItemDialog extends Stage {
         mainPane.getOkBtn().setOnAction(event -> this.close());
         Image image = new Image("/images/desktop_mac_logo.png");
         this.getIcons().add(image);
+        this.initModality(Modality.APPLICATION_MODAL);
     }
 
     /**
@@ -68,7 +70,7 @@ public class ChooseTestItemDialog extends Stage {
         if (selectedItems != null) {
             selecteds.addAll(selectedItems);
             if (selecteds.size() > mainPane.getMaxLength()) {
-                selecteds.removeAll(selecteds.subList(mainPane.getMaxLength(), selecteds.size() - 1));
+                selecteds.removeAll(selecteds.subList(mainPane.getMaxLength(), selecteds.size()));
             }
         }
         if (items != null) {
@@ -89,8 +91,8 @@ public class ChooseTestItemDialog extends Stage {
         int j = 0;
         for (int i = 0, max = mainPane.getItems().size(); i < max; i++) {
             if (selectedItems != null && selectedItems.contains(mainPane.getItems().get(i).itemNameProperty().getValue())) {
-                i++;
-                if (i > mainPane.getMaxLength()) {
+                j++;
+                if (j > mainPane.getMaxLength()) {
                     continue;
                 }
                 mainPane.getItems().get(i).selectedProperty().set(true);

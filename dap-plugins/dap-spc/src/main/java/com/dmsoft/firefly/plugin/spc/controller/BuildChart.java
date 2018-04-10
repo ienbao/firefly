@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.controller;
 
-import com.dmsoft.firefly.gui.components.chart.ChartSaveUtils;
+import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.BoxPlotChart;
 import com.dmsoft.firefly.plugin.spc.charts.ControlChart;
 import com.dmsoft.firefly.plugin.spc.charts.NDChart;
@@ -420,7 +420,7 @@ public class BuildChart {
 
         try {
             file = new File(path);
-            ChartSaveUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(image.image, null), file, F9);
+            ChartOperatorUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(image.image, null), file, F9);
         } catch (Exception e) {
             e.printStackTrace();
         }

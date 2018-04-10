@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.plugin.chart;
 
-import com.dmsoft.firefly.gui.components.chart.ChartSaveUtils;
+import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.BoxPlotChart;
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxPlotChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBoxAndWhiskerData;
@@ -201,7 +201,7 @@ public class BoxPlotChartApp extends Application {
                     imageWriter.write(null, jpgimage, iwp);
                     imageWriter.dispose();
 
-                    ChartSaveUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(writableImage, null), file, 0.9f);
+                    ChartOperatorUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(writableImage, null), file, 0.9f);
                     System.out.println(file.getAbsolutePath());
                 } catch (Exception e) {
                     e.printStackTrace();
