@@ -23,6 +23,7 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.dmsoft.firefly.sdk.utils.PropertyConfig;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.application.Platform;
@@ -193,14 +194,10 @@ public class PluginManageController implements Initializable {
             File file = fileChooser.showOpenDialog(fileStage);
             if (file != null) {
                 Platform.runLater(() -> {
-                    //TODO
-                    String propertiesURL = ApplicationPathUtil.getPath("application.properties");
-                    InputStream inputStream = null;
                     pluginFolderPath = null;
                     try {
-                        inputStream = new BufferedInputStream(new FileInputStream(propertiesURL));
-                        Properties properties = new Properties();
-                        properties.load(inputStream);
+                        String propertiesURL = ApplicationPathUtil.getPath("application.properties");
+                        Properties properties = PropertyConfig.getProperties(propertiesURL);
                         pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
                         //validate
                         String fileNameZip = file.getName();
@@ -310,7 +307,10 @@ public class PluginManageController implements Initializable {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 try {
-                    StringBuilder stringBuilder = new StringBuilder("java -jar dap-restart-1.0.0.jar");
+                    String propertiesURL = ApplicationPathUtil.getPath("application.properties");
+                    Properties properties = PropertyConfig.getProperties(propertiesURL);
+                    pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
+                    StringBuilder stringBuilder = new StringBuilder(properties.getProperty("restart_command"));
                     stringBuilder.append(" pluginFolderPath:").append(pluginFolderPath);
                     deleteList.forEach(v -> stringBuilder.append(" delete:").append(v));
                     coverList.forEach(v -> stringBuilder.append(" cover:").append(v));

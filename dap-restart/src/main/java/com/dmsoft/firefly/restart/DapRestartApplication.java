@@ -5,8 +5,8 @@
 package com.dmsoft.firefly.restart;
 
 
-import com.dmsoft.firefly.restart.utils.ApplicationPathUtil;
 import com.dmsoft.firefly.restart.utils.FileUtils;
+import com.dmsoft.firefly.restart.utils.PropertyConfig;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,17 +39,10 @@ public class DapRestartApplication {
                 }
             }
         });
-        Properties pro = new Properties();
         try {
-            String file = ApplicationPathUtil.getCanonicalPath() + "application.properties";
-            InputStream fis = null;
-            try {
-                fis = new FileInputStream(new File(file));
-            } catch (Exception e) {
-                System.out.println("can't find application.properties");
-            }
-            pro.load(fis);
-            Runtime.getRuntime().exec(pro.getProperty("restart_command"));
+            String file = System.getProperty("user.dir") + File.separator + "application.properties";
+            Properties properties = PropertyConfig.getProperties(file);
+            Runtime.getRuntime().exec(properties.getProperty("restart_command"));
             System.exit(0);
         } catch (IOException e) {
             e.printStackTrace();

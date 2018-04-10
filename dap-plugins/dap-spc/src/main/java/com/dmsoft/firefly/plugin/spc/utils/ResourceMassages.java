@@ -33,6 +33,8 @@ public class ResourceMassages {
     public static final String SPC_CONFIG_EXPORT = "SPC_CONFIG_EXPORT";
     public static final String REMOVE_FROM_TOP = "REMOVE_FROM_TOP";
 
+    public static final String TIMER_MIN = "TIMER_MIN";
+
     //Spc setting
     public static final String FILTER_TEXTFIELD_PROMPT = "FILTER_TEXTFIELD_PROMPT";
     public static final String ADD_TEST_ITEMS = "ADD_TEST_ITEMS";
