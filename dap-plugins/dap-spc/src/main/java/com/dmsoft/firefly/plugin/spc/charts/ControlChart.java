@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.charts;
 
+import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationFetch;
 import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.ControlChartData;
@@ -68,7 +69,9 @@ public class ControlChart<X, Y> extends LineChart {
         super.setLegendVisible(false);
         super.setAnimated(false);
         super.setHorizontalZeroLineVisible(false);
+        this.setHorizontalGridLinesVisible(false);
         super.setVerticalZeroLineVisible(false);
+        this.setVerticalGridLinesVisible(false);
     }
 
     /**
@@ -399,8 +402,8 @@ public class ControlChart<X, Y> extends LineChart {
         xAxis.setUpperBound(xMax + xReserve);
         yAxis.setLowerBound(yMin - yReserve);
         yAxis.setUpperBound(yMax + yReserve);
-        xAxis.setTickUnit((xAxis.getUpperBound() - xAxis.getLowerBound()) / controlChartDataList.size());
-        yAxis.setTickUnit((yAxis.getUpperBound() - yAxis.getLowerBound()) / controlChartDataList.size());
+        ChartOperatorUtils.updateAxisTickUnit(xAxis);
+        ChartOperatorUtils.updateAxisTickUnit(yAxis);
     }
 
     private void createChartSeriesData(ControlChartData controlChartData, ChartTooltip chartTooltip) {

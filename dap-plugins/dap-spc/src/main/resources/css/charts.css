@@ -10,14 +10,14 @@
     -fx-font-size: 0.9em;
 }
 
-.chart-vertical-grid-lines {
-    -fx-stroke-width: 0px;
-}
+/*.chart-vertical-grid-lines {*/
+    /*-fx-stroke-width: 0px;*/
+/*}*/
 
-.chart-horizontal-grid-lines {
-    -fx-stroke-width: 0px;
-    -fx-stroke: transparent;
-}
+/*.chart-horizontal-grid-lines {*/
+    /*-fx-stroke-width: 0px;*/
+    /*-fx-stroke: transparent;*/
+/*}*/
 
 /*chart style*/
 .chart-plot-background {

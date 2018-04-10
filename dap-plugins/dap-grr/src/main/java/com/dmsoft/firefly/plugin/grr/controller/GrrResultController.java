@@ -403,6 +403,8 @@ public class GrrResultController implements Initializable {
     }
 
     private void removeAllResultData() {
+        summaryItemTf.setDisable(false);
+        resultBasedCmb.setDisable(false);
         summaryModel.clearTableData();
         this.removeSubResultData();
     }
@@ -652,21 +654,16 @@ public class GrrResultController implements Initializable {
         xBarAppraiserChart.clear();
         xBarAppraiserChart.removeAllChildren();
         rangeAppraiserChart.removeAllChildren();
-
         componentBp.getChildren().remove(componentBp.getLeft());
         partAppraiserBp.getChildren().remove(partAppraiserBp.getLeft());
         xBarAppraiserBp.getChildren().remove(xBarAppraiserBp.getLeft());
         rangeAppraiserBp.getChildren().remove(rangeAppraiserBp.getLeft());
         rrbyAppraiserBp.getChildren().remove(rrbyAppraiserBp.getLeft());
         rrbyPartBp.getChildren().remove(rrbyPartBp.getLeft());
-
         componentChart.getData().setAll(FXCollections.observableArrayList());
         partAppraiserChart.getData().setAll(FXCollections.observableArrayList());
         rrByAppraiserChart.getData().setAll(FXCollections.observableArrayList());
         rrbyPartChart.getData().setAll(FXCollections.observableArrayList());
-
-//        itemResultModel.setRowKeyArray(FXCollections.observableArrayList());
-//        itemResultModel.setHeaderArray(FXCollections.observableArrayList());
         itemResultModel.clearTableData();
         grrAnovaModel.clearTableData();
         grrSourceModel.clearTableData();
@@ -825,6 +822,9 @@ public class GrrResultController implements Initializable {
         grrDataBtn.getStyleClass().add("btn-group");
         grrChartBtn.getStyleClass().add("btn-group");
         grrResultBtn.getStyleClass().add("btn-group-last");
+
+        summaryItemTf.setDisable(true);
+        resultBasedCmb.setDisable(true);
     }
 
     private void initComponentEvents() {

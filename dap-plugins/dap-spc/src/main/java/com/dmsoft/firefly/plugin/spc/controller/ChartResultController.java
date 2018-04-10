@@ -613,14 +613,15 @@ public class ChartResultController implements Initializable {
 
     private void setBoxChartPerformance() {
         for (String operateName : UIConstant.SPC_CHART_BOX_EXTERN_MENU) {
-            if (!runOperateBtn.getSelectedSets().contains(operateName)) {
+            if (!boxOperateBtn.getSelectedSets().contains(operateName)) {
                 if (operateName.equals(UIConstant.SPC_CHART_BOX_EXTERN_MENU[0])) {
                     boxChartPane.getChart().removeStroke();
                     continue;
                 }
-//                if (operateName.equals(UIConstant.SPC_CHART_BOX_EXTERN_MENU[1])) {
-//
-//                }
+                if (operateName.equals(UIConstant.SPC_CHART_BOX_EXTERN_MENU[1])) {
+                    boxChartPane.getChart().toggleVerticalGridLine(false);
+                    continue;
+                }
             }
         }
     }
@@ -701,6 +702,8 @@ public class ChartResultController implements Initializable {
             BoxPlotChart boxPlotChart = boxChartPane.getChart();
             if (name.equalsIgnoreCase(UIConstant.SPC_CHART_BOX_EXTERN_MENU[0])) {
                 boxPlotChart.toggleStroke(selected);
+            } else if (name.equalsIgnoreCase(UIConstant.SPC_CHART_BOX_EXTERN_MENU[1])) {
+                boxPlotChart.toggleVerticalGridLine(selected);
             }
         });
         chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[7], buildControlChartSelectCallBack(mrChartPane.getChart(), UIConstant.SPC_CHART_NAME[7]));
