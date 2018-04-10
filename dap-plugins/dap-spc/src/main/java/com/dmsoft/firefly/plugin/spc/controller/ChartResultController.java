@@ -32,7 +32,6 @@ import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.sun.javafx.charts.Legend;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -372,6 +371,7 @@ public class ChartResultController implements Initializable {
             } else if (name.equalsIgnoreCase(UIConstant.SPC_CHART_BOX_EXTERN_MENU[1])) {
                 boxPlotChart.toggleVerticalGridLine(selected);
             }
+            updatePerformance(UIConstant.SPC_CHART_NAME[6], selectedNames);
         };
     }
 

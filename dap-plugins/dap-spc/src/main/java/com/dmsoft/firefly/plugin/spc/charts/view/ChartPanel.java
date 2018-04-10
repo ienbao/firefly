@@ -114,7 +114,7 @@ public class ChartPanel<T extends XYChart> extends VBox {
         menuBar = new MenuBar();
         extensionMenu = new Menu();
         copyMenuItem = new MenuItem("Copy");
-        saveMenuItem = new MenuItem("Save As");
+        saveMenuItem = new MenuItem(UIConstant.CHART_EXTENSION_MENU_SAVE);
         printMenuItem = new MenuItem("Print");
         defaultRatioMenuItem = new RadioMenuItem("Default Display");
         oneToOneRatioMenuItem = new RadioMenuItem("1:1 Display");
