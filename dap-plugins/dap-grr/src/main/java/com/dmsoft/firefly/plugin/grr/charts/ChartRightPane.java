@@ -96,6 +96,13 @@ public class ChartRightPane extends HBox {
         this.getChildren().add(menuBar);
     }
 
+    /**
+     * Enable extension menu
+     */
+    public void toggleExtensionMenu(boolean flag) {
+        extensionMenu.setDisable(!flag);
+    }
+
     private void initComponentsRender() {
         zoomInBtn.setDisable(true);
         zoomOutBtn.setDisable(true);

@@ -96,11 +96,13 @@ public class MainController {
         dataSourceTooltip = new CustomerTooltip();
         contentStackPane = new ContentStackPane();
         grpContent.add(contentStackPane, 0, 1);
+        grpContent.setDisable(true);
         this.initToolBar();
         this.initStateBar();
-        this.updateStateBarIcon();
         this.updateMemoryState();
         if (isLogin()) {
+            grpContent.setDisable(false);
+            this.updateStateBarIcon();
             this.initTemplate();
             this.initTemplatePopup();
             this.initDataSource();
@@ -133,7 +135,6 @@ public class MainController {
             });
             tbaSystem.getItems().add(btn);
         });
-        grpContent.setDisable(true);
     }
 
     private void setActiveBtnStyle(Button btn) {
@@ -148,7 +149,6 @@ public class MainController {
     private void setActiveFirstTab(PluginUIContext pc) {
         if (tbaSystem.getItems() != null && !tbaSystem.getItems().isEmpty()) {
             Button firstTabBtn = (Button) tbaSystem.getItems().get(0);
-            grpContent.setDisable(false);
             setActiveBtnStyle(firstTabBtn);
             Pane pane = pc.getMainBodyPane(firstTabBtn.getId()).getNewPane();
             pane.setId(firstTabBtn.getId());

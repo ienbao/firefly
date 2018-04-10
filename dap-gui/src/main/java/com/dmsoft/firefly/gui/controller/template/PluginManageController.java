@@ -19,6 +19,7 @@ import com.dmsoft.firefly.gui.model.PluginTableRowData;
 import com.dmsoft.firefly.gui.utils.FileUtils;
 import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.KeyValueDto;
+import com.dmsoft.firefly.gui.utils.StreamGobbler;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
@@ -315,9 +316,16 @@ public class PluginManageController implements Initializable {
                     deleteList.forEach(v -> stringBuilder.append(" delete:").append(v));
                     coverList.forEach(v -> stringBuilder.append(" cover:").append(v));
                     System.out.println(stringBuilder.toString());
-                    Runtime.getRuntime().exec(stringBuilder.toString());
+                    Process proc = Runtime.getRuntime().exec(stringBuilder.toString());
+                    StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "Error");
+                    StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), "Output");
+                    errorGobbler.start();
+                    outputGobbler.start();
+                    proc.waitFor();
                 } catch (IOException e) {
                     System.out.println("restart failed.");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         });
