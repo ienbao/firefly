@@ -25,5 +25,5 @@
      mkdir ./log/
     fi
 
-    exec java -Djava.library.path=${R_HOME}/library/rJava/jri -jar dap-gui-2.5.0-SNAPSHOT.jar >> log/ispc_"$now".log &
+    exec java -Djava.library.path=${R_HOME}/library/rJava/jri -jar dap-gui-2.5.0-SNAPSHOT.jar >> log/dap_"$now".log &
 

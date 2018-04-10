@@ -11,6 +11,7 @@ import com.dmsoft.firefly.restart.utils.PropertyConfig;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -20,7 +21,7 @@ public class DapRestartApplication {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
-        Arrays.stream(args).forEach(v -> {
+      /*  Arrays.stream(args).forEach(v -> {
             if (v.contains("delete:")) {
                 FileUtils.deleteFolder(v.replace("delete:", ""));
             }
@@ -34,15 +35,41 @@ public class DapRestartApplication {
                     e.printStackTrace();
                 }
             }
-        });
-        try {
-            String file = System.getProperty("user.dir") + File.separator + "application.properties";
+        });*/
+       // try {
+          /*  String file = System.getProperty("user.dir") + File.separator + "application.properties";
             Properties properties = PropertyConfig.getProperties(file);
             System.out.println("start_command:" + properties.getProperty("start_command"));
-            Runtime.getRuntime().exec(properties.getProperty("start_command"));
-            System.exit(0);
-        } catch (IOException e) {
+            String run = System.getProperty("user.dir") + File.separator + "startup.sh";
+
+            File dirFile = new File(run);
+            dirFile.setReadable(true, false);
+            dirFile.setExecutable(true, false);
+            dirFile.setWritable(true, false);
+           // String run = "." + File.separator + "startup.sh";
+            Runtime.getRuntime().exec(run);
+            System.exit(0);*/
+
+
+            String run = "/Users/julia/projects/spc2.5/deploy/dap/" + "restart.sh";
+            File dirFile = new File(run);
+            dirFile.setReadable(true, false);
+            dirFile.setExecutable(true, false);
+            dirFile.setWritable(true, false);
+            ProcessBuilder pBuilder = new ProcessBuilder();
+            Map<String, String> penv = pBuilder.environment(); //获得进程的环境
+            penv.put("APP_JAR", "dap-restart-2.5.0-SNAPSHOT.jar pluginFolderPath:/Users/julia/projects/spc2.5/deploy/dap/./Plugins/ delete:/Users/julia/projects/spc2.5/deploy/dap/./Plugins/dap-csv-resolver");
+            //String run = "." + File.separator + "restart.sh";
+            System.out.println(run);
+           /* pBuilder.command(run);
+            pBuilder.start();*/
+        Process d = Runtime.getRuntime().exec(run);
+        d.getErrorStream();
+        d.getInputStream();
+        d.getOutputStream();
+            //System.exit(0);
+       /* } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }
