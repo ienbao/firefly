@@ -794,7 +794,7 @@ public class GrrExportController {
             StageMap.closeStage("grrExport");
             String savePath = locationPath.getText() + "/GRR_" + getTimeString();
             List<String> projectNameList = envService.findActivatedProjectName();
-            export(projectNameList, savePath);
+            export(projectNameList, savePath, false);
         });
         print.setOnAction(event -> {
             if (StringUtils.isEmpty(locationPath.getText())) {
@@ -815,16 +815,7 @@ public class GrrExportController {
 
             String savePath = locationPath.getText() + "/GRR_" + getTimeString();
             List<String> projectNameList = envService.findActivatedProjectName();
-            export(projectNameList, savePath);
-            boolean isSucceed = false;
-            try {
-                isSucceed = new ExcelToPdfUtil().excelToPdf(savePath);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (isSucceed) {
-                PdfPrintUtil.printPdf(savePath);
-            }
+            export(projectNameList, savePath, true);
         });
         cancel.setOnAction(event -> {
             StageMap.closeStage("grrExport");
@@ -979,7 +970,7 @@ public class GrrExportController {
         }
     }
 
-    private void export(List<String> projectNameList, String savePath) {
+    private void export(List<String> projectNameList, String savePath, boolean isPrint) {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip(GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT));
         windowProgressTipController.setAutoHide(false);
         windowProgressTipController.getAnalysisLB().setText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXPORTING));
@@ -1000,6 +991,14 @@ public class GrrExportController {
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
+                final boolean[] isSucceed = {false};
+                if (isPrint) {
+                    try {
+                        isSucceed[0] = new ExcelToPdfUtil().excelToPdf(savePath);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 context.pushEvent(new JobEvent("Export done", D100, null));
                 GrrParamDto grrParamDto = context.getParam(ParamKeys.GRR_PARAM_DTO, GrrParamDto.class);
                 refreshPartOrAppraiserListView(grrParamDto);
@@ -1013,6 +1012,14 @@ public class GrrExportController {
                     }
 
                 });
+                if (isSucceed[0]) {
+                    windowProgressTipController.closeDialog();
+                    Thread thread = new Thread(() -> {
+                        PdfPrintUtil.getPrintService();
+                        PdfPrintUtil.printPdf(savePath);
+                    });
+                    thread.start();
+                }
             }
         });
         jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {

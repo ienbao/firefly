@@ -353,7 +353,7 @@ public class SpcExportController {
             }
             StageMap.closeStage("spcExport");
             String savePath = locationPath.getText() + "/SPC_" + getTimeString();
-            export(savePath);
+            export(savePath, false);
         });
         print.setOnAction(event -> {
             if (StringUtils.isEmpty(locationPath.getText())) {
@@ -366,17 +366,7 @@ public class SpcExportController {
             }
             StageMap.closeStage("spcExport");
             String savePath = locationPath.getText() + "/SPC_" + getTimeString();
-            PdfPrintUtil.getPrintService();
-            export(savePath);
-            boolean isSucceed = false;
-            try {
-                isSucceed = new ExcelToPdfUtil().excelToPdf(savePath);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (isSucceed) {
-                PdfPrintUtil.printPdf(savePath);
-            }
+            export(savePath, true);
         });
         //TODO : change cancel text
         cancel.setOnAction(event -> {
@@ -489,7 +479,7 @@ public class SpcExportController {
         }
     }
 
-    private synchronized void export(String savePath) {
+    private synchronized void export(String savePath, boolean isPrint) {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT));
         windowProgressTipController.setAutoHide(false);
         windowProgressTipController.getAnalysisLB().setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORTING));
@@ -539,6 +529,14 @@ public class SpcExportController {
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
+                final boolean[] isSucceed = {false};
+                if (isPrint) {
+                   try {
+                       isSucceed[0] = new ExcelToPdfUtil().excelToPdf(savePath);
+                   } catch (Exception e) {
+                       e.printStackTrace();
+                   }
+               }
                 context.pushEvent(new JobEvent("Export done", D100, null));
                 String path = context.get(ParamKeys.EXPORT_PATH).toString();
                 windowProgressTipController.getCancelBtn().setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.OPEN_EXPORT_FOLDER));
@@ -550,6 +548,15 @@ public class SpcExportController {
                     }
 
                 });
+
+                if (isSucceed[0]) {
+                    windowProgressTipController.closeDialog();
+                    Thread thread = new Thread(() -> {
+                        PdfPrintUtil.getPrintService();
+                        PdfPrintUtil.printPdf(savePath);
+                    });
+                    thread.start();
+                }
             }
         });
         jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {

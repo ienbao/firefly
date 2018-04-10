@@ -157,4 +157,16 @@ public class FileUtils {
             e.printStackTrace();
         }
     }
+
+    /**
+     * change file authority
+     *
+     * @param filePath String
+     */
+    public static void changeFileAuthority(String filePath) {
+        File dirFile = new File(filePath);
+        dirFile.setReadable(true, false);
+        dirFile.setExecutable(true, false);
+        dirFile.setWritable(true, false);
+    }
 }
