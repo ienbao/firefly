@@ -9,9 +9,7 @@ import com.dmsoft.firefly.restart.utils.FileUtils;
 import com.dmsoft.firefly.restart.utils.PropertyConfig;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -21,8 +19,6 @@ import java.util.Properties;
 public class DapRestartApplication {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-
-        Thread.sleep(1000);
 
         Arrays.stream(args).forEach(v -> {
             if (v.contains("delete:")) {
@@ -42,12 +38,11 @@ public class DapRestartApplication {
         try {
             String file = System.getProperty("user.dir") + File.separator + "application.properties";
             Properties properties = PropertyConfig.getProperties(file);
-            Runtime.getRuntime().exec(properties.getProperty("restart_command"));
+            System.out.println("start_command:" + properties.getProperty("start_command"));
+            Runtime.getRuntime().exec(properties.getProperty("start_command"));
             System.exit(0);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 }
