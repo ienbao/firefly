@@ -84,6 +84,23 @@ public class SpcMainController implements Initializable {
     }
 
     /**
+     * timer refresh statistical result data
+     * @param spcStatsDtoList the data list
+     */
+    public void timerRefreshStatisticalResultData(List<SpcStatisticalResultAlarmDto> spcStatsDtoList){
+        statisticalResultController.refreshStatisticalResult(spcStatsDtoList);
+    }
+
+    /**
+     * get select search condition
+     * @return the list of searchConditionDto
+     */
+    public  List<SearchConditionDto> getSelectSearchCondition(){
+        List<SearchConditionDto> searchConditionDtoList = buildRefreshSearchConditionData(statisticalResultController.getSelectStatsData());
+        return searchConditionDtoList;
+    }
+
+    /**
      * set statistical result data
      *
      * @param list the data list
