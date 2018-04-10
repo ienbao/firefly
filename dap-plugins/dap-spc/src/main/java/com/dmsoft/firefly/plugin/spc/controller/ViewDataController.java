@@ -144,7 +144,7 @@ public class ViewDataController implements Initializable {
         this.model.setStatisticalSearchConditionDtoList(statisticalSearchConditionDtoList);
         this.model.setMainController(spcMainController);
         if (model.getHeaderArray().size() > 51) {
-            model.getHeaderArray().remove(51, model.getHeaderArray().size() - 1);
+            model.getHeaderArray().remove(51, model.getHeaderArray().size());
         }
         TableViewWrapper.decorate(viewDataTable, model);
         model.getAllCheckBox().setOnMouseClicked(event -> {
@@ -153,7 +153,7 @@ public class ViewDataController implements Initializable {
             }
         });
         viewDataTable.getColumns().forEach(this::decorate);
-        chooseTestItemDialog.resetSelectedItems(dataFrame.getAllTestItemName());
+        chooseTestItemDialog.resetSelectedItems(model.getHeaderArray().subList(1, model.getHeaderArray().size()));
     }
 
     /**

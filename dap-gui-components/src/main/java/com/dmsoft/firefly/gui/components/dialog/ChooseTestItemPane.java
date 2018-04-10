@@ -51,7 +51,7 @@ public class ChooseTestItemPane extends GridPane {
         if (selectedItems != null) {
             selecteds.addAll(selectedItems);
             if (selecteds.size() > getMaxLength()) {
-                selecteds.removeAll(selecteds.subList(getMaxLength(), selecteds.size() - 1));
+                selecteds.removeAll(selecteds.subList(getMaxLength(), selecteds.size()));
             }
         }
         if (items != null) {
