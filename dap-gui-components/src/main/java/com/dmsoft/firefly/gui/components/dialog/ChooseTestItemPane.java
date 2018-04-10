@@ -32,8 +32,6 @@ public class ChooseTestItemPane extends GridPane {
     private SortedList<ChooseTestItemModel> sortedList;
     private Label errorLabel;
     private TableView<ChooseTestItemModel> chooseTB;
-    private TableColumn<ChooseTestItemModel, String> itemCol;
-    private HBox itemHeader;
     private GridPane titlePane;
     private GridPane bottomPane;
 
@@ -46,9 +44,15 @@ public class ChooseTestItemPane extends GridPane {
      */
     ChooseTestItemPane(List<String> items, List<String> selectedItems, int maxLength) {
         this.items = FXCollections.observableArrayList();
+        if (maxLength > 0) {
+            this.maxLength = maxLength;
+        }
         List<String> selecteds = Lists.newArrayList();
         if (selectedItems != null) {
             selecteds.addAll(selectedItems);
+            if (selecteds.size() > getMaxLength()) {
+                selecteds.removeAll(selecteds.subList(getMaxLength(), selecteds.size() - 1));
+            }
         }
         if (items != null) {
             for (String s : items) {
@@ -59,9 +63,7 @@ public class ChooseTestItemPane extends GridPane {
         }
         this.filteredList = this.items.filtered(p -> true);
         this.sortedList = new SortedList<>(filteredList);
-        if (maxLength > 0) {
-            this.maxLength = maxLength;
-        }
+
         init();
     }
 
@@ -143,12 +145,12 @@ public class ChooseTestItemPane extends GridPane {
                     return new SimpleBooleanProperty(false);
                 }
             }));
-            itemCol = new TableColumn<>();
+            TableColumn<ChooseTestItemModel, String> itemCol = new TableColumn<>();
             itemCol.setCellValueFactory(cell -> cell.getValue().itemNameProperty());
             itemCol.setResizable(false);
             itemCol.setComparator(Comparator.naturalOrder());
 
-            itemHeader = new HBox();
+            HBox itemHeader = new HBox();
             itemHeader.setStyle("-fx-padding: 0 0 0 -10");
             itemHeader.setAlignment(Pos.CENTER_LEFT);
             Label testItemLabel = new Label(FxmlAndLanguageUtils.getString(CommonResourceMassages.TEST_ITEM));
@@ -273,5 +275,9 @@ public class ChooseTestItemPane extends GridPane {
 
     public ObservableList<ChooseTestItemModel> getItems() {
         return items;
+    }
+
+    int getMaxLength() {
+        return maxLength;
     }
 }
