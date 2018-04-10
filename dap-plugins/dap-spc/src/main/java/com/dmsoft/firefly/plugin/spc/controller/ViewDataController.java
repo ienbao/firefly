@@ -143,6 +143,9 @@ public class ViewDataController implements Initializable {
         this.model = new ViewDataDFModel(dataFrame, selectedRowKey);
         this.model.setStatisticalSearchConditionDtoList(statisticalSearchConditionDtoList);
         this.model.setMainController(spcMainController);
+        if (model.getHeaderArray().size() > 51) {
+            model.getHeaderArray().remove(51, model.getHeaderArray().size() - 1);
+        }
         TableViewWrapper.decorate(viewDataTable, model);
         model.getAllCheckBox().setOnMouseClicked(event -> {
             for (String s : model.getRowKeyArray()) {
@@ -308,6 +311,7 @@ public class ViewDataController implements Initializable {
         });
         chooseItemBtn.setOnAction(event -> getChooseColumnBtnEvent());
         chooseTestItemDialog.getOkBtn().setOnAction(event -> {
+            chooseTestItemDialog.close();
             if (dataFrame == null) {
                 return;
             }

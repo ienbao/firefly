@@ -51,9 +51,7 @@ public class ChooseTestItemDialog extends Stage {
         scene.setFill(Color.TRANSPARENT);
         this.setScene(scene);
         windowPane.init();
-        mainPane.getOkBtn().setOnAction(event -> {
-            this.close();
-        });
+        mainPane.getOkBtn().setOnAction(event -> this.close());
         Image image = new Image("/images/desktop_mac_logo.png");
         this.getIcons().add(image);
     }
@@ -69,6 +67,9 @@ public class ChooseTestItemDialog extends Stage {
         List<String> selecteds = Lists.newArrayList();
         if (selectedItems != null) {
             selecteds.addAll(selectedItems);
+            if (selecteds.size() > mainPane.getMaxLength()) {
+                selecteds.removeAll(selecteds.subList(mainPane.getMaxLength(), selecteds.size() - 1));
+            }
         }
         if (items != null) {
             for (String s : items) {
@@ -85,8 +86,13 @@ public class ChooseTestItemDialog extends Stage {
      * @param selectedItems selected items
      */
     public void resetSelectedItems(List<String> selectedItems) {
+        int j = 0;
         for (int i = 0, max = mainPane.getItems().size(); i < max; i++) {
             if (selectedItems != null && selectedItems.contains(mainPane.getItems().get(i).itemNameProperty().getValue())) {
+                i++;
+                if (i > mainPane.getMaxLength()) {
+                    continue;
+                }
                 mainPane.getItems().get(i).selectedProperty().set(true);
             } else {
                 mainPane.getItems().get(i).selectedProperty().set(false);
