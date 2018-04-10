@@ -104,8 +104,7 @@ public class UIConstant {
 
     //chart user performance
     public static final String CHART_PERFORMANCE_CODE = "SPC_CHARTS";
-    public static final String CHART_PERFORMANCE_KEY_OPERATE = "SPC_CHART_OPERATE";
-    public static final String CHART_PERFORMANCE_KEY_RULE = "SPC_CHART_RULE";
+    public static final String SPC_CHART_PERFORMANCE_KEY_OPERATE = "SPC_CHART_OPERATE";
 
     public static final String[] SPC_CHART_NDC_EXTERN_MENU = new String[]{
             SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_USL"),
