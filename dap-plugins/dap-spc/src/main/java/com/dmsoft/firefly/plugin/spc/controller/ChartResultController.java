@@ -542,7 +542,7 @@ public class ChartResultController implements Initializable {
         for (String operateName : UIConstant.SPC_CHART_NDC_EXTERN_MENU) {
             if (!ndOperateBtn.getSelectedSets().contains(operateName)) {
                 if (operateName.equals(UIConstant.SPC_CHART_NDC_EXTERN_MENU[9])) {
-                    ndChartPane.getChart().hiddenAllBarSeries();
+                    ndChartPane.getChart().toggleBarSeries(false);
                     continue;
                 }
                 if (operateName.equals(UIConstant.SPC_CHART_NDC_EXTERN_MENU[10])) {
@@ -674,8 +674,7 @@ public class ChartResultController implements Initializable {
     private void initChartOperateSelectCallBackMap() {
         chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[0], (name, selected, selectedNames) -> {
             if (UIConstant.SPC_CHART_NDC_EXTERN_MENU[9].equalsIgnoreCase(name)) {
-                ObservableList<XYChart.Series> series = ndChartPane.getChart().getData();
-                series.forEach(oneSeries -> ndChartPane.getChart().toggleBarSeries(oneSeries, selected));
+                ndChartPane.getChart().toggleBarSeries(selected);
             } else if (UIConstant.SPC_CHART_NDC_EXTERN_MENU[10].equalsIgnoreCase(name)) {
                 ndChartPane.getChart().toggleAreaSeries(selected);
             } else {

@@ -97,10 +97,12 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         List<UserDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, UserDto.class));
-        for (UserDto userDto : list) {
-            String name = userDto.getUserName();
-            if (name.equals("operationSystem")) {
-                return userDto.isAcceptLegal();
+        if (list != null && !list.isEmpty()) {
+            for (UserDto userDto : list) {
+                String name = userDto.getUserName();
+                if (name.equals("operationSystem")) {
+                    return userDto.isAcceptLegal();
+                }
             }
         }
         return false;

@@ -23,6 +23,7 @@ import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
 import com.dmsoft.firefly.sdk.plugin.PluginProxyMethodFactory;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
+import com.dmsoft.firefly.sdk.utils.PropertyConfig;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
 import com.google.common.collect.Lists;
 import com.mongodb.MongoClient;
@@ -30,9 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
 
@@ -93,13 +91,9 @@ public class DAPApplication {
      */
     public static void startPlugin(List<String> activePlugins) {
         // prepare env done
-        String propertiesURL = ApplicationPathUtil.getPath("application.properties");
-
-        InputStream inputStream = null;
         try {
-            inputStream = new BufferedInputStream(new FileInputStream(propertiesURL));
-            Properties properties = new Properties();
-            properties.load(inputStream);
+            String propertiesURL = ApplicationPathUtil.getPath("application.properties");
+            Properties properties = PropertyConfig.getProperties(propertiesURL);
             String pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
             logger.info("start scan... pluginFolderPath = " + pluginFolderPath);
             List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath);
@@ -108,14 +102,6 @@ public class DAPApplication {
             RuntimeContext.getBean(PluginContext.class).enablePlugin(activePlugins);
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
         RuntimeContext.getBean(PluginContext.class).startPlugin(activePlugins);
     }

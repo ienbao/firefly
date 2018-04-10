@@ -15,7 +15,6 @@ import com.dmsoft.firefly.plugin.spc.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
-import com.dmsoft.firefly.plugin.spc.utils.enums.TimerKeyType;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -285,8 +284,18 @@ public class SpcItemController implements Initializable {
         isTimer = false;
         startTimer = false;
         enabledTimerCheckBox.setSelected(false);
-        timeComboBox.setItems(FXCollections.observableArrayList(TimerKeyType.FIVE_MIN.getCode(), TimerKeyType.TEN_MIN.getCode(), TimerKeyType.TEN_MIN.getCode()));
-        timeComboBox.setValue(TimerKeyType.FIVE_MIN.getCode());
+        List<String> timerList = leftConfigService.findSpcTimerTime();
+        if(timerList == null){
+            return;
+        }
+        ObservableList<String> showTimeList = FXCollections.observableArrayList();
+        for(String time : timerList) {
+            showTimeList.add(time+SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIMER_MIN));
+        }
+        timeComboBox.setItems(showTimeList);
+        if(showTimeList.size() > 0) {
+            timeComboBox.setValue(showTimeList.get(0));
+        }
     }
 
     /**
@@ -456,45 +465,45 @@ public class SpcItemController implements Initializable {
                 startTimer = true;
                 this.setStartTimerState(startTimer);
                 timer = this.startTimerAnalysis();
+
+                this.normalAnalysisEvent(isTimer);
             }
             this.updateAnalysisBtnTimer();
         } else {
             if (validAnalysisCondition()) {
-                this.normalAnalysisEvent();
+                this.normalAnalysisEvent(isTimer);
             }
         }
     }
 
     private Timer startTimerAnalysis() {
-        long intervalTime;
+
         String currentRefreshTime = (String) timeComboBox.getValue();
-        if (currentRefreshTime.equals(TimerKeyType.FIVE_MIN.getCode())) {
-            intervalTime = 5 * 60000;
-        } else if (currentRefreshTime.equals(TimerKeyType.TEN_MIN.getCode())) {
-            intervalTime = 10 * 60000;
-        } else {
-            intervalTime = 30 * 60000;
+        String time = currentRefreshTime.replace(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIMER_MIN),"");
+        if(!DAPStringUtils.isNumeric(time)){
+            return null;
         }
+        Double intervalTime = Double.valueOf(time) * 60000;
         Timer timer1 = new Timer();
         timer1.schedule(new TimerTask() {
             @Override
             public void run() {
                 Platform.runLater(() -> autoRefreshAnalysis());
             }
-        }, 0, intervalTime);
+        }, intervalTime.longValue(), intervalTime.longValue());
         return timer1;
     }
 
     @SuppressWarnings("unchecked")
     private void autoRefreshAnalysis() {
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
-        spcMainController.clearAnalysisData();
+        spcMainController.clearAnalysisSubShowData();
         List<String> projectNameList = envService.findActivatedProjectName();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
         List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(selectedItemDto);
         SpcAnalysisConfigDto spcAnalysisConfigDto = this.buildSpcAnalysisConfigData();
 
-        List<SearchConditionDto> chartSearchConditionDtoList = spcMainController.getTimerSearchConditionDtoList();
+        List<SearchConditionDto> chartSearchConditionDtoList = spcMainController.getSelectSearchCondition();
         this.updateSpcConfigPreference(spcAnalysisConfigDto);
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         windowProgressTipController.setAutoHide(false);
@@ -521,14 +530,14 @@ public class SpcItemController implements Initializable {
                 List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.STATISTICAL_ANALYSIS_RESULT);
                 TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
                 DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
-                spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList, spcMainController.getTimerSearchKeyList(), true);
+                spcMainController.timerRefreshStatisticalResultData(spcStatisticalResultAlarmDtoList);
 
                 SearchDataFrame searchDataFrame = context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
                 spcMainController.setDataFrame(searchDataFrame);
 
                 //set chart data
                 List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) context.get(ParamKeys.CHART_ANALYSIS_RESULT);
-                if (spcChartDtoList != null) {
+                if (spcChartDtoList != null && spcChartDtoList.size() !=  0) {
                     spcMainController.setSpcChartData(spcChartDtoList);
                     //set view data
                     spcMainController.setTimerViewData(searchDataFrame, chartSearchConditionDtoList, searchDataFrame.getSearchedRowKey(), searchConditionDtoList);
@@ -572,7 +581,7 @@ public class SpcItemController implements Initializable {
         return true;
     }
 
-    private void normalAnalysisEvent() {
+    private void normalAnalysisEvent(boolean isTimer) {
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
         spcMainController.clearAnalysisData();
         List<String> projectNameList = envService.findActivatedProjectName();
@@ -604,7 +613,7 @@ public class SpcItemController implements Initializable {
                 List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
                 TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
                 DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
-                spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList, null, false);
+                spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList, null, isTimer);
                 spcMainController.setDataFrame(context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class));
                 windowProgressTipController.closeDialog();
             }

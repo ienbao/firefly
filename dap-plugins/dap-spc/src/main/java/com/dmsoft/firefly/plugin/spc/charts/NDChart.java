@@ -191,10 +191,10 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     /**
      * Hidden all bar series
      */
-    public void hiddenAllBarSeries() {
-        ObservableList<XYChart.Series<X, Y>> series = this.getData();
-        series.forEach(oneSeries -> toggleBarSeries(oneSeries, false));
-    }
+//    public void hiddenAllBarSeries() {
+//        ObservableList<XYChart.Series<X, Y>> series = this.getData();
+//        series.forEach(oneSeries -> toggleBarSeries(oneSeries, false));
+//    }
 
     /**
      * Toggle bar series show or hide
@@ -202,14 +202,30 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
      * @param series bar series
      * @param showed whether it show or not
      */
-    public void toggleBarSeries(XYChart.Series<X, Y> series, boolean showed) {
-        series.getData().forEach(dataItem -> {
+//    public void toggleBarSeries(XYChart.Series<X, Y> series, boolean showed) {
+//        series.getData().forEach(dataItem -> {
+//            if (!showed) {
+//                dataItem.getNode().getStyleClass().add("chart-hidden-bar");
+//            } else {
+//                dataItem.getNode().getStyleClass().remove("chart-hidden-bar");
+//            }
+//        });
+//    }
+
+    /**
+     * Toggle bar series show or hide
+     *
+     * @param showed whether it show or not
+     */
+    public void toggleBarSeries(boolean showed) {
+        ObservableList<Series<X, Y>> seriesObservableList = getData();
+        seriesObservableList.forEach(series -> series.getData().forEach(dataItem -> {
             if (!showed) {
-                dataItem.getNode().getStyleClass().add("chart-hidden-bar");
+                dataItem.getNode().getStyleClass().setAll("chart-hidden-bar");
             } else {
-                dataItem.getNode().getStyleClass().remove("chart-hidden-bar");
+                dataItem.getNode().getStyleClass().setAll("chart-bar");
             }
-        });
+        }));
     }
 
     /**
@@ -285,8 +301,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         data.forEach(dataItem -> {
             dataItem.getNode().getStyleClass().setAll("chart-bar");
             if (color != null && DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
-                StringBuilder nodeStyle = new StringBuilder("-fx-bar-fill: " + ColorUtils.toHexFromFXColor(color));
-                nodeStyle.append(";-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
+                StringBuilder nodeStyle = new StringBuilder();
+                nodeStyle.append("-fx-bar-fill: " + ColorUtils.toHexFromFXColor(color));
+//                nodeStyle.append(";-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
                 dataItem.getNode().setStyle(nodeStyle.toString());
             }
         });
@@ -831,7 +848,6 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
 
     /**
      * Super-lazy instantiation pattern from Bill Pugh.
-     *
      */
     private static class StyleableProperties {
         private static final CssMetaData<NDChart<?, ?>, Number> BAR_GAP =

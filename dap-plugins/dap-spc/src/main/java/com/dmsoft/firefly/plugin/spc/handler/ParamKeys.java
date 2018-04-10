@@ -55,5 +55,6 @@ public class ParamKeys {
     //file name
     public static final String SPC_SETTING_FILE_NAME = "spcSetting";
     public static final String SPC_EXPORT_SETTING_FILE_NAME = "spcExportSetting";
+    public static final String SPC_CONFIG_FILE_NAME = "spcConfig";
 
 }
