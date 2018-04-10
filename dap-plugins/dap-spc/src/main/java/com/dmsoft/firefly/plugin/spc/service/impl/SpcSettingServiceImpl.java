@@ -14,16 +14,16 @@ import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.utils.ControlRuleConfigUtil;
 import com.dmsoft.firefly.plugin.spc.utils.enums.JudgeRuleType;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcCustomAlarmKey;
-import com.dmsoft.firefly.plugin.spc.utils.enums.SpcStatisticalResultKey;
-import com.dmsoft.firefly.sdk.utils.DAPDoubleUtils;
-import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
-import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
+import com.dmsoft.firefly.plugin.spc.utils.enums.SpcStatisticalResultKey;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.apis.IConfig;
 import com.dmsoft.firefly.sdk.plugin.apis.annotation.Config;
 import com.dmsoft.firefly.sdk.plugin.apis.annotation.ExcludeMethod;
+import com.dmsoft.firefly.sdk.utils.DAPDoubleUtils;
+import com.dmsoft.firefly.sdk.utils.FileUtils;
+import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
@@ -298,6 +298,14 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
         SpcSettingJsonDto spcSettingJsonDto = jsonMapper.fromJson(new String(config), SpcSettingJsonDto.class);
         saveSpcSetting(spcSettingJsonDto.getSpcSettingDto());
         saveSpcExportTemplateSetting(spcSettingJsonDto.getExportSetting());
+    }
+
+    @Override
+    public void restoreConfig() {
+        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.SpcPlugin").getFolderPath() + File.separator + "config";
+        String defaultParentPath = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.SpcPlugin").getFolderPath() + File.separator + "default";
+        FileUtils.delFolder(path);
+        FileUtils.copyFolder(defaultParentPath, path);
     }
 
     private String getAbilityAlarmLevel(String name, Double value, Map<String, Double[]> abilityAlarmRule) {

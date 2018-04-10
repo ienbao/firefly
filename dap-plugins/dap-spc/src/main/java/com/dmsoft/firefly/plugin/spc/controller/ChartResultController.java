@@ -11,8 +11,6 @@ import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.ControlChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.NDBarChartData;
 import com.dmsoft.firefly.plugin.spc.charts.select.SelectCallBack;
-import com.dmsoft.firefly.plugin.spc.charts.utils.LegendUtils;
-import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
@@ -34,7 +32,6 @@ import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.sun.javafx.charts.Legend;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -281,8 +278,8 @@ public class ChartResultController implements Initializable {
             String chartName = chartOperateButtonEntry.getKey();
             if (data.containsKey(chartName) && data.get(chartName) instanceof Map) {
                 Map<String, List<String>> chartPerformance = (Map<String, List<String>>) data.get(chartName);
-                if (chartPerformance.containsKey(UIConstant.CHART_PERFORMANCE_KEY_OPERATE)) {
-                    chartOperateButtonEntry.getValue().setSelectedSets(Sets.newHashSet(chartPerformance.get(UIConstant.CHART_PERFORMANCE_KEY_OPERATE)));
+                if (chartPerformance.containsKey(UIConstant.SPC_CHART_PERFORMANCE_KEY_OPERATE)) {
+                    chartOperateButtonEntry.getValue().setSelectedSets(Sets.newHashSet(chartPerformance.get(UIConstant.SPC_CHART_PERFORMANCE_KEY_OPERATE)));
                 }
             }
         }
@@ -293,15 +290,15 @@ public class ChartResultController implements Initializable {
         for (String name : UIConstant.SPC_CHART_NAME) {
             Map<String, List<String>> operatePerformance = Maps.newHashMap();
             if (name.equals(UIConstant.SPC_CHART_NAME[0])) {
-                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));
+                operatePerformance.put(UIConstant.SPC_CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_NDC_EXTERN_MENU));
             } else if (name.equals(UIConstant.SPC_CHART_NAME[1])) {
-                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_RUN_EXTERN_MENU));
+                operatePerformance.put(UIConstant.SPC_CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_RUN_EXTERN_MENU));
             } else if (name.equals(UIConstant.SPC_CHART_NAME[2]) || name.equals(UIConstant.SPC_CHART_NAME[3])
                     || name.equals(UIConstant.SPC_CHART_NAME[4]) || name.equals(UIConstant.SPC_CHART_NAME[5])
                     || name.equals(UIConstant.SPC_CHART_NAME[7])) {
-                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
+                operatePerformance.put(UIConstant.SPC_CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
             } else if (name.equals(UIConstant.SPC_CHART_NAME[6])) {
-                operatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_BOX_EXTERN_MENU));
+                operatePerformance.put(UIConstant.SPC_CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.SPC_CHART_BOX_EXTERN_MENU));
             }
             performanceMap.put(name, operatePerformance);
         }
@@ -323,6 +320,33 @@ public class ChartResultController implements Initializable {
         return button;
     }
 
+    private SelectCallBack buildNdChartSelectCallBack() {
+        return (name, selected, selectedNames) -> {
+            if (UIConstant.SPC_CHART_NDC_EXTERN_MENU[9].equalsIgnoreCase(name)) {
+                ndChartPane.getChart().toggleBarSeries(selected);
+            } else if (UIConstant.SPC_CHART_NDC_EXTERN_MENU[10].equalsIgnoreCase(name)) {
+                ndChartPane.getChart().toggleAreaSeries(selected);
+            } else {
+                ndChartPane.getChart().toggleValueMarker(name, selected);
+            }
+            updatePerformance(UIConstant.SPC_CHART_NAME[0], selectedNames);
+        };
+    }
+
+    private SelectCallBack buildRunChartSelectCallBack() {
+        return (name, selected, selectedNames) -> {
+            ControlChart runChart = runChartPane.getChart();
+            if (UIConstant.SPC_CHART_RUN_EXTERN_MENU[10].equalsIgnoreCase(name)) {
+                runChart.toggleDataAllSeriesLine(selected);
+            } else if (UIConstant.SPC_CHART_RUN_EXTERN_MENU[9].equalsIgnoreCase(name)) {
+                runChart.toggleDataAllSeriesPoint(selected);
+            } else {
+                runChart.toggleValueMarker(name, selected);
+            }
+            updatePerformance(UIConstant.SPC_CHART_NAME[1], selectedNames);
+        };
+    }
+
     private SelectCallBack buildControlChartSelectCallBack(ControlChart chart, String chartName) {
         return (name, selected, selectedNames) -> {
             if (UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[4].equalsIgnoreCase(name)) {
@@ -336,6 +360,18 @@ public class ChartResultController implements Initializable {
             }
             //update user performance
             updatePerformance(chartName, selectedNames);
+        };
+    }
+
+    private SelectCallBack buildBoxChartSelectCallBack() {
+        return (name, selected, selectedNames) -> {
+            BoxPlotChart boxPlotChart = boxChartPane.getChart();
+            if (name.equalsIgnoreCase(UIConstant.SPC_CHART_BOX_EXTERN_MENU[0])) {
+                boxPlotChart.toggleStroke(selected);
+            } else if (name.equalsIgnoreCase(UIConstant.SPC_CHART_BOX_EXTERN_MENU[1])) {
+                boxPlotChart.toggleVerticalGridLine(selected);
+            }
+            updatePerformance(UIConstant.SPC_CHART_NAME[6], selectedNames);
         };
     }
 
@@ -362,7 +398,7 @@ public class ChartResultController implements Initializable {
         data = data == null ? Maps.newLinkedHashMap() : data;
         Map<String, List> operateMap = data.containsKey(chartName) && data.get(chartName) instanceof Map
                 ? (Map<String, List>) data.get(chartName) : Maps.newHashMap();
-        operateMap.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(selectedNames));
+        operateMap.put(UIConstant.SPC_CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(selectedNames));
         data.put(chartName, operateMap);
         String performValue = mapper.toJson(data);
         UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
@@ -519,7 +555,6 @@ public class ChartResultController implements Initializable {
             controlChart.setSeriesDataStyleByRule(controlChartData1.getUniqueKey(), ucl, lcl);
         });
         this.setControlChartPerformance(controlChart, chartName);
-//        chartPanelMap.get(chartName).activeChartDragging();
         chartPanelMap.get(chartName).updateChartData();
         chartPanelMap.get(chartName).toggleCustomButtonDisable(false);
     }
@@ -543,7 +578,7 @@ public class ChartResultController implements Initializable {
         for (String operateName : UIConstant.SPC_CHART_NDC_EXTERN_MENU) {
             if (!ndOperateBtn.getSelectedSets().contains(operateName)) {
                 if (operateName.equals(UIConstant.SPC_CHART_NDC_EXTERN_MENU[9])) {
-                    ndChartPane.getChart().hiddenAllBarSeries();
+                    ndChartPane.getChart().toggleBarSeries(false);
                     continue;
                 }
                 if (operateName.equals(UIConstant.SPC_CHART_NDC_EXTERN_MENU[10])) {
@@ -614,14 +649,15 @@ public class ChartResultController implements Initializable {
 
     private void setBoxChartPerformance() {
         for (String operateName : UIConstant.SPC_CHART_BOX_EXTERN_MENU) {
-            if (!runOperateBtn.getSelectedSets().contains(operateName)) {
+            if (!boxOperateBtn.getSelectedSets().contains(operateName)) {
                 if (operateName.equals(UIConstant.SPC_CHART_BOX_EXTERN_MENU[0])) {
                     boxChartPane.getChart().removeStroke();
                     continue;
                 }
-//                if (operateName.equals(UIConstant.SPC_CHART_BOX_EXTERN_MENU[1])) {
-//
-//                }
+                if (operateName.equals(UIConstant.SPC_CHART_BOX_EXTERN_MENU[1])) {
+                    boxChartPane.getChart().toggleVerticalGridLine(false);
+                    continue;
+                }
             }
         }
     }
@@ -673,38 +709,13 @@ public class ChartResultController implements Initializable {
     }
 
     private void initChartOperateSelectCallBackMap() {
-        chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[0], (name, selected, selectedNames) -> {
-            if (UIConstant.SPC_CHART_NDC_EXTERN_MENU[9].equalsIgnoreCase(name)) {
-                ObservableList<XYChart.Series> series = ndChartPane.getChart().getData();
-                series.forEach(oneSeries -> ndChartPane.getChart().toggleBarSeries(oneSeries, selected));
-            } else if (UIConstant.SPC_CHART_NDC_EXTERN_MENU[10].equalsIgnoreCase(name)) {
-                ndChartPane.getChart().toggleAreaSeries(selected);
-            } else {
-                ndChartPane.getChart().toggleValueMarker(name, selected);
-            }
-            updatePerformance(UIConstant.SPC_CHART_NAME[0], selectedNames);
-        });
-        chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[1], (name, selected, selectedNames) -> {
-            ControlChart runChart = runChartPane.getChart();
-            if (UIConstant.SPC_CHART_RUN_EXTERN_MENU[10].equalsIgnoreCase(name)) {
-                runChart.toggleDataAllSeriesLine(selected);
-            } else if (UIConstant.SPC_CHART_RUN_EXTERN_MENU[9].equalsIgnoreCase(name)) {
-                runChart.toggleDataAllSeriesPoint(selected);
-            } else {
-                runChart.toggleValueMarker(name, selected);
-            }
-            updatePerformance(UIConstant.SPC_CHART_NAME[1], selectedNames);
-        });
+        chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[0], buildNdChartSelectCallBack());
+        chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[1], buildRunChartSelectCallBack());
         chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[2], buildControlChartSelectCallBack(xBarChartPane.getChart(), UIConstant.SPC_CHART_NAME[2]));
         chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[3], buildControlChartSelectCallBack(rangeChartPane.getChart(), UIConstant.SPC_CHART_NAME[3]));
         chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[4], buildControlChartSelectCallBack(sdChartPane.getChart(), UIConstant.SPC_CHART_NAME[4]));
         chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[5], buildControlChartSelectCallBack(medianChartPane.getChart(), UIConstant.SPC_CHART_NAME[5]));
-        chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[6], (name, selected, selectedNames) -> {
-            BoxPlotChart boxPlotChart = boxChartPane.getChart();
-            if (name.equalsIgnoreCase(UIConstant.SPC_CHART_BOX_EXTERN_MENU[0])) {
-                boxPlotChart.toggleStroke(selected);
-            }
-        });
+        chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[6], buildBoxChartSelectCallBack());
         chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[7], buildControlChartSelectCallBack(mrChartPane.getChart(), UIConstant.SPC_CHART_NAME[7]));
     }
 

@@ -10,6 +10,7 @@ public class CommonResourceMassages {
     public static final String CHOOSE_DATE = "CHOOSE_DATE";
     public static final String NEXT_MONTH = "NEXT_MONTH";
     public static final String PRE_MONTH = "PRE_MONTH";
+    public static final String CHOOSE_ITEM = "CHOOSE_ITEM";
 
     public static final String COMPONENT_STAGE = "component_stage_";
     public static final String COMPONENT_NODE = "component_node_";
@@ -35,4 +36,8 @@ public class CommonResourceMassages {
     public static final String PLUGIN_EXISTS = "PLUGIN_EXISTS";
     public static final String RESTART_APPLICATION = "RESTART_APPLICATION";
     public static final String RESTART_APPLICATION_INFO = "RESTART_APPLICATION_INFO";
+    public static final String INVERT = "INVERT";
+    public static final String TEST_ITEM = "TEST_ITEM";
+    public static final String MAX_CHOICES = "MAX_CHOICES";
+    public static final String GLOBAL_BTN_OK = "GLOBAL_BTN_OK";
 }

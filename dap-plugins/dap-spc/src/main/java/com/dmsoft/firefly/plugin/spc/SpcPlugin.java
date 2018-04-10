@@ -111,12 +111,12 @@ public class SpcPlugin extends Plugin {
         JobFactory jobFactory = RuntimeContext.getBean(JobFactory.class);
         jobManager.initializeJob(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE, jobFactory.createJobPipeLine()
                 .addLast(new FindSpcSettingDataHandler())
-                .addLast(new FindTestDataHandler())
+                .addLast(new FindTestDataHandler().setWeight(D100))
                 .addLast(new DataFrameHandler())
                 .addLast(new GetSpcStatsResultHandler().setWeight(D100)));
         jobManager.initializeJob(ParamKeys.SPC_ANALYSIS_EXPORT_JOB_PIPELINE, jobFactory.createJobPipeLine()
                 .addLast(new FindSpcSettingDataHandler())
-                .addLast(new FindTestDataHandler())
+                .addLast(new FindTestDataHandler().setWeight(D100))
                 .addLast(new DataFrameHandler())
                 .addLast(new GetSpcStatsResultHandler().setWeight(D100)));
 
@@ -141,12 +141,12 @@ public class SpcPlugin extends Plugin {
                 .addLast(new SaveSpcSettingDataHandler()));
 
         jobManager.initializeJob(ParamKeys.SPC_EXPORT_VIEW_DATA, jobFactory.createJobPipeLine()
-                .addLast(new FindTestDataHandler())
+                .addLast(new FindTestDataHandler().setWeight(D100))
                 .addLast(new DataFrameHandler()));
 
         jobManager.initializeJob(ParamKeys.SPC_TIMER_REFRESH_ANALYSIS_JOB_PIPELINE, jobFactory.createJobPipeLine()
                 .addLast(new FindSpcSettingDataHandler())
-                .addLast(new FindTestDataHandler())
+                .addLast(new FindTestDataHandler().setWeight(D100))
                 .addLast(new DataFrameHandler())
                 .addLast(new TimerRefreshAnalysisHandler())
                 .addLast(new RefreshAnalysisDataHandler().setWeight(D100)));

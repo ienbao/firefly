@@ -45,6 +45,7 @@ public class ChooseColDialogController implements Initializable {
     private FilteredList<ChooseTableRowData> chooseTableRowDataFilteredList;
     private SortedList<ChooseTableRowData> chooseTableRowDataSortedList;
     private Stage stage;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initTable();
@@ -58,7 +59,7 @@ public class ChooseColDialogController implements Initializable {
      */
     public void setTableData(List<ChooseTableRowData> chooseTableRowDataList) {
         chooseTableRowDataObservableList.clear();
-        chooseTableRowDataObservableList.addAll( chooseTableRowDataList );
+        chooseTableRowDataObservableList.addAll(chooseTableRowDataList);
     }
 
     /**
@@ -67,7 +68,7 @@ public class ChooseColDialogController implements Initializable {
      * @param text the header title
      */
     public void setValueColumnText(String text) {
-        chooseValueColumn.setText( text );
+        chooseValueColumn.setText(text);
     }
 
     /**
@@ -80,7 +81,7 @@ public class ChooseColDialogController implements Initializable {
         if (chooseTableRowDataObservableList != null) {
             for (ChooseTableRowData data : chooseTableRowDataObservableList) {
                 if (data.isSelect()) {
-                    resultName.add( data.getValue() );
+                    resultName.add(data.getValue());
                 }
             }
         }
@@ -95,10 +96,10 @@ public class ChooseColDialogController implements Initializable {
     public void setSelectResultName(List<String> resultName) {
         if (chooseTableRowDataObservableList != null) {
             for (ChooseTableRowData data : chooseTableRowDataObservableList) {
-                if (resultName.contains( data.getValue() )) {
-                    data.getSelector().setValue( true );
+                if (resultName.contains(data.getValue())) {
+                    data.getSelector().setValue(true);
                 } else {
-                    data.getSelector().setValue( false );
+                    data.getSelector().setValue(false);
                 }
             }
         }
@@ -107,34 +108,34 @@ public class ChooseColDialogController implements Initializable {
 
     private void initTable() {
         allCheckBox = new CheckBox();
-        chooseCheckBoxColumn.setGraphic( allCheckBox );
+        chooseCheckBoxColumn.setGraphic(allCheckBox);
 
-        chooseCheckBoxColumn.setCellValueFactory( cellData -> cellData.getValue().getSelector().getCheckBox() );
-        chooseValueColumn.setCellValueFactory( cellData -> cellData.getValue().valueProperty() );
+        chooseCheckBoxColumn.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
+        chooseValueColumn.setCellValueFactory(cellData -> cellData.getValue().valueProperty());
         chooseTableRowDataObservableList = FXCollections.observableArrayList();
-        chooseTableRowDataFilteredList = chooseTableRowDataObservableList.filtered( p -> true );
-        chooseTableRowDataSortedList = new SortedList<>( chooseTableRowDataFilteredList );
-        chooseColumnTable.setItems( chooseTableRowDataSortedList );
-        chooseTableRowDataSortedList.comparatorProperty().bind( chooseColumnTable.comparatorProperty() );
+        chooseTableRowDataFilteredList = chooseTableRowDataObservableList.filtered(p -> true);
+        chooseTableRowDataSortedList = new SortedList<>(chooseTableRowDataFilteredList);
+        chooseColumnTable.setItems(chooseTableRowDataSortedList);
+        chooseTableRowDataSortedList.comparatorProperty().bind(chooseColumnTable.comparatorProperty());
 
     }
 
     private void initComponentEvent() {
-        chooseFilterTf.getTextField().textProperty().addListener( (observable, oldValue, newValue) -> getFilterValueEvent() );
-        chooseUnSelected.setOnAction( event -> getUnSelectedCheckBoxEvent() );
-        allCheckBox.setOnAction( event -> getAllSelectEvent() );
+        chooseFilterTf.getTextField().textProperty().addListener((observable, oldValue, newValue) -> getFilterValueEvent());
+        chooseUnSelected.setOnAction(event -> getUnSelectedCheckBoxEvent());
+        allCheckBox.setOnAction(event -> getAllSelectEvent());
     }
 
     private void getFilterValueEvent() {
-        chooseTableRowDataFilteredList.setPredicate( p ->
-                p.getValue().toLowerCase().contains( chooseFilterTf.getTextField().getText().toLowerCase() )
+        chooseTableRowDataFilteredList.setPredicate(p ->
+                p.getValue().toLowerCase().contains(chooseFilterTf.getTextField().getText().toLowerCase())
         );
     }
 
     private void getUnSelectedCheckBoxEvent() {
         if (chooseTableRowDataObservableList != null) {
             for (ChooseTableRowData data : chooseTableRowDataObservableList) {
-                data.getSelector().setValue( !data.getSelector().isSelected() );
+                data.getSelector().setValue(!data.getSelector().isSelected());
             }
         }
     }
@@ -142,7 +143,7 @@ public class ChooseColDialogController implements Initializable {
     private void getAllSelectEvent() {
         if (chooseTableRowDataSortedList != null) {
             for (ChooseTableRowData data : chooseTableRowDataSortedList) {
-                data.getSelector().setValue( allCheckBox.isSelected() );
+                data.getSelector().setValue(allCheckBox.isSelected());
             }
         }
     }

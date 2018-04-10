@@ -247,6 +247,17 @@ public class SpcExportController {
         item.widthProperty().addListener((ov, w1, w2) -> {
             Platform.runLater(() -> is.relocate(w2.doubleValue() - 21, 0));
         });
+        item.setComparator((o1, o2) -> {
+            boolean o1OnTop = stickyOnTopItems.contains(o1.getTestItemName());
+            boolean o2OnTop = stickyOnTopItems.contains(o2.getTestItemName());
+            if (o1OnTop == o2OnTop) {
+                return -o2.getTestItemName().compareTo(o1.getTestItemName());
+            } else if (o1OnTop) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
         item.sortTypeProperty().addListener((ov, sort1, sort2) -> {
             if (sort2.equals(TableColumn.SortType.DESCENDING)) {
                 item.setComparator((o1, o2) -> {
@@ -342,7 +353,7 @@ public class SpcExportController {
             }
             StageMap.closeStage("spcExport");
             String savePath = locationPath.getText() + "/SPC_" + getTimeString();
-            export(savePath);
+            export(savePath, false);
         });
         print.setOnAction(event -> {
             if (StringUtils.isEmpty(locationPath.getText())) {
@@ -355,17 +366,7 @@ public class SpcExportController {
             }
             StageMap.closeStage("spcExport");
             String savePath = locationPath.getText() + "/SPC_" + getTimeString();
-            PdfPrintUtil.getPrintService();
-            export(savePath);
-            boolean isSucceed = false;
-            try {
-                isSucceed = new ExcelToPdfUtil().excelToPdf(savePath);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (isSucceed) {
-                PdfPrintUtil.printPdf(savePath);
-            }
+            export(savePath, true);
         });
         //TODO : change cancel text
         cancel.setOnAction(event -> {
@@ -378,7 +379,7 @@ public class SpcExportController {
             pop = new ContextMenu();
             MenuItem all = new MenuItem(SpcFxmlAndLanguageUtils.getString(ResourceMassages.ALL_TEST_ITEMS));
             all.setOnAction(event -> {
-                filteredList.setPredicate(p -> this.isFilterAndAll(p));
+                filteredList.setPredicate(this::isFilterAndAll);
                 is.getStyleClass().remove("filter-active");
                 is.getStyleClass().add("filter-normal");
                 is.setGraphic(null);
@@ -386,7 +387,7 @@ public class SpcExportController {
             });
             MenuItem show = new MenuItem(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS_WITH_USL_LSL));
             show.setOnAction(event -> {
-                filteredList.setPredicate(p -> this.isFilterAndHasUslOrLsl(p));
+                filteredList.setPredicate(this::isFilterAndHasUslOrLsl);
                 is.getStyleClass().remove("filter-normal");
                 is.getStyleClass().add("filter-active");
                 is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
@@ -478,7 +479,7 @@ public class SpcExportController {
         }
     }
 
-    private synchronized void export(String savePath) {
+    private synchronized void export(String savePath, boolean isPrint) {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT));
         windowProgressTipController.setAutoHide(false);
         windowProgressTipController.getAnalysisLB().setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORTING));
@@ -528,6 +529,14 @@ public class SpcExportController {
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
+                final boolean[] isSucceed = {false};
+                if (isPrint) {
+                   try {
+                       isSucceed[0] = new ExcelToPdfUtil().excelToPdf(savePath);
+                   } catch (Exception e) {
+                       e.printStackTrace();
+                   }
+               }
                 context.pushEvent(new JobEvent("Export done", D100, null));
                 String path = context.get(ParamKeys.EXPORT_PATH).toString();
                 windowProgressTipController.getCancelBtn().setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.OPEN_EXPORT_FOLDER));
@@ -539,6 +548,15 @@ public class SpcExportController {
                     }
 
                 });
+
+                if (isSucceed[0]) {
+                    windowProgressTipController.closeDialog();
+                    Thread thread = new Thread(() -> {
+                        PdfPrintUtil.getPrintService();
+                        PdfPrintUtil.printPdf(savePath);
+                    });
+                    thread.start();
+                }
             }
         });
         jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
@@ -840,6 +858,9 @@ public class SpcExportController {
                 });
             }
             selectItem.forEach(itemName -> selectItemDto.add(envService.findTestItemNameByItemName(itemName)));
+            if (selectItemDto.size() > 50) {
+                selectItemDto.removeAll(selectItemDto.subList(50, selectItemDto.size()));
+            }
 
             JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
             context.put(ParamKeys.PROJECT_NAME_LIST, envService.findActivatedProjectName());

@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.charts;
 
+import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.data.BarCategoryData;
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxPlotChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
@@ -77,7 +78,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         this.orientation = Orientation.VERTICAL;
         this.valueAxis = (ValueAxis) yAxis;
         this.setHorizontalZeroLineVisible(false);
+        this.setHorizontalGridLinesVisible(false);
         this.setVerticalZeroLineVisible(false);
+        this.setVerticalGridLinesVisible(false);
         this.pseudoClassStateChanged(HORIZONTAL_PSEUDOCLASS_STATE, orientation == Orientation.HORIZONTAL);
         this.pseudoClassStateChanged(VERTICAL_PSEUDOCLASS_STATE, orientation == Orientation.VERTICAL);
         this.setData(FXCollections.observableArrayList());
@@ -125,8 +128,8 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         xAxis.setUpperBound(xMax + xReserve);
         yAxis.setLowerBound(0);
         yAxis.setUpperBound(yMax + yReserve);
-        xAxis.setTickUnit((xAxis.getUpperBound() - xAxis.getLowerBound()) / barChartDataList.size());
-        xAxis.setTickUnit((yAxis.getUpperBound() - yAxis.getLowerBound()) / barChartDataList.size());
+        ChartOperatorUtils.updateAxisTickUnit(xAxis);
+        ChartOperatorUtils.updateAxisTickUnit(yAxis);
     }
 
     /**
@@ -189,27 +192,19 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     }
 
     /**
-     * Hidden all bar series
-     */
-    public void hiddenAllBarSeries() {
-        ObservableList<XYChart.Series<X, Y>> series = this.getData();
-        series.forEach(oneSeries -> toggleBarSeries(oneSeries, false));
-    }
-
-    /**
      * Toggle bar series show or hide
      *
-     * @param series bar series
      * @param showed whether it show or not
      */
-    public void toggleBarSeries(XYChart.Series<X, Y> series, boolean showed) {
-        series.getData().forEach(dataItem -> {
+    public void toggleBarSeries(boolean showed) {
+        ObservableList<Series<X, Y>> seriesObservableList = getData();
+        seriesObservableList.forEach(series -> series.getData().forEach(dataItem -> {
             if (!showed) {
-                dataItem.getNode().getStyleClass().add("chart-hidden-bar");
+                dataItem.getNode().getStyleClass().setAll("chart-hidden-bar");
             } else {
-                dataItem.getNode().getStyleClass().remove("chart-hidden-bar");
+                dataItem.getNode().getStyleClass().setAll("chart-bar");
             }
-        });
+        }));
     }
 
     /**
@@ -285,8 +280,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         data.forEach(dataItem -> {
             dataItem.getNode().getStyleClass().setAll("chart-bar");
             if (color != null && DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
-                StringBuilder nodeStyle = new StringBuilder("-fx-bar-fill: " + ColorUtils.toHexFromFXColor(color));
-                nodeStyle.append(";-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
+                StringBuilder nodeStyle = new StringBuilder();
+                nodeStyle.append("-fx-bar-fill: " + ColorUtils.toHexFromFXColor(color));
+//                nodeStyle.append(";-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
                 dataItem.getNode().setStyle(nodeStyle.toString());
             }
         });
@@ -605,6 +601,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     private double calculateBarWidth(SortedSet categories) {
         ValueAxis xAxis = (ValueAxis) getXAxis();
         double firstValue = (double) categories.first();
+        if (firstValue == 0) {
+            return firstValue;
+        }
         double mark = xAxis.getDisplayPosition(firstValue) / firstValue;
         return mark;
     }
@@ -831,7 +830,6 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
 
     /**
      * Super-lazy instantiation pattern from Bill Pugh.
-     *
      */
     private static class StyleableProperties {
         private static final CssMetaData<NDChart<?, ?>, Number> BAR_GAP =

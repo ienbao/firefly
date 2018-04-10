@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.charts;
 
-import com.dmsoft.firefly.gui.components.chart.ChartSaveUtils;
+import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.gui.components.chart.ChartUtils;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
@@ -44,6 +44,11 @@ public class ChartRightPane extends HBox {
     private RadioMenuItem defaultRatioMenuItem;
     private RadioMenuItem oneToOneRatioMenuItem;
 
+    /**
+     * Construct a new LineChart with the given xyChart.
+     *
+     * @param xyChart XYChart
+     */
     public ChartRightPane(XYChart xyChart) {
         this.chart = xyChart;
         if (chart.getXAxis() instanceof ValueAxis && chart.getYAxis() instanceof ValueAxis) {
@@ -69,7 +74,7 @@ public class ChartRightPane extends HBox {
         menuBar = new MenuBar();
         extensionMenu = new Menu();
         copyMenuItem = new MenuItem("Copy");
-        saveMenuItem = new MenuItem("Save As");
+        saveMenuItem = new MenuItem(UIConstant.CHART_EXTENSION_MENU_SAVE);
         printMenuItem = new MenuItem("Print");
         defaultRatioMenuItem = new RadioMenuItem("Default Display");
         oneToOneRatioMenuItem = new RadioMenuItem("1:1 Display");
@@ -89,6 +94,13 @@ public class ChartRightPane extends HBox {
         this.getChildren().add(zoomInBtn);
         this.getChildren().add(zoomOutBtn);
         this.getChildren().add(menuBar);
+    }
+
+    /**
+     * Enable extension menu
+     */
+    public void toggleExtensionMenu(boolean flag) {
+        extensionMenu.setDisable(!flag);
     }
 
     private void initComponentsRender() {
@@ -112,6 +124,9 @@ public class ChartRightPane extends HBox {
         zoomOutBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_narrow_normal.png")));
     }
 
+    /**
+     * Update chart zoom original axis
+     */
     public void updateChartData() {
         if (chartUtils != null) {
             ValueAxis xAxis = (ValueAxis) chart.getXAxis();
@@ -153,10 +168,11 @@ public class ChartRightPane extends HBox {
             fileChooser.getExtensionFilters().add(pdfExtensionFilter);
             fileChooser.setSelectedExtensionFilter(pdfExtensionFilter);
             File file = fileChooser.showSaveDialog(null);
+            final float quality = 0.9f;
             if (file != null) {
                 try {
                     String imagePath = file.getAbsolutePath();
-                    if (imagePath.contains(suffix)) {
+                    if (!imagePath.contains(suffix)) {
                         imagePath += suffix;
                     }
                     file = new File(imagePath);
@@ -164,7 +180,7 @@ public class ChartRightPane extends HBox {
                         file.createNewFile();
                     }
                     WritableImage writableImage = chart.snapshot(new SnapshotParameters(), null);
-                    ChartSaveUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(writableImage, null), file, 0.9f);
+                    ChartOperatorUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(writableImage, null), file, quality);
                 } catch (Exception e) {
                     System.out.println("Save error, " + e.getMessage());
                     e.printStackTrace();
@@ -173,6 +189,11 @@ public class ChartRightPane extends HBox {
         });
     }
 
+    /**
+     * Add custom pane children node
+     *
+     * @param node Node
+     */
     public void addCustomPaneChildren(Node node) {
         this.customPane.getChildren().add(node);
     }

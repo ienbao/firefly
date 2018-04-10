@@ -167,7 +167,7 @@ public class QuickSearchController implements Initializable {
             if (withinUpperTf.getStyleClass().contains("text-field-error") || withinLowerTf.getStyleClass().contains("text-field-error")) {
                 return true;
             }
-        } else if(withinRangeRadioBtn.isSelected()){
+        } else if(withoutRangeRadioBtn.isSelected()){
             if (withoutLowerTf.getStyleClass().contains("text-field-error") || withoutUpperTf.getStyleClass().contains("text-field-error")) {
                 return true;
             }

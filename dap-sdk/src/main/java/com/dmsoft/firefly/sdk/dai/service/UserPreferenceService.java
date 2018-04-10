@@ -33,4 +33,9 @@ public interface UserPreferenceService {
      * @param code     code
      */
     void deletePreference(String userName, String code);
+
+    /**
+     * Reset user preference
+     */
+    void resetPreference();
 }

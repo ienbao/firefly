@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.charts;
 
+import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxExtraData;
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxPlotChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
@@ -21,7 +22,6 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
@@ -58,6 +58,7 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         super(xAxis, yAxis);
         super.setData(FXCollections.observableArrayList());
         super.setHorizontalZeroLineVisible(false);
+        super.setHorizontalGridLinesVisible(false);
         super.setVerticalZeroLineVisible(false);
         super.setAnimated(false);
         xAxis.setAnimated(false);
@@ -109,8 +110,8 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         xAxis.setUpperBound(xMax + xReserve);
         yAxis.setLowerBound(yMin - yReserve);
         yAxis.setUpperBound(yMax + yReserve);
-        xAxis.setTickUnit((xAxis.getUpperBound() - xAxis.getLowerBound()) / boxPlotChartDataList.size());
-        yAxis.setTickUnit((yAxis.getUpperBound() - yAxis.getUpperBound()) / boxPlotChartDataList.size());
+        ChartOperatorUtils.updateAxisTickUnit(xAxis);
+        ChartOperatorUtils.updateAxisTickUnit(yAxis);
     }
 
     private void createChartSeries(BoxPlotChartData chartData, ChartTooltip chartTooltip) {
@@ -143,6 +144,14 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         getData().setAll(FXCollections.observableArrayList());
         seriesUniqueKeyMap.clear();
         outliers.setAll(FXCollections.observableArrayList());
+    }
+
+    public void toggleVerticalGridLine(boolean showLined) {
+        if (showLined) {
+            this.setVerticalGridLinesVisible(true);
+        } else {
+            this.setVerticalGridLinesVisible(false);
+        }
     }
 
     private Series buildSeries(IBoxAndWhiskerData data, String seriesName) {

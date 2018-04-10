@@ -13,13 +13,6 @@ public class UIConstant {
     public static final String UI_MESSAGE_TIP_LOCATION = "UI_MESSAGE_TIP_LOCATION";
 
     public static final String EXCEPTION_GRR_MODEL = "EXCEPTION_GRR_MODEL";
-//    public static final String[] GRR_RESULT_TYPE = new String[] {"process tolerance", "system contribution"};
-//    public static final String[] GRR_SUMMARY_TITLE = new String[] {"TestItem", "LSL", "USL", "Tolerance", "%Repeatability", "%Reproducibility", "%Gauge R & R"};
-//    public static final String[] GRR_ANOVA_TITLE = new String[] {"Source", "DF", "SS", "MS", "F", "Prob > F"};
-//    public static final String[] GRR_SOURCE_TITLE = new String[] {"Source of Variation", "SIGMA", "Study Var 6", "Variation", "%Total Sigma", "%Total Variation", "%Total Tolerance"};
-//    public static final String[] CHART_COMPONENT_LABEL = new String[]{ "Gage R&R","Repeatability", "Reproducibility", "Part to Part"};
-//    public static final String[] CHART_COMPONENT_CATEGORY = new String[]{"Contribution", "Variation", "Tolerance"};
-//    public static final String[] CHART_OPERATE_NAME = new String[]{"UCL", "μ", "LCL"};
     public static final String SPLIT_FLAG = "!@#";
 
     public static final Color COLOR_EXCELLENT = Color.rgb(125, 174, 20);
@@ -36,19 +29,18 @@ public class UIConstant {
     public static final String TOTAL_MEAN = "Total Mean";
     public static final String TOTAL_RANGE = "Total Range";
 
-    public static final String ANALYSIS_RESULT_SUMMARY = "SummaryResult";
-    public static final String ANALYSIS_RESULT_DETAIL = "DetailResult";
-
     public static final String CHART_PERFORMANCE_CODE="GRR_CHARTS";
     public static final String CHART_PERFORMANCE_KEY_OPERATE="GRR_CHART_OPERATE";
 
-    public static final String GRR_CHART_XBAR_APPRAISER = "X-bar by Appraiser";
-    public static final String GRR_CHART_RANGE_APPRAISER = "Range by Appraiser";
+    public static final String GRR_CHART_XBAR_APPRAISER = GrrFxmlAndLanguageUtils.getString("GRR_CHART_XBAR_APPRAISER");
+    public static final String GRR_CHART_RANGE_APPRAISER = GrrFxmlAndLanguageUtils.getString("GRR_CHART_RANGE_APPRAISER");
 
     public static final String BTN_CHART_CHOOSE_LINES = GrrFxmlAndLanguageUtils.getString("BTN_CHART_CHOOSE_LINES");
     public static final String BTN_CHART_ZOOM_IN = GrrFxmlAndLanguageUtils.getString("BTN_CHART_ZOOM_IN");
     public static final String BTN_CHART_ZOOM_OUT = GrrFxmlAndLanguageUtils.getString("BTN_CHART_ZOOM_OUT");
     public static final String BTN_CHART_EXTENSION_MENU = GrrFxmlAndLanguageUtils.getString("BTN_CHART_EXTENSION_MENU");
+
+    public static final String CHART_EXTENSION_MENU_SAVE = GrrFxmlAndLanguageUtils.getString("CHART_SAVE_AS");
 
     public static final String[] GRR_RESULT_TYPE = new String[]{
             GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_TOLERANCE"),

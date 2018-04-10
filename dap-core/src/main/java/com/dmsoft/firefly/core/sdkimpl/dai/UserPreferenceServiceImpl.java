@@ -9,6 +9,7 @@ import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.dmsoft.firefly.sdk.utils.FileUtils;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,8 @@ import java.util.List;
 public class UserPreferenceServiceImpl implements UserPreferenceService {
 
     private final String parentPath = ApplicationPathUtil.getPath("config");
+    private final String defaultParentPath = ApplicationPathUtil.getPath("default");
+
     private final String fileName = "userPreference";
     private Logger logger = LoggerFactory.getLogger(UserPreferenceServiceImpl.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
@@ -152,5 +155,11 @@ public class UserPreferenceServiceImpl implements UserPreferenceService {
         if (isExist) {
             JsonFileUtil.writeJsonFile(list, parentPath, fileName);
         }
+    }
+
+    @Override
+    public void resetPreference() {
+        FileUtils.delFolder(parentPath);
+        FileUtils.copyFolder(defaultParentPath, parentPath);
     }
 }

@@ -148,15 +148,19 @@ public class TemplateController {
         templateItemDFModel = new TemplateItemDFModel();
         TableViewWrapper.decorate(itemTable, templateItemDFModel);
 
-        ((TableColumn<String, String>)itemTable.getColumns().get(1)).setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList(TestItemType.VARIABLE.getCode(), TestItemType.ATTRIBUTE.getCode())));
+        ((TableColumn<String, String>) itemTable.getColumns().get(1)).setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList(TestItemType.VARIABLE.getCode(), TestItemType.ATTRIBUTE.getCode())));
 
         initData(selectName);
         templateName.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> initData(newValue));
     }
 
     private void initEvent() {
-        nameFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) ->
-                nameFilterList.setPredicate(p -> p.contains(nameFilter.getTextField().getText()))
+        nameFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) -> {
+                    if (nameFilter.getTextField().getText() == null) {
+                        return;
+                    }
+                    nameFilterList.setPredicate(p -> p.toLowerCase().contains(nameFilter.getTextField().getText().toLowerCase()));
+                }
         );
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) -> {
                     templateItemDFModel.filterTestItem(newValue);
@@ -369,6 +373,9 @@ public class TemplateController {
                     return;
                 }
                 String selectTemplateName = templateName.getSelectionModel().getSelectedItem();
+                if (selectTemplateName.equals(newTemplateName)) {
+                    return;
+                }
                 if (selectTemplateName.equals(templateSettingDto.getName())) {
                     templateSettingDto.setName(newTemplateName);
                 }

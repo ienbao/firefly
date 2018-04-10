@@ -32,6 +32,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -49,6 +50,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.google.common.io.Resources.getResource;
 
@@ -79,6 +81,7 @@ public class MainController {
     private Popup templatePopup;
     private ListView<StateBarTemplateModel> templateView;
     private ObservableList<StateBarTemplateModel> templateList = FXCollections.observableArrayList();
+    private AtomicBoolean isShow = new AtomicBoolean(false);
 
     private StackPane contentStackPane;
     private Map<String, TabPane> tabPaneMap = new LinkedHashMap<>();
@@ -93,11 +96,13 @@ public class MainController {
         dataSourceTooltip = new CustomerTooltip();
         contentStackPane = new ContentStackPane();
         grpContent.add(contentStackPane, 0, 1);
+        grpContent.setDisable(true);
         this.initToolBar();
         this.initStateBar();
-        this.updateStateBarIcon();
         this.updateMemoryState();
         if (isLogin()) {
+            grpContent.setDisable(false);
+            this.updateStateBarIcon();
             this.initTemplate();
             this.initTemplatePopup();
             this.initDataSource();
@@ -130,7 +135,6 @@ public class MainController {
             });
             tbaSystem.getItems().add(btn);
         });
-        grpContent.setDisable(true);
     }
 
     private void setActiveBtnStyle(Button btn) {
@@ -145,7 +149,6 @@ public class MainController {
     private void setActiveFirstTab(PluginUIContext pc) {
         if (tbaSystem.getItems() != null && !tbaSystem.getItems().isEmpty()) {
             Button firstTabBtn = (Button) tbaSystem.getItems().get(0);
-            grpContent.setDisable(false);
             setActiveBtnStyle(firstTabBtn);
             Pane pane = pc.getMainBodyPane(firstTabBtn.getId()).getNewPane();
             pane.setId(firstTabBtn.getId());
@@ -238,7 +241,10 @@ public class MainController {
         if (isLogin()) {
             if (activeProjectNames != null && !activeProjectNames.isEmpty()) {
                 dataSourceBtn.setText(activeProjectNames.size() +" "+ GuiFxmlAndLanguageUtils.getString("STATE_BAR_FILE_SELECTED"));
+            } else {
+                GuiFxmlAndLanguageUtils.buildSelectDataSource();
             }
+
             if (DAPStringUtils.isNotBlank(activeTemplateName)) {
                 templateBtn.setText(activeTemplateName);
             }
@@ -271,7 +277,11 @@ public class MainController {
         dataSourceBtn.setOnAction(event -> this.getDataSourceBtnEvent());
         templateBtn.setOnAction(event -> this.getTemplateBtnEvent());
         templateBtn.setOnMouseEntered(event -> this.getTemplateLblEvent());
+        templateBtn.setOnMouseExited(event -> this.timerHidePopup());
         templateView.setOnMouseExited(event -> this.getHidePopupEvent());
+        templateView.setOnMouseEntered(event -> {
+            isShow.set(true);
+        });
         progressBar.setOnMouseClicked(event -> this.getProgressEvent());
     }
 
@@ -300,6 +310,7 @@ public class MainController {
 
     private void getHidePopupEvent() {
         templatePopup.hide();
+        isShow.set(false);
     }
 
     private void getDataSourceBtnEvent() {
@@ -361,6 +372,9 @@ public class MainController {
         ImageView imageReset = new ImageView(new Image("/images/icon_choose_one_gray.png"));
         imageReset.setFitHeight(16);
         imageReset.setFitWidth(16);
+        ImageView imageResetWhite = new ImageView(new Image("/images/icon_choose_one_white.png"));
+        imageResetWhite.setFitHeight(16);
+        imageResetWhite.setFitWidth(16);
         templateView.setItems(templateList);
         templateView.setCellFactory(e -> new ListCell<StateBarTemplateModel>() {
             @Override
@@ -372,6 +386,7 @@ public class MainController {
                 } else {
                     HBox cell;
                     Label label = new Label(item.getTemplateName());
+                    label.setPadding(new Insets(0, 0, 0, 5));
                     if (item.isIsChecked()) {
                         cell = new HBox(imageReset, label);
                     } else {
@@ -381,27 +396,25 @@ public class MainController {
                         cell = new HBox(label1, label);
                     }
                     setGraphic(cell);
+                    cell.setOnMouseEntered(event -> {
+                        if (item.isIsChecked()) {
+                            cell.getChildren().clear();
+                            cell.getChildren().addAll(imageResetWhite, label);
+                        }
+                    });
+                    cell.setOnMouseExited(event -> {
+                        if (item.isIsChecked()) {
+                            cell.getChildren().clear();
+                            cell.getChildren().addAll(imageReset, label);
+                        }
+                    });
+                    cell.setOnMouseClicked(event -> listCellClickEvent(item));
                 }
 
             }
         });
 
         templateView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        templateView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (oldValue != null) {
-                oldValue.setIsChecked(false);
-            }
-            if (newValue != null) {
-                newValue.setIsChecked(true);
-                templateBtn.setText(newValue.getTemplateName());
-                envService.setActivatedTemplate(newValue.getTemplateName());
-                List<String> projectName = envService.findActivatedProjectName();
-                Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
-                LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, newValue.getTemplateName());
-                envService.setTestItems(itemWithTypeDtoMap);
-            }
-            resetMain();
-        });
 
         if (templatePopup == null) {
             templatePopup = new Popup();
@@ -409,6 +422,44 @@ public class MainController {
         } else {
             templatePopup.getContent().clear();
             templatePopup.getContent().add(templateView);
+        }
+    }
+
+    private void listCellClickEvent(StateBarTemplateModel item) {
+        if (!item.isIsChecked()) {
+            WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Message", GuiFxmlAndLanguageUtils.getString("SWITCH_TEMPLATE_CONFIRM"));
+            controller.addProcessMonitorListener(new WindowCustomListener() {
+                @Override
+                public boolean onShowCustomEvent() {
+                    return false;
+                }
+
+                @Override
+                public boolean onCloseAndCancelCustomEvent() {
+                    templatePopup.hide();
+                    return false;
+                }
+
+                @Override
+                public boolean onOkCustomEvent() {
+                    templateList.forEach(template ->{
+                        if (template.getTemplateName().equals(item.getTemplateName())) {
+                            template.setIsChecked(true);
+                        } else {
+                            template.setIsChecked(false);
+                        }
+                    });
+                    item.setIsChecked(true);
+                    templateBtn.setText(item.getTemplateName());
+                    envService.setActivatedTemplate(item.getTemplateName());
+                    List<String> projectName = envService.findActivatedProjectName();
+                    Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
+                    LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, item.getTemplateName());
+                    envService.setTestItems(itemWithTypeDtoMap);
+                    resetMain();
+                    return false;
+                }
+            });
         }
     }
 
@@ -584,6 +635,27 @@ public class MainController {
            return false;
         }
     }
+
+    private void timerHidePopup() {
+        if (templatePopup.isShowing()) {
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                public void run() {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!isShow.get()) {
+                                templatePopup.hide();
+                            }
+                            timer.cancel();
+                        }
+
+                    });
+                }
+            }, 500);
+        }
+    }
+
 
     public Button getDataSourceBtn() {
         return dataSourceBtn;

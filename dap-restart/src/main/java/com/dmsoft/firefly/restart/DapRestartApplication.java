@@ -5,13 +5,11 @@
 package com.dmsoft.firefly.restart;
 
 
-import com.dmsoft.firefly.restart.utils.ApplicationPathUtil;
 import com.dmsoft.firefly.restart.utils.FileUtils;
+import com.dmsoft.firefly.restart.utils.PropertyConfig;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -21,8 +19,6 @@ import java.util.Properties;
 public class DapRestartApplication {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-
-        Thread.sleep(1000);
 
         Arrays.stream(args).forEach(v -> {
             if (v.contains("delete:")) {
@@ -39,22 +35,14 @@ public class DapRestartApplication {
                 }
             }
         });
-        Properties pro = new Properties();
         try {
-            String file = ApplicationPathUtil.getCanonicalPath() + "application.properties";
-            InputStream fis = null;
-            try {
-                fis = new FileInputStream(new File(file));
-            } catch (Exception e) {
-                System.out.println("can't find application.properties");
-            }
-            pro.load(fis);
-            Runtime.getRuntime().exec(pro.getProperty("restart_command"));
+            String file = System.getProperty("user.dir") + File.separator + "application.properties";
+            Properties properties = PropertyConfig.getProperties(file);
+            System.out.println("start_command:" + properties.getProperty("start_command"));
+            Runtime.getRuntime().exec(properties.getProperty("start_command"));
             System.exit(0);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 }

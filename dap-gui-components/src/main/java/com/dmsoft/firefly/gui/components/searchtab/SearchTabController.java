@@ -313,10 +313,7 @@ public class SearchTabController {
     public void setOneBasicSearch(List<BasicSearchDto> basicSearchDtoMaps) {
         BasicSearchPane basicSearchPane = new BasicSearchPane();
         if (basicSearchDtoMaps != null && basicSearchDtoMaps.size() > 0) {
-            List<BasicSearchDto> basicSearchDtos = basicSearchDtoMaps;
-            basicSearchDtos.forEach(basicSearchDto -> {
-                basicSearchPane.setSearch(basicSearchDto.getTestItem(), basicSearchDto.getOperator(), basicSearchDto.getValue());
-            });
+            basicSearchDtoMaps.forEach(basicSearchDto -> basicSearchPane.setSearch(basicSearchDto.getTestItem(), basicSearchDto.getOperator(), basicSearchDto.getValue()));
         }
         basicSearch.getChildren().add(basicSearchPane);
     }

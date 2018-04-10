@@ -65,7 +65,13 @@
                 <directory>${project.basedir}/src/main/resources</directory>
                 <excludes>
                     <exclude>assembly</exclude>
+                    <exclude>test/*</exclude>
+                    <exclude>pro/*</exclude>
+                    <exclude>dev/*</exclude>
                 </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources/${profiles.active}</directory>
             </resource>
             <resource>
                 <directory>../dap-plugins/distribution/target/dap-plugin-bin</directory>
@@ -74,6 +80,7 @@
                 </includes>
             </resource>
         </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -104,6 +111,8 @@
                         <exclude>*.xml</exclude>
                         <exclude>*.properties</exclude>
                         <exclude>config/</exclude>
+                        <exclude>default/</exclude>
+                        <exclude>security/</exclude>
                         <exclude>scripts/</exclude>
                         <exclude>Plugins/</exclude>
                     </excludes>

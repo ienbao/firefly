@@ -10,6 +10,7 @@ import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.apis.IConfig;
 import com.dmsoft.firefly.sdk.plugin.apis.annotation.Config;
 import com.dmsoft.firefly.sdk.plugin.apis.annotation.ExcludeMethod;
+import com.dmsoft.firefly.sdk.utils.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,5 +108,13 @@ public class GrrConfigServiceImpl implements GrrConfigService, IConfig {
             result = grrConfigDto.getExport();
         }
         return result;
+    }
+
+    @Override
+    public void restoreConfig() {
+        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.GrrPlugin").getFolderPath() + File.separator + "config";
+        String defaultParentPath = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.GrrPlugin").getFolderPath() + File.separator + "default";
+        FileUtils.delFolder(path);
+        FileUtils.copyFolder(defaultParentPath, path);
     }
 }

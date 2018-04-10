@@ -3,11 +3,13 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.firefly.gui.components.dialog.ChooseTestItemDialog;
+import com.dmsoft.firefly.gui.components.skin.ExpandableTableViewSkin;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.spc.dto.SearchConditionDto;
-import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
 import com.dmsoft.firefly.plugin.spc.model.ViewDataDFModel;
 import com.dmsoft.firefly.plugin.spc.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -18,7 +20,6 @@ import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
-import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -26,11 +27,14 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -53,9 +57,9 @@ public class ViewDataController implements Initializable {
     private TextFieldFilter filterTf;
     @FXML
     private TableView<String> viewDataTable;
+    @FXML
+    private VBox vbox;
     private SpcMainController spcMainController;
-
-    private List<ChooseTableRowData> chooseTableRowDataList = Lists.newArrayList();
 
     private SearchDataFrame dataFrame;
     private Map<String, FilterSettingAndGraphic> columnFilterSetting = Maps.newHashMap();
@@ -63,17 +67,18 @@ public class ViewDataController implements Initializable {
     private List<TestItemWithTypeDto> typeDtoList;
     private List<String> selectedProjectNames;
     private List<String> selectedRowKeys;
+    private List<String> testItemNames;
 
-    private ChooseDialogController chooseDialogController;
     private List<SearchConditionDto> statisticalSearchConditionDtoList;
+    private ChooseTestItemDialog chooseTestItemDialog;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.typeDtoList = RuntimeContext.getBean(EnvService.class).findTestItems();
+        this.testItemNames = Lists.newArrayList();
         if (this.typeDtoList != null) {
             for (TestItemWithTypeDto typeDto : typeDtoList) {
-                ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, typeDto.getTestItemName());
-                chooseTableRowDataList.add(chooseTableRowData);
+                testItemNames.add(typeDto.getTestItemName());
             }
         }
         this.filterTf.getTextField().setPromptText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_VALUE_PROMPT));
@@ -81,6 +86,15 @@ public class ViewDataController implements Initializable {
         this.initBtnIcon();
         this.initComponentEvent();
         this.selectedProjectNames = RuntimeContext.getBean(EnvService.class).findActivatedProjectName();
+    }
+
+    /**
+     * method to clear view data
+     */
+    public void clearViewData() {
+        unSelectedCheckBox.setSelected(false);
+        filterTf.getTextField().setText(null);
+        this.setViewData(null, null, null);
     }
 
     /**
@@ -108,7 +122,7 @@ public class ViewDataController implements Initializable {
         this.dataFrame = dataFrame;
         if (dataFrame == null) {
             viewDataTable.getColumns().clear();
-            chooseDialogController.setSelectResultName(Lists.newArrayList());
+            chooseTestItemDialog.resetSelectedItems(null);
             try {
                 if (model != null) {
                     this.model.getRowKeyArray().clear();
@@ -119,9 +133,19 @@ public class ViewDataController implements Initializable {
             this.model = null;
             return;
         }
+        vbox.getChildren().remove(viewDataTable);
+        this.viewDataTable = new TableView<>();
+        this.viewDataTable.setSkin(new ExpandableTableViewSkin(this.viewDataTable));
+        this.viewDataTable.setStyle("-fx-border-width: 1 0 0 0");
+        VBox.setVgrow(viewDataTable, Priority.ALWAYS);
+        this.vbox.setAlignment(Pos.CENTER);
+        this.vbox.getChildren().add(viewDataTable);
         this.model = new ViewDataDFModel(dataFrame, selectedRowKey);
         this.model.setStatisticalSearchConditionDtoList(statisticalSearchConditionDtoList);
         this.model.setMainController(spcMainController);
+        if (model.getHeaderArray().size() > 51) {
+            model.getHeaderArray().remove(51, model.getHeaderArray().size());
+        }
         TableViewWrapper.decorate(viewDataTable, model);
         model.getAllCheckBox().setOnMouseClicked(event -> {
             for (String s : model.getRowKeyArray()) {
@@ -129,13 +153,7 @@ public class ViewDataController implements Initializable {
             }
         });
         viewDataTable.getColumns().forEach(this::decorate);
-        for (ChooseTableRowData rowData : chooseTableRowDataList) {
-            if (dataFrame.isTestItemExist(rowData.getValue())) {
-                rowData.getSelector().setValue(true);
-            } else {
-                rowData.getSelector().setValue(false);
-            }
-        }
+        chooseTestItemDialog.resetSelectedItems(model.getHeaderArray().subList(1, model.getHeaderArray().size()));
     }
 
     /**
@@ -228,9 +246,7 @@ public class ViewDataController implements Initializable {
             }
             quickSearchController.getSearchBtn().setOnAction(event1 -> {
                 if (quickSearchController.isError()) {
-                    RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                            SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER),
-                            SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_QUICK_SEARCH_MESSAGE));
+                    WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER), SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_QUICK_SEARCH_MESSAGE));
                     return;
                 }
                 FilterType type1 = quickSearchController.getFilterType();
@@ -284,17 +300,7 @@ public class ViewDataController implements Initializable {
 
 
     private void buildChooseColumnDialog() {
-        FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML(ViewResource.SPC_CHOOSE_STATISTICAL_VIEW_RES);
-        Pane root = null;
-        try {
-            root = fxmlLoader.load();
-            chooseDialogController = fxmlLoader.getController();
-            Stage stage = WindowFactory.createNoManagedStage(SpcFxmlAndLanguageUtils.getString(ResourceMassages.CHOOSE_ITEMS_TITLE), root,
-                    getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
-            chooseDialogController.setStage(stage);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        chooseTestItemDialog = new ChooseTestItemDialog(testItemNames, null);
     }
 
     private void initComponentEvent() {
@@ -304,12 +310,12 @@ public class ViewDataController implements Initializable {
             filterHeaderBtn();
         });
         chooseItemBtn.setOnAction(event -> getChooseColumnBtnEvent());
-        chooseDialogController.getChooseOkButton().setOnAction(event -> {
-            chooseDialogController.getStage().close();
+        chooseTestItemDialog.getOkBtn().setOnAction(event -> {
+            chooseTestItemDialog.close();
             if (dataFrame == null) {
                 return;
             }
-            List<String> selectedTestItems = chooseDialogController.getSelectResultName();
+            List<String> selectedTestItems = chooseTestItemDialog.getSelectedItems();
             int curIndex = 0;
             for (TestItemWithTypeDto typeDto : typeDtoList) {
                 if (selectedTestItems.contains(typeDto.getTestItemName())) {
@@ -343,7 +349,7 @@ public class ViewDataController implements Initializable {
     }
 
     private void filterTF() {
-        if (model == null) {
+        if (model == null || filterTf.getTextField().getText() == null) {
             return;
         }
         model.getRowKeyArray().clear();
@@ -359,6 +365,9 @@ public class ViewDataController implements Initializable {
     }
 
     private void filterHeaderBtn() {
+        if (model == null) {
+            return;
+        }
         for (String testItem : model.getHeaderArray()) {
             if (columnFilterSetting.get(testItem) != null) {
                 FilterSettingAndGraphic fsg = columnFilterSetting.get(testItem);
@@ -394,13 +403,7 @@ public class ViewDataController implements Initializable {
     }
 
     private void getChooseColumnBtnEvent() {
-        chooseDialogController.setTableData(chooseTableRowDataList);
-        if (dataFrame != null) {
-            chooseDialogController.setSelectResultName(dataFrame.getAllTestItemName());
-        } else {
-            chooseDialogController.setSelectResultName(Lists.newArrayList());
-        }
-        chooseDialogController.getStage().show();
+        chooseTestItemDialog.show();
     }
 
     private void getInvertCheckBoxEvent() {

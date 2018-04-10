@@ -19,7 +19,6 @@ import com.dmsoft.firefly.plugin.grr.service.GrrExportService;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.utils.*;
-import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
@@ -29,6 +28,7 @@ import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.event.PlatformEvent;
+import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.core.*;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
@@ -243,6 +243,17 @@ public class GrrExportController {
         item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
         initItemData();
         item.widthProperty().addListener((ov, w1, w2) -> Platform.runLater(() -> is.relocate(w2.doubleValue() - 21, 0)));
+        item.setComparator((o1, o2) -> {
+            boolean o1OnTop = stickyOnTopItems.contains(o1.getTestItemName());
+            boolean o2OnTop = stickyOnTopItems.contains(o2.getTestItemName());
+            if (o1OnTop == o2OnTop) {
+                return -o2.getTestItemName().compareTo(o1.getTestItemName());
+            } else if (o1OnTop) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
         item.sortTypeProperty().addListener((ov, sort1, sort2) -> {
             if (sort2.equals(TableColumn.SortType.DESCENDING)) {
                 item.setComparator((o1, o2) -> {
@@ -436,6 +447,11 @@ public class GrrExportController {
 
     }
 
+    /**
+     * method to init grr exprot left config
+     *
+     * @param grrLeftConfigDto grr left config dto
+     */
     public void initGrrExportLeftConfig(GrrLeftConfigDto grrLeftConfigDto) {
         if (grrLeftConfigDto == null) {
             return;
@@ -778,7 +794,7 @@ public class GrrExportController {
             StageMap.closeStage("grrExport");
             String savePath = locationPath.getText() + "/GRR_" + getTimeString();
             List<String> projectNameList = envService.findActivatedProjectName();
-            export(projectNameList, savePath);
+            export(projectNameList, savePath, false);
         });
         print.setOnAction(event -> {
             if (StringUtils.isEmpty(locationPath.getText())) {
@@ -799,16 +815,7 @@ public class GrrExportController {
 
             String savePath = locationPath.getText() + "/GRR_" + getTimeString();
             List<String> projectNameList = envService.findActivatedProjectName();
-            export(projectNameList, savePath);
-            boolean isSucceed = false;
-            try {
-                isSucceed = new ExcelToPdfUtil().excelToPdf(savePath);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (isSucceed) {
-                PdfPrintUtil.printPdf(savePath);
-            }
+            export(projectNameList, savePath, true);
         });
         cancel.setOnAction(event -> {
             StageMap.closeStage("grrExport");
@@ -910,6 +917,9 @@ public class GrrExportController {
                 });
             }
             selectItem.forEach(itemName -> selectItemDto.add(envService.findTestItemNameByItemName(itemName)));
+            if (selectItemDto.size() > 50) {
+                selectItemDto.removeAll(selectItemDto.subList(50, selectItemDto.size()));
+            }
 
             JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
             context.put(ParamKeys.PROJECT_NAME_LIST, envService.findActivatedProjectName());
@@ -960,7 +970,7 @@ public class GrrExportController {
         }
     }
 
-    private void export(List<String> projectNameList, String savePath) {
+    private void export(List<String> projectNameList, String savePath, boolean isPrint) {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip(GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT));
         windowProgressTipController.setAutoHide(false);
         windowProgressTipController.getAnalysisLB().setText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXPORTING));
@@ -981,6 +991,14 @@ public class GrrExportController {
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
+                final boolean[] isSucceed = {false};
+                if (isPrint) {
+                    try {
+                        isSucceed[0] = new ExcelToPdfUtil().excelToPdf(savePath);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 context.pushEvent(new JobEvent("Export done", D100, null));
                 GrrParamDto grrParamDto = context.getParam(ParamKeys.GRR_PARAM_DTO, GrrParamDto.class);
                 refreshPartOrAppraiserListView(grrParamDto);
@@ -994,6 +1012,14 @@ public class GrrExportController {
                     }
 
                 });
+                if (isSucceed[0]) {
+                    windowProgressTipController.closeDialog();
+                    Thread thread = new Thread(() -> {
+                        PdfPrintUtil.getPrintService();
+                        PdfPrintUtil.printPdf(savePath);
+                    });
+                    thread.start();
+                }
             }
         });
         jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
@@ -1019,7 +1045,7 @@ public class GrrExportController {
         } else {
             addHandler(jobPipeline, projectNameList, "Export Grr Reports", savePath, testItemWithTypeDtoList);
         }
-        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context, true);
     }
 
     private void addHandler(JobPipeline pipeline, List<String> projectNameList, String handlerName, String savePath, List<TestItemWithTypeDto> testItemWithTypeDtoList) {
@@ -1037,7 +1063,7 @@ public class GrrExportController {
                 } else {
                     itemDto = testItemWithTypeDtoList;
                 }
-                if (checkSubmitParam(itemDto.size())) {
+                if (checkSubmitParam(projectNameList.get(0), itemDto.size())) {
                     GrrConfigDto grrConfigDto = grrConfigService.findGrrConfig();
                     Boolean detail = grrConfigDto.getExport().get("Export detail sheet of each selected items");
 
@@ -1110,52 +1136,53 @@ public class GrrExportController {
         return searchConditionDto;
     }
 
+    private boolean checkSubmitParam(String projectName, Integer itemNumbers) {
+        if (itemNumbers == null || itemNumbers <= 0) {
+            throw new ApplicationException(projectName + " " + GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+        }
+        if (!GrrValidateUtil.validateResult(partTxt, appraiserTxt, trialTxt)) {
+            throw new ApplicationException(projectName + " " + GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+        }
+        if (appraiserLbl.getGraphic() != null || partLbl.getGraphic() != null) {
+            throw new ApplicationException(projectName + " " + GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+        }
+        if (partCombox.getStyleClass().contains(ValidateUtil.COMBO_BOX_ERROR_STYLE) || appraiserCombox.getStyleClass().contains(ValidateUtil.COMBO_BOX_ERROR_STYLE)) {
+            throw new ApplicationException(projectName + " " + GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+        }
+        if (partListView.getItems().size() > 0 && partListView.getItems().size() < Integer.parseInt(partTxt.getText())) {
+            throw new ApplicationException(projectName + " " + GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+        }
+        if ((appraiserCombox.getValue() != null) && (appraiserListView.getItems().size() > 0 && appraiserListView.getItems().size() < Integer.parseInt(appraiserTxt.getText()))) {
+            throw new ApplicationException(projectName + " " + GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
+        }
+        return true;
+    }
+
     private boolean checkSubmitParam(Integer itemNumbers) {
         if (itemNumbers == null || itemNumbers <= 0) {
             WindowMessageFactory.createWindowMessage(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_ANALYSIS_ITEM_EMPTY"));
-//            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-//                    GrrFxmlAndLanguageUtils.getString("UI_GRR_ANALYSIS_ITEM_EMPTY"));
             return false;
         }
-
         if (!GrrValidateUtil.validateResult(partTxt, appraiserTxt, trialTxt)) {
             WindowMessageFactory.createWindowMessage(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
-//            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-//                    GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
             return false;
         }
-
         if (appraiserLbl.getGraphic() != null || partLbl.getGraphic() != null) {
             WindowMessageFactory.createWindowMessage(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
-//            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-//                    GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"));
             return false;
         }
-
         if (partCombox.getStyleClass().contains(ValidateUtil.COMBO_BOX_ERROR_STYLE) || appraiserCombox.getStyleClass().contains(ValidateUtil.COMBO_BOX_ERROR_STYLE)) {
             WindowMessageFactory.createWindowMessage(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_EQUAL_APPRAISER"));
-//            if (configTab.isSelected()) {
-//                WindowMessageFactory.createWindowMessage(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_EQUAL_APPRAISER"));
-//            } else {
-//                WindowMessageFactory.createWindowMessage(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_EQUAL_APPRAISER"));
-//            }
             return false;
         }
-
         if (partListView.getItems().size() > 0 && partListView.getItems().size() < Integer.parseInt(partTxt.getText())) {
             WindowMessageFactory.createWindowMessage(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_MAX_NUMBER_NOT_MATCH"));
-//            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-//                    GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_MAX_NUMBER_NOT_MATCH"));
             return false;
         }
-
         if ((appraiserCombox.getValue() != null) && (appraiserListView.getItems().size() > 0 && appraiserListView.getItems().size() < Integer.parseInt(appraiserTxt.getText()))) {
             WindowMessageFactory.createWindowMessage(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_MAX_NUMBER_NOT_MATCH"));
-//            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-//                    GrrFxmlAndLanguageUtils.getString("UI_GRR_APPRAISER_MAX_NUMBER_NOT_MATCH"));
             return false;
         }
-
         return true;
     }
 

@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.charts;
 
+import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationFetch;
 import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.ControlChartData;
@@ -47,6 +48,10 @@ public class ControlChart<X, Y> extends LineChart {
     private Map<XYChart.Series, Color> seriesColorMap = Maps.newHashMap();
     //    unique key----图层
     private Map<String, XYChart.Series> seriesUniqueKeyMap = Maps.newHashMap();
+    //    unique key----符合R规则的点
+    private Map<String, List<XYChart.Data>> rRuleDataUniqueKeyMap = Maps.newHashMap();
+    //    unique key----符合ucl,lcl的点
+    private Map<String, List<XYChart.Data>> uclAndLclDataUniqueKeyMap = Maps.newHashMap();
     //    series name----预警规则
     private Map<String, Function<PointRule, PointStyle>> seriesPointRuleMap = Maps.newHashMap();
 
@@ -64,7 +69,9 @@ public class ControlChart<X, Y> extends LineChart {
         super.setLegendVisible(false);
         super.setAnimated(false);
         super.setHorizontalZeroLineVisible(false);
+        this.setHorizontalGridLinesVisible(false);
         super.setVerticalZeroLineVisible(false);
+        this.setVerticalGridLinesVisible(false);
     }
 
     /**
@@ -91,7 +98,7 @@ public class ControlChart<X, Y> extends LineChart {
     public void updateChartColor(String unique, Color color) {
 //        update chart color
         if (seriesUniqueKeyMap.containsKey(unique)) {
-            this.updateNodeColor(seriesUniqueKeyMap.get(unique), color);
+            this.updateNodeColor(unique, color);
         }
 //        update value maker color
         if (valueMarkerMap.containsKey(unique)) {
@@ -255,6 +262,7 @@ public class ControlChart<X, Y> extends LineChart {
      * @param ruleNames rule names
      */
     public void setSeriesDataStyleByRule(List<String> ruleNames) {
+        this.rRuleDataUniqueKeyMap.clear();
         for (Map.Entry<String, XYChart.Series> seriesUniqueKeyEntry : seriesUniqueKeyMap.entrySet()) {
             XYChart.Series<X, Y> series = seriesUniqueKeyEntry.getValue();
             String uniqueKey = seriesUniqueKeyEntry.getKey();
@@ -267,6 +275,15 @@ public class ControlChart<X, Y> extends LineChart {
                     Function<PointRule, PointStyle> pointRuleSetFunction = seriesPointRuleMap.get(uniqueKey);
                     PointStyle pointStyle = pointRuleSetFunction.apply(pointRule);
                     dataItem.getNode().setStyle(pointStyle.getStyle());
+                    //remember to demand r rules point
+                    if (pointStyle.getAbnormal()) {
+                        if (rRuleDataUniqueKeyMap.containsKey(uniqueKey)) {
+                            List<XYChart.Data> dataList = rRuleDataUniqueKeyMap.get(uniqueKey);
+                            dataList.add(dataItem);
+                        } else {
+                            rRuleDataUniqueKeyMap.put(uniqueKey, Lists.newArrayList(dataItem));
+                        }
+                    }
                     Set<String> classStyle = pointStyle.getClassStyle();
                     if (classStyle != null) {
                         classStyle.forEach(s -> {
@@ -300,6 +317,13 @@ public class ControlChart<X, Y> extends LineChart {
                 boolean flagLessValid = lessData != null && i < lessData.length && !DAPStringUtils.isInfinityAndNaN(lessData[i]) && value < lessData[i];
                 if (flagLessValid || flagMoreValid) {
                     series.getData().get(i).getNode().setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(Color.RED));
+                    //remember to demand ucl and lcl rule point
+                    if (uclAndLclDataUniqueKeyMap.containsKey(uniqueKey)) {
+                        List<XYChart.Data> dataList = uclAndLclDataUniqueKeyMap.get(uniqueKey);
+                        dataList.add(series.getData().get(i));
+                    } else {
+                        uclAndLclDataUniqueKeyMap.put(uniqueKey, Lists.newArrayList(series.getData().get(i)));
+                    }
                 }
             }
         }
@@ -331,6 +355,8 @@ public class ControlChart<X, Y> extends LineChart {
      * Remove all chart node and clear chart data
      */
     public void removeAllChildren() {
+        this.uclAndLclDataUniqueKeyMap.clear();
+        this.rRuleDataUniqueKeyMap.clear();
         this.seriesUniqueKeyMap.clear();
         this.seriesPointRuleMap.clear();
         this.seriesColorMap.clear();
@@ -376,8 +402,8 @@ public class ControlChart<X, Y> extends LineChart {
         xAxis.setUpperBound(xMax + xReserve);
         yAxis.setLowerBound(yMin - yReserve);
         yAxis.setUpperBound(yMax + yReserve);
-        xAxis.setTickUnit((xAxis.getUpperBound() - xAxis.getLowerBound()) / controlChartDataList.size());
-        yAxis.setTickUnit((yAxis.getUpperBound() - yAxis.getLowerBound()) / controlChartDataList.size());
+        ChartOperatorUtils.updateAxisTickUnit(xAxis);
+        ChartOperatorUtils.updateAxisTickUnit(yAxis);
     }
 
     private void createChartSeriesData(ControlChartData controlChartData, ChartTooltip chartTooltip) {
@@ -489,8 +515,10 @@ public class ControlChart<X, Y> extends LineChart {
         pane.setMargin(text, new Insets(0, 0, 10, 0));
     }
 
-    private void updateNodeColor(XYChart.Series series, Color color) {
+    private void updateNodeColor(String uniqueKey, Color color) {
 
+        XYChart.Series series = seriesUniqueKeyMap.get(uniqueKey);
+        seriesColorMap.put(series, color);
         ObservableList<Data<X, Y>> data = series.getData();
 //        set series node color
         if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
@@ -498,7 +526,11 @@ public class ControlChart<X, Y> extends LineChart {
         }
         data.forEach(dataItem -> {
 //            set data node color
-            if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
+            List<XYChart.Data> rRuleDataList = rRuleDataUniqueKeyMap.containsKey(uniqueKey) ? rRuleDataUniqueKeyMap.get(uniqueKey) : null;
+            List<XYChart.Data> uclAndLclDataList = uclAndLclDataUniqueKeyMap.containsKey(uniqueKey) ? uclAndLclDataUniqueKeyMap.get(uniqueKey) : null;
+            boolean inValid = rRuleDataList != null && rRuleDataList.contains(dataItem);
+            inValid = inValid || uclAndLclDataList != null && uclAndLclDataList.contains(dataItem);
+            if (!inValid && DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
                 dataItem.getNode().setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
             }
         });

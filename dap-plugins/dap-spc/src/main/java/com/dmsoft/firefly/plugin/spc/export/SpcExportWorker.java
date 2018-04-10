@@ -9,6 +9,7 @@ import com.dmsoft.firefly.plugin.spc.poi.*;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcExportItemKey;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcKey;
+import com.dmsoft.firefly.plugin.spc.utils.enums.SpcStatisticalResultKey;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -357,13 +358,19 @@ public class SpcExportWorker implements ExWorker {
                     exCellList.add(ExUtil.fillToCell(new Integer[]{startRow + m, 0}, "Item Name", ExCellType.TEXT, cellStyle));
                     m++;
                 } else {
-                    if (exportDataItem != null && exportDataItem.keySet().contains(scdLabels[i])) {
-                        if (exportDataItem.get(scdLabels[i])) {
+                    String name = scdLabels[i];
+                    if(i == 11){
+                        name = SpcStatisticalResultKey.LCL.getCode();
+                    } else if(i == 12){
+                        name = SpcStatisticalResultKey.UCL.getCode();
+                    }
+                    if (exportDataItem != null && exportDataItem.keySet().contains(name)) {
+                        if (exportDataItem.get(name)) {
                             exCellList.add(ExUtil.fillToCell(new Integer[]{startRow + m, 0}, scdLabels[i], ExCellType.TEXT, cellStyle));
                             m++;
                         }
                     } else {
-                        if (i == 0 || i == 1 || (exportDataItem != null && exportDataItem.keySet().contains(scdLabels[i]))) {
+                        if (i == 0 || i == 1 || (exportDataItem != null && exportDataItem.keySet().contains(name))) {
                             exCellList.add(ExUtil.fillToCell(new Integer[]{startRow + m, 0}, scdLabels[i], ExCellType.TEXT, cellStyle));
                             m++;
                         }
@@ -416,6 +423,7 @@ public class SpcExportWorker implements ExWorker {
 
 
         exCellList.add(ExUtil.fillToCell(new Integer[]{n++, column}, condition, ExCellType.TEXT, textCellStyle));
+        SpcStatisticalResultKey[] spcStatisticalResultKeys = SpcStatisticalResultKey.values();
         for (int i = 0; i < scdLabels.length; i++) {
             String name = scdLabels[i];
             String s = "";
@@ -423,6 +431,11 @@ public class SpcExportWorker implements ExWorker {
             if (name.equals("CA")) {
                 s = "%";
                 digNumber = digNumber <= 2 ? 0 : digNumber - 2;
+            }
+            if(i == 11){
+                name = SpcStatisticalResultKey.LCL.getCode();
+            } else if(i == 12){
+                name = SpcStatisticalResultKey.UCL.getCode();
             }
             if (exportDataItem.containsKey(name) && exportDataItem.get(name)) {
                 exCellList.add(ExUtil.fillToCell(new Integer[]{n++, column}, (checkStaticData(dto, name) ? "-" : formatDouble(Double.valueOf(dto.get(name).getValue()), digNumber) + s), ExCellType.TEXT,
@@ -510,8 +523,14 @@ public class SpcExportWorker implements ExWorker {
             int descriptiveLablesLength = descriptiveLabels.length;
             int fillCount3 = 0;
             for (int i = 0; i < descriptiveLablesLength; i++) {
-                if (exportDataItem != null && exportDataItem.keySet().contains(descriptiveLabels[i])) {
-                    if (exportDataItem.get(descriptiveLabels[i])) {
+                String name = descriptiveLabels[i];
+                if(i == 8){
+                    name = SpcStatisticalResultKey.LCL.getCode();
+                } else if(i == 9){
+                    name = SpcStatisticalResultKey.UCL.getCode();
+                }
+                if (exportDataItem != null && exportDataItem.keySet().contains(name)) {
+                    if (exportDataItem.get(name)) {
                         exCellList.add(ExUtil.fillToCell(new Integer[]{currentRow + 4 + fillCount3, dataIndex[1]}, descriptiveLabels[i], ExCellType.TEXT, cellStyle));
                         if (i == 0) {
                             exCellList.add(ExUtil.fillToCell(new Integer[]{currentRow + 4 + fillCount3, dataIndex[1] + 1}, "", ExCellType.TEXT, cellStyle));

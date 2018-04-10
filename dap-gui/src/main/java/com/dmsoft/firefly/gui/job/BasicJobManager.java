@@ -30,18 +30,23 @@ public class BasicJobManager implements JobManager {
     }
 
     @Override
-    public JobContext fireJobSyn(String pipelineName, JobContext context) {
-        return fireJobSyn(pipelineMap.get(pipelineName), context);
+    public JobContext fireJobSyn(String pipelineName, JobContext context, boolean skipError) {
+        return fireJobSyn(pipelineMap.get(pipelineName), context, skipError);
     }
 
     @Override
-    public JobContext fireJobSyn(JobPipeline jobPipeline, JobContext context) {
+    public JobContext fireJobSyn(String pipelineName, JobContext context) {
+        return fireJobSyn(pipelineName, context, false);
+    }
+
+    @Override
+    public JobContext fireJobSyn(JobPipeline jobPipeline, JobContext context, boolean skipError) {
         if (jobPipeline == null) {
             return null;
         }
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Thread thread = new Thread(() -> {
-            fireJob(jobPipeline, context);
+            fireJob(jobPipeline, context, skipError);
             countDownLatch.countDown();
         });
         contextMap.put(thread, context);
@@ -55,21 +60,36 @@ public class BasicJobManager implements JobManager {
     }
 
     @Override
-    public void fireJobASyn(String pipelineName, JobContext context) {
-        fireJobASyn(pipelineMap.get(pipelineName), context);
+    public JobContext fireJobSyn(JobPipeline jobPipeline, JobContext context) {
+        return fireJobSyn(jobPipeline, context, false);
     }
 
     @Override
-    public void fireJobASyn(JobPipeline jobPipeline, JobContext context) {
+    public void fireJobASyn(String pipelineName, JobContext context, boolean skipError) {
+        fireJobASyn(pipelineMap.get(pipelineName), context, skipError);
+    }
+
+    @Override
+    public void fireJobASyn(String pipelineName, JobContext context) {
+        fireJobSyn(pipelineName, context, false);
+    }
+
+    @Override
+    public void fireJobASyn(JobPipeline jobPipeline, JobContext context, boolean skipError) {
         if (jobPipeline == null) {
             return;
         }
         Thread thread = new Thread(() -> {
             contextMap.put(Thread.currentThread(), context);
-            fireJob(jobPipeline, context);
+            fireJob(jobPipeline, context, skipError);
             contextMap.remove(Thread.currentThread());
         });
         thread.start();
+    }
+
+    @Override
+    public void fireJobASyn(JobPipeline jobPipeline, JobContext context) {
+        fireJobASyn(jobPipeline, context, false);
     }
 
     @Override
@@ -77,12 +97,12 @@ public class BasicJobManager implements JobManager {
         return contextMap.get(thread);
     }
 
-    private void fireJob(JobPipeline jobPipeline, JobContext context) {
+    private void fireJob(JobPipeline jobPipeline, JobContext context, boolean skipError) {
         if (context instanceof BasicJobContext) {
             ((BasicJobContext) context).setAllHandlers(jobPipeline.getAllJobHandlers());
         }
         for (JobHandler handler : jobPipeline.getAllJobHandlers()) {
-            if (!context.isError() && !context.isInterrupted()) {
+            if ((!context.isError() && !context.isInterrupted()) || (context.isError() && skipError)) {
                 try {
                     context.addDoneHandlerName(handler.getName());
                     handler.doJob(context);
@@ -93,8 +113,13 @@ public class BasicJobManager implements JobManager {
                             context.addDoneHandlerName(jobPipeline.getErrorHandler().getName());
                             jobPipeline.getErrorHandler().doJob(context);
                         });
+                    } else {
+                        throw e;
                     }
-                    return;
+                    if (!skipError) {
+                        return;
+                    }
+
                 }
             } else if (context.isInterrupted()) {
                 if (jobPipeline.getInterruptHandler() != null) {

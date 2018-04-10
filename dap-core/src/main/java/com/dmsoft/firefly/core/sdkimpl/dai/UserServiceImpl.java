@@ -17,7 +17,7 @@ import java.util.List;
  * Created by Lucien.Chen on 2018/2/9.
  */
 public class UserServiceImpl implements UserService {
-    private final String parentPath = ApplicationPathUtil.getPath("config");
+    private final String parentPath = ApplicationPathUtil.getPath("security");
     private final String fileName = "user";
     private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
@@ -97,10 +97,12 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         List<UserDto> list = mapper.fromJson(json, mapper.buildCollectionType(List.class, UserDto.class));
-        for (UserDto userDto : list) {
-            String name = userDto.getUserName();
-            if (name.equals("operationSystem")) {
-                return userDto.isAcceptLegal();
+        if (list != null && !list.isEmpty()) {
+            for (UserDto userDto : list) {
+                String name = userDto.getUserName();
+                if (name.equals("operationSystem")) {
+                    return userDto.isAcceptLegal();
+                }
             }
         }
         return false;

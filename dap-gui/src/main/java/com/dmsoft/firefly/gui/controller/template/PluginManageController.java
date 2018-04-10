@@ -19,10 +19,12 @@ import com.dmsoft.firefly.gui.model.PluginTableRowData;
 import com.dmsoft.firefly.gui.utils.FileUtils;
 import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.KeyValueDto;
+import com.dmsoft.firefly.gui.utils.StreamGobbler;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.dmsoft.firefly.sdk.utils.PropertyConfig;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.application.Platform;
@@ -193,14 +195,10 @@ public class PluginManageController implements Initializable {
             File file = fileChooser.showOpenDialog(fileStage);
             if (file != null) {
                 Platform.runLater(() -> {
-                    //TODO
-                    String propertiesURL = ApplicationPathUtil.getPath("application.properties");
-                    InputStream inputStream = null;
                     pluginFolderPath = null;
                     try {
-                        inputStream = new BufferedInputStream(new FileInputStream(propertiesURL));
-                        Properties properties = new Properties();
-                        properties.load(inputStream);
+                        String propertiesURL = ApplicationPathUtil.getPath("application.properties");
+                        Properties properties = PropertyConfig.getProperties(propertiesURL);
                         pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
                         //validate
                         String fileNameZip = file.getName();
@@ -310,14 +308,24 @@ public class PluginManageController implements Initializable {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 try {
-                    StringBuilder stringBuilder = new StringBuilder("java -jar dap-restart-1.0.0.jar");
+                    String propertiesURL = ApplicationPathUtil.getPath("application.properties");
+                    Properties properties = PropertyConfig.getProperties(propertiesURL);
+                    pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
+                    StringBuilder stringBuilder = new StringBuilder(properties.getProperty("restart_command"));
                     stringBuilder.append(" pluginFolderPath:").append(pluginFolderPath);
                     deleteList.forEach(v -> stringBuilder.append(" delete:").append(v));
                     coverList.forEach(v -> stringBuilder.append(" cover:").append(v));
                     System.out.println(stringBuilder.toString());
-                    Runtime.getRuntime().exec(stringBuilder.toString());
+                    Process proc = Runtime.getRuntime().exec(stringBuilder.toString());
+                    StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "Error");
+                    StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), "Output");
+                    errorGobbler.start();
+                    outputGobbler.start();
+                    proc.waitFor();
                 } catch (IOException e) {
                     System.out.println("restart failed.");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         });

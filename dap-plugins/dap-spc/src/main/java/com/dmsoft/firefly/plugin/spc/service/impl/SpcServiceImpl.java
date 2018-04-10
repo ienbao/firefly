@@ -150,7 +150,9 @@ public class SpcServiceImpl implements SpcService {
 
     private void pushProgress(int progress) {
         JobContext context = RuntimeContext.getBean(JobManager.class).findJobContext(Thread.currentThread());
-        context.pushEvent(new JobEvent("SpcService", progress + 0.0, null));
+        if (context != null) {
+            context.pushEvent(new JobEvent("SpcService", progress + 0.0, null));
+        }
     }
 
     private SpcAnalysisService getAnalysisService() {

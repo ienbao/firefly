@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
-import com.dmsoft.firefly.gui.components.chart.ChartSaveUtils;
+import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.plugin.grr.charts.LinearChart;
 import com.dmsoft.firefly.plugin.grr.charts.data.ILineData;
 import com.dmsoft.firefly.plugin.grr.charts.data.RuleLineData;
@@ -352,7 +352,7 @@ public class BuildChart {
 
         try {
             file = new File(path);
-            ChartSaveUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(image.image, null), file, F9);
+            ChartOperatorUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(image.image, null), file, F9);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,6 +1,9 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
+import com.dmsoft.firefly.gui.components.dialog.ChooseTestItemDialog;
+import com.dmsoft.firefly.gui.components.skin.ExpandableTableViewSkin;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
+import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrViewDataDto;
@@ -42,6 +45,10 @@ public class GrrViewDataController implements Initializable {
     @FXML
     private Button exchangeBtn;
 
+    @FXML
+    private Button chooseItemBtn;
+    private ChooseTestItemDialog chooseTestItemDialog;
+
     private GrrMainController grrMainController;
     private GrrDataFrameDto grrDataFrameDto;
     private GrrViewDataDFIncludeModel includeModel;
@@ -61,10 +68,12 @@ public class GrrViewDataController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        analysisDataTB.setSkin(new ExpandableTableViewSkin(analysisDataTB));
+        exchangeDataTB.setSkin(new ExpandableTableViewSkin(exchangeDataTB));
         analysisFilterLB.getTextField().setPromptText(GrrFxmlAndLanguageUtils.getString("TEST_ITEM"));
         exchangeFilterLB.getTextField().setPromptText(GrrFxmlAndLanguageUtils.getString("TEST_ITEM"));
         analysisFilterLB.setDisable(true);
-        exchangeableLB.setDisable(true);
+        exchangeFilterLB.setDisable(true);
         analysisFilterLB.getTextField().textProperty().addListener((ov, t1, t2) -> {
             if (this.includeModel != null) {
                 this.includeModel.searchTestItem(t2);
@@ -75,6 +84,7 @@ public class GrrViewDataController implements Initializable {
                 this.backupModel.searchTestItem(t2);
             }
         });
+        chooseItemBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
         this.exchangeBtn.setOnAction(event -> {
             if (this.backupModel != null && this.includeModel != null && this.backupModel.getSelectedViewDataDto() != null && this.includeModel.getSelectedViewDataDto() != null) {
                 GrrViewDataDto toBeBackupDto = this.includeModel.getSelectedViewDataDto();
@@ -91,6 +101,22 @@ public class GrrViewDataController implements Initializable {
                 this.backupModel.replace(toBeBackupDto);
                 isChanged = true;
             }
+        });
+        chooseTestItemDialog = new ChooseTestItemDialog(null, null);
+        chooseItemBtn.setOnAction(event -> {
+            chooseTestItemDialog.resetSelectedItems(this.includeModel.getHeaderArray());
+            chooseTestItemDialog.show();
+        });
+        chooseTestItemDialog.getOkBtn().setOnAction(event -> {
+            chooseTestItemDialog.close();
+            if (this.grrDataFrameDto == null) {
+                return;
+            }
+            List<String> selectedTestItems = chooseTestItemDialog.getSelectedItems();
+            this.includeModel.getHeaderArray().removeAll(this.includeModel.getHeaderArray().subList(4, this.includeModel.getHeaderArray().size()));
+            this.includeModel.getHeaderArray().addAll(selectedTestItems);
+            this.backupModel.getHeaderArray().removeAll(this.backupModel.getHeaderArray().subList(4, this.backupModel.getHeaderArray().size()));
+            this.backupModel.getHeaderArray().addAll(selectedTestItems);
         });
     }
 
@@ -119,9 +145,15 @@ public class GrrViewDataController implements Initializable {
         final boolean slot = isSlot;
         if (dataFrame != null && dataFrame.getDataFrame() != null && dataFrame.getIncludeDatas() != null && !dataFrame.getIncludeDatas().isEmpty()) {
             analysisFilterLB.setDisable(false);
-            exchangeableLB.setDisable(false);
+            exchangeFilterLB.setDisable(false);
             this.grrDataFrameDto = dataFrame;
             this.includeModel = new GrrViewDataDFIncludeModel(this.grrDataFrameDto, grrMainController.getSearchConditionDto());
+            if (this.includeModel.getHeaderArray().size() > 54) {
+                this.includeModel.getHeaderArray().remove(54, this.includeModel.getHeaderArray().size());
+            }
+            List<String> allItemNames = Lists.newArrayList();
+            allItemNames.addAll(this.grrDataFrameDto.getDataFrame().getAllTestItemName());
+            chooseTestItemDialog.resetItems(allItemNames, this.includeModel.getHeaderArray());
             if (isSlot) {
                 this.exchangeableLB.setText(partKey + this.grrDataFrameDto.getIncludeDatas().get(0).getPart() + ", " + appKey + this.grrDataFrameDto.getIncludeDatas().get(0).getOperator());
             } else {
@@ -136,6 +168,9 @@ public class GrrViewDataController implements Initializable {
             });
             if (dataFrame.getBackupDatas() != null && !dataFrame.getBackupDatas().isEmpty()) {
                 this.backupModel = new GrrViewDataDFBackupModel(this.grrDataFrameDto, grrMainController.getSearchConditionDto(), isSlot);
+                if (this.backupModel.getHeaderArray().size() > 54) {
+                    this.backupModel.getHeaderArray().remove(54, this.backupModel.getHeaderArray().size());
+                }
                 this.includeModel.addListener(this.backupModel);
             } else {
                 this.backupModel = null;
@@ -146,6 +181,7 @@ public class GrrViewDataController implements Initializable {
         } else {
             this.includeModel = null;
             this.grrDataFrameDto = null;
+            chooseTestItemDialog.resetItems(Lists.newArrayList(), Lists.newArrayList());
             if (this.analysisDataTB.getColumns() != null) {
                 this.analysisDataTB.getColumns().clear();
             }

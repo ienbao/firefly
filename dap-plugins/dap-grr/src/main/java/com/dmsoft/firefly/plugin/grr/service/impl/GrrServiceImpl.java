@@ -174,7 +174,9 @@ public class GrrServiceImpl implements GrrService {
 
     private void pushProgress(int progress) {
         JobContext context = RuntimeContext.getBean(JobManager.class).findJobContext(Thread.currentThread());
-        context.pushEvent(new JobEvent("GrrService", progress + 0.0, null));
+        if (context != null) {
+            context.pushEvent(new JobEvent("GrrService", progress + 0.0, null));
+        }
     }
 
     public GrrAnalysisService getAnalysisService() {

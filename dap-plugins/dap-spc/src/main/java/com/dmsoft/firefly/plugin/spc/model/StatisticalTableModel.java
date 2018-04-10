@@ -41,15 +41,15 @@ public class StatisticalTableModel implements TableModel {
     private static final String[] SPC_STATISTICAL_FIX_COLUMN = UIConstant.SPC_STATISTICAL_FIX_COLUMN;
     private ObservableList<String> columnKey = FXCollections.observableArrayList();
     private ObservableList<String> rowKey = FXCollections.observableArrayList();
-    private Map<String, SourceObjectProperty<String>> valueMap = new HashMap<>();
-    private Map<String, SimpleObjectProperty<Boolean>> checkMap = new HashMap<>();
+    private Map<String, SourceObjectProperty<String>> valueMap =  Maps.newLinkedHashMap();
+    private Map<String, SimpleObjectProperty<Boolean>> checkMap = Maps.newLinkedHashMap();
     private ObjectProperty<Boolean> allChecked = new SimpleObjectProperty<>(false);
     private Set<String> falseSet = new HashSet<>();
     private List<SpcStatisticalResultAlarmDto> spcStatsDtoList;
 
     private FilteredList<String> statisticalTableRowDataFilteredList;
     private SortedList<String> statisticalTableRowDataSortedList;
-    private Map<String, SpcStatisticalResultAlarmDto> keyToStatsDtoMap = Maps.newHashMap();
+    private Map<String, SpcStatisticalResultAlarmDto> keyToStatsDtoMap =  Maps.newLinkedHashMap();
 
     private List<TableMenuRowEvent> menuRowEvents;
     private CheckBox allCheckBox;
@@ -57,7 +57,7 @@ public class StatisticalTableModel implements TableModel {
     private TableView<String> tableView;
     private Set<String> emptyResultKeys = new HashSet<>();
 
-    private Map<String, Color> colorCache = Maps.newHashMap();
+    private Map<String, Color> colorCache =  Maps.newLinkedHashMap();
 
     private Set<String> editorCell = new HashSet<>();
     private List<String> editorRowKey = Lists.newArrayList();
@@ -385,6 +385,11 @@ public class StatisticalTableModel implements TableModel {
 
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
+        if(!this.isEditableTextField(column)){
+            tableCell.setEditable(false);
+        } else {
+            tableCell.setEditable(true);
+        }
         tableCell.setStyle(null);
         tableCell.getStyleClass().remove("error");
         if (DAPStringUtils.isBlank(column)) {

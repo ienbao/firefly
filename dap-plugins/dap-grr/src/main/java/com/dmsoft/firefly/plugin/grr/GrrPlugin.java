@@ -104,7 +104,7 @@ public class GrrPlugin extends Plugin {
                 .addLast(new DetailResultHandler().setWeight(D100)));
 
         jobManager.initializeJob(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE, jobFactory.createJobPipeLine()
-                .addLast(new FindTestDataHandler())
+                .addLast(new FindTestDataHandler().setWeight(D100))
                 .addLast(new DataFrameHandler())
                 .addLast(new ValidateParamHandler())
                 .addLast(new GrrConfigHandler())
@@ -113,7 +113,7 @@ public class GrrPlugin extends Plugin {
                 .addLast(new DetailResultHandler()));
 
         jobManager.initializeJob(ParamKeys.GRR_EXPORT_JOB_PIPELINE, jobFactory.createJobPipeLine()
-                .addLast(new FindTestDataHandler())
+                .addLast(new FindTestDataHandler().setWeight(D100))
                 .addLast(new DataFrameHandler())
                 .addLast(new ValidateParamHandler())
                 .addLast(new GrrConfigHandler())
@@ -122,7 +122,7 @@ public class GrrPlugin extends Plugin {
                 .addLast(new ExportSummaryHandler().setWeight(D100)));
 
         jobManager.initializeJob(ParamKeys.GRR_EXPORT_DETAIL_JOB_PIPELINE, jobFactory.createJobPipeLine()
-                .addLast(new FindTestDataHandler())
+                .addLast(new FindTestDataHandler().setWeight(D100))
                 .addLast(new DataFrameHandler())
                 .addLast(new ValidateParamHandler())
                 .addLast(new GrrConfigHandler())
@@ -135,7 +135,7 @@ public class GrrPlugin extends Plugin {
                 .addLast(new RefreshHandler().setWeight(D100)));
 
         jobManager.initializeJob(ParamKeys.GRR_EXPORT_VIEW_DATA, jobFactory.createJobPipeLine()
-                .addLast(new FindTestDataHandler())
+                .addLast(new FindTestDataHandler().setWeight(D100))
                 .addLast(new DataFrameHandler()));
     }
 

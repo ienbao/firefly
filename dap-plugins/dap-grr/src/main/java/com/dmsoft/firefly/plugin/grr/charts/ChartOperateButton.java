@@ -23,30 +23,56 @@ public class ChartOperateButton extends Button {
     private ListView<String> listView;
     private SelectCallBack selectCallBack;
 
-    private boolean selected = defaultSelected;
-    private Orientation orientation = defaultOrientation;
+    private boolean selected = DEFAULTSELECTED;
+    private Orientation orientation = DEFAULTORIENTATION;
 
-    private final static Orientation defaultOrientation = Orientation.UPLEFT;
-    private final static boolean defaultSelected = false;
+    private static final Orientation DEFAULTORIENTATION = Orientation.UPLEFT;
+    private static final boolean DEFAULTSELECTED = false;
     private final double threshold = 6;
     private Set<String> selectedSets = Sets.newHashSet();
 
+    /**
+     * Construct a new ChartOperateButton
+     */
     public ChartOperateButton() {
-        this(defaultSelected, defaultOrientation);
+        this(DEFAULTSELECTED, DEFAULTORIENTATION);
     }
 
+    /**
+     * Construct a new ChartOperateButton with given orientation
+     *
+     * @param orientation orientation
+     */
     public ChartOperateButton(Orientation orientation) {
-        this("", defaultSelected, orientation);
+        this("", DEFAULTSELECTED, orientation);
     }
 
+    /**
+     * Construct a new ChartOperateButton with given selected
+     *
+     * @param selected whether is true or false
+     */
     public ChartOperateButton(boolean selected) {
-        this("", selected, defaultOrientation);
+        this("", selected, DEFAULTORIENTATION);
     }
 
+    /**
+     * Construct a new ChartOperateButton with given selected and orientation
+     *
+     * @param selected    whether is true or false
+     * @param orientation orientation
+     */
     public ChartOperateButton(boolean selected, Orientation orientation) {
         this("", selected, orientation);
     }
 
+    /**
+     * Construct a new ChartOperateButton with given name, selected and orientation
+     *
+     * @param name        button text
+     * @param selected    whether is true or false
+     * @param orientation orientation
+     */
     public ChartOperateButton(String name, boolean selected, Orientation orientation) {
         super(name);
         this.selected = selected;
@@ -68,11 +94,8 @@ public class ChartOperateButton extends Button {
     }
 
     private void showPopupForButton(Button button) {
-        double x = button.getScene().getWindow().getX() +
-                button.getScene().getX() + button.localToScene(0, 0).getX();
-        double y = button.getScene().getWindow().getY() +
-                button.getScene().getY() + button.localToScene(0, 0).getY();
-
+        double x = button.getScene().getWindow().getX() + button.getScene().getX() + button.localToScene(0, 0).getX();
+        double y = button.getScene().getWindow().getY() + button.getScene().getY() + button.localToScene(0, 0).getY();
         if (orientation.equals(Orientation.UPLEFT)) {
             x -= listView.getPrefWidth();
             x += button.getPrefWidth();
@@ -89,9 +112,9 @@ public class ChartOperateButton extends Button {
 
     private Callback buildCallback() {
         return CheckBoxListCell.forListView(item -> {
-            boolean selected = selectedSets.contains(item);
-            BooleanProperty observable = new SimpleBooleanProperty(selected);
-            observable.setValue(selected);
+            boolean hasSelected = selectedSets.contains(item);
+            BooleanProperty observable = new SimpleBooleanProperty(hasSelected);
+            observable.setValue(hasSelected);
             observable.addListener((obs, wasSelected, isNowSelected) -> {
                 updateSelectedSets(isNowSelected, (String) item);
                 if (selectCallBack != null) {
@@ -110,29 +133,60 @@ public class ChartOperateButton extends Button {
         }
     }
 
+    /**
+     * Set list view data source
+     *
+     * @param data data source
+     */
     public void setListViewData(List<String> data) {
         data = (data == null) ? Lists.newArrayList() : data;
         listView.getItems().addAll(data);
     }
 
+    /**
+     * Set list view size
+     *
+     * @param width  width
+     * @param height height
+     */
     public void setListViewSize(double width, double height) {
         listView.setPrefWidth(width);
         listView.setPrefHeight(height);
     }
 
+    /**
+     * Set selected call back function
+     *
+     * @param selectCallBack selected call back function
+     */
     public void setSelectCallBack(SelectCallBack selectCallBack) {
         this.selectCallBack = selectCallBack;
     }
 
+    /**
+     * Set popup orientation
+     *
+     * @param orientation orientation
+     */
     public void setOrientation(Orientation orientation) {
         this.orientation = orientation;
     }
 
+    /**
+     * Set selectedSets
+     *
+     * @param selectedSets selectedSets
+     */
     public void setSelectedSets(Set<String> selectedSets) {
         this.selectedSets = selectedSets;
         this.listView.refresh();
     }
 
+    /**
+     * Get selectedSets
+     *
+     * @return selectedSets
+     */
     public Set<String> getSelectedSets() {
         return selectedSets;
     }
