@@ -720,6 +720,8 @@ public class GrrResultController implements Initializable {
                 com.dmsoft.firefly.plugin.grr.utils.enums.Orientation.BOTTOMLEFT);
         rangeAppraiserChartBtn = new ChartOperateButton(true,
                 com.dmsoft.firefly.plugin.grr.utils.enums.Orientation.BOTTOMLEFT);
+        Tooltip.install(xBarAppraiserChartBtn, new Tooltip(UIConstant.BTN_CHART_CHOOSE_LINES));
+        Tooltip.install(rangeAppraiserChartBtn, new Tooltip(UIConstant.BTN_CHART_CHOOSE_LINES));
         xBarAppraiserChartRightPane.addCustomPaneChildren(xBarAppraiserChartBtn);
         rangeAppraiserChartRightPane.addCustomPaneChildren(rangeAppraiserChartBtn);
 
