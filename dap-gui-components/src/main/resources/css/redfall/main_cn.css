@@ -1350,7 +1350,7 @@
     -fx-background-color: null;
     -fx-text-fill: #222222;
     -fx-alignment: center-left;
-    -fx-padding: 0 10 0 10;
+    -fx-padding: 0 10 1 9;
     -fx-border-insets: 0;
     -fx-background-insets: 0;
     -fx-border-color: transparent;
@@ -1358,7 +1358,7 @@
 }
 
 .table-cell .text-field {
-    -fx-border-insets: -1 -11 -1 -11;
+    -fx-border-insets: -1 -11 -1 -10;
     -fx-min-height: 16;
     -fx-pref-height: 16;
     -fx-max-height: 16;
@@ -1385,6 +1385,7 @@
 .table-view:focused:row-selection > .virtual-flow > .clipped-container > .sheet > .table-row-cell:focused {
     -fx-background-color: rgba(0, 150, 255, 0.2); /*#0096ff*/
     -fx-border-width: 1 0 1 0;
+    -fx-padding: -1 0 -1 0;
     -fx-border-color: rgba(0, 150, 255, 0.5) transparent;
 }
 
@@ -1422,13 +1423,13 @@
     -fx-pref-width: 160;
 }
 
-.table-view .combo-box {
-    -fx-pref-height: 16;
-    -fx-min-height: 16;
-    -fx-max-height: 16;
-    -fx-background-insets: -1 -11 -1 -11;
-    -fx-border-insets: -1 -11 -1 -11;
-    -fx-padding: -3 -8 -3 -8;
+.table-view .combo-box-base {
+    -fx-pref-height: 14;
+    -fx-min-height: 14;
+    -fx-max-height: 14;
+    -fx-background-insets: -2 -11 -2 -10;
+    -fx-border-insets: -2 -11 -2 -10;
+    -fx-padding: -5 -8 -3 -8;
 }
 
 /*******************************************************************************
@@ -1531,7 +1532,7 @@
     -fx-background-insets: 0;
     -fx-border-width: 0;
     -fx-background-color: transparent;
-
+    -fx-padding: 0;
 }
 
 .scroll-pane:hover {

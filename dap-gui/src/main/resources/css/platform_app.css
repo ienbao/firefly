@@ -70,3 +70,7 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
+
+.table-text-field {
+    -fx-text-fill: #222222 !important;
+}

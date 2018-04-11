@@ -51,11 +51,12 @@ public class ChooseTestItemDialog extends Stage {
         scene.getStylesheets().addAll(WindowFactory.checkStyles());
         scene.setFill(Color.TRANSPARENT);
         this.setScene(scene);
+        this.initModality(Modality.APPLICATION_MODAL);
+        this.setResizable(false);
         windowPane.init();
         mainPane.getOkBtn().setOnAction(event -> this.close());
         Image image = new Image("/images/desktop_mac_logo.png");
         this.getIcons().add(image);
-        this.initModality(Modality.APPLICATION_MODAL);
     }
 
     /**

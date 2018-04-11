@@ -18,6 +18,7 @@ public class ResourceMassages {
     public static final String MENU_LEGAL_NOTICE = "MENU_LEGAL_NOTICE";
     public static final String REMOVE_MSG = "REMOVE_MSG";
     public static final String PLUGIN_MANAGE = "PLUGIN_MANAGE";
+    public static final String FILTER = "FILTER";
 
     public static final String CHOOSE_ITEMS_TITLE = "Choose Test Items";
 
