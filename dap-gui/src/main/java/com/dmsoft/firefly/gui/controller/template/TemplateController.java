@@ -7,6 +7,7 @@ import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageController;
@@ -123,14 +124,21 @@ public class TemplateController {
 
     private void initButton() {
         rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rename_normal.png")));
+        TooltipUtil.installNormalTooltip(rename, GuiFxmlAndLanguageUtils.getString(ResourceMassages.RENAME_TEMPLATE));
         add.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
+        TooltipUtil.installNormalTooltip(add, GuiFxmlAndLanguageUtils.getString(ResourceMassages.ADD_TEMPLATE));
         copy.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_copy_normal.png")));
+        TooltipUtil.installNormalTooltip(copy, GuiFxmlAndLanguageUtils.getString(ResourceMassages.COPY_TEMPLATE));
         delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
+        TooltipUtil.installNormalTooltip(delete, GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_TEMPLATE));
         addTime.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
+        TooltipUtil.installNormalTooltip(addTime, GuiFxmlAndLanguageUtils.getString(ResourceMassages.ADD_TIME_KEYS));
+
         addRow.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
+        TooltipUtil.installNormalTooltip(addRow, GuiFxmlAndLanguageUtils.getString(ResourceMassages.ADD_ITEM));
         pattern.getStyleClass().add("message-tip-question");
         pattern.setStyle("-fx-background-color: #0096ff");
-
+        TooltipUtil.installNormalTooltip(pattern, GuiFxmlAndLanguageUtils.getString(ResourceMassages.HELP));
     }
 
     private void initDefault() {
