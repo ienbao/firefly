@@ -312,7 +312,16 @@ public class PluginManageController implements Initializable {
                     String propertiesURL = ApplicationPathUtil.getPath("application.properties");
                     Properties properties = PropertyConfig.getProperties(propertiesURL);
                     pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
-                    StringBuilder stringBuilder = new StringBuilder(properties.getProperty("restart_command"));
+
+                    String run = "." + File.separator + "restart.sh";
+                    String runUrl = ApplicationPathUtil.getPath("restart.sh");
+                    if (ApplicationPathUtil.OS_NAME.toLowerCase().startsWith(ApplicationPathUtil.OS_WIN)) {
+                        run = "." + File.separator + "restart.bat";
+                        runUrl = ApplicationPathUtil.getPath("restart.bat");
+                    }
+                    com.dmsoft.firefly.sdk.utils.FileUtils.changeFileAuthority(runUrl);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append(run);
                     stringBuilder.append(" pluginFolderPath:").append(pluginFolderPath);
                     deleteList.forEach(v -> stringBuilder.append(" delete:").append(v));
                     coverList.forEach(v -> stringBuilder.append(" cover:").append(v));

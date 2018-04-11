@@ -11,10 +11,7 @@ import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.ControlChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.NDBarChartData;
 import com.dmsoft.firefly.plugin.spc.charts.select.SelectCallBack;
-import com.dmsoft.firefly.plugin.spc.charts.view.ChartAnnotationButton;
-import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
-import com.dmsoft.firefly.plugin.spc.charts.view.ChartPanel;
-import com.dmsoft.firefly.plugin.spc.charts.view.VerticalTabPane;
+import com.dmsoft.firefly.plugin.spc.charts.view.*;
 import com.dmsoft.firefly.plugin.spc.dto.ControlRuleDto;
 import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
@@ -38,6 +35,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.chart.*;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.paint.Color;
 
 import java.net.URL;
@@ -53,9 +51,6 @@ public class ChartResultController implements Initializable {
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
 
-    @FXML
-    private Tab analysisChartTab;
-    private VerticalTabPane chartTabPane;
     private ChartAnnotationButton editBtn;
     private Map<String, XYChart> chartMap = Maps.newHashMap();
     private Map<String, String> testItemValue = Maps.newHashMap();
@@ -246,25 +241,15 @@ public class ChartResultController implements Initializable {
         //disable chart operate button
         this.toggleChartCustomButtonDisable(true);
 
-        chartTabPane = new VerticalTabPane();
-        ndChartPane.setId(UIConstant.SPC_CHART_NAME[0]);
-        runChartPane.setId(UIConstant.SPC_CHART_NAME[1]);
-        xBarChartPane.setId(UIConstant.SPC_CHART_NAME[2]);
-        rangeChartPane.setId(UIConstant.SPC_CHART_NAME[3]);
-        sdChartPane.setId(UIConstant.SPC_CHART_NAME[4]);
-        medianChartPane.setId(UIConstant.SPC_CHART_NAME[5]);
-        boxChartPane.setId(UIConstant.SPC_CHART_NAME[6]);
-        mrChartPane.setId(UIConstant.SPC_CHART_NAME[7]);
-        chartTabPane.addNode(ndChartPane, 0);
-        chartTabPane.addNode(runChartPane, 1);
-        chartTabPane.addNode(xBarChartPane, 2);
-        chartTabPane.addNode(rangeChartPane, 3);
-        chartTabPane.addNode(sdChartPane, 4);
-        chartTabPane.addNode(medianChartPane, 5);
-        chartTabPane.addNode(boxChartPane, 6);
-        chartTabPane.addNode(mrChartPane, 7);
-        chartTabPane.activeTabByIndex(0);
-        analysisChartTab.setContent(chartTabPane);
+        analysisChartTabPane.setSkin(new TabPaneSkin(analysisChartTabPane));
+        ndTab.setContent(ndChartPane);
+        runTab.setContent(runChartPane);
+        xBarTab.setContent(xBarChartPane);
+        sdTab.setContent(sdChartPane);
+        medianTab.setContent(medianChartPane);
+        rangeTab.setContent(rangeChartPane);
+        boxTab.setContent(boxChartPane);
+        mrTab.setContent(mrChartPane);
     }
 
     private void initPerformanceSelected() {
@@ -740,4 +725,24 @@ public class ChartResultController implements Initializable {
     private Map<String, ChartOperateButton> chartButtonMap = Maps.newHashMap();
     //chart name---chart pane
     private Map<String, ChartPanel> chartPanelMap = Maps.newHashMap();
+
+    @FXML
+    private TabPane analysisChartTabPane;
+    @FXML
+    private Tab ndTab;
+    @FXML
+    private Tab runTab;
+    @FXML
+    private Tab xBarTab;
+    @FXML
+    private Tab rangeTab;
+    @FXML
+    private Tab sdTab;
+    @FXML
+    private Tab medianTab;
+    @FXML
+    private Tab boxTab;
+    @FXML
+    private Tab mrTab;
+
 }

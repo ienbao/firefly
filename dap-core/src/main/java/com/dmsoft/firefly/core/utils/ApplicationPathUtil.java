@@ -11,7 +11,7 @@ import java.net.URLDecoder;
  */
 public class ApplicationPathUtil {
     public static final String OS_NAME;
-    private static final String OS_WIN = "win";
+    public static final String OS_WIN = "win";
 
     static {
         OS_NAME = System.getProperty("os.name");

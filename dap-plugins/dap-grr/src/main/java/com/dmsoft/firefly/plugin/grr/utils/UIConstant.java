@@ -29,8 +29,8 @@ public class UIConstant {
     public static final String TOTAL_MEAN = "Total Mean";
     public static final String TOTAL_RANGE = "Total Range";
 
-    public static final String CHART_PERFORMANCE_CODE="GRR_CHARTS";
-    public static final String CHART_PERFORMANCE_KEY_OPERATE="GRR_CHART_OPERATE";
+    public static final String CHART_PERFORMANCE_CODE = "GRR_CHARTS";
+    public static final String CHART_PERFORMANCE_KEY_OPERATE = "GRR_CHART_OPERATE";
 
     public static final String GRR_CHART_XBAR_APPRAISER = GrrFxmlAndLanguageUtils.getString("GRR_CHART_XBAR_APPRAISER");
     public static final String GRR_CHART_RANGE_APPRAISER = GrrFxmlAndLanguageUtils.getString("GRR_CHART_RANGE_APPRAISER");

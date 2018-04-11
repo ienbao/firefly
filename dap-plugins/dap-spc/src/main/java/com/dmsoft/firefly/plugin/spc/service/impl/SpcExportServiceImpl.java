@@ -78,7 +78,7 @@ public class SpcExportServiceImpl {
         if (spcStatisticDtoToExport.size() != 0) {
             spcExportBuildDetail(exportParamDto, chartImage, spcStatisticDtoToExport, exportConfig, exportTimes, runChartRule);
         }
-        String savePicPath = FileUtils.getAbsolutePath("../export/temp");
+        String savePicPath = FileUtils.getAbsolutePath("../export");
         FileUtils.deleteDir(savePicPath);
         return basePath[0];
     }

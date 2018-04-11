@@ -1,10 +1,9 @@
 @echo off
-set R_HOME=%~dp0R
 set JRE_HOME=%~dp0jre
-set PATH=%JRE_HOME%\bin;%JRE_HOME%\bin\server;%R_HOME%\bin\x64;%PATH%;%HOME%\bin
-set CLASSPATH=%CLASSPATH%;%JRE_HOME%\lib;%R_HOME%\library\rJava\jri
+set PATH=%JRE_HOME%\bin;%JRE_HOME%\bin\server;%PATH%;%HOME%\bin
+set CLASSPATH=%CLASSPATH%;%JRE_HOME%\lib;
 
-set APP_JAR=dap-gui-2.5.0-SNAPSHOT.jar
+set APP_JAR=dap-restart-2.5.0-SNAPSHOT.jar
 set LOG=log
 
 set ID=
@@ -39,7 +38,7 @@ set ID=
     )
 
     set now=%date:~,4%%date:~5,2%%date:~8,2%
-    echo DAP is running...
-	java -Djava.library.path="%R_HOME%\library\rJava\jri" -jar %APP_JAR% >> log/dap_%now%.log
+    echo iSPC is running...
+	java -jar "%APP_JAR%" %* >> log/dap_restart_%now%.log
 :stopApp
     taskkill /F /IM java > nul

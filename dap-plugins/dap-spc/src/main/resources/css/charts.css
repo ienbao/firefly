@@ -11,12 +11,12 @@
 }
 
 /*.chart-vertical-grid-lines {*/
-    /*-fx-stroke-width: 0px;*/
+/*-fx-stroke-width: 0px;*/
 /*}*/
 
 /*.chart-horizontal-grid-lines {*/
-    /*-fx-stroke-width: 0px;*/
-    /*-fx-stroke: transparent;*/
+/*-fx-stroke-width: 0px;*/
+/*-fx-stroke: transparent;*/
 /*}*/
 
 /*chart style*/
@@ -200,42 +200,6 @@
     -fx-cursor: hand;
 }
 
-.btn-tab {
-    -fx-border-width: 0px 1px 0px 0px;
-    -fx-background-color: #f0f0f0;
-    -fx-border-color: #e7e7e7;
-    -fx-alignment: center-left;
-}
-
-.btn-tab:hover {
-    -fx-background-color: white;
-}
-
-.btn-tab:pressed {
-    -fx-border-color: white;
-    -fx-background-color: white;
-}
-
-.btn-tab:focused {
-    -fx-border-color: #e7e7e7;
-    -fx-border-style: solid;
-}
-
-.btn-tab:focused:hover {
-    -fx-border-color: #f0f0f0;
-    -fx-border-style: solid;
-}
-
-.btn-tab-active {
-    -fx-border-width: 1px 0px 1px 0px;
-    -fx-border-color: #e7e7e7;
-    -fx-background-color: white;
-}
-
-.tabPane-vertical {
-    -fx-background-color: #f0f0f0;
-}
-
 .list-cell {
     -fx-background: transparent;
     -fx-background-color: transparent;
@@ -300,6 +264,57 @@
 .chart-legend-tooltip .chart-legend-item {
     -fx-text-fill: rgb(34, 34, 34);
 }
+
+.vertical-text {
+    -fx-background-color: #f0f0f0;
+}
+
+.vertical-text .tab-header-area .tab {
+    -fx-pref-height: 100px;
+    -fx-pref-width: 22px;
+}
+
+.vertical-text .tab-header-area .tab .tab-graphic-label {
+    -fx-pref-height: 22px;
+    -fx-pref-width: 100px;
+    -fx-rotate: 90;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab {
+    -fx-border-width: 0px 0px 1px 0px;
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #e7e7e7;
+    -fx-alignment: center-left;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:selected {
+    -fx-border-width: 0px 1px 0px 1px;
+    -fx-border-color: #e7e7e7;
+    -fx-background-color: white;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:hover {
+    -fx-background-color: white;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:pressed {
+    -fx-border-color: white;
+    -fx-background-color: white;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:focused {
+    -fx-border-color: #e7e7e7;
+    -fx-border-style: solid;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:focused:hover {
+    -fx-border-color: #f0f0f0;
+    -fx-border-style: solid;
+}
+
+/*.vertical-text > .tab-header-area > .headers-region > .tab .tab-label {*/
+    /*-fx-background-color: red;*/
+/*}*/
 
 
 
