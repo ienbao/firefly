@@ -4,6 +4,7 @@ import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
 import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -79,9 +80,12 @@ public class SearchTabController {
         advanceTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_advance_search_normal.png")));
         advanceTab.setStyle("-fx-padding: 0 5 0 5");
         groupAdd.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_new_template_normal.png")));
+        TooltipUtil.installNormalTooltip(groupAdd, FxmlAndLanguageUtils.getString("ADD_GROUP"));
         groupRemove.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_clear_all_normal.png")));
+        TooltipUtil.installNormalTooltip(groupRemove, FxmlAndLanguageUtils.getString("CLEAR_GROUP"));
         help.getStyleClass().add("message-tip-question");
         help.setStyle("-fx-background-color: #0096ff");
+        TooltipUtil.installNormalTooltip(help, FxmlAndLanguageUtils.getString("ADVANCE"));
     }
 
     private void initEvent() {
