@@ -48,7 +48,7 @@ public class ChooseTestItemDialog extends Stage {
         WindowPane windowPane = new WindowPane(FxmlAndLanguageUtils.getString(CommonResourceMassages.CHOOSE_ITEM), mainPane);
         windowPane.setStage(this);
         Scene scene = new Scene(windowPane);
-        scene.getStylesheets().addAll(WindowFactory.checkStyles(getResource("css/redfall/main.css").toExternalForm()));
+        scene.getStylesheets().addAll(WindowFactory.checkStyles());
         scene.setFill(Color.TRANSPARENT);
         this.setScene(scene);
         windowPane.init();

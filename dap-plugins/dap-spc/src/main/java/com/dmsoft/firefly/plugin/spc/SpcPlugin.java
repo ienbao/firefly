@@ -75,7 +75,7 @@ public class SpcPlugin extends Plugin {
                 Pane root = null;
                 try {
                     root = fxmlLoader.load();
-                    root.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
+                    root.getStylesheets().addAll(WindowFactory.checkStyles());
                     root.getStylesheets().add(getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
                     root.getStylesheets().add(getClass().getClassLoader().getResource("css/charts.css").toExternalForm());
                 } catch (Exception ex) {
