@@ -16,7 +16,7 @@
                                     <graphic>
                                         <Group>
                                             <children>
-                                                <Label rotate="90" text="%SPC_CHART_NDC" textAlignment="CENTER" />
+                                                <Label styleClass="tab-graphic-label" text="%SPC_CHART_NDC" textAlignment="CENTER" />
                                             </children>
                                         </Group>
                                     </graphic>
@@ -27,7 +27,7 @@
                                     <graphic>
                                         <Group>
                                             <children>
-                                                <Label rotate="90" text="%SPC_CHART_RUN" textAlignment="CENTER" />
+                                                <Label rotate="90" styleClass="tab-graphic-label" text="%SPC_CHART_RUN" textAlignment="CENTER" />
                                             </children>
                                         </Group>
                                     </graphic>
@@ -38,7 +38,7 @@
                                     <graphic>
                                         <Group>
                                             <children>
-                                                <Label rotate="90" text="%SPC_CHART_BAR" textAlignment="CENTER" />
+                                                <Label styleClass="tab-graphic-label"  text="%SPC_CHART_BAR" textAlignment="CENTER" />
                                             </children>
                                         </Group>
                                     </graphic>
@@ -49,7 +49,7 @@
                                     <graphic>
                                         <Group>
                                             <children>
-                                                <Label rotate="90" text="%SPC_CHART_RANGE" textAlignment="CENTER" />
+                                                <Label styleClass="tab-graphic-label" text="%SPC_CHART_RANGE" textAlignment="CENTER" />
                                             </children>
                                         </Group>
                                     </graphic>
@@ -60,7 +60,7 @@
                                     <graphic>
                                         <Group>
                                             <children>
-                                                <Label rotate="90" text="%SPC_CHART_SD" textAlignment="CENTER" />
+                                                <Label styleClass="tab-graphic-label" text="%SPC_CHART_SD" textAlignment="CENTER" />
                                             </children>
                                         </Group>
                                     </graphic>
@@ -71,7 +71,7 @@
                                     <graphic>
                                         <Group>
                                             <children>
-                                                <Label rotate="90" text="%SPC_CHART_MEDIAN" textAlignment="CENTER" />
+                                                <Label styleClass="tab-graphic-label" text="%SPC_CHART_MEDIAN" textAlignment="CENTER" />
                                             </children>
                                         </Group>
                                     </graphic>
@@ -82,7 +82,7 @@
                                     <graphic>
                                         <Group>
                                             <children>
-                                                <Label rotate="90" text="%SPC_CHART_BOX" textAlignment="CENTER" />
+                                                <Label styleClass="tab-graphic-label" text="%SPC_CHART_BOX" textAlignment="CENTER" />
                                             </children>
                                         </Group>
                                     </graphic>
@@ -93,7 +93,7 @@
                                     <graphic>
                                         <Group>
                                             <children>
-                                                <Label rotate="90" text="%SPC_CHART_MR" textAlignment="CENTER" />
+                                                <Label styleClass="tab-graphic-label" text="%SPC_CHART_MR" textAlignment="CENTER" />
                                             </children>
                                         </Group>
                                     </graphic>

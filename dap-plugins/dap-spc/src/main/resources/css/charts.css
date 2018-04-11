@@ -265,13 +265,19 @@
     -fx-text-fill: rgb(34, 34, 34);
 }
 
-.vertical-text .tab-header-area .tab {
-    -fx-pref-height: 100;
-    -fx-pref-width: 20;
-}
-
 .vertical-text {
     -fx-background-color: #f0f0f0;
+}
+
+.vertical-text .tab-header-area .tab {
+    -fx-pref-height: 100px;
+    -fx-pref-width: 22px;
+}
+
+.vertical-text .tab-header-area .tab .tab-graphic-label {
+    -fx-pref-height: 22px;
+    -fx-pref-width: 100px;
+    -fx-rotate: 90;
 }
 
 .vertical-text > .tab-header-area > .headers-region > .tab {
@@ -305,6 +311,10 @@
     -fx-border-color: #f0f0f0;
     -fx-border-style: solid;
 }
+
+/*.vertical-text > .tab-header-area > .headers-region > .tab .tab-label {*/
+    /*-fx-background-color: red;*/
+/*}*/
 
 
 

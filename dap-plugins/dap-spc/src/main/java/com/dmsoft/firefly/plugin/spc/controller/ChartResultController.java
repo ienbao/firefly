@@ -33,7 +33,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.Side;
 import javafx.scene.chart.*;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -52,9 +51,6 @@ public class ChartResultController implements Initializable {
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
 
-//    @FXML
-//    private Tab analysisChartTab;
-//    private VerticalTabPane chartTabPane;
     private ChartAnnotationButton editBtn;
     private Map<String, XYChart> chartMap = Maps.newHashMap();
     private Map<String, String> testItemValue = Maps.newHashMap();

@@ -1233,9 +1233,7 @@ public class TabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
                         closeBtn.setVisible(showCloseButton());
                     }
 
-
                     label.resize(labelWidth, labelHeight);
-
 
                     double labelStartX = paddingLeft;
 
@@ -1246,7 +1244,7 @@ public class TabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
                     // provided max width.
                     double closeBtnStartX = (maxWidth < Double.MAX_VALUE ? Math.min(w, maxWidth) : w) - paddingRight - closeBtnWidth;
 
-                    positionInArea(label, labelStartX - 7, paddingTop, labelAreaWidth, h,
+                    positionInArea(label, labelStartX - 10, paddingTop + 10, labelAreaWidth, h,
                             /*baseline ignored*/0, HPos.CENTER, VPos.CENTER);
 
                     if (closeBtn.isVisible()) {
