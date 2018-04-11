@@ -74,7 +74,7 @@ public class ChartRightPane extends HBox {
         menuBar = new MenuBar();
         extensionMenu = new Menu();
         copyMenuItem = new MenuItem("Copy");
-        saveMenuItem = new MenuItem("Save As");
+        saveMenuItem = new MenuItem(UIConstant.CHART_EXTENSION_MENU_SAVE);
         printMenuItem = new MenuItem("Print");
         defaultRatioMenuItem = new RadioMenuItem("Default Display");
         oneToOneRatioMenuItem = new RadioMenuItem("1:1 Display");
@@ -172,7 +172,7 @@ public class ChartRightPane extends HBox {
             if (file != null) {
                 try {
                     String imagePath = file.getAbsolutePath();
-                    if (imagePath.contains(suffix)) {
+                    if (!imagePath.contains(suffix)) {
                         imagePath += suffix;
                     }
                     file = new File(imagePath);

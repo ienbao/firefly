@@ -96,6 +96,8 @@ public class ExcelToPdfUtil {
                 var8.printStackTrace();
             }
         }
+        logger.debug("Result: " + isSuccess);
+
         return isSuccess;
     }
 }

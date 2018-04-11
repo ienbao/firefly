@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.gui.components.progressbar;
 
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
+import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -58,7 +59,7 @@ public class ProgressBarTest extends Application {
 
         root.getChildren().addAll(smRed, mdRed, mdGreed, lgRed, lgGreen);
         Scene scene = new Scene(root, 1000, 250, Color.WHITE);
-        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
+        scene.getStylesheets().addAll(WindowFactory.checkStyles());
         primaryStage.getIcons().setAll(new Image( "/images/logo_16.png"));
         primaryStage.setScene(scene);
 

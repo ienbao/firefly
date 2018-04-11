@@ -145,11 +145,12 @@ public class PluginManageController implements Initializable {
                 if (pluginTable.getSelectionModel().getSelectedIndex() != -1) {
                     PluginTableRowData pluginTableRowData = pluginTableRowDataObservableList.get(pluginTable.getSelectionModel().getSelectedIndex());
                     explain.getChildren().remove(0, explain.getChildren().size());
-                    Text version = new Text(pluginTableRowData.getInfo().getVersion() + "\n");
+                    Text version = new Text("Version: " + pluginTableRowData.getInfo().getVersion() + "\n");
                     Text description = new Text((DAPStringUtils.isEmpty(pluginTableRowData.getInfo().getDescription()) ? "" : pluginTableRowData.getInfo().getDescription()));
                     Text name = new Text(pluginTableRowData.getInfo().getName() + "\n");
                     name.setStyle("-fx-font-weight: bold");
                     explain.getChildren().addAll(name, version, description);
+                    explain.setLineSpacing(5);
                 }
             });
 

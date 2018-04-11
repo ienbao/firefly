@@ -75,7 +75,9 @@ public class SearchTabController {
 
     private void initBtnIcon() {
         basicTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
+        basicTab.setStyle("-fx-padding: 0 5 0 5");
         advanceTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_advance_search_normal.png")));
+        advanceTab.setStyle("-fx-padding: 0 5 0 5");
         groupAdd.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_new_template_normal.png")));
         groupRemove.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_clear_all_normal.png")));
         help.getStyleClass().add("message-tip-question");
@@ -113,7 +115,7 @@ public class SearchTabController {
         Pane root = null;
         try {
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createSimpleWindowAsModel("advance", FxmlAndLanguageUtils.getString(CommonResourceMassages.ADVANCE), root, getResource("css/redfall/main.css").toExternalForm());
+            Stage stage = WindowFactory.createSimpleWindowAsModel("advance", FxmlAndLanguageUtils.getString(CommonResourceMassages.ADVANCE), root);
             stage.toFront();
             stage.setResizable(false);
             stage.show();
