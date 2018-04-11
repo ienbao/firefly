@@ -5,6 +5,7 @@
 import com.dmsoft.firefly.core.sdkimpl.dai.EnvServiceImpl;
 import com.dmsoft.firefly.core.sdkimpl.dai.UserPreferenceServiceImpl;
 import com.dmsoft.firefly.core.sdkimpl.dataframe.BasicDataFrameFactoryImpl;
+import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -60,7 +61,7 @@ public class TestApplication extends Application {
 
 
         Scene scene = new Scene(root, 1000, 704);
-        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
+        scene.getStylesheets().addAll(WindowFactory.checkStyles());
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/grr_chart.css").toExternalForm());
         primaryStage.setScene(scene);

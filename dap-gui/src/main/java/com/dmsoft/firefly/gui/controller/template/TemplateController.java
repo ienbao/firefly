@@ -106,6 +106,8 @@ public class TemplateController {
 
 
         itemTable.setEditable(true);
+        itemFilter.getTextField().setPromptText(GuiFxmlAndLanguageUtils.getString(ResourceMassages.FILTER));
+        nameFilter.getTextField().setPromptText(GuiFxmlAndLanguageUtils.getString(ResourceMassages.FILTER));
 //        testItem.setCellValueFactory(cellData -> cellData.getValue().testItemNameProperty());
 //        type.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList("VARIABLE", "ATTRIBUTE")));
 //        lsl.setCellFactory(TextFieldTableCell.forTableColumn());

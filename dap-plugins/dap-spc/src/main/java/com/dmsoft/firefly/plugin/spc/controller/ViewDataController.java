@@ -344,6 +344,9 @@ public class ViewDataController implements Initializable {
             fsg.setWithoutLowerLimit(null);
             fsg.setWithoutUpperLimit(null);
         }
+        if(model == null){
+            return;
+        }
         model.getRowKeyArray().clear();
         model.getRowKeyArray().addAll(dataFrame.getAllRowKeys());
     }
@@ -407,8 +410,13 @@ public class ViewDataController implements Initializable {
     }
 
     private void getInvertCheckBoxEvent() {
-        for (String s : model.getRowKeyArray()) {
-            model.getCheckValue(s, "").setValue(!model.getCheckValue(s, "").getValue());
+        if(model == null){
+            return;
+        }
+        if (model != null) {
+            for (String s : model.getRowKeyArray()) {
+                model.getCheckValue(s, "").setValue(!model.getCheckValue(s, "").getValue());
+            }
         }
     }
 

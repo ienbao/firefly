@@ -11,6 +11,7 @@ import com.dmsoft.firefly.restart.utils.PropertyConfig;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -36,10 +37,15 @@ public class DapRestartApplication {
             }
         });
         try {
-            String file = System.getProperty("user.dir") + File.separator + "application.properties";
-            Properties properties = PropertyConfig.getProperties(file);
-            System.out.println("start_command:" + properties.getProperty("start_command"));
-            Runtime.getRuntime().exec(properties.getProperty("start_command"));
+            String run = "." + File.separator + "startup.sh";
+            if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
+                run = "." + File.separator + "startup.bat";
+            }
+            File dirFile = new File(run);
+            dirFile.setReadable(true, false);
+            dirFile.setExecutable(true, false);
+            dirFile.setWritable(true, false);
+            Runtime.getRuntime().exec(run);
             System.exit(0);
         } catch (IOException e) {
             e.printStackTrace();

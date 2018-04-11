@@ -8,7 +8,7 @@
 }
 
 .root {
-    -fx-font: 12 arial;
+    -fx-font: 12 "Microsoft YaHei";
     -fx-text-fill: #222222;
 
     COLOR_BLACK_22: #222222;
@@ -42,7 +42,6 @@
     COLORFUL_LIGHT_RED: #fde8e9;
     COLORFUL_MIDDLE_RED: #fac8ca;
     COLORFUL_DARK_RED: #F48F93;
-
 
     /*auxiliary color*/
     COLORFUL_AUXILIARY_BLUE: #0096ff;
@@ -176,14 +175,14 @@
 }
 
 .icon-ok-gray {
-     -fx-background-color: transparent;
-     -fx-background-image: url('/images/icon_choose_one_gray.png');
-     -fx-background-size: 16;
-     -fx-pref-height: 16;
-     -fx-pref-width: 16;
-     -fx-shape: null;
-     -fx-padding: 0 20 0 0;
- }
+    -fx-background-color: transparent;
+    -fx-background-image: url('/images/icon_choose_one_gray.png');
+    -fx-background-size: 16;
+    -fx-pref-height: 16;
+    -fx-pref-width: 16;
+    -fx-shape: null;
+    -fx-padding: 0 20 0 0;
+}
 
 .icon-ok-white {
     -fx-background-color: transparent;
@@ -194,6 +193,7 @@
     -fx-shape: null;
     -fx-padding: 0 20 0 0;
 }
+
 /*******************************************************************************
  *                                                                             *
  * Message tip                                                                 *
@@ -248,7 +248,7 @@
  *                                                                             *
  ******************************************************************************/
 .button, .btn-default, .toggle-button {
-    -fx-font: 12 arial;
+    -fx-font: 12 "Microsoft YaHei";
     -fx-min-height: 22;
     -fx-text-alignment: center;
     -fx-padding: 0 10;
@@ -620,7 +620,7 @@
     -fx-background-color: #ffffff;
     -fx-min-height: 22;
     -fx-max-height: 22;
-    -fx-font: 12 arial;
+    -fx-font: 12 "Microsoft YaHei";
     -fx-padding: 0 10 1 10;
 }
 
@@ -637,7 +637,7 @@
     -fx-background-color: #ffffff;
     -fx-min-height: 20;
     -fx-max-height: 20;
-    -fx-font: 12 arial;
+    -fx-font: 12 "Microsoft YaHei";
     -fx-padding: 0 10 1 10;
 }
 
@@ -694,7 +694,7 @@
 .text-area {
     -fx-border-color: #cccccc;
     -fx-background-color: #ffffff;
-    -fx-font: 12 arial;
+    -fx-font: 12 "Microsoft YaHei";
 }
 
 .text-area .content {
@@ -1255,7 +1255,7 @@
  *                                                                             *
  ******************************************************************************/
 .table-view {
-    -fx-font: 12 arial;
+    -fx-font: 12 "Microsoft YaHei";
     -fx-border-color: #dcdcdc;
     -fx-text-fill: #222222;
     -fx-padding: 0;
@@ -1423,13 +1423,13 @@
     -fx-pref-width: 160;
 }
 
-.table-view .combo-box {
+.table-view .combo-box-base {
     -fx-pref-height: 14;
     -fx-min-height: 14;
     -fx-max-height: 14;
-    -fx-background-insets: 0 -11 -1 -10;
-    -fx-border-insets: 0 -11 -1 -10;
-    -fx-padding: -3 -8 -3 -8;
+    -fx-background-insets: -2 -11 -2 -10;
+    -fx-border-insets: -2 -11 -2 -10;
+    -fx-padding: -5 -8 -3 -8;
 }
 
 /*******************************************************************************
@@ -2473,11 +2473,11 @@
 .login-label-lg {
     -fx-text-fill: #ea2028;
     -fx-font-weight: 800;
-    -fx-font: 28 arial;
+    -fx-font: 28 "Microsoft YaHei";
 }
 
 .login-label-md {
     -fx-text-fill: #222222;
     -fx-font-weight: 400;
-    -fx-font: 22 arial;
+    -fx-font: 22 "Microsoft YaHei";
 }
