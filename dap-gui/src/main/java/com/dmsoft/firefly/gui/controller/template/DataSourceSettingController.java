@@ -3,6 +3,7 @@
  */
 package com.dmsoft.firefly.gui.controller.template;
 
+import com.dmsoft.firefly.gui.components.dialog.ChooseTestItemDialog;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
@@ -59,6 +60,7 @@ public class DataSourceSettingController {
     private List<String> projectNames = new ArrayList<>();
     private List<TestItemWithTypeDto> testItemWithTypeDtos = Lists.newArrayList();
     private static final Double D100 = 100.0;
+    private ChooseTestItemDialog chooseTestItemDialog;
 
     @FXML
     private void initialize() {
@@ -83,7 +85,7 @@ public class DataSourceSettingController {
      */
     private void initComponentEvent() {
         chooseItem.setOnAction(event -> getChooseColumnBtnEvent());
-        chooseCumDialogController.getChooseOkButton().setOnAction(event -> getChooseTestItemEvent());
+        chooseTestItemDialog.getOkBtn().setOnAction(event -> getChooseTestItemEvent());
         if (itemDataTableModel.getAllCheckBox() != null) {
             itemDataTableModel.getAllCheckBox().setOnAction(event -> getAllCheckBoxEvent());
         }
@@ -140,19 +142,7 @@ public class DataSourceSettingController {
      * build Choose Column Dialog
      */
     private void buildChooseColumnDialog() {
-        FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/choosecol_dialog.fxml");
-        Pane root = null;
-        try {
-            root = fxmlLoader.load();
-            chooseCumDialogController = fxmlLoader.getController();
-            chooseCumDialogController.setValueColumnText("Test Item");
-            this.initChooseColumnTableData();
-            Stage stage = WindowFactory.createNoManagedStage(GuiFxmlAndLanguageUtils.getString(ResourceMassages.CHOOSE_ITEMS_TITLE), root,
-                    getClass().getClassLoader().getResource("css/platform_app.css").toExternalForm());
-            chooseCumDialogController.setStage(stage);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        chooseTestItemDialog = new ChooseTestItemDialog(testItems, null);
     }
 
 
@@ -160,8 +150,8 @@ public class DataSourceSettingController {
      * Choose Column Btn Event
      */
     private void getChooseColumnBtnEvent() {
-        chooseCumDialogController.setSelectResultName(itemDataTableModel.getHeaderArray());
-        chooseCumDialogController.getStage().show();
+        chooseTestItemDialog.resetSelectedItems(itemDataTableModel.getHeaderArray());
+        chooseTestItemDialog.show();
     }
 
     /**
@@ -184,18 +174,6 @@ public class DataSourceSettingController {
 
         TableViewWrapper.decorate(itemDataTable, itemDataTableModel);
 
-    }
-
-    /**
-     * init Choose Column Table Data
-     */
-    private void initChooseColumnTableData() {
-        List<ChooseTableRowData> chooseTableRowDataList = Lists.newArrayList();
-        testItems.forEach(v -> {
-            ChooseTableRowData chooseTableRowData = new ChooseTableRowData(false, v);
-            chooseTableRowDataList.add(chooseTableRowData);
-        });
-        chooseCumDialogController.setTableData(chooseTableRowDataList);
     }
 
     /**
@@ -223,7 +201,7 @@ public class DataSourceSettingController {
      * get Choose Test Item Event
      */
     private void getChooseTestItemEvent() {
-        selectTestItemName = chooseCumDialogController.getSelectResultName();
+        selectTestItemName = chooseTestItemDialog.getSelectedItems();
         itemDataTable.getColumns().remove(0, itemDataTable.getColumns().size());
         itemDataTableModel.updateTestItemColumn(selectTestItemName);
         itemDataTableModel.setTableView(itemDataTable);
@@ -253,7 +231,7 @@ public class DataSourceSettingController {
             }
         }
         itemDataTableModel.updateRowDataList(rowDataDtoList);
-        chooseCumDialogController.getStage().close();
+        chooseTestItemDialog.close();
     }
 
     /**

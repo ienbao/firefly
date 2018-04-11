@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.gui.components.skin.ExpandableTableViewSkin;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
@@ -117,6 +118,7 @@ public class GrrResultController implements Initializable {
             this.setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), selectedName);
             this.setAnalysisItemResultData(grrDetailDto);
         } else {
+            this.enableSubResultOperator(false);
             RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
                     GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                     GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
@@ -230,6 +232,7 @@ public class GrrResultController implements Initializable {
                         setItemResultData(grrMainController.getGrrDataFrame(), grrMainController.getSearchConditionDto(), itemName);
                         setAnalysisItemResultData(grrDetailDto);
                     } else {
+                        enableSubResultOperator(false);
                         RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
                                 GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                                 GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
@@ -270,6 +273,7 @@ public class GrrResultController implements Initializable {
             public void doJob(JobContext context) {
                 GrrDetailDto grrDetailDto = context.getParam(ParamKeys.GRR_DETAIL_DTO, GrrDetailDto.class);
                 if (grrDetailDto == null) {
+                    enableSubResultOperator(false);
                     RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
                             GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                             GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
@@ -334,6 +338,23 @@ public class GrrResultController implements Initializable {
                 grrDataFrameDto.getIncludeDatas(),
                 itemResultDto);
         TableViewWrapper.decorate(itemDetailTb, itemResultModel);
+
+        this.enableSubResultOperator(true);
+    }
+
+    private void enableSubResultOperator(boolean flag) {
+        grrDataBtn.setDisable(!flag);
+        grrChartBtn.setDisable(!flag);
+        grrResultBtn.setDisable(!flag);
+        xBarAppraiserChartBtn.setDisable(!flag);
+        rangeAppraiserChartBtn.setDisable(!flag);
+        componentChartRightPane.toggleExtensionMenu(flag);
+        partAppraiserChartRightPane.toggleExtensionMenu(flag);
+        xBarAppraiserChartRightPane.toggleExtensionMenu(flag);
+        rangeAppraiserChartRightPane.toggleExtensionMenu(flag);
+        rrByAppraiserChartRightPane.toggleExtensionMenu(flag);
+        rrbyPartChartRightPane.toggleExtensionMenu(flag);
+        grrResultScrollPane.setVvalue(0.0);
     }
 
     private List<String> buildItemTbRowKey(int appraiser, int trial, List<String> appraisers) {
@@ -375,6 +396,7 @@ public class GrrResultController implements Initializable {
 
     private void setAnalysisItemResultData(GrrDetailDto grrDetailDto) {
         if (grrDetailDto == null) {
+            enableSubResultOperator(false);
             RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
                     GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                     GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
@@ -425,6 +447,7 @@ public class GrrResultController implements Initializable {
         NumberAxis yAxis = (NumberAxis) componentChart.getYAxis();
         yAxis.setUpperBound(yMax + 20);
         yAxis.setLowerBound(yMin);
+        ChartOperatorUtils.updateAxisTickUnit(yAxis);
 
         series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[0],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrContri()) ? 0 : componentCResult.getGrrContri()));
@@ -488,6 +511,7 @@ public class GrrResultController implements Initializable {
         yAxis.setAutoRanging(false);
         yAxis.setUpperBound(max + reserve);
         yAxis.setLowerBound(min - reserve);
+        ChartOperatorUtils.updateAxisTickUnit(yAxis);
         ObservableList<XYChart.Series> seriesData = FXCollections.observableArrayList();
         for (int i = 0; i < data.length; i++) {
             XYChart.Series series = new XYChart.Series();
@@ -534,6 +558,7 @@ public class GrrResultController implements Initializable {
         yAxis.setAutoRanging(false);
         yAxis.setUpperBound(max + reserve);
         yAxis.setLowerBound(min - reserve);
+        ChartOperatorUtils.updateAxisTickUnit(yAxis);
         List<ILineData> horizontalLineData = Lists.newArrayList();
         List<ILineData> verticalLineData = Lists.newArrayList();
         XYChart.Series series = new XYChart.Series();
@@ -607,6 +632,7 @@ public class GrrResultController implements Initializable {
         yAxis.setAutoRanging(false);
         yAxis.setUpperBound(max + reserve);
         yAxis.setLowerBound(min - reserve);
+        ChartOperatorUtils.updateAxisTickUnit(yAxis);
         XYChart.Series scatterSeries = new XYChart.Series();
         XYChart.Series lineSeries = new XYChart.Series();
         scatterSeries.setName("Value");
@@ -694,6 +720,8 @@ public class GrrResultController implements Initializable {
                 com.dmsoft.firefly.plugin.grr.utils.enums.Orientation.BOTTOMLEFT);
         rangeAppraiserChartBtn = new ChartOperateButton(true,
                 com.dmsoft.firefly.plugin.grr.utils.enums.Orientation.BOTTOMLEFT);
+        Tooltip.install(xBarAppraiserChartBtn, new Tooltip(UIConstant.BTN_CHART_CHOOSE_LINES));
+        Tooltip.install(rangeAppraiserChartBtn, new Tooltip(UIConstant.BTN_CHART_CHOOSE_LINES));
         xBarAppraiserChartRightPane.addCustomPaneChildren(xBarAppraiserChartBtn);
         rangeAppraiserChartRightPane.addCustomPaneChildren(rangeAppraiserChartBtn);
 
@@ -783,11 +811,13 @@ public class GrrResultController implements Initializable {
 
         componentChart.setVerticalGridLinesVisible(false);
         componentChart.setHorizontalGridLinesVisible(false);
-        xBarAppraiserChart.setLegendVisible(false);
+        partAppraiserChart.setHorizontalGridLinesVisible(false);
+        partAppraiserChart.setVerticalGridLinesVisible(false);
         xBarAppraiserChart.setVerticalGridLinesVisible(false);
         xBarAppraiserChart.setHorizontalGridLinesVisible(false);
         rangeAppraiserChart.setVerticalGridLinesVisible(false);
         rangeAppraiserChart.setHorizontalGridLinesVisible(false);
+        xBarAppraiserChart.setLegendVisible(false);
         ObservableList<TableColumn<String, ?>> summaryTbColumns = summaryTb.getColumns();
         summaryTbColumns.get(0).prefWidthProperty().bind(summaryTb.widthProperty().divide(25));
         summaryTbColumns.get(1).prefWidthProperty().bind(summaryTb.widthProperty().divide(4));
@@ -816,8 +846,6 @@ public class GrrResultController implements Initializable {
         rangeAppraiserChartBtn.setListViewSize(80, 80);
         xBarAppraiserChartBtn.getStyleClass().add("btn-icon-b");
         rangeAppraiserChartBtn.getStyleClass().add("btn-icon-b");
-        xBarAppraiserChartBtn.setDisable(true);
-        rangeAppraiserChartBtn.setDisable(true);
 
         grrDataBtn.getStyleClass().add("btn-group");
         grrChartBtn.getStyleClass().add("btn-group");
@@ -825,6 +853,7 @@ public class GrrResultController implements Initializable {
 
         summaryItemTf.setDisable(true);
         resultBasedCmb.setDisable(true);
+        this.enableSubResultOperator(false);
     }
 
     private void initComponentEvents() {
@@ -974,6 +1003,7 @@ public class GrrResultController implements Initializable {
     private void fireRadioBtnClickEvent(boolean validGrr, String tolerance, GrrSummaryDto grrSummaryDto) {
         if (!validGrr) {
             removeSubResultData();
+            enableSubResultOperator(false);
             RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
                     GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                     GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
