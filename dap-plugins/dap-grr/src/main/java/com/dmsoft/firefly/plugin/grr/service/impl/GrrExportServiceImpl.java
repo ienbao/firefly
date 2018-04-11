@@ -178,6 +178,8 @@ public class GrrExportServiceImpl implements GrrExportService {
                 }
             }
             pushProgress(100);
+            String savePicPath = FileUtils.getAbsolutePath("../export");
+            FileUtils.deleteDir(savePicPath);
 
             logger.info("Finished excel to filepath" + exportFilePath + "\n");
             return exportFilePath;
