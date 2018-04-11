@@ -52,18 +52,6 @@
     -fx-background-color: #dcdcdc;
 }
 
-.login-label-lg {
-    -fx-text-fill: #ea2028;
-    -fx-font-weight: 800;
-    -fx-font: 28 arial;
-}
-
-.login-label-md {
-    -fx-text-fill: #222222;
-    -fx-font-weight: 400;
-    -fx-font: 22 arial;
-}
-
 .candlestick-tooltip {
     -fx-font-size: 12px;
     -fx-text-fill: #222222;
