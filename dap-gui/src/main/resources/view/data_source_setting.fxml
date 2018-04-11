@@ -64,7 +64,7 @@
         </HBox>
         <GridPane prefHeight="30.0" prefWidth="800.0">
             <columnConstraints>
-                <ColumnConstraints hgrow="ALWAYS" maxWidth="530.0" minWidth="29.0" prefWidth="29.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="530.0" minWidth="29.0" prefWidth="29.0" />
                 <ColumnConstraints hgrow="ALWAYS" maxWidth="1001.0" minWidth="278.0" prefWidth="500.0" />
                 <ColumnConstraints maxWidth="342.0" minWidth="88.0" prefWidth="94.0" />
                 <ColumnConstraints maxWidth="105.0" minWidth="90.0" prefWidth="92.0" />
@@ -77,16 +77,15 @@
                 <Button fx:id="apply" mnemonicParsing="false" prefHeight="20.0" prefWidth="80.0" text="%APPLY_DATA" GridPane.columnIndex="4" />
                 <Button fx:id="cancel" mnemonicParsing="false" prefHeight="20.0" prefWidth="80.0" text="%CANCEL_DATA" GridPane.columnIndex="3" />
                 <Button fx:id="oK" mnemonicParsing="false" prefHeight="20.0" prefWidth="80.0" text="%OK_DATA" GridPane.columnIndex="2" />
-                <Button fx:id="red" maxHeight="10.0" maxWidth="10.0" minHeight="10.0" minWidth="-Infinity" mnemonicParsing="false" prefHeight="10.0" prefWidth="10.0" styleClass="btn-primary" GridPane.columnIndex="0">
-                    <GridPane.margin>
-                        <Insets bottom="15.0" left="10.0" top="10.0" />
-                    </GridPane.margin>
-                </Button>
                 <Label prefHeight="11.0" prefWidth="363.0" text="%INSTRUCTION" GridPane.columnIndex="1">
                     <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" />
                     </GridPane.margin>
                 </Label>
+            <Label contentDisplay="CENTER" maxHeight="12.0" maxWidth="12.0" minHeight="12.0" minWidth="12.0" prefHeight="12.0" prefWidth="12.0" style="-fx-background-color: red;">
+               <GridPane.margin>
+                  <Insets bottom="15.0" top="8.0" />
+               </GridPane.margin></Label>
             </children>
         </GridPane>
     </children>
