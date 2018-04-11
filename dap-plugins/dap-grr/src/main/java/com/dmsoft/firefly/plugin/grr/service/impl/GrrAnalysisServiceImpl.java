@@ -34,7 +34,7 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
 
     @Override
     public GrrSummaryResultDto analyzeSummaryResult(GrrAnalysisDataDto analysisDataDto, GrrAnalysisConfigDto configDto) {
-        logger.debug("Analyzing GRR summary result ...");
+//        logger.debug("Analyzing GRR summary result ...");
         GrrSummaryResultDto result;
         try {
             Rengine engine = prepareEngine(analysisDataDto, configDto);
@@ -49,7 +49,7 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
                 result.setTolerance(result.getUsl() - result.getLsl());
             }
             SemaphoreUtils.releaseSemaphore(engine);
-            logger.info("Analyze GRR summary result done");
+//            logger.info("Analyze GRR summary result done");
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze GRR summary result error, exception message = {}", e.getMessage());
@@ -60,13 +60,13 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
 
     @Override
     public GrrDetailResultDto analyzeDetailResult(GrrAnalysisDataDto analysisDataDto, GrrAnalysisConfigDto configDto) {
-        logger.debug("Analyzing GRR detail result ...");
+//        logger.debug("Analyzing GRR detail result ...");
         GrrDetailResultDto result;
         try {
             Rengine engine = prepareEngine(analysisDataDto, configDto);
             result = getGrrDetailResult(engine, configDto);
             SemaphoreUtils.releaseSemaphore(engine);
-            logger.info("Analyze GRR detail result done.");
+//            logger.info("Analyze GRR detail result done.");
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze Grr detail result error, exception message = {}", e.getMessage());
@@ -77,7 +77,7 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
 
     @Override
     public GrrExportDetailResultDto analyzeExportDetailResult(GrrAnalysisDataDto analysisDataDto, GrrAnalysisConfigDto configDto) {
-        logger.debug("Analyzing GRR export detail result ...");
+//        logger.debug("Analyzing GRR export detail result ...");
         GrrExportDetailResultDto result = new GrrExportDetailResultDto();
         try {
             Rengine engine = prepareEngine(analysisDataDto, configDto);
@@ -108,7 +108,7 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
             }
             //TODO
             SemaphoreUtils.releaseSemaphore(engine);
-            logger.info("Analyze GRR export detail result done.");
+//            logger.info("Analyze GRR export detail result done.");
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze Grr export detail result error, exception message = {}", e.getMessage());

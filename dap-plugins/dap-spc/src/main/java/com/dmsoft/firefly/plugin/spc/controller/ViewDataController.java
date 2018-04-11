@@ -407,8 +407,10 @@ public class ViewDataController implements Initializable {
     }
 
     private void getInvertCheckBoxEvent() {
-        for (String s : model.getRowKeyArray()) {
-            model.getCheckValue(s, "").setValue(!model.getCheckValue(s, "").getValue());
+        if (model != null) {
+            for (String s : model.getRowKeyArray()) {
+                model.getCheckValue(s, "").setValue(!model.getCheckValue(s, "").getValue());
+            }
         }
     }
 

@@ -202,8 +202,8 @@ public class ItemDataTableModel implements TableModel {
                 if (i == 0) {
                     tableView.getColumns().get(0).setPrefWidth(35);
                 } else {
-                    tableView.getColumns().get(i).setPrefWidth(75);
-                    tableView.getColumns().get(i).setMinWidth(75);
+                    tableView.getColumns().get(i).setPrefWidth(150);
+                    tableView.getColumns().get(i).setMinWidth(150);
                 }
             }
 
