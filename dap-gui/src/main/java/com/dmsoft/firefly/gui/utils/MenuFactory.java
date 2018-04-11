@@ -255,6 +255,10 @@ public class MenuFactory {
         legalMenuItem.setOnAction(event -> {
             GuiFxmlAndLanguageUtils.buildLegalDialog();
         });
+        MenuItem aboutMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ABOUT_DAP"));
+        aboutMenuItem.setOnAction(event -> {
+            GuiFxmlAndLanguageUtils.buildAboutDialog();
+        });
 //        MenuItem dapMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ABOUT_DAP"));
 //        MenuItem updateMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_CHECK_UPDATE"));
 
@@ -266,6 +270,7 @@ public class MenuFactory {
 //            System.out.println("update");
 //        });
         menu.getItems().add(legalMenuItem);
+        menu.getItems().add(aboutMenuItem);
 //        menu.getItems().add(dapMenuItem);
 //        menu.getItems().add(updateMenuItem);
         return getParentMenuBuilder().setParentLocation(ROOT_MENU).addMenu(menu);
