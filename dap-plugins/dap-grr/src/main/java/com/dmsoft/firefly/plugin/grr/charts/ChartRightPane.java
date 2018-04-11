@@ -98,6 +98,8 @@ public class ChartRightPane extends HBox {
 
     /**
      * Enable extension menu
+     *
+     * @param flag whether disable menu or not
      */
     public void toggleExtensionMenu(boolean flag) {
         extensionMenu.setDisable(!flag);

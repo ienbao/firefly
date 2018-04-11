@@ -1,18 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="265.0" prefWidth="485.0" minHeight="190.0" minWidth="309.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.ChartResultController">
+<AnchorPane minHeight="190.0" minWidth="309.0" prefHeight="265.0" prefWidth="485.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.ChartResultController">
     <children>
-        <TabPane style="-fx-border-width: 0 0 0 0;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
+        <TabPane style="-fx-border-width: 0;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
             <tabs>
-                <Tab text="%ANALYSIS_RESULT" fx:id="analysisChartTab">
+                <Tab text="%ANALYSIS_RESULT">
                     <content>
-                        <AnchorPane fx:id="chartAnchorPane" minHeight="0.0" minWidth="0.0">
-                            <children>
-                            </children>
-                        </AnchorPane>
+                        <TabPane fx:id="analysisChartTabPane" rotateGraphic="true" side="LEFT" style="-fx-border-width: 0 0 0 0;" styleClass="vertical-text" tabClosingPolicy="UNAVAILABLE">
+                            <tabs>
+                                <Tab fx:id="ndTab" closable="false">
+                                    <graphic>
+                                        <Group>
+                                            <children>
+                                                <Label rotate="90" text="%SPC_CHART_NDC" textAlignment="CENTER" />
+                                            </children>
+                                        </Group>
+                                    </graphic>
+                                    <content>
+                                    </content>
+                                </Tab>
+                                <Tab fx:id="runTab" closable="false">
+                                    <graphic>
+                                        <Group>
+                                            <children>
+                                                <Label rotate="90" text="%SPC_CHART_RUN" textAlignment="CENTER" />
+                                            </children>
+                                        </Group>
+                                    </graphic>
+                                    <content>
+                                    </content>
+                                </Tab>
+                                <Tab closable="false" fx:id="xBarTab">
+                                    <graphic>
+                                        <Group>
+                                            <children>
+                                                <Label rotate="90" text="%SPC_CHART_BAR" textAlignment="CENTER" />
+                                            </children>
+                                        </Group>
+                                    </graphic>
+                                    <content>
+                                    </content>
+                                </Tab>
+                                <Tab fx:id="rangeTab" closable="false">
+                                    <graphic>
+                                        <Group>
+                                            <children>
+                                                <Label rotate="90" text="%SPC_CHART_RANGE" textAlignment="CENTER" />
+                                            </children>
+                                        </Group>
+                                    </graphic>
+                                    <content>
+                                    </content>
+                                </Tab>
+                                <Tab fx:id="sdTab" closable="false">
+                                    <graphic>
+                                        <Group>
+                                            <children>
+                                                <Label rotate="90" text="%SPC_CHART_SD" textAlignment="CENTER" />
+                                            </children>
+                                        </Group>
+                                    </graphic>
+                                    <content>
+                                    </content>
+                                </Tab>
+                                <Tab fx:id="medianTab" closable="false">
+                                    <graphic>
+                                        <Group>
+                                            <children>
+                                                <Label rotate="90" text="%SPC_CHART_MEDIAN" textAlignment="CENTER" />
+                                            </children>
+                                        </Group>
+                                    </graphic>
+                                    <content>
+                                    </content>
+                                </Tab>
+                                <Tab fx:id="boxTab" closable="false">
+                                    <graphic>
+                                        <Group>
+                                            <children>
+                                                <Label rotate="90" text="%SPC_CHART_BOX" textAlignment="CENTER" />
+                                            </children>
+                                        </Group>
+                                    </graphic>
+                                    <content>
+                                    </content>
+                                </Tab>
+                                <Tab fx:id="mrTab" closable="false">
+                                    <graphic>
+                                        <Group>
+                                            <children>
+                                                <Label rotate="90" text="%SPC_CHART_MR" textAlignment="CENTER" />
+                                            </children>
+                                        </Group>
+                                    </graphic>
+                                    <content>
+                                    </content>
+                                </Tab>
+                            </tabs>
+                        </TabPane>
                     </content>
                 </Tab>
             </tabs>

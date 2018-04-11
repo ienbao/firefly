@@ -68,6 +68,7 @@ public class ChartPanel<T extends XYChart> extends VBox {
      *
      * @param chart                 chart
      * @param chartSizeChangeEnable enable change chart size
+     * @param showLegend whether show legend or not
      * @param chartDraggingEnable   enable drag chart
      */
     public ChartPanel(T chart, boolean showLegend, boolean chartSizeChangeEnable, boolean chartDraggingEnable) {

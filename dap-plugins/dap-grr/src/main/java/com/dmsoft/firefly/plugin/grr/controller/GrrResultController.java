@@ -965,9 +965,10 @@ public class GrrResultController implements Initializable {
     }
 
     private List<String> buildSourceTbColumn() {
+        final double defaultCoverage = 6.0;
         List<String> tableColumns = Lists.newArrayList();
         GrrConfigDto grrConfigDto = grrConfigService.findGrrConfig();
-        double coverage = grrConfigDto == null || grrConfigDto.getCoverage() == null ? 6.0 : grrConfigDto.getCoverage();
+        double coverage = grrConfigDto == null || grrConfigDto.getCoverage() == null ? defaultCoverage : grrConfigDto.getCoverage();
         for (String name : UIConstant.GRR_SOURCE_TITLE) {
             name = name.equals(UIConstant.GRR_SOURCE_TITLE[2]) ? name + " " + coverage : name;
             tableColumns.add(name);
