@@ -113,7 +113,7 @@ public class SearchTabController {
         Pane root = null;
         try {
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createSimpleWindowAsModel("advance", FxmlAndLanguageUtils.getString(CommonResourceMassages.ADVANCE), root, getResource("css/redfall/main.css").toExternalForm());
+            Stage stage = WindowFactory.createSimpleWindowAsModel("advance", FxmlAndLanguageUtils.getString(CommonResourceMassages.ADVANCE), root);
             stage.toFront();
             stage.setResizable(false);
             stage.show();
