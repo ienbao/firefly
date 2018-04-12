@@ -271,7 +271,7 @@ public class TemplateController {
                 if (StringUtils.isNotEmpty(currTemplate.getTimePatternDto().getPattern())) {
                     patternText.setText(currTemplate.getTimePatternDto().getPattern());
                 } else {
-                    patternText.setText("yyy/MM/dd HH:mm:ss SSSSSS");
+                    patternText.setText("yyy/MM/dd HH:mm:ss.SSS");
                 }
             }
 //            if (currTemplate.getSpecificationDatas() != null) {
