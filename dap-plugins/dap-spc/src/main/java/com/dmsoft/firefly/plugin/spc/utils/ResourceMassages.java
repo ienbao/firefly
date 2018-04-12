@@ -66,4 +66,5 @@ public class ResourceMassages {
     public static final String IMPORT_CONFIG = "IMPORT_CONFIG";
     public static final String EXPORT_CONFIG = "EXPORT_CONFIG";
     public static final String ANALYSIS = "ANALYSIS";
+    public static final String CLEAR_SEARCH = "CLEAR_SEARCH";
 }
