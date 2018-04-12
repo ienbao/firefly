@@ -146,14 +146,14 @@ public class ChartResultController implements Initializable {
             mrChartDataList.add(mrChartData);
         }
 
-//        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
+        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
         this.setRunChartData(UIConstant.SPC_CHART_NAME[1], runChartDataList, Sets.newLinkedHashSet(disabledRuleNames));
         this.setControlChartData(UIConstant.SPC_CHART_NAME[2], xBarChartDataList);
-//        this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList);
-//        this.setControlChartData(UIConstant.SPC_CHART_NAME[4], sdChartDataList);
-//        this.setControlChartData(UIConstant.SPC_CHART_NAME[5], medianChartDataList);
-//        this.setBoxChartData(UIConstant.SPC_CHART_NAME[6], boxChartDataList);
-//        this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[4], sdChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[5], medianChartDataList);
+        this.setBoxChartData(UIConstant.SPC_CHART_NAME[6], boxChartDataList);
+        this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
     }
 
     /**
