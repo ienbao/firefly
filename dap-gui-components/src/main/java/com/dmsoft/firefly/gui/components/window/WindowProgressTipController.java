@@ -45,6 +45,7 @@ public class WindowProgressTipController {
         initCancelBtn();
         errorTxt.setEditable(false);
         errorTxt.setVisible(false);
+        errorTxt.setWrapText(true);
         errorTxt.setMaxHeight(0);
         vbox.getChildren().remove(hbox);
         taskProgress.getStyleClass().setAll("progress-bar-lg-green");
