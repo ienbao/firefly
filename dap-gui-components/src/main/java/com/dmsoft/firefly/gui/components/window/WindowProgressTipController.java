@@ -136,9 +136,11 @@ public class WindowProgressTipController {
 
     private void initCancelBtn() {
         cancelBtn.setText(FxmlAndLanguageUtils.getString("GLOBAL_BTN_CANCEL"));
-//        cancelBtn.setOnAction(event -> {
-//            closeDialog();
-//        });
+        cancelBtn.setOnAction(event -> {
+            if (FxmlAndLanguageUtils.getString("GLOBAL_BTN_CANCEL").equals(cancelBtn.getText())) {
+                cancelBtn.setText(FxmlAndLanguageUtils.getString("CANCELING"));
+            }
+        });
     }
 
     public void closeDialog() {

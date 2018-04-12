@@ -982,7 +982,6 @@ public class GrrExportController {
             if ("Error".equals(event.getEventName())) {
                 windowProgressTipController.updateFailProgress(event.getProgress(), event.getEventObject().toString());
             } else {
-                System.out.println(event.getEventName() + " : " + event.getProgress());
                 windowProgressTipController.getTaskProgress().setProgress(event.getProgress());
             }
         });
@@ -1013,7 +1012,6 @@ public class GrrExportController {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                 });
                 if (isSucceed[0]) {
                     windowProgressTipController.closeDialog();
