@@ -150,8 +150,17 @@ public class SpcMainController implements Initializable {
      * clear analysis data
      */
     public void clearAnalysisSubShowData() {
+        clearAnalysisSubShowData(false);
+    }
+
+    /**
+     * clear analysis data
+     */
+    public void clearAnalysisSubShowData(boolean isTimer) {
         chartResultController.clearChartData();
-        viewDataController.clearViewData();
+        if (!isTimer) {
+            viewDataController.clearViewData();
+        }
     }
 
     /**
