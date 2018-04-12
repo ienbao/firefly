@@ -58,8 +58,8 @@
             <children>
                 <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Button fx:id="installPlugin" mnemonicParsing="false" prefWidth="95.0" text="Install Plug-in" />
-                        <Button fx:id="unInstallPlugin" mnemonicParsing="false" prefHeight="23.0" prefWidth="111.0" text="Uninstall Plug-in">
+                        <Button fx:id="installPlugin" mnemonicParsing="false" text="Install Plug-in" />
+                        <Button fx:id="unInstallPlugin" mnemonicParsing="false" text="Uninstall Plug-in">
                             <HBox.margin>
                                 <Insets left="10.0" />
                             </HBox.margin>
