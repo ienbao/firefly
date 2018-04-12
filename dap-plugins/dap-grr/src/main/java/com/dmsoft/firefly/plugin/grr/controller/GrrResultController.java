@@ -786,7 +786,7 @@ public class GrrResultController implements Initializable {
         final double inputWidth = 200;
 
         String testItemText = GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TEST_ITEM");
-        summaryItemTf.getTextField().setPromptText(testItemText);
+        summaryItemTf.getTextField().setPromptText("dddddddd");
         summaryItemTf.getTextField().setPrefWidth(inputWidth);
         summaryItemTf.getTextField().setFocusTraversable(false);
         summaryTb.setEditable(true);
