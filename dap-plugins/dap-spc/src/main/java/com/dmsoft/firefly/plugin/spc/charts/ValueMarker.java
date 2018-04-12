@@ -151,7 +151,9 @@ public class ValueMarker<X, Y> {
      */
     public void hiddenValueMarker(String lineName) {
         if (lineMap.containsKey(lineName)) {
-            lineMap.get(lineName).getStyleClass().add("hidden-line");
+            if (!lineMap.get(lineName).getStyleClass().contains("hidden-line")) {
+                lineMap.get(lineName).getStyleClass().add("hidden-line");
+            }
         }
     }
 
@@ -162,7 +164,9 @@ public class ValueMarker<X, Y> {
      */
     public void showValueMarker(String lineName) {
         if (lineMap.containsKey(lineName)) {
-            lineMap.get(lineName).getStyleClass().remove("hidden-line");
+            if (lineMap.get(lineName).getStyleClass().contains("hidden-line")) {
+                lineMap.get(lineName).getStyleClass().remove("hidden-line");
+            }
         }
     }
 

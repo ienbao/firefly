@@ -63,6 +63,10 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     private static final String NEGATIVE_STYLE = "negative";
     private final Orientation orientation;
 
+    private boolean barShow = true;
+    private boolean areaShow = true;
+    private Map<String, Boolean> lineShow = Maps.newHashMap();
+
     /**
      * Constructs a XYChart given the two axes. The initial content for the chart
      * plot background and plot area that includes vertical and horizontal grid
@@ -161,10 +165,20 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         if (seriesUniqueKeyMap.containsKey(uniqueKey)) {
             setSeriesDataStyle(seriesUniqueKeyMap.get(uniqueKey), color);
         }
+
+        if (!areaShow) {
+            toggleAreaSeries(false);
+        }
+
+        if (!barShow) {
+            toggleBarSeries(false);
+        }
+
 //        update value maker color
         if (valueMarkerMap.containsKey(uniqueKey)) {
             ValueMarker valueMarker = valueMarkerMap.get(uniqueKey);
             valueMarker.updateAllLineColor(color);
+            lineShow.forEach((key, value) -> valueMarker.toggleValueMarker(key, value));
         }
     }
 
@@ -175,7 +189,10 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
      */
     public void hiddenValueMarkers(List<String> lineNames) {
         for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
-            lineNames.forEach(lineName -> valueMarkerEntry.getValue().hiddenValueMarker(lineName));
+            lineNames.forEach(lineName -> {
+                valueMarkerEntry.getValue().hiddenValueMarker(lineName);
+                lineShow.put(lineName, false);
+            });
         }
     }
 
@@ -189,6 +206,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
             valueMarkerEntry.getValue().toggleValueMarker(lineName, showed);
         }
+        lineShow.put(lineName, showed);
     }
 
     /**
@@ -205,6 +223,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
                 dataItem.getNode().getStyleClass().setAll("chart-bar");
             }
         }));
+        barShow = showed;
     }
 
     /**
@@ -215,7 +234,10 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     public void toggleAreaSeries(boolean showed) {
         for (Map.Entry<String, AreaSeriesNode> areaSeriesNodeEntry : areaSeriesNodeMap.entrySet()) {
             areaSeriesNodeEntry.getValue().toggleAreaSeries(showed);
+
+//            groupMap.get(areaSeriesNodeEntry.getKey())
         }
+        areaShow = showed;
     }
 
     private void createChartSeriesData(NDBarChartData chartData, ChartTooltip chartTooltip) {
@@ -250,6 +272,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
                     Line line = valueMarker.buildValueMarker(lineData, color, seriesName,
                             (chartTooltip == null) ? null : chartTooltip.getLineTooltip());
                     getPlotChildren().add(line);
+                    lineShow.put(lineData.getName(), true);
                 }
             });
             valueMarkerMap.put(uniqueKey, valueMarker);
@@ -282,7 +305,6 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
             if (color != null && DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
                 StringBuilder nodeStyle = new StringBuilder();
                 nodeStyle.append("-fx-bar-fill: " + ColorUtils.toHexFromFXColor(color));
-//                nodeStyle.append(";-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
                 dataItem.getNode().setStyle(nodeStyle.toString());
             }
         });

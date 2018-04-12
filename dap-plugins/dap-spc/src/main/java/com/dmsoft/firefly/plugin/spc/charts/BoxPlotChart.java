@@ -42,6 +42,7 @@ public class BoxPlotChart extends XYChart<Number, Number> {
     private double candleWidth = 10;
     private boolean showLined = true;
     private boolean candleWidthByUnit = false;
+    private boolean gridLineChanged = false;
 
     private ObservableList<Data<Number, Number>> outliers;
     private Map<String, XYChart.Series> seriesUniqueKeyMap = Maps.newHashMap();
@@ -144,14 +145,12 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         getData().setAll(FXCollections.observableArrayList());
         seriesUniqueKeyMap.clear();
         outliers.setAll(FXCollections.observableArrayList());
+        gridLineChanged = false;
     }
 
     public void toggleVerticalGridLine(boolean showLined) {
-        if (showLined) {
-            this.setVerticalGridLinesVisible(true);
-        } else {
-            this.setVerticalGridLinesVisible(false);
-        }
+        gridLineChanged = true;
+        this.setVerticalGridLinesVisible(showLined);
     }
 
     private Series buildSeries(IBoxAndWhiskerData data, String seriesName) {
@@ -202,7 +201,6 @@ public class BoxPlotChart extends XYChart<Number, Number> {
                     Candle candle = (Candle) dataItem.getNode();
                     candle.updateColor(color);
                 }
-//                dataItem.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
             }
             if (pointTooltipFunction != null) {
                 Node itemNode = dataItem.getNode();
@@ -235,7 +233,6 @@ public class BoxPlotChart extends XYChart<Number, Number> {
                     Candle candle = (Candle) dataItem.getNode();
                     candle.updateColor(color);
                 }
-//                dataItem.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
             }
         });
     }
@@ -246,7 +243,7 @@ public class BoxPlotChart extends XYChart<Number, Number> {
     @Override
     protected void layoutPlotChildren() {
         // we have nothing to layout if no data is present
-        if (getData() == null) {
+        if (getData() == null || gridLineChanged) {
             return;
         }
         // update candle positions
@@ -329,11 +326,6 @@ public class BoxPlotChart extends XYChart<Number, Number> {
             XYChart.Series<Number, Number> series = seriesUniqueKeyMap.get(unique);
 //            update path color
             setSeriesDataStyleByDefault(series, color);
-//            update box color
-//            series.getData().forEach(dataItem -> {
-//                Candle candle = (Candle) dataItem.getNode();
-//                candle.updateColor(color);
-//            });
         }
     }
 

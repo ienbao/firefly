@@ -552,8 +552,8 @@ public class ChartResultController implements Initializable {
         } else {
             chartMap.put(chartName, chart);
         }
-        chart.setData(boxChartData, chartTooltip);
         this.setBoxChartPerformance();
+        chart.setData(boxChartData, chartTooltip);
         boxChartPane.updateChartData();
         boxChartPane.toggleCustomButtonDisable(false);
     }
