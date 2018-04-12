@@ -757,8 +757,9 @@
     -fx-background-color: COLOR_GRAY_F5;
     -fx-border-color: COLOR_GRAY_CC;
     -fx-text-fill: FONT_DARK;
-    -fx-padding: -1 0 0 0;
+    -fx-padding: -1 0 -2 0;
     -fx-cursor: hand;
+    -fx-background-insets: 0 0 1 0;
 }
 
 .combo-box-base .arrow-button {
@@ -1995,6 +1996,7 @@
 .search-component .value {
     -fx-border-width: 1 1 1 0;
     -fx-skin: "com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBoxSkin";
+    -fx-padding: -1 0 0 0;
 }
 
 .search-component .value .arrow-button {

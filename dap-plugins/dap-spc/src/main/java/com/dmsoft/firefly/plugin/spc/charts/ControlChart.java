@@ -59,6 +59,7 @@ public class ControlChart<X, Y> extends LineChart {
     private PointClickCallBack pointClickCallBack;
     //    whether active point click event
     private boolean pointClick = false;
+    private boolean showPoint = true;
 
     /**
      * @param xAxis xAxis
@@ -119,8 +120,6 @@ public class ControlChart<X, Y> extends LineChart {
      */
     public void clearAnnotation(List<Data<X, Y>> data) {
         data.forEach(dateItem -> {
-            dateItem.getNode().getStyleClass().clear();
-            dateItem.getNode().getStyleClass().add("chart-line-symbol");
             StackPane pane = (StackPane) dateItem.getNode();
             if (pane.getChildren().isEmpty()) {
                 return;
@@ -131,6 +130,31 @@ public class ControlChart<X, Y> extends LineChart {
                     pane.getChildren().removeAll(node);
                 }
             }
+            if (dateItem.getNode().getStyleClass().contains("chart-symbol-triangle")) {
+                dateItem.getNode().getStyleClass().remove("chart-symbol-triangle");
+            }
+        });
+    }
+
+    /**
+     * Set chart all series annotation
+     *
+     * @param fetch annotation fetch function
+     */
+    public void setSeriesAnnotationEvent(AnnotationFetch fetch) {
+        ObservableList<Series<X, Y>> seriesObservableList = this.getData();
+        seriesObservableList.forEach(series -> {
+            ObservableList<Data<X, Y>> data = series.getData();
+            data.forEach(dataItem -> dataItem.getNode().setOnMouseClicked(event -> {
+                if (fetch != null && fetch.showedAnnotation()) {
+                    String value = fetch.getValue(dataItem.getExtraValue());
+                    setNodeAnnotation(dataItem, value, fetch.getTextColor());
+                    fetch.addData(dataItem);
+                }
+                if (pointClick && pointClickCallBack != null) {
+                    pointClickCallBack.execute(dataItem.getExtraValue());
+                }
+            }));
         });
     }
 
@@ -199,37 +223,64 @@ public class ControlChart<X, Y> extends LineChart {
             XYChart.Series<X, Y> series = value;
             series.getData().forEach(dataItem -> this.toggleOneDataPoint(dataItem, showed));
         });
+        showPoint = showed;
     }
 
     private void toggleOneSeriesLine(XYChart.Series<X, Y> series, boolean showed) {
         if (!showed) {
-            series.getNode().getStyleClass().add("chart-series-hidden-line");
+            if (!series.getNode().getStyleClass().contains("chart-series-hidden-line")) {
+                series.getNode().getStyleClass().add("chart-series-hidden-line");
+            }
         } else {
-            series.getNode().getStyleClass().remove("chart-series-hidden-line");
+            if (series.getNode().getStyleClass().contains("chart-series-hidden-line")) {
+                series.getNode().getStyleClass().remove("chart-series-hidden-line");
+            }
         }
     }
 
     private void toggleOneSeriesPath(XYChart.Series<X, Y> series, boolean showed) {
         if (!showed) {
-            series.getNode().getStyleClass().add("chart-broken-hidden-line");
+            if (!series.getNode().getStyleClass().contains("chart-broken-hidden-line")) {
+                series.getNode().getStyleClass().add("chart-broken-hidden-line");
+            }
         } else {
-            series.getNode().getStyleClass().remove("chart-broken-hidden-line");
+            if (series.getNode().getStyleClass().contains("chart-broken-hidden-line")) {
+                series.getNode().getStyleClass().remove("chart-broken-hidden-line");
+            }
         }
     }
 
     private void toggleOneDataPoint(XYChart.Data dataItem, boolean showed) {
         if (!showed) {
-            dataItem.getNode().getStyleClass().setAll("chart-line-hidden-symbol");
+            if (!dataItem.getNode().getStyleClass().contains("chart-line-hidden-symbol")) {
+                dataItem.getNode().getStyleClass().add("chart-line-hidden-symbol");
+                dataItem.getNode().getStyleClass().remove("chart-line-symbol-hover");
+            }
+//            if (dataItem.getNode().getStyleClass().contains("chart-symbol-triangle")) {
+//                dataItem.getNode().getStyleClass().add("chart-line-hidden-symbol");
+//            }
         } else {
-            dataItem.getNode().getStyleClass().setAll("chart-line-symbol");
+            if (dataItem.getNode().getStyleClass().contains("chart-line-hidden-symbol")) {
+                dataItem.getNode().getStyleClass().add("chart-line-symbol-hover");
+                dataItem.getNode().getStyleClass().remove("chart-line-hidden-symbol");
+            }
+//            if (dataItem.getNode().getStyleClass().contains("chart-symbol-triangle")) {
+//                dataItem.getNode().getStyleClass().addAll("chart-line-symbol", "chart-line-symbol-hover");
+//            }
         }
     }
 
     private void toggleOnePathPoint(XYChart.Data dataItem, boolean showed) {
         if (!showed) {
-            dataItem.getNode().getStyleClass().setAll("chart-path-hidden-symbol");
+            if (!dataItem.getNode().getStyleClass().contains("chart-path-hidden-symbol")) {
+                dataItem.getNode().getStyleClass().add("chart-path-hidden-symbol");
+                dataItem.getNode().getStyleClass().remove("chart-path-symbol-hover");
+            }
         } else {
-            dataItem.getNode().getStyleClass().setAll("chart-path-symbol");
+            if (dataItem.getNode().getStyleClass().contains("chart-path-hidden-symbol")) {
+                dataItem.getNode().getStyleClass().add("chart-path-symbol-hover");
+                dataItem.getNode().getStyleClass().remove("chart-path-hidden-symbol");
+            }
         }
     }
 
@@ -330,28 +381,6 @@ public class ControlChart<X, Y> extends LineChart {
     }
 
     /**
-     * Set chart all series annotation
-     *
-     * @param fetch annotation fetch function
-     */
-    public void setSeriesAnnotationEvent(AnnotationFetch fetch) {
-        ObservableList<Series<X, Y>> seriesObservableList = this.getData();
-        seriesObservableList.forEach(series -> {
-            ObservableList<Data<X, Y>> data = series.getData();
-            data.forEach(dataItem -> dataItem.getNode().setOnMouseClicked(event -> {
-                if (fetch != null && fetch.showedAnnotation()) {
-                    String value = fetch.getValue(dataItem.getExtraValue());
-                    setNodeAnnotation(dataItem, value, fetch.getTextColor());
-                    fetch.addData(dataItem);
-                }
-                if (pointClick && pointClickCallBack != null) {
-                    pointClickCallBack.execute(dataItem.getExtraValue());
-                }
-            }));
-        });
-    }
-
-    /**
      * Remove all chart node and clear chart data
      */
     public void removeAllChildren() {
@@ -365,6 +394,7 @@ public class ControlChart<X, Y> extends LineChart {
         this.getData().setAll(FXCollections.observableArrayList());
         this.getPlotChildren().removeAll(this.getPlotChildren());
         valueMarkerMap.forEach((key, value) -> value.clear());
+        showPoint = true;
     }
 
     /**
@@ -398,8 +428,8 @@ public class ControlChart<X, Y> extends LineChart {
         NumberAxis yAxis = (NumberAxis) this.getYAxis();
         double yReserve = (yMax - yMin) * UIConstant.FACTOR;
         double xReserve = (xMax - xMin) * UIConstant.FACTOR;
-        xAxis.setLowerBound(xMin - xReserve);
-        xAxis.setUpperBound(xMax + xReserve);
+        xAxis.setLowerBound(0);
+        xAxis.setUpperBound(xMax + UIConstant.FACTOR);
         yAxis.setLowerBound(yMin - yReserve);
         yAxis.setUpperBound(yMax + yReserve);
         ChartOperatorUtils.updateAxisTickUnit(xAxis);
@@ -494,7 +524,7 @@ public class ControlChart<X, Y> extends LineChart {
     }
 
     private void setNodeAnnotation(Data<X, Y> data, String value, String textColor) {
-        data.getNode().getStyleClass().clear();
+//        data.getNode().getStyleClass().clear();
         data.getNode().getStyleClass().add("chart-symbol-triangle");
         StackPane pane = (StackPane) data.getNode();
         pane.setAlignment(Pos.BOTTOM_CENTER);
@@ -564,6 +594,7 @@ public class ControlChart<X, Y> extends LineChart {
 //            set data node color
             if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
                 dataItem.getNode().setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
+                dataItem.getNode().getStyleClass().setAll("chart-line-symbol", "chart-line-symbol-hover");
             }
 //            set data node tooltip
             if (pointTooltipFunction != null) {
@@ -587,7 +618,7 @@ public class ControlChart<X, Y> extends LineChart {
 //            set data node color
             if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
                 dataItem.getNode().setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
-                dataItem.getNode().getStyleClass().setAll("chart-path-symbol");
+                dataItem.getNode().getStyleClass().setAll("chart-path-symbol", "chart-path-symbol-hover");
             }
 //            set data node tooltip
             if (pointTooltipFunction != null) {

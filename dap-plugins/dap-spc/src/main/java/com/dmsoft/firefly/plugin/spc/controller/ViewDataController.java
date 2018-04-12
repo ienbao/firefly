@@ -21,6 +21,7 @@ import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -87,6 +88,10 @@ public class ViewDataController implements Initializable {
         this.initBtnIcon();
         this.initComponentEvent();
         this.selectedProjectNames = RuntimeContext.getBean(EnvService.class).findActivatedProjectName();
+        filterTf.setDisable(true);
+        unSelectedCheckBox.setDisable(true);
+        clearFilterBtn.setDisable(true);
+        chooseItemBtn.setDisable(true);
     }
 
     /**
@@ -122,6 +127,10 @@ public class ViewDataController implements Initializable {
         this.selectedRowKeys = selectedRowKey;
         this.dataFrame = dataFrame;
         if (dataFrame == null) {
+            filterTf.setDisable(true);
+            unSelectedCheckBox.setDisable(true);
+            clearFilterBtn.setDisable(true);
+            chooseItemBtn.setDisable(true);
             viewDataTable.getColumns().clear();
             chooseTestItemDialog.resetSelectedItems(null);
             try {
@@ -133,6 +142,14 @@ public class ViewDataController implements Initializable {
             }
             this.model = null;
             return;
+        }
+        filterTf.setDisable(false);
+        unSelectedCheckBox.setDisable(false);
+        clearFilterBtn.setDisable(false);
+        chooseItemBtn.setDisable(false);
+        List<TableColumn<String, ?>> sortedColumnList = null;
+        if (isTimer && this.model != null) {
+            sortedColumnList = Lists.newArrayList(viewDataTable.getSortOrder());
         }
         vbox.getChildren().remove(viewDataTable);
         this.viewDataTable = new TableView<>();
@@ -147,14 +164,48 @@ public class ViewDataController implements Initializable {
         if (model.getHeaderArray().size() > 51) {
             model.getHeaderArray().remove(51, model.getHeaderArray().size());
         }
+        unSelectedCheckBox.setDisable(false);
+        if (isTimer) {
+            this.model.setIsTimer(true);
+            unSelectedCheckBox.setDisable(true);
+        }
         TableViewWrapper.decorate(viewDataTable, model);
-        model.getAllCheckBox().setOnMouseClicked(event -> {
-            for (String s : model.getRowKeyArray()) {
-                model.getCheckValue(s, "").setValue(model.getAllCheckBox().selectedProperty().getValue());
-            }
-        });
+        if (isTimer) {
+            viewDataTable.getColumns().get(0).setSortable(false);
+            viewDataTable.getColumns().get(0).setResizable(false);
+            viewDataTable.getColumns().get(0).setPrefWidth(32);
+        }
+        if (model.getAllCheckBox() != null) {
+            model.getAllCheckBox().setOnMouseClicked(event -> {
+                for (String s : model.getRowKeyArray()) {
+                    model.getCheckValue(s, "").setValue(model.getAllCheckBox().selectedProperty().getValue());
+                }
+            });
+        }
         viewDataTable.getColumns().forEach(this::decorate);
+        String filterTxt = filterTf.getTextField().getText();
+        if (DAPStringUtils.isNotBlank(filterTxt)) {
+            filterTf.getTextField().setText("");
+            filterTf.getTextField().setText(filterTxt);
+        }
         chooseTestItemDialog.resetSelectedItems(model.getHeaderArray().subList(1, model.getHeaderArray().size()));
+        if (sortedColumnList != null && !sortedColumnList.isEmpty()) {
+            final TableColumn<String, ?> sortedColumn = sortedColumnList.get(0);
+            Platform.runLater(() -> {
+                TableColumn<String, ?> column1 = null;
+                for (TableColumn<String, ?> column : viewDataTable.getColumns()) {
+                    if (sortedColumn.getText().equals(column.getText())) {
+                        column.setSortType(sortedColumn.getSortType());
+                        column1 = column;
+                        break;
+                    }
+                }
+                if (column1 != null) {
+                    viewDataTable.getSortOrder().add(column1);
+                    viewDataTable.sort();
+                }
+            });
+        }
     }
 
     /**
@@ -206,7 +257,7 @@ public class ViewDataController implements Initializable {
     }
 
     private void decorate(TableColumn<String, ?> tableColumn) {
-        if ("CheckBox".equals(tableColumn.getText())) {
+        if (" ".equals(tableColumn.getText())) {
             return;
         }
         Button filterBtn = new Button();

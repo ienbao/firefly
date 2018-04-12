@@ -304,8 +304,13 @@ public class TableViewWrapper {
                 node.getStyleClass().removeAll("descending-label");
             }
             if (tableView.getSortOrder() != null && !tableView.getSortOrder().isEmpty() && TableColumn.SortType.ASCENDING.equals(((TableColumn) tableView.getSortOrder().get(0)).getSortType())) {
-                rowHeader.getColumnHeaderFor((TableColumn) tableView.getSortOrder().get(0)).lookup(".label").getStyleClass().add("ascending-label");
-                rowHeader.getColumnHeaderFor((TableColumn) tableView.getSortOrder().get(0)).lookup(".label").getStyleClass().removeAll("descending-label");
+                if (TableColumn.SortType.ASCENDING.equals(((TableColumn) tableView.getSortOrder().get(0)).getSortType())) {
+                    rowHeader.getColumnHeaderFor((TableColumn) tableView.getSortOrder().get(0)).lookup(".label").getStyleClass().add("ascending-label");
+                    rowHeader.getColumnHeaderFor((TableColumn) tableView.getSortOrder().get(0)).lookup(".label").getStyleClass().removeAll("descending-label");
+                } else {
+                    rowHeader.getColumnHeaderFor((TableColumn) tableView.getSortOrder().get(0)).lookup(".label").getStyleClass().add("descending-label");
+                    rowHeader.getColumnHeaderFor((TableColumn) tableView.getSortOrder().get(0)).lookup(".label").getStyleClass().removeAll("ascending-label");
+                }
             }
         });
     }
