@@ -7,6 +7,7 @@ import com.dmsoft.firefly.gui.components.dialog.ChooseTestItemDialog;
 import com.dmsoft.firefly.gui.components.skin.ExpandableTableViewSkin;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.spc.dto.SearchConditionDto;
@@ -344,7 +345,7 @@ public class ViewDataController implements Initializable {
             fsg.setWithoutLowerLimit(null);
             fsg.setWithoutUpperLimit(null);
         }
-        if(model == null){
+        if (model == null) {
             return;
         }
         model.getRowKeyArray().clear();
@@ -410,7 +411,7 @@ public class ViewDataController implements Initializable {
     }
 
     private void getInvertCheckBoxEvent() {
-        if(model == null){
+        if (model == null) {
             return;
         }
         if (model != null) {
@@ -431,7 +432,9 @@ public class ViewDataController implements Initializable {
 
     private void initBtnIcon() {
         clearFilterBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_clear_filter_normal.png")));
+        TooltipUtil.installNormalTooltip(clearFilterBtn, SpcFxmlAndLanguageUtils.getString(ResourceMassages.CLEAR_SEARCH));
         chooseItemBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
+        TooltipUtil.installNormalTooltip(chooseItemBtn, SpcFxmlAndLanguageUtils.getString(ResourceMassages.CHOOSE_ITEMS_TITLE));
     }
 
     public List<SearchConditionDto> getStatisticalSearchCondition() {

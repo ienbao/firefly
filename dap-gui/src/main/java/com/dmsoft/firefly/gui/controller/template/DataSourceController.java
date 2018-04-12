@@ -15,6 +15,7 @@ import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
+import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
@@ -91,6 +92,7 @@ public class DataSourceController implements Initializable {
     private void initTable() {
 //        search.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
         delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
+        TooltipUtil.installNormalTooltip(delete, GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_SOURCE));
 //        errorInfo.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_tips_warning.png")));
         errorInfo.getStyleClass().add("message-tip-warn-mark");
         errorInfo.setStyle("-fx-background-color: #F38400");
@@ -143,9 +145,11 @@ public class DataSourceController implements Initializable {
                             Button rename = new Button();
                             rename.getStyleClass().add("btn-icon");
                             rename.setStyle("-fx-padding: 0 4 0 4; -fx-border-insets: -3 0 0 0; -fx-background-insets: -3 0 0 0");
+                            TooltipUtil.installNormalTooltip(rename, GuiFxmlAndLanguageUtils.getString(ResourceMassages.RENAME_DATA_SOURCE));
                             rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rename_normal.png")));
                             Button deleteOne = new Button();
                             deleteOne.getStyleClass().add("btn-icon");
+                            TooltipUtil.installNormalTooltip(deleteOne, GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_SOURCE));
                             deleteOne.setStyle("-fx-padding: 0 4 0 4; -fx-background-insets: -3 0 0 0; -fx-border-insets: -3 0 0 0");
 
                             rename.setVisible(false);

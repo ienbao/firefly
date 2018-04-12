@@ -194,6 +194,7 @@ public final class StageMap {
                 tempScene.setFill(Color.TRANSPARENT);
 
                 tempStage = new Stage();
+                tempStage.setResizable(false);
                 if (modality) {
                     tempStage.initModality(Modality.APPLICATION_MODAL);
                 }

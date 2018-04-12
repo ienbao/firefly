@@ -72,12 +72,12 @@
           <RowConstraints maxHeight="42.0" minHeight="42.0" prefHeight="42.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="addFile" alignment="CENTER" minWidth="80.0" mnemonicParsing="false" text="Add File">
+            <Button fx:id="addFile" alignment="CENTER" minWidth="80.0" mnemonicParsing="false" text="%ADD_FILE">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin></Button>
-            <Button fx:id="ok" minWidth="80.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="72.0" text="OK" GridPane.columnIndex="2" />
-            <Button fx:id="cancel" minWidth="80.0" mnemonicParsing="false" text="Cancel" GridPane.columnIndex="3">
+            <Button fx:id="ok" minWidth="80.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="72.0" text="%OK_DATA" GridPane.columnIndex="2" />
+            <Button fx:id="cancel" minWidth="80.0" mnemonicParsing="false" text="%CANCEL_DATA" GridPane.columnIndex="3">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin></Button>

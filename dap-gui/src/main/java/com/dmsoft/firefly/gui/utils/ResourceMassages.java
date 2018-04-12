@@ -36,4 +36,14 @@ public class ResourceMassages {
     public static final String TEMPLATE_LSL_MORE_THEN_USL = "TEMPLATE_LSL_MORE_THEN_USL";
     public static final String TEMPLATE_APPLY_WARN_MESSAGE = "TEMPLATE_APPLY_WARN_MESSAGE";
     public static final String TEMPLATE_DELETE_WARN_MESSAGE = "TEMPLATE_DELETE_WARN_MESSAGE";
+
+    public static final String DELETE_SOURCE = "DELETE_SOURCE";
+    public static final String RENAME_DATA_SOURCE = "RENAME_DATA_SOURCE";
+    public static final String RENAME_TEMPLATE = "RENAME_TEMPLATE";
+    public static final String ADD_TEMPLATE = "ADD_TEMPLATE";
+    public static final String COPY_TEMPLATE = "COPY_TEMPLATE";
+    public static final String DELETE_TEMPLATE = "DELETE_TEMPLATE";
+    public static final String ADD_TIME_KEYS = "ADD_TIME_KEY";
+    public static final String HELP = "HELP";
+    public static final String INPUT_ITEM_HELP = "INPUT_ITEM_HELP";
 }
