@@ -20,8 +20,8 @@ public class ResourceMassages {
     public static final String PLUGIN_MANAGE = "PLUGIN_MANAGE";
     public static final String FILTER = "FILTER";
 
-    public static final String CHOOSE_ITEMS_TITLE = "Choose Test Items";
-    public static final String SEARCH = "Search";
+    public static final String CHOOSE_ITEMS_TITLE = "CHOOSE_ITEMS_TITLE";
+    public static final String SEARCH = "SEARCH";
 
     //template
     public static final String WARN_HEADER = "WARN_HEADER";
