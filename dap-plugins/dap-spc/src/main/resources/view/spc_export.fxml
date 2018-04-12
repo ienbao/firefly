@@ -38,7 +38,7 @@
                         <Insets right="10.0" />
                      </VBox.margin>
                   </RadioButton>
-                  <Label prefHeight="30.0" text="Location">
+                  <Label prefHeight="30.0" text="%LOCATION">
                      <VBox.margin>
                         <Insets top="20.0" />
                      </VBox.margin>
@@ -46,7 +46,7 @@
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <TextField fx:id="locationPath" prefWidth="250.0" style="-fx-border-width: 1 0 1 1;" />
-                        <Button fx:id="browse" mnemonicParsing="false" prefWidth="80.0" text="Browse" />
+                        <Button fx:id="browse" mnemonicParsing="false" prefWidth="80.0" text="%BROWSE_BTN" />
                      </children>
                   </HBox>
                </children>
@@ -137,27 +137,27 @@
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="200.0">
          <children>
-            <Button fx:id="viewData" mnemonicParsing="false" prefWidth="80.0" text="View Data">
+            <Button fx:id="viewData" mnemonicParsing="false" prefWidth="80.0" text="%VIEW_DATA_BTN">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="setting" mnemonicParsing="false" prefWidth="100.0" text="Export Setting">
+            <Button fx:id="setting" mnemonicParsing="false" prefWidth="100.0" text="%EXPORT_SETTING_BTN">
                <HBox.margin>
                   <Insets right="335.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="export" mnemonicParsing="false" prefWidth="80.0" text="Export">
+            <Button fx:id="export" mnemonicParsing="false" prefWidth="80.0" text="%EXPORT">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="print" mnemonicParsing="false" prefWidth="80.0" text="Print">
+            <Button fx:id="print" mnemonicParsing="false" prefWidth="80.0" text="%PRINT_BTN">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="Cancel" />
+            <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="%CANCEL_BTN" />
          </children>
          <VBox.margin>
             <Insets left="10.0" right="10.0" />
