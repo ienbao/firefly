@@ -3,6 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.*;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
@@ -361,6 +362,10 @@ public class SpcMainController implements Initializable {
         printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_print_normal.png")));
         exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_export_normal.png")));
         chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
+        TooltipUtil.installNormalTooltip(resetBtn, SpcFxmlAndLanguageUtils.getString("SPC_RESET_BTN_TOOLTIP"));
+        TooltipUtil.installNormalTooltip(printBtn, SpcFxmlAndLanguageUtils.getString("SPC_PRINT_BTN_TOOLTIP"));
+        TooltipUtil.installNormalTooltip(exportBtn, SpcFxmlAndLanguageUtils.getString("SPC_EXPORT_BTN_TOOLTIP"));
+        TooltipUtil.installNormalTooltip(chooseBtn, SpcFxmlAndLanguageUtils.getString("SPC_REFRESH_BTN_TOOLTIP"));
     }
 
     public SearchDataFrame getDataFrame() {

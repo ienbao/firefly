@@ -71,7 +71,6 @@ public class ExportSettingController {
             List<String> names = getSelect();
             if (names.size() > 0) {
                 exportAllConfig(names);
-                StageMap.closeStage("exportSetting");
             }
         });
         cancelBtn.setOnAction(event -> StageMap.closeStage("exportSetting"));
