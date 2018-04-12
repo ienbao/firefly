@@ -42,6 +42,7 @@ public class ChartOperatorUtils {
         IIOImage jpgImage = new IIOImage(newBufferedImage, null, null);
         imageWriter.write(null, jpgImage, iwp);
         imageWriter.dispose();
+        fileImageOutput.close();
     }
 
     /**
