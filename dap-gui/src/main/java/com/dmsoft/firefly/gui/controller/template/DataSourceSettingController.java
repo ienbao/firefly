@@ -67,7 +67,7 @@ public class DataSourceSettingController {
     private void initialize() {
         initButton();
         this.initTableData();
-        searchTab = new SearchTab();
+        searchTab = new SearchTab(false);
         split.getItems().add(searchTab);
         this.buildChooseColumnDialog();
         this.initComponentEvent();
