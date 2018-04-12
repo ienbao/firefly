@@ -21,6 +21,7 @@ public class ResourceMassages {
     public static final String FILTER = "FILTER";
 
     public static final String CHOOSE_ITEMS_TITLE = "Choose Test Items";
+    public static final String SEARCH = "Search";
 
     //template
     public static final String WARN_HEADER = "WARN_HEADER";
