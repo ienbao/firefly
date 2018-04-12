@@ -33,9 +33,6 @@ import java.util.*;
 public class AreaSeriesNode<X, Y> {
 
     private ObservableList<XYChart.Series<X, Y>> areaSeries = FXCollections.observableArrayList();
-//    private Map<String, Path> fillPathMap = Maps.newHashMap();
-//    private Map<String, Path> seriesPathMap = Maps.newHashMap();
-
     private Map<XYChart.Series, Color> colorMap = Maps.newHashMap();
 
     /**
@@ -79,6 +76,7 @@ public class AreaSeriesNode<X, Y> {
             Path fillPath = ((Path) children.get(0));
             fillPath.setStyle("-fx-fill: " + ColorUtils.toHexFromFXColor(color));
             seriesLine.setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
+            colorMap.put(series, color);
         }
     }
 
