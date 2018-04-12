@@ -120,7 +120,7 @@ public class ControlChart<X, Y> extends LineChart {
     public void clearAnnotation(List<Data<X, Y>> data) {
         data.forEach(dateItem -> {
             dateItem.getNode().getStyleClass().clear();
-            dateItem.getNode().getStyleClass().add("chart-line-symbol");
+            dateItem.getNode().getStyleClass().addAll("chart-line-symbol", "chart-line-symbol-hover");
             StackPane pane = (StackPane) dateItem.getNode();
             if (pane.getChildren().isEmpty()) {
                 return;
@@ -203,33 +203,53 @@ public class ControlChart<X, Y> extends LineChart {
 
     private void toggleOneSeriesLine(XYChart.Series<X, Y> series, boolean showed) {
         if (!showed) {
-            series.getNode().getStyleClass().add("chart-series-hidden-line");
+            if (!series.getNode().getStyleClass().contains("chart-series-hidden-line")) {
+                series.getNode().getStyleClass().add("chart-series-hidden-line");
+            }
         } else {
-            series.getNode().getStyleClass().remove("chart-series-hidden-line");
+            if (series.getNode().getStyleClass().contains("chart-series-hidden-line")) {
+                series.getNode().getStyleClass().remove("chart-series-hidden-line");
+            }
         }
     }
 
     private void toggleOneSeriesPath(XYChart.Series<X, Y> series, boolean showed) {
         if (!showed) {
-            series.getNode().getStyleClass().add("chart-broken-hidden-line");
+            if (!series.getNode().getStyleClass().contains("chart-broken-hidden-line")) {
+                series.getNode().getStyleClass().add("chart-broken-hidden-line");
+            }
         } else {
-            series.getNode().getStyleClass().remove("chart-broken-hidden-line");
+            if (series.getNode().getStyleClass().contains("chart-broken-hidden-line")) {
+                series.getNode().getStyleClass().remove("chart-broken-hidden-line");
+            }
         }
     }
 
     private void toggleOneDataPoint(XYChart.Data dataItem, boolean showed) {
         if (!showed) {
-            dataItem.getNode().getStyleClass().setAll("chart-line-hidden-symbol");
+            if (!dataItem.getNode().getStyleClass().contains("chart-line-hidden-symbol")) {
+                dataItem.getNode().getStyleClass().add("chart-line-hidden-symbol");
+                dataItem.getNode().getStyleClass().remove("chart-line-symbol-hover");
+            }
         } else {
-            dataItem.getNode().getStyleClass().setAll("chart-line-symbol");
+            if (dataItem.getNode().getStyleClass().contains("chart-line-hidden-symbol")) {
+                dataItem.getNode().getStyleClass().add("chart-line-symbol-hover");
+                dataItem.getNode().getStyleClass().remove("chart-line-hidden-symbol");
+            }
         }
     }
 
     private void toggleOnePathPoint(XYChart.Data dataItem, boolean showed) {
         if (!showed) {
-            dataItem.getNode().getStyleClass().setAll("chart-path-hidden-symbol");
+            if (!dataItem.getNode().getStyleClass().contains("chart-path-hidden-symbol")) {
+                dataItem.getNode().getStyleClass().add("chart-path-hidden-symbol");
+                dataItem.getNode().getStyleClass().remove("chart-path-symbol-hover");
+            }
         } else {
-            dataItem.getNode().getStyleClass().setAll("chart-path-symbol");
+            if (dataItem.getNode().getStyleClass().contains("chart-path-hidden-symbol")) {
+                dataItem.getNode().getStyleClass().add("chart-path-symbol-hover");
+                dataItem.getNode().getStyleClass().remove("chart-path-hidden-symbol");
+            }
         }
     }
 
@@ -564,6 +584,7 @@ public class ControlChart<X, Y> extends LineChart {
 //            set data node color
             if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
                 dataItem.getNode().setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
+                dataItem.getNode().getStyleClass().setAll("chart-line-symbol", "chart-line-symbol-hover");
             }
 //            set data node tooltip
             if (pointTooltipFunction != null) {
@@ -587,7 +608,7 @@ public class ControlChart<X, Y> extends LineChart {
 //            set data node color
             if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
                 dataItem.getNode().setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(color));
-                dataItem.getNode().getStyleClass().setAll("chart-path-symbol");
+                dataItem.getNode().getStyleClass().setAll("chart-path-symbol", "chart-path-symbol-hover");
             }
 //            set data node tooltip
             if (pointTooltipFunction != null) {
