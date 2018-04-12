@@ -71,6 +71,10 @@ public class ChooseDialogController implements Initializable {
         chooseValueColumn.setText(text);
     }
 
+    /**
+     * set filter prompt
+     * @param promptText prompt
+     */
     public void setFilterTFPrompt(String promptText){
         chooseFilterTf.getTextField().setPromptText(promptText);
     }
