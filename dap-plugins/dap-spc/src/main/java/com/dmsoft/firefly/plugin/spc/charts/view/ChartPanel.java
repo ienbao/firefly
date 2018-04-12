@@ -147,6 +147,7 @@ public class ChartPanel<T extends XYChart> extends VBox {
         titlePane.setRight(rightHBox);
         this.getChildren().add(titlePane);
         this.getChildren().add(chart);
+        VBox.setVgrow(chart, Priority.ALWAYS);
     }
 
     private void initComponentRender() {
