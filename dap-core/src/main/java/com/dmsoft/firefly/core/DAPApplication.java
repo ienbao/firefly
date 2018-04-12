@@ -50,6 +50,9 @@ public class DAPApplication {
      */
     public static void initEnv() {
         String propertiesURL = ApplicationPathUtil.getPath("application.properties");
+        if (propertiesURL == null) {
+            propertiesURL = ApplicationPathUtil.getPath("dev", "application.properties");
+        }
         Properties properties = PropertyConfig.getProperties(propertiesURL);
         String mongoHost = properties.getProperty("MongoHost", "localhost");
         String mongoPort = properties.getProperty("MongoPort", "27017");
