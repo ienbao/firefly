@@ -5,6 +5,7 @@ package com.dmsoft.firefly.plugin.spc.model;
 
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableModel;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.google.common.collect.Lists;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -21,7 +22,7 @@ import java.util.*;
  * Created by Ethan.Yang on 2018/3/15.
  */
 public class AddItemTableModel implements TableModel {
-    private static final String[] HEADER = {"", "Test Item"};
+    private static final String[] HEADER = {"", SpcFxmlAndLanguageUtils.getString("TEST_ITEM")};
     private ObservableList<String> columnKey = FXCollections.observableArrayList(Arrays.asList(HEADER));
     private ObservableList<String> rowKey = FXCollections.observableArrayList();
 

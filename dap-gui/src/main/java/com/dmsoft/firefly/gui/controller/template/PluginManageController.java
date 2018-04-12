@@ -16,10 +16,7 @@ import com.dmsoft.firefly.gui.components.window.WindowMessageController;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.model.PluginTableRowData;
-import com.dmsoft.firefly.gui.utils.FileUtils;
-import com.dmsoft.firefly.gui.utils.GuiConst;
-import com.dmsoft.firefly.gui.utils.KeyValueDto;
-import com.dmsoft.firefly.gui.utils.StreamGobbler;
+import com.dmsoft.firefly.gui.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
@@ -45,7 +42,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +84,7 @@ public class PluginManageController implements Initializable {
         initTable();
         initEvent();
         initDataSourceTableData();
+        filterTf.getTextField().setPromptText(FxmlAndLanguageUtils.getString(ResourceMassages.FILTER));
     }
 
     private void initTable() {
