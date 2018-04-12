@@ -578,7 +578,7 @@ public class SpcMainController implements Initializable {
 
                     List<SpcStatisticalResultAlarmDto> allRowDataList = statisticalResultController.getAllRowStatsData();
                     List<SearchConditionDto> statisticalSearchConditionDtoList = buildRefreshSearchConditionData(allRowDataList);
-                    viewDataController.setViewData(viewDataFrame, rowKeyList, statisticalSearchConditionDtoList);
+                    viewDataController.setViewData(viewDataFrame, rowKeyList, statisticalSearchConditionDtoList,spcItemController.isTimer());
 
                     windowProgressTipController.closeDialog();
                 });
@@ -704,7 +704,7 @@ public class SpcMainController implements Initializable {
 
                 //set view data
                 SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getSearchedRowKey(), chartSearchConditionDtoList);
-                viewDataController.setViewData(viewDataFrame, countViewDataRowKeyList, statisticalSearchConditionDtoList);
+                viewDataController.setViewData(viewDataFrame, countViewDataRowKeyList, statisticalSearchConditionDtoList,spcItemController.isTimer());
             }
         });
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
