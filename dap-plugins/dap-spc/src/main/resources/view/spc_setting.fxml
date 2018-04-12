@@ -26,17 +26,17 @@
                                 <!--<Insets left="10.0" />-->
                             <!--</padding>-->
                         <!--</Label>-->
-                        <Label fx:id="alarmSetting" prefHeight="22.0" prefWidth="160.0" text="Alarm Setting">
+                        <Label fx:id="alarmSetting" prefHeight="22.0" prefWidth="160.0" text="%ALARM_SETTING">
                             <padding>
                                 <Insets left="10.0" />
                             </padding>
                         </Label>
-                        <Label fx:id="controlAlarmRule" prefHeight="22.0" prefWidth="160.0" text="Control Alarm Rule">
+                        <Label fx:id="controlAlarmRule" prefHeight="22.0" prefWidth="160.0" text="%CONTROL_ALARM_RULE">
                             <padding>
                                 <Insets left="10.0" />
                             </padding>
                         </Label>
-                        <Label fx:id="exportSetting" prefHeight="22.0" prefWidth="160.0" text="Export Setting">
+                        <Label fx:id="exportSetting" prefHeight="22.0" prefWidth="160.0" text="%EXPORT_SETTING">
                             <padding>
                                 <Insets left="10.0" />
                             </padding>
@@ -91,12 +91,12 @@
                                 <!--</VBox>-->
                                 <VBox fx:id="alarmSettingVBox">
                                     <children>
-                                        <Label style="-fx-font-weight: bold" text="Alarm Setting">
+                                        <Label style="-fx-font-weight: bold" text="%ALARM_SETTING">
                                             <VBox.margin>
                                                 <Insets bottom="10.0" top="10.0" />
                                             </VBox.margin>
                                         </Label>
-                                        <Label text="Process Capability Alarm Setting">
+                                        <Label text="%PROCESS_CAPABILITY_ALARM_SETTING">
                                             <VBox.margin>
                                                 <Insets bottom="10.0" />
                                             </VBox.margin>
@@ -300,7 +300,7 @@
                                                 <Insets bottom="10.0" />
                                             </padding>
                                         </GridPane>
-                                        <Label text="Custom Statistical Alarm Setting">
+                                        <Label text="%CUSTOM_STATISTICAL_ALARM_SETTING">
                                             <VBox.margin>
                                                 <Insets bottom="10.0" />
                                             </VBox.margin>
@@ -377,7 +377,7 @@
                                 </VBox>
                                 <VBox fx:id="controlAlarmRuleVBox">
                                     <children>
-                                        <Label style="-fx-font-weight: bold" text="Control Alarm Rule">
+                                        <Label style="-fx-font-weight: bold" text="%CONTROL_ALARM_RULE">
                                             <VBox.margin>
                                                 <Insets bottom="10.0" top="10.0" />
                                             </VBox.margin>
@@ -418,14 +418,14 @@
                                 </VBox>
                                 <VBox fx:id="exportSettingVBox" prefHeight="100.0">
                                     <children>
-                                        <Label style="-fx-font-weight: bold" text="Export Mode">
+                                        <Label style="-fx-font-weight: bold" text="%EXPORT_MODE">
                                             <VBox.margin>
                                                 <Insets bottom="10.0" top="10.0" />
                                             </VBox.margin>
                                         </Label>
                                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                                             <children>
-                                                <Label text="Active Template" />
+                                                <Label text="%ACTIVE_TEMPLATE" />
                                                 <ComboBox fx:id="exportTemplateCb" prefWidth="150.0" />
                                                 <Button fx:id="exportTemplateSettingBtn" maxHeight="22.0" maxWidth="22.0" minHeight="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" />
                                             </children>
@@ -455,9 +455,9 @@
                 <RowConstraints minHeight="45.0" prefHeight="45.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button fx:id="apply" mnemonicParsing="false" prefWidth="80.0" text="Apply" GridPane.columnIndex="3" />
-                <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="Cancel" GridPane.columnIndex="2" />
-                <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="OK" GridPane.columnIndex="1" />
+                <Button fx:id="apply" mnemonicParsing="false" prefWidth="80.0" text="%APPLY" GridPane.columnIndex="3" />
+                <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="%CANCEL" GridPane.columnIndex="2" />
+                <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="%OK" GridPane.columnIndex="1" />
             </children>
         </GridPane>
     </children>

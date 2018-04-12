@@ -146,7 +146,6 @@ public class ChartResultController implements Initializable {
             mrChartDataList.add(mrChartData);
         }
 
-
         this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
         this.setRunChartData(UIConstant.SPC_CHART_NAME[1], runChartDataList, Sets.newLinkedHashSet(disabledRuleNames));
         this.setControlChartData(UIConstant.SPC_CHART_NAME[2], xBarChartDataList);
@@ -618,11 +617,11 @@ public class ChartResultController implements Initializable {
                     controlChart.hiddenDataSeriesLine();
                     continue;
                 }
-                if (controlChart.equals(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[0])) {
+                if (operateName.equals(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[0])) {
                     controlChart.hiddenPathSeriesLine(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[0]);
                     continue;
                 }
-                if (controlChart.equals(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[2])) {
+                if (operateName.equals(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[2])) {
                     controlChart.hiddenPathSeriesLine(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU[2]);
                     continue;
                 }

@@ -108,7 +108,11 @@
     -fx-background-insets: 1px;
 }
 
-.chart-line-symbol:hover {
+.chart-line-symbol-hover {
+
+}
+
+.chart-line-symbol-hover:hover {
     -fx-background-insets: 0px;
 }
 
@@ -122,7 +126,11 @@
     -fx-background-insets: 4px;
 }
 
-.chart-path-symbol:hover {
+.chart-path-symbol-hover {
+
+}
+
+.chart-path-symbol-hover:hover {
     -fx-background-insets: 1px;
 }
 

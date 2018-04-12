@@ -191,9 +191,10 @@ public class StatisticalResultController implements Initializable {
         try {
             root = fxmlLoader.load();
             chooseDialogController = fxmlLoader.getController();
-            chooseDialogController.setValueColumnText("Statistical Result");
+            chooseDialogController.setValueColumnText(SpcFxmlAndLanguageUtils.getString("STATISTICAL_RESULT"));
+            chooseDialogController.setFilterTFPrompt(SpcFxmlAndLanguageUtils.getString("STATISTICAL_RESULT_PROMPT"));
             this.initChooseStatisticalResultTableData();
-            Stage stage = WindowFactory.createNoManagedStage("Choose Statistical Results", root,
+            Stage stage = WindowFactory.createNoManagedStage(SpcFxmlAndLanguageUtils.getString("CHOOSE_STATISTICAL_RESULTS"), root,
                     getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
             chooseDialogController.setStage(stage);
         } catch (IOException e) {
