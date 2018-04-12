@@ -8,6 +8,7 @@ import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.plugin.spc.model.AddItemTableModel;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
@@ -68,10 +69,19 @@ public class AddItemController implements Initializable {
         addItemTableModel.initData(testItemList, existTestItemList);
     }
 
+    /**
+     * set filter prompt
+     * @param promptText prompt
+     */
+    public void setFilterTFPrompt(String promptText){
+        filterTf.getTextField().setPromptText(promptText);
+    }
+
     private void initComponent() {
         addItemTableModel = new AddItemTableModel();
         TableViewWrapper.decorate(testItemTable, addItemTableModel);
         ((TableColumn) testItemTable.getColumns().get(1)).setPrefWidth(145);
+        this.setFilterTFPrompt(SpcFxmlAndLanguageUtils.getString("FILTER_TEST_ITEM_PROMPT"));
     }
 
     private void initComponentEvent() {

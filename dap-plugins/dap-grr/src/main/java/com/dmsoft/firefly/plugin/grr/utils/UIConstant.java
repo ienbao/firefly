@@ -42,6 +42,16 @@ public class UIConstant {
 
     public static final String CHART_EXTENSION_MENU_SAVE = GrrFxmlAndLanguageUtils.getString("CHART_SAVE_AS");
 
+//    grr setting
+    public static final String GRR_SETTING_SORT_DATA_BY_APPRAISERS = GrrFxmlAndLanguageUtils.getString("GRR_SETTING_SORT_DATA_BY_APPRAISERS");
+    public static final String GRR_SETTING_SORT_DATA_BY_DEFAULT = GrrFxmlAndLanguageUtils.getString("GRR_SETTING_SORT_DATA_BY_DEFAULT");
+    public static final String GRR_SETTING_RULE_NO_EMPTY = GrrFxmlAndLanguageUtils.getString("GRR_SETTING_RULE_NO_EMPTY");
+    public static final String GRR_SETTING_RULE_INVALID_RANGE = GrrFxmlAndLanguageUtils.getString("GRR_SETTING_RULE_INVALID_RANGE");
+    public static final String GRR_SETTING_RULE_MUST_NUMBER = GrrFxmlAndLanguageUtils.getString("GRR_SETTING_RULE_MUST_NUMBER");
+    public static final String GRR_SETTING_LEVEL_NO_EMPTY = GrrFxmlAndLanguageUtils.getString("GRR_SETTING_LEVEL_NO_EMPTY");
+    public static final String GRR_SETTING_LEVEL_LEVEL_MUST_BIGGER = GrrFxmlAndLanguageUtils.getString("GRR_SETTING_LEVEL_LEVEL_MUST_BIGGER");
+    public static final String GRR_SETTING_LEVEL_INPUT_ERROR = GrrFxmlAndLanguageUtils.getString("GRR_SETTING_LEVEL_INPUT_ERROR");
+
     public static final String[] GRR_RESULT_TYPE = new String[]{
             GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_TOLERANCE"),
             GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_CONTRIBUTION")};
