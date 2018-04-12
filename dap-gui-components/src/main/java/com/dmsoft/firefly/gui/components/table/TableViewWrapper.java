@@ -81,8 +81,9 @@ public class TableViewWrapper {
         SortedList<String> list = model.getRowKeyArray() instanceof SortedList ? (SortedList) model.getRowKeyArray() : new SortedList<>(model.getRowKeyArray());
         list.comparatorProperty().bind(tableView.comparatorProperty());
         tableView.setItems(list);
+        ContextMenu menu = null;
         if (model.getMenuEventList() != null && !model.getMenuEventList().isEmpty()) {
-            ContextMenu menu = new ContextMenu();
+            menu = new ContextMenu();
             for (TableMenuRowEvent event : model.getMenuEventList()) {
                 MenuItem menuItem = new MenuItem(event.getMenuName(), event.getMenuNode());
 
@@ -92,20 +93,18 @@ public class TableViewWrapper {
                 });
                 menu.getItems().add(menuItem);
             }
-            tableView.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> {
-                if (event.isConsumed()) {
-                    return;
-                }
-                Object source = event.getSource();
-                if (source instanceof Control) {
-                    Control c = (Control) source;
-                    if (model.isMenuEventEnable(tableView.getSelectionModel().getSelectedItem())) {
-                        menu.show(c, event.getScreenX(), event.getScreenY());
-                        event.consume();
-                    }
+            menu.setAutoHide(true);
+        }
+        tableView.setContextMenu(menu);
+        tableView.setRowFactory(tv -> {
+            TableRow<String> row = new TableRow<>();
+            row.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> {
+                if (row.getTableView().getContextMenu() == null || row.isEmpty() || !model.isMenuEventEnable(row.getItem())) {
+                    event.consume();
                 }
             });
-        }
+            return row;
+        });
         model.setTableView(tableView);
         if (tableView.getSkin() != null) {
             decorateSkinForSortHeader((TableViewSkin) tableView.getSkin(), tableView);
