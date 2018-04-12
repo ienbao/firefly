@@ -40,7 +40,6 @@ import java.util.function.Function;
 public class BoxPlotChart extends XYChart<Number, Number> {
 
     private double candleWidth = 10;
-    private boolean showLined = true;
     private boolean candleWidthByUnit = false;
     private boolean gridLineChanged = false;
 
@@ -333,40 +332,22 @@ public class BoxPlotChart extends XYChart<Number, Number> {
      * Add stroke
      */
     public void addStroke() {
-
-        if (showLined) {
-            return;
-        }
-        for (int seriesIndex = 0; seriesIndex < getData().size(); seriesIndex++) {
-            XYChart.Series<Number, Number> series = getData().get(seriesIndex);
-            Iterator<Data<Number, Number>> iter = getDisplayedDataIterator(series);
-            Path seriesPath = null;
-            if (series.getNode() instanceof Path) {
-                seriesPath = (Path) series.getNode();
-                seriesPath.getElements().clear();
+        this.getData().forEach(series -> {
+            if (series.getNode().getStyleClass().contains("chart-series-hidden-line")) {
+                series.getNode().getStyleClass().remove("chart-series-hidden-line");
             }
-            while (iter.hasNext()) {
-                XYChart.Data<Number, Number> item = iter.next();
-                double x = getXAxis().getDisplayPosition(getCurrentDisplayedXValue(item));
-                BoxExtraData extra = (BoxExtraData) item.getExtraValue();
-                if (seriesPath != null && extra.getMean() != null) {
-                    if (seriesPath.getElements().isEmpty()) {
-                        seriesPath.getElements().add(new MoveTo(x, getYAxis().getDisplayPosition(extra.getMean())));
-                    } else {
-                        seriesPath.getElements().add(new LineTo(x, getYAxis().getDisplayPosition(extra.getMean())));
-                    }
-                }
-            }
-        }
-        showLined = true;
+        });
     }
 
     /**
      * Remove stroke
      */
     public void removeStroke() {
-        showLined = false;
-        layoutPlotChildren();
+        this.getData().forEach(series -> {
+            if (!series.getNode().getStyleClass().contains("chart-series-hidden-line")) {
+                series.getNode().getStyleClass().add("chart-series-hidden-line");
+            }
+        });
     }
 
     /**
@@ -375,11 +356,31 @@ public class BoxPlotChart extends XYChart<Number, Number> {
      * @param showLined if true, show stroke; if false, hidden stroke
      */
     public void toggleStroke(boolean showLined) {
+
         if (showLined) {
             this.addStroke();
         } else {
             this.removeStroke();
         }
+//        this.getData().forEach(series -> {
+//            if (showLined) {
+//                if (series.getNode().getStyleClass().contains("chart-series-hidden-line")) {
+//                    series.getNode().getStyleClass().remove("chart-series-hidden-line");
+//                }
+//            } else {
+//                if (!series.getNode().getStyleClass().contains("chart-series-hidden-line")) {
+//                    series.getNode().getStyleClass().add("chart-series-hidden-line");
+//                }
+//            }
+//        });
+
+//        if (showLined) {
+//
+//            this.addStroke();
+//        } else {
+//            this.removeStroke();
+//        }
+
     }
 
     @Override
@@ -474,7 +475,7 @@ public class BoxPlotChart extends XYChart<Number, Number> {
     }
 
     private void drawSeriesPath(Path seriesPath, BoxExtraData extra, double x) {
-        if (seriesPath != null && showLined && extra.getMean() != null) {
+        if (seriesPath != null && extra.getMean() != null) {
             if (seriesPath.getElements().isEmpty()) {
                 seriesPath.getElements().add(new MoveTo(x, getYAxis().getDisplayPosition(extra.getMean())));
             } else {
