@@ -32,11 +32,13 @@ public class BasicSearchPane extends VBox {
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
     private List<String> timeKey;
     private String pattern;
+    private boolean isMulti = true;
 
     /**
      * constructor
      */
-    public BasicSearchPane() {
+    public BasicSearchPane(boolean isMulti) {
+        this.isMulti = isMulti;
         if (envService.findActivatedTemplate() != null && envService.findActivatedTemplate().getTimePatternDto() != null) {
             timeKey = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
             pattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
@@ -118,7 +120,7 @@ public class BasicSearchPane extends VBox {
         });
         basicSearchCom.getCloseBtn().setOnAction(e -> {
             this.getChildren().remove(basicSearchCom);
-            if (this.getChildren().size() == 2 && ((VBox) this.getParent()).getChildren().size() > 1) {
+            if (isMulti && this.getChildren().size() == 2 && ((VBox) this.getParent()).getChildren().size() > 1) {
                 ((VBox) this.getParent()).getChildren().remove(this);
             }
         });

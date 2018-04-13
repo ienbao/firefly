@@ -68,7 +68,7 @@ public class SearchTabController {
         if (isMulti) {
             basicSearch.getChildren().add(new BasicSearchPane("Group1"));
         } else {
-            basicSearch.getChildren().add(new BasicSearchPane());
+            basicSearch.getChildren().add(new BasicSearchPane(false));
         }
         initEvent();
         initItemData();
@@ -95,7 +95,7 @@ public class SearchTabController {
             if (isMulti) {
                 basicSearch.getChildren().add(new BasicSearchPane("Group" + (basicSearch.getChildren().size() + 1)));
             } else {
-                basicSearch.getChildren().add(new BasicSearchPane());
+                basicSearch.getChildren().add(new BasicSearchPane(false));
             }
         });
         help.setOnAction(event -> buildAdvanceHelpDia());
@@ -317,7 +317,7 @@ public class SearchTabController {
      * @param basicSearchDtoMaps map of basic search dto
      */
     public void setOneBasicSearch(List<BasicSearchDto> basicSearchDtoMaps) {
-        BasicSearchPane basicSearchPane = new BasicSearchPane();
+        BasicSearchPane basicSearchPane = new BasicSearchPane(false);
         if (basicSearchDtoMaps != null && basicSearchDtoMaps.size() > 0) {
             basicSearchDtoMaps.forEach(basicSearchDto -> basicSearchPane.setSearch(basicSearchDto.getTestItem(), basicSearchDto.getOperator(), basicSearchDto.getValue()));
         }
