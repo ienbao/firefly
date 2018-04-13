@@ -8,12 +8,14 @@ import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.plugin.PluginClass;
 import com.dmsoft.firefly.sdk.plugin.PluginClassType;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.plugin.apis.IConfig;
 import com.dmsoft.firefly.sdk.ui.IMenu;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -21,7 +23,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import org.apache.commons.lang3.StringUtils;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,7 @@ import static com.dmsoft.firefly.sdk.ui.MenuBuilder.MenuType;
 
 public class AppController {
     private final Logger logger = LoggerFactory.getLogger(AppController.class);
+    private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
 
     @FXML
     private GridPane menuPane;
@@ -230,8 +232,7 @@ public class AppController {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
         );
-        Stage fileStage = null;
-        File file = fileChooser.showOpenDialog(fileStage);
+        File file = fileChooser.showOpenDialog(StageMap.getStage(GuiConst.PLARTFORM_STAGE_MAIN));
 
         if (file != null) {
             String json = JsonFileUtil.readJsonFile(file);
@@ -240,13 +241,20 @@ public class AppController {
                 PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
                 List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.CONFIG);
                 Map<String, String> config = jsonMapper.fromJson(json, Map.class);
-                pluginClasses.forEach(v -> {
-                    IConfig service = (IConfig) v.getInstance();
-                    String name = service.getConfigName();
-                    if (StringUtils.isNotEmpty(name) && StringUtils.isNotEmpty(config.get(name))) {
-                        service.importConfig(config.get(name).getBytes());
+                if (config != null && !config.isEmpty()) {
+                    String templateConfigName = GuiFxmlAndLanguageUtils.getString(templateService.getConfigName());
+                    if (DAPStringUtils.isNotBlank(config.get(templateConfigName))) {
+                        templateService.importConfig(config.get(templateConfigName).getBytes());
                     }
-                });
+                    pluginClasses.forEach(v -> {
+                        IConfig service = (IConfig) v.getInstance();
+                        String name = GuiFxmlAndLanguageUtils.getString(service.getConfigName());
+                        if (StringUtils.isNotEmpty(name) && StringUtils.isNotEmpty(config.get(name))) {
+                            service.importConfig(config.get(name).getBytes());
+                        }
+                    });
+                }
+
             }
         }
     }

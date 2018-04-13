@@ -908,7 +908,7 @@ public class SpcExportController {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
         );
-        File file = fileChooser.showOpenDialog(null);
+        File file = fileChooser.showOpenDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
 
         if (file != null) {
             SpcLeftConfigDto spcLeftConfigDto = leftConfigService.importSpcConfig(file);

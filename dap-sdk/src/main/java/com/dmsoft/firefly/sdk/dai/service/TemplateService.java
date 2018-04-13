@@ -12,6 +12,31 @@ import java.util.Map;
  * Created by GuangLi on 2018/1/25.
  */
 public interface TemplateService {
+    /**
+     * method to get config name
+     *
+     * @return name
+     */
+    String getConfigName();
+
+    /**
+     * method to export config
+     *
+     * @return config bytes
+     */
+    byte[] exportConfig();
+
+    /**
+     * method to import config
+     *
+     * @param config config bytes
+     */
+    void importConfig(byte[] config);
+
+    /**
+     * method to restore config
+     */
+    void restoreConfig();
 
     /**
      * find all template name

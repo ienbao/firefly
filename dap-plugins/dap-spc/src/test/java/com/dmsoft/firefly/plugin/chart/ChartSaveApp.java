@@ -1,5 +1,7 @@
 package com.dmsoft.firefly.plugin.chart;
 
+import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -77,7 +79,7 @@ public class ChartSaveApp extends Application {
             FileChooser.ExtensionFilter pdfExtensionFilter = new FileChooser.ExtensionFilter("PNG - Portable Network Graphics (.png)", "*.png");
             fileChooser.getExtensionFilters().add(pdfExtensionFilter);
             fileChooser.setSelectedExtensionFilter(pdfExtensionFilter);
-            File file = fileChooser.showSaveDialog(null);
+            File file = fileChooser.showSaveDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
             if (file != null) {
                 try {
                     String name = file.getName();

@@ -163,7 +163,7 @@ public class SpcPlugin extends Plugin {
             FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML("view/spc_setting.fxml");
             root = fxmlLoader.load();
             spcSettingController = fxmlLoader.getController();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.SPC_SETTING, SpcFxmlAndLanguageUtils.getString("SPC_SETTING"), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.SPC_SETTING, SpcFxmlAndLanguageUtils.getString("SPC_SETTINGS"), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
             stage.setResizable(false);
             stage.toFront();
             stage.show();
