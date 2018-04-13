@@ -21,7 +21,7 @@ public class CsvConfigService implements IConfig {
 
     @Override
     public String getConfigName() {
-        return "CsvResolver";
+        return "MENU_CSV_RESOLVER";
     }
 
     @Override

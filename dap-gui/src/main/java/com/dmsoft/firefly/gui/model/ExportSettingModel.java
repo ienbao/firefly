@@ -1,8 +1,6 @@
 package com.dmsoft.firefly.gui.model;
 
 import com.dmsoft.firefly.gui.utils.TableCheckBox;
-import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
