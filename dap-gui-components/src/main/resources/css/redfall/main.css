@@ -644,7 +644,7 @@
 .text-field-filter:focused {
     -fx-background-color: #fff;
     -fx-text-fill: #222;
-    -fx-highlight-fill: #cccccc;
+    -fx-highlight-fill: #0096ff;
     -fx-highlight-text-fill: #fff;
     -fx-border-style: dashed;
 }
@@ -757,8 +757,9 @@
     -fx-background-color: COLOR_GRAY_F5;
     -fx-border-color: COLOR_GRAY_CC;
     -fx-text-fill: FONT_DARK;
-    -fx-padding: -1 0 0 0;
+    -fx-padding: -1 0 -2 0;
     -fx-cursor: hand;
+    -fx-background-insets: 0 0 1 0;
 }
 
 .combo-box-base .arrow-button {
@@ -1350,7 +1351,7 @@
     -fx-background-color: null;
     -fx-text-fill: #222222;
     -fx-alignment: center-left;
-    -fx-padding: 0 10 0 10;
+    -fx-padding: 0 10 1 9;
     -fx-border-insets: 0;
     -fx-background-insets: 0;
     -fx-border-color: transparent;
@@ -1358,7 +1359,7 @@
 }
 
 .table-cell .text-field {
-    -fx-border-insets: -1 -11 -1 -11;
+    -fx-border-insets: -1 -11 -1 -10;
     -fx-min-height: 16;
     -fx-pref-height: 16;
     -fx-max-height: 16;
@@ -1385,6 +1386,7 @@
 .table-view:focused:row-selection > .virtual-flow > .clipped-container > .sheet > .table-row-cell:focused {
     -fx-background-color: rgba(0, 150, 255, 0.2); /*#0096ff*/
     -fx-border-width: 1 0 1 0;
+    -fx-padding: -1 0 -1 0;
     -fx-border-color: rgba(0, 150, 255, 0.5) transparent;
 }
 
@@ -1423,11 +1425,11 @@
 }
 
 .table-view .combo-box {
-    -fx-pref-height: 16;
-    -fx-min-height: 16;
-    -fx-max-height: 16;
-    -fx-background-insets: -1 -11 -1 -11;
-    -fx-border-insets: -1 -11 -1 -11;
+    -fx-pref-height: 14;
+    -fx-min-height: 14;
+    -fx-max-height: 14;
+    -fx-background-insets: 0 -11 -1 -10;
+    -fx-border-insets: 0 -11 -1 -10;
     -fx-padding: -3 -8 -3 -8;
 }
 
@@ -1531,7 +1533,7 @@
     -fx-background-insets: 0;
     -fx-border-width: 0;
     -fx-background-color: transparent;
-
+    -fx-padding: 0;
 }
 
 .scroll-pane:hover {
@@ -1699,7 +1701,7 @@
     -fx-min-height: 22;
     -fx-pref-height: 22;
     -fx-background-color: COLOR_LIGHT_FF;
-    -fx-padding: 0 10 0 10; /* 4 5 4 5 */
+    -fx-padding: 0 0 0 0; /* 4 5 4 5 */
     -fx-background-insets: 0;
 }
 
@@ -1712,7 +1714,7 @@
 }
 
 .menu-item > .label {
-    -fx-padding: 0em 0.5em 0em 0em;
+    -fx-padding: 0 10 0 10;
     -fx-text-fill: FONT_DARK;
 }
 

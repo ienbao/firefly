@@ -75,7 +75,7 @@ public class SpcPlugin extends Plugin {
                 Pane root = null;
                 try {
                     root = fxmlLoader.load();
-                    root.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
+                    root.getStylesheets().addAll(WindowFactory.checkStyles());
                     root.getStylesheets().add(getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
                     root.getStylesheets().add(getClass().getClassLoader().getResource("css/charts.css").toExternalForm());
                 } catch (Exception ex) {
@@ -163,7 +163,7 @@ public class SpcPlugin extends Plugin {
             FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML("view/spc_setting.fxml");
             root = fxmlLoader.load();
             spcSettingController = fxmlLoader.getController();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.SPC_SETTING, "Spc Setting", root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.SPC_SETTING, SpcFxmlAndLanguageUtils.getString("SPC_SETTINGS"), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
             stage.setResizable(false);
             stage.toFront();
             stage.show();

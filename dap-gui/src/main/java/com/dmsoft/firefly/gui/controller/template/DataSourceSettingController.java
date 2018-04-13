@@ -8,6 +8,7 @@ import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.handler.importcsv.*;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
@@ -66,7 +67,11 @@ public class DataSourceSettingController {
     private void initialize() {
         initButton();
         this.initTableData();
-        searchTab = new SearchTab();
+        searchTab = new SearchTab(false);
+        searchTab.hiddenGroupAdd();
+        searchTab.getGroup1().setVisible(false);
+        searchTab.getGroup2().setVisible(false);
+        searchTab.getAutoDivideLbl().setVisible(false);
         split.getItems().add(searchTab);
         this.buildChooseColumnDialog();
         this.initComponentEvent();
@@ -77,7 +82,9 @@ public class DataSourceSettingController {
      */
     private void initButton() {
         chooseItem.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
+        TooltipUtil.installNormalTooltip(chooseItem, GuiFxmlAndLanguageUtils.getString(ResourceMassages.CHOOSE_ITEMS_TITLE));
         searchBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
+        TooltipUtil.installNormalTooltip(searchBtn, GuiFxmlAndLanguageUtils.getString(ResourceMassages.SEARCH));
     }
 
     /**

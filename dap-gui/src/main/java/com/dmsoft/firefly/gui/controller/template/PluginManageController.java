@@ -16,10 +16,7 @@ import com.dmsoft.firefly.gui.components.window.WindowMessageController;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.model.PluginTableRowData;
-import com.dmsoft.firefly.gui.utils.FileUtils;
-import com.dmsoft.firefly.gui.utils.GuiConst;
-import com.dmsoft.firefly.gui.utils.KeyValueDto;
-import com.dmsoft.firefly.gui.utils.StreamGobbler;
+import com.dmsoft.firefly.gui.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
@@ -45,7 +42,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +84,7 @@ public class PluginManageController implements Initializable {
         initTable();
         initEvent();
         initDataSourceTableData();
+        filterTf.getTextField().setPromptText(FxmlAndLanguageUtils.getString(ResourceMassages.FILTER));
     }
 
     private void initTable() {
@@ -145,11 +144,12 @@ public class PluginManageController implements Initializable {
                 if (pluginTable.getSelectionModel().getSelectedIndex() != -1) {
                     PluginTableRowData pluginTableRowData = pluginTableRowDataObservableList.get(pluginTable.getSelectionModel().getSelectedIndex());
                     explain.getChildren().remove(0, explain.getChildren().size());
-                    Text version = new Text(pluginTableRowData.getInfo().getVersion() + "\n");
+                    Text version = new Text("Version: " + pluginTableRowData.getInfo().getVersion() + "\n");
                     Text description = new Text((DAPStringUtils.isEmpty(pluginTableRowData.getInfo().getDescription()) ? "" : pluginTableRowData.getInfo().getDescription()));
                     Text name = new Text(pluginTableRowData.getInfo().getName() + "\n");
                     name.setStyle("-fx-font-weight: bold");
                     explain.getChildren().addAll(name, version, description);
+                    explain.setLineSpacing(5);
                 }
             });
 
@@ -311,7 +311,16 @@ public class PluginManageController implements Initializable {
                     String propertiesURL = ApplicationPathUtil.getPath("application.properties");
                     Properties properties = PropertyConfig.getProperties(propertiesURL);
                     pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
-                    StringBuilder stringBuilder = new StringBuilder(properties.getProperty("restart_command"));
+
+                    String run = "." + File.separator + "restart.sh";
+                    String runUrl = ApplicationPathUtil.getPath("restart.sh");
+                    if (ApplicationPathUtil.OS_NAME.toLowerCase().startsWith(ApplicationPathUtil.OS_WIN)) {
+                        run = "." + File.separator + "restart.bat";
+                        runUrl = ApplicationPathUtil.getPath("restart.bat");
+                    }
+                    com.dmsoft.firefly.sdk.utils.FileUtils.changeFileAuthority(runUrl);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append(run);
                     stringBuilder.append(" pluginFolderPath:").append(pluginFolderPath);
                     deleteList.forEach(v -> stringBuilder.append(" delete:").append(v));
                     coverList.forEach(v -> stringBuilder.append(" cover:").append(v));
@@ -321,11 +330,9 @@ public class PluginManageController implements Initializable {
                     StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), "Output");
                     errorGobbler.start();
                     outputGobbler.start();
-                    proc.waitFor();
+
                 } catch (IOException e) {
                     System.out.println("restart failed.");
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
         });

@@ -324,7 +324,7 @@ public class GrrSummaryModel implements TableModel {
         }
         if (radioKey.equals(column)) {
             tableCell.setText(null);
-            tableCell.setGraphic(summaryRadioButton.get(rowKey));
+            tableCell.setGraphic(new Label("", summaryRadioButton.get(rowKey)));
             return tableCell;
         }
         if (editorCell.contains(rowKey + UIConstant.SPLIT_FLAG + column)) {

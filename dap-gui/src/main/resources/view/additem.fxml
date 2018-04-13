@@ -33,7 +33,7 @@
          <children>
             <VBox prefHeight="200.0" prefWidth="190.0" style="-fx-border-color: #DCDCDC; -fx-border-width: 1 1 1 1;">
                <children>
-                  <TextField fx:id="filter" promptText="Test Item">
+                  <TextField fx:id="filter" promptText="%TEMPLATE_TEST_ITEM">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
@@ -49,7 +49,7 @@
                   </TableView>
                </children>
             </VBox>
-            <TextArea fx:id="customizeItem" prefHeight="200.0" prefWidth="190.0" promptText="Please input test item">
+            <TextArea fx:id="customizeItem" prefHeight="200.0" prefWidth="190.0" promptText="%PLEASE_INPUT_TEST_ITEM">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>

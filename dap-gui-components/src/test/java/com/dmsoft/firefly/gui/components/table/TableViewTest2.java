@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.gui.components.table;
 
+import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.google.common.collect.Lists;
 import javafx.application.Application;
 import javafx.beans.property.ObjectProperty;
@@ -179,7 +180,7 @@ public class TableViewTest2 extends Application {
         pane.add(hBox, 0, 0);
         pane.add(tableView, 0, 2);
         Scene scene = new Scene(pane);
-        scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
+        scene.getStylesheets().addAll(WindowFactory.checkStyles());
         TableViewWrapper.decorate(tableView, model);
         primaryStage.setScene(scene);
         primaryStage.show();

@@ -2,8 +2,10 @@ package com.dmsoft.firefly.plugin.spc.charts.view;
 
 import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.gui.components.chart.ChartUtils;
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.plugin.spc.charts.utils.LegendUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.sun.javafx.charts.Legend;
 import javafx.embed.swing.SwingFXUtils;
@@ -42,7 +44,7 @@ public class ChartPanel<T extends XYChart> extends VBox {
     private final double spacing = 10;
     private final double threshold = 1;
     private final double legendWidth = 255;
-    private final double legendHeight = 25;
+    private final double legendHeight = 22;
 
     /**
      * Constructor for ChartPanel
@@ -68,6 +70,7 @@ public class ChartPanel<T extends XYChart> extends VBox {
      *
      * @param chart                 chart
      * @param chartSizeChangeEnable enable change chart size
+     * @param showLegend whether show legend or not
      * @param chartDraggingEnable   enable drag chart
      */
     public ChartPanel(T chart, boolean showLegend, boolean chartSizeChangeEnable, boolean chartDraggingEnable) {
@@ -129,10 +132,6 @@ public class ChartPanel<T extends XYChart> extends VBox {
         extensionMenu.getItems().addAll(saveMenuItem);
         menuBar.getMenus().addAll(extensionMenu);
 //        contextMenu.getItems().addAll(saveMenuItem, printMenuItem, copyMenuItem, ratioMenu);
-        Pane topPane = new Pane();
-        topPane.setPrefHeight(3);
-        topPane.setMinHeight(3);
-        topPane.setMaxHeight(3);
         rightHBox = new HBox();
         rightHBox.getChildren().add(customPane);
         rightHBox.getChildren().add(zoomInBtn);
@@ -146,6 +145,8 @@ public class ChartPanel<T extends XYChart> extends VBox {
         titlePane.setRight(rightHBox);
         this.getChildren().add(titlePane);
         this.getChildren().add(chart);
+        VBox.setVgrow(chart, Priority.ALWAYS);
+        VBox.setMargin(chart, new Insets(-1, 0, 0, 0));
     }
 
     private void initComponentRender() {
@@ -161,28 +162,28 @@ public class ChartPanel<T extends XYChart> extends VBox {
         rightHBox.setMargin(zoomInBtn, new Insets(0, 0, 0, 5));
         rightHBox.setMargin(zoomOutBtn, new Insets(0, 0, 0, 5));
         rightHBox.setMargin(menuBar, new Insets(-3, 0, 0, 5));
-        titlePane.setMargin(leftHBox, new Insets(3, 0, 0, spacing));
+        titlePane.setMargin(leftHBox, new Insets(2, 0, 0, spacing));
         titlePane.setMargin(rightHBox, new Insets(3, 0, 0, 0));
 
 //        extensionMenu.setStyle("-fx-padding: 0em 1em 0em -0.8em");
         menuBar.getStyleClass().removeAll("menu-icon");
         menuBar.getStyleClass().add("menu-icon");
 
-        zoomInBtn.setPrefWidth(20);
-        zoomInBtn.setMaxWidth(20);
-        zoomInBtn.setMinWidth(20);
-        zoomOutBtn.setPrefWidth(20);
-        zoomOutBtn.setMaxWidth(20);
-        zoomOutBtn.setMinWidth(20);
-        extensionBtn.setPrefWidth(20);
-        extensionBtn.setMaxWidth(20);
-        extensionBtn.setMinWidth(20);
-        legendBtn.setPrefWidth(25);
-        legendBtn.setMaxWidth(25);
-        legendBtn.setMinWidth(25);
-        legendBtn.setPrefHeight(25);
-        legendBtn.setMaxHeight(25);
-        legendBtn.setMinHeight(25);
+        zoomInBtn.setPrefWidth(legendHeight);
+        zoomInBtn.setMaxWidth(legendHeight);
+        zoomInBtn.setMinWidth(legendHeight);
+        zoomOutBtn.setPrefWidth(legendHeight);
+        zoomOutBtn.setMaxWidth(legendHeight);
+        zoomOutBtn.setMinWidth(legendHeight);
+        extensionBtn.setPrefWidth(legendHeight);
+        extensionBtn.setMaxWidth(legendHeight);
+        extensionBtn.setMinWidth(legendHeight);
+        legendBtn.setPrefWidth(legendHeight);
+        legendBtn.setMaxWidth(legendHeight);
+        legendBtn.setMinWidth(legendHeight);
+        legendBtn.setPrefHeight(legendHeight);
+        legendBtn.setMaxHeight(legendHeight);
+        legendBtn.setMinHeight(legendHeight);
         chart.setLegendVisible(false);
         legend.setPrefWidth(legendWidth);
         legend.setPrefHeight(legendHeight);
@@ -242,7 +243,7 @@ public class ChartPanel<T extends XYChart> extends VBox {
                             "PNG - Portable Network Graphics (.png)", "*.png");
             fileChooser.getExtensionFilters().add(pdfExtensionFilter);
             fileChooser.setSelectedExtensionFilter(pdfExtensionFilter);
-            File file = fileChooser.showSaveDialog(null);
+            File file = fileChooser.showSaveDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
             if (file != null) {
                 try {
                     String imagePath = file.getAbsolutePath();

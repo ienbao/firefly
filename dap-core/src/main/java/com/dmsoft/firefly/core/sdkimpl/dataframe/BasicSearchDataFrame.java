@@ -61,6 +61,19 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
     }
 
     @Override
+    public void removeRows(List<String> rowKeyList) {
+        for (String rowKey : rowKeyList) {
+            if (isRowKeyExist(rowKey)) {
+                int targetRowIndex = getRowKeys().indexOf(rowKey);
+                getRowKeys().remove(targetRowIndex);
+                getInUsedList().remove(targetRowIndex);
+                getCellValues().remove(targetRowIndex);
+                rowSearchConditionResultList.remove(targetRowIndex);
+            }
+        }
+    }
+
+    @Override
     public List<DataColumn> getDataColumn(List<String> testItemNames, String searchCondition) {
         List<DataColumn> dataColumns = Lists.newArrayList();
         for (String testItemName : testItemNames) {

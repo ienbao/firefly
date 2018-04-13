@@ -14,18 +14,18 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.DataSourceSettingController">
     <children>
-        <HBox style="-fx-border-color: #DCDCDC; -fx-border-width: 1 1 1 1;" VBox.vgrow="ALWAYS">
+        <HBox VBox.vgrow="ALWAYS">
             <children>
                 <VBox>
                     <children>
-                        <HBox prefHeight="24.0" prefWidth="619.0" style="-fx-border-color: #DCDCDC;">
+                        <HBox prefHeight="24.0" prefWidth="619.0" style="-fx-border-color: #DCDCDC; -fx-border-width: 1 1 0 1;">
                             <children>
                                 <Label fx:id="title" minHeight="30.0" prefHeight="30.0" prefWidth="591.0" text="%ALL_DATA">
                                     <opaqueInsets>
                                         <Insets />
                                     </opaqueInsets>
                                     <padding>
-                                        <Insets left="20.0" />
+                                        <Insets left="10.0" />
                                     </padding>
                                 </Label>
                                 <Button fx:id="chooseItem" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" prefHeight="22.0" prefWidth="22.0" styleClass="btn-icon">
@@ -37,14 +37,17 @@
                             <VBox.margin>
                                 <Insets />
                             </VBox.margin>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
                         </HBox>
                         <TableView fx:id="itemDataTable" prefHeight="461.0" prefWidth="619.0" />
                     </children>
                 </VBox>
                 <VBox fx:id="vBox" style="-fx-border-color: #DCDCDC; -fx-border-width: 0 1 0 0;">
                     <children>
-                        <SplitPane fx:id="split" orientation="VERTICAL" prefHeight="487.0" prefWidth="158.0" />
-                        <Pane prefHeight="53.0" prefWidth="158.0">
+                        <SplitPane fx:id="split" orientation="VERTICAL" prefHeight="487.0" prefWidth="158.0" style="-fx-border-color: #DCDCDC; -fx-border-width: 1 0 0 0;" />
+                        <Pane prefHeight="53.0" prefWidth="158.0" style="-fx-border-color: #DCDCDC;">
                             <children>
                                 <Button fx:id="searchBtn" layoutX="29.0" layoutY="2.0" minHeight="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-primary" />
                             </children>
@@ -61,7 +64,7 @@
         </HBox>
         <GridPane prefHeight="30.0" prefWidth="800.0">
             <columnConstraints>
-                <ColumnConstraints hgrow="ALWAYS" maxWidth="530.0" minWidth="29.0" prefWidth="29.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="530.0" minWidth="29.0" prefWidth="29.0" />
                 <ColumnConstraints hgrow="ALWAYS" maxWidth="1001.0" minWidth="278.0" prefWidth="500.0" />
                 <ColumnConstraints maxWidth="342.0" minWidth="88.0" prefWidth="94.0" />
                 <ColumnConstraints maxWidth="105.0" minWidth="90.0" prefWidth="92.0" />
@@ -71,19 +74,18 @@
                 <RowConstraints minHeight="45.0" prefHeight="45.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button fx:id="apply" mnemonicParsing="false" prefWidth="80.0" text="%APPLY_DATA" GridPane.columnIndex="4" />
-                <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="%CANCEL_DATA" GridPane.columnIndex="3" />
-                <Button fx:id="oK" mnemonicParsing="false" prefWidth="80.0" text="%OK_DATA" GridPane.columnIndex="2" />
-                <Button maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" styleClass="btn-primary">
-                    <GridPane.margin>
-                        <Insets bottom="10.0" left="10.0" top="2.0" />
-                    </GridPane.margin>
-                </Button>
-                <Label prefHeight="7.0" prefWidth="363.0" text="%INSTRUCTION" GridPane.columnIndex="1">
+                <Button fx:id="apply" mnemonicParsing="false" prefHeight="20.0" prefWidth="80.0" text="%APPLY_DATA" GridPane.columnIndex="4" />
+                <Button fx:id="cancel" mnemonicParsing="false" prefHeight="20.0" prefWidth="80.0" text="%CANCEL_DATA" GridPane.columnIndex="3" />
+                <Button fx:id="oK" mnemonicParsing="false" prefHeight="20.0" prefWidth="80.0" text="%OK_DATA" GridPane.columnIndex="2" />
+                <Label prefHeight="11.0" prefWidth="363.0" text="%INSTRUCTION" GridPane.columnIndex="1">
                     <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" />
                     </GridPane.margin>
                 </Label>
+            <Label contentDisplay="CENTER" maxHeight="12.0" maxWidth="12.0" minHeight="12.0" minWidth="12.0" prefHeight="12.0" prefWidth="12.0" style="-fx-background-color: red;">
+               <GridPane.margin>
+                  <Insets bottom="15.0" top="8.0" />
+               </GridPane.margin></Label>
             </children>
         </GridPane>
     </children>

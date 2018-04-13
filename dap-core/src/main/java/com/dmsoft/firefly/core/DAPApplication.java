@@ -23,6 +23,7 @@ import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
 import com.dmsoft.firefly.sdk.plugin.PluginProxyMethodFactory;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.PropertyConfig;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
 import com.google.common.collect.Lists;
@@ -48,6 +49,14 @@ public class DAPApplication {
      * methdod to init env
      */
     public static void initEnv() {
+        String propertiesURL = ApplicationPathUtil.getPath("application.properties");
+        if (propertiesURL == null) {
+            propertiesURL = ApplicationPathUtil.getPath("dev", "application.properties");
+        }
+        Properties properties = PropertyConfig.getProperties(propertiesURL);
+        String mongoHost = properties.getProperty("MongoHost", "localhost");
+        String mongoPort = properties.getProperty("MongoPort", "27017");
+        String mongoDB = properties.getProperty("MongoDB");
         // prepare env start
         PluginContextImpl pluginInfoContextImpl = new PluginContextImpl(InitModel.INIT_WITH_UI);
         PluginImageContextImpl pluginImageContext = new PluginImageContextImpl();
@@ -59,8 +68,10 @@ public class DAPApplication {
         UserServiceImpl userService = new UserServiceImpl();
         EventContextImpl eventContext = new EventContextImpl();
         BasicDataFrameFactoryImpl dataFrameFactory = new BasicDataFrameFactoryImpl();
-        MongoClient mongoClient = new MongoClient("localhost");
-        MongoTemplate mongoTemplate = new MongoTemplate(mongoClient, "ispc");
+
+        int port = DAPStringUtils.isNumeric(mongoPort) ? Integer.valueOf(mongoPort) : 27017;
+        MongoClient mongoClient = new MongoClient(mongoHost, port);
+        MongoTemplate mongoTemplate = new MongoTemplate(mongoClient, mongoDB);
         SourceDataServiceImpl sourceDataService = new SourceDataServiceImpl();
         TestDataCacheFactory factory = new TestDataCacheFactory();
 

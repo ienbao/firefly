@@ -118,6 +118,20 @@ public class GuiFxmlAndLanguageUtils {
         }
     }
 
+    public static void buildAboutDialog(){
+        Pane root = null;
+        try {
+            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/about.fxml");
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_ABOUT, "", root, getResource("css/platform_app.css").toExternalForm());
+            stage.setResizable(false);
+            stage.toFront();
+            stage.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public static void buildChangePasswordBackDia() {
         Pane root = null;
         try {

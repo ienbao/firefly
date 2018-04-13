@@ -3,6 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.*;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
@@ -150,8 +151,17 @@ public class SpcMainController implements Initializable {
      * clear analysis data
      */
     public void clearAnalysisSubShowData() {
+        clearAnalysisSubShowData(false);
+    }
+
+    /**
+     * clear analysis data
+     */
+    public void clearAnalysisSubShowData(boolean isTimer) {
         chartResultController.clearChartData();
-        viewDataController.clearViewData();
+        if (!isTimer) {
+            viewDataController.clearViewData();
+        }
     }
 
     /**
@@ -178,6 +188,14 @@ public class SpcMainController implements Initializable {
      */
     public void updateChartColor(String key, javafx.scene.paint.Color color) {
         chartResultController.updateChartColor(key, color);
+    }
+
+    /**
+     * stick chart layer
+     * @param key key
+     */
+    public void stickChartLayer(String key){
+        chartResultController.stickLayerToUniqueKey(key);
     }
 
     /**
@@ -275,7 +293,7 @@ public class SpcMainController implements Initializable {
         try {
             FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML("view/spc_export.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("spcExport", "Spc Export", root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("spcExport", SpcFxmlAndLanguageUtils.getString("SPC_EXPORT"), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
             SpcLeftConfigDto leftConfigDto = spcItemController.getCurrentConfigData();
             ((SpcExportController) fxmlLoader.getController()).initSpcExportLeftConfig(leftConfigDto);
             stage.setResizable(false);
@@ -352,6 +370,10 @@ public class SpcMainController implements Initializable {
         printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_print_normal.png")));
         exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_export_normal.png")));
         chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
+        TooltipUtil.installNormalTooltip(resetBtn, SpcFxmlAndLanguageUtils.getString("SPC_RESET_BTN_TOOLTIP"));
+        TooltipUtil.installNormalTooltip(printBtn, SpcFxmlAndLanguageUtils.getString("SPC_PRINT_BTN_TOOLTIP"));
+        TooltipUtil.installNormalTooltip(exportBtn, SpcFxmlAndLanguageUtils.getString("SPC_EXPORT_BTN_TOOLTIP"));
+        TooltipUtil.installNormalTooltip(chooseBtn, SpcFxmlAndLanguageUtils.getString("SPC_REFRESH_BTN_TOOLTIP"));
     }
 
     public SearchDataFrame getDataFrame() {
@@ -569,7 +591,7 @@ public class SpcMainController implements Initializable {
 
                     List<SpcStatisticalResultAlarmDto> allRowDataList = statisticalResultController.getAllRowStatsData();
                     List<SearchConditionDto> statisticalSearchConditionDtoList = buildRefreshSearchConditionData(allRowDataList);
-                    viewDataController.setViewData(viewDataFrame, rowKeyList, statisticalSearchConditionDtoList);
+                    viewDataController.setViewData(viewDataFrame, rowKeyList, statisticalSearchConditionDtoList,spcItemController.isTimer());
 
                     windowProgressTipController.closeDialog();
                 });
@@ -695,7 +717,7 @@ public class SpcMainController implements Initializable {
 
                 //set view data
                 SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getSearchedRowKey(), chartSearchConditionDtoList);
-                viewDataController.setViewData(viewDataFrame, countViewDataRowKeyList, statisticalSearchConditionDtoList);
+                viewDataController.setViewData(viewDataFrame, countViewDataRowKeyList, statisticalSearchConditionDtoList,spcItemController.isTimer());
             }
         });
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {

@@ -23,9 +23,10 @@ public class PropertyConfig {
     /**
      * get properties
      *
+     * @param filePath file path
      * @return properties
      */
-    public static Properties getProperties(String filePath){
+    public static Properties getProperties(String filePath) {
         try {
             InputStream fis = null;
             try {

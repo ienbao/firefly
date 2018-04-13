@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.gui.components.chart;
 
 import javafx.scene.chart.NumberAxis;
+import javafx.util.StringConverter;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -10,6 +11,7 @@ import javax.imageio.stream.FileImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Iterator;
+import java.util.function.Function;
 
 /**
  * Created by cherry on 2018/3/27.
@@ -40,6 +42,7 @@ public class ChartOperatorUtils {
         IIOImage jpgImage = new IIOImage(newBufferedImage, null, null);
         imageWriter.write(null, jpgImage, iwp);
         imageWriter.dispose();
+        fileImageOutput.close();
     }
 
     /**
@@ -60,5 +63,33 @@ public class ChartOperatorUtils {
             tick = tick - (tick % 2);
         }
         axis.setTickUnit(tick);
+    }
+
+    /**
+     * Set tick label formatter
+     *
+     * @param axis chart number axis
+     */
+    public static void setTickLabelFormatter(NumberAxis axis) {
+
+        axis.setTickLabelFormatter(new StringConverter<Number>() {
+            @Override
+            public String toString(Number object) {
+                Function<Double, String> convertData = buildConvertDataFunc();
+                return (object instanceof Double) ? convertData.apply((Double) object) : String.valueOf(object);
+            }
+
+            @Override
+            public Number fromString(String string) {
+                return 0D;
+            }
+        });
+    }
+
+    private static Function<Double, String> buildConvertDataFunc() {
+        return aDouble -> {
+            String value = aDouble == null ? "" : String.valueOf(aDouble);
+            return value;
+        };
     }
 }

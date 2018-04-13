@@ -34,6 +34,7 @@ public class ChooseTestItemPane extends GridPane {
     private TableView<ChooseTestItemModel> chooseTB;
     private GridPane titlePane;
     private GridPane bottomPane;
+    private CheckBox allCheck;
 
     /**
      * constructor
@@ -131,7 +132,7 @@ public class ChooseTestItemPane extends GridPane {
             sortedList.comparatorProperty().bind(chooseTB.comparatorProperty());
 
             chooseTB.setEditable(true);
-            CheckBox allCheck = new CheckBox();
+            allCheck = new CheckBox();
             allCheck.selectedProperty().addListener((ov, b1, b2) -> this.handleAllCheckBoxEvent(b2));
             TableColumn<ChooseTestItemModel, ?> checkCol = new TableColumn<>();
             checkCol.setGraphic(allCheck);
@@ -240,7 +241,7 @@ public class ChooseTestItemPane extends GridPane {
     void handleNumberChangeEvent() {
         okBtn.setDisable(false);
         errorLabel.setVisible(false);
-
+        allCheck.getStyleClass().removeAll("error");
         int total = 0;
         for (int i = 0, max = items.size(); i < max; i++) {
             if (items.get(i).selectedProperty().get()) {
@@ -251,6 +252,9 @@ public class ChooseTestItemPane extends GridPane {
             errorLabel.setText(" " + total + "/" + maxLength);
             errorLabel.setVisible(true);
             okBtn.setDisable(true);
+            if (!allCheck.getStyleClass().contains("error")) {
+                allCheck.getStyleClass().add("error");
+            }
         }
     }
 

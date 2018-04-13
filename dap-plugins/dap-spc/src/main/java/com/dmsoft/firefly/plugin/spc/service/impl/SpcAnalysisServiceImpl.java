@@ -567,6 +567,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
             singleBoxDataDto.setLowerWhisker(boxy[i * 5]);
             singleBoxDataDto.setQ1(boxy[i * 5 + 1]);
             singleBoxDataDto.setMedian(boxy[i * 5 + 2]);
+            singleBoxDataDto.setCl(singleBoxDataDto.getMedian());
             singleBoxDataDto.setQ3(boxy[i * 5 + 3]);
             singleBoxDataDto.setUpperWhisker(boxy[i * 5 + 4]);
             List<Double> outList = Lists.newArrayList();

@@ -66,6 +66,7 @@ public class ViewDataDFModel implements TableModel {
     private List<SearchConditionDto> statisticalSearchConditionDtoList;
     private Map<String, TestItemWithTypeDto> testItemDtoMap;
     private Map<String, ReadOnlyStringProperty> cellMap;
+    private boolean isTimer = false;
 
     /**
      * constructor
@@ -77,7 +78,7 @@ public class ViewDataDFModel implements TableModel {
         this.dataFrame = dataFrame;
         this.initSelectedRowKeys = selectedRowKeys;
         this.headerArray = FXCollections.observableArrayList(dataFrame.getAllTestItemName());
-        this.headerArray.add(0, "CheckBox");
+        this.headerArray.add(0, " ");
         this.rowKeyArray = FXCollections.observableArrayList(dataFrame.getAllRowKeys());
         this.checkValueMap = Maps.newLinkedHashMap();
         this.allCheck = new SimpleObjectProperty<>(true);
@@ -157,7 +158,7 @@ public class ViewDataDFModel implements TableModel {
             @Override
             public void handleAction(String rowKey, ActionEvent event) {
                 rowKeyArray.remove(rowKey);
-                checkValueMap.remove(rowKey);
+                checkValueMap.put(rowKey, new SimpleObjectProperty<>(false));
                 RuntimeContext.getBean(SourceDataService.class).changeRowDataInUsed(Lists.newArrayList(rowKey), false);
                 if (mainController != null) {
                     mainController.removeDataFrameRow(rowKey);
@@ -196,7 +197,10 @@ public class ViewDataDFModel implements TableModel {
 
     @Override
     public boolean isCheckBox(String columnName) {
-        return "CheckBox".equals(columnName);
+        if (isTimer) {
+            return false;
+        }
+        return " ".equals(columnName);
     }
 
     @Override
@@ -309,5 +313,21 @@ public class ViewDataDFModel implements TableModel {
                 testItemDtoMap.put(testName, testItemDto);
             }
         }
+    }
+
+    /**
+     * method to set data frame
+     *
+     * @param dataFrame data frame
+     */
+    public void setDataFrame(SearchDataFrame dataFrame) {
+        this.dataFrame = dataFrame;
+        this.getHeaderArray().clear();
+        this.getHeaderArray().addAll(dataFrame.getAllTestItemName());
+        this.getHeaderArray().add(0, " ");
+    }
+
+    public void setIsTimer(boolean isTimer) {
+        this.isTimer = isTimer;
     }
 }

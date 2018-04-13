@@ -65,7 +65,6 @@ public class MenuFactory {
 
         Menu menu = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_FILE"));
         menu.setId(MenuBuilder.MENU_FILE);
-        menu.setMnemonicParsing(true);
         MenuItem selectDataSourceMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_SELECT_DATA_SOURCE"));
         selectDataSourceMenuItem.setMnemonicParsing(true);
         selectDataSourceMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
@@ -77,7 +76,7 @@ public class MenuFactory {
         exportMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN));
         MenuItem restoreMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_RESTORE_SETTING"));
         restoreMenuItem.setMnemonicParsing(true);
-        restoreMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.R));
+        restoreMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.R, KeyCombination.SHORTCUT_DOWN));
         restoreMenuItem.setOnAction(event -> {
             WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Message", GuiFxmlAndLanguageUtils.getString("GLOBAL_RESTORE_SYSTEM"));
             controller.addProcessMonitorListener(new WindowCustomListener() {
@@ -137,8 +136,6 @@ public class MenuFactory {
     private static MenuBuilder createPreferenceMenu() {
         Menu menu = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_PREFERENCE"));
         menu.setId(MenuBuilder.MENU_PREFERENCE);
-        menu.setMnemonicParsing(true);
-        menu.setAccelerator(new KeyCodeCombination(KeyCode.P));
         MenuItem dataSourceSettingMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_DATA_SOURCE_SETTING"));
         dataSourceSettingMenuItem.setMnemonicParsing(true);
         dataSourceSettingMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.D, KeyCombination.SHORTCUT_DOWN));
@@ -146,7 +143,7 @@ public class MenuFactory {
 
         MenuItem analysisMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ANALYSIS_TEMPLATE"));
         analysisMenuItem.setMnemonicParsing(true);
-        analysisMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.A, KeyCombination.SHORTCUT_DOWN));
+        analysisMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.T, KeyCombination.SHORTCUT_DOWN));
         analysisMenuItem.setOnAction(event -> GuiFxmlAndLanguageUtils.buildTemplateDia());
 
         MenuItem pluginMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_PLUGIN_MANAGER"));
@@ -165,7 +162,6 @@ public class MenuFactory {
 
     private static Menu initLanguageMenu() {
         Menu language = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_LANGUAGE"));
-
         RadioMenuItem zh = new RadioMenuItem(GuiFxmlAndLanguageUtils.getString("LANGUAGE_ZH"));
         RadioMenuItem en = new RadioMenuItem(GuiFxmlAndLanguageUtils.getString("LANGUAGE_EN"));
         if (LanguageType.ZH.equals(envService.getLanguageType())) {
@@ -248,12 +244,14 @@ public class MenuFactory {
 
     private static MenuBuilder createHelpMenu() {
         Menu menu = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_HELP"));
-        menu.setMnemonicParsing(true);
-        menu.setAccelerator(new KeyCodeCombination(KeyCode.H));
         menu.setId(MenuBuilder.MENU_HELP);
         MenuItem legalMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_LEGAL_NOTICE"));
         legalMenuItem.setOnAction(event -> {
             GuiFxmlAndLanguageUtils.buildLegalDialog();
+        });
+        MenuItem aboutMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ABOUT_DAP"));
+        aboutMenuItem.setOnAction(event -> {
+            GuiFxmlAndLanguageUtils.buildAboutDialog();
         });
 //        MenuItem dapMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ABOUT_DAP"));
 //        MenuItem updateMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_CHECK_UPDATE"));
@@ -266,6 +264,7 @@ public class MenuFactory {
 //            System.out.println("update");
 //        });
         menu.getItems().add(legalMenuItem);
+        menu.getItems().add(aboutMenuItem);
 //        menu.getItems().add(dapMenuItem);
 //        menu.getItems().add(updateMenuItem);
         return getParentMenuBuilder().setParentLocation(ROOT_MENU).addMenu(menu);

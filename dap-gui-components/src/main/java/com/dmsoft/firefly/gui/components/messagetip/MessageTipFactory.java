@@ -4,6 +4,7 @@ package com.dmsoft.firefly.gui.components.messagetip;
  */
 
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
+import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -62,7 +63,7 @@ public class MessageTipFactory {
             popup = new Popup();
             FXMLLoader fxmlLoader = FxmlAndLanguageUtils.getLoaderFXML("view/message_tip.fxml");
             Pane pane = fxmlLoader.load();
-            pane.getStylesheets().add("/css/redfall/main.css");
+            pane.getStylesheets().addAll(WindowFactory.checkStyles());
             messageTipControl = fxmlLoader.getController();
             popup.getContent().add(pane);
         } catch (IOException exception) {

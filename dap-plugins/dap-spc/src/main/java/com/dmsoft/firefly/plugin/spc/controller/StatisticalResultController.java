@@ -9,6 +9,7 @@ import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
 import com.dmsoft.firefly.plugin.spc.model.ChooseTableRowData;
@@ -191,9 +192,10 @@ public class StatisticalResultController implements Initializable {
         try {
             root = fxmlLoader.load();
             chooseDialogController = fxmlLoader.getController();
-            chooseDialogController.setValueColumnText("Statistical Result");
+            chooseDialogController.setValueColumnText(SpcFxmlAndLanguageUtils.getString("STATISTICAL_RESULT"));
+            chooseDialogController.setFilterTFPrompt(SpcFxmlAndLanguageUtils.getString("STATISTICAL_RESULT_PROMPT"));
             this.initChooseStatisticalResultTableData();
-            Stage stage = WindowFactory.createNoManagedStage("Choose Statistical Results", root,
+            Stage stage = WindowFactory.createNoManagedStage(SpcFxmlAndLanguageUtils.getString("CHOOSE_STATISTICAL_RESULTS"), root,
                     getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
             chooseDialogController.setStage(stage);
         } catch (IOException e) {
@@ -237,6 +239,14 @@ public class StatisticalResultController implements Initializable {
         filterTestItemTf.getTextField().textProperty().addListener((observable, oldValue, newValue) -> getFilterTestItemTfEvent());
         chooseDialogController.getChooseOkButton().setOnAction(event -> getChooseStatisticalResultEvent());
         statisticalTableModel.getAllCheckBox().setOnAction(event -> getAllCheckBoxEvent());
+
+        statisticalResultTb.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            List<String> statisticalSelectRowKeyListCache = SpcRefreshJudgeUtil.newInstance().getStatisticalSelectRowKeyListCache();
+            if(statisticalSelectRowKeyListCache == null || !statisticalSelectRowKeyListCache.contains(newValue)){
+                return;
+            }
+            spcMainController.stickChartLayer((String)newValue);
+        });
     }
 
     private void getChooseColumnBtnEvent() {
@@ -272,6 +282,7 @@ public class StatisticalResultController implements Initializable {
 
     private void initBtnIcon() {
         chooseColumnBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
+        TooltipUtil.installNormalTooltip(chooseColumnBtn, SpcFxmlAndLanguageUtils.getString("CHOOSE_STATISTICAL_RESULT"));
     }
 
     private void initTableMenuEvent() {
@@ -284,7 +295,7 @@ public class StatisticalResultController implements Initializable {
 
         @Override
         public String getMenuName() {
-            return null;
+            return "";
         }
 
         @Override

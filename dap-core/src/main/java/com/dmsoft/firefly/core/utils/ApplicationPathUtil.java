@@ -4,6 +4,7 @@
 
 package com.dmsoft.firefly.core.utils;
 
+import java.net.URL;
 import java.net.URLDecoder;
 
 /**
@@ -11,7 +12,7 @@ import java.net.URLDecoder;
  */
 public class ApplicationPathUtil {
     public static final String OS_NAME;
-    private static final String OS_WIN = "win";
+    public static final String OS_WIN = "win";
 
     static {
         OS_NAME = System.getProperty("os.name");
@@ -42,8 +43,11 @@ public class ApplicationPathUtil {
      */
     public static String getPath(String searchPath, String fileName) {
         ResourceFinder rf = new ResourceFinder(searchPath);
-
-        String path = rf.findResource(fileName).getPath();
+        URL url = rf.findResource(fileName);
+        if (url == null) {
+            return null;
+        }
+        String path = url.getPath();
 
         if (OS_NAME.toLowerCase().startsWith(OS_WIN)) {
             path = path.substring(1, path.length());
@@ -59,7 +63,11 @@ public class ApplicationPathUtil {
     public static String getPath(String fileName) {
         ResourceFinder rf = new ResourceFinder();
 
-        String path = rf.findResource(fileName).getPath();
+        URL url = rf.findResource(fileName);
+        if (url == null) {
+            return null;
+        }
+        String path = url.getPath();
 
         if (OS_NAME.toLowerCase().startsWith(OS_WIN)) {
             path = path.substring(1, path.length());

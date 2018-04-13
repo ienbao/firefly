@@ -1,24 +1,31 @@
 package com.dmsoft.firefly.gui.components.window;
 
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import com.google.common.collect.Lists;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.util.Collections;
 import java.util.List;
 
 public class WindowFactory {
 
     private static final String PLATFORM_CSS_PATH = WindowFactory.class.getClassLoader().getResource("css/redfall/main.css").toExternalForm();
+    private static final String PLATFORM_CSS_PATH_ZN = WindowFactory.class.getClassLoader().getResource("css/redfall/main_cn.css").toExternalForm();
 
     public static List<String> checkStyles(String... styles) {
-        List list = Lists.newArrayList();
-        list.add(PLATFORM_CSS_PATH);
+        List<String> list = Lists.newArrayList();
+        if (LanguageType.ZH.equals(RuntimeContext.getBean(EnvService.class).getLanguageType())) {
+            list.add(PLATFORM_CSS_PATH_ZN);
+        } else {
+            list.add(PLATFORM_CSS_PATH);
+        }
         if (styles != null && styles.length > 0) {
-            for (String s : styles) {
-                list.add(s);
-            }
+            Collections.addAll(list, styles);
         }
         return list;
     }
@@ -77,33 +84,33 @@ public class WindowFactory {
         return null;
     }
 
-    public static Stage createSimpleWindowAsModel(String name, Pane title, Pane bodyPane, String... styles) {
-        WindowPane windowPane = new WindowPane(title, bodyPane);
-        windowPane.setWindowsModel(WindowPane.WINDOW_MODEL_X);
+//    public static Stage createSimpleWindowAsModel(String name, Pane title, Pane bodyPane, String... styles) {
+//        WindowPane windowPane = new WindowPane(title, bodyPane);
+//        windowPane.setWindowsModel(WindowPane.WINDOW_MODEL_X);
+//
+//        if (StageMap.loadStage(name, windowPane, true, checkStyles(styles), StageStyle.TRANSPARENT)) {
+//            Stage stage = StageMap.getStage(name);
+//            windowPane.setStage(stage);
+//            windowPane.init();
+//            return stage;
+//        }
+//
+//        return null;
+//    }
 
-        if (StageMap.loadStage(name, windowPane, true, checkStyles(styles), StageStyle.TRANSPARENT)) {
-            Stage stage = StageMap.getStage(name);
-            windowPane.setStage(stage);
-            windowPane.init();
-            return stage;
-        }
-
-        return null;
-    }
-
-    public static Stage createSimpleWindowAsModel(String name, String title, Pane bodyPane, String... styles) {
-        WindowPane windowPane = new WindowPane(title, bodyPane);
-        windowPane.setWindowsModel(WindowPane.WINDOW_MODEL_X);
-
-        if (StageMap.loadStage(name, windowPane, true, checkStyles(styles), StageStyle.TRANSPARENT)) {
-            Stage stage = StageMap.getStage(name);
-            windowPane.setStage(stage);
-            windowPane.init();
-            return stage;
-        }
-
-        return null;
-    }
+//    public static Stage createSimpleWindowAsModel(String name, String title, Pane bodyPane, String... styles) {
+//        WindowPane windowPane = new WindowPane(title, bodyPane);
+//        windowPane.setWindowsModel(WindowPane.WINDOW_MODEL_X);
+//
+//        if (StageMap.loadStage(name, windowPane, true, checkStyles(styles), StageStyle.TRANSPARENT)) {
+//            Stage stage = StageMap.getStage(name);
+//            windowPane.setStage(stage);
+//            windowPane.init();
+//            return stage;
+//        }
+//
+//        return null;
+//    }
 
 
     public static Stage createOrUpdateFullWindow(String name, String title, Pane bodyPane, String... styles) {

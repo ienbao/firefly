@@ -48,14 +48,15 @@ public class ChooseTestItemDialog extends Stage {
         WindowPane windowPane = new WindowPane(FxmlAndLanguageUtils.getString(CommonResourceMassages.CHOOSE_ITEM), mainPane);
         windowPane.setStage(this);
         Scene scene = new Scene(windowPane);
-        scene.getStylesheets().addAll(WindowFactory.checkStyles(getResource("css/redfall/main.css").toExternalForm()));
+        scene.getStylesheets().addAll(WindowFactory.checkStyles());
         scene.setFill(Color.TRANSPARENT);
         this.setScene(scene);
+        this.initModality(Modality.APPLICATION_MODAL);
+        this.setResizable(false);
         windowPane.init();
         mainPane.getOkBtn().setOnAction(event -> this.close());
         Image image = new Image("/images/desktop_mac_logo.png");
         this.getIcons().add(image);
-        this.initModality(Modality.APPLICATION_MODAL);
     }
 
     /**

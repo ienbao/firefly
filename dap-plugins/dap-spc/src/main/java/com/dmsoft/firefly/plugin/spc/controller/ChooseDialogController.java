@@ -72,6 +72,15 @@ public class ChooseDialogController implements Initializable {
     }
 
     /**
+     * set filter prompt
+     * @param promptText prompt
+     */
+    public void setFilterTFPrompt(String promptText){
+        chooseFilterTf.getTextField().setPromptText(promptText);
+    }
+
+
+    /**
      * get select result
      *
      * @return method to get select result name

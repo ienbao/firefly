@@ -41,29 +41,24 @@ public class ChartDataUtils {
     public static XYData foldCLData(Double[] cl) {
         Double[] x = new Double[cl.length * 3];
         Double[] y = new Double[cl.length * 3];
-        Double beforeThreshold = 1.0 / 3.0;
-        Double afterThreshold = 1.0 / 3.0;
+        Double threshold = 0.5;
+        int j = -1;
         for (int i = 0; i < cl.length * 3; i++) {
+            if (i % 3 == 0) {
+                j++;
+            }
             if (i % 3 == 1) {
-                x[i] = (i + 2) / 3.0;
+                x[i] = Double.valueOf(j + 1);
             }
             if (i % 3 == 0) {
-                x[i] = (i + 2) / 3.0 - beforeThreshold;
+                x[i] = (j + 1) - threshold;
             }
             if (i % 3 == 2) {
-                x[i] = x[i - 1] + afterThreshold;
+                x[i] = (j + 1) + threshold;
             }
-            y[i] = cl[i / 3];
+            y[i] = cl[j];
         }
 
-//        for (int i = 0; i < cl.length * 3; i++) {
-//            x[i] = (i + 1) - 0.5;
-//            x[i + 1] = Double.valueOf(i + 1);
-//            x[i + 2] = (i + 1) + 0.5;
-//            y[i] = cl[i / 3];
-//            y[i + 1] = cl[i / 3];
-//            y[i + 2] = cl[i / 3];
-//        }
         XYData xyData = new XYData();
         xyData.setX(x);
         xyData.setY(y);

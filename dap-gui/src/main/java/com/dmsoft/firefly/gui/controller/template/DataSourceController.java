@@ -15,6 +15,7 @@ import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
+import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
@@ -91,6 +92,7 @@ public class DataSourceController implements Initializable {
     private void initTable() {
 //        search.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
         delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
+        TooltipUtil.installNormalTooltip(delete, GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_SOURCE));
 //        errorInfo.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_tips_warning.png")));
         errorInfo.getStyleClass().add("message-tip-warn-mark");
         errorInfo.setStyle("-fx-background-color: #F38400");
@@ -120,6 +122,7 @@ public class DataSourceController implements Initializable {
                             Label textField = new Label(item.getValue());
                             textField.setStyle("-fx-border-width: 0 0 0 0");
                             textField.setPrefWidth(400);
+                            textField.getStyleClass().add("table-text-field");
                             if (item.isImport() || item.isError()) {
                                 textField.setDisable(true);
                                 item.getSelector().getCheckbox().setSelected(false);
@@ -141,10 +144,13 @@ public class DataSourceController implements Initializable {
                             progressBar.setMinHeight(3);
                             Button rename = new Button();
                             rename.getStyleClass().add("btn-icon");
+                            rename.setStyle("-fx-padding: 0 4 0 4; -fx-border-insets: -3 0 0 0; -fx-background-insets: -3 0 0 0");
+                            TooltipUtil.installNormalTooltip(rename, GuiFxmlAndLanguageUtils.getString(ResourceMassages.RENAME_DATA_SOURCE));
                             rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rename_normal.png")));
                             Button deleteOne = new Button();
                             deleteOne.getStyleClass().add("btn-icon");
-                            deleteOne.getStyleClass().add("delete-icon");
+                            TooltipUtil.installNormalTooltip(deleteOne, GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_SOURCE));
+                            deleteOne.setStyle("-fx-padding: 0 4 0 4; -fx-background-insets: -3 0 0 0; -fx-border-insets: -3 0 0 0");
 
                             rename.setVisible(false);
                             deleteOne.setVisible(false);
@@ -161,6 +167,7 @@ public class DataSourceController implements Initializable {
                             hBox.getChildren().add(progressBar);
                             hBox.getChildren().add(rename);
                             hBox.getChildren().add(deleteOne);
+                            hBox.setStyle("-fx-background-insets: -1 0 0 0; -fx-border-insets: -1 0 0 0");
                             HBox.setHgrow(textField, Priority.ALWAYS);
                             HBox.setHgrow(progressBar, Priority.NEVER);
                             HBox.setHgrow(rename, Priority.NEVER);
