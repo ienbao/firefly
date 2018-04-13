@@ -5,7 +5,6 @@
     export R_HOME=R
     export CLASSPATH=.:${CLASSPATH}:${JRE_HOME}/lib:${JRE_HOME}/lib/server:${R_HOME}/library/rJava/jri
     export PATH=${JRE_HOME}/bin:${R_HOME}/bin:${PATH}:${HOME}/bin
-    mongodThread=`lsof -i tcp:27018|grep mongod|wc -l`
     : ${R_JAVA_LD_LIBRARY_PATH=}
     if test -n ""; then
     : ${R_LD_LIBRARY_PATH=${R_HOME}/lib:}
@@ -25,12 +24,5 @@
     then
      mkdir ./log/
     fi
-
-    ###########Mongodb process  check #############
-    if [ $mongodThread -eq  0 ]
-      then
-      exec ./mongodb/bin/./mongod --port 27018 --dbpath ./data/db
-    fi
-
     exec java -Djava.library.path=${R_HOME}/library/rJava/jri -jar dap-gui-2.5.0-SNAPSHOT.jar
 
