@@ -241,6 +241,10 @@ public class StatisticalResultController implements Initializable {
         statisticalTableModel.getAllCheckBox().setOnAction(event -> getAllCheckBoxEvent());
 
         statisticalResultTb.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            List<String> statisticalSelectRowKeyListCache = SpcRefreshJudgeUtil.newInstance().getStatisticalSelectRowKeyListCache();
+            if(statisticalSelectRowKeyListCache == null || !statisticalSelectRowKeyListCache.contains(newValue)){
+                return;
+            }
             spcMainController.stickChartLayer((String)newValue);
         });
     }

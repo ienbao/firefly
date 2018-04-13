@@ -118,7 +118,7 @@ public class BasicSearchPane extends VBox {
         });
         basicSearchCom.getCloseBtn().setOnAction(e -> {
             this.getChildren().remove(basicSearchCom);
-            if (this.getChildren().size() == 2) {
+            if (this.getChildren().size() == 2 && ((VBox) this.getParent()).getChildren().size() > 1) {
                 ((VBox) this.getParent()).getChildren().remove(this);
             }
         });
