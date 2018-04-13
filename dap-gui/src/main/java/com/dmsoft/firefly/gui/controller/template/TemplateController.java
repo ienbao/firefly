@@ -469,7 +469,7 @@ public class TemplateController {
         try {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/pattern.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createSimpleWindowAsModel("pattern", GuiFxmlAndLanguageUtils.getString(ResourceMassages.TIME_PATTERN), root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("pattern", GuiFxmlAndLanguageUtils.getString(ResourceMassages.TIME_PATTERN), root, getResource("css/platform_app.css").toExternalForm());
             stage.toFront();
             stage.show();
         } catch (Exception ex) {
