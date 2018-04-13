@@ -33,6 +33,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.chart.*;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -187,6 +188,22 @@ public class ChartResultController implements Initializable {
         medianChartPane.getChart().updateChartColor(unique, color);
         boxChartPane.getChart().updateChartColor(unique, color);
         mrChartPane.getChart().updateChartColor(unique, color);
+    }
+
+    /**
+     * Stick unique key series layer
+     *
+     * @param uniqueKey unique key
+     */
+    public void stickLayerToUniqueKey(String uniqueKey) {
+        ndChartPane.getChart().stickLayerToUniqueKey(uniqueKey);
+        runChartPane.getChart().stickLayerToUniqueKey(uniqueKey);
+        xBarChartPane.getChart().stickLayerToUniqueKey(uniqueKey);
+        rangeChartPane.getChart().stickLayerToUniqueKey(uniqueKey);
+        sdChartPane.getChart().stickLayerToUniqueKey(uniqueKey);
+        medianChartPane.getChart().stickLayerToUniqueKey(uniqueKey);
+        boxChartPane.getChart().stickLayerToUniqueKey(uniqueKey);
+        mrChartPane.getChart().stickLayerToUniqueKey(uniqueKey);
     }
 
     private void toggleChartCustomButtonDisable(boolean flag) {

@@ -191,6 +191,14 @@ public class SpcMainController implements Initializable {
     }
 
     /**
+     * stick chart layer
+     * @param key key
+     */
+    public void stickChartLayer(String key){
+        chartResultController.stickLayerToUniqueKey(key);
+    }
+
+    /**
      * set view data focus row data
      *
      * @param rowKey row key
