@@ -24,6 +24,7 @@ import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import com.google.common.collect.Lists;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -181,9 +182,18 @@ public class MainController {
     }
 
     private void initStateBar() {
+        LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+
         Label lblFile = new Label(GuiFxmlAndLanguageUtils.getString("STATE_BAR_FILE"));
         lblFile.getStyleClass().add("state-bar-lbl");
+        Double length = Double.valueOf(lblFile.getText().getBytes().length);
         stateBar.addColumn(0, lblFile);
+        if (LanguageType.EN.equals(languageType)) {
+            stateBar.getColumnConstraints().get(0).setMaxWidth(85);
+        } else {
+            stateBar.getColumnConstraints().get(0).setMaxWidth(55);
+        }
+
 
         ImageView imageView = new ImageView("/images/btn_edit_unable.png");
         imageView.setFitHeight(16);
@@ -197,7 +207,13 @@ public class MainController {
 
         Label lblAnalyze = new Label(GuiFxmlAndLanguageUtils.getString("STATE_BAR_ANALYZE"));
         lblAnalyze.getStyleClass().add("state-bar-lbl");
+        Double length1 = Double.valueOf(lblAnalyze.getText().getBytes().length);
         stateBar.addColumn(2, lblAnalyze);
+        if (LanguageType.EN.equals(languageType)) {
+            stateBar.getColumnConstraints().get(2).setMaxWidth(120);
+        } else {
+            stateBar.getColumnConstraints().get(2).setMaxWidth(70);
+        }
 
         ImageView imageView1 = new ImageView("/images/btn_template_unable.png");
         imageView1.setFitHeight(16);

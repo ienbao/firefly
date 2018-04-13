@@ -68,6 +68,10 @@ public class DataSourceSettingController {
         initButton();
         this.initTableData();
         searchTab = new SearchTab(false);
+        searchTab.hiddenGroupAdd();
+        searchTab.getGroup1().setVisible(false);
+        searchTab.getGroup2().setVisible(false);
+        searchTab.getAutoDivideLbl().setVisible(false);
         split.getItems().add(searchTab);
         this.buildChooseColumnDialog();
         this.initComponentEvent();

@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.gui.utils;
+package com.dmsoft.firefly.restart.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,9 +16,9 @@ public class StreamGobbler extends Thread {
     }
 
     public void run() {
-        InputStreamReader isr = new InputStreamReader(is);
-        BufferedReader br = new BufferedReader(isr);
         try {
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
             String line = null;
             while ((line = br.readLine()) != null) {
                 if (type.equals("Error")) {
@@ -29,21 +29,6 @@ public class StreamGobbler extends Thread {
             }
         } catch (IOException ioe) {
             ioe.printStackTrace();
-        } finally {
-            if (isr != null) {
-                try {
-                    isr.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 }

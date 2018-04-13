@@ -158,7 +158,7 @@ public class ViewDataDFModel implements TableModel {
             @Override
             public void handleAction(String rowKey, ActionEvent event) {
                 rowKeyArray.remove(rowKey);
-                checkValueMap.remove(rowKey);
+                checkValueMap.put(rowKey, new SimpleObjectProperty<>(false));
                 RuntimeContext.getBean(SourceDataService.class).changeRowDataInUsed(Lists.newArrayList(rowKey), false);
                 if (mainController != null) {
                     mainController.removeDataFrameRow(rowKey);
