@@ -86,6 +86,9 @@ public class TableViewWrapper {
             menu = new ContextMenu();
             for (TableMenuRowEvent event : model.getMenuEventList()) {
                 MenuItem menuItem = new MenuItem(event.getMenuName(), event.getMenuNode());
+                if(event.getMenuNode() != null){
+                    menuItem.setStyle("-fx-padding:0 0 0 0");
+                }
 
                 menuItem.setOnAction(event1 -> {
                     String rowKey = tableView.getSelectionModel().getSelectedItem();

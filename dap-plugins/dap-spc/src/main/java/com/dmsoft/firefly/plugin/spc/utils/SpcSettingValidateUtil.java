@@ -100,6 +100,9 @@ public class SpcSettingValidateUtil {
                         textField.textProperty().addListener((obVal, oldVal, newVal) -> {
                             if (ValidateUtil.validateIsNotEmpty(newVal, textField)) {
                                 boolean isDouble = validateIsDouble(newVal);
+                                if(sort.equals(BindNode.ASC)) {
+                                    isDouble = validateIsPositiveNumber(newVal);
+                                }
                                 if (!isDouble) {
                                     textField.setText(oldVal);
                                     return;
@@ -241,6 +244,13 @@ public class SpcSettingValidateUtil {
 
     private static boolean validateIsDouble(String value) {
         if (!Pattern.matches(ValidateUtils.DOUBLE_PATTERN, value) || value.length() > ANALYSIS_SETTING_MAX_INT) {
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean validateIsPositiveNumber(String value){
+        if (!Pattern.matches(ValidateUtils.POSITIVE_DOUBLE_PATTERN, value) || value.length() > ANALYSIS_SETTING_MAX_INT) {
             return false;
         }
         return true;
