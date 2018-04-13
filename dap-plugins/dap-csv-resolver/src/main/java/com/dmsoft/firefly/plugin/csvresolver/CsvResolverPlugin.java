@@ -39,7 +39,7 @@ public class CsvResolverPlugin extends Plugin {
     @Override
     @SuppressWarnings("unchecked")
     public void start() {
-        MenuItem menuItem = new MenuItem("CsvResolver");
+        MenuItem menuItem = new MenuItem(CsvFxmlAndLanguageUtils.getString("MENU_CSV_RESOLVER"));
         menuItem.setId("csvResolver");
         menuItem.setOnAction(event -> build());
 

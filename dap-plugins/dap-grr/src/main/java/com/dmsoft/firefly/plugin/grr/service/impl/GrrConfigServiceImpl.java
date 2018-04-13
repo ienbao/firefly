@@ -4,7 +4,6 @@ import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.utils.JsonFileUtil;
 import com.dmsoft.firefly.plugin.grr.dto.GrrConfigDto;
 import com.dmsoft.firefly.plugin.grr.service.GrrConfigService;
-import com.dmsoft.firefly.plugin.grr.utils.enums.GrrAnalysisMethod;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.apis.IConfig;
@@ -16,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -32,7 +30,7 @@ public class GrrConfigServiceImpl implements GrrConfigService, IConfig {
 
     @Override
     public String getConfigName() {
-        return "Grr Setting";
+        return "MENU_GRR_SETTING";
     }
 
     @Override

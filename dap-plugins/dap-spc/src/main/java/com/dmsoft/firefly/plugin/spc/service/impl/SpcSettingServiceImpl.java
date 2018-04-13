@@ -274,7 +274,7 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
 
     @Override
     public String getConfigName() {
-        return "Spc Setting";
+        return "MENU_SPC_SETTING";
     }
 
     @Override

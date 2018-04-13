@@ -3,6 +3,8 @@ package com.dmsoft.firefly.plugin.grr.charts;
 import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.gui.components.chart.ChartUtils;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
+import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
@@ -169,7 +171,7 @@ public class ChartRightPane extends HBox {
                             "PNG - Portable Network Graphics (.png)", "*.png");
             fileChooser.getExtensionFilters().add(pdfExtensionFilter);
             fileChooser.setSelectedExtensionFilter(pdfExtensionFilter);
-            File file = fileChooser.showSaveDialog(null);
+            File file = fileChooser.showSaveDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
             final float quality = 0.9f;
             if (file != null) {
                 try {

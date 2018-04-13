@@ -90,7 +90,6 @@ public class ControlChart<X, Y> extends LineChart {
         }
         setAxisRange(controlChartDataList);
         controlChartDataList.forEach(controlChartData -> createChartSeriesData(controlChartData, chartTooltip));
-//        stickLayerToUniqueKey(controlChartDataList.get(0).getUniqueKey());
     }
 
     /**
@@ -122,6 +121,9 @@ public class ControlChart<X, Y> extends LineChart {
      * @param uniqueKey unique key
      */
     public void stickLayerToUniqueKey(String uniqueKey) {
+        if (uniqueKeyNodesMap.isEmpty() || !uniqueKeyNodesMap.containsKey(uniqueKey)) {
+            return;
+        }
         ObservableList<Node> nodes = getPlotChildren();
         List<Node> newNodes = uniqueKeyNodesMap.get(uniqueKey);
         nodes.removeAll(newNodes);

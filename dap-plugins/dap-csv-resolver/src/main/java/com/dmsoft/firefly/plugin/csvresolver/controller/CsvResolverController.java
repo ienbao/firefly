@@ -18,7 +18,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 
@@ -152,8 +151,7 @@ public class CsvResolverController {
             fileChooser.getExtensionFilters().addAll(
                     new FileChooser.ExtensionFilter("CSV", "*.csv")
             );
-            Stage fileStage = null;
-            File file = fileChooser.showOpenDialog(fileStage);
+            File file = fileChooser.showOpenDialog(StageMap.getStage("csv"));
 
             if (file != null) {
                 path.setText(file.getPath());

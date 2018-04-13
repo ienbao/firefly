@@ -1210,7 +1210,7 @@ public class GrrExportController {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
         );
-        File file = fileChooser.showOpenDialog(null);
+        File file = fileChooser.showOpenDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
 
         if (file != null) {
             GrrLeftConfigDto grrLeftConfigDto = leftConfigService.importGrrConfig(file);

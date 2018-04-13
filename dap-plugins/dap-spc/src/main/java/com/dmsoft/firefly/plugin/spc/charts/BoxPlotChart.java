@@ -85,7 +85,6 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         }
         setAxisRange(boxPlotChartDataList);
         boxPlotChartDataList.forEach(boxPlotChartData -> createChartSeries(boxPlotChartData, chartTooltip));
-//        stickLayerToUniqueKey(boxPlotChartDataList.get(0).getUniqueKey());
     }
 
     private void setAxisRange(List<BoxPlotChartData> boxPlotChartDataList) {
@@ -146,6 +145,9 @@ public class BoxPlotChart extends XYChart<Number, Number> {
      * @param uniqueKey unique key
      */
     public void stickLayerToUniqueKey(String uniqueKey) {
+        if (uniqueKeyNodesMap.isEmpty() || !uniqueKeyNodesMap.containsKey(uniqueKey)) {
+            return;
+        }
         ObservableList<Node> nodes = getPlotChildren();
         List<Node> newNodes = uniqueKeyNodesMap.get(uniqueKey);
         nodes.removeAll(newNodes);

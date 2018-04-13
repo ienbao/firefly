@@ -758,7 +758,7 @@ public class SpcItemController implements Initializable {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
         );
-        File file = fileChooser.showOpenDialog(null);
+        File file = fileChooser.showOpenDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
 
         if (file != null) {
             SpcLeftConfigDto spcLeftConfigDto = leftConfigService.importSpcConfig(file);
@@ -798,7 +798,7 @@ public class SpcItemController implements Initializable {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
         );
-        File file = fileChooser.showSaveDialog(null);
+        File file = fileChooser.showSaveDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
 
         if (file != null) {
             leftConfigService.exportSpcConfig(leftConfigDto, file);
