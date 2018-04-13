@@ -44,6 +44,9 @@ public class ChartDataUtils {
         Double beforeThreshold = 1.0 / 3.0;
         Double afterThreshold = 1.0 / 3.0;
         for (int i = 0; i < cl.length * 3; i++) {
+            if (i == cl.length * 3 -1) {
+                continue;
+            }
             if (i % 3 == 1) {
                 x[i] = (i + 2) / 3.0;
             }

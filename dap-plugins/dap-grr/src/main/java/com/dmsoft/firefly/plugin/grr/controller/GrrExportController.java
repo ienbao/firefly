@@ -1034,7 +1034,7 @@ public class GrrExportController {
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
-                windowProgressTipController.updateFailProgress(context.getError().toString());
+                windowProgressTipController.updateFailProgress(context.getError().getMessage());
             }
         });
         List<TestItemWithTypeDto> testItemWithTypeDtoList = initSelectedItemDto();
@@ -1042,16 +1042,16 @@ public class GrrExportController {
             int i = 0;
             for (String projectName : projectNameList) {
                 String handlerName = projectName + i;
-                addHandler(jobPipeline, Lists.newArrayList(projectName), handlerName, savePath, testItemWithTypeDtoList);
+                addHandler(jobPipeline, windowProgressTipController, Lists.newArrayList(projectName), handlerName, savePath, testItemWithTypeDtoList);
                 i++;
             }
         } else {
-            addHandler(jobPipeline, projectNameList, "Export Grr Reports", savePath, testItemWithTypeDtoList);
+            addHandler(jobPipeline, windowProgressTipController, projectNameList, "Export Grr Reports", savePath, testItemWithTypeDtoList);
         }
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context, true);
     }
 
-    private void addHandler(JobPipeline pipeline, List<String> projectNameList, String handlerName, String savePath, List<TestItemWithTypeDto> testItemWithTypeDtoList) {
+    private void addHandler(JobPipeline pipeline, WindowProgressTipController windowProgressTipController, List<String> projectNameList, String handlerName, String savePath, List<TestItemWithTypeDto> testItemWithTypeDtoList) {
         pipeline.addLast(new AbstractBasicJobHandler(handlerName) {
             @Override
             public void doJob(JobContext context) {
@@ -1095,9 +1095,21 @@ public class GrrExportController {
                     context1.addJobEventListener(event -> context.pushEvent(new JobEvent(event.getEventName(), event.getProgress() * D100, event.getEventObject())));
                     if (!detail) {
                         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_EXPORT_JOB_PIPELINE);
+                        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+                            @Override
+                            public void doJob(JobContext context) {
+                                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                            };
+                        });
                         RuntimeContext.getBean(JobManager.class).fireJobSyn(jobPipeline, context1);
                     } else {
                         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_EXPORT_DETAIL_JOB_PIPELINE);
+                        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+                            @Override
+                            public void doJob(JobContext context) {
+                                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                            };
+                        });
                         RuntimeContext.getBean(JobManager.class).fireJobSyn(jobPipeline, context1);
                     }
                     context.put(ParamKeys.EXPORT_PATH, savePath);

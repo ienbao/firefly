@@ -106,8 +106,8 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         NumberAxis yAxis = (NumberAxis) this.getYAxis();
         double yReserve = (yMax - yMin) * UIConstant.FACTOR;
         double xReserve = (xMax - xMin) * UIConstant.FACTOR;
-        xAxis.setLowerBound(xMin - xReserve);
-        xAxis.setUpperBound(xMax + xReserve);
+        xAxis.setLowerBound(0);
+        xAxis.setUpperBound(xMax + UIConstant.FACTOR);
         yAxis.setLowerBound(yMin - yReserve);
         yAxis.setUpperBound(yMax + yReserve);
         ChartOperatorUtils.updateAxisTickUnit(xAxis);

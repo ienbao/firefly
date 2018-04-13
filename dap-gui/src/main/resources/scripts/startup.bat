@@ -40,6 +40,6 @@ set ID=
 
     set now=%date:~,4%%date:~5,2%%date:~8,2%
     echo DAP is running...
-	java -Djava.library.path="%R_HOME%\library\rJava\jri" -jar %APP_JAR% >> log/dap_%now%.log
+	java -Djava.library.path="%R_HOME%\library\rJava\jri" -jar %APP_JAR%
 :stopApp
     taskkill /F /IM java > nul

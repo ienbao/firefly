@@ -785,10 +785,10 @@ public class GrrResultController implements Initializable {
     private void initComponentsRender() {
         final double inputWidth = 200;
 
-        String testItemText = GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TEST_ITEM");
-        summaryItemTf.getTextField().setPromptText(testItemText);
         summaryItemTf.getTextField().setPrefWidth(inputWidth);
         summaryItemTf.getTextField().setFocusTraversable(false);
+        String testItemText = GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TEST_ITEM");
+        summaryItemTf.getTextField().setPromptText(testItemText);
         summaryTb.setEditable(true);
 
         //table自适应列宽
