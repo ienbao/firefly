@@ -316,7 +316,8 @@ public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
         String level = null;
         if (alarmData != null) {
             if (name.equals(SpcStatisticalResultKey.CA.getCode())) {
-                if (value < alarmData[0]) {
+                value = Math.abs(value);
+                if ( value < alarmData[0]) {
                     level = SpcKey.EXCELLENT.getCode();
                 } else if (value < alarmData[1]) {
                     level = SpcKey.ACCEPTABLE.getCode();

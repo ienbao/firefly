@@ -239,6 +239,10 @@ public class StatisticalResultController implements Initializable {
         filterTestItemTf.getTextField().textProperty().addListener((observable, oldValue, newValue) -> getFilterTestItemTfEvent());
         chooseDialogController.getChooseOkButton().setOnAction(event -> getChooseStatisticalResultEvent());
         statisticalTableModel.getAllCheckBox().setOnAction(event -> getAllCheckBoxEvent());
+
+        statisticalResultTb.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            spcMainController.stickChartLayer((String)newValue);
+        });
     }
 
     private void getChooseColumnBtnEvent() {
@@ -287,7 +291,7 @@ public class StatisticalResultController implements Initializable {
 
         @Override
         public String getMenuName() {
-            return null;
+            return "";
         }
 
         @Override
