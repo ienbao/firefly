@@ -86,7 +86,6 @@ public class TableViewWrapper {
             menu = new ContextMenu();
             for (TableMenuRowEvent event : model.getMenuEventList()) {
                 MenuItem menuItem = new MenuItem(event.getMenuName(), event.getMenuNode());
-
                 menuItem.setOnAction(event1 -> {
                     String rowKey = tableView.getSelectionModel().getSelectedItem();
                     event.handleAction(rowKey, event1);

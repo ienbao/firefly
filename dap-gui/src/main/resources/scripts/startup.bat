@@ -14,6 +14,7 @@ set ID=
     IF "%1%"=="exit" EXIT
 
 :start
+    start %~dp0installmongo.bat
     call :startApp
     GOTO :eof
 
