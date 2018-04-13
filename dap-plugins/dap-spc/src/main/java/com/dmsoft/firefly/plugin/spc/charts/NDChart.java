@@ -109,7 +109,6 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         }
         setAxisRange(barChartDataList);
         barChartDataList.forEach(ndBarChartData -> createChartSeriesData(ndBarChartData, chartTooltip));
-//        stickLayerToUniqueKey(barChartDataList.get(0).getUniqueKey());
     }
 
     private void setAxisRange(List<NDBarChartData> barChartDataList) {
@@ -148,6 +147,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
      * @param uniqueKey unique key
      */
     public void stickLayerToUniqueKey(String uniqueKey) {
+        if (uniqueKeyNodesMap.isEmpty() || !uniqueKeyNodesMap.containsKey(uniqueKey)) {
+            return;
+        }
         ObservableList<Node> nodes = getPlotChildren();
         List<Node> newNodes = uniqueKeyNodesMap.get(uniqueKey);
         nodes.removeAll(newNodes);
