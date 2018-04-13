@@ -644,7 +644,7 @@
 .text-field-filter:focused {
     -fx-background-color: #fff;
     -fx-text-fill: #222;
-    -fx-highlight-fill: #cccccc;
+    -fx-highlight-fill: #0096ff;
     -fx-highlight-text-fill: #fff;
     -fx-border-style: dashed;
 }

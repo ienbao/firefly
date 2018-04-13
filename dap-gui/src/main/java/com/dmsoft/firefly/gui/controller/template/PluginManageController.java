@@ -330,11 +330,9 @@ public class PluginManageController implements Initializable {
                     StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), "Output");
                     errorGobbler.start();
                     outputGobbler.start();
-                    proc.waitFor();
+
                 } catch (IOException e) {
                     System.out.println("restart failed.");
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
         });

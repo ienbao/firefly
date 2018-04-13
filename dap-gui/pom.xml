@@ -108,7 +108,7 @@
                         </manifest>
                     </archive>
                     <excludes>
-                        <exclude>*.xml</exclude>
+                        <!--<exclude>*.xml</exclude>-->
                         <exclude>*.properties</exclude>
                         <exclude>config/</exclude>
                         <exclude>default/</exclude>

@@ -84,33 +84,33 @@ public class WindowFactory {
         return null;
     }
 
-    public static Stage createSimpleWindowAsModel(String name, Pane title, Pane bodyPane, String... styles) {
-        WindowPane windowPane = new WindowPane(title, bodyPane);
-        windowPane.setWindowsModel(WindowPane.WINDOW_MODEL_X);
+//    public static Stage createSimpleWindowAsModel(String name, Pane title, Pane bodyPane, String... styles) {
+//        WindowPane windowPane = new WindowPane(title, bodyPane);
+//        windowPane.setWindowsModel(WindowPane.WINDOW_MODEL_X);
+//
+//        if (StageMap.loadStage(name, windowPane, true, checkStyles(styles), StageStyle.TRANSPARENT)) {
+//            Stage stage = StageMap.getStage(name);
+//            windowPane.setStage(stage);
+//            windowPane.init();
+//            return stage;
+//        }
+//
+//        return null;
+//    }
 
-        if (StageMap.loadStage(name, windowPane, true, checkStyles(styles), StageStyle.TRANSPARENT)) {
-            Stage stage = StageMap.getStage(name);
-            windowPane.setStage(stage);
-            windowPane.init();
-            return stage;
-        }
-
-        return null;
-    }
-
-    public static Stage createSimpleWindowAsModel(String name, String title, Pane bodyPane, String... styles) {
-        WindowPane windowPane = new WindowPane(title, bodyPane);
-        windowPane.setWindowsModel(WindowPane.WINDOW_MODEL_X);
-
-        if (StageMap.loadStage(name, windowPane, true, checkStyles(styles), StageStyle.TRANSPARENT)) {
-            Stage stage = StageMap.getStage(name);
-            windowPane.setStage(stage);
-            windowPane.init();
-            return stage;
-        }
-
-        return null;
-    }
+//    public static Stage createSimpleWindowAsModel(String name, String title, Pane bodyPane, String... styles) {
+//        WindowPane windowPane = new WindowPane(title, bodyPane);
+//        windowPane.setWindowsModel(WindowPane.WINDOW_MODEL_X);
+//
+//        if (StageMap.loadStage(name, windowPane, true, checkStyles(styles), StageStyle.TRANSPARENT)) {
+//            Stage stage = StageMap.getStage(name);
+//            windowPane.setStage(stage);
+//            windowPane.init();
+//            return stage;
+//        }
+//
+//        return null;
+//    }
 
 
     public static Stage createOrUpdateFullWindow(String name, String title, Pane bodyPane, String... styles) {

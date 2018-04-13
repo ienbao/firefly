@@ -2,7 +2,7 @@
 set JRE_HOME=%~dp0jre
 set PATH=%JRE_HOME%\bin;%JRE_HOME%\bin\server;%PATH%;%HOME%\bin
 set CLASSPATH=%CLASSPATH%;%JRE_HOME%\lib;
-
+set PARAMS=%*%
 set APP_JAR=dap-restart-2.5.0-SNAPSHOT.jar
 set LOG=log
 
@@ -39,6 +39,6 @@ set ID=
 
     set now=%date:~,4%%date:~5,2%%date:~8,2%
     echo iSPC is running...
-	java -jar "%APP_JAR%" %* >> log/dap_restart_%now%.log
+	java -jar "%APP_JAR%" %PARAMS% >> log/dap_restart_%now%.log
 :stopApp
     taskkill /F /IM java > nul
