@@ -107,6 +107,12 @@
     -fx-cursor: hand;
     -fx-background-insets: 1px;
     -fx-scale-shape: false;
+    -fx-min-width: 8px;
+    -fx-pref-width: 8px;
+    -fx-max-width: 8px;
+    -fx-pref-height: 8px;
+    -fx-min-height: 8px;
+    -fx-max-height: 8px;
 }
 
 .chart-line-symbol-hover {
@@ -142,7 +148,7 @@
 /* solid triangle */
 .chart-symbol-triangle {
     -fx-cursor: hand;
-    -fx-background-insets: -3;
+    -fx-background-insets: -2;
     -fx-shape: "M5,3 L10,8 L0,8 Z";
     -fx-scale-shape: false;
 }
