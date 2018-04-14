@@ -69,12 +69,15 @@ public class StackPaneApp extends Application {
                         dataItem.getNode().getStyleClass().removeAll("chart-line-symbol");
                     }
                     for (int i = 0; i < stackPane.getChildren().size(); i++) {
-                        if (stackPane.getChildren().get(i) instanceof Text) {
-                            stackPane.getChildren().removeAll(stackPane.getChildren().get(i));
-                        }
+                        System.out.println(stackPane.getStyleClass());
+//                        if (stackPane.getChildren().get(i) instanceof Text) {
+//                            stackPane.getChildren().removeAll(stackPane.getChildren().get(i));
+//                        }
+                        //三角
                         if (stackPane.getStyleClass().contains("chart-symbol-triangle")) {
                             stackPane.getStyleClass().removeAll("chart-symbol-triangle");
                         }
+                        //圆形
                         if (!stackPane.getStyleClass().contains("chart-line-symbol")) {
                             stackPane.getStyleClass().add( "chart-line-symbol");
                         }

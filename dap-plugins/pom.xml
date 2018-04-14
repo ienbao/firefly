@@ -17,7 +17,8 @@
     <modules>
         <module>dap-spc</module>
         <module>dap-grr</module>
-        <module>dap-csv-resolver</module>
+        <module>dap-am-csv-resolver</module>
+        <module>dap-tm-csv-resolver</module>
         <module>distribution</module>
     </modules>
 

@@ -10,9 +10,9 @@
     <moduleSets>
         <moduleSet>
             <useAllReactorProjects>true</useAllReactorProjects>
-
             <includes>
-                <include>com.dmsoft:dap-csv-resolver</include>
+                <include>com.dmsoft:dap-am-csv-resolver</include>
+                <include>com.dmsoft:dap-tm-csv-resolver</include>
                 <include>com.dmsoft:dap-spc</include>
                 <include>com.dmsoft:dap-grr</include>
             </includes>
