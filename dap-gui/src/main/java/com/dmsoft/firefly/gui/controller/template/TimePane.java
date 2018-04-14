@@ -18,16 +18,24 @@ public class TimePane extends HBox {
     private Button delete;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
 
+    /**
+     * constructor
+     *
+     * @param selectItem select item
+     */
     public TimePane(String selectItem) {
         initView();
         item.setValue(selectItem);
     }
 
+    /**
+     * constructor
+     */
     public TimePane() {
         initView();
     }
 
-    private void initView(){
+    private void initView() {
         this.setMaxWidth(500);
         item = new ComboBox<>();
         item.setMinWidth(160);
@@ -45,7 +53,7 @@ public class TimePane extends HBox {
         HBox.setMargin(delete, new Insets(0, 0, 10, 0));
     }
 
-    public String getSelectItem(){
+    public String getSelectItem() {
         return item.getValue();
     }
 }

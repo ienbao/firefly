@@ -30,7 +30,7 @@ import java.util.*;
 public class TemplateItemDFModel implements TableModel {
     private static final String[] HEADER = new String[]{GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_TEST_ITEM),
             GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_DATA_TYPE), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_LSL_FAIL),
-                    GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_USL_PASS)};
+            GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_USL_PASS)};
     private ObservableList<String> columnKey = FXCollections.observableArrayList(Arrays.asList(HEADER));
     private ObservableList<String> rowKey = FXCollections.observableArrayList();
     private FilteredList<String> templateFilterList;
@@ -52,26 +52,27 @@ public class TemplateItemDFModel implements TableModel {
      *
      * @param dataMap data
      */
-    public void initData( Map<String, SpecificationDataDto> dataMap) {
+    public void initData(Map<String, SpecificationDataDto> dataMap) {
         this.clearTable();
-        if(dataMap == null){
+        if (dataMap == null) {
             return;
         }
         this.dataMap = dataMap;
         rowKey.addAll(dataMap.keySet());
-        dataMap.entrySet().forEach(e ->{
+        dataMap.entrySet().forEach(e -> {
             this.initValueMap(e.getValue());
         });
     }
 
     /**
      * add new testItem
+     *
      * @param specificationDataDto testItem dto
      */
-    public void addTestItem(SpecificationDataDto specificationDataDto){
-        if(specificationDataDto != null){
-            dataMap.put(specificationDataDto.getTestItemName(),specificationDataDto);
-            rowKey.add(0,specificationDataDto.getTestItemName());
+    public void addTestItem(SpecificationDataDto specificationDataDto) {
+        if (specificationDataDto != null) {
+            dataMap.put(specificationDataDto.getTestItemName(), specificationDataDto);
+            rowKey.add(0, specificationDataDto.getTestItemName());
             this.initValueMap(specificationDataDto);
         }
     }
@@ -86,12 +87,13 @@ public class TemplateItemDFModel implements TableModel {
         errorEditorCell.clear();
     }
 
-    private void initValueMap(SpecificationDataDto specificationDataDto){
+    @SuppressWarnings("unchecked")
+    private void initValueMap(SpecificationDataDto specificationDataDto) {
         String name = specificationDataDto.getTestItemName();
         String type = specificationDataDto.getDataType();
         SourceObjectProperty typeProperty = new SourceObjectProperty(type);
         typeProperty.addListener((ov, b1, b2) -> {
-            this.updateComboxValue(name,(String) b2);
+            this.updateComboxValue(name, (String) b2);
         });
         String lsl = specificationDataDto.getLslFail() == null ? "" : specificationDataDto.getLslFail();
         String usl = specificationDataDto.getUslPass() == null ? "" : specificationDataDto.getUslPass();
@@ -111,10 +113,10 @@ public class TemplateItemDFModel implements TableModel {
             }
             specificationDataDto.setUslPass((String) b2);
         });
-        valueMap.put(name + "-" + HEADER[0],new SourceObjectProperty(name));
-        valueMap.put(name + "-" + HEADER[1],typeProperty);
-        valueMap.put(name + "-" + HEADER[2],lslProperty);
-        valueMap.put(name + "-" + HEADER[3],uslProperty);
+        valueMap.put(name + "-" + HEADER[0], new SourceObjectProperty(name));
+        valueMap.put(name + "-" + HEADER[1], typeProperty);
+        valueMap.put(name + "-" + HEADER[2], lslProperty);
+        valueMap.put(name + "-" + HEADER[3], uslProperty);
     }
 
     /**
@@ -123,21 +125,25 @@ public class TemplateItemDFModel implements TableModel {
      * @param filterTf filter text
      */
     public void filterTestItem(String filterTf) {
-        templateFilterList.setPredicate(p -> {
-            return p.toLowerCase().contains(filterTf.toLowerCase());
-        });
+        templateFilterList.setPredicate(p -> p.toLowerCase().contains(filterTf.toLowerCase()));
     }
 
-    public void updateComboxValue(String rowKey,String value){
+    /**
+     * method to update combobox value
+     *
+     * @param rowKey row key
+     * @param value  new value
+     */
+    public void updateComboxValue(String rowKey, String value) {
         dataMap.get(rowKey).setDataType(value);
 
-        if(value.equals(TestItemType.VARIABLE.getCode())){
+        if (value.equals(TestItemType.VARIABLE.getCode())) {
             valueMap.get(rowKey + "-" + HEADER[2]).setValue(null);
             valueMap.get(rowKey + "-" + HEADER[3]).setValue(null);
         }
     }
 
-    public ObservableList<String> getComboBoxList(){
+    public ObservableList<String> getComboBoxList() {
         return FXCollections.observableArrayList(TestItemType.VARIABLE.getCode(), TestItemType.ATTRIBUTE.getCode());
     }
 
@@ -169,7 +175,13 @@ public class TemplateItemDFModel implements TableModel {
         return false;
     }
 
-    public boolean isComboBox(String columnName){
+    /**
+     * is combo box or not
+     *
+     * @param columnName column name
+     * @return true : is comboBox; false : not
+     */
+    public boolean isComboBox(String columnName) {
         return columnName.equals(HEADER[1]);
     }
 
@@ -213,7 +225,7 @@ public class TemplateItemDFModel implements TableModel {
             return true;
         }
         SpecificationDataDto specificationDataDto = dataMap.get(rowKey);
-        if(specificationDataDto.getDataType().equals(TestItemType.VARIABLE.getCode())) {
+        if (specificationDataDto.getDataType().equals(TestItemType.VARIABLE.getCode())) {
             if (!ValidateUtils.validatePattern(newText, ValidateUtils.DOUBLE_PATTERN)) {
                 textField.setText(oldText);
                 return true;
@@ -277,13 +289,16 @@ public class TemplateItemDFModel implements TableModel {
         if (textField.getStyleClass().contains("text-field-error")) {
             textField.getStyleClass().removeAll("text-field-error");
         }
-        if (errorEditorCell.contains(rowKey + "-" + columnName)) {
-            errorEditorCell.remove(rowKey + "-" + columnName);
-        }
+        errorEditorCell.remove(rowKey + "-" + columnName);
         TooltipUtil.uninstallWarnTooltip(textField);
         return false;
     }
 
+    /**
+     * method to judge has error or not
+     *
+     * @return true : has error; false : not error
+     */
     public boolean hasErrorEditValue() {
         return errorEditorCell.size() != 0;
     }

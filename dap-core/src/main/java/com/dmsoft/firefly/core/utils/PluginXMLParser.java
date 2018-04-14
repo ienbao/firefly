@@ -88,9 +88,7 @@ public class PluginXMLParser {
                 pluginInfo.setConfig(configXMLHandler.getConfigMap());
             }
             return pluginInfo;
-        } catch (IOException e) {
-            return null;
-        } catch (SAXException e1) {
+        } catch (IOException | SAXException e) {
             return null;
         }
     }

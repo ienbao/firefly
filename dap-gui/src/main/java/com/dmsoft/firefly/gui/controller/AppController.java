@@ -21,17 +21,24 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import org.apache.commons.lang3.StringUtils;
 import javafx.stage.FileChooser;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.dmsoft.firefly.sdk.ui.MenuBuilder.MenuType;
 
+/**
+ * app controller for main pane
+ *
+ * @author Julia
+ */
 public class AppController {
     private final Logger logger = LoggerFactory.getLogger(AppController.class);
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
@@ -93,7 +100,7 @@ public class AppController {
 
     private void initEvent() {
         menuChangePassword.setOnAction(event -> {
-            GuiFxmlAndLanguageUtils.buildChangePasswordDia();
+            GuiFxmlAndLanguageUtils.buildChangePasswordDialog();
         });
         menuLoginOut.setOnAction(event -> {
             UserModel.getInstance().setUser(null);
@@ -135,11 +142,11 @@ public class AppController {
                     }
                 } else {
                     boolean isExist = false;
-                    for (Menu tempMenu :menuSystem.getMenus()) {
+                    for (Menu tempMenu : menuSystem.getMenus()) {
                         if (isExist) {
                             break;
                         }
-                        for (MenuItem menuItem :tempMenu.getItems()) {
+                        for (MenuItem menuItem : tempMenu.getItems()) {
                             MenuItem menuItem1 = (MenuItem) menu.getMenu();
                             if (menuItem.getText().equals(menuItem1.getText())) {
                                 isExist = true;
@@ -188,10 +195,10 @@ public class AppController {
 
     private boolean updateMenu(IMenu menuComponent, Menu menu) {
         String parentLocation = menuComponent.getPluginId() + "_" + menuComponent.getParentLocation();
-        String PlatformParentLocation = MenuFactory.PLATFORM_ID + "_" + menuComponent.getParentLocation();
+        String platformParentLocation = MenuFactory.PLATFORM_ID + "_" + menuComponent.getParentLocation();
 
         AtomicBoolean result = new AtomicBoolean(false);
-        if (StringUtils.isNotBlank(menu.getId()) && (menu.getId().equals(parentLocation) || (menu.getId().equals(PlatformParentLocation)))) {
+        if (StringUtils.isNotBlank(menu.getId()) && (menu.getId().equals(parentLocation) || (menu.getId().equals(platformParentLocation)))) {
             menu.getItems().add(menuComponent.getMenu());
             result.set(true);
         } else {
@@ -223,7 +230,9 @@ public class AppController {
         }
     }
 
-
+    /**
+     * method import all config
+     */
     public void importAllConfig() {
         String str = System.getProperty("user.home");
         FileChooser fileChooser = new FileChooser();

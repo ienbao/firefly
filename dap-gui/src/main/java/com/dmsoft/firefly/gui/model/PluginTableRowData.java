@@ -17,6 +17,13 @@ public class PluginTableRowData {
     private SimpleStringProperty value;
     private PluginInfo info;
 
+    /**
+     * constructor
+     *
+     * @param isSelect is selcted
+     * @param value    value
+     * @param info     plugin info
+     */
     public PluginTableRowData(boolean isSelect, String value, PluginInfo info) {
         selector.setValue(isSelect);
         this.value = new SimpleStringProperty(value);
@@ -35,21 +42,39 @@ public class PluginTableRowData {
         return value.get();
     }
 
-    public SimpleStringProperty valueProperty() {
-        return value;
-    }
-
+    /**
+     * method to set value
+     *
+     * @param value value
+     */
     public void setValue(String value) {
         this.value.set(value);
     }
 
-    public boolean containsRex(String rex) {
-        if (value.getValue().contains(rex)) {
-            return true;
-        }
-        return false;
+    /**
+     * method to get value property
+     *
+     * @return string property
+     */
+    public SimpleStringProperty valueProperty() {
+        return value;
     }
 
+    /**
+     * method to judge contain rex or not
+     *
+     * @param rex rex string
+     * @return true : contains; false : not constains
+     */
+    public boolean containsRex(String rex) {
+        return value.getValue().contains(rex);
+    }
+
+    /**
+     * method to set on action
+     *
+     * @param value event handler
+     */
     public void setOnAction(EventHandler<ActionEvent> value) {
         selector.getCheckBox().getValue().setOnAction(value);
     }

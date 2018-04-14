@@ -11,6 +11,11 @@ public class ExportSettingModel {
     private TableCheckBox selector = new TableCheckBox();
     private StringProperty name;
 
+    /**
+     * constructor
+     *
+     * @param name name
+     */
     public ExportSettingModel(String name) {
 
         this.name = new SimpleStringProperty(name);
@@ -28,11 +33,21 @@ public class ExportSettingModel {
         return name.get();
     }
 
-    public StringProperty nameProperty() {
-        return name;
-    }
-
+    /**
+     * method to set name
+     *
+     * @param name name
+     */
     public void setName(String name) {
         this.name.set(name);
+    }
+
+    /**
+     * method to get name property
+     *
+     * @return string property
+     */
+    public StringProperty nameProperty() {
+        return name;
     }
 }

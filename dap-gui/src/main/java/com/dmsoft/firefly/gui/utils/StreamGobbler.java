@@ -5,16 +5,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+/**
+ * gobbler extend thread
+ */
 public class StreamGobbler extends Thread {
 
-    InputStream is;
-    String type;
+    private InputStream is;
+    private String type;
 
+    /**
+     * constructor
+     *
+     * @param is   input stream
+     * @param type type
+     */
     public StreamGobbler(InputStream is, String type) {
         this.is = is;
         this.type = type;
     }
 
+    @Override
     public void run() {
         InputStreamReader isr = new InputStreamReader(is);
         BufferedReader br = new BufferedReader(isr);

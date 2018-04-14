@@ -8,29 +8,32 @@ import javafx.scene.control.TabPane;
  */
 public class TabUtils {
 
+    /**
+     * listener
+     *
+     * @param tab     tab
+     * @param tabPane tab pane
+     */
     public static void tabSelectedListener(Tab tab, TabPane tabPane) {
         tab.setOnCloseRequest(event -> {
             if (tabPane.getTabs().size() == 2) {
-                tabPane.getTabs().forEach(tab1 -> {
-                    tab1.setClosable(false);
-                });
+                tabPane.getTabs().forEach(tab1 -> tab1.setClosable(false));
             } else {
-                tabPane.getTabs().forEach(tab1 -> {
-                    tab1.setClosable(true);
-                });
+                tabPane.getTabs().forEach(tab1 -> tab1.setClosable(true));
             }
         });
     }
 
+    /**
+     * method to disable close tab
+     *
+     * @param tabPane tab pane
+     */
     public static void disableCloseTab(TabPane tabPane) {
         if (tabPane.getTabs().size() == 1) {
-            tabPane.getTabs().forEach(tab -> {
-                tab.setClosable(false);
-            });
+            tabPane.getTabs().forEach(tab -> tab.setClosable(false));
         } else {
-            tabPane.getTabs().forEach(tab -> {
-                tab.setClosable(true);
-            });
+            tabPane.getTabs().forEach(tab -> tab.setClosable(true));
         }
     }
 }

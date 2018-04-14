@@ -80,12 +80,4 @@ public class JsonFileUtil {
         }
         return json;
     }
-
-    public static void main(String[] args) {
-        UserDto userDto = new UserDto();
-        userDto.setUserName("xxx");
-        userDto.setPassword("2344");
-        writeJsonFile(userDto, JsonFileUtil.class.getResource("/").getPath() + "config", "user");
-    }
-
 }

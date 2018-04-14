@@ -4,7 +4,6 @@
 
 package com.dmsoft.firefly.gui.controller.template;
 
-import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.handler.importcsv.CsvImportHandler;
@@ -46,17 +45,21 @@ public class ResolverSelectController implements Initializable {
 
     private static final Double D100 = 100.0;
     private DataSourceController controller;
-    private ObservableList resolverData;
+    private ObservableList<String> resolverData;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     @FXML
-    private ComboBox resolver;
+    private ComboBox<String> resolver;
     @FXML
     private Button nextStep;
     @FXML
     private CheckBox defaultTemplate;
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
-    private JsonMapper mapper = JsonMapper.defaultMapper();
 
+    /**
+     * constructotr
+     *
+     * @param controller controller
+     */
     public ResolverSelectController(DataSourceController controller) {
         this.controller = controller;
     }
@@ -71,20 +74,14 @@ public class ResolverSelectController implements Initializable {
         PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
         List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.DATA_PARSER);
         List<String> name = Lists.newArrayList();
-        pluginClasses.forEach(v -> {
-            name.add(((IDataParser) v.getInstance()).getName());
-        });
+        pluginClasses.forEach(v -> name.add(((IDataParser) v.getInstance()).getName()));
         resolverData = FXCollections.observableArrayList(name);
         resolver.setItems(resolverData);
         if (name.size() > 0) {
             String defaultResolver = userPreferenceService.findPreferenceByUserId("defaultResolver", envService.getUserName());
             String resolverName;
             if (DAPStringUtils.isNotBlank(defaultResolver)) {
-                if (defaultResolver instanceof String) {
-                    resolverName = defaultResolver;
-                } else {
-                    resolverName = mapper.fromJson(defaultResolver, String.class);
-                }
+                resolverName = defaultResolver;
                 if (DAPStringUtils.isNotBlank(resolverName)) {
                     resolver.getSelectionModel().select(resolverName);
                 } else {
@@ -106,7 +103,7 @@ public class ResolverSelectController implements Initializable {
                 return;
             }
 
-            UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+            UserPreferenceDto<String> userPreferenceDto = new UserPreferenceDto<>();
             userPreferenceDto.setUserName(UserModel.getInstance().getUser().getUserName());
             userPreferenceDto.setCode("defaultResolver");
             userPreferenceDto.setValue(resolverName);
@@ -115,9 +112,6 @@ public class ResolverSelectController implements Initializable {
             StageMap.closeStage("resolver");
 
             String str = System.getProperty("user.home");
-//            if (!StringUtils.isEmpty(path.getText())) {
-//                str = path.getText();
-//            }
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Open");
             fileChooser.setInitialDirectory(new File(str));
@@ -144,7 +138,7 @@ public class ResolverSelectController implements Initializable {
                     stringBuilder.append("DataSource" + " ");
                     List<String> stringList = Lists.newArrayList();
                     fileNameExits.forEach(v -> {
-                        stringBuilder.append(v + " ");
+                        stringBuilder.append(v).append(" ");
                         stringList.add(v);
                     });
                     if (stringList.size() > 0) {
@@ -190,33 +184,6 @@ public class ResolverSelectController implements Initializable {
                 controller.getErrorInfo().setVisible(true);
             }
         });
-//        JobManager manager = RuntimeContext.getBean(JobManager.class);
-//        Job job = new Job(GuiConst.DATASOURCE_IMPORT);
-//        job.addProcessMonitorListener(event -> {
-//            chooseTableRowData.setProgress(event.getPoint());
-//            Platform.runLater(() -> {
-//                controller.getDataSourceTable().refresh();
-//            });
-//        });
-//        controller.getChooseTableRowDataObservableList().add(chooseTableRowData);
-//        new Thread(() -> jobManager.fireJobASyn(jobPipeline, context)).start();
         jobManager.fireJobASyn(jobPipeline, context);
-//
-//        new Thread(() -> {
-//            manager.doJobASyn(job, returnValue -> {
-//                if (returnValue != null && returnValue instanceof Throwable) {
-//                    chooseTableRowData.setError(true);
-//                    chooseTableRowData.setImport(false);
-//                    Platform.runLater(() -> {
-//                        controller.getDataSourceTable().refresh();
-//                        controller.getErrorInfo().setVisible(true);
-//                    });
-////                    controller.getChooseTableRowDataObservableList().remove(chooseTableRowData);
-//                } else {
-//                    chooseTableRowData.setImport(false);
-//                    controller.getDataSourceTable().refresh();
-//                }
-//            }, filePath, resolverName);
-//        }).start();
     }
 }
