@@ -2,12 +2,8 @@ package com.dmsoft.firefly.plugin.components;
 
 import com.google.common.collect.Lists;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.AccessibleRole;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -48,6 +44,7 @@ public class StackPaneApp extends Application {
         List<XYChart.Data> dataList = Lists.newArrayList();
 
         series.getData().forEach(dataItem -> {
+            StackPane stackPane = (StackPane) dataItem.getNode();
             dataItem.getNode().setOnMouseClicked(event -> {
                 Text text = new Text("part1");
                 text.setStyle("-fx-fill: red");
@@ -57,13 +54,21 @@ public class StackPaneApp extends Application {
                 pane.getChildren().add(text);
                 dataList.add(dataItem);
             });
+//            stackPane.setPrefWidth(8);
+//            stackPane.setMinWidth(8);
+//            stackPane.setMaxWidth(8);
+//            stackPane.setPrefHeight(8);
+//            stackPane.setMinHeight(8);
+//            stackPane.setMaxHeight(8);
+            dataItem.getNode().getStyleClass().clear();
             dataItem.getNode().getStyleClass().add("chart-line-symbol");
-            dataItem.getNode().setStyle("-fx-stroke: #4B910E; -fx-background-color: #4B910E");
+            dataItem.getNode().setStyle("-fx-stroke: #4B910E;-fx-background-color: red");
         });
 
         clearBtn.setOnAction(event -> {
             series.getData().forEach(dataItem -> {
                 StackPane stackPane = (StackPane) dataItem.getNode();
+                stackPane.setStyle("-fx-background-color: red");
                 if (dataList.contains(dataItem)) {
                     if (dataItem.getNode().getStyleClass().contains("chart-line-symbol")) {
                         dataItem.getNode().getStyleClass().removeAll("chart-line-symbol");
@@ -82,6 +87,7 @@ public class StackPaneApp extends Application {
                             stackPane.getStyleClass().add( "chart-line-symbol");
                         }
                     }
+                    dataList.remove(dataItem);
                 }
             });
         });

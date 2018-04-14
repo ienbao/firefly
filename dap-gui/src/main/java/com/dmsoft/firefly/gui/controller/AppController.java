@@ -83,10 +83,16 @@ public class AppController {
         });
     }
 
+    /**
+     * method to reset menu
+     */
     public void resetMenu() {
         initialize();
     }
 
+    /**
+     * method to update menu system
+     */
     public void updateMenuSystem() {
         UserModel userModel = UserModel.getInstance();
         if (userModel != null && userModel.getUser() != null) {
