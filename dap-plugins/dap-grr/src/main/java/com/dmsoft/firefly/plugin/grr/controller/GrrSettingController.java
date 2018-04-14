@@ -123,56 +123,16 @@ public class GrrSettingController {
         levelGood.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (newValue.length() > oldValue.length()) {
-                    String text = levelGood.getText();
-                    Pattern pattern = Pattern.compile("^[+]?\\d*[.]?\\d*$");
-                    if (DAPStringUtils.isEmpty(text) || !pattern.matcher(text).matches()) {
-//                        TooltipUtil.installWarnTooltip(levelGood, "must be number");
-//                        levelGood.getStyleClass().add("text-field-error");
-                        levelGood.setText(oldValue);
-                    } else {
-//                        TooltipUtil.uninstallWarnTooltip(levelGood);
-//                        levelGood.getStyleClass().removeAll("text-field-error");
-                    }
-                }
-                if (DAPStringUtils.isEmpty(levelGood.getText())
-                        || (!DAPStringUtils.isEmpty(levelGood.getText()) && !DAPStringUtils.isEmpty(levelBad.getText())
-                        && Double.valueOf(levelGood.getText()) > Double.valueOf(levelBad.getText()))) {
-                    TooltipUtil.installWarnTooltip(levelGood, UIConstant.GRR_SETTING_RULE_MUST_NUMBER);
-                    levelGood.getStyleClass().add("text-field-error");
-                } else {
-                    TooltipUtil.uninstallWarnTooltip(levelGood);
-                    levelGood.getStyleClass().removeAll("text-field-error");
-                }
+                checkInValid(levelGood, levelBad, oldValue, true);
             }
         });
         levelBad.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (newValue.length() > oldValue.length()) {
-                    String text = levelBad.getText();
-                    Pattern pattern = Pattern.compile("^[+]?\\d*[.]?\\d*$");
-                    if (DAPStringUtils.isEmpty(text) || !pattern.matcher(text).matches()) {
-//                        TooltipUtil.installWarnTooltip(levelBad, "must be number");
-//                        levelBad.getStyleClass().add("text-field-error");
-                        levelBad.setText(oldValue);
-                    } else {
-//                        TooltipUtil.uninstallWarnTooltip(levelBad);
-//                        levelBad.getStyleClass().removeAll("text-field-error");
-
-                    }
-                }
-                if (DAPStringUtils.isEmpty(levelBad.getText())
-                        || (!DAPStringUtils.isEmpty(levelBad.getText()) && !DAPStringUtils.isEmpty(levelGood.getText())
-                        && Double.valueOf(levelBad.getText()) < Double.valueOf(levelGood.getText()))) {
-                    TooltipUtil.installWarnTooltip(levelBad, UIConstant.GRR_SETTING_RULE_MUST_NUMBER);
-                    levelBad.getStyleClass().add("text-field-error");
-                } else {
-                    TooltipUtil.uninstallWarnTooltip(levelBad);
-                    levelBad.getStyleClass().removeAll("text-field-error");
-                }
+                checkInValid(levelGood, levelBad, oldValue, false);
             }
         });
+
         exportBtn.setOnAction(event -> buildExportDia());
         ok.setOnAction(event -> {
             if (DAPStringUtils.isEmpty(levelBad.getText()) || DAPStringUtils.isEmpty(levelGood.getText())) {
@@ -208,6 +168,64 @@ public class GrrSettingController {
             }
             saveGrrSetting();
         });
+    }
+
+    private void checkInValid(TextField greaterData, TextField lessData, String oldValue, boolean currentGreaterData) {
+        Pattern pattern = Pattern.compile("^[+]?\\d*[.]?\\d*$");
+        String currentText = currentGreaterData ? greaterData.getText() : lessData.getText();
+        String anotherText = currentGreaterData ? lessData.getText() : greaterData.getText();
+        TextField currentTextField = currentGreaterData ? greaterData : lessData;
+        TextField anotherTextField = currentGreaterData ? lessData : greaterData;
+        boolean invalid = !pattern.matcher(currentText).matches();
+        invalid = invalid || (!DAPStringUtils.isEmpty(currentText) && !DAPStringUtils.isNumeric(currentText));
+        //special char check
+        if (invalid) {
+            TooltipUtil.installWarnTooltip(currentTextField, UIConstant.GRR_SETTING_RULE_MUST_NUMBER);
+            if (!currentTextField.getStyleClass().contains("text-field-error")) {
+                currentTextField.getStyleClass().add("text-field-error");
+            }
+            currentTextField.setText(oldValue);
+        } else {
+
+            // empty check
+            if (DAPStringUtils.isEmpty(currentText)) {
+                TooltipUtil.installWarnTooltip(currentTextField, UIConstant.GRR_SETTING_RULE_MUST_NUMBER);
+                if (!currentTextField.getStyleClass().contains("text-field-error")) {
+                    currentTextField.getStyleClass().add("text-field-error");
+                }
+                return;
+            }
+
+            //another check
+            boolean anotherInvalid = DAPStringUtils.isEmpty(currentText) || !DAPStringUtils.isNumeric(anotherText);
+            if (anotherInvalid) {
+                TooltipUtil.uninstallWarnTooltip(currentTextField);
+                if (currentTextField.getStyleClass().contains("text-field-error")) {
+                    currentTextField.getStyleClass().remove("text-field-error");
+                }
+                return;
+            }
+
+            // compare check
+            boolean compareInvalid = Double.valueOf(greaterData.getText()) > Double.valueOf(lessData.getText());
+            if (compareInvalid) {
+                TooltipUtil.installWarnTooltip(currentTextField, UIConstant.GRR_SETTING_RULE_MUST_NUMBER);
+                if (!currentTextField.getStyleClass().contains("text-field-error")) {
+                    currentTextField.getStyleClass().add("text-field-error");
+                }
+                return;
+            }
+
+            TooltipUtil.uninstallWarnTooltip(currentTextField);
+            TooltipUtil.uninstallWarnTooltip(anotherTextField);
+            if (currentTextField.getStyleClass().contains("text-field-error")) {
+                currentTextField.getStyleClass().remove("text-field-error");
+            }
+
+            if (anotherTextField.getStyleClass().contains("text-field-error")) {
+                anotherTextField.getStyleClass().remove("text-field-error");
+            }
+        }
     }
 
     private void initLabelStyle() {
