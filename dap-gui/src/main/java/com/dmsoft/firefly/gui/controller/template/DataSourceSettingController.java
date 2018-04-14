@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2016. For Intelligent Group.
  */
@@ -9,9 +10,7 @@ import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
-import com.dmsoft.firefly.gui.handler.importcsv.DataFrameHandler;
-import com.dmsoft.firefly.gui.handler.importcsv.FindTestDataHandler;
-import com.dmsoft.firefly.gui.handler.importcsv.ParamKeys;
+import com.dmsoft.firefly.gui.handler.importcsv.*;
 import com.dmsoft.firefly.gui.model.ItemDataTableModel;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
@@ -29,16 +28,18 @@ import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableView;
 
+import java.net.URL;
 import java.util.*;
 
 /**
  * Created by Alice on 2018/2/10.
  */
-public class DataSourceSettingController {
+public class DataSourceSettingController implements Initializable {
     private static final Double D100 = 100.0;
     @FXML
     private Button chooseItem, searchBtn, oK, cancel, apply;
@@ -56,8 +57,8 @@ public class DataSourceSettingController {
     private List<TestItemWithTypeDto> testItemWithTypeDtos = Lists.newArrayList();
     private ChooseTestItemDialog chooseTestItemDialog;
 
-    @FXML
-    private void initialize() {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         initButton();
         this.initTableData();
         searchTab = new SearchTab(false);
@@ -70,8 +71,9 @@ public class DataSourceSettingController {
         this.initComponentEvent();
     }
 
+
     /**
-     * init Button
+     * init Button.
      */
     private void initButton() {
         chooseItem.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
@@ -81,7 +83,7 @@ public class DataSourceSettingController {
     }
 
     /**
-     * init Component
+     * init Component.
      */
     private void initComponentEvent() {
         chooseItem.setOnAction(event -> getChooseColumnBtnEvent());
@@ -139,7 +141,7 @@ public class DataSourceSettingController {
     }
 
     /**
-     * build Choose Column Dialog
+     * build Choose Column Dialog.
      */
     private void buildChooseColumnDialog() {
         chooseTestItemDialog = new ChooseTestItemDialog(testItems, null);
@@ -147,7 +149,7 @@ public class DataSourceSettingController {
 
 
     /**
-     * Choose Column Btn Event
+     * Choose Column Btn Event.
      */
     private void getChooseColumnBtnEvent() {
         chooseTestItemDialog.resetSelectedItems(itemDataTableModel.getHeaderArray());
@@ -155,7 +157,7 @@ public class DataSourceSettingController {
     }
 
     /**
-     * init Table Data
+     * init Table Data.
      */
     private void initTableData() {
         projectNames = envService.findActivatedProjectName();
@@ -167,8 +169,7 @@ public class DataSourceSettingController {
                 testItems.add(dto.getTestItemName());
             }
         }
-        List<RowDataDto> rowDataDtoList = new ArrayList<>();
-        rowDataDtoList = this.addRowData(testItems);
+        List<RowDataDto> rowDataDtoList  = this.addRowData(testItems);
 
         itemDataTableModel = new ItemDataTableModel(dataFrame, rowDataDtoList);
 
@@ -177,7 +178,7 @@ public class DataSourceSettingController {
     }
 
     /**
-     * get All Check Box Event
+     * get All Check Box Event.
      */
     private void getAllCheckBoxEvent() {
         Map<String, SimpleObjectProperty<Boolean>> checkMap = itemDataTableModel.getCheckMap();
@@ -198,7 +199,7 @@ public class DataSourceSettingController {
     }
 
     /**
-     * get Choose Test Item Event
+     * get Choose Test Item Event.
      */
     private void getChooseTestItemEvent() {
         selectTestItemName = chooseTestItemDialog.getSelectedItems();
@@ -235,7 +236,7 @@ public class DataSourceSettingController {
     }
 
     /**
-     * get Search Condition Event
+     * get Search Condition Event.
      */
     private void getSearchConditionEvent() {
         if (!searchTab.verifySearchTextArea()) {
@@ -257,9 +258,8 @@ public class DataSourceSettingController {
 
         SearchDataFrame dataFrame = getDataFrame(testItemWithTypeDtoList);
         List<String> searchCondition = searchTab.getSearch();
-        List<RowDataDto> rowDataDtoList = new LinkedList<>();
         if (!searchCondition.isEmpty()) {
-            rowDataDtoList = dataFrame.getDataRowArray(searchCondition.get(0));
+            List<RowDataDto> rowDataDtoList = dataFrame.getDataRowArray(searchCondition.get(0));
             List<RowDataDto> searchResultDtos = this.addRowData(columKey);
             searchResultDtos.addAll(rowDataDtoList);
             itemDataTableModel.updateRowDataList(searchResultDtos);
@@ -267,8 +267,7 @@ public class DataSourceSettingController {
     }
 
     /**
-     * add Row Data
-     *
+     * addRowData.
      * @param columKey columKey
      * @return rowDataDtoList
      */
@@ -313,9 +312,9 @@ public class DataSourceSettingController {
     }
 
     /**
-     * get Data Frame
+     * get Data Frame.
      *
-     * @param testItemWithTypeDtoList list of test item with type dto
+     * @param testItemWithTypeDtoList testItemWithTypeDtoList
      * @return dataFrame
      */
 
@@ -331,7 +330,8 @@ public class DataSourceSettingController {
                 .addLast(new DataFrameHandler().setWeight(D100));
 
         JobContext jobContext = jobManager.fireJobSyn(jobPipeline, context);
-        return jobContext.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
+        SearchDataFrame dataFrame = jobContext.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
+        return dataFrame;
 
     }
 
