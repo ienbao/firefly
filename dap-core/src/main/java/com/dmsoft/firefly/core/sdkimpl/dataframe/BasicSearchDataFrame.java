@@ -84,7 +84,7 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
 
     @Override
     public List<RowDataDto> getDataRowArray(String searchCondition) {
-        if (!this.searchConditions.contains(searchCondition) && filterUtils.isLegal(searchCondition)) {
+        if (!this.searchConditions.contains(searchCondition) && FilterUtils.isLegal(searchCondition)) {
             search(searchCondition);
         }
         List<RowDataDto> result = Lists.newArrayList();
@@ -99,7 +99,7 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
     @Override
     public void addSearchCondition(List<String> searchConditionList) {
         for (String s : searchConditionList) {
-            if (filterUtils.isLegal(s) && !this.searchConditions.contains(s)) {
+            if (FilterUtils.isLegal(s) && !this.searchConditions.contains(s)) {
                 search(s);
                 this.searchConditions.add(s);
             }
