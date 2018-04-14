@@ -15,7 +15,6 @@ import com.dmsoft.firefly.sdk.plugin.apis.IConfig;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
-import com.google.common.collect.Maps;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -24,11 +23,9 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import org.apache.commons.lang3.StringUtils;
 
 
 import java.util.List;
-import java.util.Map;
 
 import static com.google.common.io.Resources.getResource;
 
@@ -144,7 +141,7 @@ public class MenuFactory {
         MenuItem analysisMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ANALYSIS_TEMPLATE"));
         analysisMenuItem.setMnemonicParsing(true);
         analysisMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.T, KeyCombination.SHORTCUT_DOWN));
-        analysisMenuItem.setOnAction(event -> GuiFxmlAndLanguageUtils.buildTemplateDia());
+        analysisMenuItem.setOnAction(event -> GuiFxmlAndLanguageUtils.buildTemplateDialog());
 
         MenuItem pluginMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_PLUGIN_MANAGER"));
         pluginMenuItem.setMnemonicParsing(true);

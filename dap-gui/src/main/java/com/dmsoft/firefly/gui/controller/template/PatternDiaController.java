@@ -14,12 +14,6 @@ import javafx.scene.control.TableView;
  * Created by Guang.Li on 2018/2/27.
  */
 public class PatternDiaController {
-    @FXML
-    private TableColumn<PatternHelpModel, String> character;
-    @FXML
-    private TableColumn<PatternHelpModel, String> description;
-    @FXML
-    private TableView patternHelp;
     private final ObservableList<PatternHelpModel> helpItems = FXCollections.observableArrayList(
             new PatternHelpModel("y", "Year"),
             new PatternHelpModel("M", "Month in year"),
@@ -29,6 +23,13 @@ public class PatternDiaController {
             new PatternHelpModel("s", "Second in minute"),
             new PatternHelpModel("S", "Microsecond")
     );
+    @FXML
+    private TableColumn<PatternHelpModel, String> character;
+    @FXML
+    private TableColumn<PatternHelpModel, String> description;
+    @FXML
+    private TableView<PatternHelpModel> patternHelp;
+
     @FXML
     private void initialize() {
         character.setCellValueFactory(cellData -> cellData.getValue().characterProperty());

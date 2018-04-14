@@ -31,6 +31,11 @@ import java.util.List;
 import java.util.Map;
 
 
+/**
+ * controller for login windows
+ *
+ * @author Julia
+ */
 public class LoginController {
     private UserService userService = RuntimeContext.getBean(UserService.class);
 

@@ -20,14 +20,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class MessageManagerFactory implements IMessageManager{
+/**
+ * factory class for massage manager
+ */
+public class MessageManagerFactory implements IMessageManager {
 
     private List<Popup> popupList = Lists.newLinkedList();
     private List<Double> popupHeightList = Lists.newLinkedList();
     private boolean isHasLink = false;
-
-    public MessageManagerFactory() {
-    }
+    private static final Double D30 = 30.0d;
 
     @Override
     public void showMsg(String title, String msg, MessageTipType type) {
@@ -36,13 +37,13 @@ public class MessageManagerFactory implements IMessageManager{
                 case SUCCESS:
                     initSuccessTip(title, msg);
                     break;
-                case  WARN:
+                case WARN:
                     initWarnTip(title, msg);
                     break;
-                case  INFO:
+                case INFO:
                     initNormalTip(title, msg);
                     break;
-                default :
+                default:
                     initNormalTip(title, msg);
                     break;
             }
@@ -89,11 +90,11 @@ public class MessageManagerFactory implements IMessageManager{
         if (DAPStringUtils.isBlank(title)) {
             title = GuiFxmlAndLanguageUtils.getString("GLOBAL_MESSAGE_TIP_SUCCESS_TITLE");
         }
-       Popup popup = MessageTipFactory.getSuccessTip(title, msg);
+        Popup popup = MessageTipFactory.getSuccessTip(title, msg);
         doPopup(popup, msg);
     }
 
-    private void initSuccessTip(String title, String msg,  String linkMsg, EventHandler<ActionEvent> linkEvent) {
+    private void initSuccessTip(String title, String msg, String linkMsg, EventHandler<ActionEvent> linkEvent) {
         if (DAPStringUtils.isBlank(title)) {
             title = GuiFxmlAndLanguageUtils.getString("GLOBAL_MESSAGE_TIP_SUCCESS_TITLE");
         }
@@ -109,7 +110,7 @@ public class MessageManagerFactory implements IMessageManager{
         doPopup(popup, msg);
     }
 
-    private void initWarnTip(String title, String msg,  String linkMsg, EventHandler<ActionEvent> linkEvent) {
+    private void initWarnTip(String title, String msg, String linkMsg, EventHandler<ActionEvent> linkEvent) {
         if (DAPStringUtils.isBlank(title)) {
             title = GuiFxmlAndLanguageUtils.getString("GLOBAL_MESSAGE_TIP_WARNING_TITLE");
         }
@@ -121,11 +122,11 @@ public class MessageManagerFactory implements IMessageManager{
         if (DAPStringUtils.isBlank(title)) {
             title = GuiFxmlAndLanguageUtils.getString("GLOBAL_MESSAGE_TIP_INFO_TITLE");
         }
-        Popup  popup = MessageTipFactory.getNormalTip(title, msg);
+        Popup popup = MessageTipFactory.getNormalTip(title, msg);
         doPopup(popup, msg);
     }
 
-    private void initNormalTip(String title, String msg,  String linkMsg, EventHandler<ActionEvent> linkEvent) {
+    private void initNormalTip(String title, String msg, String linkMsg, EventHandler<ActionEvent> linkEvent) {
         if (DAPStringUtils.isBlank(title)) {
             title = GuiFxmlAndLanguageUtils.getString("GLOBAL_MESSAGE_TIP_INFO_TITLE");
         }
@@ -189,9 +190,9 @@ public class MessageManagerFactory implements IMessageManager{
             Double length = Double.valueOf(msg.getBytes().length);
             Double preHeight = 0.0;
             if (isHasLink) {
-                preHeight = Math.ceil((double) (length/30.0)) * 16 + 61;
-            } else  {
-                preHeight = Math.ceil((double) (length/30.0)) * 16 + 23;
+                preHeight = Math.ceil((double) (length / D30)) * 16 + 61;
+            } else {
+                preHeight = Math.ceil((double) (length / D30)) * 16 + 23;
             }
             popupHeightList.add(preHeight);
         }
@@ -200,10 +201,10 @@ public class MessageManagerFactory implements IMessageManager{
             exPreHeight += d;
         }
 
-        Node node  = NodeMap.getNode(GuiConst.PLARTFORM_NODE_MAIN);
+        Node node = NodeMap.getNode(GuiConst.PLARTFORM_NODE_MAIN);
         popupList.add(popup);
         double screenX = node.getScene().getWindow().getX() + node.getBoundsInLocal().getMaxX() - 240;
-        double screenY = node.getScene().getWindow().getY() + node.getBoundsInLocal().getMaxY() - exPreHeight - 8 ;
+        double screenY = node.getScene().getWindow().getY() + node.getBoundsInLocal().getMaxY() - exPreHeight - 8;
         popup.show(node, screenX, screenY);
     }
 }

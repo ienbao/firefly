@@ -1,7 +1,13 @@
 package com.dmsoft.firefly.gui.view;
 
-import java.awt.*;
 
+import javafx.scene.control.MenuBar;
+
+/**
+ * tile pane for system
+ *
+ * @author Julia
+ */
 public class SystemTitlePane {
 
     public static final int SYSTEM_MENU = 1;
@@ -11,6 +17,9 @@ public class SystemTitlePane {
 
     private MenuBar menuBar;
 
+    /**
+     * blank constructor
+     */
     public SystemTitlePane() {
 
     }
@@ -19,6 +28,11 @@ public class SystemTitlePane {
 
     }
 
+    /**
+     * method to change menu model
+     *
+     * @param model model type
+     */
     public void changeMenuModel(int model) {
 
     }

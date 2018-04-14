@@ -127,7 +127,7 @@ public class GuiApplication extends Application {
 
         RuntimeContext.getBean(EventContext.class).addEventListener(event -> {
             if (event.getMessage().equals("Template_Show")) {
-                GuiFxmlAndLanguageUtils.buildTemplateDia();
+                GuiFxmlAndLanguageUtils.buildTemplateDialog();
             }
         });
     }

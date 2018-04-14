@@ -13,6 +13,11 @@ public class TemplateItemModel {
     private StringProperty lslFail;
     private StringProperty uslPass;
 
+    /**
+     * constructor
+     *
+     * @param dataDto data dto
+     */
     public TemplateItemModel(SpecificationDataDto dataDto) {
         testItemName = new SimpleStringProperty(dataDto.getTestItemName());
         dataType = new SimpleStringProperty(dataDto.getDataType());
@@ -24,47 +29,87 @@ public class TemplateItemModel {
         return testItemName.get();
     }
 
-    public StringProperty testItemNameProperty() {
-        return testItemName;
-    }
-
+    /**
+     * method to set test item name
+     *
+     * @param testItemName test item name
+     */
     public void setTestItemName(String testItemName) {
         this.testItemName.set(testItemName);
+    }
+
+    /**
+     * method to get test item
+     *
+     * @return string property
+     */
+    public StringProperty testItemNameProperty() {
+        return testItemName;
     }
 
     public String getDataType() {
         return dataType.get();
     }
 
-    public StringProperty dataTypeProperty() {
-        return dataType;
-    }
-
+    /**
+     * method to set data type
+     *
+     * @param dataType data type
+     */
     public void setDataType(String dataType) {
         this.dataType.set(dataType);
+    }
+
+    /**
+     * method to get data type property
+     *
+     * @return string property
+     */
+    public StringProperty dataTypeProperty() {
+        return dataType;
     }
 
     public String getLslFail() {
         return lslFail.get();
     }
 
-    public StringProperty lslFailProperty() {
-        return lslFail;
-    }
-
+    /**
+     * method to set lsl fail
+     *
+     * @param lslFail lsl or fail value
+     */
     public void setLslFail(String lslFail) {
         this.lslFail.set(lslFail);
+    }
+
+    /**
+     * method to get string property
+     *
+     * @return string property
+     */
+    public StringProperty lslFailProperty() {
+        return lslFail;
     }
 
     public String getUslPass() {
         return uslPass.get();
     }
 
-    public StringProperty uslPassProperty() {
-        return uslPass;
-    }
-
+    /**
+     * method to set usl or pass value
+     *
+     * @param uslPass usl pass value
+     */
     public void setUslPass(String uslPass) {
         this.uslPass.set(uslPass);
+    }
+
+    /**
+     * method to get string property
+     *
+     * @return string property
+     */
+    public StringProperty uslPassProperty() {
+        return uslPass;
     }
 }

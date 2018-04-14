@@ -52,7 +52,12 @@ public class TableCheckBox {
         return checkbox.isSelected();
     }
 
-    public void setValue(Boolean select){
+    /**
+     * method to set value
+     *
+     * @param select is select or not
+     */
+    public void setValue(Boolean select) {
         checkbox.setSelected(select);
     }
 }

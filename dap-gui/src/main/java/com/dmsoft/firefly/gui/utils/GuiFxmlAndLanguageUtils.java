@@ -24,7 +24,7 @@ import static com.google.common.io.Resources.getResource;
  * Created by Ethan.Yang on 2018/2/11.
  */
 public class GuiFxmlAndLanguageUtils {
-    private static final Logger logger = LoggerFactory.getLogger(GuiFxmlAndLanguageUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GuiFxmlAndLanguageUtils.class);
 
     private static ResourceBundle getResourceBundle() {
         LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
@@ -36,7 +36,7 @@ public class GuiFxmlAndLanguageUtils {
             bundleKey = "i18n.message_zh_CN_";
         }
         bundleKey = bundleKey + ModuleType.GUI.name();
-        logger.debug("Language: {}", bundleKey);
+        LOGGER.debug("Language: {}", bundleKey);
         return ResourceBundle.getBundle(bundleKey);
     }
 
@@ -47,10 +47,15 @@ public class GuiFxmlAndLanguageUtils {
      * @return loader
      */
     public static FXMLLoader getLoaderFXML(String res) {
-        FXMLLoader fxmlLoader = new FXMLLoader(GuiFxmlAndLanguageUtils.class.getClassLoader().getResource(res), getResourceBundle());
-        return fxmlLoader;
+        return new FXMLLoader(GuiFxmlAndLanguageUtils.class.getClassLoader().getResource(res), getResourceBundle());
     }
 
+    /**
+     * method to convert string from i18n
+     *
+     * @param key key
+     * @return i18n string
+     */
     public static String getString(String key) {
         try {
             return getResourceBundle().getString(key);
@@ -59,6 +64,13 @@ public class GuiFxmlAndLanguageUtils {
         }
     }
 
+    /**
+     * method to convert string from i18n
+     *
+     * @param key    key
+     * @param params params
+     * @return i18n string
+     */
     public static String getString(String key, Object[] params) {
         try {
             String result = getString(key);
@@ -68,6 +80,12 @@ public class GuiFxmlAndLanguageUtils {
         }
     }
 
+    /**
+     * method to get string from i18n
+     *
+     * @param key key
+     * @return i18n string
+     */
     public static String getString(int key) {
         try {
             return getString(String.valueOf(key));
@@ -76,6 +94,9 @@ public class GuiFxmlAndLanguageUtils {
         }
     }
 
+    /**
+     * method to build login dialog
+     */
     public static void buildLoginDialog() {
         Pane root = null;
         try {
@@ -90,7 +111,10 @@ public class GuiFxmlAndLanguageUtils {
         }
     }
 
-    public static void buildChangePasswordDia() {
+    /**
+     * method to build change password
+     */
+    public static void buildChangePasswordDialog() {
         Pane root = null;
         try {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/change_password.fxml");
@@ -104,12 +128,16 @@ public class GuiFxmlAndLanguageUtils {
         }
     }
 
+    /**
+     * method to build legal notice dialog
+     */
     public static void buildLegalDialog() {
         Pane root = null;
         try {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/legal_notice.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_LEGAL, GuiFxmlAndLanguageUtils.getString(ResourceMassages.MENU_LEGAL_NOTICE), root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_LEGAL,
+                    GuiFxmlAndLanguageUtils.getString(ResourceMassages.MENU_LEGAL_NOTICE), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
             stage.toFront();
             stage.show();
@@ -118,12 +146,16 @@ public class GuiFxmlAndLanguageUtils {
         }
     }
 
-    public static void buildAboutDialog(){
+    /**
+     * method to build about dialog
+     */
+    public static void buildAboutDialog() {
         Pane root = null;
         try {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/about.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_ABOUT, "", root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_ABOUT, "", root,
+                    getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
             stage.toFront();
             stage.show();
@@ -132,12 +164,16 @@ public class GuiFxmlAndLanguageUtils {
         }
     }
 
-    public static void buildChangePasswordBackDia() {
+    /**
+     * method to change password back dialog
+     */
+    public static void buildChangePasswordBackDialog() {
         Pane root = null;
         try {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/change_password_back.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_CHANGE_PASSWORD_BACK, GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_CHANGE_PASSWORD_BACK,
+                    GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
             stage.toFront();
             stage.show();
@@ -150,12 +186,16 @@ public class GuiFxmlAndLanguageUtils {
         }
     }
 
-    public static void buildTemplateDia() {
+    /**
+     * method to build template
+     */
+    public static void buildTemplateDialog() {
         Pane root = null;
         try {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/template.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("template", GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE), root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("template",
+                    GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
             stage.toFront();
             stage.show();
@@ -164,13 +204,16 @@ public class GuiFxmlAndLanguageUtils {
         }
     }
 
-
-    public static void buildSelectDataSource(){
+    /**
+     * method to build select data source
+     */
+    public static void buildSelectDataSource() {
         Pane root = null;
         try {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("dataSource", GuiFxmlAndLanguageUtils.getString(ResourceMassages.DataSource), root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("dataSource",
+                    GuiFxmlAndLanguageUtils.getString(ResourceMassages.DATA_SOURCE), root, getResource("css/platform_app.css").toExternalForm());
             stage.toFront();
             stage.show();
         } catch (Exception ex) {

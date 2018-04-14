@@ -6,17 +6,16 @@ import com.dmsoft.firefly.sdk.dai.dto.UserDto;
 /**
  * Created by Julia on 2018/03/08.
  */
-public class UserModel {
+public final class UserModel {
     private static UserModel ourInstance = new UserModel();
-
-    public static UserModel getInstance() {
-        return ourInstance;
-    }
+    private UserDto user;
 
     private UserModel() {
     }
 
-    private UserDto user;
+    public static UserModel getInstance() {
+        return ourInstance;
+    }
 
     public UserDto getUser() {
         return user;

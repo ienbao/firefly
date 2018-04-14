@@ -25,7 +25,8 @@ import java.util.Map;
  */
 public class TemplateServiceImpl implements TemplateService {
     private final String parentPath = ApplicationPathUtil.getPath("config");
-    private final String defaultParentPath = ApplicationPathUtil.getPath("default");    private final String fileName = "template";
+    private final String defaultParentPath = ApplicationPathUtil.getPath("default");
+    private final String fileName = "template";
     private Logger logger = LoggerFactory.getLogger(TemplateServiceImpl.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
@@ -137,12 +138,10 @@ public class TemplateServiceImpl implements TemplateService {
             }
         }
         Boolean isExist = Boolean.FALSE;
-        if (!isExist) {
-            for (TemplateSettingDto dto : list) {
-                if (dto.getName().equals(newName)) {
-                    dto.setName(newName);
-                    isExist = true;
-                }
+        for (TemplateSettingDto dto : list) {
+            if (dto.getName().equals(newName)) {
+                dto.setName(newName);
+                isExist = true;
             }
         }
         if (isExist) {
