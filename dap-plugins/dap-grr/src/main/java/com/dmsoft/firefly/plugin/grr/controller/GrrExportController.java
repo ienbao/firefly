@@ -192,7 +192,7 @@ public class GrrExportController {
         }
         box = new CheckBox();
         box.setOnAction(event -> {
-            if (items != null) {
+            if (itemTable != null && itemTable.getItems() != null) {
                 for (ItemTableModel model : items) {
                     if (isFilterUslOrLsl) {
                         if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {

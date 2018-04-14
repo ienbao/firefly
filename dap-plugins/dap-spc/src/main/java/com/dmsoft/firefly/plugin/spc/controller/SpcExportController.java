@@ -168,8 +168,8 @@ public class SpcExportController {
         // select column in test item table
         box = new CheckBox();
         box.setOnAction(event -> {
-            if (items != null) {
-                for (ItemTableModel model : items) {
+            if (itemTable != null && itemTable.getItems() != null) {
+                for (ItemTableModel model : itemTable.getItems()) {
                     if (isFilterUslOrLsl) {
                         if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
                             model.getSelector().setValue(box.isSelected());
@@ -532,12 +532,12 @@ public class SpcExportController {
             public void doJob(JobContext context) {
                 final boolean[] isSucceed = {false};
                 if (isPrint) {
-                   try {
-                       isSucceed[0] = new ExcelToPdfUtil().excelToPdf(savePath);
-                   } catch (Exception e) {
-                       e.printStackTrace();
-                   }
-               }
+                    try {
+                        isSucceed[0] = new ExcelToPdfUtil().excelToPdf(savePath);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 context.pushEvent(new JobEvent("Export done", D100, null));
                 String path = context.get(ParamKeys.EXPORT_PATH).toString();
                 windowProgressTipController.getCancelBtn().setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.OPEN_EXPORT_FOLDER));

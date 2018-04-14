@@ -153,8 +153,8 @@ public class SpcItemController implements Initializable {
         // select column in test item table
         box = new CheckBox();
         box.setOnAction(event -> {
-            if (items != null) {
-                for (ItemTableModel model : items) {
+            if (itemTable != null && itemTable.getItems() != null) {
+                for (ItemTableModel model : itemTable.getItems()) {
                     if (isFilterUslOrLsl) {
                         if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
                             model.getSelector().setValue(box.isSelected());
