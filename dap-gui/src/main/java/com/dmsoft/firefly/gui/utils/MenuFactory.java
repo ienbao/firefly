@@ -1,7 +1,10 @@
 package com.dmsoft.firefly.gui.utils;
 
 import com.dmsoft.firefly.gui.components.utils.StageMap;
-import com.dmsoft.firefly.gui.components.window.*;
+import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
+import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowMessageController;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.controller.AppController;
 import com.dmsoft.firefly.gui.controller.MainController;
 import com.dmsoft.firefly.gui.controller.template.PluginManageController;
@@ -17,26 +20,32 @@ import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-
 import java.util.List;
 
 import static com.google.common.io.Resources.getResource;
 
+/**
+ * menu factory class
+ *
+ * @author Julia
+ */
 public class MenuFactory {
+    public static final String ROOT_MENU = "root";
+    public static final String PLATFORM_ID = "Platform";
     private static MainController mainController;
     private static AppController appController;
     private static EnvService envService = RuntimeContext.getBean(EnvService.class);
     private static UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
-
-    public final static String ROOT_MENU = "root";
-    public final static String PLATFORM_ID = "Platform";
     private static boolean isChangeEnLanguage = true;
     private static boolean isChangeZhLanguage = true;
 
@@ -52,6 +61,9 @@ public class MenuFactory {
         return new MenuBuilder(PLATFORM_ID, MenuBuilder.MenuType.MENU_ITEM);
     }
 
+    /**
+     * method to init menu
+     */
     public static void initMenu() {
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(createFileMenu());
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(createPreferenceMenu());
@@ -167,9 +179,9 @@ public class MenuFactory {
             en.setSelected(true);
         }
         en.selectedProperty().addListener((ov, b1, b2) -> {
-           if (b2 && isChangeZhLanguage) {
-               WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Message", GuiFxmlAndLanguageUtils.getString("GLOBAL_CHANGE_LANGUAGE"));
-               controller.addProcessMonitorListener(new WindowCustomListener() {
+            if (b2 && isChangeZhLanguage) {
+                WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Message", GuiFxmlAndLanguageUtils.getString("GLOBAL_CHANGE_LANGUAGE"));
+                controller.addProcessMonitorListener(new WindowCustomListener() {
                     @Override
                     public boolean onShowCustomEvent() {
                         return false;
@@ -195,7 +207,7 @@ public class MenuFactory {
                         });
                         return false;
                     }
-               });
+                });
             }
         });
 
@@ -250,33 +262,23 @@ public class MenuFactory {
         aboutMenuItem.setOnAction(event -> {
             GuiFxmlAndLanguageUtils.buildAboutDialog();
         });
-//        MenuItem dapMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ABOUT_DAP"));
-//        MenuItem updateMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_CHECK_UPDATE"));
 
-//        dapMenuItem.setOnAction(event -> {
-//            System.out.println("dap");
-//        });
-//
-//        updateMenuItem.setOnAction(event -> {
-//            System.out.println("update");
-//        });
         menu.getItems().add(legalMenuItem);
         menu.getItems().add(aboutMenuItem);
-//        menu.getItems().add(dapMenuItem);
-//        menu.getItems().add(updateMenuItem);
         return getParentMenuBuilder().setParentLocation(ROOT_MENU).addMenu(menu);
     }
 
-    private static void buildSourceSettingDia(){
-        List<String> projectNames= envService.findActivatedProjectName();
+    private static void buildSourceSettingDia() {
+        List<String> projectNames = envService.findActivatedProjectName();
         if (projectNames == null || projectNames.isEmpty()) {
-           WindowMessageFactory.createWindowMessageHasOk("Message", GuiFxmlAndLanguageUtils.getString("DATA_SOURCE_SETTING_NO_SELECT_FILE"));
+            WindowMessageFactory.createWindowMessageHasOk("Message", GuiFxmlAndLanguageUtils.getString("DATA_SOURCE_SETTING_NO_SELECT_FILE"));
         } else {
             Pane root = null;
             try {
                 FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source_setting.fxml");
                 root = fxmlLoader.load();
-                Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("sourceSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.SOURCE_SETTING), root, getResource("css/platform_app.css").toExternalForm());
+                Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("sourceSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.SOURCE_SETTING), root,
+                        getResource("css/platform_app.css").toExternalForm());
                 stage.toFront();
                 stage.show();
             } catch (Exception ex) {
@@ -284,13 +286,14 @@ public class MenuFactory {
             }
         }
     }
-    
+
     private static void buildeSettingExportDia() {
         Pane root = null;
         try {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/export_setting.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("exportSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.GLOBAL_EXPORT_SETTING), root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("exportSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.GLOBAL_EXPORT_SETTING), root,
+                    getResource("css/platform_app.css").toExternalForm());
             stage.toFront();
             stage.show();
         } catch (Exception ex) {
@@ -303,7 +306,8 @@ public class MenuFactory {
         try {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/plugin.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("pluginManage", GuiFxmlAndLanguageUtils.getString(ResourceMassages.PLUGIN_MANAGE), root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("pluginManage", GuiFxmlAndLanguageUtils.getString(ResourceMassages.PLUGIN_MANAGE), root,
+                    getResource("css/platform_app.css").toExternalForm());
             PluginManageController controller = fxmlLoader.getController();
             stage.setOnCloseRequest(controller.getOnCloseRequest());
             stage.toFront();
@@ -313,19 +317,19 @@ public class MenuFactory {
         }
     }
 
-    public static void setMainController(MainController mainController) {
-        MenuFactory.mainController = mainController;
-    }
-
-    public static void setAppController(AppController appController) {
-        MenuFactory.appController = appController;
-    }
-
     public static MainController getMainController() {
         return mainController;
     }
 
+    public static void setMainController(MainController mainController) {
+        MenuFactory.mainController = mainController;
+    }
+
     public static AppController getAppController() {
         return appController;
+    }
+
+    public static void setAppController(AppController appController) {
+        MenuFactory.appController = appController;
     }
 }

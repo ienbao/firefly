@@ -9,15 +9,14 @@ import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
-import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.gui.handler.importcsv.*;
-import com.dmsoft.firefly.gui.model.ChooseTableRowData;
+import com.dmsoft.firefly.gui.handler.importcsv.DataFrameHandler;
+import com.dmsoft.firefly.gui.handler.importcsv.FindTestDataHandler;
+import com.dmsoft.firefly.gui.handler.importcsv.ParamKeys;
 import com.dmsoft.firefly.gui.model.ItemDataTableModel;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
-import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
@@ -27,24 +26,20 @@ import com.dmsoft.firefly.sdk.job.core.JobFactory;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.job.core.JobPipeline;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
-import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.google.common.collect.Lists;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
  * Created by Alice on 2018/2/10.
  */
 public class DataSourceSettingController {
+    private static final Double D100 = 100.0;
     @FXML
     private Button chooseItem, searchBtn, oK, cancel, apply;
     @FXML
@@ -59,7 +54,6 @@ public class DataSourceSettingController {
     private List<String> selectTestItemName = Lists.newArrayList();
     private List<String> projectNames = new ArrayList<>();
     private List<TestItemWithTypeDto> testItemWithTypeDtos = Lists.newArrayList();
-    private static final Double D100 = 100.0;
     private ChooseTestItemDialog chooseTestItemDialog;
 
     @FXML

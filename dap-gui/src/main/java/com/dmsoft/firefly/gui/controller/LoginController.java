@@ -89,17 +89,17 @@ public class LoginController {
     }
 
     private void doLogin() {
-        Thread thread = new Thread(()-> {
+        Thread thread = new Thread(() -> {
             UserDto userDto = userService.validateUser(userNameTxt.getText(), passwordField.getText());
             if (userDto != null) {
                 this.initEnvData(userDto);
-                Platform.runLater(()->{
+                Platform.runLater(() -> {
                     MenuFactory.getAppController().resetMenu();
                     MenuFactory.getMainController().resetMain();
                     StageMap.getStage(GuiConst.PLARTFORM_STAGE_LOGIN).close();
                 });
             } else {
-                Platform.runLater(()-> {
+                Platform.runLater(() -> {
                     resetLoginBtn();
                     addErrorTip();
                 });
