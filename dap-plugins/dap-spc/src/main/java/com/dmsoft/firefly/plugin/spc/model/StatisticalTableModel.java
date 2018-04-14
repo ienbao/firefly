@@ -41,7 +41,7 @@ public class StatisticalTableModel implements TableModel {
     private static final String[] SPC_STATISTICAL_FIX_COLUMN = UIConstant.SPC_STATISTICAL_FIX_COLUMN;
     private ObservableList<String> columnKey = FXCollections.observableArrayList();
     private ObservableList<String> rowKey = FXCollections.observableArrayList();
-    private Map<String, SourceObjectProperty<String>> valueMap =  Maps.newLinkedHashMap();
+    private Map<String, SourceObjectProperty<String>> valueMap = Maps.newLinkedHashMap();
     private Map<String, SimpleObjectProperty<Boolean>> checkMap = Maps.newLinkedHashMap();
     private ObjectProperty<Boolean> allChecked = new SimpleObjectProperty<>(false);
     private Set<String> falseSet = new HashSet<>();
@@ -49,7 +49,7 @@ public class StatisticalTableModel implements TableModel {
 
     private FilteredList<String> statisticalTableRowDataFilteredList;
     private SortedList<String> statisticalTableRowDataSortedList;
-    private Map<String, SpcStatisticalResultAlarmDto> keyToStatsDtoMap =  Maps.newLinkedHashMap();
+    private Map<String, SpcStatisticalResultAlarmDto> keyToStatsDtoMap = Maps.newLinkedHashMap();
 
     private List<TableMenuRowEvent> menuRowEvents;
     private CheckBox allCheckBox;
@@ -57,7 +57,7 @@ public class StatisticalTableModel implements TableModel {
     private TableView<String> tableView;
     private Set<String> emptyResultKeys = new HashSet<>();
 
-    private Map<String, Color> colorCache =  Maps.newLinkedHashMap();
+    private Map<String, Color> colorCache = Maps.newLinkedHashMap();
 
     private Set<String> editorCell = new HashSet<>();
     private List<String> editorRowKey = Lists.newArrayList();
@@ -72,6 +72,7 @@ public class StatisticalTableModel implements TableModel {
      * constructor
      */
     public StatisticalTableModel() {
+        this.columnKey.addAll(SPC_STATISTICAL_FIX_COLUMN);
         statisticalTableRowDataFilteredList = rowKey.filtered(p -> true);
         statisticalTableRowDataSortedList = new SortedList<>(statisticalTableRowDataFilteredList);
         this.menuRowEvents = Lists.newArrayList();
@@ -102,13 +103,13 @@ public class StatisticalTableModel implements TableModel {
         }
     }
 
-    public void setSelect(List<String> selectRowList){
-        if(selectRowList == null || spcStatsDtoList  == null){
+    public void setSelect(List<String> selectRowList) {
+        if (selectRowList == null || spcStatsDtoList == null) {
             return;
         }
         for (SpcStatisticalResultAlarmDto dto : spcStatsDtoList) {
             SimpleObjectProperty<Boolean> b = new SimpleObjectProperty<>(false);
-            if(selectRowList.contains(dto.getKey())){
+            if (selectRowList.contains(dto.getKey())) {
                 b.set(true);
             } else {
                 falseSet.add(dto.getKey());
@@ -137,8 +138,8 @@ public class StatisticalTableModel implements TableModel {
      */
     public void initColumn(List<String> columnList) {
         this.columnList = columnList;
-        columnKey.clear();
-        columnKey.addAll(Arrays.asList(SPC_STATISTICAL_FIX_COLUMN));
+        columnKey.remove(3, columnKey.size());
+//        columnKey.addAll(Arrays.asList(SPC_STATISTICAL_FIX_COLUMN));
         columnKey.addAll(columnList);
     }
 
@@ -385,7 +386,7 @@ public class StatisticalTableModel implements TableModel {
 
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
-        if(!this.isEditableTextField(column)){
+        if (!this.isEditableTextField(column)) {
             tableCell.setEditable(false);
         } else {
             tableCell.setEditable(true);
@@ -537,7 +538,7 @@ public class StatisticalTableModel implements TableModel {
         if (!key.equals(STATISTICAL_TITLE[2]) && !key.equals(STATISTICAL_TITLE[7]) && !key.equals(STATISTICAL_TITLE[8])) {
             return DAPStringUtils.formatDouble(statisticalAlarmDto.getValue(), DigNumInstance.newInstance().getDigNum());
         }
-        if(key.equals(STATISTICAL_TITLE[2])){
+        if (key.equals(STATISTICAL_TITLE[2])) {
             DecimalFormat df = new DecimalFormat("######0");
             return Integer.valueOf(df.format(statisticalAlarmDto.getValue())).toString();
         }

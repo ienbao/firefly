@@ -308,7 +308,7 @@ public class StatisticalResultController implements Initializable {
 
         @Override
         public Node getMenuNode() {
-            colorPicker = new ColorPicker(javafx.scene.paint.Color.RED);
+            colorPicker = new ColorPicker();
             colorPicker.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
             colorPicker.setSkin(new ColorPickerMenuSkin(colorPicker));
             colorPicker.getCustomColors().addAll(

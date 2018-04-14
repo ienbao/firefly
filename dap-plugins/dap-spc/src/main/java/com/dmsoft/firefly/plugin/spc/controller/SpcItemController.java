@@ -544,7 +544,7 @@ public class SpcItemController implements Initializable {
                 if (spcChartDtoList != null && spcChartDtoList.size() != 0) {
                     spcMainController.setSpcChartData(spcChartDtoList);
                     //set view data
-                    spcMainController.setTimerViewData(searchDataFrame, chartSearchConditionDtoList, searchDataFrame.getSearchedRowKey(), searchConditionDtoList);
+                    spcMainController.setTimerViewData(chartSearchConditionDtoList, searchConditionDtoList);
                 }
                 windowProgressTipController.closeDialog();
             }
