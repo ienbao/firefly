@@ -215,6 +215,7 @@ public class PluginImageContextImpl implements PluginImageContext, PluginContext
                     if (pluginClass.getMethodSet() != null) {
                         pluginClass.getMethodSet().addAll(entry.getValue().getMethodSet());
                     } else {
+                        pluginClass.setMethodSet(Sets.newHashSet());
                         pluginClass.getMethodSet().addAll(Sets.newHashSet(entry.getValue().getMethodSet()));
                     }
                 }

@@ -35,7 +35,7 @@ public class ExportSettingController {
     private final Logger logger = LoggerFactory.getLogger(ExportSettingController.class);
 
     @FXML
-    private TableView settingTable;
+    private TableView<ExportSettingModel> settingTable;
     @FXML
     private TableColumn<ExportSettingModel, CheckBox> selector;
     @FXML
@@ -90,6 +90,11 @@ public class ExportSettingController {
         settingTable.setItems(items);
     }
 
+    /**
+     * method to export all config
+     *
+     * @param names names of selected config name
+     */
     public void exportAllConfig(List<String> names) {
         Map<String, String> config = Maps.newHashMap();
         String templateConfigName = GuiFxmlAndLanguageUtils.getString(templateService.getConfigName());
@@ -99,7 +104,6 @@ public class ExportSettingController {
 
         pluginClasses.forEach(v -> {
             IConfig service = (IConfig) v.getInstance();
-//            name.add(((IConfig) v.getInstance()).getConfigName());
             String name = GuiFxmlAndLanguageUtils.getString(service.getConfigName());
             if (StringUtils.isNotEmpty(name) && names.contains(name)) {
                 config.put(name, new String(service.exportConfig()));
@@ -116,10 +120,8 @@ public class ExportSettingController {
         File file = fileChooser.showSaveDialog(StageMap.getStage("exportSetting"));
 
         if (file != null) {
-            if (config != null) {
-                JsonFileUtil.writeJsonFile(config, file);
-                logger.debug("Export success");
-            }
+            JsonFileUtil.writeJsonFile(config, file);
+            logger.debug("Export success");
         }
     }
 

@@ -3,17 +3,12 @@
  */
 package com.dmsoft.firefly.gui.controller.template;
 
-import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
-import com.dmsoft.firefly.gui.model.TemplateItemModel;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.SpecificationDataDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
-import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
-import com.sun.prism.PixelFormat;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -34,7 +29,7 @@ public class AddItemController {
     @FXML
     private Button addItemOk;
     @FXML
-    private TableView itemTable;
+    private TableView<ItemTableModel> itemTable;
     @FXML
     private TableColumn<ItemTableModel, CheckBox> select;
     @FXML
@@ -72,29 +67,27 @@ public class AddItemController {
         filter.textProperty().addListener((observable, oldValue, newValue) ->
                 filteredList.setPredicate(p -> p.getItem().toLowerCase().contains(filter.getText().toLowerCase()))
         );
-//        addItemOk.setOnAction(event -> {
-//            List<String> selectItems = getSelectItem();
-//            selectItems.forEach(item -> {
-//                SpecificationDataDto dataDto = new SpecificationDataDto();
-//                dataDto.setTestItemName(item);
-//                dataDto.setDataType(TestItemType.VARIABLE.toString());
-//                itemTableData.add(new TemplateItemModel(dataDto));
-//            });
-//            StageMap.closeStage("addItem");
-//        });
     }
 
+    /**
+     * method to init data
+     */
     public void initData() {
         List<String> itemNames = envService.findTestItemNames();
         if (itemNames != null) {
             items.clear();
             if (selectTestItem != null) {
-                selectTestItem.forEach(testItem -> itemNames.remove(testItem));
+                selectTestItem.forEach(itemNames::remove);
             }
             itemNames.forEach(item -> items.add(new ItemTableModel(item)));
         }
     }
 
+    /**
+     * method to get select item
+     *
+     * @return list of selected item
+     */
     public List<String> getSelectItem() {
         List<String> selectItems = Lists.newArrayList();
         items.forEach(item -> {

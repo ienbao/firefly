@@ -53,7 +53,6 @@ public class DataSourceSettingController {
     private SplitPane split;
     private SearchTab searchTab;
     private ItemDataTableModel itemDataTableModel;
-    private ChooseColDialogController chooseCumDialogController;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
     private List<String> testItems = new ArrayList<>();
@@ -322,7 +321,7 @@ public class DataSourceSettingController {
     /**
      * get Data Frame
      *
-     * @param testItemWithTypeDtoList
+     * @param testItemWithTypeDtoList list of test item with type dto
      * @return dataFrame
      */
 
@@ -338,8 +337,7 @@ public class DataSourceSettingController {
                 .addLast(new DataFrameHandler().setWeight(D100));
 
         JobContext jobContext = jobManager.fireJobSyn(jobPipeline, context);
-        SearchDataFrame dataFrame = jobContext.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
-        return dataFrame;
+        return jobContext.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
 
     }
 

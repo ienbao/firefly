@@ -13,6 +13,11 @@ import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
 
+/**
+ * controller of legal notice
+ *
+ * @author Julia
+ */
 public class LegalNoticeController {
     private UserService userService = RuntimeContext.getBean(UserService.class);
     @FXML

@@ -727,8 +727,7 @@ public class SpcExportController {
             }
         }
 
-        String result = spcExportService.spcExport(spcConfig, spcStatisticalResultDtosToExport, chartPath, runChartRule);
-        return result;
+        return spcExportService.spcExport(spcConfig, spcStatisticalResultDtosToExport, chartPath, runChartRule);
     }
 
     private List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {

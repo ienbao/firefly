@@ -62,7 +62,7 @@ public class PluginManageController implements Initializable {
     @FXML
     private TextFieldFilter filterTf;
     @FXML
-    private TableView pluginTable;
+    private TableView<PluginTableRowData> pluginTable;
     @FXML
     private TextFlow explain;
     @FXML
@@ -92,7 +92,7 @@ public class PluginManageController implements Initializable {
         pluginActivated.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
         pluginName.setCellValueFactory(cellData -> cellData.getValue().valueProperty());
         pluginTable.setRowFactory(tv -> {
-            TableRow<ChooseTableRowData> row = new TableRow<>();
+            TableRow<PluginTableRowData> row = new TableRow<>();
 
             row.setOnDragDetected(event -> {
                 if (!row.isEmpty()) {
@@ -163,11 +163,10 @@ public class PluginManageController implements Initializable {
         pluginTableRowDataSortedList.comparatorProperty().bind(pluginTable.comparatorProperty());
     }
 
+    @SuppressWarnings("unchecked")
     private void updateProjectOrder() {
         List<KeyValueDto> activePlugin = Lists.newArrayList();
-        pluginTableRowDataObservableList.forEach(v -> {
-            activePlugin.add(new KeyValueDto(v.getInfo().getId(), v.getSelector().isSelected()));
-        });
+        pluginTableRowDataObservableList.forEach(v -> activePlugin.add(new KeyValueDto(v.getInfo().getId(), v.getSelector().isSelected())));
         JsonFileUtil.writeJsonFile(activePlugin, parentPath, GuiConst.ACTIVE_PLUGIN);
     }
 
@@ -182,9 +181,6 @@ public class PluginManageController implements Initializable {
         });
         installPlugin.setOnAction(event -> {
             String str = System.getProperty("user.home");
-//            if (!StringUtils.isEmpty(path.getText())) {
-//                str = path.getText();
-//            }
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Open");
             fileChooser.setInitialDirectory(new File(str));
@@ -401,13 +397,10 @@ public class PluginManageController implements Initializable {
     }
 
     public EventHandler<WindowEvent> getOnCloseRequest() {
-        return new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                validateMapChange();
-                if (isEdit) {
-                    showRestart();
-                }
+        return event -> {
+            validateMapChange();
+            if (isEdit) {
+                showRestart();
             }
         };
     }

@@ -28,7 +28,7 @@ public class AboutController {
     private void initialize() {
         imageViewLogo.setImage(new Image("/images/" + LOGOPATH));
         versionLabel.setText(GuiFxmlAndLanguageUtils.getString("VERSION") + " : " + GuiFxmlAndLanguageUtils.getString("STATE_BAR_VERSION"));
-        Properties props=System.getProperties();
+        Properties props = System.getProperties();
         String osName = props.getProperty("os.name");
         osLabel.setText(GuiFxmlAndLanguageUtils.getString("OPERATION_SYSTEM") + " : " + osName);
     }
