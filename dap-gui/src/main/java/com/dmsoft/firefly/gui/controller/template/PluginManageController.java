@@ -390,8 +390,18 @@ public class PluginManageController implements Initializable {
                     ok.setText(restartStr);
                 });
                 pluginTableRowDataObservableList.add(chooseTableRowData);
+                map.remove(v.getKey());
                 validateMap.put(v.getKey(), (Boolean) v.getValue());
             });
+        }
+        for (PluginInfo exclude : map.values()) {
+            PluginTableRowData chooseTableRowData = new PluginTableRowData(false, exclude.getName(), exclude);
+            chooseTableRowData.setOnAction(event -> {
+                isEdit = true;
+                ok.setText(restartStr);
+            });
+            pluginTableRowDataObservableList.add(chooseTableRowData);
+            validateMap.put(exclude.getName(), false);
         }
     }
 
