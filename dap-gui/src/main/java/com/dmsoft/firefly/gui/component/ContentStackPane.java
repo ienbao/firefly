@@ -100,7 +100,9 @@ public class ContentStackPane extends StackPane {
      * @param pushHistory   push into history
      */
     public void navTo(int nextPageIndex, boolean pushHistory) {
-        if (nextPageIndex < 0 || nextPageIndex >= pages.size()) return;
+        if (nextPageIndex < 0 || nextPageIndex >= pages.size()) {
+            return;
+        }
         if (curPageIdx != UNDEFINED) {
             if (pushHistory) {
                 history.push(curPageIdx);
