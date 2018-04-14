@@ -17,6 +17,7 @@
                 <include>README</include>
                 <include>*.xml</include>
                 <include>*.properties</include>
+                <include>version.txt</include>
             </includes>
             <excludes>
                 <exclude>assembly.xml</exclude>

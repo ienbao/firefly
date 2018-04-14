@@ -32,7 +32,7 @@ public class UserPreferenceServiceImpl implements UserPreferenceService {
     public void addValueItem(UserPreferenceDto userPreferenceDto) {
 
         String json = JsonFileUtil.readJsonFile(parentPath, fileName);
-        List<UserPreferenceDto> list = null;
+        List<UserPreferenceDto> list;
         if (DAPStringUtils.isEmpty(json)) {
             logger.debug("Don`t find " + fileName);
             list = Lists.newArrayList();

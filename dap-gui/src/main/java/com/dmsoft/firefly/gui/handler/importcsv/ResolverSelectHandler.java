@@ -33,8 +33,8 @@ public class ResolverSelectHandler extends AbstractBasicJobHandler {
         IDataParser service = null;
         String selectedTemplateName = context.get(RESOLVER_TEMPLATE_NAME).toString();
         for (int i = 0; i < pluginClasses.size(); i++) {
-            if (((IDataParser) pluginClasses.get(0).getInstance()).getName().equals(selectedTemplateName)) {
-                service = (IDataParser) pluginClasses.get(0).getInstance();
+            if (((IDataParser) pluginClasses.get(i).getInstance()).getName().equals(selectedTemplateName)) {
+                service = (IDataParser) pluginClasses.get(i).getInstance();
             }
         }
         context.put(ParamKeys.IDATA_PARSER, service);

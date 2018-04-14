@@ -73,8 +73,6 @@ import java.util.List;
 public class GrrExportController {
     private static final String STICKY_ON_TOP_CODE = "stick_on_top";
     private static final Double D100 = 100.0d;
-    private static final Double D30 = 30.0d;
-    private static final Double D70 = 70.0d;
     @FXML
     private TextFieldFilter itemFilter;
     @FXML
@@ -192,7 +190,7 @@ public class GrrExportController {
         }
         box = new CheckBox();
         box.setOnAction(event -> {
-            if (items != null) {
+            if (itemTable != null && itemTable.getItems() != null) {
                 for (ItemTableModel model : items) {
                     if (isFilterUslOrLsl) {
                         if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
@@ -1051,7 +1049,8 @@ public class GrrExportController {
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context, true);
     }
 
-    private void addHandler(JobPipeline pipeline, WindowProgressTipController windowProgressTipController, List<String> projectNameList, String handlerName, String savePath, List<TestItemWithTypeDto> testItemWithTypeDtoList) {
+    private void addHandler(JobPipeline pipeline, WindowProgressTipController windowProgressTipController, List<String> projectNameList, String handlerName,
+                            String savePath, List<TestItemWithTypeDto> testItemWithTypeDtoList) {
         pipeline.addLast(new AbstractBasicJobHandler(handlerName) {
             @Override
             public void doJob(JobContext context) {
@@ -1099,7 +1098,7 @@ public class GrrExportController {
                             @Override
                             public void doJob(JobContext context) {
                                 windowProgressTipController.updateFailProgress(context.getError().getMessage());
-                            };
+                            }
                         });
                         RuntimeContext.getBean(JobManager.class).fireJobSyn(jobPipeline, context1);
                     } else {
@@ -1108,7 +1107,7 @@ public class GrrExportController {
                             @Override
                             public void doJob(JobContext context) {
                                 windowProgressTipController.updateFailProgress(context.getError().getMessage());
-                            };
+                            }
                         });
                         RuntimeContext.getBean(JobManager.class).fireJobSyn(jobPipeline, context1);
                     }
@@ -1302,8 +1301,8 @@ public class GrrExportController {
     }
 
     private boolean isFilterAndAll(ItemTableModel itemTableModel) {
-        if (itemTableModel.getItem().startsWith("") && (DAPStringUtils.isBlank(itemFilter.getTextField().getText()) ||
-                (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText()) && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())))) {
+        if (itemTableModel.getItem().startsWith("") && (DAPStringUtils.isBlank(itemFilter.getTextField().getText())
+                || (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText()) && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())))) {
             return true;
         }
         return false;

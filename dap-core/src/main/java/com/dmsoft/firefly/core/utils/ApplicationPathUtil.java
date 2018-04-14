@@ -53,13 +53,18 @@ public class ApplicationPathUtil {
             path = path.substring(1, path.length());
         }
         try {
-            String result = URLDecoder.decode(path, "UTF-8");
-            return result;
+            return URLDecoder.decode(path, "UTF-8");
         } catch (Exception e) {
             return path;
         }
     }
 
+    /**
+     * method to get path from file name
+     *
+     * @param fileName name of file
+     * @return file path
+     */
     public static String getPath(String fileName) {
         ResourceFinder rf = new ResourceFinder();
 
@@ -73,8 +78,7 @@ public class ApplicationPathUtil {
             path = path.substring(1, path.length());
         }
         try {
-            String result = URLDecoder.decode(path, "UTF-8");
-            return result;
+            return URLDecoder.decode(path, "UTF-8");
         } catch (Exception e) {
             return path;
         }

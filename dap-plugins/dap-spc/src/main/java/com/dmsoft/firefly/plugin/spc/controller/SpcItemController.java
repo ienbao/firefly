@@ -61,6 +61,7 @@ import java.util.*;
 public class SpcItemController implements Initializable {
     private static final String STICKY_ON_TOP_CODE = "stick_on_top";
     private final Logger logger = LoggerFactory.getLogger(SpcItemController.class);
+    private static final Double D20 = 20.0d;
     @FXML
     private TextFieldFilter itemFilter;
     @FXML
@@ -131,9 +132,9 @@ public class SpcItemController implements Initializable {
         itemFilter.getTextField().setPromptText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) -> {
             if (isFilterUslOrLsl) {
-                filteredList.setPredicate(p -> this.isFilterAndHasUslOrLsl(p));
+                filteredList.setPredicate(this::isFilterAndHasUslOrLsl);
             } else {
-                filteredList.setPredicate(p -> this.isFilterAndAll(p));
+                filteredList.setPredicate(this::isFilterAndAll);
             }
         });
 
@@ -153,8 +154,8 @@ public class SpcItemController implements Initializable {
         // select column in test item table
         box = new CheckBox();
         box.setOnAction(event -> {
-            if (items != null) {
-                for (ItemTableModel model : items) {
+            if (itemTable != null && itemTable.getItems() != null) {
+                for (ItemTableModel model : itemTable.getItems()) {
                     if (isFilterUslOrLsl) {
                         if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
                             model.getSelector().setValue(box.isSelected());
@@ -285,15 +286,15 @@ public class SpcItemController implements Initializable {
         startTimer = false;
         enabledTimerCheckBox.setSelected(false);
         List<String> timerList = leftConfigService.findSpcTimerTime();
-        if(timerList == null){
+        if (timerList == null) {
             return;
         }
         ObservableList<String> showTimeList = FXCollections.observableArrayList();
-        for(String time : timerList) {
-            showTimeList.add(time+SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIMER_MIN));
+        for (String time : timerList) {
+            showTimeList.add(time + SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIMER_MIN));
         }
         timeComboBox.setItems(showTimeList);
-        if(showTimeList.size() > 0) {
+        if (showTimeList.size() > 0) {
             timeComboBox.setValue(showTimeList.get(0));
         }
     }
@@ -485,8 +486,8 @@ public class SpcItemController implements Initializable {
     private Timer startTimerAnalysis() {
 
         String currentRefreshTime = (String) timeComboBox.getValue();
-        String time = currentRefreshTime.replace(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIMER_MIN),"");
-        if(!DAPStringUtils.isNumeric(time)){
+        String time = currentRefreshTime.replace(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIMER_MIN), "");
+        if (!DAPStringUtils.isNumeric(time)) {
             return null;
         }
         Double intervalTime = Double.valueOf(time) * 60000;
@@ -519,10 +520,7 @@ public class SpcItemController implements Initializable {
         context.put(ParamKeys.CHART_SEARCH_CONDITION_DTO_LIST, chartSearchConditionDtoList);
         context.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
         context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
-        context.addJobEventListener(event -> {
-            windowProgressTipController.getTaskProgress().setProgress(event.getProgress());
-            System.out.println(event.getEventName() + " : " + event.getProgress());
-        });
+        context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
         windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_TIMER_REFRESH_ANALYSIS_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
@@ -543,10 +541,10 @@ public class SpcItemController implements Initializable {
 
                 //set chart data
                 List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) context.get(ParamKeys.CHART_ANALYSIS_RESULT);
-                if (spcChartDtoList != null && spcChartDtoList.size() !=  0) {
+                if (spcChartDtoList != null && spcChartDtoList.size() != 0) {
                     spcMainController.setSpcChartData(spcChartDtoList);
                     //set view data
-                    spcMainController.setTimerViewData(searchDataFrame, chartSearchConditionDtoList, searchDataFrame.getSearchedRowKey(), searchConditionDtoList);
+                    spcMainController.setTimerViewData(chartSearchConditionDtoList, searchConditionDtoList);
                 }
                 windowProgressTipController.closeDialog();
             }
@@ -581,12 +579,10 @@ public class SpcItemController implements Initializable {
                     SpcFxmlAndLanguageUtils.getString(ResourceMassages.UI_SPC_ANALYSIS_ITEM_EMPTY));
             return false;
         }
-        if (!searchTab.verifySearchTextArea()) {
-            return false;
-        }
-        return true;
+        return searchTab.verifySearchTextArea();
     }
 
+    @SuppressWarnings("unchecked")
     private void normalAnalysisEvent(boolean isTimer) {
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
         spcMainController.clearAnalysisData();
@@ -733,7 +729,7 @@ public class SpcItemController implements Initializable {
         rule.setMaxLength(SpcSettingValidateUtil.ANALYSIS_SETTING_MAX_INT);
         rule.setPattern("^\\+?\\d*$");
         rule.setErrorStyle("text-field-error");
-        rule.setMaxValue(20d);
+        rule.setMaxValue(D20);
         rule.setMinValue(1d);
         String[] params = new String[]{rule.getMinValue().toString(), rule.getMaxValue().toString()};
         rule.setRangErrorMsg(SpcFxmlAndLanguageUtils.getString(ResourceMassages.RANGE_NUMBER_WARNING_MESSAGE, params));

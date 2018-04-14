@@ -14,7 +14,6 @@ import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowMessageController;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
-import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.model.PluginTableRowData;
 import com.dmsoft.firefly.gui.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -62,7 +61,7 @@ public class PluginManageController implements Initializable {
     @FXML
     private TextFieldFilter filterTf;
     @FXML
-    private TableView pluginTable;
+    private TableView<PluginTableRowData> pluginTable;
     @FXML
     private TextFlow explain;
     @FXML
@@ -92,7 +91,7 @@ public class PluginManageController implements Initializable {
         pluginActivated.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
         pluginName.setCellValueFactory(cellData -> cellData.getValue().valueProperty());
         pluginTable.setRowFactory(tv -> {
-            TableRow<ChooseTableRowData> row = new TableRow<>();
+            TableRow<PluginTableRowData> row = new TableRow<>();
 
             row.setOnDragDetected(event -> {
                 if (!row.isEmpty()) {
@@ -163,11 +162,10 @@ public class PluginManageController implements Initializable {
         pluginTableRowDataSortedList.comparatorProperty().bind(pluginTable.comparatorProperty());
     }
 
+    @SuppressWarnings("unchecked")
     private void updateProjectOrder() {
         List<KeyValueDto> activePlugin = Lists.newArrayList();
-        pluginTableRowDataObservableList.forEach(v -> {
-            activePlugin.add(new KeyValueDto(v.getInfo().getId(), v.getSelector().isSelected()));
-        });
+        pluginTableRowDataObservableList.forEach(v -> activePlugin.add(new KeyValueDto(v.getInfo().getId(), v.getSelector().isSelected())));
         JsonFileUtil.writeJsonFile(activePlugin, parentPath, GuiConst.ACTIVE_PLUGIN);
     }
 
@@ -182,9 +180,6 @@ public class PluginManageController implements Initializable {
         });
         installPlugin.setOnAction(event -> {
             String str = System.getProperty("user.home");
-//            if (!StringUtils.isEmpty(path.getText())) {
-//                str = path.getText();
-//            }
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Open");
             fileChooser.setInitialDirectory(new File(str));
@@ -395,19 +390,26 @@ public class PluginManageController implements Initializable {
                     ok.setText(restartStr);
                 });
                 pluginTableRowDataObservableList.add(chooseTableRowData);
+                map.remove(v.getKey());
                 validateMap.put(v.getKey(), (Boolean) v.getValue());
             });
+        }
+        for (PluginInfo exclude : map.values()) {
+            PluginTableRowData chooseTableRowData = new PluginTableRowData(false, exclude.getName(), exclude);
+            chooseTableRowData.setOnAction(event -> {
+                isEdit = true;
+                ok.setText(restartStr);
+            });
+            pluginTableRowDataObservableList.add(chooseTableRowData);
+            validateMap.put(exclude.getName(), false);
         }
     }
 
     public EventHandler<WindowEvent> getOnCloseRequest() {
-        return new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                validateMapChange();
-                if (isEdit) {
-                    showRestart();
-                }
+        return event -> {
+            validateMapChange();
+            if (isEdit) {
+                showRestart();
             }
         };
     }

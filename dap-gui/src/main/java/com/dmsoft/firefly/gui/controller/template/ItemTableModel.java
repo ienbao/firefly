@@ -12,6 +12,11 @@ public class ItemTableModel implements Comparable<TestItemWithTypeDto> {
     private TableCheckBox selector = new TableCheckBox();
     private StringProperty item;
 
+    /**
+     * constructor
+     *
+     * @param item item name
+     */
     public ItemTableModel(String item) {
         this.item = new SimpleStringProperty(item);
     }
@@ -28,10 +33,20 @@ public class ItemTableModel implements Comparable<TestItemWithTypeDto> {
         return item.get();
     }
 
+    /**
+     * method to set item
+     *
+     * @param item item name
+     */
     public void setItem(String item) {
         this.item.set(item);
     }
 
+    /**
+     * method to get item property
+     *
+     * @return string property
+     */
     public StringProperty itemProperty() {
         return item;
     }

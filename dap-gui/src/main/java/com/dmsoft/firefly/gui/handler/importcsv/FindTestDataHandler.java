@@ -33,7 +33,7 @@ public class FindTestDataHandler extends AbstractBasicJobHandler {
             testItemNames.add(testItemWithTypeDto.getTestItemName());
         }
         SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
-        List<RowDataDto> dataDtoList = sourceDataService.findTestData(projectNameList, testItemNames,null);
+        List<RowDataDto> dataDtoList = sourceDataService.findTestData(projectNameList, testItemNames, null);
         context.put(ParamKeys.ROW_DATA_DTO_LIST, dataDtoList);
     }
 }

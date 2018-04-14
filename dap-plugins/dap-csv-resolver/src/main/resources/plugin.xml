@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<plugin id="com.dmsoft.dap.CsvResolverPlugin" name="Csv resolver" version="1.0.0" author="Guang Li"
-        description="Basic csv resolver for parsing csv data into DAP data base."
-        scanPath="com.dmsoft.firefly.plugin.csvresolver"
-        pluginClassName="com.dmsoft.firefly.plugin.csvresolver.CsvResolverPlugin">
-    <runtime path="com.dmsoft.dap.CsvResolverPlugin.jar"></runtime>
-</plugin>

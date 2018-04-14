@@ -84,7 +84,7 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
 
     @Override
     public List<RowDataDto> getDataRowArray(String searchCondition) {
-        if (!this.searchConditions.contains(searchCondition) && filterUtils.isLegal(searchCondition)) {
+        if (!this.searchConditions.contains(searchCondition) && FilterUtils.isLegal(searchCondition)) {
             search(searchCondition);
         }
         List<RowDataDto> result = Lists.newArrayList();
@@ -99,7 +99,7 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
     @Override
     public void addSearchCondition(List<String> searchConditionList) {
         for (String s : searchConditionList) {
-            if (filterUtils.isLegal(s) && !this.searchConditions.contains(s)) {
+            if (FilterUtils.isLegal(s) && !this.searchConditions.contains(s)) {
                 search(s);
                 this.searchConditions.add(s);
             }
@@ -149,6 +149,26 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
         for (int i = 0; i < this.rowSearchConditionResultList.size(); i++) {
             if (this.rowSearchConditionResultList.get(i).contains(searchCondition)) {
                 result.add(this.getRowKeys().get(i));
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<String> getSearchRowKey(List<String> searchConditionList) {
+        for (String condition : searchConditionList) {
+            if (!this.searchConditions.contains(condition)) {
+                search(condition);
+            }
+        }
+        List<String> result = Lists.newArrayList();
+        for (int i = 0; i < this.rowSearchConditionResultList.size(); i++) {
+            Set<String> eachRowSearchConditionSet = this.rowSearchConditionResultList.get(i);
+            for (String condition : searchConditionList) {
+                if (eachRowSearchConditionSet.contains(condition)) {
+                    result.add(this.getRowKeys().get(i));
+                    break;
+                }
             }
         }
         return result;

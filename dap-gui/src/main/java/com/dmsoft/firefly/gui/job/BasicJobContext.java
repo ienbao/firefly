@@ -28,7 +28,7 @@ public class BasicJobContext extends HashMap<String, Object> implements JobConte
             return null;
         }
         Object o = get(key);
-        if (o != null && tClass.isInstance(o)) {
+        if (tClass.isInstance(o)) {
             return tClass.cast(o);
         }
         return null;
@@ -46,11 +46,10 @@ public class BasicJobContext extends HashMap<String, Object> implements JobConte
 
     @Override
     public void pushEvent(JobEvent event) {
-        Platform.runLater(() -> {
-            for (JobEventListener listener : listenerList) {
-                listener.eventNotify(convert(event));
-            }
-        });
+        for (JobEventListener listener : listenerList) {
+            JobEvent event1 = convert(event);
+            Platform.runLater(() -> listener.eventNotify(event1));
+        }
     }
 
     @Override
@@ -111,7 +110,7 @@ public class BasicJobContext extends HashMap<String, Object> implements JobConte
         }
     }
 
-    JobEvent convert(JobEvent event) {
+    private JobEvent convert(JobEvent event) {
         JobEvent event1 = new JobEvent();
         event1.setEventName(event.getEventName());
         event1.setEventObject(event.getEventObject());

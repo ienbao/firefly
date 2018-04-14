@@ -2,8 +2,12 @@ package com.dmsoft.firefly.gui.component;
 
 import javafx.scene.control.Tooltip;
 
+/**
+ * expanded tool tip
+ * @author Julia
+ */
 public class CustomerTooltip extends Tooltip {
-    public boolean isHover = false;
+    private boolean isHover = false;
     @Override
     public void hide() {
         if (!isHover) {

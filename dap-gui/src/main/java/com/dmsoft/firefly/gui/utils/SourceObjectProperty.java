@@ -7,16 +7,20 @@ import javafx.beans.property.SimpleObjectProperty;
 
 /**
  * Created by Ethan.Yang on 2018/3/5.
+ *
+ * @param <T> any object
  */
 public class SourceObjectProperty<T> extends SimpleObjectProperty<T> {
     private T sourceValue;
     private boolean error = false;
+
     /**
      * constructor
      */
-    public SourceObjectProperty(){
+    public SourceObjectProperty() {
 
     }
+
     /**
      * constructor
      *

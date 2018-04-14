@@ -37,8 +37,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -55,13 +53,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.google.common.io.Resources.getResource;
 
+/**
+ * controller for main pane
+ *
+ * @author Julia
+ */
 public class MainController {
 
+    public static final Double MAX_HEIGHT = 250.0;
+    public static final Double MAX_WIDTH = 250.0;
+    public static final Double MIN_WIDTH = 160.0;
     private final Logger logger = LoggerFactory.getLogger(MainController.class);
-    public final Double MAX_HEIGHT = 250.0;
-    public final Double MAX_WIDTH = 250.0;
-    public final Double MIN_WIDTH = 160.0;
-
     @FXML
     private GridPane grpContent;
 
@@ -157,6 +159,9 @@ public class MainController {
         }
     }
 
+    /**
+     * method to reset main
+     */
     public void resetMain() {
         grpContent.getChildren().remove(contentStackPane);
         contentStackPane.getChildren().clear();
@@ -256,7 +261,7 @@ public class MainController {
     private void initStateBarText(List<String> activeProjectNames, String activeTemplateName) {
         if (isLogin()) {
             if (activeProjectNames != null && !activeProjectNames.isEmpty()) {
-                dataSourceBtn.setText(activeProjectNames.size() +" "+ GuiFxmlAndLanguageUtils.getString("STATE_BAR_FILE_SELECTED"));
+                dataSourceBtn.setText(activeProjectNames.size() + " " + GuiFxmlAndLanguageUtils.getString("STATE_BAR_FILE_SELECTED"));
             } else {
                 GuiFxmlAndLanguageUtils.buildSelectDataSource();
             }
@@ -270,14 +275,27 @@ public class MainController {
         }
     }
 
+    /**
+     * method to update source text
+     *
+     * @param selectedFileNumber selected file numbers
+     */
     public void updateDataSourceText(int selectedFileNumber) {
         dataSourceBtn.setText(selectedFileNumber + GuiFxmlAndLanguageUtils.getString("STATE_BAR_FILE_SELECTED"));
     }
 
-    public void updateTemplateText(String selecteTemplateName) {
-        templateBtn.setText(selecteTemplateName);
+    /**
+     * method to update template name
+     *
+     * @param selectedTemplateName selected template name
+     */
+    public void updateTemplateText(String selectedTemplateName) {
+        templateBtn.setText(selectedTemplateName);
     }
 
+    /**
+     * method to update stats bar icon
+     */
     public void updateStateBarIcon() {
         ImageView imageView = new ImageView("/images/btn_edit_normal.png");
         imageView.setFitHeight(16);
@@ -344,7 +362,7 @@ public class MainController {
             dataSourceTooltip.setPrefHeight(0);
         } else {
             VBox vBox = new VBox();
-            dataSourceList.forEach(value->{
+            dataSourceList.forEach(value -> {
                 Label label = new Label();
                 label.setStyle("-fx-padding: 5 10 0 10");
                 label.setText(value);
@@ -359,7 +377,7 @@ public class MainController {
             scrollPaneTooltip.setMaxWidth(MAX_WIDTH + 10);
             scrollPaneTooltip.setContent(vBox);
             dataSourceTooltip.setGraphic(scrollPaneTooltip);
-            double preHeight =  (20 * dataSourceList.size()) + 10;
+            double preHeight = (20 * dataSourceList.size()) + 10;
             if (preHeight >= MAX_HEIGHT) {
                 preHeight = MAX_HEIGHT;
             }
@@ -396,7 +414,7 @@ public class MainController {
             @Override
             public void updateItem(StateBarTemplateModel item, boolean empty) {
                 super.updateItem(item, empty);
-                if (item == null || empty == true) {
+                if (item == null || empty) {
                     setGraphic(null);
                     setText(null);
                 } else {
@@ -458,7 +476,7 @@ public class MainController {
 
                 @Override
                 public boolean onOkCustomEvent() {
-                    templateList.forEach(template ->{
+                    templateList.forEach(template -> {
                         if (template.getTemplateName().equals(item.getTemplateName())) {
                             template.setIsChecked(true);
                         } else {
@@ -492,6 +510,9 @@ public class MainController {
         }
     }
 
+    /**
+     * method to init data source
+     */
     public void initDataSource() {
         List<String> projectName = envService.findActivatedProjectName();
         TemplateSettingDto activeTemplate = envService.findActivatedTemplate();
@@ -499,17 +520,20 @@ public class MainController {
             projectName = Lists.newArrayList();
         }
         String activeTemplateName = "";
-        if(activeTemplate != null){
+        if (activeTemplate != null) {
             activeTemplateName = activeTemplate.getName();
         }
         dataSourceList = FXCollections.observableArrayList(projectName);
         initStateBarText(projectName, activeTemplateName);
     }
 
+    /**
+     * method to init template
+     */
     public void initTemplate() {
         List<StateBarTemplateModel> stateBarTemplateModels = Lists.newLinkedList();
         List<TemplateSettingDto> allTemplates = templateService.findAllTemplate();
-        TemplateSettingDto templateSettingDto =  envService.findActivatedTemplate();
+        TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
         if (allTemplates != null) {
             allTemplates.forEach(dto -> {
                 StateBarTemplateModel stateBarTemplateModel = new StateBarTemplateModel(dto.getName(), false);
@@ -522,10 +546,20 @@ public class MainController {
         templateList = FXCollections.observableArrayList(stateBarTemplateModels);
     }
 
+    /**
+     * method to refresh data source
+     *
+     * @param dataSourceList observable string list
+     */
     public void refreshDataSource(ObservableList<String> dataSourceList) {
         this.dataSourceList = dataSourceList;
     }
 
+    /**
+     * method to refresh template
+     *
+     * @param templateList template list
+     */
     public void refreshTemplate(ObservableList<StateBarTemplateModel> templateList) {
         this.templateList = templateList;
         templateView.setItems(templateList);
@@ -536,7 +570,7 @@ public class MainController {
     private void getTemplateBtnEvent() {
         logger.debug("Template btn event.");
         getHidePopupEvent();
-        GuiFxmlAndLanguageUtils.buildTemplateDia();
+        GuiFxmlAndLanguageUtils.buildTemplateDialog();
     }
 
     private void getTemplateLblEvent() {
@@ -590,7 +624,6 @@ public class MainController {
 
     /**
      * Get memory state
-     *
      */
     public void updateMemoryState() {
         boolean flag = true;
@@ -645,11 +678,7 @@ public class MainController {
 
     private boolean isLogin() {
         UserModel userModel = UserModel.getInstance();
-        if (userModel != null && userModel.getUser() != null) {
-           return true;
-        } else {
-           return false;
-        }
+        return (userModel != null && userModel.getUser() != null);
     }
 
     private void timerHidePopup() {
