@@ -46,11 +46,10 @@ public class BasicJobContext extends HashMap<String, Object> implements JobConte
 
     @Override
     public void pushEvent(JobEvent event) {
-        Platform.runLater(() -> {
-            for (JobEventListener listener : listenerList) {
-                listener.eventNotify(convert(event));
-            }
-        });
+        for (JobEventListener listener : listenerList) {
+            JobEvent event1 = convert(event);
+            Platform.runLater(() -> listener.eventNotify(event1));
+        }
     }
 
     @Override
