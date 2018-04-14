@@ -155,6 +155,26 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
     }
 
     @Override
+    public List<String> getSearchRowKey(List<String> searchConditionList) {
+        for (String condition : searchConditionList) {
+            if (!this.searchConditions.contains(condition)) {
+                search(condition);
+            }
+        }
+        List<String> result = Lists.newArrayList();
+        for (int i = 0; i < this.rowSearchConditionResultList.size(); i++) {
+            Set<String> eachRowSearchConditionSet = this.rowSearchConditionResultList.get(i);
+            for (String condition : searchConditionList) {
+                if (eachRowSearchConditionSet.contains(condition)) {
+                    result.add(this.getRowKeys().get(i));
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
     public void replaceRow(String targetRowKey, RowDataDto rowDataDto) {
         super.replaceRow(targetRowKey, rowDataDto);
         if (rowDataDto != null && rowDataDto.getData() != null && rowDataDto.getRowKey() != null && isRowKeyExist(targetRowKey)) {
