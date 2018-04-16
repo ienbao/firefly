@@ -700,7 +700,6 @@ public class GrrResultController implements Initializable {
     }
 
     private void initComponents() {
-        summaryItemTf = new TextFieldFilter();
         xBarAppraiserChart = buildControlChart();
         rangeAppraiserChart = buildControlChart();
         rrByAppraiserChart = buildScatterChart();
