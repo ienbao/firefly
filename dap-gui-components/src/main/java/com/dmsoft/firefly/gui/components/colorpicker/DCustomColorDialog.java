@@ -2,6 +2,7 @@
 package com.dmsoft.firefly.gui.components.colorpicker;
 
 import com.dmsoft.firefly.gui.components.colorpicker.input.*;
+import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.*;
@@ -52,7 +53,7 @@ public class DCustomColorDialog extends HBox {
     public DCustomColorDialog(Window owner) {
         getStyleClass().add("custom-color-dialog");
         if (owner != null) dialog.initOwner(owner);
-        dialog.setTitle("Custom Color");
+        dialog.setTitle(FxmlAndLanguageUtils.getString("CUSTOM_COLOR"));
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initStyle(StageStyle.UTILITY);
         dialog.setResizable(false);
@@ -69,6 +70,7 @@ public class DCustomColorDialog extends HBox {
         }
         buildUI();
 
+        this.styleProperty().set("-fx-background-color:white");
         dialog.setScene(customScene);
     }
 
@@ -533,8 +535,8 @@ public class DCustomColorDialog extends HBox {
                 }
             });
 
-            currentColorLabel = new Label("Current Color");
-            newColorLabel = new Label("New Color");
+            currentColorLabel = new Label(FxmlAndLanguageUtils.getString("CURRENT_COLOR"));
+            newColorLabel = new Label(FxmlAndLanguageUtils.getString("NEW_COLOR"));
 
             whiteBox = new Region();
             whiteBox.getStyleClass().add("customcolor-controls-background");
@@ -646,7 +648,7 @@ public class DCustomColorDialog extends HBox {
                 settingsPane.add(units[i], 4, row);
             }
 
-            set(3, "Opacity", 100, colorRectPane.alpha);
+            set(3, FxmlAndLanguageUtils.getString("OPACITY"), 100, colorRectPane.alpha);
 
             hsbButton.setToggleGroup(group);
             rgbButton.setToggleGroup(group);
@@ -669,7 +671,7 @@ public class DCustomColorDialog extends HBox {
             buttonBox = new HBox();
             buttonBox.setId("buttons-hbox");
 
-            Button saveButton = new Button(saveBtnText != null && !saveBtnText.isEmpty() ? saveBtnText : "Save");
+            Button saveButton = new Button(saveBtnText != null && !saveBtnText.isEmpty() ? saveBtnText : FxmlAndLanguageUtils.getString("SAVE"));
             saveButton.setDefaultButton(true);
             saveButton.setOnAction(t -> {
                 if (onSave != null) {
@@ -678,7 +680,7 @@ public class DCustomColorDialog extends HBox {
                 dialog.hide();
             });
 
-            Button useButton = new Button("Use");
+            Button useButton = new Button(FxmlAndLanguageUtils.getString("USE"));
             useButton.setOnAction(t -> {
                 if (onUse != null) {
                     onUse.run();
@@ -686,7 +688,7 @@ public class DCustomColorDialog extends HBox {
                 dialog.hide();
             });
 
-            Button cancelButton = new Button("Cancel");
+            Button cancelButton = new Button(FxmlAndLanguageUtils.getString("CANCEL"));
             cancelButton.setCancelButton(true);
             cancelButton.setOnAction(e -> {
                 customColorProperty.set(getCurrentColor());
@@ -706,15 +708,15 @@ public class DCustomColorDialog extends HBox {
         }
 
         private void showHSBSettings() {
-            set(0, "Hue", 360, colorRectPane.hue);
-            set(1, "Saturation", 100, colorRectPane.sat);
-            set(2, "Brightness", 100, colorRectPane.bright);
+            set(0, FxmlAndLanguageUtils.getString("HUE"), 360, colorRectPane.hue);
+            set(1, FxmlAndLanguageUtils.getString("SATURATION"), 100, colorRectPane.sat);
+            set(2, FxmlAndLanguageUtils.getString("BRIGHTNESS"), 100, colorRectPane.bright);
         }
 
         private void showRGBSettings() {
-            set(0, "Red", 255, colorRectPane.red);
-            set(1, "Green", 255, colorRectPane.green);
-            set(2, "Blue", 255, colorRectPane.blue);
+            set(0, FxmlAndLanguageUtils.getString("RED"), 255, colorRectPane.red);
+            set(1, FxmlAndLanguageUtils.getString("GREEN"), 255, colorRectPane.green);
+            set(2, FxmlAndLanguageUtils.getString("BLUE"), 255, colorRectPane.blue);
         }
 
         private void showWebSettings() {
