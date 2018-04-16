@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
@@ -64,6 +65,10 @@ public class GrrMainController implements Initializable {
         resetBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_reset_normal.png")));
         printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_print_normal.png")));
         refreshBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
+        TooltipUtil.installNormalTooltip(resetBtn, GrrFxmlAndLanguageUtils.getString("GRR_RESET_BTN_TOOLTIP"));
+        TooltipUtil.installNormalTooltip(printBtn, GrrFxmlAndLanguageUtils.getString("GRR_PRINT_BTN_TOOLTIP"));
+        TooltipUtil.installNormalTooltip(exportBtn, GrrFxmlAndLanguageUtils.getString("GRR_EXPORT_BTN_TOOLTIP"));
+        TooltipUtil.installNormalTooltip(refreshBtn, GrrFxmlAndLanguageUtils.getString("GRR_REFRESH_BTN_TOOLTIP"));
     }
 
     private void initComponentEvents() {
