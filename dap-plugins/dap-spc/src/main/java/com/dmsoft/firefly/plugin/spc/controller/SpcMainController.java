@@ -76,27 +76,29 @@ public class SpcMainController implements Initializable {
     /**
      * set statistical result data
      *
-     * @param list the data list
-     * @param isTimer isTimer
+     * @param list         the data list
+     * @param isTimer      isTimer
      * @param selectRowKey selectRowKey
      */
-    public void setStatisticalResultData(List<SpcStatisticalResultAlarmDto> list,List<String> selectRowKey,boolean isTimer) {
-        statisticalResultController.setTimerStatisticalResultTableData(list,selectRowKey,isTimer);
+    public void setStatisticalResultData(List<SpcStatisticalResultAlarmDto> list, List<String> selectRowKey, boolean isTimer) {
+        statisticalResultController.setTimerStatisticalResultTableData(list, selectRowKey, isTimer);
     }
 
     /**
      * timer refresh statistical result data
+     *
      * @param spcStatsDtoList the data list
      */
-    public void timerRefreshStatisticalResultData(List<SpcStatisticalResultAlarmDto> spcStatsDtoList){
+    public void timerRefreshStatisticalResultData(List<SpcStatisticalResultAlarmDto> spcStatsDtoList) {
         statisticalResultController.refreshStatisticalResult(spcStatsDtoList);
     }
 
     /**
      * get select search condition
+     *
      * @return the list of searchConditionDto
      */
-    public  List<SearchConditionDto> getSelectSearchCondition(){
+    public List<SearchConditionDto> getSelectSearchCondition() {
         List<SearchConditionDto> searchConditionDtoList = buildRefreshSearchConditionData(statisticalResultController.getSelectStatsData());
         return searchConditionDtoList;
     }
@@ -115,14 +117,14 @@ public class SpcMainController implements Initializable {
      *
      * @param spcChartDtoList the list of chart data
      */
-    public void setSpcChartData(List<SpcChartDto> spcChartDtoList){
+    public void setSpcChartData(List<SpcChartDto> spcChartDtoList) {
         chartResultController.initSpcChartData(spcChartDtoList);
     }
 
-    public void setTimerViewData(SearchDataFrame dataFrame, List<SearchConditionDto> chartSearchConditionDtoList, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList){
+    public void setTimerViewData(List<SearchConditionDto> chartSearchConditionDtoList,  List<SearchConditionDto> statisticalSearchConditionDtoList) {
         //set view data
-        SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getSearchedRowKey(), chartSearchConditionDtoList);
-        viewDataController.setViewData(viewDataFrame, selectedRowKey, statisticalSearchConditionDtoList,true);
+        SearchDataFrame viewDataFrame = buildSubSearchDataFrame(chartSearchConditionDtoList);
+        viewDataController.setViewData(viewDataFrame, viewDataFrame.getSearchedRowKey(), statisticalSearchConditionDtoList, true);
 
     }
 
@@ -176,7 +178,7 @@ public class SpcMainController implements Initializable {
     /**
      * clear chart data
      */
-    public void clearChartResultData(){
+    public void clearChartResultData() {
         chartResultController.clearChartData();
     }
 
@@ -192,9 +194,10 @@ public class SpcMainController implements Initializable {
 
     /**
      * stick chart layer
+     *
      * @param key key
      */
-    public void stickChartLayer(String key){
+    public void stickChartLayer(String key) {
         chartResultController.stickLayerToUniqueKey(key);
     }
 
@@ -232,7 +235,7 @@ public class SpcMainController implements Initializable {
                 SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
                 SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
                 List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
-                setStatisticalResultData(spcStatisticalResultAlarmDtoList,null,false);
+                setStatisticalResultData(spcStatisticalResultAlarmDtoList, null, false);
                 clearAnalysisSubShowData();
             }
         });
@@ -440,6 +443,34 @@ public class SpcMainController implements Initializable {
         return dataFrame.subDataFrame(rowKeyList, testItemNameList);
     }
 
+    private SearchDataFrame buildSubSearchDataFrame(List<SearchConditionDto> searchConditionDtoList) {
+        if (dataFrame == null || searchConditionDtoList == null) {
+            return null;
+        }
+        List<String> testItemNameList = Lists.newArrayList();
+        List<String> searchCondition = Lists.newArrayList();
+        List<String> timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
+        String timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
+        FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
+        for (SearchConditionDto searchConditionDto : searchConditionDtoList) {
+            if (!testItemNameList.contains(searchConditionDto.getItemName())) {
+                testItemNameList.add(searchConditionDto.getItemName());
+            }
+            String condition = searchConditionDto.getCondition();
+            Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);
+            for (String conditionTestItem : conditionTestItemSet) {
+                if (!testItemNameList.contains(conditionTestItem)) {
+                    testItemNameList.add(conditionTestItem);
+                }
+            }
+
+            if (!searchCondition.contains(condition)) {
+                searchCondition.add(condition);
+            }
+        }
+        return dataFrame.subDataFrame(dataFrame.getSearchRowKey(searchCondition), testItemNameList);
+    }
+
     private boolean resultSelectIsChange(List<String> newList, List<String> oldList) {
         if (oldList == null) {
             return newList.size() != 0;
@@ -561,13 +592,12 @@ public class SpcMainController implements Initializable {
         List<String> rowKeyList = viewDataSelectRowKeyListCache == null ? dataFrame.getSearchedRowKey() : viewDataSelectRowKeyListCache;
 
         spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
-        spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(rowKeyList);
 
         List<SearchConditionDto> searchConditionDtoList = buildRefreshSearchConditionData(statisticalResultController.getSelectStatsData());
         if (searchConditionDtoList.size() == 0) {
             return;
         }
-        if(spcItemController.isTimer()){
+        if (spcItemController.isTimer()) {
             timerSearchConditionDtoList = searchConditionDtoList;
         }
 
@@ -587,11 +617,13 @@ public class SpcMainController implements Initializable {
             public void doJob(JobContext context) {
                 Platform.runLater(() -> {
                     chartResultController.initSpcChartData((List<SpcChartDto>) context.get(ParamKeys.SPC_CHART_DTO_LIST));
-                    SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getSearchedRowKey(), searchConditionDtoList);
+                    SearchDataFrame viewDataFrame = buildSubSearchDataFrame(searchConditionDtoList);
 
                     List<SpcStatisticalResultAlarmDto> allRowDataList = statisticalResultController.getAllRowStatsData();
                     List<SearchConditionDto> statisticalSearchConditionDtoList = buildRefreshSearchConditionData(allRowDataList);
-                    viewDataController.setViewData(viewDataFrame, rowKeyList, statisticalSearchConditionDtoList,spcItemController.isTimer());
+                    List<String> rowKeyList = viewDataSelectRowKeyListCache == null ? viewDataFrame.getAllRowKeys() : viewDataSelectRowKeyListCache;
+                    spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(rowKeyList);
+                    viewDataController.setViewData(viewDataFrame, rowKeyList, statisticalSearchConditionDtoList, spcItemController.isTimer());
 
                     windowProgressTipController.closeDialog();
                 });
@@ -671,7 +703,6 @@ public class SpcMainController implements Initializable {
 
         List<String> countViewDataRowKeyList = currentViewDataSelectRowKeyList == null ? dataFrame.getSearchedRowKey() : currentViewDataSelectRowKeyList;
         spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
-        spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(countViewDataRowKeyList);
 
         //statistical data
         List<SpcStatisticalResultAlarmDto> editRowDataList = statisticalResultController.getAllRowStatsData();
@@ -686,7 +717,7 @@ public class SpcMainController implements Initializable {
         List<SpcStatisticalResultAlarmDto> chooseRowDataList = statisticalResultController.getSelectStatsData();
         List<SearchConditionDto> chartSearchConditionDtoList = buildRefreshSearchConditionData(chooseRowDataList);
         SearchDataFrame chartDataFrame = buildSubSearchDataFrame(countViewDataRowKeyList, chartSearchConditionDtoList);
-        if(spcItemController.isTimer()){
+        if (spcItemController.isTimer()) {
             timerSearchConditionDtoList = chartSearchConditionDtoList;
         }
 
@@ -716,8 +747,10 @@ public class SpcMainController implements Initializable {
                 chartResultController.initSpcChartData(spcChartDtoList);
 
                 //set view data
-                SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getSearchedRowKey(), chartSearchConditionDtoList);
-                viewDataController.setViewData(viewDataFrame, countViewDataRowKeyList, statisticalSearchConditionDtoList,spcItemController.isTimer());
+                SearchDataFrame viewDataFrame = buildSubSearchDataFrame(chartSearchConditionDtoList);
+                List<String> countViewDataRowKeyList = currentViewDataSelectRowKeyList == null ? viewDataFrame.getAllRowKeys() : currentViewDataSelectRowKeyList;
+                spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(countViewDataRowKeyList);
+                viewDataController.setViewData(viewDataFrame, countViewDataRowKeyList, statisticalSearchConditionDtoList, spcItemController.isTimer());
             }
         });
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
@@ -812,7 +845,7 @@ public class SpcMainController implements Initializable {
         resetBtn.setDisable(isTimer);
         printBtn.setDisable(isTimer);
         exportBtn.setDisable(isTimer);
-        if(!isTimer){
+        if (!isTimer) {
             this.setTimerSearchConditionDtoList(null);
         }
 
@@ -826,12 +859,12 @@ public class SpcMainController implements Initializable {
         return timerSearchConditionDtoList;
     }
 
-    public List<String> getTimerSearchKeyList(){
-        if(timerSearchConditionDtoList == null){
+    public List<String> getTimerSearchKeyList() {
+        if (timerSearchConditionDtoList == null) {
             return null;
         }
         List<String> timerSearchKeyList = Lists.newArrayList();
-        for(SearchConditionDto searchConditionDto : timerSearchConditionDtoList){
+        for (SearchConditionDto searchConditionDto : timerSearchConditionDtoList) {
             timerSearchKeyList.add(searchConditionDto.getKey());
         }
         return timerSearchKeyList;

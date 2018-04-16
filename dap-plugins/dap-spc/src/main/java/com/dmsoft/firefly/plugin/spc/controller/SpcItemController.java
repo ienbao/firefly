@@ -520,10 +520,7 @@ public class SpcItemController implements Initializable {
         context.put(ParamKeys.CHART_SEARCH_CONDITION_DTO_LIST, chartSearchConditionDtoList);
         context.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
         context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
-        context.addJobEventListener(event -> {
-            windowProgressTipController.getTaskProgress().setProgress(event.getProgress());
-            System.out.println(event.getEventName() + " : " + event.getProgress());
-        });
+        context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
         windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_TIMER_REFRESH_ANALYSIS_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
@@ -547,7 +544,7 @@ public class SpcItemController implements Initializable {
                 if (spcChartDtoList != null && spcChartDtoList.size() != 0) {
                     spcMainController.setSpcChartData(spcChartDtoList);
                     //set view data
-                    spcMainController.setTimerViewData(searchDataFrame, chartSearchConditionDtoList, searchDataFrame.getSearchedRowKey(), searchConditionDtoList);
+                    spcMainController.setTimerViewData(chartSearchConditionDtoList, searchConditionDtoList);
                 }
                 windowProgressTipController.closeDialog();
             }

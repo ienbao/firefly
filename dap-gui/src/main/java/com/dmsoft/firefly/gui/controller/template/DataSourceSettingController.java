@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2016. For Intelligent Group.
  */
@@ -10,7 +9,11 @@ import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
-import com.dmsoft.firefly.gui.handler.importcsv.*;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
+import com.dmsoft.firefly.gui.handler.importcsv.DataFrameHandler;
+import com.dmsoft.firefly.gui.handler.importcsv.FindTestDataHandler;
+import com.dmsoft.firefly.gui.handler.importcsv.ParamKeys;
 import com.dmsoft.firefly.gui.model.ItemDataTableModel;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
@@ -20,26 +23,21 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
-import com.dmsoft.firefly.sdk.job.core.JobContext;
-import com.dmsoft.firefly.sdk.job.core.JobFactory;
-import com.dmsoft.firefly.sdk.job.core.JobManager;
-import com.dmsoft.firefly.sdk.job.core.JobPipeline;
+import com.dmsoft.firefly.sdk.job.core.*;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableView;
 
-import java.net.URL;
 import java.util.*;
 
 /**
  * Created by Alice on 2018/2/10.
  */
-public class DataSourceSettingController implements Initializable {
+public class DataSourceSettingController {
     private static final Double D100 = 100.0;
     @FXML
     private Button chooseItem, searchBtn, oK, cancel, apply;
@@ -57,8 +55,8 @@ public class DataSourceSettingController implements Initializable {
     private List<TestItemWithTypeDto> testItemWithTypeDtos = Lists.newArrayList();
     private ChooseTestItemDialog chooseTestItemDialog;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    @FXML
+    private void initialize() {
         initButton();
         this.initTableData();
         searchTab = new SearchTab(false);
@@ -67,13 +65,11 @@ public class DataSourceSettingController implements Initializable {
         searchTab.getGroup2().setVisible(false);
         searchTab.getAutoDivideLbl().setVisible(false);
         split.getItems().add(searchTab);
-        this.buildChooseColumnDialog();
-        this.initComponentEvent();
+
     }
 
-
     /**
-     * init Button.
+     * init Button
      */
     private void initButton() {
         chooseItem.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
@@ -83,7 +79,7 @@ public class DataSourceSettingController implements Initializable {
     }
 
     /**
-     * init Component.
+     * init Component
      */
     private void initComponentEvent() {
         chooseItem.setOnAction(event -> getChooseColumnBtnEvent());
@@ -141,7 +137,7 @@ public class DataSourceSettingController implements Initializable {
     }
 
     /**
-     * build Choose Column Dialog.
+     * build Choose Column Dialog
      */
     private void buildChooseColumnDialog() {
         chooseTestItemDialog = new ChooseTestItemDialog(testItems, null);
@@ -149,7 +145,7 @@ public class DataSourceSettingController implements Initializable {
 
 
     /**
-     * Choose Column Btn Event.
+     * Choose Column Btn Event
      */
     private void getChooseColumnBtnEvent() {
         chooseTestItemDialog.resetSelectedItems(itemDataTableModel.getHeaderArray());
@@ -157,28 +153,48 @@ public class DataSourceSettingController implements Initializable {
     }
 
     /**
-     * init Table Data.
+     * init Table Data
      */
     private void initTableData() {
         projectNames = envService.findActivatedProjectName();
         testItemWithTypeDtos = envService.findTestItems();
 
-        SearchDataFrame dataFrame = getDataFrame(testItemWithTypeDtos);
-        if (testItemWithTypeDtos != null && !testItemWithTypeDtos.isEmpty()) {
-            for (TestItemWithTypeDto dto : testItemWithTypeDtos) {
-                testItems.add(dto.getTestItemName());
+        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+        windowProgressTipController.setAutoHide(false);
+        JobManager jobManager = RuntimeContext.getBean(JobManager.class);
+        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        context.put(ParamKeys.PROJECT_NAME_LIST, projectNames);
+        context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtos);
+        context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
+
+        windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobFactory.class).createJobPipeLine()
+                .addLast(new FindTestDataHandler())
+                .addLast(new DataFrameHandler().setWeight(D100));
+        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                SearchDataFrame dataFrame = context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
+                if (testItemWithTypeDtos != null && !testItemWithTypeDtos.isEmpty()) {
+                    for (TestItemWithTypeDto dto : testItemWithTypeDtos) {
+                        testItems.add(dto.getTestItemName());
+                    }
+                }
+                List<RowDataDto> rowDataDtoList;
+                rowDataDtoList = addRowData(testItems);
+                itemDataTableModel = new ItemDataTableModel(dataFrame, rowDataDtoList);
+                TableViewWrapper.decorate(itemDataTable, itemDataTableModel);
+                buildChooseColumnDialog();
+                initComponentEvent();
+                windowProgressTipController.closeDialog();
             }
-        }
-        List<RowDataDto> rowDataDtoList  = this.addRowData(testItems);
+        });
 
-        itemDataTableModel = new ItemDataTableModel(dataFrame, rowDataDtoList);
-
-        TableViewWrapper.decorate(itemDataTable, itemDataTableModel);
-
+        jobManager.fireJobASyn(jobPipeline, context);
     }
 
     /**
-     * get All Check Box Event.
+     * get All Check Box Event
      */
     private void getAllCheckBoxEvent() {
         Map<String, SimpleObjectProperty<Boolean>> checkMap = itemDataTableModel.getCheckMap();
@@ -199,7 +215,7 @@ public class DataSourceSettingController implements Initializable {
     }
 
     /**
-     * get Choose Test Item Event.
+     * get Choose Test Item Event
      */
     private void getChooseTestItemEvent() {
         selectTestItemName = chooseTestItemDialog.getSelectedItems();
@@ -216,38 +232,61 @@ public class DataSourceSettingController implements Initializable {
 
             }
         }
+        chooseTestItemDialog.close();
 
-        SearchDataFrame dataFrame = getDataFrame(testItemWithTypeDtoList);
-        List<RowDataDto> rowDataDtos = dataFrame.getAllDataRow();
-        List<RowDataDto> rowDataDtoList = this.addRowData(testItems);
+        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+        windowProgressTipController.setAutoHide(false);
+        JobManager jobManager = RuntimeContext.getBean(JobManager.class);
+        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        context.put(ParamKeys.PROJECT_NAME_LIST, projectNames);
+        context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+        context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
 
-        if (itemDataTableModel.getRowDataDtoList() != null && !itemDataTableModel.getRowDataDtoList().isEmpty()) {
-            for (int i = 0; i < itemDataTableModel.getRowDataDtoList().size(); i++) {
-                for (RowDataDto rowDataDto : rowDataDtos) {
-                    if (itemDataTableModel.getRowDataDtoList().get(i).getRowKey().equals(rowDataDto.getRowKey())) {
-                        rowDataDtoList.add(rowDataDto);
+        windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobFactory.class).createJobPipeLine()
+                .addLast(new FindTestDataHandler().setWeight(D100))
+                .addLast(new DataFrameHandler());
+
+        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                SearchDataFrame dataFrame = context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
+                List<RowDataDto> rowDataDtos = dataFrame.getAllDataRow();
+                List<RowDataDto> rowDataDtoList = addRowData(testItems);
+
+                if (itemDataTableModel.getRowDataDtoList() != null && !itemDataTableModel.getRowDataDtoList().isEmpty()) {
+                    for (int i = 0; i < itemDataTableModel.getRowDataDtoList().size(); i++) {
+                        for (RowDataDto rowDataDto : rowDataDtos) {
+                            if (itemDataTableModel.getRowDataDtoList().get(i).getRowKey().equals(rowDataDto.getRowKey())) {
+                                rowDataDtoList.add(rowDataDto);
+                            }
+                        }
+
                     }
                 }
+                itemDataTableModel.updateRowDataList(rowDataDtoList);
 
+                windowProgressTipController.closeDialog();
             }
-        }
-        itemDataTableModel.updateRowDataList(rowDataDtoList);
-        chooseTestItemDialog.close();
+        });
+
+        jobManager.fireJobASyn(jobPipeline, context);
+
     }
 
     /**
-     * get Search Condition Event.
+     * get Search Condition Event
      */
     private void getSearchConditionEvent() {
         if (!searchTab.verifySearchTextArea()) {
             return;
         }
         List<TestItemWithTypeDto> testItemWithTypeDtoList = new LinkedList<>();
-        List<String> columKey = new LinkedList<>();
+        List<String> columnKey = new LinkedList<>();
         if (itemDataTableModel.getHeaderArray() != null && !itemDataTableModel.getHeaderArray().isEmpty()) {
             for (int i = 0; i < itemDataTableModel.getHeaderArray().size(); i++) {
                 if (i != 0) {
-                    columKey.add(itemDataTableModel.getHeaderArray().get(i));
+                    columnKey.add(itemDataTableModel.getHeaderArray().get(i));
 
                     TestItemWithTypeDto testItemWithTypeDto = new TestItemWithTypeDto();
                     testItemWithTypeDto.setTestItemName(itemDataTableModel.getHeaderArray().get(i));
@@ -256,18 +295,40 @@ public class DataSourceSettingController implements Initializable {
             }
         }
 
-        SearchDataFrame dataFrame = getDataFrame(testItemWithTypeDtoList);
-        List<String> searchCondition = searchTab.getSearch();
-        if (!searchCondition.isEmpty()) {
-            List<RowDataDto> rowDataDtoList = dataFrame.getDataRowArray(searchCondition.get(0));
-            List<RowDataDto> searchResultDtos = this.addRowData(columKey);
-            searchResultDtos.addAll(rowDataDtoList);
-            itemDataTableModel.updateRowDataList(searchResultDtos);
-        }
+        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+        windowProgressTipController.setAutoHide(false);
+        JobManager jobManager = RuntimeContext.getBean(JobManager.class);
+        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        context.put(ParamKeys.PROJECT_NAME_LIST, projectNames);
+        context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+        windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
+        context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
+
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobFactory.class).createJobPipeLine()
+                .addLast(new FindTestDataHandler().setWeight(D100))
+                .addLast(new DataFrameHandler());
+        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                SearchDataFrame dataFrame = context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
+                List<String> searchCondition = searchTab.getSearch();
+                List<RowDataDto> rowDataDtoList;
+                if (!searchCondition.isEmpty()) {
+                    rowDataDtoList = dataFrame.getDataRowArray(searchCondition.get(0));
+                    List<RowDataDto> searchResultDtos = addRowData(columnKey);
+                    searchResultDtos.addAll(rowDataDtoList);
+                    itemDataTableModel.updateRowDataList(searchResultDtos);
+                }
+                windowProgressTipController.closeDialog();
+            }
+        });
+
+        jobManager.fireJobASyn(jobPipeline, context);
     }
 
     /**
-     * addRowData.
+     * add Row Data
+     *
      * @param columKey columKey
      * @return rowDataDtoList
      */
@@ -312,9 +373,9 @@ public class DataSourceSettingController implements Initializable {
     }
 
     /**
-     * get Data Frame.
+     * get Data Frame
      *
-     * @param testItemWithTypeDtoList testItemWithTypeDtoList
+     * @param testItemWithTypeDtoList list of test item with type dto
      * @return dataFrame
      */
 
@@ -326,12 +387,11 @@ public class DataSourceSettingController implements Initializable {
         context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
 
         JobPipeline jobPipeline = RuntimeContext.getBean(JobFactory.class).createJobPipeLine()
-                .addLast(new FindTestDataHandler())
-                .addLast(new DataFrameHandler().setWeight(D100));
+                .addLast(new FindTestDataHandler().setWeight(D100))
+                .addLast(new DataFrameHandler());
 
         JobContext jobContext = jobManager.fireJobSyn(jobPipeline, context);
-        SearchDataFrame dataFrame = jobContext.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
-        return dataFrame;
+        return jobContext.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
 
     }
 

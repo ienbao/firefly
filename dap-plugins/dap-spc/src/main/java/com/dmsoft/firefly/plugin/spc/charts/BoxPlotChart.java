@@ -10,6 +10,7 @@ import com.dmsoft.firefly.plugin.spc.charts.data.basic.IPoint;
 import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.charts.view.Candle;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
+import com.dmsoft.firefly.sdk.plugin.apis.annotation.Chart;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
@@ -107,12 +108,15 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         }
         NumberAxis xAxis = (NumberAxis) this.getXAxis();
         NumberAxis yAxis = (NumberAxis) this.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
+        yMax += (yMax - yMin) * UIConstant.Y_FACTOR;
+        yMin -= (yMax - yMin) * UIConstant.Y_FACTOR;
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        yAxis.setLowerBound(newYMin);
+        yAxis.setUpperBound(newYMax);
         xAxis.setLowerBound(0);
-        xAxis.setUpperBound(xMax + UIConstant.FACTOR);
-        yAxis.setLowerBound(yMin - yReserve);
-        yAxis.setUpperBound(yMax + yReserve);
+        xAxis.setUpperBound(xMax + UIConstant.X_FACTOR);
         ChartOperatorUtils.updateAxisTickUnit(xAxis);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
     }

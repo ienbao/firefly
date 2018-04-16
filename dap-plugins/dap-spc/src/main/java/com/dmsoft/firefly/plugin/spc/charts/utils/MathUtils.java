@@ -67,6 +67,9 @@ public class MathUtils {
         }
         Double max = null;
         for (int i = 0; i < array.length; i++) {
+            if (array[i] == null) {
+                continue;
+            }
             for (int x = 0; x < array[i].length; x++) {
                 if (DAPStringUtils.isInfinityAndNaN(array[i][x])) {
                     continue;
@@ -93,6 +96,9 @@ public class MathUtils {
         }
         Double min = null;
         for (int i = 0; i < array.length; i++) {
+            if (array[i] == null) {
+                continue;
+            }
             for (int x = 0; x < array[i].length; x++) {
                 if (DAPStringUtils.isInfinityAndNaN(array[i][x])) {
                     continue;

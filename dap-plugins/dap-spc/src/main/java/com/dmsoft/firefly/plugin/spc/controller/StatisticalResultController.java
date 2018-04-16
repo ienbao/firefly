@@ -293,6 +293,18 @@ public class StatisticalResultController implements Initializable {
     class ChooseColorMenuEvent implements TableMenuRowEvent {
         private ColorPicker colorPicker;
 
+        /**
+         * constructor
+         */
+        public ChooseColorMenuEvent(){
+            colorPicker = new ColorPicker();
+            colorPicker.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
+            colorPicker.setSkin(new ColorPickerMenuSkin(colorPicker));
+            colorPicker.getCustomColors().addAll(
+                    ColorUtils.toFxColorFromAwtColor(Colur.RAW_VALUES)
+            );
+        }
+
         @Override
         public String getMenuName() {
             return "";
@@ -308,14 +320,6 @@ public class StatisticalResultController implements Initializable {
 
         @Override
         public Node getMenuNode() {
-            colorPicker = new ColorPicker(javafx.scene.paint.Color.RED);
-            colorPicker.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
-            colorPicker.setSkin(new ColorPickerMenuSkin(colorPicker));
-            colorPicker.getCustomColors().addAll(
-                    ColorUtils.toFxColorFromAwtColor(Colur.RAW_VALUES)
-            );
-            colorPicker.valueProperty().addListener((observable, oldValue, c) -> {
-            });
             return colorPicker;
         }
     }

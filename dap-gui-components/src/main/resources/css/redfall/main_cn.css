@@ -1996,12 +1996,12 @@
 .search-component .value {
     -fx-border-width: 1 1 1 0;
     -fx-skin: "com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBoxSkin";
-    -fx-padding: -1 0 0 0;
+    -fx-padding: -1 0 -1 0;
 }
 
 .search-component .value .arrow-button {
     -fx-padding: 0 5 0 7;
-    -fx-background-insets: 1 0 0 1;
+    -fx-background-insets: 1 0 1 1;
 }
 
 .search-component .value .arrow {

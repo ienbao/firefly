@@ -131,12 +131,20 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         }
         NumberAxis xAxis = (NumberAxis) this.getXAxis();
         NumberAxis yAxis = (NumberAxis) this.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
-        xAxis.setLowerBound(xMin - xReserve);
-        xAxis.setUpperBound(xMax + xReserve);
-        yAxis.setLowerBound(0);
-        yAxis.setUpperBound(yMax + yReserve);
+        xMax += (xMax - xMin) * UIConstant.Y_FACTOR;
+        xMin -= (xMax - xMin) * UIConstant.Y_FACTOR;
+        yMax += (yMax - yMin) * UIConstant.Y_FACTOR;
+        xMin -= (yMax - yMin) * UIConstant.Y_FACTOR;
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        Map<String, Object> xAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(xMax, xMin, (int) Math.ceil(xMax - xMin));
+        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        double newXMin = (Double) xAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newXMax = (Double) xAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        yAxis.setLowerBound(newYMin);
+        yAxis.setUpperBound(newYMax > 120 ? 100 : newYMax);
+        xAxis.setLowerBound(newXMin);
+        xAxis.setUpperBound(newXMax);
         ChartOperatorUtils.updateAxisTickUnit(xAxis);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
     }
