@@ -256,6 +256,20 @@ public class ViewDataController implements Initializable {
         }
     }
 
+    /**
+     * method to get selected row keys
+     *
+     * @return list of selected row key
+     */
+    public List<String> getUnSelectedRowKeys() {
+        if (this.model != null) {
+            return this.model.getUnSelectedRowKeys();
+        } else {
+            return null;
+        }
+    }
+
+
     private void decorate(TableColumn<String, ?> tableColumn) {
         if (" ".equals(tableColumn.getText())) {
             return;
