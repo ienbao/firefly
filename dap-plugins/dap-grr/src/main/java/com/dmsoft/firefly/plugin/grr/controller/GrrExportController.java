@@ -771,7 +771,7 @@ public class GrrExportController {
 
         viewData.setOnAction(event -> {
             if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                WindowMessageFactory.createWindowMessageHasOk(GrrFxmlAndLanguageUtils.getString("EXPORT"), GrrFxmlAndLanguageUtils.getString("EXPORT_ITEM"));
                 return;
             }
             buildViewData();
@@ -781,15 +781,15 @@ public class GrrExportController {
         });
         export.setOnAction(event -> {
             if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                WindowMessageFactory.createWindowMessageHasOk(GrrFxmlAndLanguageUtils.getString("EXPORT"), GrrFxmlAndLanguageUtils.getString("EXPORT_ITEM_PARAM"));
                 return;
             }
             if (!checkSubmitParam(getSelectedItem().size())) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "GRR Config param error.");
+                WindowMessageFactory.createWindowMessageHasOk(GrrFxmlAndLanguageUtils.getString("EXPORT"), GrrFxmlAndLanguageUtils.getString("EXPORT_CONFIG_PARAM"));
                 return;
             }
             if (StringUtils.isEmpty(locationPath.getText())) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export path.");
+                WindowMessageFactory.createWindowMessageHasOk(GrrFxmlAndLanguageUtils.getString("EXPORT"), GrrFxmlAndLanguageUtils.getString("EXPORT_PATH_PARAM"));
                 return;
             }
             StageMap.closeStage("grrExport");
@@ -799,11 +799,11 @@ public class GrrExportController {
         });
         print.setOnAction(event -> {
             if (StringUtils.isEmpty(locationPath.getText())) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export path.");
+                WindowMessageFactory.createWindowMessageHasOk(GrrFxmlAndLanguageUtils.getString("EXPORT"), GrrFxmlAndLanguageUtils.getString("EXPORT_PATH_PARAM"));
                 return;
             }
             if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                WindowMessageFactory.createWindowMessageHasOk(GrrFxmlAndLanguageUtils.getString("EXPORT"), GrrFxmlAndLanguageUtils.getString("EXPORT_ITEM"));
                 return;
             }
             if (!searchTab.verifySearchTextArea()) {
