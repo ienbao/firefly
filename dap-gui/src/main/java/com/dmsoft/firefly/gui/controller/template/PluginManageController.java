@@ -83,7 +83,7 @@ public class PluginManageController implements Initializable {
         initTable();
         initEvent();
         initDataSourceTableData();
-        filterTf.getTextField().setPromptText(FxmlAndLanguageUtils.getString(ResourceMassages.FILTER));
+        filterTf.getTextField().setPromptText(GuiFxmlAndLanguageUtils.getString(ResourceMassages.FILTER));
     }
 
     private void initTable() {

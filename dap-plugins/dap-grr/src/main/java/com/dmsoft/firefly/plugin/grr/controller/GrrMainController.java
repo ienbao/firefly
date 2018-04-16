@@ -112,7 +112,7 @@ public class GrrMainController implements Initializable {
         try {
             FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_export.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrExport", "Grr Export", root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrExport", GrrFxmlAndLanguageUtils.getString("GRR_EXPORT"), root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
             ((GrrExportController) fxmlLoader.getController()).initGrrExportLeftConfig(grrItemController.getGrrLeftConfigDto());
             stage.setResizable(false);
             stage.toFront();

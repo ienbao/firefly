@@ -45,7 +45,7 @@
                                 <Insets right="10.0" />
                             </VBox.margin>
                         </RadioButton>
-                        <Label prefHeight="30.0" text="Location">
+                        <Label prefHeight="30.0" text="%LOCATION">
                             <VBox.margin>
                                 <Insets top="20.0" />
                             </VBox.margin>
@@ -53,7 +53,7 @@
                         <HBox prefHeight="100.0" prefWidth="200.0">
                             <children>
                                 <TextField fx:id="locationPath" prefWidth="250.0" style="-fx-border-width: 1 0 1 1;" />
-                                <Button fx:id="browse" mnemonicParsing="false" prefWidth="80.0" text="Browse" />
+                                <Button fx:id="browse" mnemonicParsing="false" prefWidth="80.0" text="%BROWSE_BTN" />
                             </children>
                         </HBox>
                     </children>
@@ -111,10 +111,15 @@
                                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                             </rowConstraints>
                                                             <children>
-                                                                <Label text="Model*" />
-                                                                <Label text="Part" GridPane.rowIndex="1" />
-                                                                <Label text="Appraisers" GridPane.rowIndex="2" />
-                                                                <Label text="Trial" GridPane.rowIndex="3" />
+                                                                <HBox alignment="CENTER_LEFT" GridPane.columnIndex="0">
+                                                                    <children>
+                                                                        <Label text="%GRR_MODEL" />
+                                                                        <Label style="-fx-text-fill: #EA2028;" text="*"/>
+                                                                    </children>
+                                                                </HBox>
+                                                                <Label text="%PART" GridPane.rowIndex="1" />
+                                                                <Label text="%APPRAISER" GridPane.rowIndex="2" />
+                                                                <Label text="%TRAIL" GridPane.rowIndex="3" />
                                                                 <TextField fx:id="partTxt" maxHeight="22.0" maxWidth="70.0" minHeight="22.0" minWidth="70.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="22.0" prefWidth="70.0" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                                                     <GridPane.margin>
                                                                         <Insets />
@@ -130,9 +135,14 @@
                                                                         <Insets />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <Label alignment="CENTER" contentDisplay="CENTER" text="Part*" GridPane.rowIndex="5" />
+                                                                <HBox alignment="CENTER_LEFT" GridPane.rowIndex="5">
+                                                                    <children>
+                                                                        <Label text="%GRR_PARTS" GridPane.rowIndex="5" />
+                                                                        <Label style="-fx-text-fill: #EA2028;" text="*"/>
+                                                                    </children>
+                                                                </HBox>
                                                                 <ComboBox fx:id="partCombox" maxHeight="22.0" maxWidth="500.0" minHeight="22.0" prefHeight="22.0" prefWidth="159.0" GridPane.rowIndex="6" />
-                                                                <Label text="Appraisers" GridPane.rowIndex="9" />
+                                                                <Label text="%GRR_APPRAISERS" GridPane.rowIndex="9" />
                                                                 <ComboBox fx:id="appraiserCombox" maxHeight="22.0" maxWidth="500.0" minHeight="22.0" prefHeight="22.0" prefWidth="159.0" GridPane.rowIndex="10" />
                                                                 <ListView fx:id="partListView" minHeight="0.0" GridPane.rowIndex="7" />
                                                                 <ListView fx:id="appraiserListView" minHeight="0.0" GridPane.rowIndex="11" />
@@ -168,27 +178,27 @@
         </HBox>
         <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="200.0">
             <children>
-                <Button fx:id="viewData" mnemonicParsing="false" prefWidth="80.0" text="View Data">
+                <Button fx:id="viewData" mnemonicParsing="false" prefWidth="80.0" text="%VIEW_DATA_BTN">
                     <HBox.margin>
                         <Insets right="10.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="setting" mnemonicParsing="false" prefWidth="100.0" text="Export Setting">
+                <Button fx:id="setting" mnemonicParsing="false" prefWidth="100.0" text="%EXPORT_SETTING_BTN">
                     <HBox.margin>
                         <Insets right="335.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="export" mnemonicParsing="false" prefWidth="80.0" text="Export">
+                <Button fx:id="export" mnemonicParsing="false" prefWidth="80.0" text="%EXPORT">
                     <HBox.margin>
                         <Insets right="10.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="print" mnemonicParsing="false" prefWidth="80.0" text="Print">
+                <Button fx:id="print" mnemonicParsing="false" prefWidth="80.0" text="%PRINT_BTN">
                     <HBox.margin>
                         <Insets right="10.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="Cancel" />
+                <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="%GRR_SETTING_BTN_CANCEL" />
             </children>
             <VBox.margin>
                 <Insets left="10.0" right="10.0" />
