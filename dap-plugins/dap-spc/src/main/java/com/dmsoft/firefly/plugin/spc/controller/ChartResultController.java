@@ -151,40 +151,14 @@ public class ChartResultController implements Initializable {
             mrChartData.setSeriesName(seriesName);
             mrChartDataList.add(mrChartData);
         }
-        long dataEnd = new Date().getTime();
-        logger.info("Data time: {} min", (dataEnd - dataStart) / 1000.0/60);
-        long dnStart = new Date().getTime();
         this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
-        long dnEnd = new Date().getTime();
-        logger.info("Nd time: {} min", (dnEnd - dnStart) / 1000.0/60);
-        long runStart = new Date().getTime();
         this.setRunChartData(UIConstant.SPC_CHART_NAME[1], runChartDataList, Sets.newLinkedHashSet(disabledRuleNames));
-        long runEnd = new Date().getTime();
-        logger.info("Run time: {} min", (runEnd - runStart) / 1000.0/60);
-        long xBarStart = new Date().getTime();
         this.setControlChartData(UIConstant.SPC_CHART_NAME[2], xBarChartDataList);
-        long xBarEnd = new Date().getTime();
-        logger.info("xBar time: {} min", (xBarEnd - xBarStart) / 1000.0/60);
-        long rangeStart = new Date().getTime();
         this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList);
-        long rangeEnd = new Date().getTime();
-        logger.info("Range time: {} min", (rangeEnd - rangeStart) / 1000.0/60);
-        long sdStart = new Date().getTime();
         this.setControlChartData(UIConstant.SPC_CHART_NAME[4], sdChartDataList);
-        long sdEnd = new Date().getTime();
-        logger.info("SD time: {} min", (sdEnd - sdStart) / 1000.0/60);
-        long medianStart = new Date().getTime();
         this.setControlChartData(UIConstant.SPC_CHART_NAME[5], medianChartDataList);
-        long medianEnd = new Date().getTime();
-        logger.info("Median time: {} min", (medianEnd - medianStart) / 1000.0/60);
-        long boxStart = new Date().getTime();
         this.setBoxChartData(UIConstant.SPC_CHART_NAME[6], boxChartDataList);
-        long boxEnd = new Date().getTime();
-        logger.info("Box time: {} min", (boxEnd - boxStart) / 1000.0/60);
-        long mrStart = new Date().getTime();
         this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
-        long mrEnd = new Date().getTime();
-        logger.info("Mr time: {} min", (mrEnd - mrStart) / 1000.0/60);
     }
 
     /**
