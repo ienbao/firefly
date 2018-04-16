@@ -6,6 +6,8 @@
 
 package com.dmsoft.firefly.gui.component;
 
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
+import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.TabUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
@@ -814,6 +816,7 @@ public class TabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
                 }
 
             });
+            TooltipUtil.installNormalTooltip(addTabBtn, GuiFxmlAndLanguageUtils.getString("GLOBAL_ADD_TAB"));
             headerBackground.setAlignment(Pos.BASELINE_LEFT);
             headerBackground.getChildren().add(addTabBtn);
 

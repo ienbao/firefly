@@ -331,10 +331,16 @@ public class SpcItemController implements Initializable {
         TooltipUtil.installNormalTooltip(exportBtn, SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_CONFIG));
         itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_datasource_normal.png")));
         itemTab.setStyle("-fx-padding: 0 5 0 5");
+        itemTab.setTooltip(new Tooltip(SpcFxmlAndLanguageUtils.getString("SPC_TEST_ITEM")));
+
         configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_config_normal.png")));
         configTab.setStyle("-fx-padding: 0 5 0 5");
+        configTab.setTooltip(new Tooltip(SpcFxmlAndLanguageUtils.getString("SPC_CONFIG")));
+
         timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
         timeTab.setStyle("-fx-padding: 0 5 0 5");
+        timeTab.setTooltip(new Tooltip(SpcFxmlAndLanguageUtils.getString("SPC_TIMER_SETTING")));
+
     }
 
     private ContextMenu createPopMenu(Button is, MouseEvent e) {

@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2017. For Intelligent Group.
  */
@@ -5,7 +6,6 @@ package com.dmsoft.firefly.gui.controller.template;
 
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
-import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -19,7 +19,6 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -53,59 +52,8 @@ public class ChooseColDialogController implements Initializable {
     }
 
     /**
-     * set table data
-     *
-     * @param chooseTableRowDataList the data list
+     * initTable.
      */
-    public void setTableData(List<ChooseTableRowData> chooseTableRowDataList) {
-        chooseTableRowDataObservableList.clear();
-        chooseTableRowDataObservableList.addAll(chooseTableRowDataList);
-    }
-
-    /**
-     * set the column of value header text
-     *
-     * @param text the header title
-     */
-    public void setValueColumnText(String text) {
-        chooseValueColumn.setText(text);
-    }
-
-    /**
-     * get select result
-     *
-     * @return method to get select result name
-     */
-    public List<String> getSelectResultName() {
-        List<String> resultName = Lists.newArrayList();
-        if (chooseTableRowDataObservableList != null) {
-            for (ChooseTableRowData data : chooseTableRowDataObservableList) {
-                if (data.isSelect()) {
-                    resultName.add(data.getValue());
-                }
-            }
-        }
-        return resultName;
-    }
-
-    /**
-     * set select result name
-     *
-     * @param resultName result name
-     */
-    public void setSelectResultName(List<String> resultName) {
-        if (chooseTableRowDataObservableList != null) {
-            for (ChooseTableRowData data : chooseTableRowDataObservableList) {
-                if (resultName.contains(data.getValue())) {
-                    data.getSelector().setValue(true);
-                } else {
-                    data.getSelector().setValue(false);
-                }
-            }
-        }
-    }
-
-
     private void initTable() {
         allCheckBox = new CheckBox();
         chooseCheckBoxColumn.setGraphic(allCheckBox);
@@ -120,18 +68,27 @@ public class ChooseColDialogController implements Initializable {
 
     }
 
+    /**
+     * initComponentEvent.
+     */
     private void initComponentEvent() {
         chooseFilterTf.getTextField().textProperty().addListener((observable, oldValue, newValue) -> getFilterValueEvent());
         chooseUnSelected.setOnAction(event -> getUnSelectedCheckBoxEvent());
         allCheckBox.setOnAction(event -> getAllSelectEvent());
     }
 
+    /**
+     * getFilterValueEvent.
+     */
     private void getFilterValueEvent() {
         chooseTableRowDataFilteredList.setPredicate(p ->
                 p.getValue().toLowerCase().contains(chooseFilterTf.getTextField().getText().toLowerCase())
         );
     }
 
+    /**
+     * getUnSelectedCheckBoxEvent.
+     */
     private void getUnSelectedCheckBoxEvent() {
         if (chooseTableRowDataObservableList != null) {
             for (ChooseTableRowData data : chooseTableRowDataObservableList) {
@@ -140,6 +97,9 @@ public class ChooseColDialogController implements Initializable {
         }
     }
 
+    /**
+     * getAllSelectEvent.
+     */
     private void getAllSelectEvent() {
         if (chooseTableRowDataSortedList != null) {
             for (ChooseTableRowData data : chooseTableRowDataSortedList) {
@@ -148,14 +108,18 @@ public class ChooseColDialogController implements Initializable {
         }
     }
 
-    public Button getChooseOkButton() {
-        return chooseOkButton;
-    }
-
+    /**
+     * getStage
+     * @return stage stage
+     */
     public Stage getStage() {
         return stage;
     }
 
+    /**
+     * setStage
+     * @param stage stage
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
     }

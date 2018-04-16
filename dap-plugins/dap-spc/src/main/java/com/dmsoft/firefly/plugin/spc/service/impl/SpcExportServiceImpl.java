@@ -101,7 +101,7 @@ public class SpcExportServiceImpl {
 
     private String getTimeString() {
         Date d = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         return sdf.format(d);
     }
 }

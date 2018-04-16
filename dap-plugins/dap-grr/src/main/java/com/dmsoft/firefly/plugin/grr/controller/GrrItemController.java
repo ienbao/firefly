@@ -550,8 +550,10 @@ public class GrrItemController implements Initializable {
         TooltipUtil.installNormalTooltip(exportBtn, GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_CONFIG));
         itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_datasource_normal.png")));
         itemTab.setStyle("-fx-padding: 0 5 0 5");
+        itemTab.setTooltip(new Tooltip(GrrFxmlAndLanguageUtils.getString("GRR_TEST_ITEM")));
         configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_config_normal.png")));
         configTab.setStyle("-fx-padding: 0 5 0 5");
+        configTab.setTooltip(new Tooltip(GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")));
     }
 
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
