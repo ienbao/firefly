@@ -125,7 +125,7 @@ public class MainController {
                 if (!tabPaneMap.containsKey(name)) {
                     Pane pane = pc.getMainBodyPane(name).getNewPane();
                     pane.setId(name);
-                    initTab(name, pane);
+                    initMutilyTab(name, pane);
                 } else {
                     contentStackPane.getChildren().forEach(node -> {
                         node.setVisible(false);
@@ -155,7 +155,7 @@ public class MainController {
             setActiveBtnStyle(firstTabBtn);
             Pane pane = pc.getMainBodyPane(firstTabBtn.getId()).getNewPane();
             pane.setId(firstTabBtn.getId());
-            initTab(firstTabBtn.getId(), pane);
+            initMutilyTab(firstTabBtn.getId(), pane);
         }
     }
 
@@ -171,7 +171,21 @@ public class MainController {
         initialize();
     }
 
-    private void initTab(String name, Pane pane) {
+    private void initSinglelTab(String name, Pane pane) {
+        TabPane tabPane = new TabPane();
+        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
+        tabPane.setId(name);
+        Tab tab = new Tab();
+        tab.setText(name + "_1");
+        tab.setContent(pane);
+        tabPane.getTabs().add(tab);
+        contentStackPane.getChildren().add(tabPane);
+        tabPaneMap.put(name, tabPane);
+        TabUtils.disableCloseTab(tabPane);
+        TabUtils.tabSelectedListener(tab, tabPane);
+    }
+
+    private void initMutilyTab(String name, Pane pane) {
         TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
         tabPane.setStyle("-fx-skin: 'com.dmsoft.firefly.gui.component.TabPaneSkin'");
