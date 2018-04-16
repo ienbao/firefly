@@ -5,6 +5,7 @@ import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.utils.TableComparatorUtils;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrSourceDto;
 import com.dmsoft.firefly.plugin.grr.utils.DigNumInstance;
+import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
@@ -150,7 +151,9 @@ public class GrrSourceModel implements TableModel {
 
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
-        if (column.equals(UIConstant.GRR_SOURCE_TITLE[4]) || column.equals(UIConstant.GRR_SOURCE_TITLE[5]) || column.equals(UIConstant.GRR_SOURCE_TITLE[6])) {
+        if (column.equals(GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SOURCE_TITLE_TOTAL_SIGMA))
+                || column.equals(GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SOURCE_TITLE_TOTAL_VARIATION))
+                || column.equals(GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SOURCE_TITLE_TOTAL_TOLERANCE))) {
             tableCell.getTableColumn().setComparator((Comparator<T>) TableComparatorUtils.getContainsPercentColumnComparator());
             return tableCell;
         }

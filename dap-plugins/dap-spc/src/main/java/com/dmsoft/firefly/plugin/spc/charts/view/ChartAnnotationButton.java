@@ -5,6 +5,8 @@ import com.dmsoft.firefly.plugin.spc.charts.select.ClearCallBack;
 import com.dmsoft.firefly.plugin.spc.charts.model.SimpleItemCheckModel;
 import com.dmsoft.firefly.plugin.spc.charts.select.SelectCallBack;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Sets;
 import javafx.collections.FXCollections;
@@ -56,6 +58,7 @@ public class ChartAnnotationButton extends Button {
         this.initRender();
         this.initEvent();
         this.initData();
+        this.setComponentsTooltip();
     }
 
     /**
@@ -117,6 +120,11 @@ public class ChartAnnotationButton extends Button {
         vBox.getChildren().add(borderPane);
         popup.getContent().add(vBox);
         vBox.setMargin(borderPane, new Insets(2, 0, 0, 0));
+    }
+
+    private void setComponentsTooltip() {
+        Tooltip.install(clearBtn, new Tooltip(SpcFxmlAndLanguageUtils.getString(UIConstant.BTN_ANNOTATION_CLEAR)));
+        Tooltip.install(editBtn, new Tooltip(SpcFxmlAndLanguageUtils.getString(UIConstant.BTN_ANNOTATION_TOGGLE)));
     }
 
     private void initEvent() {

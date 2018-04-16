@@ -88,6 +88,7 @@ public class GrrResultController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initComponents();
+        this.initI18n();
     }
 
     /**
@@ -449,36 +450,36 @@ public class GrrResultController implements Initializable {
         yAxis.setLowerBound(yMin);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
 
-        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[0],
+        series1.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[0],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrContri()) ? 0 : componentCResult.getGrrContri()));
-        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[1],
+        series1.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[1],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getRepeatContri()) ? 0 : componentCResult.getRepeatContri()));
-        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[2],
+        series1.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[2],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodContri()) ? 0 : componentCResult.getReprodContri()));
-        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[3],
+        series1.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[3],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getPartContri()) ? 0 : componentCResult.getPartContri()));
 
-        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[0],
+        series2.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[0],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrVar()) ? 0 : componentCResult.getGrrVar()));
-        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[1],
+        series2.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[1],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getRepeatVar()) ? 0 : componentCResult.getRepeatVar()));
-        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[2],
+        series2.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[2],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodVar()) ? 0 : componentCResult.getReprodVar()));
-        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[3],
+        series2.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[3],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getPartVar()) ? 0 : componentCResult.getPartVar()));
 
-        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[0],
+        series3.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[0],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrTol()) ? 0 : componentCResult.getGrrTol()));
-        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[1],
+        series3.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[1],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getRepeatTol()) ? 0 : componentCResult.getRepeatTol()));
-        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[2],
+        series3.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[2],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodTol()) ? 0 : componentCResult.getReprodTol()));
-        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[3],
+        series3.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[3],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getPartTol()) ? 0 : componentCResult.getPartTol()));
         componentChart.getData().addAll(series1, series2, series3);
-        for (int i = 0; i < UIConstant.CHART_COMPONENT_CATEGORY.length; i++) {
+        for (int i = 0; i < CHART_COMPONENT_CATEGORY.length; i++) {
             XYChart.Series series = (XYChart.Series) componentChart.getData().get(i);
-            series.setName("% " + UIConstant.CHART_COMPONENT_CATEGORY[i]);
+            series.setName("% " + CHART_COMPONENT_CATEGORY[i]);
         }
         Legend legend = LegendUtils.buildLegend(componentChart.getData(), "bar-legend-symbol", "chart-bar");
         componentBp.setLeft(legend);
@@ -575,18 +576,18 @@ public class GrrResultController implements Initializable {
             series.getData().add(new XYChart.Data<>(x[i], y[i], parts.get(i % partCount)));
         }
         if (!DAPStringUtils.isInfinityAndNaN(chartData.getUcl())) {
-            RuleLineData uclLineData = new RuleLineData(UIConstant.CHART_OPERATE_NAME[0], chartData.getUcl());
+            RuleLineData uclLineData = new RuleLineData(CHART_OPERATE_NAME[0], chartData.getUcl());
             uclLineData.setColor(Color.rgb(102, 102, 102));
             uclLineData.setLineClass("dashed2-line");
             horizontalLineData.add(uclLineData);
         }
         if (!DAPStringUtils.isInfinityAndNaN(chartData.getCl())) {
-            RuleLineData clLineData = new RuleLineData(UIConstant.CHART_OPERATE_NAME[1], chartData.getCl());
+            RuleLineData clLineData = new RuleLineData(CHART_OPERATE_NAME[1], chartData.getCl());
             clLineData.setLineClass("solid-line");
             horizontalLineData.add(clLineData);
         }
         if (!DAPStringUtils.isInfinityAndNaN(chartData.getLcl())) {
-            RuleLineData lclLineData = new RuleLineData(UIConstant.CHART_OPERATE_NAME[2], chartData.getLcl());
+            RuleLineData lclLineData = new RuleLineData(CHART_OPERATE_NAME[2], chartData.getLcl());
             lclLineData.setColor(Color.rgb(178, 178, 178));
             lclLineData.setLineClass("dashed1-line");
             horizontalLineData.add(lclLineData);
@@ -720,8 +721,8 @@ public class GrrResultController implements Initializable {
                 com.dmsoft.firefly.plugin.grr.utils.enums.Orientation.BOTTOMLEFT);
         rangeAppraiserChartBtn = new ChartOperateButton(true,
                 com.dmsoft.firefly.plugin.grr.utils.enums.Orientation.BOTTOMLEFT);
-        Tooltip.install(xBarAppraiserChartBtn, new Tooltip(UIConstant.BTN_CHART_CHOOSE_LINES));
-        Tooltip.install(rangeAppraiserChartBtn, new Tooltip(UIConstant.BTN_CHART_CHOOSE_LINES));
+        Tooltip.install(xBarAppraiserChartBtn, new Tooltip(GrrFxmlAndLanguageUtils.getString(UIConstant.BTN_CHART_CHOOSE_LINES)));
+        Tooltip.install(rangeAppraiserChartBtn, new Tooltip(GrrFxmlAndLanguageUtils.getString(UIConstant.BTN_CHART_CHOOSE_LINES)));
         xBarAppraiserChartRightPane.addCustomPaneChildren(xBarAppraiserChartBtn);
         rangeAppraiserChartRightPane.addCustomPaneChildren(rangeAppraiserChartBtn);
 
@@ -863,8 +864,8 @@ public class GrrResultController implements Initializable {
         resultBasedCmb.setOnAction(event -> fireResultBasedCmbChangeEvent());
         summaryModel.setRadioClickListener((grrSummaryDto, tolerance, validGrr) -> fireRadioBtnClickEvent(validGrr, tolerance, grrSummaryDto));
         summaryItemTf.getTextField().textProperty().addListener(observable -> summaryModel.filterTestItem(summaryItemTf.getTextField().getText()));
-        xBarAppraiserChartBtn.setSelectCallBack(buildSelectCallBack(UIConstant.GRR_CHART_XBAR_APPRAISER, xBarAppraiserChart));
-        rangeAppraiserChartBtn.setSelectCallBack(buildSelectCallBack(UIConstant.GRR_CHART_RANGE_APPRAISER, rangeAppraiserChart));
+        xBarAppraiserChartBtn.setSelectCallBack(buildSelectCallBack(GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_CHART_XBAR_APPRAISER), xBarAppraiserChart));
+        rangeAppraiserChartBtn.setSelectCallBack(buildSelectCallBack(GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_CHART_RANGE_APPRAISER), rangeAppraiserChart));
     }
 
     private SelectCallBack buildSelectCallBack(String chartName, LinearChart chart) {
@@ -893,7 +894,7 @@ public class GrrResultController implements Initializable {
 
     private void setBarChartPerformance() {
         List<String> barHiddenLines = Lists.newArrayList();
-        for (String operateName : UIConstant.CHART_OPERATE_NAME) {
+        for (String operateName : CHART_OPERATE_NAME) {
             if (!xBarAppraiserChartBtn.getSelectedSets().contains(operateName)) {
                 barHiddenLines.add(operateName);
             }
@@ -903,7 +904,7 @@ public class GrrResultController implements Initializable {
 
     private void setRangeChartPerformance() {
         List<String> rangeHiddenLines = Lists.newArrayList();
-        for (String operateName : UIConstant.CHART_OPERATE_NAME) {
+        for (String operateName : CHART_OPERATE_NAME) {
             if (!rangeAppraiserChartBtn.getSelectedSets().contains(operateName)) {
                 rangeHiddenLines.add(operateName);
             }
@@ -912,16 +913,18 @@ public class GrrResultController implements Initializable {
     }
 
     private void initData() {
-        resultBasedCmb.getItems().addAll(UIConstant.GRR_RESULT_TYPE);
-        resultBasedCmb.setValue(UIConstant.GRR_RESULT_TYPE[0]);
-        summaryModel.initColumn(Lists.newArrayList(UIConstant.GRR_SUMMARY_TITLE));
-        grrAnovaModel.initColumn(Lists.newArrayList(UIConstant.GRR_ANOVA_TITLE));
+        resultBasedCmb.getItems().addAll(
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TYPE_TOLERANCE),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TYPE_CONTRIBUTION));
+        resultBasedCmb.setValue(GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TYPE_TOLERANCE));
+        summaryModel.initColumn(Lists.newArrayList(GRR_SUMMARY_TITLE));
+        grrAnovaModel.initColumn(Lists.newArrayList(GRR_ANOVA_TITLE));
         grrSourceModel.initColumn(buildSourceTbColumn());
         TableViewWrapper.decorate(summaryTb, summaryModel);
         TableViewWrapper.decorate(anovaTb, grrAnovaModel);
         TableViewWrapper.decorate(sourceTb, grrSourceModel);
-        xBarAppraiserChartBtn.setListViewData(Lists.newArrayList(UIConstant.CHART_OPERATE_NAME));
-        rangeAppraiserChartBtn.setListViewData(Lists.newArrayList(UIConstant.CHART_OPERATE_NAME));
+        xBarAppraiserChartBtn.setListViewData(Lists.newArrayList(CHART_OPERATE_NAME));
+        rangeAppraiserChartBtn.setListViewData(Lists.newArrayList(CHART_OPERATE_NAME));
     }
 
     private void initPerformanceSelected() {
@@ -951,8 +954,8 @@ public class GrrResultController implements Initializable {
         Map<String, List<String>> rangeOperatePerformance = Maps.newHashMap();
         String barChartName = UIConstant.GRR_CHART_XBAR_APPRAISER;
         String rangeChartName = UIConstant.GRR_CHART_RANGE_APPRAISER;
-        barOperatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.CHART_OPERATE_NAME));
-        rangeOperatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(UIConstant.CHART_OPERATE_NAME));
+        barOperatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(CHART_OPERATE_NAME));
+        rangeOperatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(CHART_OPERATE_NAME));
         performanceMap.put(barChartName, barOperatePerformance);
         performanceMap.put(rangeChartName, rangeOperatePerformance);
         UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
@@ -960,8 +963,8 @@ public class GrrResultController implements Initializable {
         userPreferenceDto.setCode(UIConstant.CHART_PERFORMANCE_CODE);
         userPreferenceDto.setValue(performanceMap);
         userPreferenceService.updatePreference(userPreferenceDto);
-        xBarAppraiserChartBtn.setSelectedSets(Sets.newHashSet(UIConstant.CHART_OPERATE_NAME));
-        rangeAppraiserChartBtn.setSelectedSets(Sets.newHashSet(UIConstant.CHART_OPERATE_NAME));
+        xBarAppraiserChartBtn.setSelectedSets(Sets.newHashSet(CHART_OPERATE_NAME));
+        rangeAppraiserChartBtn.setSelectedSets(Sets.newHashSet(CHART_OPERATE_NAME));
     }
 
     private List<String> buildSourceTbColumn() {
@@ -969,8 +972,8 @@ public class GrrResultController implements Initializable {
         List<String> tableColumns = Lists.newArrayList();
         GrrConfigDto grrConfigDto = grrConfigService.findGrrConfig();
         double coverage = grrConfigDto == null || grrConfigDto.getCoverage() == null ? defaultCoverage : grrConfigDto.getCoverage();
-        for (String name : UIConstant.GRR_SOURCE_TITLE) {
-            name = name.equals(UIConstant.GRR_SOURCE_TITLE[2]) ? name + " " + coverage : name;
+        for (String name : GRR_SOURCE_TITLE) {
+            name = name.equals(GRR_SOURCE_TITLE[2]) ? name + " " + coverage : name;
             tableColumns.add(name);
         }
         return tableColumns;
@@ -1036,6 +1039,47 @@ public class GrrResultController implements Initializable {
         value[10] = resultDto.getReprodTol();
         value[11] = resultDto.getReprodVar();
         return value;
+    }
+
+    private void initI18n() {
+        appKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " ";
+        trailKey = GrrFxmlAndLanguageUtils.getString("TRAIL") + " ";
+        CHART_COMPONENT_LABEL = new String[]{
+                GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_GAGE_R),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_REPEATABILITY),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_REPRODUCIBILITY),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_PART)};
+        CHART_COMPONENT_CATEGORY = new String[]{
+                GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_CONTRIBUTION),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_VARIATION),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_TOLERANCE)};
+        CHART_OPERATE_NAME = new String[]{
+                GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_LINE_NAME_UCL),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_LINE_NAME_AVG),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_LINE_NAME_LCL)};
+        GRR_SUMMARY_TITLE = new String[]{
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_TESTITEM),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_LSL),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_USL),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_TOLERANCE),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_REPEATABILITY),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_REPRODUCIBILITY),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_GAUGE)};
+        GRR_ANOVA_TITLE = new String[]{
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_ANOVA_TITLE_SOURCE),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_ANOVA_TITLE_DF),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_ANOVA_TITLE_SS),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_ANOVA_TITLE_MS),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_ANOVA_TITLE_F),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_ANOVA_TITLE_PROB)};
+        GRR_SOURCE_TITLE = new String[]{
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SOURCE_TITLE_SOURCE_VARIATION),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SOURCE_TITLE_SIGMA),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SOURCE_TITLE_STUDY_VAR),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SOURCE_TITLE_VARIATION),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SOURCE_TITLE_TOTAL_SIGMA),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SOURCE_TITLE_TOTAL_VARIATION),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SOURCE_TITLE_TOTAL_TOLERANCE)};
     }
 
     /****** Summary *****/
@@ -1106,6 +1150,13 @@ public class GrrResultController implements Initializable {
     private ChartOperateButton rangeAppraiserChartBtn;
     @FXML
     private Label toleranceLbl;
-    private String appKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " ";
-    private String trailKey = GrrFxmlAndLanguageUtils.getString("TRAIL") + " ";
+
+    private String appKey;
+    private String trailKey;
+    private String[] CHART_COMPONENT_LABEL;
+    private String[] CHART_COMPONENT_CATEGORY;
+    private String[] CHART_OPERATE_NAME;
+    private String[] GRR_SUMMARY_TITLE;
+    private String[] GRR_ANOVA_TITLE;
+    private String[] GRR_SOURCE_TITLE;
 }

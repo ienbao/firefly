@@ -4,6 +4,7 @@ import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.gui.components.chart.ChartUtils;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import javafx.embed.swing.SwingFXUtils;
@@ -63,9 +64,9 @@ public class ChartRightPane extends HBox {
     }
 
     private void setComponentsTooltip() {
-        Tooltip.install(zoomInBtn, new Tooltip(UIConstant.BTN_CHART_ZOOM_IN));
-        Tooltip.install(zoomOutBtn, new Tooltip(UIConstant.BTN_CHART_ZOOM_OUT));
-        Tooltip.install(menuBar, new Tooltip(UIConstant.BTN_CHART_EXTENSION_MENU));
+        Tooltip.install(zoomInBtn, new Tooltip(GrrFxmlAndLanguageUtils.getString(UIConstant.BTN_CHART_ZOOM_IN)));
+        Tooltip.install(zoomOutBtn, new Tooltip(GrrFxmlAndLanguageUtils.getString(UIConstant.BTN_CHART_ZOOM_OUT)));
+        Tooltip.install(menuBar, new Tooltip(GrrFxmlAndLanguageUtils.getString(UIConstant.BTN_CHART_EXTENSION_MENU)));
     }
 
     private void initComponents() {
@@ -76,7 +77,7 @@ public class ChartRightPane extends HBox {
         menuBar = new MenuBar();
         extensionMenu = new Menu();
         copyMenuItem = new MenuItem("Copy");
-        saveMenuItem = new MenuItem(UIConstant.CHART_EXTENSION_MENU_SAVE);
+        saveMenuItem = new MenuItem(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_EXTENSION_MENU_SAVE));
         printMenuItem = new MenuItem("Print");
         defaultRatioMenuItem = new RadioMenuItem("Default Display");
         oneToOneRatioMenuItem = new RadioMenuItem("1:1 Display");

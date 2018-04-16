@@ -11,6 +11,7 @@ import com.dmsoft.firefly.plugin.spc.dto.chart.pel.LineData;
 import com.dmsoft.firefly.plugin.spc.dto.chart.pel.SpcBarChartData;
 import com.dmsoft.firefly.plugin.spc.dto.chart.pel.SpcXYChartData;
 import com.dmsoft.firefly.plugin.spc.utils.ChartDataUtils;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
@@ -68,7 +69,16 @@ public class SpcNdChartData implements NDBarChartData {
         Double usl = ndcResultDto.getUsl();
         Double lsl = ndcResultDto.getLsl();
         Double[] uslAndLsl = new Double[]{usl, lsl};
-        String[] lineNames = UIConstant.SPC_CHART_LINE_NAME;
+        String[] lineNames = new String[]{
+                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_USL),
+                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_LSL),
+                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_LCL),
+                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_NEGATIVE_2_SIGMA),
+                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_NEGATIVE_SIGMA),
+                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_AVERAGE),
+                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_SIGMA),
+                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_2_SIGMA),
+                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_UCL)};
         Double[] cls = ndcResultDto.getCls();
         for (int i = 0; i < lineNames.length; i++) {
             if (lineNames[i].equalsIgnoreCase(lineNames[0])) {

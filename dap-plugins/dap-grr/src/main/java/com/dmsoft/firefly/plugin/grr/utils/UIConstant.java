@@ -32,74 +32,68 @@ public class UIConstant {
     public static final String CHART_PERFORMANCE_CODE = "GRR_CHARTS";
     public static final String CHART_PERFORMANCE_KEY_OPERATE = "GRR_CHART_OPERATE";
 
-    public static final String GRR_CHART_XBAR_APPRAISER = GrrFxmlAndLanguageUtils.getString("GRR_CHART_XBAR_APPRAISER");
-    public static final String GRR_CHART_RANGE_APPRAISER = GrrFxmlAndLanguageUtils.getString("GRR_CHART_RANGE_APPRAISER");
-
-    public static final String BTN_CHART_CHOOSE_LINES = GrrFxmlAndLanguageUtils.getString("BTN_CHART_CHOOSE_LINES");
-    public static final String BTN_CHART_ZOOM_IN = GrrFxmlAndLanguageUtils.getString("BTN_CHART_ZOOM_IN");
-    public static final String BTN_CHART_ZOOM_OUT = GrrFxmlAndLanguageUtils.getString("BTN_CHART_ZOOM_OUT");
-    public static final String BTN_CHART_EXTENSION_MENU = GrrFxmlAndLanguageUtils.getString("BTN_CHART_EXTENSION_MENU");
-
-    public static final String CHART_EXTENSION_MENU_SAVE = GrrFxmlAndLanguageUtils.getString("CHART_SAVE_AS");
+    public static final String GRR_CHART_XBAR_APPRAISER = "GRR_CHART_XBAR_APPRAISER";
+    public static final String GRR_CHART_RANGE_APPRAISER = "GRR_CHART_RANGE_APPRAISER";
+    public static final String BTN_CHART_CHOOSE_LINES = "BTN_CHART_CHOOSE_LINES";
+    public static final String BTN_CHART_ZOOM_IN = "BTN_CHART_ZOOM_IN";
+    public static final String BTN_CHART_ZOOM_OUT = "BTN_CHART_ZOOM_OUT";
+    public static final String BTN_CHART_EXTENSION_MENU = "BTN_CHART_EXTENSION_MENU";
+    public static final String CHART_EXTENSION_MENU_SAVE = "CHART_SAVE_AS";
 
 //    grr setting
-    public static final String GRR_SETTING_SORT_DATA_BY_APPRAISERS = GrrFxmlAndLanguageUtils.getString("GRR_SETTING_SORT_DATA_BY_APPRAISERS");
-    public static final String GRR_SETTING_SORT_DATA_BY_DEFAULT = GrrFxmlAndLanguageUtils.getString("GRR_SETTING_SORT_DATA_BY_DEFAULT");
-    public static final String GRR_SETTING_RULE_NO_EMPTY = GrrFxmlAndLanguageUtils.getString("GRR_SETTING_RULE_NO_EMPTY");
-    public static final String GRR_SETTING_RULE_INVALID_RANGE = GrrFxmlAndLanguageUtils.getString("GRR_SETTING_RULE_INVALID_RANGE");
-    public static final String GRR_SETTING_RULE_MUST_NUMBER = GrrFxmlAndLanguageUtils.getString("GRR_SETTING_RULE_MUST_NUMBER");
-    public static final String GRR_SETTING_LEVEL_NO_EMPTY = GrrFxmlAndLanguageUtils.getString("GRR_SETTING_LEVEL_NO_EMPTY");
-    public static final String GRR_SETTING_LEVEL_LEVEL_MUST_BIGGER = GrrFxmlAndLanguageUtils.getString("GRR_SETTING_LEVEL_LEVEL_MUST_BIGGER");
-    public static final String GRR_SETTING_LEVEL_INPUT_ERROR = GrrFxmlAndLanguageUtils.getString("GRR_SETTING_LEVEL_INPUT_ERROR");
+    public static final String GRR_SETTING_SORT_DATA_BY_APPRAISERS = "GRR_SETTING_SORT_DATA_BY_APPRAISERS";
+    public static final String GRR_SETTING_SORT_DATA_BY_DEFAULT = "GRR_SETTING_SORT_DATA_BY_DEFAULT";
+    public static final String GRR_SETTING_RULE_NO_EMPTY = "GRR_SETTING_RULE_NO_EMPTY";
+    public static final String GRR_SETTING_RULE_INVALID_RANGE = "GRR_SETTING_RULE_INVALID_RANGE";
+    public static final String GRR_SETTING_RULE_MUST_NUMBER = "GRR_SETTING_RULE_MUST_NUMBER";
+    public static final String GRR_SETTING_LEVEL_NO_EMPTY = "GRR_SETTING_LEVEL_NO_EMPTY";
+    public static final String GRR_SETTING_LEVEL_LEVEL_MUST_BIGGER = "GRR_SETTING_LEVEL_LEVEL_MUST_BIGGER";
+    public static final String GRR_SETTING_LEVEL_INPUT_ERROR = "GRR_SETTING_LEVEL_INPUT_ERROR";
 
-    public static final String[] GRR_RESULT_TYPE = new String[]{
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_TOLERANCE"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TYPE_CONTRIBUTION")};
-    public static final String[] CHART_COMPONENT_LABEL = new String[]{
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_GAGE_R"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_REPEATABILITY"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_REPRODUCIBILITY"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_PART")};
-    public static final String[] CHART_COMPONENT_CATEGORY = new String[]{
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_CONTRIBUTION"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_VARIATION"),
-            GrrFxmlAndLanguageUtils.getString("COMPONENTS_TOLERANCE")};
-    public static final String[] CHART_OPERATE_NAME = new String[]{
-            GrrFxmlAndLanguageUtils.getString("CHART_LINE_NAME_UCL"),
-            GrrFxmlAndLanguageUtils.getString("CHART_LINE_NAME_AVG"),
-            GrrFxmlAndLanguageUtils.getString("CHART_LINE_NAME_LCL")};
-    public static final String[] GRR_SUMMARY_TITLE = new String[]{
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_TESTITEM"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_LSL"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_USL"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_TOLERANCE"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_REPEATABILITY"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_REPRODUCIBILITY"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TITLE_GAUGE")};
-    public static final String[] GRR_ANOVA_TITLE = new String[]{
-            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_SOURCE"),
-            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_DF"),
-            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_SS"),
-            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_MS"),
-            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_F"),
-            GrrFxmlAndLanguageUtils.getString("GRR_ANOVA_TITLE_PROB")};
-    public static final String[] GRR_SOURCE_TITLE = new String[]{
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_SOURCE_VARIATION"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_SIGMA"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_STUDY_VAR"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_VARIATION"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_SIGMA"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_VARIATION"),
-            GrrFxmlAndLanguageUtils.getString("GRR_SOURCE_TITLE_TOTAL_TOLERANCE")};
 
-    public static final String[] GRR_EXPORT_CONFIG_KEY = new String[]{
-            GrrFxmlAndLanguageUtils.getString("EXPORT_DETIAL"),
-            GrrFxmlAndLanguageUtils.getString("EXPORT_SOURCE"),
-            GrrFxmlAndLanguageUtils.getString("EXPORT_CHARTS"),
-            GrrFxmlAndLanguageUtils.getString("CHART_1"),
-            GrrFxmlAndLanguageUtils.getString("CHART_2"),
-            GrrFxmlAndLanguageUtils.getString("CHART_3"),
-            GrrFxmlAndLanguageUtils.getString("CHART_4"),
-            GrrFxmlAndLanguageUtils.getString("CHART_5"),
-            GrrFxmlAndLanguageUtils.getString("CHART_6")};
+    public static final String COMPONENTS_GAGE_R = "COMPONENTS_GAGE_R";
+    public static final String COMPONENTS_REPEATABILITY = "COMPONENTS_REPEATABILITY";
+    public static final String COMPONENTS_REPRODUCIBILITY = "COMPONENTS_REPRODUCIBILITY";
+    public static final String COMPONENTS_PART = "COMPONENTS_PART";
+    public static final String COMPONENTS_CONTRIBUTION = "COMPONENTS_CONTRIBUTION";
+    public static final String COMPONENTS_VARIATION = "COMPONENTS_VARIATION";
+    public static final String COMPONENTS_TOLERANCE = "COMPONENTS_TOLERANCE";
+
+    public static final String CHART_LINE_NAME_UCL = "CHART_LINE_NAME_UCL";
+    public static final String CHART_LINE_NAME_AVG = "CHART_LINE_NAME_AVG";
+    public static final String CHART_LINE_NAME_LCL = "CHART_LINE_NAME_LCL";
+
+    public static final String GRR_SUMMARY_TYPE_TOLERANCE = "GRR_SUMMARY_TYPE_TOLERANCE";
+    public static final String GRR_SUMMARY_TYPE_CONTRIBUTION = "GRR_SUMMARY_TYPE_CONTRIBUTION";
+
+    public static final String GRR_SUMMARY_TITLE_TESTITEM = "GRR_SUMMARY_TITLE_TESTITEM";
+    public static final String GRR_SUMMARY_TITLE_LSL = "GRR_SUMMARY_TITLE_LSL";
+    public static final String GRR_SUMMARY_TITLE_USL = "GRR_SUMMARY_TITLE_USL";
+    public static final String GRR_SUMMARY_TITLE_TOLERANCE = "GRR_SUMMARY_TITLE_TOLERANCE";
+    public static final String GRR_SUMMARY_TITLE_REPEATABILITY = "GRR_SUMMARY_TITLE_REPEATABILITY";
+    public static final String GRR_SUMMARY_TITLE_REPRODUCIBILITY = "GRR_SUMMARY_TITLE_REPRODUCIBILITY";
+    public static final String GRR_SUMMARY_TITLE_GAUGE = "GRR_SUMMARY_TITLE_GAUGE";
+    public static final String GRR_ANOVA_TITLE_SOURCE = "GRR_ANOVA_TITLE_SOURCE";
+    public static final String GRR_ANOVA_TITLE_DF = "GRR_ANOVA_TITLE_DF";
+    public static final String GRR_ANOVA_TITLE_SS = "GRR_ANOVA_TITLE_SS";
+    public static final String GRR_ANOVA_TITLE_MS = "GRR_ANOVA_TITLE_MS";
+    public static final String GRR_ANOVA_TITLE_F = "GRR_ANOVA_TITLE_F";
+    public static final String GRR_ANOVA_TITLE_PROB = "GRR_ANOVA_TITLE_PROB";
+    public static final String GRR_SOURCE_TITLE_SOURCE_VARIATION = "GRR_SOURCE_TITLE_SOURCE_VARIATION";
+    public static final String GRR_SOURCE_TITLE_SIGMA = "GRR_SOURCE_TITLE_SIGMA";
+    public static final String GRR_SOURCE_TITLE_STUDY_VAR = "GRR_SOURCE_TITLE_STUDY_VAR";
+    public static final String GRR_SOURCE_TITLE_VARIATION = "GRR_SOURCE_TITLE_VARIATION";
+    public static final String GRR_SOURCE_TITLE_TOTAL_SIGMA = "GRR_SOURCE_TITLE_TOTAL_SIGMA";
+    public static final String GRR_SOURCE_TITLE_TOTAL_VARIATION = "GRR_SOURCE_TITLE_TOTAL_VARIATION";
+    public static final String GRR_SOURCE_TITLE_TOTAL_TOLERANCE = "GRR_SOURCE_TITLE_TOTAL_TOLERANCE";
+
+    public static final String EXPORT_DETIAL = "EXPORT_DETIAL";
+    public static final String EXPORT_SOURCE = "EXPORT_SOURCE";
+    public static final String EXPORT_CHARTS = "EXPORT_CHARTS";
+    public static final String CHART_1 = "CHART_1";
+    public static final String CHART_2 = "CHART_2";
+    public static final String CHART_3 = "CHART_3";
+    public static final String CHART_4 = "CHART_4";
+    public static final String CHART_5 = "CHART_5";
+    public static final String CHART_6 = "CHART_6";
 }

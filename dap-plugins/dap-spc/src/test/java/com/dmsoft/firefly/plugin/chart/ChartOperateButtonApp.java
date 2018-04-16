@@ -17,7 +17,7 @@ public class ChartOperateButtonApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         ChartOperateButton button = new ChartOperateButton();
-        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
+//        button.setListViewData(Arrays.asList(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU));
         button.setListViewSize(140, 120);
         button.setSelectCallBack((name, selected, selectedNames) -> {
             System.out.println(name);

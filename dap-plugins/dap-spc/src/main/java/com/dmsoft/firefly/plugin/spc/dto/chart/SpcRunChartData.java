@@ -8,6 +8,7 @@ import com.dmsoft.firefly.plugin.spc.dto.RuleResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.RunCResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.pel.LineData;
 import com.dmsoft.firefly.plugin.spc.dto.chart.pel.SpcXYChartData;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.google.common.collect.Lists;
@@ -86,7 +87,16 @@ public class SpcRunChartData implements ControlChartData {
         Double usl = runCResultDto.getUsl();
         Double lsl = runCResultDto.getLsl();
         Double[] uslAndlsl = new Double[]{usl, lsl};
-        String[] lineNames = UIConstant.SPC_CHART_LINE_NAME;
+        String[] lineNames = new String[]{
+                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_USL),
+                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_LSL),
+                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_LCL),
+                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_NEGATIVE_2_SIGMA),
+                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_NEGATIVE_SIGMA),
+                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_AVERAGE),
+                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_SIGMA),
+                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_2_SIGMA),
+                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_UCL)};
         if (usl != null) {
             ILineData uslData = new LineData(usl, lineNames[0], Orientation.HORIZONTAL, LineType.DASHED);
             lineDataList.add(uslData);
