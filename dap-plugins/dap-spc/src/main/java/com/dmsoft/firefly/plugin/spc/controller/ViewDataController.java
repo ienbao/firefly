@@ -256,6 +256,20 @@ public class ViewDataController implements Initializable {
         }
     }
 
+    /**
+     * method to get selected row keys
+     *
+     * @return list of selected row key
+     */
+    public List<String> getUnSelectedRowKeys() {
+        if (this.model != null) {
+            return this.model.getUnSelectedRowKeys();
+        } else {
+            return null;
+        }
+    }
+
+
     private void decorate(TableColumn<String, ?> tableColumn) {
         if (" ".equals(tableColumn.getText())) {
             return;
@@ -408,15 +422,17 @@ public class ViewDataController implements Initializable {
             return;
         }
         model.getRowKeyArray().clear();
-        for (String s : dataFrame.getAllRowKeys()) {
-            List<String> datas = dataFrame.getDataRowList(s);
-            for (String data : datas) {
-                if (data.toLowerCase().contains(filterTf.getTextField().getText().toLowerCase())) {
-                    model.getRowKeyArray().add(s);
-                    break;
+        Platform.runLater(() -> {
+            for (String s : dataFrame.getAllRowKeys()) {
+                List<String> datas = dataFrame.getDataRowList(s);
+                for (String data : datas) {
+                    if (data.toLowerCase().contains(filterTf.getTextField().getText().toLowerCase())) {
+                        model.getRowKeyArray().add(s);
+                        break;
+                    }
                 }
             }
-        }
+        });
     }
 
     private void filterHeaderBtn() {

@@ -129,7 +129,7 @@ public class AddItemController implements Initializable {
     private void initBtnIcon() {
         tipLabel.getStyleClass().add("message-tip-question");
         tipLabel.setStyle("-fx-background-color: #0096ff");
-        TooltipUtil.installNormalTooltip(tipLabel, "Please use \"Tab\" or \"Enter\" to separate item names");
+        TooltipUtil.installNormalTooltip(tipLabel, SpcFxmlAndLanguageUtils.getString("CUSTOM_TEST_ITEM_TIP"));
 //        tipLabel.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
     }
 

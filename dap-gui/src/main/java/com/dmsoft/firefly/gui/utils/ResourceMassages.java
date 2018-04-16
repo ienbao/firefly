@@ -12,9 +12,9 @@ public class ResourceMassages {
 
     public static final String GLOBAL_EXPORT_SETTING = "GLOBAL_EXPORT_SETTING";
     public static final String SOURCE_SETTING = "DATA_SOURCE_SETTING";
-    public static final String DATA_SOURCE = "Data Source";
+    public static final String DATA_SOURCE = "DATA_SOURCE";
     public static final String TEMPLATE = "TEMPLATE";
-    public static final String DATASOURCE = "DATASOURCE";
+//    public static final String DATASOURCE = "DATASOURCE";
     public static final String MENU_LEGAL_NOTICE = "MENU_LEGAL_NOTICE";
     public static final String REMOVE_MSG = "REMOVE_MSG";
     public static final String PLUGIN_MANAGE = "PLUGIN_MANAGE";
