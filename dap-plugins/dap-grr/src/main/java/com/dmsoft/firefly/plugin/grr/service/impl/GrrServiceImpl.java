@@ -20,6 +20,8 @@ import com.dmsoft.firefly.sdk.plugin.apis.annotation.OpenService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -31,10 +33,13 @@ import java.util.Map;
 public class GrrServiceImpl implements GrrService {
     private static final String MAP_KEY_DATA = "data";
     private static final String MAP_KEY_COUNT = "count";
+    private static Logger logger = LoggerFactory.getLogger(GrrServiceImpl.class);
     private GrrAnalysisService analysisService;
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<GrrSummaryDto> getSummaryResult(SearchDataFrame dataFrame, List<TestItemWithTypeDto> testItemDtoList, List<String> rowKeysToByAnalyzed, GrrAnalysisConfigDto configDto) {
+        logger.debug("Getting GRR summary result...");
         if (dataFrame == null || testItemDtoList == null || configDto == null) {
             pushProgress(100);
             throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
@@ -87,11 +92,14 @@ public class GrrServiceImpl implements GrrService {
             result.add(summaryDto);
             pushProgress((int) (40 + ((i + 1) / (double) (grrAnalysisDataDtoList.size())) * 60));
         }
+        logger.info("Get GRR summary result done.");
         return result;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public GrrDetailDto getDetailResult(DataColumn dataColumn, TestItemWithTypeDto testItemDto, List<String> rowKeysToByAnalyzed, GrrAnalysisConfigDto configDto) {
+        logger.debug("Getting GRR detail result...");
         if (dataColumn == null || testItemDto == null || configDto == null) {
             pushProgress(100);
             throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
@@ -115,10 +123,12 @@ public class GrrServiceImpl implements GrrService {
         GrrDetailResultDto resultDto = getAnalysisService().analyzeDetailResult(grrAnalysisDataDto, configDto);
         result.setItemName(testItemDto.getTestItemName());
         result.setGrrDetailResultDto(resultDto);
+        logger.info("Get GRR detail result done.");
         return result;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public GrrExportDetailDto getExportDetailResult(DataColumn dataColumn, TestItemWithTypeDto testItemDto, List<String> rowKeysToByAnalyzed, GrrAnalysisConfigDto configDto) {
         if (dataColumn == null || testItemDto == null || configDto == null) {
             throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));

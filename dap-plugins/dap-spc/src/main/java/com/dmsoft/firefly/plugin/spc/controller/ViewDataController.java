@@ -408,15 +408,17 @@ public class ViewDataController implements Initializable {
             return;
         }
         model.getRowKeyArray().clear();
-        for (String s : dataFrame.getAllRowKeys()) {
-            List<String> datas = dataFrame.getDataRowList(s);
-            for (String data : datas) {
-                if (data.toLowerCase().contains(filterTf.getTextField().getText().toLowerCase())) {
-                    model.getRowKeyArray().add(s);
-                    break;
+        Platform.runLater(() -> {
+            for (String s : dataFrame.getAllRowKeys()) {
+                List<String> datas = dataFrame.getDataRowList(s);
+                for (String data : datas) {
+                    if (data.toLowerCase().contains(filterTf.getTextField().getText().toLowerCase())) {
+                        model.getRowKeyArray().add(s);
+                        break;
+                    }
                 }
             }
-        }
+        });
     }
 
     private void filterHeaderBtn() {
