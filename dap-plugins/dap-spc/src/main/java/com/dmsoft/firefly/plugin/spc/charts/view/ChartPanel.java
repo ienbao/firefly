@@ -6,6 +6,7 @@ import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.plugin.spc.charts.utils.LegendUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.sun.javafx.charts.Legend;
 import javafx.embed.swing.SwingFXUtils;
@@ -117,7 +118,7 @@ public class ChartPanel<T extends XYChart> extends VBox {
         menuBar = new MenuBar();
         extensionMenu = new Menu();
         copyMenuItem = new MenuItem("Copy");
-        saveMenuItem = new MenuItem(UIConstant.CHART_EXTENSION_MENU_SAVE);
+        saveMenuItem = new MenuItem(SpcFxmlAndLanguageUtils.getString(UIConstant.CHART_SAVE_AS));
         printMenuItem = new MenuItem("Print");
         defaultRatioMenuItem = new RadioMenuItem("Default Display");
         oneToOneRatioMenuItem = new RadioMenuItem("1:1 Display");
@@ -194,9 +195,9 @@ public class ChartPanel<T extends XYChart> extends VBox {
     }
 
     private void setComponentsTooltip() {
-        Tooltip.install(zoomInBtn, new Tooltip(UIConstant.BTN_CHART_ZOOM_IN));
-        Tooltip.install(zoomOutBtn, new Tooltip(UIConstant.BTN_CHART_ZOOM_OUT));
-        Tooltip.install(menuBar, new Tooltip(UIConstant.BTN_CHART_EXTENSION_MENU));
+        Tooltip.install(zoomInBtn, new Tooltip(SpcFxmlAndLanguageUtils.getString(UIConstant.BTN_CHART_ZOOM_IN)));
+        Tooltip.install(zoomOutBtn, new Tooltip(SpcFxmlAndLanguageUtils.getString(UIConstant.BTN_CHART_ZOOM_OUT)));
+        Tooltip.install(menuBar, new Tooltip(SpcFxmlAndLanguageUtils.getString(UIConstant.BTN_CHART_EXTENSION_MENU)));
     }
 
     private void initEvent() {
