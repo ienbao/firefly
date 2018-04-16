@@ -6,12 +6,11 @@ import com.dmsoft.firefly.plugin.spc.charts.data.basic.IPathData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IPoint;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
+import com.dmsoft.firefly.plugin.spc.charts.utils.enums.LineType;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcControlChartDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.pel.LineData;
 import com.dmsoft.firefly.plugin.spc.dto.chart.pel.SpcXYChartData;
-import com.dmsoft.firefly.plugin.spc.utils.ChartDataUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
-import com.dmsoft.firefly.plugin.spc.utils.XYData;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import javafx.geometry.Orientation;
@@ -20,9 +19,9 @@ import javafx.scene.paint.Color;
 import java.util.List;
 
 /**
- * Created by cherry on 2018/3/21.
+ * Created by cherry on 2018/4/14.
  */
-public class SpcControlChartData implements ControlChartData {
+public class SpcMrChartData implements ControlChartData {
 
     private SpcControlChartDto spcControlChartDto;
     private SpcXYChartData xyChartData;
@@ -45,7 +44,7 @@ public class SpcControlChartData implements ControlChartData {
      * @param spcControlChartDto control chart data
      * @param color              chart color
      */
-    public SpcControlChartData(String key, SpcControlChartDto spcControlChartDto, Color color) {
+    public SpcMrChartData(String key, SpcControlChartDto spcControlChartDto, Color color) {
         this.spcControlChartDto = spcControlChartDto;
         this.key = key;
         this.color = color;
@@ -60,56 +59,27 @@ public class SpcControlChartData implements ControlChartData {
         Double[] y = spcControlChartDto.getY();
         //init lines data
         Double cl = spcControlChartDto.getCl();
-        ILineData uslData = new LineData(cl, UIConstant.SPC_CHART_CL, Orientation.HORIZONTAL);
-        lineDataList.add(uslData);
-        String[] uclLclName = UIConstant.SPC_UCL_LCL;
         uclValue = spcControlChartDto.getUcl();
         lclValue = spcControlChartDto.getLcl();
-        XYData ucl = ChartDataUtils.foldCLData(uclValue);
-        XYData lcl = ChartDataUtils.foldCLData(lclValue);
-        if (ucl != null) {
-            IPathData uclData = new IPathData() {
-                @Override
-                public IPoint getPoints() {
-                    return new SpcPointData(ucl.getX(), ucl.getY());
-                }
-
-                @Override
-                public String getPathName() {
-                    return uclLclName[0];
-                }
-
-                @Override
-                public Color getColor() {
-                    return color;
-                }
-            };
-            breakLineList.add(uclData);
+        if (cl != null) {
+            ILineData uslData = new LineData(cl, UIConstant.SPC_CHART_CL, Orientation.HORIZONTAL);
+            lineDataList.add(uslData);
         }
-        if (lcl != null) {
-            IPathData lclData = new IPathData() {
-                @Override
-                public IPoint getPoints() {
-                    return new SpcPointData(lcl.getX(), lcl.getY());
-                }
-
-                @Override
-                public String getPathName() {
-                    return uclLclName[1];
-                }
-
-                @Override
-                public Color getColor() {
-                    return color;
-                }
-            };
-            breakLineList.add(lclData);
+        if (uclValue != null && uclValue.length >= 1) {
+            ILineData uclData = new LineData(uclValue[0], UIConstant.SPC_UCL_LCL[0], Orientation.HORIZONTAL, LineType.DASHED);
+            lineDataList.add(uclData);
+        }
+        if (lclValue != null && lclValue.length >= 1) {
+            ILineData lclData = new LineData(lclValue[0], UIConstant.SPC_UCL_LCL[1], Orientation.HORIZONTAL, LineType.DASHED);
+            lineDataList.add(lclData);
         }
         xyChartData = new SpcXYChartData(x, y);
-        maxY = MathUtils.getMax(y, ucl == null ? null : ucl.getY(), lcl == null ? null : lcl.getY(), new Double[]{cl});
-        minY = MathUtils.getMin(y, ucl == null ? null : ucl.getY(), lcl == null ? null : lcl.getY(), new Double[]{cl});
-        maxX = MathUtils.getMax(x, ucl == null ? null : ucl.getX(), lcl == null ? null : lcl.getX());
-        minX = MathUtils.getMin(x, ucl == null ? null : ucl.getX(), lcl == null ? null : lcl.getX());
+        Double uclRange = ((uclValue != null && uclValue.length >= 1)) ? uclValue[0] : null;
+        Double lclRange = ((lclValue != null && lclValue.length >= 1)) ? lclValue[0] : null;
+        maxY = MathUtils.getMax(y, new Double[]{cl});
+        minY = MathUtils.getMin(y, new Double[]{cl, uclRange, lclRange});
+        maxX = MathUtils.getMax(x);
+        minX = MathUtils.getMin(x);
     }
 
     @Override

@@ -162,7 +162,7 @@ public class ChartPanel<T extends XYChart> extends VBox {
         rightHBox.setMargin(zoomInBtn, new Insets(0, 0, 0, 5));
         rightHBox.setMargin(zoomOutBtn, new Insets(0, 0, 0, 5));
         rightHBox.setMargin(menuBar, new Insets(-3, 0, 0, 5));
-        titlePane.setMargin(leftHBox, new Insets(2, 0, 0, spacing));
+        titlePane.setMargin(leftHBox, new Insets(1.5, 0, 0, spacing));
         titlePane.setMargin(rightHBox, new Insets(3, 0, 0, 0));
 
 //        extensionMenu.setStyle("-fx-padding: 0em 1em 0em -0.8em");

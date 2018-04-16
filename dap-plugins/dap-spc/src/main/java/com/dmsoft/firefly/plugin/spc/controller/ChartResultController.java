@@ -38,6 +38,8 @@ import javafx.scene.chart.*;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.paint.Color;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.*;
@@ -46,6 +48,8 @@ import java.util.*;
  * Created by Ethan.Yang on 2018/2/2.
  */
 public class ChartResultController implements Initializable {
+
+    private Logger logger = LoggerFactory.getLogger(ChartResultController.class);
 
     private SpcMainController spcMainController;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
@@ -98,6 +102,7 @@ public class ChartResultController implements Initializable {
         List<BoxPlotChartData> boxChartDataList = Lists.newArrayList();
         List<ControlChartData> mrChartDataList = Lists.newArrayList();
         Set<String> disabledRuleNames = Sets.newLinkedHashSet();
+        long dataStart = new Date().getTime();
         for (int i = 0; i < spcChartDtoList.size(); i++) {
             SpcChartDto spcChartDto = spcChartDtoList.get(i);
             String key = spcChartDto.getKey();
@@ -142,19 +147,44 @@ public class ChartResultController implements Initializable {
             boxChartData.setSeriesName(seriesName);
             boxChartDataList.add(boxChartData);
             //mr chart
-            SpcControlChartData mrChartData = new SpcControlChartData(key, spcChartResultDto.getMrCResult(), color);
+            SpcMrChartData mrChartData = new SpcMrChartData(key, spcChartResultDto.getMrCResult(), color);
             mrChartData.setSeriesName(seriesName);
             mrChartDataList.add(mrChartData);
         }
-
+        long dataEnd = new Date().getTime();
+        logger.info("Data time: {} min", (dataEnd - dataStart) / 1000.0/60);
+        long dnStart = new Date().getTime();
         this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
+        long dnEnd = new Date().getTime();
+        logger.info("Nd time: {} min", (dnEnd - dnStart) / 1000.0/60);
+        long runStart = new Date().getTime();
         this.setRunChartData(UIConstant.SPC_CHART_NAME[1], runChartDataList, Sets.newLinkedHashSet(disabledRuleNames));
+        long runEnd = new Date().getTime();
+        logger.info("Run time: {} min", (runEnd - runStart) / 1000.0/60);
+        long xBarStart = new Date().getTime();
         this.setControlChartData(UIConstant.SPC_CHART_NAME[2], xBarChartDataList);
+        long xBarEnd = new Date().getTime();
+        logger.info("xBar time: {} min", (xBarEnd - xBarStart) / 1000.0/60);
+        long rangeStart = new Date().getTime();
         this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList);
+        long rangeEnd = new Date().getTime();
+        logger.info("Range time: {} min", (rangeEnd - rangeStart) / 1000.0/60);
+        long sdStart = new Date().getTime();
         this.setControlChartData(UIConstant.SPC_CHART_NAME[4], sdChartDataList);
+        long sdEnd = new Date().getTime();
+        logger.info("SD time: {} min", (sdEnd - sdStart) / 1000.0/60);
+        long medianStart = new Date().getTime();
         this.setControlChartData(UIConstant.SPC_CHART_NAME[5], medianChartDataList);
+        long medianEnd = new Date().getTime();
+        logger.info("Median time: {} min", (medianEnd - medianStart) / 1000.0/60);
+        long boxStart = new Date().getTime();
         this.setBoxChartData(UIConstant.SPC_CHART_NAME[6], boxChartDataList);
+        long boxEnd = new Date().getTime();
+        logger.info("Box time: {} min", (boxEnd - boxStart) / 1000.0/60);
+        long mrStart = new Date().getTime();
         this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
+        long mrEnd = new Date().getTime();
+        logger.info("Mr time: {} min", (mrEnd - mrStart) / 1000.0/60);
     }
 
     /**

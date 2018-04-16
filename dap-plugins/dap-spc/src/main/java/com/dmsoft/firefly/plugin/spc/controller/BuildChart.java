@@ -292,8 +292,8 @@ public class BuildChart {
         }
         NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
+        double yReserve = (yMax - yMin) * UIConstant.Y_FACTOR;
+        double xReserve = (xMax - xMin) * UIConstant.X_FACTOR;
         xAxis.setLowerBound(xMin - xReserve);
         xAxis.setUpperBound(xMax + xReserve);
         yAxis.setLowerBound(yMin);
@@ -321,8 +321,8 @@ public class BuildChart {
         }
         NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
+        double yReserve = (yMax - yMin) * UIConstant.Y_FACTOR;
+        double xReserve = (xMax - xMin) * UIConstant.X_FACTOR;
         xAxis.setLowerBound(xMin - xReserve);
         xAxis.setUpperBound(xMax + xReserve);
         yAxis.setLowerBound(yMin - yReserve);
@@ -351,8 +351,8 @@ public class BuildChart {
         }
         NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
+        double yReserve = (yMax - yMin) * UIConstant.Y_FACTOR;
+        double xReserve = (xMax - xMin) * UIConstant.X_FACTOR;
         xAxis.setLowerBound(xMin - xReserve);
         xAxis.setUpperBound(xMax + xReserve);
         yAxis.setLowerBound(yMin - yReserve);
@@ -386,8 +386,8 @@ public class BuildChart {
         }
         NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
+        double yReserve = (yMax - yMin) * UIConstant.X_FACTOR;
+        double xReserve = (xMax - xMin) * UIConstant.Y_FACTOR;
         xAxis.setLowerBound(xMin - xReserve);
         xAxis.setUpperBound(xMax + xReserve);
         yAxis.setLowerBound(yMin - yReserve);
