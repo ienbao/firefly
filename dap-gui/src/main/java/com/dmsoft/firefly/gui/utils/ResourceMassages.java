@@ -47,4 +47,6 @@ public class ResourceMassages {
     public static final String ADD_TIME_KEYS = "ADD_TIME_KEY";
     public static final String HELP = "HELP";
     public static final String INPUT_ITEM_HELP = "INPUT_ITEM_HELP";
+    public static final String DELETE_DATA_SOURCE = "DELETE_DATA_SOURCE";
+    public static final String DELETE_DATA_SOURCE_CONFIRM = "DELETE_DATA_SOURCE_CONFIRM";
 }

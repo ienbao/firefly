@@ -328,7 +328,7 @@ public class SpcExportController {
 
         viewData.setOnAction(event -> {
             if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), SpcFxmlAndLanguageUtils.getString(ResourceMassages.EMPTY_ITEM));
                 return;
             }
             buildViewData();
@@ -338,18 +338,18 @@ public class SpcExportController {
         });
         export.setOnAction(event -> {
             if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), SpcFxmlAndLanguageUtils.getString(ResourceMassages.EMPTY_ITEM));
                 return;
             }
             if (subGroup.getStyleClass().contains("text-field-error") || ndGroup.getStyleClass().contains("text-field-error")) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please Input correct config numbers.");
+                WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_ERROR_CONFIG));
                 return;
             }
             if (!searchTab.verifySearchTextArea()) {
                 return;
             }
             if (StringUtils.isEmpty(locationPath.getText())) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export path.");
+                WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), SpcFxmlAndLanguageUtils.getString(ResourceMassages.EMPTY_PATH));
                 return;
             }
             StageMap.closeStage("spcExport");
@@ -358,11 +358,11 @@ public class SpcExportController {
         });
         print.setOnAction(event -> {
             if (StringUtils.isEmpty(locationPath.getText())) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export path.");
+                WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), SpcFxmlAndLanguageUtils.getString(ResourceMassages.EMPTY_PATH));
                 return;
             }
             if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), SpcFxmlAndLanguageUtils.getString(ResourceMassages.EMPTY_ITEM));
                 return;
             }
             StageMap.closeStage("spcExport");
