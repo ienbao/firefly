@@ -13,6 +13,7 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.job.core.*;
+import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.google.common.collect.Lists;
 import javafx.application.Platform;
@@ -73,6 +74,16 @@ public class SpcMainController implements Initializable {
         this.chartResultController.init(this);
         this.initBtnIcon();
         this.initComponentEvent();
+        this.setDisable(true);
+    }
+
+    /**
+     * set disable
+     * @param disable disable
+     */
+    public void setDisable(boolean disable){
+        resetBtn.setDisable(disable);
+        chooseBtn.setDisable(disable);
     }
 
     /**
@@ -178,6 +189,7 @@ public class SpcMainController implements Initializable {
     public void clearAnalysisData() {
         statisticalResultController.clearStatisticalResultData();
         clearAnalysisSubShowData(false);
+        this.setDisable(true);
     }
 
     /**
@@ -352,6 +364,9 @@ public class SpcMainController implements Initializable {
 
         switch (refreshType) {
             case NOT_NEED_REFRESH:
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        SpcFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        SpcFxmlAndLanguageUtils.getString("EXCEPTION_SPC_NO_REFRESH_RESULT"));
                 if (currentStatisticalSelectRowKeyList.size() == 0) {
                     chartResultController.clearChartData();
                     viewDataController.clearViewData();
@@ -605,7 +620,6 @@ public class SpcMainController implements Initializable {
         List<String> currentStatisticalSelectRowKeyList = spcRefreshJudgeUtil.getCurrentStatisticalSelectRowKeyList();
 
         List<String> viewDataSelectRowKeyListCache = spcRefreshJudgeUtil.getViewDataSelectRowKeyListCache();
-        spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
 
         List<SearchConditionDto> searchConditionDtoList = buildRefreshSearchConditionData(statisticalResultController.getSelectStatsData());
         if (searchConditionDtoList.size() == 0) {
@@ -632,7 +646,7 @@ public class SpcMainController implements Initializable {
             }
         }
         lastViewDataRowKeyList = viewDataFrame.getAllRowKeys();
-        spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(rowKeyList);
+
 //        List<String> rowKeyList = viewDataSelectRowKeyListCache == null ? dataFrame.getSearchedRowKey() : viewDataSelectRowKeyListCache;
 
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
@@ -654,7 +668,6 @@ public class SpcMainController implements Initializable {
             public void doJob(JobContext context) {
                 Platform.runLater(() -> {
                     chartResultController.initSpcChartData((List<SpcChartDto>) context.get(ParamKeys.SPC_CHART_DTO_LIST));
-
 
                     List<SpcStatisticalResultAlarmDto> allRowDataList = statisticalResultController.getAllRowStatsData();
                     List<SearchConditionDto> statisticalSearchConditionDtoList = buildRefreshSearchConditionData(allRowDataList);
@@ -679,6 +692,8 @@ public class SpcMainController implements Initializable {
 //                    List<String> rowKeyList = viewDataSelectRowKeyListCache == null ? viewDataFrame.getAllRowKeys() : viewDataSelectRowKeyListCache;
 
                     viewDataController.setViewData(viewDataFrame, subDataFrame.getAllRowKeys(), statisticalSearchConditionDtoList, spcItemController.isTimer());
+                    spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
+                    spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(subDataFrame.getAllRowKeys());
 
                     windowProgressTipController.closeDialog();
                 });
@@ -772,7 +787,7 @@ public class SpcMainController implements Initializable {
         }
 
 //        List<String> countViewDataRowKeyList = currentViewDataSelectRowKeyList == null ? dataFrame.getSearchedRowKey() : currentViewDataSelectRowKeyList;
-        spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
+
 
         //statistical data
         List<SpcStatisticalResultAlarmDto> editRowDataList = statisticalResultController.getAllRowStatsData();
@@ -802,7 +817,7 @@ public class SpcMainController implements Initializable {
                 }
             }
         }
-        spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(selectRowKeyList);
+
 
         //get statisticalRowKey
         List<String> statisticalRowKeyList = Lists.newArrayList();
@@ -875,6 +890,8 @@ public class SpcMainController implements Initializable {
 ////                List<String> countViewDataRowKeyList = currentViewDataSelectRowKeyList == null ? viewDataFrame.getAllRowKeys() : currentViewDataSelectRowKeyList;
 //                spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(selectRowKeyList);
                 viewDataController.setViewData(viewDataFrame, chartDataFrame.getAllRowKeys(), statisticalSearchConditionDtoList, spcItemController.isTimer());
+                spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(chartDataFrame.getAllRowKeys());
+                spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
             }
         });
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {

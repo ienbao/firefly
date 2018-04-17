@@ -474,13 +474,6 @@
     -fx-border-style: dotted;
 }
 
-.button:disabled {
-    -fx-text-fill: FONT_MID;
-    -fx-highlight-fill: COLOR_GRAY_DC;
-    -fx-border-color: COLOR_GRAY_DC;
-    -fx-background-color: COLOR_GRAY_FA;
-}
-
 /*******************************************************************************
  *                                                                             *
  * CheckBox                                                                    *
@@ -2482,4 +2475,48 @@
     -fx-text-fill: #222222;
     -fx-font-weight: 400;
     -fx-font: 22 arial;
+}
+
+/* ====   DISABLED THINGS   ================================================= */
+
+.label:disabled,
+.button:disabled,
+.toggle-button:disabled,
+.radio-button:disabled,
+.check-box:disabled,
+.hyperlink:disabled,
+.menu-button:disabled,
+.split-menu-button:disabled,
+.slider:disabled,
+.scroll-bar:disabled,
+.scroll-pane:disabled,
+.progress-bar:disabled,
+.progress-indicator:disabled,
+.text-input:disabled,
+.choice-box:disabled,
+.combo-box-base:disabled,
+.date-cell:disabled > *, /* This is set on children so border is not affected. */
+.list-view:disabled,
+.tree-view:disabled,
+.table-view:disabled,
+.tree-table-view:disabled,
+.tab-pane:disabled,
+.titled-pane:disabled > .title,
+.accordion:disabled > .titled-pane > .title,
+.tab-pane > .tab-header-area > .headers-region > .tab:disabled,
+.menu:disabled,
+.menu-item:disabled > .label,
+.menu-item:disabled,
+.list-cell:filled:selected:focused:disabled,
+.list-cell:filled:selected:disabled,
+.tree-cell:filled:selected:focused:disabled,
+.tree-cell:filled:selected:disabled,
+.tree-cell > .tree-disclosure-node:disabled,
+.tree-table-row-cell > .tree-disclosure-node:disabled,
+.table-row-cell:selected:disabled,
+.tree-table-row-cell:selected:disabled,
+.table-cell:selected:disabled,
+.tree-table-cell:selected:disabled,
+.spinner:disabled {
+    -fx-opacity: 0.7;
 }
