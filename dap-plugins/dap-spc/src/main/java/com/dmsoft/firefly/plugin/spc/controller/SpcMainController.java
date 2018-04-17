@@ -215,7 +215,10 @@ public class SpcMainController implements Initializable {
         context.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
         context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
-        windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
+        windowProgressTipController.getCancelBtn().setOnAction(event -> {
+            windowProgressTipController.setCancelingText();
+            context.interruptBeforeNextJobHandler();
+        });
 
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_RESET_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
@@ -466,7 +469,10 @@ public class SpcMainController implements Initializable {
         context.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
         context.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
-        windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
+        windowProgressTipController.getCancelBtn().setOnAction(event -> {
+            windowProgressTipController.setCancelingText();
+            context.interruptBeforeNextJobHandler();
+        });
 
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_REFRESH_STATISTICAL_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
@@ -571,7 +577,10 @@ public class SpcMainController implements Initializable {
         SearchDataFrame subDataFrame = buildSubSearchDataFrame(rowKeyList, searchConditionDtoList);
         context.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
-        windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
+        windowProgressTipController.getCancelBtn().setOnAction(event -> {
+            windowProgressTipController.setCancelingText();
+            context.interruptBeforeNextJobHandler();
+        });
 
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_REFRESH_CHART_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
@@ -693,7 +702,10 @@ public class SpcMainController implements Initializable {
         context.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
 
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
-        windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
+        windowProgressTipController.getCancelBtn().setOnAction(event -> {
+            windowProgressTipController.setCancelingText();
+            context.interruptBeforeNextJobHandler();
+        });
 
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_REFRESH_ANALYSIS_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
