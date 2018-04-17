@@ -5,6 +5,7 @@ package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.firefly.gui.components.utils.TextFieldWrapper;
 import com.dmsoft.firefly.gui.components.utils.ValidateRule;
+import com.dmsoft.firefly.gui.components.utils.ValidateUtils;
 import com.dmsoft.firefly.plugin.spc.utils.FilterType;
 import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
@@ -57,7 +58,7 @@ public class QuickSearchController implements Initializable {
     private void validRangeText(){
         ValidateRule rule = new ValidateRule();
         rule.setMaxLength(SpcSettingValidateUtil.ANALYSIS_SETTING_MAX_INT);
-        rule.setPattern("^[+]?\\d*[.]?\\d*$");
+        rule.setPattern(ValidateUtils.DOUBLE_PATTERN);
         rule.setErrorStyle("text-field-error");
         rule.setEmptyErrorMsg(SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_VALIDATE_NOT_BE_EMPTY));
         TextFieldWrapper.decorate(withinLowerTf, rule);
