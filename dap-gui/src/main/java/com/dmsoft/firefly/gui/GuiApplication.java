@@ -94,14 +94,12 @@ public class GuiApplication extends Application {
                 }
             });
         }
-//        DAPApplication.run(Lists.newArrayList(plugins));
         DAPApplication.initEnv();
         BasicJobManager jobManager1 = new BasicJobManager();
         BasicJobFactory jobFactory = new BasicJobFactory();
         RuntimeContext.registerBean(JobManager.class, jobManager1);
         RuntimeContext.registerBean(BasicJobFactory.class, jobFactory);
         userService = RuntimeContext.getBean(UserService.class);
-
         buildProcessorBarDialog();
         if (StageMap.getStage(GuiConst.PLARTFORM_STAGE_PROCESS).isShowing()) {
             updateProcessorBar();
@@ -124,14 +122,13 @@ public class GuiApplication extends Application {
         MenuFactory.setMainController(fxmlLoader1.getController());
         MenuFactory.setAppController(fxmlLoader.getController());
 
-       /* RuntimeContext.registerBean(IController.class);
-        RuntimeContext.getBean(IController.class).registerController(CommonResourceMassages.PLATFORM_CONTROLLER_MAIN, fxmlLoader.getController());*/
-        StageMap.setPrimaryStage(GuiConst.PLARTFORM_STAGE_MAIN, WindowFactory.createFullWindow(GuiConst.PLARTFORM_STAGE_MAIN, root, main, getClass().getClassLoader().getResource("css/platform_app.css").toExternalForm()));
+        StageMap.setPrimaryStage(GuiConst.PLARTFORM_STAGE_MAIN, WindowFactory.createFullWindow(GuiConst.PLARTFORM_STAGE_MAIN, root, main,
+                getClass().getClassLoader().getResource("css/platform_app.css").toExternalForm()));
         NodeMap.addNode(GuiConst.PLARTFORM_NODE_MAIN, main);
 
         RuntimeContext.getBean(EventContext.class).addEventListener(event -> {
             if (event.getMessage().equals("Template_Show")) {
-                GuiFxmlAndLanguageUtils.buildTemplateDia();
+                GuiFxmlAndLanguageUtils.buildTemplateDialog();
             }
         });
     }
@@ -147,12 +144,14 @@ public class GuiApplication extends Application {
                     @Override
                     protected Integer call() throws Exception {
                         while (true) {
-                            Thread.sleep(100);
                             ClassLoadingMXBean classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
                             int process = (int) (classLoadingMXBean.getLoadedClassCount() * 1.0 / TOTAL_LOAD_CLASS * 100);
-                            updateProgress(process, 100);
-                            System.out.println(classLoadingMXBean.getLoadedClassCount() + "sasdf");
+                            System.out.println("count: " + classLoadingMXBean.getLoadedClassCount());
                             if (process >= 100) {
+                                for (int i = 10; i <= 100; i++) {
+                                    Thread.sleep(20);
+                                    updateProgress(i, 100);
+                                }
                                 Platform.runLater(() -> {
                                     StageMap.getStage(GuiConst.PLARTFORM_STAGE_PROCESS).close();
                                     if (!userService.findLegal()) {
@@ -183,11 +182,12 @@ public class GuiApplication extends Application {
 
     private void buildProcessorBarDialog() {
         Pane root = null;
+        final Double d02 = 0.2d;
         try {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/system_processor_bar.fxml");
             root = fxmlLoader.load();
             systemProcessorController = fxmlLoader.getController();
-            Effect shadowEffect = new DropShadow(BlurType.TWO_PASS_BOX, new Color(0, 0, 0, 0.2),
+            Effect shadowEffect = new DropShadow(BlurType.TWO_PASS_BOX, new Color(0, 0, 0, d02),
                     10, 0, 0, 0);
             root.setEffect(shadowEffect);
             Scene tempScene = new Scene(root);

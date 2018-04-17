@@ -73,8 +73,6 @@ import java.util.List;
 public class GrrExportController {
     private static final String STICKY_ON_TOP_CODE = "stick_on_top";
     private static final Double D100 = 100.0d;
-    private static final Double D30 = 30.0d;
-    private static final Double D70 = 70.0d;
     @FXML
     private TextFieldFilter itemFilter;
     @FXML
@@ -192,7 +190,7 @@ public class GrrExportController {
         }
         box = new CheckBox();
         box.setOnAction(event -> {
-            if (items != null) {
+            if (itemTable != null && itemTable.getItems() != null) {
                 for (ItemTableModel model : items) {
                     if (isFilterUslOrLsl) {
                         if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
@@ -773,7 +771,7 @@ public class GrrExportController {
 
         viewData.setOnAction(event -> {
             if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                WindowMessageFactory.createWindowMessageHasOk(GrrFxmlAndLanguageUtils.getString("EXPORT"), GrrFxmlAndLanguageUtils.getString("EXPORT_ITEM"));
                 return;
             }
             buildViewData();
@@ -783,15 +781,15 @@ public class GrrExportController {
         });
         export.setOnAction(event -> {
             if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                WindowMessageFactory.createWindowMessageHasOk(GrrFxmlAndLanguageUtils.getString("EXPORT"), GrrFxmlAndLanguageUtils.getString("EXPORT_ITEM_PARAM"));
                 return;
             }
             if (!checkSubmitParam(getSelectedItem().size())) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "GRR Config param error.");
+                WindowMessageFactory.createWindowMessageHasOk(GrrFxmlAndLanguageUtils.getString("EXPORT"), GrrFxmlAndLanguageUtils.getString("EXPORT_CONFIG_PARAM"));
                 return;
             }
             if (StringUtils.isEmpty(locationPath.getText())) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export path.");
+                WindowMessageFactory.createWindowMessageHasOk(GrrFxmlAndLanguageUtils.getString("EXPORT"), GrrFxmlAndLanguageUtils.getString("EXPORT_PATH_PARAM"));
                 return;
             }
             StageMap.closeStage("grrExport");
@@ -801,11 +799,11 @@ public class GrrExportController {
         });
         print.setOnAction(event -> {
             if (StringUtils.isEmpty(locationPath.getText())) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export path.");
+                WindowMessageFactory.createWindowMessageHasOk(GrrFxmlAndLanguageUtils.getString("EXPORT"), GrrFxmlAndLanguageUtils.getString("EXPORT_PATH_PARAM"));
                 return;
             }
             if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                WindowMessageFactory.createWindowMessageHasOk(GrrFxmlAndLanguageUtils.getString("EXPORT"), GrrFxmlAndLanguageUtils.getString("EXPORT_ITEM"));
                 return;
             }
             if (!searchTab.verifySearchTextArea()) {
@@ -1032,7 +1030,7 @@ public class GrrExportController {
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
-                windowProgressTipController.updateFailProgress(context.getError().toString());
+                windowProgressTipController.updateFailProgress(context.getError().getMessage());
             }
         });
         List<TestItemWithTypeDto> testItemWithTypeDtoList = initSelectedItemDto();
@@ -1040,16 +1038,17 @@ public class GrrExportController {
             int i = 0;
             for (String projectName : projectNameList) {
                 String handlerName = projectName + i;
-                addHandler(jobPipeline, Lists.newArrayList(projectName), handlerName, savePath, testItemWithTypeDtoList);
+                addHandler(jobPipeline, windowProgressTipController, Lists.newArrayList(projectName), handlerName, savePath, testItemWithTypeDtoList);
                 i++;
             }
         } else {
-            addHandler(jobPipeline, projectNameList, "Export Grr Reports", savePath, testItemWithTypeDtoList);
+            addHandler(jobPipeline, windowProgressTipController, projectNameList, "Export Grr Reports", savePath, testItemWithTypeDtoList);
         }
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context, true);
     }
 
-    private void addHandler(JobPipeline pipeline, List<String> projectNameList, String handlerName, String savePath, List<TestItemWithTypeDto> testItemWithTypeDtoList) {
+    private void addHandler(JobPipeline pipeline, WindowProgressTipController windowProgressTipController, List<String> projectNameList, String handlerName,
+                            String savePath, List<TestItemWithTypeDto> testItemWithTypeDtoList) {
         pipeline.addLast(new AbstractBasicJobHandler(handlerName) {
             @Override
             public void doJob(JobContext context) {
@@ -1093,9 +1092,21 @@ public class GrrExportController {
                     context1.addJobEventListener(event -> context.pushEvent(new JobEvent(event.getEventName(), event.getProgress() * D100, event.getEventObject())));
                     if (!detail) {
                         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_EXPORT_JOB_PIPELINE);
+                        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+                            @Override
+                            public void doJob(JobContext context) {
+                                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                            }
+                        });
                         RuntimeContext.getBean(JobManager.class).fireJobSyn(jobPipeline, context1);
                     } else {
                         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_EXPORT_DETAIL_JOB_PIPELINE);
+                        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+                            @Override
+                            public void doJob(JobContext context) {
+                                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                            }
+                        });
                         RuntimeContext.getBean(JobManager.class).fireJobSyn(jobPipeline, context1);
                     }
                     context.put(ParamKeys.EXPORT_PATH, savePath);
@@ -1196,7 +1207,7 @@ public class GrrExportController {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
         );
-        File file = fileChooser.showOpenDialog(null);
+        File file = fileChooser.showOpenDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
 
         if (file != null) {
             GrrLeftConfigDto grrLeftConfigDto = leftConfigService.importGrrConfig(file);
@@ -1288,8 +1299,8 @@ public class GrrExportController {
     }
 
     private boolean isFilterAndAll(ItemTableModel itemTableModel) {
-        if (itemTableModel.getItem().startsWith("") && (DAPStringUtils.isBlank(itemFilter.getTextField().getText()) ||
-                (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText()) && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())))) {
+        if (itemTableModel.getItem().startsWith("") && (DAPStringUtils.isBlank(itemFilter.getTextField().getText())
+                || (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText()) && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())))) {
             return true;
         }
         return false;

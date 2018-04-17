@@ -1,7 +1,10 @@
 package com.dmsoft.firefly.gui.utils;
 
 import com.dmsoft.firefly.gui.components.utils.StageMap;
-import com.dmsoft.firefly.gui.components.window.*;
+import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
+import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.components.window.WindowMessageController;
+import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.controller.AppController;
 import com.dmsoft.firefly.gui.controller.MainController;
 import com.dmsoft.firefly.gui.controller.template.PluginManageController;
@@ -15,31 +18,34 @@ import com.dmsoft.firefly.sdk.plugin.apis.IConfig;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
-import com.google.common.collect.Maps;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import org.apache.commons.lang3.StringUtils;
-
 
 import java.util.List;
-import java.util.Map;
 
 import static com.google.common.io.Resources.getResource;
 
+/**
+ * menu factory class
+ *
+ * @author Julia
+ */
 public class MenuFactory {
+    public static final String ROOT_MENU = "root";
+    public static final String PLATFORM_ID = "Platform";
     private static MainController mainController;
     private static AppController appController;
     private static EnvService envService = RuntimeContext.getBean(EnvService.class);
     private static UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
-
-    public final static String ROOT_MENU = "root";
-    public final static String PLATFORM_ID = "Platform";
     private static boolean isChangeEnLanguage = true;
     private static boolean isChangeZhLanguage = true;
 
@@ -55,6 +61,9 @@ public class MenuFactory {
         return new MenuBuilder(PLATFORM_ID, MenuBuilder.MenuType.MENU_ITEM);
     }
 
+    /**
+     * method to init menu
+     */
     public static void initMenu() {
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(createFileMenu());
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(createPreferenceMenu());
@@ -65,7 +74,6 @@ public class MenuFactory {
 
         Menu menu = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_FILE"));
         menu.setId(MenuBuilder.MENU_FILE);
-        menu.setMnemonicParsing(true);
         MenuItem selectDataSourceMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_SELECT_DATA_SOURCE"));
         selectDataSourceMenuItem.setMnemonicParsing(true);
         selectDataSourceMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
@@ -77,7 +85,7 @@ public class MenuFactory {
         exportMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN));
         MenuItem restoreMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_RESTORE_SETTING"));
         restoreMenuItem.setMnemonicParsing(true);
-        restoreMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.R));
+        restoreMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.R, KeyCombination.SHORTCUT_DOWN));
         restoreMenuItem.setOnAction(event -> {
             WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Message", GuiFxmlAndLanguageUtils.getString("GLOBAL_RESTORE_SYSTEM"));
             controller.addProcessMonitorListener(new WindowCustomListener() {
@@ -137,8 +145,6 @@ public class MenuFactory {
     private static MenuBuilder createPreferenceMenu() {
         Menu menu = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_PREFERENCE"));
         menu.setId(MenuBuilder.MENU_PREFERENCE);
-        menu.setMnemonicParsing(true);
-        menu.setAccelerator(new KeyCodeCombination(KeyCode.P));
         MenuItem dataSourceSettingMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_DATA_SOURCE_SETTING"));
         dataSourceSettingMenuItem.setMnemonicParsing(true);
         dataSourceSettingMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.D, KeyCombination.SHORTCUT_DOWN));
@@ -146,8 +152,8 @@ public class MenuFactory {
 
         MenuItem analysisMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ANALYSIS_TEMPLATE"));
         analysisMenuItem.setMnemonicParsing(true);
-        analysisMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.A, KeyCombination.SHORTCUT_DOWN));
-        analysisMenuItem.setOnAction(event -> GuiFxmlAndLanguageUtils.buildTemplateDia());
+        analysisMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.T, KeyCombination.SHORTCUT_DOWN));
+        analysisMenuItem.setOnAction(event -> GuiFxmlAndLanguageUtils.buildTemplateDialog());
 
         MenuItem pluginMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_PLUGIN_MANAGER"));
         pluginMenuItem.setMnemonicParsing(true);
@@ -165,7 +171,6 @@ public class MenuFactory {
 
     private static Menu initLanguageMenu() {
         Menu language = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_LANGUAGE"));
-
         RadioMenuItem zh = new RadioMenuItem(GuiFxmlAndLanguageUtils.getString("LANGUAGE_ZH"));
         RadioMenuItem en = new RadioMenuItem(GuiFxmlAndLanguageUtils.getString("LANGUAGE_EN"));
         if (LanguageType.ZH.equals(envService.getLanguageType())) {
@@ -174,9 +179,9 @@ public class MenuFactory {
             en.setSelected(true);
         }
         en.selectedProperty().addListener((ov, b1, b2) -> {
-           if (b2 && isChangeZhLanguage) {
-               WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Message", GuiFxmlAndLanguageUtils.getString("GLOBAL_CHANGE_LANGUAGE"));
-               controller.addProcessMonitorListener(new WindowCustomListener() {
+            if (b2 && isChangeZhLanguage) {
+                WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Message", GuiFxmlAndLanguageUtils.getString("GLOBAL_CHANGE_LANGUAGE"));
+                controller.addProcessMonitorListener(new WindowCustomListener() {
                     @Override
                     public boolean onShowCustomEvent() {
                         return false;
@@ -202,7 +207,7 @@ public class MenuFactory {
                         });
                         return false;
                     }
-               });
+                });
             }
         });
 
@@ -248,8 +253,6 @@ public class MenuFactory {
 
     private static MenuBuilder createHelpMenu() {
         Menu menu = new Menu(GuiFxmlAndLanguageUtils.getString("MENU_HELP"));
-        menu.setMnemonicParsing(true);
-        menu.setAccelerator(new KeyCodeCombination(KeyCode.H));
         menu.setId(MenuBuilder.MENU_HELP);
         MenuItem legalMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_LEGAL_NOTICE"));
         legalMenuItem.setOnAction(event -> {
@@ -259,33 +262,23 @@ public class MenuFactory {
         aboutMenuItem.setOnAction(event -> {
             GuiFxmlAndLanguageUtils.buildAboutDialog();
         });
-//        MenuItem dapMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_ABOUT_DAP"));
-//        MenuItem updateMenuItem = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_CHECK_UPDATE"));
 
-//        dapMenuItem.setOnAction(event -> {
-//            System.out.println("dap");
-//        });
-//
-//        updateMenuItem.setOnAction(event -> {
-//            System.out.println("update");
-//        });
         menu.getItems().add(legalMenuItem);
         menu.getItems().add(aboutMenuItem);
-//        menu.getItems().add(dapMenuItem);
-//        menu.getItems().add(updateMenuItem);
         return getParentMenuBuilder().setParentLocation(ROOT_MENU).addMenu(menu);
     }
 
-    private static void buildSourceSettingDia(){
-        List<String> projectNames= envService.findActivatedProjectName();
+    private static void buildSourceSettingDia() {
+        List<String> projectNames = envService.findActivatedProjectName();
         if (projectNames == null || projectNames.isEmpty()) {
-           WindowMessageFactory.createWindowMessageHasOk("Message", GuiFxmlAndLanguageUtils.getString("DATA_SOURCE_SETTING_NO_SELECT_FILE"));
+            WindowMessageFactory.createWindowMessageHasOk("Message", GuiFxmlAndLanguageUtils.getString("DATA_SOURCE_SETTING_NO_SELECT_FILE"));
         } else {
             Pane root = null;
             try {
                 FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source_setting.fxml");
                 root = fxmlLoader.load();
-                Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("sourceSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.SOURCE_SETTING), root, getResource("css/platform_app.css").toExternalForm());
+                Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("sourceSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.SOURCE_SETTING), root,
+                        getResource("css/platform_app.css").toExternalForm());
                 stage.toFront();
                 stage.show();
             } catch (Exception ex) {
@@ -293,13 +286,14 @@ public class MenuFactory {
             }
         }
     }
-    
+
     private static void buildeSettingExportDia() {
         Pane root = null;
         try {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/export_setting.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("exportSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.GLOBAL_EXPORT_SETTING), root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("exportSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.GLOBAL_EXPORT_SETTING), root,
+                    getResource("css/platform_app.css").toExternalForm());
             stage.toFront();
             stage.show();
         } catch (Exception ex) {
@@ -312,7 +306,8 @@ public class MenuFactory {
         try {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/plugin.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("pluginManage", GuiFxmlAndLanguageUtils.getString(ResourceMassages.PLUGIN_MANAGE), root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("pluginManage", GuiFxmlAndLanguageUtils.getString(ResourceMassages.PLUGIN_MANAGE), root,
+                    getResource("css/platform_app.css").toExternalForm());
             PluginManageController controller = fxmlLoader.getController();
             stage.setOnCloseRequest(controller.getOnCloseRequest());
             stage.toFront();
@@ -322,19 +317,19 @@ public class MenuFactory {
         }
     }
 
-    public static void setMainController(MainController mainController) {
-        MenuFactory.mainController = mainController;
-    }
-
-    public static void setAppController(AppController appController) {
-        MenuFactory.appController = appController;
-    }
-
     public static MainController getMainController() {
         return mainController;
     }
 
+    public static void setMainController(MainController mainController) {
+        MenuFactory.mainController = mainController;
+    }
+
     public static AppController getAppController() {
         return appController;
+    }
+
+    public static void setAppController(AppController appController) {
+        MenuFactory.appController = appController;
     }
 }

@@ -3,7 +3,9 @@ package com.dmsoft.firefly.gui.controller;
 import com.dmsoft.firefly.gui.components.utils.JsonFileUtil;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.model.ExportSettingModel;
+import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.plugin.PluginClass;
 import com.dmsoft.firefly.sdk.plugin.PluginClassType;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
@@ -18,7 +20,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,7 @@ public class ExportSettingController {
     private final Logger logger = LoggerFactory.getLogger(ExportSettingController.class);
 
     @FXML
-    private TableView settingTable;
+    private TableView<ExportSettingModel> settingTable;
     @FXML
     private TableColumn<ExportSettingModel, CheckBox> selector;
     @FXML
@@ -48,6 +49,7 @@ public class ExportSettingController {
 
     private PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
     private List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.CONFIG);
+    private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
 
     @FXML
     private void initialize() {
@@ -77,41 +79,49 @@ public class ExportSettingController {
     }
 
     private void initData() {
+        items.add(new ExportSettingModel(GuiFxmlAndLanguageUtils.getString(templateService.getConfigName())));
         pluginClasses.forEach(v -> {
             IConfig service = (IConfig) v.getInstance();
             String configName = service.getConfigName();
             if (StringUtils.isNotEmpty(configName)) {
-                items.add(new ExportSettingModel(configName));
+                items.add(new ExportSettingModel(GuiFxmlAndLanguageUtils.getString(configName)));
             }
         });
         settingTable.setItems(items);
     }
 
+    /**
+     * method to export all config
+     *
+     * @param names names of selected config name
+     */
     public void exportAllConfig(List<String> names) {
         Map<String, String> config = Maps.newHashMap();
+        String templateConfigName = GuiFxmlAndLanguageUtils.getString(templateService.getConfigName());
+        if (names != null && !names.isEmpty() && names.contains(templateConfigName)) {
+            config.put(templateConfigName, new String(templateService.exportConfig()));
+        }
+
         pluginClasses.forEach(v -> {
             IConfig service = (IConfig) v.getInstance();
-//            name.add(((IConfig) v.getInstance()).getConfigName());
-            String name = service.getConfigName();
+            String name = GuiFxmlAndLanguageUtils.getString(service.getConfigName());
             if (StringUtils.isNotEmpty(name) && names.contains(name)) {
-                config.put(service.getConfigName(), new String(service.exportConfig()));
+                config.put(name, new String(service.exportConfig()));
             }
         });
         String str = System.getProperty("user.home");
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Spc Config export");
+        fileChooser.setTitle(GuiFxmlAndLanguageUtils.getString("GLOBAL_TITLE_EXPORT_CONFIG"));
         fileChooser.setInitialDirectory(new File(str));
+        fileChooser.setInitialFileName("DAPConfig.json");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
         );
-        Stage fileStage = null;
-        File file = fileChooser.showSaveDialog(fileStage);
+        File file = fileChooser.showSaveDialog(StageMap.getStage("exportSetting"));
 
         if (file != null) {
-            if (config != null) {
-                JsonFileUtil.writeJsonFile(config, file);
-                logger.debug("Export success");
-            }
+            JsonFileUtil.writeJsonFile(config, file);
+            logger.debug("Export success");
         }
     }
 

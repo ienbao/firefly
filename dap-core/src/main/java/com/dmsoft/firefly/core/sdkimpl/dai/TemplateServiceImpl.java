@@ -8,6 +8,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.dmsoft.firefly.sdk.utils.FileUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -24,6 +25,7 @@ import java.util.Map;
  */
 public class TemplateServiceImpl implements TemplateService {
     private final String parentPath = ApplicationPathUtil.getPath("config");
+    private final String defaultParentPath = ApplicationPathUtil.getPath("default");
     private final String fileName = "template";
     private Logger logger = LoggerFactory.getLogger(TemplateServiceImpl.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
@@ -136,12 +138,10 @@ public class TemplateServiceImpl implements TemplateService {
             }
         }
         Boolean isExist = Boolean.FALSE;
-        if (!isExist) {
-            for (TemplateSettingDto dto : list) {
-                if (dto.getName().equals(newName)) {
-                    dto.setName(newName);
-                    isExist = true;
-                }
+        for (TemplateSettingDto dto : list) {
+            if (dto.getName().equals(newName)) {
+                dto.setName(newName);
+                isExist = true;
             }
         }
         if (isExist) {
@@ -211,5 +211,33 @@ public class TemplateServiceImpl implements TemplateService {
             }
         }
         return result;
+    }
+
+    @Override
+    public String getConfigName() {
+        return "ANALYSIS_TEMPLATE";
+    }
+
+    @Override
+    public byte[] exportConfig() {
+        List<TemplateSettingDto> templateSettingDtos = findAllTemplate();
+        if (mapper != null) {
+            return mapper.toJson(templateSettingDtos).getBytes();
+        }
+        return new byte[0];
+    }
+
+    @Override
+    public void importConfig(byte[] config) {
+        if (config == null) {
+            return;
+        }
+        saveAllAnalysisTemplate(mapper.fromJson(new String(config), mapper.buildCollectionType(List.class, TemplateSettingDto.class)));
+    }
+
+    @Override
+    public void restoreConfig() {
+        FileUtils.delFolder(parentPath);
+        FileUtils.copyFolder(defaultParentPath, parentPath);
     }
 }

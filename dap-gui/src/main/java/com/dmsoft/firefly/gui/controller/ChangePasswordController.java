@@ -50,8 +50,8 @@ public class ChangePasswordController {
                 return;
             }
             try {
-                if (userService.updatePassword(userModel.getUser().getUserName(), txtOldPassword.getText(), txtNewPassword.getText())){
-                    GuiFxmlAndLanguageUtils.buildChangePasswordBackDia();
+                if (userService.updatePassword(userModel.getUser().getUserName(), txtOldPassword.getText(), txtNewPassword.getText())) {
+                    GuiFxmlAndLanguageUtils.buildChangePasswordBackDialog();
                 } else {
                     WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_CHECK_PASSWORD"));
                 }
@@ -109,13 +109,14 @@ public class ChangePasswordController {
         if (DAPStringUtils.isBlank(newPassword) && DAPStringUtils.isBlank(confirmPassword)) {
             node.getStyleClass().add(errorStyle);
             TooltipUtil.installWarnTooltip(node, GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_VALIDATE_EMPTY"));
-        } else if (DAPStringUtils.isNotBlank(newPassword) && DAPStringUtils.isNotBlank(confirmPassword) && (newPassword.length() < 6 || newPassword.length() >= 13) && (confirmPassword.length() < 6 || confirmPassword.length() >= 13)) {
+        } else if (DAPStringUtils.isNotBlank(newPassword) && DAPStringUtils.isNotBlank(confirmPassword) && (newPassword.length() < 6
+                || newPassword.length() >= 13) && (confirmPassword.length() < 6 || confirmPassword.length() >= 13)) {
             node.getStyleClass().add(errorStyle);
             TooltipUtil.installWarnTooltip(node, GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_VALIDATE_LENGTH"));
         } else if (!newPassword.equals(confirmPassword)) {
             node.getStyleClass().add(errorStyle);
             TooltipUtil.installWarnTooltip(node, GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_VALIDATE_CONFIRM"));
-        }  else {
+        } else {
             node.getStyleClass().removeAll(errorStyle);
             TooltipUtil.uninstallWarnTooltip(node);
         }

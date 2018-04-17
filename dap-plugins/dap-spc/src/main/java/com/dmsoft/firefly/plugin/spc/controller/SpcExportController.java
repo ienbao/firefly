@@ -168,8 +168,8 @@ public class SpcExportController {
         // select column in test item table
         box = new CheckBox();
         box.setOnAction(event -> {
-            if (items != null) {
-                for (ItemTableModel model : items) {
+            if (itemTable != null && itemTable.getItems() != null) {
+                for (ItemTableModel model : itemTable.getItems()) {
                     if (isFilterUslOrLsl) {
                         if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
                             model.getSelector().setValue(box.isSelected());
@@ -328,7 +328,7 @@ public class SpcExportController {
 
         viewData.setOnAction(event -> {
             if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), SpcFxmlAndLanguageUtils.getString(ResourceMassages.EMPTY_ITEM));
                 return;
             }
             buildViewData();
@@ -338,18 +338,18 @@ public class SpcExportController {
         });
         export.setOnAction(event -> {
             if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), SpcFxmlAndLanguageUtils.getString(ResourceMassages.EMPTY_ITEM));
                 return;
             }
             if (subGroup.getStyleClass().contains("text-field-error") || ndGroup.getStyleClass().contains("text-field-error")) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please Input correct config numbers.");
+                WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_ERROR_CONFIG));
                 return;
             }
             if (!searchTab.verifySearchTextArea()) {
                 return;
             }
             if (StringUtils.isEmpty(locationPath.getText())) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export path.");
+                WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), SpcFxmlAndLanguageUtils.getString(ResourceMassages.EMPTY_PATH));
                 return;
             }
             StageMap.closeStage("spcExport");
@@ -358,11 +358,11 @@ public class SpcExportController {
         });
         print.setOnAction(event -> {
             if (StringUtils.isEmpty(locationPath.getText())) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export path.");
+                WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), SpcFxmlAndLanguageUtils.getString(ResourceMassages.EMPTY_PATH));
                 return;
             }
             if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
-                WindowMessageFactory.createWindowMessageHasOk("Export", "Please select export item.");
+                WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), SpcFxmlAndLanguageUtils.getString(ResourceMassages.EMPTY_ITEM));
                 return;
             }
             StageMap.closeStage("spcExport");
@@ -532,12 +532,12 @@ public class SpcExportController {
             public void doJob(JobContext context) {
                 final boolean[] isSucceed = {false};
                 if (isPrint) {
-                   try {
-                       isSucceed[0] = new ExcelToPdfUtil().excelToPdf(savePath);
-                   } catch (Exception e) {
-                       e.printStackTrace();
-                   }
-               }
+                    try {
+                        isSucceed[0] = new ExcelToPdfUtil().excelToPdf(savePath);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 context.pushEvent(new JobEvent("Export done", D100, null));
                 String path = context.get(ParamKeys.EXPORT_PATH).toString();
                 windowProgressTipController.getCancelBtn().setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.OPEN_EXPORT_FOLDER));
@@ -727,8 +727,7 @@ public class SpcExportController {
             }
         }
 
-        String result = spcExportService.spcExport(spcConfig, spcStatisticalResultDtosToExport, chartPath, runChartRule);
-        return result;
+        return spcExportService.spcExport(spcConfig, spcStatisticalResultDtosToExport, chartPath, runChartRule);
     }
 
     private List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
@@ -908,7 +907,7 @@ public class SpcExportController {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
         );
-        File file = fileChooser.showOpenDialog(null);
+        File file = fileChooser.showOpenDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
 
         if (file != null) {
             SpcLeftConfigDto spcLeftConfigDto = leftConfigService.importSpcConfig(file);

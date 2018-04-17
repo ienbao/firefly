@@ -13,6 +13,12 @@ public class PatternHelpModel {
     private StringProperty character;
     private StringProperty description;
 
+    /**
+     * constructor
+     *
+     * @param character   character
+     * @param description description
+     */
     public PatternHelpModel(String character, String description) {
         this.character = new SimpleStringProperty(character);
         this.description = new SimpleStringProperty(description);
@@ -22,23 +28,43 @@ public class PatternHelpModel {
         return character.get();
     }
 
-    public StringProperty characterProperty() {
-        return character;
-    }
-
+    /**
+     * method set character
+     *
+     * @param character character
+     */
     public void setCharacter(String character) {
         this.character.set(character);
+    }
+
+    /**
+     * method to get character property
+     *
+     * @return string property
+     */
+    public StringProperty characterProperty() {
+        return character;
     }
 
     public String getDescription() {
         return description.get();
     }
 
-    public StringProperty descriptionProperty() {
-        return description;
-    }
-
+    /**
+     * method to set description
+     *
+     * @param description description
+     */
     public void setDescription(String description) {
         this.description.set(description);
+    }
+
+    /**
+     * method to get description property
+     *
+     * @return string property
+     */
+    public StringProperty descriptionProperty() {
+        return description;
     }
 }

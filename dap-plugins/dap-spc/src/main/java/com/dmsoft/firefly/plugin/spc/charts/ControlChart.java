@@ -48,6 +48,9 @@ public class ControlChart<X, Y> extends LineChart {
     private Map<XYChart.Series, Color> seriesColorMap = Maps.newHashMap();
     //    unique key----图层
     private Map<String, XYChart.Series> seriesUniqueKeyMap = Maps.newHashMap();
+    //    unique key----nodes
+    private Map<String, List<Node>> uniqueKeyNodesMap = Maps.newHashMap();
+
     //    unique key----符合R规则的点
     private Map<String, List<XYChart.Data>> rRuleDataUniqueKeyMap = Maps.newHashMap();
     //    unique key----符合ucl,lcl的点
@@ -59,7 +62,6 @@ public class ControlChart<X, Y> extends LineChart {
     private PointClickCallBack pointClickCallBack;
     //    whether active point click event
     private boolean pointClick = false;
-    private boolean showPoint = true;
 
     /**
      * @param xAxis xAxis
@@ -111,6 +113,21 @@ public class ControlChart<X, Y> extends LineChart {
             List<XYChart.Series<X, Y>> seriesList = pathMarkerMap.get(unique);
             seriesList.forEach(series -> this.updatePathColor(series, color));
         }
+    }
+
+    /**
+     * Stick unique key series layer
+     *
+     * @param uniqueKey unique key
+     */
+    public void stickLayerToUniqueKey(String uniqueKey) {
+        if (uniqueKeyNodesMap.isEmpty() || !uniqueKeyNodesMap.containsKey(uniqueKey)) {
+            return;
+        }
+        ObservableList<Node> nodes = getPlotChildren();
+        List<Node> newNodes = uniqueKeyNodesMap.get(uniqueKey);
+        nodes.removeAll(newNodes);
+        nodes.addAll(newNodes);
     }
 
     /**
@@ -223,7 +240,15 @@ public class ControlChart<X, Y> extends LineChart {
             XYChart.Series<X, Y> series = value;
             series.getData().forEach(dataItem -> this.toggleOneDataPoint(dataItem, showed));
         });
-        showPoint = showed;
+    }
+
+    /**
+     * Set point click call back
+     *
+     * @param pointClickCallBack point click call back
+     */
+    public void setPointClickCallBack(PointClickCallBack pointClickCallBack) {
+        this.pointClickCallBack = pointClickCallBack;
     }
 
     private void toggleOneSeriesLine(XYChart.Series<X, Y> series, boolean showed) {
@@ -256,17 +281,11 @@ public class ControlChart<X, Y> extends LineChart {
                 dataItem.getNode().getStyleClass().add("chart-line-hidden-symbol");
                 dataItem.getNode().getStyleClass().remove("chart-line-symbol-hover");
             }
-//            if (dataItem.getNode().getStyleClass().contains("chart-symbol-triangle")) {
-//                dataItem.getNode().getStyleClass().add("chart-line-hidden-symbol");
-//            }
         } else {
             if (dataItem.getNode().getStyleClass().contains("chart-line-hidden-symbol")) {
                 dataItem.getNode().getStyleClass().add("chart-line-symbol-hover");
                 dataItem.getNode().getStyleClass().remove("chart-line-hidden-symbol");
             }
-//            if (dataItem.getNode().getStyleClass().contains("chart-symbol-triangle")) {
-//                dataItem.getNode().getStyleClass().addAll("chart-line-symbol", "chart-line-symbol-hover");
-//            }
         }
     }
 
@@ -388,13 +407,13 @@ public class ControlChart<X, Y> extends LineChart {
         this.rRuleDataUniqueKeyMap.clear();
         this.seriesUniqueKeyMap.clear();
         this.seriesPointRuleMap.clear();
+        this.uniqueKeyNodesMap.clear();
         this.seriesColorMap.clear();
         this.valueMarkerMap.clear();
         this.pathMarkerMap.clear();
         this.getData().setAll(FXCollections.observableArrayList());
         this.getPlotChildren().removeAll(this.getPlotChildren());
         valueMarkerMap.forEach((key, value) -> value.clear());
-        showPoint = true;
     }
 
     /**
@@ -426,12 +445,15 @@ public class ControlChart<X, Y> extends LineChart {
         }
         NumberAxis xAxis = (NumberAxis) this.getXAxis();
         NumberAxis yAxis = (NumberAxis) this.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
+        yMax += (yMax - yMin) * UIConstant.Y_FACTOR;
+        yMin -= (yMax - yMin) * UIConstant.Y_FACTOR;
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
         xAxis.setLowerBound(0);
-        xAxis.setUpperBound(xMax + UIConstant.FACTOR);
-        yAxis.setLowerBound(yMin - yReserve);
-        yAxis.setUpperBound(yMax + yReserve);
+        xAxis.setUpperBound(xMax + UIConstant.X_FACTOR);
+        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        yAxis.setLowerBound(newYMin);
+        yAxis.setUpperBound(newYMax);
         ChartOperatorUtils.updateAxisTickUnit(xAxis);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
     }
@@ -457,6 +479,7 @@ public class ControlChart<X, Y> extends LineChart {
             this.seriesUniqueKeyMap.put(uniqueKey, series);
             this.seriesColorMap.put(series, color);
             this.seriesPointRuleMap.put(uniqueKey, rulePointStyleFunction);
+            this.uniqueKeyNodesMap.put(uniqueKey, getSeriesNodes(series));
         }
 //        Set chart line
         if (lineDataList != null) {
@@ -465,6 +488,7 @@ public class ControlChart<X, Y> extends LineChart {
                 if (oneLineData.getValue() != null) {
                     Line line = valueMarker.buildValueMarker(oneLineData, color, seriesName, chartTooltip == null ? null : chartTooltip.getLineTooltip());
                     getPlotChildren().add(line);
+                    addToUniqueKeyNodes(uniqueKey, Lists.newArrayList(line));
                 }
             });
             valueMarkerMap.put(uniqueKey, valueMarker);
@@ -479,6 +503,7 @@ public class ControlChart<X, Y> extends LineChart {
                         this.getData().add(series);
                         this.setPathNodeStyleAndTooltip(series, color, seriesName, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
                         seriesList.add(series);
+                        addToUniqueKeyNodes(uniqueKey, getSeriesNodes(series));
                     }
                 }
             });
@@ -543,6 +568,24 @@ public class ControlChart<X, Y> extends LineChart {
         text.setStyle(" -fx-fill: " + textColor);
         pane.getChildren().add(text);
         pane.setMargin(text, new Insets(0, 0, 10, 0));
+    }
+
+    private List<Node> getSeriesNodes(XYChart.Series<X, Y> series) {
+        List<Node> nodes = Lists.newArrayList();
+        if (series == null) {
+            return nodes;
+        }
+        nodes.add(series.getNode());
+        series.getData().forEach(dataItem -> nodes.add(dataItem.getNode()));
+        return nodes;
+    }
+
+    private void addToUniqueKeyNodes(String uniqueKey, List<Node> node) {
+        if (uniqueKeyNodesMap.containsKey(uniqueKey)) {
+            uniqueKeyNodesMap.get(uniqueKey).addAll(node);
+        } else {
+            uniqueKeyNodesMap.put(uniqueKey, Lists.newArrayList(node));
+        }
     }
 
     private void updateNodeColor(String uniqueKey, Color color) {
@@ -636,14 +679,5 @@ public class ControlChart<X, Y> extends LineChart {
         for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
             valueMarkerEntry.getValue().paintValueMaker(this);
         }
-    }
-
-    /**
-     * Set point click call back
-     *
-     * @param pointClickCallBack point click call back
-     */
-    public void setPointClickCallBack(PointClickCallBack pointClickCallBack) {
-        this.pointClickCallBack = pointClickCallBack;
     }
 }

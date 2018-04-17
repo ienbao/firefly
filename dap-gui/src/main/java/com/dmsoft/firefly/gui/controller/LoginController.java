@@ -17,6 +17,7 @@ import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.dai.service.UserService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -30,6 +31,11 @@ import java.util.List;
 import java.util.Map;
 
 
+/**
+ * controller for login windows
+ *
+ * @author Julia
+ */
 public class LoginController {
     private UserService userService = RuntimeContext.getBean(UserService.class);
 
@@ -62,14 +68,8 @@ public class LoginController {
         resetLoginBtn();
         loginBtn.setOnAction(event -> {
             loginingBtn();
-            if (doLogin()) {
-                UserModel userModel = UserModel.getInstance();
-                if (userModel != null) {
-                    MenuFactory.getAppController().resetMenu();
-                    MenuFactory.getMainController().resetMain();
-                    StageMap.getStage(GuiConst.PLARTFORM_STAGE_LOGIN).close();
-                }
-            }
+            loginFailHbox.getChildren().clear();
+            this.doLogin();
         });
     }
 
@@ -88,17 +88,24 @@ public class LoginController {
         loginBtn.getStyleClass().add("btn-primary-loading");
     }
 
-    private boolean doLogin() {
-        loginFailHbox.getChildren().clear();
-        UserDto userDto = userService.validateUser(userNameTxt.getText(), passwordField.getText());
-        if (userDto != null) {
-            this.initEnvData(userDto);
-            return true;
-        } else {
-            resetLoginBtn();
-            addErrorTip();
-        }
-        return false;
+    private void doLogin() {
+        Thread thread = new Thread(() -> {
+            UserDto userDto = userService.validateUser(userNameTxt.getText(), passwordField.getText());
+            if (userDto != null) {
+                this.initEnvData(userDto);
+                Platform.runLater(() -> {
+                    MenuFactory.getAppController().resetMenu();
+                    MenuFactory.getMainController().resetMain();
+                    StageMap.getStage(GuiConst.PLARTFORM_STAGE_LOGIN).close();
+                });
+            } else {
+                Platform.runLater(() -> {
+                    resetLoginBtn();
+                    addErrorTip();
+                });
+            }
+        });
+        thread.start();
     }
 
     private void initEnvData(UserDto userDto) {

@@ -644,7 +644,7 @@
 .text-field-filter:focused {
     -fx-background-color: #fff;
     -fx-text-fill: #222;
-    -fx-highlight-fill: #cccccc;
+    -fx-highlight-fill: #0096ff;
     -fx-highlight-text-fill: #fff;
     -fx-border-style: dashed;
 }
@@ -1701,7 +1701,7 @@
     -fx-min-height: 22;
     -fx-pref-height: 22;
     -fx-background-color: COLOR_LIGHT_FF;
-    -fx-padding: 0 10 0 10; /* 4 5 4 5 */
+    -fx-padding: 0 0 0 0; /* 4 5 4 5 */
     -fx-background-insets: 0;
 }
 
@@ -1714,7 +1714,7 @@
 }
 
 .menu-item > .label {
-    -fx-padding: 0em 0.5em 0em 0em;
+    -fx-padding: 0 10 0 10;
     -fx-text-fill: FONT_DARK;
 }
 
@@ -1996,11 +1996,12 @@
 .search-component .value {
     -fx-border-width: 1 1 1 0;
     -fx-skin: "com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBoxSkin";
+    -fx-padding: -1 0 -1 0;
 }
 
 .search-component .value .arrow-button {
     -fx-padding: 0 5 0 7;
-    -fx-background-insets: 1 0 0 1;
+    -fx-background-insets: 1 0 1 1;
 }
 
 .search-component .value .arrow {

@@ -12,9 +12,9 @@ public class ResourceMassages {
 
     public static final String GLOBAL_EXPORT_SETTING = "GLOBAL_EXPORT_SETTING";
     public static final String SOURCE_SETTING = "DATA_SOURCE_SETTING";
-    public static final String DataSource = "Data Source";
+    public static final String DATA_SOURCE = "DATA_SOURCE";
     public static final String TEMPLATE = "TEMPLATE";
-    public static final String DATASOURCE = "DATASOURCE";
+//    public static final String DATASOURCE = "DATASOURCE";
     public static final String MENU_LEGAL_NOTICE = "MENU_LEGAL_NOTICE";
     public static final String REMOVE_MSG = "REMOVE_MSG";
     public static final String PLUGIN_MANAGE = "PLUGIN_MANAGE";
@@ -47,4 +47,6 @@ public class ResourceMassages {
     public static final String ADD_TIME_KEYS = "ADD_TIME_KEY";
     public static final String HELP = "HELP";
     public static final String INPUT_ITEM_HELP = "INPUT_ITEM_HELP";
+    public static final String DELETE_DATA_SOURCE = "DELETE_DATA_SOURCE";
+    public static final String DELETE_DATA_SOURCE_CONFIRM = "DELETE_DATA_SOURCE_CONFIRM";
 }

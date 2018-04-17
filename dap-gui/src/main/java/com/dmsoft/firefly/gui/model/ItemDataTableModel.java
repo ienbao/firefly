@@ -1,13 +1,15 @@
+
 /*
  * Copyright (c) 2017. For Intelligent Group.
  */
 package com.dmsoft.firefly.gui.model;
 
-import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
+import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -32,12 +34,12 @@ public class ItemDataTableModel implements TableModel {
     private List<String> trueSet = new ArrayList<>();
     private List<String> falseSet = new ArrayList<>();
     private CheckBox allCheckBox = new CheckBox();
-//    private TableView tableView;
 
     /**
-     * constructor
+     * constructor.
      *
-     * @param dataFrame dataFrame
+     * @param rowDataDtos list of row data dto
+     * @param dataFrame   dataFrame
      */
     public ItemDataTableModel(SearchDataFrame dataFrame, List<RowDataDto> rowDataDtos) {
         rowKey.clear();
@@ -48,7 +50,7 @@ public class ItemDataTableModel implements TableModel {
             headers = dataFrame.getAllTestItemName();
         }
 
-        List<RowDataDto> rowDataDtoListContext = dataFrame.getAllDataRow();
+        List<RowDataDto> rowDataDtoListContext = dataFrame == null ? Lists.newArrayList() : dataFrame.getAllDataRow();
         rowDataDtos.addAll(rowDataDtoListContext);
         if (headers != null && !headers.isEmpty()) {
             columnKey.add(0, "");
@@ -57,9 +59,7 @@ public class ItemDataTableModel implements TableModel {
                     columnKey.add(headers.get(i));
                 }
             } else {
-                for (String header : headers) {
-                    columnKey.add(header);
-                }
+                columnKey.addAll(headers);
             }
         }
 
@@ -79,7 +79,7 @@ public class ItemDataTableModel implements TableModel {
             }
         }
 
-        if (k == rowDataDtos.size() && k != 3) {
+        if (rowDataDtos != null && !rowDataDtos.isEmpty() && k == rowDataDtos.size() && k != 3) {
             allChecked.setValue(true);
         }
 
@@ -191,11 +191,6 @@ public class ItemDataTableModel implements TableModel {
     }
 
     @Override
-    public void setAllCheckBox(CheckBox checkBox) {
-        this.allCheckBox = checkBox;
-    }
-
-    @Override
     public void setTableView(TableView<String> tableView) {
         if (tableView.getColumns() != null && !tableView.getColumns().isEmpty()) {
             for (int i = 0; i < tableView.getColumns().size(); i++) {
@@ -231,8 +226,13 @@ public class ItemDataTableModel implements TableModel {
         return allCheckBox;
     }
 
+    @Override
+    public void setAllCheckBox(CheckBox checkBox) {
+        this.allCheckBox = checkBox;
+    }
+
     /**
-     * get Row Key
+     * get Row Key.
      *
      * @return rowKey
      */
@@ -241,7 +241,7 @@ public class ItemDataTableModel implements TableModel {
     }
 
     /**
-     * update TestItem Column
+     * update TestItem Column.
      *
      * @param result columnKey
      */
@@ -254,7 +254,7 @@ public class ItemDataTableModel implements TableModel {
     }
 
     /**
-     * update RowData List
+     * update RowData List.
      *
      * @param rowDataDtos rowDataDtos
      */
@@ -272,7 +272,7 @@ public class ItemDataTableModel implements TableModel {
     }
 
     /**
-     * get RowDataDtoList
+     * get RowDataDtoList.
      *
      * @return rowDataDtoList
      */
@@ -281,7 +281,7 @@ public class ItemDataTableModel implements TableModel {
     }
 
     /**
-     * get FalseSet
+     * get FalseSet.
      *
      * @return falseSet
      */
@@ -290,7 +290,7 @@ public class ItemDataTableModel implements TableModel {
     }
 
     /**
-     * get TrueSet
+     * get TrueSet.
      *
      * @return trueSet
      */

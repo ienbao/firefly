@@ -41,7 +41,7 @@ public class EnvServiceImpl implements EnvService {
     @Override
     public void setActivatedTemplate(String templateName) {
         this.templateName = templateName;
-        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+        UserPreferenceDto<String> userPreferenceDto = new UserPreferenceDto<>();
         userPreferenceDto.setCode("activeTemplate");
         userPreferenceDto.setUserName(userName);
         userPreferenceDto.setValue(templateName);
@@ -63,8 +63,7 @@ public class EnvServiceImpl implements EnvService {
     @Override
     public void setActivatedProjectName(List<String> activatedProjectName) {
         this.projectNames = activatedProjectName;
-
-        UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
+        UserPreferenceDto<List> userPreferenceDto = new UserPreferenceDto<>();
         userPreferenceDto.setCode("selectProject");
         userPreferenceDto.setUserName(userName);
         userPreferenceDto.setValue(activatedProjectName);
@@ -73,8 +72,7 @@ public class EnvServiceImpl implements EnvService {
 
     @Override
     public String findPreference(String code) {
-        String preference = getUserPreferenceService().findPreferenceByUserId(code, userName);
-        return preference;
+        return getUserPreferenceService().findPreferenceByUserId(code, userName);
     }
 
     @Override

@@ -239,6 +239,14 @@ public class StatisticalResultController implements Initializable {
         filterTestItemTf.getTextField().textProperty().addListener((observable, oldValue, newValue) -> getFilterTestItemTfEvent());
         chooseDialogController.getChooseOkButton().setOnAction(event -> getChooseStatisticalResultEvent());
         statisticalTableModel.getAllCheckBox().setOnAction(event -> getAllCheckBoxEvent());
+
+        statisticalResultTb.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            List<String> statisticalSelectRowKeyListCache = SpcRefreshJudgeUtil.newInstance().getStatisticalSelectRowKeyListCache();
+            if(statisticalSelectRowKeyListCache == null || !statisticalSelectRowKeyListCache.contains(newValue)){
+                return;
+            }
+            spcMainController.stickChartLayer((String)newValue);
+        });
     }
 
     private void getChooseColumnBtnEvent() {
@@ -285,9 +293,21 @@ public class StatisticalResultController implements Initializable {
     class ChooseColorMenuEvent implements TableMenuRowEvent {
         private ColorPicker colorPicker;
 
+        /**
+         * constructor
+         */
+        public ChooseColorMenuEvent(){
+            colorPicker = new ColorPicker();
+            colorPicker.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
+            colorPicker.setSkin(new ColorPickerMenuSkin(colorPicker));
+            colorPicker.getCustomColors().addAll(
+                    ColorUtils.toFxColorFromAwtColor(Colur.RAW_VALUES)
+            );
+        }
+
         @Override
         public String getMenuName() {
-            return null;
+            return "";
         }
 
         @Override
@@ -300,14 +320,6 @@ public class StatisticalResultController implements Initializable {
 
         @Override
         public Node getMenuNode() {
-            colorPicker = new ColorPicker(javafx.scene.paint.Color.RED);
-            colorPicker.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
-            colorPicker.setSkin(new ColorPickerMenuSkin(colorPicker));
-            colorPicker.getCustomColors().addAll(
-                    ColorUtils.toFxColorFromAwtColor(Colur.RAW_VALUES)
-            );
-            colorPicker.valueProperty().addListener((observable, oldValue, c) -> {
-            });
             return colorPicker;
         }
     }

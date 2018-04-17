@@ -2,8 +2,11 @@ package com.dmsoft.firefly.plugin.spc.charts.view;
 
 import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.gui.components.chart.ChartUtils;
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.plugin.spc.charts.utils.LegendUtils;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.sun.javafx.charts.Legend;
 import javafx.embed.swing.SwingFXUtils;
@@ -68,7 +71,7 @@ public class ChartPanel<T extends XYChart> extends VBox {
      *
      * @param chart                 chart
      * @param chartSizeChangeEnable enable change chart size
-     * @param showLegend whether show legend or not
+     * @param showLegend            whether show legend or not
      * @param chartDraggingEnable   enable drag chart
      */
     public ChartPanel(T chart, boolean showLegend, boolean chartSizeChangeEnable, boolean chartDraggingEnable) {
@@ -111,11 +114,10 @@ public class ChartPanel<T extends XYChart> extends VBox {
         zoomInBtn = new Button();
         zoomOutBtn = new Button();
         extensionBtn = new Button();
-        contextMenu = new ContextMenu();
         menuBar = new MenuBar();
         extensionMenu = new Menu();
         copyMenuItem = new MenuItem("Copy");
-        saveMenuItem = new MenuItem(UIConstant.CHART_EXTENSION_MENU_SAVE);
+        saveMenuItem = new MenuItem(SpcFxmlAndLanguageUtils.getString(UIConstant.CHART_SAVE_AS));
         printMenuItem = new MenuItem("Print");
         defaultRatioMenuItem = new RadioMenuItem("Default Display");
         oneToOneRatioMenuItem = new RadioMenuItem("1:1 Display");
@@ -126,10 +128,8 @@ public class ChartPanel<T extends XYChart> extends VBox {
         defaultRatioMenuItem.setToggleGroup(toggleGroup);
         oneToOneRatioMenuItem.setToggleGroup(toggleGroup);
         ratioMenu.getItems().addAll(defaultRatioMenuItem, oneToOneRatioMenuItem);
-//        extensionMenu.getItems().addAll(saveMenuItem, printMenuItem, copyMenuItem, ratioMenu);
         extensionMenu.getItems().addAll(saveMenuItem);
         menuBar.getMenus().addAll(extensionMenu);
-//        contextMenu.getItems().addAll(saveMenuItem, printMenuItem, copyMenuItem, ratioMenu);
         rightHBox = new HBox();
         rightHBox.getChildren().add(customPane);
         rightHBox.getChildren().add(zoomInBtn);
@@ -159,12 +159,9 @@ public class ChartPanel<T extends XYChart> extends VBox {
         legendBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_unfold_normal.png")));
         rightHBox.setMargin(zoomInBtn, new Insets(0, 0, 0, 5));
         rightHBox.setMargin(zoomOutBtn, new Insets(0, 0, 0, 5));
-        rightHBox.setMargin(menuBar, new Insets(-3, 0, 0, 5));
-        titlePane.setMargin(leftHBox, new Insets(2, 0, 0, spacing));
+        rightHBox.setMargin(menuBar, new Insets(-3, 7, 0, 5));
+        titlePane.setMargin(leftHBox, new Insets(1.5, 0, 0, spacing));
         titlePane.setMargin(rightHBox, new Insets(3, 0, 0, 0));
-
-//        extensionMenu.setStyle("-fx-padding: 0em 1em 0em -0.8em");
-        menuBar.getStyleClass().removeAll("menu-icon");
         menuBar.getStyleClass().add("menu-icon");
 
         zoomInBtn.setPrefWidth(legendHeight);
@@ -192,9 +189,9 @@ public class ChartPanel<T extends XYChart> extends VBox {
     }
 
     private void setComponentsTooltip() {
-        Tooltip.install(zoomInBtn, new Tooltip(UIConstant.BTN_CHART_ZOOM_IN));
-        Tooltip.install(zoomOutBtn, new Tooltip(UIConstant.BTN_CHART_ZOOM_OUT));
-        Tooltip.install(menuBar, new Tooltip(UIConstant.BTN_CHART_EXTENSION_MENU));
+        Tooltip.install(zoomInBtn, new Tooltip(SpcFxmlAndLanguageUtils.getString(UIConstant.BTN_CHART_ZOOM_IN)));
+        Tooltip.install(zoomOutBtn, new Tooltip(SpcFxmlAndLanguageUtils.getString(UIConstant.BTN_CHART_ZOOM_OUT)));
+        Tooltip.install(menuBar, new Tooltip(SpcFxmlAndLanguageUtils.getString(UIConstant.BTN_CHART_EXTENSION_MENU)));
     }
 
     private void initEvent() {
@@ -231,17 +228,17 @@ public class ChartPanel<T extends XYChart> extends VBox {
 
         saveMenuItem.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Save as spc chart");
+            fileChooser.setTitle(SpcFxmlAndLanguageUtils.getString(UIConstant.CHART_SAVE_AS_TITLE));
             fileChooser.setInitialDirectory(
                     new File(System.getProperty("user.home"))
             );
             fileChooser.setInitialFileName(chartName);
-            FileChooser.ExtensionFilter pdfExtensionFilter =
-                    new FileChooser.ExtensionFilter(
-                            "PNG - Portable Network Graphics (.png)", "*.png");
+            FileChooser.ExtensionFilter pdfExtensionFilter = new FileChooser.ExtensionFilter(
+                    SpcFxmlAndLanguageUtils.getString(UIConstant.CHART_SAVE_AS_PNG_EXTENSION)
+                            + " (.png)", "*.png");
             fileChooser.getExtensionFilters().add(pdfExtensionFilter);
             fileChooser.setSelectedExtensionFilter(pdfExtensionFilter);
-            File file = fileChooser.showSaveDialog(null);
+            File file = fileChooser.showSaveDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
             if (file != null) {
                 try {
                     String imagePath = file.getAbsolutePath();
@@ -260,16 +257,6 @@ public class ChartPanel<T extends XYChart> extends VBox {
                 }
             }
         });
-
-//        extensionBtn.setOnMouseClicked(event -> {
-//
-//            double screenX = extensionBtn.getScene().getWindow().getX() +
-//                    extensionBtn.getScene().getX() + extensionBtn.localToScene(0, 0).getX();
-//            double screenY = extensionBtn.getScene().getWindow().getY() +
-//                    extensionBtn.getScene().getY() + extensionBtn.localToScene(0, 0).getY() +
-//                    extensionBtn.getHeight();
-//            contextMenu.show(this, screenX, screenY);
-//        });
     }
 
     /**
@@ -297,7 +284,6 @@ public class ChartPanel<T extends XYChart> extends VBox {
     private Button zoomInBtn;
     private Button zoomOutBtn;
     private Button extensionBtn;
-    private ContextMenu contextMenu;
 
     private MenuBar menuBar;
     private Menu ratioMenu;

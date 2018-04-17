@@ -19,13 +19,25 @@ import java.util.zip.ZipFile;
 public class FileUtils {
 
 
+    /**
+     * method to up zip files
+     *
+     * @param zipPath zip file path
+     * @param descDir destination dir
+     * @throws IOException io exception
+     */
     public static void unZipFiles(String zipPath, String descDir) throws IOException {
         unZipFiles(new File(zipPath), descDir);
     }
 
+    /**
+     * method to zip file
+     *
+     * @param zipFile zip file
+     * @param descDir destination dir
+     * @throws IOException io exception
+     */
     public static void unZipFiles(File zipFile, String descDir) throws IOException {
-
-//        ZipFile zip = new ZipFile(zipFile, Charset.forName("GBK"));
         ZipFile zip = new ZipFile(zipFile);
         String name = zip.getName().substring(zip.getName().lastIndexOf(File.separator) + 1, zip.getName().lastIndexOf('.'));
 
@@ -67,6 +79,12 @@ public class FileUtils {
         return;
     }
 
+    /**
+     * method to delete file
+     *
+     * @param sPath path
+     * @return deleted or not
+     */
     public static boolean deleteFile(String sPath) {
         boolean flag = false;
         File file = new File(sPath);
@@ -78,6 +96,12 @@ public class FileUtils {
         return flag;
     }
 
+    /**
+     * method to delete dir
+     *
+     * @param sPath path
+     * @return delete or not
+     */
     public static boolean deleteDirectory(String sPath) {
         //如果sPath不以文件分隔符结尾，自动添加文件分隔符
         if (!sPath.endsWith(File.separator)) {
@@ -95,28 +119,34 @@ public class FileUtils {
             //删除子文件
             if (files[i].isFile()) {
                 flag = deleteFile(files[i].getAbsolutePath());
-                if (!flag) break;
-            } //删除子目录
-            else {
+                if (!flag) {
+                    break;
+                }
+            } else {
                 flag = deleteDirectory(files[i].getAbsolutePath());
-                if (!flag) break;
+                if (!flag) {
+                    break;
+                }
             }
         }
-        if (!flag) return false;
-        //删除当前目录
-        if (dirFile.delete()) {
-            return true;
-        } else {
+        if (!flag) {
             return false;
         }
+        //删除当前目录
+        return (dirFile.delete());
     }
 
+    /**
+     * method to delete folder
+     *
+     * @param sPath path
+     * @return deleted or not
+     */
     public static boolean deleteFolder(String sPath) {
-        boolean flag = false;
         File file = new File(sPath);
         // 判断目录或文件是否存在
         if (!file.exists()) {  // 不存在返回 false
-            return flag;
+            return false;
         } else {
             // 判断是否为文件
             if (file.isFile()) {  // 为文件时调用删除文件方法

@@ -21,6 +21,8 @@ import com.dmsoft.firefly.sdk.plugin.apis.annotation.OpenService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -31,6 +33,7 @@ import java.util.List;
  */
 @OpenService
 public class SpcServiceImpl implements SpcService {
+    private static Logger logger = LoggerFactory.getLogger(SpcServiceImpl.class);
     private SpcAnalysisService analysisService;
 
     @Override
@@ -39,6 +42,7 @@ public class SpcServiceImpl implements SpcService {
         1.Verify the validity of the parameters
         2.Get analysis statistical result from R
          */
+        logger.debug("Getting SPC stats result...");
         if (searchDataFrame == null || searchConditions == null || configDto == null) {
             pushProgress(100);
             throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11002));
@@ -74,6 +78,7 @@ public class SpcServiceImpl implements SpcService {
             result.add(statsDto);
             pushProgress((int) (40 + ((i + 1) / (double) (spcAnalysisDataDtoList.size())) * 60));
         }
+        logger.info("Get SPC stats result done.");
         return result;
     }
 
@@ -83,6 +88,7 @@ public class SpcServiceImpl implements SpcService {
         1.Verify the validity of the parameters
         2.Get analysis chart result from R
          */
+        logger.debug("Getting SPC chart result...");
         if (searchDataFrame == null || searchConditions == null || configDto == null) {
             pushProgress(100);
             throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11002));
@@ -145,6 +151,7 @@ public class SpcServiceImpl implements SpcService {
             result.add(chartDto);
             pushProgress((int) (40 + ((i + 1) / (double) (spcAnalysisDataDtoList.size())) * 60));
         }
+        logger.info("Get SPC chart result done.");
         return result;
     }
 

@@ -3,6 +3,9 @@ package com.dmsoft.firefly.plugin.grr.charts;
 import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.gui.components.chart.ChartUtils;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
+import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
@@ -30,17 +33,13 @@ public class ChartRightPane extends HBox {
     private final String suffix = ".png";
 
     private XYChart chart;
-
     private HBox customPane;
     private Button zoomInBtn;
     private Button zoomOutBtn;
-
     private MenuBar menuBar;
     private Menu ratioMenu;
     private Menu extensionMenu;
-    private MenuItem copyMenuItem;
     private MenuItem saveMenuItem;
-    private MenuItem printMenuItem;
     private RadioMenuItem defaultRatioMenuItem;
     private RadioMenuItem oneToOneRatioMenuItem;
 
@@ -61,9 +60,9 @@ public class ChartRightPane extends HBox {
     }
 
     private void setComponentsTooltip() {
-        Tooltip.install(zoomInBtn, new Tooltip(UIConstant.BTN_CHART_ZOOM_IN));
-        Tooltip.install(zoomOutBtn, new Tooltip(UIConstant.BTN_CHART_ZOOM_OUT));
-        Tooltip.install(menuBar, new Tooltip(UIConstant.BTN_CHART_EXTENSION_MENU));
+        Tooltip.install(zoomInBtn, new Tooltip(GrrFxmlAndLanguageUtils.getString(UIConstant.BTN_CHART_ZOOM_IN)));
+        Tooltip.install(zoomOutBtn, new Tooltip(GrrFxmlAndLanguageUtils.getString(UIConstant.BTN_CHART_ZOOM_OUT)));
+        Tooltip.install(menuBar, new Tooltip(GrrFxmlAndLanguageUtils.getString(UIConstant.BTN_CHART_EXTENSION_MENU)));
     }
 
     private void initComponents() {
@@ -73,9 +72,7 @@ public class ChartRightPane extends HBox {
         zoomOutBtn = new Button();
         menuBar = new MenuBar();
         extensionMenu = new Menu();
-        copyMenuItem = new MenuItem("Copy");
-        saveMenuItem = new MenuItem(UIConstant.CHART_EXTENSION_MENU_SAVE);
-        printMenuItem = new MenuItem("Print");
+        saveMenuItem = new MenuItem(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_EXTENSION_MENU_SAVE));
         defaultRatioMenuItem = new RadioMenuItem("Default Display");
         oneToOneRatioMenuItem = new RadioMenuItem("1:1 Display");
         oneToOneRatioMenuItem.setDisable(true);
@@ -86,7 +83,6 @@ public class ChartRightPane extends HBox {
         defaultRatioMenuItem.setToggleGroup(toggleGroup);
         oneToOneRatioMenuItem.setToggleGroup(toggleGroup);
         ratioMenu.getItems().addAll(defaultRatioMenuItem, oneToOneRatioMenuItem);
-//        extensionMenu.getItems().addAll(saveMenuItem, printMenuItem, copyMenuItem, ratioMenu);
         extensionMenu.getItems().addAll(saveMenuItem);
         menuBar.getMenus().addAll(extensionMenu);
 
@@ -120,7 +116,7 @@ public class ChartRightPane extends HBox {
         menuBar.getStyleClass().add("menu-icon");
         this.setMargin(zoomInBtn, new Insets(0, 0, 0, 5));
         this.setMargin(zoomOutBtn, new Insets(0, 0, 0, 5));
-        this.setMargin(menuBar, new Insets(-3, 0, 0, 5));
+        this.setMargin(menuBar, new Insets(-3, 7, 0, 5));
         extensionMenu.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_more_normal.png")));
         zoomInBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_zoom_normal.png")));
         zoomOutBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_narrow_normal.png")));
@@ -159,17 +155,17 @@ public class ChartRightPane extends HBox {
 
         saveMenuItem.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Save as spc chart");
+            fileChooser.setTitle(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_SAVE_AS_TITLE));
             fileChooser.setInitialDirectory(
                     new File(System.getProperty("user.home"))
             );
             fileChooser.setInitialFileName(chartName);
-            FileChooser.ExtensionFilter pdfExtensionFilter =
-                    new FileChooser.ExtensionFilter(
-                            "PNG - Portable Network Graphics (.png)", "*.png");
+            FileChooser.ExtensionFilter pdfExtensionFilter = new FileChooser.ExtensionFilter(
+                    GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_SAVE_AS_PNG_EXTENSION)
+                            + " (.png)", "*.png");
             fileChooser.getExtensionFilters().add(pdfExtensionFilter);
             fileChooser.setSelectedExtensionFilter(pdfExtensionFilter);
-            File file = fileChooser.showSaveDialog(null);
+            File file = fileChooser.showSaveDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
             final float quality = 0.9f;
             if (file != null) {
                 try {
@@ -184,7 +180,6 @@ public class ChartRightPane extends HBox {
                     WritableImage writableImage = chart.snapshot(new SnapshotParameters(), null);
                     ChartOperatorUtils.saveImageUsingJPGWithQuality(SwingFXUtils.fromFXImage(writableImage, null), file, quality);
                 } catch (Exception e) {
-                    System.out.println("Save error, " + e.getMessage());
                     e.printStackTrace();
                 }
             }

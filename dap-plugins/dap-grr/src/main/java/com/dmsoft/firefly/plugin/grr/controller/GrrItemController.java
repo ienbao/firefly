@@ -173,8 +173,8 @@ public class GrrItemController implements Initializable {
         }
         box = new CheckBox();
         box.setOnAction(event -> {
-            if (items != null) {
-                for (ItemTableModel model : items) {
+            if (itemTable != null && itemTable.getItems() != null) {
+                for (ItemTableModel model : itemTable.getItems()) {
                     if (isFilterUslOrLsl) {
                         if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
                             model.getSelector().setValue(box.isSelected());
@@ -550,8 +550,10 @@ public class GrrItemController implements Initializable {
         TooltipUtil.installNormalTooltip(exportBtn, GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_CONFIG));
         itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_datasource_normal.png")));
         itemTab.setStyle("-fx-padding: 0 5 0 5");
+        itemTab.setTooltip(new Tooltip(GrrFxmlAndLanguageUtils.getString("GRR_TEST_ITEM")));
         configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_config_normal.png")));
         configTab.setStyle("-fx-padding: 0 5 0 5");
+        configTab.setTooltip(new Tooltip(GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")));
     }
 
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
@@ -1032,7 +1034,7 @@ public class GrrItemController implements Initializable {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
         );
-        File file = fileChooser.showOpenDialog(null);
+        File file = fileChooser.showOpenDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
 
         if (file != null) {
             GrrLeftConfigDto grrLeftConfigDto = leftConfigService.importGrrConfig(file);
@@ -1110,7 +1112,7 @@ public class GrrItemController implements Initializable {
             fileChooser.getExtensionFilters().addAll(
                     new FileChooser.ExtensionFilter("JSON", "*.json")
             );
-            File file = fileChooser.showSaveDialog(null);
+            File file = fileChooser.showSaveDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
 
             if (file != null) {
                 leftConfigService.exportGrrConfig(leftConfigDto, file);

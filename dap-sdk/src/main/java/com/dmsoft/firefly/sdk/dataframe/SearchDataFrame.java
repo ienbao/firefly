@@ -84,6 +84,14 @@ public interface SearchDataFrame extends DataFrame {
     List<String> getSearchRowKey(String searchCondition);
 
     /**
+     * method to get search row keys
+     *
+     * @param searchConditionList list of search condition
+     * @return list of row key
+     */
+    List<String> getSearchRowKey(List<String> searchConditionList);
+
+    /**
      * method to get sub data frame
      *
      * @param rowKeyList       row key list

@@ -1,10 +1,12 @@
 package com.dmsoft.firefly.plugin.chart;
 
 import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.plugin.spc.charts.BoxPlotChart;
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxPlotChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBoxAndWhiskerData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.IPoint;
+import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
 import com.google.common.collect.Lists;
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
@@ -169,7 +171,7 @@ public class BoxPlotChartApp extends Application {
             FileChooser.ExtensionFilter pdfExtensionFilter = new FileChooser.ExtensionFilter("PNG - Portable Network Graphics (.png)", "*.png");
             fileChooser.getExtensionFilters().add(pdfExtensionFilter);
             fileChooser.setSelectedExtensionFilter(pdfExtensionFilter);
-            File file = fileChooser.showSaveDialog(null);
+            File file = fileChooser.showSaveDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
             if (file != null) {
                 try {
                     String name = file.getName();

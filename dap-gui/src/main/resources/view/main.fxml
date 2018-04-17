@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -20,7 +21,7 @@
               <columnConstraints>
                 <ColumnConstraints hgrow="ALWAYS" maxWidth="45.0" minWidth="45.0" prefWidth="45.0" />
                   <ColumnConstraints fillWidth="false" />
-                  <ColumnConstraints hgrow="ALWAYS" maxWidth="85.0" minWidth="85.0" prefWidth="85.0" />
+                  <ColumnConstraints hgrow="ALWAYS" maxWidth="60.0" minWidth="70.0" prefWidth="70.0" />
                   <ColumnConstraints hgrow="ALWAYS" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="180.0" prefWidth="180.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="180.0" prefWidth="180.0" />

@@ -65,7 +65,7 @@ public class DataSourceController implements Initializable {
     @FXML
     private Label errorInfo;
     @FXML
-    private TableView dataSourceTable;
+    private TableView<ChooseTableRowData> dataSourceTable;
 
     @FXML
     private TextFieldFilter filterTf;
@@ -90,10 +90,8 @@ public class DataSourceController implements Initializable {
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
     private void initTable() {
-//        search.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
         delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
         TooltipUtil.installNormalTooltip(delete, GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_SOURCE));
-//        errorInfo.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_tips_warning.png")));
         errorInfo.getStyleClass().add("message-tip-warn-mark");
         errorInfo.setStyle("-fx-background-color: #F38400");
         errorInfo.setVisible(false);
@@ -358,7 +356,8 @@ public class DataSourceController implements Initializable {
         });
         List<String> deleteProjects = Lists.newArrayList();
         delete.setOnAction(event -> {
-            WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Delete DataSource", "Are you sure to delete this file?");
+            WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel(FxmlAndLanguageUtils.getString(ResourceMassages.DELETE_DATA_SOURCE),
+                    FxmlAndLanguageUtils.getString(ResourceMassages.DELETE_DATA_SOURCE_CONFIRM));
             controller.addProcessMonitorListener(new WindowCustomListener() {
                 @Override
                 public boolean onShowCustomEvent() {

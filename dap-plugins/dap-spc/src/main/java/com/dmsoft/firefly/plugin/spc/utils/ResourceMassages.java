@@ -62,9 +62,14 @@ public class ResourceMassages {
     public static final String OPEN_EXPORT_FOLDER = "OPEN_EXPORT_FOLDER";
     public static final String EXPORT = "EXPORT";
     public static final String EXPORTING = "EXPORTING";
+    public static final String EMPTY_ITEM = "EMPTY_ITEM";
+    public static final String EXPORT_ERROR_CONFIG = "EXPORT_ERROR_CONFIG";
+    public static final String EMPTY_PATH = "EMPTY_PATH";
 
     public static final String IMPORT_CONFIG = "IMPORT_CONFIG";
     public static final String EXPORT_CONFIG = "EXPORT_CONFIG";
     public static final String ANALYSIS = "ANALYSIS";
     public static final String CLEAR_SEARCH = "CLEAR_SEARCH";
+    public static final String PLATFORM_STAGE_MAIN = "platform_stage_main";
+
 }

@@ -67,45 +67,49 @@ public class SpcControlChartData implements ControlChartData {
         lclValue = spcControlChartDto.getLcl();
         XYData ucl = ChartDataUtils.foldCLData(uclValue);
         XYData lcl = ChartDataUtils.foldCLData(lclValue);
+        if (ucl != null) {
+            IPathData uclData = new IPathData() {
+                @Override
+                public IPoint getPoints() {
+                    return new SpcPointData(ucl.getX(), ucl.getY());
+                }
+
+                @Override
+                public String getPathName() {
+                    return uclLclName[0];
+                }
+
+                @Override
+                public Color getColor() {
+                    return color;
+                }
+            };
+            breakLineList.add(uclData);
+        }
+        if (lcl != null) {
+            IPathData lclData = new IPathData() {
+                @Override
+                public IPoint getPoints() {
+                    return new SpcPointData(lcl.getX(), lcl.getY());
+                }
+
+                @Override
+                public String getPathName() {
+                    return uclLclName[1];
+                }
+
+                @Override
+                public Color getColor() {
+                    return color;
+                }
+            };
+            breakLineList.add(lclData);
+        }
         xyChartData = new SpcXYChartData(x, y);
-        IPathData uclData = new IPathData() {
-            @Override
-            public IPoint getPoints() {
-                return new SpcPointData(ucl.getX(), ucl.getY());
-            }
-
-            @Override
-            public String getPathName() {
-                return uclLclName[0];
-            }
-
-            @Override
-            public Color getColor() {
-                return color;
-            }
-        };
-        IPathData lclData = new IPathData() {
-            @Override
-            public IPoint getPoints() {
-                return new SpcPointData(lcl.getX(), lcl.getY());
-            }
-
-            @Override
-            public String getPathName() {
-                return uclLclName[1];
-            }
-
-            @Override
-            public Color getColor() {
-                return color;
-            }
-        };
-        breakLineList.add(uclData);
-        breakLineList.add(lclData);
-        maxY = MathUtils.getMax(y, ucl.getY(), lcl.getY(), new Double[]{cl});
-        minY = MathUtils.getMin(y, ucl.getY(), lcl.getY(), new Double[]{cl});
-        maxX = MathUtils.getMax(x, ucl.getX(), lcl.getX());
-        minX = MathUtils.getMin(x, ucl.getX(), lcl.getX());
+        maxY = MathUtils.getMax(y, ucl == null ? null : ucl.getY(), lcl == null ? null : lcl.getY(), new Double[]{cl});
+        minY = MathUtils.getMin(y, ucl == null ? null : ucl.getY(), lcl == null ? null : lcl.getY(), new Double[]{cl});
+        maxX = MathUtils.getMax(x, ucl == null ? null : ucl.getX(), lcl == null ? null : lcl.getX());
+        minX = MathUtils.getMin(x, ucl == null ? null : ucl.getX(), lcl == null ? null : lcl.getX());
     }
 
     @Override

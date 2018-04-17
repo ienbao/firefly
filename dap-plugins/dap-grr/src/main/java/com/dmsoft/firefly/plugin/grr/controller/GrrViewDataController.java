@@ -87,6 +87,8 @@ public class GrrViewDataController implements Initializable {
         chooseItemBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
         this.exchangeBtn.setOnAction(event -> {
             if (this.backupModel != null && this.includeModel != null && this.backupModel.getSelectedViewDataDto() != null && this.includeModel.getSelectedViewDataDto() != null) {
+                int analsysisTBIndex = analysisDataTB.getSelectionModel().getSelectedIndex();
+                int exchangeTBIndex = exchangeDataTB.getSelectionModel().getSelectedIndex();
                 GrrViewDataDto toBeBackupDto = this.includeModel.getSelectedViewDataDto();
                 String toBeBackUpApp = toBeBackupDto.getOperator();
                 String toBeBackUpTrail = toBeBackupDto.getTrial();
@@ -100,6 +102,8 @@ public class GrrViewDataController implements Initializable {
                 this.includeModel.replace(toBeIncludeDto);
                 this.backupModel.replace(toBeBackupDto);
                 isChanged = true;
+                analysisDataTB.getSelectionModel().select(analsysisTBIndex);
+                exchangeDataTB.getSelectionModel().select(exchangeTBIndex);
             }
         });
         chooseTestItemDialog = new ChooseTestItemDialog(null, null);

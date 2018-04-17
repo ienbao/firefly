@@ -8,15 +8,26 @@ import com.dmsoft.bamboo.common.dto.AbstractValueObject;
 
 /**
  * Created by Garen.Pang on 2018/3/7.
+ *
+ * @param <T> any class
  */
 public class KeyValueDto<T> extends AbstractValueObject {
 
     private String key;
     private T value;
 
+    /**
+     * constructor
+     */
     public KeyValueDto() {
     }
 
+    /**
+     * constructor
+     *
+     * @param key   key
+     * @param value value
+     */
     public KeyValueDto(String key, T value) {
         this.key = key;
         this.value = value;

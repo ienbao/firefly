@@ -81,6 +81,13 @@ public class ViewDataDFModel implements TableModel {
         this.headerArray.add(0, " ");
         this.rowKeyArray = FXCollections.observableArrayList(dataFrame.getAllRowKeys());
         this.checkValueMap = Maps.newLinkedHashMap();
+        for (String rowKey : rowKeyArray) {
+            if (this.initSelectedRowKeys != null && this.initSelectedRowKeys.contains(rowKey)) {
+                this.checkValueMap.put(rowKey, new SimpleObjectProperty<>(true));
+            } else {
+                this.checkValueMap.put(rowKey, new SimpleObjectProperty<>(false));
+            }
+        }
         this.allCheck = new SimpleObjectProperty<>(true);
         this.highLightRowKeys = Sets.newLinkedHashSet();
         this.menuRowEvents = Lists.newArrayList();
@@ -158,7 +165,7 @@ public class ViewDataDFModel implements TableModel {
             @Override
             public void handleAction(String rowKey, ActionEvent event) {
                 rowKeyArray.remove(rowKey);
-                checkValueMap.remove(rowKey);
+                checkValueMap.put(rowKey, new SimpleObjectProperty<>(false));
                 RuntimeContext.getBean(SourceDataService.class).changeRowDataInUsed(Lists.newArrayList(rowKey), false);
                 if (mainController != null) {
                     mainController.removeDataFrameRow(rowKey);
@@ -267,6 +274,21 @@ public class ViewDataDFModel implements TableModel {
         List<String> result = Lists.newArrayList(dataFrame.getAllRowKeys());
         for (String s : this.checkValueMap.keySet()) {
             if (!this.checkValueMap.get(s).get()) {
+                result.remove(s);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * method to get unselected row keys
+     *
+     * @return list of unselected row key
+     */
+    public List<String> getUnSelectedRowKeys() {
+        List<String> result = Lists.newArrayList(dataFrame.getAllRowKeys());
+        for (String s : this.checkValueMap.keySet()) {
+            if (this.checkValueMap.get(s).get()) {
                 result.remove(s);
             }
         }

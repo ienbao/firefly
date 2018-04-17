@@ -2,7 +2,6 @@ package com.dmsoft.firefly.plugin.spc.charts;
 
 import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.data.BarCategoryData;
-import com.dmsoft.firefly.plugin.spc.charts.data.BoxPlotChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.NDBarChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
@@ -11,6 +10,7 @@ import com.dmsoft.firefly.plugin.spc.charts.utils.ReflectionUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sun.javafx.css.converters.SizeConverter;
 import javafx.animation.*;
@@ -50,11 +50,16 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     //    unique key---area group
     private Map<String, Group> groupMap = Maps.newHashMap();
     //    unique key---bar series
-    private Map<String, XYChart.Series> seriesUniqueKeyMap = Maps.newHashMap();
+    private Map<String, XYChart.Series> uniqueKeySeriesMap = Maps.newLinkedHashMap();
+
+    private Map<XYChart.Series, String> seriesUniqueKeyMap = Maps.newLinkedHashMap();
     //    unique key----value marker
-    private Map<String, ValueMarker> valueMarkerMap = Maps.newHashMap();
+    private Map<String, ValueMarker> valueMarkerMap = Maps.newLinkedHashMap();
     //    unique key----area series
-    private Map<String, AreaSeriesNode> areaSeriesNodeMap = Maps.newHashMap();
+    private Map<String, AreaSeriesNode> areaSeriesNodeMap = Maps.newLinkedHashMap();
+
+    private Map<String, List<Node>> uniqueKeyNodesMap = Maps.newHashMap();
+
     private ValueAxis valueAxis;
     private Timeline dataRemoveTimeline;
     private TreeSet categories = new TreeSet();
@@ -65,7 +70,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
 
     private boolean barShow = true;
     private boolean areaShow = true;
-    private Map<String, Boolean> lineShow = Maps.newHashMap();
+    private Map<String, Boolean> lineShow = Maps.newLinkedHashMap();
 
     /**
      * Constructs a XYChart given the two axes. The initial content for the chart
@@ -126,21 +131,44 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         }
         NumberAxis xAxis = (NumberAxis) this.getXAxis();
         NumberAxis yAxis = (NumberAxis) this.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
-        xAxis.setLowerBound(xMin - xReserve);
-        xAxis.setUpperBound(xMax + xReserve);
-        yAxis.setLowerBound(0);
-        yAxis.setUpperBound(yMax + yReserve);
+        xMax += (xMax - xMin) * UIConstant.Y_FACTOR;
+        xMin -= (xMax - xMin) * UIConstant.Y_FACTOR;
+        yMax += (yMax - yMin) * UIConstant.Y_FACTOR;
+        xMin -= (yMax - yMin) * UIConstant.Y_FACTOR;
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        Map<String, Object> xAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(xMax, xMin, (int) Math.ceil(xMax - xMin));
+        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        double newXMin = (Double) xAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newXMax = (Double) xAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        yAxis.setLowerBound(newYMin);
+        yAxis.setUpperBound(newYMax > 120 ? 100 : newYMax);
+        xAxis.setLowerBound(newXMin);
+        xAxis.setUpperBound(newXMax);
         ChartOperatorUtils.updateAxisTickUnit(xAxis);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
+    }
+
+    /**
+     * Stick unique key series layer
+     *
+     * @param uniqueKey unique key
+     */
+    public void stickLayerToUniqueKey(String uniqueKey) {
+        if (uniqueKeyNodesMap.isEmpty() || !uniqueKeyNodesMap.containsKey(uniqueKey)) {
+            return;
+        }
+        ObservableList<Node> nodes = getPlotChildren();
+        List<Node> newNodes = uniqueKeyNodesMap.get(uniqueKey);
+        nodes.removeAll(newNodes);
+        nodes.addAll(newNodes);
     }
 
     /**
      * Remove all chart elements and chart data
      */
     public void removeAllChildren() {
-        for (Map.Entry<String, XYChart.Series> stringSeriesEntry : seriesUniqueKeyMap.entrySet()) {
+        for (Map.Entry<String, XYChart.Series> stringSeriesEntry : uniqueKeySeriesMap.entrySet()) {
             seriesRemoved(stringSeriesEntry.getValue());
         }
         ObservableList<Node> nodes = getPlotChildren();
@@ -162,8 +190,8 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         if (areaSeriesNodeMap.containsKey(uniqueKey)) {
             areaSeriesNodeMap.get(uniqueKey).updateColor(color);
         }
-        if (seriesUniqueKeyMap.containsKey(uniqueKey)) {
-            setSeriesDataStyle(seriesUniqueKeyMap.get(uniqueKey), color);
+        if (uniqueKeySeriesMap.containsKey(uniqueKey)) {
+            setSeriesDataStyle(uniqueKeySeriesMap.get(uniqueKey), color);
         }
 
         if (!areaShow) {
@@ -259,10 +287,11 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         }
         if (chartData.getBarChartData() != null) {
             XYChart.Series series = this.buildSeries(chartData.getBarChartData(), seriesName);
+            this.uniqueKeySeriesMap.put(uniqueKey, series);
+            this.seriesUniqueKeyMap.put(series, uniqueKey);
             this.getData().add(series);
             this.setSeriesDataStyle(series, color);
             this.setSeriesDataTooltip(series, chartTooltip == null ? null : chartTooltip.getChartBarToolTip());
-            this.seriesUniqueKeyMap.put(uniqueKey, series);
         }
 
         if (chartData.getLineData() != null) {
@@ -273,6 +302,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
                             (chartTooltip == null) ? null : chartTooltip.getLineTooltip());
                     getPlotChildren().add(line);
                     lineShow.put(lineData.getName(), true);
+                    addToUniqueKeyNodes(uniqueKey, line);
                 }
             });
             valueMarkerMap.put(uniqueKey, valueMarker);
@@ -334,6 +364,23 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         groupMap.put(unique, areaGroup);
         areaSeriesNodeMap.put(unique, areaSeriesNode);
         getPlotChildren().add(areaGroup);
+        addToUniqueKeyNodes(unique, areaGroup);
+    }
+
+    private void addToUniqueKeyNodes(String uniqueKey, Node node) {
+        if (uniqueKeyNodesMap.containsKey(uniqueKey)) {
+            uniqueKeyNodesMap.get(uniqueKey).add(node);
+        } else {
+            uniqueKeyNodesMap.put(uniqueKey, Lists.newArrayList(node));
+        }
+    }
+
+    private void addToSeriesNodes(Series series, Node node) {
+        String uniqueKey = seriesUniqueKeyMap == null || !seriesUniqueKeyMap.containsKey(series) ? null : seriesUniqueKeyMap.get(series);
+        if (DAPStringUtils.isBlank(uniqueKey)) {
+            return;
+        }
+        addToUniqueKeyNodes(uniqueKey, node);
     }
 
     @Override
@@ -367,8 +414,10 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
             animateDataAdd(item, bar);
         } else {
             getPlotChildren().add(bar);
+            addToSeriesNodes(series, bar);
         }
         getPlotChildren().add(bar);
+        addToSeriesNodes(series, bar);
     }
 
     @Override
@@ -458,6 +507,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
                     bar.getStyleClass().add(NEGATIVE_STYLE);
                 }
                 getPlotChildren().add(bar);
+                addToSeriesNodes(series, bar);
             }
         }
         if (categoryMap.size() > 0) {
@@ -588,6 +638,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     private void clearData() {
         seriesCategoryMap.clear();
         barCategoryDataMap.clear();
+        uniqueKeySeriesMap.clear();
+        seriesUniqueKeyMap.clear();
+        uniqueKeyNodesMap.clear();
         categories.clear();
         for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
             valueMarkerEntry.getValue().clear();

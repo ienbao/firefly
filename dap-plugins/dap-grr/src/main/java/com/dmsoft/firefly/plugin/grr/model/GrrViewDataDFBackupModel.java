@@ -141,7 +141,7 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
         tableCell.setStyle(null);
         if (radioKey.equals(column)) {
             tableCell.setText(null);
-            tableCell.setGraphic(grrRadioButton.get(rowKey));
+            tableCell.setGraphic(new Label("", grrRadioButton.get(rowKey)));
             return tableCell;
         }
         if (!partKey.equals(column) && !appKey.equals(column) && !trailKey.equals(column)) {
