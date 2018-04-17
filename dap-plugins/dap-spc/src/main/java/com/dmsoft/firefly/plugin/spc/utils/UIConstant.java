@@ -170,5 +170,6 @@ public class UIConstant {
     public static final String BTN_CHART_EXTENSION_MENU = "BTN_CHART_EXTENSION_MENU";
 
     public static final String BTN_ANNOTATION_CLEAR = "BTN_ANNOTATION_CLEAR";
-    public static final String BTN_ANNOTATION_TOGGLE = "BTN_ANNOTATION_TOGGLE";
+    public static final String BTN_ANNOTATION_OPEN = "BTN_ANNOTATION_OPEN";
+    public static final String BTN_ANNOTATION_EXIT = "BTN_ANNOTATION_EXIT";
 }
