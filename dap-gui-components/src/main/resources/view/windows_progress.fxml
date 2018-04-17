@@ -16,7 +16,7 @@
    <children>
       <HBox prefHeight="20.0" prefWidth="200.0">
          <children>
-            <Label fx:id="analysisLB" text="Analyzing">
+            <Label fx:id="analysisLB" text="%Analyzing">
                <HBox.margin>
                   <Insets />
                </HBox.margin></Label>

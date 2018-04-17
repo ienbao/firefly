@@ -735,7 +735,10 @@ public class GrrItemController implements Initializable {
             conditionDto.setSelectedTestItemDtos(selectedItemDto);
             context.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, conditionDto);
             context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
-            windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
+            windowProgressTipController.getCancelBtn().setOnAction(event -> {
+                windowProgressTipController.setCancelingText();
+                context.interruptBeforeNextJobHandler();
+            });
             updateGrrPreference(conditionDto);
             JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE);
             jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
