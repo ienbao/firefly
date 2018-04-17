@@ -162,6 +162,8 @@ public class UIConstant {
     public static final String SPC_RULE_R_R9 = "SPC_RULE_R_R9";
 
     public static final String CHART_SAVE_AS = "CHART_SAVE_AS";
+    public static final String CHART_SAVE_AS_TITLE = "CHART_SAVE_AS_TITLE";
+    public static final String CHART_SAVE_AS_PNG_EXTENSION = "CHART_SAVE_AS_PNG_EXTENSION";
     public static final String BTN_CHART_CHOOSE_LINES = "BTN_CHART_CHOOSE_LINES";
     public static final String BTN_RUN_CHART_CHOOSE_RULES = "BTN_RUN_CHART_CHOOSE_RULES";
     public static final String BTN_RUN_CHART_CHOOSE_ANNOTATION_ITEM = "BTN_RUN_CHART_CHOOSE_ANNOTATION_ITEM";

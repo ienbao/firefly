@@ -40,7 +40,7 @@ public class UIConstant {
     public static final String BTN_CHART_EXTENSION_MENU = "BTN_CHART_EXTENSION_MENU";
     public static final String CHART_EXTENSION_MENU_SAVE = "CHART_SAVE_AS";
 
-//    grr setting
+    //    grr setting
     public static final String GRR_SETTING_SORT_DATA_BY_APPRAISERS = "GRR_SETTING_SORT_DATA_BY_APPRAISERS";
     public static final String GRR_SETTING_SORT_DATA_BY_DEFAULT = "GRR_SETTING_SORT_DATA_BY_DEFAULT";
     public static final String GRR_SETTING_RULE_NO_EMPTY = "GRR_SETTING_RULE_NO_EMPTY";
@@ -49,7 +49,6 @@ public class UIConstant {
     public static final String GRR_SETTING_LEVEL_NO_EMPTY = "GRR_SETTING_LEVEL_NO_EMPTY";
     public static final String GRR_SETTING_LEVEL_LEVEL_MUST_BIGGER = "GRR_SETTING_LEVEL_LEVEL_MUST_BIGGER";
     public static final String GRR_SETTING_LEVEL_INPUT_ERROR = "GRR_SETTING_LEVEL_INPUT_ERROR";
-
 
     public static final String COMPONENTS_GAGE_R = "COMPONENTS_GAGE_R";
     public static final String COMPONENTS_REPEATABILITY = "COMPONENTS_REPEATABILITY";
@@ -96,4 +95,7 @@ public class UIConstant {
     public static final String CHART_4 = "CHART_4";
     public static final String CHART_5 = "CHART_5";
     public static final String CHART_6 = "CHART_6";
+
+    public static final String CHART_SAVE_AS_TITLE = "CHART_SAVE_AS_TITLE";
+    public static final String CHART_SAVE_AS_PNG_EXTENSION = "CHART_SAVE_AS_PNG_EXTENSION";
 }
