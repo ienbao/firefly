@@ -353,4 +353,8 @@ public class ViewDataDFModel implements TableModel {
     public void setIsTimer(boolean isTimer) {
         this.isTimer = isTimer;
     }
+
+    public boolean isTimer() {
+        return isTimer;
+    }
 }
