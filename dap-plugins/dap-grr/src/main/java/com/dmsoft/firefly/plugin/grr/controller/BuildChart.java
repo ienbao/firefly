@@ -172,9 +172,32 @@ public class BuildChart {
     }
 
     private static void setComponentChart(GrrComponentCResultDto componentCResult, BarChart componentChart) {
+
+        if (componentCResult == null) {
+            return;
+        }
         XYChart.Series series1 = new XYChart.Series();
         XYChart.Series series2 = new XYChart.Series();
         XYChart.Series series3 = new XYChart.Series();
+        Double[] array = getArrayValue(componentCResult);
+        Double yMax = MathUtils.getMax(array);
+        Double yMin = MathUtils.getMin(array);
+        if (yMax == null || yMin == null) {
+            return;
+        }
+        NumberAxis yAxis = (NumberAxis) componentChart.getYAxis();
+        final double factor = 0.01;
+        double reserve = (yMax - yMin) * factor;
+        yAxis.setAutoRanging(false);
+        yMax += reserve;
+        yMin -= reserve;
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        yAxis.setLowerBound(newYMin);
+        yAxis.setUpperBound((newYMax > 120) ? 120 : newYMax);
+        ChartOperatorUtils.updateAxisTickUnit(yAxis);
+
         series1.getData().add(new XYChart.Data<>(GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_GAGE_R),
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrContri()) ? 0 : componentCResult.getGrrContri()));
         series1.getData().add(new XYChart.Data<>(GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_REPEATABILITY),
@@ -232,14 +255,23 @@ public class BuildChart {
                                               List<String> parts,
                                               List<String> appraisers) {
         double[][] data = partAppraiserChartDto.getDatas();
-        double max = MathUtils.getMax(data);
-        double min = MathUtils.getMin(data);
+        Double yMax = MathUtils.getMax(data);
+        Double yMin = MathUtils.getMin(data);
+        if (DAPStringUtils.isInfinityAndNaN(yMax) || DAPStringUtils.isInfinityAndNaN(yMin)) {
+            return;
+        }
         NumberAxis yAxis = (NumberAxis) partAppraiserChart.getYAxis();
-        final double factor = 0.20;
-        double reserve = (max - min) * factor;
+        final double factor = 0.01;
+        double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
-        yAxis.setUpperBound(max + reserve);
-        yAxis.setLowerBound(min - reserve);
+        yMax += reserve;
+        yMin -= reserve;
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        yAxis.setLowerBound(newYMin);
+        yAxis.setUpperBound(newYMax);
+        ChartOperatorUtils.updateAxisTickUnit(yAxis);
         ObservableList<XYChart.Series> seriesData = FXCollections.observableArrayList();
         for (int i = 0; i < data.length; i++) {
             XYChart.Series series = new XYChart.Series();
@@ -264,14 +296,23 @@ public class BuildChart {
         Double[] x = chartData.getX();
         Double[] y = chartData.getY();
         Double[] ruleData = new Double[]{chartData.getUcl(), chartData.getCl(), chartData.getLcl()};
-        double max = MathUtils.getMax(y, ruleData);
-        double min = MathUtils.getMin(y, ruleData);
+        Double yMax = MathUtils.getMax(y, ruleData);
+        Double yMin = MathUtils.getMin(y, ruleData);
+        if (DAPStringUtils.isInfinityAndNaN(yMax) || DAPStringUtils.isInfinityAndNaN(yMin)) {
+            return;
+        }
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        final double factor = 0.20;
-        double reserve = (max - min) * factor;
+        final double factor = 0.01;
+        double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
-        yAxis.setUpperBound(max + reserve);
-        yAxis.setLowerBound(min - reserve);
+        yMax += reserve;
+        yMin -= reserve;
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        yAxis.setLowerBound(newYMin);
+        yAxis.setUpperBound(newYMax);
+        ChartOperatorUtils.updateAxisTickUnit(yAxis);
         List<ILineData> horizonalLineData = Lists.newArrayList();
         List<ILineData> verticalLineData = Lists.newArrayList();
         XYChart.Series series = new XYChart.Series();
@@ -309,14 +350,23 @@ public class BuildChart {
         Double[] y = scatterChartData.getY();
         Double[] clX = scatterChartData.getClX();
         Double[] clY = scatterChartData.getClY();
-        double max = MathUtils.getMax(y, clY);
-        double min = MathUtils.getMin(y, clY);
+        Double yMax = MathUtils.getMax(y, clY);
+        Double yMin = MathUtils.getMin(y, clY);
+        if (DAPStringUtils.isInfinityAndNaN(yMax) || DAPStringUtils.isInfinityAndNaN(yMin)) {
+            return;
+        }
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        final double factor = 0.20;
-        double reserve = (max - min) * factor;
+        final double factor = 0.01;
+        Double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
-        yAxis.setUpperBound(max + reserve);
-        yAxis.setLowerBound(min - reserve);
+        yMax += reserve;
+        yMin -= reserve;
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        yAxis.setLowerBound(newYMin);
+        yAxis.setUpperBound(newYMax);
+        ChartOperatorUtils.updateAxisTickUnit(yAxis);
         XYChart.Series scatterSeries = new XYChart.Series();
         XYChart.Series lineSeries = new XYChart.Series();
         for (int i = 0; i < x.length; i++) {
@@ -371,5 +421,22 @@ public class BuildChart {
      */
     private static class WriteImage {
         private WritableImage image;
+    }
+
+    private static Double[] getArrayValue(GrrComponentCResultDto resultDto) {
+        Double[] value = new Double[12];
+        value[0] = resultDto.getGrrContri();
+        value[1] = resultDto.getGrrTol();
+        value[2] = resultDto.getGrrVar();
+        value[3] = resultDto.getPartContri();
+        value[4] = resultDto.getPartTol();
+        value[5] = resultDto.getPartVar();
+        value[6] = resultDto.getRepeatContri();
+        value[7] = resultDto.getRepeatTol();
+        value[8] = resultDto.getRepeatVar();
+        value[9] = resultDto.getReprodContri();
+        value[10] = resultDto.getReprodTol();
+        value[11] = resultDto.getReprodVar();
+        return value;
     }
 }

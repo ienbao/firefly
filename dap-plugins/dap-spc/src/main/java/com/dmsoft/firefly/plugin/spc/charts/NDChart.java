@@ -142,7 +142,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         double newXMin = (Double) xAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
         double newXMax = (Double) xAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
         yAxis.setLowerBound(newYMin);
-        yAxis.setUpperBound(newYMax > 120 ? 100 : newYMax);
+        yAxis.setUpperBound(newYMax > 120 ? 120 : newYMax);
         xAxis.setLowerBound(newXMin);
         xAxis.setUpperBound(newXMax);
         ChartOperatorUtils.updateAxisTickUnit(xAxis);

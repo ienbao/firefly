@@ -446,8 +446,16 @@ public class GrrResultController implements Initializable {
             return;
         }
         NumberAxis yAxis = (NumberAxis) componentChart.getYAxis();
-        yAxis.setUpperBound(yMax + 20);
-        yAxis.setLowerBound(yMin);
+        final double factor = 0.01;
+        double reserve = (yMax - yMin) * factor;
+        yAxis.setAutoRanging(false);
+        yMax += reserve;
+        yMin -= reserve;
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        yAxis.setLowerBound(newYMin);
+        yAxis.setUpperBound((newYMax > 120) ? 120 : newYMax);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
 
         series1.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[0],
@@ -501,17 +509,22 @@ public class GrrResultController implements Initializable {
                                        List<String> parts,
                                        List<String> appraisers) {
         double[][] data = partAppraiserChartDto.getDatas();
-        Double max = MathUtils.getMax(data);
-        Double min = MathUtils.getMin(data);
-        if (DAPStringUtils.isInfinityAndNaN(max) || DAPStringUtils.isInfinityAndNaN(min)) {
+        Double yMax = MathUtils.getMax(data);
+        Double yMin = MathUtils.getMin(data);
+        if (DAPStringUtils.isInfinityAndNaN(yMax) || DAPStringUtils.isInfinityAndNaN(yMin)) {
             return;
         }
         NumberAxis yAxis = (NumberAxis) partAppraiserChart.getYAxis();
-        final double factor = 0.20;
-        double reserve = (max - min) * factor;
+        final double factor = 0.01;
+        double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
-        yAxis.setUpperBound(max + reserve);
-        yAxis.setLowerBound(min - reserve);
+        yMax += reserve;
+        yMin -= reserve;
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        yAxis.setLowerBound(newYMin);
+        yAxis.setUpperBound(newYMax);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
         ObservableList<XYChart.Series> seriesData = FXCollections.observableArrayList();
         for (int i = 0; i < data.length; i++) {
@@ -548,17 +561,22 @@ public class GrrResultController implements Initializable {
         Double[] x = chartData.getX();
         Double[] y = chartData.getY();
         Double[] ruleData = new Double[]{chartData.getUcl(), chartData.getCl(), chartData.getLcl()};
-        Double max = MathUtils.getMax(y, ruleData);
-        Double min = MathUtils.getMin(y, ruleData);
-        if (DAPStringUtils.isInfinityAndNaN(max) || DAPStringUtils.isInfinityAndNaN(min)) {
+        Double yMax = MathUtils.getMax(y, ruleData);
+        Double yMin = MathUtils.getMin(y, ruleData);
+        if (DAPStringUtils.isInfinityAndNaN(yMax) || DAPStringUtils.isInfinityAndNaN(yMin)) {
             return;
         }
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        final double factor = 0.20;
-        double reserve = (max - min) * factor;
+        final double factor = 0.01;
+        double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
-        yAxis.setUpperBound(max + reserve);
-        yAxis.setLowerBound(min - reserve);
+        yMax += reserve;
+        yMin -= reserve;
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        yAxis.setLowerBound(newYMin);
+        yAxis.setUpperBound(newYMax);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
         List<ILineData> horizontalLineData = Lists.newArrayList();
         List<ILineData> verticalLineData = Lists.newArrayList();
@@ -622,17 +640,22 @@ public class GrrResultController implements Initializable {
         Double[] y = scatterChartData.getY();
         Double[] clX = scatterChartData.getClX();
         Double[] clY = scatterChartData.getClY();
-        Double max = MathUtils.getMax(y, clY);
-        Double min = MathUtils.getMin(y, clY);
-        if (DAPStringUtils.isInfinityAndNaN(max) || DAPStringUtils.isInfinityAndNaN(min)) {
+        Double yMax = MathUtils.getMax(y, clY);
+        Double yMin = MathUtils.getMin(y, clY);
+        if (DAPStringUtils.isInfinityAndNaN(yMax) || DAPStringUtils.isInfinityAndNaN(yMin)) {
             return;
         }
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        final double factor = 0.20;
-        Double reserve = (max - min) * factor;
+        final double factor = 0.01;
+        Double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
-        yAxis.setUpperBound(max + reserve);
-        yAxis.setLowerBound(min - reserve);
+        yMax += reserve;
+        yMin -= reserve;
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        yAxis.setLowerBound(newYMin);
+        yAxis.setUpperBound(newYMax);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
         XYChart.Series scatterSeries = new XYChart.Series();
         XYChart.Series lineSeries = new XYChart.Series();
