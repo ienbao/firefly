@@ -556,6 +556,7 @@ public class SpcItemController implements Initializable {
                     spcMainController.setTimerViewData(chartSearchConditionDtoList, searchConditionDtoList);
                 }
                 windowProgressTipController.closeDialog();
+                logger.info("Spc auto refresh finish.");
             }
         });
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
@@ -571,6 +572,7 @@ public class SpcItemController implements Initializable {
                 windowProgressTipController.closeDialog();
             }
         });
+        logger.info("Start auto refresh Spc.");
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
     }
 
@@ -628,6 +630,7 @@ public class SpcItemController implements Initializable {
                 spcMainController.setDataFrame(context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class));
                 windowProgressTipController.closeDialog();
                 spcMainController.setDisable(false);
+                logger.info("Spc analysis finish.");
             }
         });
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
@@ -643,6 +646,7 @@ public class SpcItemController implements Initializable {
                 windowProgressTipController.closeDialog();
             }
         });
+        logger.info("Start analysis Spc.");
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
     }
 
