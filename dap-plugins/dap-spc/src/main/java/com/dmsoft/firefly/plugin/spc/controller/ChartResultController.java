@@ -152,14 +152,23 @@ public class ChartResultController implements Initializable {
             mrChartData.setSeriesName(seriesName);
             mrChartDataList.add(mrChartData);
         }
-        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
-        this.setRunChartData(UIConstant.SPC_CHART_NAME[1], runChartDataList, Sets.newLinkedHashSet(disabledRuleNames));
+        logger.debug("Initializing ND chart...");
+//        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
+        logger.debug("Initializing Run chart...");
+//        this.setRunChartData(UIConstant.SPC_CHART_NAME[1], runChartDataList, Sets.newLinkedHashSet(disabledRuleNames));
+        logger.debug("Initializing Xbar chart...");
         this.setControlChartData(UIConstant.SPC_CHART_NAME[2], xBarChartDataList);
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList);
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[4], sdChartDataList);
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[5], medianChartDataList);
-        this.setBoxChartData(UIConstant.SPC_CHART_NAME[6], boxChartDataList);
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
+        logger.debug("Initializing Range chart...");
+//        this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList);
+        logger.debug("Initializing SD chart...");
+//        this.setControlChartData(UIConstant.SPC_CHART_NAME[4], sdChartDataList);
+        logger.debug("Initializing ME chart...");
+//        this.setControlChartData(UIConstant.SPC_CHART_NAME[5], medianChartDataList);
+        logger.debug("Initializing Box chart...");
+//        this.setBoxChartData(UIConstant.SPC_CHART_NAME[6], boxChartDataList);
+        logger.debug("Initializing MR chart...");
+//        this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
+        logger.debug("Initialize charts done.");
     }
 
     /**

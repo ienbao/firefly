@@ -17,7 +17,10 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.chart.*;
+import javafx.scene.chart.Axis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -89,7 +92,18 @@ public class ControlChart<X, Y> extends LineChart {
             return;
         }
         setAxisRange(controlChartDataList);
-        controlChartDataList.forEach(controlChartData -> createChartSeriesData(controlChartData, chartTooltip));
+        List<XYChart.Series> seriesResult = Lists.newArrayList();
+        List<Line> lineResutl = Lists.newArrayList();
+        controlChartDataList.forEach(controlChartData -> {
+            ControlChartSeries series = createChartSeriesData(controlChartData, chartTooltip);
+            if (series != null) {
+                seriesResult.add(series.getPointSeries());
+                seriesResult.addAll(series.getPathSeries());
+                lineResutl.addAll(series.getConnectLine());
+            }
+        });
+        this.getPlotChildren().addAll(lineResutl);
+        this.getData().addAll(seriesResult);
     }
 
     /**
@@ -213,7 +227,8 @@ public class ControlChart<X, Y> extends LineChart {
     /**
      * Toggle series path show or hide
      *
-     * @param showed whether it show or not
+     * @param pathName path name
+     * @param showed   whether it show or not
      */
     public void togglePathAllSeriesLine(String pathName, boolean showed) {
         if (pathMarkerMap == null || DAPStringUtils.isBlank(pathName)) {
@@ -458,13 +473,14 @@ public class ControlChart<X, Y> extends LineChart {
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
     }
 
-    private void createChartSeriesData(ControlChartData controlChartData, ChartTooltip chartTooltip) {
+    private ControlChartSeries createChartSeriesData(ControlChartData controlChartData, ChartTooltip chartTooltip) {
 //        1. 设置画图数据, 图的颜色、样式、悬浮提示
 //        2. 设置画直线数据， 线的颜色，样式
 //        3. 设置画折线数据， 折线的颜色，样式
         if (controlChartData == null) {
-            return;
+            return null;
         }
+        ControlChartSeries result = new ControlChartSeries();
         Color color = controlChartData.getColor();
         String seriesName = controlChartData.getSeriesName();
         String uniqueKey = controlChartData.getUniqueKey();
@@ -474,8 +490,9 @@ public class ControlChart<X, Y> extends LineChart {
 
         if (controlChartData.getXyOneChartData() != null) {
             XYChart.Series series = this.buildDataSeries(controlChartData.getXyOneChartData(), seriesName);
-            this.getData().add(series);
-            this.setDataNodeStyleAndTooltip(series, color, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
+            result.setPointSeries(series);
+//            this.getData().add(series);
+//            this.setDataNodeStyleAndTooltip(series, color, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
             this.seriesUniqueKeyMap.put(uniqueKey, series);
             this.seriesColorMap.put(series, color);
             this.seriesPointRuleMap.put(uniqueKey, rulePointStyleFunction);
@@ -484,10 +501,12 @@ public class ControlChart<X, Y> extends LineChart {
 //        Set chart line
         if (lineDataList != null) {
             ValueMarker valueMarker = new ValueMarker();
+            result.setConnectLine(Lists.newArrayList());
             lineDataList.forEach(oneLineData -> {
                 if (oneLineData.getValue() != null) {
                     Line line = valueMarker.buildValueMarker(oneLineData, color, seriesName, chartTooltip == null ? null : chartTooltip.getLineTooltip());
-                    getPlotChildren().add(line);
+                    result.getConnectLine().add(line);
+//                    getPlotChildren().add(line);
                     addToUniqueKeyNodes(uniqueKey, Lists.newArrayList(line));
                 }
             });
@@ -496,12 +515,14 @@ public class ControlChart<X, Y> extends LineChart {
 //       Set chart path
         if (pathDataList != null) {
             List<XYChart.Series<X, Y>> seriesList = Lists.newArrayList();
+            result.setPathSeries(Lists.newArrayList());
             pathDataList.forEach(onePathData -> {
                 if (onePathData != null) {
                     XYChart.Series<X, Y> series = buildPathSeries(onePathData.getPoints(), onePathData.getPathName());
                     if (series != null) {
-                        this.getData().add(series);
-                        this.setPathNodeStyleAndTooltip(series, color, seriesName, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
+                        result.getPathSeries().add(series);
+//                        this.getData().add(series);
+//                        this.setPathNodeStyleAndTooltip(series, color, seriesName, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
                         seriesList.add(series);
                         addToUniqueKeyNodes(uniqueKey, getSeriesNodes(series));
                     }
@@ -509,6 +530,7 @@ public class ControlChart<X, Y> extends LineChart {
             });
             pathMarkerMap.put(uniqueKey, seriesList);
         }
+        return result;
     }
 
     private XYChart.Series buildDataSeries(IXYChartData<X, Y> xyOneChartData, String seriesName) {
@@ -678,6 +700,36 @@ public class ControlChart<X, Y> extends LineChart {
 //        paint line
         for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
             valueMarkerEntry.getValue().paintValueMaker(this);
+        }
+    }
+
+    private class ControlChartSeries {
+        private XYChart.Series pointSeries;
+        private List<Line> connectLine;
+        private List<XYChart.Series> pathSeries;
+
+        public Series getPointSeries() {
+            return pointSeries;
+        }
+
+        public void setPointSeries(Series pointSeries) {
+            this.pointSeries = pointSeries;
+        }
+
+        public List<Line> getConnectLine() {
+            return connectLine;
+        }
+
+        public void setConnectLine(List<Line> connectLine) {
+            this.connectLine = connectLine;
+        }
+
+        public List<Series> getPathSeries() {
+            return pathSeries;
+        }
+
+        public void setPathSeries(List<Series> pathSeries) {
+            this.pathSeries = pathSeries;
         }
     }
 }

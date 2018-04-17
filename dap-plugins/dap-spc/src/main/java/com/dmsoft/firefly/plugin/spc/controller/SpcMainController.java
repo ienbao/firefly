@@ -650,7 +650,7 @@ public class SpcMainController implements Initializable {
 //                    lastViewDataRowKeyList = viewDataFrame.getAllRowKeys();
 //                    List<String> rowKeyList = viewDataSelectRowKeyListCache == null ? viewDataFrame.getAllRowKeys() : viewDataSelectRowKeyListCache;
 
-                    viewDataController.setViewData(viewDataFrame, subDataFrame.getAllRowKeys(), statisticalSearchConditionDtoList, spcItemController.isTimer());
+//                    viewDataController.setViewData(viewDataFrame, subDataFrame.getAllRowKeys(), statisticalSearchConditionDtoList, spcItemController.isTimer());
                     spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
                     spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(subDataFrame.getAllRowKeys());
 
