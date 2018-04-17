@@ -170,6 +170,7 @@ public class ViewDataDFModel implements TableModel {
                 if (mainController != null) {
                     mainController.removeDataFrameRow(rowKey);
                 }
+                dataFrame.removeRows(Lists.newArrayList(rowKey));
                 tableView.refresh();
             }
         };
