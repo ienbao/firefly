@@ -627,6 +627,7 @@ public class SpcItemController implements Initializable {
                 spcMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList, null, isTimer);
                 spcMainController.setDataFrame(context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class));
                 windowProgressTipController.closeDialog();
+                spcMainController.setDisable(false);
             }
         });
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
