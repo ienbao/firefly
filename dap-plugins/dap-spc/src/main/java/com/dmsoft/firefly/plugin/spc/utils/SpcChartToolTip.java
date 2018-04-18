@@ -38,8 +38,17 @@ public class SpcChartToolTip implements ChartTooltip {
             String startV = DAPStringUtils.formatDouble((Double) barToolTip.getStartValue(), digNumInstance.getDigNum());
             String endV = DAPStringUtils.formatDouble((Double) barToolTip.getEndValue(), digNumInstance.getDigNum());
             String value = DAPStringUtils.formatDouble((Double) barToolTip.getValue(), digNumInstance.getDigNum());
-            String tip = seriesName + "\nX[" + startV + ", " + endV + ")\n" + "Y=" + value;
-            return tip;
+            StringBuilder tipBuilder = new StringBuilder();
+            tipBuilder.append(seriesName);
+            tipBuilder.append("\nX[");
+            tipBuilder.append(startV);
+            tipBuilder.append(", ");
+            tipBuilder.append(endV);
+            tipBuilder.append(barToolTip.isLastData() ? "]\n" : ")\n");
+            tipBuilder.append("Y=");
+            tipBuilder.append(value);
+//            String tip = seriesName + "\nX[" + startV + ", " + endV + ")\n" + "Y=" + value;
+            return tipBuilder.toString();
         };
     }
 
