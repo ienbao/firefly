@@ -67,11 +67,13 @@ public class TableViewWrapper {
                     try {
                         List<? extends String> removedHeaders = c.getRemoved();
                         List<TableColumn> tableColumnList = Lists.newArrayList(tableView.getColumns());
+                        List<TableColumn> existedColumnList = Lists.newArrayList();
                         for (TableColumn aTableColumnList : tableColumnList) {
                             if (removedHeaders.contains(aTableColumnList.getText())) {
-                                tableView.getColumns().remove(aTableColumnList);
+                                existedColumnList.add(aTableColumnList);
                             }
                         }
+                        tableView.getColumns().removeAll(existedColumnList);
                     } catch (Exception ignored) {
                         ignored.printStackTrace();
                     }
@@ -86,7 +88,7 @@ public class TableViewWrapper {
             menu = new ContextMenu();
             for (TableMenuRowEvent event : model.getMenuEventList()) {
                 MenuItem menuItem = new MenuItem(event.getMenuName(), event.getMenuNode());
-                if(event.getMenuNode() != null) {
+                if (event.getMenuNode() != null) {
                     menuItem.setStyle("-fx-padding:0 0 0 0");
                 }
                 menuItem.setOnAction(event1 -> {
