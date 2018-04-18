@@ -34,6 +34,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -159,8 +160,12 @@ public class ResolverSelectController implements Initializable {
         JobManager jobManager = RuntimeContext.getBean(JobManager.class);
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
         context.addJobEventListener(event -> {
-            chooseTableRowData.setProgress(event.getProgress());
-            controller.getDataSourceTable().refresh();
+            BigDecimal bg = new BigDecimal(event.getProgress());
+            double f1 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            if (chooseTableRowData.getProgress() != f1) {
+                chooseTableRowData.setProgress(f1);
+                controller.getDataSourceTable().refresh();
+            }
         });
         context.put(ParamKeys.FILE_PATH, filePath);
         context.put(ParamKeys.RESOLVER_TEMPLATE_NAME, resolverName);
