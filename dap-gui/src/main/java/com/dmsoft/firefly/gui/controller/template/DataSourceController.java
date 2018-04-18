@@ -88,6 +88,8 @@ public class DataSourceController implements Initializable {
     private EventHandler eventHandler;
 
     private JsonMapper mapper = JsonMapper.defaultMapper();
+    private String renameStr = GuiFxmlAndLanguageUtils.getString(ResourceMassages.RENAME_DATA_SOURCE);
+    private String delStr = GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_SOURCE);
 
     private void initTable() {
         delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
@@ -143,11 +145,11 @@ public class DataSourceController implements Initializable {
                             Button rename = new Button();
                             rename.getStyleClass().add("btn-icon");
                             rename.setStyle("-fx-padding: 0 4 0 4; -fx-border-insets: -3 0 0 0; -fx-background-insets: -3 0 0 0");
-                            TooltipUtil.installNormalTooltip(rename, GuiFxmlAndLanguageUtils.getString(ResourceMassages.RENAME_DATA_SOURCE));
+                            TooltipUtil.installNormalTooltip(rename, renameStr);
                             rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rename_normal.png")));
                             Button deleteOne = new Button();
                             deleteOne.getStyleClass().add("btn-icon");
-                            TooltipUtil.installNormalTooltip(deleteOne, GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_SOURCE));
+                            TooltipUtil.installNormalTooltip(deleteOne, delStr);
                             deleteOne.setStyle("-fx-padding: 0 4 0 4; -fx-background-insets: -3 0 0 0; -fx-border-insets: -3 0 0 0");
 
                             rename.setVisible(false);
