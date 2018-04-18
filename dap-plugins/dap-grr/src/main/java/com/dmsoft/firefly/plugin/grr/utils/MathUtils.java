@@ -80,6 +80,46 @@ public class MathUtils {
         return max;
     }
 
+    public static Double getNaNToZoreMax(Double[]... array) {
+        if (array == null) {
+            return null;
+        }
+        Double max = null;
+        for (int i = 0; i < array.length; i++) {
+            for (int x = 0; x < array[i].length; x++) {
+                if (DAPStringUtils.isInfinityAndNaN(array[i][x])) {
+                    array[i][x] = 0.0;
+                }
+                if (DAPStringUtils.isInfinityAndNaN(max)) {
+                    max = array[i][x];
+                    continue;
+                }
+                max = Math.max(array[i][x], max);
+            }
+        }
+        return max;
+    }
+
+    public static Double getNaNToZoreMin(Double[]... array) {
+        if (array == null) {
+            return null;
+        }
+        Double min = null;
+        for (int i = 0; i < array.length; i++) {
+            for (int x = 0; x < array[i].length; x++) {
+                if (DAPStringUtils.isInfinityAndNaN(array[i][x])) {
+                    array[i][x] = 0.0;
+                }
+                if (DAPStringUtils.isInfinityAndNaN(min)) {
+                    min = array[i][x];
+                    continue;
+                }
+                min = Math.min(array[i][x], min);
+            }
+        }
+        return min;
+    }
+
     public static Double getMin(Double[]... array) {
         if (array == null) {
             return null;

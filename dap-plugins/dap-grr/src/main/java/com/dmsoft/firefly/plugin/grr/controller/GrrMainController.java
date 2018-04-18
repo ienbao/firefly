@@ -15,6 +15,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.List;
@@ -24,6 +26,8 @@ import java.util.ResourceBundle;
  * Created by cherry on 2018/3/11.
  */
 public class GrrMainController implements Initializable {
+
+    private Logger logger = LoggerFactory.getLogger(GrrMainController.class);
 
     private GrrDataFrameDto grrDataFrame;
     private GrrDataFrameDto backGrrDataFrame;
@@ -76,21 +80,26 @@ public class GrrMainController implements Initializable {
         printBtn.setOnAction(event -> getExportBtnEvent());
 
         refreshBtn.setOnAction(event -> {
+            logger.debug("Refresh grr start ...");
             grrResultController.refreshGrrResult();
             grrViewDataController.refresh();
+            logger.debug("Refresh grr finished.");
         });
 
         grrResultTab.setOnSelectionChanged(event -> {
             if (grrResultTab.isSelected()) {
                 if (grrViewDataController.isChanged()) {
+                    logger.debug("Analyze grr result start ...");
                     grrDataFrame = grrViewDataController.getChangedGrrDFDto();
                     grrResultController.changeGrrResult();
                     grrViewDataController.setChanged(false);
+                    logger.debug("Analyze grr result finished.");
                 }
             }
         });
 
         resetBtn.setOnAction(event -> {
+            logger.debug("Reset grr start ...");
             this.getSearchConditionDto().setSelectedTestItemDtos(this.grrItemController.getInitSelectTestItemDtos());
             GrrDataFrameDto newDataFrame = new GrrDataFrameDto();
             if (backGrrDataFrame == null) {
@@ -104,6 +113,7 @@ public class GrrMainController implements Initializable {
             this.grrDataFrame = newDataFrame;
             this.grrViewDataController.refresh();
             this.grrResultController.changeGrrResult();
+            logger.debug("Reset grr finished.");
         });
     }
 

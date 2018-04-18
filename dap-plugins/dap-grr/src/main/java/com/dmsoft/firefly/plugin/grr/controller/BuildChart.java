@@ -180,22 +180,21 @@ public class BuildChart {
         XYChart.Series series2 = new XYChart.Series();
         XYChart.Series series3 = new XYChart.Series();
         Double[] array = getArrayValue(componentCResult);
-        Double yMax = MathUtils.getMax(array);
-        Double yMin = MathUtils.getMin(array);
+        Double yMax = MathUtils.getNaNToZoreMax(array);
+        Double yMin = MathUtils.getNaNToZoreMin(array);
         if (yMax == null || yMin == null) {
             return;
         }
         NumberAxis yAxis = (NumberAxis) componentChart.getYAxis();
-        final double factor = 0.01;
+        final double factor = 0.2;
         double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
         yMax += reserve;
-        yMin -= reserve;
         Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
         double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
         double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
         yAxis.setLowerBound(newYMin);
-        yAxis.setUpperBound((newYMax > 120) ? 120 : newYMax);
+        yAxis.setUpperBound(newYMax);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
 
         series1.getData().add(new XYChart.Data<>(GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_GAGE_R),

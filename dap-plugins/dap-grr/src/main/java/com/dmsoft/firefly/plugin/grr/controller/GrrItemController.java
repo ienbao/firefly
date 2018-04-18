@@ -50,6 +50,8 @@ import javafx.scene.layout.RowConstraints;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
@@ -60,6 +62,9 @@ import java.util.*;
  * Updated by Can Guan on 2018/3/23
  */
 public class GrrItemController implements Initializable {
+
+    private Logger logger = LoggerFactory.getLogger(GrrItemController.class);
+
     private static final String STICKY_ON_TOP_CODE = "stick_on_top";
     @FXML
     private TextFieldFilter itemFilter;
@@ -719,6 +724,7 @@ public class GrrItemController implements Initializable {
 
     @SuppressWarnings("unchecked")
     private void getAnalysisBtnEvent() {
+        logger.debug("Analyse grr start ...");
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
         if (!searchTab.verifySearchTextArea()) {
             return;
@@ -764,6 +770,7 @@ public class GrrItemController implements Initializable {
                         grrMainController.updateGrrViewData();
                         grrMainController.updateGrrSummaryAndDetail();
                     }
+                    logger.debug("Analyse grr finished.");
                     windowProgressTipController.closeDialog();
                 }
             });
