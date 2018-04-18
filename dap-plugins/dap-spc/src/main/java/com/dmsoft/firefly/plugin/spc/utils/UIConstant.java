@@ -101,7 +101,7 @@ public class UIConstant {
     public static final String[] CONTROL_ALARM_RULE_HEADER = new String[]{SpcFxmlAndLanguageUtils.getString("IS_USE"), SpcFxmlAndLanguageUtils.getString("RULE_NAME"), "n", "m", "s"};
 
     public static final double X_FACTOR = 1.0;
-    public static final double Y_FACTOR = 0.01;
+    public static final double Y_FACTOR = 0.15;
 
     public static final int COR_NUMBER = 4;
 
