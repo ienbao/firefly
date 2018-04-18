@@ -3,6 +3,7 @@ package com.dmsoft.firefly.gui.components.textarea;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -21,7 +22,9 @@ public class TextAreaTest extends Application {
                 textArea.getStyleClass().add("text-area-error");
             }
         });
+        CheckBox checkBox = new CheckBox("ASDF");
         hBox.getChildren().add(button);
+        hBox.getChildren().add(checkBox);
         Scene scene = new Scene(hBox);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
         primaryStage.setScene(scene);

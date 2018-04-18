@@ -262,7 +262,7 @@ public class MainController {
         lblMemory.setMaxWidth(179);
         lblMemory.setMinWidth(179);
         lblMemory.getStyleClass().add("state-bar-lbl");
-        lblMemory.setStyle("-fx-border-width: 0 1 0 1; -fx-border-color: #ededed;");
+        lblMemory.setStyle("-fx-border-width: 0 1 0 1; -fx-border-color: #dcdcdc;");
         lblMemory.setAlignment(Pos.BASELINE_LEFT);
         lblMemory.setContentDisplay(ContentDisplay.RIGHT);
         stateBar.addColumn(4, lblMemory);

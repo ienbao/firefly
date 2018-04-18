@@ -64,7 +64,7 @@ public class LoginController {
         DecoratorTextFiledUtils.decoratorFixedLengthTextFiled(userNameTxt, 20);
         DecoratorTextFiledUtils.decoratorFixedLengthTextFiled(passwordField, 20);
         loginBtn.setStyle("-fx-font-weight: bold;");
-        loginImageView.setImage(new Image("/images/top_title_logo.png"));
+        loginImageView.setImage(new Image("/images/login_logo.png"));
         resetLoginBtn();
         loginBtn.setOnAction(event -> {
             loginingBtn();
