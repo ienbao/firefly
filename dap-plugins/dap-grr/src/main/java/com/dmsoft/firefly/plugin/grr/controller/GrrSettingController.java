@@ -209,7 +209,7 @@ public class GrrSettingController {
             }
 
             // compare check
-            boolean compareInvalid = Double.valueOf(greaterData.getText()) > Double.valueOf(lessData.getText());
+            boolean compareInvalid = Double.valueOf(greaterData.getText()) >= Double.valueOf(lessData.getText());
             if (compareInvalid) {
                 TooltipUtil.installWarnTooltip(currentTextField, GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SETTING_RULE_MUST_NUMBER));
                 if (!currentTextField.getStyleClass().contains("text-field-error")) {
