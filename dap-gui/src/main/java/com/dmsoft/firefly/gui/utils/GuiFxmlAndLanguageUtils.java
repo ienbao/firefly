@@ -24,7 +24,6 @@ import static com.google.common.io.Resources.getResource;
  * Created by Ethan.Yang on 2018/2/11.
  */
 public class GuiFxmlAndLanguageUtils {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GuiFxmlAndLanguageUtils.class);
 
     private static ResourceBundle getResourceBundle() {
         LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
@@ -36,7 +35,6 @@ public class GuiFxmlAndLanguageUtils {
             bundleKey = "i18n.message_zh_CN_";
         }
         bundleKey = bundleKey + ModuleType.GUI.name();
-        LOGGER.debug("Language: {}", bundleKey);
         return ResourceBundle.getBundle(bundleKey);
     }
 
