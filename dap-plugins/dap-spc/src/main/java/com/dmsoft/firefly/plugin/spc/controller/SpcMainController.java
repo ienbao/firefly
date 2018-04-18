@@ -87,6 +87,11 @@ public class SpcMainController implements Initializable {
     public void setDisable(boolean disable) {
         resetBtn.setDisable(disable);
         chooseBtn.setDisable(disable);
+        if (disable) {
+            chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_gray.png")));
+        } else {
+            chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
+        }
     }
 
     /**

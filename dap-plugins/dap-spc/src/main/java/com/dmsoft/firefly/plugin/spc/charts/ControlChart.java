@@ -93,7 +93,7 @@ public class ControlChart<X, Y> extends LineChart {
         }
         setAxisRange(controlChartDataList);
         List<XYChart.Series> seriesResult = Lists.newArrayList();
-        List<Line> lineResutl = Lists.newArrayList();
+        List<Line> lineResult = Lists.newArrayList();
         List<String> uniqueKey = Lists.newArrayList();
         List<Color> uniqueColor = Lists.newArrayList();
         List<String> seriesNames = Lists.newArrayList();
@@ -104,24 +104,32 @@ public class ControlChart<X, Y> extends LineChart {
                     seriesResult.add(series.getPointSeries());
                 }
                 seriesResult.addAll(series.getPathSeries());
-                lineResutl.addAll(series.getConnectLine());
+                lineResult.addAll(series.getConnectLine());
                 uniqueKey.add(controlChartData.getUniqueKey());
                 uniqueColor.add(controlChartData.getColor());
                 seriesNames.add(controlChartData.getSeriesName());
             }
         });
-        this.getPlotChildren().addAll(lineResutl);
+        this.getPlotChildren().addAll(lineResult);
         this.getData().addAll(seriesResult);
         for (int i = 0; i < uniqueKey.size(); i++) {
             Color color = uniqueColor.get(i);
             String seriesName = seriesNames.get(i);
             String key = uniqueKey.get(i);
             setDataNodeStyleAndTooltip(seriesUniqueKeyMap.get(key), color, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
-            if (pathMarkerMap.containsKey(uniqueKey.get(i))) {
-                pathMarkerMap.get(uniqueKey.get(i)).forEach(series -> {
-                    setPathNodeStyleAndTooltip(series, color, seriesName, chartTooltip == null ? null :chartTooltip.getChartPointTooltip());
-                });
+            if (pathMarkerMap != null &&  pathMarkerMap.containsKey(uniqueKey.get(i))) {
+                pathMarkerMap.get(uniqueKey.get(i)).forEach(series -> setPathNodeStyleAndTooltip(series, color, seriesName,
+                        chartTooltip == null ? null :chartTooltip.getChartPointTooltip()));
             }
+            List<Node> nodes = Lists.newArrayList();
+            nodes.addAll(getSeriesNodes(Lists.newArrayList(seriesUniqueKeyMap.get(key))));
+            if (pathMarkerMap != null && pathMarkerMap.containsKey(key)) {
+                nodes.addAll(getSeriesNodes(pathMarkerMap.get(key)));
+            }
+            if (valueMarkerMap != null && valueMarkerMap.containsKey(key)) {
+                nodes.addAll(valueMarkerMap.get(key).getAllLines());
+            }
+            addToUniqueKeyNodes(key, nodes);
         }
 
     }
@@ -518,7 +526,6 @@ public class ControlChart<X, Y> extends LineChart {
             this.seriesUniqueKeyMap.put(uniqueKey, series);
             this.seriesColorMap.put(series, color);
             this.seriesPointRuleMap.put(uniqueKey, rulePointStyleFunction);
-            this.uniqueKeyNodesMap.put(uniqueKey, getSeriesNodes(series));
         }
 //        Set chart line
         result.setConnectLine(Lists.newArrayList());
@@ -529,7 +536,7 @@ public class ControlChart<X, Y> extends LineChart {
                     Line line = valueMarker.buildValueMarker(oneLineData, color, seriesName, chartTooltip == null ? null : chartTooltip.getLineTooltip());
                     result.getConnectLine().add(line);
 //                    getPlotChildren().add(line);
-                    addToUniqueKeyNodes(uniqueKey, Lists.newArrayList(line));
+//                    addToUniqueKeyNodes(uniqueKey, Lists.newArrayList(line));
                 }
             });
             valueMarkerMap.put(uniqueKey, valueMarker);
@@ -546,7 +553,7 @@ public class ControlChart<X, Y> extends LineChart {
 //                        this.getData().add(series);
 //                        this.setPathNodeStyleAndTooltip(series, color, seriesName, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
                         seriesList.add(series);
-                        addToUniqueKeyNodes(uniqueKey, getSeriesNodes(series));
+//                        addToUniqueKeyNodes(uniqueKey, getSeriesNodes(series));
                     }
                 }
             });
@@ -614,13 +621,15 @@ public class ControlChart<X, Y> extends LineChart {
         pane.setMargin(text, new Insets(0, 0, 10, 0));
     }
 
-    private List<Node> getSeriesNodes(XYChart.Series<X, Y> series) {
+    private List<Node> getSeriesNodes(List<XYChart.Series<X, Y>> series) {
         List<Node> nodes = Lists.newArrayList();
         if (series == null) {
             return nodes;
         }
-        nodes.add(series.getNode());
-        series.getData().forEach(dataItem -> nodes.add(dataItem.getNode()));
+        series.forEach(oneSeries -> {
+            nodes.add(oneSeries.getNode());
+            oneSeries.getData().forEach(dataItem -> nodes.add(dataItem.getNode()));
+        });
         return nodes;
     }
 
