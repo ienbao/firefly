@@ -37,10 +37,10 @@ public class WindowPane extends GridPane {
     protected static final int TITLE_LEFT_PADDING_MAC = 15;
     protected static final int STANDARD_MARGIN = 10;
     protected static final int SHADOW_WIDTH = 10;
-    protected static final int BORDER_TITLE_HEIGHT = 30;
+    protected static final int BORDER_TITLE_HEIGHT = 28;
     protected static final int DRAG_PADDING = 10;
-    protected static final int WINDOW_BUTTON_WIDTH = 30;
-    protected static final int WINDOW_TITLE_HEIGHT = 30;
+    protected static final int WINDOW_BUTTON_WIDTH = 28;
+    protected static final int WINDOW_TITLE_HEIGHT = 28;
     protected static String windowButtonClass = "";
     protected static String minimizeBtnStyleClass = "";
     protected static String maximizeBtnStyleClass = "";

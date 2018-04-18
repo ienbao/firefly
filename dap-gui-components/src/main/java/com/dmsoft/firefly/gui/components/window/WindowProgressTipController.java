@@ -130,7 +130,7 @@ public class WindowProgressTipController {
         }
 
         if (!isOverride) {
-            Stage stage1 = StageMap.getStage(CommonResourceMassages.PLATFORM_STAGE_MAIN);
+            Stage stage1 = StageMap.getPrimaryStage(CommonResourceMassages.PLATFORM_STAGE_MAIN);
             if (stage1 != null && stage1.getScene() != null && stage1.getScene().lookup("#grpContent") != null) {
                 stage1.getScene().lookup("#grpContent").setDisable(true);
                 stage1.getScene().lookup("#tbaSystem").setDisable(true);
@@ -151,7 +151,7 @@ public class WindowProgressTipController {
         }
         if (!isOverride) {
             StageMap.closeStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
-            Stage stage1 = StageMap.getStage(CommonResourceMassages.PLATFORM_STAGE_MAIN);
+            Stage stage1 = StageMap.getPrimaryStage(CommonResourceMassages.PLATFORM_STAGE_MAIN);
             if (stage1 != null && stage1.getScene() != null && stage1.getScene().lookup("#grpContent") != null) {
                 stage1.getScene().lookup("#grpContent").setDisable(false);
                 stage1.getScene().lookup("#tbaSystem").setDisable(false);

@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.gui.utils;
 
+import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -198,12 +199,14 @@ public class MenuFactory {
                     @Override
                     public boolean onOkCustomEvent() {
                         Platform.runLater(() -> {
+                            Stage mainStage = StageMap.getPrimaryStage(CommonResourceMassages.PLATFORM_STAGE_MAIN);
                             StageMap.getAllStage().clear();
                             isChangeEnLanguage = true;
                             envService.setLanguageType(LanguageType.EN);
                             initMenu();
                             appController.resetMenu();
                             mainController.resetMain();
+                            StageMap.setPrimaryStage(GuiConst.PLARTFORM_STAGE_MAIN, mainStage);
                         });
                         return false;
                     }
@@ -231,12 +234,14 @@ public class MenuFactory {
                     @Override
                     public boolean onOkCustomEvent() {
                         Platform.runLater(() -> {
+                            Stage mainStage = StageMap.getPrimaryStage(CommonResourceMassages.PLATFORM_STAGE_MAIN);
                             StageMap.getAllStage().clear();
                             isChangeZhLanguage = true;
                             envService.setLanguageType(LanguageType.ZH);
                             initMenu();
                             appController.resetMenu();
                             mainController.resetMain();
+                            StageMap.setPrimaryStage(GuiConst.PLARTFORM_STAGE_MAIN, mainStage);
                         });
 
                         return false;

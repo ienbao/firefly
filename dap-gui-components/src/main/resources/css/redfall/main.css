@@ -492,8 +492,7 @@
     -fx-background-color: COLOR_LIGHT_FF;
     -fx-background-insets: 0;
     -fx-border-width: 1;
-    -fx-padding: 0.3;
-
+    -fx-padding: 0;
 }
 
 .check-box > .box > .mark {
@@ -1058,8 +1057,8 @@
 
 /* FLOATING TABS CUSTOMISATION */
 .tab-pane {
-    -fx-tab-min-height: 22; /* 22 */
-    -fx-tab-max-height: 22; /* 22 */
+    -fx-tab-min-height: 20; /* 22 */
+    -fx-tab-max-height: 20; /* 22 */
     -fx-border-width: 1 0 0 0;
     -fx-border-color: #dcdcdc;
 }
@@ -1069,10 +1068,10 @@
     -fx-border-width: 0 0 1 1;
     -fx-border-color: #dcdcdc;
     -fx-padding: 0;
-    -fx-max-height: 22;
-    -fx-min-height: 22;
-    -fx-tab-min-height: 22; /* 22 */
-    -fx-tab-max-height: 22; /* 22 */
+    -fx-max-height: 20;
+    -fx-min-height: 19;
+    -fx-tab-min-height: 19; /* 22 */
+    -fx-tab-max-height: 20; /* 22 */
     -fx-border-insets: 0;
     -fx-background-insets: 0;
     -fx-border-image-insets: 0;
@@ -1267,8 +1266,8 @@
 
 /*设置表格头高度*/
 .table-view > .column-header-background {
-    -fx-pref-height: 22;
-    -fx-min-height: 22;
+    -fx-pref-height: 21;
+    -fx-min-height: 21;
     -fx-background-color: #ffffff;
     -fx-border-color: #dcdcdc;
     -fx-border-width: 0 0 1 0;
@@ -1358,7 +1357,6 @@
     -fx-border-insets: 0;
     -fx-background-insets: 0;
     -fx-border-color: transparent;
-
 }
 
 .table-cell .text-field {
@@ -1775,14 +1773,14 @@
 .split-pane:horizontal > .split-pane-divider {
     -fx-background-color: COLOR_GRAY_DC, COLOR_GRAY_F5;
     -fx-background-insets: 0, 0 0 0 1;
-    -fx-padding: 0.5;
+    -fx-padding: 1 0 0 1;
 }
 
 /* vertical the two nodes are placed on top of each other. */
 .split-pane:vertical > .split-pane-divider {
     -fx-background-color: COLOR_GRAY_DC, COLOR_GRAY_F5;
     -fx-background-insets: 0, 0 0 1 0;
-    -fx-padding: 0.5;
+    -fx-padding: 0 0 0 1;
 }
 
 /*******************************************************************************
