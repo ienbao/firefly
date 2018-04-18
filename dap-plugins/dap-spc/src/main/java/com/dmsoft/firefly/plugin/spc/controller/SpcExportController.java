@@ -6,6 +6,7 @@ import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.*;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.gui.components.window.WindowPane;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.spc.dto.*;
 import com.dmsoft.firefly.plugin.spc.handler.ParamKeys;
@@ -53,6 +54,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 
@@ -485,6 +487,17 @@ public class SpcExportController {
         windowProgressTipController.setAutoHide(false);
         windowProgressTipController.getAnalysisLB().setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORTING));
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
+        WindowPane windowPane = null;
+        if (stage1.getScene().getRoot() instanceof WindowPane) {
+            windowPane = (WindowPane) stage1.getScene().getRoot();
+        }
+        if (windowPane != null) {
+            windowPane.getCloseBtn().setOnAction(event -> {
+                windowProgressTipController.setCancelingText();
+                context.interruptBeforeNextJobHandler();
+            });
+        }
         context.addJobEventListener(event -> {
             if ("Error".equals(event.getEventName())) {
                 windowProgressTipController.updateFailProgress(event.getProgress(), event.getEventObject().toString());
@@ -540,6 +553,13 @@ public class SpcExportController {
                 }
                 context.pushEvent(new JobEvent("Export done", D100, null));
                 String path = context.get(ParamKeys.EXPORT_PATH).toString();
+                WindowPane windowPane = null;
+                if (stage1.getScene().getRoot() instanceof WindowPane) {
+                    windowPane = (WindowPane) stage1.getScene().getRoot();
+                }
+                if (windowPane != null) {
+                    windowPane.getCloseBtn().setOnAction(event -> stage1.fireEvent(new WindowEvent(stage1, WindowEvent.WINDOW_CLOSE_REQUEST)));
+                }
                 windowProgressTipController.getCancelBtn().setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.OPEN_EXPORT_FOLDER));
                 windowProgressTipController.getCancelBtn().setOnAction(event -> {
                     try {

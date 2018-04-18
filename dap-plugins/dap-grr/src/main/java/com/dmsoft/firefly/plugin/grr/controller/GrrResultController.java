@@ -4,12 +4,11 @@ import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.gui.components.skin.ExpandableTableViewSkin;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
+import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
-import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
-import com.dmsoft.firefly.gui.components.window.WindowMessageController;
-import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
-import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
+import com.dmsoft.firefly.gui.components.window.*;
 import com.dmsoft.firefly.plugin.grr.charts.ChartOperateButton;
 import com.dmsoft.firefly.plugin.grr.charts.ChartRightPane;
 import com.dmsoft.firefly.plugin.grr.charts.LinearChart;
@@ -50,6 +49,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 import java.net.URL;
@@ -274,6 +274,17 @@ public class GrrResultController implements Initializable {
             windowProgressTipController.setCancelingText();
             context.interruptBeforeNextJobHandler();
         });
+        Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
+        WindowPane windowPane = null;
+        if (stage1.getScene().getRoot() instanceof WindowPane) {
+            windowPane = (WindowPane) stage1.getScene().getRoot();
+        }
+        if (windowPane != null) {
+            windowPane.getCloseBtn().setOnAction(event -> {
+                windowProgressTipController.setCancelingText();
+                context.interruptBeforeNextJobHandler();
+            });
+        }
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override

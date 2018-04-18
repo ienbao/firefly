@@ -3,6 +3,8 @@
  */
 package com.dmsoft.firefly.plugin.spc.controller;
 
+import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.*;
 import com.dmsoft.firefly.plugin.spc.dto.*;
@@ -79,9 +81,10 @@ public class SpcMainController implements Initializable {
 
     /**
      * set disable
+     *
      * @param disable disable
      */
-    public void setDisable(boolean disable){
+    public void setDisable(boolean disable) {
         resetBtn.setDisable(disable);
         chooseBtn.setDisable(disable);
     }
@@ -134,6 +137,12 @@ public class SpcMainController implements Initializable {
         chartResultController.initSpcChartData(spcChartDtoList);
     }
 
+    /**
+     * method to set view data in timer model
+     *
+     * @param chartSearchConditionDtoList       list of chart search condition
+     * @param statisticalSearchConditionDtoList list of stats search condition dto
+     */
     public void setTimerViewData(List<SearchConditionDto> chartSearchConditionDtoList, List<SearchConditionDto> statisticalSearchConditionDtoList) {
         //set view data
         SearchDataFrame viewDataFrame = buildSubSearchDataFrame(chartSearchConditionDtoList);
@@ -248,6 +257,17 @@ public class SpcMainController implements Initializable {
             context.interruptBeforeNextJobHandler();
         });
 
+        Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
+        WindowPane windowPane = null;
+        if (stage1.getScene().getRoot() instanceof WindowPane) {
+            windowPane = (WindowPane) stage1.getScene().getRoot();
+        }
+        if (windowPane != null) {
+            windowPane.getCloseBtn().setOnAction(event -> {
+                windowProgressTipController.setCancelingText();
+                context.interruptBeforeNextJobHandler();
+            });
+        }
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_RESET_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
@@ -523,6 +543,17 @@ public class SpcMainController implements Initializable {
             lastViewDataRowKeyList = null;
             spcRefreshJudgeUtil.setViewDataIsBlank(true);
         }
+        Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
+        WindowPane windowPane = null;
+        if (stage1.getScene().getRoot() instanceof WindowPane) {
+            windowPane = (WindowPane) stage1.getScene().getRoot();
+        }
+        if (windowPane != null) {
+            windowPane.getCloseBtn().setOnAction(event -> {
+                windowProgressTipController.setCancelingText();
+                context.interruptBeforeNextJobHandler();
+            });
+        }
         List<String> rowKeyList = viewDataSelectRowKeyListCache == null ? dataFrame.getSearchedRowKey() : viewDataSelectRowKeyListCache;
         List<SpcStatisticalResultAlarmDto> editRowDataList = statisticalResultController.getEditRowStatsData();
         List<SearchConditionDto> searchConditionDtoList = buildRefreshSearchConditionData(editRowDataList);
@@ -618,6 +649,17 @@ public class SpcMainController implements Initializable {
             windowProgressTipController.setCancelingText();
             context.interruptBeforeNextJobHandler();
         });
+        Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
+        WindowPane windowPane = null;
+        if (stage1.getScene().getRoot() instanceof WindowPane) {
+            windowPane = (WindowPane) stage1.getScene().getRoot();
+        }
+        if (windowPane != null) {
+            windowPane.getCloseBtn().setOnAction(event -> {
+                windowProgressTipController.setCancelingText();
+                context.interruptBeforeNextJobHandler();
+            });
+        }
 
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_REFRESH_CHART_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
@@ -650,7 +692,7 @@ public class SpcMainController implements Initializable {
 //                    lastViewDataRowKeyList = viewDataFrame.getAllRowKeys();
 //                    List<String> rowKeyList = viewDataSelectRowKeyListCache == null ? viewDataFrame.getAllRowKeys() : viewDataSelectRowKeyListCache;
 
-//                    viewDataController.setViewData(viewDataFrame, subDataFrame.getAllRowKeys(), statisticalSearchConditionDtoList, spcItemController.isTimer());
+                    viewDataController.setViewData(viewDataFrame, subDataFrame.getAllRowKeys(), statisticalSearchConditionDtoList, spcItemController.isTimer());
                     spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
                     spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(subDataFrame.getAllRowKeys());
 
@@ -782,7 +824,7 @@ public class SpcMainController implements Initializable {
         if (currentViewDataSelectRowKeyList == null) {
             statisticalRowKeyList = dataFrame.getAllRowKeys();
         } else {
-            if ((lastViewDataRowKeyList == null || lastViewDataRowKeyList.size() == 0)  && unSelectRowKeyList.size() == 0) {
+            if ((lastViewDataRowKeyList == null || lastViewDataRowKeyList.size() == 0) && unSelectRowKeyList.size() == 0) {
                 statisticalRowKeyList = dataFrame.getAllRowKeys();
             } else {
                 for (String key : dataFrame.getAllRowKeys()) {
@@ -812,7 +854,17 @@ public class SpcMainController implements Initializable {
             windowProgressTipController.setCancelingText();
             context.interruptBeforeNextJobHandler();
         });
-
+        Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
+        WindowPane windowPane = null;
+        if (stage1.getScene().getRoot() instanceof WindowPane) {
+            windowPane = (WindowPane) stage1.getScene().getRoot();
+        }
+        if (windowPane != null) {
+            windowPane.getCloseBtn().setOnAction(event -> {
+                windowProgressTipController.setCancelingText();
+                context.interruptBeforeNextJobHandler();
+            });
+        }
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_REFRESH_ANALYSIS_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
@@ -826,7 +878,7 @@ public class SpcMainController implements Initializable {
                 chartResultController.initSpcChartData(spcChartDtoList);
 
                 //set view data
-//                SearchDataFrame viewDataFrame = buildSubSearchDataFrame(chartSearchConditionDtoList);
+                SearchDataFrame viewDataFrame = buildSubSearchDataFrame(chartSearchConditionDtoList);
 
                 //get last select row key
 //                List<String> selectRowKeyList = Lists.newArrayList();
@@ -879,6 +931,11 @@ public class SpcMainController implements Initializable {
         this.spcSettingDto = spcSettingDto;
     }
 
+    /**
+     * method to set is timer or not
+     *
+     * @param isTimer is timer
+     */
     public void setMainAnalysisTimerState(boolean isTimer) {
         resetBtn.setDisable(isTimer);
         printBtn.setDisable(isTimer);
@@ -889,14 +946,19 @@ public class SpcMainController implements Initializable {
 
     }
 
-    public void setTimerSearchConditionDtoList(List<SearchConditionDto> timerSearchConditionDtoList) {
-        this.timerSearchConditionDtoList = timerSearchConditionDtoList;
-    }
-
     public List<SearchConditionDto> getTimerSearchConditionDtoList() {
         return timerSearchConditionDtoList;
     }
 
+    public void setTimerSearchConditionDtoList(List<SearchConditionDto> timerSearchConditionDtoList) {
+        this.timerSearchConditionDtoList = timerSearchConditionDtoList;
+    }
+
+    /**
+     * method to get search key in timer
+     *
+     * @return list of search key
+     */
     public List<String> getTimerSearchKeyList() {
         if (timerSearchConditionDtoList == null) {
             return null;

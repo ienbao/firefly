@@ -14,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * Created by Julia on 2018/03/09.
@@ -95,6 +96,14 @@ public class WindowProgressTipController {
     }
 
     public void updateFailProgress(double progressValue, String errorText) {
+        Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
+        WindowPane windowPane = null;
+        if (stage1.getScene().getRoot() instanceof WindowPane) {
+            windowPane = (WindowPane) stage1.getScene().getRoot();
+        }
+        if (windowPane != null) {
+            windowPane.getCloseBtn().setOnAction(event -> stage1.fireEvent(new WindowEvent(stage1, WindowEvent.WINDOW_CLOSE_REQUEST)));
+        }
         taskProgress.getStyleClass().setAll("progress-bar-lg-red");
         taskProgress.setProgress(progressValue / 100);
         Platform.runLater(() -> {
@@ -105,13 +114,9 @@ public class WindowProgressTipController {
         errorTxt.setVisible(true);
         errorTxt.setMinHeight(245);
         errorTxt.appendText(errorText);
-        Stage stage = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                stage.setMaxHeight(380);
-                stage.setMinHeight(380);
-            }
+        Platform.runLater(() -> {
+            stage1.setMaxHeight(380);
+            stage1.setMinHeight(380);
         });
         /*if (progressValue >= 100) {
             closeDialog();
@@ -125,11 +130,11 @@ public class WindowProgressTipController {
         }
 
         if (!isOverride) {
-            Stage stage = StageMap.getStage(CommonResourceMassages.PLATFORM_STAGE_MAIN);
-            if (stage != null && stage.getScene() != null && stage.getScene().lookup("#grpContent") != null) {
-                stage.getScene().lookup("#grpContent").setDisable(true);
-                stage.getScene().lookup("#tbaSystem").setDisable(true);
-                stage.getScene().getRoot().getScene().lookup("#menuPane").setDisable(true);
+            Stage stage1 = StageMap.getStage(CommonResourceMassages.PLATFORM_STAGE_MAIN);
+            if (stage1 != null && stage1.getScene() != null && stage1.getScene().lookup("#grpContent") != null) {
+                stage1.getScene().lookup("#grpContent").setDisable(true);
+                stage1.getScene().lookup("#tbaSystem").setDisable(true);
+                stage1.getScene().getRoot().getScene().lookup("#menuPane").setDisable(true);
             }
         }
     }
@@ -146,11 +151,11 @@ public class WindowProgressTipController {
         }
         if (!isOverride) {
             StageMap.closeStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
-            Stage stage = StageMap.getStage(CommonResourceMassages.PLATFORM_STAGE_MAIN);
-            if (stage != null && stage.getScene() != null && stage.getScene().lookup("#grpContent") != null) {
-                stage.getScene().lookup("#grpContent").setDisable(false);
-                stage.getScene().lookup("#tbaSystem").setDisable(false);
-                stage.getScene().lookup("#menuPane").setDisable(false);
+            Stage stage1 = StageMap.getStage(CommonResourceMassages.PLATFORM_STAGE_MAIN);
+            if (stage1 != null && stage1.getScene() != null && stage1.getScene().lookup("#grpContent") != null) {
+                stage1.getScene().lookup("#grpContent").setDisable(false);
+                stage1.getScene().lookup("#tbaSystem").setDisable(false);
+                stage1.getScene().lookup("#menuPane").setDisable(false);
             }
         }
     }

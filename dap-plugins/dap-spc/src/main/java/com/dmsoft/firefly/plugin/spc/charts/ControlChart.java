@@ -116,10 +116,10 @@ public class ControlChart<X, Y> extends LineChart {
             Color color = uniqueColor.get(i);
             String seriesName = seriesNames.get(i);
             String key = uniqueKey.get(i);
-            setDataNodeStyleAndTooltip(seriesUniqueKeyMap.get(key), color, chartTooltip.getChartPointTooltip());
+            setDataNodeStyleAndTooltip(seriesUniqueKeyMap.get(key), color, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
             if (pathMarkerMap.containsKey(uniqueKey.get(i))) {
                 pathMarkerMap.get(uniqueKey.get(i)).forEach(series -> {
-                    setPathNodeStyleAndTooltip(series, color, seriesName, chartTooltip.getChartPointTooltip());
+                    setPathNodeStyleAndTooltip(series, color, seriesName, chartTooltip == null ? null :chartTooltip.getChartPointTooltip());
                 });
             }
         }

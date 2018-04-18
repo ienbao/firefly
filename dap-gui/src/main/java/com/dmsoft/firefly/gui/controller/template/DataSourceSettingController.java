@@ -6,10 +6,12 @@ package com.dmsoft.firefly.gui.controller.template;
 import com.dmsoft.firefly.gui.components.dialog.ChooseTestItemDialog;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
+import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.gui.components.window.WindowPane;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.gui.handler.importcsv.DataFrameHandler;
 import com.dmsoft.firefly.gui.handler.importcsv.FindTestDataHandler;
@@ -31,6 +33,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 
 import java.util.*;
 
@@ -161,8 +164,22 @@ public class DataSourceSettingController {
 
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         windowProgressTipController.setAutoHide(false);
-        JobManager jobManager = RuntimeContext.getBean(JobManager.class);
+
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
+        WindowPane windowPane = null;
+        if (stage1.getScene().getRoot() instanceof WindowPane) {
+            windowPane = (WindowPane) stage1.getScene().getRoot();
+        }
+        if (windowPane != null) {
+            windowPane.getCloseBtn().setOnAction(event -> {
+                windowProgressTipController.setCancelingText();
+                context.interruptBeforeNextJobHandler();
+            });
+
+        }
+        JobManager jobManager = RuntimeContext.getBean(JobManager.class);
+
         context.put(ParamKeys.PROJECT_NAME_LIST, projectNames);
         context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtos);
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
@@ -189,7 +206,12 @@ public class DataSourceSettingController {
                 windowProgressTipController.closeDialog();
             }
         });
-
+        jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                windowProgressTipController.closeDialog();
+            }
+        });
         jobManager.fireJobASyn(jobPipeline, context);
     }
 
@@ -240,6 +262,17 @@ public class DataSourceSettingController {
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
         context.put(ParamKeys.PROJECT_NAME_LIST, projectNames);
         context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+        Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
+        WindowPane windowPane = null;
+        if (stage1.getScene().getRoot() instanceof WindowPane) {
+            windowPane = (WindowPane) stage1.getScene().getRoot();
+        }
+        if (windowPane != null) {
+            windowPane.getCloseBtn().setOnAction(event -> {
+                windowProgressTipController.setCancelingText();
+                context.interruptBeforeNextJobHandler();
+            });
+        }
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
 
         windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
@@ -269,7 +302,12 @@ public class DataSourceSettingController {
                 windowProgressTipController.closeDialog();
             }
         });
-
+        jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                windowProgressTipController.closeDialog();
+            }
+        });
         jobManager.fireJobASyn(jobPipeline, context);
 
     }
@@ -303,7 +341,17 @@ public class DataSourceSettingController {
         context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
         windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
-
+        Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
+        WindowPane windowPane = null;
+        if (stage1.getScene().getRoot() instanceof WindowPane) {
+            windowPane = (WindowPane) stage1.getScene().getRoot();
+        }
+        if (windowPane != null) {
+            windowPane.getCloseBtn().setOnAction(event -> {
+                windowProgressTipController.setCancelingText();
+                context.interruptBeforeNextJobHandler();
+            });
+        }
         JobPipeline jobPipeline = RuntimeContext.getBean(JobFactory.class).createJobPipeLine()
                 .addLast(new FindTestDataHandler().setWeight(D100))
                 .addLast(new DataFrameHandler());
@@ -322,7 +370,12 @@ public class DataSourceSettingController {
                 windowProgressTipController.closeDialog();
             }
         });
-
+        jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                windowProgressTipController.closeDialog();
+            }
+        });
         jobManager.fireJobASyn(jobPipeline, context);
     }
 
