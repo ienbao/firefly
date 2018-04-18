@@ -695,7 +695,7 @@ public class ControlChart<X, Y> extends LineChart {
 //            set data node tooltip
             if (pointTooltipFunction != null) {
                 String content = pointTooltipFunction.apply(new PointTooltip(series.getName(), dataItem));
-//                Tooltip.install(dataItem.getNode(), new Tooltip(content));
+                Tooltip.install(dataItem.getNode(), new Tooltip(content));
             }
         });
     }
