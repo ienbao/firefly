@@ -1421,9 +1421,9 @@
     -fx-pref-height: 14;
     -fx-min-height: 14;
     -fx-max-height: 14;
-    -fx-background-insets: 0 -11 -1 -10;
-    -fx-border-insets: 0 -11 -1 -10;
-    -fx-padding: -3 -8 -3 -8;
+    -fx-background-insets: 0 -11 -2 -10;
+    -fx-border-insets: 0 -11 -2 -10;
+    -fx-padding: -5 -8 -3 -8;
 }
 
 /*******************************************************************************
