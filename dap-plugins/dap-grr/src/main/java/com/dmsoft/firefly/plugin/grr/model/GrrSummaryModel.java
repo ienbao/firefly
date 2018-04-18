@@ -180,18 +180,18 @@ public class GrrSummaryModel implements TableModel {
             String columnName = key.split(UIConstant.SPLIT_FLAG)[1];
             String rowName = key.split(UIConstant.SPLIT_FLAG)[0];
             GrrSummaryDto summaryDto = rowKeyDataMap.get(rowName);
-            if (UIConstant.GRR_SUMMARY_TITLE[4].equals(columnName)) {
+            if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_REPEATABILITY).equals(columnName)) {
                 Double repeatability = analysisType == 0 ? summaryDto.getSummaryResultDto().getRepeatabilityOnTolerance()
                         : summaryDto.getSummaryResultDto().getRepeatabilityOnContribution();
                 String value = this.formatterPercentValue(repeatability, percentDigNum);
                 sourceObjectProperty.setValue(value);
-            } else if (UIConstant.GRR_SUMMARY_TITLE[5].equals(columnName)) {
+            } else if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_REPRODUCIBILITY).equals(columnName)) {
 
                 Double reproducibility = analysisType == 0 ? summaryDto.getSummaryResultDto().getReproducibilityOnTolerance()
                         : summaryDto.getSummaryResultDto().getReproducibilityOnContribution();
                 String value = this.formatterPercentValue(reproducibility, percentDigNum);
                 sourceObjectProperty.setValue(value);
-            } else if (UIConstant.GRR_SUMMARY_TITLE[6].equals(columnName)) {
+            } else if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_GAUGE).equals(columnName)) {
 
                 Double grr = analysisType == 0 ? summaryDto.getSummaryResultDto().getGrrOnTolerance()
                         : summaryDto.getSummaryResultDto().getGrrOnContribution();
@@ -207,32 +207,32 @@ public class GrrSummaryModel implements TableModel {
         int percentDigNum = digNum - 2 >= 0 ? digNum - 2 : 0;
         GrrSummaryDto summaryDto = rowKeyDataMap.get(rowKey);
         if (summaryDto != null) {
-            if (UIConstant.GRR_SUMMARY_TITLE[0].equals(columnName)) {
+            if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_TESTITEM).equals(columnName)) {
 
                 value = summaryDto.getItemName();
-            } else if (UIConstant.GRR_SUMMARY_TITLE[1].equals(columnName)) {
+            } else if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_LSL).equals(columnName)) {
 
                 Double lsl = summaryDto.getSummaryResultDto().getLsl();
                 value = DAPStringUtils.isInfinityAndNaN(lsl) ? "-" : String.valueOf(lsl);
-            } else if (UIConstant.GRR_SUMMARY_TITLE[2].equals(columnName)) {
+            } else if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_USL).equals(columnName)) {
 
                 Double usl = summaryDto.getSummaryResultDto().getUsl();
                 value = DAPStringUtils.isInfinityAndNaN(usl) ? "-" : String.valueOf(usl);
-            } else if (UIConstant.GRR_SUMMARY_TITLE[3].equals(columnName)) {
+            } else if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_TOLERANCE).equals(columnName)) {
 
                 Double tolerance = summaryDto.getSummaryResultDto().getTolerance();
                 value = this.formatterNormalValue(tolerance, digNum);
-            } else if (UIConstant.GRR_SUMMARY_TITLE[4].equals(columnName)) {
+            } else if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_REPEATABILITY).equals(columnName)) {
 
                 Double repeatability = analysisType == 0 ? summaryDto.getSummaryResultDto().getRepeatabilityOnTolerance()
                         : summaryDto.getSummaryResultDto().getRepeatabilityOnContribution();
                 value = this.formatterPercentValue(repeatability, percentDigNum);
-            } else if (UIConstant.GRR_SUMMARY_TITLE[5].equals(columnName)) {
+            } else if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_REPRODUCIBILITY).equals(columnName)) {
 
                 Double reproducibility = analysisType == 0 ? summaryDto.getSummaryResultDto().getReproducibilityOnTolerance()
                         : summaryDto.getSummaryResultDto().getReproducibilityOnContribution();
                 value = this.formatterPercentValue(reproducibility, percentDigNum);
-            } else if (UIConstant.GRR_SUMMARY_TITLE[6].equals(columnName)) {
+            } else if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_GAUGE).equals(columnName)) {
 
                 Double grr = analysisType == 0 ? summaryDto.getSummaryResultDto().getGrrOnTolerance()
                         : summaryDto.getSummaryResultDto().getGrrOnContribution();
@@ -240,7 +240,8 @@ public class GrrSummaryModel implements TableModel {
             }
         }
         SourceObjectProperty valueProperty = new SourceObjectProperty<>(value);
-        if (UIConstant.GRR_SUMMARY_TITLE[1].equals(columnName) || UIConstant.GRR_SUMMARY_TITLE[2].equals(columnName)) {
+        if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_LSL).equals(columnName)
+                || GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_USL).equals(columnName)) {
             valueProperty.addListener((ov, b1, b2) -> {
                 if (!valueProperty.getSourceValue().equals(b2)) {
                     editorCell.add(rowKey + UIConstant.SPLIT_FLAG + columnName);
@@ -252,10 +253,10 @@ public class GrrSummaryModel implements TableModel {
                 if (errorEditorCell.contains(rowKey + UIConstant.SPLIT_FLAG + columnName)) {
                     return;
                 }
-                if (UIConstant.GRR_SUMMARY_TITLE[1].equals(columnName)) {
+                if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_LSL).equals(columnName)) {
                     summaryDto.getSummaryResultDto().setLsl(Double.valueOf((String) b2));
                 }
-                if (UIConstant.GRR_SUMMARY_TITLE[2].equals(columnName)) {
+                if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_USL).equals(columnName)) {
                     summaryDto.getSummaryResultDto().setUsl(Double.valueOf((String) b2));
                 }
                 TestItemWithTypeDto testItemWithTypeDto = new TestItemWithTypeDto();
@@ -287,7 +288,8 @@ public class GrrSummaryModel implements TableModel {
 
     @Override
     public boolean isEditableTextField(String columnName) {
-        if (UIConstant.GRR_SUMMARY_TITLE[1].equals(columnName) || UIConstant.GRR_SUMMARY_TITLE[2].equals(columnName)) {
+        if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_LSL).equals(columnName)
+                || GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_USL).equals(columnName)) {
             return true;
         }
         return false;
@@ -333,7 +335,7 @@ public class GrrSummaryModel implements TableModel {
         if (errorEditorCell.contains(rowKey + UIConstant.SPLIT_FLAG + column)) {
             tableCell.setStyle("-fx-border-with:1 1 1 1;-fx-border-color: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_EDIT_ERROR));
         }
-        if (column.equals(UIConstant.GRR_SUMMARY_TITLE[6])) {
+        if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_GAUGE).equals(column)) {
             int size = rules.size();
             String grrStr = tableCell.getText();
             grrStr = grrStr.substring(0, grrStr.length() - 1);
@@ -352,7 +354,9 @@ public class GrrSummaryModel implements TableModel {
                 }
             }
         }
-        if (column.equals(UIConstant.GRR_SUMMARY_TITLE[4]) || column.equals(UIConstant.GRR_SUMMARY_TITLE[5]) || column.equals(UIConstant.GRR_SUMMARY_TITLE[6])) {
+        if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_REPEATABILITY).equals(column)
+                || column.equals(GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_REPRODUCIBILITY))
+                || column.equals(GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_GAUGE))) {
             tableCell.getTableColumn().setComparator((Comparator<T>) TableComparatorUtils.getContainsPercentColumnComparator());
         }
         return tableCell;
@@ -412,7 +416,7 @@ public class GrrSummaryModel implements TableModel {
             return true;
         }
         GrrSummaryDto summaryDto = rowKeyDataMap.get(rowKey);
-        if (columnName.equals(UIConstant.GRR_SUMMARY_TITLE[1])) {
+        if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_LSL).equals(columnName)) {
             Double usl = summaryDto.getSummaryResultDto().getUsl();
             if (!DAPStringUtils.isInfinityAndNaN(usl) && Double.valueOf(newText) >= usl) {
                 errorEditorRow.add(rowKey);
@@ -423,7 +427,7 @@ public class GrrSummaryModel implements TableModel {
                 TooltipUtil.installWarnTooltip(textField, GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_LSL_MORE_THEN_USL"));
                 return true;
             }
-        } else if (columnName.equals(UIConstant.GRR_SUMMARY_TITLE[2])) {
+        } else if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_USL).equals(columnName)) {
             Double lsl = summaryDto.getSummaryResultDto().getLsl();
             if (!DAPStringUtils.isInfinityAndNaN(lsl) && Double.valueOf(newText) <= lsl) {
                 errorEditorRow.add(rowKey);

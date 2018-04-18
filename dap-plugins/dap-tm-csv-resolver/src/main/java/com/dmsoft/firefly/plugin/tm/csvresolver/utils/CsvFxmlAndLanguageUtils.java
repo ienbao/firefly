@@ -9,8 +9,6 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import javafx.fxml.FXMLLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
@@ -19,8 +17,6 @@ import java.util.ResourceBundle;
  * Created by Ethan.Yang on 2018/2/11.
  */
 public class CsvFxmlAndLanguageUtils {
-    private static final Logger logger = LoggerFactory.getLogger(CsvFxmlAndLanguageUtils.class);
-
     public static boolean isDebug = false;
 
     private static ResourceBundle getResourceBundle() {
@@ -33,7 +29,6 @@ public class CsvFxmlAndLanguageUtils {
             bundleKey = "i18n.message_zh_CN_";
         }
         bundleKey = bundleKey + ModuleType.CSV.name();
-        logger.debug("Language: {}", bundleKey);
         return ResourceBundle.getBundle(bundleKey);
     }
 
@@ -45,7 +40,7 @@ public class CsvFxmlAndLanguageUtils {
      */
     public static FXMLLoader getLoaderFXML(String res) {
         FXMLLoader fxmlLoader = new FXMLLoader(CsvFxmlAndLanguageUtils.class.getClassLoader().getResource(res), getResourceBundle());
-        if (isDebug == false) {
+        if (!isDebug) {
             fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.TMCsvResolverPlugin"));
         }
 

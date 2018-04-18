@@ -59,7 +59,6 @@ public class BuildChart {
         vBox = new Group();
         scene = new Scene(vBox);
         scene.getStylesheets().add(BuildChart.class.getClassLoader().getResource("css/charts.css").toExternalForm());
-
         List<NDBarChartData> ndcChartDataList = Lists.newArrayList();
         List<ControlChartData> runChartDataList = Lists.newArrayList();
         List<ControlChartData> xBarChartDataList = Lists.newArrayList();
@@ -68,9 +67,7 @@ public class BuildChart {
         List<ControlChartData> medianChartDataList = Lists.newArrayList();
         List<BoxPlotChartData> boxChartDataList = Lists.newArrayList();
         List<ControlChartData> mrChartDataList = Lists.newArrayList();
-
         Map<String, Map<String, String>> result = Maps.newHashMap();
-
         NDChart nd = buildND();
         ControlChart run = buildRunChart();
         ControlChart xbar = buildControlChart();
@@ -85,7 +82,6 @@ public class BuildChart {
             String key = spcChartDto.getKey();
             String condition = (DAPStringUtils.isBlank(spcChartDto.getCondition())) ? "All" : spcChartDto.getCondition();
             String seriesName = spcChartDto.getItemName() + "::" + condition;
-
             javafx.scene.paint.Color color = ColorUtils.toFxColorFromAwtColor(colorCache.get(key));
             SpcChartResultDto spcChartResultDto = spcChartDto.getResultDto();
             if (spcChartResultDto == null) {
@@ -98,7 +94,7 @@ public class BuildChart {
                 SpcNdChartData iNdcChartData = new SpcNdChartData(key, spcChartResultDto.getNdcResult(), color);
                 iNdcChartData.setSeriesName(seriesName);
                 ndcChartDataList.add(iNdcChartData);
-                BuildChart.setNdChartData(nd, Lists.newArrayList(iNdcChartData));
+                nd.setData(Lists.newArrayList(iNdcChartData), null);
                 chartPath.put(UIConstant.SPC_CHART_NAME[0], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[0], nd));
             }
             if (exportParam.get(SpcExportItemKey.RUN_CHART.getCode())) {
@@ -106,7 +102,7 @@ public class BuildChart {
                 SpcRunChartData iRunChartData = new SpcRunChartData(key, spcChartResultDto.getRunCResult(), null, color);
                 iRunChartData.setSeriesName(seriesName);
                 runChartDataList.add(iRunChartData);
-                BuildChart.setRunChartData(run, Lists.newArrayList(iRunChartData));
+                run.setData(Lists.newArrayList(iRunChartData), null);
                 chartPath.put(UIConstant.SPC_CHART_NAME[1], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[1], run));
             }
             if (exportParam.get(SpcExportItemKey.X_BAR_CHART.getCode())) {
@@ -146,7 +142,7 @@ public class BuildChart {
                 SpcBoxChartData iBoxChartData = new SpcBoxChartData(key, spcChartResultDto.getBoxCResult(), color);
                 iBoxChartData.setSeriesName(seriesName);
                 boxChartDataList.add(iBoxChartData);
-                BuildChart.setBoxChartData(box, Lists.newArrayList(iBoxChartData));
+                box.setData(Lists.newArrayList(iBoxChartData), null);
                 chartPath.put(UIConstant.SPC_CHART_NAME[6], BuildChart.exportImages(UIConstant.SPC_CHART_NAME[6], box));
             }
             if (exportParam.get(SpcExportItemKey.MR_CHART.getCode())) {
@@ -159,11 +155,10 @@ public class BuildChart {
             }
             result.put(key, chartPath);
 
-
             if (search > 1 && (i + 1) % search == 0) {
-                BuildChart.setNdChartData(nd, ndcChartDataList);
+                nd.setData(ndcChartDataList, null);
                 ndcChartDataList.clear();
-                BuildChart.setRunChartData(run, runChartDataList);
+                run.setData(runChartDataList, null);
                 runChartDataList.clear();
                 BuildChart.setControlChartData(xbar, xBarChartDataList);
                 xBarChartDataList.clear();
@@ -173,7 +168,7 @@ public class BuildChart {
                 sdChartDataList.clear();
                 BuildChart.setControlChartData(med, medianChartDataList);
                 medianChartDataList.clear();
-                BuildChart.setBoxChartData(box, boxChartDataList);
+                box.setData(boxChartDataList, null);
                 boxChartDataList.clear();
                 BuildChart.setControlChartData(mr, mrChartDataList);
                 mrChartDataList.clear();
@@ -233,7 +228,6 @@ public class BuildChart {
         yAxis.setMinorTickVisible(false);
         yAxis.setAutoRanging(false);
         yAxis.setForceZeroInRange(false);
-
         ControlChart runChart = new ControlChart(xAxis, yAxis);
         runChart.setAnimated(false);
         runChart.setLegendVisible(false);
@@ -249,7 +243,6 @@ public class BuildChart {
         yAxis.setMinorTickVisible(false);
         xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
-
         ControlChart runChart = new ControlChart(xAxis, yAxis);
         runChart.setAnimated(false);
         runChart.setLegendVisible(false);
@@ -264,7 +257,6 @@ public class BuildChart {
         xAxis.setMinorTickVisible(false);
         yAxis.setMinorTickVisible(false);
         yAxis.setAutoRanging(false);
-
         BoxPlotChart boxPlotChart = new BoxPlotChart(xAxis, yAxis);
         boxPlotChart.setAnimated(false);
         boxPlotChart.setLegendVisible(false);
@@ -272,128 +264,13 @@ public class BuildChart {
 
     }
 
-    private static void setNdChartData(NDChart chart, List<NDBarChartData> ndChartData) {
-        Double[] xLower = new Double[ndChartData.size()];
-        Double[] xUpper = new Double[ndChartData.size()];
-        Double[] yLower = new Double[ndChartData.size()];
-        Double[] yUpper = new Double[ndChartData.size()];
-        for (int i = 0; i < ndChartData.size(); i++) {
-            xLower[i] = (Double) ndChartData.get(i).getXLowerBound();
-            xUpper[i] = (Double) ndChartData.get(i).getXUpperBound();
-            yLower[i] = (Double) ndChartData.get(i).getYLowerBound();
-            yUpper[i] = (Double) ndChartData.get(i).getYUpperBound();
-        }
-        Double xMax = MathUtils.getMax(xUpper);
-        Double xMin = MathUtils.getMin(xLower);
-        Double yMax = MathUtils.getMax(yUpper);
-        Double yMin = MathUtils.getMin(yLower);
-        if (xMax == null || xMin == null || yMax == null || yMin == null) {
-            return;
-        }
-        NumberAxis xAxis = (NumberAxis) chart.getXAxis();
-        NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
-        xAxis.setLowerBound(xMin - xReserve);
-        xAxis.setUpperBound(xMax + xReserve);
-        yAxis.setLowerBound(yMin);
-        yAxis.setUpperBound(yMax + yReserve);
-        chart.setData(ndChartData, null);
-    }
-
-    private static void setRunChartData(ControlChart chart, List<ControlChartData> runChartData) {
-        Double[] xLower = new Double[runChartData.size()];
-        Double[] xUpper = new Double[runChartData.size()];
-        Double[] yLower = new Double[runChartData.size()];
-        Double[] yUpper = new Double[runChartData.size()];
-        for (int i = 0; i < runChartData.size(); i++) {
-            xLower[i] = (Double) runChartData.get(i).getXLowerBound();
-            xUpper[i] = (Double) runChartData.get(i).getXUpperBound();
-            yLower[i] = (Double) runChartData.get(i).getYLowerBound();
-            yUpper[i] = (Double) runChartData.get(i).getYUpperBound();
-        }
-        Double xMax = MathUtils.getMax(xUpper);
-        Double xMin = MathUtils.getMin(xLower);
-        Double yMax = MathUtils.getMax(yUpper);
-        Double yMin = MathUtils.getMin(yLower);
-        if (xMax == null || xMin == null || yMax == null || yMin == null) {
-            return;
-        }
-        NumberAxis xAxis = (NumberAxis) chart.getXAxis();
-        NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
-        xAxis.setLowerBound(xMin - xReserve);
-        xAxis.setUpperBound(xMax + xReserve);
-        yAxis.setLowerBound(yMin - yReserve);
-        yAxis.setUpperBound(yMax + yReserve);
-
-        chart.setData(runChartData, null);
-    }
-
     private static void setControlChartData(ControlChart chart, List<ControlChartData> controlChartData) {
-        Double[] xLower = new Double[controlChartData.size()];
-        Double[] xUpper = new Double[controlChartData.size()];
-        Double[] yLower = new Double[controlChartData.size()];
-        Double[] yUpper = new Double[controlChartData.size()];
-        for (int i = 0; i < controlChartData.size(); i++) {
-            xLower[i] = (Double) controlChartData.get(i).getXLowerBound();
-            xUpper[i] = (Double) controlChartData.get(i).getXUpperBound();
-            yLower[i] = (Double) controlChartData.get(i).getYLowerBound();
-            yUpper[i] = (Double) controlChartData.get(i).getYUpperBound();
-        }
-        Double xMax = MathUtils.getMax(xUpper);
-        Double xMin = MathUtils.getMin(xLower);
-        Double yMax = MathUtils.getMax(yUpper);
-        Double yMin = MathUtils.getMin(yLower);
-        if (xMax == null || xMin == null || yMax == null || yMin == null) {
-            return;
-        }
-        NumberAxis xAxis = (NumberAxis) chart.getXAxis();
-        NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
-        xAxis.setLowerBound(xMin - xReserve);
-        xAxis.setUpperBound(xMax + xReserve);
-        yAxis.setLowerBound(yMin - yReserve);
-        yAxis.setUpperBound(yMax + yReserve);
-
         chart.setData(controlChartData, null);
         controlChartData.forEach(controlChartData1 -> {
             Double[] ucl = controlChartData1.getUclData();
             Double[] lcl = controlChartData1.getLclData();
             chart.setSeriesDataStyleByRule(controlChartData1.getUniqueKey(), ucl, lcl);
         });
-    }
-
-    private static void setBoxChartData(BoxPlotChart chart, List<BoxPlotChartData> boxChartData) {
-        Double[] xLower = new Double[boxChartData.size()];
-        Double[] xUpper = new Double[boxChartData.size()];
-        Double[] yLower = new Double[boxChartData.size()];
-        Double[] yUpper = new Double[boxChartData.size()];
-        for (int i = 0; i < boxChartData.size(); i++) {
-            xLower[i] = (Double) boxChartData.get(i).getXLowerBound();
-            xUpper[i] = (Double) boxChartData.get(i).getXUpperBound();
-            yLower[i] = (Double) boxChartData.get(i).getYLowerBound();
-            yUpper[i] = (Double) boxChartData.get(i).getYUpperBound();
-        }
-        Double xMax = MathUtils.getMax(xUpper);
-        Double xMin = MathUtils.getMin(xLower);
-        Double yMax = MathUtils.getMax(yUpper);
-        Double yMin = MathUtils.getMin(yLower);
-        if (xMax == null || xMin == null || yMax == null || yMin == null) {
-            return;
-        }
-        NumberAxis xAxis = (NumberAxis) chart.getXAxis();
-        NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
-        xAxis.setLowerBound(xMin - xReserve);
-        xAxis.setUpperBound(xMax + xReserve);
-        yAxis.setLowerBound(yMin - yReserve);
-        yAxis.setUpperBound(yMax + yReserve);
-
-        chart.setData(boxChartData, null);
     }
 
     private static String exportImages(String name, Node node) {
@@ -409,7 +286,6 @@ public class BuildChart {
             countDownLatch.await();
         } catch (InterruptedException ignored) {
         }
-
 
         String savePicPath = FileUtils.getAbsolutePath("../export/temp");
         File file = new File(savePicPath);

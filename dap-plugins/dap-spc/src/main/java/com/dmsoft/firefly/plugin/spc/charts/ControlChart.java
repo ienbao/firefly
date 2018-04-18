@@ -17,7 +17,10 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.chart.*;
+import javafx.scene.chart.Axis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -89,7 +92,46 @@ public class ControlChart<X, Y> extends LineChart {
             return;
         }
         setAxisRange(controlChartDataList);
-        controlChartDataList.forEach(controlChartData -> createChartSeriesData(controlChartData, chartTooltip));
+        List<XYChart.Series> seriesResult = Lists.newArrayList();
+        List<Line> lineResult = Lists.newArrayList();
+        List<String> uniqueKey = Lists.newArrayList();
+        List<Color> uniqueColor = Lists.newArrayList();
+        List<String> seriesNames = Lists.newArrayList();
+        controlChartDataList.forEach(controlChartData -> {
+            ControlChartSeries series = createChartSeriesData(controlChartData, chartTooltip);
+            if (series != null) {
+                if (series.getPointSeries() != null) {
+                    seriesResult.add(series.getPointSeries());
+                }
+                seriesResult.addAll(series.getPathSeries());
+                lineResult.addAll(series.getConnectLine());
+                uniqueKey.add(controlChartData.getUniqueKey());
+                uniqueColor.add(controlChartData.getColor());
+                seriesNames.add(controlChartData.getSeriesName());
+            }
+        });
+        this.getPlotChildren().addAll(lineResult);
+        this.getData().addAll(seriesResult);
+        for (int i = 0; i < uniqueKey.size(); i++) {
+            Color color = uniqueColor.get(i);
+            String seriesName = seriesNames.get(i);
+            String key = uniqueKey.get(i);
+            setDataNodeStyleAndTooltip(seriesUniqueKeyMap.get(key), color, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
+            if (pathMarkerMap != null &&  pathMarkerMap.containsKey(uniqueKey.get(i))) {
+                pathMarkerMap.get(uniqueKey.get(i)).forEach(series -> setPathNodeStyleAndTooltip(series, color, seriesName,
+                        chartTooltip == null ? null :chartTooltip.getChartPointTooltip()));
+            }
+            List<Node> nodes = Lists.newArrayList();
+            nodes.addAll(getSeriesNodes(Lists.newArrayList(seriesUniqueKeyMap.get(key))));
+            if (pathMarkerMap != null && pathMarkerMap.containsKey(key)) {
+                nodes.addAll(getSeriesNodes(pathMarkerMap.get(key)));
+            }
+            if (valueMarkerMap != null && valueMarkerMap.containsKey(key)) {
+                nodes.addAll(valueMarkerMap.get(key).getAllLines());
+            }
+            addToUniqueKeyNodes(key, nodes);
+        }
+
     }
 
     /**
@@ -213,7 +255,8 @@ public class ControlChart<X, Y> extends LineChart {
     /**
      * Toggle series path show or hide
      *
-     * @param showed whether it show or not
+     * @param pathName path name
+     * @param showed   whether it show or not
      */
     public void togglePathAllSeriesLine(String pathName, boolean showed) {
         if (pathMarkerMap == null || DAPStringUtils.isBlank(pathName)) {
@@ -445,23 +488,27 @@ public class ControlChart<X, Y> extends LineChart {
         }
         NumberAxis xAxis = (NumberAxis) this.getXAxis();
         NumberAxis yAxis = (NumberAxis) this.getYAxis();
-        double yReserve = (yMax - yMin) * UIConstant.FACTOR;
-        double xReserve = (xMax - xMin) * UIConstant.FACTOR;
+        yMax += (yMax - yMin) * UIConstant.Y_FACTOR;
+        yMin -= (yMax - yMin) * UIConstant.Y_FACTOR;
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
         xAxis.setLowerBound(0);
-        xAxis.setUpperBound(xMax + UIConstant.FACTOR);
-        yAxis.setLowerBound(yMin - yReserve);
-        yAxis.setUpperBound(yMax + yReserve);
+        xAxis.setUpperBound(xMax + UIConstant.X_FACTOR);
+        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        yAxis.setLowerBound(newYMin);
+        yAxis.setUpperBound(newYMax);
         ChartOperatorUtils.updateAxisTickUnit(xAxis);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
     }
 
-    private void createChartSeriesData(ControlChartData controlChartData, ChartTooltip chartTooltip) {
+    private ControlChartSeries createChartSeriesData(ControlChartData controlChartData, ChartTooltip chartTooltip) {
 //        1. 设置画图数据, 图的颜色、样式、悬浮提示
 //        2. 设置画直线数据， 线的颜色，样式
 //        3. 设置画折线数据， 折线的颜色，样式
         if (controlChartData == null) {
-            return;
+            return null;
         }
+        ControlChartSeries result = new ControlChartSeries();
         Color color = controlChartData.getColor();
         String seriesName = controlChartData.getSeriesName();
         String uniqueKey = controlChartData.getUniqueKey();
@@ -471,41 +518,48 @@ public class ControlChart<X, Y> extends LineChart {
 
         if (controlChartData.getXyOneChartData() != null) {
             XYChart.Series series = this.buildDataSeries(controlChartData.getXyOneChartData(), seriesName);
-            this.getData().add(series);
-            this.setDataNodeStyleAndTooltip(series, color, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
+            result.setPointSeries(series);
+            result.setColor(color);
+            result.setName(seriesName);
+//            this.getData().add(series);
+//            this.setDataNodeStyleAndTooltip(series, color, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
             this.seriesUniqueKeyMap.put(uniqueKey, series);
             this.seriesColorMap.put(series, color);
             this.seriesPointRuleMap.put(uniqueKey, rulePointStyleFunction);
-            this.uniqueKeyNodesMap.put(uniqueKey, getSeriesNodes(series));
         }
 //        Set chart line
+        result.setConnectLine(Lists.newArrayList());
         if (lineDataList != null) {
             ValueMarker valueMarker = new ValueMarker();
             lineDataList.forEach(oneLineData -> {
                 if (oneLineData.getValue() != null) {
                     Line line = valueMarker.buildValueMarker(oneLineData, color, seriesName, chartTooltip == null ? null : chartTooltip.getLineTooltip());
-                    getPlotChildren().add(line);
-                    addToUniqueKeyNodes(uniqueKey, Lists.newArrayList(line));
+                    result.getConnectLine().add(line);
+//                    getPlotChildren().add(line);
+//                    addToUniqueKeyNodes(uniqueKey, Lists.newArrayList(line));
                 }
             });
             valueMarkerMap.put(uniqueKey, valueMarker);
         }
 //       Set chart path
+        result.setPathSeries(Lists.newArrayList());
         if (pathDataList != null) {
             List<XYChart.Series<X, Y>> seriesList = Lists.newArrayList();
             pathDataList.forEach(onePathData -> {
                 if (onePathData != null) {
                     XYChart.Series<X, Y> series = buildPathSeries(onePathData.getPoints(), onePathData.getPathName());
                     if (series != null) {
-                        this.getData().add(series);
-                        this.setPathNodeStyleAndTooltip(series, color, seriesName, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
+                        result.getPathSeries().add(series);
+//                        this.getData().add(series);
+//                        this.setPathNodeStyleAndTooltip(series, color, seriesName, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
                         seriesList.add(series);
-                        addToUniqueKeyNodes(uniqueKey, getSeriesNodes(series));
+//                        addToUniqueKeyNodes(uniqueKey, getSeriesNodes(series));
                     }
                 }
             });
             pathMarkerMap.put(uniqueKey, seriesList);
         }
+        return result;
     }
 
     private XYChart.Series buildDataSeries(IXYChartData<X, Y> xyOneChartData, String seriesName) {
@@ -567,13 +621,15 @@ public class ControlChart<X, Y> extends LineChart {
         pane.setMargin(text, new Insets(0, 0, 10, 0));
     }
 
-    private List<Node> getSeriesNodes(XYChart.Series<X, Y> series) {
+    private List<Node> getSeriesNodes(List<XYChart.Series<X, Y>> series) {
         List<Node> nodes = Lists.newArrayList();
         if (series == null) {
             return nodes;
         }
-        nodes.add(series.getNode());
-        series.getData().forEach(dataItem -> nodes.add(dataItem.getNode()));
+        series.forEach(oneSeries -> {
+            nodes.add(oneSeries.getNode());
+            oneSeries.getData().forEach(dataItem -> nodes.add(dataItem.getNode()));
+        });
         return nodes;
     }
 
@@ -675,6 +731,54 @@ public class ControlChart<X, Y> extends LineChart {
 //        paint line
         for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
             valueMarkerEntry.getValue().paintValueMaker(this);
+        }
+    }
+
+    private class ControlChartSeries {
+        private XYChart.Series pointSeries;
+        private List<Line> connectLine;
+        private List<XYChart.Series> pathSeries;
+        private Color color;
+        private String name;
+
+        public Series getPointSeries() {
+            return pointSeries;
+        }
+
+        public void setPointSeries(Series pointSeries) {
+            this.pointSeries = pointSeries;
+        }
+
+        public List<Line> getConnectLine() {
+            return connectLine;
+        }
+
+        public void setConnectLine(List<Line> connectLine) {
+            this.connectLine = connectLine;
+        }
+
+        public List<Series> getPathSeries() {
+            return pathSeries;
+        }
+
+        public void setPathSeries(List<Series> pathSeries) {
+            this.pathSeries = pathSeries;
+        }
+
+        public Color getColor() {
+            return color;
+        }
+
+        public void setColor(Color color) {
+            this.color = color;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
     }
 }

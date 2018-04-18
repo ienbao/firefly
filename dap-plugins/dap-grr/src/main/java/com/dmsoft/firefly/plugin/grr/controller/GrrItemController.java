@@ -8,6 +8,7 @@ import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.*;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.gui.components.window.WindowPane;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
@@ -48,8 +49,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
@@ -60,6 +64,9 @@ import java.util.*;
  * Updated by Can Guan on 2018/3/23
  */
 public class GrrItemController implements Initializable {
+
+    private Logger logger = LoggerFactory.getLogger(GrrItemController.class);
+
     private static final String STICKY_ON_TOP_CODE = "stick_on_top";
     @FXML
     private TextFieldFilter itemFilter;
@@ -550,8 +557,10 @@ public class GrrItemController implements Initializable {
         TooltipUtil.installNormalTooltip(exportBtn, GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_CONFIG));
         itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_datasource_normal.png")));
         itemTab.setStyle("-fx-padding: 0 5 0 5");
+        itemTab.setTooltip(new Tooltip(GrrFxmlAndLanguageUtils.getString("GRR_TEST_ITEM")));
         configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_config_normal.png")));
         configTab.setStyle("-fx-padding: 0 5 0 5");
+        configTab.setTooltip(new Tooltip(GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")));
     }
 
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
@@ -717,6 +726,7 @@ public class GrrItemController implements Initializable {
 
     @SuppressWarnings("unchecked")
     private void getAnalysisBtnEvent() {
+        logger.debug("Analyse grr start ...");
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
         if (!searchTab.verifySearchTextArea()) {
             return;
@@ -733,7 +743,21 @@ public class GrrItemController implements Initializable {
             conditionDto.setSelectedTestItemDtos(selectedItemDto);
             context.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, conditionDto);
             context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
-            windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
+            windowProgressTipController.getCancelBtn().setOnAction(event -> {
+                windowProgressTipController.setCancelingText();
+                context.interruptBeforeNextJobHandler();
+            });
+            Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
+            WindowPane windowPane = null;
+            if (stage1.getScene().getRoot() instanceof WindowPane) {
+                windowPane = (WindowPane) stage1.getScene().getRoot();
+            }
+            if (windowPane != null) {
+                windowPane.getCloseBtn().setOnAction(event -> {
+                    windowProgressTipController.setCancelingText();
+                    context.interruptBeforeNextJobHandler();
+                });
+            }
             updateGrrPreference(conditionDto);
             JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_VIEW_DATA_JOB_PIPELINE);
             jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
@@ -759,6 +783,7 @@ public class GrrItemController implements Initializable {
                         grrMainController.updateGrrViewData();
                         grrMainController.updateGrrSummaryAndDetail();
                     }
+                    logger.debug("Analyse grr finished.");
                     windowProgressTipController.closeDialog();
                 }
             });

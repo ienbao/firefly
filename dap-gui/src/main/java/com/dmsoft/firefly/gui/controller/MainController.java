@@ -125,7 +125,7 @@ public class MainController {
                 if (!tabPaneMap.containsKey(name)) {
                     Pane pane = pc.getMainBodyPane(name).getNewPane();
                     pane.setId(name);
-                    initTab(name, pane);
+                    initMutilyTab(name, pane);
                 } else {
                     contentStackPane.getChildren().forEach(node -> {
                         node.setVisible(false);
@@ -155,8 +155,19 @@ public class MainController {
             setActiveBtnStyle(firstTabBtn);
             Pane pane = pc.getMainBodyPane(firstTabBtn.getId()).getNewPane();
             pane.setId(firstTabBtn.getId());
-            initTab(firstTabBtn.getId(), pane);
+            initMutilyTab(firstTabBtn.getId(), pane);
         }
+    }
+
+    /**
+     * refresh active template
+     */
+    public void refreshActiveTemplate(){
+        List<String> projectName = envService.findActivatedProjectName();
+        Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
+        LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, envService.findActivatedTemplate().getName());
+        envService.setTestItems(itemWithTypeDtoMap);
+        resetMain();
     }
 
     /**
@@ -171,7 +182,21 @@ public class MainController {
         initialize();
     }
 
-    private void initTab(String name, Pane pane) {
+    private void initSinglelTab(String name, Pane pane) {
+        TabPane tabPane = new TabPane();
+        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
+        tabPane.setId(name);
+        Tab tab = new Tab();
+        tab.setText(name + "_1");
+        tab.setContent(pane);
+        tabPane.getTabs().add(tab);
+        contentStackPane.getChildren().add(tabPane);
+        tabPaneMap.put(name, tabPane);
+        TabUtils.disableCloseTab(tabPane);
+        TabUtils.tabSelectedListener(tab, tabPane);
+    }
+
+    private void initMutilyTab(String name, Pane pane) {
         TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
         tabPane.setStyle("-fx-skin: 'com.dmsoft.firefly.gui.component.TabPaneSkin'");
@@ -248,7 +273,7 @@ public class MainController {
         lblMemory.setMaxWidth(179);
         lblMemory.setMinWidth(179);
         lblMemory.getStyleClass().add("state-bar-lbl");
-        lblMemory.setStyle("-fx-border-width: 0 1 0 1; -fx-border-color: #ededed;");
+        lblMemory.setStyle("-fx-border-width: 0 1 0 1; -fx-border-color: #dcdcdc;");
         lblMemory.setAlignment(Pos.BASELINE_LEFT);
         lblMemory.setContentDisplay(ContentDisplay.RIGHT);
         stateBar.addColumn(4, lblMemory);
@@ -612,7 +637,7 @@ public class MainController {
             FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source.fxml");
             root = fxmlLoader.load();
             DataSourceController controller = fxmlLoader.getController();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("dataSource", GuiFxmlAndLanguageUtils.getString(ResourceMassages.DATASOURCE), root, getResource("css/platform_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("dataSource", GuiFxmlAndLanguageUtils.getString(ResourceMassages.DATA_SOURCE), root, getResource("css/platform_app.css").toExternalForm());
             stage.setOnCloseRequest(controller.getEventHandler());
             stage.setResizable(false);
             stage.toFront();

@@ -8,6 +8,7 @@ import com.dmsoft.firefly.plugin.grr.charts.data.VerticalCutLine;
 import com.dmsoft.firefly.plugin.grr.dto.GrrImageDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
 import com.dmsoft.firefly.plugin.grr.utils.FileUtils;
+import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.MathUtils;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.plugin.grr.utils.charts.ChartUtils;
@@ -61,8 +62,8 @@ public class BuildChart {
         scene.getStylesheets().add(BuildChart.class.getClassLoader().getResource("css/grr_chart.css").toExternalForm());
         GrrImageDto images = new GrrImageDto();
 //        LineChart partAppraiserChart = buildScatterChart();
-        boolean partAppraiserValid = exportParam.containsKey(UIConstant.GRR_EXPORT_CONFIG_KEY[7]);
-        partAppraiserValid = partAppraiserValid && exportParam.get(UIConstant.GRR_EXPORT_CONFIG_KEY[7]);
+        boolean partAppraiserValid = exportParam.containsKey(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_5));
+        partAppraiserValid = partAppraiserValid && exportParam.get(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_5));
         partAppraiserValid = partAppraiserValid && grrDetailResultDto.getPartAppraiserChartDto() != null;
         if (partAppraiserValid) {
             LineChart partAppraiserChart = new LineChart(new CategoryAxis(), new NumberAxis());
@@ -71,8 +72,8 @@ public class BuildChart {
             setPartAppraiserChart(partAppraiserChart, grrDetailResultDto.getPartAppraiserChartDto(), parts, appraisers);
             images.setGrrAPlotImagePath(exportImages("partAppraiserChart", partAppraiserChart));
         }
-        boolean xBarAppraiserValid = exportParam.containsKey(UIConstant.GRR_EXPORT_CONFIG_KEY[6]);
-        xBarAppraiserValid = xBarAppraiserValid && exportParam.get(UIConstant.GRR_EXPORT_CONFIG_KEY[6]);
+        boolean xBarAppraiserValid = exportParam.containsKey(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_4));
+        xBarAppraiserValid = xBarAppraiserValid && exportParam.get(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_4));
         xBarAppraiserValid = xBarAppraiserValid && grrDetailResultDto.getXbarAppraiserChartDto() != null;
         if (xBarAppraiserValid) {
             LinearChart xBarAppraiserChart = buildControlChart(parts);
@@ -80,32 +81,32 @@ public class BuildChart {
             images.setGrrXBarImagePath(exportImages("xBarAppraiserChart", xBarAppraiserChart));
         }
 
-        boolean rangeAppraiserValid = exportParam.containsKey(UIConstant.GRR_EXPORT_CONFIG_KEY[5]);
-        rangeAppraiserValid = rangeAppraiserValid && exportParam.get(UIConstant.GRR_EXPORT_CONFIG_KEY[5]);
+        boolean rangeAppraiserValid = exportParam.containsKey(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_3));
+        rangeAppraiserValid = rangeAppraiserValid && exportParam.get(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_3));
         rangeAppraiserValid = rangeAppraiserValid && grrDetailResultDto.getRangeAppraiserChartDto() != null;
         if (rangeAppraiserValid) {
             LinearChart rangeAppraiserChart = buildControlChart(parts);
             setControlChartData(grrDetailResultDto.getRangeAppraiserChartDto(), rangeAppraiserChart, parts, appraisers);
             images.setGrrRChartImagePath(exportImages("rangeAppraiserChart", rangeAppraiserChart));
         }
-        boolean rrByAppraiserValid = exportParam.containsKey(UIConstant.GRR_EXPORT_CONFIG_KEY[4]);
-        rrByAppraiserValid = rrByAppraiserValid && exportParam.get(UIConstant.GRR_EXPORT_CONFIG_KEY[4]);
+        boolean rrByAppraiserValid = exportParam.containsKey(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_2));
+        rrByAppraiserValid = rrByAppraiserValid && exportParam.get(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_2));
         rrByAppraiserValid = rrByAppraiserValid && grrDetailResultDto.getRrbyAppraiserChartDto() != null;
         if (rrByAppraiserValid) {
             LineChart rrByAppraiserChart = buildScatterChart();
             setScatterChartData(grrDetailResultDto.getRrbyAppraiserChartDto(), rrByAppraiserChart);
             images.setGrrRPlotChartAppImagePath(exportImages("rrByAppraiserChart", rrByAppraiserChart));
         }
-        boolean rrByPartValid = exportParam.containsKey(UIConstant.GRR_EXPORT_CONFIG_KEY[3]);
-        rrByPartValid = rrByPartValid && exportParam.get(UIConstant.GRR_EXPORT_CONFIG_KEY[3]);
+        boolean rrByPartValid = exportParam.containsKey(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_1));
+        rrByPartValid = rrByPartValid && exportParam.get(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_1));
         rrByPartValid = rrByPartValid && grrDetailResultDto.getRrbyPartChartDto() != null;
         if (rrByPartValid) {
             LineChart rrbyPartChart = buildScatterChart();
             setScatterChartData(grrDetailResultDto.getRrbyPartChartDto(), rrbyPartChart);
             images.setGrrRPlotChartPartImagePath(exportImages("rrbyPartChart", rrbyPartChart));
         }
-        boolean componentValid = exportParam.containsKey(UIConstant.GRR_EXPORT_CONFIG_KEY[8]);
-        componentValid = componentValid && exportParam.get(UIConstant.GRR_EXPORT_CONFIG_KEY[8]);
+        boolean componentValid = exportParam.containsKey(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_6));
+        componentValid = componentValid && exportParam.get(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_6));
         componentValid = componentValid && grrDetailResultDto.getComponentChartDto() != null;
         if (componentValid) {
             BarChart componentChart = new BarChart(new CategoryAxis(), new NumberAxis());
@@ -171,42 +172,70 @@ public class BuildChart {
     }
 
     private static void setComponentChart(GrrComponentCResultDto componentCResult, BarChart componentChart) {
+
+        if (componentCResult == null) {
+            return;
+        }
         XYChart.Series series1 = new XYChart.Series();
         XYChart.Series series2 = new XYChart.Series();
         XYChart.Series series3 = new XYChart.Series();
-        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[0],
+        Double[] array = getArrayValue(componentCResult);
+        Double yMax = MathUtils.getNaNToZoreMax(array);
+        Double yMin = MathUtils.getNaNToZoreMin(array);
+        if (yMax == null || yMin == null) {
+            return;
+        }
+        NumberAxis yAxis = (NumberAxis) componentChart.getYAxis();
+        final double factor = 0.2;
+        double reserve = (yMax - yMin) * factor;
+        yAxis.setAutoRanging(false);
+        yMax += reserve;
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        yAxis.setLowerBound(newYMin);
+        yAxis.setUpperBound(newYMax);
+        ChartOperatorUtils.updateAxisTickUnit(yAxis);
+
+        series1.getData().add(new XYChart.Data<>(GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_GAGE_R),
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrContri()) ? 0 : componentCResult.getGrrContri()));
-        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[1],
+        series1.getData().add(new XYChart.Data<>(GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_REPEATABILITY),
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getRepeatContri()) ? 0 : componentCResult.getRepeatContri()));
-        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[2],
+        series1.getData().add(new XYChart.Data<>(GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_REPRODUCIBILITY),
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodContri()) ? 0 : componentCResult.getReprodContri()));
-        series1.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[3],
+        series1.getData().add(new XYChart.Data<>(GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_PART),
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getPartContri()) ? 0 : componentCResult.getPartContri()));
-        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[0],
+        series2.getData().add(new XYChart.Data<>(GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_GAGE_R),
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrVar()) ? 0 : componentCResult.getGrrVar()));
-        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[1],
+        series2.getData().add(new XYChart.Data<>(GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_REPEATABILITY),
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getRepeatVar()) ? 0 : componentCResult.getRepeatVar()));
-        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[2],
+        series2.getData().add(new XYChart.Data<>(GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_REPRODUCIBILITY),
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodVar()) ? 0 : componentCResult.getReprodVar()));
-        series2.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[3],
+        series2.getData().add(new XYChart.Data<>(GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_PART),
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getPartVar()) ? 0 : componentCResult.getPartVar()));
-        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[0],
+        series3.getData().add(new XYChart.Data<>(GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_GAGE_R),
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrTol()) ? 0 : componentCResult.getGrrTol()));
-        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[1],
+        series3.getData().add(new XYChart.Data<>(GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_REPEATABILITY),
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getRepeatVar()) ? 0 : componentCResult.getRepeatVar()));
-        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[2],
+        series3.getData().add(new XYChart.Data<>(GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_REPRODUCIBILITY),
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodVar()) ? 0 : componentCResult.getReprodVar()));
-        series3.getData().add(new XYChart.Data<>(UIConstant.CHART_COMPONENT_LABEL[3],
+        series3.getData().add(new XYChart.Data<>(GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_PART),
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getPartVar()) ? 0 : componentCResult.getPartVar()));
         componentChart.getData().addAll(series1, series2, series3);
-        String[] colors = new String[UIConstant.CHART_COMPONENT_CATEGORY.length + 2];
-        for (int i = 0; i < UIConstant.CHART_COMPONENT_CATEGORY.length; i++) {
+
+        String[] CHART_COMPONENT_CATEGORY = new String[]{
+                GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_CONTRIBUTION),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_VARIATION),
+                GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_TOLERANCE)};
+
+        String[] colors = new String[CHART_COMPONENT_CATEGORY.length + 2];
+        for (int i = 0; i < CHART_COMPONENT_CATEGORY.length; i++) {
             XYChart.Series series = (XYChart.Series) componentChart.getData().get(i);
-            series.setName(UIConstant.CHART_COMPONENT_CATEGORY[i]);
+            series.setName(CHART_COMPONENT_CATEGORY[i]);
             colors[i] = "default-color" + i;
         }
-        colors[UIConstant.CHART_COMPONENT_CATEGORY.length] = "bar-legend-symbol";
-        colors[UIConstant.CHART_COMPONENT_CATEGORY.length + 1] = "chart-bar";
+        colors[CHART_COMPONENT_CATEGORY.length] = "bar-legend-symbol";
+        colors[CHART_COMPONENT_CATEGORY.length + 1] = "chart-bar";
         int digNumber = digNum <= 2 ? 0 : digNum - 2;
 
         //Chart text format
@@ -225,14 +254,23 @@ public class BuildChart {
                                               List<String> parts,
                                               List<String> appraisers) {
         double[][] data = partAppraiserChartDto.getDatas();
-        double max = MathUtils.getMax(data);
-        double min = MathUtils.getMin(data);
+        Double yMax = MathUtils.getMax(data);
+        Double yMin = MathUtils.getMin(data);
+        if (DAPStringUtils.isInfinityAndNaN(yMax) || DAPStringUtils.isInfinityAndNaN(yMin)) {
+            return;
+        }
         NumberAxis yAxis = (NumberAxis) partAppraiserChart.getYAxis();
-        final double factor = 0.20;
-        double reserve = (max - min) * factor;
+        final double factor = 0.01;
+        double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
-        yAxis.setUpperBound(max + reserve);
-        yAxis.setLowerBound(min - reserve);
+        yMax += reserve;
+        yMin -= reserve;
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        yAxis.setLowerBound(newYMin);
+        yAxis.setUpperBound(newYMax);
+        ChartOperatorUtils.updateAxisTickUnit(yAxis);
         ObservableList<XYChart.Series> seriesData = FXCollections.observableArrayList();
         for (int i = 0; i < data.length; i++) {
             XYChart.Series series = new XYChart.Series();
@@ -257,14 +295,23 @@ public class BuildChart {
         Double[] x = chartData.getX();
         Double[] y = chartData.getY();
         Double[] ruleData = new Double[]{chartData.getUcl(), chartData.getCl(), chartData.getLcl()};
-        double max = MathUtils.getMax(y, ruleData);
-        double min = MathUtils.getMin(y, ruleData);
+        Double yMax = MathUtils.getMax(y, ruleData);
+        Double yMin = MathUtils.getMin(y, ruleData);
+        if (DAPStringUtils.isInfinityAndNaN(yMax) || DAPStringUtils.isInfinityAndNaN(yMin)) {
+            return;
+        }
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        final double factor = 0.20;
-        double reserve = (max - min) * factor;
+        final double factor = 0.01;
+        double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
-        yAxis.setUpperBound(max + reserve);
-        yAxis.setLowerBound(min - reserve);
+        yMax += reserve;
+        yMin -= reserve;
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        yAxis.setLowerBound(newYMin);
+        yAxis.setUpperBound(newYMax);
+        ChartOperatorUtils.updateAxisTickUnit(yAxis);
         List<ILineData> horizonalLineData = Lists.newArrayList();
         List<ILineData> verticalLineData = Lists.newArrayList();
         XYChart.Series series = new XYChart.Series();
@@ -277,9 +324,9 @@ public class BuildChart {
             series.getData().add(new XYChart.Data<>(x[i], y[i], parts.get(i % partCount)));
         }
 
-        RuleLineData uclLineData = new RuleLineData(UIConstant.CHART_OPERATE_NAME[0], chartData.getUcl());
-        RuleLineData clLineData = new RuleLineData(UIConstant.CHART_OPERATE_NAME[1], chartData.getCl());
-        RuleLineData lclLineData = new RuleLineData(UIConstant.CHART_OPERATE_NAME[2], chartData.getLcl());
+        RuleLineData uclLineData = new RuleLineData(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_LINE_NAME_UCL), chartData.getUcl());
+        RuleLineData clLineData = new RuleLineData(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_LINE_NAME_AVG), chartData.getCl());
+        RuleLineData lclLineData = new RuleLineData(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_LINE_NAME_LCL), chartData.getLcl());
         uclLineData.setColor(Color.rgb(102, 102, 102));
         lclLineData.setColor(Color.rgb(178, 178, 178));
         uclLineData.setLineClass("dashed2-line");
@@ -302,14 +349,23 @@ public class BuildChart {
         Double[] y = scatterChartData.getY();
         Double[] clX = scatterChartData.getClX();
         Double[] clY = scatterChartData.getClY();
-        double max = MathUtils.getMax(y, clY);
-        double min = MathUtils.getMin(y, clY);
+        Double yMax = MathUtils.getMax(y, clY);
+        Double yMin = MathUtils.getMin(y, clY);
+        if (DAPStringUtils.isInfinityAndNaN(yMax) || DAPStringUtils.isInfinityAndNaN(yMin)) {
+            return;
+        }
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        final double factor = 0.20;
-        double reserve = (max - min) * factor;
+        final double factor = 0.01;
+        Double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
-        yAxis.setUpperBound(max + reserve);
-        yAxis.setLowerBound(min - reserve);
+        yMax += reserve;
+        yMin -= reserve;
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        yAxis.setLowerBound(newYMin);
+        yAxis.setUpperBound(newYMax);
+        ChartOperatorUtils.updateAxisTickUnit(yAxis);
         XYChart.Series scatterSeries = new XYChart.Series();
         XYChart.Series lineSeries = new XYChart.Series();
         for (int i = 0; i < x.length; i++) {
@@ -364,5 +420,22 @@ public class BuildChart {
      */
     private static class WriteImage {
         private WritableImage image;
+    }
+
+    private static Double[] getArrayValue(GrrComponentCResultDto resultDto) {
+        Double[] value = new Double[12];
+        value[0] = resultDto.getGrrContri();
+        value[1] = resultDto.getGrrTol();
+        value[2] = resultDto.getGrrVar();
+        value[3] = resultDto.getPartContri();
+        value[4] = resultDto.getPartTol();
+        value[5] = resultDto.getPartVar();
+        value[6] = resultDto.getRepeatContri();
+        value[7] = resultDto.getRepeatTol();
+        value[8] = resultDto.getRepeatVar();
+        value[9] = resultDto.getReprodContri();
+        value[10] = resultDto.getReprodTol();
+        value[11] = resultDto.getReprodVar();
+        return value;
     }
 }

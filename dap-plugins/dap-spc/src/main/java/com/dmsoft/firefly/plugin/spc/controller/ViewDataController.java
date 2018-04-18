@@ -123,6 +123,10 @@ public class ViewDataController implements Initializable {
      * @param isTimer                           isTimer
      */
     public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList, boolean isTimer) {
+        this.setViewData(dataFrame, selectedRowKey, statisticalSearchConditionDtoList, isTimer, isTimer);
+    }
+
+    private void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList, boolean isTimer, boolean isAutoRefresh) {
         this.statisticalSearchConditionDtoList = statisticalSearchConditionDtoList;
         this.selectedRowKeys = selectedRowKey;
         this.dataFrame = dataFrame;
@@ -150,6 +154,9 @@ public class ViewDataController implements Initializable {
         List<TableColumn<String, ?>> sortedColumnList = null;
         if (isTimer && this.model != null) {
             sortedColumnList = Lists.newArrayList(viewDataTable.getSortOrder());
+        }
+        if (isAutoRefresh) {
+            expandDataFrameByTestItem(chooseTestItemDialog.getSelectedItems());
         }
         vbox.getChildren().remove(viewDataTable);
         this.viewDataTable = new TableView<>();
@@ -255,6 +262,20 @@ public class ViewDataController implements Initializable {
             return null;
         }
     }
+
+    /**
+     * method to get selected row keys
+     *
+     * @return list of selected row key
+     */
+    public List<String> getUnSelectedRowKeys() {
+        if (this.model != null) {
+            return this.model.getUnSelectedRowKeys();
+        } else {
+            return null;
+        }
+    }
+
 
     private void decorate(TableColumn<String, ?> tableColumn) {
         if (" ".equals(tableColumn.getText())) {
@@ -363,6 +384,7 @@ public class ViewDataController implements Initializable {
         });
         chooseItemBtn.setOnAction(event -> getChooseColumnBtnEvent());
         chooseTestItemDialog.getOkBtn().setOnAction(event -> {
+            boolean isTimer = model.isTimer();
             chooseTestItemDialog.close();
             if (dataFrame == null) {
                 return;
@@ -382,7 +404,7 @@ public class ViewDataController implements Initializable {
                     dataFrame.removeColumns(Lists.newArrayList(typeDto.getTestItemName()));
                 }
             }
-            setViewData(this.dataFrame, getSelectedRowKeys(), statisticalSearchConditionDtoList);
+            setViewData(this.dataFrame, getSelectedRowKeys(), statisticalSearchConditionDtoList, isTimer, false);
         });
         unSelectedCheckBox.setOnAction(event -> getInvertCheckBoxEvent());
     }
@@ -408,15 +430,17 @@ public class ViewDataController implements Initializable {
             return;
         }
         model.getRowKeyArray().clear();
-        for (String s : dataFrame.getAllRowKeys()) {
-            List<String> datas = dataFrame.getDataRowList(s);
-            for (String data : datas) {
-                if (data.toLowerCase().contains(filterTf.getTextField().getText().toLowerCase())) {
-                    model.getRowKeyArray().add(s);
-                    break;
+        Platform.runLater(() -> {
+            for (String s : dataFrame.getAllRowKeys()) {
+                List<String> datas = dataFrame.getDataRowList(s);
+                for (String data : datas) {
+                    if (data.toLowerCase().contains(filterTf.getTextField().getText().toLowerCase())) {
+                        model.getRowKeyArray().add(s);
+                        break;
+                    }
                 }
             }
-        }
+        });
     }
 
     private void filterHeaderBtn() {
@@ -501,6 +525,21 @@ public class ViewDataController implements Initializable {
         this.statisticalSearchConditionDtoList = statisticalSearchConditionDtoList;
         if (model != null) {
             model.setStatisticalSearchConditionDtoList(statisticalSearchConditionDtoList);
+        }
+    }
+
+    private void expandDataFrameByTestItem(List<String> selectedTestItems) {
+        int curIndex = 0;
+        for (TestItemWithTypeDto typeDto : typeDtoList) {
+            if (selectedTestItems.contains(typeDto.getTestItemName())) {
+                if (!dataFrame.isTestItemExist(typeDto.getTestItemName())) {
+                    List<RowDataDto> rowDataDtoList = RuntimeContext.getBean(SourceDataService.class).findTestData(this.selectedProjectNames,
+                            Lists.newArrayList(typeDto.getTestItemName()));
+                    DataColumn dataColumn = RuntimeContext.getBean(DataFrameFactory.class).createDataColumn(Lists.newArrayList(typeDto), rowDataDtoList).get(0);
+                    dataFrame.appendColumn(curIndex, dataColumn);
+                }
+                curIndex++;
+            }
         }
     }
 

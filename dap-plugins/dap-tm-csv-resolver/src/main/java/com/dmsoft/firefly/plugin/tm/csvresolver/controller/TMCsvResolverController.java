@@ -9,6 +9,7 @@ import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.tm.csvresolver.service.CsvResolverService;
 import com.dmsoft.firefly.plugin.tm.csvresolver.dto.CsvTemplateDto;
 import com.dmsoft.firefly.plugin.tm.csvresolver.model.RowDataModel;
+import com.dmsoft.firefly.plugin.tm.csvresolver.utils.CsvFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.tm.csvresolver.utils.ResourceMassages;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -106,7 +107,7 @@ public class TMCsvResolverController {
         item.setOnAction(event -> {
             validate(item, "item");
             if (item.getValue() == null || StringUtils.isEmpty(item.getValue().toString())) {
-                TooltipUtil.installWarnTooltip(item, "Can not be empty!");
+                TooltipUtil.installWarnTooltip(item, CsvFxmlAndLanguageUtils.getString("TM_RESOLVE_TIP_NO_EMPTY"));
                 item.getStyleClass().add("combo-box-error");
             } else {
                 TooltipUtil.uninstallWarnTooltip(item);
@@ -116,7 +117,7 @@ public class TMCsvResolverController {
         data.setOnAction(event -> {
             validate(data, "data");
             if (data.getValue() == null || StringUtils.isEmpty(data.getValue().toString())) {
-                TooltipUtil.installWarnTooltip(data, "Can not be empty!");
+                TooltipUtil.installWarnTooltip(data, CsvFxmlAndLanguageUtils.getString("TM_RESOLVE_TIP_NO_EMPTY"));
                 data.getStyleClass().add("combo-box-error");
             } else {
                 TooltipUtil.uninstallWarnTooltip(data);
@@ -124,7 +125,7 @@ public class TMCsvResolverController {
                 if (cache != null) {
                     cache.values().forEach(value -> {
                         if (value != null && Integer.valueOf(data.getValue().toString().substring(3, 4)) < value) {
-                            TooltipUtil.installWarnTooltip(data, "Test Data row must be maximum!");
+                            TooltipUtil.installWarnTooltip(data, CsvFxmlAndLanguageUtils.getString("TM_RESOLVE_TIP_MAX_TEST_DATA_ROW"));
                             data.getStyleClass().add("combo-box-error");
                         }
                     });
@@ -138,11 +139,11 @@ public class TMCsvResolverController {
             }
             File filePath = new File(str);
             if (!filePath.exists()) {
-                WindowMessageFactory.createWindowMessageHasOk("Message", "File is not exist.");
+                WindowMessageFactory.createWindowMessageHasOk("Message", CsvFxmlAndLanguageUtils.getString("TM_RESOLVE_MESSAGE_FILE_NOT_EXIST"));
                 return;
             }
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Csv Choose");
+            fileChooser.setTitle(CsvFxmlAndLanguageUtils.getString("CSV_CHOOSE"));
             if (filePath.isDirectory()) {
                 fileChooser.setInitialDirectory(filePath);
             } else {
@@ -167,7 +168,7 @@ public class TMCsvResolverController {
         });
         ok.setOnAction(event -> {
             if (item.getStyleClass().contains("combo-box-error") || data.getStyleClass().contains("combo-box-error")) {
-                WindowMessageFactory.createWindowMessageHasCancel("Message", "Test Item Name or Test Data param error");
+                WindowMessageFactory.createWindowMessageHasCancel("Message", CsvFxmlAndLanguageUtils.getString("TM_RESOLVE_MESSAGE_TEST_DATA_PARAM_ERROR"));
                 return;
             }
             save();
@@ -178,7 +179,7 @@ public class TMCsvResolverController {
         });
         apply.setOnAction(event -> {
             if (item.getStyleClass().contains("combo-box-error") || data.getStyleClass().contains("combo-box-error")) {
-                WindowMessageFactory.createWindowMessageHasCancel("Message", "Test Item Name or Test Data param error");
+                WindowMessageFactory.createWindowMessageHasCancel("Message", CsvFxmlAndLanguageUtils.getString("TM_RESOLVE_MESSAGE_TEST_DATA_PARAM_ERROR"));
                 return;
             }
             save();
@@ -258,7 +259,7 @@ public class TMCsvResolverController {
 
         if (data.getValue() != null && !StringUtils.isEmpty(data.getValue().toString())) {
             if (!node.equals(data) && Integer.valueOf(node.getValue().toString().substring(3, 4)) > Integer.valueOf(data.getValue().toString().substring(3, 4))) {
-                TooltipUtil.installWarnTooltip(data, "Test Data row must be maximum!");
+                TooltipUtil.installWarnTooltip(data, CsvFxmlAndLanguageUtils.getString("TM_RESOLVE_TIP_MAX_TEST_DATA_ROW"));
                 data.getStyleClass().add("combo-box-error");
             }
         }
@@ -268,7 +269,7 @@ public class TMCsvResolverController {
         } else if (!node.equals(item) && node.getValue().equals(item.getValue())) {
             item.setValue("");
             cache.remove("item");
-            TooltipUtil.installWarnTooltip(item, "Can not be empty!");
+            TooltipUtil.installWarnTooltip(item, CsvFxmlAndLanguageUtils.getString("TM_RESOLVE_TIP_MAX_TEST_DATA_ROW"));
             item.getStyleClass().add("combo-box-error");
         } else if (!node.equals(usl) && node.getValue().equals(usl.getValue())) {
             usl.setValue("");
@@ -281,7 +282,7 @@ public class TMCsvResolverController {
             cache.remove("lsl");
         } else if (!node.equals(data) && node.getValue().equals(data.getValue())) {
             data.setValue("");
-            TooltipUtil.installWarnTooltip(data, "Can not be empty!");
+            TooltipUtil.installWarnTooltip(data, CsvFxmlAndLanguageUtils.getString("TM_RESOLVE_TIP_NO_EMPTY"));
             data.getStyleClass().add("combo-box-error");
         }
     }

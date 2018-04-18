@@ -16,6 +16,7 @@ public class BarToolTip<X, Y> {
     private X startValue;
     private X endValue;
     private Y value;
+    private boolean lastData;
 
     /**
      * Constructor for BarToolTip
@@ -31,11 +32,12 @@ public class BarToolTip<X, Y> {
      * @param endValue   end value
      * @param value      bar value
      */
-    public BarToolTip(String seriesName, X startValue, X endValue, Y value) {
+    public BarToolTip(String seriesName, X startValue, X endValue, Y value, boolean lastData) {
         this.seriesName = seriesName;
         this.startValue = startValue;
         this.endValue = endValue;
         this.value = value;
+        this.lastData = lastData;
     }
 
     public String getSeriesName() {
@@ -68,5 +70,13 @@ public class BarToolTip<X, Y> {
 
     public void setValue(Y value) {
         this.value = value;
+    }
+
+    public boolean isLastData() {
+        return lastData;
+    }
+
+    public void setLastData(boolean lastData) {
+        this.lastData = lastData;
     }
 }

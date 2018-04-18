@@ -5,6 +5,7 @@ import com.dmsoft.firefly.plugin.spc.charts.data.basic.LineTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.utils.enums.LineType;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
@@ -16,6 +17,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -188,5 +190,14 @@ public class ValueMarker<X, Y> {
         lineMap.clear();
         horizontalMarkers.setAll(FXCollections.observableArrayList());
         verticalMarkers.setAll(FXCollections.observableArrayList());
+    }
+
+    /**
+     * Get all line node
+     *
+     * @return all lines
+     */
+    public List<Line> getAllLines() {
+        return lineMap == null ? null : Lists.newArrayList(lineMap.values());
     }
 }

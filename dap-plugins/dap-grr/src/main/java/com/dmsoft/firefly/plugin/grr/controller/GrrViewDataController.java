@@ -9,6 +9,7 @@ import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrViewDataDto;
 import com.dmsoft.firefly.plugin.grr.model.GrrViewDataDFBackupModel;
 import com.dmsoft.firefly.plugin.grr.model.GrrViewDataDFIncludeModel;
+import com.dmsoft.firefly.plugin.grr.utils.AppConstant;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.google.common.collect.Lists;
 import javafx.fxml.FXML;
@@ -106,7 +107,7 @@ public class GrrViewDataController implements Initializable {
                 exchangeDataTB.getSelectionModel().select(exchangeTBIndex);
             }
         });
-        chooseTestItemDialog = new ChooseTestItemDialog(null, null);
+        chooseTestItemDialog = new ChooseTestItemDialog(null, null, AppConstant.MAX_COLUMN);
         chooseItemBtn.setOnAction(event -> {
             chooseTestItemDialog.resetSelectedItems(this.includeModel.getHeaderArray());
             chooseTestItemDialog.show();
@@ -152,8 +153,8 @@ public class GrrViewDataController implements Initializable {
             exchangeFilterLB.setDisable(false);
             this.grrDataFrameDto = dataFrame;
             this.includeModel = new GrrViewDataDFIncludeModel(this.grrDataFrameDto, grrMainController.getSearchConditionDto());
-            if (this.includeModel.getHeaderArray().size() > 54) {
-                this.includeModel.getHeaderArray().remove(54, this.includeModel.getHeaderArray().size());
+            if (this.includeModel.getHeaderArray().size() > AppConstant.MAX_COLUMN + 4) {
+                this.includeModel.getHeaderArray().remove(AppConstant.MAX_COLUMN + 4, this.includeModel.getHeaderArray().size());
             }
             List<String> allItemNames = Lists.newArrayList();
             allItemNames.addAll(this.grrDataFrameDto.getDataFrame().getAllTestItemName());
@@ -172,8 +173,8 @@ public class GrrViewDataController implements Initializable {
             });
             if (dataFrame.getBackupDatas() != null && !dataFrame.getBackupDatas().isEmpty()) {
                 this.backupModel = new GrrViewDataDFBackupModel(this.grrDataFrameDto, grrMainController.getSearchConditionDto(), isSlot);
-                if (this.backupModel.getHeaderArray().size() > 54) {
-                    this.backupModel.getHeaderArray().remove(54, this.backupModel.getHeaderArray().size());
+                if (this.backupModel.getHeaderArray().size() > AppConstant.MAX_COLUMN + 4) {
+                    this.backupModel.getHeaderArray().remove(AppConstant.MAX_COLUMN + 4, this.backupModel.getHeaderArray().size());
                 }
                 this.includeModel.addListener(this.backupModel);
             } else {

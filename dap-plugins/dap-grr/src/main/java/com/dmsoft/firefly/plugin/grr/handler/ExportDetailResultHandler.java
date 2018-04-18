@@ -4,6 +4,7 @@ import com.dmsoft.firefly.plugin.grr.controller.BuildChart;
 import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrSummaryResultDto;
 import com.dmsoft.firefly.plugin.grr.service.GrrExportService;
+import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.job.core.AbstractBasicJobHandler;
@@ -47,28 +48,27 @@ public class ExportDetailResultHandler extends AbstractBasicJobHandler {
             summaryResultDto.setReproducibilityOnContribution(dto.getExportDetailDto().getReproducibilityOnContribution());
             summaryResultDto.setReproducibilityOnTolerance(dto.getExportDetailDto().getReproducibilityOnTolerance());
             summaryResultDto.setTolerance(dto.getExportDetailDto().getTolerance());
-
             summaryDto.setSummaryResultDto(summaryResultDto);
             summaryDtos.add(summaryDto);
             GrrExportResultDto exportResultDto = new GrrExportResultDto();
             exportResultDto.setItemName(dto.getItemName());
-            if (configDto.getGrrConfigDto() != null && configDto.getGrrConfigDto().getExport().containsKey(UIConstant.GRR_EXPORT_CONFIG_KEY[0])) {
+            if (configDto.getGrrConfigDto() != null && configDto.getGrrConfigDto().getExport().containsKey(GrrFxmlAndLanguageUtils.getString(UIConstant.EXPORT_DETIAL))) {
                 Map<String, Boolean> data = configDto.getGrrConfigDto().getExport();
-                if (!data.get(UIConstant.GRR_EXPORT_CONFIG_KEY[0])) {
+                if (!data.get(GrrFxmlAndLanguageUtils.getString(UIConstant.EXPORT_DETIAL))) {
                     exportResultDto.setGrrAnovaAndSourceResultDto(null);
                     exportResultDto.setGrrImageDto(null);
                 } else {
 
-                    if (data.containsKey(UIConstant.GRR_EXPORT_CONFIG_KEY[1])) {
-                        if (data.get(UIConstant.GRR_EXPORT_CONFIG_KEY[1])) {
+                    if (data.containsKey(GrrFxmlAndLanguageUtils.getString(UIConstant.EXPORT_SOURCE))) {
+                        if (data.get(GrrFxmlAndLanguageUtils.getString(UIConstant.EXPORT_SOURCE))) {
                             exportResultDto.setGrrAnovaAndSourceResultDto(dto.getExportDetailDto().getAnovaAndSourceResultDto());
                         } else {
                             exportResultDto.setGrrAnovaAndSourceResultDto(null);
                         }
                     }
 
-                    if (data.containsKey(UIConstant.GRR_EXPORT_CONFIG_KEY[2])) {
-                        if (data.get(UIConstant.GRR_EXPORT_CONFIG_KEY[2])) {
+                    if (data.containsKey(GrrFxmlAndLanguageUtils.getString(UIConstant.EXPORT_CHARTS))) {
+                        if (data.get(GrrFxmlAndLanguageUtils.getString(UIConstant.EXPORT_CHARTS))) {
                             exportResultDto.setGrrImageDto(BuildChart.buildImage(dto.getExportDetailDto(), searchConditionDto.getParts(), searchConditionDto.getAppraisers(), configDto.getGrrConfigDto().getExport()));
                         } else {
                             exportResultDto.setGrrImageDto(null);

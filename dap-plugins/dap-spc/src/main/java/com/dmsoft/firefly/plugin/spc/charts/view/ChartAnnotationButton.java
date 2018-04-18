@@ -5,6 +5,8 @@ import com.dmsoft.firefly.plugin.spc.charts.select.ClearCallBack;
 import com.dmsoft.firefly.plugin.spc.charts.model.SimpleItemCheckModel;
 import com.dmsoft.firefly.plugin.spc.charts.select.SelectCallBack;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Sets;
 import javafx.collections.FXCollections;
@@ -39,7 +41,7 @@ public class ChartAnnotationButton extends Button {
     private SelectCallBack selectCallBack;
 
     private Object currentSelectItem;
-    private boolean showAnnotation = false;
+    private boolean showAnnotation = true;
 
     private final int defaultSelectedIndex = 0;
     private static final Double MAX_HEIGHT = 275.0;
@@ -166,19 +168,14 @@ public class ChartAnnotationButton extends Button {
             }
         });
 
-        clearBtn.setOnMouseClicked(event -> {
-            if (dataModels == null || dataModels.isEmpty()) {
-                return;
-            }
-            reset();
-        });
-
-        editBtn.setOnMouseClicked(event -> {
-            showAnnotation = false;
-        });
+        clearBtn.setOnMouseClicked(event -> reset());
+        editBtn.setOnMouseClicked(event -> toggleEditAnnotationBtnIcon(!showAnnotation));
     }
 
     private void reset() {
+        if (dataModels == null || dataModels.isEmpty()) {
+            return;
+        }
         dataModels.get(0).setIsChecked(true);
         dataListView.refresh();
         showAnnotation = false;
@@ -188,13 +185,30 @@ public class ChartAnnotationButton extends Button {
         }
     }
 
+    private void toggleEditAnnotationBtnIcon(boolean flag) {
+        showAnnotation = flag;
+        ImageView imageView = showAnnotation
+                ? ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_tracing_point_normal.png"))
+                : ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_cancel_tracing_point_normal.png"));
+        editBtn.setGraphic(imageView);
+        String tooltipContent = showAnnotation
+                ? SpcFxmlAndLanguageUtils.getString(UIConstant.BTN_ANNOTATION_OPEN)
+                : SpcFxmlAndLanguageUtils.getString(UIConstant.BTN_ANNOTATION_EXIT);
+        String hasTooltipContent = showAnnotation
+                ? SpcFxmlAndLanguageUtils.getString(UIConstant.BTN_ANNOTATION_EXIT)
+                : SpcFxmlAndLanguageUtils.getString(UIConstant.BTN_ANNOTATION_OPEN);
+        Tooltip.uninstall(editBtn, new Tooltip(hasTooltipContent));
+        Tooltip.install(editBtn, new Tooltip(tooltipContent));
+    }
+
     private void initRender() {
 
         vBox.setStyle("-fx-border-width: 1px; -fx-border-color: #cccccc; -fx-background-color: white;");
         clearBtn.setGraphic(ImageUtils.getImageView(getClass()
                 .getResourceAsStream("/images/btn_remove_tracing_point_normal.png")));
-        editBtn.setGraphic(ImageUtils.getImageView(getClass()
-                .getResourceAsStream("/images/btn_cancel_tracing_point_normal.png")));
+        Tooltip.install(clearBtn, new Tooltip(SpcFxmlAndLanguageUtils.getString(UIConstant.BTN_ANNOTATION_CLEAR)));
+        toggleEditAnnotationBtnIcon(showAnnotation);
+
         clearBtn.getStyleClass().addAll("btn-icon-b");
         editBtn.getStyleClass().addAll("btn-icon-b");
         this.getStyleClass().addAll("btn-icon-b");

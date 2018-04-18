@@ -39,11 +39,14 @@ public class ChartDataUtils {
      * @return xy data
      */
     public static XYData foldCLData(Double[] cl) {
-        Double[] x = new Double[cl.length * 3];
-        Double[] y = new Double[cl.length * 3];
-        Double threshold = 0.5;
+        if (cl == null) {
+            return null;
+        }
+        Double[] x = new Double[cl.length * 3 - 1];
+        Double[] y = new Double[cl.length * 3 - 1];
+        final Double threshold = 0.5;
         int j = -1;
-        for (int i = 0; i < cl.length * 3; i++) {
+        for (int i = 0; i < cl.length * 3 - 1; i++) {
             if (i % 3 == 0) {
                 j++;
             }

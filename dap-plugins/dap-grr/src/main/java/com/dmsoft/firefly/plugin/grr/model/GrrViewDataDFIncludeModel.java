@@ -5,6 +5,7 @@ import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrViewDataDto;
 import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
+import com.dmsoft.firefly.plugin.grr.utils.AppConstant;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
@@ -162,16 +163,21 @@ public class GrrViewDataDFIncludeModel implements TableModel {
     public void searchTestItem(String testItem) {
         Platform.runLater(() -> {
             this.headerArray.clear();
-            this.headerArray.add(0, trailKey);
-            this.headerArray.add(0, appKey);
-            this.headerArray.add(0, partKey);
-            this.headerArray.add(0, radioKey);
+            int i = 0;
+            List<String> addedList = Lists.newArrayList();
+            addedList.add(0, trailKey);
+            addedList.add(0, appKey);
+            addedList.add(0, partKey);
+            addedList.add(0, radioKey);
             for (String s : this.grrDataFrameDto.getDataFrame().getAllTestItemName()) {
                 if (s != null && s.toLowerCase().contains(testItem.toLowerCase()) && !s.equals(this.searchConditionDto.getPart()) && !s.equals(this.searchConditionDto.getAppraiser())) {
-                    this.headerArray.add(s);
+                    if (i < AppConstant.MAX_COLUMN + 4) {
+                        addedList.add(s);
+                    }
+                    i++;
                 }
             }
-            this.tableView.refresh();
+            this.headerArray.addAll(addedList);
         });
     }
 

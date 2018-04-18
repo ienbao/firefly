@@ -100,77 +100,78 @@ public class UIConstant {
     public static final String[] STATISTICAL_RESULT_RULE_HEADER = new String[]{SpcFxmlAndLanguageUtils.getString("STATISTICS"), SpcFxmlAndLanguageUtils.getString("LOWER_LIMIT"), SpcFxmlAndLanguageUtils.getString("UPPER_LIMIT")};
     public static final String[] CONTROL_ALARM_RULE_HEADER = new String[]{SpcFxmlAndLanguageUtils.getString("IS_USE"), SpcFxmlAndLanguageUtils.getString("RULE_NAME"), "n", "m", "s"};
 
-    public static final double FACTOR = 1.0;
+    public static final double X_FACTOR = 1.0;
+    public static final double Y_FACTOR = 0.15;
+
+    public static final int COR_NUMBER = 4;
+
 
     //chart user performance
     public static final String CHART_PERFORMANCE_CODE = "SPC_CHARTS";
     public static final String SPC_CHART_PERFORMANCE_KEY_OPERATE = "SPC_CHART_OPERATE";
 
-    public static final String CHART_EXTENSION_MENU_SAVE = SpcFxmlAndLanguageUtils.getString("CHART_SAVE_AS");
+    public static final String SPC_CHART_ND_EXTERN_MENU_USL = "SPC_CHART_ND_EXTERN_MENU_USL";
+    public static final String SPC_CHART_ND_EXTERN_MENU_LSL = "SPC_CHART_ND_EXTERN_MENU_LSL";
+    public static final String SPC_CHART_ND_EXTERN_MENU_UCL = "SPC_CHART_ND_EXTERN_MENU_UCL";
+    public static final String SPC_CHART_ND_EXTERN_MENU_2_SIGMA = "SPC_CHART_ND_EXTERN_MENU_2_SIGMA";
+    public static final String SPC_CHART_ND_EXTERN_MENU_SIGMA = "SPC_CHART_ND_EXTERN_MENU_SIGMA";
+    public static final String SPC_CHART_ND_EXTERN_MENU_AVERAGE = "SPC_CHART_ND_EXTERN_MENU_AVERAGE";
+    public static final String SPC_CHART_ND_EXTERN_MENU_NEGATIVE_SIGMA = "SPC_CHART_ND_EXTERN_MENU_NEGATIVE_SIGMA";
+    public static final String SPC_CHART_ND_EXTERN_MENU_NEGATIVE_2_SIGMA = "SPC_CHART_ND_EXTERN_MENU_NEGATIVE_2_SIGMA";
+    public static final String SPC_CHART_ND_EXTERN_MENU_LCL = "SPC_CHART_ND_EXTERN_MENU_LCL";
+    public static final String SPC_CHART_ND_EXTERN_MENU_HISTOGRAM = "SPC_CHART_ND_EXTERN_MENU_HISTOGRAM";
+    public static final String SPC_CHART_ND_EXTERN_MENU_CURVE = "SPC_CHART_ND_EXTERN_MENU_CURVE";
 
-    public static final String[] SPC_CHART_NDC_EXTERN_MENU = new String[]{
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_USL"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_LSL"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_UCL"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_2_SIGMA"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_SIGMA"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_AVERAGE"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_NEGATIVE_SIGMA"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_NEGATIVE_2_SIGMA"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_LCL"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_Histogram"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_ND_EXTERN_MENU_Curve")};
+    public static final String SPC_CHART_RUN_EXTERN_MENU_USL = "SPC_CHART_RUN_EXTERN_MENU_USL";
+    public static final String SPC_CHART_RUN_EXTERN_MENU_LSL = "SPC_CHART_RUN_EXTERN_MENU_LSL";
+    public static final String SPC_CHART_RUN_EXTERN_MENU_LCL = "SPC_CHART_RUN_EXTERN_MENU_LCL";
+    public static final String SPC_CHART_RUN_EXTERN_MENU_NEGATIVE_2_SIGMA = "SPC_CHART_RUN_EXTERN_MENU_NEGATIVE_2_SIGMA";
+    public static final String SPC_CHART_RUN_EXTERN_MENU_NEGATIVE_SIGMA = "SPC_CHART_RUN_EXTERN_MENU_NEGATIVE_SIGMA";
+    public static final String SPC_CHART_RUN_EXTERN_MENU_AVERAGE = "SPC_CHART_RUN_EXTERN_MENU_AVERAGE";
+    public static final String SPC_CHART_RUN_EXTERN_MENU_SIGMA = "SPC_CHART_RUN_EXTERN_MENU_SIGMA";
+    public static final String SPC_CHART_RUN_EXTERN_MENU_2_SIGMA = "SPC_CHART_RUN_EXTERN_MENU_2_SIGMA";
+    public static final String SPC_CHART_RUN_EXTERN_MENU_UCL = "SPC_CHART_RUN_EXTERN_MENU_UCL";
+    public static final String SPC_CHART_RUN_EXTERN_MENU_POINT = "SPC_CHART_RUN_EXTERN_MENU_POINT";
+    public static final String SPC_CHART_RUN_EXTERN_MENU_LINE = "SPC_CHART_RUN_EXTERN_MENU_LINE";
+    public static final String SPC_CHART_CONTROL_EXTERN_MENU_LCL = "SPC_CHART_CONTROL_EXTERN_MENU_LCL";
+    public static final String SPC_CHART_CONTROL_EXTERN_MENU_AVERAGE = "SPC_CHART_CONTROL_EXTERN_MENU_AVERAGE";
+    public static final String SPC_CHART_CONTROL_EXTERN_MENU_UCL = "SPC_CHART_CONTROL_EXTERN_MENU_UCL";
+    public static final String SPC_CHART_CONTROL_EXTERN_MENU_POINT = "SPC_CHART_CONTROL_EXTERN_MENU_POINT";
+    public static final String SPC_CHART_CONTROL_EXTERN_MENU_CONNECT_LINE = "SPC_CHART_CONTROL_EXTERN_MENU_CONNECT_LINE";
+    public static final String SPC_CHART_BOX_EXTERN_MENU_CL = "SPC_CHART_BOX_EXTERN_MENU_CL";
+    public static final String SPC_CHART_BOX_EXTERN_MENU_Line = "SPC_CHART_BOX_EXTERN_MENU_Line";
 
-    public static final String[] SPC_CHART_RUN_EXTERN_MENU = new String[]{
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_USL"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_LSL"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_LCL"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_NEGATIVE_2_SIGMA"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_NEGATIVE_SIGMA"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_AVERAGE"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_SIGMA"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_2_SIGMA"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_UCL"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_POINT"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_RUN_EXTERN_MENU_LINE")};
+    public static final String SPC_CHART_LINE_NAME_USL = "SPC_CHART_LINE_NAME_USL";
+    public static final String SPC_CHART_LINE_NAME_LSL = "SPC_CHART_LINE_NAME_LSL";
+    public static final String SPC_CHART_LINE_NAME_LCL = "SPC_CHART_LINE_NAME_LCL";
+    public static final String SPC_CHART_LINE_NAME_NEGATIVE_2_SIGMA = "SPC_CHART_LINE_NAME_NEGATIVE_2_SIGMA";
+    public static final String SPC_CHART_LINE_NAME_NEGATIVE_SIGMA = "SPC_CHART_LINE_NAME_NEGATIVE_SIGMA";
+    public static final String SPC_CHART_LINE_NAME_AVERAGE = "SPC_CHART_LINE_NAME_AVERAGE";
+    public static final String SPC_CHART_LINE_NAME_SIGMA = "SPC_CHART_LINE_NAME_SIGMA";
+    public static final String SPC_CHART_LINE_NAME_2_SIGMA = "SPC_CHART_LINE_NAME_2_SIGMA";
+    public static final String SPC_CHART_LINE_NAME_UCL = "SPC_CHART_LINE_NAME_UCL";
 
-    public static final String[] SPC_CHART_CONTROL_EXTERN_MENU = new String[]{
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_CONTROL_EXTERN_MENU_LCL"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_CONTROL_EXTERN_MENU_AVERAGE"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_CONTROL_EXTERN_MENU_UCL"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_CONTROL_EXTERN_MENU_POINT"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_CONTROL_EXTERN_MENU_CONNECT_LINE")};
+    public static final String SPC_RULE_R_R1 = "SPC_RULE_R_R1";
+    public static final String SPC_RULE_R_R2 = "SPC_RULE_R_R2";
+    public static final String SPC_RULE_R_R3 = "SPC_RULE_R_R3";
+    public static final String SPC_RULE_R_R4 = "SPC_RULE_R_R4";
+    public static final String SPC_RULE_R_R5 = "SPC_RULE_R_R5";
+    public static final String SPC_RULE_R_R6 = "SPC_RULE_R_R6";
+    public static final String SPC_RULE_R_R7 = "SPC_RULE_R_R7";
+    public static final String SPC_RULE_R_R8 = "SPC_RULE_R_R8";
+    public static final String SPC_RULE_R_R9 = "SPC_RULE_R_R9";
 
-    public static final String[] SPC_CHART_BOX_EXTERN_MENU = new String[]{
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_BOX_EXTERN_MENU_CL"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_BOX_EXTERN_MENU_Line")};
+    public static final String CHART_SAVE_AS = "CHART_SAVE_AS";
+    public static final String CHART_SAVE_AS_TITLE = "CHART_SAVE_AS_TITLE";
+    public static final String CHART_SAVE_AS_PNG_EXTENSION = "CHART_SAVE_AS_PNG_EXTENSION";
+    public static final String BTN_CHART_CHOOSE_LINES = "BTN_CHART_CHOOSE_LINES";
+    public static final String BTN_RUN_CHART_CHOOSE_RULES = "BTN_RUN_CHART_CHOOSE_RULES";
+    public static final String BTN_RUN_CHART_CHOOSE_ANNOTATION_ITEM = "BTN_RUN_CHART_CHOOSE_ANNOTATION_ITEM";
+    public static final String BTN_CHART_ZOOM_IN = "BTN_CHART_ZOOM_IN";
+    public static final String BTN_CHART_ZOOM_OUT = "BTN_CHART_ZOOM_OUT";
+    public static final String BTN_CHART_EXTENSION_MENU = "BTN_CHART_EXTENSION_MENU";
 
-    public static final String[] SPC_CHART_LINE_NAME = new String[]{
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_LINE_NAME_USL"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_LINE_NAME_LSL"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_LINE_NAME_LCL"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_LINE_NAME_NEGATIVE_2_SIGMA"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_LINE_NAME_NEGATIVE_SIGMA"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_LINE_NAME_AVERAGE"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_LINE_NAME_SIGMA"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_LINE_NAME_2_SIGMA"),
-            SpcFxmlAndLanguageUtils.getString("SPC_CHART_LINE_NAME_UCL")};
-
-    public static final String[] SPC_RULE_R = new String[]{
-            SpcFxmlAndLanguageUtils.getString("SPC_RULE_R_R1"),
-            SpcFxmlAndLanguageUtils.getString("SPC_RULE_R_R2"),
-            SpcFxmlAndLanguageUtils.getString("SPC_RULE_R_R3"),
-            SpcFxmlAndLanguageUtils.getString("SPC_RULE_R_R4"),
-            SpcFxmlAndLanguageUtils.getString("SPC_RULE_R_R5"),
-            SpcFxmlAndLanguageUtils.getString("SPC_RULE_R_R6"),
-            SpcFxmlAndLanguageUtils.getString("SPC_RULE_R_R7"),
-            SpcFxmlAndLanguageUtils.getString("SPC_RULE_R_R8"),
-            SpcFxmlAndLanguageUtils.getString("SPC_RULE_R_R9")};
-
-    public static final String BTN_CHART_CHOOSE_LINES = SpcFxmlAndLanguageUtils.getString("BTN_CHART_CHOOSE_LINES");
-    public static final String BTN_RUN_CHART_CHOOSE_RULES = SpcFxmlAndLanguageUtils.getString("BTN_RUN_CHART_CHOOSE_RULES");
-    public static final String BTN_RUN_CHART_CHOOSE_ANNOTATION_ITEM = SpcFxmlAndLanguageUtils.getString("BTN_RUN_CHART_CHOOSE_ANNOTATION_ITEM");
-    public static final String BTN_CHART_ZOOM_IN = SpcFxmlAndLanguageUtils.getString("BTN_CHART_ZOOM_IN");
-    public static final String BTN_CHART_ZOOM_OUT = SpcFxmlAndLanguageUtils.getString("BTN_CHART_ZOOM_OUT");
-    public static final String BTN_CHART_EXTENSION_MENU = SpcFxmlAndLanguageUtils.getString("BTN_CHART_EXTENSION_MENU");
+    public static final String BTN_ANNOTATION_CLEAR = "BTN_ANNOTATION_CLEAR";
+    public static final String BTN_ANNOTATION_OPEN = "BTN_ANNOTATION_OPEN";
+    public static final String BTN_ANNOTATION_EXIT = "BTN_ANNOTATION_EXIT";
 }

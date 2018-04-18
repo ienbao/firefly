@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2017. For Intelligent Group.
  */
@@ -35,7 +36,7 @@ public class ItemDataTableModel implements TableModel {
     private CheckBox allCheckBox = new CheckBox();
 
     /**
-     * constructor
+     * constructor.
      *
      * @param rowDataDtos list of row data dto
      * @param dataFrame   dataFrame
@@ -78,7 +79,7 @@ public class ItemDataTableModel implements TableModel {
             }
         }
 
-        if (k == rowDataDtos.size() && k != 3) {
+        if (rowDataDtos != null && !rowDataDtos.isEmpty() && k == rowDataDtos.size() && k != 3) {
             allChecked.setValue(true);
         }
 
@@ -231,7 +232,7 @@ public class ItemDataTableModel implements TableModel {
     }
 
     /**
-     * get Row Key
+     * get Row Key.
      *
      * @return rowKey
      */
@@ -240,7 +241,7 @@ public class ItemDataTableModel implements TableModel {
     }
 
     /**
-     * update TestItem Column
+     * update TestItem Column.
      *
      * @param result columnKey
      */
@@ -253,7 +254,7 @@ public class ItemDataTableModel implements TableModel {
     }
 
     /**
-     * update RowData List
+     * update RowData List.
      *
      * @param rowDataDtos rowDataDtos
      */
@@ -271,7 +272,7 @@ public class ItemDataTableModel implements TableModel {
     }
 
     /**
-     * get RowDataDtoList
+     * get RowDataDtoList.
      *
      * @return rowDataDtoList
      */
@@ -280,7 +281,7 @@ public class ItemDataTableModel implements TableModel {
     }
 
     /**
-     * get FalseSet
+     * get FalseSet.
      *
      * @return falseSet
      */
@@ -289,7 +290,7 @@ public class ItemDataTableModel implements TableModel {
     }
 
     /**
-     * get TrueSet
+     * get TrueSet.
      *
      * @return trueSet
      */

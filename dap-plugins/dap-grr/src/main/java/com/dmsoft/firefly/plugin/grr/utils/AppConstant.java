@@ -49,5 +49,5 @@ public final class AppConstant {
     public static final String GRR_EXPORT_DATA_SOURCE = "data";
     public static final String GRR_ANOVA = "anova";
 
-
+    public static final int MAX_COLUMN = 20;
 }

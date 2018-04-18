@@ -327,6 +327,10 @@
     -fx-border-style: dotted;
     -fx-border-insets: 1;
 }
+.btn-primary:disabled {
+    -fx-border-color: COLOR_GRAY_BB;
+    -fx-background-color: COLOR_GRAY_F5;
+}
 
 .btn-primary-loading {
     -fx-text-fill: FONT_LIGHT;
@@ -474,13 +478,6 @@
     -fx-border-style: dotted;
 }
 
-.button:disabled {
-    -fx-text-fill: FONT_MID;
-    -fx-highlight-fill: COLOR_GRAY_DC;
-    -fx-border-color: COLOR_GRAY_DC;
-    -fx-background-color: COLOR_GRAY_FA;
-}
-
 /*******************************************************************************
  *                                                                             *
  * CheckBox                                                                    *
@@ -495,19 +492,18 @@
     -fx-background-color: COLOR_LIGHT_FF;
     -fx-background-insets: 0;
     -fx-border-width: 1;
-    -fx-padding: 0.3;
-
+    -fx-padding: 0;
 }
 
 .check-box > .box > .mark {
     -fx-scale-shape: false;
     -fx-padding: 5px;
-    -fx-shape: "M -1 0.5 L 4 -4.5 L 5.5 -3 L -1 3.5 L -4.5 -0 L -3.5 -2 Z";
+    -fx-shape: "M 0 -3 L 1 -3 L 1 -2 L 2 -2 L 2 -1 L 3 -1 L 3 0 L 4 0 L 4 -1 L 5 -1 L 5 -2 L 6 -2 L 6 -3 L 7 -3 L 7 -4 L 8 -4 L 8 -6 L 7 -6 L 7 -5 L 6 -5 L 6 -4 L 5 -4 L 5 -3 L 4 -3 L 4 -2 L 3 -2 L 3 -3 L 2 -3 L 2 -4 L 0 -4 Z";
 }
 
 .check-box:indeterminate > .box > .mark {
     -fx-scale-shape: false;
-    -fx-shape: "M -3 -3 L 3 -3 L 3 3 L -3 3 Z";
+    -fx-shape: "M 0 -3 L 1 -3 L 1 -2 L 2 -2 L 2 -1 L 3 -1 L 3 0 L 4 0 L 4 -1 L 5 -1 L 5 -2 L 6 -2 L 6 -3 L 7 -3 L 7 -4 L 8 -4 L 8 -6 L 7 -6 L 7 -5 L 6 -5 L 6 -4 L 5 -4 L 5 -3 L 4 -3 L 4 -2 L 3 -2 L 3 -3 L 2 -3 L 2 -4 L 0 -4 Z";
 }
 
 .check-box:hover > .box, .check-box:focused > .box, .check-box:indeterminate:focused > .box {
@@ -526,10 +522,18 @@
 .check-box:selected:focused > .box, .check-box:indeterminate:focused > .box {
     -fx-border-color: COLORFUL_CHECKBOX_BORDER;
 }
-
+.check-box:disabled {
+    -fx-text-fill: FONT_MID;
+}
 .check-box:disabled > .box {
     -fx-border-color: COLOR_GRAY_DC;
     -fx-background-color: COLOR_GRAY_FA;
+}
+.check-box:disabled > .box > .mark {
+    -fx-background-color: COLOR_GRAY_CC;
+    -fx-scale-shape: false;
+    -fx-padding: 5px;
+    -fx-shape: "M 0 -3 L 1 -3 L 1 -2 L 2 -2 L 2 -1 L 3 -1 L 3 0 L 4 0 L 4 -1 L 5 -1 L 5 -2 L 6 -2 L 6 -3 L 7 -3 L 7 -4 L 8 -4 L 8 -6 L 7 -6 L 7 -5 L 6 -5 L 6 -4 L 5 -4 L 5 -3 L 4 -3 L 4 -2 L 3 -2 L 3 -3 L 2 -3 L 2 -4 L 0 -4 Z";
 }
 
 /*******************************************************************************
@@ -552,8 +556,9 @@
 .error.check-box > .box > .mark {
     -fx-scale-shape: false;
     -fx-padding: 5px;
+    -fx-background-color: #ea2028;
     -fx-background-insets: 0;
-    -fx-shape: "M -1 0.5 L 4 -4.5 L 5.5 -3 L -1 3.5 L -4.5 -0 L -3.5 -2 Z";
+    -fx-shape: "M 0 -3 L 1 -3 L 1 -2 L 2 -2 L 2 -1 L 3 -1 L 3 0 L 4 0 L 4 -1 L 5 -1 L 5 -2 L 6 -2 L 6 -3 L 7 -3 L 7 -4 L 8 -4 L 8 -6 L 7 -6 L 7 -5 L 6 -5 L 6 -4 L 5 -4 L 5 -3 L 4 -3 L 4 -2 L 3 -2 L 3 -3 L 2 -3 L 2 -4 L 0 -4 Z";
 }
 
 .error.check-box:selected > .box > .mark {
@@ -561,7 +566,7 @@
     -fx-padding: 5px;
     -fx-background-color: #ea2028;
     -fx-background-insets: 0;
-    -fx-shape: "M -1 0.5 L 4 -4.5 L 5.5 -3 L -1 3.5 L -4.5 -0 L -3.5 -2 Z";
+    -fx-shape: "M 0 -3 L 1 -3 L 1 -2 L 2 -2 L 2 -1 L 3 -1 L 3 0 L 4 0 L 4 -1 L 5 -1 L 5 -2 L 6 -2 L 6 -3 L 7 -3 L 7 -4 L 8 -4 L 8 -6 L 7 -6 L 7 -5 L 6 -5 L 6 -4 L 5 -4 L 5 -3 L 4 -3 L 4 -2 L 3 -2 L 3 -3 L 2 -3 L 2 -4 L 0 -4 Z";
 }
 
 /*******************************************************************************
@@ -648,12 +653,9 @@
     -fx-highlight-text-fill: #fff;
     -fx-border-style: dashed;
 }
-
 .text-field:disabled {
-    -fx-border-color: #dcdcdc;
-    -fx-background-color: #fafafa;
+    -fx-background-color: COLOR_GRAY_FA;
     -fx-text-fill: #cccccc;
-    -fx-opacity: 1;
 }
 
 .text-field-error {
@@ -1055,8 +1057,8 @@
 
 /* FLOATING TABS CUSTOMISATION */
 .tab-pane {
-    -fx-tab-min-height: 22; /* 22 */
-    -fx-tab-max-height: 22; /* 22 */
+    -fx-tab-min-height: 20; /* 22 */
+    -fx-tab-max-height: 20; /* 22 */
     -fx-border-width: 1 0 0 0;
     -fx-border-color: #dcdcdc;
 }
@@ -1066,10 +1068,10 @@
     -fx-border-width: 0 0 1 1;
     -fx-border-color: #dcdcdc;
     -fx-padding: 0;
-    -fx-max-height: 22;
-    -fx-min-height: 22;
-    -fx-tab-min-height: 22; /* 22 */
-    -fx-tab-max-height: 22; /* 22 */
+    -fx-max-height: 20;
+    -fx-min-height: 19;
+    -fx-tab-min-height: 19; /* 22 */
+    -fx-tab-max-height: 20; /* 22 */
     -fx-border-insets: 0;
     -fx-background-insets: 0;
     -fx-border-image-insets: 0;
@@ -1264,8 +1266,8 @@
 
 /*设置表格头高度*/
 .table-view > .column-header-background {
-    -fx-pref-height: 22;
-    -fx-min-height: 22;
+    -fx-pref-height: 21;
+    -fx-min-height: 21;
     -fx-background-color: #ffffff;
     -fx-border-color: #dcdcdc;
     -fx-border-width: 0 0 1 0;
@@ -1355,7 +1357,6 @@
     -fx-border-insets: 0;
     -fx-background-insets: 0;
     -fx-border-color: transparent;
-
 }
 
 .table-cell .text-field {
@@ -1428,9 +1429,9 @@
     -fx-pref-height: 14;
     -fx-min-height: 14;
     -fx-max-height: 14;
-    -fx-background-insets: 0 -11 -1 -10;
-    -fx-border-insets: 0 -11 -1 -10;
-    -fx-padding: -3 -8 -3 -8;
+    -fx-background-insets: 0 -11 -2 -10;
+    -fx-border-insets: 0 -11 -2 -10;
+    -fx-padding: -5 -8 -3 -8;
 }
 
 /*******************************************************************************
@@ -1772,14 +1773,14 @@
 .split-pane:horizontal > .split-pane-divider {
     -fx-background-color: COLOR_GRAY_DC, COLOR_GRAY_F5;
     -fx-background-insets: 0, 0 0 0 1;
-    -fx-padding: 0.5;
+    -fx-padding: 1 0 0 1;
 }
 
 /* vertical the two nodes are placed on top of each other. */
 .split-pane:vertical > .split-pane-divider {
     -fx-background-color: COLOR_GRAY_DC, COLOR_GRAY_F5;
     -fx-background-insets: 0, 0 0 1 0;
-    -fx-padding: 0.5;
+    -fx-padding: 0 0 0 1;
 }
 
 /*******************************************************************************
@@ -2482,4 +2483,56 @@
     -fx-text-fill: #222222;
     -fx-font-weight: 400;
     -fx-font: 22 arial;
+}
+
+/* ====   DISABLED THINGS   ================================================= */
+
+.label:disabled,
+.button:disabled,
+.toggle-button:disabled,
+.radio-button:disabled,
+/*.check-box:disabled*/
+.hyperlink:disabled,
+.menu-button:disabled,
+.split-menu-button:disabled,
+.slider:disabled,
+.scroll-bar:disabled,
+/*.scroll-pane:disabled,*/
+.progress-bar:disabled,
+.progress-indicator:disabled,
+/*.text-input:disabled,*/
+.choice-box:disabled,
+/*.combo-box-base:disabled,*/
+.date-cell:disabled > *, /* This is set on children so border is not affected. */
+.list-view:disabled,
+.tree-view:disabled,
+.table-view:disabled,
+.tree-table-view:disabled,
+.titled-pane:disabled > .title,
+.accordion:disabled > .titled-pane > .title,
+.tab-pane > .tab-header-area > .headers-region > .tab:disabled,
+.menu:disabled,
+.menu-item:disabled > .label,
+.menu-item:disabled,
+.list-cell:filled:selected:focused:disabled,
+.list-cell:filled:selected:disabled,
+.tree-cell:filled:selected:focused:disabled,
+.tree-cell:filled:selected:disabled,
+.tree-cell > .tree-disclosure-node:disabled,
+.tree-table-row-cell > .tree-disclosure-node:disabled,
+.table-row-cell:selected:disabled,
+.tree-table-row-cell:selected:disabled,
+.table-cell:selected:disabled,
+.tree-table-cell:selected:disabled,
+.spinner:disabled,
+.chart:disabled{
+    -fx-opacity: 0.4;
+}
+
+.check-box:disabled,
+.combo-box-base:disabled,
+.tab-pane:disabled,
+.text-input:disabled,
+.scroll-pane:disabled {
+    -fx-opacity:1;
 }

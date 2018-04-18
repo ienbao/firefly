@@ -50,7 +50,7 @@ public class SpcRefreshJudgeUtil {
         this.statisticalModifyRowKeyList = statisticalModifyRowKeyList;
 
 
-        if (!this.isStatisticalSelectRowChange() && statisticalModifyRowKeyList.size() == 0 && !this.isViewDataSelectRowChange()) {
+        if (!this.isStatisticalSelectRowChange() && statisticalModifyRowKeyList.size() == 0 && (!this.isViewDataSelectRowChange() || currentViewDataSelectRowKeyList == null)) {
             return RefreshType.NOT_NEED_REFRESH;
         } else if (currentStatisticalSelectRowKeyList.size() == 0 || (!this.resultSelectIsChange(currentStatisticalSelectRowKeyList, statisticalSelectRowKeyListCache)
                 && !this.modifyRowContainSelectRow(statisticalModifyRowKeyList, currentStatisticalSelectRowKeyList) && !this.isViewDataSelectRowChange())) {

@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
@@ -14,6 +15,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.List;
@@ -23,6 +26,8 @@ import java.util.ResourceBundle;
  * Created by cherry on 2018/3/11.
  */
 public class GrrMainController implements Initializable {
+
+    private Logger logger = LoggerFactory.getLogger(GrrMainController.class);
 
     private GrrDataFrameDto grrDataFrame;
     private GrrDataFrameDto backGrrDataFrame;
@@ -64,6 +69,10 @@ public class GrrMainController implements Initializable {
         resetBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_reset_normal.png")));
         printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_print_normal.png")));
         refreshBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
+        TooltipUtil.installNormalTooltip(resetBtn, GrrFxmlAndLanguageUtils.getString("GRR_RESET_BTN_TOOLTIP"));
+        TooltipUtil.installNormalTooltip(printBtn, GrrFxmlAndLanguageUtils.getString("GRR_PRINT_BTN_TOOLTIP"));
+        TooltipUtil.installNormalTooltip(exportBtn, GrrFxmlAndLanguageUtils.getString("GRR_EXPORT_BTN_TOOLTIP"));
+        TooltipUtil.installNormalTooltip(refreshBtn, GrrFxmlAndLanguageUtils.getString("GRR_REFRESH_BTN_TOOLTIP"));
     }
 
     private void initComponentEvents() {
@@ -71,21 +80,26 @@ public class GrrMainController implements Initializable {
         printBtn.setOnAction(event -> getExportBtnEvent());
 
         refreshBtn.setOnAction(event -> {
+            logger.debug("Refresh grr start ...");
             grrResultController.refreshGrrResult();
             grrViewDataController.refresh();
+            logger.debug("Refresh grr finished.");
         });
 
         grrResultTab.setOnSelectionChanged(event -> {
             if (grrResultTab.isSelected()) {
                 if (grrViewDataController.isChanged()) {
+                    logger.debug("Analyze grr result start ...");
                     grrDataFrame = grrViewDataController.getChangedGrrDFDto();
                     grrResultController.changeGrrResult();
                     grrViewDataController.setChanged(false);
+                    logger.debug("Analyze grr result finished.");
                 }
             }
         });
 
         resetBtn.setOnAction(event -> {
+            logger.debug("Reset grr start ...");
             this.getSearchConditionDto().setSelectedTestItemDtos(this.grrItemController.getInitSelectTestItemDtos());
             GrrDataFrameDto newDataFrame = new GrrDataFrameDto();
             if (backGrrDataFrame == null) {
@@ -99,6 +113,7 @@ public class GrrMainController implements Initializable {
             this.grrDataFrame = newDataFrame;
             this.grrViewDataController.refresh();
             this.grrResultController.changeGrrResult();
+            logger.debug("Reset grr finished.");
         });
     }
 
@@ -107,7 +122,7 @@ public class GrrMainController implements Initializable {
         try {
             FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_export.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrExport", "Grr Export", root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrExport", GrrFxmlAndLanguageUtils.getString("GRR_EXPORT"), root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
             ((GrrExportController) fxmlLoader.getController()).initGrrExportLeftConfig(grrItemController.getGrrLeftConfigDto());
             stage.setResizable(false);
             stage.toFront();
