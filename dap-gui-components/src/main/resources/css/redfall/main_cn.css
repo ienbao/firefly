@@ -327,6 +327,10 @@
     -fx-border-style: dotted;
     -fx-border-insets: 1;
 }
+.btn-primary:disabled {
+    -fx-border-color: COLOR_GRAY_BB;
+    -fx-background-color: COLOR_GRAY_F5;
+}
 
 .btn-primary-loading {
     -fx-text-fill: FONT_LIGHT;
@@ -495,12 +499,12 @@
 .check-box > .box > .mark {
     -fx-scale-shape: false;
     -fx-padding: 5px;
-    -fx-shape: "M -1 0.5 L 4 -4.5 L 5.5 -3 L -1 3.5 L -4.5 -0 L -3.5 -2 Z";
+    -fx-shape: "M 0 -3 L 1 -3 L 1 -2 L 2 -2 L 2 -1 L 3 -1 L 3 0 L 4 0 L 4 -1 L 5 -1 L 5 -2 L 6 -2 L 6 -3 L 7 -3 L 7 -4 L 8 -4 L 8 -6 L 7 -6 L 7 -5 L 6 -5 L 6 -4 L 5 -4 L 5 -3 L 4 -3 L 4 -2 L 3 -2 L 3 -3 L 2 -3 L 2 -4 L 0 -4 Z";
 }
 
 .check-box:indeterminate > .box > .mark {
     -fx-scale-shape: false;
-    -fx-shape: "M -3 -3 L 3 -3 L 3 3 L -3 3 Z";
+    -fx-shape: "M 0 -3 L 1 -3 L 1 -2 L 2 -2 L 2 -1 L 3 -1 L 3 0 L 4 0 L 4 -1 L 5 -1 L 5 -2 L 6 -2 L 6 -3 L 7 -3 L 7 -4 L 8 -4 L 8 -6 L 7 -6 L 7 -5 L 6 -5 L 6 -4 L 5 -4 L 5 -3 L 4 -3 L 4 -2 L 3 -2 L 3 -3 L 2 -3 L 2 -4 L 0 -4 Z";
 }
 
 .check-box:hover > .box, .check-box:focused > .box, .check-box:indeterminate:focused > .box {
@@ -519,10 +523,18 @@
 .check-box:selected:focused > .box, .check-box:indeterminate:focused > .box {
     -fx-border-color: COLORFUL_CHECKBOX_BORDER;
 }
-
+.check-box:disabled {
+    -fx-text-fill: FONT_MID;
+}
 .check-box:disabled > .box {
     -fx-border-color: COLOR_GRAY_DC;
     -fx-background-color: COLOR_GRAY_FA;
+}
+.check-box:disabled > .box > .mark {
+    -fx-background-color: COLOR_GRAY_CC;
+    -fx-scale-shape: false;
+    -fx-padding: 5px;
+    -fx-shape: "M 0 -3 L 1 -3 L 1 -2 L 2 -2 L 2 -1 L 3 -1 L 3 0 L 4 0 L 4 -1 L 5 -1 L 5 -2 L 6 -2 L 6 -3 L 7 -3 L 7 -4 L 8 -4 L 8 -6 L 7 -6 L 7 -5 L 6 -5 L 6 -4 L 5 -4 L 5 -3 L 4 -3 L 4 -2 L 3 -2 L 3 -3 L 2 -3 L 2 -4 L 0 -4 Z";
 }
 
 /*******************************************************************************
@@ -545,8 +557,9 @@
 .error.check-box > .box > .mark {
     -fx-scale-shape: false;
     -fx-padding: 5px;
+    -fx-background-color: #ea2028;
     -fx-background-insets: 0;
-    -fx-shape: "M -1 0.5 L 4 -4.5 L 5.5 -3 L -1 3.5 L -4.5 -0 L -3.5 -2 Z";
+    -fx-shape: "M 0 -3 L 1 -3 L 1 -2 L 2 -2 L 2 -1 L 3 -1 L 3 0 L 4 0 L 4 -1 L 5 -1 L 5 -2 L 6 -2 L 6 -3 L 7 -3 L 7 -4 L 8 -4 L 8 -6 L 7 -6 L 7 -5 L 6 -5 L 6 -4 L 5 -4 L 5 -3 L 4 -3 L 4 -2 L 3 -2 L 3 -3 L 2 -3 L 2 -4 L 0 -4 Z";
 }
 
 .error.check-box:selected > .box > .mark {
@@ -554,7 +567,7 @@
     -fx-padding: 5px;
     -fx-background-color: #ea2028;
     -fx-background-insets: 0;
-    -fx-shape: "M -1 0.5 L 4 -4.5 L 5.5 -3 L -1 3.5 L -4.5 -0 L -3.5 -2 Z";
+    -fx-shape: "M 0 -3 L 1 -3 L 1 -2 L 2 -2 L 2 -1 L 3 -1 L 3 0 L 4 0 L 4 -1 L 5 -1 L 5 -2 L 6 -2 L 6 -3 L 7 -3 L 7 -4 L 8 -4 L 8 -6 L 7 -6 L 7 -5 L 6 -5 L 6 -4 L 5 -4 L 5 -3 L 4 -3 L 4 -2 L 3 -2 L 3 -3 L 2 -3 L 2 -4 L 0 -4 Z";
 }
 
 /*******************************************************************************
@@ -643,10 +656,8 @@
 }
 
 .text-field:disabled {
-    -fx-border-color: #dcdcdc;
-    -fx-background-color: #fafafa;
+    -fx-background-color: COLOR_GRAY_FA;
     -fx-text-fill: #cccccc;
-    -fx-opacity: 1;
 }
 
 .text-field-error {
@@ -1694,7 +1705,7 @@
     -fx-min-height: 22;
     -fx-pref-height: 22;
     -fx-background-color: COLOR_LIGHT_FF;
-    -fx-padding: 0 10 0 10; /* 4 5 4 5 */
+    -fx-padding: 0 0 0 0; /* 4 5 4 5 */
     -fx-background-insets: 0;
 }
 
@@ -1707,7 +1718,7 @@
 }
 
 .menu-item > .label {
-    -fx-padding: 0em 0.5em 0em 0em;
+    -fx-padding: 0 10 0 10;
     -fx-text-fill: FONT_DARK;
 }
 
@@ -2484,24 +2495,23 @@
 .button:disabled,
 .toggle-button:disabled,
 .radio-button:disabled,
-.check-box:disabled,
+    /*.check-box:disabled*/
 .hyperlink:disabled,
 .menu-button:disabled,
 .split-menu-button:disabled,
 .slider:disabled,
 .scroll-bar:disabled,
-.scroll-pane:disabled,
+    /*.scroll-pane:disabled,*/
 .progress-bar:disabled,
 .progress-indicator:disabled,
-.text-input:disabled,
+    /*.text-input:disabled,*/
 .choice-box:disabled,
-.combo-box-base:disabled,
+    /*.combo-box-base:disabled,*/
 .date-cell:disabled > *, /* This is set on children so border is not affected. */
 .list-view:disabled,
 .tree-view:disabled,
 .table-view:disabled,
 .tree-table-view:disabled,
-.tab-pane:disabled,
 .titled-pane:disabled > .title,
 .accordion:disabled > .titled-pane > .title,
 .tab-pane > .tab-header-area > .headers-region > .tab:disabled,
@@ -2518,6 +2528,15 @@
 .tree-table-row-cell:selected:disabled,
 .table-cell:selected:disabled,
 .tree-table-cell:selected:disabled,
-.spinner:disabled {
-    -fx-opacity: 0.7;
+.spinner:disabled,
+.chart:disabled{
+    -fx-opacity: 0.4;
+}
+
+.check-box:disabled,
+.combo-box-base:disabled,
+.tab-pane:disabled,
+.text-input:disabled,
+.scroll-pane:disabled {
+    -fx-opacity:1;
 }
