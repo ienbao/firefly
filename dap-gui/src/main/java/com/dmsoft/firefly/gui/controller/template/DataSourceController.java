@@ -358,8 +358,8 @@ public class DataSourceController implements Initializable {
         });
         List<String> deleteProjects = Lists.newArrayList();
         delete.setOnAction(event -> {
-            WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel(FxmlAndLanguageUtils.getString(ResourceMassages.DELETE_DATA_SOURCE),
-                    FxmlAndLanguageUtils.getString(ResourceMassages.DELETE_DATA_SOURCE_CONFIRM));
+            WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel(GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_DATA_SOURCE),
+                    GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_DATA_SOURCE_CONFIRM));
             controller.addProcessMonitorListener(new WindowCustomListener() {
                 @Override
                 public boolean onShowCustomEvent() {
