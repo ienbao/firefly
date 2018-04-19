@@ -166,7 +166,7 @@ public class ChartResultController implements Initializable {
         logger.debug("Initializing Box chart...");
         this.setBoxChartData(UIConstant.SPC_CHART_NAME[6], boxChartDataList);
         logger.debug("Initializing MR chart...");
-        this.setControlChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
+        this.setMrChartData(UIConstant.SPC_CHART_NAME[7], mrChartDataList);
         logger.debug("Initialize charts done.");
     }
 
@@ -293,7 +293,8 @@ public class ChartResultController implements Initializable {
             if (data.containsKey(chartName) && data.get(chartName) instanceof Map) {
                 Map<String, List<String>> chartPerformance = (Map<String, List<String>>) data.get(chartName);
                 if (chartPerformance.containsKey(UIConstant.SPC_CHART_PERFORMANCE_KEY_OPERATE)) {
-                    chartOperateButtonEntry.getValue().setSelectedSets(Sets.newHashSet(chartPerformance.get(UIConstant.SPC_CHART_PERFORMANCE_KEY_OPERATE)));
+                    Set<String> convertNames = i18nConvert(Sets.newLinkedHashSet(chartPerformance.get(UIConstant.SPC_CHART_PERFORMANCE_KEY_OPERATE)), chartName, false);
+                    chartOperateButtonEntry.getValue().setSelectedSets(convertNames);
                 }
             }
         }
@@ -304,15 +305,15 @@ public class ChartResultController implements Initializable {
         for (String name : UIConstant.SPC_CHART_NAME) {
             Map<String, List<String>> operatePerformance = Maps.newHashMap();
             if (name.equals(UIConstant.SPC_CHART_NAME[0])) {
-                operatePerformance.put(UIConstant.SPC_CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(spcNdcExternMenu));
+                operatePerformance.put(UIConstant.SPC_CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(spcNdcExternMenuMap.values()));
             } else if (name.equals(UIConstant.SPC_CHART_NAME[1])) {
-                operatePerformance.put(UIConstant.SPC_CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(spcRunExternMenu));
+                operatePerformance.put(UIConstant.SPC_CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(spcRunExternMenuMap.values()));
             } else if (name.equals(UIConstant.SPC_CHART_NAME[2]) || name.equals(UIConstant.SPC_CHART_NAME[3])
                     || name.equals(UIConstant.SPC_CHART_NAME[4]) || name.equals(UIConstant.SPC_CHART_NAME[5])
                     || name.equals(UIConstant.SPC_CHART_NAME[7])) {
-                operatePerformance.put(UIConstant.SPC_CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(spcControlExternMenu));
+                operatePerformance.put(UIConstant.SPC_CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(spcControlExternMenuMap.values()));
             } else if (name.equals(UIConstant.SPC_CHART_NAME[6])) {
-                operatePerformance.put(UIConstant.SPC_CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(spcBoxExternMenu));
+                operatePerformance.put(UIConstant.SPC_CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(spcBoxExternMenuMap.values()));
             }
             performanceMap.put(name, operatePerformance);
         }
@@ -341,10 +342,54 @@ public class ChartResultController implements Initializable {
             } else if (spcNdcExternMenu[10].equalsIgnoreCase(name)) {
                 ndChartPane.getChart().toggleAreaSeries(selected);
             } else {
+//                String convertName = i18nConvert(Sets.newHashSet(name), UIConstant.SPC_CHART_NAME[0]) == null
+//                        ? null : i18nConvert(Sets.newHashSet(name), UIConstant.SPC_CHART_NAME[0]).iterator().next();
                 ndChartPane.getChart().toggleValueMarker(name, selected);
             }
-            updatePerformance(UIConstant.SPC_CHART_NAME[0], selectedNames);
+            updatePerformance(UIConstant.SPC_CHART_NAME[0], i18nConvert(selectedNames, UIConstant.SPC_CHART_NAME[0], true));
         };
+    }
+
+    private Set<String> i18nConvert(Set<String> selectedNames, String chartName, boolean forwardDirection) {
+        if (selectedNames == null) {
+            return null;
+        }
+        Set names = Sets.newLinkedHashSet();
+        selectedNames.forEach(selectedName -> {
+            String convertName = null;
+            if (UIConstant.SPC_CHART_NAME[0].equals(chartName)) {
+
+                convertName = forwardDirection && spcNdcExternMenuMap.containsKey(selectedName)
+                        ? spcNdcExternMenuMap.get(selectedName) : (!forwardDirection && spcNdcExternMap.containsKey(selectedName)
+                        ? spcNdcExternMap.get(selectedName) : convertName);
+
+            } else if (UIConstant.SPC_CHART_NAME[1].equals(chartName)) {
+                if (forwardDirection) {
+                    convertName = spcRunExternMenuMap.containsKey(selectedName)
+                            ? spcRunExternMenuMap.get(selectedName) : spcRuleRExternMenuMap.containsKey(selectedName)
+                            ? spcRuleRExternMenuMap.get(selectedName) : convertName;
+                } else {
+                    convertName = spcRunExternMap.containsKey(selectedName)
+                            ? spcRunExternMap.get(selectedName) : spcRuleRMap.containsKey(selectedName)
+                            ? spcRuleRMap.get(selectedName) : convertName;
+                }
+
+            } else if (UIConstant.SPC_CHART_NAME[6].equals(chartName)) {
+                convertName = forwardDirection && spcBoxExternMenuMap.containsKey(selectedName)
+                        ? spcBoxExternMenuMap.get(selectedName) : (!forwardDirection && spcBoxExternMap.containsKey(selectedName)
+                        ? spcBoxExternMap.get(selectedName) : convertName);
+
+            } else {
+                convertName = forwardDirection ? spcControlExternMenuMap.get(selectedName) : spcControlExternMap.get(selectedName);
+            }
+
+            if (convertName != null) {
+                names.add(convertName);
+            }
+        });
+
+        return names;
+
     }
 
     private SelectCallBack buildRunChartSelectCallBack() {
@@ -355,9 +400,11 @@ public class ChartResultController implements Initializable {
             } else if (spcRunExternMenu[9].equalsIgnoreCase(name)) {
                 runChart.toggleDataAllSeriesPoint(selected);
             } else {
+//                String convertName = i18nConvert(Sets.newHashSet(name), UIConstant.SPC_CHART_NAME[1]) == null
+//                        ? null : i18nConvert(Sets.newHashSet(name), UIConstant.SPC_CHART_NAME[1]).iterator().next();
                 runChart.toggleValueMarker(name, selected);
             }
-            updatePerformance(UIConstant.SPC_CHART_NAME[1], selectedNames);
+            updatePerformance(UIConstant.SPC_CHART_NAME[1], i18nConvert(selectedNames, UIConstant.SPC_CHART_NAME[1], true));
         };
     }
 
@@ -373,7 +420,7 @@ public class ChartResultController implements Initializable {
                 chart.togglePathAllSeriesLine(name, selected);
             }
             //update user performance
-            updatePerformance(chartName, selectedNames);
+            updatePerformance(chartName, i18nConvert(selectedNames, chartName, true));
         };
     }
 
@@ -387,7 +434,7 @@ public class ChartResultController implements Initializable {
                 mrChartPane.getChart().toggleValueMarker(name, selected);
             }
             //update user performance
-            updatePerformance(UIConstant.SPC_CHART_NAME[7], selectedNames);
+            updatePerformance(UIConstant.SPC_CHART_NAME[7], i18nConvert(selectedNames, UIConstant.SPC_CHART_NAME[7], true));
         };
     }
 
@@ -399,7 +446,7 @@ public class ChartResultController implements Initializable {
             } else if (name.equalsIgnoreCase(spcBoxExternMenu[1])) {
                 boxPlotChart.toggleVerticalGridLine(selected);
             }
-            updatePerformance(UIConstant.SPC_CHART_NAME[6], selectedNames);
+            updatePerformance(UIConstant.SPC_CHART_NAME[6], i18nConvert(selectedNames, UIConstant.SPC_CHART_NAME[6], true));
         };
     }
 
@@ -587,6 +634,25 @@ public class ChartResultController implements Initializable {
         chartPanelMap.get(chartName).toggleCustomButtonDisable(false);
     }
 
+    private void setMrChartData(String chartName, List<ControlChartData> controlChartData) {
+        ControlChart controlChart = mrChartPane.getChart();
+        if (chartMap.containsKey(chartName)) {
+//            clear chart
+            controlChart.removeAllChildren();
+        } else {
+            chartMap.put(chartName, controlChart);
+        }
+        controlChart.setData(controlChartData, chartTooltip);
+        controlChartData.forEach(controlChartData1 -> {
+            Double[] ucl = controlChartData1.getUclData();
+            Double[] lcl = controlChartData1.getLclData();
+            controlChart.setSeriesDataStyleByRule(controlChartData1.getUniqueKey(), ucl, lcl);
+        });
+        this.setMrChartPerformance(controlChart, chartName);
+        chartPanelMap.get(chartName).updateChartData();
+        chartPanelMap.get(chartName).toggleCustomButtonDisable(false);
+    }
+
     private void setBoxChartData(String chartName, List<BoxPlotChartData> boxChartData) {
         BoxPlotChart chart = boxChartPane.getChart();
         if (chartMap.containsKey(chartName)) {
@@ -595,8 +661,15 @@ public class ChartResultController implements Initializable {
         } else {
             chartMap.put(chartName, chart);
         }
-        this.setBoxChartPerformance();
+//      这里注意一下先后顺序
+        if (!boxOperateBtn.getSelectedSets().contains(spcBoxExternMenu[1])) {
+            boxChartPane.getChart().toggleVerticalGridLine(false);
+        }
         chart.setData(boxChartData, chartTooltip);
+
+        if (!boxOperateBtn.getSelectedSets().contains(spcBoxExternMenu[0])) {
+            boxChartPane.getChart().removeStroke();
+        }
         boxChartPane.updateChartData();
         boxChartPane.toggleCustomButtonDisable(false);
     }
@@ -613,6 +686,8 @@ public class ChartResultController implements Initializable {
                     ndChartPane.getChart().toggleAreaSeries(false);
                     continue;
                 }
+//                String convertName = i18nConvert(Sets.newHashSet(operateName), UIConstant.SPC_CHART_NAME[0]) == null
+//                        ? null : i18nConvert(Sets.newHashSet(operateName), UIConstant.SPC_CHART_NAME[0]).iterator().next();
                 hiddenLines.add(operateName);
             }
         }
@@ -631,6 +706,8 @@ public class ChartResultController implements Initializable {
                     runChartPane.getChart().hiddenDataSeriesLine();
                     continue;
                 }
+//                String convertName = i18nConvert(Sets.newHashSet(operateName), UIConstant.SPC_CHART_NAME[1]) == null
+//                        ? null : i18nConvert(Sets.newHashSet(operateName), UIConstant.SPC_CHART_NAME[1]).iterator().next();
                 hiddenLines.add(operateName);
             }
         }
@@ -675,19 +752,22 @@ public class ChartResultController implements Initializable {
         controlChart.hiddenValueMarkers(hiddenLines);
     }
 
-    private void setBoxChartPerformance() {
-        for (String operateName : spcBoxExternMenu) {
-            if (!boxOperateBtn.getSelectedSets().contains(operateName)) {
-                if (operateName.equals(spcBoxExternMenu[0])) {
-                    boxChartPane.getChart().removeStroke();
+    private void setMrChartPerformance(ControlChart controlChart, String chartName) {
+        List<String> hiddenLines = Lists.newArrayList();
+        for (String operateName : spcControlExternMenu) {
+            if (!chartButtonMap.get(chartName).getSelectedSets().contains(operateName)) {
+                if (operateName.equals(spcControlExternMenu[3])) {
+                    controlChart.hiddenDataSeriesPoint();
                     continue;
                 }
-                if (operateName.equals(spcBoxExternMenu[1])) {
-                    boxChartPane.getChart().toggleVerticalGridLine(false);
+                if (operateName.equals(spcControlExternMenu[4])) {
+                    controlChart.hiddenDataSeriesLine();
                     continue;
                 }
+                hiddenLines.add(operateName);
             }
         }
+        controlChart.hiddenValueMarkers(hiddenLines);
     }
 
     private void initChartOperatorMap() {
@@ -718,50 +798,31 @@ public class ChartResultController implements Initializable {
     }
 
     private void initI18n() {
-        spcNdcExternMenu = new String[]{
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_ND_EXTERN_MENU_USL),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_ND_EXTERN_MENU_LSL),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_ND_EXTERN_MENU_UCL),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_ND_EXTERN_MENU_2_SIGMA),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_ND_EXTERN_MENU_SIGMA),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_ND_EXTERN_MENU_AVERAGE),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_ND_EXTERN_MENU_NEGATIVE_SIGMA),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_ND_EXTERN_MENU_NEGATIVE_2_SIGMA),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_ND_EXTERN_MENU_LCL),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_ND_EXTERN_MENU_HISTOGRAM),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_ND_EXTERN_MENU_CURVE)};
-        spcRunExternMenu = new String[]{
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_RUN_EXTERN_MENU_USL),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_RUN_EXTERN_MENU_LSL),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_RUN_EXTERN_MENU_LCL),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_RUN_EXTERN_MENU_NEGATIVE_2_SIGMA),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_RUN_EXTERN_MENU_NEGATIVE_SIGMA),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_RUN_EXTERN_MENU_AVERAGE),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_RUN_EXTERN_MENU_SIGMA),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_RUN_EXTERN_MENU_2_SIGMA),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_RUN_EXTERN_MENU_UCL),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_RUN_EXTERN_MENU_POINT),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_RUN_EXTERN_MENU_LINE)};
-        spcControlExternMenu = new String[]{
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU_LCL),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU_AVERAGE),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU_UCL),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU_POINT),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_CONTROL_EXTERN_MENU_CONNECT_LINE)};
-        spcBoxExternMenu = new String[]{
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_BOX_EXTERN_MENU_CL),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_BOX_EXTERN_MENU_Line)};
-
-        spcRuleR = new String[]{
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_RULE_R_R1),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_RULE_R_R2),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_RULE_R_R3),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_RULE_R_R4),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_RULE_R_R5),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_RULE_R_R6),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_RULE_R_R7),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_RULE_R_R8),
-                SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_RULE_R_R9)};
+        for (String key : UIConstant.SPC_CHART_ND_EXTERN_MENU) {
+            spcNdcExternMenuMap.put(SpcFxmlAndLanguageUtils.getString(key), key);
+            spcNdcExternMap.put(key, SpcFxmlAndLanguageUtils.getString(key));
+        }
+        for (String key : UIConstant.SPC_CHART_RUN_EXTERN_MENU) {
+            spcRunExternMenuMap.put(SpcFxmlAndLanguageUtils.getString(key), key);
+            spcRunExternMap.put(key, SpcFxmlAndLanguageUtils.getString(key));
+        }
+        for (String key : UIConstant.SPC_CHART_CONTROL_EXTERN_MENU) {
+            spcControlExternMenuMap.put(SpcFxmlAndLanguageUtils.getString(key), key);
+            spcControlExternMap.put(key, SpcFxmlAndLanguageUtils.getString(key));
+        }
+        for (String key : UIConstant.SPC_CHART_BOX_EXTERN_MENU) {
+            spcBoxExternMenuMap.put(SpcFxmlAndLanguageUtils.getString(key), key);
+            spcBoxExternMap.put(key, SpcFxmlAndLanguageUtils.getString(key));
+        }
+        for (String key : UIConstant.SPC_RULE_R_EXTERN_MENU) {
+            spcRuleRExternMenuMap.put(SpcFxmlAndLanguageUtils.getString(key), key);
+            spcRuleRMap.put(key, SpcFxmlAndLanguageUtils.getString(key));
+        }
+        spcNdcExternMenu = spcNdcExternMenuMap.keySet().toArray(new String[]{});
+        spcRunExternMenu = spcRunExternMenuMap.keySet().toArray(new String[]{});
+        spcControlExternMenu = spcControlExternMenuMap.keySet().toArray(new String[]{});
+        spcBoxExternMenu = spcBoxExternMenuMap.keySet().toArray(new String[]{});
+        spcRuleR = spcRuleRExternMenuMap.keySet().toArray(new String[]{});
     }
 
     private void initChartButtonMap() {
@@ -840,5 +901,16 @@ public class ChartResultController implements Initializable {
     private String[] spcControlExternMenu = null;
     private String[] spcBoxExternMenu = null;
     private String[] spcRuleR = null;
+    private Map<String, String> spcNdcExternMenuMap = Maps.newLinkedHashMap();
+    private Map<String, String> spcRunExternMenuMap = Maps.newLinkedHashMap();
+    private Map<String, String> spcControlExternMenuMap = Maps.newLinkedHashMap();
+    private Map<String, String> spcBoxExternMenuMap = Maps.newLinkedHashMap();
+    private Map<String, String> spcRuleRExternMenuMap = Maps.newLinkedHashMap();
+    private Map<String, String> spcNdcExternMap = Maps.newLinkedHashMap();
+    private Map<String, String> spcRunExternMap = Maps.newLinkedHashMap();
+    private Map<String, String> spcControlExternMap = Maps.newLinkedHashMap();
+    private Map<String, String> spcBoxExternMap = Maps.newLinkedHashMap();
+    private Map<String, String> spcRuleRMap = Maps.newLinkedHashMap();
+
 
 }

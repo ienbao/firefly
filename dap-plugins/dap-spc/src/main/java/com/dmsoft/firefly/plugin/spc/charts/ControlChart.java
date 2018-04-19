@@ -376,6 +376,9 @@ public class ControlChart<X, Y> extends LineChart {
      * @param showed   whether it show or not
      */
     public void toggleValueMarker(String lineName, boolean showed) {
+        if (DAPStringUtils.isBlank(lineName)) {
+            return;
+        }
         for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
             valueMarkerEntry.getValue().toggleValueMarker(lineName, showed);
             lineTooltipShowMap.put(lineName, showed);

@@ -107,36 +107,53 @@ public class UIConstant {
     public static final String CHART_PERFORMANCE_CODE = "SPC_CHARTS";
     public static final String SPC_CHART_PERFORMANCE_KEY_OPERATE = "SPC_CHART_OPERATE";
 
-    public static final String SPC_CHART_ND_EXTERN_MENU_USL = "SPC_CHART_ND_EXTERN_MENU_USL";
-    public static final String SPC_CHART_ND_EXTERN_MENU_LSL = "SPC_CHART_ND_EXTERN_MENU_LSL";
-    public static final String SPC_CHART_ND_EXTERN_MENU_UCL = "SPC_CHART_ND_EXTERN_MENU_UCL";
-    public static final String SPC_CHART_ND_EXTERN_MENU_2_SIGMA = "SPC_CHART_ND_EXTERN_MENU_2_SIGMA";
-    public static final String SPC_CHART_ND_EXTERN_MENU_SIGMA = "SPC_CHART_ND_EXTERN_MENU_SIGMA";
-    public static final String SPC_CHART_ND_EXTERN_MENU_AVERAGE = "SPC_CHART_ND_EXTERN_MENU_AVERAGE";
-    public static final String SPC_CHART_ND_EXTERN_MENU_NEGATIVE_SIGMA = "SPC_CHART_ND_EXTERN_MENU_NEGATIVE_SIGMA";
-    public static final String SPC_CHART_ND_EXTERN_MENU_NEGATIVE_2_SIGMA = "SPC_CHART_ND_EXTERN_MENU_NEGATIVE_2_SIGMA";
-    public static final String SPC_CHART_ND_EXTERN_MENU_LCL = "SPC_CHART_ND_EXTERN_MENU_LCL";
-    public static final String SPC_CHART_ND_EXTERN_MENU_HISTOGRAM = "SPC_CHART_ND_EXTERN_MENU_HISTOGRAM";
-    public static final String SPC_CHART_ND_EXTERN_MENU_CURVE = "SPC_CHART_ND_EXTERN_MENU_CURVE";
+    public static final String[] SPC_CHART_ND_EXTERN_MENU = new String[]{
+            "SPC_CHART_ND_EXTERN_MENU_USL",
+            "SPC_CHART_ND_EXTERN_MENU_LSL",
+            "SPC_CHART_ND_EXTERN_MENU_UCL",
+            "SPC_CHART_ND_EXTERN_MENU_2_SIGMA",
+            "SPC_CHART_ND_EXTERN_MENU_SIGMA",
+            "SPC_CHART_ND_EXTERN_MENU_AVERAGE",
+            "SPC_CHART_ND_EXTERN_MENU_NEGATIVE_SIGMA",
+            "SPC_CHART_ND_EXTERN_MENU_NEGATIVE_2_SIGMA",
+            "SPC_CHART_ND_EXTERN_MENU_LCL",
+            "SPC_CHART_ND_EXTERN_MENU_HISTOGRAM",
+            "SPC_CHART_ND_EXTERN_MENU_CURVE"};
 
-    public static final String SPC_CHART_RUN_EXTERN_MENU_USL = "SPC_CHART_RUN_EXTERN_MENU_USL";
-    public static final String SPC_CHART_RUN_EXTERN_MENU_LSL = "SPC_CHART_RUN_EXTERN_MENU_LSL";
-    public static final String SPC_CHART_RUN_EXTERN_MENU_LCL = "SPC_CHART_RUN_EXTERN_MENU_LCL";
-    public static final String SPC_CHART_RUN_EXTERN_MENU_NEGATIVE_2_SIGMA = "SPC_CHART_RUN_EXTERN_MENU_NEGATIVE_2_SIGMA";
-    public static final String SPC_CHART_RUN_EXTERN_MENU_NEGATIVE_SIGMA = "SPC_CHART_RUN_EXTERN_MENU_NEGATIVE_SIGMA";
-    public static final String SPC_CHART_RUN_EXTERN_MENU_AVERAGE = "SPC_CHART_RUN_EXTERN_MENU_AVERAGE";
-    public static final String SPC_CHART_RUN_EXTERN_MENU_SIGMA = "SPC_CHART_RUN_EXTERN_MENU_SIGMA";
-    public static final String SPC_CHART_RUN_EXTERN_MENU_2_SIGMA = "SPC_CHART_RUN_EXTERN_MENU_2_SIGMA";
-    public static final String SPC_CHART_RUN_EXTERN_MENU_UCL = "SPC_CHART_RUN_EXTERN_MENU_UCL";
-    public static final String SPC_CHART_RUN_EXTERN_MENU_POINT = "SPC_CHART_RUN_EXTERN_MENU_POINT";
-    public static final String SPC_CHART_RUN_EXTERN_MENU_LINE = "SPC_CHART_RUN_EXTERN_MENU_LINE";
-    public static final String SPC_CHART_CONTROL_EXTERN_MENU_LCL = "SPC_CHART_CONTROL_EXTERN_MENU_LCL";
-    public static final String SPC_CHART_CONTROL_EXTERN_MENU_AVERAGE = "SPC_CHART_CONTROL_EXTERN_MENU_AVERAGE";
-    public static final String SPC_CHART_CONTROL_EXTERN_MENU_UCL = "SPC_CHART_CONTROL_EXTERN_MENU_UCL";
-    public static final String SPC_CHART_CONTROL_EXTERN_MENU_POINT = "SPC_CHART_CONTROL_EXTERN_MENU_POINT";
-    public static final String SPC_CHART_CONTROL_EXTERN_MENU_CONNECT_LINE = "SPC_CHART_CONTROL_EXTERN_MENU_CONNECT_LINE";
-    public static final String SPC_CHART_BOX_EXTERN_MENU_CL = "SPC_CHART_BOX_EXTERN_MENU_CL";
-    public static final String SPC_CHART_BOX_EXTERN_MENU_Line = "SPC_CHART_BOX_EXTERN_MENU_Line";
+    public static final String[] SPC_CHART_RUN_EXTERN_MENU = new String[]{
+            "SPC_CHART_RUN_EXTERN_MENU_USL",
+            "SPC_CHART_RUN_EXTERN_MENU_LSL",
+            "SPC_CHART_RUN_EXTERN_MENU_LCL",
+            "SPC_CHART_RUN_EXTERN_MENU_NEGATIVE_2_SIGMA",
+            "SPC_CHART_RUN_EXTERN_MENU_NEGATIVE_SIGMA",
+            "SPC_CHART_RUN_EXTERN_MENU_AVERAGE",
+            "SPC_CHART_RUN_EXTERN_MENU_SIGMA",
+            "SPC_CHART_RUN_EXTERN_MENU_2_SIGMA",
+            "SPC_CHART_RUN_EXTERN_MENU_UCL",
+            "SPC_CHART_RUN_EXTERN_MENU_POINT",
+            "SPC_CHART_RUN_EXTERN_MENU_LINE"};
+
+    public static final String[] SPC_CHART_CONTROL_EXTERN_MENU = new String[]{
+            "SPC_CHART_CONTROL_EXTERN_MENU_LCL",
+            "SPC_CHART_CONTROL_EXTERN_MENU_AVERAGE",
+            "SPC_CHART_CONTROL_EXTERN_MENU_UCL",
+            "SPC_CHART_CONTROL_EXTERN_MENU_POINT",
+            "SPC_CHART_CONTROL_EXTERN_MENU_CONNECT_LINE"};
+
+    public static final String[] SPC_CHART_BOX_EXTERN_MENU = new String[]{
+            "SPC_CHART_BOX_EXTERN_MENU_CL",
+            "SPC_CHART_BOX_EXTERN_MENU_Line"};
+
+    public static final String[] SPC_RULE_R_EXTERN_MENU = new String[]{
+            "SPC_RULE_R_R1",
+            "SPC_RULE_R_R2",
+            "SPC_RULE_R_R3",
+            "SPC_RULE_R_R4",
+            "SPC_RULE_R_R5",
+            "SPC_RULE_R_R6",
+            "SPC_RULE_R_R7",
+            "SPC_RULE_R_R8",
+            "SPC_RULE_R_R9"};
 
     public static final String SPC_CHART_LINE_NAME_USL = "SPC_CHART_LINE_NAME_USL";
     public static final String SPC_CHART_LINE_NAME_LSL = "SPC_CHART_LINE_NAME_LSL";
@@ -147,16 +164,6 @@ public class UIConstant {
     public static final String SPC_CHART_LINE_NAME_SIGMA = "SPC_CHART_LINE_NAME_SIGMA";
     public static final String SPC_CHART_LINE_NAME_2_SIGMA = "SPC_CHART_LINE_NAME_2_SIGMA";
     public static final String SPC_CHART_LINE_NAME_UCL = "SPC_CHART_LINE_NAME_UCL";
-
-    public static final String SPC_RULE_R_R1 = "SPC_RULE_R_R1";
-    public static final String SPC_RULE_R_R2 = "SPC_RULE_R_R2";
-    public static final String SPC_RULE_R_R3 = "SPC_RULE_R_R3";
-    public static final String SPC_RULE_R_R4 = "SPC_RULE_R_R4";
-    public static final String SPC_RULE_R_R5 = "SPC_RULE_R_R5";
-    public static final String SPC_RULE_R_R6 = "SPC_RULE_R_R6";
-    public static final String SPC_RULE_R_R7 = "SPC_RULE_R_R7";
-    public static final String SPC_RULE_R_R8 = "SPC_RULE_R_R8";
-    public static final String SPC_RULE_R_R9 = "SPC_RULE_R_R9";
 
     public static final String CHART_SAVE_AS = "CHART_SAVE_AS";
     public static final String CHART_SAVE_AS_TITLE = "CHART_SAVE_AS_TITLE";
