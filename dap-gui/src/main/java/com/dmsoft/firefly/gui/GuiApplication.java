@@ -131,6 +131,12 @@ public class GuiApplication extends Application {
                 GuiFxmlAndLanguageUtils.buildTemplateDialog();
             }
         });
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                CloseMongoDBUtil.closeMongoDB();
+            }
+        });
     }
 
     /**
