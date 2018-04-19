@@ -130,7 +130,6 @@ public class CsvResolverService implements IDataParser {
             pushProgress(60);
             int len = csvList.size();
             int row = 0;
-            List<RowDataDto> rowDataDtos = Lists.newArrayList();
             for (int i = dataIndex; i < csvList.size(); i++) {
                 List<String> data = Arrays.asList(csvList.get(i));
                 RowDataDto rowDataDto = new RowDataDto();
@@ -138,17 +137,14 @@ public class CsvResolverService implements IDataParser {
                 Map<String, String> itemDatas = Maps.newLinkedHashMap();
                 for (int j = 0; j < items.length; j++) {
                     String value = "";
-                    try {
-                        value = DAPStringUtils.formatBigDecimal(data.get(j));
-                        itemDatas.put(items[j], value);
-                    } catch (IndexOutOfBoundsException ignored) {
-                    }
+                    value = DAPStringUtils.formatBigDecimal(data.get(j));
+                    itemDatas.put(items[j], value);
                 }
                 rowDataDto.setData(itemDatas);
-                rowDataDtos.add(rowDataDto);
-                sourceDataService.saveTestData(csvFile.getName(), DoubleIdUtils.combineIds(csvFile.getName(), i), itemDatas);
+                sourceDataService.saveTestData(csvFile.getName(), DoubleIdUtils.combineIds(csvFile.getName(), i), itemDatas, false);
                 row++;
                 pushProgress(60 + 30 * row / len);
+                logger.debug("Imported Line No = {}", row);
             }
             pushProgress(90);
 

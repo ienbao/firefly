@@ -76,7 +76,7 @@ public class SpcMrChartData implements ControlChartData {
         xyChartData = new SpcXYChartData(x, y);
         Double uclRange = ((uclValue != null && uclValue.length >= 1)) ? uclValue[0] : null;
         Double lclRange = ((lclValue != null && lclValue.length >= 1)) ? lclValue[0] : null;
-        maxY = MathUtils.getMax(y, new Double[]{cl});
+        maxY = MathUtils.getMax(y, new Double[]{cl, uclRange, lclRange});
         minY = MathUtils.getMin(y, new Double[]{cl, uclRange, lclRange});
         maxX = MathUtils.getMax(x);
         minX = MathUtils.getMin(x);
