@@ -53,7 +53,6 @@ public class ControlChart<X, Y> extends LineChart {
     private Map<String, XYChart.Series> seriesUniqueKeyMap = Maps.newHashMap();
     //    unique key----nodes
     private Map<String, List<Node>> uniqueKeyNodesMap = Maps.newHashMap();
-
     //    unique key----符合R规则的点
     private Map<String, List<XYChart.Data>> rRuleDataUniqueKeyMap = Maps.newHashMap();
     //    unique key----符合ucl,lcl的点
@@ -65,6 +64,10 @@ public class ControlChart<X, Y> extends LineChart {
     private PointClickCallBack pointClickCallBack;
     //    whether active point click event
     private boolean pointClick = false;
+
+    private boolean dataTooltipShow = true;
+    private Map<String, Boolean> pathTooltipShowMap = Maps.newHashMap();
+    private Map<String, Boolean> lineTooltipShowMap = Maps.newHashMap();
 
     /**
      * @param xAxis xAxis
@@ -116,11 +119,14 @@ public class ControlChart<X, Y> extends LineChart {
             Color color = uniqueColor.get(i);
             String seriesName = seriesNames.get(i);
             String key = uniqueKey.get(i);
+
+            //init all nodes style and tooltip
             setDataNodeStyleAndTooltip(seriesUniqueKeyMap.get(key), color, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
-            if (pathMarkerMap != null &&  pathMarkerMap.containsKey(uniqueKey.get(i))) {
+            if (pathMarkerMap != null && pathMarkerMap.containsKey(uniqueKey.get(i))) {
                 pathMarkerMap.get(uniqueKey.get(i)).forEach(series -> setPathNodeStyleAndTooltip(series, color, seriesName,
-                        chartTooltip == null ? null :chartTooltip.getChartPointTooltip()));
+                        chartTooltip == null ? null : chartTooltip.getChartPointTooltip()));
             }
+            //init unique key all nodes map
             List<Node> nodes = Lists.newArrayList();
             nodes.addAll(getSeriesNodes(Lists.newArrayList(seriesUniqueKeyMap.get(key))));
             if (pathMarkerMap != null && pathMarkerMap.containsKey(key)) {
@@ -276,6 +282,7 @@ public class ControlChart<X, Y> extends LineChart {
      * @param showed whether it show or not
      */
     public void toggleDataAllSeriesPoint(boolean showed) {
+        dataTooltipShow = showed;
         if (seriesUniqueKeyMap == null) {
             return;
         }
@@ -307,6 +314,7 @@ public class ControlChart<X, Y> extends LineChart {
     }
 
     private void toggleOneSeriesPath(XYChart.Series<X, Y> series, boolean showed) {
+        pathTooltipShowMap.put(series.getName(), showed);
         if (!showed) {
             if (!series.getNode().getStyleClass().contains("chart-broken-hidden-line")) {
                 series.getNode().getStyleClass().add("chart-broken-hidden-line");
@@ -353,7 +361,11 @@ public class ControlChart<X, Y> extends LineChart {
      */
     public void hiddenValueMarkers(List<String> lineNames) {
         for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
-            lineNames.forEach(lineName -> valueMarkerEntry.getValue().hiddenValueMarker(lineName));
+
+            lineNames.forEach(lineName -> {
+                lineTooltipShowMap.put(lineName, false);
+                valueMarkerEntry.getValue().hiddenValueMarker(lineName);
+            });
         }
     }
 
@@ -366,6 +378,7 @@ public class ControlChart<X, Y> extends LineChart {
     public void toggleValueMarker(String lineName, boolean showed) {
         for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
             valueMarkerEntry.getValue().toggleValueMarker(lineName, showed);
+            lineTooltipShowMap.put(lineName, showed);
         }
     }
 
@@ -535,6 +548,16 @@ public class ControlChart<X, Y> extends LineChart {
                 if (oneLineData.getValue() != null) {
                     Line line = valueMarker.buildValueMarker(oneLineData, color, seriesName, chartTooltip == null ? null : chartTooltip.getLineTooltip());
                     result.getConnectLine().add(line);
+                    if (chartTooltip != null && chartTooltip.getLineTooltip() != null) {
+                        lineTooltipShowMap.put(oneLineData.getName(), true);
+                        String content = chartTooltip.getLineTooltip().apply(new LineTooltip(seriesName, oneLineData.getName(), oneLineData.getValue()));
+                        line.setOnMouseEntered(event -> {
+                            boolean flag = lineTooltipShowMap.get(oneLineData.getName()) != null && lineTooltipShowMap.get(oneLineData.getName());
+                            toggleTooltip(line, content, flag);
+                        });
+                        line.setOnMouseExited(event -> toggleTooltip(line, content, false));
+
+                    }
 //                    getPlotChildren().add(line);
 //                    addToUniqueKeyNodes(uniqueKey, Lists.newArrayList(line));
                 }
@@ -553,6 +576,7 @@ public class ControlChart<X, Y> extends LineChart {
 //                        this.getData().add(series);
 //                        this.setPathNodeStyleAndTooltip(series, color, seriesName, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
                         seriesList.add(series);
+                        pathTooltipShowMap.put(onePathData.getPathName(), true);
 //                        addToUniqueKeyNodes(uniqueKey, getSeriesNodes(series));
                     }
                 }
@@ -695,9 +719,32 @@ public class ControlChart<X, Y> extends LineChart {
 //            set data node tooltip
             if (pointTooltipFunction != null) {
                 String content = pointTooltipFunction.apply(new PointTooltip(series.getName(), dataItem));
-                Tooltip.install(dataItem.getNode(), new Tooltip(content));
+                dataItem.getNode().setOnMouseEntered(event -> toggleTooltip(dataItem, content, dataTooltipShow));
+                dataItem.getNode().setOnMouseExited(event -> toggleTooltip(dataItem, content, false));
             }
         });
+    }
+
+    private void toggleTooltip(XYChart.Data dataItem, String content, boolean flag) {
+        if (flag) {
+            Tooltip.install(dataItem.getNode(), new Tooltip(content));
+            if (dataItem.getNode().getStyleClass().contains("chart-point-cursor-default")) {
+                dataItem.getNode().getStyleClass().remove("chart-point-cursor-default");
+            }
+        } else {
+            Tooltip.uninstall(dataItem.getNode(), new Tooltip(content));
+            if (!dataItem.getNode().getStyleClass().contains("chart-point-cursor-default")) {
+                dataItem.getNode().getStyleClass().remove("chart-point-cursor-default");
+            }
+        }
+    }
+
+    private void toggleTooltip(Node node, String content, boolean flag) {
+        if (flag) {
+            Tooltip.install(node, new Tooltip(content));
+        } else {
+            Tooltip.uninstall(node, new Tooltip(content));
+        }
     }
 
     private void setPathNodeStyleAndTooltip(XYChart.Series series,
@@ -719,7 +766,12 @@ public class ControlChart<X, Y> extends LineChart {
 //            set data node tooltip
             if (pointTooltipFunction != null) {
                 String content = pointTooltipFunction.apply(new PointTooltip(key + " " + series.getName(), dataItem));
-                Tooltip.install(dataItem.getNode(), new Tooltip(content));
+
+                dataItem.getNode().setOnMouseEntered(event -> {
+                    boolean flag = pathTooltipShowMap.get(series.getName()) != null && pathTooltipShowMap.get(series.getName());
+                    toggleTooltip(dataItem, content, flag);
+                });
+                dataItem.getNode().setOnMouseExited(event -> toggleTooltip(dataItem, content, false));
             }
         });
     }
