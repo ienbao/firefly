@@ -1027,7 +1027,10 @@ public class GrrExportController {
                 windowProgressTipController.getCancelBtn().setText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.OPEN_EXPORT_FOLDER));
                 windowProgressTipController.getCancelBtn().setOnAction(event -> {
                     try {
-                        Desktop.getDesktop().open(new File(path));
+                        File file = new File(path);
+                        if (file.exists()) {
+                            Desktop.getDesktop().open(file);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1039,6 +1042,13 @@ public class GrrExportController {
                         PdfPrintUtil.printPdf(savePath);
                     });
                     thread.start();
+                }
+
+                File file = new File(path);
+                if (file.exists()) {
+                    windowProgressTipController.getCancelBtn().setDisable(false);
+                } else {
+                    windowProgressTipController.getCancelBtn().setDisable(true);
                 }
             }
         });
@@ -1125,7 +1135,18 @@ public class GrrExportController {
                         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
                             @Override
                             public void doJob(JobContext context) {
-                                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+
+                                GrrParamDto grrParamDto = context.getParam(ParamKeys.GRR_PARAM_DTO, GrrParamDto.class);
+                                boolean paramValid = grrParamDto != null;
+                                paramValid = paramValid && grrParamDto.getErrors() != null;
+                                paramValid = paramValid && !grrParamDto.getErrors().isEmpty();
+                                StringBuilder stringBuilder = new StringBuilder();
+                                if (paramValid) {
+                                    grrParamDto.getErrors().values().forEach(error -> stringBuilder.append(error));
+                                } else {
+                                    stringBuilder.append(context.getError().getMessage());
+                                }
+                                windowProgressTipController.updateFailProgress(stringBuilder.toString());
                             }
                         });
                         RuntimeContext.getBean(JobManager.class).fireJobSyn(jobPipeline, context1);
