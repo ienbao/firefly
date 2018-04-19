@@ -361,8 +361,13 @@ public class DataSourceSettingController {
                 SearchDataFrame dataFrame = context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
                 List<String> searchCondition = searchTab.getSearch();
                 List<RowDataDto> rowDataDtoList;
-                if (!searchCondition.isEmpty()) {
+                if (!(searchCondition.size() == 1 && searchCondition.get(0).equals(""))) {
                     rowDataDtoList = dataFrame.getDataRowArray(searchCondition.get(0));
+                    List<RowDataDto> searchResultDtos = addRowData(columnKey);
+                    searchResultDtos.addAll(rowDataDtoList);
+                    itemDataTableModel.updateRowDataList(searchResultDtos);
+                }else{
+                    rowDataDtoList = dataFrame.getAllDataRow();
                     List<RowDataDto> searchResultDtos = addRowData(columnKey);
                     searchResultDtos.addAll(rowDataDtoList);
                     itemDataTableModel.updateRowDataList(searchResultDtos);
