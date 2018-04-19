@@ -3,8 +3,11 @@ package com.dmsoft.firefly.plugin.grr.handler;
 import com.dmsoft.firefly.plugin.grr.dto.GrrParamDto;
 import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.service.GrrFilterService;
+import com.dmsoft.firefly.plugin.grr.utils.GrrExceptionCode;
+import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
+import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.core.AbstractBasicJobHandler;
 import com.dmsoft.firefly.sdk.job.core.JobContext;
 
@@ -41,6 +44,7 @@ public class ValidateParamHandler extends AbstractBasicJobHandler {
             context.put(ParamKeys.GRR_PARAM_DTO, grrParamDto);
         } else {
             context.put(ParamKeys.GRR_PARAM_DTO, grrParamDto);
+            throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12001));
         }
     }
 }
