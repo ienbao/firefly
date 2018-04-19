@@ -5,6 +5,7 @@ package com.dmsoft.firefly.plugin.spc.controller;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.plugin.spc.charts.*;
+import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationDataDto;
 import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationFetch;
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxPlotChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
@@ -486,9 +487,10 @@ public class ChartResultController implements Initializable {
     private AnnotationFetch buildAnnotationFetch() {
         return new AnnotationFetch() {
             @Override
-            public String getValue(Object id) {
+            public AnnotationDataDto getValue(Object id) {
+                Object selectName = editBtn.getCurrentSelectItem();
                 String rowKey = (String) id;
-                return testItemValue.get(rowKey);
+                return new AnnotationDataDto(selectName, testItemValue.get(rowKey));
             }
 
             @Override

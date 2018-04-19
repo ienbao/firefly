@@ -13,7 +13,7 @@ public interface AnnotationFetch {
      * @param id someone data for chart node
      * @return value annotation value
      */
-    String getValue(Object id);
+    AnnotationDataDto getValue(Object id);
 
     /**
      * Get annotation text color

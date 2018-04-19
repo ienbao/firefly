@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.spc.charts;
 
 import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
+import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationDataDto;
 import com.dmsoft.firefly.plugin.spc.charts.annotation.AnnotationFetch;
 import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.ControlChartData;
@@ -211,13 +212,18 @@ public class ControlChart<X, Y> extends LineChart {
         seriesObservableList.forEach(series -> {
             ObservableList<Data<X, Y>> data = series.getData();
             data.forEach(dataItem -> dataItem.getNode().setOnMouseClicked(event -> {
-                if (fetch != null && fetch.showedAnnotation()) {
-                    String value = fetch.getValue(dataItem.getExtraValue());
-                    setNodeAnnotation(dataItem, value, fetch.getTextColor());
-                    fetch.addData(dataItem);
-                }
                 if (pointClick && pointClickCallBack != null) {
                     pointClickCallBack.execute(dataItem.getExtraValue());
+                }
+                if (fetch != null && fetch.showedAnnotation()) {
+                    AnnotationDataDto annotationDataDto = fetch.getValue(dataItem.getExtraValue());
+                    if (annotationDataDto == null
+                            || annotationDataDto.getSelectName() == null
+                            || DAPStringUtils.isBlank(annotationDataDto.getSelectName().toString())) {
+                        return;
+                    }
+                    setNodeAnnotation(dataItem, annotationDataDto.getValue(), fetch.getTextColor());
+                    fetch.addData(dataItem);
                 }
             }));
         });
