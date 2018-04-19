@@ -44,6 +44,7 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
     private boolean isSlot;
     private Map<String, TestItemWithTypeDto> typeDtoMap = Maps.newHashMap();
     private SearchConditionDto searchConditionDto;
+    private List<String> originItems = Lists.newArrayList();
 
     /**
      * constructor
@@ -56,12 +57,15 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
         this.grrDataFrameDto = grrDataFrameDto;
         this.isSlot = isSlot;
         this.headerArray = FXCollections.observableArrayList(grrDataFrameDto.getDataFrame().getAllTestItemName());
+        this.originItems = Lists.newArrayList(grrDataFrameDto.getDataFrame().getAllTestItemName());
         this.headerArray.add(0, trailKey);
         this.headerArray.add(0, appKey);
         this.headerArray.add(0, partKey);
         this.headerArray.add(0, radioKey);
         this.headerArray.remove(searchConditionDto.getPart());
+        this.originItems.remove(searchConditionDto.getPart());
         this.headerArray.remove(searchConditionDto.getAppraiser());
+        this.originItems.remove(searchConditionDto.getAppraiser());
         this.searchConditionDto = searchConditionDto;
         if (grrDataFrameDto.getBackupDatas() != null && !grrDataFrameDto.getBackupDatas().isEmpty()) {
             for (GrrViewDataDto grrViewDataDto : grrDataFrameDto.getBackupDatas()) {
@@ -78,6 +82,11 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
         }
         for (TestItemWithTypeDto testItemWithTypeDto : searchConditionDto.getSelectedTestItemDtos()) {
             this.typeDtoMap.put(testItemWithTypeDto.getTestItemName(), testItemWithTypeDto);
+        }
+
+        if (this.headerArray.size() > AppConstant.MAX_COLUMN + 4) {
+            this.headerArray.remove(AppConstant.MAX_COLUMN + 4, this.headerArray.size());
+            this.originItems.removeAll(this.originItems.subList(AppConstant.MAX_COLUMN, this.originItems.size()));
         }
     }
 
@@ -196,7 +205,7 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
             addedList.add(0, appKey);
             addedList.add(0, partKey);
             addedList.add(0, radioKey);
-            for (String s : this.grrDataFrameDto.getDataFrame().getAllTestItemName()) {
+            for (String s : this.originItems) {
                 if (s != null && s.toLowerCase().contains(testItem.toLowerCase()) && !s.equals(this.searchConditionDto.getPart()) && !s.equals(this.searchConditionDto.getAppraiser())) {
                     if (i < AppConstant.MAX_COLUMN + 4) {
                        addedList.add(s);
@@ -245,6 +254,19 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
             }
         }
         return null;
+    }
+
+
+    /**
+     * method to reset headers
+     *
+     * @param chooseItems list of selected items
+     */
+    public void resetHeaders(List<String> chooseItems) {
+        this.headerArray.removeAll(this.headerArray.subList(4, this.headerArray.size()));
+        this.headerArray.addAll(chooseItems);
+        this.originItems.clear();
+        this.originItems.addAll(chooseItems);
     }
 
 

@@ -28,7 +28,7 @@ import java.util.Map;
 public class GrrViewDataDFIncludeModel implements TableModel {
     private GrrDataFrameDto grrDataFrameDto;
     private ObservableList<String> headerArray;
-    private ObservableList<String> rowKeyArray;
+    private ObservableList<String> rowKeyArray = FXCollections.observableArrayList();
     private TableView<String> tableView;
     private String partKey = GrrFxmlAndLanguageUtils.getString("PART") + " ";
     private String appKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " ";
@@ -40,6 +40,7 @@ public class GrrViewDataDFIncludeModel implements TableModel {
     private List<GrrViewDataListener> listeners = Lists.newArrayList();
     private Map<String, TestItemWithTypeDto> typeDtoMap = Maps.newHashMap();
     private SearchConditionDto searchConditionDto;
+    private List<String> originItems = Lists.newArrayList();
 
     /**
      * constructor
@@ -49,14 +50,16 @@ public class GrrViewDataDFIncludeModel implements TableModel {
      */
     public GrrViewDataDFIncludeModel(GrrDataFrameDto grrDataFrameDto, SearchConditionDto searchConditionDto) {
         this.grrDataFrameDto = grrDataFrameDto;
-        this.rowKeyArray = FXCollections.observableArrayList();
         this.headerArray = FXCollections.observableArrayList(grrDataFrameDto.getDataFrame().getAllTestItemName());
+        this.originItems = Lists.newArrayList(grrDataFrameDto.getDataFrame().getAllTestItemName());
         this.headerArray.add(0, trailKey);
         this.headerArray.add(0, appKey);
         this.headerArray.add(0, partKey);
         this.headerArray.add(0, radioKey);
         this.headerArray.remove(searchConditionDto.getPart());
+        this.originItems.remove(searchConditionDto.getPart());
         this.headerArray.remove(searchConditionDto.getAppraiser());
+        this.originItems.remove(searchConditionDto.getAppraiser());
         this.searchConditionDto = searchConditionDto;
         if (grrDataFrameDto.getIncludeDatas() != null && !grrDataFrameDto.getIncludeDatas().isEmpty()) {
             for (GrrViewDataDto grrViewDataDto : grrDataFrameDto.getIncludeDatas()) {
@@ -71,6 +74,11 @@ public class GrrViewDataDFIncludeModel implements TableModel {
         this.group.selectedToggleProperty().addListener((ov, t1, t2) -> fireToggle((RadioButton) t2));
         for (TestItemWithTypeDto testItemWithTypeDto : searchConditionDto.getSelectedTestItemDtos()) {
             this.typeDtoMap.put(testItemWithTypeDto.getTestItemName(), testItemWithTypeDto);
+        }
+
+        if (this.headerArray.size() > AppConstant.MAX_COLUMN + 4) {
+            this.headerArray.remove(AppConstant.MAX_COLUMN + 4, this.headerArray.size());
+            this.originItems.removeAll(this.originItems.subList(AppConstant.MAX_COLUMN, this.originItems.size()));
         }
     }
 
@@ -169,7 +177,7 @@ public class GrrViewDataDFIncludeModel implements TableModel {
             addedList.add(0, appKey);
             addedList.add(0, partKey);
             addedList.add(0, radioKey);
-            for (String s : this.grrDataFrameDto.getDataFrame().getAllTestItemName()) {
+            for (String s : this.originItems) {
                 if (s != null && s.toLowerCase().contains(testItem.toLowerCase()) && !s.equals(this.searchConditionDto.getPart()) && !s.equals(this.searchConditionDto.getAppraiser())) {
                     if (i < AppConstant.MAX_COLUMN + 4) {
                         addedList.add(s);
@@ -224,6 +232,18 @@ public class GrrViewDataDFIncludeModel implements TableModel {
         }
     }
 
+    /**
+     * method to reset headers
+     *
+     * @param chooseItems list of selected items
+     */
+    public void resetHeaders(List<String> chooseItems) {
+        this.headerArray.removeAll(this.headerArray.subList(4, this.headerArray.size()));
+        this.headerArray.addAll(chooseItems);
+        this.originItems.clear();
+        this.originItems.addAll(chooseItems);
+    }
+
     private void fireToggle(RadioButton radioButton) {
         String selectRowKey = getSelectRowKey(radioButton);
         if (selectRowKey != null) {
@@ -239,6 +259,10 @@ public class GrrViewDataDFIncludeModel implements TableModel {
             }
         }
         return null;
+    }
+
+    public List<String> getOriginItems() {
+        return originItems;
     }
 
     public Map<String, GrrViewDataDto> getGrrViewDataDtoMap() {
