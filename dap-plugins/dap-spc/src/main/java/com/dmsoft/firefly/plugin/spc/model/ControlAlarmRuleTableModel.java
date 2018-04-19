@@ -30,12 +30,11 @@ import java.util.*;
  * Created by Ethan.Yang on 2018/3/14.
  */
 public class ControlAlarmRuleTableModel implements TableModel {
-    private static final String[] HEADER = UIConstant.CONTROL_ALARM_RULE_HEADER;
+    private static final String[] HEADER = new String[]{SpcFxmlAndLanguageUtils.getString("IS_USE"), SpcFxmlAndLanguageUtils.getString("RULE_NAME"), "n", "m", "s"};
     private ObservableList<String> columnKey = FXCollections.observableArrayList(Arrays.asList(HEADER));
     private ObservableList<String> rowKey = FXCollections.observableArrayList();
 
     private List<ControlRuleDto> controlRuleDtoList;
-
 
     private Map<String, ControlRuleDto> dataMap = new HashMap<>();
     private Map<String, SimpleObjectProperty<String>> valueMap = new HashMap<>();
