@@ -138,7 +138,7 @@ public class SourceDataServiceImpl implements SourceDataService {
             try {
                 logger.debug("Saving test data in project = {} ...", projectName);
                 for (RowDataDto rowDataDto : rowDataDtoList) {
-                    privateSaveTestData(projectName, rowDataDto.getRowKey(), rowDataDto.getData(), true);
+                    privateSaveTestData(projectName, rowDataDto.getRowKey(), rowDataDto.getData(), false);
                 }
                 logger.info("Save test data project = {} done.", projectName);
             } catch (Exception e) {
@@ -152,10 +152,10 @@ public class SourceDataServiceImpl implements SourceDataService {
     }
 
     @Override
-    public void saveTestData(String projectName, String rowKey, Map<String, String> rowData) {
+    public void saveTestData(String projectName, String rowKey, Map<String, String> rowData, boolean appendFlag) {
         if (isProjectExist(projectName)) {
             try {
-                privateSaveTestData(projectName, rowKey, rowData, true);
+                privateSaveTestData(projectName, rowKey, rowData, appendFlag);
             } catch (Exception e) {
                 logger.error("Save test data (rowKey = {}) in project = {} error! Exception = {}", rowKey, projectName, e.getMessage());
                 throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
@@ -167,20 +167,8 @@ public class SourceDataServiceImpl implements SourceDataService {
     }
 
     @Override
-    public void replaceTestData(String projectName, String rowKey, Map<String, String> rowData) {
-        if (isProjectExist(projectName)) {
-            try {
-                logger.debug("Appending test data (rowKey = {}) in project = {} ...", rowKey, projectName);
-                privateSaveTestData(projectName, rowKey, rowData, false);
-                logger.info("Append test data (rowKey = {}) in project = {} done.", rowKey, projectName);
-            } catch (Exception e) {
-                logger.error("Append test data (rowKey = {}) in project = {} error! Exception = {}", rowKey, projectName, e.getMessage());
-                throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
-            }
-        } else {
-            logger.error("Append test data (rowKey = {}) in project = {} error! Exception = {}", rowKey, projectName, "Project doesn't exist!");
-            throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_11002));
-        }
+    public void saveTestData(String projectName, String rowKey, Map<String, String> rowData) {
+        saveTestData(projectName, rowKey, rowData, true);
     }
 
     @Override
@@ -476,7 +464,7 @@ public class SourceDataServiceImpl implements SourceDataService {
 
     // private method without check project exist or not
     private void privateSaveTestData(String projectName, String rowKey, Map<String, String> rowDataMap, boolean appendFlag) {
-        if (isRowKeyExist(rowKey)) {
+        if (isRowKeyExist(rowKey) && appendFlag) {
             RowData rowData = getMongoTemplate().find(new Query(where(ROW_KEY_FIELD).is(rowKey)), RowData.class, projectName).get(0);
             if (appendFlag && rowData.getData() != null) {
                 rowData.getData().putAll(rowDataMap);

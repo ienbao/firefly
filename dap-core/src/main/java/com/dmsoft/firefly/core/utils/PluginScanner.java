@@ -24,6 +24,9 @@ public class PluginScanner {
      * @return List of plugin info
      */
     public static List<PluginInfo> scanPluginByPath(String path) {
+        if (path == null) {
+            return Lists.newArrayList();
+        }
         File pathFile = new File(path);
         if (pathFile.isDirectory()) {
             File[] innerFiles = pathFile.listFiles();
