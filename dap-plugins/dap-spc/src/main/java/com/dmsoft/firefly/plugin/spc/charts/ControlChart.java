@@ -124,7 +124,7 @@ public class ControlChart<X, Y> extends LineChart {
             //init all nodes style and tooltip
             setDataNodeStyleAndTooltip(seriesUniqueKeyMap.get(key), color, chartTooltip == null ? null : chartTooltip.getChartPointTooltip());
             if (pathMarkerMap != null && pathMarkerMap.containsKey(uniqueKey.get(i))) {
-                pathMarkerMap.get(uniqueKey.get(i)).forEach(series -> setPathNodeStyleAndTooltip(series, color, seriesName,
+                pathMarkerMap.get(key).forEach(series -> setPathNodeStyleAndTooltip(series, color, seriesName,
                         chartTooltip == null ? null : chartTooltip.getChartPointTooltip()));
             }
             //init unique key all nodes map
@@ -173,6 +173,11 @@ public class ControlChart<X, Y> extends LineChart {
         if (uniqueKeyNodesMap.isEmpty() || !uniqueKeyNodesMap.containsKey(uniqueKey)) {
             return;
         }
+
+//        List<XYChart.Series<X, Y>> seriesList = pathMarkerMap != null && pathMarkerMap.containsKey(uniqueKey) ? pathMarkerMap.get(uniqueKey) : null;
+//        if (seriesList != null) {
+//            seriesList.forEach(series -> togglePathAllSeriesLine(series.getName(), true));
+//        }
         ObservableList<Node> nodes = getPlotChildren();
         List<Node> newNodes = uniqueKeyNodesMap.get(uniqueKey);
         nodes.removeAll(newNodes);
@@ -338,6 +343,7 @@ public class ControlChart<X, Y> extends LineChart {
                 dataItem.getNode().getStyleClass().add("chart-line-hidden-symbol");
                 dataItem.getNode().getStyleClass().remove("chart-line-symbol-hover");
             }
+
         } else {
             if (dataItem.getNode().getStyleClass().contains("chart-line-hidden-symbol")) {
                 dataItem.getNode().getStyleClass().add("chart-line-symbol-hover");
@@ -351,11 +357,13 @@ public class ControlChart<X, Y> extends LineChart {
             if (!dataItem.getNode().getStyleClass().contains("chart-path-hidden-symbol")) {
                 dataItem.getNode().getStyleClass().add("chart-path-hidden-symbol");
                 dataItem.getNode().getStyleClass().remove("chart-path-symbol-hover");
+                getPlotChildren().remove(dataItem.getNode());
             }
         } else {
             if (dataItem.getNode().getStyleClass().contains("chart-path-hidden-symbol")) {
                 dataItem.getNode().getStyleClass().add("chart-path-symbol-hover");
                 dataItem.getNode().getStyleClass().remove("chart-path-hidden-symbol");
+                getPlotChildren().add(dataItem.getNode());
             }
         }
     }
