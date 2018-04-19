@@ -97,9 +97,6 @@ public class UIConstant {
     public static final String EXPORT_SUMMARY_BAD = "RECTIFICATION";
     public static final String EXPORT_SUMMARY_NULL = "-";
 
-    public static final String[] STATISTICAL_RESULT_RULE_HEADER = new String[]{SpcFxmlAndLanguageUtils.getString("STATISTICS"), SpcFxmlAndLanguageUtils.getString("LOWER_LIMIT"), SpcFxmlAndLanguageUtils.getString("UPPER_LIMIT")};
-    public static final String[] CONTROL_ALARM_RULE_HEADER = new String[]{SpcFxmlAndLanguageUtils.getString("IS_USE"), SpcFxmlAndLanguageUtils.getString("RULE_NAME"), "n", "m", "s"};
-
     public static final double X_FACTOR = 1.0;
     public static final double Y_FACTOR = 0.15;
 
