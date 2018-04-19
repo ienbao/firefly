@@ -20,11 +20,10 @@ import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.SpecificationDataDto;
-import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
-import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
+import com.dmsoft.firefly.sdk.dai.dto.*;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.DeepCopy;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
@@ -46,6 +45,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.google.common.io.Resources.getResource;
 
@@ -96,6 +96,8 @@ public class TemplateController {
     private TemplateSettingDto templateSettingDto;
 
     private TemplateItemDFModel templateItemDFModel;
+
+    private boolean isModifiedActiveTemplate = false;
 
     @FXML
     private void initialize() {
@@ -220,6 +222,9 @@ public class TemplateController {
                     }
                 });
 
+            } else {
+                WindowMessageFactory.createWindowMessageHasOk("Message", "Please select a template.");
+                return;
             }
         });
         pattern.setOnAction(event -> buildPatternDia());
@@ -254,6 +259,7 @@ public class TemplateController {
     }
 
     private void initData(String name) {
+        name = name == null ? templateNames.get(0) : name;
         templateName.getSelectionModel().select(name);
         saveCache();
         currTemplate = null;
@@ -312,6 +318,9 @@ public class TemplateController {
 //                dataDto.setUslPass(model.getUslPass());
 //                currTemplate.getSpecificationDatas().put(model.getTestItemName(), dataDto);
 //            });
+            if (currTemplate.getName().equals(templateSettingDto.getName())) {
+                isModifiedActiveTemplate = this.isModifiedTemplate(templateSettingDto, currTemplate);
+            }
         }
     }
 
@@ -396,6 +405,8 @@ public class TemplateController {
                 allTemplate.remove(selectTemplateName);
 
                 int index = templateNames.indexOf(templateName.getSelectionModel().getSelectedItem());
+//                templateNames.remove(templateName.getSelectionModel().getSelectedItem());
+//                templateNames.add(index, newTemplateName);
                 templateNames.set(index, newTemplateName);
 
 
@@ -508,6 +519,9 @@ public class TemplateController {
     }
 
     private void refreshMainTemplate() {
+        if (isModifiedActiveTemplate) {
+            MenuFactory.getMainController().refreshActiveTemplate();
+        }
         ObservableList<StateBarTemplateModel> templateList = FXCollections.observableArrayList();
         if (allTemplate != null) {
             allTemplate.keySet().forEach(name -> {
@@ -524,5 +538,71 @@ public class TemplateController {
 
     public ObservableList<String> getTemplateNames() {
         return templateNames;
+    }
+
+    private boolean isModifiedTemplate(TemplateSettingDto oldTemplateDto, TemplateSettingDto newTemplateDto) {
+        if (oldTemplateDto == null || newTemplateDto == null) {
+            return false;
+        }
+        boolean isModified = false;
+        if (oldTemplateDto.getDecimalDigit() != newTemplateDto.getDecimalDigit()) {
+            isModified = true;
+            return isModified;
+        }
+        TimePatternDto oldTimePatternDto = oldTemplateDto.getTimePatternDto();
+        TimePatternDto newTimePatternDto = newTemplateDto.getTimePatternDto();
+        if (!oldTimePatternDto.getPattern().equals(newTimePatternDto.getPattern())) {
+            isModified = true;
+            return isModified;
+        }
+        List<String> oldTimeKeyList = oldTimePatternDto.getTimeKeys();
+        List<String> newTimeKeyList = newTimePatternDto.getTimeKeys();
+        if (oldTimeKeyList != null && newTimeKeyList != null) {
+            if (oldTimeKeyList.size() != newTimeKeyList.size()) {
+                isModified = true;
+                return isModified;
+            } else {
+                int i = 0;
+                for (String oldTimeKey : oldTimeKeyList) {
+                    if (!oldTimeKey.equals(newTimeKeyList.get(i))) {
+                        isModified = true;
+                        return isModified;
+                    }
+                    i++;
+                }
+            }
+        } else if (oldTimeKeyList == null && newTimeKeyList == null) {
+
+        } else {
+            isModified = true;
+            return isModified;
+        }
+        LinkedHashMap<String, SpecificationDataDto> oldSpecificationDataMap = oldTemplateDto.getSpecificationDatas();
+        LinkedHashMap<String, SpecificationDataDto> newSpecificationDataMap = newTemplateDto.getSpecificationDatas();
+
+        if (oldSpecificationDataMap != null && newSpecificationDataMap != null) {
+            if (oldSpecificationDataMap.size() != newSpecificationDataMap.size()) {
+                isModified = true;
+                return isModified;
+            } else {
+                for (Map.Entry<String, SpecificationDataDto> entry : oldSpecificationDataMap.entrySet()) {
+                    SpecificationDataDto newDto = newSpecificationDataMap.get(entry.getKey());
+                    SpecificationDataDto oldDto = entry.getValue();
+                    if (!newDto.getDataType().equals(oldDto.getDataType())) {
+                        isModified = true;
+                        return isModified;
+                    } else if (!DAPStringUtils.isEqualsString(newDto.getLslFail(), oldDto.getLslFail())) {
+                        isModified = true;
+                        return isModified;
+                    } else if (!DAPStringUtils.isEqualsString(newDto.getUslPass(), oldDto.getUslPass())) {
+                        isModified = true;
+                        return isModified;
+                    }
+                }
+            }
+        }
+
+
+        return isModified;
     }
 }

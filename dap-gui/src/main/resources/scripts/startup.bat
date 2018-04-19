@@ -14,17 +14,27 @@ set ID=
     IF "%1%"=="exit" EXIT
 
 :start
+    echo "start......"
+    call :startMongodb
     call :startApp
     GOTO :eof
+    exit
 
 :stop
+    echo "stop......"
     call :stopApp
     GOTO :eof
+    exit
 
 :restart
+    echo "restart......"
     call :stopApp
     call :startApp
     GOTO :eof
+
+:startMongodb
+    echo "start mongo"
+    start %~dp0installmongo.bat start
 
 :startApp
 
@@ -41,5 +51,8 @@ set ID=
     set now=%date:~,4%%date:~5,2%%date:~8,2%
     echo DAP is running...
 	java -Djava.library.path="%R_HOME%\library\rJava\jri" -jar %APP_JAR%
+    exit
+
 :stopApp
+    echo "kill java....."
     taskkill /F /IM java > nul

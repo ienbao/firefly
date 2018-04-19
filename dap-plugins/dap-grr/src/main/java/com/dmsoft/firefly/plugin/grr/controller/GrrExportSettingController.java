@@ -2,9 +2,12 @@ package com.dmsoft.firefly.plugin.grr.controller;
 
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
+import com.dmsoft.firefly.plugin.grr.utils.enums.GrrExportItemKey;
 import com.google.common.collect.Maps;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
@@ -19,9 +22,9 @@ import java.util.Map;
  */
 public class GrrExportSettingController {
     @FXML
-    private RadioButton tolerance;
+    private RadioButton toleranceRBtn;
     @FXML
-    private RadioButton system;
+    private RadioButton contributeRBtn;
     @FXML
     private VBox pane;
     @FXML
@@ -31,125 +34,118 @@ public class GrrExportSettingController {
     @FXML
     private Button cancel;
     @FXML
-    private CheckBox ec;
+    private CheckBox chartCbx;
     @FXML
-    private CheckBox esr;
+    private CheckBox rrPartCbx;
     @FXML
-    private CheckBox eds;
+    private CheckBox rrAppraiserCbx;
+    @FXML
+    private CheckBox rangeCbx;
+    @FXML
+    private CheckBox xBarCbx;
+    @FXML
+    private CheckBox partAppraiserCbx;
+    @FXML
+    private CheckBox componentCbx;
+    @FXML
+    private CheckBox sourceCbx;
+    @FXML
+    private CheckBox exportDetailCbx;
 
     private ToggleGroup group = new ToggleGroup();
-    private Map<String, Boolean> data = Maps.newHashMap();
+    private Map<String, Boolean> grrExportSettingConfigMap = Maps.newHashMap();
+    private Map<String, CheckBox> checkBoxMap = Maps.newHashMap();
+    private Map<String, RadioButton> radioButtonMap = Maps.newHashMap();
     private GrrConfigServiceImpl grrConfigService = new GrrConfigServiceImpl();
 
     @FXML
     private void initialize() {
-        tolerance.setToggleGroup(group);
-        tolerance.setSelected(true);
-        system.setToggleGroup(group);
+        toleranceRBtn.setToggleGroup(group);
+        contributeRBtn.setToggleGroup(group);
+        toleranceRBtn.setSelected(true);
+        this.initSelectedMap();
         initData();
         initEvent();
     }
 
+    private void initSelectedMap() {
+        GrrExportItemKey[] grrExportItemKeys = GrrExportItemKey.values();
+        if (grrExportItemKeys == null) {
+            return;
+        }
+        for (int i = 0; i < grrExportItemKeys.length; i++) {
+            String key = grrExportItemKeys[i].getCode();
+            if (GrrExportItemKey.EXPORT_DETAIL_SHEET.getCode().equals(key)) {
+                checkBoxMap.put(key, exportDetailCbx);
+            } else if (GrrExportItemKey.EXPORT_SOURCE_RESULT.getCode().equals(key)) {
+                checkBoxMap.put(key, sourceCbx);
+            } else if (GrrExportItemKey.EXPORT_CHART.getCode().equals(key)) {
+                checkBoxMap.put(key, chartCbx);
+            } else if (GrrExportItemKey.EXPORT_R_PART_CHART.getCode().equals(key)) {
+                checkBoxMap.put(key, rrPartCbx);
+            } else if (GrrExportItemKey.EXPORT_R_APPRAISER_CHART.getCode().equals(key)) {
+                checkBoxMap.put(key, rrAppraiserCbx);
+            } else if (GrrExportItemKey.EXPORT_RANGE_CHART.getCode().equals(key)) {
+                checkBoxMap.put(key, rangeCbx);
+            } else if (GrrExportItemKey.EXPORT_X_BAR_CHART.getCode().equals(key)) {
+                checkBoxMap.put(key, xBarCbx);
+            } else if (GrrExportItemKey.EXPORT_PART_APPRAISER_CHART.getCode().equals(key)) {
+                checkBoxMap.put(key, partAppraiserCbx);
+            } else if (GrrExportItemKey.EXPORT_COMPONENT_CHART.getCode().equals(key)) {
+                checkBoxMap.put(key, componentCbx);
+            } else if (GrrExportItemKey.EXPORT_BASE_ON_TOLERANCE.getCode().equals(key)) {
+                radioButtonMap.put(key, toleranceRBtn);
+            } else if (GrrExportItemKey.EXPORT_BASE_ON_CONTRIBUTE.getCode().equals(key)) {
+                radioButtonMap.put(key, contributeRBtn);
+            }
+        }
+    }
+
     private void initData() {
-        data = grrConfigService.findGrrExportConfig();
-        if (data != null) {
-            pane.getChildren().forEach(node -> {
-                if (node instanceof CheckBox) {
-                    if (data.get(((CheckBox) node).getText()) != null) {
-                        ((CheckBox) node).setSelected(data.get(((CheckBox) node).getText()));
-                    }
+        grrExportSettingConfigMap = grrConfigService.findGrrExportConfig();
+        if (grrExportSettingConfigMap != null) {
+            for (Map.Entry<String, Boolean> entry : grrExportSettingConfigMap.entrySet()) {
+                String key = entry.getKey();
+                Boolean selectable = entry.getValue();
+                boolean hasRadioButtonText = GrrExportItemKey.EXPORT_BASE_ON_TOLERANCE.getCode().equals(key);
+                hasRadioButtonText = hasRadioButtonText || GrrExportItemKey.EXPORT_BASE_ON_CONTRIBUTE.getCode().equals(key);
+                if (hasRadioButtonText) {
+                    radioButtonMap.get(entry.getKey()).selectedProperty().setValue(selectable);
+                    continue;
                 }
-                if (node instanceof RadioButton) {
-                    if (data.get(((RadioButton) node).getText()) != null) {
-                        ((RadioButton) node).setSelected(data.get(((RadioButton) node).getText()));
-                    }
+                if (!checkBoxMap.containsKey(key)) {
+                    return;
                 }
-            });
-            chartPane.getChildren().forEach(node -> {
-                if (node instanceof CheckBox) {
-                    if (data.get(((CheckBox) node).getText()) != null) {
-                        ((CheckBox) node).setSelected(data.get(((CheckBox) node).getText()));
-                    }
+                checkBoxMap.get(key).selectedProperty().setValue(selectable);
+                if (GrrExportItemKey.EXPORT_DETAIL_SHEET.getCode().equals(key)) {
+                    toggleAllCheckBox(!selectable);
+                    continue;
                 }
-            });
-
-            if (pane.getChildren().size() >= 1) {
-                Node node = pane.getChildren().get(0);
-                if (node instanceof CheckBox) {
-                    CheckBox checkBox = (CheckBox) node;
-                    toggleAllCheckDisable(!checkBox.isSelected());
+                if (GrrExportItemKey.EXPORT_CHART.getCode().equals(key)) {
+                    toggleAllChartCheckBox(!selectable);
                 }
             }
-
-            this.setChartCheckBox();
         }
     }
 
-    private void toggleAllCheckDisable(boolean flag) {
-        for (int i = 0; i < pane.getChildren().size(); i++) {
-            Node paneNode = pane.getChildren().get(i);
-            if (i != 0 && (paneNode instanceof CheckBox)) {
-                paneNode.setDisable(flag);
-            }
-        }
-        this.toggleChartCheckDisable(flag);
+    private void toggleAllCheckBox(boolean flag) {
+        chartCbx.setDisable(flag);
+        sourceCbx.setDisable(flag);
+        toggleAllChartCheckBox(flag ? flag : !chartCbx.selectedProperty().getValue());
     }
 
-    private void toggleChartCheckDisable(boolean flag) {
-        chartPane.getChildren().forEach(chartNode -> {
-            if (chartNode instanceof CheckBox) {
-                chartNode.setDisable(flag);
-            }
-        });
-    }
-
-    private void setChartCheckBox() {
-        if (pane.getChildren().size() >= 3) {
-            Node node = pane.getChildren().get(2);
-            if (node instanceof CheckBox) {
-                CheckBox checkBox = (CheckBox) node;
-                boolean flag = checkBox.isDisable() ? true : !checkBox.isSelected();
-                this.toggleChartCheckDisable(flag);
-            }
-        }
+    private void toggleAllChartCheckBox(boolean flag) {
+        xBarCbx.setDisable(flag);
+        rangeCbx.setDisable(flag);
+        rrPartCbx.setDisable(flag);
+        componentCbx.setDisable(flag);
+        rrAppraiserCbx.setDisable(flag);
+        partAppraiserCbx.setDisable(flag);
     }
 
     private void initEvent() {
-        eds.setOnAction(event -> {
-            if (eds.isSelected()) {
-                esr.setDisable(false);
-                ec.setDisable(false);
-                chartPane.getChildren().forEach(node -> {
-                    if (node instanceof CheckBox) {
-                        node.setDisable(false);
-                    }
-                });
-            } else {
-                esr.setDisable(true);
-                ec.setDisable(true);
-                chartPane.getChildren().forEach(node -> {
-                    if (node instanceof CheckBox) {
-                        node.setDisable(true);
-                    }
-                });
-            }
-            this.setChartCheckBox();
-        });
-        ec.setOnAction(event -> {
-            if (ec.isSelected()) {
-                chartPane.getChildren().forEach(node -> {
-                    if (node instanceof CheckBox) {
-                        node.setDisable(false);
-                    }
-                });
-            } else {
-                chartPane.getChildren().forEach(node -> {
-                    if (node instanceof CheckBox) {
-                        node.setDisable(true);
-                    }
-                });
-            }
-        });
+        exportDetailCbx.setOnAction(event -> toggleAllCheckBox(!exportDetailCbx.selectedProperty().getValue()));
+        chartCbx.setOnAction(event -> toggleAllChartCheckBox(!chartCbx.selectedProperty().getValue()));
         ok.setOnAction(event -> {
             saveData();
             StageMap.closeStage("grrExportSetting");
@@ -158,26 +154,18 @@ public class GrrExportSettingController {
     }
 
     private void saveData() {
-        if (data != null) {
-            pane.getChildren().forEach(node -> {
-                if (node instanceof CheckBox) {
-                    data.put(((CheckBox) node).getText(), ((CheckBox) node).isSelected());
-                }
-                if (node instanceof RadioButton) {
-                    data.put(((RadioButton) node).getText(), ((RadioButton) node).isSelected());
-
-                }
-            });
-            chartPane.getChildren().forEach(node -> {
-                if (node instanceof CheckBox) {
-                    data.put(((CheckBox) node).getText(), ((CheckBox) node).isSelected());
-                }
-            });
-            grrConfigService.saveGrrExportConfig(data);
+        if (grrExportSettingConfigMap != null) {
+            for (Map.Entry<String, CheckBox> entry : checkBoxMap.entrySet()) {
+                grrExportSettingConfigMap.put(entry.getKey(), entry.getValue().selectedProperty().getValue());
+            }
+            for (Map.Entry<String, RadioButton> entry : radioButtonMap.entrySet()) {
+                grrExportSettingConfigMap.put(entry.getKey(), entry.getValue().selectedProperty().getValue());
+            }
+            grrConfigService.saveGrrExportConfig(grrExportSettingConfigMap);
         }
     }
 
     public void setData(Map<String, Boolean> data) {
-        this.data = data;
+        this.grrExportSettingConfigMap = data;
     }
 }

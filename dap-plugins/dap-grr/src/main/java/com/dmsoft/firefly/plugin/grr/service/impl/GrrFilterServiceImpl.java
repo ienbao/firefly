@@ -279,7 +279,6 @@ public class GrrFilterServiceImpl implements GrrFilterService {
             } else {
                 int partIndex = 1;
                 for (String partValue : parts) {
-                    System.out.println("isContinue");
                     for (String appraiserValue : appraisers) {
                         StringBuffer search = new StringBuffer();
                         search.append("\"" + partName + "\"").append("=").append("\"" + partValue + "\"").append("&").append("\"" + appraiserName + "\"").append("=").append("\"" + appraiserValue + "\"");

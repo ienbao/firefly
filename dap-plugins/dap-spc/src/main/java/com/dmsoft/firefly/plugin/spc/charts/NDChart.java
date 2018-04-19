@@ -231,6 +231,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
      * @param showed   whether it show or not
      */
     public void toggleValueMarker(String lineName, boolean showed) {
+        if (DAPStringUtils.isBlank(lineName)) {
+            return;
+        }
         for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
             valueMarkerEntry.getValue().toggleValueMarker(lineName, showed);
         }
@@ -345,16 +348,20 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         if (!showTooltip) {
             return;
         }
-        series.getData().forEach(dataItem -> {
+        int size = series.getData().size();
+        for (int i = 0; i < size; i++) {
+            XYChart.Data<X, Y> dataItem = series.getData().get(i);
             if (barToolTipStringFunction != null) {
+                boolean lastData = i == size - 1 ? true : false;
                 String content = barToolTipStringFunction.apply(new BarToolTip(
                         series.getName(),
                         dataItem.getXValue(),
                         dataItem.getExtraValue(),
-                        dataItem.getYValue()));
+                        dataItem.getYValue(),
+                        lastData));
                 Tooltip.install(dataItem.getNode(), new Tooltip(content));
             }
-        });
+        }
     }
 
     private void createAreaGroup(IXYChartData<X, Y> xyOneChartData, String unique, Color color) {

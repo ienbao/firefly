@@ -62,6 +62,7 @@ public class GrrMainController implements Initializable {
         grrViewDataController.init(this);
         initBtnIcon();
         initComponentEvents();
+        setDisable(true);
     }
 
     private void initBtnIcon() {
@@ -130,6 +131,21 @@ public class GrrMainController implements Initializable {
 
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    /**
+     * set disable
+     *
+     * @param disable disable
+     */
+    public void setDisable(boolean disable) {
+        resetBtn.setDisable(disable);
+        refreshBtn.setDisable(disable);
+        if (disable) {
+            refreshBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_gray.png")));
+        } else {
+            refreshBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
         }
     }
 

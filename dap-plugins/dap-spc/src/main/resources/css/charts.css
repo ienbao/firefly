@@ -97,6 +97,10 @@
     -fx-stroke-dash-array: 5px;
 }
 
+.chart-point-cursor-default {
+    -fx-cursor: default;
+}
+
 .chart-broken-hidden-line {
     -fx-stroke-width: 0px;
 }
@@ -128,9 +132,9 @@
 }
 
 .chart-path-symbol {
-    -fx-padding: 4px;
+    -fx-padding: 3px;
     -fx-cursor: hand;
-    -fx-background-insets: 4px;
+    -fx-background-insets: 3px;
 }
 
 .chart-path-symbol-hover {
@@ -142,7 +146,7 @@
 }
 
 .chart-path-hidden-symbol {
-    -fx-background-insets: 4px;
+    -fx-background-insets: 3px;
 }
 
 /* solid triangle */
