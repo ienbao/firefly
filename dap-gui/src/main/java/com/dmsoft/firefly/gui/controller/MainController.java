@@ -160,6 +160,17 @@ public class MainController {
     }
 
     /**
+     * refresh active template
+     */
+    public void refreshActiveTemplate(){
+        List<String> projectName = envService.findActivatedProjectName();
+        Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
+        LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, envService.findActivatedTemplate().getName());
+        envService.setTestItems(itemWithTypeDtoMap);
+        resetMain();
+    }
+
+    /**
      * method to reset main
      */
     public void resetMain() {
