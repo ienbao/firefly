@@ -155,7 +155,7 @@ public class ChartResultController implements Initializable {
         this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
         logger.debug("Initializing Run chart...");
         this.setRunChartData(UIConstant.SPC_CHART_NAME[1], runChartDataList, Sets.newLinkedHashSet(disabledRuleNames));
-        logger.debug("Initializing Xbar chart...");
+        logger.debug("Initializing XBar chart...");
         this.setControlChartData(UIConstant.SPC_CHART_NAME[2], xBarChartDataList);
         logger.debug("Initializing Range chart...");
         this.setControlChartData(UIConstant.SPC_CHART_NAME[3], rangeChartDataList);
@@ -374,6 +374,20 @@ public class ChartResultController implements Initializable {
             }
             //update user performance
             updatePerformance(chartName, selectedNames);
+        };
+    }
+
+    private SelectCallBack buildMrChartSelectCallBack() {
+        return (name, selected, selectedNames) -> {
+            if (spcControlExternMenu[4].equalsIgnoreCase(name)) {
+                mrChartPane.getChart().toggleDataAllSeriesLine(selected);
+            } else if (spcControlExternMenu[3].equalsIgnoreCase(name)) {
+                mrChartPane.getChart().toggleDataAllSeriesPoint(selected);
+            } else {
+                mrChartPane.getChart().toggleValueMarker(name, selected);
+            }
+            //update user performance
+            updatePerformance(UIConstant.SPC_CHART_NAME[7], selectedNames);
         };
     }
 
@@ -777,7 +791,7 @@ public class ChartResultController implements Initializable {
         chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[4], buildControlChartSelectCallBack(sdChartPane.getChart(), UIConstant.SPC_CHART_NAME[4]));
         chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[5], buildControlChartSelectCallBack(medianChartPane.getChart(), UIConstant.SPC_CHART_NAME[5]));
         chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[6], buildBoxChartSelectCallBack());
-        chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[7], buildControlChartSelectCallBack(mrChartPane.getChart(), UIConstant.SPC_CHART_NAME[7]));
+        chartOperateSelectCallBackMap.put(UIConstant.SPC_CHART_NAME[7], buildMrChartSelectCallBack());
     }
 
     private ChartOperateButton ndOperateBtn;

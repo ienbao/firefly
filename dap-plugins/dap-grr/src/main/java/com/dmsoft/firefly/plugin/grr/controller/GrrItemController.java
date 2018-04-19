@@ -727,6 +727,7 @@ public class GrrItemController implements Initializable {
     @SuppressWarnings("unchecked")
     private void getAnalysisBtnEvent() {
         logger.debug("Analyse grr start ...");
+        grrMainController.setDisable(true);
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
         if (!searchTab.verifySearchTextArea()) {
             return;
@@ -782,6 +783,7 @@ public class GrrItemController implements Initializable {
                     if (grrParamDto != null && (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty())) {
                         grrMainController.updateGrrViewData();
                         grrMainController.updateGrrSummaryAndDetail();
+                        grrMainController.setDisable(false);
                     }
                     logger.debug("Analyse grr finished.");
                     windowProgressTipController.closeDialog();
