@@ -62,6 +62,7 @@ public class CsvResolverService implements IDataParser {
         File csvFile = new File(csvPath);
         Boolean importSucc = false;
         String logStr = null;
+        String projectName = DAPStringUtils.filterSpeChars4Mongo(csvFile.getName());
 
         try {
             logStr = "Start to import <" + csvPath + ">.";
@@ -88,11 +89,11 @@ public class CsvResolverService implements IDataParser {
                 logStr = "Import <" + csvPath + "> failed. Csv data missing. ";
                 logger.debug(logStr);
             }
-            sourceDataService.saveProject(csvFile.getName());
+            sourceDataService.saveProject(projectName);
             pushProgress(40);
             String[] items = csvList.get(fileFormat.getItem() - 1);
             for (int i = 0; i < items.length; i++) {
-                items[i] = DAPStringUtils.specificToNomal(items[i]);
+                items[i] = DAPStringUtils.specificToNormal(items[i]);
             }
             String[] lslRow = null, uslRow = null, unitRow = null;
 
@@ -126,14 +127,14 @@ public class CsvResolverService implements IDataParser {
                 }
                 testItemDtoList.add(testItemDto);
             }
-            sourceDataService.saveTestItem(csvFile.getName(), testItemDtoList);
+            sourceDataService.saveTestItem(projectName, testItemDtoList);
             pushProgress(60);
             int len = csvList.size();
             int row = 0;
             for (int i = dataIndex; i < csvList.size(); i++) {
                 List<String> data = Arrays.asList(csvList.get(i));
                 RowDataDto rowDataDto = new RowDataDto();
-                rowDataDto.setRowKey(DoubleIdUtils.combineIds(csvFile.getName(), i));
+                rowDataDto.setRowKey(DoubleIdUtils.combineIds(projectName, i));
                 Map<String, String> itemDatas = Maps.newLinkedHashMap();
                 for (int j = 0; j < items.length; j++) {
                     String value = "";
@@ -141,7 +142,7 @@ public class CsvResolverService implements IDataParser {
                     itemDatas.put(items[j], value);
                 }
                 rowDataDto.setData(itemDatas);
-                sourceDataService.saveTestData(csvFile.getName(), DoubleIdUtils.combineIds(csvFile.getName(), i), itemDatas, false);
+                sourceDataService.saveTestData(projectName, DoubleIdUtils.combineIds(projectName, i), itemDatas, false);
                 row++;
                 pushProgress(60 + 30 * row / len);
                 logger.debug("Imported Line No = {}", row);
@@ -155,7 +156,7 @@ public class CsvResolverService implements IDataParser {
 
         } finally {
             if (!importSucc) {
-                sourceDataService.deleteProject(Lists.newArrayList(csvFile.getName()));
+                sourceDataService.deleteProject(Lists.newArrayList(projectName));
                 throw new ApplicationException();
             }
         }

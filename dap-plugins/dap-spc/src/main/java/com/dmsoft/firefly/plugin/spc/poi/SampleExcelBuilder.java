@@ -14,7 +14,9 @@ import org.apache.poi.xssf.streaming.SXSSFCell;
 import org.apache.poi.xssf.streaming.SXSSFRow;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,10 +31,9 @@ import static com.dmsoft.firefly.sdk.utils.DAPStringUtils.filterSpeChars;
  * Created by Peter on 2016/4/18.
  */
 public class SampleExcelBuilder implements ExcelBuilder {
-    private static Logger logger = LoggerFactory.getLogger(SampleExcelBuilder.class);
-
     public static final String OS_NAME;
     private static final String OS_WIN = "win";
+    private static Logger logger = LoggerFactory.getLogger(SampleExcelBuilder.class);
 
     static {
         OS_NAME = System.getProperty("os.name");
@@ -67,7 +68,7 @@ public class SampleExcelBuilder implements ExcelBuilder {
         List<ExCell> exCells = exSheet.getExCells();
         SXSSFSheet sheet = workbook.createSheet(name);
         sheet.setDefaultColumnWidth(8);
-        sheet.setColumnWidth(0, 10 * 256);//30 * 256
+        sheet.setColumnWidth(0, 10 * 256);
         //sheet.setColumnWidth(1, 8 * 256);//30 * 256
         drawSheet(exCells, sheet, workbook);
         exCells = null;

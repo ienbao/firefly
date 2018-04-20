@@ -34,6 +34,9 @@ public class ValidateUtils {
      * @return true : within range, false : without range
      */
     public static boolean validateWithinRange(String str, Double maxValue, Double minValue) {
+        if (maxValue == null && minValue == null) {
+            return true;
+        }
         if (DAPStringUtils.isBlank(str) || !DAPStringUtils.isNumeric(str)) {
             return false;
         }
@@ -49,7 +52,7 @@ public class ValidateUtils {
      * @return true : match pattern, false : no match pattern
      */
     public static boolean validatePattern(String str, String patternStr) {
-        return DAPStringUtils.isBlank(str) || Pattern.matches(patternStr, str);
+        return DAPStringUtils.isBlank(patternStr) || DAPStringUtils.isBlank(str) || Pattern.matches(patternStr, str);
     }
 
     /**
