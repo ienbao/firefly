@@ -118,7 +118,7 @@ public class GrrExportServiceImpl implements GrrExportService {
                 }
             }
             pushProgress(30);
-            String exportFilePath = exportPath + "/" + fixDir;
+            String exportFilePath = exportPath;
             FileUtils.createDir(exportFilePath);
             //Build grr excel
             int excelIndex = 1;
