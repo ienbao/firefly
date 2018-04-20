@@ -1077,10 +1077,10 @@ public class GrrExportController {
 
     private void addHandler(JobPipeline pipeline, WindowProgressTipController windowProgressTipController, List<String> projectNameList, String handlerName,
                             String savePath, List<TestItemWithTypeDto> testItemWithTypeDtoList) {
+        int groupSize = GrrExportProperty.EXPORT_EXCEL_TEST_ITEM_GROUP_SIZE;
         pipeline.addLast(new AbstractBasicJobHandler(handlerName) {
             @Override
             public void doJob(JobContext context) {
-                int groupSize = 100;
                 List<TestItemWithTypeDto> itemDto = Lists.newArrayList();
                 if (projectNameList.size() == 1) {
                     List<String> allItem = dataService.findAllTestItemName(projectNameList);

@@ -9,6 +9,7 @@ import com.dmsoft.firefly.plugin.grr.service.GrrExportService;
 import com.dmsoft.firefly.plugin.grr.service.impl.export.GrrExcelBuilder;
 import com.dmsoft.firefly.plugin.grr.service.impl.export.GrrExportWorker;
 import com.dmsoft.firefly.plugin.grr.utils.FileUtils;
+import com.dmsoft.firefly.plugin.grr.utils.GrrExportProperty;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -67,7 +68,7 @@ public class GrrExportServiceImpl implements GrrExportService {
                     throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXCEPTION_GRR_PARAMETER_INVALID));
                 }
             }
-            String exportFilePath = exportPath + "/" + fixDir;
+            String exportFilePath = exportPath;
             //Build grr excel
             GrrExportWorker factory = new GrrExportWorker();
             factory.buildGrrSummary(grrExportConfigDto, grrSummaryExportDtos);
@@ -95,8 +96,7 @@ public class GrrExportServiceImpl implements GrrExportService {
          */
         logger.info("Export grr summary and detail start");
         PropertyConfig propertyConfig = new PropertyConfig();
-        propertyConfig.setSpcExportNumber(200);
-        propertyConfig.setGrrExportNumber(200);
+        propertyConfig.setGrrExportNumber(GrrExportProperty.EXPORT_EXCEL_SHEET_SIZE);
         if (grrSummaryExportDtos == null || grrSummaryExportDtos.size() <= 0 || grrExportResultDtos == null || grrExportResultDtos.size() <= 0) {
 //            throw new ApplicationException(ExceptionMessages.ERR_15009, ResourceBundleUtils.getString(ExceptionMessages.EXCEPTION_GLOBAL_MKDIRS_FAILED));
             throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXCEPTION_GRR_PARAMETER_INVALID));
