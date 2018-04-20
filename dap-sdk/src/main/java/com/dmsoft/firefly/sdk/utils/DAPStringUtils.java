@@ -146,20 +146,25 @@ public class DAPStringUtils extends StringUtils {
      * @return replaced string
      */
     public static String filterSpeChars4Mongo(String str) {
-        char[] chars = str.toCharArray();
+        if (isBlank(str)) {
+            return null;
+        }
+        String s = str;
+        if (s.length() > 60) {
+            s = s.substring(60);
+        }
+        if (s.startsWith("System.")) {
+            s = s.substring(7);
+        }
+        char[] chars = s.toCharArray();
         int len = chars.length;
         for (int i = 0; i < len; i++) {
-            if (chars[i] == '\\' || chars[i] == '@' || chars[i] == '#' || chars[i] == '$' || chars[i] == '%' || chars[i] == '^' || chars[i] == '&'
-                    || chars[i] == '*' || chars[i] == '(' || chars[i] == ')' || chars[i] == '-' || chars[i] == '+' || chars[i] == '='
-                    || chars[i] == '{' || chars[i] == '}' || chars[i] == '[' || chars[i] == ']' || chars[i] == '|' || chars[i] == '/'
-                    || chars[i] == ';' || chars[i] == '"' || chars[i] == '<' || chars[i] == '>' || chars[i] == '?' || chars[i] == ','
-                    || chars[i] == '!' || chars[i] == '~' || chars[i] == '`' || chars[i] == ':') {
+            if (chars[i] == '.' || chars[i] == '$') {
                 chars[i] = '_';
             }
         }
         return new String(chars);
     }
-
 
     /**
      * filter special charts for mongo db
@@ -168,14 +173,16 @@ public class DAPStringUtils extends StringUtils {
      * @return replaced string
      */
     public static boolean isSpeChars4Mongo(String str) {
+        if (isBlank(str)) {
+            return true;
+        }
+        if (str.length() > 60) {
+            return true;
+        }
         char[] chars = str.toCharArray();
         int len = chars.length;
         for (int i = 0; i < len; i++) {
-            if (chars[i] == '\\' || chars[i] == '@' || chars[i] == '#' || chars[i] == '$' || chars[i] == '%' || chars[i] == '^' || chars[i] == '&'
-                    || chars[i] == '*' || chars[i] == '(' || chars[i] == ')' || chars[i] == '-' || chars[i] == '+' || chars[i] == '='
-                    || chars[i] == '{' || chars[i] == '}' || chars[i] == '[' || chars[i] == ']' || chars[i] == '|' || chars[i] == '/'
-                    || chars[i] == ';' || chars[i] == '"' || chars[i] == '<' || chars[i] == '>' || chars[i] == '?' || chars[i] == ','
-                    || chars[i] == '!' || chars[i] == '~' || chars[i] == '`' || chars[i] == ':') {
+            if (chars[i] == '.' || chars[i] == '$') {
                 return true;
             }
         }
