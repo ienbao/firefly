@@ -1080,7 +1080,7 @@ public class GrrExportController {
         pipeline.addLast(new AbstractBasicJobHandler(handlerName) {
             @Override
             public void doJob(JobContext context) {
-                int groupSize = 3;
+                int groupSize = 100;
                 List<TestItemWithTypeDto> itemDto = Lists.newArrayList();
                 if (projectNameList.size() == 1) {
                     List<String> allItem = dataService.findAllTestItemName(projectNameList);
