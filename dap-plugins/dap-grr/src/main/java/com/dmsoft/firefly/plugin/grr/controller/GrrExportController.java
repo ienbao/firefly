@@ -71,6 +71,7 @@ import java.util.List;
 /**
  * Created by Garen.Pang on 2018/3/13.
  * Updated by Can Guan on 2018/3/23
+ * Updated by Cherry on 2018/4/20
  */
 public class GrrExportController {
     private static final String STICKY_ON_TOP_CODE = "stick_on_top";
@@ -150,7 +151,6 @@ public class GrrExportController {
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
     private GrrConfigServiceImpl grrConfigService = new GrrConfigServiceImpl();
-    private GrrExportService grrExportService = RuntimeContext.getBean(GrrExportService.class);
     private GrrLeftConfigServiceImpl leftConfigService = new GrrLeftConfigServiceImpl();
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
 
@@ -820,9 +820,7 @@ public class GrrExportController {
             List<String> projectNameList = envService.findActivatedProjectName();
             export(projectNameList, savePath, true);
         });
-        cancel.setOnAction(event -> {
-            StageMap.closeStage("grrExport");
-        });
+        cancel.setOnAction(event -> StageMap.closeStage("grrExport"));
     }
 
     private String getTimeString() {
@@ -1014,9 +1012,8 @@ public class GrrExportController {
                     }
                 }
                 context.pushEvent(new JobEvent("Export done", D100, null));
-                GrrParamDto grrParamDto = context.getParam(ParamKeys.GRR_PARAM_DTO, GrrParamDto.class);
-                refreshPartOrAppraiserListView(grrParamDto);
                 String path = context.get(ParamKeys.EXPORT_PATH).toString();
+                File file = new File(path);
                 WindowPane windowPane = null;
                 if (stage1.getScene().getRoot() instanceof WindowPane) {
                     windowPane = (WindowPane) stage1.getScene().getRoot();
@@ -1024,15 +1021,20 @@ public class GrrExportController {
                 if (windowPane != null) {
                     windowPane.getCloseBtn().setOnAction(event -> stage1.fireEvent(new WindowEvent(stage1, WindowEvent.WINDOW_CLOSE_REQUEST)));
                 }
-                windowProgressTipController.getCancelBtn().setText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.OPEN_EXPORT_FOLDER));
+                windowProgressTipController.getCancelBtn().setText(file.exists()
+                        ? GrrFxmlAndLanguageUtils.getString(ResourceMassages.OPEN_EXPORT_FOLDER)
+                        : GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_EXPORT_BTN_OK));
                 windowProgressTipController.getCancelBtn().setOnAction(event -> {
-                    try {
-                        File file = new File(path);
-                        if (file.exists()) {
-                            Desktop.getDesktop().open(file);
+                    if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_EXPORT_BTN_OK).equals(windowProgressTipController.getCancelBtn().getText())) {
+                        windowProgressTipController.closeDialog();
+                    } else {
+                        try {
+                            if (file.exists()) {
+                                Desktop.getDesktop().open(file);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
                 });
                 if (isSucceed[0]) {
@@ -1042,13 +1044,6 @@ public class GrrExportController {
                         PdfPrintUtil.printPdf(savePath);
                     });
                     thread.start();
-                }
-
-                File file = new File(path);
-                if (file.exists()) {
-                    windowProgressTipController.getCancelBtn().setDisable(false);
-                } else {
-                    windowProgressTipController.getCancelBtn().setDisable(true);
                 }
             }
         });
@@ -1142,7 +1137,12 @@ public class GrrExportController {
                                 paramValid = paramValid && !grrParamDto.getErrors().isEmpty();
                                 StringBuilder stringBuilder = new StringBuilder();
                                 if (paramValid) {
-                                    grrParamDto.getErrors().values().forEach(error -> stringBuilder.append(error));
+                                    for (int i = 0; i < grrParamDto.getErrors().values().size(); i++) {
+                                        stringBuilder.append(Lists.newArrayList(grrParamDto.getErrors().values()).get(i));
+                                        if (i != grrParamDto.getErrors().values().size() - 1) {
+                                            stringBuilder.append("\n");
+                                        }
+                                    }
                                 } else {
                                     stringBuilder.append(context.getError().getMessage());
                                 }
