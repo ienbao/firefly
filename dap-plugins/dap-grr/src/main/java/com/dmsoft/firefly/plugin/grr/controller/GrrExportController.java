@@ -16,7 +16,6 @@ import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.grr.model.ListViewModel;
-import com.dmsoft.firefly.plugin.grr.service.GrrExportService;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.utils.*;
@@ -193,7 +192,7 @@ public class GrrExportController {
         box = new CheckBox();
         box.setOnAction(event -> {
             if (itemTable != null && itemTable.getItems() != null) {
-                for (ItemTableModel model : items) {
+                for (ItemTableModel model : itemTable.getItems()) {
                     if (isFilterUslOrLsl) {
                         if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
                             model.getSelector().setValue(box.isSelected());
@@ -1065,12 +1064,12 @@ public class GrrExportController {
             int i = 0;
             for (String projectName : projectNameList) {
                 String handlerName = projectName + i;
-                exportProjectFilePath = exportProjectFilePath + "/"+ "Grr_" + projectName + getTimeString();
+                exportProjectFilePath = exportProjectFilePath + "/" + "Grr_" + projectName + getTimeString();
                 addHandler(jobPipeline, windowProgressTipController, Lists.newArrayList(projectName), handlerName, exportProjectFilePath, testItemWithTypeDtoList);
                 i++;
             }
         } else {
-            exportProjectFilePath = exportProjectFilePath + "/"+ "Grr_" +  getTimeString();
+            exportProjectFilePath = exportProjectFilePath + "/" + "Grr_" + getTimeString();
             addHandler(jobPipeline, windowProgressTipController, projectNameList, "Export Grr Reports", exportProjectFilePath, testItemWithTypeDtoList);
         }
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context, true);
@@ -1081,7 +1080,7 @@ public class GrrExportController {
         pipeline.addLast(new AbstractBasicJobHandler(handlerName) {
             @Override
             public void doJob(JobContext context) {
-                int groupSize  = 100;
+                int groupSize = 3;
                 List<TestItemWithTypeDto> itemDto = Lists.newArrayList();
                 if (projectNameList.size() == 1) {
                     List<String> allItem = dataService.findAllTestItemName(projectNameList);
@@ -1135,7 +1134,8 @@ public class GrrExportController {
                             context1.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, searchTestItemList);
                             context1.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, searchConditionDto);
                             context1.put(ParamKeys.GRR_EXPORT_CONFIG_DTO, grrExportConfigDto);
-                            context1.addJobEventListener(event -> context.pushEvent(new JobEvent(event.getEventName(), event.getProgress() * D100, event.getEventObject())));
+                            final int a = i;
+                            context1.addJobEventListener(event -> context.pushEvent(new JobEvent(handlerName, event.getProgress() * D100 / groupCount + D100 * a / groupCount, event.getEventObject())));
                             if (!detail) {
                                 JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_EXPORT_JOB_PIPELINE);
                                 jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
