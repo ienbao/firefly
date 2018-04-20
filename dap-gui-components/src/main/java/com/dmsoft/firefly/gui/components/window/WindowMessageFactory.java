@@ -129,20 +129,16 @@ public class WindowMessageFactory {
             newStage.setResizable(false);
             newStage.setOnShowing(event -> {
                 windowProgressTipController.onShowingRequest();
+                newStage.setHeight(150);
+                newStage.setMinHeight(150);
+                newStage.setWidth(430);
+                newStage.setMaxHeight(150);
             });
-            newStage.setHeight(140);
-            newStage.setWidth(430);
+
             newStage.toFront();
             newStage.show();
 
             newStage.setOnCloseRequest(event -> {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        newStage.setMinHeight(150);
-                        newStage.setMaxHeight(150);
-                    }
-                });
                 windowProgressTipController.closeDialog();
             });
         } catch (IOException e) {
