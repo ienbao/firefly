@@ -298,42 +298,6 @@ public class SpcMainController implements Initializable {
             }
         });
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
-//        Service<Integer> service = new Service<Integer>() {
-//            @Override
-//            protected Task<Integer> createTask() {
-//                return new Task<Integer>() {
-//                    @Override
-//                    protected Integer call() throws Exception {
-//                        Thread.sleep(100);
-//                        Job job = new Job(ParamKeys.SPC_RESET_JOB_PIPELINE);
-//                        job.addProcessMonitorListener(event -> {
-//                            updateProgress(event.getPoint(), 100);
-//                        });
-//                        Map<String, Object> paramMap = Maps.newHashMap();
-//                        paramMap.put(ParamKeys.SPC_SETTING_FILE_NAME, spcSettingDto);
-//                        paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, initSearchConditionDtoList);
-//                        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
-//                        paramMap.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
-//
-//                        Object returnValue = manager.doJobSyn(job, paramMap);
-//                        if (returnValue == null) {
-//                            //todo message tip
-//                            ((Exception) returnValue).printStackTrace();
-//                            logger.error(((Exception) returnValue).getMessage());
-//                        } else {
-//                            SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
-//                            SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
-//                            List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) returnValue;
-//                            setStatisticalResultData(spcStatisticalResultAlarmDtoList);
-//                            Platform.runLater(SpcMainController.this::clearAnalysisSubShowData);
-//                        }
-//                        return null;
-//                    }
-//                };
-//            }
-//        };
-//        windowProgressTipController.getTaskProgress().progressProperty().bind(service.progressProperty());
-//        service.start();
     }
 
     private void getExportBtnEvent() {
@@ -678,25 +642,6 @@ public class SpcMainController implements Initializable {
                     List<SpcStatisticalResultAlarmDto> allRowDataList = statisticalResultController.getAllRowStatsData();
                     List<SearchConditionDto> statisticalSearchConditionDtoList = buildRefreshSearchConditionData(allRowDataList);
 
-                    //get last select row key
-//                    List<String> selectRowKeyList = Lists.newArrayList();
-//                    if (viewDataSelectRowKeyListCache == null) {
-//                        selectRowKeyList = viewDataFrame.getAllRowKeys();
-//                    } else {
-//                        if (lastViewDataRowKeyList == null || lastViewDataRowKeyList.size() == 0) {
-//                            selectRowKeyList = viewDataFrame.getAllRowKeys();
-//                        } else {
-//                            selectRowKeyList.addAll(viewDataSelectRowKeyListCache);
-//                            for (String key : viewDataFrame.getAllRowKeys()) {
-//                                if (!lastViewDataRowKeyList.contains(key) && !selectRowKeyList.contains(key)) {
-//                                    selectRowKeyList.add(key);
-//                                }
-//                            }
-//                        }
-//                    }
-//                    lastViewDataRowKeyList = viewDataFrame.getAllRowKeys();
-//                    List<String> rowKeyList = viewDataSelectRowKeyListCache == null ? viewDataFrame.getAllRowKeys() : viewDataSelectRowKeyListCache;
-
                     viewDataController.setViewData(viewDataFrame, subDataFrame.getAllRowKeys(), statisticalSearchConditionDtoList, spcItemController.isTimer());
                     spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
                     spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(subDataFrame.getAllRowKeys());
@@ -721,56 +666,6 @@ public class SpcMainController implements Initializable {
         });
         logger.info("Start analysis Spc char.");
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
-//
-//
-//        Service<Integer> service = new Service<Integer>() {
-//            @Override
-//            protected Task<Integer> createTask() {
-//                return new Task<Integer>() {
-//                    @Override
-//                    protected Integer call() throws Exception {
-//                        Thread.sleep(100);
-//                        //only refresh chart
-//                        List<String> currentStatisticalSelectRowKeyList = spcRefreshJudgeUtil.getCurrentStatisticalSelectRowKeyList();
-//
-//                        List<String> viewDataSelectRowKeyListCache = spcRefreshJudgeUtil.getViewDataSelectRowKeyListCache();
-//                        List<String> rowKeyList = viewDataSelectRowKeyListCache == null ? dataFrame.getAllRowKeys() : viewDataSelectRowKeyListCache;
-//
-//                        spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
-//                        spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(rowKeyList);
-//
-//                        List<SearchConditionDto> searchConditionDtoList = buildRefreshSearchConditionData(statisticalResultController.getSelectStatsData());
-//                        if (searchConditionDtoList.size() == 0) {
-//                            return null;
-//                        }
-//                        Job job = new Job(ParamKeys.SPC_REFRESH_CHART_JOB_PIPELINE);
-//                        Map<String, Object> paramMap = Maps.newHashMap();
-//                        paramMap.put(ParamKeys.SPC_SETTING_FILE_NAME, spcSettingDto);
-//                        paramMap.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
-//                        paramMap.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
-//
-//                        SearchDataFrame subDataFrame = buildSubSearchDataFrame(rowKeyList, searchConditionDtoList);
-//                        paramMap.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
-//
-//                        Object returnValue = manager.doJobSyn(job, paramMap);
-//                        if (returnValue instanceof Exception) {
-//                            ((Exception) returnValue).printStackTrace();
-//                            logger.error(((Exception) returnValue).getMessage());
-//                            return null;
-//                        }
-//                        List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) returnValue;
-//                        Platform.runLater(() -> {
-//                            chartResultController.initSpcChartData(spcChartDtoList);
-//                            SearchDataFrame viewDataFrame = buildSubSearchDataFrame(dataFrame.getAllRowKeys(), searchConditionDtoList);
-//                            viewDataController.setViewData(viewDataFrame, rowKeyList);
-//                        });
-//                        return null;
-//                    }
-//                };
-//            }
-//        };
-//        windowProgressTipController.getTaskProgress().progressProperty().bind(service.progressProperty());
-//        service.start();
     }
 
     @SuppressWarnings("unchecked")

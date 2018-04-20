@@ -23,10 +23,13 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -44,6 +47,7 @@ import java.util.function.Function;
  * @param <Y> y data class
  */
 public class ControlChart<X, Y> extends LineChart {
+    private Logger logger = LoggerFactory.getLogger(ControlChart.class);
     //    折线
     private Map<String, List<XYChart.Series<X, Y>>> pathMarkerMap = Maps.newHashMap();
     //    unique key---直线
@@ -89,7 +93,9 @@ public class ControlChart<X, Y> extends LineChart {
      * @param chartTooltip         chart data tooltip
      */
     public void setData(List<ControlChartData> controlChartDataList, ChartTooltip chartTooltip) {
+        logger.debug("Chart0");
         this.removeAllChildren();
+        logger.debug("Chart1");
         if (controlChartDataList == null) {
             return;
         }
@@ -112,8 +118,11 @@ public class ControlChart<X, Y> extends LineChart {
                 seriesNames.add(controlChartData.getSeriesName());
             }
         });
+        logger.debug("Chart2");
         this.getPlotChildren().addAll(lineResult);
+        logger.debug("Chart3");
         this.getData().addAll(seriesResult);
+        logger.debug("Chart4");
         for (int i = 0; i < uniqueKey.size(); i++) {
             Color color = uniqueColor.get(i);
             String seriesName = seriesNames.get(i);
@@ -137,6 +146,7 @@ public class ControlChart<X, Y> extends LineChart {
             addToUniqueKeyNodes(key, nodes);
         }
 
+        logger.debug("Chart5");
     }
 
     /**
@@ -663,6 +673,12 @@ public class ControlChart<X, Y> extends LineChart {
         if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
             series.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
         }
+        Tooltip tooltip = new Tooltip("ASDF") {
+            @Override
+            public void show(Node ownerNode, double anchorX, double anchorY) {
+                super.show(ownerNode, anchorX, anchorY);
+            }
+        };
         data.forEach(dataItem -> {
 //            set data node color
             if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
@@ -672,7 +688,19 @@ public class ControlChart<X, Y> extends LineChart {
 //            set data node tooltip
             if (pointTooltipFunction != null) {
                 String content = pointTooltipFunction.apply(new PointTooltip(series.getName(), dataItem));
-                Tooltip.install(dataItem.getNode(), new Tooltip(content));
+//                Tooltip.install(dataItem.getNode(), new Tooltip(content));
+                final Node dataNode = dataItem.getNode();
+                dataNode.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+                            tooltip.setText(pointTooltipFunction.apply(new PointTooltip(series.getName(), dataItem)));
+                            tooltip.show(dataNode, event.getScreenX(), event.getScreenY());
+                        }
+                );
+                dataNode.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+                    if (tooltip.isShowing()) {
+                        tooltip.hide();
+                    }
+                });
+                Tooltip.install(dataItem.getNode(), tooltip);
             }
         });
     }
