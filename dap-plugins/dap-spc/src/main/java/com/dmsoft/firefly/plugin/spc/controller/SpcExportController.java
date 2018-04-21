@@ -502,6 +502,7 @@ public class SpcExportController {
             if ("Error".equals(event.getEventName())) {
                 windowProgressTipController.updateFailProgress(event.getProgress(), event.getEventObject().toString());
             } else {
+                System.out.println("xssss" + event.getProgress());
                 windowProgressTipController.getTaskProgress().setProgress(event.getProgress());
             }
         });
@@ -592,7 +593,7 @@ public class SpcExportController {
                 windowProgressTipController.updateFailProgress(context.getError().getMessage());
             }
         });
-        int groupSize = SpcExportProperty.EXPORT_EXCEL_TEST_ITEM_GROUP_SIZE;
+        int groupSize = 10;
         SpcSettingDto spcSettingDto = RuntimeContext.getBean(SpcSettingServiceImpl.class).findSpcSetting();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = initSelectedItemDto();
         String exportProjectFilePath;
@@ -627,7 +628,7 @@ public class SpcExportController {
                                 }
                                 List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(groupList);
                                 searchTab.getConditionTestItem().forEach(item -> groupList.add(envService.findTestItemNameByItemName(item)));
-                                String result = exportFile(project, spcSettingDto, groupList, searchConditionDtoList, spcAnalysisConfigDto, spcConfig, context);
+                                String result = exportFile(project, spcSettingDto, groupList, searchConditionDtoList, spcAnalysisConfigDto, spcConfig, context, groupCount, i);
                                 context.put(ParamKeys.EXPORT_PATH, result);
                             }
                         }
@@ -658,7 +659,7 @@ public class SpcExportController {
                             searchTab.getConditionTestItem().forEach(item -> {
                                 groupList.add(envService.findTestItemNameByItemName(item));
                             });
-                            String result = exportFile(projectNameList, spcSettingDto, groupList, searchConditionDtoList, spcAnalysisConfigDto, spcConfig, context);
+                            String result = exportFile(projectNameList, spcSettingDto, groupList, searchConditionDtoList, spcAnalysisConfigDto, spcConfig, context, groupCount, i);
                             context.put(ParamKeys.EXPORT_PATH, result);
                         }
                     }
@@ -681,7 +682,7 @@ public class SpcExportController {
                               List<TestItemWithTypeDto> testItemWithTypeDtoList,
                               List<SearchConditionDto> searchConditionDtoList,
                               SpcAnalysisConfigDto spcAnalysisConfigDto,
-                              SpcExportConfigDto spcConfig, JobContext context) {
+                              SpcExportConfigDto spcConfig, JobContext context, int groupCount, int a) {
         JobContext singleJobContext = RuntimeContext.getBean(JobFactory.class).createJobContext();
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_ANALYSIS_EXPORT_JOB_PIPELINE);
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
@@ -698,7 +699,8 @@ public class SpcExportController {
         RuntimeContext.getBean(JobManager.class).fireJobSyn(jobPipeline, singleJobContext);
 
         List<SpcStatisticalResultAlarmDto> spcStatsDtoList = (List<SpcStatisticalResultAlarmDto>) singleJobContext.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
-        context.pushEvent(new JobEvent("Get Stats & Alarm Result", D30, null));
+        System.out.println("llllllllll"+ (D30 / groupCount + D100 * a / groupCount));
+        context.pushEvent(new JobEvent("Get Stats & Alarm Result", D30 / groupCount + D100 * a / groupCount, null));
 
         //build chart
         Map<String, String> runChartRule = Maps.newHashMap();
@@ -742,8 +744,8 @@ public class SpcExportController {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-            context.pushEvent(new JobEvent("Export Chart done", D70, null));
+            System.out.println("llllllllllchart"+ (D70  / groupCount + D100 * a / groupCount));
+            context.pushEvent(new JobEvent("Export Chart done", D70 / groupCount + D100 * a / groupCount, null));
 
             for (SpcChartDto dto : spcChartDtoList) {
                 if (dto.getResultDto() != null && dto.getResultDto().getRunCResult() != null && dto.getResultDto().getRunCResult().getRuleResultDtoMap() != null) {
