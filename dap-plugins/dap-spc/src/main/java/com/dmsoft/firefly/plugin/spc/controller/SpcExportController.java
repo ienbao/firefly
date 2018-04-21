@@ -592,12 +592,15 @@ public class SpcExportController {
                 windowProgressTipController.updateFailProgress(context.getError().getMessage());
             }
         });
-
+        int groupSize = SpcExportProperty.EXPORT_EXCEL_TEST_ITEM_GROUP_SIZE;
         SpcSettingDto spcSettingDto = RuntimeContext.getBean(SpcSettingServiceImpl.class).findSpcSetting();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = initSelectedItemDto();
+        String exportProjectFilePath = savePath;
         if (exportEachFile) {
             int i = 0;
             for (String projectName : projectNameList) {
+                exportProjectFilePath = exportProjectFilePath + "/SPC_" + projectName + getTimeString();
+                spcConfig.setExportPath(exportProjectFilePath);
                 jobPipeline.addLast(new AbstractBasicJobHandler(projectName + i) {
                     @Override
                     public void doJob(JobContext context) {
@@ -609,24 +612,55 @@ public class SpcExportController {
                                 itemDto.add(i);
                             }
                         }
-                        List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(itemDto);
-                        searchTab.getConditionTestItem().forEach(item -> itemDto.add(envService.findTestItemNameByItemName(item)));
-                        String result = exportFile(project, spcSettingDto, itemDto, searchConditionDtoList, spcAnalysisConfigDto, spcConfig, context);
-                        context.put(ParamKeys.EXPORT_PATH, result);
+                        if (itemDto != null && itemDto.size() != 0) {
+                            int n = itemDto.size() / groupSize;
+                            int mod = itemDto.size() % groupSize;
+                            int groupCount = n + (mod == 0 ? 0 : 1);
+                            for (int i = 0; i < groupCount; i++) {
+                                List<TestItemWithTypeDto> groupList;
+                                int startIndex = i * groupSize;
+                                if (i == groupCount - 1) {
+                                    groupList = testItemWithTypeDtoList.subList(startIndex, testItemWithTypeDtoList.size());
+                                } else {
+                                    groupList = testItemWithTypeDtoList.subList(startIndex, startIndex + groupSize);
+                                }
+                                List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(groupList);
+                                searchTab.getConditionTestItem().forEach(item -> groupList.add(envService.findTestItemNameByItemName(item)));
+                                String result = exportFile(project, spcSettingDto, groupList, searchConditionDtoList, spcAnalysisConfigDto, spcConfig, context);
+                                context.put(ParamKeys.EXPORT_PATH, result);
+                            }
+                        }
                     }
                 }.setWeight(D100));
                 i++;
             }
         } else {
+            exportProjectFilePath = exportProjectFilePath + "/SPC_" + getTimeString();
+            spcConfig.setExportPath(exportProjectFilePath);
             jobPipeline.addLast(new AbstractBasicJobHandler("Export file") {
                 @Override
                 public void doJob(JobContext context) {
-                    List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(testItemWithTypeDtoList);
-                    searchTab.getConditionTestItem().forEach(item -> {
-                        testItemWithTypeDtoList.add(envService.findTestItemNameByItemName(item));
-                    });
-                    String result = exportFile(projectNameList, spcSettingDto, testItemWithTypeDtoList, searchConditionDtoList, spcAnalysisConfigDto, spcConfig, context);
-                    context.put(ParamKeys.EXPORT_PATH, result);
+                    if (testItemWithTypeDtoList != null && testItemWithTypeDtoList.size() != 0) {
+                        int n = testItemWithTypeDtoList.size() / groupSize;
+                        int mod = testItemWithTypeDtoList.size() % groupSize;
+                        int groupCount = n + (mod == 0 ? 0 : 1);
+                        for (int i = 0; i < groupCount; i++) {
+                            List<TestItemWithTypeDto> groupList;
+                            int startIndex = i * groupSize;
+                            if (i == groupCount - 1) {
+                                groupList = testItemWithTypeDtoList.subList(startIndex, testItemWithTypeDtoList.size());
+                            } else {
+                                groupList = testItemWithTypeDtoList.subList(startIndex, startIndex + groupSize);
+                            }
+
+                            List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(groupList);
+                            searchTab.getConditionTestItem().forEach(item -> {
+                                groupList.add(envService.findTestItemNameByItemName(item));
+                            });
+                            String result = exportFile(projectNameList, spcSettingDto, groupList, searchConditionDtoList, spcAnalysisConfigDto, spcConfig, context);
+                            context.put(ParamKeys.EXPORT_PATH, result);
+                        }
+                    }
                 }
             }.setWeight(D100));
         }

@@ -6,6 +6,7 @@ import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
 import com.dmsoft.firefly.plugin.spc.export.SpcExportBuilder;
 import com.dmsoft.firefly.plugin.spc.export.SpcExportWorker;
 import com.dmsoft.firefly.plugin.spc.utils.FileUtils;
+import com.dmsoft.firefly.plugin.spc.utils.SpcExportProperty;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcExportItemKey;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
@@ -47,9 +48,9 @@ public class SpcExportServiceImpl {
         }
 
         String dirName = "SPC_Result_" + getTimeString();
-        String dirSavePath = basePath[0] + "/SPC_" + getTimeString();
+        String dirSavePath = basePath[0];
         FileUtils.createDir(dirSavePath);
-        int readPieceSize = 200;
+        int readPieceSize = SpcExportProperty.EXPORT_EXCEL_SHEET_SIZE;
         int excelCapacity = readPieceSize + 1;
         ExportParamDto exportParamDto = new ExportParamDto(excelCapacity, dirSavePath, dirName, 6);
         List<SpcStatisticalResultAlarmDto> spcStatisticDtoToExport = Lists.newArrayList();
