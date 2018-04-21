@@ -595,15 +595,16 @@ public class SpcExportController {
         int groupSize = SpcExportProperty.EXPORT_EXCEL_TEST_ITEM_GROUP_SIZE;
         SpcSettingDto spcSettingDto = RuntimeContext.getBean(SpcSettingServiceImpl.class).findSpcSetting();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = initSelectedItemDto();
-        String exportProjectFilePath = savePath;
+        String exportProjectFilePath;
         if (exportEachFile) {
             int i = 0;
             for (String projectName : projectNameList) {
-                exportProjectFilePath = exportProjectFilePath + "/SPC_" + projectName + getTimeString();
-                spcConfig.setExportPath(exportProjectFilePath);
+
                 jobPipeline.addLast(new AbstractBasicJobHandler(projectName + i) {
                     @Override
                     public void doJob(JobContext context) {
+                        String exportProjectFilePath = savePath + "/SPC_" + projectName + getTimeString();
+                        spcConfig.setExportPath(exportProjectFilePath);
                         List<String> project = Lists.newArrayList(projectName);
                         List<TestItemWithTypeDto> itemDto = Lists.newArrayList();
                         List<String> allItem = dataService.findAllTestItemName(project);
@@ -635,7 +636,7 @@ public class SpcExportController {
                 i++;
             }
         } else {
-            exportProjectFilePath = exportProjectFilePath + "/SPC_" + getTimeString();
+            exportProjectFilePath = savePath + "/SPC_" + getTimeString();
             spcConfig.setExportPath(exportProjectFilePath);
             jobPipeline.addLast(new AbstractBasicJobHandler("Export file") {
                 @Override
