@@ -1060,17 +1060,17 @@ public class GrrExportController {
             }
         });
         List<TestItemWithTypeDto> testItemWithTypeDtoList = initSelectedItemDto();
-        String exportProjectFilePath = savePath;
+        String exportProjectFilePath;
         if (exportEachFile) {
             int i = 0;
             for (String projectName : projectNameList) {
                 String handlerName = projectName + i;
-                exportProjectFilePath = exportProjectFilePath + "/" + "Grr_" + projectName + getTimeString();
+                exportProjectFilePath = savePath + "/" + "Grr_" + projectName + getTimeString();
                 addHandler(jobPipeline, windowProgressTipController, Lists.newArrayList(projectName), handlerName, exportProjectFilePath, testItemWithTypeDtoList);
                 i++;
             }
         } else {
-            exportProjectFilePath = exportProjectFilePath + "/" + "Grr_" + getTimeString();
+            exportProjectFilePath = savePath + "/" + "Grr_" + getTimeString();
             addHandler(jobPipeline, windowProgressTipController, projectNameList, "Export Grr Reports", exportProjectFilePath, testItemWithTypeDtoList);
         }
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context, true);
