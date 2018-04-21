@@ -24,6 +24,10 @@ public class UIConstant {
     public static final Color COLOR_MEAN_RANGE = Color.grayRgb(242);
     public static final Color COLOR_TOTAL_MEAN_RANGE = Color.grayRgb(229);
 
+    public static final Double X_FACTOR = 0.5;
+
+    public static final String AXIS_LBL_PREFIX_APPRAISER = "AXIS_LBL_PREFIX_APPRAISER";
+
     public static final String MEAN = "Mean";
     public static final String RANGE = "Range";
     public static final String TOTAL_MEAN = "Total Mean";

@@ -19,6 +19,7 @@ import com.dmsoft.firefly.plugin.grr.model.ListViewModel;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.service.impl.GrrLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.grr.utils.*;
+import com.dmsoft.firefly.plugin.grr.utils.enums.GrrExportItemKey;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
@@ -1110,7 +1111,7 @@ public class GrrExportController {
 
                         if (checkSubmitParam(projectNameList.get(0), itemDto.size())) {
                             GrrConfigDto grrConfigDto = grrConfigService.findGrrConfig();
-                            Boolean detail = grrConfigDto.getExport().get("Export detail sheet of each selected items");
+                            Boolean detail = grrConfigDto.getExport().get(GrrExportItemKey.EXPORT_DETAIL_SHEET.getCode());
 
                             GrrExportConfigDto grrExportConfigDto = new GrrExportConfigDto();
                             grrExportConfigDto.setExportPath(savePath);
