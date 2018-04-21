@@ -93,9 +93,7 @@ public class ControlChart<X, Y> extends LineChart {
      * @param chartTooltip         chart data tooltip
      */
     public void setData(List<ControlChartData> controlChartDataList, ChartTooltip chartTooltip) {
-        logger.debug("Chart0");
         this.removeAllChildren();
-        logger.debug("Chart1");
         if (controlChartDataList == null) {
             return;
         }
@@ -118,11 +116,8 @@ public class ControlChart<X, Y> extends LineChart {
                 seriesNames.add(controlChartData.getSeriesName());
             }
         });
-        logger.debug("Chart2");
         this.getPlotChildren().addAll(lineResult);
-        logger.debug("Chart3");
         this.getData().addAll(seriesResult);
-        logger.debug("Chart4");
         for (int i = 0; i < uniqueKey.size(); i++) {
             Color color = uniqueColor.get(i);
             String seriesName = seriesNames.get(i);
@@ -146,7 +141,6 @@ public class ControlChart<X, Y> extends LineChart {
             addToUniqueKeyNodes(key, nodes);
         }
 
-        logger.debug("Chart5");
     }
 
     /**
@@ -442,8 +436,10 @@ public class ControlChart<X, Y> extends LineChart {
         this.seriesColorMap.clear();
         this.valueMarkerMap.clear();
         this.pathMarkerMap.clear();
-        this.getData().setAll(FXCollections.observableArrayList());
-        this.getPlotChildren().removeAll(this.getPlotChildren());
+        this.getPlotChildren().clear();
+        this.getData().clear();
+//        this.getData().setAll(FXCollections.observableArrayList());
+//        this.getPlotChildren().removeAll(this.getPlotChildren());
         valueMarkerMap.forEach((key, value) -> value.clear());
     }
 
@@ -673,12 +669,8 @@ public class ControlChart<X, Y> extends LineChart {
         if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
             series.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
         }
-        Tooltip tooltip = new Tooltip("ASDF") {
-            @Override
-            public void show(Node ownerNode, double anchorX, double anchorY) {
-                super.show(ownerNode, anchorX, anchorY);
-            }
-        };
+        Tooltip tooltip = new Tooltip("ASDF");
+        System.out.println(data.size());
         data.forEach(dataItem -> {
 //            set data node color
             if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
@@ -687,7 +679,6 @@ public class ControlChart<X, Y> extends LineChart {
             }
 //            set data node tooltip
             if (pointTooltipFunction != null) {
-                String content = pointTooltipFunction.apply(new PointTooltip(series.getName(), dataItem));
 //                Tooltip.install(dataItem.getNode(), new Tooltip(content));
                 final Node dataNode = dataItem.getNode();
                 dataNode.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
@@ -700,7 +691,6 @@ public class ControlChart<X, Y> extends LineChart {
                         tooltip.hide();
                     }
                 });
-                Tooltip.install(dataItem.getNode(), tooltip);
             }
         });
     }
@@ -715,6 +705,7 @@ public class ControlChart<X, Y> extends LineChart {
         if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
             series.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color) + ";-fx-stroke-dash-array: 5px;");
         }
+        Tooltip tooltip = new Tooltip("ASDF");
         data.forEach(dataItem -> {
 //            set data node color
             if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
@@ -723,8 +714,17 @@ public class ControlChart<X, Y> extends LineChart {
             }
 //            set data node tooltip
             if (pointTooltipFunction != null) {
-                String content = pointTooltipFunction.apply(new PointTooltip(key + " " + series.getName(), dataItem));
-                Tooltip.install(dataItem.getNode(), new Tooltip(content));
+                final Node dataNode = dataItem.getNode();
+                dataNode.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+                            tooltip.setText(pointTooltipFunction.apply(new PointTooltip(key + " " + series.getName(), dataItem)));
+                            tooltip.show(dataNode, event.getScreenX(), event.getScreenY());
+                        }
+                );
+                dataNode.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+                    if (tooltip.isShowing()) {
+                        tooltip.hide();
+                    }
+                });
             }
         });
     }

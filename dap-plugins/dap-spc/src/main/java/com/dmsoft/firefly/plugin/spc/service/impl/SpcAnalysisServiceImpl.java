@@ -33,7 +33,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
 
     @Override
     public SpcStatsResultDto analyzeStatsResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
-        logger.debug("Analyzing SPC stats result ...");
+//        logger.debug("Analyzing SPC stats result ...");
         SpcStatsResultDto resultDto = new SpcStatsResultDto();
         try {
             if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
@@ -157,13 +157,13 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
             logger.error("Analyze SPC stats result error, exception message = {}", e.getMessage());
             throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11005));
         }
-        logger.info("Analyze SPC stats result done ...");
+//        logger.info("Analyze SPC stats result done ...");
         return resultDto;
     }
 
     @Override
     public NDCResultDto analyzeNDCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
-        logger.debug("Analyzing SPC ND chart result ...");
+//        logger.debug("Analyzing SPC ND chart result ...");
         NDCResultDto resultDto = new NDCResultDto();
         try {
             if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
@@ -182,7 +182,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
             }
             resultDto = getNDCResult(engine, dataDto);
             SemaphoreUtils.releaseSemaphore(engine);
-            logger.info("Analyze SPC ND chart result done.");
+//            logger.info("Analyze SPC ND chart result done.");
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC ND chart result error, exception message = {}", e.getMessage());
@@ -194,7 +194,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
 
     @Override
     public RunCResultDto analyzeRunCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
-        logger.debug("Analyzing SPC RUN chart result ...");
+//        logger.debug("Analyzing SPC RUN chart result ...");
         RunCResultDto resultDto = new RunCResultDto();
         try {
             if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
@@ -203,7 +203,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
             Rengine engine = prepareEngine(dataDto.getDataList(), configDto);
             resultDto = getRunCResult(engine, dataDto);
             SemaphoreUtils.releaseSemaphore(engine);
-            logger.info("Analyze SPC RUN chart result done.");
+//            logger.info("Analyze SPC RUN chart result done.");
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC RUN chart result error, exception message = {}", e.getMessage());
@@ -214,7 +214,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
 
     @Override
     public SpcControlChartDto analyzeXbarCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
-        logger.debug("Analyzing SPC Xbar chart result ...");
+//        logger.debug("Analyzing SPC Xbar chart result ...");
         SpcControlChartDto resultDto = new SpcControlChartDto();
         try {
             if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
@@ -223,7 +223,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
             Rengine engine = prepareEngine(dataDto.getDataList(), configDto);
             resultDto = getXbarCResult(engine);
             SemaphoreUtils.releaseSemaphore(engine);
-            logger.info("Analyze SPC Xbar chart result done.");
+//            logger.info("Analyze SPC Xbar chart result done.");
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC Xbar chart result error, exception message = {}", e.getMessage());
@@ -234,7 +234,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
 
     @Override
     public SpcControlChartDto analyzeRangeCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
-        logger.debug("Analyzing SPC Range chart result ...");
+//        logger.debug("Analyzing SPC Range chart result ...");
         SpcControlChartDto result = new SpcControlChartDto();
         try {
             if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
@@ -243,7 +243,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
             Rengine engine = prepareEngine(dataDto.getDataList(), configDto);
             result = getRangeCResult(engine);
             SemaphoreUtils.releaseSemaphore(engine);
-            logger.info("Analyze SPC Range chart result done.");
+//            logger.info("Analyze SPC Range chart result done.");
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC Range chart result error, exception message = {}", e.getMessage());
@@ -254,7 +254,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
 
     @Override
     public SpcControlChartDto analyzeSdCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
-        logger.debug("Analyzing SPC SD chart result ...");
+//        logger.debug("Analyzing SPC SD chart result ...");
         SpcControlChartDto result = new SpcControlChartDto();
         try {
             if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
@@ -263,7 +263,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
             Rengine engine = prepareEngine(dataDto.getDataList(), configDto);
             result = getSdCResult(engine);
             SemaphoreUtils.releaseSemaphore(engine);
-            logger.info("Analyze SPC SD chart result done.");
+//            logger.info("Analyze SPC SD chart result done.");
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC SD error, exception message = {}", e.getMessage());
@@ -274,7 +274,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
 
     @Override
     public SpcControlChartDto analyzeMeCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
-        logger.debug("Analyzing SPC ME chart result ...");
+//        logger.debug("Analyzing SPC ME chart result ...");
         SpcControlChartDto result = new SpcControlChartDto();
         try {
             if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
@@ -283,7 +283,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
             Rengine engine = prepareEngine(dataDto.getDataList(), configDto);
             result = getMeCResult(engine);
             SemaphoreUtils.releaseSemaphore(engine);
-            logger.info("Analyze SPC ME chart result done.");
+//            logger.info("Analyze SPC ME chart result done.");
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC");
@@ -294,7 +294,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
 
     @Override
     public SpcControlChartDto analyzeMrCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
-        logger.debug("Analyzing SPC MR chart result ...");
+//        logger.debug("Analyzing SPC MR chart result ...");
         SpcControlChartDto result = new SpcControlChartDto();
         try {
             if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
@@ -303,7 +303,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
             Rengine engine = prepareEngine(dataDto.getDataList(), configDto);
             result = getMrCResult(engine);
             SemaphoreUtils.releaseSemaphore(engine);
-            logger.info("Analyzing SPC MR chart result done.");
+//            logger.info("Analyzing SPC MR chart result done.");
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC MR chart result error, exception message = {}", e.getMessage());
@@ -315,7 +315,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
 
     @Override
     public BoxCResultDto analyzeBoxCResult(SpcAnalysisDataDto dataDto, SpcAnalysisConfigDto configDto) {
-        logger.debug("Analyzing SPC BOX chart result ...");
+//        logger.debug("Analyzing SPC BOX chart result ...");
         BoxCResultDto result = new BoxCResultDto();
         try {
             if (dataDto.getDataList() == null || dataDto.getDataList().isEmpty()) {
@@ -324,7 +324,7 @@ public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
             Rengine engine = prepareEngine(dataDto.getDataList(), configDto);
             result = getBoxCResult(engine);
             SemaphoreUtils.releaseSemaphore(engine);
-            logger.info("Analyze SPC BOX chart result done.");
+//            logger.info("Analyze SPC BOX chart result done.");
         } catch (Exception e) {
             SemaphoreUtils.releaseSemaphore(privateEngine);
             logger.error("Analyze SPC BOX chart result error, exception message = {}", e.getMessage());
