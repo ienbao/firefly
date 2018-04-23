@@ -6,6 +6,7 @@ import com.dmsoft.firefly.plugin.grr.charts.data.ILineData;
 import com.dmsoft.firefly.plugin.grr.charts.data.RuleLineData;
 import com.dmsoft.firefly.plugin.grr.charts.data.VerticalCutLine;
 import com.dmsoft.firefly.plugin.grr.dto.GrrImageDto;
+import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
 import com.dmsoft.firefly.plugin.grr.utils.FileUtils;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
@@ -48,19 +49,19 @@ public class BuildChart {
      * method to build image
      *
      * @param grrDetailResultDto grr detail result dto
-     * @param parts              parts
-     * @param appraisers         appraisers
+     * @param searchConditionDto searchConditionDto
      * @return grr image dto
      */
     public static GrrImageDto buildImage(GrrDetailResultDto grrDetailResultDto,
-                                         List<String> parts,
-                                         List<String> appraisers,
+                                         SearchConditionDto searchConditionDto,
                                          Map<String, Boolean> exportParam) {
         digNum = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getDecimalDigit();
         vBox = new Group();
         scene = new Scene(vBox);
         scene.getStylesheets().add(BuildChart.class.getClassLoader().getResource("css/grr_chart.css").toExternalForm());
         GrrImageDto images = new GrrImageDto();
+        List<String> parts = searchConditionDto.getParts();
+        List<String> appraisers = searchConditionDto.getAppraisers();
 //        LineChart partAppraiserChart = buildScatterChart();
         boolean partAppraiserValid = exportParam.containsKey(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_5));
         partAppraiserValid = partAppraiserValid && exportParam.get(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_5));
@@ -76,8 +77,9 @@ public class BuildChart {
         xBarAppraiserValid = xBarAppraiserValid && exportParam.get(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_4));
         xBarAppraiserValid = xBarAppraiserValid && grrDetailResultDto.getXbarAppraiserChartDto() != null;
         if (xBarAppraiserValid) {
-            LinearChart xBarAppraiserChart = buildControlChart(parts);
-            setControlChartData(grrDetailResultDto.getXbarAppraiserChartDto(), xBarAppraiserChart, parts, appraisers);
+            LinearChart xBarAppraiserChart = buildControlChart();
+            setControlChartData(grrDetailResultDto.getXbarAppraiserChartDto(), xBarAppraiserChart, parts);
+            setControlChartXAxisLabel(appraisers, (NumberAxis) xBarAppraiserChart.getXAxis(), searchConditionDto.getAppraiser(), parts.size());
             images.setGrrXBarImagePath(exportImages("xBarAppraiserChart", xBarAppraiserChart));
         }
 
@@ -85,8 +87,9 @@ public class BuildChart {
         rangeAppraiserValid = rangeAppraiserValid && exportParam.get(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_3));
         rangeAppraiserValid = rangeAppraiserValid && grrDetailResultDto.getRangeAppraiserChartDto() != null;
         if (rangeAppraiserValid) {
-            LinearChart rangeAppraiserChart = buildControlChart(parts);
-            setControlChartData(grrDetailResultDto.getRangeAppraiserChartDto(), rangeAppraiserChart, parts, appraisers);
+            LinearChart rangeAppraiserChart = buildControlChart();
+            setControlChartData(grrDetailResultDto.getRangeAppraiserChartDto(), rangeAppraiserChart, parts);
+            setControlChartXAxisLabel(appraisers, (NumberAxis) rangeAppraiserChart.getXAxis(), searchConditionDto.getAppraiser(), parts.size());
             images.setGrrRChartImagePath(exportImages("rangeAppraiserChart", rangeAppraiserChart));
         }
         boolean rrByAppraiserValid = exportParam.containsKey(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_2));
@@ -95,6 +98,7 @@ public class BuildChart {
         if (rrByAppraiserValid) {
             LineChart rrByAppraiserChart = buildScatterChart();
             setScatterChartData(grrDetailResultDto.getRrbyAppraiserChartDto(), rrByAppraiserChart);
+            setScatterChartXAxisLabel(appraisers, (NumberAxis) rrByAppraiserChart.getXAxis());
             images.setGrrRPlotChartAppImagePath(exportImages("rrByAppraiserChart", rrByAppraiserChart));
         }
         boolean rrByPartValid = exportParam.containsKey(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_1));
@@ -103,6 +107,7 @@ public class BuildChart {
         if (rrByPartValid) {
             LineChart rrbyPartChart = buildScatterChart();
             setScatterChartData(grrDetailResultDto.getRrbyPartChartDto(), rrbyPartChart);
+            setScatterChartXAxisLabel(parts, (NumberAxis) rrbyPartChart.getXAxis());
             images.setGrrRPlotChartPartImagePath(exportImages("rrbyPartChart", rrbyPartChart));
         }
         boolean componentValid = exportParam.containsKey(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_6));
@@ -118,28 +123,63 @@ public class BuildChart {
         return images;
     }
 
-    private static LinearChart buildControlChart(List<String> parts) {
-        NumberAxis xAxis = new NumberAxis();
-        NumberAxis yAxis = new NumberAxis();
-        xAxis.setTickLabelFormatter(new StringConverter<Number>() {
+    private static void setControlChartXAxisLabel(List<String> appraisers, NumberAxis xAxis, String appraiserKey, int partSize) {
+        xAxis.setTickLabelFormatter(new NumberAxis.DefaultFormatter(xAxis) {
             @Override
-            public String toString(Number object) {
-                return (Double) object % ((+parts.size()) / 2) == 0 ? String.valueOf(object) : null;
-            }
+            public String toString(final Number object) {
+                double standardValue = (partSize + 1) / 2.0;
 
-            @Override
-            public Number fromString(String string) {
-                return null;
+                if (object != null && object instanceof Double) {
+                    int partQuotient = (int) (object.doubleValue() / partSize);
+                    double standardQuotient = ((Double) object - standardValue) % partSize;
+                    double partRemainder = object.doubleValue() % partSize;
+                    if (standardQuotient % 1.0 == 0 && partRemainder == standardValue) {
+                        boolean appraiserValid = DAPStringUtils.isNotEmpty(appraiserKey);
+                        appraiserValid = appraiserValid && appraisers != null && appraisers.size() > partQuotient;
+                        return appraiserValid ? appraisers.get(partQuotient)
+                                : GrrFxmlAndLanguageUtils.getString(UIConstant.AXIS_LBL_PREFIX_APPRAISER) + (partQuotient + 1);
+                    }
+                }
+                return "";
             }
         });
+    }
+
+    private static void setScatterChartXAxisLabel(List<String> xAxisLabels, NumberAxis xAxis) {
+        xAxis.setTickLabelFormatter(new NumberAxis.DefaultFormatter(xAxis) {
+            @Override
+            public String toString(final Number object) {
+                if (object != null && object instanceof Double && (Double) object % 1 == 0) {
+                    int value = object.intValue();
+                    boolean xAxisLabelValid = xAxisLabels != null;
+                    xAxisLabelValid = xAxisLabelValid && !xAxisLabels.isEmpty();
+                    xAxisLabelValid = xAxisLabelValid && xAxisLabels.size() >= value;
+                    if (xAxisLabelValid && object.intValue() != 0) {
+                        return xAxisLabels.get(object.intValue() - 1);
+                    }
+                }
+                return "";
+            }
+        });
+    }
+
+    private static LinearChart buildControlChart() {
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        final double tickUnit = 0.5;
+        xAxis.setTickUnit(tickUnit);
         xAxis.setMinorTickVisible(false);
         xAxis.setTickMarkVisible(false);
         yAxis.setMinorTickVisible(false);
         yAxis.setTickMarkVisible(false);
         yAxis.setAutoRanging(false);
+        xAxis.setAutoRanging(false);
         LinearChart chart = new LinearChart(xAxis, yAxis);
         chart.setAnimated(false);
         chart.setLegendVisible(false);
+        chart.setHorizontalZeroLineVisible(false);
+        chart.setVerticalZeroLineVisible(false);
+        chart.setVerticalGridLinesVisible(false);
         return chart;
     }
 
@@ -147,27 +187,17 @@ public class BuildChart {
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setMinorTickVisible(false);
-        xAxis.setMinorTickVisible(false);
-        xAxis.setTickMarkVisible(false);
         yAxis.setMinorTickVisible(false);
+        xAxis.setTickMarkVisible(false);
         yAxis.setTickMarkVisible(false);
-        xAxis.setTickLabelFormatter(new StringConverter<Number>() {
-            @Override
-            public String toString(Number object) {
-                return (Double) object % 1.0 == 0 ? String.valueOf(object) : null;
-            }
-
-            @Override
-            public Number fromString(String string) {
-                return null;
-            }
-        });
+        xAxis.setAutoRanging(false);
+        yAxis.setAutoRanging(false);
+        xAxis.setTickUnit(1);
         LineChart chart = new LineChart(xAxis, yAxis);
-        chart.setLegendVisible(false);
-        chart.setVerticalGridLinesVisible(false);
-        chart.setHorizontalGridLinesVisible(false);
         chart.setAnimated(false);
         chart.setLegendVisible(false);
+        chart.setVerticalZeroLineVisible(false);
+        chart.setHorizontalZeroLineVisible(false);
         return chart;
     }
 
@@ -288,8 +318,7 @@ public class BuildChart {
 
     private static void setControlChartData(GrrControlChartDto chartData,
                                             LinearChart chart,
-                                            List<String> parts,
-                                            List<String> appraisers) {
+                                            List<String> parts) {
 
         int partCount = parts.size();
         Double[] x = chartData.getX();
@@ -297,10 +326,13 @@ public class BuildChart {
         Double[] ruleData = new Double[]{chartData.getUcl(), chartData.getCl(), chartData.getLcl()};
         Double yMax = MathUtils.getMax(y, ruleData);
         Double yMin = MathUtils.getMin(y, ruleData);
+        Double xMax = MathUtils.getMax(x);
+        Double xMin = MathUtils.getMin(x);
         if (DAPStringUtils.isInfinityAndNaN(yMax) || DAPStringUtils.isInfinityAndNaN(yMin)) {
             return;
         }
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
+        NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         final double factor = 0.01;
         double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
@@ -311,8 +343,10 @@ public class BuildChart {
         double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
         yAxis.setLowerBound(newYMin);
         yAxis.setUpperBound(newYMax);
+        xAxis.setLowerBound(xMin - UIConstant.X_FACTOR);
+        xAxis.setUpperBound(xMax + UIConstant.X_FACTOR);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
-        List<ILineData> horizonalLineData = Lists.newArrayList();
+        List<ILineData> horizontalLineData = Lists.newArrayList();
         List<ILineData> verticalLineData = Lists.newArrayList();
         XYChart.Series series = new XYChart.Series();
 //        draw vertical line
@@ -332,15 +366,15 @@ public class BuildChart {
         uclLineData.setLineClass("dashed2-line");
         clLineData.setLineClass("solid-line");
         lclLineData.setLineClass("dashed1-line");
-        horizonalLineData.add(uclLineData);
-        horizonalLineData.add(clLineData);
-        horizonalLineData.add(lclLineData);
+        horizontalLineData.add(uclLineData);
+        horizontalLineData.add(clLineData);
+        horizontalLineData.add(lclLineData);
 
         chart.getData().add(series);
 //        button.setDisable(false);
 
         chart.buildValueMarkerWithoutTooltip(verticalLineData);
-        chart.buildValueMarkerWithoutTooltip(horizonalLineData);
+        chart.buildValueMarkerWithoutTooltip(horizontalLineData);
     }
 
     private static void setScatterChartData(GrrScatterChartDto scatterChartData, LineChart chart) {
@@ -351,10 +385,16 @@ public class BuildChart {
         Double[] clY = scatterChartData.getClY();
         Double yMax = MathUtils.getMax(y, clY);
         Double yMin = MathUtils.getMin(y, clY);
-        if (DAPStringUtils.isInfinityAndNaN(yMax) || DAPStringUtils.isInfinityAndNaN(yMin)) {
+        Double xMin = MathUtils.getMin(x, clX);
+        Double xMax = MathUtils.getMax(x, clX);
+        if (DAPStringUtils.isInfinityAndNaN(yMax)
+                || DAPStringUtils.isInfinityAndNaN(yMin)
+                || DAPStringUtils.isInfinityAndNaN(xMax)
+                || DAPStringUtils.isInfinityAndNaN(xMin)) {
             return;
         }
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
+        NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         final double factor = 0.01;
         Double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
@@ -363,6 +403,8 @@ public class BuildChart {
         Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
         double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
         double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        xAxis.setLowerBound(xMin - UIConstant.X_FACTOR);
+        xAxis.setUpperBound(xMax + UIConstant.X_FACTOR);
         yAxis.setLowerBound(newYMin);
         yAxis.setUpperBound(newYMax);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);

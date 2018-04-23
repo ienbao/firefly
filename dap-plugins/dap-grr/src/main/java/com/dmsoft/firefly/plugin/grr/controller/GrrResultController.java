@@ -476,7 +476,7 @@ public class GrrResultController implements Initializable {
                     boolean xAxisLabelValid = xAxisLabels != null;
                     xAxisLabelValid = xAxisLabelValid && !xAxisLabels.isEmpty();
                     xAxisLabelValid = xAxisLabelValid && xAxisLabels.size() >= value;
-                    if (xAxisLabelValid) {
+                    if (xAxisLabelValid && object.intValue() != 0) {
                         return xAxisLabels.get(object.intValue() - 1);
                     }
                 }
@@ -838,6 +838,7 @@ public class GrrResultController implements Initializable {
         yAxis.setAutoRanging(false);
         xAxis.setAutoRanging(false);
         LinearChart chart = new LinearChart(xAxis, yAxis);
+        chart.setVerticalGridLinesVisible(false);
         return chart;
     }
 
@@ -851,20 +852,9 @@ public class GrrResultController implements Initializable {
         yAxis.setTickMarkVisible(false);
         xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
-        xAxis.setTickLabelFormatter(new NumberAxis.DefaultFormatter(xAxis) {
-            @Override
-            public String toString(final Number object) {
-                if (object instanceof Double && (Double) object % 1 == 0) {
-                    return object + "";
-                }
-                return "";
-            }
-        });
         xAxis.setTickUnit(1);
         LineChart chart = new LineChart(xAxis, yAxis);
         chart.setLegendVisible(false);
-        chart.setVerticalGridLinesVisible(false);
-        chart.setHorizontalGridLinesVisible(false);
         return chart;
     }
 
@@ -888,21 +878,21 @@ public class GrrResultController implements Initializable {
 
         xBarAppraiserChart.setHorizontalZeroLineVisible(false);
         xBarAppraiserChart.setVerticalZeroLineVisible(false);
+        xBarAppraiserChart.setVerticalGridLinesVisible(false);
+
         rangeAppraiserChart.setHorizontalZeroLineVisible(false);
         rangeAppraiserChart.setVerticalZeroLineVisible(false);
+        rangeAppraiserChart.setVerticalGridLinesVisible(false);
+
         rrByAppraiserChart.setHorizontalZeroLineVisible(false);
         rrByAppraiserChart.setVerticalZeroLineVisible(false);
         rrbyPartChart.setHorizontalZeroLineVisible(false);
         rrbyPartChart.setVerticalZeroLineVisible(false);
-
-        componentChart.setVerticalGridLinesVisible(false);
-        componentChart.setHorizontalGridLinesVisible(false);
-        partAppraiserChart.setHorizontalGridLinesVisible(false);
-        partAppraiserChart.setVerticalGridLinesVisible(false);
-        xBarAppraiserChart.setVerticalGridLinesVisible(false);
-        xBarAppraiserChart.setHorizontalGridLinesVisible(false);
-        rangeAppraiserChart.setVerticalGridLinesVisible(false);
-        rangeAppraiserChart.setHorizontalGridLinesVisible(false);
+//        componentChart.setVerticalGridLinesVisible(false);
+//        componentChart.setHorizontalGridLinesVisible(false);
+//        partAppraiserChart.setHorizontalGridLinesVisible(false);
+//        partAppraiserChart.setVerticalGridLinesVisible(false);
+//        rangeAppraiserChart.setHorizontalGridLinesVisible(false);
         xBarAppraiserChart.setLegendVisible(false);
         ObservableList<TableColumn<String, ?>> summaryTbColumns = summaryTb.getColumns();
         summaryTbColumns.get(0).prefWidthProperty().bind(summaryTb.widthProperty().divide(25));
