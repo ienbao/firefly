@@ -100,6 +100,7 @@ public class UIConstant {
     public static final double X_FACTOR = 1.0;
     public static final double Y_FACTOR = 0.15;
 
+    public static final double MARGINAL_VALUE = 1000;
     public static final int COR_NUMBER = 4;
 
 

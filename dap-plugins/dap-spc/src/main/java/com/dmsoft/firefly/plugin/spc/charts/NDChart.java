@@ -135,18 +135,22 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         }
         NumberAxis xAxis = (NumberAxis) this.getXAxis();
         NumberAxis yAxis = (NumberAxis) this.getYAxis();
-        xMax += (xMax - xMin) * UIConstant.Y_FACTOR;
-        xMin -= (xMax - xMin) * UIConstant.Y_FACTOR;
-        yMax += (yMax - yMin) * UIConstant.Y_FACTOR;
-        xMin -= (yMax - yMin) * UIConstant.Y_FACTOR;
-        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
-        Map<String, Object> xAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(xMax, xMin, (int) Math.ceil(xMax - xMin));
-        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        if (yMax - yMin > UIConstant.MARGINAL_VALUE) {
+            yMax += (yMax - yMin) * UIConstant.Y_FACTOR;
+        }
+        if ((xMax - xMin) > UIConstant.MARGINAL_VALUE) {
+            xMax += (xMax - xMin) * UIConstant.Y_FACTOR;
+            xMin -= (xMax - xMin) * UIConstant.Y_FACTOR;
+        }
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (yMax - yMin) > UIConstant.MARGINAL_VALUE
+                ? (int) Math.ceil(yMax - yMin) : UIConstant.COR_NUMBER);
+        Map<String, Object> xAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(xMax, xMin, (xMax - xMin) > UIConstant.MARGINAL_VALUE
+                ? (int) Math.ceil(yMax - yMin) : UIConstant.COR_NUMBER);
         double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
         double newXMin = (Double) xAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
         double newXMax = (Double) xAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
-        yAxis.setLowerBound(newYMin);
-        yAxis.setUpperBound(newYMax > 120 ? 120 : newYMax);
+        yAxis.setLowerBound(yMin);
+        yAxis.setUpperBound(newYMax);
         xAxis.setLowerBound(newXMin);
         xAxis.setUpperBound(newXMax);
         ChartOperatorUtils.updateAxisTickUnit(xAxis);
@@ -172,11 +176,14 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
      * Remove all chart elements and chart data
      */
     public void removeAllChildren() {
+        getPlotChildren().clear();
         for (Map.Entry<String, XYChart.Series> stringSeriesEntry : uniqueKeySeriesMap.entrySet()) {
             seriesRemoved(stringSeriesEntry.getValue());
         }
-        ObservableList<Node> nodes = getPlotChildren();
-        getPlotChildren().removeAll(nodes);
+//        ObservableList<Node> nodes = getPlotChildren();
+//        getData().clear();
+//        getPlotChildren().removeAll(nodes);
+        getPlotChildren().clear();
         clearData();
     }
 
