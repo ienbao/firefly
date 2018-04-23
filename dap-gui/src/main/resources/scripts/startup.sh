@@ -1,6 +1,7 @@
 #!/bin/sh
     cd "$(dirname "$0")"
     now=`date "+%Y%m%d"`
+    export MONGO_PORT=27017
     export JRE_HOME=jre
     export R_HOME=R
     export CLASSPATH=.:${CLASSPATH}:${JRE_HOME}/lib:${JRE_HOME}/lib/server:${R_HOME}/library/rJava/jri
@@ -24,7 +25,7 @@
     then
      mkdir ./log/
     fi
-     mongodThread=`lsof -i tcp:27017|grep mongod|wc -l`
+     mongodThread=`lsof -i tcp:$MONGO_PORT|grep mongod|wc -l`
     if [ $mongodThread -eq  0 ]
       then
       ./installmongo.sh start
@@ -32,4 +33,3 @@
     else
         echo “DAP has been running.”
     fi
-
