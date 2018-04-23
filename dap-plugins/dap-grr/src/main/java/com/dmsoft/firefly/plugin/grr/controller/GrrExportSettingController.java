@@ -122,7 +122,8 @@ public class GrrExportSettingController {
                     continue;
                 }
                 if (GrrExportItemKey.EXPORT_CHART.getCode().equals(key)) {
-                    toggleAllChartCheckBox(!selectable);
+                    boolean exportDetailSelected = exportDetailCbx.selectedProperty().getValue();
+                    toggleAllChartCheckBox(exportDetailSelected ? !selectable : !exportDetailSelected);
                 }
             }
         }
@@ -144,8 +145,12 @@ public class GrrExportSettingController {
     }
 
     private void initEvent() {
-        exportDetailCbx.setOnAction(event -> toggleAllCheckBox(!exportDetailCbx.selectedProperty().getValue()));
-        chartCbx.setOnAction(event -> toggleAllChartCheckBox(!chartCbx.selectedProperty().getValue()));
+        exportDetailCbx.setOnAction(event -> {
+            toggleAllCheckBox(!exportDetailCbx.selectedProperty().getValue());
+        });
+        chartCbx.setOnAction(event -> {
+            toggleAllChartCheckBox(!chartCbx.selectedProperty().getValue());
+        });
         ok.setOnAction(event -> {
             saveData();
             StageMap.closeStage("grrExportSetting");
