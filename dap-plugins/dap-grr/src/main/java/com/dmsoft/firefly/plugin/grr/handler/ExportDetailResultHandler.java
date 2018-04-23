@@ -70,7 +70,7 @@ public class ExportDetailResultHandler extends AbstractBasicJobHandler {
 
                     if (data.containsKey(GrrExportItemKey.EXPORT_CHART.getCode())) {
                         if (data.containsKey(GrrExportItemKey.EXPORT_CHART.getCode())) {
-                            exportResultDto.setGrrImageDto(BuildChart.buildImage(dto.getExportDetailDto(), searchConditionDto.getParts(), searchConditionDto.getAppraisers(), configDto.getGrrConfigDto().getExport()));
+                            exportResultDto.setGrrImageDto(BuildChart.buildImage(dto.getExportDetailDto(), searchConditionDto, configDto.getGrrConfigDto().getExport()));
                         } else {
                             exportResultDto.setGrrImageDto(null);
                         }
