@@ -472,15 +472,21 @@ public class ControlChart<X, Y> extends LineChart {
         }
         NumberAxis xAxis = (NumberAxis) this.getXAxis();
         NumberAxis yAxis = (NumberAxis) this.getYAxis();
-        yMax += (yMax - yMin) * UIConstant.Y_FACTOR;
-        yMin -= (yMax - yMin) * UIConstant.Y_FACTOR;
-        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        if (yMax - yMin > UIConstant.MARGINAL_VALUE) {
+            yMax += (yMax - yMin) * UIConstant.Y_FACTOR;
+            yMin -= (yMax - yMin) * UIConstant.Y_FACTOR;
+        } else {
+            yMax += UIConstant.Y_FACTOR;
+            yMin -= UIConstant.Y_FACTOR;
+        }
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (yMax - yMin) > UIConstant.MARGINAL_VALUE
+                ? (int) Math.ceil(yMax - yMin) : UIConstant.COR_NUMBER);
         xAxis.setLowerBound(0);
         xAxis.setUpperBound(xMax + UIConstant.X_FACTOR);
         double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
         double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
-        yAxis.setLowerBound(newYMin);
-        yAxis.setUpperBound(newYMax);
+        yAxis.setLowerBound(newYMin > yMin ? yMin : newYMin);
+        yAxis.setUpperBound(newYMax < yMax ? yMax : newYMax);
         ChartOperatorUtils.updateAxisTickUnit(xAxis);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
     }
