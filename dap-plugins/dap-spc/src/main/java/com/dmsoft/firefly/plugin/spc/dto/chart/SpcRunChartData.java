@@ -11,6 +11,7 @@ import com.dmsoft.firefly.plugin.spc.dto.chart.pel.SpcXYChartData;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import javafx.geometry.Orientation;
@@ -86,7 +87,7 @@ public class SpcRunChartData implements ControlChartData {
         //init lines data
         Double usl = runCResultDto.getUsl();
         Double lsl = runCResultDto.getLsl();
-        Double[] uslAndlsl = new Double[]{usl, lsl};
+        Double[] uslAndLsl = new Double[]{usl, lsl};
         String[] lineNames = new String[]{
                 SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_USL),
                 SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_LSL),
@@ -97,24 +98,26 @@ public class SpcRunChartData implements ControlChartData {
                 SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_SIGMA),
                 SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_2_SIGMA),
                 SpcFxmlAndLanguageUtils.getString(UIConstant.SPC_CHART_LINE_NAME_UCL)};
-        if (usl != null) {
+        if (!DAPStringUtils.isInfinityAndNaN(usl)) {
             ILineData uslData = new LineData(usl, lineNames[0], Orientation.HORIZONTAL, LineType.DASHED);
             lineDataList.add(uslData);
         }
-        if (lsl != null) {
+        if (!DAPStringUtils.isInfinityAndNaN(lsl)) {
             ILineData lslData = new LineData(lsl, lineNames[1], Orientation.HORIZONTAL, LineType.DASHED);
             lineDataList.add(lslData);
         }
         Double[] cls = runCResultDto.getCls();
         if (cls != null) {
             for (int i = 0; i < cls.length; i++) {
-//                LineType lineType = lineNames[i + 2].equals(lineNames[5]) ? LineType.DASHED : LineType.SOLID;
+                if (DAPStringUtils.isInfinityAndNaN(cls[i])) {
+                    continue;
+                }
                 ILineData lineData = new LineData(cls[i], lineNames[i + 2], Orientation.HORIZONTAL);
                 lineDataList.add(lineData);
             }
         }
-        maxY = MathUtils.getMax(y, cls, uslAndlsl);
-        minY = MathUtils.getMin(y, cls, uslAndlsl);
+        maxY = MathUtils.getMax(y, cls, uslAndLsl);
+        minY = MathUtils.getMin(y, cls, uslAndLsl);
         maxX = MathUtils.getMax(x);
         minX = MathUtils.getMin(x);
     }

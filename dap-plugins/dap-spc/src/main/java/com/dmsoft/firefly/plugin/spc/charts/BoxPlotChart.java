@@ -166,13 +166,16 @@ public class BoxPlotChart extends XYChart<Number, Number> {
      * Remove all chart nodes and all chart data
      */
     public void removeAllChildren() {
-        ObservableList<Node> nodes = getPlotChildren();
-        getPlotChildren().removeAll(nodes);
-        getData().setAll(FXCollections.observableArrayList());
+//        ObservableList<Node> nodes = getPlotChildren();
+        getPlotChildren().clear();
+        getData().clear();
+//        getPlotChildren().removeAll(nodes);
+//        getData().setAll(FXCollections.observableArrayList());
         uniqueKeySeriesMap.clear();
         seriesUniqueKeyMap.clear();
         uniqueKeyNodesMap.clear();
-        outliers.setAll(FXCollections.observableArrayList());
+//        outliers.setAll(FXCollections.observableArrayList());
+        outliers.clear();
         gridLineChanged = false;
     }
 

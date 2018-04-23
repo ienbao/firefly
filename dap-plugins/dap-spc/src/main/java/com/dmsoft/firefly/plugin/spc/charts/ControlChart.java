@@ -190,19 +190,16 @@ public class ControlChart<X, Y> extends LineChart {
      * @param data data
      */
     public void clearAnnotation(List<Data<X, Y>> data) {
-        data.forEach(dateItem -> {
-            StackPane pane = (StackPane) dateItem.getNode();
-            if (pane.getChildren().isEmpty()) {
-                return;
-            }
+        data.forEach(dataItem -> {
+            StackPane pane = (StackPane) dataItem.getNode();
             for (int i = 0; i < pane.getChildren().size(); i++) {
                 Node node = pane.getChildren().get(i);
                 if (node instanceof Text) {
                     pane.getChildren().removeAll(node);
                 }
             }
-            if (dateItem.getNode().getStyleClass().contains("chart-symbol-triangle")) {
-                dateItem.getNode().getStyleClass().remove("chart-symbol-triangle");
+            if (dataItem.getNode().getStyleClass().contains("chart-symbol-triangle")) {
+                dataItem.getNode().getStyleClass().remove("chart-symbol-triangle");
             }
         });
     }

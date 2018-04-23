@@ -742,7 +742,6 @@ public class GrrItemController implements Initializable {
     @SuppressWarnings("unchecked")
     private void getAnalysisBtnEvent() {
         logger.debug("Analyse grr start ...");
-        grrMainController.setDisable(true);
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
         if (!searchTab.verifySearchTextArea()) {
             return;

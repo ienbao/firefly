@@ -512,7 +512,7 @@ public class SpcItemController implements Initializable {
     @SuppressWarnings("unchecked")
     private void autoRefreshAnalysis() {
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
-        spcMainController.clearAnalysisSubShowData(true);
+        spcMainController.clearAnalysisSubShowData();
         List<String> projectNameList = envService.findActivatedProjectName();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
         List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(selectedItemDto);
