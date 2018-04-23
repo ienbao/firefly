@@ -176,25 +176,16 @@ public class SpcMainController implements Initializable {
         dataFrame.removeRows(Lists.newArrayList(rowKey));
     }
 
-    /**
-     * clear analysis data
-     */
-    public void clearAnalysisSubShowData() {
-        clearAnalysisSubShowData(false);
-    }
 
     /**
      * clear analysis data
      *
-     * @param isTimer is timer
      */
-    public void clearAnalysisSubShowData(boolean isTimer) {
+    public void clearAnalysisSubShowData() {
         chartResultController.clearChartData();
-        if (!isTimer) {
-            viewDataController.clearViewData();
-            unSelectRowKeyList.clear();
-            lastViewDataRowKeyList = null;
-        }
+        viewDataController.clearViewData();
+        unSelectRowKeyList.clear();
+        lastViewDataRowKeyList = null;
     }
 
     /**
@@ -202,7 +193,7 @@ public class SpcMainController implements Initializable {
      */
     public void clearAnalysisData() {
         statisticalResultController.clearStatisticalResultData();
-        clearAnalysisSubShowData(false);
+        clearAnalysisSubShowData();
         this.setDisable(true);
     }
 
