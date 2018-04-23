@@ -1,7 +1,7 @@
 #!/bin/sh
     cd "$(dirname "$0")"
     now=`date "+%Y%m%d"`
-    export MONGO_PORT=27017
+    export MONGO_PORT=27018
     usage="Usage: `basename $0` (start|stop)"
 	command=$1
     function start() {
@@ -21,7 +21,7 @@
 	    fi
 	}
 	function stop() {
-        mongod_port=`ps -ef | grep mongod | grep -v "grep" | awk '{if (27017==$10) print $2}'`
+        mongod_port=`ps -ef | grep mongod | grep -v "grep" | awk '{if (27018==$10) print $2}'`
         echo "mongod_port:"$mongod_port
 
 	    if [  -n  "$mongod_port"  ];  then

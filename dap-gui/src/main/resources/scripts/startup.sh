@@ -1,7 +1,7 @@
 #!/bin/sh
     cd "$(dirname "$0")"
     now=`date "+%Y%m%d"`
-    export MONGO_PORT=27017
+    export MONGO_PORT=27018
     export JRE_HOME=jre
     export R_HOME=R
     export CLASSPATH=.:${CLASSPATH}:${JRE_HOME}/lib:${JRE_HOME}/lib/server:${R_HOME}/library/rJava/jri
