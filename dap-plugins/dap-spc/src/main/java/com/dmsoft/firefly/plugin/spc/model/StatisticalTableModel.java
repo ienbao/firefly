@@ -155,6 +155,7 @@ public class StatisticalTableModel implements TableModel {
         editorCell.clear();
         editorRowKey.clear();
         errorEditorCell.clear();
+        int m = 0;
         for (SpcStatisticalResultAlarmDto statisticalResultAlarmDto : spcStatsDtoList) {
             String key = statisticalResultAlarmDto.getKey();
             SpcStatisticalResultAlarmDto resultAlarmDto = keyToStatsDtoMap.get(key);
@@ -163,6 +164,18 @@ public class StatisticalTableModel implements TableModel {
                 resultAlarmDto.setStatisticalAlarmDtoMap(statisticalAlarmDtoMap);
             }
             this.refreshValue(resultAlarmDto);
+            if (this.isEmptyResult(statisticalResultAlarmDto.getStatisticalAlarmDtoMap())) {
+                emptyResultKeys.add(key);
+                if (colorCache.containsKey(key)) {
+                    colorCache.remove(key);
+                }
+            } else {
+                if (emptyResultKeys.contains(statisticalResultAlarmDto.getKey())) {
+                    emptyResultKeys.remove(statisticalResultAlarmDto.getKey());
+                }
+                colorCache.put(key, ColorUtils.getTransparentColor(Colur.RAW_VALUES[m % 10], 0.8));
+                m++;
+            }
         }
         tableView.refresh();
     }
