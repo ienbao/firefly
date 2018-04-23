@@ -78,7 +78,7 @@ public class BuildChart {
         xBarAppraiserValid = xBarAppraiserValid && grrDetailResultDto.getXbarAppraiserChartDto() != null;
         if (xBarAppraiserValid) {
             LinearChart xBarAppraiserChart = buildControlChart();
-            setControlChartData(grrDetailResultDto.getXbarAppraiserChartDto(), xBarAppraiserChart, parts, appraisers);
+            setControlChartData(grrDetailResultDto.getXbarAppraiserChartDto(), xBarAppraiserChart, parts);
             setControlChartXAxisLabel(appraisers, (NumberAxis) xBarAppraiserChart.getXAxis(), searchConditionDto.getAppraiser(), parts.size());
             images.setGrrXBarImagePath(exportImages("xBarAppraiserChart", xBarAppraiserChart));
         }
@@ -88,7 +88,7 @@ public class BuildChart {
         rangeAppraiserValid = rangeAppraiserValid && grrDetailResultDto.getRangeAppraiserChartDto() != null;
         if (rangeAppraiserValid) {
             LinearChart rangeAppraiserChart = buildControlChart();
-            setControlChartData(grrDetailResultDto.getRangeAppraiserChartDto(), rangeAppraiserChart, parts, appraisers);
+            setControlChartData(grrDetailResultDto.getRangeAppraiserChartDto(), rangeAppraiserChart, parts);
             setControlChartXAxisLabel(appraisers, (NumberAxis) rangeAppraiserChart.getXAxis(), searchConditionDto.getAppraiser(), parts.size());
             images.setGrrRChartImagePath(exportImages("rangeAppraiserChart", rangeAppraiserChart));
         }
@@ -318,8 +318,7 @@ public class BuildChart {
 
     private static void setControlChartData(GrrControlChartDto chartData,
                                             LinearChart chart,
-                                            List<String> parts,
-                                            List<String> appraisers) {
+                                            List<String> parts) {
 
         int partCount = parts.size();
         Double[] x = chartData.getX();
