@@ -510,10 +510,10 @@ public class GrrResultController implements Initializable {
         double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
         yMax += reserve;
-        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, 5);
         double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
         double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
-        yAxis.setLowerBound(newYMin);
+        yAxis.setLowerBound((newYMin < 0 && yMin >= 0) ? 0 : newYMin);
         yAxis.setUpperBound(newYMax);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
 
