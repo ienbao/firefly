@@ -24,6 +24,10 @@ public class UIConstant {
     public static final Color COLOR_MEAN_RANGE = Color.grayRgb(242);
     public static final Color COLOR_TOTAL_MEAN_RANGE = Color.grayRgb(229);
 
+    public static final Double X_FACTOR = 0.5;
+
+    public static final String AXIS_LBL_PREFIX_APPRAISER = "AXIS_LBL_PREFIX_APPRAISER";
+
     public static final String MEAN = "Mean";
     public static final String RANGE = "Range";
     public static final String TOTAL_MEAN = "Total Mean";
@@ -95,6 +99,7 @@ public class UIConstant {
     public static final String CHART_4 = "CHART_4";
     public static final String CHART_5 = "CHART_5";
     public static final String CHART_6 = "CHART_6";
+    public static final String GRR_EXPORT_BTN_OK = "GRR_EXPORT_BTN_OK";
 
     public static final String CHART_SAVE_AS_TITLE = "CHART_SAVE_AS_TITLE";
     public static final String CHART_SAVE_AS_PNG_EXTENSION = "CHART_SAVE_AS_PNG_EXTENSION";

@@ -2,6 +2,7 @@ package com.dmsoft.firefly.gui.controller.template;
 
 
 import com.dmsoft.firefly.gui.components.utils.*;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -16,14 +17,16 @@ public class NewNameController {
     @FXML
     private TextField name;
     private String paneName = "";
+    private String initName = "";
 
     @FXML
     private void initialize() {
         initEvent();
+        name.setText(initName);
         ValidateRule rule = new ValidateRule();
         rule.setMaxLength(255);
-        rule.setPattern("[A-Za-z0-9]+");
         rule.setErrorStyle("text-field-error");
+        rule.setValidateFunc(s -> !DAPStringUtils.isSpeChars4Mongo(s));
         rule.setEmptyErrorMsg(FxmlAndLanguageUtils.getString(ValidationAnno.GLOBAL_VALIDATE_NOT_BE_EMPTY));
         TextFieldWrapper.decorate(name, rule);
     }
@@ -45,6 +48,10 @@ public class NewNameController {
 
     public TextField getName() {
         return name;
+    }
+
+    public void setInitName(String initName) {
+        this.initName = initName;
     }
 
     /**

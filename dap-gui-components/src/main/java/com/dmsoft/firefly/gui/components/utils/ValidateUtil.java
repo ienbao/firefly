@@ -123,14 +123,14 @@ public class ValidateUtil {
 
     public static void main(String[] args) {
         String reg = "^([1-9]|[1-1][0-9]|20)$";
-        System.out.println(!Pattern.matches(reg, ""));
-        System.out.println(!Pattern.matches(reg, " "));
-        System.out.println(!Pattern.matches(reg, "null"));
-        System.out.println(!Pattern.matches(reg, "sfs"));
-        System.out.println(!Pattern.matches(reg, "0"));
-        System.out.println(!Pattern.matches(reg, "1"));
-        System.out.println(!Pattern.matches(reg, "5"));
-        System.out.println(!Pattern.matches(reg, "20"));
-        System.out.println(!Pattern.matches(reg, "21"));
+//        System.out.println(!Pattern.matches(reg, ""));
+//        System.out.println(!Pattern.matches(reg, " "));
+//        System.out.println(!Pattern.matches(reg, "null"));
+//        System.out.println(!Pattern.matches(reg, "sfs"));
+//        System.out.println(!Pattern.matches(reg, "0"));
+//        System.out.println(!Pattern.matches(reg, "1"));
+//        System.out.println(!Pattern.matches(reg, "5"));
+//        System.out.println(!Pattern.matches(reg, "20"));
+//        System.out.println(!Pattern.matches(reg, "21"));
     }
 }

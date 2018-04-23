@@ -54,14 +54,16 @@ public interface SourceDataService {
      */
     void saveTestData(String projectName, String rowKey, Map<String, String> rowData);
 
+
     /**
-     * method to save test data, will be replaced with same row key.
+     * method to save test data, will be append with same row key. when append is false, will reduce query times
      *
      * @param projectName project name
      * @param rowKey      row key
      * @param rowData     row data
+     * @param appendFlag  true : append, false : not append
      */
-    void replaceTestData(String projectName, String rowKey, Map<String, String> rowData);
+    void saveTestData(String projectName, String rowKey, Map<String, String> rowData, boolean appendFlag);
 
     /**
      * method to find all project name.

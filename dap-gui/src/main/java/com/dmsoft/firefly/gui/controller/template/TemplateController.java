@@ -224,6 +224,9 @@ public class TemplateController {
                     }
                 });
 
+            } else {
+                WindowMessageFactory.createWindowMessageHasOk("Message", "Please select a template.");
+                return;
             }
         });
         pattern.setOnAction(event -> buildPatternDia());
@@ -258,6 +261,7 @@ public class TemplateController {
     }
 
     private void initData(String name) {
+        name = name == null ? templateNames.get(0) : name;
         templateName.getSelectionModel().select(name);
         saveCache();
         currTemplate = null;
@@ -403,6 +407,8 @@ public class TemplateController {
                 allTemplate.remove(selectTemplateName);
 
                 int index = templateNames.indexOf(templateName.getSelectionModel().getSelectedItem());
+//                templateNames.remove(templateName.getSelectionModel().getSelectedItem());
+//                templateNames.add(index, newTemplateName);
                 templateNames.set(index, newTemplateName);
 
 

@@ -411,6 +411,9 @@ public class GrrItemController implements Initializable {
                     }
                 });
                 listViewModel.setErrorMsg(errorMsg.toString());
+                if (DAPStringUtils.isNotBlank(errorMsg)) {
+                    listViewModel.setIsChecked(true);
+                }
             });
             listView.refresh();
         }
@@ -438,22 +441,34 @@ public class GrrItemController implements Initializable {
                     } else {
                         checkBox.getStyleClass().removeAll("error");
                     }
+                    if (listView.getId().equals("partListView")) {
+                        updatePartLbl();
+                    } else {
+                        updateAppraiserLbl();
+                    }
                     checkBox.setOnAction(event -> {
-                        item.setIsChecked(checkBox.isSelected());
+                        if (item.isIsChecked()) {
+                            item.setIsChecked(false);
+                        } else {
+                            item.setIsChecked(checkBox.isSelected());
+                        }
                         if (listView.getId().equals("partListView")) {
                             updatePartLbl();
                         } else {
                             updateAppraiserLbl();
                         }
+                        checkBox.getStyleClass().removeAll("error");
+                        item.setErrorMsg(null);
                     });
-                    if (StringUtils.isNotBlank(item.getErrorMsg())) {
-                        checkBox.setOnMouseEntered(event -> {
+
+                    checkBox.setOnMouseEntered(event -> {
+                        if (StringUtils.isNotBlank(item.getErrorMsg())) {
                             TooltipUtil.installNormalTooltip(checkBox, item.getErrorMsg());
-                        });
-                        checkBox.setOnMouseExited(event -> {
-                            TooltipUtil.uninstallNormalTooltip(checkBox);
-                        });
-                    }
+                        }
+                    });
+                    checkBox.setOnMouseExited(event -> {
+                        TooltipUtil.uninstallNormalTooltip(checkBox);
+                    });
 
                     Label label = new Label(item.getName());
                     cell = new HBox(checkBox, label);
@@ -782,6 +797,7 @@ public class GrrItemController implements Initializable {
                     if (grrParamDto != null && (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty())) {
                         grrMainController.updateGrrViewData();
                         grrMainController.updateGrrSummaryAndDetail();
+                        grrMainController.setDisable(false);
                     }
                     logger.debug("Analyse grr finished.");
                     windowProgressTipController.closeDialog();
@@ -796,7 +812,13 @@ public class GrrItemController implements Initializable {
             jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
                 @Override
                 public void doJob(JobContext context) {
-                    windowProgressTipController.updateFailProgress(context.getError().toString());
+                    GrrParamDto grrParamDto = context.getParam(ParamKeys.GRR_PARAM_DTO, GrrParamDto.class);
+                    refreshPartOrAppraiserListView(grrParamDto);
+                    if (grrParamDto != null && grrParamDto.getErrors() != null && !grrParamDto.getErrors().isEmpty()) {
+                        windowProgressTipController.closeDialog();
+                    } else {
+                        windowProgressTipController.updateFailProgress(context.getError().toString());
+                    }
                 }
             });
             RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);

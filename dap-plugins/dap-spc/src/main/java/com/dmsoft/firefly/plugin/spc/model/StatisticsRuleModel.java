@@ -27,7 +27,7 @@ import java.util.*;
  * Created by Ethan.Yang on 2018/3/23.
  */
 public class StatisticsRuleModel implements TableModel {
-    private static final String[] HEADER = UIConstant.STATISTICAL_RESULT_RULE_HEADER;
+    private static final String[] HEADER = new String[]{SpcFxmlAndLanguageUtils.getString("STATISTICS"), SpcFxmlAndLanguageUtils.getString("LOWER_LIMIT"), SpcFxmlAndLanguageUtils.getString("UPPER_LIMIT")};
     private ObservableList<String> columnKey = FXCollections.observableArrayList(Arrays.asList(HEADER));
     private ObservableList<String> rowKey = FXCollections.observableArrayList();
 
@@ -174,30 +174,30 @@ public class StatisticsRuleModel implements TableModel {
         if (columnName.equals(HEADER[1])) {
             SourceObjectProperty uslProperty = valueMap.get(rowKey + "-" + HEADER[2]);
 
-          if (!DAPStringUtils.isBlank((String) uslProperty.getValue())) {
-              Double usl = Double.valueOf((String) uslProperty.getValue());
-              if (DAPStringUtils.isBlank(newText)) {
-                  if (errorEditorCell.contains(rowKey + "-" + HEADER[2]) && uslProperty.isError()) {
-                      uslProperty.setError(false);
-                      customAlarmDto.setUpperLimit(usl);
-                  }
-              } else {
-                  if (Double.valueOf(newText) >= usl) {
-                      errorEditorCell.add(rowKey + "-" + columnName);
-                      if (!textField.getStyleClass().contains("text-field-error")) {
-                          textField.getStyleClass().add("text-field-error");
-                      }
-                      TooltipUtil.installWarnTooltip(textField, SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_LSL_MORE_THEN_USL));
-                      return true;
-                  } else if (errorEditorCell.contains(rowKey + "-" + HEADER[2])) {
-                      errorEditorCell.remove(rowKey + "-" + HEADER[2]);
-                      if (uslProperty.isError()) {
-                          uslProperty.setError(false);
-                          customAlarmDto.setUpperLimit(usl);
-                      }
-                  }
-              }
-          }
+            if (!DAPStringUtils.isBlank((String) uslProperty.getValue())) {
+                Double usl = Double.valueOf((String) uslProperty.getValue());
+                if (DAPStringUtils.isBlank(newText)) {
+                    if (errorEditorCell.contains(rowKey + "-" + HEADER[2]) && uslProperty.isError()) {
+                        uslProperty.setError(false);
+                        customAlarmDto.setUpperLimit(usl);
+                    }
+                } else {
+                    if (Double.valueOf(newText) >= usl) {
+                        errorEditorCell.add(rowKey + "-" + columnName);
+                        if (!textField.getStyleClass().contains("text-field-error")) {
+                            textField.getStyleClass().add("text-field-error");
+                        }
+                        TooltipUtil.installWarnTooltip(textField, SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_LSL_MORE_THEN_USL));
+                        return true;
+                    } else if (errorEditorCell.contains(rowKey + "-" + HEADER[2])) {
+                        errorEditorCell.remove(rowKey + "-" + HEADER[2]);
+                        if (uslProperty.isError()) {
+                            uslProperty.setError(false);
+                            customAlarmDto.setUpperLimit(usl);
+                        }
+                    }
+                }
+            }
         } else if (columnName.equals(HEADER[2])) {
             SourceObjectProperty lslProperty = valueMap.get(rowKey + "-" + HEADER[1]);
             if (!DAPStringUtils.isBlank((String) lslProperty.getValue())) {

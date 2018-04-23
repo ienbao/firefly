@@ -6,6 +6,7 @@ import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrSummaryResultDto;
 import com.dmsoft.firefly.plugin.grr.service.GrrExportService;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
+import com.dmsoft.firefly.plugin.grr.utils.enums.GrrExportItemKey;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.job.core.AbstractBasicJobHandler;
 import com.dmsoft.firefly.sdk.job.core.JobContext;
@@ -54,22 +55,22 @@ public class ExportDetailResultHandler extends AbstractBasicJobHandler {
             exportResultDto.setItemName(dto.getItemName());
             if (configDto.getGrrConfigDto() != null && configDto.getGrrConfigDto().getExport().containsKey(GrrFxmlAndLanguageUtils.getString(UIConstant.EXPORT_DETIAL))) {
                 Map<String, Boolean> data = configDto.getGrrConfigDto().getExport();
-                if (!data.get(GrrFxmlAndLanguageUtils.getString(UIConstant.EXPORT_DETIAL))) {
+                if (!data.get(GrrExportItemKey.EXPORT_DETAIL_SHEET.getCode())) {
                     exportResultDto.setGrrAnovaAndSourceResultDto(null);
                     exportResultDto.setGrrImageDto(null);
                 } else {
 
-                    if (data.containsKey(GrrFxmlAndLanguageUtils.getString(UIConstant.EXPORT_SOURCE))) {
-                        if (data.get(GrrFxmlAndLanguageUtils.getString(UIConstant.EXPORT_SOURCE))) {
+                    if (data.containsKey(GrrExportItemKey.EXPORT_SOURCE_RESULT.getCode())) {
+                        if (data.containsKey(GrrExportItemKey.EXPORT_SOURCE_RESULT.getCode())) {
                             exportResultDto.setGrrAnovaAndSourceResultDto(dto.getExportDetailDto().getAnovaAndSourceResultDto());
                         } else {
                             exportResultDto.setGrrAnovaAndSourceResultDto(null);
                         }
                     }
 
-                    if (data.containsKey(GrrFxmlAndLanguageUtils.getString(UIConstant.EXPORT_CHARTS))) {
-                        if (data.get(GrrFxmlAndLanguageUtils.getString(UIConstant.EXPORT_CHARTS))) {
-                            exportResultDto.setGrrImageDto(BuildChart.buildImage(dto.getExportDetailDto(), searchConditionDto.getParts(), searchConditionDto.getAppraisers(), configDto.getGrrConfigDto().getExport()));
+                    if (data.containsKey(GrrExportItemKey.EXPORT_CHART.getCode())) {
+                        if (data.containsKey(GrrExportItemKey.EXPORT_CHART.getCode())) {
+                            exportResultDto.setGrrImageDto(BuildChart.buildImage(dto.getExportDetailDto(), searchConditionDto, configDto.getGrrConfigDto().getExport()));
                         } else {
                             exportResultDto.setGrrImageDto(null);
                         }

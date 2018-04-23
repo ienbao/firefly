@@ -11,8 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,7 +55,8 @@ public class DAPStringUtils extends StringUtils {
      * @return true if it's blank.
      */
     public static boolean isSpecialBlank(String data) {
-        return StringUtils.isBlank(data) || data.equalsIgnoreCase("NA") || data.equalsIgnoreCase("N/A") || data.equalsIgnoreCase("-") || data.equalsIgnoreCase("nil") || data.equalsIgnoreCase("UnKnown Line") || data.equalsIgnoreCase("_");
+        return StringUtils.isBlank(data) || data.equalsIgnoreCase("NA") || data.equalsIgnoreCase("N/A")
+                || data.equalsIgnoreCase("-") || data.equalsIgnoreCase("nil") || data.equalsIgnoreCase("UnKnown Line") || data.equalsIgnoreCase("_");
     }
 
     /**
@@ -140,19 +139,54 @@ public class DAPStringUtils extends StringUtils {
         return new String(chars);
     }
 
-    public static String filterSpeCharsFile(String str) {
-        char[] chars = str.toCharArray();
+    /**
+     * filter special charts for mongo db
+     *
+     * @param str string
+     * @return replaced string
+     */
+    public static String filterSpeChars4Mongo(String str) {
+        if (isBlank(str)) {
+            return null;
+        }
+        String s = str;
+        if (s.length() > 60) {
+            s = s.substring(60);
+        }
+        if (s.startsWith("System.")) {
+            s = s.substring(7);
+        }
+        char[] chars = s.toCharArray();
         int len = chars.length;
         for (int i = 0; i < len; i++) {
-            if (chars[i] == '\\' || chars[i] == '@' || chars[i] == '#' || chars[i] == '$' || chars[i] == '%' || chars[i] == '^' || chars[i] == '&'
-                    || chars[i] == '*' || chars[i] == '(' || chars[i] == ')' || chars[i] == '-' || chars[i] == '+' || chars[i] == '='
-                    || chars[i] == '{' || chars[i] == '}' || chars[i] == '[' || chars[i] == ']' || chars[i] == '|' || chars[i] == '/'
-                    || chars[i] == ';' || chars[i] == '"' || chars[i] == ' ' || chars[i] == '<' || chars[i] == '>' || chars[i] == '?' || chars[i] == ','
-                    || chars[i] == '!' || chars[i] == '~' || chars[i] == '`' || chars[i] == ':') {
+            if (chars[i] == '.' || chars[i] == '$') {
                 chars[i] = '_';
             }
         }
         return new String(chars);
+    }
+
+    /**
+     * filter special charts for mongo db
+     *
+     * @param str string
+     * @return replaced string
+     */
+    public static boolean isSpeChars4Mongo(String str) {
+        if (isBlank(str)) {
+            return true;
+        }
+        if (str.length() > 60) {
+            return true;
+        }
+        char[] chars = str.toCharArray();
+        int len = chars.length;
+        for (int i = 0; i < len; i++) {
+            if (chars[i] == '.' || chars[i] == '$') {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -224,10 +258,10 @@ public class DAPStringUtils extends StringUtils {
     /**
      * mongodb ket can not contains this char
      *
-     * @param value
-     * @return
+     * @param value value
+     * @return string
      */
-    public static String specificToNomal(String value) {
+    public static String specificToNormal(String value) {
         if (value.contains(".")) {
             value = value.replace(".", "_");
         }
@@ -261,6 +295,13 @@ public class DAPStringUtils extends StringUtils {
         return value;
     }
 
+    /**
+     * judge s1 is equal to s2 or not
+     *
+     * @param v1 string 1
+     * @param v2 stirng 2
+     * @return is equal or not
+     */
     public static boolean isEqualsString(String v1, String v2) {
         if (DAPStringUtils.isBlank(v1) && DAPStringUtils.isBlank(v2)) {
             return true;
@@ -275,16 +316,20 @@ public class DAPStringUtils extends StringUtils {
         }
     }
 
+    /**
+     * sort list or not
+     *
+     * @param list  list
+     * @param isDES is des or acs
+     */
     public static void sortListString(List<String> list, boolean isDES) {
-        Collections.sort(list, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                if (isDES) {
-                    return o2.compareTo(o1);
-                } else {
-                    return o1.compareTo(o2);
-                }
+        list.sort((o1, o2) -> {
+            if (isDES) {
+                return o2.compareTo(o1);
+            } else {
+                return o1.compareTo(o2);
             }
         });
     }
+
 }

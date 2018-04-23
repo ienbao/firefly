@@ -24,6 +24,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.chart.*;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -71,6 +72,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     private boolean barShow = true;
     private boolean areaShow = true;
     private Map<String, Boolean> lineShow = Maps.newLinkedHashMap();
+
+    private final double ANCHOR_X = 10.0;
+    private final double ANCHOR_Y = 15.0;
 
     /**
      * Constructs a XYChart given the two axes. The initial content for the chart
@@ -131,20 +135,24 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         }
         NumberAxis xAxis = (NumberAxis) this.getXAxis();
         NumberAxis yAxis = (NumberAxis) this.getYAxis();
-        xMax += (xMax - xMin) * UIConstant.Y_FACTOR;
-        xMin -= (xMax - xMin) * UIConstant.Y_FACTOR;
-        yMax += (yMax - yMin) * UIConstant.Y_FACTOR;
-        xMin -= (yMax - yMin) * UIConstant.Y_FACTOR;
-        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
-        Map<String, Object> xAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(xMax, xMin, (int) Math.ceil(xMax - xMin));
-        double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
+        if (yMax - yMin > UIConstant.MARGINAL_VALUE) {
+            yMax += (yMax - yMin) * UIConstant.Y_FACTOR;
+        }
+        if ((xMax - xMin) > UIConstant.MARGINAL_VALUE) {
+            xMax += (xMax - xMin) * UIConstant.Y_FACTOR;
+            xMin -= (xMax - xMin) * UIConstant.Y_FACTOR;
+        }
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (yMax - yMin) > UIConstant.MARGINAL_VALUE
+                ? (int) Math.ceil(yMax - yMin) : UIConstant.COR_NUMBER);
+        Map<String, Object> xAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(xMax, xMin, (xMax - xMin) > UIConstant.MARGINAL_VALUE
+                ? (int) Math.ceil(yMax - yMin) : UIConstant.COR_NUMBER);
         double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
         double newXMin = (Double) xAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
         double newXMax = (Double) xAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
-        yAxis.setLowerBound(newYMin);
-        yAxis.setUpperBound(newYMax > 120 ? 120 : newYMax);
-        xAxis.setLowerBound(newXMin);
-        xAxis.setUpperBound(newXMax);
+        yAxis.setLowerBound(yMin);
+        yAxis.setUpperBound(newYMax < yMax ? yMax : newYMax);
+        xAxis.setLowerBound(newXMin > xMin ? xMin : newXMin);
+        xAxis.setUpperBound(newXMax < xMax ? xMax : newXMax);
         ChartOperatorUtils.updateAxisTickUnit(xAxis);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
     }
@@ -168,11 +176,14 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
      * Remove all chart elements and chart data
      */
     public void removeAllChildren() {
+        getPlotChildren().clear();
         for (Map.Entry<String, XYChart.Series> stringSeriesEntry : uniqueKeySeriesMap.entrySet()) {
             seriesRemoved(stringSeriesEntry.getValue());
         }
-        ObservableList<Node> nodes = getPlotChildren();
-        getPlotChildren().removeAll(nodes);
+//        ObservableList<Node> nodes = getPlotChildren();
+//        getData().clear();
+//        getPlotChildren().removeAll(nodes);
+        getPlotChildren().clear();
         clearData();
     }
 
@@ -231,6 +242,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
      * @param showed   whether it show or not
      */
     public void toggleValueMarker(String lineName, boolean showed) {
+        if (DAPStringUtils.isBlank(lineName)) {
+            return;
+        }
         for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
             valueMarkerEntry.getValue().toggleValueMarker(lineName, showed);
         }
@@ -345,6 +359,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         if (!showTooltip) {
             return;
         }
+        Tooltip tooltip = new Tooltip();
         int size = series.getData().size();
         for (int i = 0; i < size; i++) {
             XYChart.Data<X, Y> dataItem = series.getData().get(i);
@@ -356,7 +371,26 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
                         dataItem.getExtraValue(),
                         dataItem.getYValue(),
                         lastData));
-                Tooltip.install(dataItem.getNode(), new Tooltip(content));
+
+                final Node dataNode = dataItem.getNode();
+                dataNode.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+                            tooltip.setText(content);
+                            tooltip.show(dataNode, event.getScreenX() + ANCHOR_X, event.getScreenY() + ANCHOR_Y);
+                        }
+                );
+                dataNode.addEventHandler(MouseEvent.MOUSE_MOVED, event -> {
+                            if (tooltip.isShowing()) {
+                                tooltip.setAnchorX(event.getScreenX() + ANCHOR_X);
+                                tooltip.setAnchorY(event.getScreenY() + ANCHOR_Y);
+                            }
+                        }
+                );
+                dataNode.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+                    if (tooltip.isShowing()) {
+                        tooltip.hide();
+                    }
+                });
+//                Tooltip.install(dataItem.getNode(), new Tooltip(content));
             }
         }
     }

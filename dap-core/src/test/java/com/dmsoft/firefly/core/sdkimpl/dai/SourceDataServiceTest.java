@@ -101,7 +101,7 @@ public class SourceDataServiceTest {
         SourceDataServiceImpl sourceDataService = new SourceDataServiceImpl();
         Map<String, String> data = Maps.newHashMap();
         data.put("CC", "DD");
-        sourceDataService.replaceTestData("2000*2000", "2000*2000_!@#_1", data);
+        sourceDataService.saveTestData("2000*2000", "2000*2000_!@#_1", data);
     }
 
     @Test

@@ -124,7 +124,7 @@ public class AMCsvResolverController {
                 data.getStyleClass().removeAll("combo-box-error");
                 if (cache != null) {
                     cache.values().forEach(value -> {
-                        if (value != null && Integer.valueOf(data.getValue().toString().substring(3, 4)) < value) {
+                        if (value != null && Integer.valueOf(data.getValue().toString().substring(3, data.getValue().toString().length())) < value) {
                             TooltipUtil.installWarnTooltip(data, CsvFxmlAndLanguageUtils.getString("CSV_RESOLVE_TIP_MAX_TEST_DATA_ROW"));
                             data.getStyleClass().add("combo-box-error");
                         }
@@ -239,13 +239,13 @@ public class AMCsvResolverController {
     private void save() {
         CsvTemplateDto csvTemplateDto = new CsvTemplateDto();
         csvTemplateDto.setFilePath(path.getText());
-        csvTemplateDto.setHeader(header.getValue() == null || StringUtils.isEmpty(header.getValue().toString()) ? null : Integer.valueOf(header.getValue().toString().substring(3, 4)));
+        csvTemplateDto.setHeader(header.getValue() == null || StringUtils.isEmpty(header.getValue().toString()) ? null : Integer.valueOf(header.getValue().toString().substring(3, header.getValue().toString().length())));
 
-        csvTemplateDto.setItem(Integer.valueOf(item.getValue().toString().substring(3, 4)));
-        csvTemplateDto.setUsl(usl.getValue() == null || StringUtils.isEmpty(usl.getValue().toString()) ? null : Integer.valueOf(usl.getValue().toString().substring(3, 4)));
-        csvTemplateDto.setLsl(lsl.getValue() == null || StringUtils.isEmpty(lsl.getValue().toString()) ? null : Integer.valueOf(lsl.getValue().toString().substring(3, 4)));
-        csvTemplateDto.setUnit(unit.getValue() == null || StringUtils.isEmpty(unit.getValue().toString()) ? null : Integer.valueOf(unit.getValue().toString().substring(3, 4)));
-        csvTemplateDto.setData(Integer.valueOf(data.getValue().toString().substring(3, 4)));
+        csvTemplateDto.setItem(Integer.valueOf(item.getValue().toString().substring(3, item.getValue().toString().length())));
+        csvTemplateDto.setUsl(usl.getValue() == null || StringUtils.isEmpty(usl.getValue().toString()) ? null : Integer.valueOf(usl.getValue().toString().substring(3, usl.getValue().toString().length())));
+        csvTemplateDto.setLsl(lsl.getValue() == null || StringUtils.isEmpty(lsl.getValue().toString()) ? null : Integer.valueOf(lsl.getValue().toString().substring(3, lsl.getValue().toString().length())));
+        csvTemplateDto.setUnit(unit.getValue() == null || StringUtils.isEmpty(unit.getValue().toString()) ? null : Integer.valueOf(unit.getValue().toString().substring(3, unit.getValue().toString().length())));
+        csvTemplateDto.setData(Integer.valueOf(data.getValue().toString().substring(3, data.getValue().toString().length())));
 
         service.saveCsvTemplate(csvTemplateDto);
     }
@@ -255,10 +255,11 @@ public class AMCsvResolverController {
             cache.remove(key, null);
             return;
         }
-        cache.put(key, Integer.valueOf(node.getValue().toString().substring(3, 4)));
+        cache.put(key, Integer.valueOf(node.getValue().toString().substring(3, node.getValue().toString().length())));
 
         if (data.getValue() != null && !StringUtils.isEmpty(data.getValue().toString())) {
-            if (!node.equals(data) && Integer.valueOf(node.getValue().toString().substring(3, 4)) > Integer.valueOf(data.getValue().toString().substring(3, 4))) {
+            if (!node.equals(data)
+                    && Integer.valueOf(node.getValue().toString().substring(3, node.getValue().toString().length())) > Integer.valueOf(data.getValue().toString().substring(3, data.getValue().toString().length()))) {
                 TooltipUtil.installWarnTooltip(data, CsvFxmlAndLanguageUtils.getString("CSV_RESOLVE_TIP_MAX_TEST_DATA_ROW"));
                 data.getStyleClass().add("combo-box-error");
             }

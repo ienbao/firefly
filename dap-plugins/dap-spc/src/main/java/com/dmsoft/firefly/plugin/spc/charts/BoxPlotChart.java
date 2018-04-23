@@ -26,6 +26,7 @@ import javafx.scene.chart.Axis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
@@ -49,6 +50,9 @@ public class BoxPlotChart extends XYChart<Number, Number> {
     private Map<String, XYChart.Series> uniqueKeySeriesMap = Maps.newHashMap();
     private Map<XYChart.Series, String> seriesUniqueKeyMap = Maps.newHashMap();
     private Map<String, List<Node>> uniqueKeyNodesMap = Maps.newHashMap();
+
+    private final double ANCHOR_X = 10.0;
+    private final double ANCHOR_Y = 15.0;
 
     /**
      * Constructs a BoxPlotChart given the two axes. The initial content for the chart
@@ -108,13 +112,19 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         }
         NumberAxis xAxis = (NumberAxis) this.getXAxis();
         NumberAxis yAxis = (NumberAxis) this.getYAxis();
-        yMax += (yMax - yMin) * UIConstant.Y_FACTOR;
-        yMin -= (yMax - yMin) * UIConstant.Y_FACTOR;
-        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        if (yMax - yMin > UIConstant.MARGINAL_VALUE) {
+            yMax += (yMax - yMin) * UIConstant.Y_FACTOR;
+            yMin -= (yMax - yMin) * UIConstant.Y_FACTOR;
+        } else {
+            yMax += UIConstant.Y_FACTOR;
+            yMin -= UIConstant.Y_FACTOR;
+        }
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (yMax - yMin) > UIConstant.MARGINAL_VALUE
+                ? (int) Math.ceil(yMax - yMin) : UIConstant.COR_NUMBER);
         double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
         double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
-        yAxis.setLowerBound(newYMin);
-        yAxis.setUpperBound(newYMax);
+        yAxis.setLowerBound(newYMin > yMin ? yMin : newYMin);
+        yAxis.setUpperBound(newYMax < yMax ? yMax : newYMax);
         xAxis.setLowerBound(0);
         xAxis.setUpperBound(xMax + UIConstant.X_FACTOR);
         ChartOperatorUtils.updateAxisTickUnit(xAxis);
@@ -133,7 +143,7 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         }
         String uniqueKey = chartData.getUniqueKey();
         Color color = chartData.getColor();
-        this.addPoints(chartData.getPoints(), uniqueKey);
+        this.addPoints(chartData.getSeriesName(), chartData.getPoints(), uniqueKey);
         if (chartData.getBoxAndWhiskerData() != null) {
             XYChart.Series<Number, Number> series = buildSeries(chartData.getBoxAndWhiskerData(), chartData.getSeriesName());
             this.uniqueKeySeriesMap.put(uniqueKey, series);
@@ -162,13 +172,16 @@ public class BoxPlotChart extends XYChart<Number, Number> {
      * Remove all chart nodes and all chart data
      */
     public void removeAllChildren() {
-        ObservableList<Node> nodes = getPlotChildren();
-        getPlotChildren().removeAll(nodes);
-        getData().setAll(FXCollections.observableArrayList());
+//        ObservableList<Node> nodes = getPlotChildren();
+        getPlotChildren().clear();
+        getData().clear();
+//        getPlotChildren().removeAll(nodes);
+//        getData().setAll(FXCollections.observableArrayList());
         uniqueKeySeriesMap.clear();
         seriesUniqueKeyMap.clear();
         uniqueKeyNodesMap.clear();
-        outliers.setAll(FXCollections.observableArrayList());
+//        outliers.setAll(FXCollections.observableArrayList());
+        outliers.clear();
         gridLineChanged = false;
     }
 
@@ -219,6 +232,9 @@ public class BoxPlotChart extends XYChart<Number, Number> {
             series.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
         }
         series.getNode().getStyleClass().add("candlestick-series");
+        Tooltip tooltip = new Tooltip();
+        tooltip.getStyleClass().setAll("candlestick-tooltip");
+
         data.forEach(dataItem -> {
             if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {
                 if (dataItem.getNode() instanceof Candle) {
@@ -227,7 +243,6 @@ public class BoxPlotChart extends XYChart<Number, Number> {
                 }
             }
             if (pointTooltipFunction != null) {
-                Node itemNode = dataItem.getNode();
                 if (dataItem.getExtraValue() instanceof BoxExtraData) {
                     BoxExtraData extra = (BoxExtraData) dataItem.getExtraValue();
                     BoxTooltip boxTooltip = new BoxTooltip();
@@ -236,10 +251,24 @@ public class BoxPlotChart extends XYChart<Number, Number> {
                     boxTooltip.setMaxRegularValue(extra.getMaxRegularValue().doubleValue());
                     boxTooltip.setMinRegularValue(extra.getMinRegularValue().doubleValue());
                     boxTooltip.setMedian(extra.getMedian().doubleValue());
-                    Tooltip tooltip = new Tooltip();
-                    tooltip.setGraphic(pointTooltipFunction.apply(boxTooltip));
-                    tooltip.getStyleClass().setAll("candlestick-tooltip");
-                    Tooltip.install(itemNode, tooltip);
+                    final Node dataNode = dataItem.getNode();
+                    dataNode.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+                                tooltip.setGraphic(pointTooltipFunction.apply(boxTooltip));
+                                tooltip.show(dataNode, event.getScreenX() + ANCHOR_X, event.getScreenY() + ANCHOR_Y);
+                            }
+                    );
+                    dataNode.addEventHandler(MouseEvent.MOUSE_MOVED, event -> {
+                                if (tooltip.isShowing()) {
+                                    tooltip.setAnchorX(event.getScreenX() + ANCHOR_X);
+                                    tooltip.setAnchorY(event.getScreenY() + ANCHOR_Y);
+                                }
+                            }
+                    );
+                    dataNode.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+                        if (tooltip.isShowing()) {
+                            tooltip.hide();
+                        }
+                    });
                 }
             }
         });
@@ -318,18 +347,18 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         }
     }
 
-    private void addSymbol(Data<Number, Number> symbol, Color color, String uniqueKey) {
+    private void addSymbol(Data<Number, Number> symbol, Color color, String uniqueKey, String seriesName) {
         Circle circle = new Circle();
         symbol.setNode(circle);
         getPlotChildren().add(circle);
         addToUniqueKeyNodes(uniqueKey, circle);
         outliers.add(symbol);
-        Tooltip.install(circle, new Tooltip("x: " + symbol.getXValue() + "   y: " + symbol.getYValue()));
+        Tooltip.install(circle, new Tooltip(seriesName + "\n" + "x: " + symbol.getXValue() + "   y: " + symbol.getYValue()));
         circle.setFill(color);
         circle.setCache(true);
     }
 
-    private void addPoints(IPoint points, String uniqueKey) {
+    private void addPoints(String seriesName, IPoint points, String uniqueKey) {
         if (points == null) {
             return;
         }
@@ -341,7 +370,7 @@ public class BoxPlotChart extends XYChart<Number, Number> {
             }
             data.setXValue((Number) points.getXByIndex(i));
             data.setYValue((Number) points.getYByIndex(i));
-            addSymbol(data, points.getColor(), uniqueKey);
+            addSymbol(data, points.getColor(), uniqueKey, seriesName);
         }
     }
 

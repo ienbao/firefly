@@ -6,7 +6,7 @@ set CLASSPATH=%CLASSPATH%;%JRE_HOME%\lib;%R_HOME%\library\rJava\jri
 
 set APP_JAR=dap-gui-2.5.0-SNAPSHOT.jar
 set LOG=log
-
+set flag=0
 set ID=
     IF "%1%"=="start" GOTO start
     IF "%1%"=="stop" GOTO stop
@@ -14,17 +14,36 @@ set ID=
     IF "%1%"=="exit" EXIT
 
 :start
-    call :startApp
-    GOTO :eof
+        for /f "tokens=5" %%i in ('netstat -aon ^| findstr ":27018"') do (
+            echo exit starting mongodb
+            set flag=1
+         )
+         echo if exit starting mongodb: %flag%
+        IF %flag%==0 (
+           echo "start......"
+           call :startMongodb
+           call :startApp
+            GOTO :eof
+       )else (
+           echo DAP has been running.
+       )
+       exit
 
 :stop
+    echo "stop......"
     call :stopApp
     GOTO :eof
+    exit
 
 :restart
+    echo "restart......"
     call :stopApp
     call :startApp
     GOTO :eof
+
+:startMongodb
+    echo "start mongo"
+    start %~dp0installmongo.bat start
 
 :startApp
 
@@ -41,5 +60,8 @@ set ID=
     set now=%date:~,4%%date:~5,2%%date:~8,2%
     echo DAP is running...
 	java -Djava.library.path="%R_HOME%\library\rJava\jri" -jar %APP_JAR%
+    exit
+
 :stopApp
+    echo "kill java....."
     taskkill /F /IM java > nul

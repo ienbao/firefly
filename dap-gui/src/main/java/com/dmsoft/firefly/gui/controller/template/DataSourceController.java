@@ -188,14 +188,16 @@ public class DataSourceController implements Initializable {
                                     FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
                                     renameTemplateController = new NewNameController();
                                     renameTemplateController.setPaneName("renameProject");
+                                    renameTemplateController.setInitName(item.getValue());
 
                                     loader.setController(renameTemplateController);
                                     root = loader.load();
+
                                     NewNameController finalRenameTemplateController = renameTemplateController;
                                     renameTemplateController.getOk().setOnAction(renameEvent -> {
                                         TextField n = finalRenameTemplateController.getName();
                                         if (StringUtils.isNotEmpty(n.getText()) && !n.getText().equals(item.getValue().toString())) {
-                                            String newString = DAPStringUtils.filterSpeCharsFile(n.getText());
+                                            String newString = DAPStringUtils.filterSpeChars4Mongo(n.getText());
                                             sourceDataService.renameProject(item.getValue(), newString);
                                             item.setValue(newString);
                                             dataSourceTable.refresh();
@@ -204,12 +206,11 @@ public class DataSourceController implements Initializable {
                                         StageMap.closeStage("renameProject");
                                     });
                                     renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameProject", "Rename Project", root);
-                                } catch (Exception e) {
-
+                                    renameTemplateController.getName().setText(item.getValue());
+                                    renameStage.toFront();
+                                    renameStage.show();
+                                } catch (Exception ignored) {
                                 }
-                                renameTemplateController.getName().setText(item.getValue());
-                                renameStage.toFront();
-                                renameStage.show();
                             });
                             deleteOne.setOnAction(event -> {
                                 if (!item.isImport()) {
@@ -358,8 +359,8 @@ public class DataSourceController implements Initializable {
         });
         List<String> deleteProjects = Lists.newArrayList();
         delete.setOnAction(event -> {
-            WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel(FxmlAndLanguageUtils.getString(ResourceMassages.DELETE_DATA_SOURCE),
-                    FxmlAndLanguageUtils.getString(ResourceMassages.DELETE_DATA_SOURCE_CONFIRM));
+            WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel(GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_DATA_SOURCE),
+                    GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_DATA_SOURCE_CONFIRM));
             controller.addProcessMonitorListener(new WindowCustomListener() {
                 @Override
                 public boolean onShowCustomEvent() {

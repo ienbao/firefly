@@ -1,5 +1,7 @@
 package com.dmsoft.firefly.gui.components.utils;
 
+import java.util.function.Function;
+
 /**
  * base class for validate rule
  *
@@ -14,6 +16,8 @@ public class ValidateRule {
     private Boolean allowEmpty;
     private String emptyErrorMsg;
     private String rangErrorMsg;
+    // input text,return true : illegal, false : illegal
+    private Function<String, Boolean> validateFunc;
 
     public int getMaxLength() {
         return maxLength;
@@ -77,5 +81,13 @@ public class ValidateRule {
 
     public void setRangErrorMsg(String rangErrorMsg) {
         this.rangErrorMsg = rangErrorMsg;
+    }
+
+    public Function<String, Boolean> getValidateFunc() {
+        return validateFunc;
+    }
+
+    public void setValidateFunc(Function<String, Boolean> validateFunc) {
+        this.validateFunc = validateFunc;
     }
 }

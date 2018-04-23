@@ -4,6 +4,7 @@
 package com.dmsoft.firefly.gui.model;
 
 import com.dmsoft.firefly.gui.utils.TableCheckBox;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
@@ -24,7 +25,7 @@ public class ChooseTableRowData {
      */
     public ChooseTableRowData(boolean isSelect, String value) {
         selector.setValue(isSelect);
-        this.value = new SimpleStringProperty(value);
+        this.value = new SimpleStringProperty(DAPStringUtils.filterSpeChars4Mongo(value));
     }
 
     public boolean isError() {

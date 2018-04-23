@@ -50,7 +50,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 
 import java.net.URL;
 import java.util.*;
@@ -420,6 +419,7 @@ public class GrrResultController implements Initializable {
                     GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
             return;
         }
+
         setComponentChart(grrDetailDto.getGrrDetailResultDto().getComponentChartDto());
         setPartAppraiserChart(grrDetailDto.getGrrDetailResultDto().getPartAppraiserChartDto(),
                 Lists.newArrayList(parts), Lists.newArrayList(appraisers));
@@ -427,19 +427,62 @@ public class GrrResultController implements Initializable {
                 xBarAppraiserBp,
                 xBarAppraiserChart,
                 xBarAppraiserChartBtn,
-                Lists.newArrayList(parts),
-                Lists.newArrayList(appraisers));
+                Lists.newArrayList(parts));
         this.setBarChartPerformance();
         setControlChartData(grrDetailDto.getGrrDetailResultDto().getRangeAppraiserChartDto(),
                 rangeAppraiserBp,
                 rangeAppraiserChart,
                 rangeAppraiserChartBtn,
-                Lists.newArrayList(parts),
-                Lists.newArrayList(appraisers));
+                Lists.newArrayList(parts));
         this.setRangeChartPerformance();
         setScatterChartData(grrDetailDto.getGrrDetailResultDto().getRrbyAppraiserChartDto(), rrByAppraiserChart, rrbyAppraiserBp);
         setScatterChartData(grrDetailDto.getGrrDetailResultDto().getRrbyPartChartDto(), rrbyPartChart, rrbyPartBp);
+        setControlChartXAxisLabel(Lists.newArrayList(appraisers), (NumberAxis) xBarAppraiserChart.getXAxis());
+        setControlChartXAxisLabel(Lists.newArrayList(appraisers), (NumberAxis) rangeAppraiserChart.getXAxis());
+        setScatterChartXAxisLabel(Lists.newArrayList(appraisers), (NumberAxis) rrByAppraiserChart.getXAxis());
+        setScatterChartXAxisLabel(Lists.newArrayList(parts), (NumberAxis) rrbyPartChart.getXAxis());
         setAnovaAndSourceTb(grrDetailDto.getGrrDetailResultDto().getAnovaAndSourceResultDto());
+    }
+
+    private void setControlChartXAxisLabel(List<String> appraisers, NumberAxis xAxis) {
+        xAxis.setTickLabelFormatter(new NumberAxis.DefaultFormatter(xAxis) {
+            @Override
+            public String toString(final Number object) {
+                int partSize = parts.size();
+                double standardValue = (partSize + 1) / 2.0;
+
+                if (object != null && object instanceof Double) {
+                    int partQuotient = (int) (object.doubleValue() / partSize);
+                    double standardQuotient = ((Double) object - standardValue) % partSize;
+                    double partRemainder = object.doubleValue() % partSize;
+                    if (standardQuotient % 1.0 == 0 && partRemainder == standardValue) {
+                        boolean appraiserValid = DAPStringUtils.isNotEmpty(grrMainController.getSearchConditionDto().getAppraiser());
+                        appraiserValid = appraiserValid && appraisers != null && appraisers.size() > partQuotient;
+                        return appraiserValid ? appraisers.get(partQuotient)
+                                : GrrFxmlAndLanguageUtils.getString(UIConstant.AXIS_LBL_PREFIX_APPRAISER) + (partQuotient + 1);
+                    }
+                }
+                return "";
+            }
+        });
+    }
+
+    private void setScatterChartXAxisLabel(List<String> xAxisLabels, NumberAxis xAxis) {
+        xAxis.setTickLabelFormatter(new NumberAxis.DefaultFormatter(xAxis) {
+            @Override
+            public String toString(final Number object) {
+                if (object != null && object instanceof Double && (Double) object % 1 == 0) {
+                    int value = object.intValue();
+                    boolean xAxisLabelValid = xAxisLabels != null;
+                    xAxisLabelValid = xAxisLabelValid && !xAxisLabels.isEmpty();
+                    xAxisLabelValid = xAxisLabelValid && xAxisLabels.size() >= value;
+                    if (xAxisLabelValid && object.intValue() != 0) {
+                        return xAxisLabels.get(object.intValue() - 1);
+                    }
+                }
+                return "";
+            }
+        });
     }
 
     private void removeAllResultData() {
@@ -467,43 +510,43 @@ public class GrrResultController implements Initializable {
         double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
         yMax += reserve;
-        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, 5);
         double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
         double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
-        yAxis.setLowerBound(newYMin);
+        yAxis.setLowerBound((newYMin < 0 && yMin >= 0) ? 0 : newYMin);
         yAxis.setUpperBound(newYMax);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
 
-        series1.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[0],
+        series1.getData().add(new XYChart.Data<>(chartComponentLabel[0],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrContri()) ? 0 : componentCResult.getGrrContri()));
-        series1.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[1],
+        series1.getData().add(new XYChart.Data<>(chartComponentLabel[1],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getRepeatContri()) ? 0 : componentCResult.getRepeatContri()));
-        series1.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[2],
+        series1.getData().add(new XYChart.Data<>(chartComponentLabel[2],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodContri()) ? 0 : componentCResult.getReprodContri()));
-        series1.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[3],
+        series1.getData().add(new XYChart.Data<>(chartComponentLabel[3],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getPartContri()) ? 0 : componentCResult.getPartContri()));
 
-        series2.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[0],
+        series2.getData().add(new XYChart.Data<>(chartComponentLabel[0],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrVar()) ? 0 : componentCResult.getGrrVar()));
-        series2.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[1],
+        series2.getData().add(new XYChart.Data<>(chartComponentLabel[1],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getRepeatVar()) ? 0 : componentCResult.getRepeatVar()));
-        series2.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[2],
+        series2.getData().add(new XYChart.Data<>(chartComponentLabel[2],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodVar()) ? 0 : componentCResult.getReprodVar()));
-        series2.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[3],
+        series2.getData().add(new XYChart.Data<>(chartComponentLabel[3],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getPartVar()) ? 0 : componentCResult.getPartVar()));
 
-        series3.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[0],
+        series3.getData().add(new XYChart.Data<>(chartComponentLabel[0],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getGrrTol()) ? 0 : componentCResult.getGrrTol()));
-        series3.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[1],
+        series3.getData().add(new XYChart.Data<>(chartComponentLabel[1],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getRepeatTol()) ? 0 : componentCResult.getRepeatTol()));
-        series3.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[2],
+        series3.getData().add(new XYChart.Data<>(chartComponentLabel[2],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getReprodTol()) ? 0 : componentCResult.getReprodTol()));
-        series3.getData().add(new XYChart.Data<>(CHART_COMPONENT_LABEL[3],
+        series3.getData().add(new XYChart.Data<>(chartComponentLabel[3],
                 DAPStringUtils.isInfinityAndNaN(componentCResult.getPartTol()) ? 0 : componentCResult.getPartTol()));
         componentChart.getData().addAll(series1, series2, series3);
-        for (int i = 0; i < CHART_COMPONENT_CATEGORY.length; i++) {
+        for (int i = 0; i < chartComponentCategory.length; i++) {
             XYChart.Series series = (XYChart.Series) componentChart.getData().get(i);
-            series.setName("% " + CHART_COMPONENT_CATEGORY[i]);
+            series.setName("% " + chartComponentCategory[i]);
         }
         Legend legend = LegendUtils.buildLegend(componentChart.getData(), "bar-legend-symbol", "chart-bar");
         componentBp.setLeft(legend);
@@ -570,8 +613,7 @@ public class GrrResultController implements Initializable {
                                      BorderPane borderPane,
                                      LinearChart chart,
                                      ChartOperateButton button,
-                                     List<String> parts,
-                                     List<String> appraisers) {
+                                     List<String> parts) {
 
         int partCount = parts.size();
         Double[] x = chartData.getX();
@@ -579,10 +621,13 @@ public class GrrResultController implements Initializable {
         Double[] ruleData = new Double[]{chartData.getUcl(), chartData.getCl(), chartData.getLcl()};
         Double yMax = MathUtils.getMax(y, ruleData);
         Double yMin = MathUtils.getMin(y, ruleData);
+        Double xMax = MathUtils.getMax(x);
+        Double xMin = MathUtils.getMin(x);
         if (DAPStringUtils.isInfinityAndNaN(yMax) || DAPStringUtils.isInfinityAndNaN(yMin)) {
             return;
         }
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
+        NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         final double factor = 0.01;
         double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
@@ -593,6 +638,8 @@ public class GrrResultController implements Initializable {
         double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
         yAxis.setLowerBound(newYMin);
         yAxis.setUpperBound(newYMax);
+        xAxis.setLowerBound(xMin - UIConstant.X_FACTOR);
+        xAxis.setUpperBound(xMax + UIConstant.X_FACTOR);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
         List<ILineData> horizontalLineData = Lists.newArrayList();
         List<ILineData> verticalLineData = Lists.newArrayList();
@@ -610,18 +657,18 @@ public class GrrResultController implements Initializable {
             series.getData().add(new XYChart.Data<>(x[i], y[i], parts.get(i % partCount)));
         }
         if (!DAPStringUtils.isInfinityAndNaN(chartData.getUcl())) {
-            RuleLineData uclLineData = new RuleLineData(CHART_OPERATE_NAME[0], chartData.getUcl());
+            RuleLineData uclLineData = new RuleLineData(chartOperateName[0], chartData.getUcl());
             uclLineData.setColor(Color.rgb(102, 102, 102));
             uclLineData.setLineClass("dashed2-line");
             horizontalLineData.add(uclLineData);
         }
         if (!DAPStringUtils.isInfinityAndNaN(chartData.getCl())) {
-            RuleLineData clLineData = new RuleLineData(CHART_OPERATE_NAME[1], chartData.getCl());
+            RuleLineData clLineData = new RuleLineData(chartOperateName[1], chartData.getCl());
             clLineData.setLineClass("solid-line");
             horizontalLineData.add(clLineData);
         }
         if (!DAPStringUtils.isInfinityAndNaN(chartData.getLcl())) {
-            RuleLineData lclLineData = new RuleLineData(CHART_OPERATE_NAME[2], chartData.getLcl());
+            RuleLineData lclLineData = new RuleLineData(chartOperateName[2], chartData.getLcl());
             lclLineData.setColor(Color.rgb(178, 178, 178));
             lclLineData.setLineClass("dashed1-line");
             horizontalLineData.add(lclLineData);
@@ -634,8 +681,7 @@ public class GrrResultController implements Initializable {
         chart.buildValueMarkerWithTooltip(horizontalLineData, new Function<ILineData, String>() {
             @Override
             public String apply(ILineData oneLineData) {
-                return oneLineData.getTitle() + "\n" + oneLineData.getName() + "="
-                        + DAPStringUtils.formatDouble(oneLineData.getValue(), digNum);
+                return oneLineData.getName() + "=" + DAPStringUtils.formatDouble(oneLineData.getValue(), digNum);
             }
         });
         ChartUtils.setChartToolTip(chart.getData(), pointTooltip -> {
@@ -658,10 +704,16 @@ public class GrrResultController implements Initializable {
         Double[] clY = scatterChartData.getClY();
         Double yMax = MathUtils.getMax(y, clY);
         Double yMin = MathUtils.getMin(y, clY);
-        if (DAPStringUtils.isInfinityAndNaN(yMax) || DAPStringUtils.isInfinityAndNaN(yMin)) {
+        Double xMin = MathUtils.getMin(x, clX);
+        Double xMax = MathUtils.getMax(x, clX);
+        if (DAPStringUtils.isInfinityAndNaN(yMax)
+                || DAPStringUtils.isInfinityAndNaN(yMin)
+                || DAPStringUtils.isInfinityAndNaN(xMax)
+                || DAPStringUtils.isInfinityAndNaN(xMin)) {
             return;
         }
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
+        NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         final double factor = 0.01;
         Double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
@@ -670,6 +722,8 @@ public class GrrResultController implements Initializable {
         Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
         double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
         double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
+        xAxis.setLowerBound(xMin - UIConstant.X_FACTOR);
+        xAxis.setUpperBound(xMax + UIConstant.X_FACTOR);
         yAxis.setLowerBound(newYMin);
         yAxis.setUpperBound(newYMax);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
@@ -696,8 +750,7 @@ public class GrrResultController implements Initializable {
             return pointTooltip == null ? "" : "(" + DAPStringUtils.formatDouble(value, digNum) + ")";
         });
         scatterSeries.getNode().getStyleClass().add("chart-series-hidden-line");
-        Legend legend = LegendUtils.buildLegend(chart.getData(),
-                "chart-line-symbol", "line-legend-symbol");
+        Legend legend = LegendUtils.buildLegend(chart.getData(), "chart-line-symbol", "line-legend-symbol");
         borderPane.setLeft(legend);
     }
 
@@ -775,23 +828,16 @@ public class GrrResultController implements Initializable {
     private LinearChart buildControlChart() {
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
-        xAxis.setTickLabelFormatter(new StringConverter<Number>() {
-            @Override
-            public String toString(Number object) {
-                return (Double) object % ((+parts.size()) / 2) == 0 ? String.valueOf(object) : null;
-            }
-
-            @Override
-            public Number fromString(String string) {
-                return null;
-            }
-        });
+        final double tickUnit = 0.5;
+        xAxis.setTickUnit(tickUnit);
         xAxis.setMinorTickVisible(false);
         xAxis.setTickMarkVisible(false);
         yAxis.setMinorTickVisible(false);
         yAxis.setTickMarkVisible(false);
         yAxis.setAutoRanging(false);
+        xAxis.setAutoRanging(false);
         LinearChart chart = new LinearChart(xAxis, yAxis);
+        chart.setVerticalGridLinesVisible(false);
         return chart;
     }
 
@@ -803,21 +849,11 @@ public class GrrResultController implements Initializable {
         xAxis.setTickMarkVisible(false);
         yAxis.setMinorTickVisible(false);
         yAxis.setTickMarkVisible(false);
-        xAxis.setTickLabelFormatter(new StringConverter<Number>() {
-            @Override
-            public String toString(Number object) {
-                return (Double) object % 1.0 == 0 ? String.valueOf(object) : null;
-            }
-
-            @Override
-            public Number fromString(String string) {
-                return null;
-            }
-        });
+        xAxis.setAutoRanging(false);
+        yAxis.setAutoRanging(false);
+        xAxis.setTickUnit(1);
         LineChart chart = new LineChart(xAxis, yAxis);
         chart.setLegendVisible(false);
-        chart.setVerticalGridLinesVisible(false);
-        chart.setHorizontalGridLinesVisible(false);
         return chart;
     }
 
@@ -841,21 +877,21 @@ public class GrrResultController implements Initializable {
 
         xBarAppraiserChart.setHorizontalZeroLineVisible(false);
         xBarAppraiserChart.setVerticalZeroLineVisible(false);
+        xBarAppraiserChart.setVerticalGridLinesVisible(false);
+
         rangeAppraiserChart.setHorizontalZeroLineVisible(false);
         rangeAppraiserChart.setVerticalZeroLineVisible(false);
+        rangeAppraiserChart.setVerticalGridLinesVisible(false);
+
         rrByAppraiserChart.setHorizontalZeroLineVisible(false);
         rrByAppraiserChart.setVerticalZeroLineVisible(false);
         rrbyPartChart.setHorizontalZeroLineVisible(false);
         rrbyPartChart.setVerticalZeroLineVisible(false);
-
-        componentChart.setVerticalGridLinesVisible(false);
-        componentChart.setHorizontalGridLinesVisible(false);
-        partAppraiserChart.setHorizontalGridLinesVisible(false);
-        partAppraiserChart.setVerticalGridLinesVisible(false);
-        xBarAppraiserChart.setVerticalGridLinesVisible(false);
-        xBarAppraiserChart.setHorizontalGridLinesVisible(false);
-        rangeAppraiserChart.setVerticalGridLinesVisible(false);
-        rangeAppraiserChart.setHorizontalGridLinesVisible(false);
+//        componentChart.setVerticalGridLinesVisible(false);
+//        componentChart.setHorizontalGridLinesVisible(false);
+//        partAppraiserChart.setHorizontalGridLinesVisible(false);
+//        partAppraiserChart.setVerticalGridLinesVisible(false);
+//        rangeAppraiserChart.setHorizontalGridLinesVisible(false);
         xBarAppraiserChart.setLegendVisible(false);
         ObservableList<TableColumn<String, ?>> summaryTbColumns = summaryTb.getColumns();
         summaryTbColumns.get(0).prefWidthProperty().bind(summaryTb.widthProperty().divide(25));
@@ -866,19 +902,6 @@ public class GrrResultController implements Initializable {
         summaryTbColumns.get(5).prefWidthProperty().bind(summaryTb.widthProperty().divide(7));
         summaryTbColumns.get(6).prefWidthProperty().bind(summaryTb.widthProperty().divide(7));
         summaryTbColumns.get(7).prefWidthProperty().bind(summaryTb.widthProperty().divide(7));
-//        anovaTbColumns.get(0).setPrefWidth(100);
-//        anovaTbColumns.get(1).setPrefWidth(140);
-//        anovaTbColumns.get(2).setPrefWidth(140);
-//        anovaTbColumns.get(3).setPrefWidth(130);
-//        anovaTbColumns.get(4).setPrefWidth(130);
-//        anovaTbColumns.get(5).setPrefWidth(130);
-//        sourceTbColumns.get(0).setPrefWidth(127);
-//        sourceTbColumns.get(1).setPrefWidth(80);
-//        sourceTbColumns.get(2).setPrefWidth(110);
-//        sourceTbColumns.get(3).setPrefWidth(110);
-//        sourceTbColumns.get(4).setPrefWidth(120);
-//        sourceTbColumns.get(5).setPrefWidth(120);
-//        sourceTbColumns.get(6).setPrefWidth(120);
         xBarAppraiserChartBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
         rangeAppraiserChartBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
         xBarAppraiserChartBtn.setListViewSize(80, 80);
@@ -932,7 +955,7 @@ public class GrrResultController implements Initializable {
 
     private void setBarChartPerformance() {
         List<String> barHiddenLines = Lists.newArrayList();
-        for (String operateName : CHART_OPERATE_NAME) {
+        for (String operateName : chartOperateName) {
             if (!xBarAppraiserChartBtn.getSelectedSets().contains(operateName)) {
                 barHiddenLines.add(operateName);
             }
@@ -942,7 +965,7 @@ public class GrrResultController implements Initializable {
 
     private void setRangeChartPerformance() {
         List<String> rangeHiddenLines = Lists.newArrayList();
-        for (String operateName : CHART_OPERATE_NAME) {
+        for (String operateName : chartOperateName) {
             if (!rangeAppraiserChartBtn.getSelectedSets().contains(operateName)) {
                 rangeHiddenLines.add(operateName);
             }
@@ -955,14 +978,14 @@ public class GrrResultController implements Initializable {
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TYPE_TOLERANCE),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TYPE_CONTRIBUTION));
         resultBasedCmb.setValue(GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TYPE_TOLERANCE));
-        summaryModel.initColumn(Lists.newArrayList(GRR_SUMMARY_TITLE));
-        grrAnovaModel.initColumn(Lists.newArrayList(GRR_ANOVA_TITLE));
+        summaryModel.initColumn(Lists.newArrayList(grrSummaryTitle));
+        grrAnovaModel.initColumn(Lists.newArrayList(grrAnovaTitle));
         grrSourceModel.initColumn(buildSourceTbColumn());
         TableViewWrapper.decorate(summaryTb, summaryModel);
         TableViewWrapper.decorate(anovaTb, grrAnovaModel);
         TableViewWrapper.decorate(sourceTb, grrSourceModel);
-        xBarAppraiserChartBtn.setListViewData(Lists.newArrayList(CHART_OPERATE_NAME));
-        rangeAppraiserChartBtn.setListViewData(Lists.newArrayList(CHART_OPERATE_NAME));
+        xBarAppraiserChartBtn.setListViewData(Lists.newArrayList(chartOperateName));
+        rangeAppraiserChartBtn.setListViewData(Lists.newArrayList(chartOperateName));
     }
 
     private void initPerformanceSelected() {
@@ -992,8 +1015,8 @@ public class GrrResultController implements Initializable {
         Map<String, List<String>> rangeOperatePerformance = Maps.newHashMap();
         String barChartName = UIConstant.GRR_CHART_XBAR_APPRAISER;
         String rangeChartName = UIConstant.GRR_CHART_RANGE_APPRAISER;
-        barOperatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(CHART_OPERATE_NAME));
-        rangeOperatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(CHART_OPERATE_NAME));
+        barOperatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(chartOperateName));
+        rangeOperatePerformance.put(UIConstant.CHART_PERFORMANCE_KEY_OPERATE, Lists.newArrayList(chartOperateName));
         performanceMap.put(barChartName, barOperatePerformance);
         performanceMap.put(rangeChartName, rangeOperatePerformance);
         UserPreferenceDto userPreferenceDto = new UserPreferenceDto();
@@ -1001,8 +1024,8 @@ public class GrrResultController implements Initializable {
         userPreferenceDto.setCode(UIConstant.CHART_PERFORMANCE_CODE);
         userPreferenceDto.setValue(performanceMap);
         userPreferenceService.updatePreference(userPreferenceDto);
-        xBarAppraiserChartBtn.setSelectedSets(Sets.newHashSet(CHART_OPERATE_NAME));
-        rangeAppraiserChartBtn.setSelectedSets(Sets.newHashSet(CHART_OPERATE_NAME));
+        xBarAppraiserChartBtn.setSelectedSets(Sets.newHashSet(chartOperateName));
+        rangeAppraiserChartBtn.setSelectedSets(Sets.newHashSet(chartOperateName));
     }
 
     private List<String> buildSourceTbColumn() {
@@ -1010,8 +1033,8 @@ public class GrrResultController implements Initializable {
         List<String> tableColumns = Lists.newArrayList();
         GrrConfigDto grrConfigDto = grrConfigService.findGrrConfig();
         double coverage = grrConfigDto == null || grrConfigDto.getCoverage() == null ? defaultCoverage : grrConfigDto.getCoverage();
-        for (String name : GRR_SOURCE_TITLE) {
-            name = name.equals(GRR_SOURCE_TITLE[2]) ? name + " " + coverage : name;
+        for (String name : grrSourceTitle) {
+            name = name.equals(grrSourceTitle[2]) ? name + " " + coverage : name;
             tableColumns.add(name);
         }
         return tableColumns;
@@ -1082,20 +1105,20 @@ public class GrrResultController implements Initializable {
     private void initI18n() {
         appKey = GrrFxmlAndLanguageUtils.getString("APPRAISER") + " ";
         trailKey = GrrFxmlAndLanguageUtils.getString("TRAIL") + " ";
-        CHART_COMPONENT_LABEL = new String[]{
+        chartComponentLabel = new String[]{
                 GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_GAGE_R),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_REPEATABILITY),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_REPRODUCIBILITY),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_PART)};
-        CHART_COMPONENT_CATEGORY = new String[]{
+        chartComponentCategory = new String[]{
                 GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_CONTRIBUTION),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_VARIATION),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.COMPONENTS_TOLERANCE)};
-        CHART_OPERATE_NAME = new String[]{
+        chartOperateName = new String[]{
                 GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_LINE_NAME_UCL),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_LINE_NAME_AVG),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_LINE_NAME_LCL)};
-        GRR_SUMMARY_TITLE = new String[]{
+        grrSummaryTitle = new String[]{
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_TESTITEM),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_LSL),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_USL),
@@ -1103,14 +1126,14 @@ public class GrrResultController implements Initializable {
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_REPEATABILITY),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_REPRODUCIBILITY),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_GAUGE)};
-        GRR_ANOVA_TITLE = new String[]{
+        grrAnovaTitle = new String[]{
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_ANOVA_TITLE_SOURCE),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_ANOVA_TITLE_DF),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_ANOVA_TITLE_SS),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_ANOVA_TITLE_MS),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_ANOVA_TITLE_F),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_ANOVA_TITLE_PROB)};
-        GRR_SOURCE_TITLE = new String[]{
+        grrSourceTitle = new String[]{
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SOURCE_TITLE_SOURCE_VARIATION),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SOURCE_TITLE_SIGMA),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SOURCE_TITLE_STUDY_VAR),
@@ -1191,10 +1214,10 @@ public class GrrResultController implements Initializable {
 
     private String appKey;
     private String trailKey;
-    private String[] CHART_COMPONENT_LABEL;
-    private String[] CHART_COMPONENT_CATEGORY;
-    private String[] CHART_OPERATE_NAME;
-    private String[] GRR_SUMMARY_TITLE;
-    private String[] GRR_ANOVA_TITLE;
-    private String[] GRR_SOURCE_TITLE;
+    private String[] chartComponentLabel;
+    private String[] chartComponentCategory;
+    private String[] chartOperateName;
+    private String[] grrSummaryTitle;
+    private String[] grrAnovaTitle;
+    private String[] grrSourceTitle;
 }

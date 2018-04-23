@@ -10,15 +10,19 @@ import javafx.beans.property.StringProperty;
 public class ExportSettingModel {
     private TableCheckBox selector = new TableCheckBox();
     private StringProperty name;
+    private StringProperty originalKey;
+
 
     /**
      * constructor
      *
      * @param name name
+     * @param originalKey originalKey
      */
-    public ExportSettingModel(String name) {
+    public ExportSettingModel(String name, String originalKey) {
 
         this.name = new SimpleStringProperty(name);
+        this.originalKey = new SimpleStringProperty(originalKey);
     }
 
     public TableCheckBox getSelector() {
@@ -49,5 +53,17 @@ public class ExportSettingModel {
      */
     public StringProperty nameProperty() {
         return name;
+    }
+
+    public String getOriginalKey() {
+        return originalKey.get();
+    }
+
+    public StringProperty originalKeyProperty() {
+        return originalKey;
+    }
+
+    public void setOriginalKey(String originalKey) {
+        this.originalKey.set(originalKey);
     }
 }
