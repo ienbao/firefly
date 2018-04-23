@@ -1,6 +1,6 @@
 #!/bin/sh
     cd "$(dirname "$0")"
-	now=`date "+%Y%m%d"`
+    now=`date "+%Y%m%d"`
     export JRE_HOME=jre
     export R_HOME=R
     export CLASSPATH=.:${CLASSPATH}:${JRE_HOME}/lib:${JRE_HOME}/lib/server:${R_HOME}/library/rJava/jri
@@ -24,5 +24,12 @@
     then
      mkdir ./log/
     fi
-    exec java -Djava.library.path=${R_HOME}/library/rJava/jri -jar dap-gui-2.5.0-SNAPSHOT.jar
+     mongodThread=`lsof -i tcp:27017|grep mongod|wc -l`
+    if [ $mongodThread -eq  0 ]
+      then
+      ./installmongo.sh start
+      exec java -Djava.library.path=${R_HOME}/library/rJava/jri -jar dap-gui-2.5.0-SNAPSHOT.jar
+    else
+        echo “DAP has been running.”
+    fi
 

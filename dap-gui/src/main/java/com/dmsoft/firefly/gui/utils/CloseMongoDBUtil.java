@@ -27,6 +27,17 @@ public class CloseMongoDBUtil {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            try {
+                String run = "." + File.separator + "installmongo.sh stop";
+                File dirFile = new File(run);
+                dirFile.setReadable(true, false);
+                dirFile.setExecutable(true, false);
+                dirFile.setWritable(true, false);
+                Runtime.getRuntime().exec(run);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
