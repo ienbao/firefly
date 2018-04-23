@@ -670,7 +670,6 @@ public class ControlChart<X, Y> extends LineChart {
             series.getNode().setStyle("-fx-stroke: " + ColorUtils.toHexFromFXColor(color));
         }
         Tooltip tooltip = new Tooltip("ASDF");
-        System.out.println(data.size());
         data.forEach(dataItem -> {
 //            set data node color
             if (DAPStringUtils.isNotBlank(ColorUtils.toHexFromFXColor(color))) {

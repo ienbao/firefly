@@ -502,7 +502,6 @@ public class SpcExportController {
             if ("Error".equals(event.getEventName())) {
                 windowProgressTipController.updateFailProgress(event.getProgress(), event.getEventObject().toString());
             } else {
-                System.out.println("xssss" + event.getProgress());
                 windowProgressTipController.getTaskProgress().setProgress(event.getProgress());
             }
         });
@@ -593,7 +592,7 @@ public class SpcExportController {
                 windowProgressTipController.updateFailProgress(context.getError().getMessage());
             }
         });
-        int groupSize = 10;
+        int groupSize = 3;
         SpcSettingDto spcSettingDto = RuntimeContext.getBean(SpcSettingServiceImpl.class).findSpcSetting();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = initSelectedItemDto();
         String exportProjectFilePath;
@@ -699,7 +698,6 @@ public class SpcExportController {
         RuntimeContext.getBean(JobManager.class).fireJobSyn(jobPipeline, singleJobContext);
 
         List<SpcStatisticalResultAlarmDto> spcStatsDtoList = (List<SpcStatisticalResultAlarmDto>) singleJobContext.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
-        System.out.println("llllllllll"+ (D30 / groupCount + D100 * a / groupCount));
         context.pushEvent(new JobEvent("Get Stats & Alarm Result", D30 / groupCount + D100 * a / groupCount, null));
 
         //build chart
@@ -717,12 +715,13 @@ public class SpcExportController {
             singleJobContext4Chart.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
             singleJobContext4Chart.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
             singleJobContext4Chart.put(ParamKeys.SPC_SETTING_DTO, spcSettingDto);
+            dataFrame = singleJobContext.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
 
 //            buildViewData();
-            List<String> selectItem = Lists.newArrayList();
-            testItemWithTypeDtoList.forEach(dto -> selectItem.add(dto.getTestItemName()));
-            List<RowDataDto> rowDataDtoList = dataService.findTestData(projectNameList, selectItem);
-            dataFrame = RuntimeContext.getBean(DataFrameFactory.class).createSearchDataFrame(testItemWithTypeDtoList, rowDataDtoList);
+//            List<String> selectItem = Lists.newArrayList();
+//            testItemWithTypeDtoList.forEach(dto -> selectItem.add(dto.getTestItemName()));
+//            List<RowDataDto> rowDataDtoList = dataService.findTestData(projectNameList, selectItem);
+//            dataFrame = RuntimeContext.getBean(DataFrameFactory.class).createSearchDataFrame(testItemWithTypeDtoList, rowDataDtoList);
             dataFrame.addSearchCondition(searchTab.getSearch());
 
             singleJobContext4Chart.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
@@ -744,7 +743,6 @@ public class SpcExportController {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("llllllllllchart"+ (D70  / groupCount + D100 * a / groupCount));
             context.pushEvent(new JobEvent("Export Chart done", D70 / groupCount + D100 * a / groupCount, null));
 
             for (SpcChartDto dto : spcChartDtoList) {

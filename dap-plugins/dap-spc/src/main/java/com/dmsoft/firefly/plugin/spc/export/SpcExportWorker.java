@@ -4,7 +4,9 @@
 
 package com.dmsoft.firefly.plugin.spc.export;
 
-import com.dmsoft.firefly.plugin.spc.dto.*;
+import com.dmsoft.firefly.plugin.spc.dto.SpcExportConfigDto;
+import com.dmsoft.firefly.plugin.spc.dto.SpcStatisticalResultAlarmDto;
+import com.dmsoft.firefly.plugin.spc.dto.StatisticalAlarmDto;
 import com.dmsoft.firefly.plugin.spc.poi.*;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.plugin.spc.utils.enums.SpcExportItemKey;
@@ -17,6 +19,8 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -25,15 +29,15 @@ import java.util.*;
  * Created by cherry on 2016/4/19.
  */
 public class SpcExportWorker implements ExWorker {
+    private static final int IMAGE_COL_WIDTH = 5500, CACHE_ROW = 1000;
+    private static final int DX2 = 1023, // the x coordinate within the first cell.
+            DY2 = 255; // the y coordinate within the first cell.
     //cell's start coordinate in sheet
     private final Integer[] headIndex = new Integer[]{0, 0};
     private final Integer[] dataIndex = new Integer[]{9, 0};
     //position and size of chart image
     private final int imageStartCol = dataIndex[1] + 3, imageEndCol = dataIndex[1] + 8;
     private SXSSFWorkbook workbook = null;
-    private static final int IMAGE_COL_WIDTH = 5500, CACHE_ROW = 1000;
-    private static final int DX2 = 1023, // the x coordinate within the first cell.
-            DY2 = 255; // the y coordinate within the first cell.
     private Map<String, CellStyle> cpColorMap = Maps.newHashMap();
     //index of current row to write
     private Integer currentRow = 0;
@@ -50,14 +54,15 @@ public class SpcExportWorker implements ExWorker {
     private List<Integer> breakRowLists = Lists.newArrayList();
     private int runChartRow = 0;
     private int perRow = 0;
+    private Logger logger = LoggerFactory.getLogger(SpcExportWorker.class);
 
     /**
      * build SPC export excel data.
      *
-     * @param spcStatisticalResultDtos   spc static result data
-     * @param chartPicPaths              chartPicPaths
-     * @param spcExportConfigDto spc user action and config dto
-     * @param runChartRule spc run chart warn rules
+     * @param spcStatisticalResultDtos spc static result data
+     * @param chartPicPaths            chartPicPaths
+     * @param spcExportConfigDto       spc user action and config dto
+     * @param runChartRule             spc run chart warn rules
      */
     public void buildSPCMultiItem(Map<String, Map<String, String>> chartPicPaths,
                                   List<SpcStatisticalResultAlarmDto> spcStatisticalResultDtos,
@@ -87,6 +92,7 @@ public class SpcExportWorker implements ExWorker {
         for (SpcStatisticalResultAlarmDto spcStatisticalResultDto : spcStatisticalResultDtos) {
             String itemName = spcStatisticalResultDto.getItemName();
             String condition = spcStatisticalResultDto.getCondition();
+            logger.debug("Building SPC detail Sheet: " + itemName + "_" + condition);
             if (SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode().equals(condition) && !exportDataItem.get(SpcExportItemKey.EXPORT_SUB_SUMMARY.getCode())) {
                 continue;
             }
@@ -359,9 +365,9 @@ public class SpcExportWorker implements ExWorker {
                     m++;
                 } else {
                     String name = scdLabels[i];
-                    if(i == 11){
+                    if (i == 11) {
                         name = SpcStatisticalResultKey.LCL.getCode();
-                    } else if(i == 12){
+                    } else if (i == 12) {
                         name = SpcStatisticalResultKey.UCL.getCode();
                     }
                     if (exportDataItem != null && exportDataItem.keySet().contains(name)) {
@@ -432,9 +438,9 @@ public class SpcExportWorker implements ExWorker {
                 s = "%";
                 digNumber = digNumber <= 2 ? 0 : digNumber - 2;
             }
-            if(i == 11){
+            if (i == 11) {
                 name = SpcStatisticalResultKey.LCL.getCode();
-            } else if(i == 12){
+            } else if (i == 12) {
                 name = SpcStatisticalResultKey.UCL.getCode();
             }
             if (exportDataItem.containsKey(name) && exportDataItem.get(name)) {
@@ -524,9 +530,9 @@ public class SpcExportWorker implements ExWorker {
             int fillCount3 = 0;
             for (int i = 0; i < descriptiveLablesLength; i++) {
                 String name = descriptiveLabels[i];
-                if(i == 8){
+                if (i == 8) {
                     name = SpcStatisticalResultKey.LCL.getCode();
-                } else if(i == 9){
+                } else if (i == 9) {
                     name = SpcStatisticalResultKey.UCL.getCode();
                 }
                 if (exportDataItem != null && exportDataItem.keySet().contains(name)) {
