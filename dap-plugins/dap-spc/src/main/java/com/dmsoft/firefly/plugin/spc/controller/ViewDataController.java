@@ -351,8 +351,10 @@ public class ViewDataController implements Initializable {
                     default:
                         break;
                 }
-                filterTF();
-                filterHeaderBtn();
+                Platform.runLater(() -> {
+                    filterTF();
+                    filterHeaderBtn();
+                });
             });
             quickSearchController.getCancelBtn().setOnAction(event1 -> {
                 quickSearchController.getStage().close();
@@ -379,8 +381,10 @@ public class ViewDataController implements Initializable {
     private void initComponentEvent() {
         clearFilterBtn.setOnAction(event -> getClearFilterBtnEvent());
         filterTf.getTextField().textProperty().addListener((observable, oldValue, newValue) -> {
-            filterTF();
-            filterHeaderBtn();
+            Platform.runLater(() -> {
+                filterTF();
+                filterHeaderBtn();
+            });
         });
         chooseItemBtn.setOnAction(event -> getChooseColumnBtnEvent());
         chooseTestItemDialog.getOkBtn().setOnAction(event -> {
@@ -426,21 +430,19 @@ public class ViewDataController implements Initializable {
     }
 
     private void filterTF() {
-        if (model == null || filterTf.getTextField().getText() == null) {
+        if (model == null) {
             return;
         }
         model.getRowKeyArray().clear();
-        Platform.runLater(() -> {
-            for (String s : dataFrame.getAllRowKeys()) {
-                List<String> datas = dataFrame.getDataRowList(s);
-                for (String data : datas) {
-                    if (data.toLowerCase().contains(filterTf.getTextField().getText().toLowerCase())) {
-                        model.getRowKeyArray().add(s);
-                        break;
-                    }
+        for (String s : dataFrame.getAllRowKeys()) {
+            List<String> datas = dataFrame.getDataRowList(s);
+            for (String data : datas) {
+                if (filterTf.getTextField().getText() == null || data.toLowerCase().contains(filterTf.getTextField().getText().toLowerCase())) {
+                    model.getRowKeyArray().add(s);
+                    break;
                 }
             }
-        });
+        }
     }
 
     private void filterHeaderBtn() {
