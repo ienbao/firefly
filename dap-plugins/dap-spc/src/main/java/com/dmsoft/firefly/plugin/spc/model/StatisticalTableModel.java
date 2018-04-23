@@ -618,6 +618,9 @@ public class StatisticalTableModel implements TableModel {
         Map<String, StatisticalAlarmDto> statisticalAlarmDtoMap = spcStatsDto.getStatisticalAlarmDtoMap();
         if (columnName.equals(STATISTICAL_TITLE[7])) {
             SourceObjectProperty uslProperty = valueMap.get(rowKey + "-" + STATISTICAL_TITLE[8]);
+            if (!DAPStringUtils.isNumeric((String) uslProperty.getValue())) {
+                return false;
+            }
             StatisticalAlarmDto statisticalAlarmDto = statisticalAlarmDtoMap.get(SpcStatisticalResultKey.USL.getCode());
             Double usl = Double.valueOf((String) uslProperty.getValue());
             if (!DAPStringUtils.isNumeric(newText) || Double.valueOf(newText) >= usl) {
@@ -636,6 +639,9 @@ public class StatisticalTableModel implements TableModel {
             }
         } else if (columnName.equals(STATISTICAL_TITLE[8])) {
             SourceObjectProperty lslProperty = valueMap.get(rowKey + "-" + STATISTICAL_TITLE[7]);
+            if (!DAPStringUtils.isNumeric((String) lslProperty.getValue())) {
+                return false;
+            }
             StatisticalAlarmDto statisticalAlarmDto = statisticalAlarmDtoMap.get(SpcStatisticalResultKey.LSL.getCode());
             Double lsl = Double.valueOf((String) lslProperty.getValue());
             if (Double.valueOf(newText) <= lsl) {
