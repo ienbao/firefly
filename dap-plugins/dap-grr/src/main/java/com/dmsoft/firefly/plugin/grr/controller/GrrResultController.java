@@ -681,8 +681,7 @@ public class GrrResultController implements Initializable {
         chart.buildValueMarkerWithTooltip(horizontalLineData, new Function<ILineData, String>() {
             @Override
             public String apply(ILineData oneLineData) {
-                return oneLineData.getTitle() + "\n" + oneLineData.getName() + "="
-                        + DAPStringUtils.formatDouble(oneLineData.getValue(), digNum);
+                return oneLineData.getName() + "=" + DAPStringUtils.formatDouble(oneLineData.getValue(), digNum);
             }
         });
         ChartUtils.setChartToolTip(chart.getData(), pointTooltip -> {
