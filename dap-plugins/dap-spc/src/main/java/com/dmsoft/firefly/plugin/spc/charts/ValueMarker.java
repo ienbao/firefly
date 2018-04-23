@@ -14,6 +14,7 @@ import javafx.geometry.Orientation;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
@@ -39,6 +40,10 @@ public class ValueMarker<X, Y> {
     private ObservableList<XYChart.Data<X, Y>> verticalMarkers;
 
     private Map<String, Line> lineMap = Maps.newHashMap();
+
+    private final double ANCHOR_X = 10.0;
+    private final double ANCHOR_Y = 15.0;
+    private Tooltip tooltip = new Tooltip();
 
     /**
      * The no parameters construction of ValueMarker
@@ -119,7 +124,24 @@ public class ValueMarker<X, Y> {
         }
         if (lineTooltipFunction != null) {
             String content = lineTooltipFunction.apply(new LineTooltip(seriesName, lineData.getName(), lineData.getValue()));
-            Tooltip.install(line, new Tooltip(content));
+            line.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+                        tooltip.setText(content);
+                        tooltip.show(line, event.getScreenX() + ANCHOR_X, event.getScreenY() + ANCHOR_Y);
+                    }
+            );
+            line.addEventHandler(MouseEvent.MOUSE_MOVED, event -> {
+                        if (tooltip.isShowing()) {
+                            tooltip.setAnchorX(event.getScreenX() + ANCHOR_X);
+                            tooltip.setAnchorY(event.getScreenY() + ANCHOR_Y);
+                        }
+                    }
+            );
+            line.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+                if (tooltip.isShowing()) {
+                    tooltip.hide();
+                }
+            });
+//            Tooltip.install(line, new Tooltip(content));
         }
         setLineColor(line, color);
         return line;

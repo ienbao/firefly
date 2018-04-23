@@ -13,6 +13,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
@@ -37,6 +38,9 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
     private ObservableList<Data<X, Y>> horizontalMarkers;
     private ObservableList<XYChart.Data<X, Y>> verticalMarkers;
     private Map<String, Line> lineMap = Maps.newHashMap();
+
+    private final double ANCHOR_X = 10.0;
+    private final double ANCHOR_Y = 15.0;
 
     /**
      * Construct a new LinearChart with the given axis.
@@ -94,12 +98,26 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
      */
     public void buildValueMarkerWithTooltip(List<ILineData> lineData, Function<ILineData, String> pointTooltipFunction) {
         buildValueMarkerWithoutTooltip(lineData);
+        Tooltip tooltip = new Tooltip();
         lineData.forEach(oneLineData -> {
             if (lineMap.containsKey(oneLineData.getName())) {
                 Line line = lineMap.get(oneLineData.getName());
-                line.setOnMouseEntered(event -> {
-                    //Set tooltip
-                    Tooltip.install(line, new Tooltip(pointTooltipFunction.apply(oneLineData)));
+                line.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+                            tooltip.setText(pointTooltipFunction.apply(oneLineData));
+                            tooltip.show(line, event.getScreenX() + ANCHOR_X, event.getScreenY() + ANCHOR_Y);
+                        }
+                );
+                line.addEventHandler(MouseEvent.MOUSE_MOVED, event -> {
+                            if (tooltip.isShowing()) {
+                                tooltip.setAnchorX(event.getScreenX() + ANCHOR_X);
+                                tooltip.setAnchorY(event.getScreenY() + ANCHOR_Y);
+                            }
+                        }
+                );
+                line.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+                    if (tooltip.isShowing()) {
+                        tooltip.hide();
+                    }
                 });
             }
         });
@@ -199,8 +217,8 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
     public void removeAllChildren() {
         this.horizontalMarkers.setAll(FXCollections.observableArrayList());
         this.verticalMarkers.setAll(FXCollections.observableArrayList());
-        this.getData().setAll(FXCollections.observableArrayList());
-        this.getPlotChildren().removeAll(this.getPlotChildren());
+        this.getData().clear();
+        this.getPlotChildren().clear();
     }
 
     /**

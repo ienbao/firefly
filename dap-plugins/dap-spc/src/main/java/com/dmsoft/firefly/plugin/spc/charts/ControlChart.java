@@ -72,6 +72,9 @@ public class ControlChart<X, Y> extends LineChart {
 
     private Map<String, Boolean> lineTooltipShowMap = Maps.newHashMap();
 
+    private final double ANCHOR_X = 10.0;
+    private final double ANCHOR_Y = 15.0;
+
     /**
      * @param xAxis xAxis
      * @param yAxis yAxis
@@ -682,7 +685,14 @@ public class ControlChart<X, Y> extends LineChart {
                 final Node dataNode = dataItem.getNode();
                 dataNode.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
                             tooltip.setText(pointTooltipFunction.apply(new PointTooltip(series.getName(), dataItem)));
-                            tooltip.show(dataNode, event.getScreenX(), event.getScreenY());
+                            tooltip.show(dataNode, event.getScreenX() + ANCHOR_X, event.getScreenY() + ANCHOR_Y);
+                        }
+                );
+                dataNode.addEventHandler(MouseEvent.MOUSE_MOVED, event -> {
+                            if (tooltip.isShowing()) {
+                                tooltip.setAnchorX(event.getScreenX() + ANCHOR_X);
+                                tooltip.setAnchorY(event.getScreenY() + ANCHOR_Y);
+                            }
                         }
                 );
                 dataNode.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
@@ -716,7 +726,14 @@ public class ControlChart<X, Y> extends LineChart {
                 final Node dataNode = dataItem.getNode();
                 dataNode.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
                             tooltip.setText(pointTooltipFunction.apply(new PointTooltip(key + " " + series.getName(), dataItem)));
-                            tooltip.show(dataNode, event.getScreenX(), event.getScreenY());
+                            tooltip.show(dataNode, event.getScreenX() + ANCHOR_X, event.getScreenY() + ANCHOR_Y);
+                        }
+                );
+                dataNode.addEventHandler(MouseEvent.MOUSE_MOVED, event -> {
+                            if (tooltip.isShowing()) {
+                                tooltip.setAnchorX(event.getScreenX() + ANCHOR_X);
+                                tooltip.setAnchorY(event.getScreenY() + ANCHOR_Y);
+                            }
                         }
                 );
                 dataNode.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {

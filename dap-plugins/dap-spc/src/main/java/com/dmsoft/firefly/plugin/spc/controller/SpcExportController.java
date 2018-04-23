@@ -592,7 +592,7 @@ public class SpcExportController {
                 windowProgressTipController.updateFailProgress(context.getError().getMessage());
             }
         });
-        int groupSize = 3;
+        int groupSize = 100;
         SpcSettingDto spcSettingDto = RuntimeContext.getBean(SpcSettingServiceImpl.class).findSpcSetting();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = initSelectedItemDto();
         String exportProjectFilePath;

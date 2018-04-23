@@ -24,6 +24,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.chart.*;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -71,6 +72,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     private boolean barShow = true;
     private boolean areaShow = true;
     private Map<String, Boolean> lineShow = Maps.newLinkedHashMap();
+
+    private final double ANCHOR_X = 10.0;
+    private final double ANCHOR_Y = 15.0;
 
     /**
      * Constructs a XYChart given the two axes. The initial content for the chart
@@ -348,6 +352,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         if (!showTooltip) {
             return;
         }
+        Tooltip tooltip = new Tooltip();
         int size = series.getData().size();
         for (int i = 0; i < size; i++) {
             XYChart.Data<X, Y> dataItem = series.getData().get(i);
@@ -359,7 +364,26 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
                         dataItem.getExtraValue(),
                         dataItem.getYValue(),
                         lastData));
-                Tooltip.install(dataItem.getNode(), new Tooltip(content));
+
+                final Node dataNode = dataItem.getNode();
+                dataNode.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+                            tooltip.setText(content);
+                            tooltip.show(dataNode, event.getScreenX() + ANCHOR_X, event.getScreenY() + ANCHOR_Y);
+                        }
+                );
+                dataNode.addEventHandler(MouseEvent.MOUSE_MOVED, event -> {
+                            if (tooltip.isShowing()) {
+                                tooltip.setAnchorX(event.getScreenX() + ANCHOR_X);
+                                tooltip.setAnchorY(event.getScreenY() + ANCHOR_Y);
+                            }
+                        }
+                );
+                dataNode.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+                    if (tooltip.isShowing()) {
+                        tooltip.hide();
+                    }
+                });
+//                Tooltip.install(dataItem.getNode(), new Tooltip(content));
             }
         }
     }
