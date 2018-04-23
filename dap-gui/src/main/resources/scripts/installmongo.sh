@@ -1,7 +1,6 @@
 #!/bin/sh
     cd "$(dirname "$0")"
     now=`date "+%Y%m%d"`
-    export MONGO_PORT=27018
     usage="Usage: `basename $0` (start|stop)"
 	command=$1
     function start() {
@@ -14,10 +13,10 @@
 	     mkdir ./data/db
 	    fi
 	    ###########Mongodb process  check #############
-	    mongodThread=`lsof -i tcp:$MONGO_PORT|grep mongod|wc -l`
+	    mongodThread=`lsof -i tcp:27018|grep mongod|wc -l`
 	    if [ $mongodThread -eq  0 ]
 	      then
-	      exec ./mongodb/bin/./mongod --port $MONGO_PORT --dbpath ./data/db -logpath ./log/mongo_$now.log -logappend -fork
+	      exec ./mongodb/bin/./mongod --port 27018 --dbpath ./data/db -logpath ./log/mongo_$now.log -logappend -fork
 	    fi
 	}
 	function stop() {
