@@ -61,15 +61,15 @@ public class SpcMrChartData implements ControlChartData {
         Double cl = spcControlChartDto.getCl();
         uclValue = spcControlChartDto.getUcl();
         lclValue = spcControlChartDto.getLcl();
-        if (cl != null) {
+        if (!DAPStringUtils.isInfinityAndNaN(cl)) {
             ILineData uslData = new LineData(cl, UIConstant.SPC_CHART_CL, Orientation.HORIZONTAL);
             lineDataList.add(uslData);
         }
-        if (uclValue != null && uclValue.length >= 1) {
+        if (uclValue != null && uclValue.length >= 1 && !DAPStringUtils.isInfinityAndNaN(uclValue[0])) {
             ILineData uclData = new LineData(uclValue[0], UIConstant.SPC_UCL_LCL[0], Orientation.HORIZONTAL, LineType.DASHED);
             lineDataList.add(uclData);
         }
-        if (lclValue != null && lclValue.length >= 1) {
+        if (lclValue != null && lclValue.length >= 1 && !DAPStringUtils.isInfinityAndNaN(lclValue[0])) {
             ILineData lclData = new LineData(lclValue[0], UIConstant.SPC_UCL_LCL[1], Orientation.HORIZONTAL, LineType.DASHED);
             lineDataList.add(lclData);
         }

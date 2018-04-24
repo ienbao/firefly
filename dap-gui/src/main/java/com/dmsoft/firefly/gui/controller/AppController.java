@@ -257,13 +257,13 @@ public class AppController {
                 List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.CONFIG);
                 Map<String, String> config = jsonMapper.fromJson(json, Map.class);
                 if (config != null && !config.isEmpty()) {
-                    String templateConfigName = GuiFxmlAndLanguageUtils.getString(templateService.getConfigName());
+                    String templateConfigName =templateService.getConfigName();
                     if (DAPStringUtils.isNotBlank(config.get(templateConfigName))) {
                         templateService.importConfig(config.get(templateConfigName).getBytes());
                     }
                     pluginClasses.forEach(v -> {
                         IConfig service = (IConfig) v.getInstance();
-                        String name = GuiFxmlAndLanguageUtils.getString(service.getConfigName());
+                        String name = service.getConfigName();
                         if (StringUtils.isNotEmpty(name) && StringUtils.isNotEmpty(config.get(name))) {
                             service.importConfig(config.get(name).getBytes());
                         }
