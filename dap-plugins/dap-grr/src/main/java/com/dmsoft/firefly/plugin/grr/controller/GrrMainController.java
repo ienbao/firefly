@@ -69,7 +69,9 @@ public class GrrMainController implements Initializable {
      * Clear grr result and view data
      */
     public void clearResultData() {
+        this.grrDataFrame = null;
         grrResultController.removeAllResultData();
+        grrViewDataController.refresh();
     }
 
     private void initBtnIcon() {
