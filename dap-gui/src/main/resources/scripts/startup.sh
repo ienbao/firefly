@@ -28,6 +28,7 @@
      mongodThread=`lsof -i tcp:$MONGO_PORT|grep mongod|wc -l`
     if [ $mongodThread -eq  0 ]
       then
+      chmod 777 installmongo.sh
       ./installmongo.sh start
       exec java -Djava.library.path=${R_HOME}/library/rJava/jri -jar dap-gui-2.5.0-SNAPSHOT.jar
     else
