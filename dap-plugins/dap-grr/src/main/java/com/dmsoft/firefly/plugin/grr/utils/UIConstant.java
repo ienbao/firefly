@@ -11,6 +11,7 @@ public class UIConstant {
     public static final String UI_MESSAGE_TIP_WARNING_TITLE = "UI_MESSAGE_TIP_WARNING_TITLE";
     public static final String UI_MESSAGE_TIP_INFO_TITLE = "UI_MESSAGE_TIP_INFO_TITLE";
     public static final String UI_MESSAGE_TIP_LOCATION = "UI_MESSAGE_TIP_LOCATION";
+    public static final String UI_MESSAGE_TIP_FILE_NOT_EXIST = "UI_MESSAGE_TIP_FILE_NOT_EXIST";
 
     public static final String EXCEPTION_GRR_MODEL = "EXCEPTION_GRR_MODEL";
     public static final String SPLIT_FLAG = "!@#";

@@ -151,7 +151,12 @@ public class SpcItemController implements Initializable {
                 TableViewWrapper.decorateSkinForSortHeader((TableViewSkin) s2, itemTable);
             });
         }
-        itemTable.setContextMenu(createTableRightMenu());
+        itemTable.setRowFactory(tv -> {
+            TableRow<ItemTableModel> tableRow = new TableRow<>();
+            tableRow.setContextMenu(createTableRightMenu());
+            return tableRow;
+        });
+//        itemTable.setContextMenu(createTableRightMenu());
 
         // select column in test item table
         box = new CheckBox();
@@ -376,7 +381,10 @@ public class SpcItemController implements Initializable {
         ContextMenu right = new ContextMenu() {
             @Override
             public void show(Node anchor, double screenX, double screenY) {
-                if (itemTable.getSelectionModel().getSelectedItem().getOnTop()) {
+                if (((TableRow) anchor).getItem() == null) {
+                    return;
+                }
+                if (itemTable.getSelectionModel().getSelectedItem() != null && itemTable.getSelectionModel().getSelectedItem().getOnTop()) {
                     top.setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.REMOVE_FROM_TOP));
                 } else {
                     top.setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.STICKY_ON_TOP));

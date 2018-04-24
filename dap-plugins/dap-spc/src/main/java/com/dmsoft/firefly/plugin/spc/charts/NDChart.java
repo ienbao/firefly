@@ -183,7 +183,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
 //        ObservableList<Node> nodes = getPlotChildren();
 //        getData().clear();
 //        getPlotChildren().removeAll(nodes);
-        getPlotChildren().clear();
+//        getPlotChildren().clear();
         clearData();
     }
 
