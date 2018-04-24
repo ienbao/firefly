@@ -75,7 +75,6 @@ public class TableViewWrapper {
                         }
                         tableView.getColumns().removeAll(existedColumnList);
                     } catch (Exception ignored) {
-                        ignored.printStackTrace();
                     }
                 }
             }
@@ -99,16 +98,20 @@ public class TableViewWrapper {
             }
             menu.setAutoHide(true);
         }
-        tableView.setContextMenu(menu);
-        tableView.setRowFactory(tv -> {
-            TableRow<String> row = new TableRow<>();
-            row.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> {
-                if (row.getTableView().getContextMenu() == null || row.isEmpty() || !model.isMenuEventEnable(row.getItem())) {
-                    event.consume();
-                }
+        if (menu != null) {
+            final ContextMenu menu1 = menu;
+            tableView.setRowFactory(tv -> {
+                TableRow<String> row = new TableRow<>();
+                row.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> {
+                    if (row.getItem() == null && row.getTableView().getContextMenu() == null || row.isEmpty() || !model.isMenuEventEnable(row.getItem())) {
+                        event.consume();
+                    } else {
+                        menu1.show(row, event.getScreenX(), event.getScreenY());
+                    }
+                });
+                return row;
             });
-            return row;
-        });
+        }
         model.setTableView(tableView);
         if (tableView.getSkin() != null) {
             decorateSkinForSortHeader((TableViewSkin) tableView.getSkin(), tableView);
