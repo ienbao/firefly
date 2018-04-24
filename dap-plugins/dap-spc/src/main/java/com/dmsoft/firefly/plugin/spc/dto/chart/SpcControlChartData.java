@@ -60,8 +60,10 @@ public class SpcControlChartData implements ControlChartData {
         Double[] y = spcControlChartDto.getY();
         //init lines data
         Double cl = spcControlChartDto.getCl();
-        ILineData uslData = new LineData(cl, UIConstant.SPC_CHART_CL, Orientation.HORIZONTAL);
-        lineDataList.add(uslData);
+        if (!DAPStringUtils.isInfinityAndNaN(cl)) {
+            ILineData uslData = new LineData(cl, UIConstant.SPC_CHART_CL, Orientation.HORIZONTAL);
+            lineDataList.add(uslData);
+        }
         String[] uclLclName = UIConstant.SPC_UCL_LCL;
         uclValue = spcControlChartDto.getUcl();
         lclValue = spcControlChartDto.getLcl();

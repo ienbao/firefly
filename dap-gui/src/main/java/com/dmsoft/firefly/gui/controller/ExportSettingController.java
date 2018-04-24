@@ -79,12 +79,12 @@ public class ExportSettingController {
     }
 
     private void initData() {
-        items.add(new ExportSettingModel(GuiFxmlAndLanguageUtils.getString(templateService.getConfigName())));
+        items.add(new ExportSettingModel(GuiFxmlAndLanguageUtils.getString(templateService.getConfigName()), templateService.getConfigName()));
         pluginClasses.forEach(v -> {
             IConfig service = (IConfig) v.getInstance();
             String configName = service.getConfigName();
             if (StringUtils.isNotEmpty(configName)) {
-                items.add(new ExportSettingModel(GuiFxmlAndLanguageUtils.getString(configName)));
+                items.add(new ExportSettingModel(GuiFxmlAndLanguageUtils.getString(configName), service.getConfigName()));
             }
         });
         settingTable.setItems(items);
@@ -97,14 +97,14 @@ public class ExportSettingController {
      */
     public void exportAllConfig(List<String> names) {
         Map<String, String> config = Maps.newHashMap();
-        String templateConfigName = GuiFxmlAndLanguageUtils.getString(templateService.getConfigName());
+        String templateConfigName = templateService.getConfigName();
         if (names != null && !names.isEmpty() && names.contains(templateConfigName)) {
             config.put(templateConfigName, new String(templateService.exportConfig()));
         }
 
         pluginClasses.forEach(v -> {
             IConfig service = (IConfig) v.getInstance();
-            String name = GuiFxmlAndLanguageUtils.getString(service.getConfigName());
+            String name = service.getConfigName();
             if (StringUtils.isNotEmpty(name) && names.contains(name)) {
                 config.put(name, new String(service.exportConfig()));
             }
@@ -129,7 +129,7 @@ public class ExportSettingController {
         List<String> names = Lists.newArrayList();
         items.forEach(value -> {
             if (value.getSelector().isSelected()) {
-                names.add(value.getName());
+                names.add(value.getOriginalKey());
             }
         });
         return names;

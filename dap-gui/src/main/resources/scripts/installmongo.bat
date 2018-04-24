@@ -10,7 +10,7 @@ set ID=
     IF "%1%"=="stop" GOTO stop
 
 :start
-   for /f "tokens=5" %%i in ('netstat -aon ^| findstr ":27017"') do (
+   for /f "tokens=5" %%i in ('netstat -aon ^| findstr ": 27018"') do (
      echo exit starting mongodb
      set flag=1
   )
@@ -31,13 +31,13 @@ set ID=
 
        cd "%MONGO%\bin"
        echo start mongod.exe
-        mongod --dbpath="%~dp0%DB%" --port=27017 --logpath="%~dp0%LOG%\mongo.log" --wiredTigerCacheSizeGB 4
+        mongod --dbpath="%~dp0%DB%" --port=27018 --logpath="%~dp0%LOG%\mongo.log" --wiredTigerCacheSizeGB 4
      ))
     exit
 
 
 :stop
-  for /f "tokens=5" %%i in ('netstat -aon ^| findstr ":27017"') do (
+  for /f "tokens=5" %%i in ('netstat -aon ^| findstr ":27018"') do (
      echo kill mongod.exe pid %%i
      taskkill /f /pid %%i /T
   )

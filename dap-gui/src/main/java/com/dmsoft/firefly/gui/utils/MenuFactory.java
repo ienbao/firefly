@@ -181,7 +181,7 @@ public class MenuFactory {
         }
         en.selectedProperty().addListener((ov, b1, b2) -> {
             if (b2 && isChangeZhLanguage) {
-                WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Message", GuiFxmlAndLanguageUtils.getString("GLOBAL_CHANGE_LANGUAGE"));
+                WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel(GuiFxmlAndLanguageUtils.getString("GLOBAL_MESSAGE_TIP_INFO_TITLE"), GuiFxmlAndLanguageUtils.getString("GLOBAL_CHANGE_LANGUAGE"));
                 controller.addProcessMonitorListener(new WindowCustomListener() {
                     @Override
                     public boolean onShowCustomEvent() {
@@ -216,7 +216,7 @@ public class MenuFactory {
 
         zh.selectedProperty().addListener((ov, b1, b2) -> {
             if (b2 && isChangeEnLanguage) {
-                WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Message", GuiFxmlAndLanguageUtils.getString("GLOBAL_CHANGE_LANGUAGE"));
+                WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel(GuiFxmlAndLanguageUtils.getString("GLOBAL_MESSAGE_TIP_INFO_TITLE"), GuiFxmlAndLanguageUtils.getString("GLOBAL_CHANGE_LANGUAGE"));
                 controller.addProcessMonitorListener(new WindowCustomListener() {
                     @Override
                     public boolean onShowCustomEvent() {

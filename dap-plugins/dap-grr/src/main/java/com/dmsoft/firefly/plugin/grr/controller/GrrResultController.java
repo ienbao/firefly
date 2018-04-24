@@ -485,7 +485,7 @@ public class GrrResultController implements Initializable {
         });
     }
 
-    private void removeAllResultData() {
+    public void removeAllResultData() {
         summaryItemTf.setDisable(false);
         resultBasedCmb.setDisable(false);
         summaryModel.clearTableData();

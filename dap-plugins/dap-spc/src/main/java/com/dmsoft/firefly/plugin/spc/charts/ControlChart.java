@@ -196,19 +196,16 @@ public class ControlChart<X, Y> extends LineChart {
      * @param data data
      */
     public void clearAnnotation(List<Data<X, Y>> data) {
-        data.forEach(dateItem -> {
-            StackPane pane = (StackPane) dateItem.getNode();
-            if (pane.getChildren().isEmpty()) {
-                return;
-            }
+        data.forEach(dataItem -> {
+            StackPane pane = (StackPane) dataItem.getNode();
             for (int i = 0; i < pane.getChildren().size(); i++) {
                 Node node = pane.getChildren().get(i);
                 if (node instanceof Text) {
                     pane.getChildren().removeAll(node);
                 }
             }
-            if (dateItem.getNode().getStyleClass().contains("chart-symbol-triangle")) {
-                dateItem.getNode().getStyleClass().remove("chart-symbol-triangle");
+            if (dataItem.getNode().getStyleClass().contains("chart-symbol-triangle")) {
+                dataItem.getNode().getStyleClass().remove("chart-symbol-triangle");
             }
         });
     }
@@ -481,15 +478,21 @@ public class ControlChart<X, Y> extends LineChart {
         }
         NumberAxis xAxis = (NumberAxis) this.getXAxis();
         NumberAxis yAxis = (NumberAxis) this.getYAxis();
-        yMax += (yMax - yMin) * UIConstant.Y_FACTOR;
-        yMin -= (yMax - yMin) * UIConstant.Y_FACTOR;
-        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (int) Math.ceil(yMax - yMin));
+        if (yMax - yMin > UIConstant.MARGINAL_VALUE) {
+            yMax += (yMax - yMin) * UIConstant.Y_FACTOR;
+            yMin -= (yMax - yMin) * UIConstant.Y_FACTOR;
+        } else {
+            yMax += UIConstant.Y_FACTOR;
+            yMin -= UIConstant.Y_FACTOR;
+        }
+        Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, (yMax - yMin) > UIConstant.MARGINAL_VALUE
+                ? (int) Math.ceil(yMax - yMin) : UIConstant.COR_NUMBER);
         xAxis.setLowerBound(0);
         xAxis.setUpperBound(xMax + UIConstant.X_FACTOR);
         double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
         double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
-        yAxis.setLowerBound(newYMin);
-        yAxis.setUpperBound(newYMax);
+        yAxis.setLowerBound(newYMin > yMin ? yMin : newYMin);
+        yAxis.setUpperBound(newYMax < yMax ? yMax : newYMax);
         ChartOperatorUtils.updateAxisTickUnit(xAxis);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
     }
