@@ -43,7 +43,7 @@ set ID=
 
 :startMongodb
     echo "start mongo"
-    start %~dp0installmongo.bat start
+    start installmongo.bat start
 
 :startApp
 
