@@ -8,6 +8,8 @@ import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.plugin.PluginClass;
 import com.dmsoft.firefly.sdk.plugin.PluginClassType;
@@ -42,6 +44,8 @@ import static com.dmsoft.firefly.sdk.ui.MenuBuilder.MenuType;
 public class AppController {
     private final Logger logger = LoggerFactory.getLogger(AppController.class);
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
+    private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
+    private EnvService envService = RuntimeContext.getBean(EnvService.class);
 
     @FXML
     private GridPane menuPane;
@@ -268,6 +272,7 @@ public class AppController {
                             service.importConfig(config.get(name).getBytes());
                         }
                     });
+                    MenuFactory.getMainController().refreshActiveTemplate();
                 }
 
             }
