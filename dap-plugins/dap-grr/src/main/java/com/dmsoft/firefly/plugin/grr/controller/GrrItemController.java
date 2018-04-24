@@ -840,6 +840,7 @@ public class GrrItemController implements Initializable {
                             windowProgressTipController.updateFailProgress(context.getError().getMessage());
                         }
                     }
+                    grrMainController.clearResultData();
                 }
             });
             RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
