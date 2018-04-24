@@ -10,7 +10,7 @@ set ID=
     IF "%1%"=="stop" GOTO stop
 
 :start
-   for /f "tokens=5" %%i in ('netstat -aon ^| findstr ": 27018"') do (
+   for /f "tokens=5" %%i in ('netstat -aon ^| findstr ":27018"') do (
      echo exit starting mongodb
      set flag=1
   )
