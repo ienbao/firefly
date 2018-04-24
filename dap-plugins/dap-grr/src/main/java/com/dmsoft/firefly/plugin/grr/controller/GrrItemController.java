@@ -761,6 +761,9 @@ public class GrrItemController implements Initializable {
             windowProgressTipController.getCancelBtn().setOnAction(event -> {
                 windowProgressTipController.setCancelingText();
                 context.interruptBeforeNextJobHandler();
+                if (context.isError()) {
+                    windowProgressTipController.closeDialog();
+                }
             });
             Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
             WindowPane windowPane = null;
@@ -817,7 +820,25 @@ public class GrrItemController implements Initializable {
                     if (grrParamDto != null && grrParamDto.getErrors() != null && !grrParamDto.getErrors().isEmpty()) {
                         windowProgressTipController.closeDialog();
                     } else {
-                        windowProgressTipController.updateFailProgress(context.getError().toString());
+                        List<String> errors = Lists.newArrayList();
+                        errors.add(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12002));
+                        errors.add(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12007));
+                        errors.add(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12004));
+                        errors.add(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12006));
+                        if (errors.contains(context.getError().getMessage())) {
+                            windowProgressTipController.closeDialog();
+                            if (configTab.isSelected()) {
+                                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                                        context.getError().getMessage());
+                            } else {
+                                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE), context.getError().getMessage(),
+                                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
+                            }
+                        } else {
+                            windowProgressTipController.updateFailProgress(context.getError().getMessage());
+                        }
                     }
                 }
             });
