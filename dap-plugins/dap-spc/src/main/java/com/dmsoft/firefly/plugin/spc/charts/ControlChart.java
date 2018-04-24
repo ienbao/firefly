@@ -96,7 +96,9 @@ public class ControlChart<X, Y> extends LineChart {
      * @param chartTooltip         chart data tooltip
      */
     public void setData(List<ControlChartData> controlChartDataList, ChartTooltip chartTooltip) {
+        logger.debug("Chart0");
         this.removeAllChildren();
+        logger.debug("Chart1");
         if (controlChartDataList == null) {
             return;
         }
@@ -119,8 +121,11 @@ public class ControlChart<X, Y> extends LineChart {
                 seriesNames.add(controlChartData.getSeriesName());
             }
         });
+        logger.debug("Chart2");
         this.getPlotChildren().addAll(lineResult);
+        logger.debug("Chart3");
         this.getData().addAll(seriesResult);
+        logger.debug("Chart4");
         for (int i = 0; i < uniqueKey.size(); i++) {
             Color color = uniqueColor.get(i);
             String seriesName = seriesNames.get(i);
@@ -144,6 +149,7 @@ public class ControlChart<X, Y> extends LineChart {
             addToUniqueKeyNodes(key, nodes);
         }
 
+        logger.debug("Chart5");
     }
 
     /**
