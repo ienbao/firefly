@@ -8,10 +8,7 @@ import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.*;
-import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
-import com.dmsoft.firefly.gui.components.window.WindowPane;
-import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
+import com.dmsoft.firefly.gui.components.window.*;
 import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.grr.model.ItemTableModel;
@@ -64,6 +61,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -1021,20 +1019,41 @@ public class GrrExportController {
                 if (windowPane != null) {
                     windowPane.getCloseBtn().setOnAction(event -> stage1.fireEvent(new WindowEvent(stage1, WindowEvent.WINDOW_CLOSE_REQUEST)));
                 }
+                windowProgressTipController.getCancelBtn().setText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.OPEN_EXPORT_FOLDER));
+
                 windowProgressTipController.getCancelBtn().setText(file.exists()
                         ? GrrFxmlAndLanguageUtils.getString(ResourceMassages.OPEN_EXPORT_FOLDER)
                         : GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_EXPORT_BTN_OK));
+
                 windowProgressTipController.getCancelBtn().setOnAction(event -> {
-                    if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_EXPORT_BTN_OK).equals(windowProgressTipController.getCancelBtn().getText())) {
-                        windowProgressTipController.closeDialog();
-                    } else {
+                    if (file.exists()) {
                         try {
-                            if (file.exists()) {
-                                Desktop.getDesktop().open(file);
-                            }
-                        } catch (Exception e) {
+                            Desktop.getDesktop().open(file);
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        windowProgressTipController.closeDialog();
+                    } else {
+                        WindowMessageController windowMessageController = WindowMessageFactory.createWindowMessageHasOk(
+                                GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                                GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_FILE_NOT_EXIST));
+                        windowMessageController.addProcessMonitorListener(new WindowCustomListener() {
+                            @Override
+                            public boolean onShowCustomEvent() {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onCloseAndCancelCustomEvent() {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onOkCustomEvent() {
+                                windowProgressTipController.closeDialog();
+                                return false;
+                            }
+                        });
                     }
                 });
                 if (isSucceed[0]) {

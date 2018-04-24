@@ -61,7 +61,7 @@ public class ExportDetailResultHandler extends AbstractBasicJobHandler {
                 } else {
 
                     if (data.containsKey(GrrExportItemKey.EXPORT_SOURCE_RESULT.getCode())) {
-                        if (data.containsKey(GrrExportItemKey.EXPORT_SOURCE_RESULT.getCode())) {
+                        if (data.get(GrrExportItemKey.EXPORT_SOURCE_RESULT.getCode())) {
                             exportResultDto.setGrrAnovaAndSourceResultDto(dto.getExportDetailDto().getAnovaAndSourceResultDto());
                         } else {
                             exportResultDto.setGrrAnovaAndSourceResultDto(null);
@@ -69,7 +69,7 @@ public class ExportDetailResultHandler extends AbstractBasicJobHandler {
                     }
 
                     if (data.containsKey(GrrExportItemKey.EXPORT_CHART.getCode())) {
-                        if (data.containsKey(GrrExportItemKey.EXPORT_CHART.getCode())) {
+                        if (data.get(GrrExportItemKey.EXPORT_CHART.getCode())) {
                             exportResultDto.setGrrImageDto(BuildChart.buildImage(dto.getExportDetailDto(), searchConditionDto, configDto.getGrrConfigDto().getExport()));
                         } else {
                             exportResultDto.setGrrImageDto(null);

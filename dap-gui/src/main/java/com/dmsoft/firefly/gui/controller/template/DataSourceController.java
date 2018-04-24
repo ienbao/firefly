@@ -92,6 +92,7 @@ public class DataSourceController implements Initializable {
     private String delStr = GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_SOURCE);
 
     private void initTable() {
+        filterTf.getTextField().setPromptText(GuiFxmlAndLanguageUtils.getString(ResourceMassages.FILTER));
         delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
         TooltipUtil.installNormalTooltip(delete, GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_SOURCE));
         errorInfo.getStyleClass().add("message-tip-warn-mark");

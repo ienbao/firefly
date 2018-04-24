@@ -65,6 +65,15 @@ public class GrrMainController implements Initializable {
         setDisable(true);
     }
 
+    /**
+     * Clear grr result and view data
+     */
+    public void clearResultData() {
+        this.grrDataFrame = null;
+        grrResultController.removeAllResultData();
+        grrViewDataController.refresh();
+    }
+
     private void initBtnIcon() {
         exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_export_normal.png")));
         resetBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_reset_normal.png")));

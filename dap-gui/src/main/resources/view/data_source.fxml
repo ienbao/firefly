@@ -52,7 +52,7 @@
       <TableView fx:id="dataSourceTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn fx:id="chooseCheckBoxColumn" maxWidth="33.0" minWidth="33.0" prefWidth="33.0" resizable="false" text="C1" />
-          <TableColumn fx:id="chooseValueColumn" prefWidth="75.0" text="Data Source Name" />
+          <TableColumn fx:id="chooseValueColumn" prefWidth="75.0" text="%DATA_SOURCE_NAME" />
         </columns>
          <VBox.margin>
             <Insets left="10.0" right="10.0" />
