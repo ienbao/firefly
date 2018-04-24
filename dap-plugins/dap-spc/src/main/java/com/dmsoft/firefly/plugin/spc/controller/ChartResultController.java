@@ -72,6 +72,16 @@ public class ChartResultController implements Initializable {
     private ChartTooltip chartTooltip = new SpcChartToolTip();
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
+    private List<NDBarChartData> ndcChartDataList = Lists.newArrayList();
+    private List<ControlChartData> xBarChartDataList = Lists.newArrayList();
+    private List<ControlChartData> rangeChartDataList = Lists.newArrayList();
+    private List<ControlChartData> runChartDataList = Lists.newArrayList();
+    private List<ControlChartData> sdChartDataList = Lists.newArrayList();
+    private List<ControlChartData> medianChartDataList = Lists.newArrayList();
+    private List<BoxPlotChartData> boxChartDataList = Lists.newArrayList();
+    private List<ControlChartData> mrChartDataList = Lists.newArrayList();
+    private Set<String> disabledRuleNames = Sets.newLinkedHashSet();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initI18n();
@@ -94,16 +104,16 @@ public class ChartResultController implements Initializable {
      * @param spcChartDtoList the list of chart data
      */
     public void initSpcChartData(List<SpcChartDto> spcChartDtoList) {
+        ndcChartDataList.clear();
+        xBarChartDataList.clear();
+        rangeChartDataList.clear();
+        runChartDataList.clear();
+        sdChartDataList.clear();
+        medianChartDataList.clear();
+        boxChartDataList.clear();
+        mrChartDataList.clear();
+        disabledRuleNames.clear();
         Map<String, java.awt.Color> colorCache = spcMainController.getColorCache();
-        List<NDBarChartData> ndcChartDataList = Lists.newArrayList();
-        List<ControlChartData> xBarChartDataList = Lists.newArrayList();
-        List<ControlChartData> rangeChartDataList = Lists.newArrayList();
-        List<ControlChartData> runChartDataList = Lists.newArrayList();
-        List<ControlChartData> sdChartDataList = Lists.newArrayList();
-        List<ControlChartData> medianChartDataList = Lists.newArrayList();
-        List<BoxPlotChartData> boxChartDataList = Lists.newArrayList();
-        List<ControlChartData> mrChartDataList = Lists.newArrayList();
-        Set<String> disabledRuleNames = Sets.newLinkedHashSet();
         for (int i = 0; i < spcChartDtoList.size(); i++) {
             SpcChartDto spcChartDto = spcChartDtoList.get(i);
             String key = spcChartDto.getKey();
