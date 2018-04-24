@@ -16,7 +16,7 @@
    <children>
       <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="310.0">
          <children>
-            <Label text="Resolver:">
+            <Label text="%RESOLVER">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>
@@ -30,14 +30,14 @@
       </HBox>
       <HBox prefHeight="30.0" prefWidth="200.0">
          <children>
-            <CheckBox fx:id="defaultTemplate" mnemonicParsing="false" text="Set as default template">
+            <CheckBox fx:id="defaultTemplate" mnemonicParsing="false" text="%SET_DEFAULT_RESOLVER">
                <HBox.margin>
                   <Insets left="72.0" />
                </HBox.margin></CheckBox>
          </children></HBox>
       <HBox alignment="CENTER_LEFT" nodeOrientation="RIGHT_TO_LEFT" prefHeight="50.0" prefWidth="200.0">
          <children>
-            <Button fx:id="nextStep" alignment="CENTER" mnemonicParsing="false" prefWidth="80.0" text="OK">
+            <Button fx:id="nextStep" alignment="CENTER" mnemonicParsing="false" prefWidth="80.0" text="%OK_BTN">
                <HBox.margin>
                   <Insets left="28.0" />
                </HBox.margin>

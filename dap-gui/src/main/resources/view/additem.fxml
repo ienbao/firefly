@@ -41,7 +41,7 @@
                   <TableView fx:id="itemTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <columns>
                       <TableColumn fx:id="select" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" sortable="false" />
-                      <TableColumn fx:id="testItem" prefWidth="75.0" sortable="false" text="Test Item" />
+                      <TableColumn fx:id="testItem" prefWidth="75.0" sortable="false" text="%TEST_ITEM" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -56,7 +56,7 @@
             </TextArea>
          </children>
       </HBox>
-      <Button fx:id="addItemOk" mnemonicParsing="false" prefWidth="80.0" text="OK">
+      <Button fx:id="addItemOk" mnemonicParsing="false" prefWidth="80.0" text="%OK_BTN">
          <VBox.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </VBox.margin>

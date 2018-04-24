@@ -88,7 +88,7 @@ public class MenuFactory {
         restoreMenuItem.setMnemonicParsing(true);
         restoreMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.R, KeyCombination.SHORTCUT_DOWN));
         restoreMenuItem.setOnAction(event -> {
-            WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Message", GuiFxmlAndLanguageUtils.getString("GLOBAL_RESTORE_SYSTEM"));
+            WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel(GuiFxmlAndLanguageUtils.getString("GLOBAL_MESSAGE_TIP_INFO_TITLE"), GuiFxmlAndLanguageUtils.getString("GLOBAL_RESTORE_SYSTEM"));
             controller.addProcessMonitorListener(new WindowCustomListener() {
                 @Override
                 public boolean onShowCustomEvent() {
