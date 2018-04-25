@@ -178,6 +178,10 @@ table
     -fx-cursor: hand;
 }
 
+.cell .alarm {
+    -fx-text-fill: white;
+}
+
 /*
 *Spc setting
 */
