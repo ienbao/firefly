@@ -843,9 +843,9 @@ public class GrrExportController {
             }
         }
 
-        if (itemTable.getScene().lookup(".ascending-label") != null) {
+        if (itemTable.lookup(".ascending-label") != null) {
             DAPStringUtils.sortListString(selectItems, false);
-        } else if (itemTable.getScene().lookup(".descending-label") != null) {
+        } else if (itemTable.lookup(".descending-label") != null) {
             DAPStringUtils.sortListString(selectItems, true);
         }
         List<String> selectTestItemsResult = Lists.newLinkedList();
@@ -880,9 +880,9 @@ public class GrrExportController {
                 }
             }
         }
-        if (itemTable.getScene().lookup(".ascending-label") != null) {
+        if (itemTable.lookup(".ascending-label") != null) {
             this.sortTestItemWithTypeDto(selectTestItemDtos, false);
-        } else if (itemTable.getScene().lookup(".descending-label") != null) {
+        } else if (itemTable.lookup(".descending-label") != null) {
             this.sortTestItemWithTypeDto(selectTestItemDtos, true);
         }
         List<TestItemWithTypeDto> selectTestItemDtosResult = Lists.newLinkedList();
