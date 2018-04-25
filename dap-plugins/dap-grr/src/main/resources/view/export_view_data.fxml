@@ -20,12 +20,12 @@
       </TableView>
       <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="200.0">
          <children>
-            <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="OK">
+            <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="%GRR_SETTING_BTN_OK">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="Cancel">
+            <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="%GRR_SETTING_BTN_CANCEL">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
