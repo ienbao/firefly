@@ -24,7 +24,7 @@ public class ResourceMassages {
     public static final String DETAIL_TABLE_MENU = "DETAIL_TABLE_MENU";
     public static final String REMOVE_TABLE_MENU = "REMOVE_TABLE_MENU";
     public static final String TEST_ITEM = "TEST_ITEM";
-    public static final String VALUES = "VALUES";
+    public static final String VALUE = "VALUE";
     public static final String ALL_TEST_ITEMS = "ALL_TEST_ITEMS";
     public static final String TEST_ITEMS_WITH_USL_LSL = "TEST_ITEMS_WITH_USL_LSL";
     public static final String STICKY_ON_TOP = "STICKY_ON_TOP";

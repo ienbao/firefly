@@ -3,6 +3,8 @@ package com.dmsoft.firefly.plugin.spc.controller;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.plugin.spc.model.DetailDataModel;
+import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
+import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import javafx.fxml.FXML;
@@ -33,9 +35,10 @@ public class ViewDataDetailController implements Initializable {
         filterTF.getTextField().textProperty().addListener((ov, s1, s2) -> {
             model.filterText(s2);
         });
+        filterTF.getTextField().setPromptText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.VALUE));
         TableViewWrapper.decorate(detailTB, model);
-        detailTB.getColumns().get(0).setPrefWidth(226);
-        detailTB.getColumns().get(1).setPrefWidth(163);
+//        detailTB.getColumns().get(0).setPrefWidth(226);
+//        detailTB.getColumns().get(1).setPrefWidth(163);
     }
 
     public void setRowDataDto(RowDataDto rowDataDto) {
