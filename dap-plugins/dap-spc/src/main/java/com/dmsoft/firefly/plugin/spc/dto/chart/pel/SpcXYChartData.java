@@ -46,7 +46,7 @@ public class SpcXYChartData implements IXYChartData<Double, Double> {
 
     @Override
     public Double getYValueByIndex(int index) {
-        return (index >= 0 && index < getLen()) ? (DAPDoubleUtils.isBlank(x[index]) ? null : y[index]) : null;
+        return (index >= 0 && index < getLen()) ? (DAPDoubleUtils.isBlank(y[index]) ? null : y[index]) : null;
     }
 
     @Override

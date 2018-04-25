@@ -353,6 +353,7 @@ public class GrrSummaryModel implements TableModel {
                     tableCell.setStyle("-fx-background-color: " + ColorUtils.toHexFromFXColor(UIConstant.COLOR_RECTIFICATION));
                 }
             }
+            tableCell.getStyleClass().add("alarm");
         }
         if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_REPEATABILITY).equals(column)
                 || column.equals(GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SUMMARY_TITLE_REPRODUCIBILITY))

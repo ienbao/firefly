@@ -492,6 +492,15 @@ public class GrrResultController implements Initializable {
         this.removeSubResultData();
     }
 
+    public void toggleTickLabelsVisible(boolean flag) {
+        componentChart.getXAxis().setTickLabelsVisible(flag);
+        partAppraiserChart.getXAxis().setTickLabelsVisible(flag);
+        xBarAppraiserChart.getXAxis().setTickLabelsVisible(flag);
+        rangeAppraiserChart.getXAxis().setTickLabelsVisible(flag);
+        rrbyPartChart.getXAxis().setTickLabelsVisible(flag);
+        rrByAppraiserChart.getXAxis().setTickLabelsVisible(flag);
+    }
+
     private void setComponentChart(GrrComponentCResultDto componentCResult) {
         if (componentCResult == null) {
             return;
@@ -789,6 +798,7 @@ public class GrrResultController implements Initializable {
         toleranceLbl.setText("");
         categoryBtn.setText("");
         itemDetailTb.refresh();
+        this.toggleTickLabelsVisible(true);
     }
 
     private void initComponents() {
