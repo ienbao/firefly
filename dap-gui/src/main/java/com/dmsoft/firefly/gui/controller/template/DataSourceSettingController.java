@@ -109,6 +109,10 @@ public class DataSourceSettingController {
                     i++;
                 }
             }
+
+            System.out.println("=======trueSet====" + trueSet.size());
+            System.out.println("=======falseSet====" + falseSet.size());
+
             sourceDataService.changeRowDataInUsed(trueSet, true);
             sourceDataService.changeRowDataInUsed(falseSet, false);
             StageMap.closeStage("sourceSetting");
@@ -224,12 +228,15 @@ public class DataSourceSettingController {
             for (String key : itemDataTableModel.getRowKey()) {
                 if (checkMap.get(key) != null) {
                     checkMap.get(key).set(itemDataTableModel.getAllCheckBox().isSelected());
+                    itemDataTableModel.getTrueSet().add(key);
+                    itemDataTableModel.getFalseSet().remove(key);
                 } else {
                     checkMap.put(key, new SimpleObjectProperty<>(itemDataTableModel.getAllCheckBox().isSelected()));
                 }
 
                 if (!itemDataTableModel.getAllCheckBox().isSelected()) {
                     itemDataTableModel.getFalseSet().add(key);
+                    itemDataTableModel.getTrueSet().remove(key);
                 }
 
             }
@@ -366,7 +373,7 @@ public class DataSourceSettingController {
                     List<RowDataDto> searchResultDtos = addRowData(columnKey);
                     searchResultDtos.addAll(rowDataDtoList);
                     itemDataTableModel.updateRowDataList(searchResultDtos);
-                }else{
+                } else {
                     rowDataDtoList = dataFrame.getAllDataRow();
                     List<RowDataDto> searchResultDtos = addRowData(columnKey);
                     searchResultDtos.addAll(rowDataDtoList);
