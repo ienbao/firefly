@@ -69,7 +69,6 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     private static final String NEGATIVE_STYLE = "negative";
     private final Orientation orientation;
 
-    private boolean barShow = true;
     private boolean areaShow = true;
     private Map<String, Boolean> lineShow = Maps.newLinkedHashMap();
 
@@ -180,10 +179,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         for (Map.Entry<String, XYChart.Series> stringSeriesEntry : uniqueKeySeriesMap.entrySet()) {
             seriesRemoved(stringSeriesEntry.getValue());
         }
-//        ObservableList<Node> nodes = getPlotChildren();
-//        getData().clear();
-//        getPlotChildren().removeAll(nodes);
-//        getPlotChildren().clear();
+        getData().clear();
         clearData();
     }
 
@@ -207,10 +203,6 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
 
         if (!areaShow) {
             toggleAreaSeries(false);
-        }
-
-        if (!barShow) {
-            toggleBarSeries(false);
         }
 
 //        update value maker color
@@ -259,13 +251,25 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     public void toggleBarSeries(boolean showed) {
         ObservableList<Series<X, Y>> seriesObservableList = getData();
         seriesObservableList.forEach(series -> series.getData().forEach(dataItem -> {
-            if (!showed) {
-                dataItem.getNode().getStyleClass().setAll("chart-hidden-bar");
-            } else {
-                dataItem.getNode().getStyleClass().setAll("chart-bar");
-            }
+            toggleShowNode(dataItem.getNode(), showed);
+//            if (!showed) {
+//                dataItem.getNode().getStyleClass().setAll("chart-hidden-bar");
+//            } else {
+//                dataItem.getNode().getStyleClass().setAll("chart-bar");
+//            }
         }));
-        barShow = showed;
+    }
+
+    private void toggleShowNode(Node node, boolean showed) {
+        if (showed) {
+            if (!getPlotChildren().contains(node)) {
+                getPlotChildren().add(node);
+            }
+        } else {
+            if (getPlotChildren().contains(node)) {
+                getPlotChildren().remove(node);
+            }
+        }
     }
 
     /**
