@@ -1,11 +1,13 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.grr.dto.*;
 import com.dmsoft.firefly.plugin.grr.utils.GrrFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.grr.utils.ListUtils;
+import com.dmsoft.firefly.plugin.grr.utils.UIConstant;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.google.common.collect.Lists;
 import javafx.fxml.FXML;
@@ -71,6 +73,7 @@ public class GrrMainController implements Initializable {
     public void clearResultData() {
         this.grrDataFrame = null;
         grrResultController.removeAllResultData();
+        grrResultController.toggleTickLabelsVisible(false);
         grrViewDataController.refresh();
     }
 
@@ -132,7 +135,9 @@ public class GrrMainController implements Initializable {
         try {
             FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_export.fxml");
             root = fxmlLoader.load();
+
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrExport", GrrFxmlAndLanguageUtils.getString("GRR_EXPORT"), root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
+            StageMap.addStage(UIConstant.GRR_EXPORT_STAGE, stage);
             ((GrrExportController) fxmlLoader.getController()).initGrrExportLeftConfig(grrItemController.getGrrLeftConfigDto());
             stage.setResizable(false);
             stage.toFront();

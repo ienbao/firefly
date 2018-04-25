@@ -79,6 +79,8 @@ public class SpcItemController implements Initializable {
     @FXML
     private Tab timeTab;
     @FXML
+    private Label helpLabel;
+    @FXML
     private TableColumn<ItemTableModel, CheckBox> select;
     @FXML
     private TableColumn<ItemTableModel, TestItemWithTypeDto> item;
@@ -347,6 +349,10 @@ public class SpcItemController implements Initializable {
         timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
         timeTab.setStyle("-fx-padding: 0 5 0 5");
         timeTab.setTooltip(new Tooltip(SpcFxmlAndLanguageUtils.getString("SPC_TIMER_SETTING")));
+
+        helpLabel.getStyleClass().add("message-tip-question");
+        helpLabel.setStyle("-fx-background-color: #0096ff");
+        helpLabel.setTooltip(new Tooltip(SpcFxmlAndLanguageUtils.getString("SUBGROUP_SIZE_TIP")));
 
     }
 
@@ -698,9 +704,9 @@ public class SpcItemController implements Initializable {
             }
         }
 
-        if (itemTable.getScene().lookup(".ascending-label") != null) {
+        if (itemTable.lookup(".ascending-label") != null) {
             DAPStringUtils.sortListString(selectItems, false);
-        } else if (itemTable.getScene().lookup(".descending-label") != null) {
+        } else if (itemTable.lookup(".descending-label") != null) {
             DAPStringUtils.sortListString(selectItems, true);
         }
         List<String> selectTestItemsResult = Lists.newLinkedList();
@@ -735,9 +741,9 @@ public class SpcItemController implements Initializable {
                 }
             }
         }
-        if (itemTable.getScene().lookup(".ascending-label") != null) {
+        if (itemTable.lookup(".ascending-label") != null) {
             this.sortTestItemWithTypeDto(selectTestItemDtos, false);
-        } else if (itemTable.getScene().lookup(".descending-label") != null) {
+        } else if (itemTable.lookup(".descending-label") != null) {
             this.sortTestItemWithTypeDto(selectTestItemDtos, true);
         }
         List<TestItemWithTypeDto> selectTestItemDtosResult = Lists.newLinkedList();

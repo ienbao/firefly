@@ -288,6 +288,8 @@ public class ControlChart<X, Y> extends LineChart {
                 series.getData().forEach(dataItem -> this.toggleShowNode(dataItem.getNode(), showed));
             }
         }));
+        this.getStyleClass().add("A");
+        this.getStyleClass().removeAll("A");
     }
 
     /**
@@ -303,6 +305,8 @@ public class ControlChart<X, Y> extends LineChart {
             XYChart.Series<X, Y> series = value;
             series.getData().forEach(dataItem -> this.toggleShowNode(dataItem.getNode(), showed));
         });
+        this.getStyleClass().add("A");
+        this.getStyleClass().removeAll("A");
     }
 
     /**

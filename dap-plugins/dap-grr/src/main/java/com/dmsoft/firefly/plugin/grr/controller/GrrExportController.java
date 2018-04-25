@@ -760,9 +760,9 @@ public class GrrExportController {
         browse.setOnAction(event -> {
             String str = System.getProperty("user.home");
             DirectoryChooser directoryChooser = new DirectoryChooser();
-            directoryChooser.setTitle("Grr Config export");
+            directoryChooser.setTitle(GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_EXPORT_DIALOG_TITLE));
             directoryChooser.setInitialDirectory(new File(str));
-            File file = directoryChooser.showDialog(null);
+            File file = directoryChooser.showDialog(StageMap.getStage(UIConstant.GRR_EXPORT_STAGE));
 
             if (file != null) {
                 locationPath.setText(file.getPath());
@@ -843,9 +843,9 @@ public class GrrExportController {
             }
         }
 
-        if (itemTable.getScene().lookup(".ascending-label") != null) {
+        if (itemTable.lookup(".ascending-label") != null) {
             DAPStringUtils.sortListString(selectItems, false);
-        } else if (itemTable.getScene().lookup(".descending-label") != null) {
+        } else if (itemTable.lookup(".descending-label") != null) {
             DAPStringUtils.sortListString(selectItems, true);
         }
         List<String> selectTestItemsResult = Lists.newLinkedList();
@@ -880,9 +880,9 @@ public class GrrExportController {
                 }
             }
         }
-        if (itemTable.getScene().lookup(".ascending-label") != null) {
+        if (itemTable.lookup(".ascending-label") != null) {
             this.sortTestItemWithTypeDto(selectTestItemDtos, false);
-        } else if (itemTable.getScene().lookup(".descending-label") != null) {
+        } else if (itemTable.lookup(".descending-label") != null) {
             this.sortTestItemWithTypeDto(selectTestItemDtos, true);
         }
         List<TestItemWithTypeDto> selectTestItemDtosResult = Lists.newLinkedList();
@@ -1291,7 +1291,7 @@ public class GrrExportController {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
         );
-        File file = fileChooser.showOpenDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
+        File file = fileChooser.showOpenDialog(StageMap.getStage(UIConstant.GRR_EXPORT_STAGE));
 
         if (file != null) {
             GrrLeftConfigDto grrLeftConfigDto = leftConfigService.importGrrConfig(file);

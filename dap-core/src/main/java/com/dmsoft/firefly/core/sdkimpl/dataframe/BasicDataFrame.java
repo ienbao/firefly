@@ -149,8 +149,9 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
     public List<String> getDataValue(String testItemName, List<String> rowKeyList) {
         if (isTestItemExist(testItemName)) {
             List<String> result = Lists.newArrayList();
+            int targetIndex = this.testItemNames.indexOf(testItemName);
             for (String rowKey : rowKeyList) {
-                result.add(getCellValue(rowKey, testItemName));
+                result.add(privateGetCellValue(rowKey, targetIndex));
             }
             return result;
         }
@@ -362,6 +363,17 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
     @Override
     public int getColumnSize() {
         return this.testItemNames == null ? 0 : this.testItemNames.size();
+    }
+
+    private String privateGetCellValue(String rowKey, int targetColumnIndex) {
+        if (targetColumnIndex < 0) {
+            return null;
+        }
+        int targetRowIndex = this.rowKeys.indexOf(rowKey);
+        if (targetRowIndex > -1) {
+            return this.cellValues.get(targetRowIndex).get(targetColumnIndex);
+        }
+        return null;
     }
 
     protected List<String> getTestItemNames() {

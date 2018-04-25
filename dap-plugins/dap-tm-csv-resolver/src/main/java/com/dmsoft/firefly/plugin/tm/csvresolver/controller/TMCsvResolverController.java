@@ -6,9 +6,9 @@ package com.dmsoft.firefly.plugin.tm.csvresolver.controller;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
-import com.dmsoft.firefly.plugin.tm.csvresolver.service.CsvResolverService;
 import com.dmsoft.firefly.plugin.tm.csvresolver.dto.CsvTemplateDto;
 import com.dmsoft.firefly.plugin.tm.csvresolver.model.RowDataModel;
+import com.dmsoft.firefly.plugin.tm.csvresolver.service.CsvResolverService;
 import com.dmsoft.firefly.plugin.tm.csvresolver.utils.CsvFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.tm.csvresolver.utils.ResourceMassages;
 import com.google.common.collect.Lists;
@@ -222,6 +222,7 @@ public class TMCsvResolverController {
             }
             if (csvTemplateDto.getData() != null) {
                 data.setValue(row[csvTemplateDto.getData() - 1]);
+                cache.put("data", csvTemplateDto.getData());
             }
             if (csvTemplateDto.getItem() != null) {
                 item.setValue(row[csvTemplateDto.getItem() - 1]);
@@ -252,17 +253,28 @@ public class TMCsvResolverController {
 
     private void validate(ComboBox node, String key) {
         if (node.getValue() == null || StringUtils.isEmpty(node.getValue().toString())) {
-            cache.remove(key, null);
-            return;
+            cache.remove(key);
+        } else {
+            cache.put(key, Integer.valueOf(node.getValue().toString().substring(3, node.getValue().toString().length())));
         }
-        cache.put(key, Integer.valueOf(node.getValue().toString().substring(3, node.getValue().toString().length())));
-
-        if (data.getValue() != null && !StringUtils.isEmpty(data.getValue().toString())) {
-            if (!node.equals(data)
-                    && Integer.valueOf(node.getValue().toString().substring(3, node.getValue().toString().length())) > Integer.valueOf(data.getValue().toString().substring(3, data.getValue().toString().length()))) {
-                TooltipUtil.installWarnTooltip(data, CsvFxmlAndLanguageUtils.getString("TM_RESOLVE_TIP_MAX_TEST_DATA_ROW"));
-                data.getStyleClass().add("combo-box-error");
+        if (cache.containsKey("data")) {
+            int dataIndex = cache.get("data");
+            boolean flag = true;
+            for (Integer i : cache.values()) {
+                if (i > dataIndex) {
+                    flag = false;
+                }
             }
+            if (!flag) {
+                TooltipUtil.installWarnTooltip(data, CsvFxmlAndLanguageUtils.getString("CSV_RESOLVE_TIP_MAX_TEST_DATA_ROW"));
+                data.getStyleClass().add("combo-box-error");
+            } else {
+                TooltipUtil.uninstallWarnTooltip(data);
+                data.getStyleClass().removeAll("combo-box-error");
+            }
+        }
+        if (node.getValue() == null || StringUtils.isEmpty(node.getValue().toString())) {
+            return;
         }
         if (!node.equals(header) && node.getValue().equals(header.getValue())) {
             header.setValue("");
