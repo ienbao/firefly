@@ -69,6 +69,8 @@ public class GrrSettingController {
     private GrrConfigServiceImpl grrConfigService = new GrrConfigServiceImpl();
     private Map<String, Boolean> grrExportSetting = Maps.newHashMap();
 
+    private Map<String, String> i18nMap = Maps.newHashMap();
+
     @FXML
     private void initialize() {
         initLabelStyle();
@@ -92,12 +94,17 @@ public class GrrSettingController {
         sort.setItems(FXCollections.observableArrayList(
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SETTING_SORT_DATA_BY_APPRAISERS),
                 GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SETTING_SORT_DATA_BY_DEFAULT)));
-        sort.setValue(UIConstant.GRR_SETTING_SORT_DATA_BY_APPRAISERS);
+        sort.getSelectionModel().select(0);
         levelGood.setText("5");
         levelBad.setText("10");
-
+        initI18nMap();
         initConfigData();
         initEvent();
+    }
+
+    private void initI18nMap() {
+        i18nMap.put(GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SETTING_SORT_DATA_BY_APPRAISERS), UIConstant.GRR_SETTING_SORT_BY_APPRAISERS);
+        i18nMap.put(GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SETTING_SORT_DATA_BY_DEFAULT), UIConstant.GRR_SETTING_SORT_BY_DEFAULT);
     }
 
     private void initConfigData() {
@@ -115,7 +122,12 @@ public class GrrSettingController {
             }
             coverage.setValue(grrConfigDto.getCoverage());
             sign.setText(grrConfigDto.getSignLevel());
-            sort.setValue(grrConfigDto.getSortMethod());
+            i18nMap.forEach((key, value) -> {
+                if (value.equals(grrConfigDto.getSortMethod())) {
+                    sort.setValue(key);
+                }
+            });
+
             levelGood.setText(grrConfigDto.getAlarmSetting().get(0).toString());
             levelBad.setText(grrConfigDto.getAlarmSetting().get(1).toString());
         }
@@ -266,7 +278,7 @@ public class GrrSettingController {
         }
         grrConfigDto.setCoverage(coverage.getValue());
         grrConfigDto.setSignLevel(sign.getText());
-        grrConfigDto.setSortMethod(sort.getValue());
+        grrConfigDto.setSortMethod(i18nMap.get(sort.getValue()));
         List<Double> alarm = Lists.newArrayList();
         alarm.add(Double.valueOf(levelGood.getText()));
         alarm.add(Double.valueOf(levelBad.getText()));
