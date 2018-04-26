@@ -665,9 +665,10 @@ public class MainController {
                             try {
                                 Thread.sleep(1000);
                                 int progress = (int) (getHeapUsed() / memoryLimit * 100);
-                                updateProgress(progress, 100);
+                                //updateProgress(progress, 100);
                                 Platform.runLater(() -> {
                                     try {
+                                        progressBar.setProgress(progress / 100.0);
                                         if (progress < warningPercent) {
                                             progressBar.getStyleClass().setAll("progress-bar-md-green");
                                         } else {
@@ -691,7 +692,7 @@ public class MainController {
             }
         };
 
-        progressBar.progressProperty().bind(service.progressProperty());
+        //progressBar.progressProperty().bind(service.progressProperty());
         service.start();
     }
 
