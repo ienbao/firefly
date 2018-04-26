@@ -97,7 +97,7 @@ public class GrrSourceModel implements TableModel {
             case 3:
                 return new SimpleObjectProperty<>(formatterNormalValue(sourceDto.getVariation(), digNum));
             case 4:
-                return new SimpleObjectProperty<>(formatterPercentValue(sourceDto.getTotalVariation(), percentDigNum));
+                return new SimpleObjectProperty<>(formatterPercentValue(sourceDto.getContribution(), percentDigNum));
             case 5:
                 return new SimpleObjectProperty<>(formatterPercentValue(sourceDto.getTotalVariation(), percentDigNum));
             case 6:
