@@ -579,9 +579,9 @@ public class SpcItemController implements Initializable {
                 List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) context.get(ParamKeys.CHART_ANALYSIS_RESULT);
                 if (spcChartDtoList != null && spcChartDtoList.size() != 0) {
                     spcMainController.setSpcChartData(spcChartDtoList);
-                    //set view data
-                    spcMainController.setTimerViewData(chartSearchConditionDtoList, searchConditionDtoList);
                 }
+                //set view data
+                spcMainController.setTimerViewData(chartSearchConditionDtoList, searchConditionDtoList);
                 windowProgressTipController.closeDialog();
                 logger.info("Spc auto refresh finish.");
             }
