@@ -1034,26 +1034,30 @@ public class GrrExportController {
                         }
                         windowProgressTipController.closeDialog();
                     } else {
-                        WindowMessageController windowMessageController = WindowMessageFactory.createWindowMessageHasOk(
-                                GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-                                GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_FILE_NOT_EXIST));
-                        windowMessageController.addProcessMonitorListener(new WindowCustomListener() {
-                            @Override
-                            public boolean onShowCustomEvent() {
-                                return false;
-                            }
+                        if (GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_EXPORT_BTN_OK).equals(windowProgressTipController.getCancelBtn().getText())) {
+                            windowProgressTipController.closeDialog();
+                        } else {
+                            WindowMessageController windowMessageController = WindowMessageFactory.createWindowMessageHasOk(
+                                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                                    GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_FILE_NOT_EXIST));
+                            windowMessageController.addProcessMonitorListener(new WindowCustomListener() {
+                                @Override
+                                public boolean onShowCustomEvent() {
+                                    return false;
+                                }
 
-                            @Override
-                            public boolean onCloseAndCancelCustomEvent() {
-                                return false;
-                            }
+                                @Override
+                                public boolean onCloseAndCancelCustomEvent() {
+                                    return false;
+                                }
 
-                            @Override
-                            public boolean onOkCustomEvent() {
-                                windowProgressTipController.closeDialog();
-                                return false;
-                            }
-                        });
+                                @Override
+                                public boolean onOkCustomEvent() {
+                                    windowProgressTipController.closeDialog();
+                                    return false;
+                                }
+                            });
+                        }
                     }
                 });
                 if (isSucceed[0]) {
