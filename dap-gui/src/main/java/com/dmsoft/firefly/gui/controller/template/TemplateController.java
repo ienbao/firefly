@@ -328,7 +328,7 @@ public class TemplateController {
         title.setText(GuiConst.DEFAULT_TEMPLATE_NAME);
         decimal.setValue(6);
         timeKeys.getChildren().clear();
-        patternText.setText("yyy/MM/dd HH:mm:ss SSSSSS");
+        patternText.setText("yyy/MM/dd HH:mm:ss SSS");
 //        items.clear();
     }
 
