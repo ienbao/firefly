@@ -10,7 +10,7 @@
    <children>
       <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="310.0" VBox.vgrow="ALWAYS">
          <children>
-            <Label alignment="CENTER_RIGHT" prefWidth="65.0" text="Name">
+            <Label alignment="CENTER_RIGHT" prefWidth="65.0" text="%TEMPLATE_NAME">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
@@ -20,12 +20,12 @@
       </HBox>
       <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="310.0">
          <children>
-            <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="OK">
+            <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="%OK_BTN">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="Cancel">
+            <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="%CANCEL_BTN">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
