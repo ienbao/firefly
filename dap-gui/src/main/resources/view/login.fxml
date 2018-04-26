@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="loginPane" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.LoginController">
+<AnchorPane fx:id="loginPane" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.LoginController">
    <children>
       <VBox>
          <children>
@@ -36,7 +36,7 @@
                      <GridPane.margin>
                         <Insets bottom="15.0" />
                      </GridPane.margin></ImageView>
-                  <PasswordField fx:id="passwordField" text="123456" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <PasswordField fx:id="passwordField" minHeight="26.0" prefHeight="26.0" style="-fx-pref-height: 26; -fx-min-height: 26;" text="123456" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
                <VBox.margin>
                   <Insets />
