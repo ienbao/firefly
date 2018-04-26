@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @OpenService
 public class GrrFilterServiceImpl implements GrrFilterService {
     private static final String SORT_METHOD_APPRAISER = "Appraisers";
-    private static final String SORT_METHOD_TRIAL = "default";
+    private static final String SORT_METHOD_TRIAL = "Default";
     private final Logger logger = LoggerFactory.getLogger(GrrFilterServiceImpl.class);
 
     @Override

@@ -53,7 +53,7 @@ public class ExportDetailResultHandler extends AbstractBasicJobHandler {
             summaryDtos.add(summaryDto);
             GrrExportResultDto exportResultDto = new GrrExportResultDto();
             exportResultDto.setItemName(dto.getItemName());
-            if (configDto.getGrrConfigDto() != null && configDto.getGrrConfigDto().getExport().containsKey(GrrFxmlAndLanguageUtils.getString(UIConstant.EXPORT_DETIAL))) {
+            if (configDto.getGrrConfigDto() != null && configDto.getGrrConfigDto().getExport().containsKey(GrrExportItemKey.EXPORT_DETAIL_SHEET.getCode())) {
                 Map<String, Boolean> data = configDto.getGrrConfigDto().getExport();
                 if (!data.get(GrrExportItemKey.EXPORT_DETAIL_SHEET.getCode())) {
                     exportResultDto.setGrrAnovaAndSourceResultDto(null);

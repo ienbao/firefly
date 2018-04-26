@@ -364,7 +364,7 @@ public class TemplateController {
                 StageMap.closeStage("newTemplate");
             });
 
-            Stage newStage = WindowFactory.createOrUpdateSimpleWindowAsModel("newTemplate", "New Template", root);
+            Stage newStage = WindowFactory.createOrUpdateSimpleWindowAsModel("newTemplate", GuiFxmlAndLanguageUtils.getString(ResourceMassages.NEW_TEMPLATE), root);
             newStage.setOnCloseRequest(event -> newNameController.getName().setText(""));
             newStage.toFront();
             newStage.show();
@@ -423,7 +423,7 @@ public class TemplateController {
 //                }
                 StageMap.closeStage("renameTemplate");
             });
-            Stage renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameTemplate", "Rename Template", root);
+            Stage renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameTemplate", GuiFxmlAndLanguageUtils.getString(ResourceMassages.RENAME_TEMPLATE_TITLE), root);
             renameTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem());
             renameStage.setResizable(false);
             renameStage.toFront();
@@ -469,7 +469,7 @@ public class TemplateController {
                 }
                 StageMap.closeStage("copyTemplate");
             });
-            Stage copyStage = WindowFactory.createOrUpdateSimpleWindowAsModel("copyTemplate", "Copy Template", root);
+            Stage copyStage = WindowFactory.createOrUpdateSimpleWindowAsModel("copyTemplate",  GuiFxmlAndLanguageUtils.getString(ResourceMassages.COPY_TEMPLATE_TITLE), root);
             copyTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem());
             copyStage.toFront();
             copyStage.show();
@@ -553,7 +553,7 @@ public class TemplateController {
         }
         TimePatternDto oldTimePatternDto = oldTemplateDto.getTimePatternDto();
         TimePatternDto newTimePatternDto = newTemplateDto.getTimePatternDto();
-        if (oldTimePatternDto.getPattern() != null && newTimePatternDto.getPattern() != null && !oldTimePatternDto.getPattern().equals(newTimePatternDto.getPattern())) {
+        if (!oldTimePatternDto.getPattern().equals(newTimePatternDto.getPattern())) {
             isModified = true;
             return isModified;
         }

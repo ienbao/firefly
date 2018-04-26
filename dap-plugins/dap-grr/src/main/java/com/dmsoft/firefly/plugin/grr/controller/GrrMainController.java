@@ -73,6 +73,7 @@ public class GrrMainController implements Initializable {
     public void clearResultData() {
         this.grrDataFrame = null;
         grrResultController.removeAllResultData();
+        grrResultController.disableResultOperator();
         grrResultController.toggleTickLabelsVisible(false);
         grrViewDataController.refresh();
     }
