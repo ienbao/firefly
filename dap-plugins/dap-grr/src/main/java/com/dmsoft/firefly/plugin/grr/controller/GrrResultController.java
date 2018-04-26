@@ -359,6 +359,15 @@ public class GrrResultController implements Initializable {
         this.enableSubResultOperator(true);
     }
 
+    /**
+     * Disable grr result operator
+     */
+    public void disableResultOperator() {
+        summaryItemTf.setDisable(true);
+        resultBasedCmb.setDisable(true);
+        enableSubResultOperator(false);
+    }
+
     private void enableSubResultOperator(boolean flag) {
         grrDataBtn.setDisable(!flag);
         grrChartBtn.setDisable(!flag);
@@ -492,6 +501,11 @@ public class GrrResultController implements Initializable {
         this.removeSubResultData();
     }
 
+    /**
+     * Toggle tick label visible
+     *
+     * @param flag it show or hide
+     */
     public void toggleTickLabelsVisible(boolean flag) {
         componentChart.getXAxis().setTickLabelsVisible(flag);
         partAppraiserChart.getXAxis().setTickLabelsVisible(flag);

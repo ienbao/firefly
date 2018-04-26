@@ -75,6 +75,7 @@ public class GrrViewDataController implements Initializable {
         exchangeFilterLB.getTextField().setPromptText(GrrFxmlAndLanguageUtils.getString("TEST_ITEM"));
         analysisFilterLB.setDisable(true);
         exchangeFilterLB.setDisable(true);
+        chooseItemBtn.setDisable(true);
         analysisFilterLB.getTextField().textProperty().addListener((ov, t1, t2) -> {
             if (this.includeModel != null) {
                 this.includeModel.searchTestItem(t2);
@@ -151,6 +152,7 @@ public class GrrViewDataController implements Initializable {
         if (dataFrame != null && dataFrame.getDataFrame() != null && dataFrame.getIncludeDatas() != null && !dataFrame.getIncludeDatas().isEmpty()) {
             analysisFilterLB.setDisable(false);
             exchangeFilterLB.setDisable(false);
+            chooseItemBtn.setDisable(false);
             this.grrDataFrameDto = dataFrame;
             this.includeModel = new GrrViewDataDFIncludeModel(this.grrDataFrameDto, grrMainController.getSearchConditionDto());
             List<String> allItemNames = Lists.newArrayList();
@@ -188,6 +190,14 @@ public class GrrViewDataController implements Initializable {
             if (this.exchangeDataTB.getColumns() != null) {
                 this.exchangeDataTB.getColumns().clear();
             }
+
+            exchangeableLB.setText("");
+            analysisFilterLB.getTextField().setText("");
+            exchangeFilterLB.getTextField().setText("");
+            analysisFilterLB.setDisable(true);
+            exchangeFilterLB.setDisable(true);
+            chooseItemBtn.setDisable(true);
+            isChanged = false;
         }
         TableViewWrapper.decorate(analysisDataTB, this.includeModel);
         TableViewWrapper.decorate(exchangeDataTB, this.backupModel);
