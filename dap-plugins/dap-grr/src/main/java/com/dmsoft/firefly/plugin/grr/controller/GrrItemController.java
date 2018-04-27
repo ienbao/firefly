@@ -761,7 +761,7 @@ public class GrrItemController implements Initializable {
             windowProgressTipController.getCancelBtn().setOnAction(event -> {
                 windowProgressTipController.setCancelingText();
                 context.interruptBeforeNextJobHandler();
-                if (context.isError()) {
+                if (context.isError() || context.getCurrentProgress() == 1.0) {
                     windowProgressTipController.closeDialog();
                 }
             });
