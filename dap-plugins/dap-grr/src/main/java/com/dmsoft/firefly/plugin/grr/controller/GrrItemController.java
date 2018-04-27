@@ -946,6 +946,20 @@ public class GrrItemController implements Initializable {
             return false;
         }
 
+        if (partCombox.getStyleClass().contains(ValidateUtil.COMBO_BOX_ERROR_STYLE) && DAPStringUtils.isBlank(partCombox.getValue())) {
+            if (configTab.isSelected()) {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_NAME_EMPTY"));
+            } else {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_NAME_EMPTY"),
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
+            }
+            return false;
+        }
+
         if (partCombox.getStyleClass().contains(ValidateUtil.COMBO_BOX_ERROR_STYLE) || appraiserCombox.getStyleClass().contains(ValidateUtil.COMBO_BOX_ERROR_STYLE)) {
             if (configTab.isSelected()) {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(

@@ -46,7 +46,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
         }
 
         if (parts.size() < partInt) {
-            logger.error("Please check your configuration of part numbers!");
+            logger.error("The actual number of parts does not match the number of input parts!");
             throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12007));
         }
         if (StringUtils.isNotBlank(appraiserName)) {
@@ -274,7 +274,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
                 throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12004));
             }
             if (appraisers.size() < appraiserInt) {
-                logger.error("Please check your configuration of appraiser numbers!");
+                logger.error("The actual number of appraisers does not match the number of input appraisers!");
                 throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12006));
             } else {
                 int partIndex = 1;
