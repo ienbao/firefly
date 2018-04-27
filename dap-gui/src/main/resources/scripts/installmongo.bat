@@ -31,7 +31,7 @@ set ID=
 
        cd "%MONGO%\bin"
       rem echo start mongod.exe
-        mongod --dbpath="%~dp0%DB%" --port=27018 --logpath="%~dp0%LOG%\mongo.log" --wiredTigerCacheSizeGB 4
+        mongod --dbpath="%~dp0%DB%" --port=27018 --logpath="%~dp0%LOG%\mongo.log" --wiredTigerCacheSizeGB 4   > nul
      ))
     exit
 
