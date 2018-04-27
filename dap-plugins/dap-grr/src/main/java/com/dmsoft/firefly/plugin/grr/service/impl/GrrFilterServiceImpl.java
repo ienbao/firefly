@@ -306,6 +306,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
                                 }
                             }
                         } else {
+                            rights.decrementAndGet();
                             errorParams = new String[]{partValue + " * " + appraiserValue, String.valueOf(trialInt), "0"};
                             errorMap.put(partValue + UIConstant.SPLIT_FLAG + appraiserValue, GrrFxmlAndLanguageUtils.getString(UIConstant.EXCEPTION_GRR_MODEL, errorParams));
                         }
