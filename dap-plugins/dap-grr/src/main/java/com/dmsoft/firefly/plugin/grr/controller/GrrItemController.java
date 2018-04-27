@@ -761,7 +761,7 @@ public class GrrItemController implements Initializable {
             windowProgressTipController.getCancelBtn().setOnAction(event -> {
                 windowProgressTipController.setCancelingText();
                 context.interruptBeforeNextJobHandler();
-                if (context.isError()) {
+                if (context.isError() || context.getCurrentProgress() == 1.0) {
                     windowProgressTipController.closeDialog();
                 }
             });
@@ -941,6 +941,20 @@ public class GrrItemController implements Initializable {
                 RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
                         GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                         GrrFxmlAndLanguageUtils.getString("UI_GRR_CONFIGURATION_INVALIDATE"),
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
+            }
+            return false;
+        }
+
+        if (partCombox.getStyleClass().contains(ValidateUtil.COMBO_BOX_ERROR_STYLE) && DAPStringUtils.isBlank(partCombox.getValue())) {
+            if (configTab.isSelected()) {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_NAME_EMPTY"));
+            } else {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        GrrFxmlAndLanguageUtils.getString("UI_GRR_PART_NAME_EMPTY"),
                         GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")}), grrConfigEvent());
             }
             return false;

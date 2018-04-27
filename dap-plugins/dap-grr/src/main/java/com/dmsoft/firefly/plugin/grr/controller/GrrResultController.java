@@ -212,6 +212,9 @@ public class GrrResultController implements Initializable {
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
             windowProgressTipController.setCancelingText();
             context.interruptBeforeNextJobHandler();
+            if (context.isError() || context.getCurrentProgress() == 1.0) {
+                windowProgressTipController.closeDialog();
+            }
         });
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_REFRESH_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
@@ -272,6 +275,9 @@ public class GrrResultController implements Initializable {
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
             windowProgressTipController.setCancelingText();
             context.interruptBeforeNextJobHandler();
+            if (context.isError() || context.getCurrentProgress() == 1.0) {
+                windowProgressTipController.closeDialog();
+            }
         });
         Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
         WindowPane windowPane = null;

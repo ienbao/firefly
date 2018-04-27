@@ -552,6 +552,28 @@
     -fx-background-color: #ea2028;
 }
 
+.error .check-box {
+    -fx-cursor: hand;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Error CheckBox                                                              *
+ *                                                                             *
+ ******************************************************************************/
+.error.check-box > .box {
+    -fx-border-color: #ea2028;
+    -fx-background-color: #fde8e9;
+}
+
+.error.check-box > .box > .mark {
+    -fx-background-color: #ea2028;
+}
+
+.error.check-box:selected > .box > .mark {
+    -fx-background-color: #ea2028;
+}
+
 /*******************************************************************************
  *                                                                             *
  * Radio-Button                                                                *
