@@ -136,7 +136,7 @@ public class SpcExportController {
     // cached items for user preference
     private List<String> stickyOnTopItems = Lists.newArrayList();
     private List<String> originalItems = Lists.newArrayList();
-
+    private SpcExportSettingController spcExportSettingController;
     @FXML
     private void initialize() {
         initBtnIcon();
@@ -1014,17 +1014,14 @@ public class SpcExportController {
     }
 
     private void initSpcExportSettingDialog() {
-        Pane root;
-        try {
-            FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML("view/spc_export_setting.fxml");
-            root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.SPC_EXPORT_TEMPLATE_SETTING,
-                    SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_SETTING_TITLE), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
-            stage.toFront();
-            stage.show();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-
+        if (StageMap.getStage(StateKey.SPC_EXPORT_TEMPLATE_SETTING) != null) {
+            spcExportSettingController = spcExportSettingController == null ? (SpcExportSettingController) SpcStageFactory.newInstance().getController(StateKey.SPC_EXPORT_TEMPLATE_SETTING) : spcExportSettingController;
+            if (spcExportSettingController != null) {
+                spcExportSettingController.initData();
+            }
+            StageMap.showStage(StateKey.SPC_EXPORT_TEMPLATE_SETTING);
+        } else {
+            spcExportSettingController = SpcStageFactory.newInstance().createSpcExportSettingDialog();
         }
     }
 
