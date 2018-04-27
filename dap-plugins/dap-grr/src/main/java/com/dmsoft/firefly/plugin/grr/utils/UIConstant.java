@@ -59,7 +59,7 @@ public class UIConstant {
     public static final String GRR_SETTING_LEVEL_LEVEL_MUST_BIGGER = "GRR_SETTING_LEVEL_LEVEL_MUST_BIGGER";
     public static final String GRR_SETTING_LEVEL_INPUT_ERROR = "GRR_SETTING_LEVEL_INPUT_ERROR";
 
-    public static final String GRR_SETTING_SORT_BY_APPRAISERS = "Appraiser";
+    public static final String GRR_SETTING_SORT_BY_APPRAISERS = "Appraisers";
     public static final String GRR_SETTING_SORT_BY_DEFAULT = "Default";
 
     public static final String COMPONENTS_GAGE_R = "COMPONENTS_GAGE_R";
