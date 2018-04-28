@@ -107,7 +107,7 @@
                                     <Insets right="10.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField fx:id="patternText" prefWidth="200.0" text="yyy/MM/dd HH:mm:ss.SSS" />
+                              <TextField fx:id="patternText" prefWidth="200.0" text="yyyy/MM/dd HH:mm:ss SSS" />
                               <Button fx:id="pattern" mnemonicParsing="false" prefWidth="22.0" styleClass="btn-txt">
                                  <HBox.margin>
                                     <Insets left="10.0" />

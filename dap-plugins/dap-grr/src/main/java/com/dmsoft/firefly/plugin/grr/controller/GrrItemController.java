@@ -300,7 +300,11 @@ public class GrrItemController implements Initializable {
         this.appraiserCombox.valueProperty().addListener((observable, oldValue, newValue) -> {
             appraiserList.clear();
             clearLbl(appraiserLbl);
-            GrrValidateUtil.validateNotEqualResult(partCombox.getValue(), newValue, appraiserCombox, partCombox);
+            if (DAPStringUtils.isBlank(partCombox.getValue())) {
+                GrrValidateUtil.validateNotEqualResult(partCombox.getValue(), newValue, partCombox, appraiserCombox);
+            } else {
+                GrrValidateUtil.validateNotEqualResult(partCombox.getValue(), newValue, appraiserCombox, partCombox);
+            }
             updateAppraiserListViewDatas(null, newValue);
 
         });
