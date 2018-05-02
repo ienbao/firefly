@@ -251,6 +251,9 @@ public class SpcMainController implements Initializable {
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
             windowProgressTipController.setCancelingText();
             context.interruptBeforeNextJobHandler();
+            if (context.isError() || context.getCurrentProgress() == 1.0) {
+                windowProgressTipController.closeDialog();
+            }
         });
 
         Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
@@ -527,6 +530,9 @@ public class SpcMainController implements Initializable {
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
             windowProgressTipController.setCancelingText();
             context.interruptBeforeNextJobHandler();
+            if (context.isError() || context.getCurrentProgress() == 1.0) {
+                windowProgressTipController.closeDialog();
+            }
         });
 
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_REFRESH_STATISTICAL_JOB_PIPELINE);
@@ -608,6 +614,9 @@ public class SpcMainController implements Initializable {
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
             windowProgressTipController.setCancelingText();
             context.interruptBeforeNextJobHandler();
+            if (context.isError() || context.getCurrentProgress() == 1.0) {
+                windowProgressTipController.closeDialog();
+            }
         });
         Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
         WindowPane windowPane = null;
@@ -744,6 +753,9 @@ public class SpcMainController implements Initializable {
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
             windowProgressTipController.setCancelingText();
             context.interruptBeforeNextJobHandler();
+            if (context.isError() || context.getCurrentProgress() == 1.0) {
+                windowProgressTipController.closeDialog();
+            }
         });
         Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
         WindowPane windowPane = null;

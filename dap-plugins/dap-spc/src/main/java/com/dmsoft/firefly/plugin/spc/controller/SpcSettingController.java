@@ -551,29 +551,16 @@ public class SpcSettingController implements Initializable {
 
     private void getExportTemplateSettingEvent() {
         if (StageMap.getStage(StateKey.SPC_EXPORT_TEMPLATE_SETTING) != null) {
+            spcExportSettingController = spcExportSettingController == null ? (SpcExportSettingController) SpcStageFactory.newInstance().getController(StateKey.SPC_EXPORT_TEMPLATE_SETTING) : spcExportSettingController;
             if (spcExportSettingController != null) {
                 spcExportSettingController.initData();
             }
             StageMap.showStage(StateKey.SPC_EXPORT_TEMPLATE_SETTING);
         } else {
-            this.initSpcExportSettingDialog();
+            spcExportSettingController = SpcStageFactory.newInstance().createSpcExportSettingDialog();
         }
     }
 
-    private void initSpcExportSettingDialog() {
-        Pane root = null;
-        try {
-            FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML("view/spc_export_setting.fxml");
-            root = fxmlLoader.load();
-            spcExportSettingController = fxmlLoader.getController();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.SPC_EXPORT_TEMPLATE_SETTING, SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_SETTING_TITLE), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
-            stage.setResizable(false);
-            stage.toFront();
-            stage.show();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
 
     private SpcSettingDto buildSaveSettingData() {
         SpcSettingDto spcSettingDto = new SpcSettingDto();
