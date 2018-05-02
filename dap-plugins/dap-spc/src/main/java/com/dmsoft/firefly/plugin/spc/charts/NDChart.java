@@ -175,11 +175,11 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
      * Remove all chart elements and chart data
      */
     public void removeAllChildren() {
+        ObservableList<Node> nodes = getPlotChildren();
+        getPlotChildren().removeAll(nodes);
         for (Map.Entry<String, XYChart.Series> stringSeriesEntry : uniqueKeySeriesMap.entrySet()) {
             seriesRemoved(stringSeriesEntry.getValue());
         }
-        getPlotChildren().clear();
-        getData().clear();
         clearData();
     }
 
