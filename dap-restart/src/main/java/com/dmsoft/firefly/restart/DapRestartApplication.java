@@ -27,6 +27,7 @@ public class DapRestartApplication {
             if (v.contains("delete:")) {
                 logger.info("start delete plugin folder" + v);
                 String path = v.replace("#!@$", " ");
+                logger.info("start delete plugin folder:" + path);
                 boolean isDelete = FileUtils.deleteFolder(path.replace("delete:", ""));
                 if (isDelete) {
                     logger.info("delete plugin folder success");
@@ -38,6 +39,7 @@ public class DapRestartApplication {
                 try {
                     logger.info("start cover original plugin" + v);
                     String path = v.replace("#!@$", " ");
+                    logger.info("start cover original plugin:" + path);
                     String coverAll = path.replace("cover:", "");
                     String filePath = coverAll.split(":coverPath:")[0];
                     String coverPath = coverAll.split(":coverPath:")[1];
