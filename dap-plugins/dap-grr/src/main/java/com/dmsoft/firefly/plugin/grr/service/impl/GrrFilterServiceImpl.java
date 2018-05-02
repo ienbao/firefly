@@ -265,7 +265,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
 
         String partName = searchConditionDto.getPart();
         String appraiserName = searchConditionDto.getAppraiser();
-
+        boolean isRight = true;
         if (StringUtils.isNotBlank(appraiserName)) {
             //slot validate
             Set<String> appraisers = getAppraisers(dataFrame, searchConditionDto);
@@ -306,6 +306,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
                                 }
                             }
                         } else {
+                            isRight = false;
                             rights.decrementAndGet();
                             errorParams = new String[]{partValue + " * " + appraiserValue, String.valueOf(trialInt), "0"};
                             errorMap.put(partValue + UIConstant.SPLIT_FLAG + appraiserValue, GrrFxmlAndLanguageUtils.getString(UIConstant.EXCEPTION_GRR_MODEL, errorParams));
@@ -318,7 +319,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
             }
             grrParamDto.setParts(rightParts);
             grrParamDto.setAppraisers(rightAppraisers);
-            if (rights.get() != partInt * appraiserInt) {
+            if (rights.get() != partInt * appraiserInt || !isRight) {
                 grrParamDto.setErrors(errorMap);
             }
         }
