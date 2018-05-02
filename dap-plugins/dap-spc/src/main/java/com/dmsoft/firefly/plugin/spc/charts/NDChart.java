@@ -175,10 +175,10 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
      * Remove all chart elements and chart data
      */
     public void removeAllChildren() {
-        getPlotChildren().clear();
         for (Map.Entry<String, XYChart.Series> stringSeriesEntry : uniqueKeySeriesMap.entrySet()) {
             seriesRemoved(stringSeriesEntry.getValue());
         }
+        getPlotChildren().clear();
         getData().clear();
         clearData();
     }
@@ -678,6 +678,9 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     }
 
     private void clearData() {
+        areaSeriesNodeMap.clear();
+        areaShow = true;
+        lineShow.clear();
         seriesCategoryMap.clear();
         barCategoryDataMap.clear();
         uniqueKeySeriesMap.clear();
@@ -687,6 +690,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         for (Map.Entry<String, ValueMarker> valueMarkerEntry : valueMarkerMap.entrySet()) {
             valueMarkerEntry.getValue().clear();
         }
+        valueMarkerMap.clear();
     }
 
     private SortedSet getCategoriesOnScreen() {

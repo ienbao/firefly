@@ -212,6 +212,9 @@ public class GrrResultController implements Initializable {
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
             windowProgressTipController.setCancelingText();
             context.interruptBeforeNextJobHandler();
+            if (context.isError() || context.getCurrentProgress() == 1.0) {
+                windowProgressTipController.closeDialog();
+            }
         });
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_REFRESH_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
@@ -272,6 +275,9 @@ public class GrrResultController implements Initializable {
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
             windowProgressTipController.setCancelingText();
             context.interruptBeforeNextJobHandler();
+            if (context.isError() || context.getCurrentProgress() == 1.0) {
+                windowProgressTipController.closeDialog();
+            }
         });
         Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
         WindowPane windowPane = null;
@@ -357,6 +363,15 @@ public class GrrResultController implements Initializable {
         TableViewWrapper.decorate(itemDetailTb, itemResultModel);
 
         this.enableSubResultOperator(true);
+    }
+
+    /**
+     * Disable grr result operator
+     */
+    public void disableResultOperator() {
+        summaryItemTf.setDisable(true);
+        resultBasedCmb.setDisable(true);
+        enableSubResultOperator(false);
     }
 
     private void enableSubResultOperator(boolean flag) {
@@ -490,6 +505,20 @@ public class GrrResultController implements Initializable {
         resultBasedCmb.setDisable(false);
         summaryModel.clearTableData();
         this.removeSubResultData();
+    }
+
+    /**
+     * Toggle tick label visible
+     *
+     * @param flag it show or hide
+     */
+    public void toggleTickLabelsVisible(boolean flag) {
+        componentChart.getXAxis().setTickLabelsVisible(flag);
+        partAppraiserChart.getXAxis().setTickLabelsVisible(flag);
+        xBarAppraiserChart.getXAxis().setTickLabelsVisible(flag);
+        rangeAppraiserChart.getXAxis().setTickLabelsVisible(flag);
+        rrbyPartChart.getXAxis().setTickLabelsVisible(flag);
+        rrByAppraiserChart.getXAxis().setTickLabelsVisible(flag);
     }
 
     private void setComponentChart(GrrComponentCResultDto componentCResult) {
@@ -789,6 +818,7 @@ public class GrrResultController implements Initializable {
         toleranceLbl.setText("");
         categoryBtn.setText("");
         itemDetailTb.refresh();
+        this.toggleTickLabelsVisible(true);
     }
 
     private void initComponents() {

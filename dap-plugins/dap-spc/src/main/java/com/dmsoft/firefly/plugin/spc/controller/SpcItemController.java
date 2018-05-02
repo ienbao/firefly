@@ -79,6 +79,8 @@ public class SpcItemController implements Initializable {
     @FXML
     private Tab timeTab;
     @FXML
+    private Label helpLabel;
+    @FXML
     private TableColumn<ItemTableModel, CheckBox> select;
     @FXML
     private TableColumn<ItemTableModel, TestItemWithTypeDto> item;
@@ -348,6 +350,10 @@ public class SpcItemController implements Initializable {
         timeTab.setStyle("-fx-padding: 0 5 0 5");
         timeTab.setTooltip(new Tooltip(SpcFxmlAndLanguageUtils.getString("SPC_TIMER_SETTING")));
 
+        helpLabel.getStyleClass().add("message-tip-question");
+        helpLabel.setStyle("-fx-background-color: #0096ff");
+        helpLabel.setTooltip(new Tooltip(SpcFxmlAndLanguageUtils.getString("SUBGROUP_SIZE_TIP")));
+
     }
 
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
@@ -540,6 +546,9 @@ public class SpcItemController implements Initializable {
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
             windowProgressTipController.setCancelingText();
             context.interruptBeforeNextJobHandler();
+            if (context.isError() || context.getCurrentProgress() == 1.0) {
+                windowProgressTipController.closeDialog();
+            }
         });
         Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
         WindowPane windowPane = null;
@@ -573,9 +582,9 @@ public class SpcItemController implements Initializable {
                 List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) context.get(ParamKeys.CHART_ANALYSIS_RESULT);
                 if (spcChartDtoList != null && spcChartDtoList.size() != 0) {
                     spcMainController.setSpcChartData(spcChartDtoList);
-                    //set view data
-                    spcMainController.setTimerViewData(chartSearchConditionDtoList, searchConditionDtoList);
                 }
+                //set view data
+                spcMainController.setTimerViewData(chartSearchConditionDtoList, searchConditionDtoList);
                 windowProgressTipController.closeDialog();
                 logger.info("Spc auto refresh finish.");
             }
@@ -634,6 +643,9 @@ public class SpcItemController implements Initializable {
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
             windowProgressTipController.setCancelingText();
             context.interruptBeforeNextJobHandler();
+            if (context.isError() || context.getCurrentProgress() == 1.0) {
+                windowProgressTipController.closeDialog();
+            }
         });
         Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
         WindowPane windowPane = null;
@@ -698,9 +710,9 @@ public class SpcItemController implements Initializable {
             }
         }
 
-        if (itemTable.getScene().lookup(".ascending-label") != null) {
+        if (itemTable.lookup(".ascending-label") != null) {
             DAPStringUtils.sortListString(selectItems, false);
-        } else if (itemTable.getScene().lookup(".descending-label") != null) {
+        } else if (itemTable.lookup(".descending-label") != null) {
             DAPStringUtils.sortListString(selectItems, true);
         }
         List<String> selectTestItemsResult = Lists.newLinkedList();
@@ -735,9 +747,9 @@ public class SpcItemController implements Initializable {
                 }
             }
         }
-        if (itemTable.getScene().lookup(".ascending-label") != null) {
+        if (itemTable.lookup(".ascending-label") != null) {
             this.sortTestItemWithTypeDto(selectTestItemDtos, false);
-        } else if (itemTable.getScene().lookup(".descending-label") != null) {
+        } else if (itemTable.lookup(".descending-label") != null) {
             this.sortTestItemWithTypeDto(selectTestItemDtos, true);
         }
         List<TestItemWithTypeDto> selectTestItemDtosResult = Lists.newLinkedList();

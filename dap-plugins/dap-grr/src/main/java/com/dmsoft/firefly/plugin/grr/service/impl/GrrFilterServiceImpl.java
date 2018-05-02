@@ -27,8 +27,8 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @OpenService
 public class GrrFilterServiceImpl implements GrrFilterService {
-    private static final String SORT_METHOD_APPRAISER = "Appraisers";
-    private static final String SORT_METHOD_TRIAL = "default";
+    private static final String SORT_METHOD_APPRAISER = UIConstant.GRR_SETTING_SORT_BY_APPRAISERS;             //"Appraisers";
+    private static final String SORT_METHOD_TRIAL = UIConstant.GRR_SETTING_SORT_BY_DEFAULT;                    //"Default";
     private final Logger logger = LoggerFactory.getLogger(GrrFilterServiceImpl.class);
 
     @Override
@@ -46,7 +46,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
         }
 
         if (parts.size() < partInt) {
-            logger.error("Please check your configuration of part numbers!");
+            logger.error("The actual number of parts does not match the number of input parts!");
             throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12007));
         }
         if (StringUtils.isNotBlank(appraiserName)) {
@@ -274,7 +274,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
                 throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12004));
             }
             if (appraisers.size() < appraiserInt) {
-                logger.error("Please check your configuration of appraiser numbers!");
+                logger.error("The actual number of appraisers does not match the number of input appraisers!");
                 throw new ApplicationException(GrrFxmlAndLanguageUtils.getString(GrrExceptionCode.ERR_12006));
             } else {
                 int partIndex = 1;
@@ -306,6 +306,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
                                 }
                             }
                         } else {
+                            rights.decrementAndGet();
                             errorParams = new String[]{partValue + " * " + appraiserValue, String.valueOf(trialInt), "0"};
                             errorMap.put(partValue + UIConstant.SPLIT_FLAG + appraiserValue, GrrFxmlAndLanguageUtils.getString(UIConstant.EXCEPTION_GRR_MODEL, errorParams));
                         }

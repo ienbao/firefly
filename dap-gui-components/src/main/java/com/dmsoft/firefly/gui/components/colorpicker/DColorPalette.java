@@ -119,6 +119,8 @@ public class DColorPalette extends Region {
         paletteBox.getStyleClass().add("color-palette");
         paletteBox.getChildren().addAll(colorPickerGrid, customColorLabel, customColorGrid, separator, customColorLink);
         paletteBox.setStyle("-fx-background-color: white");
+        customColorLabel.setStyle("-fx-text-fill: black");
+        customColorLink.setStyle("-fx-text-fill: black");
 
         hoverSquare.setMouseTransparent(true);
         hoverSquare.getStyleClass().addAll("hover-square");

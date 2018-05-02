@@ -16,6 +16,10 @@ public class UIConstant {
     public static final String EXCEPTION_GRR_MODEL = "EXCEPTION_GRR_MODEL";
     public static final String SPLIT_FLAG = "!@#";
 
+    public static final String GRR_EXPORT_STAGE = "GRR_EXPORT_STAGE";
+
+    public static final String GRR_EXPORT_DIALOG_TITLE = "GRR_EXPORT_DIALOG_TITLE";
+
     public static final Color COLOR_EXCELLENT = Color.rgb(125, 174, 20);
     public static final Color COLOR_GOOD = Color.rgb(72, 124, 244);
     public static final Color COLOR_ACCEPTABLE = Color.rgb(243, 132, 0);
@@ -54,6 +58,9 @@ public class UIConstant {
     public static final String GRR_SETTING_LEVEL_NO_EMPTY = "GRR_SETTING_LEVEL_NO_EMPTY";
     public static final String GRR_SETTING_LEVEL_LEVEL_MUST_BIGGER = "GRR_SETTING_LEVEL_LEVEL_MUST_BIGGER";
     public static final String GRR_SETTING_LEVEL_INPUT_ERROR = "GRR_SETTING_LEVEL_INPUT_ERROR";
+
+    public static final String GRR_SETTING_SORT_BY_APPRAISERS = "Appraisers";
+    public static final String GRR_SETTING_SORT_BY_DEFAULT = "Default";
 
     public static final String COMPONENTS_GAGE_R = "COMPONENTS_GAGE_R";
     public static final String COMPONENTS_REPEATABILITY = "COMPONENTS_REPEATABILITY";

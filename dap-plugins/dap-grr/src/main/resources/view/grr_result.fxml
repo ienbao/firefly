@@ -364,7 +364,7 @@
                                                                 <Button fx:id="categoryBtn" maxHeight="15.0"
                                                                         minHeight="15.0" mnemonicParsing="false"
                                                                         prefHeight="15.0"
-                                                                        style="-fx-background-color: red; -fx-border-width: 0px;"
+                                                                        style="-fx-background-color: red; -fx-text-fill: white; -fx-border-width: 0px;"
                                                                         text="">
                                                                     <HBox.margin>
                                                                         <Insets top="-2.0"/>

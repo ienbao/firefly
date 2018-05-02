@@ -38,6 +38,10 @@ public class ResourceMassages {
     public static final String TEMPLATE_APPLY_WARN_MESSAGE = "TEMPLATE_APPLY_WARN_MESSAGE";
     public static final String TEMPLATE_DELETE_WARN_MESSAGE = "TEMPLATE_DELETE_WARN_MESSAGE";
 
+    public static final String NEW_TEMPLATE= "NEW_TEMPLATE";
+    public static final String RENAME_TEMPLATE_TITLE= "RENAME_TEMPLATE_TITLE";
+    public static final String COPY_TEMPLATE_TITLE = "COPY_TEMPLATE_TITLE";
+
     public static final String DELETE_SOURCE = "DELETE_SOURCE";
     public static final String RENAME_DATA_SOURCE = "RENAME_DATA_SOURCE";
     public static final String RENAME_TEMPLATE = "RENAME_TEMPLATE";

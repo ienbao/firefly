@@ -149,7 +149,7 @@ public class GrrPlugin extends Plugin {
         try {
             FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_setting.fxml");
             root = fxmlLoader.load();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrSetting", "Grr Setting", root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrSetting", GrrFxmlAndLanguageUtils.getString("GRR_SETTINGS"), root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
             stage.setResizable(false);
             stage.toFront();
             stage.show();

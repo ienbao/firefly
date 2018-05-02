@@ -186,7 +186,7 @@ public class DataSourceController implements Initializable {
                                 Stage renameStage = null;
                                 NewNameController renameTemplateController = null;
                                 try {
-                                    FXMLLoader loader = new FXMLLoader(GuiApplication.class.getClassLoader().getResource("view/new_template.fxml"), ResourceBundle.getBundle("i18n.message_en_US_GUI"));
+                                    FXMLLoader loader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/new_template.fxml");
                                     renameTemplateController = new NewNameController();
                                     renameTemplateController.setPaneName("renameProject");
                                     renameTemplateController.setInitName(item.getValue());
@@ -206,7 +206,7 @@ public class DataSourceController implements Initializable {
                                         }
                                         StageMap.closeStage("renameProject");
                                     });
-                                    renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameProject", "Rename Project", root);
+                                    renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameProject", GuiFxmlAndLanguageUtils.getString("RENAME_DATA_SOURCE"), root);
                                     renameTemplateController.getName().setText(item.getValue());
                                     renameStage.toFront();
                                     renameStage.show();
@@ -215,7 +215,7 @@ public class DataSourceController implements Initializable {
                             });
                             deleteOne.setOnAction(event -> {
                                 if (!item.isImport()) {
-                                    WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel("Delete DataSource", "Are you sure to delete this file?");
+                                    WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel(GuiFxmlAndLanguageUtils.getString("DELETE_SOURCE"), GuiFxmlAndLanguageUtils.getString("DELETE_DATA_SOURCE_CONFIRM"));
                                     controller.addProcessMonitorListener(new WindowCustomListener() {
                                         @Override
                                         public boolean onShowCustomEvent() {

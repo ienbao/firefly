@@ -658,6 +658,7 @@
     -fx-highlight-text-fill: #fff;
     -fx-border-style: dashed;
 }
+
 .text-field:disabled {
     -fx-background-color: COLOR_GRAY_FA;
     -fx-text-fill: #cccccc;
