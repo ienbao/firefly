@@ -227,7 +227,7 @@ public class AreaSeriesNode<X, Y> {
      * @param dataPoints 2d data points
      * @return Pair
      */
-    public static Pair<Point2D[], Point2D[]> calcCurveControlPoints(Point2D[] dataPoints) {
+    private static Pair<Point2D[], Point2D[]> calcCurveControlPoints(Point2D[] dataPoints) {
         Point2D[] firstControlPoints;
         Point2D[] secondControlPoints;
         int n = dataPoints.length - 1;
