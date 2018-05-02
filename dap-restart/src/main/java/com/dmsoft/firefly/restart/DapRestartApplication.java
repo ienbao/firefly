@@ -20,10 +20,10 @@ public class DapRestartApplication {
     private final static Logger logger = LoggerFactory.getLogger(DapRestartApplication.class);
 
     public static void main(String[] args) throws IOException, InterruptedException {
-
-        Thread.sleep(2000);
+        logger.info("start dap-restart.jar..");
+//        Thread.sleep(2000);
         Arrays.stream(args).forEach(v -> {
-            System.out.println(v);
+//            System.out.println(v);
             if (v.contains("delete:")) {
                 logger.info("start delete plugin folder" + v);
                 String path = v.replace("#!@$", " ");

@@ -22,11 +22,11 @@ set ID=
         IF %flag%==0 (
            echo "start......"
            call :startMongodb
-           call :startApp
-            GOTO :eof
        )else (
-           echo DAP has been running.
+           echo Mongodb has been running.
        )
+       call :startApp
+       GOTO :eof
        exit
 
 :stop
