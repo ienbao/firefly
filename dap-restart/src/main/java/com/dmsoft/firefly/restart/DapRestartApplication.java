@@ -23,16 +23,22 @@ public class DapRestartApplication {
 
         Thread.sleep(2000);
         Arrays.stream(args).forEach(v -> {
-
+            System.out.println(v);
             if (v.contains("delete:")) {
-                logger.info("start delete plugin folder");
-                FileUtils.deleteFolder(v.replace("delete:", ""));
-                logger.info("end delete plugin folder");
+                logger.info("start delete plugin folder" + v);
+                String path = v.replace("#!@$", " ");
+                boolean isDelete = FileUtils.deleteFolder(path.replace("delete:", ""));
+                if (isDelete) {
+                    logger.info("delete plugin folder success");
+                } else {
+                    logger.info("delete plugin folder fail");
+                }
             }
             if (v.contains("cover:")) {
                 try {
-                    logger.info("start cover original plugin");
-                    String coverAll = v.replace("cover:", "");
+                    logger.info("start cover original plugin" + v);
+                    String path = v.replace("#!@$", " ");
+                    String coverAll = path.replace("cover:", "");
                     String filePath = coverAll.split(":coverPath:")[0];
                     String coverPath = coverAll.split(":coverPath:")[1];
                     FileUtils.unZipFilesNoFileName(new File(filePath), coverPath + "/");

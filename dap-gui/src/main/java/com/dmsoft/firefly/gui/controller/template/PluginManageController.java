@@ -317,8 +317,12 @@ public class PluginManageController implements Initializable {
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.append(run);
                     stringBuilder.append(" pluginFolderPath:").append(pluginFolderPath);
-                    deleteList.forEach(v -> stringBuilder.append(" delete:").append(v));
-                    coverList.forEach(v -> stringBuilder.append(" cover:").append(v));
+                    deleteList.forEach(v -> {
+                        stringBuilder.append(" delete:").append(v.replace(" ", "#!@$"));
+                    });
+                    coverList.forEach(v -> {
+                        stringBuilder.append(" cover:").append(v.replace(" ", "#!@$"));
+                    });
 //                    System.out.println(stringBuilder.toString());
                     Process proc = Runtime.getRuntime().exec(stringBuilder.toString());
                     StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "Error");
