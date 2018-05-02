@@ -40,6 +40,5 @@ set ID=
     set now=%date:~,4%%date:~5,2%%date:~8,2%
     echo iSPC is running...
 	java -jar "%APP_JAR%" %PARAMS% >> log/dap_restart_%now%.log
-    exit
 :stopApp
     taskkill /F /IM java > nul
