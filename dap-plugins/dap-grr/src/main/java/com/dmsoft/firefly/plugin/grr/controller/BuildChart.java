@@ -28,7 +28,6 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.*;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import javafx.util.StringConverter;
 
 import java.io.File;
 import java.util.Date;
@@ -41,8 +40,6 @@ import java.util.concurrent.CountDownLatch;
  */
 public class BuildChart {
     private static final Float F9 = 0.9f;
-    private static Group vBox;
-    private static Scene scene;
     private static int digNum = 6;
 
     /**
@@ -56,9 +53,6 @@ public class BuildChart {
                                          SearchConditionDto searchConditionDto,
                                          Map<String, Boolean> exportParam) {
         digNum = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getDecimalDigit();
-        vBox = new Group();
-        scene = new Scene(vBox);
-        scene.getStylesheets().add(BuildChart.class.getClassLoader().getResource("css/grr_chart.css").toExternalForm());
         GrrImageDto images = new GrrImageDto();
         List<String> parts = searchConditionDto.getParts();
         List<String> appraisers = searchConditionDto.getAppraisers();
@@ -428,6 +422,9 @@ public class BuildChart {
      * @return path
      */
     public static String exportImages(String name, Node node) {
+        Group vBox = new Group();
+        Scene scene = new Scene(vBox);
+        scene.getStylesheets().add(BuildChart.class.getClassLoader().getResource("css/grr_chart.css").toExternalForm());
         vBox.getChildren().clear();
         vBox.getChildren().add(node);
         WriteImage image = new WriteImage();
@@ -457,13 +454,6 @@ public class BuildChart {
         return path;
     }
 
-    /**
-     * private class`
-     */
-    private static class WriteImage {
-        private WritableImage image;
-    }
-
     private static Double[] getArrayValue(GrrComponentCResultDto resultDto) {
         Double[] value = new Double[12];
         value[0] = resultDto.getGrrContri();
@@ -479,5 +469,12 @@ public class BuildChart {
         value[10] = resultDto.getReprodTol();
         value[11] = resultDto.getReprodVar();
         return value;
+    }
+
+    /**
+     * private class`
+     */
+    private static class WriteImage {
+        private WritableImage image;
     }
 }
