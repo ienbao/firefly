@@ -659,6 +659,23 @@
     -fx-border-style: dashed;
 }
 
+.text-field-login {
+    -fx-border-color: #ffffff;
+    -fx-background-color: #ffffff;
+    -fx-min-height: 24;
+    -fx-max-height: 24;
+    -fx-font: 12 arial;
+    -fx-padding: 0 5 1 5;
+}
+
+.text-field-login:focused {
+    -fx-background-color: #fff;
+    -fx-text-fill: #222;
+    -fx-highlight-fill: #0096ff;
+    -fx-highlight-text-fill: #fff;
+    -fx-border-style: dashed;
+}
+
 .text-field:disabled {
     -fx-background-color: COLOR_GRAY_FA;
     -fx-text-fill: #cccccc;
