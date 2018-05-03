@@ -2,6 +2,8 @@ package com.dmsoft.firefly.gui.controller;
 
 import com.dmsoft.firefly.gui.components.utils.DecoratorTextFiledUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.utils.TextFieldPassword;
+import com.dmsoft.firefly.gui.components.utils.TextFieldUser;
 import com.dmsoft.firefly.gui.model.UserModel;
 import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
@@ -46,10 +48,10 @@ public class LoginController {
     private ImageView loginImageView;
 
     @FXML
-    private TextField userNameTxt;
+    private TextFieldUser userNameTxt;
 
     @FXML
-    private PasswordField passwordField;
+    private TextFieldPassword passwordField;
 
     @FXML
     private Button loginBtn;
@@ -61,8 +63,8 @@ public class LoginController {
 
     @FXML
     private void initialize() {
-        DecoratorTextFiledUtils.decoratorFixedLengthTextFiled(userNameTxt, 20);
-        DecoratorTextFiledUtils.decoratorFixedLengthTextFiled(passwordField, 20);
+        DecoratorTextFiledUtils.decoratorFixedLengthTextFiled(userNameTxt.getTextField(), 20);
+        DecoratorTextFiledUtils.decoratorFixedLengthTextFiled(passwordField.getTextField(), 20);
         loginBtn.setStyle("-fx-font-weight: bold;");
         loginImageView.setImage(new Image("/images/login_logo.png"));
         resetLoginBtn();
@@ -90,7 +92,7 @@ public class LoginController {
 
     private void doLogin() {
         Thread thread = new Thread(() -> {
-            UserDto userDto = userService.validateUser(userNameTxt.getText(), passwordField.getText());
+            UserDto userDto = userService.validateUser(userNameTxt.getTextField().getText(), passwordField.getTextField().getText());
             if (userDto != null) {
                 this.initEnvData(userDto);
                 Platform.runLater(() -> {
