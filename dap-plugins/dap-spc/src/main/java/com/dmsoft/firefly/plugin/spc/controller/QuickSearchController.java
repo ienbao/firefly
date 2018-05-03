@@ -55,12 +55,13 @@ public class QuickSearchController implements Initializable {
         this.validRangeText();
     }
 
-    private void validRangeText(){
+    private void validRangeText() {
         ValidateRule rule = new ValidateRule();
         rule.setMaxLength(SpcSettingValidateUtil.ANALYSIS_SETTING_MAX_INT);
         rule.setPattern(ValidateUtils.DOUBLE_PATTERN);
         rule.setErrorStyle("text-field-error");
         rule.setEmptyErrorMsg(SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_VALIDATE_NOT_BE_EMPTY));
+        rule.setAllowEmpty(true);
         TextFieldWrapper.decorate(withinLowerTf, rule);
         TextFieldWrapper.decorate(withinUpperTf, rule);
 
@@ -163,12 +164,12 @@ public class QuickSearchController implements Initializable {
         this.stage = stage;
     }
 
-    public boolean isError(){
-        if(withinRangeRadioBtn.isSelected()){
+    public boolean isError() {
+        if (withinRangeRadioBtn.isSelected()) {
             if (withinUpperTf.getStyleClass().contains("text-field-error") || withinLowerTf.getStyleClass().contains("text-field-error")) {
                 return true;
             }
-        } else if(withoutRangeRadioBtn.isSelected()){
+        } else if (withoutRangeRadioBtn.isSelected()) {
             if (withoutLowerTf.getStyleClass().contains("text-field-error") || withoutUpperTf.getStyleClass().contains("text-field-error")) {
                 return true;
             }
