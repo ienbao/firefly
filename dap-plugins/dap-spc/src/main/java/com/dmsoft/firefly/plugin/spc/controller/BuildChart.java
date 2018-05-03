@@ -7,7 +7,6 @@ import com.dmsoft.firefly.plugin.spc.charts.NDChart;
 import com.dmsoft.firefly.plugin.spc.charts.data.BoxPlotChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.ControlChartData;
 import com.dmsoft.firefly.plugin.spc.charts.data.NDBarChartData;
-import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.dto.SpcChartDto;
 import com.dmsoft.firefly.plugin.spc.dto.analysis.SpcChartResultDto;
 import com.dmsoft.firefly.plugin.spc.dto.chart.SpcBoxChartData;
@@ -41,10 +40,7 @@ import java.util.concurrent.CountDownLatch;
  * Created by GuangLi on 2018/3/14.
  */
 public class BuildChart {
-
     private static final Float F9 = 0.9f;
-    private static Group vBox;
-    private static Scene scene;
 
     /**
      * init spc chart and export
@@ -56,9 +52,6 @@ public class BuildChart {
      * @return exported chart path
      */
     public static Map<String, Map<String, String>> initSpcChartData(List<SpcChartDto> spcChartDtoList, int search, Map<String, Color> colorCache, Map<String, Boolean> exportParam) {
-        vBox = new Group();
-        scene = new Scene(vBox);
-        scene.getStylesheets().add(BuildChart.class.getClassLoader().getResource("css/charts.css").toExternalForm());
         List<NDBarChartData> ndcChartDataList = Lists.newArrayList();
         List<ControlChartData> runChartDataList = Lists.newArrayList();
         List<ControlChartData> xBarChartDataList = Lists.newArrayList();
@@ -274,6 +267,9 @@ public class BuildChart {
     }
 
     private static String exportImages(String name, Node node) {
+        Group vBox = new Group();
+        Scene scene = new Scene(vBox);
+        scene.getStylesheets().add(BuildChart.class.getClassLoader().getResource("css/charts.css").toExternalForm());
         vBox.getChildren().clear();
         vBox.getChildren().add(node);
         WriteImage image = new WriteImage();
