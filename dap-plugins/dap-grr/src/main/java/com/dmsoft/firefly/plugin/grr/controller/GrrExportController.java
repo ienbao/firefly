@@ -690,7 +690,7 @@ public class GrrExportController {
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
         if (pop == null) {
             pop = new ContextMenu();
-            MenuItem all = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.ALL_TEST_ITEMS));
+            RadioMenuItem all = new RadioMenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.ALL_TEST_ITEMS));
             all.setOnAction(event -> {
                 filteredList.setPredicate(p -> this.isFilterAndAll(p));
                 is.getStyleClass().remove("filter-active");
@@ -698,14 +698,18 @@ public class GrrExportController {
                 is.setGraphic(null);
                 isFilterUslOrLsl = false;
             });
-            MenuItem show = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS_WITH_USL_LSL));
+            RadioMenuItem show = new RadioMenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS_WITH_USL_LSL));
             show.setOnAction(event -> {
                 filteredList.setPredicate(p -> this.isFilterAndHasUslOrLsl(p));
                 is.getStyleClass().remove("filter-normal");
                 is.getStyleClass().add("filter-active");
-                is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
+//                is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
                 isFilterUslOrLsl = true;
             });
+            all.setSelected(true);
+            ToggleGroup toggleGroup = new ToggleGroup();
+            all.setToggleGroup(toggleGroup);
+            show.setToggleGroup(toggleGroup);
             pop.getItems().addAll(all, show);
         }
         Bounds bounds = is.localToScreen(is.getBoundsInLocal());
