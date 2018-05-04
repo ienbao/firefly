@@ -130,6 +130,7 @@ public class ViewDataController implements Initializable {
         this.statisticalSearchConditionDtoList = statisticalSearchConditionDtoList;
         this.selectedRowKeys = selectedRowKey;
         this.dataFrame = dataFrame;
+        this.columnFilterSetting.clear();
         if (dataFrame == null) {
             filterTf.setDisable(true);
             unSelectedCheckBox.setDisable(true);
@@ -453,7 +454,7 @@ public class ViewDataController implements Initializable {
             if (columnFilterSetting.get(testItem) != null) {
                 FilterSettingAndGraphic fsg = columnFilterSetting.get(testItem);
                 if (FilterType.ALL_DATA.equals(fsg.getType())) {
-                    break;
+                    continue;
                 } else if (FilterType.WITHIN_RANGE.equals(fsg.getType())) {
                     List<String> toBeRemovedList = Lists.newArrayList();
                     for (int i = 0; i < model.getRowKeyArray().size(); i++) {

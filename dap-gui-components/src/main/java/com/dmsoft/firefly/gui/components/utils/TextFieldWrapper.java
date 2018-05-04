@@ -35,7 +35,7 @@ public class TextFieldWrapper {
             if (!(ValidateUtils.validatePattern(s2, validateRule.getPattern())
                     && ValidateUtils.validateWithLength(s2, validateRule.getMaxLength()))) {
                 textField.setText(s1);
-            } else if (!ValidateUtils.validateNotEmpty(s2)) {
+            } else if (!ValidateUtils.validateNotEmpty(s2) && Boolean.FALSE.equals(validateRule.getAllowEmpty())) {
                 if (!textField.getStyleClass().contains(validateRule.getErrorStyle())) {
                     textField.getStyleClass().add(validateRule.getErrorStyle());
                 }

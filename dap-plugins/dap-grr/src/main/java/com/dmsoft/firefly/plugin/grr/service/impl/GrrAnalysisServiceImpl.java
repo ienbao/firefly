@@ -220,7 +220,7 @@ public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
         componentCResultDto.setReprodVar(engine.eval("ComponentCResult[2, 2]").asDouble());
         componentCResultDto.setReprodTol(engine.eval("ComponentCResult[3, 2]").asDouble());
         componentCResultDto.setPartContri(engine.eval("ComponentCResult[1, 4]").asDouble());
-        componentCResultDto.setPartVar(engine.eval("ComponentCResult[1, 4]").asDouble());
+        componentCResultDto.setPartVar(engine.eval("ComponentCResult[2, 4]").asDouble());
         componentCResultDto.setPartTol(engine.eval("ComponentCResult[3, 4]").asDouble());
         return componentCResultDto;
     }
