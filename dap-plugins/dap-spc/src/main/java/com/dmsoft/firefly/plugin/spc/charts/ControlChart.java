@@ -562,8 +562,7 @@ public class ControlChart<X, Y> extends LineChart {
     }
 
     private XYChart.Series buildDataSeries(IXYChartData<X, Y> xyOneChartData, String seriesName) {
-        XYChart.Series oneSeries = new XYChart.Series();
-        oneSeries.setName(seriesName);
+        ObservableList<XYChart.Data<X, Y>> dataList = FXCollections.observableArrayList();
         int length = xyOneChartData.getLen();
         for (int i = 0; i < length; i++) {
             X xValue = xyOneChartData.getXValueByIndex(i);
@@ -571,20 +570,19 @@ public class ControlChart<X, Y> extends LineChart {
             if (xValue == null || yValue == null) {
                 continue;
             }
-            XYChart.Data data = new XYChart.Data<>(xValue, yValue);
+            XYChart.Data<X, Y> data = new XYChart.Data<>(xValue, yValue);
             Object extraValue = xyOneChartData.getExtraValueByIndex(i) == null ? "" : xyOneChartData.getExtraValueByIndex(i);
             data.setExtraValue(extraValue);
-            oneSeries.getData().add(data);
+            dataList.add(data);
         }
-        return oneSeries;
+        return new XYChart.Series<>(seriesName, dataList);
     }
 
     private XYChart.Series buildPathSeries(IPoint<X, Y> xyiPoint, String seriesName) {
         if (xyiPoint == null) {
             return null;
         }
-        XYChart.Series oneSeries = new XYChart.Series();
-        oneSeries.setName(seriesName);
+        ObservableList<XYChart.Data<X, Y>> dataList = FXCollections.observableArrayList();
         int length = xyiPoint.getLen();
         for (int i = 0; i < length; i++) {
             X xValue = xyiPoint.getXByIndex(i);
@@ -592,10 +590,10 @@ public class ControlChart<X, Y> extends LineChart {
             if (xValue == null || yValue == null) {
                 continue;
             }
-            XYChart.Data data = new XYChart.Data<>(xValue, yValue);
-            oneSeries.getData().add(data);
+            XYChart.Data<X, Y> data = new XYChart.Data<>(xValue, yValue);
+            dataList.add(data);
         }
-        return oneSeries;
+        return new XYChart.Series<>(seriesName, dataList);
     }
 
     private void setNodeAnnotation(Data<X, Y> data, String value, String textColor) {
