@@ -4,7 +4,9 @@ import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.plugin.spc.charts.data.BarCategoryData;
 import com.dmsoft.firefly.plugin.spc.charts.data.ChartTooltip;
 import com.dmsoft.firefly.plugin.spc.charts.data.NDBarChartData;
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.*;
+import com.dmsoft.firefly.plugin.spc.charts.data.basic.BarToolTip;
+import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBarChartData;
+import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
 import com.dmsoft.firefly.plugin.spc.charts.utils.MathUtils;
 import com.dmsoft.firefly.plugin.spc.charts.utils.ReflectionUtils;
 import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
@@ -44,6 +46,20 @@ import java.util.function.Function;
  * @param <Y> second data class
  */
 public class NDChart<X, Y> extends XYChart<X, Y> {
+    private static final String NEGATIVE_STYLE = "negative";
+    /**
+     * Pseudoclass indicating this is a vertical chart.
+     */
+    private static final PseudoClass VERTICAL_PSEUDOCLASS_STATE =
+            PseudoClass.getPseudoClass("vertical");
+    /**
+     * Pseudoclass indicating this is a horizontal chart.
+     */
+    private static final PseudoClass HORIZONTAL_PSEUDOCLASS_STATE =
+            PseudoClass.getPseudoClass("horizontal");
+    private final Orientation orientation;
+    private final double ANCHOR_X = 10.0;
+    private final double ANCHOR_Y = 15.0;
     private Map<Series<X, Y>, Map<Object, Data<X, Y>>> seriesCategoryMap = new HashMap<>();
     private Map<XYChart.Data, BarCategoryData<X, Y>> barCategoryDataMap = Maps.newHashMap();
     private Data<X, Y> dataItemBeingRemoved = null;
@@ -52,28 +68,65 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     private Map<String, Group> groupMap = Maps.newHashMap();
     //    unique key---bar series
     private Map<String, XYChart.Series> uniqueKeySeriesMap = Maps.newLinkedHashMap();
-
     private Map<XYChart.Series, String> seriesUniqueKeyMap = Maps.newLinkedHashMap();
     //    unique key----value marker
     private Map<String, ValueMarker> valueMarkerMap = Maps.newLinkedHashMap();
     //    unique key----area series
     private Map<String, AreaSeriesNode> areaSeriesNodeMap = Maps.newLinkedHashMap();
-
     private Map<String, List<Node>> uniqueKeyNodesMap = Maps.newHashMap();
-
     private ValueAxis valueAxis;
     private Timeline dataRemoveTimeline;
     private TreeSet categories = new TreeSet();
     private boolean showTooltip = true;
     private double bottomPos = 0;
-    private static final String NEGATIVE_STYLE = "negative";
-    private final Orientation orientation;
-
     private boolean areaShow = true;
     private Map<String, Boolean> lineShow = Maps.newLinkedHashMap();
+    /**
+     * The gap to leave between bars in the same category
+     */
+    private DoubleProperty barGap = new StyleableDoubleProperty(2) {
+        @Override
+        protected void invalidated() {
+            get();
+            requestChartLayout();
+        }
 
-    private final double ANCHOR_X = 10.0;
-    private final double ANCHOR_Y = 15.0;
+        public Object getBean() {
+            return NDChart.this;
+        }
+
+        public String getName() {
+            return "barGap";
+        }
+
+        public CssMetaData<NDChart<?, ?>, Number> getCssMetaData() {
+            return NDChart.StyleableProperties.BAR_GAP;
+        }
+    };
+    /**
+     * The gap to leave between bars in separate categories
+     */
+    private DoubleProperty categoryGap = new StyleableDoubleProperty(10) {
+        @Override
+        protected void invalidated() {
+            get();
+            requestChartLayout();
+        }
+
+        @Override
+        public Object getBean() {
+            return NDChart.this;
+        }
+
+        @Override
+        public String getName() {
+            return "categoryGap";
+        }
+
+        public CssMetaData<NDChart<?, ?>, Number> getCssMetaData() {
+            return NDChart.StyleableProperties.CATEGORY_GAP;
+        }
+    };
 
     /**
      * Constructs a XYChart given the two axes. The initial content for the chart
@@ -97,6 +150,15 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
         this.pseudoClassStateChanged(VERTICAL_PSEUDOCLASS_STATE, orientation == Orientation.VERTICAL);
         this.setData(FXCollections.observableArrayList());
         this.setLegendVisible(false);
+    }
+
+    /**
+     * @return The CssMetaData associated with this class, which may include the
+     * CssMetaData of its super classes.
+     * @since JavaFX 8.0
+     */
+    public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
+        return NDChart.StyleableProperties.STYLEABLES;
     }
 
     /**
@@ -328,8 +390,7 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     }
 
     private XYChart.Series buildSeries(IBarChartData<X, Y> barData, String seriesName) {
-        XYChart.Series oneSeries = new XYChart.Series();
-        oneSeries.setName(seriesName);
+        ObservableList<XYChart.Data<X, Y>> dataList = FXCollections.observableArrayList();
         int length = barData.getLen();
         for (int i = 0; i < length; i++) {
             X xValue = barData.getStartValueByIndex(i);
@@ -337,13 +398,13 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
             if (xValue == null || yValue == null) {
                 continue;
             }
-            XYChart.Data data = new XYChart.Data<>(xValue, yValue);
+            XYChart.Data<X, Y> data = new XYChart.Data<>(xValue, yValue);
             data.setExtraValue(barData.getEndValueByIndex(i));
-            oneSeries.getData().add(data);
+            dataList.add(data);
             barCategoryDataMap.put(data,
                     new BarCategoryData(xValue, barData.getBarWidthByIndex(i), yValue));
         }
-        return oneSeries;
+        return new XYChart.Series<>(seriesName, dataList);
     }
 
     private void setSeriesDataStyle(XYChart.Series series, Color color) {
@@ -848,29 +909,6 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     }
 
     /**
-     * The gap to leave between bars in the same category
-     */
-    private DoubleProperty barGap = new StyleableDoubleProperty(2) {
-        @Override
-        protected void invalidated() {
-            get();
-            requestChartLayout();
-        }
-
-        public Object getBean() {
-            return NDChart.this;
-        }
-
-        public String getName() {
-            return "barGap";
-        }
-
-        public CssMetaData<NDChart<?, ?>, Number> getCssMetaData() {
-            return NDChart.StyleableProperties.BAR_GAP;
-        }
-    };
-
-    /**
      * Get bar gap
      *
      * @return bar gap
@@ -898,31 +936,6 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
     }
 
     /**
-     * The gap to leave between bars in separate categories
-     */
-    private DoubleProperty categoryGap = new StyleableDoubleProperty(10) {
-        @Override
-        protected void invalidated() {
-            get();
-            requestChartLayout();
-        }
-
-        @Override
-        public Object getBean() {
-            return NDChart.this;
-        }
-
-        @Override
-        public String getName() {
-            return "categoryGap";
-        }
-
-        public CssMetaData<NDChart<?, ?>, Number> getCssMetaData() {
-            return NDChart.StyleableProperties.CATEGORY_GAP;
-        }
-    };
-
-    /**
      * Get category bar gap
      *
      * @return category bar gap
@@ -947,6 +960,16 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
      */
     public final DoubleProperty categoryGapProperty() {
         return categoryGap;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since JavaFX 8.0
+     */
+    @Override
+    public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
+        return getClassCssMetaData();
     }
 
     /**
@@ -994,35 +1017,4 @@ public class NDChart<X, Y> extends XYChart<X, Y> {
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
     }
-
-    /**
-     * @return The CssMetaData associated with this class, which may include the
-     * CssMetaData of its super classes.
-     * @since JavaFX 8.0
-     */
-    public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
-        return NDChart.StyleableProperties.STYLEABLES;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since JavaFX 8.0
-     */
-    @Override
-    public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
-        return getClassCssMetaData();
-    }
-
-    /**
-     * Pseudoclass indicating this is a vertical chart.
-     */
-    private static final PseudoClass VERTICAL_PSEUDOCLASS_STATE =
-            PseudoClass.getPseudoClass("vertical");
-
-    /**
-     * Pseudoclass indicating this is a horizontal chart.
-     */
-    private static final PseudoClass HORIZONTAL_PSEUDOCLASS_STATE =
-            PseudoClass.getPseudoClass("horizontal");
 }

@@ -300,14 +300,14 @@ public class BuildChart {
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
         ObservableList<XYChart.Series> seriesData = FXCollections.observableArrayList();
         for (int i = 0; i < data.length; i++) {
-            XYChart.Series series = new XYChart.Series();
-            series.setName(appraisers.get(i));
+            ObservableList<XYChart.Data<String, Number>> dataList = FXCollections.observableArrayList();
             double[] appraiser = data[i];
             for (int j = 0; j < appraiser.length; j++) {
                 if (!DAPStringUtils.isInfinityAndNaN(appraiser[j])) {
-                    series.getData().add(new XYChart.Data<>(parts.get(j), appraiser[j], appraisers.get(i)));
+                    dataList.add(new XYChart.Data<String, Number>(parts.get(j), appraiser[j], appraisers.get(i)));
                 }
             }
+            XYChart.Series series = new XYChart.Series(appraisers.get(i), dataList);
             seriesData.add(series);
         }
         partAppraiserChart.getData().addAll(seriesData);
@@ -345,14 +345,14 @@ public class BuildChart {
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
         List<ILineData> horizontalLineData = Lists.newArrayList();
         List<ILineData> verticalLineData = Lists.newArrayList();
-        XYChart.Series series = new XYChart.Series();
+        ObservableList<XYChart.Data<Number, Number>> dataList = FXCollections.observableArrayList();
 //        draw vertical line
         for (int i = 0; i < x.length; i++) {
             if ((i + 1) % partCount == 0 && i != x.length - 1) {
                 double value = (x[i] + x[i + 1]) / 2;
                 verticalLineData.add(new VerticalCutLine(value));
             }
-            series.getData().add(new XYChart.Data<>(x[i], y[i], parts.get(i % partCount)));
+            dataList.add(new XYChart.Data<Number, Number>(x[i], y[i], parts.get(i % partCount)));
         }
 
         RuleLineData uclLineData = new RuleLineData(GrrFxmlAndLanguageUtils.getString(UIConstant.CHART_LINE_NAME_UCL), chartData.getUcl());
@@ -367,7 +367,7 @@ public class BuildChart {
         horizontalLineData.add(clLineData);
         horizontalLineData.add(lclLineData);
 
-        chart.getData().add(series);
+        chart.getData().add(new XYChart.Series<>(dataList));
 //        button.setDisable(false);
 
         chart.buildValueMarkerWithoutTooltip(verticalLineData);
@@ -405,14 +405,16 @@ public class BuildChart {
         yAxis.setLowerBound(newYMin);
         yAxis.setUpperBound(newYMax);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
-        XYChart.Series scatterSeries = new XYChart.Series();
-        XYChart.Series lineSeries = new XYChart.Series();
+        ObservableList<XYChart.Data<Number, Number>> scatterDataList = FXCollections.observableArrayList();
+        ObservableList<XYChart.Data<Number, Number>> lineDataList = FXCollections.observableArrayList();
         for (int i = 0; i < x.length; i++) {
-            scatterSeries.getData().add(new XYChart.Data<>(x[i], y[i]));
+            scatterDataList.add(new XYChart.Data<>(x[i], y[i]));
         }
         for (int i = 0; i < clX.length; i++) {
-            lineSeries.getData().add(new XYChart.Data<>(clX[i], clY[i]));
+            lineDataList.add(new XYChart.Data<>(clX[i], clY[i]));
         }
+        XYChart.Series scatterSeries = new XYChart.Series(scatterDataList);
+        XYChart.Series lineSeries = new XYChart.Series(lineDataList);
         chart.getData().addAll(scatterSeries, lineSeries);
         scatterSeries.getNode().getStyleClass().add("chart-series-hidden-line");
     }

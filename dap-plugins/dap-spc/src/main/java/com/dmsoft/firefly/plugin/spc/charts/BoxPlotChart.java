@@ -190,8 +190,7 @@ public class BoxPlotChart extends XYChart<Number, Number> {
     }
 
     private Series buildSeries(IBoxAndWhiskerData data, String seriesName) {
-        XYChart.Series<Number, Number> series = new XYChart.Series();
-        series.setName(seriesName);
+        ObservableList<XYChart.Data<Number, Number>> dataList = FXCollections.observableArrayList();
         for (int i = 0; i < data.getLen(); i++) {
             boolean valid = data.getXPosByIndex(i) != null;
             valid = valid && data.getQ3ByIndex(i) != null;
@@ -212,14 +211,14 @@ public class BoxPlotChart extends XYChart<Number, Number> {
                     data.getMedianByIndex(i),
                     data.getColor());
 
-            series.getData().add(
-                    new XYChart.Data(
+            dataList.add(
+                    new XYChart.Data<>(
                             data.getXPosByIndex(i),
                             data.getQ3ByIndex(i),
                             boxExtraData)
             );
         }
-        return series;
+        return new XYChart.Series<>(seriesName, dataList);
     }
 
     private void setDataNodeStyleAndTooltip(XYChart.Series series,
