@@ -182,29 +182,24 @@ public class GrrFilterServiceImpl implements GrrFilterService {
             AtomicInteger index = new AtomicInteger(1);
             AtomicInteger appraiserIndex = new AtomicInteger(1);
             AtomicInteger trialIndex = new AtomicInteger(1);
-            AtomicInteger backupTrialIndex = new AtomicInteger(1);
 
             rowKeys.forEach(rowKey -> {
-                if (trialIndex.get() == trialInt + 1) {
-                    appraiserIndex.set(appraiserIndex.get() + 1);
-                    trialIndex.set(1);
+                if (appraiserIndex.get() == appraiserInt + 1) {
+                    trialIndex.set(trialIndex.get() + 1);
+                    appraiserIndex.set(1);
                 }
                 GrrViewDataDto grrViewDataDto = new GrrViewDataDto();
                 grrViewDataDto.setPart(partValue);
                 grrViewDataDto.setRowKey(rowKey);
                 if (index.get() > (appraiserInt * trialInt)) {
-                    if (backupTrialIndex.get() == trialInt + 1) {
-                        backupTrialIndex.set(1);
-                    }
                     grrViewDataDto.setOperator("");
-                    grrViewDataDto.setTrial(String.valueOf(backupTrialIndex.get()));
+                    grrViewDataDto.setTrial("");
                     grrBackupDataDtos.add(grrViewDataDto);
-                    backupTrialIndex.getAndIncrement();
                 } else {
                     grrViewDataDto.setOperator(String.valueOf(appraiserIndex.get()));
                     grrViewDataDto.setTrial(String.valueOf(trialIndex.get()));
                     grrIncludeDataDtos.add(grrViewDataDto);
-                    trialIndex.getAndIncrement();
+                    appraiserIndex.getAndIncrement();
                 }
                 index.getAndIncrement();
             });
@@ -212,14 +207,7 @@ public class GrrFilterServiceImpl implements GrrFilterService {
         Collections.sort(grrIncludeDataDtos, new Comparator<GrrViewDataDto>() {
             @Override
             public int compare(GrrViewDataDto s1, GrrViewDataDto s2) {
-                return s1.getTrial().compareTo(s2.getTrial());
-            }
-        });
-
-        Collections.sort(grrBackupDataDtos, new Comparator<GrrViewDataDto>() {
-            @Override
-            public int compare(GrrViewDataDto s1, GrrViewDataDto s2) {
-                return s1.getTrial().compareTo(s2.getTrial());
+                return s1.getOperator().compareTo(s2.getOperator());
             }
         });
         grrDataFrameDto.setDataFrame(dataFrame);
