@@ -388,14 +388,16 @@ public class PluginManageController implements Initializable {
         }
         if (activePlugin != null) {
             activePlugin.forEach(v -> {
-                PluginTableRowData chooseTableRowData = new PluginTableRowData((Boolean) v.getValue(), map.get(v.getKey()).getName(), map.get(v.getKey()));
-                chooseTableRowData.setOnAction(event -> {
-                    isEdit = true;
-                    ok.setText(restartStr);
-                });
-                pluginTableRowDataObservableList.add(chooseTableRowData);
-                map.remove(v.getKey());
-                validateMap.put(v.getKey(), (Boolean) v.getValue());
+                if (map.get(v.getKey()) != null) {
+                    PluginTableRowData chooseTableRowData = new PluginTableRowData((Boolean) v.getValue(), map.get(v.getKey()).getName(), map.get(v.getKey()));
+                    chooseTableRowData.setOnAction(event -> {
+                        isEdit = true;
+                        ok.setText(restartStr);
+                    });
+                    pluginTableRowDataObservableList.add(chooseTableRowData);
+                    map.remove(v.getKey());
+                    validateMap.put(v.getKey(), (Boolean) v.getValue());
+                }
             });
         }
         for (PluginInfo exclude : map.values()) {
