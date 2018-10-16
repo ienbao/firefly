@@ -14,7 +14,7 @@ public class ChartDataUtils {
      * @param normalCurveY normal curve y data
      * @return rebased normal curve y array
      */
-    public static Double[] rebaseNormalCurveData(Double[] histY, Double[] normalCurveY) {
+    public static Double[] rebaseNormalCurveData(Double[] histY, Double[] normalCurveY) {//恢复正常曲线数据
         Double[] result = new Double[normalCurveY.length];
         Double max = Double.NEGATIVE_INFINITY;
         Double total = 0.0;
@@ -34,7 +34,7 @@ public class ChartDataUtils {
 
     /**
      * method to fold cl data
-     *
+     *fold 折叠
      * @param cl cl data
      * @return xy data
      */

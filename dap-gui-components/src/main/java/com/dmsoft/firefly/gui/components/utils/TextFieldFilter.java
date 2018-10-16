@@ -22,8 +22,8 @@ public class TextFieldFilter extends HBox {
      * constructor
      */
     public TextFieldFilter() {
-        textField = new TextField();
-        textField.setPromptText("Filter");
+        textField = new TextField();//创建文本域
+        textField.setPromptText("Filter");//设置提示文字
 //        textField.setStyle("-fx-border-width: 1 1 1 1;-fx-border-style: dotted");
         textField.getStyleClass().add("text-field-filter");
         textField.setPrefHeight(20);

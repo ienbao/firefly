@@ -43,7 +43,7 @@ public class BoxPlotChart extends XYChart<Number, Number> {
 
     private double candleWidth = 10;
     private boolean candleWidthByUnit = false;
-    private boolean gridLineChanged = false;
+    private boolean gridLineChanged = false;//网格线变化
 
     private ObservableList<Data<Number, Number>> outliers;
     private Map<String, XYChart.Series> uniqueKeySeriesMap = Maps.newHashMap();
@@ -64,12 +64,12 @@ public class BoxPlotChart extends XYChart<Number, Number> {
     public BoxPlotChart(Axis<Number> xAxis, Axis<Number> yAxis) {
         super(xAxis, yAxis);
         super.setData(FXCollections.observableArrayList());
-        super.setHorizontalZeroLineVisible(false);
-        super.setHorizontalGridLinesVisible(false);
-        super.setVerticalZeroLineVisible(false);
-        super.setAnimated(false);
-        xAxis.setAnimated(false);
-        yAxis.setAnimated(false);
+        super.setHorizontalZeroLineVisible(false);//设置水平零线是否可见
+        super.setHorizontalGridLinesVisible(false);//设置平行于X轴（水平网格线）的网格是否显示
+        super.setVerticalZeroLineVisible(false);//设置垂直零线是够可见
+        super.setAnimated(false);//设置是否为动画效果
+        xAxis.setAnimated(false);//x轴是否自动延伸
+        yAxis.setAnimated(false);//y轴是否自动延伸
         outliers = FXCollections.observableArrayList(d -> new Observable[]{d.YValueProperty()});
         outliers.addListener((InvalidationListener) observable -> layoutPlotChildren());
     }
@@ -91,7 +91,7 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         boxPlotChartDataList.forEach(boxPlotChartData -> createChartSeries(boxPlotChartData, chartTooltip));
     }
 
-    private void setAxisRange(List<BoxPlotChartData> boxPlotChartDataList) {
+    private void setAxisRange(List<BoxPlotChartData> boxPlotChartDataList) {//设置轴线的范围
         Double[] xLower = new Double[boxPlotChartDataList.size()];
         Double[] xUpper = new Double[boxPlotChartDataList.size()];
         Double[] yLower = new Double[boxPlotChartDataList.size()];
@@ -102,10 +102,10 @@ public class BoxPlotChart extends XYChart<Number, Number> {
             yLower[i] = (Double) boxPlotChartDataList.get(i).getYLowerBound();
             yUpper[i] = (Double) boxPlotChartDataList.get(i).getYUpperBound();
         }
-        Double xMax = MathUtils.getMax(xUpper);
-        Double xMin = MathUtils.getMin(xLower);
-        Double yMax = MathUtils.getMax(yUpper);
-        Double yMin = MathUtils.getMin(yLower);
+        Double xMax = MathUtils.getMax(xUpper);//X获取最大值
+        Double xMin = MathUtils.getMin(xLower);//最小
+        Double yMax = MathUtils.getMax(yUpper);//最大
+        Double yMin = MathUtils.getMin(yLower);//最小
         if (xMax == null || xMin == null || yMax == null || yMin == null) {
             return;
         }
@@ -176,7 +176,7 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         getData().clear();
 //        getPlotChildren().removeAll(nodes);
 //        getData().setAll(FXCollections.observableArrayList());
-        uniqueKeySeriesMap.clear();
+        uniqueKeySeriesMap.clear();//清除之前的数据
         seriesUniqueKeyMap.clear();
         uniqueKeyNodesMap.clear();
 //        outliers.setAll(FXCollections.observableArrayList());
@@ -193,11 +193,11 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         ObservableList<XYChart.Data<Number, Number>> dataList = FXCollections.observableArrayList();
         for (int i = 0; i < data.getLen(); i++) {
             boolean valid = data.getXPosByIndex(i) != null;
-            valid = valid && data.getQ3ByIndex(i) != null;
-            valid = valid && data.getQ1ByIndex(i) != null;
-            valid = valid && data.getMaxRegularValueByIndex(i) != null;
-            valid = valid && data.getMinRegularValueByIndex(i) != null;
-            valid = valid && data.getMedianByIndex(i) != null;
+            valid = valid && data.getQ3ByIndex(i) != null;//上四分位数
+            valid = valid && data.getQ1ByIndex(i) != null;//下四分位数
+            valid = valid && data.getMaxRegularValueByIndex(i) != null;//最大值
+            valid = valid && data.getMinRegularValueByIndex(i) != null;//最小值
+            valid = valid && data.getMedianByIndex(i) != null;//中位数
             if (!valid) {
                 continue;
             }
@@ -220,10 +220,8 @@ public class BoxPlotChart extends XYChart<Number, Number> {
         }
         return new XYChart.Series<>(seriesName, dataList);
     }
-
-    private void setDataNodeStyleAndTooltip(XYChart.Series series,
-                                            Color color,
-                                            Function<BoxTooltip, Node> pointTooltipFunction) {
+    //设置数据节点样式和提示
+    private void setDataNodeStyleAndTooltip(XYChart.Series series, Color color, Function<BoxTooltip, Node> pointTooltipFunction) {
 
         ObservableList<Data<Number, Number>> data = series.getData();
         if (color != null) {

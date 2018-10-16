@@ -39,7 +39,7 @@ import java.util.concurrent.CountDownLatch;
 /**
  * Created by GuangLi on 2018/3/14.
  */
-public class BuildChart {
+public class BuildChart {//生成图
     private static final Float F9 = 0.9f;
 
     /**
@@ -51,7 +51,7 @@ public class BuildChart {
      * @param exportParam     export param
      * @return exported chart path
      */
-    public static Map<String, Map<String, String>> initSpcChartData(List<SpcChartDto> spcChartDtoList, int search, Map<String, Color> colorCache, Map<String, Boolean> exportParam) {
+    public static Map<String, Map<String, String>> initSpcChartData(List<SpcChartDto> spcChartDtoList, int search, Map<String, Color> colorCache, Map<String, Boolean> exportParam) {//初始化spc图数据
         List<NDBarChartData> ndcChartDataList = Lists.newArrayList();
         List<ControlChartData> runChartDataList = Lists.newArrayList();
         List<ControlChartData> xBarChartDataList = Lists.newArrayList();
@@ -197,12 +197,12 @@ public class BuildChart {
         return result;
     }
 
-    private static NDChart buildND() {
+    private static NDChart buildND() {//创建正态分布图
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
-        xAxis.setTickMarkVisible(false);
-        yAxis.setTickMarkVisible(false);
-        yAxis.setMinorTickVisible(false);
+        xAxis.setTickMarkVisible(false);//设置x轴数字标记线是否显示
+        yAxis.setTickMarkVisible(false);//设置y轴数字标记线是否显示
+        yAxis.setMinorTickVisible(false);//设置y轴两个数字之间的刻度线是否显示
         xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
@@ -215,11 +215,11 @@ public class BuildChart {
     private static ControlChart buildRunChart() {
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
-        xAxis.setTickMarkVisible(false);
-        yAxis.setTickMarkVisible(false);
-        xAxis.setMinorTickVisible(false);
-        yAxis.setMinorTickVisible(false);
-        yAxis.setAutoRanging(false);
+        xAxis.setTickMarkVisible(false);//设置x轴数字标记线是否显示
+        yAxis.setTickMarkVisible(false);//设置y轴数字标记线是否显示
+        xAxis.setMinorTickVisible(false);//设置x轴两个数字之间的刻度线是否显示
+        yAxis.setMinorTickVisible(false);//设置y轴两个数字之间的刻度线是否显示
+        yAxis.setAutoRanging(false);//设置y轴自动变化量程
         yAxis.setForceZeroInRange(false);
         ControlChart runChart = new ControlChart(xAxis, yAxis);
         runChart.setAnimated(false);
@@ -230,29 +230,29 @@ public class BuildChart {
     private static ControlChart buildControlChart() {
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
-        xAxis.setTickMarkVisible(false);
-        yAxis.setTickMarkVisible(false);
-        xAxis.setMinorTickVisible(false);
-        yAxis.setMinorTickVisible(false);
-        xAxis.setAutoRanging(false);
-        yAxis.setAutoRanging(false);
-        ControlChart runChart = new ControlChart(xAxis, yAxis);
-        runChart.setAnimated(false);
-        runChart.setLegendVisible(false);
+        xAxis.setTickMarkVisible(false);//设置x轴数字标记线是否显示
+        yAxis.setTickMarkVisible(false);//设置y轴数字标记线是否显示
+        xAxis.setMinorTickVisible(false);//设置x轴两个数字之间的刻度线是否显示
+        yAxis.setMinorTickVisible(false);//设置y轴两个数字之间的刻度线是否显示
+        xAxis.setAutoRanging(false);//设置x轴自动变化量程
+        yAxis.setAutoRanging(false);//设置y轴自动变化量程
+        ControlChart runChart = new ControlChart(xAxis, yAxis);//创建控制图
+        runChart.setAnimated(false);//设置runChart是否有动画效果
+        runChart.setLegendVisible(false);//设置图例是否可见
         return runChart;
     }
 
     private static BoxPlotChart buildBox() {
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
-        xAxis.setTickMarkVisible(false);
-        yAxis.setTickMarkVisible(false);
-        xAxis.setMinorTickVisible(false);
-        yAxis.setMinorTickVisible(false);
-        yAxis.setAutoRanging(false);
-        BoxPlotChart boxPlotChart = new BoxPlotChart(xAxis, yAxis);
-        boxPlotChart.setAnimated(false);
-        boxPlotChart.setLegendVisible(false);
+        xAxis.setTickMarkVisible(false);//设置x轴数字标记线是否显示
+        yAxis.setTickMarkVisible(false);//设置y轴数字标记线是否显示
+        xAxis.setMinorTickVisible(false);//设置x轴两个数字之间的刻度线是否显示
+        yAxis.setMinorTickVisible(false);//设置y轴两个数字之间的刻度线是否显示
+        yAxis.setAutoRanging(false);//设置y轴自动变化量程
+        BoxPlotChart boxPlotChart = new BoxPlotChart(xAxis, yAxis);//创建箱型图对象
+        boxPlotChart.setAnimated(false);//设置runChart是否有动画效果
+        boxPlotChart.setLegendVisible(false);//设置图例是否可见
         return boxPlotChart;
 
     }

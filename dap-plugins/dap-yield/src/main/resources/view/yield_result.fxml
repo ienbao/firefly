@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<!--AnchorPane 布局面板允许你将控件停靠在窗口的上下左右位置-->
+
+<AnchorPane minHeight="110.0" minWidth="180.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldResultController">
+<children>
+    <TabPane style="-fx-background-color: #ffffff;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <tabs>
+            <Tab text="%STATISTICAL_RESULT">
+                <content>
+                    <VBox minHeight="0.0" minWidth="0.0">
+                        <GridPane prefHeight="4.0" prefWidth="435.0" BorderPane.alignment="CENTER">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="310.0" minWidth="310.0" prefWidth="310.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints maxHeight="28.0" minHeight="28.0" prefHeight="28.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                        <children>
+                           <Text strokeType="OUTSIDE" strokeWidth="0.0" text="  Yield Result" wrappingWidth="99.21875" />
+                        </children>
+                        </GridPane>
+                        <GridPane>
+                            <GridPane>
+                                <GridPane style="-fx-border-color: red">
+                                    <TabPane prefHeight="200.0" prefWidth="250.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="0">
+                                        <tabs>
+                                            <Tab fx:id="boxTab" closable="false">
+                                                <graphic>
+                                                    <Group>
+                                                        <children>
+                                                            <Label styleClass="tab-graphic-label" text="Total Processes" textAlignment="CENTER" />
+                                                        </children>
+                                                        <VBox style="-fx-border-color: yellow; -fx-max-width: 100;-fx-max-height: 100" >
+
+                                                        </VBox>
+                                                    </Group>
+                                                </graphic>
+                                                <content>
+                                                </content>
+                                            </Tab>
+                                        </tabs>
+                                        <GridPane.margin>
+                                            <Insets />
+                                        </GridPane.margin>
+                                    </TabPane>
+
+
+                                      <columnConstraints>
+                                         <ColumnConstraints  />
+
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                         <RowConstraints />
+                                      </rowConstraints>
+                                </GridPane>
+                                <TabPane prefHeight="214.0" prefWidth="368.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="1">
+                                    <tabs>
+                                        <Tab fx:id="ndTab" closable="false">
+                                            <graphic>
+                                                <Group>
+                                                    <children>
+                                                        <Label styleClass="tab-graphic-label" text="\%NTF Chart" textAlignment="CENTER" />
+                                                    </children>
+                                                </Group>
+                                            </graphic>
+                                            <content>
+                                            </content>
+                                        </Tab>
+                                    </tabs>
+                                </TabPane>
+
+                                <columnConstraints>
+                                    <ColumnConstraints minWidth="10.0" prefWidth="300.0" />
+                                    <ColumnConstraints prefWidth="200.0" />
+
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints />
+                                </rowConstraints>
+                            </GridPane>
+                        <columnConstraints>
+                           <ColumnConstraints />
+                        </columnConstraints>
+                        <rowConstraints>
+                           <RowConstraints />
+                        </rowConstraints>
+
+                        </GridPane>
+                    </VBox>
+                </content>
+            </Tab>
+        </tabs>
+    </TabPane>
+</children>
+</AnchorPane>

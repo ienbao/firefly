@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * table view wrapper
- *
+ *  表示图包装器
  * @author Can Guan
  */
 public class TableViewWrapper {

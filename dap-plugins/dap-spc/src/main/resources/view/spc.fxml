@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcMainController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcMainController">
     <children>
         <SplitPane dividerPositions="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
@@ -41,12 +41,12 @@
                             <Button fx:id="chooseBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-primary" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                         </children>
                     </GridPane>
-                    <SplitPane dividerPositions="0.5593471810089021" layoutY="28.0" orientation="VERTICAL" VBox.vgrow="ALWAYS">
+                    <SplitPane dividerPositions="0.5072083879423329" layoutY="28.0" orientation="VERTICAL" VBox.vgrow="ALWAYS">
                         <items>
                             <fx:include fx:id="statisticalResult" source="statistical_result.fxml" />
                             <AnchorPane prefHeight="300.0">
                                 <children>
-                                    <SplitPane dividerPositions="0.5050136736554239" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <SplitPane dividerPositions="0.5033557046979866" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                         <items>
                                             <fx:include fx:id="chartResult" source="chart_result.fxml" />
                                             <fx:include fx:id="viewData" source="view_data.fxml" />
