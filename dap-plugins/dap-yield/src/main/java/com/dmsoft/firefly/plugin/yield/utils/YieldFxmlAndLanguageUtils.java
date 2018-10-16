@@ -22,7 +22,7 @@ public class YieldFxmlAndLanguageUtils {
         if (LanguageType.ZH.equals(languageType)) {
             bundleKey = "i18n.message_zh_CN_";
         }
-        bundleKey = bundleKey + ModuleType.SPC.name();
+        bundleKey = bundleKey + ModuleType.Yield.name();
         return ResourceBundle.getBundle(bundleKey);
     }
 
@@ -35,7 +35,7 @@ public class YieldFxmlAndLanguageUtils {
     public static FXMLLoader getLoaderFXML(String res) {
         FXMLLoader fxmlLoader = new FXMLLoader(YieldFxmlAndLanguageUtils.class.getClassLoader().getResource(res), getResourceBundle());
         if (isDebug == false) {
-            fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.SpcPlugin"));
+            fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.YieldPlugin"));
         }
         return fxmlLoader;
     }
