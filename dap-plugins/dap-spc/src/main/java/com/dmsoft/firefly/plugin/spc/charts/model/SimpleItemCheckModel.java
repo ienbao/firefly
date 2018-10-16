@@ -23,7 +23,8 @@ public class SimpleItemCheckModel {
         this.isChecked = new SimpleBooleanProperty(isChecked);
     }
 
-    /**
+
+        /**
      * Get item name
      *
      * @return item name

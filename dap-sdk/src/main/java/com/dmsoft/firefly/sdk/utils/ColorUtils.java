@@ -69,9 +69,9 @@ public class ColorUtils {
         return su.toString();
     }
 
-    public static String toHexFromFXColor(javafx.scene.paint.Color fxColor) {
+    public static String toHexFromFXColor(javafx.scene.paint.Color fxColor) {//设置十六进制的颜色编码
         String r, g, b;
-        Color awtColor = toAwtColorFromFxColor(fxColor);
+        Color awtColor = toAwtColorFromFxColor(fxColor);//设置颜色
         StringBuilder su = new StringBuilder();
         if (awtColor == null) {
             return su.toString();
