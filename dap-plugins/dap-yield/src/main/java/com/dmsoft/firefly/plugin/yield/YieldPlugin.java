@@ -49,12 +49,12 @@ public class YieldPlugin extends Plugin {
 //
 //        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(Yield_PLUGIN_NAME,
 //                "com.dmsoft.firefly.plugin.yield.service.impl.SpcSettingServiceImpl", spcSettingService);
-        LOGGER.info("Plugin-SPC Initialized.");
+        LOGGER.info("Plugin-Yield Initialized.");
     }
 
     @Override
     public void start() {
-        RuntimeContext.getBean(PluginUIContext.class).registerMainBody("SPC", new IMainBodyPane() {
+        RuntimeContext.getBean(PluginUIContext.class).registerMainBody("Yield", new IMainBodyPane() {
             @Override
             public Pane getNewPane() {
                 FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML(ViewResource.Yield_VIEW_RES);
@@ -63,7 +63,7 @@ public class YieldPlugin extends Plugin {
                 try {
                     root = fxmlLoader.load();
                     root.getStylesheets().addAll(WindowFactory.checkStyles());
-                    root.getStylesheets().add(getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+                    root.getStylesheets().add(getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
                     root.getStylesheets().add(getClass().getClassLoader().getResource("css/charts.css").toExternalForm());
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -72,13 +72,13 @@ public class YieldPlugin extends Plugin {
             }
         });
 
-        LOGGER.debug("Plugin-SPC UI register done.");
+        LOGGER.debug("Plugin-Yield UI register done.");
 
-        LOGGER.info("Plugin-SPC started.");
+        LOGGER.info("Plugin-Yield started.");
 
         //register spc setting menu
-        MenuItem menuItem = new MenuItem(YieldFxmlAndLanguageUtils.getString("MENU_SPC_SETTING"));
-        menuItem.setId("spcSetting");
+        MenuItem menuItem = new MenuItem(YieldFxmlAndLanguageUtils.getString("MENU_Yield_SETTING"));
+        menuItem.setId("yieldSetting");
         menuItem.setMnemonicParsing(true);
         menuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
         menuItem.setOnAction(event -> {
@@ -141,7 +141,7 @@ public class YieldPlugin extends Plugin {
 
     @Override
     public void destroy() {
-        System.out.println("Plugin-SPC Destroyed.");
+        System.out.println("Plugin-Yield Destroyed.");
     }
 
     private void initSpcSettingDialog() {

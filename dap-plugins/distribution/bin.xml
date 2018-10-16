@@ -15,6 +15,7 @@
                 <include>com.dmsoft:dap-tm-csv-resolver</include>
                 <include>com.dmsoft:dap-spc</include>
                 <include>com.dmsoft:dap-grr</include>
+                <include>com.dmsoft:dap-yield</include>
             </includes>
             <binaries>
                 <outputDirectory>Plugins/${module.artifactId}/libs</outputDirectory>
