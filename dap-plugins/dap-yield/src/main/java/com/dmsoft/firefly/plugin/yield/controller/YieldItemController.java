@@ -68,8 +68,8 @@ public class YieldItemController implements Initializable {
     private Tab configTab;
     @FXML
     private Tab timeTab;
-    @FXML
-    private Label helpLabel;
+//    @FXML
+//    private Label helpLabel;
     @FXML
     private TableColumn<ItemTableModel, CheckBox> select;
     @FXML
@@ -91,7 +91,7 @@ public class YieldItemController implements Initializable {
     private ContextMenu pop;
     private boolean isFilterUslOrLsl = false;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
-    private YieldLeftConfigServiceImpl yieldConfigService = new YieldLeftConfigServiceImpl();
+    private YieldLeftConfigServiceImpl leftConfigService = new YieldLeftConfigServiceImpl();
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
     // cached items for user preference
@@ -103,7 +103,8 @@ public class YieldItemController implements Initializable {
     private CheckBox enabledTimerCheckBox;
     @FXML
     private ComboBox<String> timeComboBox;
-
+    @FXML
+    private ComboBox<String> configComboBox;
     private boolean isTimer;
     private boolean startTimer;
 
@@ -273,7 +274,7 @@ public class YieldItemController implements Initializable {
 
         initComponentEvent();
         initItemData();
-        initSpcConfig();
+        initYieldConfig();
         initSpcTimer();
     }
 
@@ -281,16 +282,17 @@ public class YieldItemController implements Initializable {
      * init spc timer tab
      */
     public void initSpcTimer() {
-        isTimer = false;
-        startTimer = false;
-        enabledTimerCheckBox.setSelected(false);
-//        List<String> timerList = leftConfigService.findSpcTimerTime();
+//        isTimer = false;
+//        startTimer = false;
+//        enabledTimerCheckBox.setSelected(false);
+//        List<String> timerList = leftConfigService.findYieldTimerTime();
+//
 //        if (timerList == null) {
 //            return;
 //        }
 //        ObservableList<String> showTimeList = FXCollections.observableArrayList();
 //        for (String time : timerList) {
-//            showTimeList.add(time + SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIMER_MIN));
+//            showTimeList.add(time + YieldFxmlAndLanguageUtils.getString(ResourceMassages.TIMER_MIN));
 //        }
 //        timeComboBox.setItems(showTimeList);
 //        if (showTimeList.size() > 0) {
@@ -339,11 +341,6 @@ public class YieldItemController implements Initializable {
         timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
         timeTab.setStyle("-fx-padding: 0 5 0 5");
         timeTab.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("SPC_TIMER_SETTING")));
-
-        helpLabel.getStyleClass().add("message-tip-question");
-        helpLabel.setStyle("-fx-background-color: #0096ff");
-        helpLabel.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("SUBGROUP_SIZE_TIP")));
-
     }
 
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
@@ -747,7 +744,15 @@ public class YieldItemController implements Initializable {
         return selectTestItemDtosResult;
     }
 
-    private void initSpcConfig() {
+    private void initYieldConfig() {
+        ObservableList<String> primaryKeyList = FXCollections.observableArrayList();
+        for (String item : originalItems) {
+            primaryKeyList.add(item);
+        }
+        configComboBox.setItems(primaryKeyList);
+        if (primaryKeyList.size() > 0) {
+            configComboBox.setValue(primaryKeyList.get(0));
+        }
 
     }
 
