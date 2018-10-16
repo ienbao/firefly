@@ -88,7 +88,7 @@ public class YieldPlugin extends Plugin {
                 initSpcSettingDialog();
             } else {
                 if (yieldSettingController != null) {
-//                    yieldSettingController.initData();
+                    yieldSettingController.initData();
                 }
                 StageMap.showStage(StateKey.Yield_SETTING);
             }
