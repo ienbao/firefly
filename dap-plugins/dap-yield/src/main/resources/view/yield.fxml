@@ -57,7 +57,7 @@
                     </SplitPane>
                 </VBox>
                 <VBox minWidth="180.0" prefWidth="180.0" SplitPane.resizableWithParent="false">
-
+                    <fx:include fx:id="yieldItem" source="yield_item.fxml" VBox.vgrow="ALWAYS" />
                 </VBox>
             </items>
         </SplitPane>

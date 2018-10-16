@@ -86,7 +86,7 @@ public class YieldPlugin extends Plugin {
                 initYieldSettingDialog();
             } else {
                 if (yieldSettingController != null) {
-//                    yieldSettingController.initData();
+                    yieldSettingController.initData();
                 }
                 StageMap.showStage(StateKey.Yield_SETTING);
             }
