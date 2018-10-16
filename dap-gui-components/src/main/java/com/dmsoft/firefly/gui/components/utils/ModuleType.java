@@ -6,5 +6,5 @@ package com.dmsoft.firefly.gui.components.utils;
  * @author Julia
  */
 public enum ModuleType {
-    GUI, SPC, GRR, CSV, COM;
+    GUI, SPC, GRR, Yield, CSV, COM;
 }

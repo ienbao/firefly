@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-
+<!--Analysis Template分析模板-->
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.TemplateController">
    <children>
       <HBox maxHeight="488.0" minHeight="488.0" prefHeight="488.0" prefWidth="800.0" style="-fx-border-color: #DCDCDC; -fx-border-width: 1 1 1 1;" VBox.vgrow="ALWAYS">

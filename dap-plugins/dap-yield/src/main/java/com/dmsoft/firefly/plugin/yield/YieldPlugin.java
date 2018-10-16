@@ -3,15 +3,13 @@ package com.dmsoft.firefly.plugin.yield;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.yield.controller.YieldSettingController;
-import com.dmsoft.firefly.plugin.yield.service.YieldService;
 import com.dmsoft.firefly.plugin.yield.service.impl.YieldServiceImpl;
 import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
+import com.dmsoft.firefly.plugin.yield.service.impl.YieldSettingServiceImpl;
 import com.dmsoft.firefly.plugin.yield.utils.StateKey;
 import com.dmsoft.firefly.plugin.yield.utils.ViewResource;
 import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.job.core.JobFactory;
-import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.plugin.Plugin;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.ui.IMainBodyPane;
@@ -38,7 +36,7 @@ public class YieldPlugin extends Plugin {
     public void initialize(InitModel model) {
         YieldServiceImpl yieldService = new YieldServiceImpl();
 //        SpcAnalysisServiceImpl spcAnalysisService = new SpcAnalysisServiceImpl();
-        YieldSettingService yieldSettingService = new YieldSettingService();
+        YieldSettingService yieldSettingService = new YieldSettingServiceImpl();
 //        yieldService.setAnalysisService(spcAnalysisService);
 //        RuntimeContext.registerBean(YieldService.class, yieldService);
 //        RuntimeContext.registerBean(SpcAnalysisService.class, spcAnalysisService);
@@ -51,12 +49,12 @@ public class YieldPlugin extends Plugin {
 //
 //        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(Yield_PLUGIN_NAME,
 //                "com.dmsoft.firefly.plugin.yield.service.impl.SpcSettingServiceImpl", spcSettingService);
-        LOGGER.info("Plugin-SPC Initialized.");
+        LOGGER.info("Plugin-Yield Initialized.");
     }
 
     @Override
     public void start() {
-        RuntimeContext.getBean(PluginUIContext.class).registerMainBody("SPC", new IMainBodyPane() {
+        RuntimeContext.getBean(PluginUIContext.class).registerMainBody("Yield", new IMainBodyPane() {
             @Override
             public Pane getNewPane() {
                 FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML(ViewResource.Yield_VIEW_RES);
@@ -65,7 +63,7 @@ public class YieldPlugin extends Plugin {
                 try {
                     root = fxmlLoader.load();
                     root.getStylesheets().addAll(WindowFactory.checkStyles());
-                    root.getStylesheets().add(getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+                    root.getStylesheets().add(getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
                     root.getStylesheets().add(getClass().getClassLoader().getResource("css/charts.css").toExternalForm());
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -74,21 +72,21 @@ public class YieldPlugin extends Plugin {
             }
         });
 
-        LOGGER.debug("Plugin-SPC UI register done.");
+        LOGGER.debug("Plugin-Yield UI register done.");
 
-        LOGGER.info("Plugin-SPC started.");
+        LOGGER.info("Plugin-Yield started.");
 
         //register spc setting menu
-        MenuItem menuItem = new MenuItem(YieldFxmlAndLanguageUtils.getString("MENU_SPC_SETTING"));
-        menuItem.setId("spcSetting");
+        MenuItem menuItem = new MenuItem(YieldFxmlAndLanguageUtils.getString("MENU_Yield_SETTING"));
+        menuItem.setId("yieldSetting");
         menuItem.setMnemonicParsing(true);
         menuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
         menuItem.setOnAction(event -> {
             if (StageMap.getStage(StateKey.Yield_SETTING) == null) {
-                initSpcSettingDialog();
+                initYieldSettingDialog();
             } else {
                 if (yieldSettingController != null) {
-//                    yieldSettingController.initData();
+                    yieldSettingController.initData();
                 }
                 StageMap.showStage(StateKey.Yield_SETTING);
             }
@@ -143,16 +141,16 @@ public class YieldPlugin extends Plugin {
 
     @Override
     public void destroy() {
-        System.out.println("Plugin-SPC Destroyed.");
+        System.out.println("Plugin-Yield Destroyed.");
     }
 
-    private void initSpcSettingDialog() {
+    private void initYieldSettingDialog() {
         Pane root = null;
         try {
-            FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML("view/spc_setting.fxml");
+            FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML("view/yield_setting.fxml");
             root = fxmlLoader.load();
             yieldSettingController = fxmlLoader.getController();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.Yield_SETTING, YieldFxmlAndLanguageUtils.getString("SPC_SETTINGS"), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.Yield_SETTING, YieldFxmlAndLanguageUtils.getString("Yield_SETTINGS"), root, getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
             stage.setResizable(false);
             stage.toFront();
             stage.show();

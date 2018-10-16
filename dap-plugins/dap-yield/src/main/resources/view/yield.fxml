@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldMainController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldMainController">
     <children>
         <SplitPane dividerPositions="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
@@ -30,7 +30,7 @@
                             <RowConstraints minHeight="3.0" prefHeight="3.0" vgrow="SOMETIMES" />
                         </rowConstraints>
                         <children>
-                            <Label prefHeight="15.0" prefWidth="174.0" text="%SPC_ANALYSIS_RESULT_TITLE" GridPane.rowIndex="1">
+                            <Label prefHeight="15.0" prefWidth="174.0" text="%Yield_ANALYSIS_RESULT_TITLE" GridPane.rowIndex="1">
                                 <padding>
                                     <Insets left="10.0" />
                                 </padding>
@@ -41,24 +41,35 @@
                             <Button fx:id="chooseBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-primary" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                         </children>
                     </GridPane>
-                    <SplitPane dividerPositions="0.5593471810089021" layoutY="28.0" orientation="VERTICAL" VBox.vgrow="ALWAYS">
+                    <SplitPane dividerPositions="0.5327868852459017, 0.6825633383010432" layoutY="28.0" orientation="VERTICAL" prefWidth="1210.0" VBox.vgrow="ALWAYS">
                         <items>
-                           <fx:include fx:id="statisticalResult" source="" />
                             <AnchorPane prefHeight="300.0">
                                 <children>
-                                    <SplitPane dividerPositions="0.5050136736554239" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <SplitPane dividerPositions="0.5033557046979866" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                         <items>
-                                            <fx:include fx:id="chartResult" source="" />
-                                            <fx:include fx:id="viewData" source="" />
+                                            <fx:include fx:id="totalProgress" source="total_progress.fxml" />
+                                            <fx:include fx:id="ntfChart" source="ntf_chart.fxml" />
                                         </items>
                                     </SplitPane>
                                 </children>
                             </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="1208.0">
+                                <children>
+                                    <fx:include fx:id="overView" source="over_view.fxml" />
+                                </children>
+                            </AnchorPane>
+
+                            <AnchorPane prefHeight="200.0" prefWidth="1208.0">
+                                <children>
+                                    <fx:include fx:id="viewData" source="view_data.fxml" />
+                                </children>
+                            </AnchorPane>
+
                         </items>
                     </SplitPane>
                 </VBox>
                 <VBox minWidth="180.0" prefWidth="180.0" SplitPane.resizableWithParent="false">
-                    <fx:include fx:id="spcItem" source="" VBox.vgrow="ALWAYS" />
+                    <fx:include fx:id="yieldItem" source="yield_item.fxml" VBox.vgrow="ALWAYS" />
                 </VBox>
             </items>
         </SplitPane>

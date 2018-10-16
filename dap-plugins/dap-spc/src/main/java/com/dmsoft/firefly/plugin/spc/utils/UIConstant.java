@@ -5,6 +5,7 @@ package com.dmsoft.firefly.plugin.spc.utils;
 
 /**
  * Created by Ethan.Yang on 2018/2/6.
+ * UI 上面的常量
  */
 public class UIConstant {
     public static final String UI_MESSAGE_TIP_SUCCESS_TITLE = "UI_MESSAGE_TIP_SUCCESS_TITLE";

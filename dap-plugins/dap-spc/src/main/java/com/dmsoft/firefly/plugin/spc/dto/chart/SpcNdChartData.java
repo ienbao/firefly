@@ -62,8 +62,8 @@ public class SpcNdChartData implements NDBarChartData {
         Double[] histY = ndcResultDto.getHistY();
         barChartData = new SpcBarChartData(histX, histY);
         //init curve data
-        Double[] curveX = ndcResultDto.getCurveX();
-        Double[] curveY = ChartDataUtils.rebaseNormalCurveData(histY, ndcResultDto.getCurveY());
+        Double[] curveX = ndcResultDto.getCurveX();//获取曲线x
+        Double[] curveY = ChartDataUtils.rebaseNormalCurveData(histY, ndcResultDto.getCurveY());//恢复正常曲线数据
         xyChartData = new SpcXYChartData(curveX, curveY);
         //init lines data
         Double usl = ndcResultDto.getUsl();
@@ -82,14 +82,14 @@ public class SpcNdChartData implements NDBarChartData {
         Double[] cls = ndcResultDto.getCls();
         for (int i = 0; i < lineNames.length; i++) {
             if (lineNames[i].equalsIgnoreCase(lineNames[0])) {
-                if (!DAPStringUtils.isInfinityAndNaN(usl)) {
+                if (!DAPStringUtils.isInfinityAndNaN(usl)) {//判断usl是否是无穷并且非数值
                     ILineData lineData = new LineData(usl, lineNames[i], LineType.DASHED);
                     lineDataList.add(lineData);
                 }
                 continue;
             }
             if (lineNames[i].equalsIgnoreCase(lineNames[1])) {
-                if (!DAPStringUtils.isInfinityAndNaN(lsl)) {
+                if (!DAPStringUtils.isInfinityAndNaN(lsl)) {//判断lsl是否是无穷并且非数值
                     ILineData lineData = new LineData(lsl, lineNames[i], LineType.DASHED);
                     lineDataList.add(lineData);
                 }
@@ -101,10 +101,10 @@ public class SpcNdChartData implements NDBarChartData {
                 lineDataList.add(lineData);
             }
         }
-        maxY = MathUtils.getMax(histY, curveY);
-        minY = MathUtils.getMin(histY, curveY);
-        maxX = MathUtils.getMax(histX, curveX, cls, uslAndLsl);
-        minX = MathUtils.getMin(histX, curveX, cls, uslAndLsl);
+        maxY = MathUtils.getMax(histY, curveY);//y轴获取NDchart最大值
+        minY = MathUtils.getMin(histY, curveY);//y轴获取NDchart最小值
+        maxX = MathUtils.getMax(histX, curveX, cls, uslAndLsl);//X轴获取最大值
+        minX = MathUtils.getMin(histX, curveX, cls, uslAndLsl);//x轴获取最小值
     }
 
     @Override
