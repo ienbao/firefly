@@ -8,6 +8,9 @@ import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowPane;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.yield.model.ItemTableModel;
+import com.dmsoft.firefly.plugin.yield.service.impl.YieldLeftConfigServiceImpl;
+import com.dmsoft.firefly.plugin.yield.utils.ResourceMassages;
+import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -84,11 +87,11 @@ public class YieldItemController implements Initializable {
     private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
-//    private SpcMainController spcMainController;
+    private YieldMainController yieldMainController;
     private ContextMenu pop;
     private boolean isFilterUslOrLsl = false;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
-//    private SpcLeftConfigServiceImpl leftConfigService = new SpcLeftConfigServiceImpl();
+    private YieldLeftConfigServiceImpl yieldConfigService = new YieldLeftConfigServiceImpl();
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
     // cached items for user preference
@@ -111,16 +114,16 @@ public class YieldItemController implements Initializable {
      *
 //     * @param spcMainController main controller
      */
-//    public void init(SpcMainController spcMainController) {
-//        this.spcMainController = spcMainController;
-//    }
+    public void init(YieldMainController yieldMainController) {
+        this.yieldMainController = yieldMainController;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 //        initBtnIcon();
         searchTab = new SearchTab();
         split.getItems().add(searchTab);
-//        itemFilter.getTextField().setPromptText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
+        itemFilter.getTextField().setPromptText(YieldFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) -> {
             if (isFilterUslOrLsl) {
                 filteredList.setPredicate(this::isFilterAndHasUslOrLsl);
@@ -142,7 +145,7 @@ public class YieldItemController implements Initializable {
         }
         itemTable.setRowFactory(tv -> {
             TableRow<ItemTableModel> tableRow = new TableRow<>();
-//            tableRow.setContextMenu(createTableRightMenu());
+            tableRow.setContextMenu(createTableRightMenu());
             return tableRow;
         });
 //        itemTable.setContextMenu(createTableRightMenu());
@@ -318,105 +321,105 @@ public class YieldItemController implements Initializable {
 //        return leftConfigDto;
 //    }
 //
-//    private void initBtnIcon() {
-//        analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
-//        TooltipUtil.installNormalTooltip(analysisBtn, SpcFxmlAndLanguageUtils.getString(ResourceMassages.ANALYSIS));
-//        importBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_load_script_normal.png")));
-//        TooltipUtil.installNormalTooltip(importBtn, SpcFxmlAndLanguageUtils.getString(ResourceMassages.IMPORT_CONFIG));
-//        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_save_normal.png")));
-//        TooltipUtil.installNormalTooltip(exportBtn, SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_CONFIG));
-//        itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_datasource_normal.png")));
-//        itemTab.setStyle("-fx-padding: 0 5 0 5");
-//        itemTab.setTooltip(new Tooltip(SpcFxmlAndLanguageUtils.getString("SPC_TEST_ITEM")));
-//
-//        configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_config_normal.png")));
-//        configTab.setStyle("-fx-padding: 0 5 0 5");
-//        configTab.setTooltip(new Tooltip(SpcFxmlAndLanguageUtils.getString("SPC_CONFIG")));
-//
-//        timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
-//        timeTab.setStyle("-fx-padding: 0 5 0 5");
-//        timeTab.setTooltip(new Tooltip(SpcFxmlAndLanguageUtils.getString("SPC_TIMER_SETTING")));
-//
-//        helpLabel.getStyleClass().add("message-tip-question");
-//        helpLabel.setStyle("-fx-background-color: #0096ff");
-//        helpLabel.setTooltip(new Tooltip(SpcFxmlAndLanguageUtils.getString("SUBGROUP_SIZE_TIP")));
-//
-//    }
-//
-//    private ContextMenu createPopMenu(Button is, MouseEvent e) {
-//        if (pop == null) {
-//            pop = new ContextMenu();
-//            RadioMenuItem all = new RadioMenuItem(SpcFxmlAndLanguageUtils.getString(ResourceMassages.ALL_TEST_ITEMS));
-//            all.setOnAction(event -> {
-//                filteredList.setPredicate(this::isFilterAndAll);
-//                is.getStyleClass().remove("filter-active");
-//                is.getStyleClass().add("filter-normal");
-//                is.setGraphic(null);
-//                isFilterUslOrLsl = false;
-//            });
-//            RadioMenuItem show = new RadioMenuItem(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS_WITH_USL_LSL));
-//            show.setOnAction(event -> {
-//                filteredList.setPredicate(this::isFilterAndHasUslOrLsl);
-//                is.getStyleClass().remove("filter-normal");
-//                is.getStyleClass().add("filter-active");
-////                is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
-//                isFilterUslOrLsl = true;
-//            });
-//            all.setSelected(true);
-//            ToggleGroup toggleGroup = new ToggleGroup();
-//            all.setToggleGroup(toggleGroup);
-//            show.setToggleGroup(toggleGroup);
-//            pop.getItems().addAll(all, show);
-//        }
-//        Bounds bounds = is.localToScreen(is.getBoundsInLocal());
-//        pop.show(is, bounds.getMinX(), bounds.getMinY() + 22);
-//        return pop;
-//    }
-//
-//    private ContextMenu createTableRightMenu() {
-//        MenuItem top = new MenuItem(SpcFxmlAndLanguageUtils.getString(ResourceMassages.STICKY_ON_TOP));
-//        ContextMenu right = new ContextMenu() {
-//            @Override
-//            public void show(Node anchor, double screenX, double screenY) {
-//                if (((TableRow) anchor).getItem() == null) {
-//                    return;
-//                }
-//                if (itemTable.getSelectionModel().getSelectedItem() != null && itemTable.getSelectionModel().getSelectedItem().getOnTop()) {
-//                    top.setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.REMOVE_FROM_TOP));
-//                } else {
-//                    top.setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.STICKY_ON_TOP));
-//                }
-//                super.show(anchor, screenX, screenY);
-//            }
-//        };
-//
-//        top.setOnAction(event -> {
-//            ItemTableModel selectedItems = itemTable.getSelectionModel().getSelectedItem();
-//            boolean former = selectedItems.getOnTop();
-//            String itemName = selectedItems.getItem();
-//            if (former) {
-//                stickyOnTopItems.remove(itemName);
-//                items.remove(selectedItems);
-//                int newSite = findNewSite(items, selectedItems);
-//                items.add(newSite, selectedItems);
-//            } else {
-//                stickyOnTopItems.add(itemName);
-//                items.remove(selectedItems);
-//                items.add(0, selectedItems);
-//            }
-//            UserPreferenceDto<String> preferenceDto = new UserPreferenceDto<>();
-//            preferenceDto.setCode(STICKY_ON_TOP_CODE);
-//            preferenceDto.setUserName(envService.getUserName());
-//            preferenceDto.setValue(mapper.toJson(stickyOnTopItems));
-//            userPreferenceService.updatePreference(preferenceDto);
-//            selectedItems.setOnTop(!former);
-//            itemTable.refresh();
-//        });
-//        MenuItem setting = new MenuItem(SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPECIFICATION_SETTING));
-//        setting.setOnAction(event -> RuntimeContext.getBean(EventContext.class).pushEvent(new PlatformEvent(null, "Template_Show")));
-//        right.getItems().addAll(top, setting);
-//        return right;
-//    }
+    private void initBtnIcon() {
+        analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
+        TooltipUtil.installNormalTooltip(analysisBtn, YieldFxmlAndLanguageUtils.getString(ResourceMassages.ANALYSIS));
+        importBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_load_script_normal.png")));
+        TooltipUtil.installNormalTooltip(importBtn, YieldFxmlAndLanguageUtils.getString(ResourceMassages.IMPORT_CONFIG));
+        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_save_normal.png")));
+        TooltipUtil.installNormalTooltip(exportBtn, YieldFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_CONFIG));
+        itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_datasource_normal.png")));
+        itemTab.setStyle("-fx-padding: 0 5 0 5");
+        itemTab.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("SPC_TEST_ITEM")));
+
+        configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_config_normal.png")));
+        configTab.setStyle("-fx-padding: 0 5 0 5");
+        configTab.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("SPC_CONFIG")));
+
+        timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
+        timeTab.setStyle("-fx-padding: 0 5 0 5");
+        timeTab.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("SPC_TIMER_SETTING")));
+
+        helpLabel.getStyleClass().add("message-tip-question");
+        helpLabel.setStyle("-fx-background-color: #0096ff");
+        helpLabel.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("SUBGROUP_SIZE_TIP")));
+
+    }
+
+    private ContextMenu createPopMenu(Button is, MouseEvent e) {
+        if (pop == null) {
+            pop = new ContextMenu();
+            RadioMenuItem all = new RadioMenuItem(YieldFxmlAndLanguageUtils.getString(ResourceMassages.ALL_TEST_ITEMS));
+            all.setOnAction(event -> {
+                filteredList.setPredicate(this::isFilterAndAll);
+                is.getStyleClass().remove("filter-active");
+                is.getStyleClass().add("filter-normal");
+                is.setGraphic(null);
+                isFilterUslOrLsl = false;
+            });
+            RadioMenuItem show = new RadioMenuItem(YieldFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS_WITH_USL_LSL));
+            show.setOnAction(event -> {
+                filteredList.setPredicate(this::isFilterAndHasUslOrLsl);
+                is.getStyleClass().remove("filter-normal");
+                is.getStyleClass().add("filter-active");
+//                is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
+                isFilterUslOrLsl = true;
+            });
+            all.setSelected(true);
+            ToggleGroup toggleGroup = new ToggleGroup();
+            all.setToggleGroup(toggleGroup);
+            show.setToggleGroup(toggleGroup);
+            pop.getItems().addAll(all, show);
+        }
+        Bounds bounds = is.localToScreen(is.getBoundsInLocal());
+        pop.show(is, bounds.getMinX(), bounds.getMinY() + 22);
+        return pop;
+    }
+
+    private ContextMenu createTableRightMenu() {
+        MenuItem top = new MenuItem(YieldFxmlAndLanguageUtils.getString(ResourceMassages.STICKY_ON_TOP));
+        ContextMenu right = new ContextMenu() {
+            @Override
+            public void show(Node anchor, double screenX, double screenY) {
+                if (((TableRow) anchor).getItem() == null) {
+                    return;
+                }
+                if (itemTable.getSelectionModel().getSelectedItem() != null && itemTable.getSelectionModel().getSelectedItem().getOnTop()) {
+                    top.setText(YieldFxmlAndLanguageUtils.getString(ResourceMassages.REMOVE_FROM_TOP));
+                } else {
+                    top.setText(YieldFxmlAndLanguageUtils.getString(ResourceMassages.STICKY_ON_TOP));
+                }
+                super.show(anchor, screenX, screenY);
+            }
+        };
+
+        top.setOnAction(event -> {
+            ItemTableModel selectedItems = itemTable.getSelectionModel().getSelectedItem();
+            boolean former = selectedItems.getOnTop();
+            String itemName = selectedItems.getItem();
+            if (former) {
+                stickyOnTopItems.remove(itemName);
+                items.remove(selectedItems);
+                int newSite = findNewSite(items, selectedItems);
+                items.add(newSite, selectedItems);
+            } else {
+                stickyOnTopItems.add(itemName);
+                items.remove(selectedItems);
+                items.add(0, selectedItems);
+            }
+            UserPreferenceDto<String> preferenceDto = new UserPreferenceDto<>();
+            preferenceDto.setCode(STICKY_ON_TOP_CODE);
+            preferenceDto.setUserName(envService.getUserName());
+            preferenceDto.setValue(mapper.toJson(stickyOnTopItems));
+            userPreferenceService.updatePreference(preferenceDto);
+            selectedItems.setOnTop(!former);
+            itemTable.refresh();
+        });
+        MenuItem setting = new MenuItem(YieldFxmlAndLanguageUtils.getString(ResourceMassages.SPECIFICATION_SETTING));
+        setting.setOnAction(event -> RuntimeContext.getBean(EventContext.class).pushEvent(new PlatformEvent(null, "Template_Show")));
+        right.getItems().addAll(top, setting);
+        return right;
+    }
 
     private void initComponentEvent() {
 //        analysisBtn.setOnAction(event -> getAnalysisBtnEvent());
