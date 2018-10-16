@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane minHeight="110.0" minWidth="180.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.StatisticalResultController">
+<AnchorPane minHeight="110.0" minWidth="180.0" prefHeight="424.0" prefWidth="435.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.StatisticalResultController">
     <children>
         <TabPane style="-fx-background-color: #ffffff;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
@@ -37,7 +37,7 @@
                               </GridPane.margin></TextFieldFilter>
                                 </children>
                             </GridPane>
-                            <TableView fx:id="statisticalResultTb" editable="true" style="-fx-border-width: 1 0 0 0;" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
+                            <TableView fx:id="statisticalResultTb" editable="true" prefHeight="365.0" prefWidth="435.0" style="-fx-border-width: 1 0 0 0;" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
                                 <!--<columns>-->
                                     <!--<TableColumn fx:id="checkBoxColumn" maxWidth="30.0" minWidth="30.0" prefWidth="30" resizable="false" sortable="false" />-->
                                 <!--</columns>-->
