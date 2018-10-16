@@ -43,7 +43,7 @@
                     </GridPane>
                     <SplitPane dividerPositions="0.5593471810089021" layoutY="28.0" orientation="VERTICAL" VBox.vgrow="ALWAYS">
                         <items>
-
+                            <fx:include fx:id="totalProgress" source="total_progress.fxml" />
                             <AnchorPane prefHeight="300.0">
                                 <children>
                                     <SplitPane dividerPositions="0.5050136736554239" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
