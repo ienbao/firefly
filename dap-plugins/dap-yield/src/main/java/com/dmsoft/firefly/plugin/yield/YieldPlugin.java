@@ -83,7 +83,7 @@ public class YieldPlugin extends Plugin {
         menuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
         menuItem.setOnAction(event -> {
             if (StageMap.getStage(StateKey.Yield_SETTING) == null) {
-                initSpcSettingDialog();
+                initYieldSettingDialog();
             } else {
                 if (yieldSettingController != null) {
                     yieldSettingController.initData();
@@ -144,13 +144,13 @@ public class YieldPlugin extends Plugin {
         System.out.println("Plugin-Yield Destroyed.");
     }
 
-    private void initSpcSettingDialog() {
+    private void initYieldSettingDialog() {
         Pane root = null;
         try {
             FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML("view/yield_setting.fxml");
             root = fxmlLoader.load();
             yieldSettingController = fxmlLoader.getController();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.Yield_SETTING, YieldFxmlAndLanguageUtils.getString("SPC_SETTINGS"), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.Yield_SETTING, YieldFxmlAndLanguageUtils.getString("Yield_SETTINGS"), root, getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
             stage.setResizable(false);
             stage.toFront();
             stage.show();
