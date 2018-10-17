@@ -5,4 +5,5 @@ public class ViewResource {
 
     public static final String PRE_VIEW = "view/";
     public static final String Yield_VIEW_RES = PRE_VIEW + "yield.fxml";
+    public static final String Yield_CHOOSE_STATISTICAL_VIEW_RES = PRE_VIEW + "choose_dialog.fxml";
 }

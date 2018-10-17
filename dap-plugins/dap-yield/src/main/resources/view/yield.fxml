@@ -43,27 +43,23 @@
                     </GridPane>
                     <SplitPane dividerPositions="0.5327868852459017, 0.6825633383010432" layoutY="28.0" orientation="VERTICAL" prefWidth="1210.0" VBox.vgrow="ALWAYS">
                         <items>
-                            <AnchorPane prefHeight="300.0">
+                            <AnchorPane prefHeight="200.0">
                                 <children>
-                                    <SplitPane dividerPositions="0.5033557046979866" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                        <items>
-                                            <fx:include fx:id="totalProgress" source="total_progress.fxml" />
-                                            <fx:include fx:id="ntfChart" source="ntf_chart.fxml" />
-                                        </items>
-                                    </SplitPane>
+                                    <fx:include fx:id="totalProgress" source="total_progress.fxml" />
                                 </children>
                             </AnchorPane>
+
                             <AnchorPane prefHeight="200.0" prefWidth="1208.0">
                                 <children>
                                     <fx:include fx:id="overView" source="over_view.fxml" />
                                 </children>
                             </AnchorPane>
 
-                            <AnchorPane prefHeight="200.0" prefWidth="1208.0">
-                                <children>
+                            <!--<AnchorPane prefHeight="200.0" prefWidth="1208.0">-->
+                                <!--<children>-->
                                     <fx:include fx:id="viewData" source="view_data.fxml" />
-                                </children>
-                            </AnchorPane>
+                                <!--</children>-->
+                            <!--</AnchorPane>-->
 
                         </items>
                     </SplitPane>
