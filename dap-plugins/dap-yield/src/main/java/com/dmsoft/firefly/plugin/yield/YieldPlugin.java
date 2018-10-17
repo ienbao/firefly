@@ -3,7 +3,7 @@ package com.dmsoft.firefly.plugin.yield;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.yield.controller.YieldSettingController;
-import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
+import com.dmsoft.firefly.plugin.yield.handler.*;
 import com.dmsoft.firefly.plugin.yield.service.impl.YieldServiceImpl;
 import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
 import com.dmsoft.firefly.plugin.yield.service.impl.YieldSettingServiceImpl;
@@ -100,11 +100,11 @@ public class YieldPlugin extends Plugin {
         JobManager jobManager = RuntimeContext.getBean(JobManager.class);
         JobFactory jobFactory = RuntimeContext.getBean(JobFactory.class);
         jobManager.initializeJob(ParamKeys.YIELD_ANALYSIS_JOB_PIPELINE, jobFactory.createJobPipeLine()
-//                .addLast(new FindYieldSettingDataHandler())
-//                .addLast(new FindTestDataHandler().setWeight(D100))
-//                .addLast(new DataFrameHandler())
-//                .addLast(new GetYieldStatsResultHandler().setWeight(D100)));
-        );
+                .addLast(new FindYieldSettingDataHandler())
+                .addLast(new FindTestDataHandler().setWeight(D100))
+                .addLast(new DataFrameHandler())
+                .addLast(new GetYieldResultHandler().setWeight(D100)));
+
 //        jobManager.initializeJob(ParamKeys.SPC_ANALYSIS_EXPORT_JOB_PIPELINE, jobFactory.createJobPipeLine()
 //                .addLast(new FindSpcSettingDataHandler())
 //                .addLast(new FindTestDataHandler().setWeight(D100))

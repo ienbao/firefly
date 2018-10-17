@@ -7,6 +7,7 @@ import com.dmsoft.bamboo.common.dto.AbstractValueObject;
  */
 public class YieldAnalysisConfigDto extends AbstractValueObject {
     private String primaryKey;
+    private Integer topN;
 
     public String getPrimaryKey() {
         return primaryKey;
@@ -14,5 +15,13 @@ public class YieldAnalysisConfigDto extends AbstractValueObject {
 
     public void setPrimaryKey(String primaryKey) {
         this.primaryKey = primaryKey;
+    }
+
+    public Integer getTopN() {
+        return topN;
+    }
+
+    public void setTopN(Integer topN) {
+        this.topN = topN;
     }
 }
