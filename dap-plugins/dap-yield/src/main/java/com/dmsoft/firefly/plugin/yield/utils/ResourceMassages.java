@@ -49,8 +49,8 @@ public class ResourceMassages {
 
     public static final String SPC_STATISTICAL_ERROR_EDIT_MESSAGE = "SPC_STATISTICAL_ERROR_EDIT_MESSAGE";
     public static final String RANGE_NUMBER_WARNING_MESSAGE = "RANGE_NUMBER_WARNING_MESSAGE";
-    public static final String SPC_CONFIG_ERROR_MESSAGE = "SPC_CONFIG_ERROR_MESSAGE";
-    public static final String UI_SPC_ANALYSIS_ITEM_EMPTY = "UI_SPC_ANALYSIS_ITEM_EMPTY";
+    public static final String YIELD_CONFIG_ERROR_MESSAGE = "YIELD_CONFIG_ERROR_MESSAGE";
+    public static final String UI_YIELD_ANALYSIS_ITEM_EMPTY = "UI_YIELD_ANALYSIS_ITEM_EMPTY";
     public static final String SPC_QUICK_SEARCH_MESSAGE = "SPC_QUICK_SEARCH_MESSAGE";
 
     public static final String OPEN_EXPORT_FOLDER = "OPEN_EXPORT_FOLDER";
