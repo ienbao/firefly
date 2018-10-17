@@ -37,7 +37,7 @@
                                         </GridPane.margin></TextFieldFilter>
                                 </children>
                             </GridPane>
-                            <TableView fx:id="statisticalResultTb" editable="true" prefHeight="365.0" prefWidth="435.0" style="-fx-border-width: 1 0 0 0;" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
+                            <TableView fx:id="viewDataTable" editable="true" prefHeight="365.0" prefWidth="435.0" style="-fx-border-width: 1 0 0 0;" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
                                 <!--<columns>-->
                                 <!--<TableColumn fx:id="checkBoxColumn" maxWidth="30.0" minWidth="30.0" prefWidth="30" resizable="false" sortable="false" />-->
                                 <!--</columns>-->

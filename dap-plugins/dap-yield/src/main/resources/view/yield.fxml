@@ -57,7 +57,7 @@
 
                             <AnchorPane prefHeight="200.0" prefWidth="1208.0">
                                 <children>
-                                    <fx:include fx:id="viewData" source="view_data.fxml" />
+                                    <!--<fx:include fx:id="viewData" source="view_data.fxml" />-->
                                 </children>
                             </AnchorPane>
 
