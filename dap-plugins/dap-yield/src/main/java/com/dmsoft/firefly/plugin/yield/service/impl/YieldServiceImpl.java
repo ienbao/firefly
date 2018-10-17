@@ -26,6 +26,11 @@ public class YieldServiceImpl implements YieldService {
 
     @Override
     public List<YieldViewDataDto> getViewData(SearchDataFrame searchDataFrame, SearchViewDataConditionDto searchViewDataConditionDto) {
+
+        logger.debug("Getting Yield result...");
+//        if (searchDataFrame == null || searchViewDataConditionDto == null ) {
+//            throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11002));
+//        }
         return null;
     }
 

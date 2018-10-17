@@ -6,8 +6,8 @@ public class ParamKeys {
     public static final String ROW_DATA_DTO_LIST = "rowDataDtoList";
     public static final String SEARCH_DATA_FRAME = "searchDataFrame";
     public static final String SEARCH_CONDITION_DTO_LIST = "searchConditionDtoList";
-    public static final String SPC_ANALYSIS_CONFIG_DTO = "spcAnalysisConfigDto";
-    public static final String SPC_SETTING_DTO = "spcSettingDto";
+    public static final String YIELD_ANALYSIS_CONFIG_DTO = "spcAnalysisConfigDto";
+    public static final String YIELD_SETTING_DTO = "spcSettingDto";
     public static final String SPC_CHART_DTO_LIST = "spcChartDtoList";
     public static final String SPC_STATISTICAL_RESULT_ALARM_DTO_LIST = "spcStatisticalResultAlarmDtoList";
     public static final String ANALYSIS_RESULT_MAP = "analysisResultMap";
@@ -38,7 +38,7 @@ public class ParamKeys {
     public static final String SPC_REFRESH_ANALYSIS_JOB_PIPELINE = "spcRefreshAnalysisJobPipeline";
     public static final String SPC_REFRESH_CHART_JOB_PIPELINE = "spcRefreshChartJobPipeline";
     public static final String SPC_REFRESH_CHART_EXPORT_JOB_PIPELINE = "spcRefreshChartExportJobPipeline";
-    public static final String Yield_RESET_JOB_PIPELINE = "yieldResetJobPipeline";
+    public static final String YIELD_RESET_JOB_PIPELINE = "yieldResetJobPipeline";
     public static final String SPC_REFRESH_STATISTICAL_JOB_PIPELINE = "spcRefreshStatisticalJobPipeline";
     public static final String FIND_SPC_SETTING_DATA_JOP_PIPELINE = "findSpcSettingDataJobPipeline";
     public static final String SAVE_SPC_SETTING_DATA_JOP_PIPELINE = "saveSpcSettingDataJobPipeline";

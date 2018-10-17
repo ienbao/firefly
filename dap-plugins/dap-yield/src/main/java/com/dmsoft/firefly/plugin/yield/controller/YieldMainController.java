@@ -2,11 +2,16 @@ package com.dmsoft.firefly.plugin.yield.controller;
 
 import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.*;
+import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
+import com.dmsoft.firefly.plugin.yield.dto.YieldAnalysisConfigDto;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
+import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
 import com.dmsoft.firefly.plugin.yield.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.job.core.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import javafx.scene.control.Button;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 
@@ -40,11 +46,11 @@ public class YieldMainController implements Initializable {
 //    @FXML
 //    private ChartResultController chartResultController;
 //    private SearchDataFrame dataFrame;
-//    private SpcAnalysisConfigDto analysisConfigDto;
-//    private List<SearchConditionDto> initSearchConditionDtoList;
-//    private SpcSettingDto spcSettingDto;
-//    private SpcSettingService spcSettingService = RuntimeContext.getBean(SpcSettingService.class);
-//    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    private YieldAnalysisConfigDto analysisConfigDto;
+    private List<SearchConditionDto> initSearchConditionDtoList;
+//      private YieldSettingDto spcSettingDto;
+    private YieldSettingService yieldSettingService = RuntimeContext.getBean(YieldSettingService.class);
+    private EnvService envService = RuntimeContext.getBean(EnvService.class);
 //    private List<String> lastViewDataRowKeyList;
 //    private List<String> unSelectRowKeyList = Lists.newArrayList();
 //
@@ -56,8 +62,8 @@ public class YieldMainController implements Initializable {
 //        this.statisticalResultController.init(this);
         this.viewDataController.init(this);
 //        this.chartResultController.init(this);
-//        this.initBtnIcon();
-//        this.initComponentEvent();
+        this.initBtnIcon();
+        this.initComponentEvent();
         this.setDisable(true);
     }
 
@@ -215,20 +221,20 @@ public class YieldMainController implements Initializable {
 //        viewDataController.setFocusRowData(rowKey);
 //    }
 
-//    private void initComponentEvent() {
-//        resetBtn.setOnAction(event -> getResetBtnEvent());
-//        printBtn.setOnAction(event -> getExportBtnEvent());
+    private void initComponentEvent() {
+        resetBtn.setOnAction(event -> getResetBtnEvent());
+        printBtn.setOnAction(event -> getExportBtnEvent());
 //        exportBtn.setOnAction(event -> getExportBtnEvent());
 //        chooseBtn.setOnAction(event -> getChooseBtnEvent());
-//    }
+    }
 
     @SuppressWarnings("unchecked")
     private void getResetBtnEvent() {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
-//        context.put(ParamKeys.SPC_SETTING_DTO, spcSettingDto);
-//        context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, initSearchConditionDtoList);
-//        context.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
+//        context.put(ParamKeys.YIELD_SETTING_DTO, spcSettingDto);
+          context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, initSearchConditionDtoList);
+          context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, analysisConfigDto);
 //        context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
@@ -250,7 +256,7 @@ public class YieldMainController implements Initializable {
                 context.interruptBeforeNextJobHandler();
             });
         }
-        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.Yield_RESET_JOB_PIPELINE);
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.YIELD_RESET_JOB_PIPELINE);
 //        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
 //            @Override
 //            public void doJob(JobContext context) {
@@ -277,22 +283,22 @@ public class YieldMainController implements Initializable {
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
     }
 
-//    private void getExportBtnEvent() {
-//        Pane root = null;
-//        try {
-//            FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML("view/spc_export.fxml");
-//            root = fxmlLoader.load();
-//            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("spcExport", YieldFxmlAndLanguageUtils.getString("SPC_EXPORT"), root, getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
-//            SpcLeftConfigDto leftConfigDto = spcItemController.getCurrentConfigData();
-//            ((SpcExportController) fxmlLoader.getController()).initSpcExportLeftConfig(leftConfigDto);
-//            stage.setResizable(false);
-//            stage.toFront();
-//            stage.show();
-//
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
+    private void getExportBtnEvent() {
+         Pane root = null;
+         try {
+             FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML("view/yield_export.fxml");
+             root = fxmlLoader.load();
+             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("yieldExport", YieldFxmlAndLanguageUtils.getString("YIELD_EXPORT"), root, getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
+//             SpcLeftConfigDto leftConfigDto = spcItemController.getCurrentConfigData();
+//             ((SpcExportController) fxmlLoader.getController()).initSpcExportLeftConfig(leftConfigDto);
+             stage.setResizable(false);
+             stage.toFront();
+             stage.show();
+
+         } catch (Exception ex) {
+             ex.printStackTrace();
+         }
+    }
 
 //    private void getChooseBtnEvent() {
 //        if (statisticalResultController.hasErrorEditCell()) {
@@ -359,17 +365,17 @@ public class YieldMainController implements Initializable {
 //        }
 //    }
 
-//    private void initBtnIcon() {
-//        resetBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_reset_normal.png")));
-//        printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_print_normal.png")));
-//        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_export_normal.png")));
-//        chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
-//        TooltipUtil.installNormalTooltip(resetBtn, SpcFxmlAndLanguageUtils.getString("SPC_RESET_BTN_TOOLTIP"));
-//        TooltipUtil.installNormalTooltip(printBtn, SpcFxmlAndLanguageUtils.getString("SPC_PRINT_BTN_TOOLTIP"));
-//        TooltipUtil.installNormalTooltip(exportBtn, SpcFxmlAndLanguageUtils.getString("SPC_EXPORT_BTN_TOOLTIP"));
-//        TooltipUtil.installNormalTooltip(chooseBtn, SpcFxmlAndLanguageUtils.getString("SPC_REFRESH_BTN_TOOLTIP"));
-//    }
-//
+    private void initBtnIcon() {
+        resetBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_reset_normal.png")));
+        printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_print_normal.png")));
+        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_export_normal.png")));
+        chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
+        TooltipUtil.installNormalTooltip(resetBtn, YieldFxmlAndLanguageUtils.getString("YIELD_RESET_BTN_TOOLTIP"));
+        TooltipUtil.installNormalTooltip(printBtn, YieldFxmlAndLanguageUtils.getString("YIELD_PRINT_BTN_TOOLTIP"));
+        TooltipUtil.installNormalTooltip(exportBtn, YieldFxmlAndLanguageUtils.getString("YIELD_EXPORT_BTN_TOOLTIP"));
+        TooltipUtil.installNormalTooltip(chooseBtn, YieldFxmlAndLanguageUtils.getString("YIELD_REFRESH_BTN_TOOLTIP"));
+    }
+
 //    public SearchDataFrame getDataFrame() {
 //        return dataFrame;
 //    }
