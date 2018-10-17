@@ -29,11 +29,11 @@ public class DAPStringUtils extends StringUtils {
      * @param str source string
      * @return true if it's numeric.
      */
-    public static boolean isNumeric(String str) {
-        if (isSpecialBlank(str)) {
+    public static boolean isNumeric(String str) {//检测变量是否为数字或数字字符串
+        if (isSpecialBlank(str)) {//判断是否为空白
             return false;
         }
-        Pattern pattern = Pattern.compile("-?[0-9]+(\\.?)[0-9]*");
+        Pattern pattern = Pattern.compile("-?[0-9]+(\\.?)[0-9]*");//正则表达式
         return checkPattern(str, pattern);
     }
 

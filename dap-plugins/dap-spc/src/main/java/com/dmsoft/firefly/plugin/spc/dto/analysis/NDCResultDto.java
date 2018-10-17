@@ -13,8 +13,8 @@ public class NDCResultDto extends AbstractValueObject {
     private Double[] curveX;
     private Double[] curveY;
     private Double[] cls;
-    private Double usl;
-    private Double lsl;
+    private Double usl;//upper spec limit(规格上线)
+    private Double lsl;//lower spec limit(规格线下)
 
     public Double[] getHistX() {
         return histX;

@@ -3,6 +3,7 @@ package com.dmsoft.firefly.plugin.yield;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.yield.controller.YieldSettingController;
+import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.yield.service.impl.YieldServiceImpl;
 import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
 import com.dmsoft.firefly.plugin.yield.service.impl.YieldSettingServiceImpl;
@@ -10,6 +11,8 @@ import com.dmsoft.firefly.plugin.yield.utils.StateKey;
 import com.dmsoft.firefly.plugin.yield.utils.ViewResource;
 import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.job.core.JobFactory;
+import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.plugin.Plugin;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.ui.IMainBodyPane;
@@ -94,13 +97,14 @@ public class YieldPlugin extends Plugin {
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.YieldPlugin",
                 MenuBuilder.MenuType.MENU_ITEM, "Spc Settings", MenuBuilder.MENU_PREFERENCE).addMenu(menuItem));
 
-//        JobManager jobManager = RuntimeContext.getBean(JobManager.class);
-//        JobFactory jobFactory = RuntimeContext.getBean(JobFactory.class);
-//        jobManager.initializeJob(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE, jobFactory.createJobPipeLine()
-//                .addLast(new FindSpcSettingDataHandler())
+        JobManager jobManager = RuntimeContext.getBean(JobManager.class);
+        JobFactory jobFactory = RuntimeContext.getBean(JobFactory.class);
+        jobManager.initializeJob(ParamKeys.YIELD_ANALYSIS_JOB_PIPELINE, jobFactory.createJobPipeLine()
+//                .addLast(new FindYieldSettingDataHandler())
 //                .addLast(new FindTestDataHandler().setWeight(D100))
 //                .addLast(new DataFrameHandler())
-//                .addLast(new GetSpcStatsResultHandler().setWeight(D100)));
+//                .addLast(new GetYieldStatsResultHandler().setWeight(D100)));
+        );
 //        jobManager.initializeJob(ParamKeys.SPC_ANALYSIS_EXPORT_JOB_PIPELINE, jobFactory.createJobPipeLine()
 //                .addLast(new FindSpcSettingDataHandler())
 //                .addLast(new FindTestDataHandler().setWeight(D100))

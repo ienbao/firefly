@@ -12,9 +12,9 @@ import java.util.List;
  * Created by Ethan.Yang on 2018/2/6.
  */
 public class SpcChartDto extends AbstractValueObject {
-    private String key;
-    private String itemName;
-    private String condition;
+    private String key;             //key值
+    private String itemName;        //item名称
+    private String condition;       //状况
     private SpcChartResultDto resultDto;
     private List<String> analyzedRowKeys;
 
