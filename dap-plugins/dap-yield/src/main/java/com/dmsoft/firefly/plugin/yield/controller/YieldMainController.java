@@ -17,9 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javafx.scene.control.Button;
 
-import java.awt.*;
 import java.net.URL;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 
@@ -37,8 +35,8 @@ public class YieldMainController implements Initializable {
     private YieldItemController yieldItemController;
 //    @FXML
 //    private StatisticalResultController statisticalResultController;
-//    @FXML
-//    private ViewDataController viewDataController;
+    @FXML
+    private ViewDataController viewDataController;
 //    @FXML
 //    private ChartResultController chartResultController;
 //    private SearchDataFrame dataFrame;
@@ -54,14 +52,15 @@ public class YieldMainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        this.spcItemController.init(this);
+        this.yieldItemController.init(this);
 //        this.statisticalResultController.init(this);
-//        this.viewDataController.init(this);
+        this.viewDataController.init(this);
 //        this.chartResultController.init(this);
 //        this.initBtnIcon();
 //        this.initComponentEvent();
         this.setDisable(true);
     }
+
 
     /**
      * set disable

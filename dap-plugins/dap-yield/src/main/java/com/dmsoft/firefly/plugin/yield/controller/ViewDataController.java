@@ -2,7 +2,9 @@ package com.dmsoft.firefly.plugin.yield.controller;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.plugin.yield.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.yield.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.yield.utils.ViewResource;
 import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
@@ -31,7 +33,7 @@ public class ViewDataController implements Initializable {
     @FXML
     private TableView<String> viewDataTable;
 
-//    private SpcMainController spcMainController;
+    private YieldMainController yieldMainController;
 //
 //    private ChooseDialogController chooseDialogController;
 //
@@ -45,12 +47,15 @@ public class ViewDataController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         filterTestItemTf.getTextField().setPromptText(YieldFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
-        this.buildChooseColumnDialog();
+        //this.buildChooseColumnDialog();
 //        this.initStatisticalResultTable();
-//        this.initBtnIcon();
+        this.initBtnIcon();
 //        this.initComponentEvent();
-        chooseColumnBtn.setDisable(true);
         viewDataTable.getColumns().clear();
+    }
+
+    public void init(YieldMainController yieldMainController) {
+        this.yieldMainController = yieldMainController;
     }
 
 
@@ -69,5 +74,10 @@ public class ViewDataController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void initBtnIcon() {
+        chooseColumnBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
+//        TooltipUtil.installNormalTooltip(chooseColumnBtn, SpcFxmlAndLanguageUtils.getString("CHOOSE_STATISTICAL_RESULT"));
     }
 }
