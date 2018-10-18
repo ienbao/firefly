@@ -18,6 +18,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.sun.javafx.scene.control.skin.TableHeaderRow?>
 <VBox fx:id="testItemPane" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcItemController">
    <children>
       <SplitPane fx:id="split" orientation="VERTICAL" prefHeight="600.0" style="-fx-border-width: 0 0 0 0;" VBox.vgrow="ALWAYS">
@@ -33,6 +34,9 @@
                                     <TableColumn fx:id="select" maxWidth="32.0" minWidth="32.0" prefWidth="32.0" sortType="DESCENDING" sortable="false" />
                                     <TableColumn fx:id="item" maxWidth="1.7976931348623157E308" minWidth="148.0" prefWidth="148.0" />
                                  </columns>
+                                 <rowFactory>
+
+                                 </rowFactory>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
