@@ -847,8 +847,8 @@ public class YieldItemController implements Initializable {
                 for (String condition : conditionList) {
                     SearchConditionDto searchConditionDto = new SearchConditionDto();
                     searchConditionDto.setItemName(testItemWithTypeDto.getTestItemName());
-                    searchConditionDto.setUslOrPass(testItemWithTypeDto.getLsl());
-                    searchConditionDto.setLslOrFail(testItemWithTypeDto.getUsl());
+                    searchConditionDto.setUslOrPass(testItemWithTypeDto.getUsl());
+                    searchConditionDto.setLslOrFail(testItemWithTypeDto.getLsl());
                     searchConditionDto.setTestItemType(testItemWithTypeDto.getTestItemType());
                     searchConditionDto.setCondition(condition);
                     searchConditionDtoList.add(searchConditionDto);
