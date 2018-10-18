@@ -1,0 +1,215 @@
+.mytext_ok {
+    -fx-background-color: Red;
+}
+
+#viewDataTable {
+    -fx-skin: "com.dmsoft.firefly.gui.components.skin.ExpandableTableViewSkin";
+}
+
+#viewDataTable .column-header.filter-header .button {
+    -fx-min-width: 17;
+    -fx-min-height: 21;
+    -fx-border-width: 0 0 0 1;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+#viewDataTable .column-header.filter-header:hover .filter-normal {
+    -fx-background-image: url('/images/btn_arrow_down.png');
+}
+
+#viewDataTable .column-header.filter-header .filter-active {
+    -fx-background-image: url('/images/btn_filter_normal.png');
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 2 2;
+}
+
+#viewDataTable .column-header.filter-header:hover .button {
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 2 2;
+    -fx-background-color: #e5f4ff;
+    -fx-border-color: #dcdcdc;
+}
+
+#viewDataTable .column-header.filter-header:hover .button:hover {
+    -fx-background-color: #ceeaff;
+}
+
+#viewDataTable .column-header.filter-header .button:armed {
+    -fx-background-color: #c3d0d9;
+}
+
+#viewDataTable .filter-header .label {
+    -fx-content-display: right;
+    -fx-padding: 0 -4 0 10;
+    -fx-skin: "com.dmsoft.firefly.gui.components.skin.FilterTableHeaderLabel";
+}
+
+.column-header.filter-header .button {
+    -fx-min-width: 17;
+    -fx-min-height: 21;
+    -fx-pref-height: 21;
+    -fx-border-width: 0 0 0 1;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.column-header.filter-header:hover .filter-normal {
+    -fx-background-image: url('/images/btn_arrow_down.png');
+}
+
+.column-header.filter-header .filter-active {
+    -fx-background-image: url('/images/btn_filter_normal.png');
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 2 2;
+}
+
+.column-header.filter-header:hover .button {
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 2 2;
+    -fx-background-color: #e5f4ff;
+    -fx-border-color: #dcdcdc;
+}
+
+.column-header.filter-header:hover .button:hover {
+    -fx-background-color: #ceeaff;
+}
+
+.column-header.filter-header .button:armed {
+    -fx-background-color: #c3d0d9;
+}
+
+.filter-header .label {
+    -fx-content-display: right;
+    -fx-padding: 0 -4 0 10;
+    -fx-skin: "com.dmsoft.firefly.gui.components.skin.FilterTableHeaderLabel";
+}
+
+.table-filter-btn {
+    -fx-min-height: 21;
+    -fx-min-width: 21;
+    -fx-pref-height: 21;
+    -fx-pref-width: 21;
+    -fx-border-width: 1;
+    -fx-border-color: transparent;
+    -fx-background-position: center;
+    -fx-background-color: null;
+    -fx-background-repeat: no-repeat;
+}
+
+.table-filter-btn:hover {
+    -fx-border-color: null;
+    -fx-background-color: null;
+}
+
+.table-filter-btn:pressed {
+    -fx-background-color: null;
+}
+
+.table-filter-btn:focused, .btn-icon:focused:hover {
+    -fx-border-color: COLOR_GRAY_66;
+    -fx-border-style: dotted;
+}
+
+.table-view .column-header .label .label {
+    -fx-padding: 0 0 0 0;
+    -fx-font-weight: normal;
+    -fx-alignment: center-left;
+}
+
+/**
+table
+**/
+.cell .edited {
+    -fx-background-color: yellow;
+    -fx-font-weight: bold;
+}
+
+/*
+*Spc setting
+*/
+.alarm-excellent {
+    -fx-alignment: center;
+    -fx-pref-width: 22;
+    -fx-pref-height: 22;
+    -fx-text-fill: white;
+    -fx-background-color: #4ebe11;
+}
+
+.alarm-good {
+    -fx-alignment: center;
+    -fx-pref-width: 22;
+    -fx-pref-height: 22;
+    -fx-text-fill: white;
+    -fx-background-color: #27b5b3;
+}
+
+.alarm-acceptable {
+    -fx-alignment: center;
+    -fx-pref-width: 22;
+    -fx-pref-height: 22;
+    -fx-text-fill: white;
+    -fx-background-color: #487cf4;
+}
+
+.alarm-rectification {
+    -fx-alignment: center;
+    -fx-pref-width: 22;
+    -fx-pref-height: 22;
+    -fx-text-fill: white;
+    -fx-background-color: #f38400;
+}
+
+.alarm-bad {
+    -fx-alignment: center;
+    -fx-pref-width: 22;
+    -fx-pref-height: 22;
+    -fx-text-fill: white;
+    -fx-background-color: #ea2028;
+}
+
+#customAlarmTable .column-header-background {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+}
+
+
+
+.btn-timer {
+    -fx-text-fill: COLOR_LIGHT_FF;
+    -fx-highlight-fill: #5eb511;
+    -fx-border-color: #5eb511;
+    -fx-background-color: #5eb511;
+    -fx-border-insets: 1;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.btn-timer:hover {
+    -fx-highlight-fill: #5eb511;
+    -fx-border-color: #5eb511;
+    -fx-background-color: #5eb511;
+}
+
+.btn-timer:pressed {
+    -fx-highlight-fill: #5eb511;
+    -fx-border-color: #5eb511;
+    -fx-background-color: #5eb511;
+}
+
+.btn-timer:focused {
+    -fx-border-color: COLOR_LIGHT_FF;
+    -fx-border-style: dotted;
+    -fx-border-insets: 1;
+}
+
+.btn-timer:focused:hover {
+    -fx-border-color: COLOR_LIGHT_FF;
+    -fx-border-style: dotted;
+    -fx-border-insets: 1;
+}
