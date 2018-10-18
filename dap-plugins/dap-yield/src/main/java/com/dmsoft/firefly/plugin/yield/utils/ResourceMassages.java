@@ -23,8 +23,8 @@ public class ResourceMassages {
     public static final String TEST_ITEMS_WITH_USL_LSL = "TEST_ITEMS_WITH_USL_LSL";
     public static final String STICKY_ON_TOP = "STICKY_ON_TOP";
     public static final String SPECIFICATION_SETTING = "SPECIFICATION_SETTING";
-    public static final String SPC_CONFIG_IMPORT = "SPC_CONFIG_IMPORT";
-    public static final String SPC_CONFIG_EXPORT = "SPC_CONFIG_EXPORT";
+    public static final String YIELD_CONFIG_IMPORT = "YIELD_CONFIG_IMPORT";
+    public static final String YIELD_CONFIG_EXPORT = "YIELD_CONFIG_EXPORT";
     public static final String REMOVE_FROM_TOP = "REMOVE_FROM_TOP";
 
     public static final String TIMER_MIN = "TIMER_MIN";

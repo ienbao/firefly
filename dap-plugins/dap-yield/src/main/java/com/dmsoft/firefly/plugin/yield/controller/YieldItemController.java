@@ -9,10 +9,12 @@ import com.dmsoft.firefly.gui.components.window.WindowPane;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldAnalysisConfigDto;
+import com.dmsoft.firefly.plugin.yield.dto.YieldLeftConfigDto;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.yield.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.yield.service.impl.YieldLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.yield.utils.ResourceMassages;
+import com.dmsoft.firefly.plugin.yield.utils.UIConstant;
 import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
@@ -280,26 +282,26 @@ public class YieldItemController implements Initializable {
     /**
      * method to get current config
      *
-     * @return spc left config dto
+     * @return yield left config dto
      */
-//    public SpcLeftConfigDto getCurrentConfigData() {
-//        SpcLeftConfigDto leftConfigDto = new SpcLeftConfigDto();
-//        leftConfigDto.setItems(getSelectedItem());
-//        leftConfigDto.setBasicSearchs(searchTab.getBasicSearch());
-//        if (searchTab.getAdvanceText().getText() != null) {
-//            leftConfigDto.setAdvanceSearch(searchTab.getAdvanceText().getText());
-//        }
-//        leftConfigDto.setNdNumber(ndGroup.getText());
-//        leftConfigDto.setSubGroup(subGroup.getText());
-//        if (searchTab.getGroup1().getValue() != null) {
-//            leftConfigDto.setAutoGroup1(searchTab.getGroup1().getValue());
-//        }
-//        if (searchTab.getGroup2().getValue() != null) {
-//            leftConfigDto.setAutoGroup2(searchTab.getGroup2().getValue());
-//        }
-//        return leftConfigDto;
-//    }
-//
+    public YieldLeftConfigDto getCurrentConfigData() {
+        YieldLeftConfigDto leftConfigDto = new YieldLeftConfigDto();
+        leftConfigDto.setItems(getSelectedItem());
+        leftConfigDto.setBasicSearchs(searchTab.getBasicSearch());
+        if (searchTab.getAdvanceText().getText() != null) {
+            leftConfigDto.setAdvanceSearch(searchTab.getAdvanceText().getText());
+        }
+        leftConfigDto.setPrimaryKey(configComboBox.getValue());
+//        leftConfigDto.setTopN();
+        if (searchTab.getGroup1().getValue() != null) {
+            leftConfigDto.setAutoGroup1(searchTab.getGroup1().getValue());
+        }
+        if (searchTab.getGroup2().getValue() != null) {
+            leftConfigDto.setAutoGroup2(searchTab.getGroup2().getValue());
+        }
+        return leftConfigDto;
+    }
+
     private void initBtnIcon() {
         analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
         TooltipUtil.installNormalTooltip(analysisBtn, YieldFxmlAndLanguageUtils.getString(ResourceMassages.ANALYSIS));
@@ -367,8 +369,8 @@ public class YieldItemController implements Initializable {
 
     private void initComponentEvent() {
         analysisBtn.setOnAction(event -> getAnalysisBtnEvent());
-//        importBtn.setOnAction(event -> importLeftConfig());
-//        exportBtn.setOnAction(event -> exportLeftConfig());
+        importBtn.setOnAction(event -> importLeftConfig());
+        exportBtn.setOnAction(event -> exportLeftConfig());
         enabledTimerCheckBox.selectedProperty().addListener((ov, v1, v2) -> {
             isTimer = v2;
             if (!isTimer && startTimer) {
@@ -710,62 +712,62 @@ public class YieldItemController implements Initializable {
         return false;
     }
 
-//    private void importLeftConfig() {
-//        String str = System.getProperty("user.home");
+    private void importLeftConfig() {
+        String str = System.getProperty("user.home");
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(YieldFxmlAndLanguageUtils.getString(ResourceMassages.YIELD_CONFIG_IMPORT));
+        fileChooser.setInitialDirectory(new File(str));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JSON", "*.json")
+        );
+        File file = fileChooser.showOpenDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
+
+        if (file != null) {
+            YieldLeftConfigDto yieldLeftConfigDto = leftConfigService.importSpcConfig(file);
+            if (yieldLeftConfigDto != null) {
+                clearLeftConfig();
+                if (yieldLeftConfigDto.getItems() != null && yieldLeftConfigDto.getItems().size() > 0) {
+                    items.forEach(testItem -> {
+                        if (yieldLeftConfigDto.getItems().contains(testItem.getItem())) {
+                            testItem.getSelector().setValue(true);
+                        }
+                    });
+                }
+                if (yieldLeftConfigDto.getBasicSearchs() != null && yieldLeftConfigDto.getBasicSearchs().size() > 0) {
+                    searchTab.setBasicSearch(yieldLeftConfigDto.getBasicSearchs());
+                }
+                configComboBox.setValue(yieldLeftConfigDto.getPrimaryKey());
+//TODO set topN
+                searchTab.getAdvanceText().setText(yieldLeftConfigDto.getAdvanceSearch());
+                searchTab.getGroup1().setValue(yieldLeftConfigDto.getAutoGroup1());
+                searchTab.getGroup2().setValue(yieldLeftConfigDto.getAutoGroup2());
+            } else {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        YieldFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
+            }
 //
-//        FileChooser fileChooser = new FileChooser();
-//        fileChooser.setTitle(SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_CONFIG_IMPORT));
-//        fileChooser.setInitialDirectory(new File(str));
-//        fileChooser.getExtensionFilters().addAll(
-//                new FileChooser.ExtensionFilter("JSON", "*.json")
-//        );
-//        File file = fileChooser.showOpenDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
+        }
+    }
+
+    private void exportLeftConfig() {
+        YieldLeftConfigDto leftConfigDto = this.getCurrentConfigData();
+
+        String str = System.getProperty("user.home");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(YieldFxmlAndLanguageUtils.getString(ResourceMassages.YIELD_CONFIG_EXPORT));
+        fileChooser.setInitialDirectory(new File(str));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JSON", "*.json")
+        );
+        File file = fileChooser.showSaveDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
 //
-//        if (file != null) {
-//            SpcLeftConfigDto spcLeftConfigDto = leftConfigService.importSpcConfig(file);
-//            if (spcLeftConfigDto != null) {
-//                clearLeftConfig();
-//                if (spcLeftConfigDto.getItems() != null && spcLeftConfigDto.getItems().size() > 0) {
-//                    items.forEach(testItem -> {
-//                        if (spcLeftConfigDto.getItems().contains(testItem.getItem())) {
-//                            testItem.getSelector().setValue(true);
-//                        }
-//                    });
-//                }
-//                if (spcLeftConfigDto.getBasicSearchs() != null && spcLeftConfigDto.getBasicSearchs().size() > 0) {
-//                    searchTab.setBasicSearch(spcLeftConfigDto.getBasicSearchs());
-//                }
-//                ndGroup.setText(spcLeftConfigDto.getNdNumber());
-//                subGroup.setText(spcLeftConfigDto.getSubGroup());
-//                searchTab.getAdvanceText().setText(spcLeftConfigDto.getAdvanceSearch());
-//                searchTab.getGroup1().setValue(spcLeftConfigDto.getAutoGroup1());
-//                searchTab.getGroup2().setValue(spcLeftConfigDto.getAutoGroup2());
-//            } else {
-//                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-//                        SpcFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-//                        SpcFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
-//            }
-//
-//        }
-//    }
-//
-//    private void exportLeftConfig() {
-//        SpcLeftConfigDto leftConfigDto = this.getCurrentConfigData();
-//
-//        String str = System.getProperty("user.home");
-//        FileChooser fileChooser = new FileChooser();
-//        fileChooser.setTitle(SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_CONFIG_EXPORT));
-//        fileChooser.setInitialDirectory(new File(str));
-//        fileChooser.getExtensionFilters().addAll(
-//                new FileChooser.ExtensionFilter("JSON", "*.json")
-//        );
-//        File file = fileChooser.showSaveDialog(StageMap.getStage(ResourceMassages.PLATFORM_STAGE_MAIN));
-//
-//        if (file != null) {
-//            leftConfigService.exportSpcConfig(leftConfigDto, file);
-//        }
-//    }
-//
+        if (file != null) {
+            leftConfigService.exportYieldConfig(leftConfigDto, file);
+        }
+    }
+
     private void clearLeftConfig() {
         box.setSelected(false);
         for (ItemTableModel model : items) {
@@ -787,6 +789,9 @@ public class YieldItemController implements Initializable {
         }
         List<String> conditionList = searchTab.getSearch();
         List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
+        SearchConditionDto searchPrimaryKey = new SearchConditionDto();
+        searchPrimaryKey.setItemName(configComboBox.getValue());
+        searchConditionDtoList.add(searchPrimaryKey);
         int i = 0;
         for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtoList) {
             if (conditionList != null && conditionList.size() != 0) {
