@@ -5,6 +5,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableCell?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -38,20 +41,44 @@
                         <GridPane>
                             <GridPane>
                                 <GridPane style="-fx-border-color: red">
-                                    <TabPane prefHeight="200.0" prefWidth="250.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="0">
+                                    <TabPane prefHeight="200.0" prefWidth="400.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="0">
                                         <tabs>
                                             <Tab fx:id="boxTab" closable="false">
                                                 <graphic>
                                                     <Group>
-                                                        <children>
-                                                            <Label styleClass="tab-graphic-label" text="Total Processes" textAlignment="CENTER" />
-                                                        </children>
-                                                        <VBox style="-fx-border-color: yellow; -fx-max-width: 100;-fx-max-height: 100" >
 
-                                                        </VBox>
+                                                                <children>
+                                                                    <Label styleClass="tab-graphic-label" text="Total Processes" textAlignment="CENTER" />
+                                                                </children>
+
                                                     </Group>
                                                 </graphic>
                                                 <content>
+                                                    <GridPane>
+                                                        <VBox fx:id="BarChart" minHeight="170.0" minWidth="150.0" GridPane.columnIndex="0">
+
+                                                        </VBox>
+                                                        <VBox GridPane.columnIndex="1">
+                                                            <TableView fx:id="" centerShape="false" editable="true" fixedCellSize="25.0" minHeight="170.0" minWidth="150.0" prefHeight="200.0" prefWidth="150.0" scaleShape="false" style="-fx-border-width: 1 0 0 0;">
+                                                                <columns>
+                                                                    <TableColumn fx:id="select" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" sortType="DESCENDING" sortable="false" text="123" />
+                                                                    <TableColumn fx:id="item" maxWidth="1.7976931348623157E308" minWidth="75.0" prefWidth="75.0" text="456" />
+                                                                </columns>
+                                                                <TableCell>12</TableCell>
+                                                   <columnResizePolicy>
+                                                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                                   </columnResizePolicy>
+
+                                                            </TableView>
+                                                        </VBox>
+                                                        <columnConstraints>
+                                                            <ColumnConstraints />
+                                                            <ColumnConstraints />
+                                                        </columnConstraints>
+                                                        <rowConstraints>
+                                                            <RowConstraints />
+                                                        </rowConstraints>
+                                                    </GridPane>
                                                 </content>
                                             </Tab>
                                         </tabs>
@@ -59,16 +86,14 @@
                                             <Insets />
                                         </GridPane.margin>
                                     </TabPane>
-
-
                                       <columnConstraints>
-                                         <ColumnConstraints  />
-
+                                         <ColumnConstraints />
                                       </columnConstraints>
                                       <rowConstraints>
                                          <RowConstraints />
                                       </rowConstraints>
                                 </GridPane>
+
                                 <TabPane prefHeight="214.0" prefWidth="368.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="1">
                                     <tabs>
                                         <Tab fx:id="ndTab" closable="false">
