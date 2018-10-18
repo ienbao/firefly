@@ -7,6 +7,9 @@ import com.dmsoft.firefly.gui.components.utils.*;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowPane;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
+import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
+import com.dmsoft.firefly.plugin.yield.dto.YieldAnalysisConfigDto;
+import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.yield.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.yield.service.impl.YieldLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.yield.utils.ResourceMassages;
@@ -76,10 +79,7 @@ public class YieldItemController implements Initializable {
     private TableColumn<ItemTableModel, TestItemWithTypeDto> item;
     @FXML
     private TableView<ItemTableModel> itemTable;
-    @FXML
-    private TextField subGroup;
-    @FXML
-    private TextField ndGroup;
+
     @FXML
     private SplitPane split;
     private SearchTab searchTab;
@@ -126,11 +126,7 @@ public class YieldItemController implements Initializable {
         split.getItems().add(searchTab);
         itemFilter.getTextField().setPromptText(YieldFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) -> {
-            if (isFilterUslOrLsl) {
-                filteredList.setPredicate(this::isFilterAndHasUslOrLsl);
-            } else {
                 filteredList.setPredicate(this::isFilterAndAll);
-            }
         });
 
         // test item table init
@@ -149,20 +145,14 @@ public class YieldItemController implements Initializable {
             tableRow.setContextMenu(createTableRightMenu());
             return tableRow;
         });
-//        itemTable.setContextMenu(createTableRightMenu());
-
         // select column in test item table
         box = new CheckBox();
         box.setOnAction(event -> {
             if (itemTable != null && itemTable.getItems() != null) {
                 for (ItemTableModel model : itemTable.getItems()) {
-                    if (isFilterUslOrLsl) {
-                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
-                            model.getSelector().setValue(box.isSelected());
-                        }
-                    } else {
+
                         model.getSelector().setValue(box.isSelected());
-                    }
+
                 }
             }
         });
@@ -192,17 +182,7 @@ public class YieldItemController implements Initializable {
                 };
             }
         });
-
-        // test item column in test item table
-        Button is = new Button();
-        is.setPrefSize(22, 22);
-        is.setMinSize(22, 22);
-        is.setMaxSize(22, 22);
-//        is.setOnMousePressed(event -> createPopMenu(is, event));
-        is.getStyleClass().add("filter-normal");
-
-//        item.setText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
-        item.setGraphic(is);
+        item.setText(YieldFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
         item.getStyleClass().add("filter-header");
         item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
         item.setCellFactory(new Callback<TableColumn<ItemTableModel, TestItemWithTypeDto>, TableCell<ItemTableModel, TestItemWithTypeDto>>() {
@@ -229,9 +209,6 @@ public class YieldItemController implements Initializable {
                     }
                 };
             }
-        });
-        item.widthProperty().addListener((ov, w1, w2) -> {
-            Platform.runLater(() -> is.relocate(w2.doubleValue() - 21, 0));
         });
         item.setComparator((o1, o2) -> {
             boolean o1OnTop = stickyOnTopItems.contains(o1.getTestItemName());
@@ -341,36 +318,6 @@ public class YieldItemController implements Initializable {
         timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
         timeTab.setStyle("-fx-padding: 0 5 0 5");
         timeTab.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("SPC_TIMER_SETTING")));
-    }
-
-    private ContextMenu createPopMenu(Button is, MouseEvent e) {
-        if (pop == null) {
-            pop = new ContextMenu();
-            RadioMenuItem all = new RadioMenuItem(YieldFxmlAndLanguageUtils.getString(ResourceMassages.ALL_TEST_ITEMS));
-            all.setOnAction(event -> {
-                filteredList.setPredicate(this::isFilterAndAll);
-                is.getStyleClass().remove("filter-active");
-                is.getStyleClass().add("filter-normal");
-                is.setGraphic(null);
-                isFilterUslOrLsl = false;
-            });
-            RadioMenuItem show = new RadioMenuItem(YieldFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS_WITH_USL_LSL));
-            show.setOnAction(event -> {
-                filteredList.setPredicate(this::isFilterAndHasUslOrLsl);
-                is.getStyleClass().remove("filter-normal");
-                is.getStyleClass().add("filter-active");
-//                is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
-                isFilterUslOrLsl = true;
-            });
-            all.setSelected(true);
-            ToggleGroup toggleGroup = new ToggleGroup();
-            all.setToggleGroup(toggleGroup);
-            show.setToggleGroup(toggleGroup);
-            pop.getItems().addAll(all, show);
-        }
-        Bounds bounds = is.localToScreen(is.getBoundsInLocal());
-        pop.show(is, bounds.getMinX(), bounds.getMinY() + 22);
-        return pop;
     }
 
     private ContextMenu createTableRightMenu() {
@@ -585,14 +532,14 @@ public class YieldItemController implements Initializable {
         if (isConfigError()) {
             RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
                     YieldFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER),
-                    YieldFxmlAndLanguageUtils.getString(ResourceMassages.SPC_CONFIG_ERROR_MESSAGE));
+                    YieldFxmlAndLanguageUtils.getString(ResourceMassages.YIELD_CONFIG_ERROR_MESSAGE));
             return false;
         }
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
         if (selectedItemDto.size() == 0) {
             RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
                     YieldFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER),
-                    YieldFxmlAndLanguageUtils.getString(ResourceMassages.UI_SPC_ANALYSIS_ITEM_EMPTY));
+                    YieldFxmlAndLanguageUtils.getString(ResourceMassages.UI_YIELD_ANALYSIS_ITEM_EMPTY));
             return false;
         }
         return searchTab.verifySearchTextArea();
@@ -602,18 +549,18 @@ public class YieldItemController implements Initializable {
     private void normalAnalysisEvent(boolean isTimer) {
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
 //        yieldMainController.clearAnalysisData();
-//        List<String> projectNameList = envService.findActivatedProjectName();
-//        List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
-//        List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(selectedItemDto);
-//        SpcAnalysisConfigDto spcAnalysisConfigDto = this.buildSpcAnalysisConfigData();
-//        this.updateSpcConfigPreference(spcAnalysisConfigDto);
+        List<String> projectNameList = envService.findActivatedProjectName();
+        List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
+        List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(selectedItemDto);
+        YieldAnalysisConfigDto yieldAnalysisConfigDto = this.buildYieldAnalysisConfigData();
+        this.updateYieldConfigPreference(yieldAnalysisConfigDto);
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         windowProgressTipController.setAutoHide(false);
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
-//        context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
-//        context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
-//        context.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
-//        context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+        context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
+        context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+        context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, yieldAnalysisConfigDto);
+        context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
             windowProgressTipController.setCancelingText();
@@ -633,10 +580,10 @@ public class YieldItemController implements Initializable {
                 windowProgressTipController.setCancelingText();
             });
         }
-//        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE);
-//        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
-//            @Override
-//            public void doJob(JobContext context) {
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.YIELD_ANALYSIS_JOB_PIPELINE);
+        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
 //                yieldMainController.setSpcSettingDto(context.getParam(ParamKeys.SPC_SETTING_DTO, SpcSettingDto.class));
 //                yieldMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
 //                yieldMainController.setInitSearchConditionDtoList(searchConditionDtoList);
@@ -648,25 +595,25 @@ public class YieldItemController implements Initializable {
 //                yieldMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList, null, isTimer);
 //                yieldMainController.setDataFrame(context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class));
 //                windowProgressTipController.closeDialog();
-//                yieldMainController.setDisable(false);
-//                logger.info("Spc analysis finish.");
-//            }
-//        });
-//        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
-//            @Override
-//            public void doJob(JobContext context) {
-//                logger.error(context.getError().getMessage());
-//                windowProgressTipController.updateFailProgress(context.getError().toString());
-//            }
-//        });
-//        jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
-//            @Override
-//            public void doJob(JobContext context) {
-//                windowProgressTipController.closeDialog();
-//            }
-//        });
-//        logger.info("Start analysis Spc.");
-//        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+                yieldMainController.setDisable(false);
+                logger.info("Yield analysis finish.");
+            }
+        });
+        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                logger.error(context.getError().getMessage());
+                windowProgressTipController.updateFailProgress(context.getError().toString());
+            }
+        });
+        jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                windowProgressTipController.closeDialog();
+            }
+        });
+        logger.info("Start analysis Yield.");
+        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
     }
 
     private List<String> getSelectedItem() {
@@ -757,7 +704,7 @@ public class YieldItemController implements Initializable {
     }
 
     private boolean isConfigError() {
-        if (subGroup.getStyleClass().contains("text-field-error") || ndGroup.getStyleClass().contains("text-field-error")) {
+        if (!configComboBox.getValue().equals("Serial Number")) {
             return true;
         }
         return false;
@@ -824,25 +771,59 @@ public class YieldItemController implements Initializable {
         for (ItemTableModel model : items) {
             model.getSelector().setValue(false);
         }
-        subGroup.setText(null);
-        ndGroup.setText(null);
         searchTab.clearSearchTab();
     }
-//
-//
-//
-//    private List<TestItemWithTypeDto> buildSelectTestItemWithTypeData(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
-//        List<TestItemWithTypeDto> itemWithTypeDtoList = Lists.newArrayList();
-//        itemWithTypeDtoList.addAll(testItemWithTypeDtoList);
-//        List<String> conditionTestItemList = getConditionTestItem();
-//        if (conditionTestItemList != null) {
-//            for (String testItem : conditionTestItemList) {
-//                TestItemWithTypeDto testItemWithTypeDto = envService.findTestItemNameByItemName(testItem);
-//                itemWithTypeDtoList.add(testItemWithTypeDto);
-//            }
-//        }
-//        return itemWithTypeDtoList;
-//    }
+
+    private YieldAnalysisConfigDto buildYieldAnalysisConfigData() {
+        YieldAnalysisConfigDto yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
+        yieldAnalysisConfigDto.setPrimaryKey(configComboBox.getValue());
+//        yieldAnalysisConfigDto.set;
+        return yieldAnalysisConfigDto;
+    }
+
+    private List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
+        if (testItemWithTypeDtoList == null) {
+            return null;
+        }
+        List<String> conditionList = searchTab.getSearch();
+        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
+        int i = 0;
+        for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtoList) {
+            if (conditionList != null && conditionList.size() != 0) {
+                for (String condition : conditionList) {
+                    SearchConditionDto searchConditionDto = new SearchConditionDto();
+                    searchConditionDto.setItemName(testItemWithTypeDto.getTestItemName());
+                    searchConditionDto.setUslOrPass(testItemWithTypeDto.getLsl());
+                    searchConditionDto.setLslOrFail(testItemWithTypeDto.getUsl());
+                    searchConditionDto.setTestItemType(testItemWithTypeDto.getTestItemType());
+                    searchConditionDto.setCondition(condition);
+                    searchConditionDtoList.add(searchConditionDto);
+                    i++;
+                }
+            } else {
+                SearchConditionDto searchConditionDto = new SearchConditionDto();
+                searchConditionDto.setItemName(testItemWithTypeDto.getTestItemName());
+                searchConditionDto.setUslOrPass(testItemWithTypeDto.getLsl());
+                searchConditionDto.setLslOrFail(testItemWithTypeDto.getUsl());
+                searchConditionDto.setTestItemType(testItemWithTypeDto.getTestItemType());
+                searchConditionDtoList.add(searchConditionDto);
+                i++;
+            }
+        }
+        return searchConditionDtoList;
+    }
+    private List<TestItemWithTypeDto> buildSelectTestItemWithTypeData(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
+        List<TestItemWithTypeDto> itemWithTypeDtoList = Lists.newArrayList();
+        itemWithTypeDtoList.addAll(testItemWithTypeDtoList);
+        List<String> conditionTestItemList = getConditionTestItem();
+        if (conditionTestItemList != null) {
+            for (String testItem : conditionTestItemList) {
+                TestItemWithTypeDto testItemWithTypeDto = envService.findTestItemNameByItemName(testItem);
+                itemWithTypeDtoList.add(testItemWithTypeDto);
+            }
+        }
+        return itemWithTypeDtoList;
+    }
 
     private List<String> getConditionTestItem() {
         List<String> conditionList = searchTab.getSearch();
@@ -860,7 +841,13 @@ public class YieldItemController implements Initializable {
         return conditionTestItemList;
     }
 
-
+    private void updateYieldConfigPreference(YieldAnalysisConfigDto configDto) {
+        UserPreferenceDto<YieldAnalysisConfigDto> userPreferenceDto = new UserPreferenceDto<>();
+        userPreferenceDto.setUserName(envService.getUserName());
+        userPreferenceDto.setCode("yield_config_preference");
+        userPreferenceDto.setValue(configDto);
+        userPreferenceService.updatePreference(userPreferenceDto);
+    }
 
     private int findNewSite(List<ItemTableModel> modelList, ItemTableModel model) {
         int site = originalItems.indexOf(model.getItem());
@@ -892,11 +879,11 @@ public class YieldItemController implements Initializable {
         }
     }
 
-    private boolean isFilterAndHasUslOrLsl(ItemTableModel itemTableModel) {
-        return (StringUtils.isNotEmpty(itemTableModel.getItemDto().getLsl()) || StringUtils.isNotEmpty(itemTableModel.getItemDto().getUsl()))
-                && (DAPStringUtils.isBlank(itemFilter.getTextField().getText()) || (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText())
-                && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())));
-    }
+//    private boolean isFilterAndHasUslOrLsl(ItemTableModel itemTableModel) {
+//        return (StringUtils.isNotEmpty(itemTableModel.getItemDto().getLsl()) || StringUtils.isNotEmpty(itemTableModel.getItemDto().getUsl()))
+//                && (DAPStringUtils.isBlank(itemFilter.getTextField().getText()) || (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText())
+//                && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())));
+//    }
 
     private boolean isFilterAndAll(ItemTableModel itemTableModel) {
         return itemTableModel.getItem().startsWith("") && (DAPStringUtils.isBlank(itemFilter.getTextField().getText())

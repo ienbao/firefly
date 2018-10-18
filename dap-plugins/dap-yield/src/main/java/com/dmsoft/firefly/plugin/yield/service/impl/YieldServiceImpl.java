@@ -24,8 +24,15 @@ public class YieldServiceImpl implements YieldService {
 
     private static Logger logger = LoggerFactory.getLogger(YieldServiceImpl.class);
 
+
+    private List<YieldOverviewDto> getOverviewResult(SearchDataFrame searchDataFrame, List<SearchConditionDto> searchConditions,
+                                                     YieldAnalysisConfigDto configDto){
+        return null;
+    }
+
     @Override
     public List<YieldResultDto> getResult(SearchDataFrame searchDataFrame, List<SearchConditionDto> searchConditions, YieldAnalysisConfigDto configDto) {
+
         logger.debug("Getting Yield totalProcesses result...");
         if (searchDataFrame == null || searchConditions == null || configDto == null) {
             pushProgress(100);
