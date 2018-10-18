@@ -80,6 +80,12 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.dmsoft</groupId>
+            <artifactId>dap-spc</artifactId>
+            <version>2.5.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

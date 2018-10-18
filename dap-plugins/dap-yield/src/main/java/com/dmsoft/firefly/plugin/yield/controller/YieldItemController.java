@@ -128,7 +128,11 @@ public class YieldItemController implements Initializable {
         split.getItems().add(searchTab);
         itemFilter.getTextField().setPromptText(YieldFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (isFilterUslOrLsl) {
+                filteredList.setPredicate(this::isFilterAndHasUslOrLsl);
+            } else {
                 filteredList.setPredicate(this::isFilterAndAll);
+            }
         });
 
         // test item table init
@@ -152,9 +156,13 @@ public class YieldItemController implements Initializable {
         box.setOnAction(event -> {
             if (itemTable != null && itemTable.getItems() != null) {
                 for (ItemTableModel model : itemTable.getItems()) {
-
+                    if (isFilterUslOrLsl) {
+                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
+                            model.getSelector().setValue(box.isSelected());
+                        }
+                    } else {
                         model.getSelector().setValue(box.isSelected());
-
+                    }
                 }
             }
         });
@@ -184,7 +192,17 @@ public class YieldItemController implements Initializable {
                 };
             }
         });
+        // test item column in test item table
+        Button is = new Button();
+        is.setPrefSize(22, 22);
+        is.setMinSize(22, 22);
+        is.setMaxSize(22, 22);
+        is.setOnMousePressed(event -> createPopMenu(is, event));
+        is.getStyleClass().add("filter-normal");
+
+
         item.setText(YieldFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
+        item.setGraphic(is);
         item.getStyleClass().add("filter-header");
         item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
         item.setCellFactory(new Callback<TableColumn<ItemTableModel, TestItemWithTypeDto>, TableCell<ItemTableModel, TestItemWithTypeDto>>() {
@@ -211,6 +229,9 @@ public class YieldItemController implements Initializable {
                     }
                 };
             }
+        });
+        item.widthProperty().addListener((ov, w1, w2) -> {
+            Platform.runLater(() -> is.relocate(w2.doubleValue() - 21, 0));
         });
         item.setComparator((o1, o2) -> {
             boolean o1OnTop = stickyOnTopItems.contains(o1.getTestItemName());
@@ -321,7 +342,35 @@ public class YieldItemController implements Initializable {
         timeTab.setStyle("-fx-padding: 0 5 0 5");
         timeTab.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("SPC_TIMER_SETTING")));
     }
-
+    private ContextMenu createPopMenu(Button is, MouseEvent e) {
+        if (pop == null) {
+            pop = new ContextMenu();
+            RadioMenuItem all = new RadioMenuItem(YieldFxmlAndLanguageUtils.getString(ResourceMassages.ALL_TEST_ITEMS));
+            all.setOnAction(event -> {
+                filteredList.setPredicate(this::isFilterAndAll);
+                is.getStyleClass().remove("filter-active");
+                is.getStyleClass().add("filter-normal");
+                is.setGraphic(null);
+                isFilterUslOrLsl = false;
+            });
+            RadioMenuItem show = new RadioMenuItem(YieldFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEMS_WITH_USL_LSL));
+            show.setOnAction(event -> {
+                filteredList.setPredicate(this::isFilterAndHasUslOrLsl);
+                is.getStyleClass().remove("filter-normal");
+                is.getStyleClass().add("filter-active");
+//                is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
+                isFilterUslOrLsl = true;
+            });
+            all.setSelected(true);
+            ToggleGroup toggleGroup = new ToggleGroup();
+            all.setToggleGroup(toggleGroup);
+            show.setToggleGroup(toggleGroup);
+            pop.getItems().addAll(all, show);
+        }
+        Bounds bounds = is.localToScreen(is.getBoundsInLocal());
+        pop.show(is, bounds.getMinX(), bounds.getMinY() + 22);
+        return pop;
+    }
     private ContextMenu createTableRightMenu() {
         MenuItem top = new MenuItem(YieldFxmlAndLanguageUtils.getString(ResourceMassages.STICKY_ON_TOP));
         ContextMenu right = new ContextMenu() {
@@ -706,7 +755,7 @@ public class YieldItemController implements Initializable {
     }
 
     private boolean isConfigError() {
-        if (!configComboBox.getValue().equals("Serial Number")) {
+        if (null==configComboBox.getValue()&&configComboBox.getValue().equals("")) {
             return true;
         }
         return false;
@@ -798,8 +847,8 @@ public class YieldItemController implements Initializable {
                 for (String condition : conditionList) {
                     SearchConditionDto searchConditionDto = new SearchConditionDto();
                     searchConditionDto.setItemName(testItemWithTypeDto.getTestItemName());
-                    searchConditionDto.setUslOrPass(testItemWithTypeDto.getLsl());
-                    searchConditionDto.setLslOrFail(testItemWithTypeDto.getUsl());
+                    searchConditionDto.setUslOrPass(testItemWithTypeDto.getUsl());
+                    searchConditionDto.setLslOrFail(testItemWithTypeDto.getLsl());
                     searchConditionDto.setTestItemType(testItemWithTypeDto.getTestItemType());
                     searchConditionDto.setCondition(condition);
                     searchConditionDtoList.add(searchConditionDto);
@@ -819,6 +868,9 @@ public class YieldItemController implements Initializable {
     }
     private List<TestItemWithTypeDto> buildSelectTestItemWithTypeData(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
         List<TestItemWithTypeDto> itemWithTypeDtoList = Lists.newArrayList();
+        TestItemWithTypeDto searchPrimaryKey = new TestItemWithTypeDto();
+        searchPrimaryKey.setTestItemName(configComboBox.getValue());
+        itemWithTypeDtoList.add(searchPrimaryKey);
         itemWithTypeDtoList.addAll(testItemWithTypeDtoList);
         List<String> conditionTestItemList = getConditionTestItem();
         if (conditionTestItemList != null) {
@@ -884,11 +936,11 @@ public class YieldItemController implements Initializable {
         }
     }
 
-//    private boolean isFilterAndHasUslOrLsl(ItemTableModel itemTableModel) {
-//        return (StringUtils.isNotEmpty(itemTableModel.getItemDto().getLsl()) || StringUtils.isNotEmpty(itemTableModel.getItemDto().getUsl()))
-//                && (DAPStringUtils.isBlank(itemFilter.getTextField().getText()) || (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText())
-//                && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())));
-//    }
+    private boolean isFilterAndHasUslOrLsl(ItemTableModel itemTableModel) {
+        return (StringUtils.isNotEmpty(itemTableModel.getItemDto().getLsl()) || StringUtils.isNotEmpty(itemTableModel.getItemDto().getUsl()))
+                && (DAPStringUtils.isBlank(itemFilter.getTextField().getText()) || (DAPStringUtils.isNotBlank(itemFilter.getTextField().getText())
+                && itemTableModel.getItem().toLowerCase().contains(itemFilter.getTextField().getText().toLowerCase())));
+    }
 
     private boolean isFilterAndAll(ItemTableModel itemTableModel) {
         return itemTableModel.getItem().startsWith("") && (DAPStringUtils.isBlank(itemFilter.getTextField().getText())
