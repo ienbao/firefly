@@ -164,28 +164,28 @@ public class YieldMainController implements Initializable {
 //        }
 //        dataFrame.removeRows(Lists.newArrayList(rowKey));
 //    }
-//
-//
-//    /**
-//     * clear analysis data
-//     *
-//     */
-//    public void clearAnalysisSubShowData() {
+
+
+    /**
+     * clear analysis data
+     *
+     */
+    public void clearAnalysisSubShowData() {
 //        chartResultController.clearChartData();
-//        viewDataController.clearViewData();
+        viewDataController.clearViewData();
 //        unSelectRowKeyList.clear();
 //        lastViewDataRowKeyList = null;
-//    }
-//
-//    /**
-//     * clear all analysis data
-//     */
-//    public void clearAnalysisData() {
+    }
+
+    /**
+     * clear all analysis data
+     */
+    public void clearAnalysisData() {
 //        statisticalResultController.clearStatisticalResultData();
-//        clearAnalysisSubShowData();
-//        this.setDisable(true);
-//    }
-//
+        clearAnalysisSubShowData();
+        this.setDisable(true);
+    }
+
 //    /**
 //     * clear chart data
 //     */

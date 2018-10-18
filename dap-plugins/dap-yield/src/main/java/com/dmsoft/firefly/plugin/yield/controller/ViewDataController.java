@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.yield.controller;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.gui.components.dialog.ChooseTestItemDialog;
 import com.dmsoft.firefly.gui.components.skin.ExpandableTableViewSkin;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
@@ -54,23 +55,37 @@ public class ViewDataController implements Initializable {
     private ViewDataModel model;
     private SearchDataFrame dataFrame;
     private List<SearchConditionDto> searchViewDataConditionDto;
-    private String selectedRowKeys;
+    private List<String> selectedRowKeys;
     private String selectedColumnKey;
+    private List<String> testItemNames;
     private Map<String, FilterSettingAndGraphic> columnFilterSetting = Maps.newHashMap();
+    private List<TestItemWithTypeDto> typeDtoList;
+    private List<String> selectedProjectNames;
+    private List<SearchConditionDto> statisticalSearchConditionDtoList;
 
     private List<String> selectStatisticalResultName = Lists.newArrayList();
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
 //    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
+    private ChooseTestItemDialog chooseTestItemDialog;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.typeDtoList = RuntimeContext.getBean(EnvService.class).findTestItems();
+        this.testItemNames = Lists.newArrayList();
+        if (this.typeDtoList != null) {
+            for (TestItemWithTypeDto typeDto : typeDtoList) {
+                testItemNames.add(typeDto.getTestItemName());
+            }
+        }
         filteValueTf.getTextField().setPromptText(YieldFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_VALUE_PROMPT));
+        this.buildChooseColumnDialog();
         this.initBtnIcon();
         this.initComponentEvent();
+        this.selectedProjectNames = RuntimeContext.getBean(EnvService.class).findActivatedProjectName();
         viewDataTable.getColumns().clear();
         chooseColumnBtn.setDisable(true);
-        this.setViewData(null,null,null,null);
+        filteValueTf.setDisable(true);
     }
 
     /**
@@ -83,10 +98,13 @@ public class ViewDataController implements Initializable {
     }
 
 
-
     private void initBtnIcon() {
         chooseColumnBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
-//        TooltipUtil.installNormalTooltip(chooseColumnBtn, SpcFxmlAndLanguageUtils.getString("CHOOSE_STATISTICAL_RESULT"));
+        TooltipUtil.installNormalTooltip(chooseColumnBtn, YieldFxmlAndLanguageUtils.getString(ResourceMassages.CHOOSE_ITEMS_TITLE));
+    }
+
+    private void buildChooseColumnDialog() {
+        chooseTestItemDialog = new ChooseTestItemDialog(testItemNames, null);
     }
 
     /**
@@ -97,6 +115,29 @@ public class ViewDataController implements Initializable {
         this.setViewData(null,null, null, null);
     }
 
+    /**
+     * set view data table dataList
+     *
+     * @param dataFrame                         search data frame
+     * @param selectedRowKey                    selected row key
+     * @param statisticalSearchConditionDtoList statisticalSearchConditionDtoList
+     */
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, String selectedColumnKey, List<SearchConditionDto> statisticalSearchConditionDtoList) {
+        this.setViewData(dataFrame, selectedRowKey, selectedColumnKey,statisticalSearchConditionDtoList, false);
+    }
+
+    /**
+     * set view data table dataList
+     *
+     * @param dataFrame                         search data frame
+     * @param selectedRowKey                    selected row key
+     * @param statisticalSearchConditionDtoList statisticalSearchConditionDtoList
+     * @param isTimer                           isTimer
+     */
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, String selectedColumnKey, List<SearchConditionDto> statisticalSearchConditionDtoList, boolean isTimer) {
+        this.setViewData(dataFrame, selectedRowKey,selectedColumnKey, statisticalSearchConditionDtoList, isTimer, isTimer);
+    }
+
 
     /**
      * set view data table dataList
@@ -105,8 +146,7 @@ public class ViewDataController implements Initializable {
      * @param selectedRowKey                    selected row key
      * @param searchViewDataConditionDto statisticalSearchConditionDtoList
      */
-    private void setViewData(SearchDataFrame dataFrame, String selectedRowKey, String selectedColumnKey, List<SearchConditionDto> searchViewDataConditionDto) {
-        selectedRowKey = "zengliyun";
+    private void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, String selectedColumnKey, List<SearchConditionDto> searchViewDataConditionDto, boolean isTimer, boolean isAutoRefresh) {
         this.searchViewDataConditionDto = searchViewDataConditionDto;
         this.selectedRowKeys = selectedRowKey;
         this.selectedColumnKey = selectedColumnKey;
@@ -114,6 +154,8 @@ public class ViewDataController implements Initializable {
         if (dataFrame == null) {
             filteValueTf.setDisable(true);
             viewDataTable.getColumns().clear();
+            chooseColumnBtn.setDisable(true);
+            chooseTestItemDialog.resetSelectedItems(null);
             try {
                 if (model != null) {
                     this.model.getRowKeyArray().clear();
@@ -125,8 +167,15 @@ public class ViewDataController implements Initializable {
             return;
         }
         filteValueTf.setDisable(false);
-
+        chooseColumnBtn.setDisable(false);
         List<TableColumn<String, ?>> sortedColumnList = null;
+        if (isTimer && this.model != null) {
+            sortedColumnList = Lists.newArrayList(viewDataTable.getSortOrder());
+        }
+        if (isAutoRefresh) {
+            expandDataFrameByTestItem(chooseTestItemDialog.getSelectedItems());
+        }
+
         vbox.getChildren().remove(viewDataTable);
         this.viewDataTable = new TableView<>();
         this.viewDataTable.setSkin(new ExpandableTableViewSkin(this.viewDataTable));
@@ -143,6 +192,7 @@ public class ViewDataController implements Initializable {
             filteValueTf.getTextField().setText("");
             filteValueTf.getTextField().setText(filterTxt);
         }
+        chooseTestItemDialog.resetSelectedItems(model.getHeaderArray().subList(1, model.getHeaderArray().size()));
         if (sortedColumnList != null && !sortedColumnList.isEmpty()) {
             final TableColumn<String, ?> sortedColumn = sortedColumnList.get(0);
             Platform.runLater(() -> {
@@ -169,18 +219,61 @@ public class ViewDataController implements Initializable {
                 filterHeaderBtn();
             });
         });
-//        chooseItemBtn.setOnAction(event -> getChooseColumnBtnEvent());
-//        chooseTestItemDialog.getOkBtn().setOnAction(event -> {
-//            boolean isTimer = model.isTimer();
-//            chooseTestItemDialog.close();
-//            if (dataFrame == null) {
-//                return;
-//            }
-//            List<String> selectedTestItems = chooseTestItemDialog.getSelectedItems();
-//            int curIndex = 0;
-//            setViewData(this.dataFrame, getSelectedRowKeys(), statisticalSearchConditionDtoList, isTimer, false);
-//        });
-//        unSelectedCheckBox.setOnAction(event -> getInvertCheckBoxEvent());
+        chooseColumnBtn.setOnAction(event -> getChooseColumnBtnEvent());
+        chooseTestItemDialog.getOkBtn().setOnAction(event -> {
+            chooseTestItemDialog.close();
+            if (dataFrame == null) {
+                return;
+            }
+            List<String> selectedTestItems = chooseTestItemDialog.getSelectedItems();
+            int curIndex = 0;
+            for (TestItemWithTypeDto typeDto : typeDtoList) {
+                if (selectedTestItems.contains(typeDto.getTestItemName())) {
+                    if (!dataFrame.isTestItemExist(typeDto.getTestItemName())) {
+                        List<RowDataDto> rowDataDtoList = RuntimeContext.getBean(SourceDataService.class).findTestData(this.selectedProjectNames,
+                                Lists.newArrayList(typeDto.getTestItemName()));
+                        DataColumn dataColumn = RuntimeContext.getBean(DataFrameFactory.class).createDataColumn(Lists.newArrayList(typeDto), rowDataDtoList).get(0);
+                        dataFrame.appendColumn(curIndex, dataColumn);
+                    }
+                    curIndex++;
+                } else {
+                    dataFrame.removeColumns(Lists.newArrayList(typeDto.getTestItemName()));
+                }
+            }
+            setViewData(this.dataFrame, getSelectedRowKeys(),"", statisticalSearchConditionDtoList);
+        });
+    }
+
+    private void getChooseColumnBtnEvent() {
+        chooseTestItemDialog.show();
+    }
+
+    private void expandDataFrameByTestItem(List<String> selectedTestItems) {
+        int curIndex = 0;
+        for (TestItemWithTypeDto typeDto : typeDtoList) {
+            if (selectedTestItems.contains(typeDto.getTestItemName())) {
+                if (!dataFrame.isTestItemExist(typeDto.getTestItemName())) {
+                    List<RowDataDto> rowDataDtoList = RuntimeContext.getBean(SourceDataService.class).findTestData(this.selectedProjectNames,
+                            Lists.newArrayList(typeDto.getTestItemName()));
+                    DataColumn dataColumn = RuntimeContext.getBean(DataFrameFactory.class).createDataColumn(Lists.newArrayList(typeDto), rowDataDtoList).get(0);
+                    dataFrame.appendColumn(curIndex, dataColumn);
+                }
+                curIndex++;
+            }
+        }
+    }
+
+    /**
+     * method to get selected row keys
+     *
+     * @return list of selected row key
+     */
+    public List<String> getSelectedRowKeys() {
+        if (this.model != null) {
+            return this.model.getSelectedRowKeys();
+        } else {
+            return null;
+        }
     }
 
     private void filterTF() {

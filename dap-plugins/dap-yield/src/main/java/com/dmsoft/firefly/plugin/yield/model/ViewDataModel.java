@@ -53,7 +53,7 @@ public class ViewDataModel {
     private CheckBox allCheckBox;
     private TableView<String> tableView;
     private YieldMainController mainController;
-    private String initSelectedRowKeys;
+    private List<String> initSelectedRowKeys;
     private String initSelectedColumnKeys;
     private List<SearchConditionDto> statisticalSearchConditionDtoList;
     private Map<String, TestItemWithTypeDto> testItemDtoMap;
@@ -66,7 +66,7 @@ public class ViewDataModel {
      * @param dataFrame       search data frame
      * @param selectedRowKeys selected row keys
      */
-    public ViewDataModel(SearchDataFrame dataFrame, String selectedColumnKeys, String selectedRowKeys) {
+    public ViewDataModel(SearchDataFrame dataFrame, String selectedColumnKeys, List<String>  selectedRowKeys) {
         this.dataFrame = dataFrame;
         this.initSelectedRowKeys = selectedRowKeys;
         this.initSelectedColumnKeys = selectedColumnKeys;
@@ -101,6 +101,21 @@ public class ViewDataModel {
 
     public ObservableList<String> getRowKeyArray() { //获取行key
         return rowKeyArray;
+    }
+
+    /**
+     * method to get selected row keys
+     *
+     * @return list of selected row key
+     */
+    public List<String> getSelectedRowKeys() {
+        List<String> result = Lists.newArrayList(dataFrame.getAllRowKeys());
+        for (String s : this.checkValueMap.keySet()) {
+            if (!this.checkValueMap.get(s).get()) {
+                result.remove(s);
+            }
+        }
+        return result;
     }
 
 
