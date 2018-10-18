@@ -214,7 +214,13 @@ public class YieldServiceImpl implements YieldService {
 
     @Override
     public List<YieldViewDataDto> getViewData(SearchDataFrame searchDataFrame, SearchViewDataConditionDto searchViewDataConditionDto) {
+
         return null;
+    }
+
+
+    private void refreshChartResult(String columnKey, String rowKey){
+
     }
 
 //    private List<YieldOverviewDto> getOverviewResult(SearchDataFrame searchDataFrame, List<SearchConditionDto> searchConditions,
