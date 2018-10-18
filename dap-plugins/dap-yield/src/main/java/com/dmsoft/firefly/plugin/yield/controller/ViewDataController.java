@@ -70,8 +70,14 @@ public class ViewDataController implements Initializable {
         this.initComponentEvent();
         viewDataTable.getColumns().clear();
         chooseColumnBtn.setDisable(true);
+        this.setViewData(null,null,null,null);
     }
 
+    /**
+     * init main controller
+     *
+     * @param yieldMainController main controller
+     */
     public void init(YieldMainController yieldMainController) {
         this.yieldMainController = yieldMainController;
     }
@@ -100,6 +106,7 @@ public class ViewDataController implements Initializable {
      * @param searchViewDataConditionDto statisticalSearchConditionDtoList
      */
     private void setViewData(SearchDataFrame dataFrame, String selectedRowKey, String selectedColumnKey, List<SearchConditionDto> searchViewDataConditionDto) {
+        selectedRowKey = "zengliyun";
         this.searchViewDataConditionDto = searchViewDataConditionDto;
         this.selectedRowKeys = selectedRowKey;
         this.selectedColumnKey = selectedColumnKey;
