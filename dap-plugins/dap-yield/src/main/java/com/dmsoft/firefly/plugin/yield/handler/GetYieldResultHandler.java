@@ -2,6 +2,7 @@ package com.dmsoft.firefly.plugin.yield.handler;
 
 import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldAnalysisConfigDto;
+import com.dmsoft.firefly.plugin.yield.dto.YieldResultDto;
 import com.dmsoft.firefly.plugin.yield.service.YieldService;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
@@ -26,7 +27,7 @@ public class GetYieldResultHandler extends AbstractBasicJobHandler {
         YieldAnalysisConfigDto analysisConfigDto = (YieldAnalysisConfigDto) context.get(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO);
         YieldService yieldService = RuntimeContext.getBean(YieldService.class);
 //        YieldSettingDto yieldSettingDto = (YieldSettingDto) context.get(ParamKeys.YIELD_SETTING_DTO);
-//        List<SpcStatsDto> spcStatsDtoList = spcService.getStatisticalResult(dataFrame, searchConditionDtoList, analysisConfigDto);
+        List<YieldResultDto> yieldResultDtoList = yieldService.getResult(dataFrame, searchConditionDtoList, analysisConfigDto);
 //        List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = RuntimeContext.getBean(SpcSettingService.class).setStatisticalResultAlarm(spcStatsDtoList, spcSettingDto);
 //        context.put(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST, spcStatisticalResultAlarmDtoList);
     }
