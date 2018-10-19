@@ -51,6 +51,7 @@ public class ViewDataController implements Initializable {
     private TableView<String> viewDataTable; //表格
     @FXML
     private VBox vbox;
+
     private YieldMainController yieldMainController;
     private ViewDataModel model;
     private SearchDataFrame dataFrame;
@@ -71,7 +72,7 @@ public class ViewDataController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.typeDtoList = RuntimeContext.getBean(EnvService.class).findTestItems();
+        this.typeDtoList = RuntimeContext.getBean(EnvService.class).findTestItems();/*获取到所有测试项 */
         this.testItemNames = Lists.newArrayList();
         if (this.typeDtoList != null) {
             for (TestItemWithTypeDto typeDto : typeDtoList) {
@@ -112,7 +113,7 @@ public class ViewDataController implements Initializable {
      */
     public void clearViewData() {
         filteValueTf.getTextField().setText(null);
-        this.setViewData(null,null, null, null);
+        this.setViewData(null,null, null);
     }
 
     /**
@@ -122,8 +123,8 @@ public class ViewDataController implements Initializable {
      * @param selectedRowKey                    selected row key
      * @param statisticalSearchConditionDtoList statisticalSearchConditionDtoList
      */
-    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, String selectedColumnKey, List<SearchConditionDto> statisticalSearchConditionDtoList) {
-        this.setViewData(dataFrame, selectedRowKey, selectedColumnKey,statisticalSearchConditionDtoList, false);
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList) {
+        this.setViewData(dataFrame, selectedRowKey,statisticalSearchConditionDtoList, false);
     }
 
     /**
@@ -134,8 +135,8 @@ public class ViewDataController implements Initializable {
      * @param statisticalSearchConditionDtoList statisticalSearchConditionDtoList
      * @param isTimer                           isTimer
      */
-    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, String selectedColumnKey, List<SearchConditionDto> statisticalSearchConditionDtoList, boolean isTimer) {
-        this.setViewData(dataFrame, selectedRowKey,selectedColumnKey, statisticalSearchConditionDtoList, isTimer, isTimer);
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList, boolean isTimer) {
+        this.setViewData(dataFrame, selectedRowKey, statisticalSearchConditionDtoList, isTimer, isTimer);
     }
 
 
@@ -146,7 +147,7 @@ public class ViewDataController implements Initializable {
      * @param selectedRowKey                    selected row key
      * @param searchViewDataConditionDto statisticalSearchConditionDtoList
      */
-    private void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, String selectedColumnKey, List<SearchConditionDto> searchViewDataConditionDto, boolean isTimer, boolean isAutoRefresh) {
+    private void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> searchViewDataConditionDto, boolean isTimer, boolean isAutoRefresh) {
         this.searchViewDataConditionDto = searchViewDataConditionDto;
         this.selectedRowKeys = selectedRowKey;
         this.selectedColumnKey = selectedColumnKey;
@@ -183,7 +184,7 @@ public class ViewDataController implements Initializable {
         VBox.setVgrow(viewDataTable, Priority.ALWAYS);
         this.vbox.setAlignment(Pos.CENTER);
         this.vbox.getChildren().add(viewDataTable);
-        this.model = new ViewDataModel(dataFrame, selectedColumnKey, selectedRowKey);
+        this.model = new ViewDataModel(dataFrame, selectedRowKey);
 //        this.model.setStatisticalSearchConditionDtoList(statisticalSearchConditionDtoList);
         this.model.setMainController(yieldMainController);
 
@@ -232,7 +233,7 @@ public class ViewDataController implements Initializable {
                     if (!dataFrame.isTestItemExist(typeDto.getTestItemName())) {
                         List<RowDataDto> rowDataDtoList = RuntimeContext.getBean(SourceDataService.class).findTestData(this.selectedProjectNames,
                                 Lists.newArrayList(typeDto.getTestItemName()));
-                        DataColumn dataColumn = RuntimeContext.getBean(DataFrameFactory.class).createDataColumn(Lists.newArrayList(typeDto), rowDataDtoList).get(0);
+                        DataColumn dataColumn = RuntimeContext.getBean(DataFrameFactory.class).createDataColumn(Lists.newArrayList(typeDto), rowDataDtoList).get(0);/* 新增表中的列 */
                         dataFrame.appendColumn(curIndex, dataColumn);
                     }
                     curIndex++;
@@ -240,7 +241,7 @@ public class ViewDataController implements Initializable {
                     dataFrame.removeColumns(Lists.newArrayList(typeDto.getTestItemName()));
                 }
             }
-            setViewData(this.dataFrame, getSelectedRowKeys(),"", statisticalSearchConditionDtoList);
+            setViewData(this.dataFrame,null, statisticalSearchConditionDtoList);
         });
     }
 

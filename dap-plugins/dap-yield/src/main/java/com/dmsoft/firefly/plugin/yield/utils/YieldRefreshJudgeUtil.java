@@ -1,10 +1,13 @@
 package com.dmsoft.firefly.plugin.yield.utils;
 
+import com.google.common.collect.Lists;
+
 import java.util.List;
 
 public class YieldRefreshJudgeUtil {
     private static YieldRefreshJudgeUtil instance;
     private List<String> overViewSelectRowKeyListCache;
+    private List<String> currentViewDataSelectRowKeyList = Lists.newArrayList();
 
     /**
      * instance
@@ -16,6 +19,14 @@ public class YieldRefreshJudgeUtil {
             instance = new YieldRefreshJudgeUtil();
         }
         return instance;
+    }
+
+    public List<String> getCurrentViewDataSelectRowKeyList() {
+        return currentViewDataSelectRowKeyList;
+    }
+
+    public void setCurrentViewDataSelectRowKeyList(List<String> currentViewDataSelectRowKeyList) {
+        this.currentViewDataSelectRowKeyList = currentViewDataSelectRowKeyList;
     }
 
     public List<String> getOverViewSelectRowKeyListCache() {

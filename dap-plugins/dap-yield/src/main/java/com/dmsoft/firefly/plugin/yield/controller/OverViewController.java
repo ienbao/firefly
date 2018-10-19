@@ -4,11 +4,13 @@ import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.yield.model.OverViewTableModel;
 import com.dmsoft.firefly.plugin.yield.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.yield.utils.UIConstant;
 import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
 import com.dmsoft.firefly.plugin.yield.utils.YieldRefreshJudgeUtil;
+import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.google.common.collect.Lists;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,6 +34,10 @@ public class OverViewController implements Initializable {
     @FXML
     private TableView overViewResultTb;
 
+    private YieldMainController yieldMainController;
+    private ViewDataController viewDataController;
+    private List<SearchConditionDto> OverViewConditionDtoList;
+
     private OverViewTableModel overViewTableModel;
     private List<String> selectOverViewResultName = Lists.newArrayList();
 
@@ -40,6 +46,15 @@ public class OverViewController implements Initializable {
         filterTestItemTf.getTextField().setPromptText(YieldFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
         this.initStatisticalResultTable();
         this.initComponentEvent();
+    }
+
+    /**
+     * init viewData controller
+     *
+     * @param viewDataController viewData controller
+     */
+    public void init(ViewDataController viewDataController) {
+        this.viewDataController = viewDataController;
     }
 
     private void initStatisticalResultTable() {
@@ -77,8 +92,11 @@ public class OverViewController implements Initializable {
 //        statisticalTableModel.addTableMenuEvent(selectColor);
     }
 
-    /* 表格点击事件 */
+    /* 表格点击表格中某一格触发的事件 */
+ private void refreshViewData(){
+     yieldMainController.refreshViewData(OverViewConditionDtoList);
 
+ }
 
 
 

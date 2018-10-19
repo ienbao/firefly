@@ -10,9 +10,13 @@ import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
 import com.dmsoft.firefly.plugin.yield.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.yield.utils.YieldRefreshJudgeUtil;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.job.core.*;
+import com.dmsoft.firefly.sdk.utils.FilterUtils;
+import com.google.common.collect.Lists;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -25,6 +29,7 @@ import javafx.scene.control.Button;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 
 public class YieldMainController implements Initializable {
@@ -45,13 +50,13 @@ public class YieldMainController implements Initializable {
     private ViewDataController viewDataController;
 //    @FXML
 //    private ChartResultController chartResultController;
-//    private SearchDataFrame dataFrame;
+    private SearchDataFrame dataFrame;
     private YieldAnalysisConfigDto analysisConfigDto;
     private List<SearchConditionDto> initSearchConditionDtoList;
 //      private YieldSettingDto spcSettingDto;
     private YieldSettingService yieldSettingService = RuntimeContext.getBean(YieldSettingService.class);
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
-//    private List<String> lastViewDataRowKeyList;
+    private List<String> lastViewDataRowKeyList;
 //    private List<String> unSelectRowKeyList = Lists.newArrayList();
 //
 //    private List<SearchConditionDto> timerSearchConditionDtoList;
@@ -417,57 +422,57 @@ public class YieldMainController implements Initializable {
 //        return searchConditionDtoList;
 //    }
 //
-//    private SearchDataFrame buildSubSearchDataFrame(List<String> rowKeyList, List<SearchConditionDto> searchConditionDtoList) {
-//        if (dataFrame == null || searchConditionDtoList == null) {
-//            return null;
-//        }
-//        List<String> testItemNameList = Lists.newArrayList();
-//        List<String> timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
-//        String timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
-//        FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
-//        for (SearchConditionDto searchConditionDto : searchConditionDtoList) {
-//            if (!testItemNameList.contains(searchConditionDto.getItemName())) {
-//                testItemNameList.add(searchConditionDto.getItemName());
-//            }
-//            String condition = searchConditionDto.getCondition();
-//            Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);
-//            for (String conditionTestItem : conditionTestItemSet) {
-//                if (!testItemNameList.contains(conditionTestItem)) {
-//                    testItemNameList.add(conditionTestItem);
-//                }
-//            }
-//        }
-//        return dataFrame.subDataFrame(rowKeyList, testItemNameList);
-//    }
+    private SearchDataFrame buildSubSearchDataFrame(List<String> rowKeyList, List<SearchConditionDto> searchConditionDtoList) {
+        if (dataFrame == null || searchConditionDtoList == null) {
+            return null;
+        }
+        List<String> testItemNameList = Lists.newArrayList();
+        List<String> timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
+        String timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
+        FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
+        for (SearchConditionDto searchConditionDto : searchConditionDtoList) {
+            if (!testItemNameList.contains(searchConditionDto.getItemName())) {
+                testItemNameList.add(searchConditionDto.getItemName());
+            }
+            String condition = searchConditionDto.getCondition();
+            Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);
+            for (String conditionTestItem : conditionTestItemSet) {
+                if (!testItemNameList.contains(conditionTestItem)) {
+                    testItemNameList.add(conditionTestItem);
+                }
+            }
+        }
+        return dataFrame.subDataFrame(rowKeyList, testItemNameList);
+    }
 //
-//    private SearchDataFrame buildSubSearchDataFrame(List<SearchConditionDto> searchConditionDtoList) {
-//        if (dataFrame == null || searchConditionDtoList == null) {
-//            return null;
-//        }
-//        List<String> testItemNameList = Lists.newArrayList();
-//        List<String> searchCondition = Lists.newArrayList();
-//        List<String> timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
-//        String timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
-//        FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
-//        for (SearchConditionDto searchConditionDto : searchConditionDtoList) {
-//            if (!testItemNameList.contains(searchConditionDto.getItemName())) {
-//                testItemNameList.add(searchConditionDto.getItemName());
-//            }
-//            String condition = searchConditionDto.getCondition();
-//            Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);
-//            for (String conditionTestItem : conditionTestItemSet) {
-//                if (!testItemNameList.contains(conditionTestItem)) {
-//                    testItemNameList.add(conditionTestItem);
-//                }
-//            }
-//
-//            if (!searchCondition.contains(condition)) {
-//                searchCondition.add(condition);
-//            }
-//        }
-//        return dataFrame.subDataFrame(dataFrame.getSearchRowKey(searchCondition), testItemNameList);
-//    }
-//
+    public SearchDataFrame buildSubSearchDataFrame(List<SearchConditionDto> searchConditionDtoList) {
+        if (dataFrame == null || searchConditionDtoList == null) {
+            return null;
+        }
+        List<String> testItemNameList = Lists.newArrayList();
+        List<String> searchCondition = Lists.newArrayList();
+        List<String> timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
+        String timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
+        FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
+        for (SearchConditionDto searchConditionDto : searchConditionDtoList) {
+            if (!testItemNameList.contains(searchConditionDto.getItemName())) {
+                testItemNameList.add(searchConditionDto.getItemName());
+            }
+            String condition = searchConditionDto.getCondition();
+            Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);
+            for (String conditionTestItem : conditionTestItemSet) {
+                if (!testItemNameList.contains(conditionTestItem)) {
+                    testItemNameList.add(conditionTestItem);
+                }
+            }
+
+            if (!searchCondition.contains(condition)) {
+                searchCondition.add(condition);
+            }
+        }
+        return dataFrame.subDataFrame(dataFrame.getSearchRowKey(searchCondition), testItemNameList);
+    }
+
 //    private boolean resultSelectIsChange(List<String> newList, List<String> oldList) {
 //        if (oldList == null) {
 //            return newList.size() != 0;
@@ -656,6 +661,41 @@ public class YieldMainController implements Initializable {
 //        logger.info("Start analysis Spc char.");
 //        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
 //    }
+
+    /* 刷新viewData数据（通过两个条件过滤数据） */
+    public void refreshViewData(List<SearchConditionDto> OverViewConditionDtoList){
+        YieldRefreshJudgeUtil yieldRefreshJudgeUtil = YieldRefreshJudgeUtil.newInstance();
+        List<String> currentViewDataSelectRowKeyList = yieldRefreshJudgeUtil.getCurrentViewDataSelectRowKeyList();//获取选中的项
+        List<SearchConditionDto> searchConditionDtoList = OverViewConditionDtoList;
+        if (searchConditionDtoList.size() == 0) {
+            return;
+        }
+        SearchDataFrame viewDataFrame = buildSubSearchDataFrame(searchConditionDtoList);
+        List<String> selectRowKeyList = Lists.newArrayList();
+        if (currentViewDataSelectRowKeyList == null) {
+            selectRowKeyList = viewDataFrame.getSearchedRowKey();
+        } else {
+            if ((lastViewDataRowKeyList == null || lastViewDataRowKeyList.size() == 0) ) {
+                selectRowKeyList = viewDataFrame.getSearchedRowKey();
+            } else {
+                for (String key : viewDataFrame.getSearchedRowKey()) {
+                    if ((!lastViewDataRowKeyList.contains(key) || currentViewDataSelectRowKeyList.contains(key)) && !selectRowKeyList.contains(key) ) {
+                        selectRowKeyList.add(key);
+                    }
+                }
+            }
+            lastViewDataRowKeyList = viewDataFrame.getAllRowKeys();
+            SearchDataFrame chartDataFrame = buildSubSearchDataFrame(selectRowKeyList, searchConditionDtoList);
+//            viewDataController.setViewData(viewDataFrame, chartDataFrame.getAllRowKeys(), statisticalSearchConditionDtoList, yieldItemController.isTimer());
+            yieldRefreshJudgeUtil.setOverViewSelectRowKeyListCache(chartDataFrame.getAllRowKeys());
+        }
+
+
+
+
+
+//        viewDataController.setViewData(viewDataFrame,null,null,null,false);
+    }
 //
 //    @SuppressWarnings("unchecked")
 //    private void refreshAllAnalysisResult(SpcRefreshJudgeUtil spcRefreshJudgeUtil) {
