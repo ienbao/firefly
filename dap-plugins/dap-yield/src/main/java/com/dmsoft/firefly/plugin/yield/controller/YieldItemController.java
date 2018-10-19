@@ -632,7 +632,7 @@ public class YieldItemController implements Initializable {
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
-//                yieldMainController.setSpcSettingDto(context.getParam(ParamKeys.SPC_SETTING_DTO, SpcSettingDto.class));
+                yieldMainController.setSpcSettingDto(context.getParam(ParamKeys.YIELD_SETTING_DTO, YieldSettingDto.class));
                 yieldMainController.setAnalysisConfigDto(yieldAnalysisConfigDto);
                 yieldMainController.setInitSearchConditionDtoList(searchConditionDtoList);
                 YieldRefreshJudgeUtil.newInstance().setOverViewSelectRowKeyListCache(null);
@@ -853,6 +853,7 @@ public class YieldItemController implements Initializable {
             if (conditionList != null && conditionList.size() != 0) {
                 for (String condition : conditionList) {
                     SearchConditionDto searchConditionDto = new SearchConditionDto();
+                    searchConditionDto.setKey(ParamKeys.SPC_ANALYSIS_CONDITION_KEY + i);
                     searchConditionDto.setItemName(testItemWithTypeDto.getTestItemName());
                     searchConditionDto.setUslOrPass(testItemWithTypeDto.getUsl());
                     searchConditionDto.setLslOrFail(testItemWithTypeDto.getLsl());

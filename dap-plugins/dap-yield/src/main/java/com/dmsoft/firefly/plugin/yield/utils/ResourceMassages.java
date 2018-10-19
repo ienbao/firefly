@@ -42,7 +42,7 @@ public class ResourceMassages {
     public static final String TIP_WARN_HEADER = "TIP_WARN_HEADER";
     //warn message
     public static final String SPC_VALIDATE_NOT_BE_EMPTY = "VALIDATE_NOT_BE_EMPTY";
-    public static final String SPC_SETTING_APPLY_WARN_MESSAGE = "SPC_SETTING_APPLY_WARN_MESSAGE";
+    public static final String YIELD_SETTING_APPLY_WARN_MESSAGE = "YIELD_SETTING_APPLY_WARN_MESSAGE";
     public static final String SPC_STATISTICAL_USL_LSL_EMPTY = "SPC_STATISTICAL_USL_LSL_EMPTY";
     public static final String SPC_STATISTICAL_USL_LESS_THEN_LSL = "SPC_STATISTICAL_USL_LESS_THEN_LSL";
     public static final String SPC_STATISTICAL_LSL_MORE_THEN_USL = "SPC_STATISTICAL_LSL_MORE_THEN_USL";

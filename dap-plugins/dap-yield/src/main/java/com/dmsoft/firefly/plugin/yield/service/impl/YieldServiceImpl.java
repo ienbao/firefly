@@ -146,6 +146,7 @@ public class YieldServiceImpl implements YieldService {
                 overTotalSamples = overPassSamples+overNtfSamples+overNgSamples;
 
                 YieldOverviewDto yieldOverviewDto = new YieldOverviewDto();
+                yieldOverviewDto.setKey(searchConditions.get(i).getKey());
                 yieldOverviewDto.setFpySamples(overFpySamples);
                 yieldOverviewDto.setNtfSamples(overNtfSamples);
                 yieldOverviewDto.setPassSamples(overPassSamples);
