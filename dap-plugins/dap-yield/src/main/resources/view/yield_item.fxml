@@ -57,7 +57,7 @@
                                             <children>
                                                 <HBox alignment="CENTER_LEFT" GridPane.columnIndex="0">
                                                     <children>
-                                                        <Label text="PrimaryKey" ></Label>
+                                                        <Label text="%PRIMER_KEY" ></Label>
                                                         <Label style="-fx-text-fill: #EA2028;" text="*"/>
                                                     </children>
                                                 </HBox>

@@ -16,6 +16,7 @@ import com.dmsoft.firefly.plugin.yield.service.impl.YieldLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.yield.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.yield.utils.UIConstant;
 import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.yield.utils.YieldValidateUtil;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -271,7 +272,7 @@ public class YieldItemController implements Initializable {
                 });
             }
         });
-
+        YieldValidateUtil.validateYield(configComboBox);
         initComponentEvent();
         initItemData();
         initYieldConfig();
@@ -332,15 +333,15 @@ public class YieldItemController implements Initializable {
         TooltipUtil.installNormalTooltip(exportBtn, YieldFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_CONFIG));
         itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_datasource_normal.png")));
         itemTab.setStyle("-fx-padding: 0 5 0 5");
-        itemTab.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("SPC_TEST_ITEM")));
+        itemTab.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("YIELD_TEST_ITEM")));
 
         configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_config_normal.png")));
         configTab.setStyle("-fx-padding: 0 5 0 5");
-        configTab.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("SPC_CONFIG")));
+        configTab.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("YIELD_CONFIG")));
 
         timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
         timeTab.setStyle("-fx-padding: 0 5 0 5");
-        timeTab.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("SPC_TIMER_SETTING")));
+        timeTab.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("YIELD_TIMER_SETTING")));
     }
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
         if (pop == null) {
@@ -741,18 +742,28 @@ public class YieldItemController implements Initializable {
         });
         return selectTestItemDtosResult;
     }
-
     private void initYieldConfig() {
+       YieldAnalysisConfigDto yieldAnalysisConfigDto = this.getYieldConfigPreference();
+        if (yieldAnalysisConfigDto == null) {
+            yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
+            yieldAnalysisConfigDto.setPrimaryKey("");
+//            yieldAnalysisConfigDto.setTopN(null);
+            this.updateYieldConfigPreference(yieldAnalysisConfigDto);
+        }
         ObservableList<String> primaryKeyList = FXCollections.observableArrayList();
+        primaryKeyList.add("");
         for (String item : originalItems) {
             primaryKeyList.add(item);
         }
         configComboBox.setItems(primaryKeyList);
         if (primaryKeyList.size() > 0) {
-            configComboBox.setValue(primaryKeyList.get(0));
+            configComboBox.setValue(yieldAnalysisConfigDto.getPrimaryKey());
+//            set TopN
         }
 
+
     }
+
 
     private boolean isConfigError() {
         if (null==configComboBox.getValue()&&configComboBox.getValue().equals("")) {
@@ -904,6 +915,14 @@ public class YieldItemController implements Initializable {
         userPreferenceDto.setCode("yield_config_preference");
         userPreferenceDto.setValue(configDto);
         userPreferenceService.updatePreference(userPreferenceDto);
+    }
+    private YieldAnalysisConfigDto getYieldConfigPreference() {
+        String value = userPreferenceService.findPreferenceByUserId("yield_config_preference", envService.getUserName());
+        if (StringUtils.isNotBlank(value)) {
+            return mapper.fromJson(value, YieldAnalysisConfigDto.class);
+        } else {
+            return null;
+        }
     }
 
     private int findNewSite(List<ItemTableModel> modelList, ItemTableModel model) {
