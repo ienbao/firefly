@@ -574,6 +574,7 @@ public class ViewDataController implements Initializable {
             this.type = type;
         }
 
+
         String getWithinLowerLimit() {
             return withinLowerLimit;
         }
