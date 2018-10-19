@@ -8,4 +8,5 @@ public class UIConstant {
     public static final String[] YIELD_CHOOSE_RESULT = new String[]{
             "LSL/Fail", "USL/Pass", "Total Samples", "FPY Samples", "NTF Samples", "NG Samples", "%FPY", "%NTF", "%NG"
     };
+    
 }

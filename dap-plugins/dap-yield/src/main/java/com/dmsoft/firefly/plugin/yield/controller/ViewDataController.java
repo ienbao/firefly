@@ -243,6 +243,7 @@ public class ViewDataController implements Initializable {
             }
             setViewData(this.dataFrame,null, statisticalSearchConditionDtoList);
         });
+
     }
 
     private void getChooseColumnBtnEvent() {

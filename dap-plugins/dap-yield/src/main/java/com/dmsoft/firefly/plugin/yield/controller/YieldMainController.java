@@ -662,7 +662,7 @@ public class YieldMainController implements Initializable {
 //        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
 //    }
 
-    /* 刷新viewData数据（通过两个条件过滤数据） */
+    /* 刷新viewData数据（通过行和列过滤数据） */
     public void refreshViewData(List<SearchConditionDto> OverViewConditionDtoList){
         YieldRefreshJudgeUtil yieldRefreshJudgeUtil = YieldRefreshJudgeUtil.newInstance();
         List<String> currentViewDataSelectRowKeyList = yieldRefreshJudgeUtil.getCurrentViewDataSelectRowKeyList();//获取选中的项
