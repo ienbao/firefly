@@ -7,7 +7,7 @@ import com.dmsoft.bamboo.common.dto.AbstractValueObject;
  */
 public class YieldOverviewDto extends AbstractValueObject {
 
-//    private String key;
+    private String key;
     private String itemName;
     private String uslOrPass;
     private String lslOrPass;
@@ -20,13 +20,13 @@ public class YieldOverviewDto extends AbstractValueObject {
     private Double ntfPercent;
     private Double ngPersent;
 
-//    public String getKey() {
-//        return key;
-//    }
-//
-//    public void setKey(String key) {
-//        this.key = key;
-//    }
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public String getItemName() {
         return itemName;

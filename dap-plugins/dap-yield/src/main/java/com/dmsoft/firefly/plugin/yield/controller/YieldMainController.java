@@ -4,10 +4,7 @@ import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.*;
-import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldAnalysisConfigDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
+import com.dmsoft.firefly.plugin.yield.dto.*;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
 import com.dmsoft.firefly.plugin.yield.utils.ImageUtils;
@@ -55,7 +52,7 @@ public class YieldMainController implements Initializable {
     private SearchDataFrame dataFrame;
     private YieldAnalysisConfigDto analysisConfigDto;
     private List<SearchConditionDto> initSearchConditionDtoList;
-//      private YieldSettingDto spcSettingDto;
+    private YieldSettingDto spcSettingDto;
     private YieldSettingService yieldSettingService = RuntimeContext.getBean(YieldSettingService.class);
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private List<String> lastViewDataRowKeyList;
@@ -867,14 +864,16 @@ public class YieldMainController implements Initializable {
 //    }
 //
 //
-//    public SpcSettingDto getSpcSettingDto() {
-//        return spcSettingDto;
-//    }
-//
-//    public void setSpcSettingDto(SpcSettingDto spcSettingDto) {
-//        this.spcSettingDto = spcSettingDto;
-//    }
-//
+
+    public YieldSettingDto getSpcSettingDto() {
+        return spcSettingDto;
+    }
+
+    public void setSpcSettingDto(YieldSettingDto spcSettingDto) {
+        this.spcSettingDto = spcSettingDto;
+    }
+
+
 //    /**
 //     * method to set is timer or not
 //     *
