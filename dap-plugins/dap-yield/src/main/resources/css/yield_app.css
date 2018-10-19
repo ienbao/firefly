@@ -134,7 +134,7 @@ table
 */
 .alarm-excellent {
     -fx-alignment: center;
-    -fx-pref-width: 22;
+    -fx-pref-width: 60;
     -fx-pref-height: 22;
     -fx-text-fill: white;
     -fx-background-color: #4ebe11;
@@ -142,7 +142,7 @@ table
 
 .alarm-good {
     -fx-alignment: center;
-    -fx-pref-width: 22;
+    -fx-pref-width: 60;
     -fx-pref-height: 22;
     -fx-text-fill: white;
     -fx-background-color: #27b5b3;
@@ -150,7 +150,7 @@ table
 
 .alarm-acceptable {
     -fx-alignment: center;
-    -fx-pref-width: 22;
+    -fx-pref-width: 60;
     -fx-pref-height: 22;
     -fx-text-fill: white;
     -fx-background-color: #487cf4;
@@ -158,7 +158,7 @@ table
 
 .alarm-rectification {
     -fx-alignment: center;
-    -fx-pref-width: 22;
+    -fx-pref-width: 60;
     -fx-pref-height: 22;
     -fx-text-fill: white;
     -fx-background-color: #f38400;
@@ -166,7 +166,7 @@ table
 
 .alarm-bad {
     -fx-alignment: center;
-    -fx-pref-width: 22;
+    -fx-pref-width: 60;
     -fx-pref-height: 22;
     -fx-text-fill: white;
     -fx-background-color: #ea2028;
