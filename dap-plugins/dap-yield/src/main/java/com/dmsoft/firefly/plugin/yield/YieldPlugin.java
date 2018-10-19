@@ -129,8 +129,8 @@ public class YieldPlugin extends Plugin {
         jobManager.initializeJob(ParamKeys.FIND_YIELD_SETTING_DATA_JOP_PIPELINE, jobFactory.createJobPipeLine()
                 .addLast(new FindYieldSettingDataHandler()));
 //
-//        jobManager.initializeJob(ParamKeys.SAVE_SPC_SETTING_DATA_JOP_PIPELINE, jobFactory.createJobPipeLine()
-//                .addLast(new SaveSpcSettingDataHandler()));
+        jobManager.initializeJob(ParamKeys.SAVE_YIELD_SETTING_DATA_JOP_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new SaveYieldSettingDataHandler()));
 //
 //        jobManager.initializeJob(ParamKeys.SPC_EXPORT_VIEW_DATA, jobFactory.createJobPipeLine()
 //                .addLast(new FindTestDataHandler().setWeight(D100))

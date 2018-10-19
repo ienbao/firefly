@@ -22,5 +22,11 @@ public interface YieldSettingService {
      * @return spc setting
      */
     YieldSettingDto findYieldSetting();
+    /**
+     * save yiels config setting
+     *
+     * @param yieldSettingDto spc setting
+     */
+    void saveYieldSetting(YieldSettingDto yieldSettingDto);
 }
 

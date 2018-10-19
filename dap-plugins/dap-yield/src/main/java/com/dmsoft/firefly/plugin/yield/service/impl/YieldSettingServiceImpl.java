@@ -167,4 +167,15 @@ public class YieldSettingServiceImpl implements YieldSettingService, IConfig {
         }
         return yieldSettingDto;
     }
+    @ExcludeMethod
+    @Override
+    public void saveYieldSetting(YieldSettingDto yieldSettingDto) {
+        String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.YieldPlugin").getFolderPath() + File.separator + "config";
+        String json = JsonFileUtil.readJsonFile(path, ParamKeys.YIELD_SETTING_FILE_NAME);
+        if (json == null) {
+            logger.debug("Don`t find " + ParamKeys.YIELD_SETTING_FILE_NAME);
+        }
+
+        JsonFileUtil.writeJsonFile(yieldSettingDto, path, ParamKeys.YIELD_SETTING_FILE_NAME);
+    }
 }
