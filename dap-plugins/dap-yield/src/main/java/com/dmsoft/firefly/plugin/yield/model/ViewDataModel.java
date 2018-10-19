@@ -66,10 +66,9 @@ public class ViewDataModel {
      * @param dataFrame       search data frame
      * @param selectedRowKeys selected row keys
      */
-    public ViewDataModel(SearchDataFrame dataFrame, String selectedColumnKeys, List<String>  selectedRowKeys) {
+    public ViewDataModel(SearchDataFrame dataFrame, List<String>  selectedRowKeys) {
         this.dataFrame = dataFrame;
         this.initSelectedRowKeys = selectedRowKeys;
-        this.initSelectedColumnKeys = selectedColumnKeys;
         this.headerArray = FXCollections.observableArrayList(dataFrame.getAllTestItemName());
         this.headerArray.add(0, " ");
         this.rowKeyArray = FXCollections.observableArrayList(dataFrame.getAllRowKeys());

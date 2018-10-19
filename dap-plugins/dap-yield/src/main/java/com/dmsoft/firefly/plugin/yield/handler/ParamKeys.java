@@ -29,7 +29,7 @@ public class ParamKeys {
     public static final String YIELD_STATS_RESULT_HANDLER = "yieldStatsResultHandler";
     public static final String SPC_CHART_RESULT_HANDLER = "spcChartResultHandler";
     public static final String FIND_YIELD_SETTING_HANDLER = "findYieldSettingHandler";
-    public static final String SAVE_SPC_SETTING_HANDLER = "saveSpcSettingHandler";
+    public static final String SAVE_YIELD_SETTING_HANDLER = "saveYieldSettingHandler";
     public static final String TIMER_REFRESH_ANALYSIS_HANDLER = "timerRefreshAnalysisHandler";
 
     //pipeline
@@ -40,15 +40,15 @@ public class ParamKeys {
     public static final String SPC_REFRESH_CHART_EXPORT_JOB_PIPELINE = "spcRefreshChartExportJobPipeline";
     public static final String YIELD_RESET_JOB_PIPELINE = "yieldResetJobPipeline";
     public static final String SPC_REFRESH_STATISTICAL_JOB_PIPELINE = "spcRefreshStatisticalJobPipeline";
-    public static final String FIND_SPC_SETTING_DATA_JOP_PIPELINE = "findSpcSettingDataJobPipeline";
-    public static final String SAVE_SPC_SETTING_DATA_JOP_PIPELINE = "saveSpcSettingDataJobPipeline";
+    public static final String FIND_YIELD_SETTING_DATA_JOP_PIPELINE = "findYieldSettingDataJobPipeline";
+    public static final String SAVE_YIELD_SETTING_DATA_JOP_PIPELINE = "saveYieldSettingDataJobPipeline";
     public static final String SPC_EXPORT_VIEW_DATA = "spcExportViewData";
     public static final String SPC_TIMER_REFRESH_ANALYSIS_JOB_PIPELINE = "spcTimerRefreshAnalysisJobPipeline";
 
     public static final String SPC_ANALYSIS_CONDITION_KEY = "analysisKey";
 
     //file name
-    public static final String SPC_SETTING_FILE_NAME = "spcSetting";
-    public static final String SPC_EXPORT_SETTING_FILE_NAME = "spcExportSetting";
-    public static final String SPC_CONFIG_FILE_NAME = "spcConfig";
+    public static final String YIELD_SETTING_FILE_NAME = "yieldSetting";
+    public static final String YIELD_EXPORT_SETTING_FILE_NAME = "yieldExportSetting";
+    public static final String YIELD_CONFIG_FILE_NAME = "yieldConfig";
 }

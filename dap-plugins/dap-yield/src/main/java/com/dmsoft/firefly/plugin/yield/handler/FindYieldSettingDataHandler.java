@@ -1,5 +1,7 @@
 package com.dmsoft.firefly.plugin.yield.handler;
 
+import com.dmsoft.firefly.plugin.yield.dto.YieldSettingDto;
+import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.job.core.AbstractBasicJobHandler;
 import com.dmsoft.firefly.sdk.job.core.JobContext;
@@ -14,8 +16,8 @@ public class FindYieldSettingDataHandler extends AbstractBasicJobHandler {
 
     @Override
     public void doJob(JobContext context) {
-//        YieldSettingService spcSettingService = RuntimeContext.getBean(YieldSettingService.class);
-//        YieldSettingDto yieldSettingDto = spcSettingService.findYieldSetting();
-//        context.put(ParamKeys.YIELD_SETTING_DTO, yieldSettingDto);
+        YieldSettingService spcSettingService = RuntimeContext.getBean(YieldSettingService.class);
+        YieldSettingDto yieldSettingDto = spcSettingService.findYieldSetting();
+        context.put(ParamKeys.YIELD_SETTING_DTO, yieldSettingDto);
     }
 }

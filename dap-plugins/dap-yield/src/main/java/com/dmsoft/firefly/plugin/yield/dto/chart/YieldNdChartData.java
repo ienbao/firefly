@@ -1,6 +1,6 @@
 package com.dmsoft.firefly.plugin.yield.dto.chart;
 
-import com.dmsoft.firefly.plugin.yield.charts.data.NDBarChartData;
+import com.dmsoft.firefly.plugin.spc.charts.data.NDBarChartData;
 import com.dmsoft.firefly.plugin.yield.charts.data.basic.IBarChartData;
 import com.dmsoft.firefly.plugin.yield.charts.data.basic.IXYChartData;
 import com.dmsoft.firefly.plugin.yield.dto.NDCResultDto;

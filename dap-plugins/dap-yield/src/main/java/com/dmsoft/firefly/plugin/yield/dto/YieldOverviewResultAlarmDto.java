@@ -1,24 +1,18 @@
 package com.dmsoft.firefly.plugin.yield.dto;
 
-import com.dmsoft.bamboo.common.dto.AbstractValueObject;
+import java.util.Map;
 
-/**
- * Created by Tod Dylan on 2018/10/16.
- */
-public class YieldOverviewDto extends AbstractValueObject {
-
+public class YieldOverviewResultAlarmDto {
     private String key;
     private String itemName;
+    private String lslOrFail;
     private String uslOrPass;
-    private String lslOrPass;
     private Integer totalSamples;
     private Integer fpySamples;
     private Integer passSamples;
     private Integer ntfSamples;
     private Integer ngSamples;
-    private Double fpyPercent;
-    private Double ntfPercent;
-    private Double ngPersent;
+    private Map<String, OverviewAlarmDto> overviewAlarmDtoMap;
 
     public String getKey() {
         return key;
@@ -36,20 +30,20 @@ public class YieldOverviewDto extends AbstractValueObject {
         this.itemName = itemName;
     }
 
+    public String getLslOrFail() {
+        return lslOrFail;
+    }
+
+    public void setLslOrFail(String lslOrFail) {
+        this.lslOrFail = lslOrFail;
+    }
+
     public String getUslOrPass() {
         return uslOrPass;
     }
 
     public void setUslOrPass(String uslOrPass) {
         this.uslOrPass = uslOrPass;
-    }
-
-    public String getLslOrPass() {
-        return lslOrPass;
-    }
-
-    public void setLslOrPass(String lslOrPass) {
-        this.lslOrPass = lslOrPass;
     }
 
     public Integer getTotalSamples() {
@@ -92,27 +86,11 @@ public class YieldOverviewDto extends AbstractValueObject {
         this.ngSamples = ngSamples;
     }
 
-    public Double getFpyPercent() {
-        return fpyPercent;
+    public Map<String, OverviewAlarmDto> getOverviewAlarmDtoMap() {
+        return overviewAlarmDtoMap;
     }
 
-    public void setFpyPercent(Double fpyPercent) {
-        this.fpyPercent = fpyPercent;
-    }
-
-    public Double getNtfPercent() {
-        return ntfPercent;
-    }
-
-    public void setNtfPercent(Double ntfPercent) {
-        this.ntfPercent = ntfPercent;
-    }
-
-    public Double getNgPersent() {
-        return ngPersent;
-    }
-
-    public void setNgPersent(Double ngPersent) {
-        this.ngPersent = ngPersent;
+    public void setOverviewAlarmDtoMap(Map<String, OverviewAlarmDto> overviewAlarmDtoMap) {
+        this.overviewAlarmDtoMap = overviewAlarmDtoMap;
     }
 }
