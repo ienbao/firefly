@@ -4,6 +4,7 @@ import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
 import com.dmsoft.firefly.plugin.yield.model.OverViewTableModel;
 import com.dmsoft.firefly.plugin.yield.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.yield.utils.UIConstant;
@@ -79,7 +80,30 @@ public class OverViewController implements Initializable {
 
     /* 表格点击事件 */
 
-
+    /**
+     * set statistical result table data
+     *
+     * @param list the data list
+     * @param isTimer isTimer
+     * @param selectRowKey selectRowKey
+     */
+    public void setTimerOverviewResultTableData(List<YieldOverviewResultAlarmDto> list, List<String> selectRowKey, boolean isTimer) {
+//        List<String> columnList = statisticalTableModel.getColumnList();
+//        statisticalTableModel = new StatisticalTableModel();
+//        statisticalTableModel.setTimer(isTimer);
+//        statisticalTableModel.initColumn(columnList);
+//        this.initTableMenuEvent();
+//        TableViewWrapper.decorate(statisticalResultTb, statisticalTableModel);
+//
+//        statisticalTableModel.initData(list);
+//        statisticalTableModel.setSelect(selectRowKey);
+//
+//        statisticalTableModel.getAllCheckBox().setOnAction(event -> getAllCheckBoxEvent());
+        overViewTableModel.initData(list);
+//        overViewTableModel.setSelect(selectRowKey);
+//        overViewTableModel.setTimer(isTimer);
+        overViewTableModel.filterTestItem(filterTestItemTf.getTextField().getText());
+    }
 
 
 }

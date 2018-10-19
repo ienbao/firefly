@@ -4,6 +4,7 @@ import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.utils.ValidateUtils;
+import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldResultDto;
 import com.dmsoft.firefly.plugin.yield.utils.SourceObjectProperty;
 import com.dmsoft.firefly.plugin.yield.utils.UIConstant;
@@ -94,7 +95,7 @@ public class OverViewTableModel  implements TableModel{
      *
      * @param spcStatsDtoList data list
      */
-    public void initData(List<YieldResultDto> spcStatsDtoList) {
+    public void initData(List<YieldOverviewResultAlarmDto> overviewResultAlarmDtoList) {
         tableView.getSortOrder().clear();
         tableView.sort();
 //        this.spcStatsDtoList = spcStatsDtoList;
