@@ -48,7 +48,7 @@ public class ParamKeys {
     public static final String SPC_ANALYSIS_CONDITION_KEY = "analysisKey";
 
     //file name
-    public static final String SPC_SETTING_FILE_NAME = "spcSetting";
-    public static final String SPC_EXPORT_SETTING_FILE_NAME = "spcExportSetting";
-    public static final String SPC_CONFIG_FILE_NAME = "spcConfig";
+    public static final String YIELD_SETTING_FILE_NAME = "yieldSetting";
+    public static final String YIELD_EXPORT_SETTING_FILE_NAME = "yieldExportSetting";
+    public static final String YIELD_CONFIG_FILE_NAME = "yieldConfig";
 }

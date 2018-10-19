@@ -5,6 +5,7 @@ import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.spc.controller.SpcSettingController;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+import com.dmsoft.firefly.plugin.yield.dto.YieldSettingDto;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.yield.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -95,11 +96,10 @@ public class YieldSettingController implements Initializable {
     public void initData() {
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
         RuntimeContext.getBean(JobManager.class).fireJobSyn(ParamKeys.FIND_YIELD_SETTING_DATA_JOP_PIPELINE, context);
-//
-//       YieldSettingDto yieldSettingDto = context.getParam(ParamKeys.YIELD_SETTING_DTO, YieldSettingDto.class);
-//        this.setProcessAlarmSettingData(yieldSettingDto.getAbilityAlarmRule());
-//        this.setCustomAlarmSettingData(yieldSettingDto.getStatisticalAlarmSetting());
-//        this.setExportSettingData(yieldSettingDto.getExportTemplateName());
+
+        YieldSettingDto yieldSettingDto = context.getParam(ParamKeys.YIELD_SETTING_DTO, YieldSettingDto.class);
+        this.setProcessAlarmSettingData(yieldSettingDto.getAbilityAlarmRule());
+        this.setExportSettingData(yieldSettingDto.getExportTemplateName());
     }
 
 
@@ -134,7 +134,7 @@ public class YieldSettingController implements Initializable {
             Double[] value = abilityAlarmRule.get(key);
             if (YieldProCapAlarmKey.FPY.getCode().equals(key)) {
                 FPYExcellentTf.setText(alarmDataToText(value[0]));
-                FPYAcceptableTf.setText(alarmDataToText(value[1]));
+                FPYGoodTf.setText(alarmDataToText(value[1]));
                 FPYAcceptableTf.setText(alarmDataToText(value[2]));
             } else if (YieldProCapAlarmKey.NTF.getCode().equals(key)) {
                 NTFExcellentTf.setText(alarmDataToText(value[0]));
@@ -188,7 +188,7 @@ public class YieldSettingController implements Initializable {
 //            WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER), SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_SETTING_APPLY_WARN_MESSAGE));
 //            return false;
 //        }
-        return true;
+        return false;
     }
     private void saveSetting() {
 //        SpcSettingDto spcSettingDto = this.buildSaveSettingData();
