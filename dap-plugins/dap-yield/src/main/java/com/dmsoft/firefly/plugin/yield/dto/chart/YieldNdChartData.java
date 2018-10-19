@@ -1,8 +1,8 @@
 package com.dmsoft.firefly.plugin.yield.dto.chart;
 
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
 import com.dmsoft.firefly.plugin.yield.charts.data.NDBarChartData;
 import com.dmsoft.firefly.plugin.yield.charts.data.basic.IBarChartData;
+import com.dmsoft.firefly.plugin.yield.charts.data.basic.IXYChartData;
 import com.dmsoft.firefly.plugin.yield.dto.NDCResultDto;
 import com.dmsoft.firefly.plugin.yield.dto.chart.pel.YieldBarChartData;
 import com.dmsoft.firefly.plugin.yield.dto.chart.pel.YieldXYChartData;
@@ -16,7 +16,7 @@ import java.util.List;
 public  class YieldNdChartData implements NDBarChartData {
     private NDCResultDto ndcResultDto;
     private YieldXYChartData xyChartData;
-    private YieldBarChartData barChartData = null;
+    private YieldBarChartData barChartData ;
 
     private String seriesName;
     private String key;
@@ -47,19 +47,26 @@ public  class YieldNdChartData implements NDBarChartData {
 
     }
 
-//    @Override
-//    public IBarChartData getBarChartData() {
-//        return barChartData;
-//    }
+
+
+    @Override
+    public IBarChartData getBarChartData() {
+        return barChartData;
+    }
 
     @Override
     public IXYChartData getXYChartData() {
-        return null;
+        return xyChartData;
     }
 
     @Override
     public Color getColor() {
         return color;
+    }
+
+    @Override
+    public String getUniqueKey() {
+        return key;
     }
 
 

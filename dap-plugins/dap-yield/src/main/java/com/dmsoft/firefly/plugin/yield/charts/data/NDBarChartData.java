@@ -1,9 +1,8 @@
 package com.dmsoft.firefly.plugin.yield.charts.data;
 
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.IBarChartData;
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.ILineData;
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.IXYChartData;
 import com.dmsoft.firefly.plugin.yield.charts.AxisRange;
+import com.dmsoft.firefly.plugin.yield.charts.data.basic.IBarChartData;
+import com.dmsoft.firefly.plugin.yield.charts.data.basic.IXYChartData;
 import javafx.scene.paint.Color;
 
 import java.util.List;
@@ -14,7 +13,7 @@ public interface NDBarChartData extends AxisRange {
      *
      * @return bar data
      */
-//    IBarChartData getBarChartData();
+    IBarChartData getBarChartData();
 
     /**
      * Get area data
@@ -42,7 +41,7 @@ public interface NDBarChartData extends AxisRange {
      * @return series unique key
      */
 
-
+    String getUniqueKey();
     /**
      * Get series name
      *

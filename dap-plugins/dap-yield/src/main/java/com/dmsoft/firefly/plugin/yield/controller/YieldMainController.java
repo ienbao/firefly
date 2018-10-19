@@ -22,8 +22,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javafx.scene.control.Button;
 
+import java.awt.*;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 
@@ -374,6 +376,11 @@ public class YieldMainController implements Initializable {
         TooltipUtil.installNormalTooltip(printBtn, YieldFxmlAndLanguageUtils.getString("YIELD_PRINT_BTN_TOOLTIP"));
         TooltipUtil.installNormalTooltip(exportBtn, YieldFxmlAndLanguageUtils.getString("YIELD_EXPORT_BTN_TOOLTIP"));
         TooltipUtil.installNormalTooltip(chooseBtn, YieldFxmlAndLanguageUtils.getString("YIELD_REFRESH_BTN_TOOLTIP"));
+    }
+
+    public Map<String, Color> getColorCache() {
+
+        return  null;
     }
 
 //    public SearchDataFrame getDataFrame() {
