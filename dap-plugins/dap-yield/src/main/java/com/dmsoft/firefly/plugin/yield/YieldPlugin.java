@@ -86,13 +86,13 @@ public class YieldPlugin extends Plugin {
         menuItem.setMnemonicParsing(true);
         menuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
         menuItem.setOnAction(event -> {
-            if (StageMap.getStage(StateKey.Yield_SETTING) == null) {
+            if (StageMap.getStage(StateKey.YIELD_SETTING) == null) {
                 initYieldSettingDialog();
             } else {
                 if (yieldSettingController != null) {
                     yieldSettingController.initData();
                 }
-                StageMap.showStage(StateKey.Yield_SETTING);
+                StageMap.showStage(StateKey.YIELD_SETTING);
             }
         });
         RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.YieldPlugin",
@@ -126,8 +126,8 @@ public class YieldPlugin extends Plugin {
 //        jobManager.initializeJob(ParamKeys.SPC_REFRESH_ANALYSIS_JOB_PIPELINE, jobFactory.createJobPipeLine()
 //                .addLast(new RefreshAnalysisDataHandler().setWeight(D100)));
 //
-//        jobManager.initializeJob(ParamKeys.FIND_SPC_SETTING_DATA_JOP_PIPELINE, jobFactory.createJobPipeLine()
-//                .addLast(new FindSpcSettingDataHandler()));
+        jobManager.initializeJob(ParamKeys.FIND_YIELD_SETTING_DATA_JOP_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new FindYieldSettingDataHandler()));
 //
 //        jobManager.initializeJob(ParamKeys.SAVE_SPC_SETTING_DATA_JOP_PIPELINE, jobFactory.createJobPipeLine()
 //                .addLast(new SaveSpcSettingDataHandler()));
@@ -155,7 +155,7 @@ public class YieldPlugin extends Plugin {
             FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML("view/yield_setting.fxml");
             root = fxmlLoader.load();
             yieldSettingController = fxmlLoader.getController();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.Yield_SETTING, YieldFxmlAndLanguageUtils.getString("Yield_SETTINGS"), root, getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.YIELD_SETTING, YieldFxmlAndLanguageUtils.getString("Yield_SETTINGS"), root, getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
             stage.setResizable(false);
             stage.toFront();
             stage.show();

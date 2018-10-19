@@ -6,6 +6,8 @@ import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.*;
 import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldAnalysisConfigDto;
+import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewDto;
+import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
 import com.dmsoft.firefly.plugin.yield.utils.ImageUtils;
@@ -44,8 +46,8 @@ public class YieldMainController implements Initializable {
     private Button chooseBtn;
     @FXML
     private YieldItemController yieldItemController;
-//    @FXML
-//    private StatisticalResultController statisticalResultController;
+    @FXML
+    private OverViewController overViewController;
     @FXML
     private ViewDataController viewDataController;
 //    @FXML
@@ -88,16 +90,16 @@ public class YieldMainController implements Initializable {
         }
     }
 
-//    /**
-//     * set statistical result data
-//     *
-//     * @param list         the data list
-//     * @param isTimer      isTimer
-//     * @param selectRowKey selectRowKey
-//     */
-//    public void setStatisticalResultData(List<SpcStatisticalResultAlarmDto> list, List<String> selectRowKey, boolean isTimer) {
-//        statisticalResultController.setTimerStatisticalResultTableData(list, selectRowKey, isTimer);
-//    }
+    /**
+     * set overview result data
+     *
+     * @param list         the data list
+     * @param isTimer      isTimer
+     * @param selectRowKey selectRowKey
+     */
+    public void setOverviewResultData(List<YieldOverviewResultAlarmDto> list, List<String> selectRowKey, boolean isTimer) {
+        overViewController.setTimerOverviewResultTableData(list, selectRowKey, isTimer);
+    }
 //
 //    /**
 //     * timer refresh statistical result data
@@ -381,21 +383,31 @@ public class YieldMainController implements Initializable {
         TooltipUtil.installNormalTooltip(chooseBtn, YieldFxmlAndLanguageUtils.getString("YIELD_REFRESH_BTN_TOOLTIP"));
     }
 
-//    public SearchDataFrame getDataFrame() {
-//        return dataFrame;
-//    }
+    public YieldAnalysisConfigDto getAnalysisConfigDto() {
+        return analysisConfigDto;
+    }
+
+    public void setAnalysisConfigDto(YieldAnalysisConfigDto analysisConfigDto) {
+        this.analysisConfigDto = analysisConfigDto;
+    }
+
+    public List<SearchConditionDto> getInitSearchConditionDtoList() {
+        return initSearchConditionDtoList;
+    }
+
+    public void setInitSearchConditionDtoList(List<SearchConditionDto> initSearchConditionDtoList) {
+        this.initSearchConditionDtoList = initSearchConditionDtoList;
+    }
+
+        public SearchDataFrame getDataFrame() {
+        return dataFrame;
+    }
+
+    public void setDataFrame(SearchDataFrame dataFrame) {
+        this.dataFrame = dataFrame;
+    }
 //
-//    public void setDataFrame(SearchDataFrame dataFrame) {
-//        this.dataFrame = dataFrame;
-//    }
-//
-//    public SpcAnalysisConfigDto getAnalysisConfigDto() {
-//        return analysisConfigDto;
-//    }
-//
-//    public void setAnalysisConfigDto(SpcAnalysisConfigDto analysisConfigDto) {
-//        this.analysisConfigDto = analysisConfigDto;
-//    }
+
 //
 //    public List<SearchConditionDto> getInitSearchConditionDtoList() {
 //        return initSearchConditionDtoList;

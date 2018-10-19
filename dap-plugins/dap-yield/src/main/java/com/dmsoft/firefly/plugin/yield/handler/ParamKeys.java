@@ -40,7 +40,7 @@ public class ParamKeys {
     public static final String SPC_REFRESH_CHART_EXPORT_JOB_PIPELINE = "spcRefreshChartExportJobPipeline";
     public static final String YIELD_RESET_JOB_PIPELINE = "yieldResetJobPipeline";
     public static final String SPC_REFRESH_STATISTICAL_JOB_PIPELINE = "spcRefreshStatisticalJobPipeline";
-    public static final String FIND_SPC_SETTING_DATA_JOP_PIPELINE = "findSpcSettingDataJobPipeline";
+    public static final String FIND_YIELD_SETTING_DATA_JOP_PIPELINE = "findYieldSettingDataJobPipeline";
     public static final String SAVE_SPC_SETTING_DATA_JOP_PIPELINE = "saveSpcSettingDataJobPipeline";
     public static final String SPC_EXPORT_VIEW_DATA = "spcExportViewData";
     public static final String SPC_TIMER_REFRESH_ANALYSIS_JOB_PIPELINE = "spcTimerRefreshAnalysisJobPipeline";

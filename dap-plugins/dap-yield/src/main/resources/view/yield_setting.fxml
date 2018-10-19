@@ -108,7 +108,7 @@
                                                 <Label text="&lt;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
 
-                                                <TextField fx:id="FTPExcellentTf" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                <TextField fx:id="FPYExcellentTf" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                                 <TextField fx:id="NTFExcellentTf" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                                 <TextField fx:id="NGExcellentTf" GridPane.columnIndex="2" GridPane.rowIndex="5" />
 
@@ -126,7 +126,7 @@
                                                 <Label text="&lt;" GridPane.columnIndex="5" GridPane.rowIndex="5" />
 
 
-                                                <TextField fx:id="FTPGoodTf" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                                                <TextField fx:id="FPYGoodTf" GridPane.columnIndex="6" GridPane.rowIndex="1" />
                                                 <TextField fx:id="NTFGoodTf" GridPane.columnIndex="6" GridPane.rowIndex="3" />
                                                 <TextField fx:id="NGGoodTf" GridPane.columnIndex="6" GridPane.rowIndex="5" />
 
@@ -145,7 +145,7 @@
                                                 <Label text="&lt;" GridPane.columnIndex="9" GridPane.rowIndex="5" />
 
 
-                                                <TextField fx:id="FTPAcceptableTf" GridPane.columnIndex="10" GridPane.rowIndex="1" />
+                                                <TextField fx:id="FPYAcceptableTf" GridPane.columnIndex="10" GridPane.rowIndex="1" />
                                                 <TextField fx:id="NTFAcceptableTf" GridPane.columnIndex="10" GridPane.rowIndex="3" />
                                                 <TextField fx:id="NGAcceptableTf" GridPane.columnIndex="10" GridPane.rowIndex="5" />
 
