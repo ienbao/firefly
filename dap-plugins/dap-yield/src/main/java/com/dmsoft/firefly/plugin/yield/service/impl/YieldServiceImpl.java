@@ -10,6 +10,7 @@ import com.dmsoft.firefly.sdk.job.core.JobContext;
 import com.dmsoft.firefly.sdk.job.core.JobEvent;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 
 import org.slf4j.Logger;
@@ -95,21 +96,31 @@ public class YieldServiceImpl implements YieldService {
                                 key = entry.getKey();
                             }
                         }
-                        if (searchConditions.get(i).getTestItemType().getCode().equals("Variable") || searchConditions.get(i).getTestItemType() == null) {
-                            double lsl = Double.parseDouble(searchConditions.get(i).getLslOrFail());
-                            double usl = Double.parseDouble(searchConditions.get(i).getUslOrPass());
-                            if (Double.parseDouble(rowDataDto.getData().get(key)) >= lsl && Double.parseDouble(rowDataDto.getData().get(key)) <= usl) {
-                                ngFlag = ngFlag +1;
-                                if (j == 0) {
-                                    overFpySamples = overFpySamples + 1;
-                                    overPassSamples = overPassSamples + 1;
-                                    break;
-                                } else if (j > 0 && j <= rowKeys.size() - 1) {
-                                    overNtfSamples = overNtfSamples + j;
-                                    overPassSamples = overPassSamples + 1;
-                                    break;
-                                }
+                        if (searchConditions.get(i).getTestItemType().getCode().equals("Variable")) {
+                            String lslOrFail = searchConditions.get(i).getLslOrFail();
+                            String uslOrPass = searchConditions.get(i).getUslOrPass();
+                            double lsl = Double.NaN;
+                            double usl = Double.NaN;
+                            if (DAPStringUtils.isNumeric(lslOrFail)) {
+                                lsl = Double.parseDouble(searchConditions.get(i).getLslOrFail());
                             }
+                            if (DAPStringUtils.isNumeric(uslOrPass)){
+                                usl = Double.parseDouble(searchConditions.get(i).getUslOrPass());
+                            }
+
+                                if (Double.parseDouble(rowDataDto.getData().get(key)) >= lsl && Double.parseDouble(rowDataDto.getData().get(key)) <= usl && usl != Double.NaN && lsl != Double.NaN) {
+                                    ngFlag = ngFlag + 1;
+                                    if (j == 0) {
+                                        overFpySamples = overFpySamples + 1;
+                                        overPassSamples = overPassSamples + 1;
+                                        break;
+                                    } else if (j > 0 && j <= rowKeys.size() - 1) {
+                                        overNtfSamples = overNtfSamples + j;
+                                        overPassSamples = overPassSamples + 1;
+                                        break;
+                                    }
+                                }
+
                         } else if (searchConditions.get(i).getTestItemType().getCode().equals("Attribute")) {
                             if (rowDataDto.getData().get(key).equals(searchConditions.get(i).getUslOrPass())) {
                                 ngFlag = ngFlag +1;
@@ -138,9 +149,9 @@ public class YieldServiceImpl implements YieldService {
                 yieldOverviewDto.setNtfSamples(overNtfSamples);
                 yieldOverviewDto.setPassSamples(overPassSamples);
                 yieldOverviewDto.setNgSamples(overNgSamples);
-                yieldOverviewDto.setFpyPercent((double) (overFpySamples / overTotalSamples));
-                yieldOverviewDto.setNtfPercent((double) (overNtfSamples / overTotalSamples));
-                yieldOverviewDto.setNgPersent((double) (overNgSamples / overTotalSamples));
+                yieldOverviewDto.setFpyPercent((double) overFpySamples / (double)overTotalSamples);
+                yieldOverviewDto.setNtfPercent((double) overNtfSamples / (double)overTotalSamples);
+                yieldOverviewDto.setNgPersent((double) overNgSamples / (double)overTotalSamples);
                 yieldOverviewDto.setItemName(searchConditions.get(i).getItemName());
                 yieldOverviewDto.setLslOrPass(searchConditions.get(i).getLslOrFail());
                 yieldOverviewDto.setUslOrPass(searchConditions.get(i).getUslOrPass());
@@ -163,9 +174,9 @@ public class YieldServiceImpl implements YieldService {
                 List<String> rowKeys = dataAndRowKeyMap.get(unRepetitionDatas.get(i));
                 for (int j = 0; j < rowKeys.size(); j++) {
                     boolean flag = false;
+                    int count = 0;
                     RowDataDto rowDataDto = searchDataFrame.getDataRow(rowKeys.get(j));
                     for (Map.Entry<String, String> entry : rowDataDto.getData().entrySet()) {
-                        int count = 0;
                         for (int k = 1; k < searchConditions.size(); k++) {
                             if (entry.getKey().equals(searchConditions.get(k).getItemName())) {
                                 if (searchConditions.get(k).getTestItemType().getCode().equals("Variable") || searchConditions.get(k).getTestItemType() == null) {
@@ -206,9 +217,9 @@ public class YieldServiceImpl implements YieldService {
             yieldTotalProcessesDto.setNtfSamples(totalProNtfSamples);
             yieldTotalProcessesDto.setPassSamples(totalProPassSamples);
             yieldTotalProcessesDto.setTotalSamples(totalProTotalSamples);
-            yieldTotalProcessesDto.setFpyPercent((double) (totalProFpySamples / totalProTotalSamples));
-            yieldTotalProcessesDto.setNgPercent((double) (totalProNgSamples / totalProTotalSamples));
-            yieldTotalProcessesDto.setNtfPercent((double) (totalProNtfSamples / totalProTotalSamples));
+            yieldTotalProcessesDto.setFpyPercent((double)totalProFpySamples / (double)totalProTotalSamples);
+            yieldTotalProcessesDto.setNgPercent((double) totalProNgSamples / (double)totalProTotalSamples);
+            yieldTotalProcessesDto.setNtfPercent((double) totalProNtfSamples / (double)totalProTotalSamples);
         }
         configDto.setTopN(5);//
         for (int i = 0; i < configDto.getTopN() && i < searchConditions.size() -1 ; i++) {
