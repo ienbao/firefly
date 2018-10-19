@@ -88,7 +88,7 @@ public class CsvResolverService implements IDataParser {
                 logStr = "Import <" + csvPath + "> failed. Csv data missing. ";
                 logger.debug(logStr);
             }
-            sourceDataService.saveProject(DAPStringUtils.filterSpeChars4Mongo(projectName));
+            sourceDataService.saveProject(projectName);
             pushProgress(40);
             String[] items = csvList.get(fileFormat.getItem() - 1);
             for (int i = 0; i < items.length; i++) {
@@ -130,6 +130,7 @@ public class CsvResolverService implements IDataParser {
             pushProgress(60);
             int len = csvList.size();
             int row = 0;
+            //TODO yuanwen  这里面要批量数据写入逻辑，这样子写入性能太低；
             for (int i = dataIndex; i < csvList.size(); i++) {
                 List<String> data = Arrays.asList(csvList.get(i));
                 RowDataDto rowDataDto = new RowDataDto();

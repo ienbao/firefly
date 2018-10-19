@@ -43,6 +43,7 @@ public class SpcServiceImpl implements SpcService {
         2.Get analysis statistical result from R
          */
         logger.debug("Getting SPC stats result...");
+        //TODO yuanwen 优化此处逻辑，特别关注内存使用情况
         if (searchDataFrame == null || searchConditions == null || configDto == null) {
             pushProgress(100);
             throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11002));
@@ -51,6 +52,7 @@ public class SpcServiceImpl implements SpcService {
         List<SpcAnalysisDataDto> spcAnalysisDataDtoList = Lists.newArrayList();
         int n = 0;
         double len = searchConditions.size();
+        //TODO yuanwen 第一步：这里对数据处理占用太多内存，需要抽取公共资管理类；第二步：分级分析对象
         for (SearchConditionDto searchConditionDto : searchConditions) {
             SpcAnalysisDataDto spcAnalysisDataDto = new SpcAnalysisDataDto();
             List<String> searchRowKeys = searchDataFrame.getSearchRowKey(searchConditionDto.getCondition());
@@ -68,7 +70,9 @@ public class SpcServiceImpl implements SpcService {
             n++;
             pushProgress((int) (n / len * 40));
         }
+        logger.debug("开始分析每个测试项的数据。。");
         for (int i = 0; i < spcAnalysisDataDtoList.size(); i++) {
+            logger.debug("开如分析数据项：" + searchConditions.get(i).getItemName());
             SpcStatsResultDto resultDto = getAnalysisService().analyzeStatsResult(spcAnalysisDataDtoList.get(i), configDto);
             SpcStatsDto statsDto = new SpcStatsDto();
             statsDto.setStatsResultDto(resultDto);
@@ -121,12 +125,12 @@ public class SpcServiceImpl implements SpcService {
                     doubleList.add(value);
                 }
             }
-            spcAnalysisDataDto.setCalculable(flag);
-            analyzedRowKeys.add(rowKeys);
-            spcAnalysisDataDto.setLsl(searchConditionDto.getCusLsl());
-            spcAnalysisDataDto.setUsl(searchConditionDto.getCusUsl());
-            spcAnalysisDataDto.setDataList(doubleList);
-            spcAnalysisDataDtoList.add(spcAnalysisDataDto);
+//            spcAnalysisDataDto.setCalculable(flag);
+//            analyzedRowKeys.add(rowKeys);
+//            spcAnalysisDataDto.setLsl(searchConditionDto.getCusLsl());
+//            spcAnalysisDataDto.setUsl(searchConditionDto.getCusUsl());
+//            spcAnalysisDataDto.setDataList(doubleList);
+//            spcAnalysisDataDtoList.add(spcAnalysisDataDto);
             n++;
             pushProgress((int) (n / len * 40));
         }
