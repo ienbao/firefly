@@ -3,8 +3,7 @@ package com.dmsoft.firefly.plugin.yield.controller;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
-import com.dmsoft.firefly.plugin.spc.controller.SpcSettingController;
-import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.yield.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -27,7 +26,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public class YieldSettingController implements Initializable {
-    private final Logger logger = LoggerFactory.getLogger(SpcSettingController.class);
+    private final Logger logger = LoggerFactory.getLogger(YieldSettingController.class);
     @FXML
     private Label alarmSetting;
     @FXML

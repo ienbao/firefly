@@ -5,15 +5,15 @@ import com.dmsoft.bamboo.common.dto.AbstractValueObject;
  * Created by Tod Dylan on 2018/10/16.
  */
 public class YieldViewDataDto extends AbstractValueObject {
-    private String itemName;
+    private String productName;
     private Double result;
 
-    public String getItemName() {
-        return itemName;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
+    public void setProductName(String itemName) {
+        this.productName = productName;
     }
 
     public Double getResult() {
