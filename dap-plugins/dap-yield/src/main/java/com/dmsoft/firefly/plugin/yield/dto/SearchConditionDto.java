@@ -7,11 +7,20 @@ import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
  * Created by Tod Dylan on 2018/10/16.
  */
 public class SearchConditionDto extends AbstractValueObject {
+    private String key;
     private String itemName;
     private String condition;
     private String lslOrFail;
     private String uslOrPass;
     private TestItemType testItemType;
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public String getItemName() {
         return itemName;

@@ -1,14 +1,14 @@
 package com.dmsoft.firefly.plugin.yield.dto;
 
 public class OverviewAlarmDto {
-    private String value;
+    private Double value;
     private String level;
 
-    public String getValue() {
+    public Double getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Double value) {
         this.value = value;
     }
 

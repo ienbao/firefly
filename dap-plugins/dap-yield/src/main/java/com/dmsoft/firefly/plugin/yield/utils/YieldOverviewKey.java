@@ -10,7 +10,13 @@ public enum YieldOverviewKey {
     NGSAMPLES("NgSamples"),
     FPYPER("FpyPercent"),
     NTFPER("NtfPercent"),
-    NGPER("NgPercent");
+    NGPER("NgPercent"),
+
+
+    EXCELLENT("Excellent"),
+    ADEQUATE("Adequate"),
+    MARGINAL("Marginal"),
+    BAD("Bad");
 
 
     private String code;
