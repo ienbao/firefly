@@ -121,7 +121,11 @@ public class YieldItemController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initBtnIcon();
-        searchTab = new SearchTab();
+        searchTab = new SearchTab(false);
+        searchTab.hiddenGroupAdd();
+        searchTab.getGroup1().setVisible(false);
+        searchTab.getGroup2().setVisible(false);
+        searchTab.getAutoDivideLbl().setVisible(false);
         split.getItems().add(searchTab);
         itemFilter.getTextField().setPromptText(YieldFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) -> {
