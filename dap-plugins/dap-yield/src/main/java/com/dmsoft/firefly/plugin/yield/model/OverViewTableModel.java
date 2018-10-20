@@ -342,7 +342,7 @@ public class OverViewTableModel  implements TableModel{
 
     @Override
     public boolean isEditableTextField(String columnName) {
-        if (!isTimer && (columnName.equals(YIELD_TITLE[7]) || columnName.equals(YIELD_TITLE[8]))) {
+        if (!isTimer && (columnName.equals(YIELD_TITLE[1]) || columnName.equals(YIELD_TITLE[2]))) {
             return true;
         }
         return false;
@@ -471,20 +471,28 @@ public class OverViewTableModel  implements TableModel{
         if (overviewResultAlarmDto != null) {
             if (columnName.equals(YIELD_TITLE[0])) {
                 value = overviewResultAlarmDto.getItemName();
+                if (value == null){value = "-";}
             }else if(columnName.equals(YIELD_TITLE[1])){
                 value = overviewResultAlarmDto.getLslOrFail();
+                if (value == null){value = "-";}
             }else if(columnName.equals(YIELD_TITLE[2])){
                 value = overviewResultAlarmDto.getUslOrPass();
+                if (value == null){value = "-";}
             }else if(columnName.equals(YIELD_TITLE[3])){
                 value = overviewResultAlarmDto.getTotalSamples()+"";
+                if (overviewResultAlarmDto.getTotalSamples() == null){value = "-";}
             }else if(columnName.equals(YIELD_TITLE[4])){
                 value = overviewResultAlarmDto.getFpySamples()+"";
+                if (overviewResultAlarmDto.getFpySamples() == null){value = "-";}
             } else if(columnName.equals(YIELD_TITLE[5])){
                 value = overviewResultAlarmDto.getPassSamples()+"";
+                if (overviewResultAlarmDto.getPassSamples() == null){value = "-";}
             }else if(columnName.equals(YIELD_TITLE[6])){
                 value = overviewResultAlarmDto.getNtfSamples()+"";
+                if (overviewResultAlarmDto.getNtfSamples() == null){value = "-";}
             }else if(columnName.equals(YIELD_TITLE[7])){
                 value = overviewResultAlarmDto.getNgSamples()+"";
+                if (overviewResultAlarmDto.getNgSamples() == null){value = "-";}
             } else {
                 Map<String, OverviewAlarmDto> overviewAlarmDtoMap = overviewResultAlarmDto.getOverviewAlarmDtoMap();
                 if (overviewAlarmDtoMap == null) {

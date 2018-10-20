@@ -5,12 +5,9 @@ import com.dmsoft.firefly.gui.components.dialog.ChooseTestItemDialog;
 import com.dmsoft.firefly.gui.components.skin.ExpandableTableViewSkin;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
-import com.dmsoft.firefly.plugin.yield.model.ViewDataModel;
-import com.dmsoft.firefly.plugin.yield.utils.FilterType;
 import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
-import com.dmsoft.firefly.plugin.yield.utils.ImageUtils;
-import com.dmsoft.firefly.plugin.yield.utils.ResourceMassages;
-import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.yield.model.ViewDataModel;
+import com.dmsoft.firefly.plugin.yield.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -33,6 +30,8 @@ import javafx.scene.layout.VBox;
 
 import javafx.scene.control.TableView;
 import javafx.scene.control.Button;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.List;
@@ -40,6 +39,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public class ViewDataController implements Initializable {
+    private final Logger logger = LoggerFactory.getLogger(ViewDataController.class);
 
     @FXML
     private Button chooseColumnBtn;  //选择按钮
@@ -49,7 +49,7 @@ public class ViewDataController implements Initializable {
     private TableView<String> viewDataTable; //表格
     @FXML
     private VBox vbox;
-
+    private YieldItemController yieldItemController;
     private YieldMainController yieldMainController;
     private ViewDataModel model;
     private SearchDataFrame dataFrame;
@@ -399,5 +399,7 @@ public class ViewDataController implements Initializable {
         }
 
     }
+
+
 
 }
