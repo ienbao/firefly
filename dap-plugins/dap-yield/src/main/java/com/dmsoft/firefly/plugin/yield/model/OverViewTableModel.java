@@ -419,7 +419,7 @@ public class OverViewTableModel  implements TableModel{
         YieldOverviewResultAlarmDto spcStatsDto = keyToStatsDtoMap.get(rowKey);
         Map<String, OverviewAlarmDto> statisticalAlarmDtoMap = spcStatsDto.getOverviewAlarmDtoMap();
         if (statisticalAlarmDtoMap != null) {
-            if (column.equals(YIELD_TITLE[16])) {
+            if (column.equals(YIELD_TITLE[7])) {
                 column = YieldOverviewKey.FPYPER.getCode();
             }
             if (statisticalAlarmDtoMap.get(column) == null) {
@@ -469,21 +469,37 @@ public class OverViewTableModel  implements TableModel{
         if (overviewResultAlarmDto != null) {
             if (columnName.equals(YIELD_TITLE[0])) {
                 value = overviewResultAlarmDto.getItemName();
+            }else if(columnName.equals(YIELD_TITLE[1])){
+                value = overviewResultAlarmDto.getLslOrFail();
+            }else if(columnName.equals(YIELD_TITLE[2])){
+                value = overviewResultAlarmDto.getUslOrPass();
+            }else if(columnName.equals(YIELD_TITLE[3])){
+                value = overviewResultAlarmDto.getTotalSamples()+"";
+            }else if(columnName.equals(YIELD_TITLE[4])){
+                value = overviewResultAlarmDto.getFpySamples()+"";
+            }else if(columnName.equals(YIELD_TITLE[5])){
+                value = overviewResultAlarmDto.getNtfSamples()+"";
+            }else if(columnName.equals(YIELD_TITLE[6])){
+                value = overviewResultAlarmDto.getNgSamples()+"";
             } else {
                 Map<String, OverviewAlarmDto> overviewAlarmDtoMap = overviewResultAlarmDto.getOverviewAlarmDtoMap();
                 if (overviewAlarmDtoMap == null) {
                     value = "-";
                 } else {
                     String key = columnName;
-                    if (columnName.equals(YIELD_TITLE[16])) {
+                    if (columnName.equals(YIELD_TITLE[7])) {
                         key = YieldOverviewKey.FPYPER.getCode();
+                    }else if (columnName.equals(YIELD_TITLE[8])){
+                        key = YieldOverviewKey.NTFPER.getCode();
+                    }else if (columnName.equals(YIELD_TITLE[9])){
+                        key = YieldOverviewKey.NGPER.getCode();
                     }
                     value = showValue(key, overviewAlarmDtoMap.get(key));
                 }
             }
         }
         SourceObjectProperty valueProperty = new SourceObjectProperty<>(value);
-        if (columnName.equals(YIELD_TITLE[7]) || columnName.equals(YIELD_TITLE[8])) {
+        if (columnName.equals(YIELD_TITLE[1]) || columnName.equals(YIELD_TITLE[2])) {
             valueProperty.addListener((ov, b1, b2) -> {
                 if (DAPStringUtils.isBlank((String) b2) || !DAPStringUtils.isNumeric((String) b2)) {
                     return;
