@@ -23,6 +23,7 @@ import javafx.scene.control.TableView;
 
 import java.awt.*;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -417,8 +418,12 @@ public class OverViewTableModel  implements TableModel{
         YieldOverviewResultAlarmDto spcStatsDto = keyToStatsDtoMap.get(rowKey);
         Map<String, OverviewAlarmDto> statisticalAlarmDtoMap = spcStatsDto.getOverviewAlarmDtoMap();
         if (statisticalAlarmDtoMap != null) {
-            if (column.equals(YIELD_TITLE[16])) {
+            if (column.equals(YIELD_TITLE[8])) {
                 column = YieldOverviewKey.FPYPER.getCode();
+            }else if (column.equals(YIELD_TITLE[9])) {
+                column = YieldOverviewKey.NTFPER.getCode();
+            }else if(column.equals(YIELD_TITLE[10])) {
+                column = YieldOverviewKey.NGPER.getCode();
             }
             if (statisticalAlarmDtoMap.get(column) == null) {
                 return tableCell;
@@ -467,21 +472,39 @@ public class OverViewTableModel  implements TableModel{
         if (overviewResultAlarmDto != null) {
             if (columnName.equals(YIELD_TITLE[0])) {
                 value = overviewResultAlarmDto.getItemName();
+            }else if(columnName.equals(YIELD_TITLE[1])){
+                value = overviewResultAlarmDto.getLslOrFail();
+            }else if(columnName.equals(YIELD_TITLE[2])){
+                value = overviewResultAlarmDto.getUslOrPass();
+            }else if(columnName.equals(YIELD_TITLE[3])){
+                value = overviewResultAlarmDto.getTotalSamples()+"";
+            }else if(columnName.equals(YIELD_TITLE[4])){
+                value = overviewResultAlarmDto.getFpySamples()+"";
+            } else if(columnName.equals(YIELD_TITLE[5])){
+                value = overviewResultAlarmDto.getPassSamples()+"";
+            }else if(columnName.equals(YIELD_TITLE[6])){
+                value = overviewResultAlarmDto.getNtfSamples()+"";
+            }else if(columnName.equals(YIELD_TITLE[7])){
+                value = overviewResultAlarmDto.getNgSamples()+"";
             } else {
                 Map<String, OverviewAlarmDto> overviewAlarmDtoMap = overviewResultAlarmDto.getOverviewAlarmDtoMap();
                 if (overviewAlarmDtoMap == null) {
                     value = "-";
                 } else {
                     String key = columnName;
-                    if (columnName.equals(YIELD_TITLE[16])) {
+                    if (columnName.equals(YIELD_TITLE[8])) {
                         key = YieldOverviewKey.FPYPER.getCode();
+                    }else if (columnName.equals(YIELD_TITLE[9])){
+                        key = YieldOverviewKey.NTFPER.getCode();
+                    }else if (columnName.equals(YIELD_TITLE[10])){
+                        key = YieldOverviewKey.NGPER.getCode();
                     }
                     value = showValue(key, overviewAlarmDtoMap.get(key));
                 }
             }
         }
         SourceObjectProperty valueProperty = new SourceObjectProperty<>(value);
-        if (columnName.equals(YIELD_TITLE[7]) || columnName.equals(YIELD_TITLE[8])) {
+        if (columnName.equals(YIELD_TITLE[1]) || columnName.equals(YIELD_TITLE[2])) {
             valueProperty.addListener((ov, b1, b2) -> {
                 if (DAPStringUtils.isBlank((String) b2) || !DAPStringUtils.isNumeric((String) b2)) {
                     return;
@@ -539,8 +562,10 @@ public class OverViewTableModel  implements TableModel{
         if (overviewAlarmDto == null || DAPDoubleUtils.isSpecialNumber(overviewAlarmDto.getValue())) {
             return "-";
         }
-        if (!key.equals(YIELD_TITLE[2]) && !key.equals(YIELD_TITLE[7]) && !key.equals(YIELD_TITLE[8])) {
-            return DAPStringUtils.formatDouble(overviewAlarmDto.getValue(), DigNumInstance.newInstance().getDigNum());
+        if (key.equals(YIELD_TITLE[8]) || key.equals(YIELD_TITLE[9]) || key.equals(YIELD_TITLE[10])) {
+         String str = DAPStringUtils.formatDouble(overviewAlarmDto.getValue(), DigNumInstance.newInstance().getDigNum());
+         NumberFormat num = NumberFormat.getPercentInstance();
+         return num.format(Double.valueOf(str));
         }
         if (key.equals(YIELD_TITLE[2])) {
             DecimalFormat df = new DecimalFormat("######0");

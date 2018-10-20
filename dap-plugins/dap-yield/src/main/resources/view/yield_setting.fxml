@@ -26,42 +26,43 @@
                         <!--<Insets left="10.0" />-->
                         <!--</padding>-->
                         <!--</Label>-->
-                        <Label fx:id="defaultSetting" prefHeight="22.0" prefWidth="160.0" text="%DEFAULT_SETTING">
-                            <padding>
-                                <Insets left="10.0" />
-                            </padding>
-                        </Label>
+                        <!--<Label fx:id="defaultSetting" prefHeight="22.0" prefWidth="160.0" text="%DEFAULT_SETTING">-->
+                            <!--<padding>-->
+                                <!--<Insets left="10.0" />-->
+                            <!--</padding>-->
+                        <!--</Label>-->
                         <Label fx:id="alarmSetting" prefHeight="22.0" prefWidth="160.0" text="%ALARM_SETTING">
                             <padding>
                                 <Insets left="10.0" />
                             </padding>
                         </Label>
-                        <Label fx:id="exportMode" prefHeight="22.0" prefWidth="160.0" text="%EXPORT_MODE">
-                            <padding>
-                                <Insets left="10.0" />
-                            </padding>
-                        </Label>
+                        <!--<Label fx:id="exportMode" prefHeight="22.0" prefWidth="160.0" text="%EXPORT_MODE">-->
+                            <!--<padding>-->
+                                <!--<Insets left="10.0" />-->
+                            <!--</padding>-->
+                        <!--</Label>-->
                     </children>
                 </VBox>
                 <ScrollPane fx:id="settingScrollPane" fitToWidth="true" hbarPolicy="NEVER" prefHeight="450.0" prefWidth="625.0" HBox.hgrow="ALWAYS">
                     <content>
                         <VBox>
                             <children>
-                                <VBox fx:id="defaultSettingVBox" prefHeight="100.0">
-                                    <children>
-                                        <Label style="-fx-font-weight: bold" text="%DEFAULT_SETTING">
-                                            <VBox.margin>
-                                                <Insets bottom="10.0" top="10.0" />
-                                            </VBox.margin>
-                                        </Label>
-                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                            <children>
-                                                <Label text="%PRIMER_KEY" />
-                                                <ComboBox fx:id="defaultSettingCb" prefWidth="150.0" />
-                                            </children>
-                                        </HBox>
-                                    </children>
-                                </VBox>
+                                <!--<VBox fx:id="defaultSettingVBox" prefHeight="100.0">-->
+                                    <!--<children>-->
+                                        <!--<Label style="-fx-font-weight: bold" text="%DEFAULT_SETTING">-->
+                                            <!--<VBox.margin>-->
+                                                <!--<Insets bottom="10.0" top="10.0" />-->
+                                            <!--</VBox.margin>-->
+                                        <!--</Label>-->
+                                        <!--<HBox alignment="CENTER_LEFT" spacing="10.0">-->
+                                            <!--<children>-->
+                                                <!--<Label text="%PRIMER_KEY" />-->
+                                                <!--<Label style="-fx-text-fill: #EA2028;" text="*"/>-->
+                                                <!--<ComboBox fx:id="defaultSettingCb" prefWidth="150.0" />-->
+                                            <!--</children>-->
+                                        <!--</HBox>-->
+                                    <!--</children>-->
+                                <!--</VBox>-->
                                 <VBox fx:id="alarmSettingVBox">
                                     <children>
                                         <Label style="-fx-font-weight: bold" text="%ALARM_SETTING">
@@ -95,7 +96,7 @@
                                                 <RowConstraints minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <Label text="\%FTP" />
+                                                <Label text="\%FPY" />
                                                 <Label text="\%NTF" GridPane.rowIndex="2" />
                                                 <Label text="\%NG" GridPane.rowIndex="4" />
                                                 <Label styleClass="alarm-excellent" text="Excellent" GridPane.columnIndex="0" GridPane.rowIndex="1" />
@@ -171,22 +172,22 @@
                                     </VBox.margin>
                                 </VBox>
 
-                                <VBox fx:id="exportSettingVBox" prefHeight="100.0">
-                                    <children>
-                                        <Label style="-fx-font-weight: bold" text="%EXPORT_MODE">
-                                            <VBox.margin>
-                                                <Insets bottom="10.0" top="10.0" />
-                                            </VBox.margin>
-                                        </Label>
-                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                            <children>
-                                                <Label text="%ACTIVE_TEMPLATE" />
-                                                <ComboBox fx:id="exportTemplateCb" prefWidth="150.0" />
-                                                <Button fx:id="exportTemplateSettingBtn" maxHeight="22.0" maxWidth="22.0" minHeight="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" />
-                                            </children>
-                                        </HBox>
-                                    </children>
-                                </VBox>
+                                <!--<VBox fx:id="exportSettingVBox" prefHeight="100.0">-->
+                                    <!--<children>-->
+                                        <!--<Label style="-fx-font-weight: bold" text="%EXPORT_MODE">-->
+                                            <!--<VBox.margin>-->
+                                                <!--<Insets bottom="10.0" top="10.0" />-->
+                                            <!--</VBox.margin>-->
+                                        <!--</Label>-->
+                                        <!--<HBox alignment="CENTER_LEFT" spacing="10.0">-->
+                                            <!--<children>-->
+                                                <!--<Label text="%ACTIVE_TEMPLATE" />-->
+                                                <!--<ComboBox fx:id="exportTemplateCb" prefWidth="150.0" />-->
+                                                <!--<Button fx:id="exportTemplateSettingBtn" maxHeight="22.0" maxWidth="22.0" minHeight="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" />-->
+                                            <!--</children>-->
+                                        <!--</HBox>-->
+                                    <!--</children>-->
+                                <!--</VBox>-->
                             </children>
                             <padding>
                                 <Insets left="10.0" right="10.0" />
