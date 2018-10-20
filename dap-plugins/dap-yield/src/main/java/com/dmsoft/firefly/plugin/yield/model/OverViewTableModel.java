@@ -477,9 +477,11 @@ public class OverViewTableModel  implements TableModel{
                 value = overviewResultAlarmDto.getTotalSamples()+"";
             }else if(columnName.equals(YIELD_TITLE[4])){
                 value = overviewResultAlarmDto.getFpySamples()+"";
-            }else if(columnName.equals(YIELD_TITLE[5])){
-                value = overviewResultAlarmDto.getNtfSamples()+"";
+            } else if(columnName.equals(YIELD_TITLE[5])){
+                value = overviewResultAlarmDto.getPassSamples()+"";
             }else if(columnName.equals(YIELD_TITLE[6])){
+                value = overviewResultAlarmDto.getNtfSamples()+"";
+            }else if(columnName.equals(YIELD_TITLE[7])){
                 value = overviewResultAlarmDto.getNgSamples()+"";
             } else {
                 Map<String, OverviewAlarmDto> overviewAlarmDtoMap = overviewResultAlarmDto.getOverviewAlarmDtoMap();

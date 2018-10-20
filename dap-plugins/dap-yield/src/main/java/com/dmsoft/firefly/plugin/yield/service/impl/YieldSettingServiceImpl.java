@@ -78,7 +78,7 @@ public class YieldSettingServiceImpl implements YieldSettingService, IConfig {
             yieldOverviewResultAlarmDto.setLslOrFail(yieldOverviewDto.getLslOrPass());
             yieldOverviewResultAlarmDto.setUslOrPass(yieldOverviewDto.getUslOrPass());
             yieldOverviewResultAlarmDto.setTotalSamples(yieldOverviewDto.getTotalSamples());
-            yieldOverviewResultAlarmDto.setPassSamples(yieldOverviewDto.getTotalSamples());
+            yieldOverviewResultAlarmDto.setPassSamples(yieldOverviewDto.getPassSamples());
             yieldOverviewResultAlarmDto.setNtfSamples(yieldOverviewDto.getNtfSamples());
             yieldOverviewResultAlarmDto.setNgSamples(yieldOverviewDto.getNgSamples());
             yieldOverviewResultAlarmDto.setFpySamples(yieldOverviewDto.getFpySamples());
