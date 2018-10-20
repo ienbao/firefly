@@ -155,7 +155,7 @@ public class YieldPlugin extends Plugin {
             FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML("view/yield_setting.fxml");
             root = fxmlLoader.load();
             yieldSettingController = fxmlLoader.getController();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.YIELD_SETTING, YieldFxmlAndLanguageUtils.getString("Yield_SETTINGS"), root, getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.YIELD_SETTING, YieldFxmlAndLanguageUtils.getString("YIELD_SETTINGS"), root, getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
             stage.setResizable(false);
             stage.toFront();
             stage.show();

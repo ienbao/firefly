@@ -3,8 +3,7 @@ package com.dmsoft.firefly.plugin.yield.controller;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
-import com.dmsoft.firefly.plugin.spc.controller.SpcSettingController;
-import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
+
 import com.dmsoft.firefly.plugin.yield.dto.YieldSettingDto;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.yield.utils.*;
@@ -29,13 +28,13 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public class YieldSettingController implements Initializable {
-    private final Logger logger = LoggerFactory.getLogger(SpcSettingController.class);
+    private final Logger logger = LoggerFactory.getLogger(YieldSettingController.class);
     @FXML
     private Label alarmSetting;
-    @FXML
-    private Label defaultSetting;
-    @FXML
-    private Label exportMode;
+//    @FXML
+//    private Label defaultSetting;
+//    @FXML
+//    private Label exportMode;
     @FXML
     private Button apply;
     @FXML
@@ -43,15 +42,15 @@ public class YieldSettingController implements Initializable {
     @FXML
     private Button ok;
 
-    //default setting
-    @FXML
-    private ComboBox defaultSettingCb;
+//    //default setting
+//    @FXML
+//    private ComboBox defaultSettingCb;
 
     //Export Template Setting
-    @FXML
-    private ComboBox exportTemplateCb;
-    @FXML
-    private Button exportTemplateSettingBtn;
+//    @FXML
+//    private ComboBox exportTemplateCb;
+//    @FXML
+//    private Button exportTemplateSettingBtn;
 
     @FXML
     private ScrollPane settingScrollPane;
@@ -85,11 +84,11 @@ public class YieldSettingController implements Initializable {
     private VBox defaultSettingVBox, alarmSettingVBox,  exportSettingVBox;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.initBtnIcon();
+//        this.initBtnIcon();
 //        this.initComponent();
         this.initData();
         this.initComponentEvent();
-//        this.initValidate();
+        this.initValidate();
     }
     /**
      * init data
@@ -100,24 +99,30 @@ public class YieldSettingController implements Initializable {
 
         YieldSettingDto yieldSettingDto = context.getParam(ParamKeys.YIELD_SETTING_DTO, YieldSettingDto.class);
         this.setProcessAlarmSettingData(yieldSettingDto.getAbilityAlarmRule());
-        this.setExportSettingData(yieldSettingDto.getExportTemplateName());
-        this.setPrimaryKey(yieldSettingDto.getPrimaryKey());
+//        this.setExportSettingData(yieldSettingDto.getExportTemplateName());
+//        this.setPrimaryKey(yieldSettingDto.getPrimaryKey());
     }
 
+    private void initValidate() {
 
-    private void initBtnIcon() {
-        exportTemplateSettingBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_setting_normal.png")));
-        exportTemplateSettingBtn.setPrefSize(22, 22);
+        YieldSettingValidateUtil.BindNode NTFBindNode = YieldSettingValidateUtil.newInstance().new BindNode(NTFExcellentTf, NTFGoodTf, NTFAcceptableTf);
+        YieldSettingValidateUtil.BindNode FPYBindNode = YieldSettingValidateUtil.newInstance().new BindNode(FPYExcellentTf, FPYGoodTf, FPYAcceptableTf);
+        YieldSettingValidateUtil.BindNode NGBindNode = YieldSettingValidateUtil.newInstance().new BindNode(NGExcellentTf, NGGoodTf, NGAcceptableTf);
+        YieldSettingValidateUtil.newInstance().validateYieldAlarmSetting( FPYBindNode,NTFBindNode, NGBindNode);
     }
+//    private void initBtnIcon() {
+//        exportTemplateSettingBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_setting_normal.png")));
+//        exportTemplateSettingBtn.setPrefSize(22, 22);
+//    }
 
     private void initComponentEvent() {
         apply.setOnAction(event -> getApplyBtnEvent());
         cancel.setOnAction(event -> getCancelBtnEvent());
         ok.setOnAction(event -> getOkBtnEvent());
 //        exportTemplateSettingBtn.setOnAction(event -> getExportTemplateSettingEvent());
-        defaultSetting.setOnMousePressed(defaultSetting -> getDefaultSettingMousePressedEvent());
+//        defaultSetting.setOnMousePressed(defaultSetting -> getDefaultSettingMousePressedEvent());
         alarmSetting.setOnMousePressed(defaultSetting -> getAlarmSettingMousePressedEvent());
-        exportMode.setOnMousePressed(defaultSetting -> getExportSettingMousePressedEvent());
+//        exportMode.setOnMousePressed(defaultSetting -> getExportSettingMousePressedEvent());
     }
     private String alarmDataToText(Double value) {
         if (value == null) {
@@ -134,16 +139,16 @@ public class YieldSettingController implements Initializable {
         for (int i = 0; i < proCapAlarmKeys.length; i++) {
             String key = proCapAlarmKeys[i].getCode();
             Double[] value = abilityAlarmRule.get(key);
-            if (YieldProCapAlarmKey.FPY.getCode().equals(key)) {
+            if (YieldProCapAlarmKey.FPYPER.getCode().equals(key)) {
                 FPYExcellentTf.setText(alarmDataToText(value[0]));
                 FPYGoodTf.setText(alarmDataToText(value[1]));
                 FPYAcceptableTf.setText(alarmDataToText(value[2]));
-            } else if (YieldProCapAlarmKey.NTF.getCode().equals(key)) {
+            } else if (YieldProCapAlarmKey.NTFPER.getCode().equals(key)) {
                 NTFExcellentTf.setText(alarmDataToText(value[0]));
                 NTFGoodTf.setText(alarmDataToText(value[1]));
                 NTFAcceptableTf.setText(alarmDataToText(value[2]));
 
-            } else if (YieldProCapAlarmKey.NG.getCode().equals(key)) {
+            } else if (YieldProCapAlarmKey.NGPER.getCode().equals(key)) {
                 NGExcellentTf.setText(alarmDataToText(value[0]));
                 NGGoodTf.setText(alarmDataToText(value[1]));
                 NGAcceptableTf.setText(alarmDataToText(value[2]));
@@ -151,29 +156,29 @@ public class YieldSettingController implements Initializable {
             }
         }
     }
-    private void setExportSettingData(String exportTemplateName) {
-        exportTemplateCb.setValue(exportTemplateName);
-    }
-    private void setPrimaryKey(String primaryKey) {
-        defaultSettingCb.setValue(primaryKey);
-    }
+//    private void setExportSettingData(String exportTemplateName) {
+//        exportTemplateCb.setValue(exportTemplateName);
+//    }
+//    private void setPrimaryKey(String primaryKey) {
+//        defaultSettingCb.setValue(primaryKey);
+//    }
     private void getAlarmSettingMousePressedEvent() {
         ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, alarmSettingVBox);
-        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
+//        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
         alarmSetting.setStyle("-fx-background-color: #FFFFFF");
-        exportMode.setStyle("-fx-background-color: #F0F0F0");
+//        exportMode.setStyle("-fx-background-color: #F0F0F0");
     }
     private void getExportSettingMousePressedEvent() {
         ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, exportSettingVBox);
-        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
+//        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
         alarmSetting.setStyle("-fx-background-color: #F0F0F0");
-        exportMode.setStyle("-fx-background-color: #FFFFFF");
+//        exportMode.setStyle("-fx-background-color: #FFFFFF");
     }
     private void getDefaultSettingMousePressedEvent() {
         ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, defaultSettingVBox);
-        defaultSetting.setStyle("-fx-background-color: #FFFFFF");
+//        defaultSetting.setStyle("-fx-background-color: #FFFFFF");
         alarmSetting.setStyle("-fx-background-color: #F0F0F0");
-        exportMode.setStyle("-fx-background-color: #F0F0F0");
+//        exportMode.setStyle("-fx-background-color: #F0F0F0");
     }
     private void getCancelBtnEvent() {
         StageMap.closeStage(StateKey.YIELD_SETTING);
@@ -210,8 +215,8 @@ public class YieldSettingController implements Initializable {
     private YieldSettingDto buildSaveSettingData() {
         YieldSettingDto yieldSettingDto = new YieldSettingDto();
         yieldSettingDto.setAbilityAlarmRule(this.buildProcessAlarmData());
-        yieldSettingDto.setPrimaryKey(String.valueOf(defaultSettingCb.getValue()));
-        yieldSettingDto.setExportTemplateName(String.valueOf(exportTemplateCb.getValue()));
+//        yieldSettingDto.setPrimaryKey(String.valueOf(defaultSettingCb.getValue()));
+//        yieldSettingDto.setExportTemplateName(String.valueOf(exportTemplateCb.getValue()));
         return yieldSettingDto;
     }
     private Map<String, Double[]> buildProcessAlarmData() {
@@ -224,16 +229,16 @@ public class YieldSettingController implements Initializable {
             String key = proCapAlarmKeys[i].getCode();
 
             Double[] value = new Double[3];
-            if (YieldProCapAlarmKey.FPY.getCode().equals(key)) {
+            if (YieldProCapAlarmKey.FPYPER.getCode().equals(key)) {
                 value[0] = Double.valueOf(FPYExcellentTf.getText());
                 value[1] = Double.valueOf(FPYGoodTf.getText());
                 value[2] = Double.valueOf(FPYAcceptableTf.getText());
-            } else if (YieldProCapAlarmKey.NTF.getCode().equals(key)) {
+            } else if (YieldProCapAlarmKey.NTFPER.getCode().equals(key)) {
                 value[0] = Double.valueOf(NTFExcellentTf.getText());
                 value[1] = Double.valueOf(NTFGoodTf.getText());
                 value[2] = Double.valueOf(NTFAcceptableTf.getText());
 
-            } else if (YieldProCapAlarmKey.NG.getCode().equals(key)) {
+            } else if (YieldProCapAlarmKey.NGPER.getCode().equals(key)) {
                 value[0] = Double.valueOf(NGExcellentTf.getText());
                 value[1] = Double.valueOf(NGGoodTf.getText());
                 value[2] = Double.valueOf(NGAcceptableTf.getText());

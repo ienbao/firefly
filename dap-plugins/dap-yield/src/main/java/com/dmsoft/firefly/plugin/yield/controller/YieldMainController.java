@@ -6,12 +6,15 @@ import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.*;
 import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldAnalysisConfigDto;
+import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
+import com.dmsoft.firefly.plugin.yield.dto.YieldSettingDto;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
 import com.dmsoft.firefly.plugin.yield.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.job.core.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,16 +44,19 @@ public class YieldMainController implements Initializable {
     private Button chooseBtn;
     @FXML
     private YieldItemController yieldItemController;
-//    @FXML
-//    private StatisticalResultController statisticalResultController;
+    @FXML
+    private OverViewController overViewController;
     @FXML
     private ViewDataController viewDataController;
 //    @FXML
 //    private ChartResultController chartResultController;
-//    private SearchDataFrame dataFrame;
+    private SearchDataFrame dataFrame;
     private YieldAnalysisConfigDto analysisConfigDto;
     private List<SearchConditionDto> initSearchConditionDtoList;
-//      private YieldSettingDto spcSettingDto;
+    private YieldSettingDto yieldSettingDto;
+
+
+
     private YieldSettingService yieldSettingService = RuntimeContext.getBean(YieldSettingService.class);
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
 //    private List<String> lastViewDataRowKeyList;
@@ -85,16 +91,16 @@ public class YieldMainController implements Initializable {
         }
     }
 
-//    /**
-//     * set statistical result data
-//     *
-//     * @param list         the data list
-//     * @param isTimer      isTimer
-//     * @param selectRowKey selectRowKey
-//     */
-//    public void setStatisticalResultData(List<SpcStatisticalResultAlarmDto> list, List<String> selectRowKey, boolean isTimer) {
-//        statisticalResultController.setTimerStatisticalResultTableData(list, selectRowKey, isTimer);
-//    }
+    /**
+     * set statistical result data
+     *
+     * @param list         the data list
+     * @param isTimer      isTimer
+     * @param selectRowKey selectRowKey
+     */
+    public void setOverviewResultData(List<YieldOverviewResultAlarmDto> list, List<String> selectRowKey, boolean isTimer) {
+        overViewController.setTimerOverviewResultTableData(list, selectRowKey, isTimer);
+    }
 //
 //    /**
 //     * timer refresh statistical result data
@@ -167,6 +173,14 @@ public class YieldMainController implements Initializable {
 //        dataFrame.removeRows(Lists.newArrayList(rowKey));
 //    }
 
+
+    public YieldAnalysisConfigDto getAnalysisConfigDto() {
+        return analysisConfigDto;
+    }
+
+    public void setAnalysisConfigDto(YieldAnalysisConfigDto analysisConfigDto) {
+        this.analysisConfigDto = analysisConfigDto;
+    }
 
     /**
      * clear analysis data
@@ -383,29 +397,23 @@ public class YieldMainController implements Initializable {
         return  null;
     }
 
-//    public SearchDataFrame getDataFrame() {
-//        return dataFrame;
-//    }
+    public SearchDataFrame getDataFrame() {
+        return dataFrame;
+    }
+
+    public void setDataFrame(SearchDataFrame dataFrame) {
+        this.dataFrame = dataFrame;
+    }
 //
-//    public void setDataFrame(SearchDataFrame dataFrame) {
-//        this.dataFrame = dataFrame;
-//    }
-//
-//    public SpcAnalysisConfigDto getAnalysisConfigDto() {
-//        return analysisConfigDto;
-//    }
-//
-//    public void setAnalysisConfigDto(SpcAnalysisConfigDto analysisConfigDto) {
-//        this.analysisConfigDto = analysisConfigDto;
-//    }
-//
-//    public List<SearchConditionDto> getInitSearchConditionDtoList() {
-//        return initSearchConditionDtoList;
-//    }
-//
-//    public void setInitSearchConditionDtoList(List<SearchConditionDto> initSearchConditionDtoList) {
-//        this.initSearchConditionDtoList = initSearchConditionDtoList;
-//    }
+
+
+    public List<SearchConditionDto> getInitSearchConditionDtoList() {
+        return initSearchConditionDtoList;
+    }
+
+    public void setInitSearchConditionDtoList(List<SearchConditionDto> initSearchConditionDtoList) {
+        this.initSearchConditionDtoList = initSearchConditionDtoList;
+    }
 
 //    private List<SearchConditionDto> buildRefreshSearchConditionData(List<SpcStatisticalResultAlarmDto> spcStatsDtoList) {
 //        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
@@ -822,13 +830,16 @@ public class YieldMainController implements Initializable {
 //    }
 //
 //
-//    public SpcSettingDto getSpcSettingDto() {
-//        return spcSettingDto;
-//    }
-//
-//    public void setSpcSettingDto(SpcSettingDto spcSettingDto) {
-//        this.spcSettingDto = spcSettingDto;
-//    }
+
+    public YieldSettingDto getYieldSettingDto() {
+        return yieldSettingDto;
+    }
+
+    public void setYieldSettingDto(YieldSettingDto yieldSettingDto) {
+        this.yieldSettingDto = yieldSettingDto;
+    }
+
+
 //
 //    /**
 //     * method to set is timer or not

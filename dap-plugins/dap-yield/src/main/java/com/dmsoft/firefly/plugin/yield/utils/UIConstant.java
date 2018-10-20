@@ -6,11 +6,10 @@ public class UIConstant {
     public static final String[] YIELD_OVERVIEW_FIX_COLUMN = new String[]{"Test Item"};
 
     public static final String[] YIELD_CHOOSE_RESULT = new String[]{
-            "LSL/Fail", "USL/Pass", "Total Samples", "FPY Samples", "NTF Samples", "NG Samples", "%FPY", "%NTF", "%NG"
+            "LSL/Fail", "USL/Pass", "Total Samples", "FPY Samples", "Pass Samples", "NTF Samples", "NG Samples", "FpyPercent", "NtfPercent", "NgPercent"
     };
 
     public static final String[] YIELD_SR_ALL = new String[]{
-            "Test Item", "Condition", "Samples", "AVG", "Max", "Min", "StDev", "LSL", "USL", "Center", "CPK", "Range", "μ-3σ", "μ+3σ", "Kurtosis", "Skewness",
-            "CA(%)", "CP", "CPL", "CPU", "Within PPM", "PP", "PPK", "PPL", "PPU", "OverAll PPM"};
+            "Test Item",  "LSL/Fail", "USL/Pass", "Total Samples", "FPY Samples","Pass Samples", "NTF Samples", "NG Samples", "FpyPercent", "NtfPercent", "NgPercent"};
     
 }

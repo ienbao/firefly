@@ -40,7 +40,7 @@ public class YieldSettingValidateUtil {
      *
      * @param nodes nodes
      */
-    public void validateSpcAnalysisSetting(Node... nodes) {
+    public void validateYieldAnalysisSetting(Node... nodes) {
         if (nodes != null && nodes.length > 0) {
             for (Node node : nodes) {
                 nodeArrayList.add(node);
@@ -78,10 +78,12 @@ public class YieldSettingValidateUtil {
      *
      * @param bindNodes bindNodes
      */
-    public void validateSpcAlarmSetting(BindNode... bindNodes) {
+    public void validateYieldAlarmSetting(BindNode... bindNodes) {
         if (bindNodes != null && bindNodes.length > 0) {
+            int i=0;
             for (BindNode bindNode : bindNodes) {
-                String sort = bindNode.getSort();
+                String sort = i==0?bindNode.getSort():BindNode.ASC;
+                i=1;
                 List<Node> nodeList = bindNode.getNodeList();
                 for (Node node : nodeList) {
                     nodeArrayList.add(node);
@@ -95,7 +97,7 @@ public class YieldSettingValidateUtil {
                             if (ValidateUtil.validateIsNotEmpty(newVal, textField)) {
                                 boolean isDouble = validateIsDouble(newVal);
                                 if(sort.equals(BindNode.ASC)) {
-                                    isDouble = validateIsPositiveNumber(newVal);
+                                    isDouble = validateIsPositiveNumber(newVal);//判断是否为正数
                                 }
                                 if (!isDouble) {
                                     textField.setText(oldVal);
@@ -148,7 +150,7 @@ public class YieldSettingValidateUtil {
                         Node lastNodeD = nodes.get(index - 2);
                         if (lastNodeD != null && lastValueV != null) {
                             Double lastValueDV = DAPStringUtils.isBlank(((TextField) lastNodeD).getText()) ? null : Double.parseDouble(((TextField) lastNodeD).getText());
-                            if (lastValueDV != null && lastValueDV > lastValueV) {
+                            if (lastValueDV != null && lastValueDV > lastValueV) {//前面的数大于后面的数
                                 uninstallErrorStyle(lastNode);
                             }
                         }
