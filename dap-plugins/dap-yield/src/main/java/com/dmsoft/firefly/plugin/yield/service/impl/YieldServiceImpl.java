@@ -97,17 +97,18 @@ public class YieldServiceImpl implements YieldService {
                                 key = entry.getKey();
                             }
                         }
-                        if (searchConditions.get(i).getTestItemType().getCode().equals("Variable")) {
-                            String lslOrFail = searchConditions.get(i).getLslOrFail();
-                            String uslOrPass = searchConditions.get(i).getUslOrPass();
-                            double lsl = Double.NaN;
-                            double usl = Double.NaN;
-                            if (DAPStringUtils.isNumeric(lslOrFail)) {
-                                lsl = Double.parseDouble(searchConditions.get(i).getLslOrFail());
-                            }
-                            if (DAPStringUtils.isNumeric(uslOrPass)){
-                                usl = Double.parseDouble(searchConditions.get(i).getUslOrPass());
-                            }
+                        if (!searchConditions.get(i).getLslOrFail().equals("") &&  !searchConditions.get(i).getUslOrPass().equals("")) {
+                            if (searchConditions.get(i).getTestItemType().getCode().equals("Variable")) {
+                                String lslOrFail = searchConditions.get(i).getLslOrFail();
+                                String uslOrPass = searchConditions.get(i).getUslOrPass();
+                                double lsl = Double.NaN;
+                                double usl = Double.NaN;
+                                if (DAPStringUtils.isNumeric(lslOrFail)) {
+                                    lsl = Double.parseDouble(searchConditions.get(i).getLslOrFail());
+                                }
+                                if (DAPStringUtils.isNumeric(uslOrPass)) {
+                                    usl = Double.parseDouble(searchConditions.get(i).getUslOrPass());
+                                }
 
                                 if (Double.parseDouble(rowDataDto.getData().get(key)) >= lsl && Double.parseDouble(rowDataDto.getData().get(key)) <= usl && usl != Double.NaN && lsl != Double.NaN) {
                                     ngFlag = ngFlag + 1;
@@ -122,23 +123,24 @@ public class YieldServiceImpl implements YieldService {
                                     }
                                 }
 
-                        } else if (searchConditions.get(i).getTestItemType().getCode().equals("Attribute")) {
-                            if (rowDataDto.getData().get(key).equals(searchConditions.get(i).getUslOrPass())) {
-                                ngFlag = ngFlag +1;
-                                if (j == 0) {
-                                    overFpySamples = overFpySamples + 1;
-                                    overPassSamples = overPassSamples + 1;
-                                    break;
-                                } else if (j > 0 && j <= rowKeys.size() - 1) {
-                                    overNtfSamples = overNtfSamples + j;
-                                    overPassSamples = overPassSamples + 1;
-                                    break;
+                            } else if (searchConditions.get(i).getTestItemType().getCode().equals("Attribute")) {
+                                if (rowDataDto.getData().get(key).equals(searchConditions.get(i).getUslOrPass())) {
+                                    ngFlag = ngFlag + 1;
+                                    if (j == 0) {
+                                        overFpySamples = overFpySamples + 1;
+                                        overPassSamples = overPassSamples + 1;
+                                        break;
+                                    } else if (j > 0 && j <= rowKeys.size() - 1) {
+                                        overNtfSamples = overNtfSamples + j;
+                                        overPassSamples = overPassSamples + 1;
+                                        break;
+                                    }
                                 }
                             }
-                        }
-                        if(j==rowKeys.size()-1){
-                            if (ngFlag == 0){
-                                overNgSamples = overNgSamples + 1 + j;
+                            if (j == rowKeys.size() - 1) {
+                                if (ngFlag == 0) {
+                                    overNgSamples = overNgSamples + 1 + j;
+                                }
                             }
                         }
                     }
@@ -146,18 +148,20 @@ public class YieldServiceImpl implements YieldService {
                 overTotalSamples = overPassSamples+overNtfSamples+overNgSamples;
 
                 YieldOverviewDto yieldOverviewDto = new YieldOverviewDto();
-                yieldOverviewDto.setKey(searchConditions.get(i).getKey());
-                yieldOverviewDto.setFpySamples(overFpySamples);
-                yieldOverviewDto.setNtfSamples(overNtfSamples);
-                yieldOverviewDto.setPassSamples(overPassSamples);
-                yieldOverviewDto.setNgSamples(overNgSamples);
-                yieldOverviewDto.setFpyPercent((double) overFpySamples / (double)overTotalSamples);
-                yieldOverviewDto.setNtfPercent((double) overNtfSamples / (double)overTotalSamples);
-                yieldOverviewDto.setNgPersent((double) overNgSamples / (double)overTotalSamples);
                 yieldOverviewDto.setItemName(searchConditions.get(i).getItemName());
-                yieldOverviewDto.setLslOrPass(searchConditions.get(i).getLslOrFail());
-                yieldOverviewDto.setUslOrPass(searchConditions.get(i).getUslOrPass());
-                yieldOverviewDto.setTotalSamples(overTotalSamples);
+                yieldOverviewDto.setKey(searchConditions.get(i).getKey());
+                if (!searchConditions.get(i).getLslOrFail().equals("") &&  !searchConditions.get(i).getUslOrPass().equals("")) {
+                    yieldOverviewDto.setFpySamples(overFpySamples);
+                    yieldOverviewDto.setNtfSamples(overNtfSamples);
+                    yieldOverviewDto.setPassSamples(overPassSamples);
+                    yieldOverviewDto.setNgSamples(overNgSamples);
+                    yieldOverviewDto.setFpyPercent((double) overFpySamples / (double) overTotalSamples);
+                    yieldOverviewDto.setNtfPercent((double) overNtfSamples / (double) overTotalSamples);
+                    yieldOverviewDto.setNgPersent((double) overNgSamples / (double) overTotalSamples);
+                    yieldOverviewDto.setLslOrPass(searchConditions.get(i).getLslOrFail());
+                    yieldOverviewDto.setUslOrPass(searchConditions.get(i).getUslOrPass());
+                    yieldOverviewDto.setTotalSamples(overTotalSamples);
+                }
                 overResult.add(yieldOverviewDto);
                 overTotalSamples = 0;
                 overFpySamples = 0;
@@ -181,15 +185,17 @@ public class YieldServiceImpl implements YieldService {
                     for (Map.Entry<String, String> entry : rowDataDto.getData().entrySet()) {
                         for (int k = 1; k < searchConditions.size(); k++) {
                             if (entry.getKey().equals(searchConditions.get(k).getItemName())) {
-                                if (searchConditions.get(k).getTestItemType().getCode().equals("Variable") || searchConditions.get(k).getTestItemType() == null) {
-                                    double lsl = Double.parseDouble(searchConditions.get(k).getLslOrFail());
-                                    double usl = Double.parseDouble(searchConditions.get(k).getUslOrPass());
-                                    if (Double.parseDouble(entry.getValue()) >= lsl && Double.parseDouble(entry.getValue()) <= usl) {
-                                        count = count + 1;
-                                    }
-                                } else if (searchConditions.get(k).getTestItemType().getCode().equals("Attribute")) {
-                                    if (entry.getValue().equals(searchConditions.get(k).getUslOrPass())) {
-                                        count = count + 1;
+                                if (!searchConditions.get(k).getLslOrFail().equals("") &&  !searchConditions.get(k).getUslOrPass().equals("")) {
+                                    if (searchConditions.get(k).getTestItemType().getCode().equals("Variable") || searchConditions.get(k).getTestItemType() == null) {
+                                        double lsl = Double.parseDouble(searchConditions.get(k).getLslOrFail());
+                                        double usl = Double.parseDouble(searchConditions.get(k).getUslOrPass());
+                                        if (Double.parseDouble(entry.getValue()) >= lsl && Double.parseDouble(entry.getValue()) <= usl) {
+                                            count = count + 1;
+                                        }
+                                    } else if (searchConditions.get(k).getTestItemType().getCode().equals("Attribute")) {
+                                        if (entry.getValue().equals(searchConditions.get(k).getUslOrPass())) {
+                                            count = count + 1;
+                                        }
                                     }
                                 }
                             }
@@ -239,8 +245,9 @@ public class YieldServiceImpl implements YieldService {
         return result;
     }
 
+
     @Override
-    public List<YieldViewDataDto> getViewData(SearchDataFrame searchDataFrame,  List<SearchConditionDto> searchConditions, YieldAnalysisConfigDto configDto) {
+    public List<YieldViewDataResultDto> getViewData(SearchDataFrame searchDataFrame,  List<SearchConditionDto> searchConditions, YieldAnalysisConfigDto configDto) {
 
         logger.debug("Getting ViewData...");
         if (searchDataFrame == null || searchConditions == null || configDto == null) {
@@ -255,7 +262,7 @@ public class YieldServiceImpl implements YieldService {
         YieldTotalProcessesDto yieldTotalProcessesDto = new YieldTotalProcessesDto();
 
 
-        List<YieldViewDataDto> viewDataResult = Lists.newArrayList();
+        List<YieldViewDataResultDto> viewDataResultDto = Lists.newArrayList();
 
 
         //分类产品
@@ -295,7 +302,12 @@ public class YieldServiceImpl implements YieldService {
             int overNgSamples = 0;
 
             YieldViewDataDto yieldViewDataDto = new YieldViewDataDto();
-            List<YieldViewDataDto> list = new ArrayList<>();
+            List<YieldViewDataDto> Fpylist = Lists.newArrayList();
+            List<YieldViewDataDto> Passlist = Lists.newArrayList();
+            List<YieldViewDataDto> Ntflist = Lists.newArrayList();
+            List<YieldViewDataDto> Nglist = Lists.newArrayList();
+            List<YieldViewDataDto> Totallist = Lists.newArrayList();
+
             Map<String, List<YieldViewDataDto>> overFpySamplesMap = new HashMap<>();
             Map<String, List<YieldViewDataDto>> overPassSamplesMap = new HashMap<>();
             Map<String, List<YieldViewDataDto>> overNtfSamplesMap = new HashMap<>();
@@ -332,35 +344,35 @@ public class YieldServiceImpl implements YieldService {
                                 if (j == 0) {
                                     yieldViewDataDto.setProductName(unRepetitionDatas.get(k));
                                     yieldViewDataDto.setResult(Double.parseDouble(rowDataDto.getData().get(key)));
-                                    list.add(yieldViewDataDto);
+                                    Fpylist.add(yieldViewDataDto);
+                                    Passlist.add(yieldViewDataDto);
 
-                                    overFpySamples = overFpySamples + 1;
-                                    overPassSamples = overPassSamples + 1;
                                     break;
                                 } else if (j > 0 && j <= rowKeys.size() - 1) {
-//                                    overNtfSamplesMap.put(searchConditions.get(i).getCondition(),list);
-//                                    overPassSamplesMap.put(searchConditions.get(i).getCondition(),list);
-                                    for(int n = 0;n<=j;n++){}
+                                    yieldViewDataDto.setProductName(unRepetitionDatas.get(k));
+                                    yieldViewDataDto.setResult(Double.parseDouble(rowDataDto.getData().get(key)));
+                                    Ntflist.add(yieldViewDataDto);
+                                    Passlist.add(yieldViewDataDto);
 
-
-                                    overNtfSamples = overNtfSamples + j;
-                                    overPassSamples = overPassSamples + 1;
                                     break;
                                 }
                             }
-                            overFpySamplesMap.put(searchConditions.get(i).getCondition(),list);
-                            overPassSamplesMap.put(searchConditions.get(i).getCondition(),list);
 
                         } else if (searchConditions.get(i).getTestItemType().getCode().equals("Attribute")) {
                             if (rowDataDto.getData().get(key).equals(searchConditions.get(i).getUslOrPass())) {
                                 ngFlag = ngFlag +1;
                                 if (j == 0) {
-                                    overFpySamples = overFpySamples + 1;
-                                    overPassSamples = overPassSamples + 1;
+                                    yieldViewDataDto.setProductName(unRepetitionDatas.get(k));
+                                    yieldViewDataDto.setResult(Double.parseDouble(rowDataDto.getData().get(key)));
+                                    Fpylist.add(yieldViewDataDto);
+                                    Passlist.add(yieldViewDataDto);
                                     break;
                                 } else if (j > 0 && j <= rowKeys.size() - 1) {
-                                    overNtfSamples = overNtfSamples + j;
-                                    overPassSamples = overPassSamples + 1;
+                                    yieldViewDataDto.setProductName(unRepetitionDatas.get(k));
+                                    yieldViewDataDto.setResult(Double.parseDouble(rowDataDto.getData().get(key)));
+                                    Ntflist.add(yieldViewDataDto);
+                                    Passlist.add(yieldViewDataDto);
+
                                     break;
                                 }
                             }
@@ -374,97 +386,34 @@ public class YieldServiceImpl implements YieldService {
                 }
                 overTotalSamples = overPassSamples+overNtfSamples+overNgSamples;
 
-                YieldOverviewDto yieldOverviewDto = new YieldOverviewDto();
-                yieldOverviewDto.setFpySamples(overFpySamples);
-                yieldOverviewDto.setNtfSamples(overNtfSamples);
-                yieldOverviewDto.setPassSamples(overPassSamples);
-                yieldOverviewDto.setNgSamples(overNgSamples);
-                yieldOverviewDto.setFpyPercent((double) overFpySamples / (double)overTotalSamples);
-                yieldOverviewDto.setNtfPercent((double) overNtfSamples / (double)overTotalSamples);
-                yieldOverviewDto.setNgPersent((double) overNgSamples / (double)overTotalSamples);
-                yieldOverviewDto.setItemName(searchConditions.get(i).getItemName());
-                yieldOverviewDto.setLslOrPass(searchConditions.get(i).getLslOrFail());
-                yieldOverviewDto.setUslOrPass(searchConditions.get(i).getUslOrPass());
-                yieldOverviewDto.setTotalSamples(overTotalSamples);
-                overResult.add(yieldOverviewDto);
-                overTotalSamples = 0;
-                overFpySamples = 0;
-                overNtfSamples = 0;
-                overPassSamples = 0;
-                overNgSamples = 0;
+//                Totallist.addAll(Fpylist);
+//                Totallist.removeAll(Passlist);
+//                Totallist.addAll(Passlist);
+//                Totallist.removeAll(Ntflist);
+//                Totallist.addAll(Ntflist);
+
+                overFpySamplesMap.put(searchConditions.get(i).getItemName(),Fpylist);
+                overPassSamplesMap.put(searchConditions.get(i).getItemName(),Passlist);
+                overNtfSamplesMap.put(searchConditions.get(i).getItemName(),Ntflist);
+
+//                overTotalSamplesMap.put(searchConditions.get(i).getItemName(),Totallist);
+
+                YieldViewDataResultDto yieldViewDataResultDto = new YieldViewDataResultDto();
+                yieldViewDataResultDto.setItemName(searchConditions.get(i).getItemName());
+                yieldViewDataResultDto.setPrimary(configDto.getPrimaryKey());
+                yieldViewDataResultDto.setFPYlist(Fpylist);
+                yieldViewDataResultDto.setPASSlist(Passlist);
+                yieldViewDataResultDto.setNtflist(Ntflist);
+                yieldViewDataResultDto.setNglist(Nglist);
+                yieldViewDataResultDto.setTotallist(Totallist);
+
+                viewDataResultDto.add(yieldViewDataResultDto);
+
             }
 
-            //total
-            int totalProTotalSamples = 0;
-            int totalProFpySamples = 0;
-            int totalProPassSamples = 0;
-            int totalProNtfSamples = 0;
-            int totalProNgSamples = 0;
-            for (int i = 0; i < unRepetitionDatas.size(); i++) {
-                List<String> rowKeys = dataAndRowKeyMap.get(unRepetitionDatas.get(i));
-                for (int j = 0; j < rowKeys.size(); j++) {
-                    boolean flag = false;
-                    int count = 0;
-                    RowDataDto rowDataDto = searchDataFrame.getDataRow(rowKeys.get(j));
-                    for (Map.Entry<String, String> entry : rowDataDto.getData().entrySet()) {
-                        for (int k = 1; k < searchConditions.size(); k++) {
-                            if (entry.getKey().equals(searchConditions.get(k).getItemName())) {
-                                if (searchConditions.get(k).getTestItemType().getCode().equals("Variable") || searchConditions.get(k).getTestItemType() == null) {
-                                    double lsl = Double.parseDouble(searchConditions.get(k).getLslOrFail());
-                                    double usl = Double.parseDouble(searchConditions.get(k).getUslOrPass());
-                                    if (Double.parseDouble(entry.getValue()) >= lsl && Double.parseDouble(entry.getValue()) <= usl) {
-                                        count = count + 1;
-                                    }
-                                } else if (searchConditions.get(k).getTestItemType().getCode().equals("Attribute")) {
-                                    if (entry.getValue().equals(searchConditions.get(k).getUslOrPass())) {
-                                        count = count + 1;
-                                    }
-                                }
-                            }
-                        }
-                        if (count == searchConditions.size()-1 && j == 0) {
-                            totalProFpySamples = totalProFpySamples + 1;
-                            totalProPassSamples = totalProPassSamples + 1;
-                            flag = true;
-                            break;
-                        } else if (count == searchConditions.size()-1 && j > 0 && j <= rowKeys.size() - 1) {
-                            totalProPassSamples = totalProPassSamples + 1;
-                            flag = true;
-                            break;
-                        }
-                    }
-                    if (flag) {
-                        break;
-                    }
-                }
-            }
+        }
 
-            totalProTotalSamples = unRepetitionDatas.size();
-            totalProNgSamples = totalProTotalSamples - totalProPassSamples;
-            totalProNtfSamples = totalProPassSamples - totalProFpySamples;
-            yieldTotalProcessesDto.setFpySamples(totalProFpySamples);
-            yieldTotalProcessesDto.setNgSamples(totalProNgSamples);
-            yieldTotalProcessesDto.setNtfSamples(totalProNtfSamples);
-            yieldTotalProcessesDto.setPassSamples(totalProPassSamples);
-            yieldTotalProcessesDto.setTotalSamples(totalProTotalSamples);
-            yieldTotalProcessesDto.setFpyPercent((double)totalProFpySamples / (double)totalProTotalSamples);
-            yieldTotalProcessesDto.setNgPercent((double) totalProNgSamples / (double)totalProTotalSamples);
-            yieldTotalProcessesDto.setNtfPercent((double) totalProNtfSamples / (double)totalProTotalSamples);
-        }
-        configDto.setTopN(5);//
-        for (int i = 0; i < configDto.getTopN() && i < searchConditions.size() -1 ; i++) {
-            YieldNTFChartDto yieldNTFChartDto = new YieldNTFChartDto();
-            yieldNTFChartDto.setItemName(overResult.get(i).getItemName());
-            yieldNTFChartDto.setNtfPercent(overResult.get(i).getNtfPercent());
-            ntfChartResult.add(yieldNTFChartDto);
-        }
-        yieldTotalProcessesDtos.add(yieldTotalProcessesDto);
-        YieldResultDto yieldResultDto = new YieldResultDto();
-        yieldResultDto.setTotalProcessesDtos(yieldTotalProcessesDtos);
-        yieldResultDto.setYieldNTFChartDtos(ntfChartResult);
-        yieldResultDto.setYieldOverviewDtos(overResult);
-        result.add(yieldResultDto);
-        return viewDataResult;
+        return viewDataResultDto;
     }
 
 
