@@ -664,6 +664,77 @@ public class YieldItemController implements Initializable {
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
     }
 
+    @SuppressWarnings("unchecked")
+    public void normalViewDataEvent() {
+        List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
+        yieldMainController.clearAnalysisData();
+        List<String> projectNameList = envService.findActivatedProjectName();
+        List<TestItemWithTypeDto> testItemWithTypeDtoList = this.buildSelectTestItemWithTypeData(selectedItemDto);
+        List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(selectedItemDto);
+        YieldAnalysisConfigDto yieldAnalysisConfigDto = this.buildYieldAnalysisConfigData();
+        this.updateYieldConfigPreference(yieldAnalysisConfigDto);
+        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+        windowProgressTipController.setAutoHide(false);
+        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
+        context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+        context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, yieldAnalysisConfigDto);
+        context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+        context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
+        windowProgressTipController.getCancelBtn().setOnAction(event -> {
+            windowProgressTipController.setCancelingText();
+            context.interruptBeforeNextJobHandler();
+            if (context.isError() || context.getCurrentProgress() == 1.0) {
+                windowProgressTipController.closeDialog();
+            }
+        });
+        Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
+        WindowPane windowPane = null;
+        if (stage1.getScene().getRoot() instanceof WindowPane) {
+            windowPane = (WindowPane) stage1.getScene().getRoot();
+        }
+        if (windowPane != null) {
+            windowPane.getCloseBtn().setOnAction(event -> {
+                context.interruptBeforeNextJobHandler();
+                windowProgressTipController.setCancelingText();
+            });
+        }
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.YIELD_OVER_VIEW_JOB_PIPELINE);
+        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+//                yieldMainController.setSpcSettingDto(context.getParam(ParamKeys.YIELD_SETTING_DTO, YieldSettingDto.class));
+//                yieldMainController.setAnalysisConfigDto(yieldAnalysisConfigDto);
+//                yieldMainController.setInitSearchConditionDtoList(searchConditionDtoList);
+//                YieldRefreshJudgeUtil.newInstance().setOverViewSelectRowKeyListCache(null);
+////                YieldRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
+                List<YieldViewDataResultDto> YieldViewDataDtoList = (List<YieldViewDataResultDto>) context.get(ParamKeys.YIELD_RESULT_DTO_LIST);
+//                TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
+////                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
+//                yieldMainController.setOverviewResultData(YieldOverviewAlarmDtoList, null, isTimer);
+//                yieldMainController.setDataFrame(context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class));
+//                windowProgressTipController.closeDialog();
+                yieldMainController.setDisable(false);
+                logger.info("Yield analysis finish.");
+            }
+        });
+        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                logger.error(context.getError().getMessage());
+                windowProgressTipController.updateFailProgress(context.getError().toString());
+            }
+        });
+        jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                windowProgressTipController.closeDialog();
+            }
+        });
+        logger.info("Start analysis Yield.");
+        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+    }
+
     private List<String> getSelectedItem() {
         List<String> selectItems = Lists.newArrayList();
         if (items != null && !items.isEmpty()) {
@@ -701,6 +772,8 @@ public class YieldItemController implements Initializable {
         });
         return selectTestItemsResult;
     }
+
+
 
     private List<TestItemWithTypeDto> initSelectedItemDto() {
         List<TestItemWithTypeDto> selectTestItemDtos = Lists.newLinkedList();
