@@ -1,18 +1,21 @@
 package com.dmsoft.firefly.plugin.yield.controller;
 
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
-import com.dmsoft.firefly.plugin.yiela.spc.controller.SpcSettingController;
-import com.dmsoft.firefly.plugin.yiela.spc.utils.ImageUtils;
+
 import com.dmsoft.firefly.plugin.yield.dto.YieldSettingDto;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
-import com.dmsoft.firefly.plugin.yiela.yield.utils.*;
 import com.dmsoft.firefly.plugin.yield.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.job.core.JobContext;
 import com.dmsoft.firefly.sdk.job.core.JobFactory;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.google.common.collect.Maps;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -25,7 +28,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public class YieldSettingController implements Initializable {
-    private final Logger logger = LoggerFactory.getLogger(SpcSettingController.class);
+    private final Logger logger = LoggerFactory.getLogger(YieldSettingController.class);
     @FXML
     private Label alarmSetting;
     @FXML
@@ -52,7 +55,7 @@ public class YieldSettingController implements Initializable {
     @FXML
     private ScrollPane settingScrollPane;
 
-//    private SpcExportSettingController spcExportSettingController;
+    //    private SpcExportSettingController spcExportSettingController;
     //CP
     @FXML
     private TextField FPYExcellentTf;
@@ -130,16 +133,16 @@ public class YieldSettingController implements Initializable {
         for (int i = 0; i < proCapAlarmKeys.length; i++) {
             String key = proCapAlarmKeys[i].getCode();
             Double[] value = abilityAlarmRule.get(key);
-            if (YieldProCapAlarmKey.FPY.getCode().equals(key)) {
+            if (YieldProCapAlarmKey.FPYPER.getCode().equals(key)) {
                 FPYExcellentTf.setText(alarmDataToText(value[0]));
                 FPYGoodTf.setText(alarmDataToText(value[1]));
                 FPYAcceptableTf.setText(alarmDataToText(value[2]));
-            } else if (YieldProCapAlarmKey.NTF.getCode().equals(key)) {
+            } else if (YieldProCapAlarmKey.NTFPER.getCode().equals(key)) {
                 NTFExcellentTf.setText(alarmDataToText(value[0]));
                 NTFGoodTf.setText(alarmDataToText(value[1]));
                 NTFAcceptableTf.setText(alarmDataToText(value[2]));
 
-            } else if (YieldProCapAlarmKey.NG.getCode().equals(key)) {
+            } else if (YieldProCapAlarmKey.NGPER.getCode().equals(key)) {
                 NGExcellentTf.setText(alarmDataToText(value[0]));
                 NGGoodTf.setText(alarmDataToText(value[1]));
                 NGAcceptableTf.setText(alarmDataToText(value[2]));
@@ -220,16 +223,16 @@ public class YieldSettingController implements Initializable {
             String key = proCapAlarmKeys[i].getCode();
 
             Double[] value = new Double[3];
-            if (YieldProCapAlarmKey.FPY.getCode().equals(key)) {
+            if (YieldProCapAlarmKey.FPYPER.getCode().equals(key)) {
                 value[0] = Double.valueOf(FPYExcellentTf.getText());
                 value[1] = Double.valueOf(FPYGoodTf.getText());
                 value[2] = Double.valueOf(FPYAcceptableTf.getText());
-            } else if (YieldProCapAlarmKey.NTF.getCode().equals(key)) {
+            } else if (YieldProCapAlarmKey.NTFPER.getCode().equals(key)) {
                 value[0] = Double.valueOf(NTFExcellentTf.getText());
                 value[1] = Double.valueOf(NTFGoodTf.getText());
                 value[2] = Double.valueOf(NTFAcceptableTf.getText());
 
-            } else if (YieldProCapAlarmKey.NG.getCode().equals(key)) {
+            } else if (YieldProCapAlarmKey.NGPER.getCode().equals(key)) {
                 value[0] = Double.valueOf(NGExcellentTf.getText());
                 value[1] = Double.valueOf(NGGoodTf.getText());
                 value[2] = Double.valueOf(NGAcceptableTf.getText());

@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.plugin.charts.data;
+package com.dmsoft.firefly.plugin.charts;
 
 import com.dmsoft.firefly.plugin.yield.charts.NDChart;
 import com.dmsoft.firefly.plugin.yield.charts.data.NDBarChartData;

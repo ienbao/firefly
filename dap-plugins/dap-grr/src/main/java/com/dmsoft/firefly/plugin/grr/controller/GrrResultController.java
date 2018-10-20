@@ -24,7 +24,6 @@ import com.dmsoft.firefly.plugin.grr.utils.charts.ChartUtils;
 import com.dmsoft.firefly.plugin.grr.utils.charts.LegendUtils;
 import com.dmsoft.firefly.plugin.grr.utils.enums.Orientation;
 import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
-import com.dmsoft.firefly.plugin.yiela.grr.dto.analysis.*;
 import com.dmsoft.firefly.plugin.grr.model.GrrAnovaModel;
 import com.dmsoft.firefly.plugin.grr.model.GrrSourceModel;
 import com.dmsoft.firefly.plugin.grr.model.GrrSummaryModel;

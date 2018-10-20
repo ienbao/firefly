@@ -1,7 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.service;
 
 import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
-import com.dmsoft.firefly.plugin.yiela.grr.dto.analysis.*;
 
 /**
  * interface class for grr analysis

@@ -632,17 +632,19 @@ public class YieldItemController implements Initializable {
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
-//                yieldMainController.setSpcSettingDto(context.getParam(ParamKeys.SPC_SETTING_DTO, SpcSettingDto.class));
-//                yieldMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
-//                yieldMainController.setInitSearchConditionDtoList(searchConditionDtoList);
-//                SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
-//                SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
-//                List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
-//                TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
+                yieldMainController.setYieldSettingDto(context.getParam(ParamKeys.YIELD_SETTING_DTO, YieldSettingDto.class));
+                yieldMainController.setAnalysisConfigDto(yieldAnalysisConfigDto);
+                yieldMainController.setInitSearchConditionDtoList(searchConditionDtoList);
+                YieldRefreshJudgeUtil.newInstance().setOverViewSelectRowKeyListCache(null);
+//                YieldRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
+                List<YieldOverviewResultAlarmDto> YieldOverviewAlarmDtoList = (List<YieldOverviewResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
+                TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
 //                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
-//                yieldMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList, null, isTimer);
-//                yieldMainController.setDataFrame(context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class));
-//                windowProgressTipController.closeDialog();
+                yieldMainController.setOverviewResultData(YieldOverviewAlarmDtoList, null, isTimer);
+                yieldMainController.setDataFrame(context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class));
+                windowProgressTipController.closeDialog();
+                yieldMainController.setDisable(false);
+                logger.info("Yield analysis finish.");
                 yieldMainController.setDisable(false);
                 logger.info("Yield analysis finish.");
             }

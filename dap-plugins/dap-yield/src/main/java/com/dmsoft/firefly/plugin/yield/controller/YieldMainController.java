@@ -9,8 +9,8 @@ import com.dmsoft.firefly.plugin.yield.dto.YieldAnalysisConfigDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldSettingDto;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
-import com.dmsoft.firefly.plugin.yield.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
+import com.dmsoft.firefly.plugin.yield.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -44,16 +44,19 @@ public class YieldMainController implements Initializable {
     private Button chooseBtn;
     @FXML
     private YieldItemController yieldItemController;
-//    @FXML
-//    private StatisticalResultController statisticalResultController;
+    @FXML
+    private OverViewController overViewController;
     @FXML
     private ViewDataController viewDataController;
-//    @FXML
+    //    @FXML
 //    private ChartResultController chartResultController;
-//    private SearchDataFrame dataFrame;
+    private SearchDataFrame dataFrame;
     private YieldAnalysisConfigDto analysisConfigDto;
     private List<SearchConditionDto> initSearchConditionDtoList;
-//      private YieldSettingDto spcSettingDto;
+    private YieldSettingDto yieldSettingDto;
+
+
+
     private YieldSettingService yieldSettingService = RuntimeContext.getBean(YieldSettingService.class);
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
 //    private List<String> lastViewDataRowKeyList;
@@ -88,16 +91,16 @@ public class YieldMainController implements Initializable {
         }
     }
 
-//    /**
-//     * set statistical result data
-//     *
-//     * @param list         the data list
-//     * @param isTimer      isTimer
-//     * @param selectRowKey selectRowKey
-//     */
-//    public void setStatisticalResultData(List<SpcStatisticalResultAlarmDto> list, List<String> selectRowKey, boolean isTimer) {
-//        statisticalResultController.setTimerStatisticalResultTableData(list, selectRowKey, isTimer);
-//    }
+    /**
+     * set statistical result data
+     *
+     * @param list         the data list
+     * @param isTimer      isTimer
+     * @param selectRowKey selectRowKey
+     */
+    public void setOverviewResultData(List<YieldOverviewResultAlarmDto> list, List<String> selectRowKey, boolean isTimer) {
+        overViewController.setTimerOverviewResultTableData(list, selectRowKey, isTimer);
+    }
 //
 //    /**
 //     * timer refresh statistical result data
@@ -171,6 +174,14 @@ public class YieldMainController implements Initializable {
 //    }
 
 
+    public YieldAnalysisConfigDto getAnalysisConfigDto() {
+        return analysisConfigDto;
+    }
+
+    public void setAnalysisConfigDto(YieldAnalysisConfigDto analysisConfigDto) {
+        this.analysisConfigDto = analysisConfigDto;
+    }
+
     /**
      * clear analysis data
      *
@@ -238,8 +249,8 @@ public class YieldMainController implements Initializable {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
 //        context.put(ParamKeys.YIELD_SETTING_DTO, spcSettingDto);
-          context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, initSearchConditionDtoList);
-          context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, analysisConfigDto);
+        context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, initSearchConditionDtoList);
+        context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, analysisConfigDto);
 //        context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
@@ -289,20 +300,20 @@ public class YieldMainController implements Initializable {
     }
 
     private void getExportBtnEvent() {
-         Pane root = null;
-         try {
-             FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML("view/yield_export.fxml");
-             root = fxmlLoader.load();
-             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("yieldExport", YieldFxmlAndLanguageUtils.getString("YIELD_EXPORT"), root, getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
+        Pane root = null;
+        try {
+            FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML("view/yield_export.fxml");
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("yieldExport", YieldFxmlAndLanguageUtils.getString("YIELD_EXPORT"), root, getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
 //             SpcLeftConfigDto leftConfigDto = spcItemController.getCurrentConfigData();
 //             ((SpcExportController) fxmlLoader.getController()).initSpcExportLeftConfig(leftConfigDto);
-             stage.setResizable(false);
-             stage.toFront();
-             stage.show();
+            stage.setResizable(false);
+            stage.toFront();
+            stage.show();
 
-         } catch (Exception ex) {
-             ex.printStackTrace();
-         }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 //    private void getChooseBtnEvent() {
@@ -386,44 +397,23 @@ public class YieldMainController implements Initializable {
         return  null;
     }
 
-    public void setSpcSettingDto(YieldSettingDto param) {
+    public SearchDataFrame getDataFrame() {
+        return dataFrame;
     }
 
-    public void setAnalysisConfigDto(YieldAnalysisConfigDto yieldAnalysisConfigDto) {
+    public void setDataFrame(SearchDataFrame dataFrame) {
+        this.dataFrame = dataFrame;
+    }
+//
+
+
+    public List<SearchConditionDto> getInitSearchConditionDtoList() {
+        return initSearchConditionDtoList;
     }
 
-    public void setInitSearchConditionDtoList(List<SearchConditionDto> searchConditionDtoList) {
+    public void setInitSearchConditionDtoList(List<SearchConditionDto> initSearchConditionDtoList) {
+        this.initSearchConditionDtoList = initSearchConditionDtoList;
     }
-
-    public void setOverviewResultData(List<YieldOverviewResultAlarmDto> yieldOverviewAlarmDtoList, Object o, boolean isTimer) {
-    }
-
-    public void setDataFrame(SearchDataFrame param) {
-    }
-
-//    public SearchDataFrame getDataFrame() {
-//        return dataFrame;
-//    }
-//
-//    public void setDataFrame(SearchDataFrame dataFrame) {
-//        this.dataFrame = dataFrame;
-//    }
-//
-//    public SpcAnalysisConfigDto getAnalysisConfigDto() {
-//        return analysisConfigDto;
-//    }
-//
-//    public void setAnalysisConfigDto(SpcAnalysisConfigDto analysisConfigDto) {
-//        this.analysisConfigDto = analysisConfigDto;
-//    }
-//
-//    public List<SearchConditionDto> getInitSearchConditionDtoList() {
-//        return initSearchConditionDtoList;
-//    }
-//
-//    public void setInitSearchConditionDtoList(List<SearchConditionDto> initSearchConditionDtoList) {
-//        this.initSearchConditionDtoList = initSearchConditionDtoList;
-//    }
 
 //    private List<SearchConditionDto> buildRefreshSearchConditionData(List<SpcStatisticalResultAlarmDto> spcStatsDtoList) {
 //        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
@@ -840,13 +830,16 @@ public class YieldMainController implements Initializable {
 //    }
 //
 //
-//    public SpcSettingDto getSpcSettingDto() {
-//        return spcSettingDto;
-//    }
-//
-//    public void setSpcSettingDto(SpcSettingDto spcSettingDto) {
-//        this.spcSettingDto = spcSettingDto;
-//    }
+
+    public YieldSettingDto getYieldSettingDto() {
+        return yieldSettingDto;
+    }
+
+    public void setYieldSettingDto(YieldSettingDto yieldSettingDto) {
+        this.yieldSettingDto = yieldSettingDto;
+    }
+
+
 //
 //    /**
 //     * method to set is timer or not

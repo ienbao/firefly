@@ -1,6 +1,5 @@
 package com.dmsoft.firefly.plugin.yield.controller;
 
-import com.dmsoft.firefly.plugin.yiela.spc.utils.UIConstant;
 import com.dmsoft.firefly.plugin.yield.charts.ChartTooltip;
 import com.dmsoft.firefly.plugin.yield.charts.NDChart;
 import com.dmsoft.firefly.plugin.yield.charts.data.NDBarChartData;
@@ -61,7 +60,7 @@ public class YieldChartResultController implements Initializable {
             iNdcChartData.setSeriesName(seriesName);
             ndcChartDataList.add(iNdcChartData);
     }
-        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
+        //this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
     }
 
     private void setNdChartData(String chartName, List<NDBarChartData> ndChartData) {
