@@ -1,7 +1,7 @@
 package com.dmsoft.firefly.plugin.yield.charts.data.basic;
 
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.PointRule;
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.PointStyle;
+import com.dmsoft.firefly.plugin.yiela.spc.charts.data.basic.PointRule;
+import com.dmsoft.firefly.plugin.yiela.spc.charts.data.basic.PointStyle;
 import javafx.scene.paint.Color;
 
 import java.util.function.Function;

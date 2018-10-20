@@ -197,7 +197,7 @@ public class BuildChart {//生成图
         return result;
     }
 
-    private static NDChart buildND() {//创建正态分布图
+    private static NDChart buildND() {//创建直方分布图
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setTickMarkVisible(false);//设置x轴数字标记线是否显示

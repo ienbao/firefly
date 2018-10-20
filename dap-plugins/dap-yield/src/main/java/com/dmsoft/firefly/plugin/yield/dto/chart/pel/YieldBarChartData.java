@@ -7,7 +7,6 @@ import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import javafx.scene.paint.Color;
 
-import javax.persistence.Index;
 import java.util.List;
 
 public class YieldBarChartData implements IBarChartData<Double,Double> {

@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import com.sun.javafx.scene.control.skin.TableHeaderRow?>
-<VBox fx:id="testItemPane" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcItemController">
+<VBox fx:id="testItemPane" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yiela.spc.controller.SpcItemController">
    <children>
       <SplitPane fx:id="split" orientation="VERTICAL" prefHeight="600.0" style="-fx-border-width: 0 0 0 0;" VBox.vgrow="ALWAYS">
          <items>

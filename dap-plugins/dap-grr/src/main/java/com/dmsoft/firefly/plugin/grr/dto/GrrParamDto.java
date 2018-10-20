@@ -1,9 +1,7 @@
 package com.dmsoft.firefly.plugin.grr.dto;
 
 import com.dmsoft.bamboo.common.dto.AbstractValueObject;
-import com.dmsoft.firefly.plugin.grr.dto.analysis.GrrSummaryResultDto;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 

@@ -1,7 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.utils.charts;
 
 import com.dmsoft.firefly.plugin.grr.charts.data.PointTooltip;
-import com.dmsoft.firefly.plugin.grr.utils.DigNumInstance;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

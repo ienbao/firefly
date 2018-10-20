@@ -2,10 +2,9 @@ package com.dmsoft.firefly.plugin.yield.model;
 
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableModel;
-import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
-import com.dmsoft.firefly.gui.components.utils.ValidateUtils;
 import com.dmsoft.firefly.plugin.yield.dto.OverviewAlarmDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
+import com.dmsoft.firefly.plugin.yiela.yield.utils.*;
 import com.dmsoft.firefly.plugin.yield.utils.*;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPDoubleUtils;
@@ -21,7 +20,6 @@ import javafx.collections.transformation.SortedList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 
 import java.awt.*;
 import java.text.DecimalFormat;

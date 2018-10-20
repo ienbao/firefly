@@ -31,8 +31,8 @@ public class AMCsvResolverPlugin extends Plugin {
 
     @Override
     public void initialize(InitModel model) {
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.AMCsvResolverPlugin", "com.dmsoft.firefly.plugin.am.csvresolver.service.CsvResolverService", new CsvResolverService());
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.AMCsvResolverPlugin", "com.dmsoft.firefly.plugin.am.csvresolver.service.CsvConfigService", new CsvConfigService());
+        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.AMCsvResolverPlugin", "CsvResolverService", new CsvResolverService());
+        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.AMCsvResolverPlugin", "CsvConfigService", new CsvConfigService());
 
         logger.info("Plugin-CsvResolver Initialized.");
     }

@@ -17,13 +17,18 @@ import com.dmsoft.firefly.plugin.grr.charts.data.ILineData;
 import com.dmsoft.firefly.plugin.grr.charts.data.RuleLineData;
 import com.dmsoft.firefly.plugin.grr.charts.data.VerticalCutLine;
 import com.dmsoft.firefly.plugin.grr.dto.*;
-import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
 import com.dmsoft.firefly.plugin.grr.handler.ParamKeys;
-import com.dmsoft.firefly.plugin.grr.model.*;
 import com.dmsoft.firefly.plugin.grr.service.GrrConfigService;
 import com.dmsoft.firefly.plugin.grr.utils.*;
 import com.dmsoft.firefly.plugin.grr.utils.charts.ChartUtils;
 import com.dmsoft.firefly.plugin.grr.utils.charts.LegendUtils;
+import com.dmsoft.firefly.plugin.grr.utils.enums.Orientation;
+import com.dmsoft.firefly.plugin.grr.dto.analysis.*;
+import com.dmsoft.firefly.plugin.yiela.grr.dto.analysis.*;
+import com.dmsoft.firefly.plugin.grr.model.GrrAnovaModel;
+import com.dmsoft.firefly.plugin.grr.model.GrrSourceModel;
+import com.dmsoft.firefly.plugin.grr.model.GrrSummaryModel;
+import com.dmsoft.firefly.plugin.grr.model.ItemResultModel;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
@@ -839,9 +844,9 @@ public class GrrResultController implements Initializable {
         rrbyPartChartRightPane = new ChartRightPane(rrbyPartChart);
 
         xBarAppraiserChartBtn = new ChartOperateButton(true,
-                com.dmsoft.firefly.plugin.grr.utils.enums.Orientation.BOTTOMLEFT);
+                Orientation.BOTTOMLEFT);
         rangeAppraiserChartBtn = new ChartOperateButton(true,
-                com.dmsoft.firefly.plugin.grr.utils.enums.Orientation.BOTTOMLEFT);
+                Orientation.BOTTOMLEFT);
         Tooltip.install(xBarAppraiserChartBtn, new Tooltip(GrrFxmlAndLanguageUtils.getString(UIConstant.BTN_CHART_CHOOSE_LINES)));
         Tooltip.install(rangeAppraiserChartBtn, new Tooltip(GrrFxmlAndLanguageUtils.getString(UIConstant.BTN_CHART_CHOOSE_LINES)));
         xBarAppraiserChartRightPane.addCustomPaneChildren(xBarAppraiserChartBtn);

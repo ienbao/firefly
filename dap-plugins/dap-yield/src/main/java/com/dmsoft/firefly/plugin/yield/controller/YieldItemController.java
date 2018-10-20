@@ -8,10 +8,10 @@ import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowPane;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
-import com.dmsoft.firefly.plugin.yield.dto.*;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.yield.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.yield.service.impl.YieldLeftConfigServiceImpl;
+import com.dmsoft.firefly.plugin.yield.dto.*;
 import com.dmsoft.firefly.plugin.yield.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
@@ -632,17 +632,17 @@ public class YieldItemController implements Initializable {
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
-                yieldMainController.setSpcSettingDto(context.getParam(ParamKeys.YIELD_SETTING_DTO, YieldSettingDto.class));
-                yieldMainController.setAnalysisConfigDto(yieldAnalysisConfigDto);
-                yieldMainController.setInitSearchConditionDtoList(searchConditionDtoList);
-                YieldRefreshJudgeUtil.newInstance().setOverViewSelectRowKeyListCache(null);
-//                YieldRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
-                List<YieldOverviewResultAlarmDto> YieldOverviewAlarmDtoList = (List<YieldOverviewResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
-                TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
+//                yieldMainController.setSpcSettingDto(context.getParam(ParamKeys.SPC_SETTING_DTO, SpcSettingDto.class));
+//                yieldMainController.setAnalysisConfigDto(spcAnalysisConfigDto);
+//                yieldMainController.setInitSearchConditionDtoList(searchConditionDtoList);
+//                SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
+//                SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
+//                List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
+//                TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
 //                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
-                yieldMainController.setOverviewResultData(YieldOverviewAlarmDtoList, null, isTimer);
-                yieldMainController.setDataFrame(context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class));
-                windowProgressTipController.closeDialog();
+//                yieldMainController.setStatisticalResultData(spcStatisticalResultAlarmDtoList, null, isTimer);
+//                yieldMainController.setDataFrame(context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class));
+//                windowProgressTipController.closeDialog();
                 yieldMainController.setDisable(false);
                 logger.info("Yield analysis finish.");
             }

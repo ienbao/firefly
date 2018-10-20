@@ -1,11 +1,9 @@
 package com.dmsoft.firefly.plugin.yield.charts.data;
 
-import com.dmsoft.firefly.plugin.yield.charts.AxisRange;
 import com.dmsoft.firefly.plugin.yield.charts.data.basic.IBarChartData;
 import com.dmsoft.firefly.plugin.yield.charts.data.basic.IXYChartData;
+import com.dmsoft.firefly.plugin.yield.charts.AxisRange;
 import javafx.scene.paint.Color;
-
-import java.util.List;
 
 public interface NDBarChartData extends AxisRange {
     /**

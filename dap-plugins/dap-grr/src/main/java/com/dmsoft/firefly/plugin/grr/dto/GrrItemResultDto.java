@@ -2,7 +2,6 @@ package com.dmsoft.firefly.plugin.grr.dto;
 
 import com.dmsoft.bamboo.common.dto.AbstractValueObject;
 
-import java.util.List;
 import java.util.Map;
 
 /**

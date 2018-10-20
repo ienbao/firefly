@@ -6,12 +6,15 @@ import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.*;
 import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldAnalysisConfigDto;
+import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
+import com.dmsoft.firefly.plugin.yield.dto.YieldSettingDto;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
-import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
 import com.dmsoft.firefly.plugin.yield.utils.ImageUtils;
+import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
 import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.job.core.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -381,6 +384,21 @@ public class YieldMainController implements Initializable {
     public Map<String, Color> getColorCache() {
 
         return  null;
+    }
+
+    public void setSpcSettingDto(YieldSettingDto param) {
+    }
+
+    public void setAnalysisConfigDto(YieldAnalysisConfigDto yieldAnalysisConfigDto) {
+    }
+
+    public void setInitSearchConditionDtoList(List<SearchConditionDto> searchConditionDtoList) {
+    }
+
+    public void setOverviewResultData(List<YieldOverviewResultAlarmDto> yieldOverviewAlarmDtoList, Object o, boolean isTimer) {
+    }
+
+    public void setDataFrame(SearchDataFrame param) {
     }
 
 //    public SearchDataFrame getDataFrame() {

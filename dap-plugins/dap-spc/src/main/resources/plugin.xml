@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin id="com.dmsoft.dap.SpcPlugin" name="SPC" version="1.0.0" author="Can Guan"
         description="Statistical Process Control and Analysis is a method of quality control which employs statistical methods to monitor and control a process. This helps ensure the process operates efficiently, producing more specification-conforming products with less waste. SPC can be applied to any process where the conforming product output can be measured. Key tools used in  SPC include run charts, control charts, a focus on continuous improvement, and the design of experiments."
-        scanPath="com.dmsoft.firefly.plugin.spc" pluginClassName="com.dmsoft.firefly.plugin.spc.SpcPlugin">
+        scanPath="com.dmsoft.firefly.plugin.spc" pluginClassName="com.dmsoft.firefly.plugin.yiela.spc.SpcPlugin">
     <runtime path="com.dmsoft.dap.SpcPlugin.jar"></runtime>
 </plugin>

@@ -2,8 +2,8 @@ package com.dmsoft.firefly.plugin.grr.utils;
 
 import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrItemResultDto;
-import com.dmsoft.firefly.plugin.grr.dto.GrrViewDataDto;
 import com.dmsoft.firefly.plugin.grr.dto.GrrMeanAndRangeDto;
+import com.dmsoft.firefly.plugin.grr.dto.GrrViewDataDto;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;

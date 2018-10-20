@@ -1,28 +1,19 @@
 package com.dmsoft.firefly.plugin.yield.controller;
 
-import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
-import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
+import com.dmsoft.firefly.plugin.yield.utils.YieldRefreshJudgeUtil;
+import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.yield.model.OverViewTableModel;
 import com.dmsoft.firefly.plugin.yield.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.yield.utils.UIConstant;
 import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
-import com.dmsoft.firefly.plugin.yield.utils.YieldRefreshJudgeUtil;
-import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.google.common.collect.Lists;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
