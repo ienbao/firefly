@@ -106,11 +106,11 @@ public class YieldPlugin extends Plugin {
                 .addLast(new DataFrameHandler())
                 .addLast(new GetYieldResultHandler().setWeight(D100)));
 
-//        jobManager.initializeJob(ParamKeys.SPC_ANALYSIS_EXPORT_JOB_PIPELINE, jobFactory.createJobPipeLine()
-//                .addLast(new FindSpcSettingDataHandler())
-//                .addLast(new FindTestDataHandler().setWeight(D100))
-//                .addLast(new DataFrameHandler())
-//                .addLast(new GetSpcStatsResultHandler().setWeight(D100)));
+        jobManager.initializeJob(ParamKeys.YIELD_OVER_VIEW_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new FindYieldSettingDataHandler())
+                .addLast(new FindTestDataHandler().setWeight(D100))
+                .addLast(new DataFrameHandler())
+                .addLast(new GetYieldOverViewHandler().setWeight(D100)));
 //
 //        jobManager.initializeJob(ParamKeys.SPC_REFRESH_CHART_JOB_PIPELINE, jobFactory.createJobPipeLine()
 //                .addLast(new GetSpcChartResultHandler().setWeight(D100)));
@@ -155,7 +155,7 @@ public class YieldPlugin extends Plugin {
             FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML("view/yield_setting.fxml");
             root = fxmlLoader.load();
             yieldSettingController = fxmlLoader.getController();
-            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.YIELD_SETTING, YieldFxmlAndLanguageUtils.getString("Yield_SETTINGS"), root, getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(StateKey.YIELD_SETTING, YieldFxmlAndLanguageUtils.getString("YIELD_SETTINGS"), root, getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
             stage.setResizable(false);
             stage.toFront();
             stage.show();
