@@ -18,7 +18,7 @@
 
 <!--AnchorPane 布局面板允许你将控件停靠在窗口的上下左右位置-->
 
-<AnchorPane minHeight="110.0" minWidth="180.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldResultController">
+<AnchorPane minHeight="110.0" minWidth="180.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldChartResultController">
 <children>
     <TabPane style="-fx-background-color: #ffffff;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>

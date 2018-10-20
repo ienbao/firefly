@@ -94,9 +94,9 @@ public class OverViewController implements Initializable {
     }
 
     /* 表格点击表格中某一格触发的事件 */
- private void refreshViewData() {
-     yieldMainController.refreshViewData(OverViewConditionDtoList);
- }
+// private void refreshViewData() {
+//     yieldMainController.refreshViewData(OverViewConditionDtoList);
+// }
     /**
      * set statistical result table data
      *
