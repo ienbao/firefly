@@ -120,6 +120,7 @@ public class YieldItemController implements Initializable {
         this.yieldMainController = yieldMainController;
     }
 
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initBtnIcon();
@@ -647,7 +648,8 @@ public class YieldItemController implements Initializable {
                 TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
 //                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
                 yieldMainController.setOverviewResultData(YieldOverviewAlarmDtoList, null, isTimer);
-                yieldMainController.setDataFrame(context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class));
+                dataFrame=context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
+                yieldMainController.setDataFrame(dataFrame);
                 windowProgressTipController.closeDialog();
                 yieldMainController.setDisable(false);
                 logger.info("Yield analysis finish.");
@@ -673,7 +675,7 @@ public class YieldItemController implements Initializable {
     }
 
     @SuppressWarnings("unchecked")
-    public void normalViewDataEvent() {
+    public void normalViewDataEvent(boolean isTimer) {
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
         yieldMainController.clearAnalysisData();
         List<String> projectNameList = envService.findActivatedProjectName();
@@ -682,13 +684,9 @@ public class YieldItemController implements Initializable {
         YieldAnalysisConfigDto yieldAnalysisConfigDto = this.buildYieldAnalysisConfigData();
         this.updateYieldConfigPreference(yieldAnalysisConfigDto);
 
-        SearchDataFrame viewDataFrame = buildSubSearchDataFrame(searchConditionDtoList);
-
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         windowProgressTipController.setAutoHide(false);
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
-//        SearchDataFrame subDataFrame = buildSubSearchDataFrame(rowKeyList, searchConditionDtoList);
-//        context.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
         context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
         context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, yieldAnalysisConfigDto);
@@ -712,7 +710,7 @@ public class YieldItemController implements Initializable {
                 windowProgressTipController.setCancelingText();
             });
         }
-        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.YIELD_OVER_VIEW_JOB_PIPELINE);
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.YIELD_VIEW_DATA_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
@@ -721,15 +719,20 @@ public class YieldItemController implements Initializable {
 //                yieldMainController.setInitSearchConditionDtoList(searchConditionDtoList);
 //                YieldRefreshJudgeUtil.newInstance().setOverViewSelectRowKeyListCache(null);
 ////                YieldRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
-                List<YieldViewDataResultDto> YieldViewDataDtoList = (List<YieldViewDataResultDto>) context.get(ParamKeys.YIELD_RESULT_DTO_LIST);
-//                TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
-////                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
+                System.out.println("23123242");
+                List<YieldViewDataResultDto> YieldViewDataResultDtoList = (List<YieldViewDataResultDto>) context.get(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO_LIST);
+                List<String> rowKeyList = Lists.newArrayList();
+                for(int i =0; i<YieldViewDataResultDtoList.get(0).getFPYlist().size();i++){
+                    rowKeyList.add(YieldViewDataResultDtoList.get(0).getFPYlist().get(i).getRowKey());
+                }
+                dataFrame = context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
+                List<String> testItemNameList = Lists.newArrayList();
+                testItemNameList.add(searchConditionDtoList.get(1).getItemName());
+                SearchDataFrame subDataFrame = dataFrame.subDataFrame(rowKeyList, testItemNameList);
+                viewDataController.setViewData(subDataFrame, rowKeyList, searchConditionDtoList, false);
 
-//                viewDataController.setViewData(viewDataFrame, subDataFrame.getAllRowKeys(), YieldViewDataDtoList, yieldItemController.isTimer());
 
-
-//                yieldMainController.setDataFrame(context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class));
-//                windowProgressTipController.closeDialog();
+                windowProgressTipController.closeDialog();
                 yieldMainController.setDisable(false);
                 logger.info("Yield analysis finish.");
             }

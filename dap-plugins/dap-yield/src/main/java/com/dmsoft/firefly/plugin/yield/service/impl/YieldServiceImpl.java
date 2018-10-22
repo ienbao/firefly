@@ -2,6 +2,7 @@ package com.dmsoft.firefly.plugin.yield.service.impl;
 
 import com.dmsoft.firefly.plugin.yield.service.YieldService;
 import com.dmsoft.firefly.plugin.yield.dto.*;
+import com.dmsoft.firefly.plugin.yield.utils.YieldType;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
@@ -23,6 +24,8 @@ import java.util.Map;
 
 
 public class YieldServiceImpl implements YieldService {
+
+    private YieldViewDataDto yieldViewDataDto;
 
     private static Logger logger = LoggerFactory.getLogger(YieldServiceImpl.class);
 
@@ -295,24 +298,13 @@ public class YieldServiceImpl implements YieldService {
 
 
         if (!dataAndRowKeyMap.isEmpty()) {
-            int overTotalSamples = 0;
-            int overFpySamples = 0;
-            int overPassSamples = 0;
-            int overNtfSamples = 0;
-            int overNgSamples = 0;
 
-            YieldViewDataDto yieldViewDataDto = new YieldViewDataDto();
             List<YieldViewDataDto> Fpylist = Lists.newArrayList();
             List<YieldViewDataDto> Passlist = Lists.newArrayList();
             List<YieldViewDataDto> Ntflist = Lists.newArrayList();
             List<YieldViewDataDto> Nglist = Lists.newArrayList();
             List<YieldViewDataDto> Totallist = Lists.newArrayList();
 
-            Map<String, List<YieldViewDataDto>> overFpySamplesMap = new HashMap<>();
-            Map<String, List<YieldViewDataDto>> overPassSamplesMap = new HashMap<>();
-            Map<String, List<YieldViewDataDto>> overNtfSamplesMap = new HashMap<>();
-            Map<String, List<YieldViewDataDto>> overNgSamplesMap = new HashMap<>();
-            Map<String, List<YieldViewDataDto>> overTotalSamplesMap = new HashMap<>();
 
             //overView
             for (int i = 1;i<searchConditions.size();i++) {
@@ -342,7 +334,9 @@ public class YieldServiceImpl implements YieldService {
                             if (Double.parseDouble(rowDataDto.getData().get(key)) >= lsl && Double.parseDouble(rowDataDto.getData().get(key)) <= usl && usl != Double.NaN && lsl != Double.NaN) {
                                 ngFlag = ngFlag + 1;
                                 if (j == 0) {
+                                    yieldViewDataDto = new YieldViewDataDto();
                                     yieldViewDataDto.setProductName(unRepetitionDatas.get(k));
+                                    yieldViewDataDto.setRowKey(rowKeys.get(j));
                                     yieldViewDataDto.setResult(Double.parseDouble(rowDataDto.getData().get(key)));
                                     Fpylist.add(yieldViewDataDto);
                                     Passlist.add(yieldViewDataDto);
@@ -350,6 +344,7 @@ public class YieldServiceImpl implements YieldService {
                                     break;
                                 } else if (j > 0 && j <= rowKeys.size() - 1) {
                                     yieldViewDataDto.setProductName(unRepetitionDatas.get(k));
+                                    yieldViewDataDto.setRowKey(rowKeys.get(j));
                                     yieldViewDataDto.setResult(Double.parseDouble(rowDataDto.getData().get(key)));
                                     Ntflist.add(yieldViewDataDto);
                                     Passlist.add(yieldViewDataDto);
@@ -362,16 +357,27 @@ public class YieldServiceImpl implements YieldService {
                             if (rowDataDto.getData().get(key).equals(searchConditions.get(i).getUslOrPass())) {
                                 ngFlag = ngFlag +1;
                                 if (j == 0) {
+                                    if (searchConditions.get(i).getYieldType() == YieldType.FPY) {
+                                        yieldViewDataDto.setProductName(unRepetitionDatas.get(k));
+                                        yieldViewDataDto.setResult(Double.parseDouble(rowDataDto.getData().get(key)));
+                                        Fpylist.add(yieldViewDataDto);
+
+                                    } else if(searchConditions.get(i).getYieldType() == YieldType.PASS)
                                     yieldViewDataDto.setProductName(unRepetitionDatas.get(k));
                                     yieldViewDataDto.setResult(Double.parseDouble(rowDataDto.getData().get(key)));
-                                    Fpylist.add(yieldViewDataDto);
                                     Passlist.add(yieldViewDataDto);
                                     break;
                                 } else if (j > 0 && j <= rowKeys.size() - 1) {
-                                    yieldViewDataDto.setProductName(unRepetitionDatas.get(k));
-                                    yieldViewDataDto.setResult(Double.parseDouble(rowDataDto.getData().get(key)));
-                                    Ntflist.add(yieldViewDataDto);
-                                    Passlist.add(yieldViewDataDto);
+                                    if(searchConditions.get(i).getYieldType() == YieldType.NTF){
+                                        yieldViewDataDto.setProductName(unRepetitionDatas.get(k));
+                                        yieldViewDataDto.setResult(Double.parseDouble(rowDataDto.getData().get(key)));
+                                        Ntflist.add(yieldViewDataDto);
+                                    }else if(searchConditions.get(i).getYieldType() == YieldType.PASS){
+                                        yieldViewDataDto.setProductName(unRepetitionDatas.get(k));
+                                        yieldViewDataDto.setResult(Double.parseDouble(rowDataDto.getData().get(key)));
+                                        Passlist.add(yieldViewDataDto);
+                                    }
+
 
                                     break;
                                 }
@@ -379,24 +385,20 @@ public class YieldServiceImpl implements YieldService {
                         }
                         if(j==rowKeys.size()-1){
                             if (ngFlag == 0){
-                                overNgSamples = overNgSamples + 1 + j;
+                                if(searchConditions.get(i).getYieldType() == YieldType.NG){
+                                    yieldViewDataDto.setProductName(unRepetitionDatas.get(k));
+                                    yieldViewDataDto.setResult(Double.parseDouble(rowDataDto.getData().get(key)));
+                                    Nglist.add(yieldViewDataDto);
+                                }
                             }
                         }
                     }
                 }
-                overTotalSamples = overPassSamples+overNtfSamples+overNgSamples;
-
-//                Totallist.addAll(Fpylist);
-//                Totallist.removeAll(Passlist);
-//                Totallist.addAll(Passlist);
-//                Totallist.removeAll(Ntflist);
-//                Totallist.addAll(Ntflist);
-
-                overFpySamplesMap.put(searchConditions.get(i).getItemName(),Fpylist);
-                overPassSamplesMap.put(searchConditions.get(i).getItemName(),Passlist);
-                overNtfSamplesMap.put(searchConditions.get(i).getItemName(),Ntflist);
-
-//                overTotalSamplesMap.put(searchConditions.get(i).getItemName(),Totallist);
+                if(searchConditions.get(i).getYieldType() == YieldType.TOTAL){
+                    Totallist.addAll(Passlist);
+                    Totallist.addAll(Ntflist);
+                    Totallist.addAll(Nglist);
+                }
 
                 YieldViewDataResultDto yieldViewDataResultDto = new YieldViewDataResultDto();
                 yieldViewDataResultDto.setItemName(searchConditions.get(i).getItemName());

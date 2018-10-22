@@ -880,4 +880,13 @@ public class YieldMainController implements Initializable {
 //        }
 //        return timerSearchKeyList;
 //    }
+
+
+    public ViewDataController getViewDataController() {
+        return viewDataController;
+    }
+
+    public void setViewDataController(ViewDataController viewDataController) {
+        this.viewDataController = viewDataController;
+    }
 }

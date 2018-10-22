@@ -11,6 +11,7 @@ public class ParamKeys {
     public static final String SPC_CHART_DTO_LIST = "spcChartDtoList";
     public static final String SPC_STATISTICAL_RESULT_ALARM_DTO_LIST = "spcStatisticalResultAlarmDtoList";
     public static final String YIELD_RESULT_DTO_LIST = "yieldResultDtoList";
+    public static final String YIELD_VIEW_DATA_RESULT_DTO_LIST = "yieldViewDataResultDtoList";
     public static final String ANALYSIS_RESULT_MAP = "analysisResultMap";
     public static final String EXPORT_PATH = "exportPath";
 
@@ -36,6 +37,7 @@ public class ParamKeys {
     //pipeline
     public static final String YIELD_ANALYSIS_JOB_PIPELINE = "yieldAnalysisJobPipeline";
     public static final String YIELD_OVER_VIEW_JOB_PIPELINE = "yieldViewDataJobPipeline";
+    public static final String YIELD_VIEW_DATA_JOB_PIPELINE = "yieldViewDataJobPipeline";
     public static final String SPC_ANALYSIS_EXPORT_JOB_PIPELINE = "spcAnalysisExportJobPipeline";
     public static final String SPC_REFRESH_ANALYSIS_JOB_PIPELINE = "spcRefreshAnalysisJobPipeline";
     public static final String SPC_REFRESH_CHART_JOB_PIPELINE = "spcRefreshChartJobPipeline";

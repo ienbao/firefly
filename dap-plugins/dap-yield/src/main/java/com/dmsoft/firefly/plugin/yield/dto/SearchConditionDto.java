@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.yield.dto;
 
 import com.dmsoft.bamboo.common.dto.AbstractValueObject;
+import com.dmsoft.firefly.plugin.yield.utils.YieldType;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 
 /**
@@ -13,6 +14,7 @@ public class SearchConditionDto extends AbstractValueObject {
     private String lslOrFail;
     private String uslOrPass;
     private TestItemType testItemType;
+    private YieldType yieldType;
 
     public String getKey() {
         return key;
@@ -60,5 +62,13 @@ public class SearchConditionDto extends AbstractValueObject {
 
     public void setTestItemType(TestItemType testItemType) {
         this.testItemType = testItemType;
+    }
+
+    public YieldType getYieldType() {
+        return yieldType;
+    }
+
+    public void setYieldType(YieldType yieldType) {
+        this.yieldType = yieldType;
     }
 }
