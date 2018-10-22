@@ -3,6 +3,7 @@ package com.dmsoft.firefly.plugin.yield.controller;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.dialog.ChooseTestItemDialog;
 import com.dmsoft.firefly.gui.components.skin.ExpandableTableViewSkin;
+import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
@@ -184,6 +185,8 @@ public class ViewDataController implements Initializable {
         this.model = new ViewDataModel(dataFrame, selectedRowKey);
 //        this.model.setStatisticalSearchConditionDtoList(statisticalSearchConditionDtoList);
         this.model.setMainController(yieldMainController);
+
+        TableViewWrapper.decorate(viewDataTable, model);
 
         String filterTxt = filteValueTf.getTextField().getText();
         if (DAPStringUtils.isNotBlank(filterTxt)) {

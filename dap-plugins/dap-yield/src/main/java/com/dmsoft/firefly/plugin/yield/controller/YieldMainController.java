@@ -890,4 +890,12 @@ public class YieldMainController implements Initializable {
     public void setViewDataController(ViewDataController viewDataController) {
         this.viewDataController = viewDataController;
     }
+
+    public YieldItemController getYieldItemController() {
+        return yieldItemController;
+    }
+
+    public void setYieldItemController(YieldItemController yieldItemController) {
+        this.yieldItemController = yieldItemController;
+    }
 }

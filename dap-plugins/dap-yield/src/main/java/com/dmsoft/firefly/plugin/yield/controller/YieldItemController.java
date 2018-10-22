@@ -821,7 +821,7 @@ public class YieldItemController implements Initializable {
         return dataFrame.subDataFrame(dataFrame.getSearchRowKey(searchCondition), testItemNameList);
     }
 
-    private List<TestItemWithTypeDto> initSelectedItemDto() {
+    public List<TestItemWithTypeDto> initSelectedItemDto() {
         List<TestItemWithTypeDto> selectTestItemDtos = Lists.newLinkedList();
         if (items != null && !items.isEmpty()) {
             for (ItemTableModel model : items) {
@@ -857,6 +857,7 @@ public class YieldItemController implements Initializable {
         });
         return selectTestItemDtosResult;
     }
+
     private void initYieldConfig() {
        YieldAnalysisConfigDto yieldAnalysisConfigDto = this.getYieldConfigPreference();
         if (yieldAnalysisConfigDto == null) {
@@ -951,14 +952,14 @@ public class YieldItemController implements Initializable {
         searchTab.clearSearchTab();
     }
 
-    private YieldAnalysisConfigDto buildYieldAnalysisConfigData() {
+    public YieldAnalysisConfigDto buildYieldAnalysisConfigData() {
         YieldAnalysisConfigDto yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
         yieldAnalysisConfigDto.setPrimaryKey(configComboBox.getValue());
 //        yieldAnalysisConfigDto.set;
         return yieldAnalysisConfigDto;
     }
 
-    private List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
+    public List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
         if (testItemWithTypeDtoList == null) {
             return null;
         }
@@ -993,7 +994,7 @@ public class YieldItemController implements Initializable {
         }
         return searchConditionDtoList;
     }
-    private List<TestItemWithTypeDto> buildSelectTestItemWithTypeData(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
+    public List<TestItemWithTypeDto> buildSelectTestItemWithTypeData(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
         List<TestItemWithTypeDto> itemWithTypeDtoList = Lists.newArrayList();
         TestItemWithTypeDto searchPrimaryKey = new TestItemWithTypeDto();
         searchPrimaryKey.setTestItemName(configComboBox.getValue());
