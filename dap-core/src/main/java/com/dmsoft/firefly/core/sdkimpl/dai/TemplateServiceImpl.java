@@ -194,8 +194,10 @@ public class TemplateServiceImpl implements TemplateService {
                 TestItemWithTypeDto testItemWithTypeDto = new TestItemWithTypeDto();
                 BeanUtils.copyProperties(itemDto, testItemWithTypeDto);
                 if (curr.getSpecificationDatas() != null && curr.getSpecificationDatas().containsKey(itemDto.getTestItemName())) {
-                    if (curr.getSpecificationDatas().get(itemDto.getTestItemName()).getDataType().equals("VARIABLE")) {
+                    if (curr.getSpecificationDatas().get(itemDto.getTestItemName()).getDataType().equals("Variable")) {
                         testItemWithTypeDto.setTestItemType(TestItemType.VARIABLE);
+                    }else if (curr.getSpecificationDatas().get(itemDto.getTestItemName()).getDataType().equals("Attribute")) {
+                        testItemWithTypeDto.setTestItemType(TestItemType.ATTRIBUTE);
                     }
                     testItemWithTypeDto.setLsl(curr.getSpecificationDatas().get(itemDto.getTestItemName()).getLslFail());
                     testItemWithTypeDto.setUsl(curr.getSpecificationDatas().get(itemDto.getTestItemName()).getUslPass());

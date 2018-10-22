@@ -69,6 +69,7 @@ public class YieldMainController implements Initializable {
         this.yieldItemController.init(this);
 //        this.statisticalResultController.init(this);
         this.viewDataController.init(this);
+        this.overViewController.init(this);
 //        this.chartResultController.init(this);
         this.initBtnIcon();
         this.initComponentEvent();

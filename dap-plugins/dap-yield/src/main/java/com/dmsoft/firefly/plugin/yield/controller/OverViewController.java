@@ -9,6 +9,8 @@ import com.dmsoft.firefly.plugin.yield.model.OverViewTableModel;
 import com.dmsoft.firefly.plugin.yield.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.yield.utils.UIConstant;
 import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.google.common.collect.Lists;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,6 +30,7 @@ public class OverViewController implements Initializable {
 
     private YieldMainController yieldMainController;
     private ViewDataController viewDataController;
+
     private List<SearchConditionDto> OverViewConditionDtoList;
 
     private OverViewTableModel overViewTableModel;
@@ -45,8 +48,9 @@ public class OverViewController implements Initializable {
      *
      * @param viewDataController viewData controller
      */
-    public void init(ViewDataController viewDataController) {
-        this.viewDataController = viewDataController;
+    public void init(YieldMainController yieldMainController) {
+        this.yieldMainController = yieldMainController;
+        this.initComponentEvents();
     }
 
     private void initStatisticalResultTable() {
@@ -88,6 +92,14 @@ public class OverViewController implements Initializable {
 // private void refreshViewData() {
 //     yieldMainController.refreshViewData(OverViewConditionDtoList);
 // }
+
+    private void initComponentEvents() {
+        overViewTableModel.setClickListener((rowKey,column) -> fireClickEvent(rowKey,column));
+    }
+
+    private void fireClickEvent(String rowKey,String column) {
+        System.out.println(rowKey + column);
+    }
     /**
      * set statistical result table data
      *
