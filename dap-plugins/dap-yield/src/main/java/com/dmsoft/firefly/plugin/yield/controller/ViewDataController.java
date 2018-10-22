@@ -55,7 +55,6 @@ public class ViewDataController implements Initializable {
     private SearchDataFrame dataFrame;
     private List<SearchConditionDto> searchViewDataConditionDto;
     private List<String> selectedRowKeys;
-    private String selectedColumnKey;
     private List<String> testItemNames;
     private Map<String, FilterSettingAndGraphic> columnFilterSetting = Maps.newHashMap();
     private List<TestItemWithTypeDto> typeDtoList;
@@ -95,6 +94,7 @@ public class ViewDataController implements Initializable {
     public void init(YieldMainController yieldMainController) {
         this.yieldMainController = yieldMainController;
     }
+
 
 
     private void initBtnIcon() {
@@ -148,7 +148,6 @@ public class ViewDataController implements Initializable {
     private void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> searchViewDataConditionDto, boolean isTimer, boolean isAutoRefresh) {
         this.searchViewDataConditionDto = searchViewDataConditionDto;
         this.selectedRowKeys = selectedRowKey;
-        this.selectedColumnKey = selectedColumnKey;
         this.dataFrame = dataFrame;
         if (dataFrame == null) {
             filteValueTf.setDisable(true);

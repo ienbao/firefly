@@ -87,6 +87,7 @@ public class YieldItemController implements Initializable {
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
     private YieldMainController yieldMainController;
+    private ViewDataController viewDataController;
     private ContextMenu pop;
     private boolean isFilterUslOrLsl = false;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
@@ -97,6 +98,7 @@ public class YieldItemController implements Initializable {
     private List<String> stickyOnTopItems = Lists.newArrayList();
 
     private List<String> originalItems = Lists.newArrayList();
+    private SearchDataFrame dataFrame;
 
     @FXML
     private CheckBox enabledTimerCheckBox;
@@ -117,6 +119,7 @@ public class YieldItemController implements Initializable {
     public void init(YieldMainController yieldMainController) {
         this.yieldMainController = yieldMainController;
     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -645,7 +648,8 @@ public class YieldItemController implements Initializable {
                 TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
 //                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
                 yieldMainController.setOverviewResultData(YieldOverviewAlarmDtoList, null, isTimer);
-                yieldMainController.setDataFrame(context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class));
+                dataFrame=context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
+                yieldMainController.setDataFrame(dataFrame);
                 windowProgressTipController.closeDialog();
                 yieldMainController.setDisable(false);
                 logger.info("Yield analysis finish.");
@@ -671,7 +675,7 @@ public class YieldItemController implements Initializable {
     }
 
     @SuppressWarnings("unchecked")
-    public void normalViewDataEvent() {
+    public void normalViewDataEvent(boolean isTimer) {
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
         yieldMainController.clearAnalysisData();
         List<String> projectNameList = envService.findActivatedProjectName();
@@ -679,6 +683,7 @@ public class YieldItemController implements Initializable {
         List<SearchConditionDto> searchConditionDtoList = this.buildSearchConditionDataList(selectedItemDto);
         YieldAnalysisConfigDto yieldAnalysisConfigDto = this.buildYieldAnalysisConfigData();
         this.updateYieldConfigPreference(yieldAnalysisConfigDto);
+
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         windowProgressTipController.setAutoHide(false);
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
@@ -705,7 +710,7 @@ public class YieldItemController implements Initializable {
                 windowProgressTipController.setCancelingText();
             });
         }
-        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.YIELD_OVER_VIEW_JOB_PIPELINE);
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.YIELD_VIEW_DATA_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
@@ -714,12 +719,20 @@ public class YieldItemController implements Initializable {
 //                yieldMainController.setInitSearchConditionDtoList(searchConditionDtoList);
 //                YieldRefreshJudgeUtil.newInstance().setOverViewSelectRowKeyListCache(null);
 ////                YieldRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
-                List<YieldViewDataResultDto> YieldViewDataDtoList = (List<YieldViewDataResultDto>) context.get(ParamKeys.YIELD_RESULT_DTO_LIST);
-//                TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
-////                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
-//                yieldMainController.setOverviewResultData(YieldOverviewAlarmDtoList, null, isTimer);
-//                yieldMainController.setDataFrame(context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class));
-//                windowProgressTipController.closeDialog();
+                System.out.println("23123242");
+                List<YieldViewDataResultDto> YieldViewDataResultDtoList = (List<YieldViewDataResultDto>) context.get(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO_LIST);
+                List<String> rowKeyList = Lists.newArrayList();
+                for(int i =0; i<YieldViewDataResultDtoList.get(0).getFPYlist().size();i++){
+                    rowKeyList.add(YieldViewDataResultDtoList.get(0).getFPYlist().get(i).getRowKey());
+                }
+                dataFrame = context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
+                List<String> testItemNameList = Lists.newArrayList();
+                testItemNameList.add(searchConditionDtoList.get(1).getItemName());
+                SearchDataFrame subDataFrame = dataFrame.subDataFrame(rowKeyList, testItemNameList);
+                viewDataController.setViewData(subDataFrame, rowKeyList, searchConditionDtoList, false);
+
+
+                windowProgressTipController.closeDialog();
                 yieldMainController.setDisable(false);
                 logger.info("Yield analysis finish.");
             }
@@ -740,6 +753,7 @@ public class YieldItemController implements Initializable {
         logger.info("Start analysis Yield.");
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
     }
+
 
     private List<String> getSelectedItem() {
         List<String> selectItems = Lists.newArrayList();
@@ -779,7 +793,33 @@ public class YieldItemController implements Initializable {
         return selectTestItemsResult;
     }
 
+    private SearchDataFrame buildSubSearchDataFrame(List<SearchConditionDto> searchConditionDtoList) {
+        if (dataFrame == null || searchConditionDtoList == null) {
+            return null;
+        }
+        List<String> testItemNameList = Lists.newArrayList();
+        List<String> searchCondition = Lists.newArrayList();
+        List<String> timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
+        String timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
+        FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
+        for (SearchConditionDto searchConditionDto : searchConditionDtoList) {
+            if (!testItemNameList.contains(searchConditionDto.getItemName())) {
+                testItemNameList.add(searchConditionDto.getItemName());
+            }
+            String condition = searchConditionDto.getCondition();
+            Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);
+            for (String conditionTestItem : conditionTestItemSet) {
+                if (!testItemNameList.contains(conditionTestItem)) {
+                    testItemNameList.add(conditionTestItem);
+                }
+            }
 
+            if (!searchCondition.contains(condition)) {
+                searchCondition.add(condition);
+            }
+        }
+        return dataFrame.subDataFrame(dataFrame.getSearchRowKey(searchCondition), testItemNameList);
+    }
 
     private List<TestItemWithTypeDto> initSelectedItemDto() {
         List<TestItemWithTypeDto> selectTestItemDtos = Lists.newLinkedList();
