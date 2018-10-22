@@ -101,6 +101,7 @@ public class YieldMainController implements Initializable {
     public void setOverviewResultData(List<YieldOverviewResultAlarmDto> list, List<String> selectRowKey, boolean isTimer) {
         overViewController.setTimerOverviewResultTableData(list, selectRowKey, isTimer);
     }
+
 //
 //    /**
 //     * timer refresh statistical result data
