@@ -16,10 +16,7 @@ import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class YieldServiceImpl implements YieldService {
@@ -230,11 +227,29 @@ public class YieldServiceImpl implements YieldService {
             yieldTotalProcessesDto.setNtfPercent((double) totalProNtfSamples / (double)totalProTotalSamples);
         }
         configDto.setTopN(5);//
-        for (int i = 0; i < configDto.getTopN() && i < searchConditions.size() -1 ; i++) {
+        List<YieldNTFChartDto> ntfChartDtoList = Lists.newArrayList();
+        for (int i = 0; i < searchConditions.size() -1 ; i++) {
             YieldNTFChartDto yieldNTFChartDto = new YieldNTFChartDto();
             yieldNTFChartDto.setItemName(overResult.get(i).getItemName());
             yieldNTFChartDto.setNtfPercent(overResult.get(i).getNtfPercent());
-            ntfChartResult.add(yieldNTFChartDto);
+            ntfChartDtoList.add(yieldNTFChartDto);
+        }
+        Collections.sort(ntfChartDtoList, new Comparator<YieldNTFChartDto>() {
+            @Override
+            public int compare(YieldNTFChartDto o1, YieldNTFChartDto o2) {
+                double ntf1 = o1.getNtfPercent();
+                double ntf2 = o2.getNtfPercent();
+                if (ntf1 > ntf2){
+                    return 1;
+                }else if (ntf1 == ntf2){
+                    return 0;
+                }else {
+                    return  -1;
+                }
+            }
+        });
+        for (int i = 0; i < configDto.getTopN() && i < searchConditions.size() -1 ; i++) {
+            ntfChartResult.add(ntfChartDtoList.get(i));
         }
         yieldTotalProcessesDtos.add(yieldTotalProcessesDto);
         YieldResultDto yieldResultDto = new YieldResultDto();
