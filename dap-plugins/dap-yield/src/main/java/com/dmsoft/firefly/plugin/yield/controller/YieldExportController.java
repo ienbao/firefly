@@ -1,13 +1,8 @@
 package com.dmsoft.firefly.plugin.yield.controller;
 
-import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
-import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
-import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
-import com.dmsoft.firefly.gui.components.utils.TextFieldWrapper;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
-import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.plugin.yield.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.yield.utils.ImageUtils;
 import com.dmsoft.firefly.plugin.yield.utils.ResourceMassages;
@@ -17,10 +12,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
-import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -29,14 +21,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.stage.DirectoryChooser;
-import javafx.util.Callback;
-import org.apache.commons.lang3.StringUtils;
 
-import java.awt.*;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 
 public class YieldExportController {

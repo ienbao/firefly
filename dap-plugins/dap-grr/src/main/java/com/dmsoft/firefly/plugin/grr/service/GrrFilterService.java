@@ -1,6 +1,9 @@
 package com.dmsoft.firefly.plugin.grr.service;
 
-import com.dmsoft.firefly.plugin.grr.dto.*;
+import com.dmsoft.firefly.plugin.grr.dto.GrrConfigDto;
+import com.dmsoft.firefly.plugin.grr.dto.GrrDataFrameDto;
+import com.dmsoft.firefly.plugin.grr.dto.GrrParamDto;
+import com.dmsoft.firefly.plugin.grr.dto.SearchConditionDto;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 

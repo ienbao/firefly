@@ -1,13 +1,11 @@
 package com.dmsoft.firefly.plugin.yield.controller;
 
-import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import com.dmsoft.firefly.plugin.yield.charts.ChartTooltip;
 import com.dmsoft.firefly.plugin.yield.charts.NDChart;
 import com.dmsoft.firefly.plugin.yield.charts.data.NDBarChartData;
+import com.dmsoft.firefly.plugin.yield.dto.chart.YieldNdChartData;
 import com.dmsoft.firefly.plugin.yield.dto.YieldChartDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldChartResultDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldResultDto;
-import com.dmsoft.firefly.plugin.yield.dto.chart.YieldNdChartData;
 import com.dmsoft.firefly.plugin.yield.dto.chart.view.ChartPanel;
 import com.dmsoft.firefly.plugin.yield.utils.YieldChartToolTip;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
@@ -62,7 +60,7 @@ public class YieldChartResultController implements Initializable {
             iNdcChartData.setSeriesName(seriesName);
             ndcChartDataList.add(iNdcChartData);
     }
-        this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
+        //this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
     }
 
     private void setNdChartData(String chartName, List<NDBarChartData> ndChartData) {

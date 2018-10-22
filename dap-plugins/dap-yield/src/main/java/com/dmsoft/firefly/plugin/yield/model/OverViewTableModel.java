@@ -2,8 +2,6 @@ package com.dmsoft.firefly.plugin.yield.model;
 
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableModel;
-import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
-import com.dmsoft.firefly.gui.components.utils.ValidateUtils;
 import com.dmsoft.firefly.plugin.yield.dto.OverviewAlarmDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
 import com.dmsoft.firefly.plugin.yield.utils.*;
@@ -21,7 +19,6 @@ import javafx.collections.transformation.SortedList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 
 import java.awt.*;
 import java.text.DecimalFormat;
@@ -345,7 +342,7 @@ public class OverViewTableModel  implements TableModel{
 
     @Override
     public boolean isEditableTextField(String columnName) {
-        if (!isTimer && (columnName.equals(YIELD_TITLE[7]) || columnName.equals(YIELD_TITLE[8]))) {
+        if (!isTimer && (columnName.equals(YIELD_TITLE[1]) || columnName.equals(YIELD_TITLE[2]))) {
             return true;
         }
         return false;
@@ -474,20 +471,28 @@ public class OverViewTableModel  implements TableModel{
         if (overviewResultAlarmDto != null) {
             if (columnName.equals(YIELD_TITLE[0])) {
                 value = overviewResultAlarmDto.getItemName();
+                if (value == null){value = "-";}
             }else if(columnName.equals(YIELD_TITLE[1])){
                 value = overviewResultAlarmDto.getLslOrFail();
+                if (value == null){value = "-";}
             }else if(columnName.equals(YIELD_TITLE[2])){
                 value = overviewResultAlarmDto.getUslOrPass();
+                if (value == null){value = "-";}
             }else if(columnName.equals(YIELD_TITLE[3])){
                 value = overviewResultAlarmDto.getTotalSamples()+"";
+                if (overviewResultAlarmDto.getTotalSamples() == null){value = "-";}
             }else if(columnName.equals(YIELD_TITLE[4])){
                 value = overviewResultAlarmDto.getFpySamples()+"";
+                if (overviewResultAlarmDto.getFpySamples() == null){value = "-";}
             } else if(columnName.equals(YIELD_TITLE[5])){
                 value = overviewResultAlarmDto.getPassSamples()+"";
+                if (overviewResultAlarmDto.getPassSamples() == null){value = "-";}
             }else if(columnName.equals(YIELD_TITLE[6])){
                 value = overviewResultAlarmDto.getNtfSamples()+"";
+                if (overviewResultAlarmDto.getNtfSamples() == null){value = "-";}
             }else if(columnName.equals(YIELD_TITLE[7])){
                 value = overviewResultAlarmDto.getNgSamples()+"";
+                if (overviewResultAlarmDto.getNgSamples() == null){value = "-";}
             } else {
                 Map<String, OverviewAlarmDto> overviewAlarmDtoMap = overviewResultAlarmDto.getOverviewAlarmDtoMap();
                 if (overviewAlarmDtoMap == null) {

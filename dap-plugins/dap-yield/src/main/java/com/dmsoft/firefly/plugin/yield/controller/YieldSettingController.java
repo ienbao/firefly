@@ -31,10 +31,10 @@ public class YieldSettingController implements Initializable {
     private final Logger logger = LoggerFactory.getLogger(YieldSettingController.class);
     @FXML
     private Label alarmSetting;
-//    @FXML
-//    private Label defaultSetting;
-//    @FXML
-//    private Label exportMode;
+    @FXML
+    private Label defaultSetting;
+    @FXML
+    private Label exportMode;
     @FXML
     private Button apply;
     @FXML
@@ -42,20 +42,20 @@ public class YieldSettingController implements Initializable {
     @FXML
     private Button ok;
 
-//    //default setting
-//    @FXML
-//    private ComboBox defaultSettingCb;
+    //default setting
+    @FXML
+    private ComboBox defaultSettingCb;
 
     //Export Template Setting
-//    @FXML
-//    private ComboBox exportTemplateCb;
-//    @FXML
-//    private Button exportTemplateSettingBtn;
+    @FXML
+    private ComboBox exportTemplateCb;
+    @FXML
+    private Button exportTemplateSettingBtn;
 
     @FXML
     private ScrollPane settingScrollPane;
 
-//    private SpcExportSettingController spcExportSettingController;
+    //    private SpcExportSettingController spcExportSettingController;
     //CP
     @FXML
     private TextField FPYExcellentTf;
@@ -84,11 +84,11 @@ public class YieldSettingController implements Initializable {
     private VBox defaultSettingVBox, alarmSettingVBox,  exportSettingVBox;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        this.initBtnIcon();
+        this.initBtnIcon();
 //        this.initComponent();
         this.initData();
         this.initComponentEvent();
-        this.initValidate();
+//        this.initValidate();
     }
     /**
      * init data
@@ -99,30 +99,24 @@ public class YieldSettingController implements Initializable {
 
         YieldSettingDto yieldSettingDto = context.getParam(ParamKeys.YIELD_SETTING_DTO, YieldSettingDto.class);
         this.setProcessAlarmSettingData(yieldSettingDto.getAbilityAlarmRule());
-//        this.setExportSettingData(yieldSettingDto.getExportTemplateName());
-//        this.setPrimaryKey(yieldSettingDto.getPrimaryKey());
+        this.setExportSettingData(yieldSettingDto.getExportTemplateName());
+        this.setPrimaryKey(yieldSettingDto.getPrimaryKey());
     }
 
-    private void initValidate() {
 
-        YieldSettingValidateUtil.BindNode NTFBindNode = YieldSettingValidateUtil.newInstance().new BindNode(NTFExcellentTf, NTFGoodTf, NTFAcceptableTf);
-        YieldSettingValidateUtil.BindNode FPYBindNode = YieldSettingValidateUtil.newInstance().new BindNode(FPYExcellentTf, FPYGoodTf, FPYAcceptableTf);
-        YieldSettingValidateUtil.BindNode NGBindNode = YieldSettingValidateUtil.newInstance().new BindNode(NGExcellentTf, NGGoodTf, NGAcceptableTf);
-        YieldSettingValidateUtil.newInstance().validateYieldAlarmSetting( FPYBindNode,NTFBindNode, NGBindNode);
+    private void initBtnIcon() {
+        exportTemplateSettingBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_setting_normal.png")));
+        exportTemplateSettingBtn.setPrefSize(22, 22);
     }
-//    private void initBtnIcon() {
-//        exportTemplateSettingBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_setting_normal.png")));
-//        exportTemplateSettingBtn.setPrefSize(22, 22);
-//    }
 
     private void initComponentEvent() {
         apply.setOnAction(event -> getApplyBtnEvent());
         cancel.setOnAction(event -> getCancelBtnEvent());
         ok.setOnAction(event -> getOkBtnEvent());
 //        exportTemplateSettingBtn.setOnAction(event -> getExportTemplateSettingEvent());
-//        defaultSetting.setOnMousePressed(defaultSetting -> getDefaultSettingMousePressedEvent());
+        defaultSetting.setOnMousePressed(defaultSetting -> getDefaultSettingMousePressedEvent());
         alarmSetting.setOnMousePressed(defaultSetting -> getAlarmSettingMousePressedEvent());
-//        exportMode.setOnMousePressed(defaultSetting -> getExportSettingMousePressedEvent());
+        exportMode.setOnMousePressed(defaultSetting -> getExportSettingMousePressedEvent());
     }
     private String alarmDataToText(Double value) {
         if (value == null) {
@@ -156,29 +150,29 @@ public class YieldSettingController implements Initializable {
             }
         }
     }
-//    private void setExportSettingData(String exportTemplateName) {
-//        exportTemplateCb.setValue(exportTemplateName);
-//    }
-//    private void setPrimaryKey(String primaryKey) {
-//        defaultSettingCb.setValue(primaryKey);
-//    }
+    private void setExportSettingData(String exportTemplateName) {
+        exportTemplateCb.setValue(exportTemplateName);
+    }
+    private void setPrimaryKey(String primaryKey) {
+        defaultSettingCb.setValue(primaryKey);
+    }
     private void getAlarmSettingMousePressedEvent() {
         ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, alarmSettingVBox);
-//        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
+        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
         alarmSetting.setStyle("-fx-background-color: #FFFFFF");
-//        exportMode.setStyle("-fx-background-color: #F0F0F0");
+        exportMode.setStyle("-fx-background-color: #F0F0F0");
     }
     private void getExportSettingMousePressedEvent() {
         ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, exportSettingVBox);
-//        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
+        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
         alarmSetting.setStyle("-fx-background-color: #F0F0F0");
-//        exportMode.setStyle("-fx-background-color: #FFFFFF");
+        exportMode.setStyle("-fx-background-color: #FFFFFF");
     }
     private void getDefaultSettingMousePressedEvent() {
         ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, defaultSettingVBox);
-//        defaultSetting.setStyle("-fx-background-color: #FFFFFF");
+        defaultSetting.setStyle("-fx-background-color: #FFFFFF");
         alarmSetting.setStyle("-fx-background-color: #F0F0F0");
-//        exportMode.setStyle("-fx-background-color: #F0F0F0");
+        exportMode.setStyle("-fx-background-color: #F0F0F0");
     }
     private void getCancelBtnEvent() {
         StageMap.closeStage(StateKey.YIELD_SETTING);
@@ -215,8 +209,8 @@ public class YieldSettingController implements Initializable {
     private YieldSettingDto buildSaveSettingData() {
         YieldSettingDto yieldSettingDto = new YieldSettingDto();
         yieldSettingDto.setAbilityAlarmRule(this.buildProcessAlarmData());
-//        yieldSettingDto.setPrimaryKey(String.valueOf(defaultSettingCb.getValue()));
-//        yieldSettingDto.setExportTemplateName(String.valueOf(exportTemplateCb.getValue()));
+        yieldSettingDto.setPrimaryKey(String.valueOf(defaultSettingCb.getValue()));
+        yieldSettingDto.setExportTemplateName(String.valueOf(exportTemplateCb.getValue()));
         return yieldSettingDto;
     }
     private Map<String, Double[]> buildProcessAlarmData() {

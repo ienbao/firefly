@@ -2,12 +2,10 @@ package com.dmsoft.firefly.plugin.chart;
 
 import com.dmsoft.firefly.plugin.spc.charts.view.ChartOperateButton;
 import com.dmsoft.firefly.plugin.spc.utils.ImageUtils;
-import com.dmsoft.firefly.plugin.spc.utils.UIConstant;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import java.util.Arrays;
 
 /**
  * Created by cherry on 2018/2/9.

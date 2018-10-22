@@ -8,10 +8,10 @@ import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.components.window.WindowPane;
 import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
-import com.dmsoft.firefly.plugin.yield.dto.*;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.yield.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.yield.service.impl.YieldLeftConfigServiceImpl;
+import com.dmsoft.firefly.plugin.yield.dto.*;
 import com.dmsoft.firefly.plugin.yield.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
@@ -123,7 +123,11 @@ public class YieldItemController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initBtnIcon();
-        searchTab = new SearchTab();
+        searchTab = new SearchTab(false);
+        searchTab.hiddenGroupAdd();
+        searchTab.getGroup1().setVisible(false);
+        searchTab.getGroup2().setVisible(false);
+        searchTab.getAutoDivideLbl().setVisible(false);
         split.getItems().add(searchTab);
         itemFilter.getTextField().setPromptText(YieldFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) -> {
@@ -645,6 +649,8 @@ public class YieldItemController implements Initializable {
                 yieldMainController.setOverviewResultData(YieldOverviewAlarmDtoList, null, isTimer);
                 yieldMainController.setDataFrame(context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class));
                 windowProgressTipController.closeDialog();
+                yieldMainController.setDisable(false);
+                logger.info("Yield analysis finish.");
                 yieldMainController.setDisable(false);
                 logger.info("Yield analysis finish.");
             }

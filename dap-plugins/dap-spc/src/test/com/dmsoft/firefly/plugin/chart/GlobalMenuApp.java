@@ -2,7 +2,6 @@ package com.dmsoft.firefly.plugin.chart;
 
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
-import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Screen;

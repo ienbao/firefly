@@ -48,7 +48,7 @@ public class YieldMainController implements Initializable {
     private OverViewController overViewController;
     @FXML
     private ViewDataController viewDataController;
-//    @FXML
+    //    @FXML
 //    private ChartResultController chartResultController;
     private SearchDataFrame dataFrame;
     private YieldAnalysisConfigDto analysisConfigDto;
@@ -250,8 +250,8 @@ public class YieldMainController implements Initializable {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
 //        context.put(ParamKeys.YIELD_SETTING_DTO, spcSettingDto);
-          context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, initSearchConditionDtoList);
-          context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, analysisConfigDto);
+        context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, initSearchConditionDtoList);
+        context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, analysisConfigDto);
 //        context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
@@ -301,20 +301,20 @@ public class YieldMainController implements Initializable {
     }
 
     private void getExportBtnEvent() {
-         Pane root = null;
-         try {
-             FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML("view/yield_export.fxml");
-             root = fxmlLoader.load();
-             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("yieldExport", YieldFxmlAndLanguageUtils.getString("YIELD_EXPORT"), root, getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
+        Pane root = null;
+        try {
+            FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML("view/yield_export.fxml");
+            root = fxmlLoader.load();
+            Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("yieldExport", YieldFxmlAndLanguageUtils.getString("YIELD_EXPORT"), root, getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
 //             SpcLeftConfigDto leftConfigDto = spcItemController.getCurrentConfigData();
 //             ((SpcExportController) fxmlLoader.getController()).initSpcExportLeftConfig(leftConfigDto);
-             stage.setResizable(false);
-             stage.toFront();
-             stage.show();
+            stage.setResizable(false);
+            stage.toFront();
+            stage.show();
 
-         } catch (Exception ex) {
-             ex.printStackTrace();
-         }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 //    private void getChooseBtnEvent() {

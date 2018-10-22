@@ -3,14 +3,14 @@ package com.dmsoft.firefly.plugin.yield;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.yield.controller.YieldSettingController;
-import com.dmsoft.firefly.plugin.yield.handler.*;
 import com.dmsoft.firefly.plugin.yield.service.YieldService;
-import com.dmsoft.firefly.plugin.yield.service.impl.YieldServiceImpl;
 import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
+import com.dmsoft.firefly.plugin.yield.service.impl.YieldServiceImpl;
 import com.dmsoft.firefly.plugin.yield.service.impl.YieldSettingServiceImpl;
 import com.dmsoft.firefly.plugin.yield.utils.StateKey;
 import com.dmsoft.firefly.plugin.yield.utils.ViewResource;
 import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.yield.handler.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.job.core.JobFactory;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
@@ -46,7 +46,7 @@ public class YieldPlugin extends Plugin {
 //        RuntimeContext.registerBean(SpcAnalysisService.class, spcAnalysisService);
         RuntimeContext.registerBean(YieldSettingService.class, yieldSettingService);
         RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(Yield_PLUGIN_NAME,
-                "com.dmsoft.firefly.plugin.yield.service.impl.YieldServiceImpl", yieldService);
+                "YieldServiceImpl", yieldService);
 
 //        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(Yield_PLUGIN_NAME,
 //                "com.dmsoft.firefly.plugin.yield.service.impl.SpcAnalysisServiceImpl", spcAnalysisService);

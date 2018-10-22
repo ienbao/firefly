@@ -1,10 +1,6 @@
 package com.dmsoft.firefly.plugin.yield.charts.data.basic;
 
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.PointRule;
-import com.dmsoft.firefly.plugin.spc.charts.data.basic.PointStyle;
 import javafx.scene.paint.Color;
-
-import java.util.function.Function;
 
 /**
  * Created by Tommy on 2018/10/18.
@@ -72,7 +68,7 @@ public interface IXYChartData<X, Y> {
      *
      * @return point rule function
      */
-    default Function<PointRule, PointStyle> getPointFunction() {
-        return null;
-    }
+//    default Function<PointRule, PointStyle> getPointFunction() {
+//        return null;
+//    }
 }

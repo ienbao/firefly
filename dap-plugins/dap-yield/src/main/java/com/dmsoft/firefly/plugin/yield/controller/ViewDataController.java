@@ -3,19 +3,9 @@ package com.dmsoft.firefly.plugin.yield.controller;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.dialog.ChooseTestItemDialog;
 import com.dmsoft.firefly.gui.components.skin.ExpandableTableViewSkin;
-import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
-import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
-import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
-import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
-import com.dmsoft.firefly.gui.components.window.WindowPane;
-import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
 import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldAnalysisConfigDto;
-import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
-import com.dmsoft.firefly.plugin.yield.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.yield.model.ViewDataModel;
 import com.dmsoft.firefly.plugin.yield.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -26,29 +16,23 @@ import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
-import com.dmsoft.firefly.sdk.job.core.*;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.RangeUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.TableColumn;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import javafx.scene.control.TableView;
 import javafx.scene.control.Button;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -373,15 +357,6 @@ public class ViewDataController implements Initializable {
             }
             this.type = type;
         }
-
-        /* 链接点击事件 */
-        private void ViewDataEvent() {
-            yieldItemController = new YieldItemController();
-            clearViewData();
-            yieldItemController.normalViewDataEvent();
-
-        }
-
 
         String getWithinLowerLimit() {
             return withinLowerLimit;

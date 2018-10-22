@@ -7,8 +7,8 @@ import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldSettingDto;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
-import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
 import com.dmsoft.firefly.plugin.yield.utils.YieldOverviewKey;
+import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.apis.IConfig;
@@ -121,21 +121,21 @@ public class YieldSettingServiceImpl implements YieldSettingService, IConfig {
         if (alarmData != null) {
             if (name.equals(YieldOverviewKey.FPYPER.getCode())) {
                 value = Math.abs(value);
-                if ( value >= alarmData[0]) {
+                if ( value >= alarmData[0]/100) {
                     level = YieldOverviewKey.EXCELLENT.getCode();
-                } else if (value >= alarmData[1]) {
+                } else if (value >= alarmData[1]/100) {
                     level = YieldOverviewKey.ADEQUATE.getCode();
-                } else if (value >= alarmData[2]) {
+                } else if (value >= alarmData[2]/100) {
                     level = YieldOverviewKey.MARGINAL.getCode();
                 } else {
                     level = YieldOverviewKey.BAD.getCode();
                 }
             } else {
-                if (value < alarmData[0]) {
+                if (value < alarmData[0]/100) {
                     level = YieldOverviewKey.EXCELLENT.getCode();
-                } else if (value < alarmData[1]) {
+                } else if (value < alarmData[1]/100) {
                     level = YieldOverviewKey.ADEQUATE.getCode();
-                } else if (value < alarmData[2]) {
+                } else if (value < alarmData[2]/100) {
                     level = YieldOverviewKey.MARGINAL.getCode();
                 } else {
                     level = YieldOverviewKey.BAD.getCode();

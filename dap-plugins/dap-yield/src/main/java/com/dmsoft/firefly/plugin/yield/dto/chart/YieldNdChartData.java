@@ -1,14 +1,12 @@
 package com.dmsoft.firefly.plugin.yield.dto.chart;
 
-import com.dmsoft.firefly.plugin.yield.charts.data.NDBarChartData;
 import com.dmsoft.firefly.plugin.yield.charts.data.basic.IBarChartData;
+import com.dmsoft.firefly.plugin.yield.dto.chart.pel.YieldBarChartData;
+import com.dmsoft.firefly.plugin.yield.charts.data.NDBarChartData;
 import com.dmsoft.firefly.plugin.yield.charts.data.basic.IXYChartData;
 import com.dmsoft.firefly.plugin.yield.dto.NDCResultDto;
-import com.dmsoft.firefly.plugin.yield.dto.chart.pel.YieldBarChartData;
 import com.dmsoft.firefly.plugin.yield.dto.chart.pel.YieldXYChartData;
 import javafx.scene.paint.Color;
-
-import java.util.List;
 
 /**
  * Created by Tommy on 2018/10/18.
@@ -17,7 +15,6 @@ public  class YieldNdChartData implements NDBarChartData {
     private NDCResultDto ndcResultDto;
     private YieldXYChartData xyChartData;
     private YieldBarChartData barChartData ;
-
     private String seriesName;
     private String key;
     private Color color;
