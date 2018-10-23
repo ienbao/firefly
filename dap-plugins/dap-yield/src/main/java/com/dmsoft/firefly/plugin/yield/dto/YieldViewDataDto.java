@@ -7,6 +7,7 @@ import com.dmsoft.bamboo.common.dto.AbstractValueObject;
 public class YieldViewDataDto extends AbstractValueObject {
 
     private String productName;
+    private String rowKey;
     private Double result;
 
     public String getProductName() {
@@ -25,4 +26,11 @@ public class YieldViewDataDto extends AbstractValueObject {
         this.result = result;
     }
 
+    public String getRowKey() {
+        return rowKey;
+    }
+
+    public void setRowKey(String rowKey) {
+        this.rowKey = rowKey;
+    }
 }

@@ -4,6 +4,8 @@ import com.dmsoft.firefly.plugin.yield.charts.data.BarCategoryData;
 import com.dmsoft.firefly.plugin.yield.charts.data.NDBarChartData;
 import com.dmsoft.firefly.plugin.yield.charts.data.basic.BarToolTip;
 import com.dmsoft.firefly.plugin.yield.charts.data.basic.IBarChartData;
+import com.dmsoft.firefly.plugin.yield.dto.YieldChartResultDto;
+import com.dmsoft.firefly.plugin.yield.dto.YieldDetailChartDto;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
@@ -12,9 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
-import javafx.scene.chart.Axis;
-import javafx.scene.chart.ValueAxis;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -36,6 +36,8 @@ public class NDChart<X,Y> extends XYChart<X,Y>{
     private Boolean showToltip = true;
     private final double ANCHOR_X = 10.0; //固定x
     private final double ANCHOR_Y = 15.0;//固定y
+    private YieldChartResultDto yieldChartResultDto;
+    private ChartTooltip chartTooltip;
 
 
     /**
@@ -60,6 +62,7 @@ public class NDChart<X,Y> extends XYChart<X,Y>{
         this.pseudoClassStateChanged(VERTICAL_PSEUDOCLASS_STATE,orientation == Orientation.VERTICAL);
         this.setData(FXCollections.observableArrayList());//创建一个列表
         this.setLegendVisible(false);//图示可见
+        this.setData(yieldChartResultDto, chartTooltip);
     }
 
     /**
@@ -68,16 +71,28 @@ public class NDChart<X,Y> extends XYChart<X,Y>{
      * lines and fills, are added.
      *
      */
-    public void setData(List<NDBarChartData> barChartDataList, ChartTooltip chartTooltip){
+    public BarChart setData(YieldChartResultDto yieldChartResultDto , ChartTooltip chartTooltip){
         this.removeAllChilder();
-        if(barChartDataList == null){
-            return;
-        }
-        setAxisRange(barChartDataList);//设置坐标轴的范围
-        barChartDataList.forEach(ndBarChartData ->createChartSeriesData(ndBarChartData,chartTooltip) );
+
+        BarChart barChart = new BarChart(new CategoryAxis(),new NumberAxis());
+        barChart.setAnimated(false);
+        barChart.setLegendVisible(false);
+        //setAxisRange(barChartDataList);//设置坐标轴的范围
+       XYChart.Series series = setComponentBarChart();
+        barChart.getData().addAll(series);
+        return barChart;
+
 
     }
 
+    private XYChart.Series setComponentBarChart( ) {
+        XYChart.Series series1 = new XYChart.Series();
+        series1.getData().add(new XYChart.Data("123",12));
+        series1.getData().add(new XYChart.Data("456",23));
+        series1.getData().add(new XYChart.Data("789",10));
+       return  series1;
+
+    }
     private void createChartSeriesData(NDBarChartData chartData, ChartTooltip chartTooltip) {
         //1、设置barchart的数据源
         if(chartData == null){

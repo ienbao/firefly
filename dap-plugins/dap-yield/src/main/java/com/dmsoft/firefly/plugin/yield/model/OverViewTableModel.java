@@ -4,6 +4,7 @@ import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.plugin.yield.dto.OverviewAlarmDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
+import com.dmsoft.firefly.plugin.yield.service.YieldService;
 import com.dmsoft.firefly.plugin.yield.utils.*;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPDoubleUtils;
@@ -38,6 +39,8 @@ public class OverViewTableModel  implements TableModel{
     private ObjectProperty<Boolean> allChecked = new SimpleObjectProperty<>(false);
     private Set<String> falseSet = new HashSet<>();
     private List<YieldOverviewResultAlarmDto> overviewResultAlarmDtoList;
+
+    private ClickListener clickListener;
 
     private FilteredList<String> statisticalTableRowDataFilteredList;
     private SortedList<String> statisticalTableRowDataSortedList;
@@ -396,6 +399,17 @@ public class OverViewTableModel  implements TableModel{
         } else {
             tableCell.setEditable(true);
         }
+
+        if (column.equals("Total Samples")||column.equals("FPY Samples")||column.equals("Pass Samples")||column.equals("NTF Samples")||column.equals("NG Samples")){
+            String finalColumn = column;
+            YieldOverviewResultAlarmDto yieldStatsDto = keyToStatsDtoMap.get(rowKey);
+            tableCell.setOnMouseClicked(event -> {
+                if (clickListener != null){
+                    clickListener.executeAnalyzeDetail(yieldStatsDto.getItemName(), finalColumn);
+                }
+            });
+        }
+
         tableCell.setStyle(null);
         tableCell.getStyleClass().remove("error");
         if (DAPStringUtils.isBlank(column)) {
@@ -704,6 +718,10 @@ public class OverViewTableModel  implements TableModel{
 //        TooltipUtil.uninstallWarnTooltip(textField);
 //        return false;
 //    }
+
+    public void setClickListener(ClickListener radioClickListener) {
+        this.clickListener = radioClickListener;
+    }
 
     public boolean hasErrorEditValue() {
         return errorEditorCell.size() != 0;

@@ -1,9 +1,6 @@
 package com.dmsoft.firefly.plugin.yield.handler;
 
-import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldAnalysisConfigDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldSettingDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldViewDataResultDto;
+import com.dmsoft.firefly.plugin.yield.dto.*;
 import com.dmsoft.firefly.plugin.yield.service.YieldService;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
@@ -12,12 +9,12 @@ import com.dmsoft.firefly.sdk.job.core.JobContext;
 
 import java.util.List;
 
-public class GetYieldOverViewHandler extends AbstractBasicJobHandler {
+public class GetYieldViewDataHandler extends AbstractBasicJobHandler {
 
     /**
      * constructor
      */
-    public GetYieldOverViewHandler() {
+    public GetYieldViewDataHandler() {
         setName(ParamKeys.YIELD_OVER_VIEW_JOB_PIPELINE);
     }
 
@@ -29,9 +26,9 @@ public class GetYieldOverViewHandler extends AbstractBasicJobHandler {
         YieldAnalysisConfigDto analysisConfigDto = (YieldAnalysisConfigDto) context.get(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO);
         YieldService yieldService = RuntimeContext.getBean(YieldService.class);
         YieldSettingDto yieldSettingDto = (YieldSettingDto) context.get(ParamKeys.YIELD_SETTING_DTO);
-        List<YieldViewDataResultDto> yieldResultDtoList = yieldService.getViewData(dataFrame, searchConditionDtoList, analysisConfigDto);
+        List<YieldViewDataResultDto> yieldViewDataResultDtoList = yieldService.getViewData(dataFrame, searchConditionDtoList, analysisConfigDto);
 //        List<YieldOverviewDto> yieldOverviewDtoList = yieldResultDtoList.get(0).getYieldOverviewDtos();
 //        List<YieldOverviewResultAlarmDto> yieldOverviecalResultAlarm(yieldOverviewDtoList, yieldSettingDto);
-        context.put(ParamKeys.YIELD_RESULT_DTO_LIST, yieldResultDtoList);
+        context.put(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO_LIST, yieldViewDataResultDtoList);
     }
 }

@@ -3,6 +3,7 @@ package com.dmsoft.firefly.plugin.yield.controller;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.dialog.ChooseTestItemDialog;
 import com.dmsoft.firefly.gui.components.skin.ExpandableTableViewSkin;
+import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
@@ -55,7 +56,6 @@ public class ViewDataController implements Initializable {
     private SearchDataFrame dataFrame;
     private List<SearchConditionDto> searchViewDataConditionDto;
     private List<String> selectedRowKeys;
-    private String selectedColumnKey;
     private List<String> testItemNames;
     private Map<String, FilterSettingAndGraphic> columnFilterSetting = Maps.newHashMap();
     private List<TestItemWithTypeDto> typeDtoList;
@@ -95,6 +95,7 @@ public class ViewDataController implements Initializable {
     public void init(YieldMainController yieldMainController) {
         this.yieldMainController = yieldMainController;
     }
+
 
 
     private void initBtnIcon() {
@@ -148,7 +149,6 @@ public class ViewDataController implements Initializable {
     private void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> searchViewDataConditionDto, boolean isTimer, boolean isAutoRefresh) {
         this.searchViewDataConditionDto = searchViewDataConditionDto;
         this.selectedRowKeys = selectedRowKey;
-        this.selectedColumnKey = selectedColumnKey;
         this.dataFrame = dataFrame;
         if (dataFrame == null) {
             filteValueTf.setDisable(true);
@@ -185,6 +185,8 @@ public class ViewDataController implements Initializable {
         this.model = new ViewDataModel(dataFrame, selectedRowKey);
 //        this.model.setStatisticalSearchConditionDtoList(statisticalSearchConditionDtoList);
         this.model.setMainController(yieldMainController);
+
+        TableViewWrapper.decorate(viewDataTable, model);
 
         String filterTxt = filteValueTf.getTextField().getText();
         if (DAPStringUtils.isNotBlank(filterTxt)) {

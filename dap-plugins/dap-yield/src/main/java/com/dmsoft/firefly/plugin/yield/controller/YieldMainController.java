@@ -66,6 +66,7 @@ public class YieldMainController implements Initializable {
         this.yieldItemController.init(this);
 //        this.statisticalResultController.init(this);
         this.viewDataController.init(this);
+        this.overViewController.init(this);
 //        this.chartResultController.init(this);
         this.initBtnIcon();
         this.initComponentEvent();
@@ -98,6 +99,7 @@ public class YieldMainController implements Initializable {
     public void setOverviewResultData(List<YieldOverviewResultAlarmDto> list, List<String> selectRowKey, boolean isTimer) {
         overViewController.setTimerOverviewResultTableData(list, selectRowKey, isTimer);
     }
+
 //
 //    /**
 //     * timer refresh statistical result data
@@ -876,4 +878,21 @@ public class YieldMainController implements Initializable {
 //        }
 //        return timerSearchKeyList;
 //    }
+
+
+    public ViewDataController getViewDataController() {
+        return viewDataController;
+    }
+
+    public void setViewDataController(ViewDataController viewDataController) {
+        this.viewDataController = viewDataController;
+    }
+
+    public YieldItemController getYieldItemController() {
+        return yieldItemController;
+    }
+
+    public void setYieldItemController(YieldItemController yieldItemController) {
+        this.yieldItemController = yieldItemController;
+    }
 }
