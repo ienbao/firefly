@@ -139,9 +139,32 @@ public class OverViewController implements Initializable {
 
                 List<YieldViewDataResultDto> YieldViewDataResultDtoList = (List<YieldViewDataResultDto>) context.get(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO_LIST);
                 List<String> rowKeyList = Lists.newArrayList();
-                for (int i = 0; i < YieldViewDataResultDtoList.get(0).getResultlist().size(); i++) {
-                    rowKeyList.add(YieldViewDataResultDtoList.get(0).getResultlist().get(i).getRowKey());
+//                for (int i = 0; i < YieldViewDataResultDtoList.get(0).getResultlist().size(); i++) {
+//                    rowKeyList.add(YieldViewDataResultDtoList.get(0).getResultlist().get(i).getRowKey());
+//                }
+
+                if(column.equals("FPY Samples")) {
+                    for (int i = 0; i < YieldViewDataResultDtoList.get(0).getFPYlist().size(); i++) {
+                        rowKeyList.add(YieldViewDataResultDtoList.get(0).getFPYlist().get(i).getRowKey());
+                    }
+                }else if(column.equals("Pass Samples")){
+                    for (int i = 0; i < YieldViewDataResultDtoList.get(0).getPASSlist().size(); i++) {
+                        rowKeyList.add(YieldViewDataResultDtoList.get(0).getPASSlist().get(i).getRowKey());
+                    }
+                }else if(column.equals("NTF Samples")){
+                    for (int i = 0; i < YieldViewDataResultDtoList.get(0).getNtflist().size(); i++) {
+                        rowKeyList.add(YieldViewDataResultDtoList.get(0).getNtflist().get(i).getRowKey());
+                    }
+                }else if(column.equals("NG Samples")){
+                    for (int i = 0; i < YieldViewDataResultDtoList.get(0).getNglist().size(); i++) {
+                        rowKeyList.add(YieldViewDataResultDtoList.get(0).getNglist().get(i).getRowKey());
+                    }
+                }else if(column.equals("Total Samples")){
+                    for (int i = 0; i < YieldViewDataResultDtoList.get(0).getTotallist().size(); i++) {
+                        rowKeyList.add(YieldViewDataResultDtoList.get(0).getTotallist().get(i).getRowKey());
+                    }
                 }
+
                 dataFrame = context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
                 List<String> testItemNameList = Lists.newArrayList();
                 testItemNameList.add(searchConditionDtoList.get(0).getItemName());
