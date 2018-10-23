@@ -9,6 +9,10 @@ public class YieldRefreshJudgeUtil {
     private List<String> overViewSelectRowKeyListCache;
     private List<String> currentViewDataSelectRowKeyList = Lists.newArrayList();
 
+
+    private List<String> statisticalModifyRowKeyList = Lists.newArrayList();
+
+
     /**
      * instance
      *
@@ -36,4 +40,68 @@ public class YieldRefreshJudgeUtil {
     public void setOverViewSelectRowKeyListCache(List<String> overViewSelectRowKeyListCache) {
         this.overViewSelectRowKeyListCache = overViewSelectRowKeyListCache;
     }
+
+    /**
+     * is need refresh
+     *
+     * @param currentViewDataSelectRowKeyList    current view data select row key
+     * @param statisticalModifyRowKeyList        statistical Modify row key
+     * @return id need
+     */
+    public RefreshType refreshJudge(List<String> statisticalModifyRowKeyList) {
+        this.currentViewDataSelectRowKeyList = currentViewDataSelectRowKeyList;
+        this.statisticalModifyRowKeyList = statisticalModifyRowKeyList;
+
+
+        if (statisticalModifyRowKeyList.size() == 0 && currentViewDataSelectRowKeyList == null){
+            return RefreshType.NOT_NEED_REFRESH;
+        } else if ( !(statisticalModifyRowKeyList.size()==0)) {
+            return RefreshType.REFRESH_STATISTICAL_RESULT;
+        } else if (statisticalModifyRowKeyList.size() == 0 ) {
+            return RefreshType.REFRESH_CHART_RESULT;
+        } else {
+            return RefreshType.REFRESH_ALL_ANALYSIS_RESULT;
+        }
+    }
+
+    public enum RefreshType {
+        NOT_NEED_REFRESH("notNeedRefresh"),
+        REFRESH_STATISTICAL_RESULT("refreshStatisticalResult"),
+        REFRESH_CHART_RESULT("refreshChartResult"),
+        REFRESH_ALL_ANALYSIS_RESULT("refreshAllAnalysisResult");
+
+        private String code;
+
+        RefreshType(String code) {
+            this.code = code;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        /**
+         * Get judgeRuleType by code name.
+         *
+         * @param codeName the name of code
+         * @return judgeRuleType
+         */
+        public static RefreshType getByCode(String codeName) {
+            switch (codeName) {
+                case "notNeedRefresh":
+                    return NOT_NEED_REFRESH;
+                case "refreshStatisticalResult":
+                    return REFRESH_STATISTICAL_RESULT;
+                case "refreshChartResult":
+                    return REFRESH_CHART_RESULT;
+                case "refreshAllAnalysisResult":
+                    return REFRESH_ALL_ANALYSIS_RESULT;
+                default:
+                    return null;
+            }
+        }
+
+    }
+
+
 }

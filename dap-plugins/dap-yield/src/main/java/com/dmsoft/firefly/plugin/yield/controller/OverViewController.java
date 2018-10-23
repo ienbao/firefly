@@ -104,26 +104,34 @@ public class OverViewController implements Initializable {
         viewDataController = yieldMainController.getViewDataController();
         List<TestItemWithTypeDto> selectedItemDto = yieldItemController.initSelectedItemDto();
         List<String> projectNameList = envService.findActivatedProjectName();
+        for(int i = 0; i<selectedItemDto.size();i++) {
+            if (!rowKey.equals(selectedItemDto.get(i).getTestItemName())) {
+                selectedItemDto.remove(i);
+            }
+        }
         List<TestItemWithTypeDto> testItemWithTypeDtoList = yieldItemController.buildSelectTestItemWithTypeData(selectedItemDto);
         List<SearchConditionDto> searchConditionDtoList = yieldItemController.buildSearchConditionDataList(selectedItemDto);
         YieldAnalysisConfigDto yieldAnalysisConfigDto = yieldItemController.buildYieldAnalysisConfigData();
+
+        if(column.equals("FPY Samples")) {
+            searchConditionDtoList.get(1).setYieldType(YieldType.FPY);
+        }else if(column.equals("Pass Samples")){
+            searchConditionDtoList.get(1).setYieldType(YieldType.PASS);
+        }else if(column.equals("NTF Samples")){
+            searchConditionDtoList.get(1).setYieldType(YieldType.NTF);
+        }else if(column.equals("NG Samples")){
+            searchConditionDtoList.get(1).setYieldType(YieldType.NG);
+        }else if(column.equals("Total Samples")){
+            searchConditionDtoList.get(1).setYieldType(YieldType.TOTAL);
+        }
+
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
         context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
         context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, yieldAnalysisConfigDto);
         context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
-//        searchConditionDtoList.get(0).setItemName(rowKey);
-//        if(column.equals("FPY Samples")) {
-//            searchConditionDtoList.get(0).setYieldType(YieldType.FPY);
-//        }else if(column.equals("Pass Samples")){
-//            searchConditionDtoList.get(0).setYieldType(YieldType.PASS);
-//        }else if(column.equals("NTF Samples")){
-//            searchConditionDtoList.get(0).setYieldType(YieldType.NTF);
-//        }else if(column.equals("NG Samples")){
-//            searchConditionDtoList.get(0).setYieldType(YieldType.NG);
-//        }else if(column.equals("Total Samples")){
-//            searchConditionDtoList.get(0).setYieldType(YieldType.TOTAL);
-//        }
+
+
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.YIELD_VIEW_DATA_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
@@ -131,8 +139,8 @@ public class OverViewController implements Initializable {
 
                 List<YieldViewDataResultDto> YieldViewDataResultDtoList = (List<YieldViewDataResultDto>) context.get(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO_LIST);
                 List<String> rowKeyList = Lists.newArrayList();
-                for(int i =0; i<YieldViewDataResultDtoList.get(0).getFPYlist().size();i++){
-                    rowKeyList.add(YieldViewDataResultDtoList.get(0).getFPYlist().get(i).getRowKey());
+                for (int i = 0; i < YieldViewDataResultDtoList.get(0).getResultlist().size(); i++) {
+                    rowKeyList.add(YieldViewDataResultDtoList.get(0).getResultlist().get(i).getRowKey());
                 }
                 dataFrame = context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
                 List<String> testItemNameList = Lists.newArrayList();
@@ -157,6 +165,7 @@ public class OverViewController implements Initializable {
         });
         logger.info("ViewData Yield.");
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+
     }
     /**
      * set statistical result table data
@@ -181,6 +190,59 @@ public class OverViewController implements Initializable {
 //        overViewTableModel.setSelect(selectRowKey);
 //        overViewTableModel.setTimer(isTimer);
         overViewTableModel.filterTestItem(filterTestItemTf.getTextField().getText());
+    }
+
+    /**
+     * has error edit cell.
+     */
+    public boolean hasErrorEditCell(){
+        return overViewTableModel.hasErrorEditValue();
+    }
+
+//    /**
+//     * get select row key
+//     *
+//     * @return row key
+//     */
+//    public List<String> getSelectStatisticalRowKey() {
+//        return overViewTableModel.getSelectRowKey();
+//    }
+
+    /**
+     * get edit row key
+     *
+     * @return row key
+     */
+    public List<String> getEidtStatisticalRowKey() {
+        return overViewTableModel.getEditorRowKey();
+    }
+
+    /**
+     * refresh spc statistical data
+     *
+     * @param yieldOverviewResultAlarmDtoList the refresh data
+     */
+    public void refreshStatisticalResult(List<YieldOverviewResultAlarmDto> yieldOverviewResultAlarmDtoList) {
+        overViewTableModel.refreshData(yieldOverviewResultAlarmDtoList);
+    }
+
+
+    /**
+     * get all stats data
+     *
+     * @return
+     */
+    public List<YieldOverviewResultAlarmDto> getAllRowStatsData() {
+        return overViewTableModel.getSpcStatsDtoList();
+    }
+
+    /**
+     * get edit row data
+     *
+     * @return the row data
+     */
+    public List<YieldOverviewResultAlarmDto> getEditRowStatsData() {
+        return overViewTableModel.getEditRowData();
     }
 
 

@@ -11,5 +11,9 @@ public class UIConstant {
 
     public static final String[] YIELD_SR_ALL = new String[]{
             "Test Item",  "LSL/Fail", "USL/Pass", "Total Samples", "FPY Samples","Pass Samples", "NTF Samples", "NG Samples", "FpyPercent", "NtfPercent", "NgPercent"};
+
+    public static final String[] YIELD_SR_USLLSL = new String[]{
+            "LSL", "USL"
+    };
     
 }

@@ -138,89 +138,91 @@ public class OverViewTableModel  implements TableModel{
         columnKey.addAll(columnList);
     }
 //
-//    /**
-//     * refresh spc statistical data
-//     *
-//     * @param spcStatsDtoList the refresh data
-//     */
-//    public void refreshData(List<SpcStatisticalResultAlarmDto> spcStatsDtoList) {
-//        if (spcStatsDtoList == null) {
-//            return;
-//        }
-//        editorCell.clear();
-//        editorRowKey.clear();
-//        errorEditorCell.clear();
-//        int m = 0;
-//        for (SpcStatisticalResultAlarmDto statisticalResultAlarmDto : spcStatsDtoList) {
-//            String key = statisticalResultAlarmDto.getKey();
-//            SpcStatisticalResultAlarmDto resultAlarmDto = keyToStatsDtoMap.get(key);
-//            if (resultAlarmDto != null) {
-//                Map<String, StatisticalAlarmDto> statisticalAlarmDtoMap = statisticalResultAlarmDto.getStatisticalAlarmDtoMap();
-//                resultAlarmDto.setStatisticalAlarmDtoMap(statisticalAlarmDtoMap);
-//            }
-//            this.refreshValue(resultAlarmDto);
-//            if (this.isEmptyResult(statisticalResultAlarmDto.getStatisticalAlarmDtoMap())) {
-//                emptyResultKeys.add(key);
-//                if (colorCache.containsKey(key)) {
-//                    colorCache.remove(key);
-//                }
-//            } else {
-//                if (emptyResultKeys.contains(statisticalResultAlarmDto.getKey())) {
-//                    emptyResultKeys.remove(statisticalResultAlarmDto.getKey());
-//                }
-//                colorCache.put(key, ColorUtils.getTransparentColor(Colur.RAW_VALUES[m % 10], 0.8));
-//                m++;
-//            }
-//        }
-//        tableView.refresh();
-//    }
+    /**
+     * refresh spc statistical data
+     *
+     * @param spcStatsDtoList the refresh data
+     */
+    public void refreshData(List<YieldOverviewResultAlarmDto> spcStatsDtoList) {
+        if (spcStatsDtoList == null) {
+            return;
+        }
+        editorCell.clear();
+        editorRowKey.clear();
+        errorEditorCell.clear();
+        int m = 0;
+        for (YieldOverviewResultAlarmDto statisticalResultAlarmDto : spcStatsDtoList) {
+            String key = statisticalResultAlarmDto.getKey();
+            YieldOverviewResultAlarmDto resultAlarmDto = keyToStatsDtoMap.get(key);
+            if (resultAlarmDto != null) {
+                Map<String, OverviewAlarmDto> statisticalAlarmDtoMap = statisticalResultAlarmDto.getOverviewAlarmDtoMap();
+                resultAlarmDto.setOverviewAlarmDtoMap(statisticalAlarmDtoMap);
+            }
+            this.refreshValue(resultAlarmDto);
+            if (this.isEmptyResult(statisticalResultAlarmDto.getOverviewAlarmDtoMap())) {
+                emptyResultKeys.add(key);
+                if (colorCache.containsKey(key)) {
+                    colorCache.remove(key);
+                }
+            } else {
+                if (emptyResultKeys.contains(statisticalResultAlarmDto.getKey())) {
+                    emptyResultKeys.remove(statisticalResultAlarmDto.getKey());
+                }
+                colorCache.put(key, ColorUtils.getTransparentColor(Colur.RAW_VALUES[m % 10], 0.8));
+                m++;
+            }
+        }
+        tableView.refresh();
+    }
 //
-//    private void refreshValue(SpcStatisticalResultAlarmDto spcStatsDto) {
-//        String value = "";
-//        if (spcStatsDto != null) {
-//            String spcStatsDtoKey = spcStatsDto.getKey();
-//            for (int i = 0; i < YIELD_TITLE.length; i++) {
-//                String columnName = YIELD_TITLE[i];
-//                if (i == 0) {
-//                    value = spcStatsDto.getItemName();
-//                } else if (i == 1) {
-//                    value = DAPStringUtils.isBlank(spcStatsDto.getCondition()) ? "All" : spcStatsDto.getCondition();
-//                } else {
-//                    Map<String, StatisticalAlarmDto> statisticalAlarmDtoMap = spcStatsDto.getStatisticalAlarmDtoMap();
-//                    if (statisticalAlarmDtoMap == null) {
-//                        value = "-";
-//                    } else {
-//                        String key = columnName;
-//                        if (i == 16) {
-//                            key = SpcStatisticalResultKey.CA.getCode();
-//                        }
-//                        value = showValue(key, statisticalAlarmDtoMap.get(key));
-//                    }
-//                }
-//                SourceObjectProperty valueProperty = new SourceObjectProperty<>(value);
-//                if (columnName.equals(YIELD_TITLE[7]) || columnName.equals(YIELD_TITLE[8])) {
-//                    valueProperty.addListener((ov, b1, b2) -> {
-//                        if (DAPStringUtils.isBlank((String) b2) || !DAPStringUtils.isNumeric((String) b2)) {
-//                            return;
-//                        }
-//                        if (!DAPStringUtils.isEqualsString((String) valueProperty.getSourceValue(), (String) b2)) {
-//                            editorCell.add(spcStatsDtoKey + "-" + columnName);
-//                            editorRowKey.add(spcStatsDtoKey);
-//                        } else {
-//                            editorCell.remove(spcStatsDtoKey + "-" + columnName);
-//                            editorRowKey.remove(spcStatsDtoKey);
-//                        }
-//                        if (errorEditorCell.contains(spcStatsDtoKey + "-" + columnName)) {
-//                            valueProperty.setError(true);
-//                            return;
-//                        }
-//                        spcStatsDto.getStatisticalAlarmDtoMap().get(columnName).setValue(Double.valueOf((String) b2));
-//                    });
-//                }
-//                valueMap.put(spcStatsDtoKey + "-" + columnName, valueProperty);
-//            }
-//        }
-//    }
+    private void refreshValue(YieldOverviewResultAlarmDto spcStatsDto) {
+        String value = "";
+        if (spcStatsDto != null) {
+            String spcStatsDtoKey = spcStatsDto.getKey();
+            for (int i = 0; i < YIELD_TITLE.length; i++) {
+                String columnName = YIELD_TITLE[i];
+                if (i == 0) {
+                    value = spcStatsDto.getItemName();
+                }  else {
+                    Map<String, OverviewAlarmDto> statisticalAlarmDtoMap = spcStatsDto.getOverviewAlarmDtoMap();
+                    if (statisticalAlarmDtoMap == null) {
+                        value = "-";
+                    } else {
+                        String key = columnName;
+                        if (i == 8) {
+                            key = YieldOverviewKey.FPYPER.getCode();
+                        }else if(i == 9){
+                            key = YieldOverviewKey.NTFPER.getCode();
+                        }else if(i == 10){
+                            key = YieldOverviewKey.NGPER.getCode();
+                        }
+                        value = showValue(key, statisticalAlarmDtoMap.get(key));
+                    }
+                }
+                SourceObjectProperty valueProperty = new SourceObjectProperty<>(value);
+                if (columnName.equals(YIELD_TITLE[1]) || columnName.equals(YIELD_TITLE[2])) {
+                    valueProperty.addListener((ov, b1, b2) -> {
+                        if (DAPStringUtils.isBlank((String) b2) || !DAPStringUtils.isNumeric((String) b2)) {
+                            return;
+                        }
+                        if (!DAPStringUtils.isEqualsString((String) valueProperty.getSourceValue(), (String) b2)) {
+                            editorCell.add(spcStatsDtoKey + "-" + columnName);
+                            editorRowKey.add(spcStatsDtoKey);
+                        } else {
+                            editorCell.remove(spcStatsDtoKey + "-" + columnName);
+                            editorRowKey.remove(spcStatsDtoKey);
+                        }
+                        if (errorEditorCell.contains(spcStatsDtoKey + "-" + columnName)) {
+                            valueProperty.setError(true);
+                            return;
+                        }
+                        spcStatsDto.getOverviewAlarmDtoMap().get(columnName).setValue(Double.valueOf((String) b2));
+                    });
+                }
+                valueMap.put(spcStatsDtoKey + "-" + columnName, valueProperty);
+            }
+        }
+    }
 
     /**
      * clear table
@@ -290,40 +292,40 @@ public class OverViewTableModel  implements TableModel{
 //        return rowList;
 //    }
 //
-//    /**
-//     * get editor row key
-//     *
-//     * @return the row keys
-//     */
-//    public List<String> getEditorRowKey() {
-//        if (editorRowKey == null) {
-//            return null;
-//        }
-//        List<String> rowKeyList = Lists.newArrayList();
-//        for (String key : editorRowKey) {
-//            if (!rowKeyList.contains(key)) {
-//                rowKeyList.add(key);
-//            }
-//        }
-//        return rowKeyList;
-//    }
+    /**
+     * get editor row key
+     *
+     * @return the row keys
+     */
+    public List<String> getEditorRowKey() {
+        if (editorRowKey == null) {
+            return null;
+        }
+        List<String> rowKeyList = Lists.newArrayList();
+        for (String key : editorRowKey) {
+            if (!rowKeyList.contains(key)) {
+                rowKeyList.add(key);
+            }
+        }
+        return rowKeyList;
+    }
 //
-//    /**
-//     * get edit row data
-//     *
-//     * @return the row data
-//     */
-//    public List<SpcStatisticalResultAlarmDto> getEditRowData() {
-//        List<String> rowKeyList = getEditorRowKey();
-//        if (rowKeyList == null) {
-//            return null;
-//        }
-//        List<SpcStatisticalResultAlarmDto> editRowDataList = Lists.newArrayList();
-//        for (String key : rowKeyList) {
-//            editRowDataList.add(keyToStatsDtoMap.get(key));
-//        }
-//        return editRowDataList;
-//    }
+    /**
+     * get edit row data
+     *
+     * @return the row data
+     */
+    public List<YieldOverviewResultAlarmDto> getEditRowData() {
+        List<String> rowKeyList = getEditorRowKey();
+        if (rowKeyList == null) {
+            return null;
+        }
+        List<YieldOverviewResultAlarmDto> editRowDataList = Lists.newArrayList();
+        for (String key : rowKeyList) {
+            editRowDataList.add(keyToStatsDtoMap.get(key));
+        }
+        return editRowDataList;
+    }
 
     @Override
     public ObservableList<String> getHeaderArray() {
@@ -541,7 +543,11 @@ public class OverViewTableModel  implements TableModel{
                     valueProperty.setError(true);
                     return;
                 }
-                overviewResultAlarmDto.getOverviewAlarmDtoMap().get(columnName).setValue(Double.valueOf((String) b2));
+                if (columnName.equals("USL/Pass")) {
+                    overviewResultAlarmDto.setUslOrPass((String) b2);
+                }else if(columnName.equals("LSL/Fail")){
+                    overviewResultAlarmDto.setLslOrFail((String) b2);
+                }
             });
         }
         valueMap.put(rowKey + "-" + columnName, valueProperty);
@@ -619,21 +625,21 @@ public class OverViewTableModel  implements TableModel{
         return color;
     }
 
-//    /**
-//     * get spc statistical data
-//     *
-//     * @return the list of data
-//     */
-//    public List<SpcStatisticalResultAlarmDto> getOverviewResultAlarmDtoList() {
-//        if (keyToStatsDtoMap == null) {
-//            return null;
-//        }
-//        List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = Lists.newArrayList();
-//        for (Map.Entry<String, SpcStatisticalResultAlarmDto> entry : keyToStatsDtoMap.entrySet()) {
-//            spcStatisticalResultAlarmDtoList.add(entry.getValue());
-//        }
-//        return spcStatisticalResultAlarmDtoList;
-//    }
+    /**
+     * get spc statistical data
+     *
+     * @return the list of data
+     */
+    public List<YieldOverviewResultAlarmDto> getOverviewResultAlarmDtoList() {
+        if (keyToStatsDtoMap == null) {
+            return null;
+        }
+        List<YieldOverviewResultAlarmDto> spcStatisticalResultAlarmDtoList = Lists.newArrayList();
+        for (Map.Entry<String, YieldOverviewResultAlarmDto> entry : keyToStatsDtoMap.entrySet()) {
+            spcStatisticalResultAlarmDtoList.add(entry.getValue());
+        }
+        return spcStatisticalResultAlarmDtoList;
+    }
 
     /**
      * is menu event enable
@@ -733,5 +739,21 @@ public class OverViewTableModel  implements TableModel{
 
     public List<String> getColumnList() {
         return columnList;
+    }
+
+    /**
+     * get spc statistical data
+     *
+     * @return the list of data
+     */
+    public List<YieldOverviewResultAlarmDto> getSpcStatsDtoList() {
+        if (keyToStatsDtoMap == null) {
+            return null;
+        }
+        List<YieldOverviewResultAlarmDto> spcStatisticalResultAlarmDtoList = Lists.newArrayList();
+        for (Map.Entry<String, YieldOverviewResultAlarmDto> entry : keyToStatsDtoMap.entrySet()) {
+            spcStatisticalResultAlarmDtoList.add(entry.getValue());
+        }
+        return spcStatisticalResultAlarmDtoList;
     }
 }

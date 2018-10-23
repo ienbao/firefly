@@ -7,6 +7,7 @@ import java.util.List;
 public class YieldViewDataResultDto extends AbstractValueObject {
     private String ItemName;
     private String primary;
+    private List<YieldViewDataDto> resultlist;
     private List<YieldViewDataDto> FPYlist;
     private List<YieldViewDataDto> PASSlist;
     private List<YieldViewDataDto> Ntflist;
@@ -29,7 +30,15 @@ public class YieldViewDataResultDto extends AbstractValueObject {
         this.primary = primary;
     }
 
-    public List<YieldViewDataDto> getFPYlist() {
+    public List<YieldViewDataDto> getResultlist() {
+        return resultlist;
+    }
+
+    public void setResultlist(List<YieldViewDataDto> resultlist) {
+        this.resultlist = resultlist;
+    }
+
+        public List<YieldViewDataDto> getFPYlist() {
         return FPYlist;
     }
 
