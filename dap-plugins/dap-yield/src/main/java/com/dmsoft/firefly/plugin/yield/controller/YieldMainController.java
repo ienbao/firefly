@@ -284,7 +284,7 @@ public class YieldMainController implements Initializable {
             public void doJob(JobContext context) {
                 YieldRefreshJudgeUtil.newInstance().setOverViewSelectRowKeyListCache(null);
 //                SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
-                List<YieldOverviewResultAlarmDto> YieldOverviewAlarmDtoList = (List<YieldOverviewResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
+                List<YieldOverviewResultAlarmDto> YieldOverviewAlarmDtoList = (List<YieldOverviewResultAlarmDto>) context.get(ParamKeys.YIELD_STATISTICAL_RESULT_ALARM_DTO_LIST);
                 setOverviewResultData(YieldOverviewAlarmDtoList, null, false);
                 windowProgressTipController.closeDialog();
                 clearAnalysisSubShowData();
@@ -560,7 +560,7 @@ public class YieldMainController implements Initializable {
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
-                List<YieldOverviewResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<YieldOverviewResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
+                List<YieldOverviewResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<YieldOverviewResultAlarmDto>) context.get(ParamKeys.YIELD_STATISTICAL_RESULT_ALARM_DTO_LIST);
 //                overViewController.refreshStatisticalResult(spcStatisticalResultAlarmDtoList);
                 overViewController.setTimerOverviewResultTableData(spcStatisticalResultAlarmDtoList,null,false);
 //                if (editRowDataList != null && editRowDataList.size() != 0) {
