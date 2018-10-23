@@ -68,8 +68,8 @@ public class YieldItemController implements Initializable {
     private Tab itemTab;
     @FXML
     private Tab configTab;
-    @FXML
-    private Tab timeTab;
+//    @FXML
+//    private Tab timeTab;
 //    @FXML
 //    private Label helpLabel;
     @FXML
@@ -99,11 +99,11 @@ public class YieldItemController implements Initializable {
 
     private List<String> originalItems = Lists.newArrayList();
     private SearchDataFrame dataFrame;
-
-    @FXML
-    private CheckBox enabledTimerCheckBox;
-    @FXML
-    private ComboBox<String> timeComboBox;
+//
+//    @FXML
+//    private CheckBox enabledTimerCheckBox;
+//    @FXML
+//    private ComboBox<String> timeComboBox;
     @FXML
     private ComboBox<String> configComboBox;
     private boolean isTimer;
@@ -342,9 +342,9 @@ public class YieldItemController implements Initializable {
         configTab.setStyle("-fx-padding: 0 5 0 5");
         configTab.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("YIELD_CONFIG")));
 
-        timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
-        timeTab.setStyle("-fx-padding: 0 5 0 5");
-        timeTab.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("YIELD_TIMER_SETTING")));
+//        timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
+//        timeTab.setStyle("-fx-padding: 0 5 0 5");
+//        timeTab.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("YIELD_TIMER_SETTING")));
     }
     private ContextMenu createPopMenu(Button is, MouseEvent e) {
         if (pop == null) {
@@ -424,13 +424,13 @@ public class YieldItemController implements Initializable {
         analysisBtn.setOnAction(event -> getAnalysisBtnEvent());
         importBtn.setOnAction(event -> importLeftConfig());
         exportBtn.setOnAction(event -> exportLeftConfig());
-        enabledTimerCheckBox.selectedProperty().addListener((ov, v1, v2) -> {
-            isTimer = v2;
-            if (!isTimer && startTimer) {
-                startTimer = false;
-            }
-            updateAnalysisBtnTimer();
-        });
+//        enabledTimerCheckBox.selectedProperty().addListener((ov, v1, v2) -> {
+//            isTimer = v2;
+//            if (!isTimer && startTimer) {
+//                startTimer = false;
+//            }
+//            updateAnalysisBtnTimer();
+//        });
     }
 
     @SuppressWarnings("unchecked")
