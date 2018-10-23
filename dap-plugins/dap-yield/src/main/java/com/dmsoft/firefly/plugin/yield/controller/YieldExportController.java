@@ -681,12 +681,12 @@ public class YieldExportController {
         yieldAnalysisConfigDto.setPrimaryKey(configComboBox.getValue());
 
 //        Map<String, Boolean> exportDataItem = settingService.findYieldExportTemplateSetting();
-//        if (!exportDataItem.get(SpcExportItemKey.DESCRIPTIVE_STATISTICS.getCode())) {
+//        if (!exportDataItem.get(YieldExportItemKey.DESCRIPTIVE_STATISTICS.getCode())) {
 //            for (int i = 0; i < UIConstant.SPC_STATISTICAL.length; i++) {
 //                exportDataItem.put(UIConstant.SPC_STATISTICAL[i], false);
 //            }
 //        }
-//        if (!exportDataItem.get(SpcExportItemKey.PROCESS_CAPABILITY_INDEX.getCode())) {
+//        if (!exportDataItem.get(YieldExportItemKey.PROCESS_CAPABILITY_INDEX.getCode())) {
 //            for (int i = 0; i < UIConstant.SPC_CAPABILITY.length; i++) {
 //                exportDataItem.put(UIConstant.SPC_CAPABILITY[i], false);
 //            }
