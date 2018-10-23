@@ -4,7 +4,7 @@ import com.dmsoft.firefly.plugin.yield.charts.ChartTooltip;
 import com.dmsoft.firefly.plugin.yield.charts.NDChart;
 import com.dmsoft.firefly.plugin.yield.charts.data.NDBarChartData;
 import com.dmsoft.firefly.plugin.yield.dto.chart.YieldNdChartData;
-import com.dmsoft.firefly.plugin.yield.dto.YieldChartDto;
+import com.dmsoft.firefly.plugin.yield.dto.YieldDetailChartDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldChartResultDto;
 import com.dmsoft.firefly.plugin.yield.dto.chart.view.ChartPanel;
 import com.dmsoft.firefly.plugin.yield.utils.YieldChartToolTip;
@@ -41,24 +41,24 @@ public class YieldChartResultController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
     }
-    public void initYieldChartData(List<YieldChartDto> yieldChartDtoList){
+    public void initYieldChartData(List<YieldDetailChartDto> yieldChartDtoList){
         ndcChartDataList.clear();
         Map<String, java.awt.Color> colorCache = yieldMainController.getColorCache();
         for (int i = 0; i < yieldChartDtoList.size(); i++) {
-            YieldChartDto yieldChartDto = yieldChartDtoList.get(i);
-            String key = yieldChartDto.getKey();
-            String condition = (DAPStringUtils.isBlank(yieldChartDto.getCondition())) ? "All" : yieldChartDto.getCondition();
-            String seriesName = yieldChartDto.getItemName() + "::" + condition;
-            javafx.scene.paint.Color color = ColorUtils.toFxColorFromAwtColor(colorCache.get(key));
-            YieldChartResultDto yieldChartResultDto = yieldChartDto.getResultDto();
+            YieldDetailChartDto yieldChartDto = yieldChartDtoList.get(i);
+           // String key = yieldChartDto.getKey();
+           // String condition = (DAPStringUtils.isBlank(yieldChartDto.getCondition())) ? "All" : yieldChartDto.getCondition();
+            //String seriesName = yieldChartDto.getItemName() + "::" + condition;
+            //javafx.scene.paint.Color color = ColorUtils.toFxColorFromAwtColor(colorCache.get(key));
+            //YieldChartResultDto yieldChartResultDto = yieldChartDto.getResultDto();
             //List<String> analyzedRowKeys = yieldChartDto.getAnalyzedRowKeys();
             if (yieldChartResultDto == null) {
                 continue;
             }
             //nd chart
-            YieldNdChartData iNdcChartData = new YieldNdChartData(key, yieldChartResultDto.getNdcResult(), color);
-            iNdcChartData.setSeriesName(seriesName);
-            ndcChartDataList.add(iNdcChartData);
+            //YieldNdChartData iNdcChartData = new YieldNdChartData(key, "", color);
+            //iNdcChartData.setSeriesName(seriesName);
+            //ndcChartDataList.add(iNdcChartData);
     }
         //this.setNdChartData(UIConstant.SPC_CHART_NAME[0], ndcChartDataList);
     }
@@ -71,6 +71,6 @@ public class YieldChartResultController implements Initializable {
         } else {
             chartMap.put(chartName, chart);
         }
-        chart.setData(ndChartData, chartTooltip);
+        //chart.setData(ndChartData, chartTooltip);
     }
 }

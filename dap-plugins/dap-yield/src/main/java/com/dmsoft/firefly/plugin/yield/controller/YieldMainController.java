@@ -4,10 +4,7 @@ import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.*;
-import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldAnalysisConfigDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldSettingDto;
+import com.dmsoft.firefly.plugin.yield.dto.*;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.yield.model.OverViewTableModel;
 import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
@@ -257,10 +254,10 @@ public class YieldMainController implements Initializable {
     private void getResetBtnEvent() {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
-        context.put(ParamKeys.YIELD_SETTING_DTO, yieldSettingDto);
+//        context.put(ParamKeys.YIELD_SETTING_DTO, spcSettingDto);
         context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, initSearchConditionDtoList);
         context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, analysisConfigDto);
-        context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
+//        context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
             windowProgressTipController.setCancelingText();
@@ -315,8 +312,8 @@ public class YieldMainController implements Initializable {
             FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML("view/yield_export.fxml");
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("yieldExport", YieldFxmlAndLanguageUtils.getString("YIELD_EXPORT"), root, getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
-//             SpcLeftConfigDto leftConfigDto = spcItemController.getCurrentConfigData();
-//             ((SpcExportController) fxmlLoader.getController()).initSpcExportLeftConfig(leftConfigDto);
+            YieldLeftConfigDto leftConfigDto = yieldItemController.getCurrentConfigData();
+//             ((YieldExportController) fxmlLoader.getController()).initYieldExportLeftConfig(leftConfigDto);
             stage.setResizable(false);
             stage.toFront();
             stage.show();
@@ -909,4 +906,12 @@ public class YieldMainController implements Initializable {
         this.viewDataController = viewDataController;
     }
 
+
+    public YieldItemController getYieldItemController() {
+        return yieldItemController;
+    }
+
+    public void setYieldItemController(YieldItemController yieldItemController) {
+        this.yieldItemController = yieldItemController;
+    }
 }
