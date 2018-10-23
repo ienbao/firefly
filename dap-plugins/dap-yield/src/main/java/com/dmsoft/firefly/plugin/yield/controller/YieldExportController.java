@@ -3,22 +3,21 @@ package com.dmsoft.firefly.plugin.yield.controller;
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
+import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
-import com.dmsoft.firefly.plugin.yield.dto.YieldAnalysisConfigDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldLeftConfigDto;
+import com.dmsoft.firefly.gui.components.window.WindowPane;
+import com.dmsoft.firefly.gui.components.window.WindowProgressTipController;
+import com.dmsoft.firefly.plugin.yield.dto.*;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.yield.model.ItemTableModel;
 import com.dmsoft.firefly.plugin.yield.service.impl.YieldExportServiceImpl;
 import com.dmsoft.firefly.plugin.yield.service.impl.YieldLeftConfigServiceImpl;
 import com.dmsoft.firefly.plugin.yield.service.impl.YieldSettingServiceImpl;
-import com.dmsoft.firefly.plugin.yield.utils.ImageUtils;
-import com.dmsoft.firefly.plugin.yield.utils.ResourceMassages;
-import com.dmsoft.firefly.plugin.yield.utils.UIConstant;
-import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.yield.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
@@ -30,6 +29,7 @@ import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.event.PlatformEvent;
 import com.dmsoft.firefly.sdk.job.core.*;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
+import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
@@ -46,21 +46,31 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 
+import java.awt.*;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 public class YieldExportController {
     private static final String STICKY_ON_TOP_CODE = "stick_on_top";
+    private static final Double D100 = 100.0d;
+    private static final Double D70 = 70.0d;
+    private static final Double D30 = 30.0d;
+    private static final Double D20 = 20.0d;
     private Map<String, Map<String, String>> chartPath = Maps.newHashMap();
     @FXML
     private TextFieldFilter itemFilter;
@@ -115,7 +125,7 @@ public class YieldExportController {
     private YieldSettingServiceImpl settingService = RuntimeContext.getBean(YieldSettingServiceImpl.class);
     private YieldExportServiceImpl yieldExportService = new YieldExportServiceImpl();
     private YieldLeftConfigServiceImpl leftConfigService = new YieldLeftConfigServiceImpl();
- //   private Map<String, Color> colorMap = Maps.newHashMap();
+    private Map<String, Color> colorMap = Maps.newHashMap();
     // cached items for user preference
     private List<String> stickyOnTopItems = Lists.newArrayList();
     private List<String> originalItems = Lists.newArrayList();
@@ -269,6 +279,7 @@ public class YieldExportController {
             }
         });
         itemTable.setContextMenu(createTableRightMenu());
+
 //        ndGroup.setText(String.valueOf(PropertiesResource.SPC_CONFIG_INTERVAL_NUMBER));
 //        subGroup.setText(String.valueOf(PropertiesResource.SPC_CONFIG_SUBGROUP_SIZE));
 //        ValidateRule rule = new ValidateRule();
@@ -285,6 +296,17 @@ public class YieldExportController {
 
         initEvent();
         initItemData();
+        String value = userPreferenceService.findPreferenceByUserId("yield_config_preference", envService.getUserName());
+        String PrimaryKey= StringUtils.isNotBlank(value)?mapper.fromJson(value, YieldAnalysisConfigDto.class).getPrimaryKey():null;
+        ObservableList<String> primaryKeyList = FXCollections.observableArrayList();
+        for (String item : originalItems) {
+            primaryKeyList.add(item);
+        }
+        configComboBox.setItems(primaryKeyList);
+        if (primaryKeyList.size() > 0) {
+            configComboBox.setValue(PrimaryKey);
+        }
+
     }
     private void initEvent() {
         browse.setOnAction(event -> {
@@ -310,39 +332,39 @@ public class YieldExportController {
 //        setting.setOnAction(event -> {
 //            initSpcExportSettingDialog();
 //        });
-//        export.setOnAction(event -> {
-//            if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
-//                WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), SpcFxmlAndLanguageUtils.getString(ResourceMassages.EMPTY_ITEM));
-//                return;
-//            }
+        export.setOnAction(event -> {
+            if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
+                WindowMessageFactory.createWindowMessageHasOk(YieldFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), YieldFxmlAndLanguageUtils.getString(ResourceMassages.EMPTY_ITEM));
+                return;
+            }
 //            if (subGroup.getStyleClass().contains("text-field-error") || ndGroup.getStyleClass().contains("text-field-error")) {
-//                WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_ERROR_CONFIG));
+//                WindowMessageFactory.createWindowMessageHasOk(YieldFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), YieldFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_ERROR_CONFIG));
 //                return;
 //            }
-//            if (!searchTab.verifySearchTextArea()) {
-//                return;
-//            }
-//            if (StringUtils.isEmpty(locationPath.getText())) {
-//                WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), SpcFxmlAndLanguageUtils.getString(ResourceMassages.EMPTY_PATH));
-//                return;
-//            }
-//            StageMap.closeStage("spcExport");
-//            String savePath = locationPath.getText() + "/SPC_" + getTimeString();
-//            export(savePath, false);
-//        });
-//        print.setOnAction(event -> {
-//            if (StringUtils.isEmpty(locationPath.getText())) {
-//                WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), SpcFxmlAndLanguageUtils.getString(ResourceMassages.EMPTY_PATH));
-//                return;
-//            }
-//            if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
-//                WindowMessageFactory.createWindowMessageHasOk(SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), SpcFxmlAndLanguageUtils.getString(ResourceMassages.EMPTY_ITEM));
-//                return;
-//            }
-//            StageMap.closeStage("spcExport");
-//            String savePath = locationPath.getText() + "/SPC_" + getTimeString();
-//            export(savePath, true);
-//        });
+            if (!searchTab.verifySearchTextArea()) {
+                return;
+            }
+            if (StringUtils.isEmpty(locationPath.getText())) {
+                WindowMessageFactory.createWindowMessageHasOk(YieldFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), YieldFxmlAndLanguageUtils.getString(ResourceMassages.EMPTY_PATH));
+                return;
+            }
+            StageMap.closeStage("yieldExport");
+            String savePath = locationPath.getText() + "/YIELD_" + getTimeString();
+            export(savePath, false);
+        });
+        print.setOnAction(event -> {
+            if (StringUtils.isEmpty(locationPath.getText())) {
+                WindowMessageFactory.createWindowMessageHasOk(YieldFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), YieldFxmlAndLanguageUtils.getString(ResourceMassages.EMPTY_PATH));
+                return;
+            }
+            if (getSelectedItem() == null || getSelectedItem().size() <= 0) {
+                WindowMessageFactory.createWindowMessageHasOk(YieldFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT), YieldFxmlAndLanguageUtils.getString(ResourceMassages.EMPTY_ITEM));
+                return;
+            }
+            StageMap.closeStage("yieldExport");
+            String savePath = locationPath.getText() + "/YIELD_" + getTimeString();
+            export(savePath, true);
+        });
         //TODO : change cancel text
         cancel.setOnAction(event -> {
             StageMap.closeStage("yieldExport");
@@ -418,16 +440,7 @@ public class YieldExportController {
             searchTab.setBasicSearch(yieldLeftConfigDto.getBasicSearchs());
         }
 //
-        ObservableList<String> primaryKeyList = FXCollections.observableArrayList();
-        primaryKeyList.add("");
-        for (String item : originalItems) {
-            primaryKeyList.add(item);
-        }
-        configComboBox.setItems(primaryKeyList);
-        if (primaryKeyList.size() > 0) {
-            configComboBox.setValue(primaryKeyList.get(0));
-        }
-
+        configComboBox.setValue(yieldLeftConfigDto.getPrimaryKey());
         searchTab.getAdvanceText().setText(yieldLeftConfigDto.getAdvanceSearch());
         searchTab.getGroup1().setValue(yieldLeftConfigDto.getAutoGroup1());
         searchTab.getGroup2().setValue(yieldLeftConfigDto.getAutoGroup2());
@@ -634,5 +647,386 @@ public class YieldExportController {
             ex.printStackTrace();
         }
     }
+    private synchronized void export(String savePath, boolean isPrint) {
+        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip(YieldFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT));
+        windowProgressTipController.setAutoHide(false);
+        windowProgressTipController.getAnalysisLB().setText(YieldFxmlAndLanguageUtils.getString(ResourceMassages.EXPORTING));
+        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
+        WindowPane windowPane = null;
+        if (stage1.getScene().getRoot() instanceof WindowPane) {
+            windowPane = (WindowPane) stage1.getScene().getRoot();
+        }
+        if (windowPane != null) {
+            windowPane.getCloseBtn().setOnAction(event -> {
+                windowProgressTipController.setCancelingText();
+                context.interruptBeforeNextJobHandler();
+            });
+        }
+        context.addJobEventListener(event -> {
+            if ("Error".equals(event.getEventName())) {
+                windowProgressTipController.updateFailProgress(event.getProgress(), event.getEventObject().toString());
+            } else {
+                windowProgressTipController.getTaskProgress().setProgress(event.getProgress());
+            }
+        });
 
+        Boolean exportEachFile = false;
+        if (eachFile.isSelected()) {
+            exportEachFile = true;
+        }
+        List<String> projectNameList = envService.findActivatedProjectName();
+
+        YieldAnalysisConfigDto yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
+        yieldAnalysisConfigDto.setPrimaryKey(configComboBox.getValue());
+
+//        Map<String, Boolean> exportDataItem = settingService.findYieldExportTemplateSetting();
+//        if (!exportDataItem.get(SpcExportItemKey.DESCRIPTIVE_STATISTICS.getCode())) {
+//            for (int i = 0; i < UIConstant.SPC_STATISTICAL.length; i++) {
+//                exportDataItem.put(UIConstant.SPC_STATISTICAL[i], false);
+//            }
+//        }
+//        if (!exportDataItem.get(SpcExportItemKey.PROCESS_CAPABILITY_INDEX.getCode())) {
+//            for (int i = 0; i < UIConstant.SPC_CAPABILITY.length; i++) {
+//                exportDataItem.put(UIConstant.SPC_CAPABILITY[i], false);
+//            }
+//        }
+//        if (!exportDataItem.get(YieldExportItemKey.PROCESS_PERFORMANCE_INDEX.getCode())) {
+//            for (int i = 0; i < UIConstant.YIELD_PERFORMANCE.length; i++) {
+//                exportDataItem.put(UIConstant.YIELD_PERFORMANCE[i], false);
+//            }
+//        }
+        YieldExportConfigDto yieldConfig = new YieldExportConfigDto();
+        yieldConfig.setExportPath(savePath);
+        yieldConfig.setPerformer(envService.getUserName());
+        yieldConfig.setDigNum(envService.findActivatedTemplate().getDecimalDigit());
+//        yieldConfig.setExportDataItem(exportDataItem);
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobFactory.class).createJobPipeLine();
+        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                final boolean[] isSucceed = {false};
+                if (isPrint) {
+                    try {
+                        isSucceed[0] = new ExcelToPdfUtil().excelToPdf(savePath);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                context.pushEvent(new JobEvent("Export done", D100, null));
+                String path = context.get(ParamKeys.EXPORT_PATH).toString();
+                WindowPane windowPane = null;
+                if (stage1.getScene().getRoot() instanceof WindowPane) {
+                    windowPane = (WindowPane) stage1.getScene().getRoot();
+                }
+                if (windowPane != null) {
+                    windowPane.getCloseBtn().setOnAction(event -> stage1.fireEvent(new WindowEvent(stage1, WindowEvent.WINDOW_CLOSE_REQUEST)));
+                }
+                windowProgressTipController.getCancelBtn().setText(YieldFxmlAndLanguageUtils.getString(ResourceMassages.OPEN_EXPORT_FOLDER));
+                windowProgressTipController.getCancelBtn().setOnAction(event -> {
+                    try {
+                        Desktop.getDesktop().open(new File(path));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                });
+
+                if (isSucceed[0]) {
+                    windowProgressTipController.closeDialog();
+                    Thread thread = new Thread(() -> {
+                        PdfPrintUtil.getPrintService();
+                        PdfPrintUtil.printPdf(savePath);
+                    });
+                    thread.start();
+                }
+            }
+        });
+        jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                windowProgressTipController.closeDialog();
+            }
+        });
+        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                windowProgressTipController.updateFailProgress(context.getError().getMessage());
+            }
+        });
+        int groupSize = 100;
+        YieldSettingDto yieldSettingDto = RuntimeContext.getBean(YieldSettingServiceImpl.class).findYieldSetting();
+        List<TestItemWithTypeDto> testItemWithTypeDtoList = initSelectedItemDto();
+        String exportProjectFilePath;
+        if (exportEachFile) {
+            int i = 0;
+            for (String projectName : projectNameList) {
+
+                jobPipeline.addLast(new AbstractBasicJobHandler(projectName + i) {
+                    @Override
+                    public void doJob(JobContext context) {
+                        String exportProjectFilePath = savePath + "/YIELD_" + projectName + getTimeString();
+                        yieldConfig.setExportPath(exportProjectFilePath);
+                        List<String> project = Lists.newArrayList(projectName);
+                        List<TestItemWithTypeDto> itemDto = Lists.newArrayList();
+                        List<String> allItem = dataService.findAllTestItemName(project);
+                        for (TestItemWithTypeDto i : testItemWithTypeDtoList) {
+                            if (allItem.contains(i.getTestItemName())) {
+                                itemDto.add(i);
+                            }
+                        }
+                        if (itemDto != null && itemDto.size() != 0) {
+                            int n = itemDto.size() / groupSize;
+                            int mod = itemDto.size() % groupSize;
+                            int groupCount = n + (mod == 0 ? 0 : 1);
+                            for (int i = 0; i < groupCount; i++) {
+                                List<TestItemWithTypeDto> groupList;
+                                int startIndex = i * groupSize;
+                                if (i == groupCount - 1) {
+                                    groupList = testItemWithTypeDtoList.subList(startIndex, testItemWithTypeDtoList.size());
+                                } else {
+                                    groupList = testItemWithTypeDtoList.subList(startIndex, startIndex + groupSize);
+                                }
+                                List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(groupList);
+                                searchTab.getConditionTestItem().forEach(item -> groupList.add(envService.findTestItemNameByItemName(item)));
+                                String result = exportFile(project, yieldSettingDto, groupList, searchConditionDtoList, yieldAnalysisConfigDto, yieldConfig, context, groupCount, i);
+                                context.put(ParamKeys.EXPORT_PATH, result);
+                            }
+                        }
+                    }
+                }.setWeight(D100));
+                i++;
+            }
+        } else {
+            exportProjectFilePath = savePath + "/YIELD_" + getTimeString();
+            yieldConfig.setExportPath(exportProjectFilePath);
+            jobPipeline.addLast(new AbstractBasicJobHandler("Export file") {
+                @Override
+                public void doJob(JobContext context) {
+                    if (testItemWithTypeDtoList != null && testItemWithTypeDtoList.size() != 0) {
+                        int n = testItemWithTypeDtoList.size() / groupSize;
+                        int mod = testItemWithTypeDtoList.size() % groupSize;
+                        int groupCount = n + (mod == 0 ? 0 : 1);
+                        for (int i = 0; i < groupCount; i++) {
+                            List<TestItemWithTypeDto> groupList;
+                            int startIndex = i * groupSize;
+                            if (i == groupCount - 1) {
+                                groupList = testItemWithTypeDtoList.subList(startIndex, testItemWithTypeDtoList.size());
+                            } else {
+                                groupList = testItemWithTypeDtoList.subList(startIndex, startIndex + groupSize);
+                            }
+
+                            List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(groupList);
+                            searchTab.getConditionTestItem().forEach(item -> {
+                                groupList.add(envService.findTestItemNameByItemName(item));
+                            });
+                            String result = exportFile(projectNameList, yieldSettingDto, groupList, searchConditionDtoList, yieldAnalysisConfigDto, yieldConfig, context, groupCount, i);
+                            context.put(ParamKeys.EXPORT_PATH, result);
+                        }
+                    }
+                }
+            }.setWeight(D100));
+        }
+
+        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+    }
+    private String getTimeString() {
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        return sdf.format(d);
+    }
+
+    private List<TestItemWithTypeDto> initSelectedItemDto() {
+        List<TestItemWithTypeDto> selectTestItemDtos = Lists.newLinkedList();
+        if (items != null && !items.isEmpty()) {
+            for (ItemTableModel model : items) {
+                if (model.getSelector().isSelected()) {
+                    if (isFilterUslOrLsl) {
+                        if (StringUtils.isNotEmpty(model.getItemDto().getLsl()) || StringUtils.isNotEmpty(model.getItemDto().getUsl())) {
+                            selectTestItemDtos.add(model.getItemDto());
+                        }
+                    } else {
+                        selectTestItemDtos.add(model.getItemDto());
+                    }
+                }
+            }
+        }
+        if (itemTable.lookup(".ascending-label") != null) {
+            this.sortTestItemWithTypeDto(selectTestItemDtos, false);
+        } else if (itemTable.lookup(".descending-label") != null) {
+            this.sortTestItemWithTypeDto(selectTestItemDtos, true);
+        }
+        List<TestItemWithTypeDto> selectTestItemDtosResult = Lists.newLinkedList();
+        if (stickyOnTopItems != null && !stickyOnTopItems.isEmpty()) {
+            selectTestItemDtos.forEach(selectTestItemDto -> {
+                if (stickyOnTopItems.contains(selectTestItemDto.getTestItemName())) {
+                    selectTestItemDtosResult.add(selectTestItemDto);
+                }
+            });
+        }
+
+        selectTestItemDtos.forEach(selectTestItemDto -> {
+            if (!selectTestItemDtosResult.contains(selectTestItemDto)) {
+                selectTestItemDtosResult.add(selectTestItemDto);
+            }
+        });
+        return selectTestItemDtosResult;
+    }
+    private void sortTestItemWithTypeDto(List<TestItemWithTypeDto> testItemWithTypeDtos, boolean isDES) {
+        testItemWithTypeDtos.sort((o1, o2) -> {
+            if (isDES) {
+                return o2.getTestItemName().compareTo(o1.getTestItemName());
+            } else {
+                return o1.getTestItemName().compareTo(o2.getTestItemName());
+            }
+        });
+    }
+    private List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
+        if (testItemWithTypeDtoList == null) {
+            return null;
+        }
+        colorMap.clear();
+        List<String> conditionList = searchTab.getSearch();
+        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
+        int i = 0;
+        for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtoList) {
+            if (conditionList != null) {
+                for (String condition : conditionList) {
+                    SearchConditionDto searchConditionDto = new SearchConditionDto();
+                    searchConditionDto.setKey(ParamKeys.YIELD_ANALYSIS_CONDITION_KEY + i);
+                    searchConditionDto.setItemName(testItemWithTypeDto.getTestItemName());
+                    searchConditionDto.setLslOrFail(testItemWithTypeDto.getLsl());
+                    searchConditionDto.setUslOrPass(testItemWithTypeDto.getUsl());
+                    searchConditionDto.setTestItemType(testItemWithTypeDto.getTestItemType());
+                    searchConditionDto.setCondition(condition);
+                    searchConditionDtoList.add(searchConditionDto);
+                    colorMap.put(searchConditionDto.getKey(), ColorUtils.getTransparentColor(Colur.RAW_VALUES[i % 10], 1));
+                    i++;
+                }
+            } else {
+                SearchConditionDto searchConditionDto = new SearchConditionDto();
+                searchConditionDto.setKey(ParamKeys.YIELD_ANALYSIS_CONDITION_KEY + i);
+                searchConditionDto.setItemName(testItemWithTypeDto.getTestItemName());
+                searchConditionDto.setLslOrFail(testItemWithTypeDto.getLsl());
+                searchConditionDto.setUslOrPass(testItemWithTypeDto.getUsl());
+                searchConditionDto.setTestItemType(testItemWithTypeDto.getTestItemType());
+                searchConditionDtoList.add(searchConditionDto);
+                colorMap.put(searchConditionDto.getKey(), ColorUtils.getTransparentColor(Colur.RAW_VALUES[i % 10], 1));
+                i++;
+            }
+        }
+        return searchConditionDtoList;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private String exportFile(List<String> projectNameList,
+                             YieldSettingDto yieldSettingDto,
+                              List<TestItemWithTypeDto> testItemWithTypeDtoList,
+                              List<SearchConditionDto> searchConditionDtoList,
+                              YieldAnalysisConfigDto yieldAnalysisConfigDto,
+                              YieldExportConfigDto yieldConfig, JobContext context, int groupCount, int a) {
+        JobContext singleJobContext = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.YIELD_ANALYSIS_EXPORT_JOB_PIPELINE);
+        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context1) {
+                context.pushEvent(new JobEvent("Error", context.getCurrentProgress(), context1.getError()));
+            }
+        }.setWeight(D100));
+        singleJobContext.put(ParamKeys.YIELD_SETTING_DTO, yieldSettingDto);
+        singleJobContext.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
+        singleJobContext.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+        singleJobContext.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, yieldAnalysisConfigDto);
+        singleJobContext.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+        RuntimeContext.getBean(JobManager.class).fireJobSyn(jobPipeline, singleJobContext);
+
+        List<YieldOverviewResultAlarmDto> yieldStatsDtoList = (List<YieldOverviewResultAlarmDto>) singleJobContext.get(ParamKeys.YIELD_STATISTICAL_RESULT_ALARM_DTO_LIST);
+        context.pushEvent(new JobEvent("Get Stats & Alarm Result", D30 / groupCount + D100 * a / groupCount, null));
+
+        //build chart
+//        Map<String, String> runChartRule = Maps.newHashMap();
+//
+//        if (yieldConfig.getExportDataItem().get(YieldExportItemKey.EXPORT_CHARTS.getCode())) {
+//            JobContext singleJobContext4Chart = RuntimeContext.getBean(JobFactory.class).createJobContext();
+//            JobPipeline jobPipeline4Chart = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_REFRESH_CHART_EXPORT_JOB_PIPELINE);
+//            jobPipeline4Chart.setErrorHandler(new AbstractBasicJobHandler() {
+//                @Override
+//                public void doJob(JobContext context1) {
+//                    context.pushEvent(new JobEvent("Error", context.getCurrentProgress(), context1.getError()));
+//                }
+//            });
+//            singleJobContext4Chart.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+//            singleJobContext4Chart.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, spcAnalysisConfigDto);
+//            singleJobContext4Chart.put(ParamKeys.SPC_SETTING_DTO, spcSettingDto);
+//            dataFrame = singleJobContext.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
+//
+////            buildViewData();
+////            List<String> selectItem = Lists.newArrayList();
+////            testItemWithTypeDtoList.forEach(dto -> selectItem.add(dto.getTestItemName()));
+////            List<RowDataDto> rowDataDtoList = dataService.findTestData(projectNameList, selectItem);
+////            dataFrame = RuntimeContext.getBean(DataFrameFactory.class).createSearchDataFrame(testItemWithTypeDtoList, rowDataDtoList);
+//            dataFrame.addSearchCondition(searchTab.getSearch());
+//
+//            singleJobContext4Chart.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
+//
+//            RuntimeContext.getBean(JobManager.class).fireJobSyn(jobPipeline4Chart, singleJobContext4Chart);
+//            List<SpcChartDto> spcChartDtoList = (List<SpcChartDto>) singleJobContext4Chart.get(ParamKeys.SPC_CHART_DTO_LIST);
+//            CountDownLatch count = new CountDownLatch(1);
+//            Thread thread = new Thread(() -> {
+//                try {
+//                    chartPath = initSpcChartData(spcChartDtoList, spcConfig.getExportDataItem());
+//                } finally {
+//                    count.countDown();
+//                }
+//            });
+//            thread.start();
+//
+//            try {
+//                count.await();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            context.pushEvent(new JobEvent("Export Chart done", D70 / groupCount + D100 * a / groupCount, null));
+//
+//            for (SpcChartDto dto : spcChartDtoList) {
+//                if (dto.getResultDto() != null && dto.getResultDto().getRunCResult() != null && dto.getResultDto().getRunCResult().getRuleResultDtoMap() != null) {
+//                    Map<String, RuleResultDto> rule = dto.getResultDto().getRunCResult().getRuleResultDtoMap();
+//                    StringBuilder s = new StringBuilder();
+//                    for (Map.Entry<String, RuleResultDto> entry : rule.entrySet()) {
+//                        if (entry.getValue() != null && entry.getValue().getX() != null && entry.getValue().getX().length > 0) {
+//                            if (s.length() > 0) {
+//                                s.append(",");
+//                            }
+//                            s.append(entry.getKey());
+//                        }
+//                    }
+//                    runChartRule.put(dto.getKey(), s.toString());
+//                }
+//            }
+//        }
+//
+        List<YieldOverviewResultAlarmDto> yieldOverviewResultDtosToExport;
+        int conditionSize = searchTab.getSearch().size();
+        if (conditionSize < 2) {
+            yieldOverviewResultDtosToExport = yieldStatsDtoList;
+        } else {
+            yieldOverviewResultDtosToExport = Lists.newArrayList();
+            for (int index = 0; index <= yieldStatsDtoList.size() - conditionSize; index += conditionSize) {
+                if (yieldConfig.getExportDataItem().get(YieldExportItemKey.EXPORT_SUB_SUMMARY.getCode())) {
+                    YieldOverviewResultAlarmDto yieldOverviewResultDto = new YieldOverviewResultAlarmDto();
+                    yieldOverviewResultDto.setItemName(yieldStatsDtoList.get(index + conditionSize - 1).getItemName());
+                    yieldOverviewResultDto.setKey(yieldStatsDtoList.get(index + conditionSize - 1).getKey() + YieldExportItemKey.EXPORT_SUB_SUMMARY.getCode());
+                    yieldOverviewResultDto.setCondition(YieldExportItemKey.EXPORT_SUB_SUMMARY.getCode());
+                    yieldOverviewResultDtosToExport.add(yieldOverviewResultDto);
+                }
+                for (int i = 0; i < conditionSize; i++) {
+                    yieldOverviewResultDtosToExport.add(yieldStatsDtoList.get(index + i));
+                }
+            }
+        }
+
+//        return yieldExportService.yieldExport(yieldConfig, yieldStatisticalResultDtosToExport, chartPath, runChartRule);
+          return yieldExportService.yieldExport(yieldConfig, yieldOverviewResultDtosToExport);
+    }
 }

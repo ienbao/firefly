@@ -644,7 +644,7 @@ public class YieldItemController implements Initializable {
                 yieldMainController.setInitSearchConditionDtoList(searchConditionDtoList);
                 YieldRefreshJudgeUtil.newInstance().setOverViewSelectRowKeyListCache(null);
 //                YieldRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
-                List<YieldOverviewResultAlarmDto> YieldOverviewAlarmDtoList = (List<YieldOverviewResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
+                List<YieldOverviewResultAlarmDto> YieldOverviewAlarmDtoList = (List<YieldOverviewResultAlarmDto>) context.get(ParamKeys.YIELD_STATISTICAL_RESULT_ALARM_DTO_LIST);
                 TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
 //                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
                 yieldMainController.setOverviewResultData(YieldOverviewAlarmDtoList, null, isTimer);
@@ -973,7 +973,7 @@ public class YieldItemController implements Initializable {
             if (conditionList != null && conditionList.size() != 0) {
                 for (String condition : conditionList) {
                     SearchConditionDto searchConditionDto = new SearchConditionDto();
-                    searchConditionDto.setKey(ParamKeys.SPC_ANALYSIS_CONDITION_KEY + i);
+                    searchConditionDto.setKey(ParamKeys.YIELD_ANALYSIS_CONDITION_KEY + i);
                     searchConditionDto.setItemName(testItemWithTypeDto.getTestItemName());
                     searchConditionDto.setUslOrPass(testItemWithTypeDto.getUsl());
                     searchConditionDto.setLslOrFail(testItemWithTypeDto.getLsl());

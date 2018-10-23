@@ -12,6 +12,7 @@ public class YieldOverviewResultAlarmDto {
     private Integer passSamples;
     private Integer ntfSamples;
     private Integer ngSamples;
+    private String condition;
     private Map<String, OverviewAlarmDto> overviewAlarmDtoMap;
 
     public String getKey() {
@@ -92,5 +93,13 @@ public class YieldOverviewResultAlarmDto {
 
     public void setOverviewAlarmDtoMap(Map<String, OverviewAlarmDto> overviewAlarmDtoMap) {
         this.overviewAlarmDtoMap = overviewAlarmDtoMap;
+    }
+
+    public String getCondition() {
+        return condition;
+    }
+
+    public void setCondition(String condition) {
+        this.condition = condition;
     }
 }

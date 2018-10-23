@@ -106,6 +106,12 @@ public class YieldPlugin extends Plugin {
                 .addLast(new DataFrameHandler())
                 .addLast(new GetYieldResultHandler().setWeight(D100)));
 
+        jobManager.initializeJob(ParamKeys.YIELD_ANALYSIS_EXPORT_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new FindYieldSettingDataHandler())
+                .addLast(new FindTestDataHandler().setWeight(D100))
+                .addLast(new DataFrameHandler())
+                .addLast(new GetYieldResultHandler().setWeight(D100)));
+
         jobManager.initializeJob(ParamKeys.YIELD_VIEW_DATA_JOB_PIPELINE, jobFactory.createJobPipeLine()
                 .addLast(new FindYieldSettingDataHandler())
                 .addLast(new FindTestDataHandler().setWeight(D100))
