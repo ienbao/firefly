@@ -176,6 +176,8 @@ public class YieldServiceImpl implements YieldService {
             int totalProPassSamples = 0;
             int totalProNtfSamples = 0;
             int totalProNgSamples = 0;
+
+
             for (int i = 0; i < unRepetitionDatas.size(); i++) {
                 List<String> rowKeys = dataAndRowKeyMap.get(unRepetitionDatas.get(i));
                 for (int j = 0; j < rowKeys.size(); j++) {
@@ -217,24 +219,37 @@ public class YieldServiceImpl implements YieldService {
                 }
             }
 
+            int noRangeCount = 0;
+            for (int i=1;i<searchConditions.size();i++){
+                if (searchConditions.get(i).getUslOrPass().equals("")&&searchConditions.get(i).getLslOrFail().equals("")){
+                    noRangeCount = noRangeCount + 1;
+                }
+            }
+
             totalProTotalSamples = unRepetitionDatas.size();
             totalProNgSamples = totalProTotalSamples - totalProPassSamples;
             totalProNtfSamples = totalProPassSamples - totalProFpySamples;
-            yieldTotalProcessesDto.setFpySamples(totalProFpySamples);
-            yieldTotalProcessesDto.setNgSamples(totalProNgSamples);
-            yieldTotalProcessesDto.setNtfSamples(totalProNtfSamples);
-            yieldTotalProcessesDto.setPassSamples(totalProPassSamples);
-            yieldTotalProcessesDto.setTotalSamples(totalProTotalSamples);
-            yieldTotalProcessesDto.setFpyPercent((double)totalProFpySamples / (double)totalProTotalSamples);
-            yieldTotalProcessesDto.setNgPercent((double) totalProNgSamples / (double)totalProTotalSamples);
-            yieldTotalProcessesDto.setNtfPercent((double) totalProNtfSamples / (double)totalProTotalSamples);
+            if (noRangeCount != searchConditions.size()-1) {
+                yieldTotalProcessesDto.setFpySamples(totalProFpySamples);
+                yieldTotalProcessesDto.setNgSamples(totalProNgSamples);
+                yieldTotalProcessesDto.setNtfSamples(totalProNtfSamples);
+                yieldTotalProcessesDto.setPassSamples(totalProPassSamples);
+                yieldTotalProcessesDto.setTotalSamples(totalProTotalSamples);
+                yieldTotalProcessesDto.setFpyPercent((double) totalProFpySamples / (double) totalProTotalSamples);
+                yieldTotalProcessesDto.setNgPercent((double) totalProNgSamples / (double) totalProTotalSamples);
+                yieldTotalProcessesDto.setNtfPercent((double) totalProNtfSamples / (double) totalProTotalSamples);
+            }
         }
         configDto.setTopN(5);//
         List<YieldNTFChartDto> ntfChartDtoList = Lists.newArrayList();
         for (int i = 0; i < searchConditions.size() -1 ; i++) {
             YieldNTFChartDto yieldNTFChartDto = new YieldNTFChartDto();
             yieldNTFChartDto.setItemName(overResult.get(i).getItemName());
-            yieldNTFChartDto.setNtfPercent(overResult.get(i).getNtfPercent());
+            if (overResult.get(i).getNtfPercent() == null){
+                yieldNTFChartDto.setNtfPercent(0.0);
+            }else {
+                yieldNTFChartDto.setNtfPercent(overResult.get(i).getNtfPercent());
+            }
             ntfChartDtoList.add(yieldNTFChartDto);
         }
         Collections.sort(ntfChartDtoList, new Comparator<YieldNTFChartDto>() {
@@ -243,11 +258,11 @@ public class YieldServiceImpl implements YieldService {
                 double ntf1 = o1.getNtfPercent();
                 double ntf2 = o2.getNtfPercent();
                 if (ntf1 > ntf2){
-                    return 1;
+                    return -1;
                 }else if (ntf1 == ntf2){
                     return 0;
                 }else {
-                    return  -1;
+                    return  1;
                 }
             }
         });
@@ -354,20 +369,21 @@ public class YieldServiceImpl implements YieldService {
 
                                     } else if(searchConditions.get(i).getYieldType() == YieldType.PASS) {
 
-                                        Passlist.add(yieldViewDataDto);
+                                        Totallist.add(yieldViewDataDto);
                                         Resultlist.add(yieldViewDataDto);
                                     }
 
                                     break;
                                 } else if (j > 0 && j <= rowKeys.size() - 1) {
+                                    yieldViewDataDto = new YieldViewDataDto();
                                     yieldViewDataDto.setProductName(unRepetitionDatas.get(k));
                                     yieldViewDataDto.setRowKey(rowKeys.get(j));
                                     yieldViewDataDto.setResult(Double.parseDouble(rowDataDto.getData().get(key)));
                                     if(searchConditions.get(i).getYieldType() == YieldType.NTF){
-                                        Ntflist.add(yieldViewDataDto);
+                                        Totallist.add(yieldViewDataDto);
                                         Resultlist.add(yieldViewDataDto);
                                     }else if(searchConditions.get(i).getYieldType() == YieldType.PASS){
-                                        Passlist.add(yieldViewDataDto);
+                                        Totallist.add(yieldViewDataDto);
                                         Resultlist.add(yieldViewDataDto);
                                     }
 
@@ -380,6 +396,7 @@ public class YieldServiceImpl implements YieldService {
                             if (rowDataDto.getData().get(key).equals(searchConditions.get(i).getUslOrPass())) {
                                 ngFlag = ngFlag +1;
                                 if (j == 0) {
+                                    yieldViewDataDto = new YieldViewDataDto();
                                     yieldViewDataDto.setProductName(unRepetitionDatas.get(k));
                                     yieldViewDataDto.setRowKey(rowKeys.get(j));
                                     yieldViewDataDto.setResult(Double.parseDouble(rowDataDto.getData().get(key)));
@@ -390,22 +407,23 @@ public class YieldServiceImpl implements YieldService {
 
                                     } else if(searchConditions.get(i).getYieldType() == YieldType.PASS) {
 
-                                        Passlist.add(yieldViewDataDto);
+                                        Totallist.add(yieldViewDataDto);
                                         Resultlist.add(yieldViewDataDto);
                                     }
                                     break;
                                 } else if (j > 0 && j <= rowKeys.size() - 1) {
+                                    yieldViewDataDto = new YieldViewDataDto();
                                     yieldViewDataDto.setProductName(unRepetitionDatas.get(k));
                                     yieldViewDataDto.setRowKey(rowKeys.get(j));
                                     yieldViewDataDto.setResult(Double.parseDouble(rowDataDto.getData().get(key)));
 
                                     if(searchConditions.get(i).getYieldType() == YieldType.NTF){
 
-                                        Ntflist.add(yieldViewDataDto);
+                                        Totallist.add(yieldViewDataDto);
                                         Resultlist.add(yieldViewDataDto);
                                     }else if(searchConditions.get(i).getYieldType() == YieldType.PASS){
 
-                                        Passlist.add(yieldViewDataDto);
+                                        Totallist.add(yieldViewDataDto);
                                         Resultlist.add(yieldViewDataDto);
                                     }
 
@@ -417,10 +435,11 @@ public class YieldServiceImpl implements YieldService {
                         if(j==rowKeys.size()-1){
                             if (ngFlag == 0){
                                 if(searchConditions.get(i).getYieldType() == YieldType.NG){
+                                    yieldViewDataDto = new YieldViewDataDto();
                                     yieldViewDataDto.setProductName(unRepetitionDatas.get(k));
                                     yieldViewDataDto.setRowKey(rowKeys.get(j));
                                     yieldViewDataDto.setResult(Double.parseDouble(rowDataDto.getData().get(key)));
-                                    Nglist.add(yieldViewDataDto);
+                                    Totallist.add(yieldViewDataDto);
                                     Resultlist.add(yieldViewDataDto);
                                 }
                             }
@@ -429,9 +448,8 @@ public class YieldServiceImpl implements YieldService {
                 }
                 if(searchConditions.get(i).getYieldType() == YieldType.TOTAL){
                     Resultlist.clear();
-                    Resultlist.addAll(Passlist);
-                    Resultlist.addAll(Ntflist);
-                    Resultlist.addAll(Nglist);
+                    Resultlist.addAll(Totallist);
+
                 }
 
                 YieldViewDataResultDto yieldViewDataResultDto = new YieldViewDataResultDto();
