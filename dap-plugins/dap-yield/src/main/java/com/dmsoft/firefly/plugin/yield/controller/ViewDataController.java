@@ -150,6 +150,7 @@ public class ViewDataController implements Initializable {
         this.searchViewDataConditionDto = searchViewDataConditionDto;
         this.selectedRowKeys = selectedRowKey;
         this.dataFrame = dataFrame;
+
         if (dataFrame == null) {
             filteValueTf.setDisable(true);
             viewDataTable.getColumns().clear();
@@ -193,7 +194,7 @@ public class ViewDataController implements Initializable {
             filteValueTf.getTextField().setText("");
             filteValueTf.getTextField().setText(filterTxt);
         }
-        chooseTestItemDialog.resetSelectedItems(model.getHeaderArray().subList(1, model.getHeaderArray().size()));
+        chooseTestItemDialog.resetSelectedItems(dataFrame.getAllTestItemName());
         if (sortedColumnList != null && !sortedColumnList.isEmpty()) {
             final TableColumn<String, ?> sortedColumn = sortedColumnList.get(0);
             Platform.runLater(() -> {
@@ -227,6 +228,11 @@ public class ViewDataController implements Initializable {
                 return;
             }
             List<String> selectedTestItems = chooseTestItemDialog.getSelectedItems();
+//            for(int i =0; i<selectedTestItems.size(); i++){
+//                if(!selectedTestItems.get(i).equals(searchViewDataConditionDto.get(1).getItemName())){
+//                    dataFrame.
+//                }
+//            }
             int curIndex = 0;
             for (TestItemWithTypeDto typeDto : typeDtoList) {
                 if (selectedTestItems.contains(typeDto.getTestItemName())) {
@@ -241,7 +247,7 @@ public class ViewDataController implements Initializable {
                     dataFrame.removeColumns(Lists.newArrayList(typeDto.getTestItemName()));
                 }
             }
-            setViewData(this.dataFrame,null, statisticalSearchConditionDtoList);
+            setViewData(this.dataFrame,getSelectedRowKeys(), statisticalSearchConditionDtoList,false);
         });
 
     }
