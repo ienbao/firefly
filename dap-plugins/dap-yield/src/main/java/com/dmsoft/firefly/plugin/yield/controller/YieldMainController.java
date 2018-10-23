@@ -4,10 +4,7 @@ import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.*;
-import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldAnalysisConfigDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldSettingDto;
+import com.dmsoft.firefly.plugin.yield.dto.*;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
 import com.dmsoft.firefly.plugin.yield.utils.ImageUtils;
@@ -242,7 +239,7 @@ public class YieldMainController implements Initializable {
     private void initComponentEvent() {
         resetBtn.setOnAction(event -> getResetBtnEvent());
         printBtn.setOnAction(event -> getExportBtnEvent());
-//        exportBtn.setOnAction(event -> getExportBtnEvent());
+        exportBtn.setOnAction(event -> getExportBtnEvent());
 //        chooseBtn.setOnAction(event -> getChooseBtnEvent());
     }
 
@@ -307,8 +304,8 @@ public class YieldMainController implements Initializable {
             FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML("view/yield_export.fxml");
             root = fxmlLoader.load();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("yieldExport", YieldFxmlAndLanguageUtils.getString("YIELD_EXPORT"), root, getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
-//             SpcLeftConfigDto leftConfigDto = spcItemController.getCurrentConfigData();
-//             ((SpcExportController) fxmlLoader.getController()).initSpcExportLeftConfig(leftConfigDto);
+            YieldLeftConfigDto leftConfigDto = yieldItemController.getCurrentConfigData();
+//             ((YieldExportController) fxmlLoader.getController()).initYieldExportLeftConfig(leftConfigDto);
             stage.setResizable(false);
             stage.toFront();
             stage.show();

@@ -49,7 +49,7 @@ public class YieldServiceImpl implements YieldService {
 
 
         //分类产品
-        List<String> searchRowKeys = searchDataFrame.getSearchRowKey(searchConditions.get(0).getCondition());
+        List<String> searchRowKeys = searchDataFrame.getSearchRowKey(searchConditions.get(1).getCondition());
         List<String> datas = searchDataFrame.getDataValue(searchConditions.get(0).getItemName(), searchRowKeys);
         Map<String, List<String>> dataAndRowKeyMap = new HashMap<>();
         List<String> unRepetitionDatas = Lists.newArrayList();
