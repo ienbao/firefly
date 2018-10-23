@@ -170,4 +170,5 @@ public class YieldSettingServiceImpl implements YieldSettingService, IConfig {
 
         JsonFileUtil.writeJsonFile(yieldSettingDto, path, ParamKeys.YIELD_SETTING_FILE_NAME);
     }
+
 }

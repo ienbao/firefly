@@ -1,8 +1,17 @@
 package com.dmsoft.firefly.plugin.yield.service.impl;
 
 
+import com.dmsoft.firefly.plugin.yield.dto.YieldExportConfigDto;
+import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
+import com.dmsoft.firefly.plugin.yield.utils.FileUtils;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -20,6 +29,23 @@ public class YieldExportServiceImpl {
 //     * @param runChartRule run chart rules
 //     * @return export path
 //     */
+public String yieldExport(YieldExportConfigDto exportConfig,List<YieldOverviewResultAlarmDto> yieldStatsDtos){
+    String[] basePath = new String[1];
+        String savePath = FileUtils.getAbsolutePath("../export/");
+        String exportPath = exportConfig.getExportPath();
+//        String exportType = exportConfig.getExportType();
+        Map<String, Boolean> exportDataItem = exportConfig.getExportDataItem();
+        if (DAPStringUtils.isBlank(exportPath)) {
+            basePath[0] = savePath;
+        } else {
+            basePath[0] = exportPath;
+        }
+          String dirName = "SPC_Result_" + getTimeString();
+        String dirSavePath = basePath[0];
+        FileUtils.createDir(dirSavePath);
+    return basePath[0];
+}
+
 //    public String spcExport(YieldExportConfigDto exportConfig, List<SpcStatisticalResultAlarmDto> spcStatsDtos,
 //                            Map<String, Map<String, String>> chartImage, Map<String, String> runChartRule) {
 //        //TODO : add context and progress
@@ -70,7 +96,7 @@ public class YieldExportServiceImpl {
 //        FileUtils.deleteDir(savePicPath);
 //        return basePath[0];
 //    }
-//
+
 //    private boolean spcExportBuildDetail(ExportParamDto exportParamDto, Map<String, Map<String, String>> chartImage, List<SpcStatisticalResultAlarmDto> spcStatisticalResultDtos,
 //                                         SpcExportConfigDto spcExportConfigDto, int exportTimes, Map<String, String> runChartRule) {
 //        SpcExportBuilder spcExportBuilder = new SpcExportBuilder();
@@ -87,9 +113,9 @@ public class YieldExportServiceImpl {
 //        return true;
 //    }
 //
-//    private String getTimeString() {
-//        Date d = new Date();
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-//        return sdf.format(d);
-//    }
+    private String getTimeString() {
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        return sdf.format(d);
+    }
 }

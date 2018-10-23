@@ -192,5 +192,58 @@ public class OverViewController implements Initializable {
         overViewTableModel.filterTestItem(filterTestItemTf.getTextField().getText());
     }
 
+    /**
+     * has error edit cell.
+     */
+    public boolean hasErrorEditCell(){
+        return overViewTableModel.hasErrorEditValue();
+    }
+
+//    /**
+//     * get select row key
+//     *
+//     * @return row key
+//     */
+//    public List<String> getSelectStatisticalRowKey() {
+//        return overViewTableModel.getSelectRowKey();
+//    }
+
+    /**
+     * get edit row key
+     *
+     * @return row key
+     */
+    public List<String> getEidtStatisticalRowKey() {
+        return overViewTableModel.getEditorRowKey();
+    }
+
+    /**
+     * refresh spc statistical data
+     *
+     * @param yieldOverviewResultAlarmDtoList the refresh data
+     */
+    public void refreshStatisticalResult(List<YieldOverviewResultAlarmDto> yieldOverviewResultAlarmDtoList) {
+        overViewTableModel.refreshData(yieldOverviewResultAlarmDtoList);
+    }
+
+
+    /**
+     * get all stats data
+     *
+     * @return
+     */
+    public List<YieldOverviewResultAlarmDto> getAllRowStatsData() {
+        return overViewTableModel.getSpcStatsDtoList();
+    }
+
+    /**
+     * get edit row data
+     *
+     * @return the row data
+     */
+    public List<YieldOverviewResultAlarmDto> getEditRowStatsData() {
+        return overViewTableModel.getEditRowData();
+    }
+
 
 }

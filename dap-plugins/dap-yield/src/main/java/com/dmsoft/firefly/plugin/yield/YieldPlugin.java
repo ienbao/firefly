@@ -106,6 +106,12 @@ public class YieldPlugin extends Plugin {
                 .addLast(new DataFrameHandler())
                 .addLast(new GetYieldResultHandler().setWeight(D100)));
 
+        jobManager.initializeJob(ParamKeys.YIELD_ANALYSIS_EXPORT_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new FindYieldSettingDataHandler())
+                .addLast(new FindTestDataHandler().setWeight(D100))
+                .addLast(new DataFrameHandler())
+                .addLast(new GetYieldResultHandler().setWeight(D100)));
+
         jobManager.initializeJob(ParamKeys.YIELD_VIEW_DATA_JOB_PIPELINE, jobFactory.createJobPipeLine()
                 .addLast(new FindYieldSettingDataHandler())
                 .addLast(new FindTestDataHandler().setWeight(D100))
@@ -117,11 +123,11 @@ public class YieldPlugin extends Plugin {
 //        jobManager.initializeJob(ParamKeys.SPC_REFRESH_CHART_EXPORT_JOB_PIPELINE, jobFactory.createJobPipeLine()
 //                .addLast(new GetSpcChartResultHandler().setWeight(D100)));
 //
-//        jobManager.initializeJob(ParamKeys.SPC_RESET_JOB_PIPELINE, jobFactory.createJobPipeLine()
-//                .addLast(new GetSpcStatsResultHandler().setWeight(D100)));
-//
-//        jobManager.initializeJob(ParamKeys.SPC_REFRESH_STATISTICAL_JOB_PIPELINE, jobFactory.createJobPipeLine()
-//                .addLast(new GetSpcStatsResultHandler().setWeight(D100)));
+        jobManager.initializeJob(ParamKeys.YIELD_RESET_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new GetYieldResultHandler().setWeight(D100)));
+
+        jobManager.initializeJob(ParamKeys.SPC_REFRESH_STATISTICAL_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new GetYieldResultHandler().setWeight(D100)));
 //
 //        jobManager.initializeJob(ParamKeys.SPC_REFRESH_ANALYSIS_JOB_PIPELINE, jobFactory.createJobPipeLine()
 //                .addLast(new RefreshAnalysisDataHandler().setWeight(D100)));

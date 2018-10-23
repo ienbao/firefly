@@ -29,6 +29,6 @@ public class GetYieldResultHandler extends AbstractBasicJobHandler {
         List<YieldResultDto> yieldResultDtoList = yieldService.getResult(dataFrame, searchConditionDtoList, analysisConfigDto);
         List<YieldOverviewDto> yieldOverviewDtoList = yieldResultDtoList.get(0).getYieldOverviewDtos();
         List<YieldOverviewResultAlarmDto> yieldOverviewResultAlarmDtoList = RuntimeContext.getBean(YieldSettingService.class).setStatisticalResultAlarm(yieldOverviewDtoList, yieldSettingDto);
-        context.put(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST, yieldOverviewResultAlarmDtoList);
+        context.put(ParamKeys.YIELD_STATISTICAL_RESULT_ALARM_DTO_LIST, yieldOverviewResultAlarmDtoList);
     }
 }
