@@ -74,51 +74,48 @@
                                             <rowConstraints>
                                                 <RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
                                                 <RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                         </GridPane>
                                     </center>
                                 </BorderPane>
                             </content>
                         </Tab>
-                        <Tab fx:id="timeTab" style="-fx-pref-width: 45;">
-                            <content>
-                                <BorderPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                    <center>
-                                        <GridPane BorderPane.alignment="CENTER">
-                                            <children>
-                                                <CheckBox fx:id="enabledTimerCheckBox" mnemonicParsing="false" text="%ENABLED_TIMER">
-                                                    <GridPane.margin>
-                                                        <Insets left="10.0" right="10.0" />
-                                                    </GridPane.margin>
-                                                </CheckBox>
-                                                <Label text="%REFRESH_CURRENT_TASK_EVERY" GridPane.rowIndex="1">
-                                                    <GridPane.margin>
-                                                        <Insets left="10.0" right="10.0" />
-                                                    </GridPane.margin>
-                                                </Label>
-                                                <ComboBox fx:id="timeComboBox" prefHeight="23.0" prefWidth="160.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
-                                                    <GridPane.margin>
-                                                        <Insets left="10.0" right="10.0" />
-                                                    </GridPane.margin>
-                                                </ComboBox>
-                                            </children>
-                                            <columnConstraints>
-                                                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                            </columnConstraints>
-                                            <rowConstraints>
-                                                <RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="22.0" minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                            </rowConstraints>
-                                        </GridPane>
-                                    </center>
-                                </BorderPane>
-                            </content>
-                        </Tab>
+                        <!--<Tab fx:id="timeTab" style="-fx-pref-width: 45;">-->
+                            <!--<content>-->
+                                <!--<BorderPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">-->
+                                    <!--<center>-->
+                                        <!--<GridPane BorderPane.alignment="CENTER">-->
+                                            <!--<children>-->
+                                                <!--<CheckBox fx:id="enabledTimerCheckBox" mnemonicParsing="false" text="%ENABLED_TIMER">-->
+                                                    <!--<GridPane.margin>-->
+                                                        <!--<Insets left="10.0" right="10.0" />-->
+                                                    <!--</GridPane.margin>-->
+                                                <!--</CheckBox>-->
+                                                <!--<Label text="%REFRESH_CURRENT_TASK_EVERY" GridPane.rowIndex="1">-->
+                                                    <!--<GridPane.margin>-->
+                                                        <!--<Insets left="10.0" right="10.0" />-->
+                                                    <!--</GridPane.margin>-->
+                                                <!--</Label>-->
+                                                <!--<ComboBox fx:id="timeComboBox" prefHeight="23.0" prefWidth="160.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">-->
+                                                    <!--<GridPane.margin>-->
+                                                        <!--<Insets left="10.0" right="10.0" />-->
+                                                    <!--</GridPane.margin>-->
+                                                <!--</ComboBox>-->
+                                            <!--</children>-->
+                                            <!--<columnConstraints>-->
+                                                <!--<ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />-->
+                                            <!--</columnConstraints>-->
+                                            <!--<rowConstraints>-->
+                                                <!--<RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />-->
+                                                <!--<RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />-->
+                                                <!--<RowConstraints maxHeight="22.0" minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />-->
+                                                <!--<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />-->
+                                            <!--</rowConstraints>-->
+                                        <!--</GridPane>-->
+                                    <!--</center>-->
+                                <!--</BorderPane>-->
+                            <!--</content>-->
+                        <!--</Tab>-->
                     </tabs>
                 </TabPane>
             </items>

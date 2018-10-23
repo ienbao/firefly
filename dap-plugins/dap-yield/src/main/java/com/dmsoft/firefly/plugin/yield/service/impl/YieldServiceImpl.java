@@ -49,8 +49,16 @@ public class YieldServiceImpl implements YieldService {
 
 
         //分类产品
-        List<String> searchRowKeys = searchDataFrame.getSearchRowKey(searchConditions.get(1).getCondition());
-        List<String> datas = searchDataFrame.getDataValue(searchConditions.get(0).getItemName(), searchRowKeys);
+        List<String> searchRowKeys = Lists.newArrayList();
+        List<String> oldSearchRowKeys =  searchDataFrame.getSearchRowKey(searchConditions.get(1).getCondition());
+        List<String> datas = Lists.newArrayList();
+        List<String> oldDatas =  searchDataFrame.getDataValue(searchConditions.get(0).getItemName(), oldSearchRowKeys);
+        for (int i = 0 ; i<oldDatas.size();i++){
+            if (!oldDatas.get(i).equals("")){
+                datas.add(oldDatas.get(i));
+                searchRowKeys.add(oldSearchRowKeys.get(i));
+            }
+        }
         Map<String, List<String>> dataAndRowKeyMap = new HashMap<>();
         List<String> unRepetitionDatas = Lists.newArrayList();
         if (searchConditions.get(0).getItemName().equals(configDto.getPrimaryKey())) {
