@@ -17,6 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.ComboBox?>
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldExportController">
     <children>
         <HBox fx:id="exportPane" prefHeight="100.0" prefWidth="200.0" style="-fx-border-color: #DCDCDC;" VBox.vgrow="ALWAYS">
@@ -83,26 +84,17 @@
                                             <content>
                                                 <GridPane>
                                                     <children>
-                                                        <Label text="%SUBGROUPS_SIZE">
+                                                        <HBox alignment="CENTER_LEFT" GridPane.columnIndex="0">
+                                                            <children>
+                                                                <Label text="%PRIMER_KEY" ></Label>
+                                                                <Label style="-fx-text-fill: #EA2028;" text="*"/>
+                                                            </children>
+                                                        </HBox>
+                                                        <ComboBox fx:id="configComboBox" prefHeight="23.0" prefWidth="160.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
                                                             <GridPane.margin>
                                                                 <Insets left="10.0" right="10.0" />
                                                             </GridPane.margin>
-                                                        </Label>
-                                                        <TextField fx:id="subGroup" GridPane.rowIndex="1" GridPane.valignment="TOP">
-                                                            <GridPane.margin>
-                                                                <Insets left="10.0" right="10.0" />
-                                                            </GridPane.margin>
-                                                        </TextField>
-                                                        <Label text="%ND_CHART_INTERVAL_NUMBER" GridPane.rowIndex="2">
-                                                            <GridPane.margin>
-                                                                <Insets left="10.0" right="10.0" />
-                                                            </GridPane.margin>
-                                                        </Label>
-                                                        <TextField fx:id="ndGroup" GridPane.rowIndex="3" GridPane.valignment="TOP">
-                                                            <GridPane.margin>
-                                                                <Insets left="10.0" right="10.0" />
-                                                            </GridPane.margin>
-                                                        </TextField>
+                                                        </ComboBox>
                                                     </children>
                                                     <columnConstraints>
                                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
