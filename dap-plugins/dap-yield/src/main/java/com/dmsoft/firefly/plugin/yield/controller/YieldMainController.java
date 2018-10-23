@@ -254,10 +254,10 @@ public class YieldMainController implements Initializable {
     private void getResetBtnEvent() {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
-//        context.put(ParamKeys.YIELD_SETTING_DTO, spcSettingDto);
+        context.put(ParamKeys.YIELD_SETTING_DTO, yieldSettingDto);
         context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, initSearchConditionDtoList);
         context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, analysisConfigDto);
-//        context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
+        context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
             windowProgressTipController.setCancelingText();
