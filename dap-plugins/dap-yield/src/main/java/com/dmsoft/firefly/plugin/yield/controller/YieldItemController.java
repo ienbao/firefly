@@ -1104,4 +1104,8 @@ public class YieldItemController implements Initializable {
         ControlMap.getControl(CommonResourceMassages.PLATFORM_CONTROL_TEMPLATE_BTN).setDisable(isTimer);
     }
 
+    public String getPrimaryKey(){
+        return configComboBox.getValue();
+    }
+
 }

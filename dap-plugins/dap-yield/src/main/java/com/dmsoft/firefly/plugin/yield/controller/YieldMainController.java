@@ -9,13 +9,18 @@ import com.dmsoft.firefly.plugin.yield.dto.YieldAnalysisConfigDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldSettingDto;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
+import com.dmsoft.firefly.plugin.yield.model.OverViewTableModel;
 import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
-import com.dmsoft.firefly.plugin.yield.utils.ImageUtils;
-import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
+import com.dmsoft.firefly.plugin.yield.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.job.core.*;
+import com.dmsoft.firefly.sdk.message.IMessageManager;
+import com.dmsoft.firefly.sdk.utils.FilterUtils;
+import com.google.common.collect.Lists;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -30,6 +35,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 
 public class YieldMainController implements Initializable {
@@ -54,6 +60,7 @@ public class YieldMainController implements Initializable {
     private YieldAnalysisConfigDto analysisConfigDto;
     private List<SearchConditionDto> initSearchConditionDtoList;
     private YieldSettingDto yieldSettingDto;
+
 
 
 
@@ -242,18 +249,18 @@ public class YieldMainController implements Initializable {
     private void initComponentEvent() {
         resetBtn.setOnAction(event -> getResetBtnEvent());
         printBtn.setOnAction(event -> getExportBtnEvent());
-//        exportBtn.setOnAction(event -> getExportBtnEvent());
-//        chooseBtn.setOnAction(event -> getChooseBtnEvent());
+        exportBtn.setOnAction(event -> getExportBtnEvent());
+        chooseBtn.setOnAction(event -> getChooseBtnEvent());
     }
 
     @SuppressWarnings("unchecked")
     private void getResetBtnEvent() {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
-//        context.put(ParamKeys.YIELD_SETTING_DTO, spcSettingDto);
+        context.put(ParamKeys.YIELD_SETTING_DTO, yieldSettingDto);
         context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, initSearchConditionDtoList);
         context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, analysisConfigDto);
-//        context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
+        context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
             windowProgressTipController.setCancelingText();
@@ -275,16 +282,17 @@ public class YieldMainController implements Initializable {
             });
         }
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.YIELD_RESET_JOB_PIPELINE);
-//        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
-//            @Override
-//            public void doJob(JobContext context) {
-//                SpcRefreshJudgeUtil.newInstance().setViewDataSelectRowKeyListCache(null);
+        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                YieldRefreshJudgeUtil.newInstance().setOverViewSelectRowKeyListCache(null);
 //                SpcRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
-//                List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
-//                setStatisticalResultData(spcStatisticalResultAlarmDtoList, null, false);
-//                clearAnalysisSubShowData();
-//            }
-//        });
+                List<YieldOverviewResultAlarmDto> YieldOverviewAlarmDtoList = (List<YieldOverviewResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
+                setOverviewResultData(YieldOverviewAlarmDtoList, null, false);
+                windowProgressTipController.closeDialog();
+                clearAnalysisSubShowData();
+            }
+        });
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
@@ -318,70 +326,69 @@ public class YieldMainController implements Initializable {
         }
     }
 
-//    private void getChooseBtnEvent() {
-//        if (statisticalResultController.hasErrorEditCell()) {
-//            WindowMessageController messageController = WindowMessageFactory.createWindowMessageHasOkAndCancel(YieldFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER),
-//                    YieldFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_ERROR_EDIT_MESSAGE));
-//            messageController.addProcessMonitorListener(new WindowCustomListener() {
-//                @Override
-//                public boolean onShowCustomEvent() {
-//                    return false;
-//                }
-//
-//                @Override
-//                public boolean onCloseAndCancelCustomEvent() {
-//                    return false;
-//                }
-//
-//                @Override
-//                public boolean onOkCustomEvent() {
-//                    refreshEvent();
-//                    return false;
-//                }
-//            });
-//        } else {
-//            refreshEvent();
-//        }
-//    }
+    private void getChooseBtnEvent() {
+        if (overViewController.hasErrorEditCell()) {
+            WindowMessageController messageController = WindowMessageFactory.createWindowMessageHasOkAndCancel(YieldFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER),
+                    YieldFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_ERROR_EDIT_MESSAGE));
+            messageController.addProcessMonitorListener(new WindowCustomListener() {
+                @Override
+                public boolean onShowCustomEvent() {
+                    return false;
+                }
 
-//    private void refreshEvent() {
-//        List<String> currentStatisticalSelectRowKeyList = statisticalResultController.getSelectStatisticalRowKey();
+                @Override
+                public boolean onCloseAndCancelCustomEvent() {
+                    return false;
+                }
+
+                @Override
+                public boolean onOkCustomEvent() {
+                    refreshEvent();
+                    return false;
+                }
+            });
+        } else {
+            refreshEvent();
+        }
+    }
+
+    private void refreshEvent() {
+//        List<String> currentStatisticalSelectRowKeyList = overViewController.getSelectStatisticalRowKey();
 //        List<String> currentViewDataSelectRowKeyList = viewDataController.getSelectedRowKeys();
-//        List<String> statisticalModifyRowKeyList = statisticalResultController.getEidtStatisticalRowKey();
-//
-//        SpcRefreshJudgeUtil spcRefreshJudgeUtil = SpcRefreshJudgeUtil.newInstance();
-//        SpcRefreshJudgeUtil.RefreshType refreshType = spcRefreshJudgeUtil.refreshJudge(currentStatisticalSelectRowKeyList, currentViewDataSelectRowKeyList, statisticalModifyRowKeyList);
-//
-//        switch (refreshType) {
-//            case NOT_NEED_REFRESH:
-//                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-//                        SpcFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
-//                        SpcFxmlAndLanguageUtils.getString("EXCEPTION_SPC_NO_REFRESH_RESULT"));
-//                if (currentStatisticalSelectRowKeyList.size() == 0) {
+        List<String> statisticalModifyRowKeyList = overViewController.getEidtStatisticalRowKey();
+
+        YieldRefreshJudgeUtil yieldRefreshJudgeUtil = YieldRefreshJudgeUtil.newInstance();
+        YieldRefreshJudgeUtil.RefreshType refreshType = yieldRefreshJudgeUtil.refreshJudge(statisticalModifyRowKeyList);
+
+        switch (refreshType) {
+            case NOT_NEED_REFRESH:
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        YieldFxmlAndLanguageUtils.getString("EXCEPTION_SPC_NO_REFRESH_RESULT"));
 //                    chartResultController.clearChartData();
-//                    viewDataController.clearViewData();
+//                    overViewController.clearViewData();
 //                    lastViewDataRowKeyList = null;
-//                    spcRefreshJudgeUtil.setViewDataIsBlank(true);
-//                    spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
-//                }
-//                break;
-//            case REFRESH_STATISTICAL_RESULT:
-//                //refresh statistical result
-//                this.refreshStatisticalResult(spcRefreshJudgeUtil);
-//                break;
+//                    yieldRefreshJudgeUtil.setViewDataIsBlank(true);
+//                    yieldRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
+
+                break;
+            case REFRESH_STATISTICAL_RESULT:
+                //refresh statistical result
+                this.refreshStatisticalResult(yieldRefreshJudgeUtil);
+                break;
 //            case REFRESH_CHART_RESULT:
 //                //only refresh chart
-//                this.refreshChartResult(spcRefreshJudgeUtil);
-//                spcRefreshJudgeUtil.setViewDataIsBlank(false);
+//                this.refreshChartResult(yieldRefreshJudgeUtil);
+//                yieldRefreshJudgeUtil.setViewDataIsBlank(false);
 //                break;
 //            case REFRESH_ALL_ANALYSIS_RESULT:
-//                this.refreshAllAnalysisResult(spcRefreshJudgeUtil);
-//                spcRefreshJudgeUtil.setViewDataIsBlank(false);
+//                this.refreshAllAnalysisResult(yieldRefreshJudgeUtil);
+//                yieldRefreshJudgeUtil.setViewDataIsBlank(false);
 //                break;
-//            default:
-//                break;
-//        }
-//    }
+            default:
+                break;
+        }
+    }
 
     private void initBtnIcon() {
         resetBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_reset_normal.png")));
@@ -417,22 +424,25 @@ public class YieldMainController implements Initializable {
         this.initSearchConditionDtoList = initSearchConditionDtoList;
     }
 
-//    private List<SearchConditionDto> buildRefreshSearchConditionData(List<SpcStatisticalResultAlarmDto> spcStatsDtoList) {
-//        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
-//        if (spcStatsDtoList == null) {
-//            return searchConditionDtoList;
-//        }
-//        for (SpcStatisticalResultAlarmDto spcStatsDto : spcStatsDtoList) {
-//            SearchConditionDto searchConditionDto = new SearchConditionDto();
-//            searchConditionDto.setKey(spcStatsDto.getKey());
-//            searchConditionDto.setItemName(spcStatsDto.getItemName());
-//            searchConditionDto.setCondition(spcStatsDto.getCondition());
-//            searchConditionDto.setCusUsl(String.valueOf(spcStatsDto.getStatisticalAlarmDtoMap().get(UIConstant.SPC_SR_ALL[8]).getValue()));
-//            searchConditionDto.setCusLsl(String.valueOf(spcStatsDto.getStatisticalAlarmDtoMap().get(UIConstant.SPC_SR_ALL[7]).getValue()));
-//            searchConditionDtoList.add(searchConditionDto);
-//        }
-//        return searchConditionDtoList;
-//    }
+    private List<SearchConditionDto> buildRefreshSearchConditionData(List<YieldOverviewResultAlarmDto> spcStatsDtoList) {
+        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
+        if (spcStatsDtoList == null) {
+            return searchConditionDtoList;
+        }
+        for (YieldOverviewResultAlarmDto spcStatsDto : spcStatsDtoList) {
+            SearchConditionDto searchConditionDto = new SearchConditionDto();
+            searchConditionDto.setKey(spcStatsDto.getKey());
+            searchConditionDto.setItemName(spcStatsDto.getItemName());
+//
+            searchConditionDto.setUslOrPass(String.valueOf(spcStatsDto.getUslOrPass()));
+            searchConditionDto.setLslOrFail(String.valueOf(spcStatsDto.getLslOrFail()));
+            TestItemWithTypeDto testItemWithTypeDto = envService.findTestItemNameByItemName(spcStatsDto.getItemName());
+//            searchConditionDto.setCondition(testItemWithTypeDto.get);
+            searchConditionDto.setTestItemType(testItemWithTypeDto.getTestItemType());
+            searchConditionDtoList.add(searchConditionDto);
+        }
+        return searchConditionDtoList;
+    }
 //
 //    private SearchDataFrame buildSubSearchDataFrame(List<String> rowKeyList, List<SearchConditionDto> searchConditionDtoList) {
 //        if (dataFrame == null || searchConditionDtoList == null) {
@@ -457,33 +467,33 @@ public class YieldMainController implements Initializable {
 //        return dataFrame.subDataFrame(rowKeyList, testItemNameList);
 //    }
 //
-//    private SearchDataFrame buildSubSearchDataFrame(List<SearchConditionDto> searchConditionDtoList) {
-//        if (dataFrame == null || searchConditionDtoList == null) {
-//            return null;
-//        }
-//        List<String> testItemNameList = Lists.newArrayList();
-//        List<String> searchCondition = Lists.newArrayList();
-//        List<String> timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
-//        String timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
-//        FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
-//        for (SearchConditionDto searchConditionDto : searchConditionDtoList) {
-//            if (!testItemNameList.contains(searchConditionDto.getItemName())) {
-//                testItemNameList.add(searchConditionDto.getItemName());
-//            }
-//            String condition = searchConditionDto.getCondition();
-//            Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);
-//            for (String conditionTestItem : conditionTestItemSet) {
-//                if (!testItemNameList.contains(conditionTestItem)) {
-//                    testItemNameList.add(conditionTestItem);
-//                }
-//            }
-//
-//            if (!searchCondition.contains(condition)) {
-//                searchCondition.add(condition);
-//            }
-//        }
-//        return dataFrame.subDataFrame(dataFrame.getSearchRowKey(searchCondition), testItemNameList);
-//    }
+    private SearchDataFrame buildSubSearchDataFrame(List<SearchConditionDto> searchConditionDtoList) {
+        if (dataFrame == null || searchConditionDtoList == null) {
+            return null;
+        }
+        List<String> testItemNameList = Lists.newArrayList();
+        List<String> searchCondition = Lists.newArrayList();
+        List<String> timeKeys = envService.findActivatedTemplate().getTimePatternDto().getTimeKeys();
+        String timePattern = envService.findActivatedTemplate().getTimePatternDto().getPattern();
+        FilterUtils filterUtils = new FilterUtils(timeKeys, timePattern);
+        for (SearchConditionDto searchConditionDto : searchConditionDtoList) {
+            if (!testItemNameList.contains(searchConditionDto.getItemName())) {
+                testItemNameList.add(searchConditionDto.getItemName());
+            }
+            String condition = searchConditionDto.getCondition();
+            Set<String> conditionTestItemSet = filterUtils.parseItemNameFromConditions(condition);
+            for (String conditionTestItem : conditionTestItemSet) {
+                if (!testItemNameList.contains(conditionTestItem)) {
+                    testItemNameList.add(conditionTestItem);
+                }
+            }
+
+            if (!searchCondition.contains(condition)) {
+                searchCondition.add(condition);
+            }
+        }
+        return dataFrame.subDataFrame(dataFrame.getSearchRowKey(searchCondition), testItemNameList);
+    }
 //
 //    private boolean resultSelectIsChange(List<String> newList, List<String> oldList) {
 //        if (oldList == null) {
@@ -500,79 +510,87 @@ public class YieldMainController implements Initializable {
 //        return false;
 //    }
 
-//    @SuppressWarnings("unchecked")
-//    private void refreshStatisticalResult(SpcRefreshJudgeUtil spcRefreshJudgeUtil) {
-//        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
-//        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+    @SuppressWarnings("unchecked")
+    private void refreshStatisticalResult(YieldRefreshJudgeUtil spcRefreshJudgeUtil) {
+        WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
+        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
 //        List<String> currentStatisticalSelectRowKeyList = spcRefreshJudgeUtil.getCurrentStatisticalSelectRowKeyList();
 //        List<String> viewDataSelectRowKeyListCache = spcRefreshJudgeUtil.getViewDataSelectRowKeyListCache();
-//        if (currentStatisticalSelectRowKeyList.size() == 0) {
+
 //            chartResultController.clearChartData();
 //            viewDataController.clearViewData();
 //            lastViewDataRowKeyList = null;
 //            spcRefreshJudgeUtil.setViewDataIsBlank(true);
-//        }
-//        Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
-//        WindowPane windowPane = null;
-//        if (stage1.getScene().getRoot() instanceof WindowPane) {
-//            windowPane = (WindowPane) stage1.getScene().getRoot();
-//        }
-//        if (windowPane != null) {
-//            windowPane.getCloseBtn().setOnAction(event -> {
-//                windowProgressTipController.setCancelingText();
-//                context.interruptBeforeNextJobHandler();
-//            });
-//        }
+
+        Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
+        WindowPane windowPane = null;
+        if (stage1.getScene().getRoot() instanceof WindowPane) {
+            windowPane = (WindowPane) stage1.getScene().getRoot();
+        }
+        if (windowPane != null) {
+            windowPane.getCloseBtn().setOnAction(event -> {
+                windowProgressTipController.setCancelingText();
+                context.interruptBeforeNextJobHandler();
+            });
+        }
 //        List<String> rowKeyList = viewDataSelectRowKeyListCache == null ? dataFrame.getSearchedRowKey() : viewDataSelectRowKeyListCache;
-//        List<SpcStatisticalResultAlarmDto> editRowDataList = statisticalResultController.getEditRowStatsData();
-//        List<SearchConditionDto> searchConditionDtoList = buildRefreshSearchConditionData(editRowDataList);
-//        SearchDataFrame subDataFrame = buildSubSearchDataFrame(rowKeyList, searchConditionDtoList);
-//
-//        context.put(ParamKeys.SPC_SETTING_DTO, spcSettingDto);
-//        context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
-//        context.put(ParamKeys.SPC_ANALYSIS_CONFIG_DTO, analysisConfigDto);
-//        context.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
-//        context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
-//        windowProgressTipController.getCancelBtn().setOnAction(event -> {
-//            windowProgressTipController.setCancelingText();
-//            context.interruptBeforeNextJobHandler();
-//            if (context.isError() || context.getCurrentProgress() == 1.0) {
-//                windowProgressTipController.closeDialog();
-//            }
-//        });
-//
-//        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_REFRESH_STATISTICAL_JOB_PIPELINE);
-//        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
-//            @Override
-//            public void doJob(JobContext context) {
-//                List<SpcStatisticalResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<SpcStatisticalResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
-//                statisticalResultController.refreshStatisticalResult(spcStatisticalResultAlarmDtoList);
-//
+        String primaryKey = yieldItemController.getPrimaryKey();
+        YieldOverviewResultAlarmDto yieldOverviewResultAlarmDto = new YieldOverviewResultAlarmDto();
+        yieldOverviewResultAlarmDto.setItemName(primaryKey);
+        List<YieldOverviewResultAlarmDto> editRowDataList = Lists.newArrayList();
+        editRowDataList.add(yieldOverviewResultAlarmDto);
+        List<YieldOverviewResultAlarmDto> RowDataList = overViewController.getEditRowStatsData();
+        for (YieldOverviewResultAlarmDto yieldOverviewResultAlarmDto1 : RowDataList){
+            editRowDataList.add(yieldOverviewResultAlarmDto1);
+        }
+        List<SearchConditionDto> searchConditionDtoList = buildRefreshSearchConditionData(editRowDataList);
+        SearchDataFrame subDataFrame = buildSubSearchDataFrame(searchConditionDtoList);
+
+        context.put(ParamKeys.YIELD_SETTING_DTO, yieldSettingDto);
+        context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+        context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, analysisConfigDto);
+        context.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
+        context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
+        windowProgressTipController.getCancelBtn().setOnAction(event -> {
+            windowProgressTipController.setCancelingText();
+            context.interruptBeforeNextJobHandler();
+            if (context.isError() || context.getCurrentProgress() == 1.0) {
+                windowProgressTipController.closeDialog();
+            }
+        });
+
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_REFRESH_STATISTICAL_JOB_PIPELINE);
+        jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                List<YieldOverviewResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<YieldOverviewResultAlarmDto>) context.get(ParamKeys.SPC_STATISTICAL_RESULT_ALARM_DTO_LIST);
+//                overViewController.refreshStatisticalResult(spcStatisticalResultAlarmDtoList);
+                overViewController.setTimerOverviewResultTableData(spcStatisticalResultAlarmDtoList,null,false);
 //                if (editRowDataList != null && editRowDataList.size() != 0) {
-//                    List<SpcStatisticalResultAlarmDto> allRowDataList = statisticalResultController.getAllRowStatsData();
+//                    List<YieldOverviewResultAlarmDto> allRowDataList = overViewController.getAllRowStatsData();
 //                    List<SearchConditionDto> statisticalSearchConditionDtoList = buildRefreshSearchConditionData(allRowDataList);
-//                    viewDataController.updateStatisticalSearchCondition(statisticalSearchConditionDtoList);
+////                    overViewController.updateStatisticalSearchCondition(statisticalSearchConditionDtoList);
 //                }
-//                windowProgressTipController.closeDialog();
-//                logger.info("Refresh Spc statistical data finish.");
-//            }
-//        });
-//        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
-//            @Override
-//            public void doJob(JobContext context) {
-//                logger.error(context.getError().toString());
-//                windowProgressTipController.updateFailProgress(context.getError().toString());
-//            }
-//        });
-//        jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
-//            @Override
-//            public void doJob(JobContext context) {
-//                windowProgressTipController.closeDialog();
-//            }
-//        });
-//        logger.info("Start refresh Spc statistical data.");
-//        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
-//    }
+                windowProgressTipController.closeDialog();
+                logger.info("Refresh Spc statistical data finish.");
+            }
+        });
+        jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                logger.error(context.getError().toString());
+                windowProgressTipController.updateFailProgress(context.getError().toString());
+            }
+        });
+        jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
+            @Override
+            public void doJob(JobContext context) {
+                windowProgressTipController.closeDialog();
+            }
+        });
+        logger.info("Start refresh Spc statistical data.");
+        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+    }
 //
 //    @SuppressWarnings("unchecked")
 //    private void refreshChartResult(SpcRefreshJudgeUtil spcRefreshJudgeUtil) {
@@ -890,4 +908,5 @@ public class YieldMainController implements Initializable {
     public void setViewDataController(ViewDataController viewDataController) {
         this.viewDataController = viewDataController;
     }
+
 }
