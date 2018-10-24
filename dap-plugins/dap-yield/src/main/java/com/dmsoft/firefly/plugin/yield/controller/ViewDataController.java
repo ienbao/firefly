@@ -256,29 +256,40 @@ public class ViewDataController implements Initializable {
 
             int curIndex = 0;
             for (TestItemWithTypeDto typeDto : typeDtoList) {
-                if (selectedTestItems.contains(typeDto.getTestItemName())) {
-                    if (!dataFrame.isTestItemExist(typeDto.getTestItemName())) {
+                String testItemName = typeDto.getTestItemName();
+                if (selectedTestItems.contains(testItemName)) {
+                    if (!dataFrame.isTestItemExist(testItemName)) {
                         List<RowDataDto> rowDataDtoList = RuntimeContext.getBean(SourceDataService.class).findTestData(this.selectedProjectNames,
-                                Lists.newArrayList(typeDto.getTestItemName()));
+                                Lists.newArrayList(testItemName));
                         DataColumn dataColumn = RuntimeContext.getBean(DataFrameFactory.class).createDataColumn(Lists.newArrayList(typeDto), rowDataDtoList).get(0);/* 新增表中的列 */
                         dataFrame.appendColumn(curIndex, dataColumn);
+                    }
+
+                    if(!(testItemName.equals(searchViewDataConditionDto.get(0).getItemName()))){
+                        if(!(testItemName.equals(searchViewDataConditionDto.get(1).getItemName()))){
+                            searchConditionDto = new SearchConditionDto();
+                            searchConditionDto.setItemName(testItemName);
+                            searchConditionDto.setLslOrFail(typeDto.getLsl());
+                            searchConditionDto.setUslOrPass(typeDto.getUsl());
+                            searchViewDataConditionDto.add(searchConditionDto);
+                        }
                     }
                     curIndex++;
                 } else {
                     dataFrame.removeColumns(Lists.newArrayList(typeDto.getTestItemName()));
                 }
             }
-            for(int i=0; i<dataFrame.getAllTestItemName().size();i++){
-                if(!(dataFrame.getAllTestItemWithTypeDto().get(i).getTestItemName().equals(searchViewDataConditionDto.get(0).getItemName()))){
-                    if(!(dataFrame.getAllTestItemWithTypeDto().get(i).getTestItemName().equals(searchViewDataConditionDto.get(1).getItemName()))){
-                        searchConditionDto = new SearchConditionDto();
-                        searchConditionDto.setItemName(dataFrame.getAllTestItemWithTypeDto().get(i).getTestItemName());
-                        searchConditionDto.setLslOrFail(dataFrame.getAllTestItemWithTypeDto().get(i).getLsl());
-                        searchConditionDto.setUslOrPass(dataFrame.getAllTestItemWithTypeDto().get(i).getUsl());
-                        searchViewDataConditionDto.add(searchConditionDto);
-                    }
-                }
-            }
+//            for(int i=0; i<dataFrame.getAllTestItemName().size();i++){
+//                if(!(dataFrame.getAllTestItemWithTypeDto().get(i).getTestItemName().equals(searchViewDataConditionDto.get(0).getItemName()))){
+//                    if(!(dataFrame.getAllTestItemWithTypeDto().get(i).getTestItemName().equals(searchViewDataConditionDto.get(1).getItemName()))){
+//                        searchConditionDto = new SearchConditionDto();
+//                        searchConditionDto.setItemName(dataFrame.getAllTestItemWithTypeDto().get(i).getTestItemName());
+//                        searchConditionDto.setLslOrFail(dataFrame.getAllTestItemWithTypeDto().get(i).getLsl());
+//                        searchConditionDto.setUslOrPass(dataFrame.getAllTestItemWithTypeDto().get(i).getUsl());
+//                        searchViewDataConditionDto.add(searchConditionDto);
+//                    }
+//                }
+//            }
 
             setViewData(this.dataFrame,getSelectedRowKeys(), searchViewDataConditionDto,false, rowKey, columnLabel);
         });

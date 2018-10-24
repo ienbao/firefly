@@ -113,9 +113,6 @@ public class YieldPlugin extends Plugin {
                 .addLast(new GetYieldResultHandler().setWeight(D100)));
 
         jobManager.initializeJob(ParamKeys.YIELD_VIEW_DATA_JOB_PIPELINE, jobFactory.createJobPipeLine()
-                .addLast(new FindYieldSettingDataHandler())
-                .addLast(new FindTestDataHandler().setWeight(D100))
-                .addLast(new DataFrameHandler())
                 .addLast(new GetYieldViewDataHandler().setWeight(D100)));
 //
 //        jobManager.initializeJob(ParamKeys.SPC_REFRESH_CHART_JOB_PIPELINE, jobFactory.createJobPipeLine()
