@@ -63,7 +63,10 @@
                                                             </BarChart>
                                                         </VBox>
                                                         <VBox style="-fx-border-width: 0px; -fx-border-color: rgb(220,220,220); -fx-max-width: 750;" GridPane.columnIndex="1" VBox.vgrow="ALWAYS">
-                                                                    <fx:include fx:id="yieldResultData" source="yield_result_data.fxml" />
+                                                            <padding>
+                                                                <Insets bottom="3.0" right="10.0" top="3.0" />
+                                                            </padding>
+                                                            <fx:include fx:id="yieldResultData" source="yield_result_data.fxml" />
                                                         </VBox>
                                                         <columnConstraints>
                                                             <ColumnConstraints maxWidth="300.0" minWidth="298.0" prefWidth="299.0" />
