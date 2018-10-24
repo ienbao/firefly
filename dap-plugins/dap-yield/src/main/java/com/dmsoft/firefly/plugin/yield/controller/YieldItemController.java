@@ -87,6 +87,7 @@ public class YieldItemController implements Initializable {
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
     private YieldMainController yieldMainController;
+    private YieldResultDataController yieldResultDataController;
     private ViewDataController viewDataController;
     private ContextMenu pop;
     private boolean isFilterUslOrLsl = false;
@@ -120,6 +121,7 @@ public class YieldItemController implements Initializable {
      */
     public void init(YieldMainController yieldMainController) {
         this.yieldMainController = yieldMainController;
+        this.yieldResultDataController=yieldMainController.getYieldResultController().getYieldResultDataController();
     }
 
 
@@ -281,29 +283,7 @@ public class YieldItemController implements Initializable {
         initComponentEvent();
         initItemData();
         initYieldConfig();
-        initSpcTimer();
-    }
-
-    /**
-     * init spc timer tab
-     */
-    public void initSpcTimer() {
-//        isTimer = false;
-//        startTimer = false;
-//        enabledTimerCheckBox.setSelected(false);
-//        List<String> timerList = leftConfigService.findYieldTimerTime();
-//
-//        if (timerList == null) {
-//            return;
-//        }
-//        ObservableList<String> showTimeList = FXCollections.observableArrayList();
-//        for (String time : timerList) {
-//            showTimeList.add(time + YieldFxmlAndLanguageUtils.getString(ResourceMassages.TIMER_MIN));
-//        }
-//        timeComboBox.setItems(showTimeList);
-//        if (showTimeList.size() > 0) {
-//            timeComboBox.setValue(showTimeList.get(0));
-//        }
+//        initYieldTimer();
     }
 
     /**
@@ -364,7 +344,6 @@ public class YieldItemController implements Initializable {
                 filteredList.setPredicate(this::isFilterAndHasUslOrLsl);
                 is.getStyleClass().remove("filter-normal");
                 is.getStyleClass().add("filter-active");
-//                is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
                 isFilterUslOrLsl = true;
             });
             all.setSelected(true);
@@ -647,9 +626,12 @@ public class YieldItemController implements Initializable {
                 YieldRefreshJudgeUtil.newInstance().setOverViewSelectRowKeyListCache(null);
 //                YieldRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
                 List<YieldOverviewResultAlarmDto> YieldOverviewAlarmDtoList = (List<YieldOverviewResultAlarmDto>) context.get(ParamKeys.YIELD_STATISTICAL_RESULT_ALARM_DTO_LIST);
+                List<YieldTotalProcessesDto> yieldTotalProcessesDtoList = (List<YieldTotalProcessesDto>) context.get(ParamKeys.YIELD_TOTAL_PROCESSES_DTO_LIST);
+
                 TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
 //                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
                 yieldMainController.setOverviewResultData(YieldOverviewAlarmDtoList, null, isTimer);
+                yieldResultDataController.setOverviewResultData(yieldTotalProcessesDtoList, configComboBox.getValue(), isTimer);
                 dataFrame=context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
                 yieldMainController.setDataFrame(dataFrame);
                 windowProgressTipController.closeDialog();
@@ -877,7 +859,7 @@ public class YieldItemController implements Initializable {
     private YieldAnalysisConfigDto buildYieldAnalysisConfigData() {
         YieldAnalysisConfigDto yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
         yieldAnalysisConfigDto.setPrimaryKey(configComboBox.getValue());
-//        yieldAnalysisConfigDto.set;
+//        yieldAnalysisConfigDto.setTopN;
         return yieldAnalysisConfigDto;
     }
 
@@ -1031,4 +1013,11 @@ public class YieldItemController implements Initializable {
         return configComboBox.getValue();
     }
 
+    public ComboBox<String> getConfigComboBox() {
+        return configComboBox;
+    }
+
+    public SearchTab getSearchTab() {
+        return searchTab;
+    }
 }

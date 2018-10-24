@@ -12,8 +12,9 @@ public class UIConstant {
     public static final String[] YIELD_SR_ALL = new String[]{
             "Test Item",  "LSL/Fail", "USL/Pass", "Total Samples", "FPY Samples","Pass Samples", "NTF Samples", "NG Samples", "FpyPercent", "NtfPercent", "NgPercent"};
 
-    public static final String[] YIELD_SR_USLLSL = new String[]{
-            "LSL", "USL"
-    };
-    
+    public static final String CHART_1 = "CHART_1";
+    public static final String BARCHART_FPY = "BARCHART_FPY";
+    public static final String BARCHART_NTF = "BARCHART_NTF";
+    public static final String BARCHART_NG = "BARCHART_NG";
+
 }

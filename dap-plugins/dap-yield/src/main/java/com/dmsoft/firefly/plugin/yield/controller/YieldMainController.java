@@ -6,11 +6,9 @@ import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.*;
 import com.dmsoft.firefly.plugin.yield.dto.*;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
-import com.dmsoft.firefly.plugin.yield.model.OverViewTableModel;
 import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
 import com.dmsoft.firefly.plugin.yield.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
@@ -51,14 +49,13 @@ public class YieldMainController implements Initializable {
     private OverViewController overViewController;
     @FXML
     private ViewDataController viewDataController;
-    //    @FXML
-//    private ChartResultController chartResultController;
+
+    @FXML
+    private YieldChartResultController yieldResultController;
     private SearchDataFrame dataFrame;
     private YieldAnalysisConfigDto analysisConfigDto;
     private List<SearchConditionDto> initSearchConditionDtoList;
     private YieldSettingDto yieldSettingDto;
-
-
 
 
     private YieldSettingService yieldSettingService = RuntimeContext.getBean(YieldSettingService.class);
@@ -73,6 +70,7 @@ public class YieldMainController implements Initializable {
         this.yieldItemController.init(this);
 //        this.statisticalResultController.init(this);
         this.viewDataController.init(this);
+        this.yieldResultController.init(this);
         this.overViewController.init(this);
 //        this.chartResultController.init(this);
         this.initBtnIcon();
@@ -898,6 +896,14 @@ public class YieldMainController implements Initializable {
 //    }
 
 
+    public YieldChartResultController getYieldResultController() {
+        return yieldResultController;
+    }
+
+    public void setYieldResultController(YieldChartResultController yieldResultController) {
+        this.yieldResultController = yieldResultController;
+    }
+
     public ViewDataController getViewDataController() {
         return viewDataController;
     }
@@ -905,7 +911,6 @@ public class YieldMainController implements Initializable {
     public void setViewDataController(ViewDataController viewDataController) {
         this.viewDataController = viewDataController;
     }
-
 
     public YieldItemController getYieldItemController() {
         return yieldItemController;
