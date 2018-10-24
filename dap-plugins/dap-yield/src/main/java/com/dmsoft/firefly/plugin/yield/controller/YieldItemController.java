@@ -100,6 +100,8 @@ public class YieldItemController implements Initializable {
 
     private List<String> originalItems = Lists.newArrayList();
     private SearchDataFrame dataFrame;
+
+
 //
 //    @FXML
 //    private CheckBox enabledTimerCheckBox;
@@ -854,14 +856,14 @@ public class YieldItemController implements Initializable {
         searchTab.clearSearchTab();
     }
 
-    public YieldAnalysisConfigDto buildYieldAnalysisConfigData() {
+    private YieldAnalysisConfigDto buildYieldAnalysisConfigData() {
         YieldAnalysisConfigDto yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
         yieldAnalysisConfigDto.setPrimaryKey(configComboBox.getValue());
 //        yieldAnalysisConfigDto.setTopN;
         return yieldAnalysisConfigDto;
     }
 
-    public List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
+    private List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
         if (testItemWithTypeDtoList == null) {
             return null;
         }
