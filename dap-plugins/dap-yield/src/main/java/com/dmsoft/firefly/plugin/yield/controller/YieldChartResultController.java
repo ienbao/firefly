@@ -35,23 +35,22 @@ public class YieldChartResultController implements Initializable {
 
     @FXML
     private BarChart yieldBarChart;
-
+    @FXML
+    private YieldResultDataController yieldResultDataController;
     private String[] yieldBarChartCategory;
     private String[] yieldBarChartLabel;
-
+    private YieldMainController yieldMainController;
     private Logger logger = LoggerFactory.getLogger(YieldChartResultController.class);
 
 
 
     public void init(YieldMainController yieldMainController) {
-
-
-
+        this.yieldMainController = yieldMainController;
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initI18n();
-
+        this.yieldResultDataController.init(this);
     }
 
     private void initI18n() {
@@ -150,6 +149,19 @@ public class YieldChartResultController implements Initializable {
 
     }
 
+    public YieldMainController getYieldMainController() {
+        return yieldMainController;
+    }
 
+    public void setYieldMainController(YieldMainController yieldMainController) {
+        this.yieldMainController = yieldMainController;
+    }
 
+    public YieldResultDataController getYieldResultDataController() {
+        return yieldResultDataController;
+    }
+
+    public void setYieldResultDataController(YieldResultDataController yieldResultDataController) {
+        this.yieldResultDataController = yieldResultDataController;
+    }
 }

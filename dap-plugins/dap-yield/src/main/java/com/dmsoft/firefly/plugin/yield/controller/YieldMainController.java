@@ -49,10 +49,9 @@ public class YieldMainController implements Initializable {
     private OverViewController overViewController;
     @FXML
     private ViewDataController viewDataController;
+
     @FXML
-    private YieldResultDataController resultDataController;
-    //    @FXML
-//    private ChartResultController chartResultController;
+    private YieldChartResultController yieldResultController;
     private SearchDataFrame dataFrame;
     private YieldAnalysisConfigDto analysisConfigDto;
     private List<SearchConditionDto> initSearchConditionDtoList;
@@ -71,7 +70,7 @@ public class YieldMainController implements Initializable {
         this.yieldItemController.init(this);
 //        this.statisticalResultController.init(this);
         this.viewDataController.init(this);
-        this.resultDataController.init(this);
+        this.yieldResultController.init(this);
         this.overViewController.init(this);
 //        this.chartResultController.init(this);
         this.initBtnIcon();
@@ -897,6 +896,14 @@ public class YieldMainController implements Initializable {
 //    }
 
 
+    public YieldChartResultController getYieldResultController() {
+        return yieldResultController;
+    }
+
+    public void setYieldResultController(YieldChartResultController yieldResultController) {
+        this.yieldResultController = yieldResultController;
+    }
+
     public ViewDataController getViewDataController() {
         return viewDataController;
     }
@@ -905,17 +912,6 @@ public class YieldMainController implements Initializable {
         this.viewDataController = viewDataController;
     }
 
-    public YieldResultDataController getResultDataController() {
-        return resultDataController;
-    }
-
-    public OverViewController getOverViewController() {
-        return overViewController;
-    }
-
-    //    public void setViewDataController(ViewDataController viewDataController) {
-//        this.viewDataController = viewDataController;
-//    }
     public YieldItemController getYieldItemController() {
         return yieldItemController;
     }

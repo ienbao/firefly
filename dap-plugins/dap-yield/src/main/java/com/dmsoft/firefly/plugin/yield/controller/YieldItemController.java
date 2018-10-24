@@ -119,7 +119,7 @@ public class YieldItemController implements Initializable {
      */
     public void init(YieldMainController yieldMainController) {
         this.yieldMainController = yieldMainController;
-        this.yieldResultDataController=yieldMainController.getResultDataController();
+        this.yieldResultDataController=yieldMainController.getYieldResultController().getYieldResultDataController();
     }
 
 
@@ -1011,4 +1011,11 @@ public class YieldItemController implements Initializable {
         return configComboBox.getValue();
     }
 
+    public ComboBox<String> getConfigComboBox() {
+        return configComboBox;
+    }
+
+    public SearchTab getSearchTab() {
+        return searchTab;
+    }
 }
