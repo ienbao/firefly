@@ -4,6 +4,7 @@ import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.plugin.yield.dto.YieldChartResultDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldDetailChartDto;
 import com.dmsoft.firefly.plugin.yield.dto.chart.YieldImageDto;
+import com.dmsoft.firefly.plugin.yield.utils.FileUtils;
 import com.dmsoft.firefly.plugin.yield.utils.UIConstant;
 import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
