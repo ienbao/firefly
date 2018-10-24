@@ -44,6 +44,7 @@ public class OverViewController implements Initializable {
     private OverViewTableModel overViewTableModel;
     private List<String> selectOverViewResultName = Lists.newArrayList();
     private SearchDataFrame dataFrame;
+    private List<TestItemWithTypeDto> testItemWithTypeDto ;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -104,13 +105,14 @@ public class OverViewController implements Initializable {
         viewDataController = yieldMainController.getViewDataController();
         List<TestItemWithTypeDto> selectedItemDto = yieldItemController.initSelectedItemDto();
         List<String> projectNameList = envService.findActivatedProjectName();
+        testItemWithTypeDto = Lists.newArrayList();
         for(int i = 0; i<selectedItemDto.size();i++) {
-            if (!rowKey.equals(selectedItemDto.get(i).getTestItemName())) {
-                selectedItemDto.remove(i);
+            if (rowKey.equals(selectedItemDto.get(i).getTestItemName())) {
+                testItemWithTypeDto.add(selectedItemDto.get(i));
             }
         }
-        List<TestItemWithTypeDto> testItemWithTypeDtoList = yieldItemController.buildSelectTestItemWithTypeData(selectedItemDto);
-        List<SearchConditionDto> searchConditionDtoList = yieldItemController.buildSearchConditionDataList(selectedItemDto);
+        List<TestItemWithTypeDto> testItemWithTypeDtoList = yieldItemController.buildSelectTestItemWithTypeData(testItemWithTypeDto);
+        List<SearchConditionDto> searchConditionDtoList = yieldItemController.buildSearchConditionDataList(testItemWithTypeDto);
         YieldAnalysisConfigDto yieldAnalysisConfigDto = yieldItemController.buildYieldAnalysisConfigData();
 
         if(column.equals("FPY Samples")) {
@@ -170,7 +172,7 @@ public class OverViewController implements Initializable {
                 testItemNameList.add(searchConditionDtoList.get(0).getItemName());
                 testItemNameList.add(searchConditionDtoList.get(1).getItemName());
                 SearchDataFrame subDataFrame = dataFrame.subDataFrame(rowKeyList, testItemNameList);
-                viewDataController.setViewData(subDataFrame, rowKeyList, searchConditionDtoList, false);
+                viewDataController.setViewData(subDataFrame, rowKeyList, searchConditionDtoList, false, rowKey, column);
 
 
             }

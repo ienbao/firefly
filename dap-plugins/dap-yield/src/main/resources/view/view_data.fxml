@@ -32,10 +32,19 @@
                                                     vgrow="SOMETIMES"/>
                                 </rowConstraints>
                                 <children>
+                                    <HBox  GridPane.columnIndex="0" >
+                                        <padding>
+                                            <Insets bottom="3.0" left="10.0" top="3.0" />
+                                        </padding>
+                                        <children>
+                                            <Label fx:id="viewDataR" />
+                                            <Label fx:id="viewDataC"  />
+                                        </children>
+                                    </HBox>
                                     <TextFieldFilter fx:id="filteValueTf" maxWidth="200.0" prefWidth="200.0"
                                                      GridPane.columnIndex="1">
                                         <GridPane.margin>
-                                            <Insets bottom="3.0" right="10.0" top="3.0"/>
+                                            <Insets bottom="3.0" right="10.0" top="6.0"/>
                                         </GridPane.margin>
                                         <opaqueInsets>
                                             <Insets/>
