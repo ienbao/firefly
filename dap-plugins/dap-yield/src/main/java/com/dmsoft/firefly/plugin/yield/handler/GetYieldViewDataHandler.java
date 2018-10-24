@@ -15,7 +15,7 @@ public class GetYieldViewDataHandler extends AbstractBasicJobHandler {
      * constructor
      */
     public GetYieldViewDataHandler() {
-        setName(ParamKeys.YIELD_OVER_VIEW_JOB_PIPELINE);
+        setName(ParamKeys.YIELD_VIEW_DATA_JOB_PIPELINE);
     }
 
     @Override
