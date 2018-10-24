@@ -64,6 +64,11 @@
                         </items>
                     </SplitPane>
                 </VBox>
+                <VBox prefHeight="200.0" prefWidth="150.0">
+                    <children>
+                        <fx:include fx:id="resultData" source="yield_result_data.fxml" />
+                    </children>
+                </VBox>
                 <VBox minWidth="180.0" prefWidth="180.0" SplitPane.resizableWithParent="false">
                     <fx:include fx:id="yieldItem" source="yield_item.fxml" VBox.vgrow="ALWAYS" />
                 </VBox>

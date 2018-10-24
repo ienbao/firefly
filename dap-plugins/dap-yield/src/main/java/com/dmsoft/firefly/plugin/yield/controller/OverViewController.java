@@ -98,7 +98,7 @@ public class OverViewController implements Initializable {
         overViewTableModel.setClickListener((rowKey,column) -> fireClickEvent(rowKey,column));
     }
 
-    private void fireClickEvent(String rowKey,String column) {
+    public void fireClickEvent(String rowKey,String column) {
 //        System.out.println(rowKey + column);
         yieldItemController = yieldMainController.getYieldItemController();
         viewDataController = yieldMainController.getViewDataController();
