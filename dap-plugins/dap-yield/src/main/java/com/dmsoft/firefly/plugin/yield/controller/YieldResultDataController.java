@@ -51,16 +51,24 @@ public class YieldResultDataController implements Initializable {
 
     public void setOverviewResultData(List<YieldTotalProcessesDto> list, String rowKey, boolean isTimer) {
 //        String rowKey="V_Mic_Bias";
-        TotalSamples.setText(list.get(0).getTotalSamples().toString());
-        TotalSamples.setOnMouseClicked(event ->fireClickEvent(rowKey,"Total Samples"));
-        FpySamples.setText(list.get(0).getFpySamples().toString());
-        FpySamples.setOnMouseClicked(event ->fireClickEvent(rowKey,"FPY Samples"));
-        PassSamples.setText(list.get(0).getPassSamples().toString());
-        PassSamples.setOnMouseClicked(event ->fireClickEvent(rowKey,"Pass Samples"));
-        NtfSamples.setText(list.get(0).getNtfSamples().toString());
-        NtfSamples.setOnMouseClicked(event ->fireClickEvent(rowKey,"NTF Samples"));
-        NgSamples.setText(list.get(0).getNgSamples().toString());
-        NgSamples.setOnMouseClicked(event ->fireClickEvent(rowKey,"NG Samples"));
+        if(list.get(0).getTotalSamples()!=null){
+            TotalSamples.setText(list.get(0).getTotalSamples().toString());
+            TotalSamples.setOnMouseClicked(event ->fireClickEvent(rowKey,"Total Samples"));
+            FpySamples.setText(list.get(0).getFpySamples().toString());
+            FpySamples.setOnMouseClicked(event ->fireClickEvent(rowKey,"FPY Samples"));
+            PassSamples.setText(list.get(0).getPassSamples().toString());
+            PassSamples.setOnMouseClicked(event ->fireClickEvent(rowKey,"Pass Samples"));
+            NtfSamples.setText(list.get(0).getNtfSamples().toString());
+            NtfSamples.setOnMouseClicked(event ->fireClickEvent(rowKey,"NTF Samples"));
+            NgSamples.setText(list.get(0).getNgSamples().toString());
+            NgSamples.setOnMouseClicked(event ->fireClickEvent(rowKey,"NG Samples"));
+        }else{
+            TotalSamples.setText("-");
+            FpySamples.setText("-");
+            PassSamples.setText("-");
+            NtfSamples.setText("-");
+            NgSamples.setText("-");
+        }
 
     }
     private void fireClickEvent(String rowKey,String column) {
