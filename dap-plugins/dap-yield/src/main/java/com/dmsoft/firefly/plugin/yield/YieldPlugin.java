@@ -126,6 +126,9 @@ public class YieldPlugin extends Plugin {
                 .addLast(new GetYieldResultHandler().setWeight(D100)));
 
         jobManager.initializeJob(ParamKeys.SPC_REFRESH_STATISTICAL_JOB_PIPELINE, jobFactory.createJobPipeLine()
+                .addLast(new FindYieldSettingDataHandler())
+                .addLast(new FindTestDataHandler().setWeight(D100))
+                .addLast(new DataFrameHandler())
                 .addLast(new GetYieldResultHandler().setWeight(D100)));
 //
 //        jobManager.initializeJob(ParamKeys.SPC_REFRESH_ANALYSIS_JOB_PIPELINE, jobFactory.createJobPipeLine()
