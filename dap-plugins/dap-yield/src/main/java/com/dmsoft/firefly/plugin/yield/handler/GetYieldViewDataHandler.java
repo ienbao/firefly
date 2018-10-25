@@ -15,7 +15,7 @@ public class GetYieldViewDataHandler extends AbstractBasicJobHandler {
      * constructor
      */
     public GetYieldViewDataHandler() {
-        setName(ParamKeys.YIELD_OVER_VIEW_JOB_PIPELINE);
+        setName(ParamKeys.YIELD_VIEW_DATA_JOB_PIPELINE);
     }
 
     @Override
@@ -25,10 +25,7 @@ public class GetYieldViewDataHandler extends AbstractBasicJobHandler {
         List<SearchConditionDto> searchConditionDtoList = (List<SearchConditionDto>) context.get(ParamKeys.SEARCH_CONDITION_DTO_LIST);
         YieldAnalysisConfigDto analysisConfigDto = (YieldAnalysisConfigDto) context.get(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO);
         YieldService yieldService = RuntimeContext.getBean(YieldService.class);
-        YieldSettingDto yieldSettingDto = (YieldSettingDto) context.get(ParamKeys.YIELD_SETTING_DTO);
         List<YieldViewDataResultDto> yieldViewDataResultDtoList = yieldService.getViewData(dataFrame, searchConditionDtoList, analysisConfigDto);
-//        List<YieldOverviewDto> yieldOverviewDtoList = yieldResultDtoList.get(0).getYieldOverviewDtos();
-//        List<YieldOverviewResultAlarmDto> yieldOverviecalResultAlarm(yieldOverviewDtoList, yieldSettingDto);
         context.put(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO_LIST, yieldViewDataResultDtoList);
     }
 }

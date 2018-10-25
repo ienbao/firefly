@@ -30,5 +30,7 @@ public class GetYieldResultHandler extends AbstractBasicJobHandler {
         List<YieldOverviewDto> yieldOverviewDtoList = yieldResultDtoList.get(0).getYieldOverviewDtos();
         List<YieldOverviewResultAlarmDto> yieldOverviewResultAlarmDtoList = RuntimeContext.getBean(YieldSettingService.class).setStatisticalResultAlarm(yieldOverviewDtoList, yieldSettingDto);
         context.put(ParamKeys.YIELD_STATISTICAL_RESULT_ALARM_DTO_LIST, yieldOverviewResultAlarmDtoList);
+        List<YieldTotalProcessesDto> yieldTotalProcessesDtoList = yieldResultDtoList.get(0).getTotalProcessesDtos();
+        context.put(ParamKeys.YIELD_TOTAL_PROCESSES_DTO_LIST, yieldTotalProcessesDtoList);
     }
 }

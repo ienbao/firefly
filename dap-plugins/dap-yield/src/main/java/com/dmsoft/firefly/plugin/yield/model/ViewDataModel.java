@@ -57,7 +57,7 @@ public class ViewDataModel implements TableModel {
     private List<String> initSelectedRowKeys;
     private Set<String> highLightRowKeys;
     private String initSelectedColumnKeys;
-    private List<SearchConditionDto> statisticalSearchConditionDtoList;
+    private List<SearchConditionDto> searchViewDataConditionDtoList;
     private Map<String, TestItemWithTypeDto> testItemDtoMap;
     private Map<String, ReadOnlyStringProperty> cellMap;
     private boolean isTimer = false;
@@ -148,6 +148,39 @@ public class ViewDataModel implements TableModel {
         this.menuRowEvents.add(detail);
         this.menuRowEvents.add(remove);
         this.cellMap = Maps.newHashMap();
+    }
+
+    public void setSearchViewDataConditionDto(List<SearchConditionDto> searchViewDataConditionDtoList) {
+        this.searchViewDataConditionDtoList = searchViewDataConditionDtoList;
+        if (searchViewDataConditionDtoList == null) {
+            testItemDtoMap = null;
+            return;
+        }
+        testItemDtoMap = Maps.newHashMap();
+        for (SearchConditionDto searchConditionDto : searchViewDataConditionDtoList) {
+            String testName = searchConditionDto.getItemName();
+            String lsl = searchConditionDto.getLslOrFail();
+            String usl = searchConditionDto.getUslOrPass();
+            if (testItemDtoMap.containsKey(testName)) {
+                TestItemWithTypeDto testItemDto = testItemDtoMap.get(testName);
+                if (DAPStringUtils.isNumeric(lsl)) {
+                    if (!DAPStringUtils.isNumeric(testItemDto.getLsl()) || Double.valueOf(lsl) < Double.valueOf(testItemDto.getLsl())) {
+                        testItemDto.setLsl(lsl);
+                    }
+                }
+                if (DAPStringUtils.isNumeric(usl)) {
+                    if (!DAPStringUtils.isNumeric(testItemDto.getUsl()) || Double.valueOf(usl) > Double.valueOf(testItemDto.getUsl())) {
+                        testItemDto.setUsl(usl);
+                    }
+                }
+            } else {
+                TestItemWithTypeDto testItemDto = new TestItemWithTypeDto();
+                testItemDto.setUsl(usl);
+                testItemDto.setLsl(lsl);
+                testItemDto.setTestItemName(testName);
+                testItemDtoMap.put(testName, testItemDto);
+            }
+        }
     }
 
 

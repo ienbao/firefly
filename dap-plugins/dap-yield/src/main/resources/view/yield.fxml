@@ -41,12 +41,11 @@
                             <Button fx:id="chooseBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-primary" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                         </children>
                     </GridPane>
+
                     <SplitPane dividerPositions="0.5327868852459017, 0.6825633383010432" layoutY="28.0" orientation="VERTICAL" prefWidth="1210.0" VBox.vgrow="ALWAYS">
                         <items>
-                            <AnchorPane prefHeight="200.0">
-                                <children>
-                                    <fx:include fx:id="totalProgress" source="total_progress.fxml" />
-                                </children>
+                            <AnchorPane prefHeight="433.0" style="-fx-max-width: 1500" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+                                <fx:include fx:id="yieldResult" source="yield_result.fxml" />
                             </AnchorPane>
 
                             <!--<AnchorPane prefHeight="200.0" prefWidth="1208.0">-->

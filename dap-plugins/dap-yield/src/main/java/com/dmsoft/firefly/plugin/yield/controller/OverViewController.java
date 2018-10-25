@@ -6,6 +6,7 @@ import com.dmsoft.firefly.plugin.yield.dto.YieldAnalysisConfigDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldViewDataResultDto;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
+import com.dmsoft.firefly.plugin.yield.service.YieldService;
 import com.dmsoft.firefly.plugin.yield.utils.*;
 import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.yield.model.OverViewTableModel;
@@ -98,38 +99,45 @@ public class OverViewController implements Initializable {
         overViewTableModel.setClickListener((rowKey,column) -> fireClickEvent(rowKey,column));
     }
 
-    private void fireClickEvent(String rowKey,String column) {
+    public void fireClickEvent(String rowKey,String column) {
 //        System.out.println(rowKey + column);
         yieldItemController = yieldMainController.getYieldItemController();
         viewDataController = yieldMainController.getViewDataController();
-        List<TestItemWithTypeDto> selectedItemDto = yieldItemController.initSelectedItemDto();
+        dataFrame = yieldMainController.getDataFrame();
+//        List<TestItemWithTypeDto> selectedItemDto = yieldItemController.initSelectedItemDto();
         List<String> projectNameList = envService.findActivatedProjectName();
-        for(int i = 0; i<selectedItemDto.size();i++) {
-            if (!rowKey.equals(selectedItemDto.get(i).getTestItemName())) {
-                selectedItemDto.remove(i);
+
+        List<SearchConditionDto> searchConditionDtoList = yieldMainController.getInitSearchConditionDtoList();
+        List<SearchConditionDto> selectSearchConditionDtoList = Lists.newArrayList();
+        selectSearchConditionDtoList.add(searchConditionDtoList.get(0));
+        for(int i = 1; i<searchConditionDtoList.size();i++) {
+            if (rowKey.equals(searchConditionDtoList.get(i).getItemName())) {
+                selectSearchConditionDtoList.add(searchConditionDtoList.get(i));
             }
         }
-        List<TestItemWithTypeDto> testItemWithTypeDtoList = yieldItemController.buildSelectTestItemWithTypeData(selectedItemDto);
-        List<SearchConditionDto> searchConditionDtoList = yieldItemController.buildSearchConditionDataList(selectedItemDto);
-        YieldAnalysisConfigDto yieldAnalysisConfigDto = yieldItemController.buildYieldAnalysisConfigData();
 
-        if(column.equals("FPY Samples")) {
-            searchConditionDtoList.get(1).setYieldType(YieldType.FPY);
-        }else if(column.equals("Pass Samples")){
-            searchConditionDtoList.get(1).setYieldType(YieldType.PASS);
-        }else if(column.equals("NTF Samples")){
-            searchConditionDtoList.get(1).setYieldType(YieldType.NTF);
-        }else if(column.equals("NG Samples")){
-            searchConditionDtoList.get(1).setYieldType(YieldType.NG);
-        }else if(column.equals("Total Samples")){
-            searchConditionDtoList.get(1).setYieldType(YieldType.TOTAL);
-        }
+        YieldAnalysisConfigDto yieldAnalysisConfigDto = yieldMainController.getAnalysisConfigDto();
+//        List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(testItemWithTypeDto);
+//        YieldAnalysisConfigDto yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
+//        yieldAnalysisConfigDto.setPrimaryKey(yieldItemController.getConfigComboBox().getValue());
+
+//        if(column.equals("FPY Samples")) {
+//            searchConditionDtoList.get(1).setYieldType(YieldType.FPY);
+//        }else if(column.equals("Pass Samples")){
+//            searchConditionDtoList.get(1).setYieldType(YieldType.PASS);
+//        }else if(column.equals("NTF Samples")){
+//            searchConditionDtoList.get(1).setYieldType(YieldType.NTF);
+//        }else if(column.equals("NG Samples")){
+//            searchConditionDtoList.get(1).setYieldType(YieldType.NG);
+//        }else if(column.equals("Total Samples")){
+//            searchConditionDtoList.get(1).setYieldType(YieldType.TOTAL);
+//        }
 
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
         context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
-        context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
+        context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
+        context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, selectSearchConditionDtoList);
         context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, yieldAnalysisConfigDto);
-        context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
 
 
         JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.YIELD_VIEW_DATA_JOB_PIPELINE);
@@ -142,13 +150,34 @@ public class OverViewController implements Initializable {
                 for (int i = 0; i < YieldViewDataResultDtoList.get(0).getResultlist().size(); i++) {
                     rowKeyList.add(YieldViewDataResultDtoList.get(0).getResultlist().get(i).getRowKey());
                 }
-                dataFrame = context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
-                List<String> testItemNameList = Lists.newArrayList();
-                testItemNameList.add(searchConditionDtoList.get(0).getItemName());
-                testItemNameList.add(searchConditionDtoList.get(1).getItemName());
-                SearchDataFrame subDataFrame = dataFrame.subDataFrame(rowKeyList, testItemNameList);
-                viewDataController.setViewData(subDataFrame, rowKeyList, searchConditionDtoList, false);
 
+                if(column.equals("FPY Samples")) {
+                    for (int i = 0; i < YieldViewDataResultDtoList.get(0).getFPYlist().size(); i++) {
+                        rowKeyList.add(YieldViewDataResultDtoList.get(0).getFPYlist().get(i).getRowKey());
+                    }
+                }else if(column.equals("Pass Samples")){
+                    for (int i = 0; i < YieldViewDataResultDtoList.get(0).getPASSlist().size(); i++) {
+                        rowKeyList.add(YieldViewDataResultDtoList.get(0).getPASSlist().get(i).getRowKey());
+                    }
+                }else if(column.equals("NTF Samples")){
+                    for (int i = 0; i < YieldViewDataResultDtoList.get(0).getNtflist().size(); i++) {
+                        rowKeyList.add(YieldViewDataResultDtoList.get(0).getNtflist().get(i).getRowKey());
+                    }
+                }else if(column.equals("NG Samples")){
+                    for (int i = 0; i < YieldViewDataResultDtoList.get(0).getNglist().size(); i++) {
+                        rowKeyList.add(YieldViewDataResultDtoList.get(0).getNglist().get(i).getRowKey());
+                    }
+                }else if(column.equals("Total Samples")){
+                    for (int i = 0; i < YieldViewDataResultDtoList.get(0).getTotallist().size(); i++) {
+                        rowKeyList.add(YieldViewDataResultDtoList.get(0).getTotallist().get(i).getRowKey());
+                    }
+                }
+
+                List<String> testItemNameList = Lists.newArrayList();
+                testItemNameList.add(selectSearchConditionDtoList.get(0).getItemName());
+                testItemNameList.add(selectSearchConditionDtoList.get(1).getItemName());
+                SearchDataFrame subDataFrame = dataFrame.subDataFrame(rowKeyList, testItemNameList);
+                viewDataController.setViewData(subDataFrame, rowKeyList, selectSearchConditionDtoList, false, rowKey, column);
 
             }
         });
@@ -244,6 +273,5 @@ public class OverViewController implements Initializable {
     public List<YieldOverviewResultAlarmDto> getEditRowStatsData() {
         return overViewTableModel.getEditRowData();
     }
-
 
 }
