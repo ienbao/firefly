@@ -90,8 +90,19 @@ public class YieldServiceImpl implements YieldService {
                 String testItemValue = map.get(searchConditions.get(j).getItemName());
                 if (!DAPStringUtils.isBlank(testItemValue)){
                     if (searchConditions.get(j).getTestItemType().getCode().equals("Attribute")){
-                        if (testItemValue.equals(searchConditions.get(j).getUslOrPass()) || testItemValue.equals(searchConditions.get(j).getLslOrFail())){
-                            count++;
+                        if (!DAPStringUtils.isBlank(searchConditions.get(j).getUslOrPass()) || !DAPStringUtils.isBlank(searchConditions.get(j).getLslOrFail())){
+                            if (!DAPStringUtils.isBlank(searchConditions.get(j).getUslOrPass()) && !DAPStringUtils.isBlank(searchConditions.get(j).getLslOrFail())){
+                                if (testItemValue.equals(searchConditions.get(j).getUslOrPass()) || testItemValue.equals(searchConditions.get(j).getLslOrFail())){
+                                    count++;
+                                }else {
+                                    IgnoreTestItemValue ignoreTestItemValue = new IgnoreTestItemValue();
+                                    ignoreTestItemValue.setRowKey(noNullProductSearchRowKeys.get(i));
+                                    ignoreTestItemValue.setSearchConditionDto(searchConditions.get(j));
+                                    ignoreTestItemValueList.add(ignoreTestItemValue);
+                                }
+                            }else{
+                                count++;
+                            }
                         }else{
                             IgnoreTestItemValue ignoreTestItemValue = new IgnoreTestItemValue();
                             ignoreTestItemValue.setRowKey(noNullProductSearchRowKeys.get(i));
