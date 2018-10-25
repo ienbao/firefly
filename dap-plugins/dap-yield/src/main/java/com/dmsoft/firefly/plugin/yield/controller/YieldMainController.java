@@ -242,6 +242,8 @@ public class YieldMainController implements Initializable {
 //    }
 
     private void initComponentEvent() {
+        printBtn.setVisible(false);
+        exportBtn.setVisible(false);
         resetBtn.setOnAction(event -> getResetBtnEvent());
         printBtn.setOnAction(event -> getExportBtnEvent());
         exportBtn.setOnAction(event -> getExportBtnEvent());
