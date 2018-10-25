@@ -703,13 +703,9 @@ public class YieldServiceImpl implements YieldService {
             //TotalData
             for (int i = 0; i < unRepetitionDatas.size(); i++) {
                 List<String> rowKeys = dataAndRowKeyMap.get(unRepetitionDatas.get(i));
-                for (int j = 0; j < rowKeys.size(); j++) {
+                int j;
+                for ( j = 0; j < rowKeys.size(); j++) {
 
-                    {
-                        yieldViewDataDto = new YieldViewDataDto();
-                        yieldViewDataDto.setRowKey(rowKeys.get(j));
-                        totalNtflist.add(yieldViewDataDto);
-                    }
                     int count = 0;
                     int ignoreCount = 0;
                     RowDataDto rowDataDto = searchDataFrame.getDataRow(rowKeys.get(j));
@@ -742,28 +738,36 @@ public class YieldServiceImpl implements YieldService {
                         yieldViewDataDto.setRowKey(rowKeys.get(j));
                         totalFpylist.add(yieldViewDataDto);
                         totalPasslist.add(yieldViewDataDto);
-                        totalNtflist.clear();
                         break;
                     } else if (count == searchConditions.size()-1-ignoreCount && j > 0 && j <= rowKeys.size()-1 ) {
+                        for(int n =0;n<j; n++){
+                            yieldViewDataDto = new YieldViewDataDto();
+                            yieldViewDataDto.setRowKey(rowKeys.get(n));
+                            totalNtflist.add(yieldViewDataDto);
+                        }
                         yieldViewDataDto = new YieldViewDataDto();
                         yieldViewDataDto.setRowKey(rowKeys.get(j));
                         totalPasslist.add(yieldViewDataDto);
-                        totalNtflist.remove(j);
-                        break;
-                    } else if (count != searchConditions.size()-1-ignoreCount && j > 0 && j <= rowKeys.size()-1 ){
-                        totalNglist = totalNtflist;
                         break;
                     }
                 }
+                if(j == rowKeys.size()){
+                    for(int n =0; n<rowKeys.size(); n++){
+                        yieldViewDataDto = new YieldViewDataDto();
+                        yieldViewDataDto.setRowKey(rowKeys.get(n));
+                        totalNglist.add(yieldViewDataDto);
+                    }
+                }
+
             }
 
 
 
-//            totalProTotalSamples = unRepetitionDatas.size();
-//            totalProNgSamples = totalProTotalSamples - totalProPassSamples;
-//            totalProNtfSamples = totalProPassSamples - totalProFpySamples;
-
-
+            for(int i =0; i< searchRowKeys.size(); i++){
+                yieldViewDataDto = new YieldViewDataDto();
+                yieldViewDataDto.setRowKey(searchRowKeys.get(i));
+                totalTotallist.add(yieldViewDataDto);
+            }
 
             YieldViewDataResultDto yieldViewDataResultDto = new YieldViewDataResultDto();
             yieldViewDataResultDto.setPrimary(configDto.getPrimaryKey());
