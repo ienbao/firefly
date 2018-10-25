@@ -585,7 +585,7 @@ public class OverViewTableModel  implements TableModel{
     }
 
     private String showValue(String key, OverviewAlarmDto overviewAlarmDto) {
-        DigNumInstance.newInstance().setDigNum(2);
+        DigNumInstance.newInstance().setDigNum(4);
         if (overviewAlarmDto == null || DAPDoubleUtils.isSpecialNumber(overviewAlarmDto.getValue())) {
             return "-";
         }

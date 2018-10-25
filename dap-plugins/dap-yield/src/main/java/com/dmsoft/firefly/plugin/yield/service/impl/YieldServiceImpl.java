@@ -90,8 +90,19 @@ public class YieldServiceImpl implements YieldService {
                 String testItemValue = map.get(searchConditions.get(j).getItemName());
                 if (!DAPStringUtils.isBlank(testItemValue)){
                     if (searchConditions.get(j).getTestItemType().getCode().equals("Attribute")){
-                        if (testItemValue.equals(searchConditions.get(j).getUslOrPass()) || testItemValue.equals(searchConditions.get(j).getLslOrFail())){
-                            count++;
+                        if (!DAPStringUtils.isBlank(searchConditions.get(j).getUslOrPass()) || !DAPStringUtils.isBlank(searchConditions.get(j).getLslOrFail())){
+                            if (!DAPStringUtils.isBlank(searchConditions.get(j).getUslOrPass()) && !DAPStringUtils.isBlank(searchConditions.get(j).getLslOrFail())){
+                                if (testItemValue.equals(searchConditions.get(j).getUslOrPass()) || testItemValue.equals(searchConditions.get(j).getLslOrFail())){
+                                    count++;
+                                }else {
+                                    IgnoreTestItemValue ignoreTestItemValue = new IgnoreTestItemValue();
+                                    ignoreTestItemValue.setRowKey(noNullProductSearchRowKeys.get(i));
+                                    ignoreTestItemValue.setSearchConditionDto(searchConditions.get(j));
+                                    ignoreTestItemValueList.add(ignoreTestItemValue);
+                                }
+                            }else{
+                                count++;
+                            }
                         }else{
                             IgnoreTestItemValue ignoreTestItemValue = new IgnoreTestItemValue();
                             ignoreTestItemValue.setRowKey(noNullProductSearchRowKeys.get(i));
@@ -283,7 +294,7 @@ public class YieldServiceImpl implements YieldService {
                         totalProFpySamples = totalProFpySamples + 1;
                         totalProPassSamples = totalProPassSamples + 1;
                         break;
-                    } else if (count == searchConditions.size()-1 && j > 0 && j <= rowKeys.size() - 1) {
+                    } else if (count == searchConditions.size()-1-ignoreCount && j > 0 && j <= rowKeys.size() - 1) {
                         totalProPassSamples = totalProPassSamples + 1;
                         break;
                     }
