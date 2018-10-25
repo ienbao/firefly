@@ -283,7 +283,7 @@ public class YieldServiceImpl implements YieldService {
                         totalProFpySamples = totalProFpySamples + 1;
                         totalProPassSamples = totalProPassSamples + 1;
                         break;
-                    } else if (count == searchConditions.size()-1 && j > 0 && j <= rowKeys.size() - 1) {
+                    } else if (count == searchConditions.size()-1-ignoreCount && j > 0 && j <= rowKeys.size() - 1) {
                         totalProPassSamples = totalProPassSamples + 1;
                         break;
                     }
