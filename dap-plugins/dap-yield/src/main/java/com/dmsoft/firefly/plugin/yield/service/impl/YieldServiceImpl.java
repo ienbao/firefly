@@ -638,8 +638,6 @@ public class YieldServiceImpl implements YieldService {
 
         if (!dataAndRowKeyMap.isEmpty()) {
 
-            List<YieldViewDataDto> Resultlist = Lists.newArrayList();
-
             List<YieldViewDataDto> totalFpylist = Lists.newArrayList();
             List<YieldViewDataDto> totalPasslist = Lists.newArrayList();
             List<YieldViewDataDto> totalNtflist = Lists.newArrayList();
@@ -700,39 +698,31 @@ public class YieldServiceImpl implements YieldService {
                 }
             }
 
-//            totalProTotalSamples = unRepetitionDatas.size();
-//            totalProNgSamples = totalProTotalSamples - totalProPassSamples;
-//            totalProNtfSamples = totalProPassSamples - totalProFpySamples;
-//            if (noRangeCount != searchConditions.size()-1) {
-//                yieldTotalProcessesDto.setFpySamples(totalProFpySamples);
-//                yieldTotalProcessesDto.setNgSamples(totalProNgSamples);
-//                yieldTotalProcessesDto.setNtfSamples(totalProNtfSamples);
-//                yieldTotalProcessesDto.setPassSamples(totalProPassSamples);
-//                yieldTotalProcessesDto.setTotalSamples(totalProTotalSamples);
-//                yieldTotalProcessesDto.setFpyPercent((double) totalProFpySamples / (double) totalProTotalSamples);
-//                yieldTotalProcessesDto.setNgPercent((double) totalProNgSamples / (double) totalProTotalSamples);
-//                yieldTotalProcessesDto.setNtfPercent((double) totalProNtfSamples / (double) totalProTotalSamples);
-//            }
+            for(int i =0; i<searchRowKeys.size();i++){
+                yieldViewDataDto = new YieldViewDataDto();
+                yieldViewDataDto.setRowKey(searchRowKeys.get(i));
+                totalTotallist.add(yieldViewDataDto);
+            }
+
+            totalNtflist = totalTotallist;
+            totalNtflist.removeAll(totalPasslist);
+            totalNglist = totalPasslist;
+            totalNglist.removeAll(totalFpylist);
 
 
 
-//            for (int i = 1;i<searchConditions.size();i++) {
-//
-//
-//                YieldViewDataResultDto yieldViewDataResultDto = new YieldViewDataResultDto();
-//                yieldViewDataResultDto.setItemName(searchConditions.get(i).getItemName());
-//                yieldViewDataResultDto.setPrimary(configDto.getPrimaryKey());
-//
-//                yieldViewDataResultDto.setResultlist(Resultlist);
-//                yieldViewDataResultDto.setFPYlist(Fpylist);
-//                yieldViewDataResultDto.setPASSlist(Passlist);
-//                yieldViewDataResultDto.setNtflist(Ntflist);
-//                yieldViewDataResultDto.setNglist(Nglist);
-//                yieldViewDataResultDto.setTotallist(Totallist);
-//
-//                viewDataResultDto.add(yieldViewDataResultDto);
-//
-//            }
+
+            YieldViewDataResultDto yieldViewDataResultDto = new YieldViewDataResultDto();
+            yieldViewDataResultDto.setPrimary(configDto.getPrimaryKey());
+
+            yieldViewDataResultDto.setFPYlist(totalFpylist);
+            yieldViewDataResultDto.setPASSlist(totalFpylist);
+            yieldViewDataResultDto.setNtflist(totalFpylist);
+            yieldViewDataResultDto.setNglist(totalFpylist);
+            yieldViewDataResultDto.setTotallist(totalFpylist);
+
+            viewDataResultDto.add(yieldViewDataResultDto);
+
 
         }
 
