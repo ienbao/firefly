@@ -386,8 +386,17 @@ public class YieldServiceImpl implements YieldService {
 
 
         //分类产品
-        List<String> searchRowKeys = searchDataFrame.getSearchRowKey(searchConditions.get(0).getCondition());
-        List<String> datas = searchDataFrame.getDataValue(searchConditions.get(0).getItemName(), searchRowKeys);
+        List<String> searchRowKeys = Lists.newArrayList();
+        List<String> oldSearchRowKeys =  searchDataFrame.getSearchRowKey(searchConditions.get(1).getCondition());
+        List<String> datas = Lists.newArrayList();
+        List<String> oldDatas =  searchDataFrame.getDataValue(searchConditions.get(0).getItemName(), oldSearchRowKeys);
+        for (int i = 0 ; i<oldDatas.size();i++){
+            if (!oldDatas.get(i).equals("")){
+                datas.add(oldDatas.get(i));
+                searchRowKeys.add(oldSearchRowKeys.get(i));
+            }
+        }
+
         Map<String, List<String>> dataAndRowKeyMap = new HashMap<>();//过滤后的数据（产品号，行号）
         List<String> unRepetitionDatas = Lists.newArrayList();
         if (searchConditions.get(0).getItemName().equals(configDto.getPrimaryKey())) {
@@ -575,6 +584,151 @@ public class YieldServiceImpl implements YieldService {
 
         return viewDataResultDto;
     }
+
+
+    @Override
+    public List<YieldViewDataResultDto> getTotalData(SearchDataFrame searchDataFrame,  List<SearchConditionDto> searchConditions, YieldAnalysisConfigDto configDto) {
+
+        logger.debug("Getting TotalData...");
+        if (searchDataFrame == null || searchConditions == null || configDto == null) {
+            pushProgress(100);
+            throw new ApplicationException();
+        }
+
+        List<YieldViewDataResultDto> viewDataResultDto = Lists.newArrayList();
+
+
+        //分类产品
+        List<String> searchRowKeys = Lists.newArrayList();
+        List<String> oldSearchRowKeys =  searchDataFrame.getSearchRowKey(searchConditions.get(1).getCondition());
+        List<String> datas = Lists.newArrayList();
+        List<String> oldDatas =  searchDataFrame.getDataValue(searchConditions.get(0).getItemName(), oldSearchRowKeys);
+        for (int i = 0 ; i<oldDatas.size();i++){
+            if (!oldDatas.get(i).equals("")){
+                datas.add(oldDatas.get(i));
+                searchRowKeys.add(oldSearchRowKeys.get(i));
+            }
+        }
+
+        Map<String, List<String>> dataAndRowKeyMap = new HashMap<>();//过滤后的数据（产品号，行号）
+        List<String> unRepetitionDatas = Lists.newArrayList();
+        if (searchConditions.get(0).getItemName().equals(configDto.getPrimaryKey())) {
+            for (int i = 0; i < datas.size(); i++) {
+                boolean flag = false;
+                for (String newData : unRepetitionDatas) {
+                    if (datas.get(i).equals(newData)) {
+                        flag = true;
+                    }
+                }
+                if (!flag) {
+                    unRepetitionDatas.add(datas.get(i));
+                }
+            }
+            for (int i = 0; i < unRepetitionDatas.size(); i++) {
+                List<String> unRepetitionDatasRowKeys = Lists.newArrayList();
+                for (int j = 0; j < datas.size(); j++) {
+                    if (unRepetitionDatas.get(i).equals(datas.get(j))) {
+                        unRepetitionDatasRowKeys.add(searchRowKeys.get(j));
+                    }
+                }
+                dataAndRowKeyMap.put(unRepetitionDatas.get(i), unRepetitionDatasRowKeys);
+            }
+        }
+
+
+        if (!dataAndRowKeyMap.isEmpty()) {
+
+            List<YieldViewDataDto> totalFpylist = Lists.newArrayList();
+            List<YieldViewDataDto> totalPasslist = Lists.newArrayList();
+            List<YieldViewDataDto> totalNtflist = Lists.newArrayList();
+            List<YieldViewDataDto> totalNglist = Lists.newArrayList();
+            List<YieldViewDataDto> totalTotallist = Lists.newArrayList();
+
+
+            //TotalData
+            for (int i = 0; i < unRepetitionDatas.size(); i++) {
+                List<String> rowKeys = dataAndRowKeyMap.get(unRepetitionDatas.get(i));
+                for (int j = 0; j < rowKeys.size(); j++) {
+                    boolean flag = false;
+                    int count = 0;
+                    RowDataDto rowDataDto = searchDataFrame.getDataRow(rowKeys.get(j));
+                    for (Map.Entry<String, String> entry : rowDataDto.getData().entrySet()) {
+                        for (int k = 1; k < searchConditions.size(); k++) {
+                            if (entry.getKey().equals(searchConditions.get(k).getItemName())) {
+                                if (!searchConditions.get(k).getLslOrFail().equals("") &&  !searchConditions.get(k).getUslOrPass().equals("")) {
+                                    if (searchConditions.get(k).getTestItemType().getCode().equals("Variable") || searchConditions.get(k).getTestItemType() == null) {
+                                        double lsl = Double.parseDouble(searchConditions.get(k).getLslOrFail());
+                                        double usl = Double.parseDouble(searchConditions.get(k).getUslOrPass());
+                                        if (Double.parseDouble(entry.getValue()) >= lsl && Double.parseDouble(entry.getValue()) <= usl) {
+                                            count = count + 1;
+                                        }
+                                    } else if (searchConditions.get(k).getTestItemType().getCode().equals("Attribute")) {
+                                        if (entry.getValue().equals(searchConditions.get(k).getUslOrPass())) {
+                                            count = count + 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (count == searchConditions.size()-1 && j == 0) {
+
+                            yieldViewDataDto = new YieldViewDataDto();
+                            yieldViewDataDto.setRowKey(rowKeys.get(j));
+                            totalFpylist.add(yieldViewDataDto);
+                            totalPasslist.add(yieldViewDataDto);
+                            flag = true;
+                            break;
+                        } else if (count == searchConditions.size()-1 && j > 0 && j <= rowKeys.size() - 1) {
+                            yieldViewDataDto = new YieldViewDataDto();
+                            yieldViewDataDto.setRowKey(rowKeys.get(j));
+                            totalPasslist.add(yieldViewDataDto);
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if (flag) {
+                        break;
+                    }
+                }
+            }
+            int noRangeCount = 0;
+            for (int i=1;i<searchConditions.size();i++){
+                if (searchConditions.get(i).getUslOrPass().equals("")&&searchConditions.get(i).getLslOrFail().equals("")){
+                    noRangeCount = noRangeCount + 1;
+                }
+            }
+
+            for(int i =0; i<searchRowKeys.size();i++){
+                yieldViewDataDto = new YieldViewDataDto();
+                yieldViewDataDto.setRowKey(searchRowKeys.get(i));
+                totalTotallist.add(yieldViewDataDto);
+            }
+
+            totalNtflist = totalTotallist;
+            totalNtflist.removeAll(totalPasslist);
+            totalNglist = totalPasslist;
+            totalNglist.removeAll(totalFpylist);
+
+
+
+
+            YieldViewDataResultDto yieldViewDataResultDto = new YieldViewDataResultDto();
+            yieldViewDataResultDto.setPrimary(configDto.getPrimaryKey());
+
+            yieldViewDataResultDto.setFPYlist(totalFpylist);
+            yieldViewDataResultDto.setPASSlist(totalFpylist);
+            yieldViewDataResultDto.setNtflist(totalFpylist);
+            yieldViewDataResultDto.setNglist(totalFpylist);
+            yieldViewDataResultDto.setTotallist(totalFpylist);
+
+            viewDataResultDto.add(yieldViewDataResultDto);
+
+
+        }
+
+        return viewDataResultDto;
+    }
+
 
 
     private Boolean validateValue(String value, String uslOrPass,String lslOrFail,String type) {
