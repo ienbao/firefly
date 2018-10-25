@@ -863,7 +863,7 @@ public class YieldItemController implements Initializable {
         return yieldAnalysisConfigDto;
     }
 
-    private List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
+    public List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
         if (testItemWithTypeDtoList == null) {
             return null;
         }

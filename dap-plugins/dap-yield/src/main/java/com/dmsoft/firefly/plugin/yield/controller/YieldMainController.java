@@ -420,22 +420,32 @@ public class YieldMainController implements Initializable {
     }
 
     private List<SearchConditionDto> buildRefreshSearchConditionData(List<YieldOverviewResultAlarmDto> spcStatsDtoList) {
-        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
-        if (spcStatsDtoList == null) {
-            return searchConditionDtoList;
+        List<SearchConditionDto> searchConditionDtoList = yieldItemController.buildSearchConditionDataList(yieldItemController.initSelectedItemDto());
+        for (int i = 0 ;i <searchConditionDtoList.size() ; i++){
+            for (int j = 0 ;j < spcStatsDtoList.size() ;j++) {
+                if (searchConditionDtoList.get(i).getItemName().equals(spcStatsDtoList.get(j).getItemName())){
+                    searchConditionDtoList.get(i).setLslOrFail(spcStatsDtoList.get(j).getLslOrFail());
+                    searchConditionDtoList.get(i).setUslOrPass(spcStatsDtoList.get(j).getUslOrPass());
+                }
+            }
         }
-        for (YieldOverviewResultAlarmDto spcStatsDto : spcStatsDtoList) {
-            SearchConditionDto searchConditionDto = new SearchConditionDto();
-            searchConditionDto.setKey(spcStatsDto.getKey());
-            searchConditionDto.setItemName(spcStatsDto.getItemName());
-//
-            searchConditionDto.setUslOrPass(String.valueOf(spcStatsDto.getUslOrPass()));
-            searchConditionDto.setLslOrFail(String.valueOf(spcStatsDto.getLslOrFail()));
-            TestItemWithTypeDto testItemWithTypeDto = envService.findTestItemNameByItemName(spcStatsDto.getItemName());
-//            searchConditionDto.setCondition(testItemWithTypeDto.get);
-            searchConditionDto.setTestItemType(testItemWithTypeDto.getTestItemType());
-            searchConditionDtoList.add(searchConditionDto);
-        }
+
+//        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
+//        if (spcStatsDtoList == null) {
+//            return searchConditionDtoList;
+//        }
+//        for (YieldOverviewResultAlarmDto spcStatsDto : spcStatsDtoList) {
+//            SearchConditionDto searchConditionDto = new SearchConditionDto();
+//            searchConditionDto.setKey(spcStatsDto.getKey());
+//            searchConditionDto.setItemName(spcStatsDto.getItemName());
+////
+//            searchConditionDto.setUslOrPass(String.valueOf(spcStatsDto.getUslOrPass()));
+//            searchConditionDto.setLslOrFail(String.valueOf(spcStatsDto.getLslOrFail()));
+//            TestItemWithTypeDto testItemWithTypeDto = envService.findTestItemNameByItemName(spcStatsDto.getItemName());
+////            searchConditionDto.setCondition(testItemWithTypeDto.get);
+//            searchConditionDto.setTestItemType(testItemWithTypeDto.getTestItemType());
+//            searchConditionDtoList.add(searchConditionDto);
+//        }
         return searchConditionDtoList;
     }
 //
@@ -463,6 +473,8 @@ public class YieldMainController implements Initializable {
 //    }
 //
     private SearchDataFrame buildSubSearchDataFrame(List<SearchConditionDto> searchConditionDtoList) {
+//        List<TestItemWithTypeDto> testItemWithTypeDtoList = yieldItemController.buildSelectTestItemWithTypeData(yieldItemController.initSelectedItemDto());
+//
         if (dataFrame == null || searchConditionDtoList == null) {
             return null;
         }
@@ -539,12 +551,14 @@ public class YieldMainController implements Initializable {
             editRowDataList.add(yieldOverviewResultAlarmDto1);
         }
         List<SearchConditionDto> searchConditionDtoList = buildRefreshSearchConditionData(editRowDataList);
-        SearchDataFrame subDataFrame = buildSubSearchDataFrame(searchConditionDtoList);
-
-        context.put(ParamKeys.YIELD_SETTING_DTO, yieldSettingDto);
+        List<String> projectNameList = envService.findActivatedProjectName();
+        List<TestItemWithTypeDto> testItemWithTypeDtoList = yieldItemController.buildSelectTestItemWithTypeData(yieldItemController.initSelectedItemDto());
+        context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
+//        context.put(ParamKeys.YIELD_SETTING_DTO, yieldSettingDto);
         context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, analysisConfigDto);
-        context.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
+        context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
+//        context.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
             windowProgressTipController.setCancelingText();
