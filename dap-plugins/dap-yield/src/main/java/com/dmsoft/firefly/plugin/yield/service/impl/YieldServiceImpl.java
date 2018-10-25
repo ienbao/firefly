@@ -587,10 +587,10 @@ public class YieldServiceImpl implements YieldService {
 
 
     @Override
-    public List<YieldViewDataResultDto> getTotalData(SearchDataFrame searchDataFrame,  List<SearchConditionDto> searchConditions, YieldAnalysisConfigDto configDto) {
+    public List<YieldViewDataResultDto> getTotalData(SearchDataFrame searchDataFrame,  List<SearchConditionDto> oldSearchConditions, YieldAnalysisConfigDto configDto) {
 
         logger.debug("Getting TotalData...");
-        if (searchDataFrame == null || searchConditions == null || configDto == null) {
+        if (searchDataFrame == null || oldSearchConditions == null || configDto == null) {
             pushProgress(100);
             throw new ApplicationException();
         }
@@ -599,18 +599,72 @@ public class YieldServiceImpl implements YieldService {
 
 
         //分类产品
-        List<String> searchRowKeys = Lists.newArrayList();
-        List<String> oldSearchRowKeys =  searchDataFrame.getSearchRowKey(searchConditions.get(1).getCondition());
-        List<String> datas = Lists.newArrayList();
-        List<String> oldDatas =  searchDataFrame.getDataValue(searchConditions.get(0).getItemName(), oldSearchRowKeys);
+        List<String> oldSearchRowKeys =  searchDataFrame.getSearchRowKey(oldSearchConditions.get(1).getCondition());
+        List<String> oldDatas =  searchDataFrame.getDataValue(oldSearchConditions.get(0).getItemName(), oldSearchRowKeys);
+        List<String> noNullProductSearchRowKeys = Lists.newArrayList();
+        List<String> noNullProductDatas = Lists.newArrayList();
+
+        //过滤产品为空
         for (int i = 0 ; i<oldDatas.size();i++){
-            if (!oldDatas.get(i).equals("")){
-                datas.add(oldDatas.get(i));
-                searchRowKeys.add(oldSearchRowKeys.get(i));
+            if (!DAPStringUtils.isBlank(oldDatas.get(i))){
+                noNullProductDatas.add(oldDatas.get(i));
+                noNullProductSearchRowKeys.add(oldSearchRowKeys.get(i));
             }
         }
 
-        Map<String, List<String>> dataAndRowKeyMap = new HashMap<>();//过滤后的数据（产品号，行号）
+        //过滤上下限为空
+        List<SearchConditionDto> searchConditions = Lists.newArrayList();
+        List<Integer> noRangeSearchConditionIndex = Lists.newArrayList();
+        List<Integer> rangeSearchConditionIndex = Lists.newArrayList();
+        searchConditions.add(oldSearchConditions.get(0));
+        for (int i=1;i<oldSearchConditions.size();i++){
+            if (!(DAPStringUtils.isBlank(oldSearchConditions.get(i).getLslOrFail()) && DAPStringUtils.isBlank(oldSearchConditions.get(i).getUslOrPass()))){
+                searchConditions.add(oldSearchConditions.get(i));
+                rangeSearchConditionIndex.add(i);
+            }else {
+                noRangeSearchConditionIndex.add(i);
+            }
+        }
+
+        //过滤测试项为空
+        List<String> searchRowKeys = Lists.newArrayList();
+        List<String> datas = Lists.newArrayList();
+        List<IgnoreTestItemValue> ignoreTestItemValueList = Lists.newArrayList();
+        for (int i=0;i<noNullProductSearchRowKeys.size();i++){
+            RowDataDto rowDataDto = searchDataFrame.getDataRow(noNullProductSearchRowKeys.get(i));
+            Map<String,String> map = rowDataDto.getData();
+            int count = 0;
+            for (int j = 1; j < searchConditions.size();j++){
+                String testItemValue = map.get(searchConditions.get(j).getItemName());
+                if (!DAPStringUtils.isBlank(testItemValue)){
+                    if (searchConditions.get(j).getTestItemType().getCode().equals("Attribute")){
+                        if (testItemValue.equals(searchConditions.get(j).getUslOrPass()) || testItemValue.equals(searchConditions.get(j).getLslOrFail())){
+                            count++;
+                        }else{
+                            IgnoreTestItemValue ignoreTestItemValue = new IgnoreTestItemValue();
+                            ignoreTestItemValue.setRowKey(noNullProductSearchRowKeys.get(i));
+                            ignoreTestItemValue.setSearchConditionDto(searchConditions.get(j));
+                            ignoreTestItemValueList.add(ignoreTestItemValue);
+                        }
+                    }else if (searchConditions.get(j).getTestItemType().getCode().equals("Variable")){
+                        if (DAPStringUtils.isNumeric(testItemValue)){
+                            count++;
+                        }else{
+                            IgnoreTestItemValue ignoreTestItemValue = new IgnoreTestItemValue();
+                            ignoreTestItemValue.setRowKey(noNullProductSearchRowKeys.get(i));
+                            ignoreTestItemValue.setSearchConditionDto(searchConditions.get(j));
+                            ignoreTestItemValueList.add(ignoreTestItemValue);
+                        }
+                    }
+                }
+            }
+            if (count <= searchConditions.size()-1 && count > 0) {
+                datas.add(noNullProductDatas.get(i));
+                searchRowKeys.add(noNullProductSearchRowKeys.get(i));
+            }
+        }
+
+        Map<String, List<String>> dataAndRowKeyMap = new HashMap<>();
         List<String> unRepetitionDatas = Lists.newArrayList();
         if (searchConditions.get(0).getItemName().equals(configDto.getPrimaryKey())) {
             for (int i = 0; i < datas.size(); i++) {
@@ -636,6 +690,7 @@ public class YieldServiceImpl implements YieldService {
         }
 
 
+
         if (!dataAndRowKeyMap.isEmpty()) {
 
             List<YieldViewDataDto> totalFpylist = Lists.newArrayList();
@@ -649,66 +704,64 @@ public class YieldServiceImpl implements YieldService {
             for (int i = 0; i < unRepetitionDatas.size(); i++) {
                 List<String> rowKeys = dataAndRowKeyMap.get(unRepetitionDatas.get(i));
                 for (int j = 0; j < rowKeys.size(); j++) {
-                    boolean flag = false;
+
+                    {
+                        yieldViewDataDto = new YieldViewDataDto();
+                        yieldViewDataDto.setRowKey(rowKeys.get(j));
+                        totalNtflist.add(yieldViewDataDto);
+                    }
                     int count = 0;
+                    int ignoreCount = 0;
                     RowDataDto rowDataDto = searchDataFrame.getDataRow(rowKeys.get(j));
-                    for (Map.Entry<String, String> entry : rowDataDto.getData().entrySet()) {
-                        for (int k = 1; k < searchConditions.size(); k++) {
-                            if (entry.getKey().equals(searchConditions.get(k).getItemName())) {
-                                if (!searchConditions.get(k).getLslOrFail().equals("") &&  !searchConditions.get(k).getUslOrPass().equals("")) {
-                                    if (searchConditions.get(k).getTestItemType().getCode().equals("Variable") || searchConditions.get(k).getTestItemType() == null) {
-                                        double lsl = Double.parseDouble(searchConditions.get(k).getLslOrFail());
-                                        double usl = Double.parseDouble(searchConditions.get(k).getUslOrPass());
-                                        if (Double.parseDouble(entry.getValue()) >= lsl && Double.parseDouble(entry.getValue()) <= usl) {
-                                            count = count + 1;
-                                        }
-                                    } else if (searchConditions.get(k).getTestItemType().getCode().equals("Attribute")) {
-                                        if (entry.getValue().equals(searchConditions.get(k).getUslOrPass())) {
-                                            count = count + 1;
-                                        }
-                                    }
-                                }
+                    Map<String,String> rowData = rowDataDto.getData();
+                    for (int k = 1 ; k < searchConditions.size();k++){
+                        IgnoreTestItemValue ignoreTestItemValue = null;
+                        for (int m = 0 ; m < ignoreTestItemValueList.size();m++){
+                            if (ignoreTestItemValueList.get(m).getRowKey().equals(rowKeys.get(j)) && ignoreTestItemValueList.get(m).getSearchConditionDto().equals(searchConditions.get(k))) {
+                                ignoreTestItemValue = ignoreTestItemValueList.get(m);
                             }
                         }
-                        if (count == searchConditions.size()-1 && j == 0) {
-
-                            yieldViewDataDto = new YieldViewDataDto();
-                            yieldViewDataDto.setRowKey(rowKeys.get(j));
-                            totalFpylist.add(yieldViewDataDto);
-                            totalPasslist.add(yieldViewDataDto);
-                            flag = true;
-                            break;
-                        } else if (count == searchConditions.size()-1 && j > 0 && j <= rowKeys.size() - 1) {
-                            yieldViewDataDto = new YieldViewDataDto();
-                            yieldViewDataDto.setRowKey(rowKeys.get(j));
-                            totalPasslist.add(yieldViewDataDto);
-                            flag = true;
-                            break;
+                        if (ignoreTestItemValue == null){
+                            String lslOrFail = searchConditions.get(k).getLslOrFail();
+                            String uslOrPass = searchConditions.get(k).getUslOrPass();
+                            if (searchConditions.get(k).getTestItemType().getCode().equals("Variable")) {
+                                if (validateValue(rowData.get(searchConditions.get(k).getItemName()), uslOrPass, lslOrFail, searchConditions.get(k).getTestItemType().getCode())) {
+                                    count = count + 1;
+                                }
+                            } else if (searchConditions.get(k).getTestItemType().getCode().equals("Attribute")) {
+                                if (validateValue(rowData.get(searchConditions.get(k).getItemName()), uslOrPass, lslOrFail, searchConditions.get(k).getTestItemType().getCode())) {
+                                    count = count + 1;
+                                }
+                            }
+                        }else{
+                            ignoreCount++;
                         }
                     }
-                    if (flag) {
+                    if (count == searchConditions.size()-1-ignoreCount && j == 0) {
+                        yieldViewDataDto = new YieldViewDataDto();
+                        yieldViewDataDto.setRowKey(rowKeys.get(j));
+                        totalFpylist.add(yieldViewDataDto);
+                        totalPasslist.add(yieldViewDataDto);
+                        totalNtflist.clear();
+                        break;
+                    } else if (count == searchConditions.size()-1-ignoreCount && j > 0 && j <= rowKeys.size()-1 ) {
+                        yieldViewDataDto = new YieldViewDataDto();
+                        yieldViewDataDto.setRowKey(rowKeys.get(j));
+                        totalPasslist.add(yieldViewDataDto);
+                        totalNtflist.remove(j);
+                        break;
+                    } else if (count != searchConditions.size()-1-ignoreCount && j > 0 && j <= rowKeys.size()-1 ){
+                        totalNglist = totalNtflist;
                         break;
                     }
                 }
             }
-            int noRangeCount = 0;
-            for (int i=1;i<searchConditions.size();i++){
-                if (searchConditions.get(i).getUslOrPass().equals("")&&searchConditions.get(i).getLslOrFail().equals("")){
-                    noRangeCount = noRangeCount + 1;
-                }
-            }
 
-            for(int i =0; i<searchRowKeys.size();i++){
-                yieldViewDataDto = new YieldViewDataDto();
-                yieldViewDataDto.setRowKey(searchRowKeys.get(i));
-                totalTotallist.add(yieldViewDataDto);
-            }
 
-            totalNtflist = totalTotallist;
-            totalNtflist.removeAll(totalPasslist);
-            totalNglist = totalPasslist;
-            totalNglist.removeAll(totalFpylist);
 
+//            totalProTotalSamples = unRepetitionDatas.size();
+//            totalProNgSamples = totalProTotalSamples - totalProPassSamples;
+//            totalProNtfSamples = totalProPassSamples - totalProFpySamples;
 
 
 
@@ -716,10 +769,10 @@ public class YieldServiceImpl implements YieldService {
             yieldViewDataResultDto.setPrimary(configDto.getPrimaryKey());
 
             yieldViewDataResultDto.setFPYlist(totalFpylist);
-            yieldViewDataResultDto.setPASSlist(totalFpylist);
-            yieldViewDataResultDto.setNtflist(totalFpylist);
-            yieldViewDataResultDto.setNglist(totalFpylist);
-            yieldViewDataResultDto.setTotallist(totalFpylist);
+            yieldViewDataResultDto.setPASSlist(totalPasslist);
+            yieldViewDataResultDto.setNtflist(totalNtflist);
+            yieldViewDataResultDto.setNglist(totalNglist);
+            yieldViewDataResultDto.setTotallist(totalTotallist);
 
             viewDataResultDto.add(yieldViewDataResultDto);
 

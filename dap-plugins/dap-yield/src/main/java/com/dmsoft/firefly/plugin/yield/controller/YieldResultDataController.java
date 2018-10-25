@@ -39,6 +39,7 @@ public class YieldResultDataController implements Initializable {
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SearchDataFrame dataFrame;
     private List<TestItemWithTypeDto> testItemWithTypeDto ;
+    public static final String Yield_PLUGIN_NAME = "com.dmsoft.firefly.plugin.yield.controller.YieldResultDataController";
     public void init(YieldChartResultController yieldChartResultController) {
         this.yieldChartResultController = yieldChartResultController;
 //        this.viewDataController=yieldChartResultController.getYieldMainController().getViewDataController();
@@ -68,34 +69,29 @@ public class YieldResultDataController implements Initializable {
         yieldItemController = yieldChartResultController.getYieldMainController().getYieldItemController();
         viewDataController = yieldMainController.getViewDataController();
         dataFrame = yieldMainController.getDataFrame();
-        List<TestItemWithTypeDto> selectedItemDto = yieldItemController.initSelectedItemDto();
+        List<SearchConditionDto> searchConditionDtoList = yieldMainController.getInitSearchConditionDtoList();
         List<String> projectNameList = envService.findActivatedProjectName();
+        YieldAnalysisConfigDto yieldAnalysisConfigDto = yieldMainController.getAnalysisConfigDto();
 
-
-        List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(selectedItemDto);
-        YieldAnalysisConfigDto yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
-        yieldAnalysisConfigDto.setPrimaryKey(yieldItemController.getConfigComboBox().getValue());
-        List<TestItemWithTypeDto> testItemWithTypeDtoList = yieldItemController.buildSelectTestItemWithTypeData(selectedItemDto);
 
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
         context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
         context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
         context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, yieldAnalysisConfigDto);
-        context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
 
 
 
-        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.YIELD_VIEW_DATA_JOB_PIPELINE);
+        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.YIELD_RESULT_DATA_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
 
                 List<YieldViewDataResultDto> YieldViewDataResultDtoList = (List<YieldViewDataResultDto>) context.get(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO_LIST);
                 List<String> rowKeyList = Lists.newArrayList();
-                for (int i = 0; i < YieldViewDataResultDtoList.get(0).getResultlist().size(); i++) {
-                    rowKeyList.add(YieldViewDataResultDtoList.get(0).getResultlist().get(i).getRowKey());
-                }
+//                for (int i = 0; i < YieldViewDataResultDtoList.get(0).getResultlist().size(); i++) {
+//                    rowKeyList.add(YieldViewDataResultDtoList.get(0).getResultlist().get(i).getRowKey());
+//                }
 
                 if(column.equals("FPY Samples")) {
                     for (int i = 0; i < YieldViewDataResultDtoList.get(0).getFPYlist().size(); i++) {
@@ -120,8 +116,10 @@ public class YieldResultDataController implements Initializable {
                 }
 
                 List<String> testItemNameList = Lists.newArrayList();
-                testItemNameList.add(searchConditionDtoList.get(0).getItemName());
-                testItemNameList.add(searchConditionDtoList.get(1).getItemName());
+                for(int i =0; i<searchConditionDtoList.size(); i++){
+                    testItemNameList.add(searchConditionDtoList.get(0).getItemName());
+                }
+//                testItemNameList.add(searchConditionDtoList.get(1).getItemName());
                 SearchDataFrame subDataFrame = dataFrame.subDataFrame(rowKeyList, testItemNameList);
                 viewDataController.setViewData(subDataFrame, rowKeyList, searchConditionDtoList, false, rowKey, column);
 
