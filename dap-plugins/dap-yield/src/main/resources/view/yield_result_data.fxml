@@ -6,19 +6,19 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldResultDataController">
+<GridPane fx:id="gridPane" style="-fx-background-color: #FAFAFA;" prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldResultDataController">
     <children>
-        <Label text="Total Samples" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <Label text="FPY Samples" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <Label text="Pass Samples" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-        <Label text="NTF Samples" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-        <Label text="NG Samples" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <Label fx:id="totalSamples0" style="-fx-background-color: #AAAAAA;" text="Total Samples" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Label fx:id="fpySamples0" style="-fx-background-color: #AAAAAA;" text="FPY Samples" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <Label fx:id="passSamples0" style="-fx-background-color: #AAAAAA;" text="Pass Samples" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Label fx:id="ntfSamples0" style="-fx-background-color: #AAAAAA;" text="NTF Samples" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <Label fx:id="ngSamples0" style="-fx-background-color: #AAAAAA;" text="NG Samples" GridPane.columnIndex="0" GridPane.rowIndex="4" />
 
-        <Label fx:id="TotalSamples"  underline="true" GridPane.columnIndex="1"  GridPane.halignment="RIGHT" GridPane.rowIndex="0"/>
-        <Label fx:id="FpySamples"  underline="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-        <Label fx:id="PassSamples"  underline="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-        <Label fx:id="NtfSamples"  underline="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-        <Label fx:id="NgSamples"  underline="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+        <Label fx:id="totalSamples1" style="-fx-background-color: #AAAAAA;" text="-" GridPane.columnIndex="1"  GridPane.halignment="RIGHT" GridPane.rowIndex="0"/>
+        <Label fx:id="fpySamples1" style="-fx-background-color: #AAAAAA;" text="-" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <Label fx:id="passSamples1" style="-fx-background-color: #AAAAAA;" text="-" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+        <Label fx:id="ntfSamples1" style="-fx-background-color: #AAAAAA;" text="-" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+        <Label fx:id="ngSamples1" style="-fx-background-color: #AAAAAA;" text="-" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
     </children>
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
