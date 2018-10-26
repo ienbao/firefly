@@ -41,6 +41,8 @@ public class YieldChartResultController implements Initializable {
     @FXML
     private BarChart yieldBarChart;
     @FXML
+    private BarChart yieldbarChartItem;
+    @FXML
     private GridPane YieldGridPane;
 
     private String[] yieldBarChartCategory;
@@ -51,6 +53,8 @@ public class YieldChartResultController implements Initializable {
     this.yieldMainController = yieldMainController;
         this.initComponentEvents();
         yieldBarChart.setAnimated(false);
+        yieldbarChartItem.setAnimated(false);
+
     }
 
     private void initComponentEvents() {
@@ -90,7 +94,7 @@ public class YieldChartResultController implements Initializable {
                     YieldFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
             return;
         }
-        setBarChart(yieldResultDto.getYieldTotalProcessesDto());
+        setBarChart(yieldResultDto.getTotalProcessesDtos());
     }
 
     private void enableSubResultOperator(boolean b) {
@@ -125,10 +129,10 @@ public class YieldChartResultController implements Initializable {
         series1.getData().add(new XYChart.Data(yieldBarChartLabel[1],DAPStringUtils.isInfinityAndNaN(yieldTotalProcessesDto.getNtfPercent()) ?0 : yieldTotalProcessesDto.getNtfPercent()));
         series1.getData().add(new XYChart.Data(yieldBarChartLabel[2],DAPStringUtils.isInfinityAndNaN(yieldTotalProcessesDto.getNgPercent()) ? 0 : yieldTotalProcessesDto.getNgPercent()));
         yieldBarChart.getData().addAll(series1);//barChart中添加元素
-        for (int i = 0 ; i < yieldBarChartCategory.length ;i++){
-            XYChart.Series series = (XYChart.Series) yieldBarChart.getData().get(i);
-            series.setName("%"+yieldBarChartCategory[i]);
-        }
+//        for (int i = 0 ; i < yieldBarChartCategory.length ;i++){
+//            XYChart.Series series = (XYChart.Series) yieldBarChart.getData().get(i);
+//            series.setName("%"+yieldBarChartCategory[i]);
+//        }
         int digNum = DigNumInstance.newInstance().getDigNum() - 2 >= 0 ? DigNumInstance.newInstance().getDigNum() - 2 : 0;
         ChartUtils.setChartText(yieldBarChart.getData(), s -> {//设置Chart顶部的数据百分比
             if (DAPStringUtils.isNumeric(s)) {
@@ -148,7 +152,7 @@ public class YieldChartResultController implements Initializable {
         Double[] value = new Double[3];
         value[0] = yieldTotalProcessesDto.getFpyPercent();
         value[1] = yieldTotalProcessesDto.getNtfPercent();
-        value[3] = yieldTotalProcessesDto.getNgPercent();
+        value[2] = yieldTotalProcessesDto.getNgPercent();
 
         return value;
 

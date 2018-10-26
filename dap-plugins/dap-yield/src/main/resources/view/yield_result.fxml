@@ -107,7 +107,7 @@
                                                         <Insets bottom="2.0" top="3.0" />
                                                     </padding>
                                                 </GridPane>
-                                                <BarChart fx:id="yieldBarChart1" horizontalZeroLineVisible="false" legendVisible="false" prefHeight="400.0" prefWidth="530.0" verticalZeroLineVisible="false" VBox.vgrow="ALWAYS">
+                                                <BarChart fx:id="yieldbarChartItem" horizontalZeroLineVisible="false" legendVisible="false" prefHeight="400.0" prefWidth="530.0" verticalZeroLineVisible="false" VBox.vgrow="ALWAYS">
                                                     <xAxis>
                                                         <CategoryAxis side="BOTTOM" tickLabelGap="10.0" tickMarkVisible="false" />
                                                     </xAxis>
