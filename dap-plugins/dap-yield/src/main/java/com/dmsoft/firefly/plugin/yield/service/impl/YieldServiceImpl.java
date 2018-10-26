@@ -368,6 +368,7 @@ public class YieldServiceImpl implements YieldService {
         yieldResultDto.setTotalProcessesDtos(yieldTotalProcessesDtos);
         yieldResultDto.setYieldNTFChartDtos(ntfChartResult);
         yieldResultDto.setYieldOverviewDtos(overViewResult);
+        yieldResultDto.setYieldTotalProcessesDto(yieldTotalProcessesDto);
         result.add(yieldResultDto);
         return result;
     }

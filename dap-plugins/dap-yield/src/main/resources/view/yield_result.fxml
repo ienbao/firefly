@@ -22,7 +22,7 @@
 <AnchorPane style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldChartResultController">
 <children>
     <!--<TabPane style="-fx-background-color: #ffffff;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">-->
-                    <GridPane style="-fx-border-color: blue; -fx-max-width: 1500;">
+                    <GridPane fx:id="YieldGridPane" style="-fx-border-color: blue; -fx-max-width: 1500;">
                     <VBox style="-fx-border-color: yellow; -fx-max-width: 1500;" VBox.vgrow="ALWAYS">
                         <!--<GridPane prefHeight="4.0" prefWidth="435.0" BorderPane.alignment="CENTER">-->
                             <!--<columnConstraints>-->

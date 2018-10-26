@@ -6,9 +6,11 @@ import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.*;
 import com.dmsoft.firefly.plugin.yield.dto.*;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
+import com.dmsoft.firefly.plugin.yield.model.OverViewTableModel;
 import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
 import com.dmsoft.firefly.plugin.yield.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
@@ -49,15 +51,18 @@ public class YieldMainController implements Initializable {
     private OverViewController overViewController;
     @FXML
     private ViewDataController viewDataController;
-
     @FXML
-    private YieldChartResultController yieldResultController;
+    private YieldChartResultController yieldChartResultController;
+
+   // private YieldChartResultController yieldChartResultController;
+    private YieldDetailChartDto yieldDetailChartDto;
+    private YieldResultDto yieldResultDto;
+    //    @FXML
+//    private ChartResultController chartResultController;
     private SearchDataFrame dataFrame;
     private YieldAnalysisConfigDto analysisConfigDto;
     private List<SearchConditionDto> initSearchConditionDtoList;
     private YieldSettingDto yieldSettingDto;
-
-
     private YieldSettingService yieldSettingService = RuntimeContext.getBean(YieldSettingService.class);
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
 //    private List<String> lastViewDataRowKeyList;
@@ -70,8 +75,8 @@ public class YieldMainController implements Initializable {
         this.yieldItemController.init(this);
 //        this.statisticalResultController.init(this);
         this.viewDataController.init(this);
-        this.yieldResultController.init(this);
         this.overViewController.init(this);
+        this.yieldChartResultController.init(this);
 //        this.chartResultController.init(this);
         this.initBtnIcon();
         this.initComponentEvent();
@@ -242,8 +247,6 @@ public class YieldMainController implements Initializable {
 //    }
 
     private void initComponentEvent() {
-        printBtn.setVisible(false);
-        exportBtn.setVisible(false);
         resetBtn.setOnAction(event -> getResetBtnEvent());
         printBtn.setOnAction(event -> getExportBtnEvent());
         exportBtn.setOnAction(event -> getExportBtnEvent());
@@ -350,10 +353,7 @@ public class YieldMainController implements Initializable {
     }
 
     private void refreshEvent() {
-//        List<String> currentStatisticalSelectRowKeyList = overViewController.getSelectStatisticalRowKey();
-//        List<String> currentViewDataSelectRowKeyList = viewDataController.getSelectedRowKeys();
         List<String> statisticalModifyRowKeyList = overViewController.getEidtStatisticalRowKey();
-
         YieldRefreshJudgeUtil yieldRefreshJudgeUtil = YieldRefreshJudgeUtil.newInstance();
         YieldRefreshJudgeUtil.RefreshType refreshType = yieldRefreshJudgeUtil.refreshJudge(statisticalModifyRowKeyList);
 
@@ -422,32 +422,22 @@ public class YieldMainController implements Initializable {
     }
 
     private List<SearchConditionDto> buildRefreshSearchConditionData(List<YieldOverviewResultAlarmDto> spcStatsDtoList) {
-        List<SearchConditionDto> searchConditionDtoList = yieldItemController.buildSearchConditionDataList(yieldItemController.initSelectedItemDto());
-        for (int i = 0 ;i <searchConditionDtoList.size() ; i++){
-            for (int j = 0 ;j < spcStatsDtoList.size() ;j++) {
-                if (searchConditionDtoList.get(i).getItemName().equals(spcStatsDtoList.get(j).getItemName())){
-                    searchConditionDtoList.get(i).setLslOrFail(spcStatsDtoList.get(j).getLslOrFail());
-                    searchConditionDtoList.get(i).setUslOrPass(spcStatsDtoList.get(j).getUslOrPass());
-                }
-            }
+        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
+        if (spcStatsDtoList == null) {
+            return searchConditionDtoList;
         }
-
-//        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
-//        if (spcStatsDtoList == null) {
-//            return searchConditionDtoList;
-//        }
-//        for (YieldOverviewResultAlarmDto spcStatsDto : spcStatsDtoList) {
-//            SearchConditionDto searchConditionDto = new SearchConditionDto();
-//            searchConditionDto.setKey(spcStatsDto.getKey());
-//            searchConditionDto.setItemName(spcStatsDto.getItemName());
-////
-//            searchConditionDto.setUslOrPass(String.valueOf(spcStatsDto.getUslOrPass()));
-//            searchConditionDto.setLslOrFail(String.valueOf(spcStatsDto.getLslOrFail()));
-//            TestItemWithTypeDto testItemWithTypeDto = envService.findTestItemNameByItemName(spcStatsDto.getItemName());
-////            searchConditionDto.setCondition(testItemWithTypeDto.get);
-//            searchConditionDto.setTestItemType(testItemWithTypeDto.getTestItemType());
-//            searchConditionDtoList.add(searchConditionDto);
-//        }
+        for (YieldOverviewResultAlarmDto spcStatsDto : spcStatsDtoList) {
+            SearchConditionDto searchConditionDto = new SearchConditionDto();
+            searchConditionDto.setKey(spcStatsDto.getKey());
+            searchConditionDto.setItemName(spcStatsDto.getItemName());
+//
+            searchConditionDto.setUslOrPass(String.valueOf(spcStatsDto.getUslOrPass()));
+            searchConditionDto.setLslOrFail(String.valueOf(spcStatsDto.getLslOrFail()));
+            TestItemWithTypeDto testItemWithTypeDto = envService.findTestItemNameByItemName(spcStatsDto.getItemName());
+//            searchConditionDto.setCondition(testItemWithTypeDto.get);
+            searchConditionDto.setTestItemType(testItemWithTypeDto.getTestItemType());
+            searchConditionDtoList.add(searchConditionDto);
+        }
         return searchConditionDtoList;
     }
 //
@@ -475,8 +465,6 @@ public class YieldMainController implements Initializable {
 //    }
 //
     private SearchDataFrame buildSubSearchDataFrame(List<SearchConditionDto> searchConditionDtoList) {
-//        List<TestItemWithTypeDto> testItemWithTypeDtoList = yieldItemController.buildSelectTestItemWithTypeData(yieldItemController.initSelectedItemDto());
-//
         if (dataFrame == null || searchConditionDtoList == null) {
             return null;
         }
@@ -553,14 +541,12 @@ public class YieldMainController implements Initializable {
             editRowDataList.add(yieldOverviewResultAlarmDto1);
         }
         List<SearchConditionDto> searchConditionDtoList = buildRefreshSearchConditionData(editRowDataList);
-        List<String> projectNameList = envService.findActivatedProjectName();
-        List<TestItemWithTypeDto> testItemWithTypeDtoList = yieldItemController.buildSelectTestItemWithTypeData(yieldItemController.initSelectedItemDto());
-        context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
-//        context.put(ParamKeys.YIELD_SETTING_DTO, yieldSettingDto);
+        SearchDataFrame subDataFrame = buildSubSearchDataFrame(searchConditionDtoList);
+
+        context.put(ParamKeys.YIELD_SETTING_DTO, yieldSettingDto);
         context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, analysisConfigDto);
-        context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
-//        context.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
+        context.put(ParamKeys.SEARCH_DATA_FRAME, subDataFrame);
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
         windowProgressTipController.getCancelBtn().setOnAction(event -> {
             windowProgressTipController.setCancelingText();
@@ -910,14 +896,14 @@ public class YieldMainController implements Initializable {
 //        }
 //        return timerSearchKeyList;
 //    }
+    public void setYieldResultData(YieldResultDto yieldResultData){
+        this.yieldResultDto = yieldResultData;
 
 
-    public YieldChartResultController getYieldResultController() {
-        return yieldResultController;
     }
 
-    public void setYieldResultController(YieldChartResultController yieldResultController) {
-        this.yieldResultController = yieldResultController;
+    public void updateYieldSummaryDetial(){
+        yieldChartResultController.analyzeYieldResult(yieldResultDto);
     }
 
     public ViewDataController getViewDataController() {
@@ -927,6 +913,7 @@ public class YieldMainController implements Initializable {
     public void setViewDataController(ViewDataController viewDataController) {
         this.viewDataController = viewDataController;
     }
+
 
     public YieldItemController getYieldItemController() {
         return yieldItemController;

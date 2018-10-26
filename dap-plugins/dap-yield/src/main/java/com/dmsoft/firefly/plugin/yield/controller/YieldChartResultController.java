@@ -4,6 +4,8 @@ import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.plugin.yield.charts.ChartTooltip;
 import com.dmsoft.firefly.plugin.yield.charts.NDChart;
 import com.dmsoft.firefly.plugin.yield.charts.data.NDBarChartData;
+import com.dmsoft.firefly.plugin.yield.dto.YieldResultDto;
+import com.dmsoft.firefly.plugin.yield.dto.YieldTotalProcessesDto;
 import com.dmsoft.firefly.plugin.yield.dto.chart.YieldNdChartData;
 import com.dmsoft.firefly.plugin.yield.dto.YieldDetailChartDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldChartResultDto;
@@ -22,6 +24,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.layout.GridPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,25 +35,35 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public class YieldChartResultController implements Initializable {
-
+    private YieldMainController yieldMainController;
     @FXML
     private BarChart yieldBarChart;
     @FXML
-    private YieldResultDataController yieldResultDataController;
+    private GridPane YieldGridPane;
+
     private String[] yieldBarChartCategory;
     private String[] yieldBarChartLabel;
-    private YieldMainController yieldMainController;
     private Logger logger = LoggerFactory.getLogger(YieldChartResultController.class);
 
-
-
     public void init(YieldMainController yieldMainController) {
-        this.yieldMainController = yieldMainController;
+    this.yieldMainController = yieldMainController;
+        this.initComponentEvents();
+        yieldBarChart.setAnimated(false);
     }
+
+    private void initComponentEvents() {
+       // event -> fireResultBasedCmbChangeEvent();
+
+    }
+
+    private Object fireResultBasedCmbChangeEvent() {
+        return null;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initI18n();
-        this.yieldResultDataController.init(this);
+
     }
 
     private void initI18n() {
@@ -59,49 +72,40 @@ public class YieldChartResultController implements Initializable {
                 YieldFxmlAndLanguageUtils.getString(UIConstant.BARCHART_NTF),
                 YieldFxmlAndLanguageUtils.getString((UIConstant.BARCHART_NG))
         };
-
     }
-
-    public void analyzeYieldResult(YieldDetailChartDto yieldDetailChartDto) {
+    public void analyzeYieldResult(YieldResultDto yieldResultDto) {
         //清除分析之前的数据
-
-        if (yieldDetailChartDto == null){
+        if (yieldResultDto == null){
             return ;
         }
-
-        this.setAsetAnalysisBarChartResultData(yieldDetailChartDto);
-
+        this.setAsetAnalysisBarChartResultData(yieldResultDto);
     }
-
-    private void setAsetAnalysisBarChartResultData(YieldDetailChartDto yieldDetailChartDto){
-        if (yieldDetailChartDto == null){
+    private void setAsetAnalysisBarChartResultData(YieldResultDto yieldResultDto){
+        if (yieldResultDto == null){
             enableSubResultOperator(false);
             RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
                     YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                     YieldFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
-
             return;
         }
-
-        setBarChart(yieldDetailChartDto.getYieldChartResultDto());
+        setBarChart(yieldResultDto.getYieldTotalProcessesDto());
     }
 
     private void enableSubResultOperator(boolean b) {
-
             //grrChartBtn.setDisable(!flag);
-
     }
 
-    private void setBarChart(YieldChartResultDto yieldChartResult) {
-        if(yieldChartResult == null){//判断yiyieldChartResult是否为空
+    //移除统计过后的数据
+
+    private void setBarChart(YieldTotalProcessesDto yieldTotalProcessesDto) {
+        if(yieldTotalProcessesDto == null){//判断yiyieldChartResult是否为空
             return;
         }
-        Double[] yieldChartArray = getYieldChartArrayValue(yieldChartResult);
+        Double[] yieldChartArray = getYieldChartArrayValue(yieldTotalProcessesDto);
         Double yMax = MathUtils.getNaNToZoreMax(yieldChartArray);
         Double yMin = MathUtils.getNaNToZoreMin(yieldChartArray);
         if(yMax == null || yMin == null){
             return;
-
         }
         NumberAxis yAxis = (NumberAxis) yieldBarChart.getYAxis();//设置y轴的值
         final double factor = 0.2;
@@ -115,9 +119,9 @@ public class YieldChartResultController implements Initializable {
         yAxis.setUpperBound(newYMax);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
         XYChart.Series series1 = new XYChart.Series();
-        series1.getData().add(new XYChart.Data(yieldBarChartLabel[0], DAPStringUtils.isInfinityAndNaN(yieldChartResult.getFPY()) ? 0 : yieldChartResult.getFPY()));
-        series1.getData().add(new XYChart.Data(yieldBarChartLabel[1],DAPStringUtils.isInfinityAndNaN(yieldChartResult.getNTF()) ?0 : yieldChartResult.getNTF()));
-        series1.getData().add(new XYChart.Data(yieldBarChartLabel[2],DAPStringUtils.isInfinityAndNaN(yieldChartResult.getNG()) ? 0 : yieldChartResult.getNG()));
+        series1.getData().add(new XYChart.Data(yieldBarChartLabel[0], DAPStringUtils.isInfinityAndNaN(yieldTotalProcessesDto.getFpyPercent()) ? 0 : yieldTotalProcessesDto.getFpyPercent()));
+        series1.getData().add(new XYChart.Data(yieldBarChartLabel[1],DAPStringUtils.isInfinityAndNaN(yieldTotalProcessesDto.getNtfPercent()) ?0 : yieldTotalProcessesDto.getNtfPercent()));
+        series1.getData().add(new XYChart.Data(yieldBarChartLabel[2],DAPStringUtils.isInfinityAndNaN(yieldTotalProcessesDto.getNgPercent()) ? 0 : yieldTotalProcessesDto.getNgPercent()));
         yieldBarChart.getData().addAll(series1);//barChart中添加元素
         for (int i = 0 ; i < yieldBarChartCategory.length ;i++){
             XYChart.Series series = (XYChart.Series) yieldBarChart.getData().get(i);
@@ -137,31 +141,21 @@ public class YieldChartResultController implements Initializable {
 
     }
 
-    private Double[] getYieldChartArrayValue(YieldChartResultDto yieldChartResult) {
+    private Double[] getYieldChartArrayValue(YieldTotalProcessesDto yieldTotalProcessesDto) {
 
         Double[] value = new Double[3];
-        value[0] = yieldChartResult.getFPY();
-        value[1] = yieldChartResult.getNTF();
-        value[3] = yieldChartResult.getNG();
+        value[0] = yieldTotalProcessesDto.getFpyPercent();
+        value[1] = yieldTotalProcessesDto.getNtfPercent();
+        value[3] = yieldTotalProcessesDto.getNgPercent();
 
         return value;
 
 
     }
 
+
     public YieldMainController getYieldMainController() {
-        return yieldMainController;
-    }
 
-    public void setYieldMainController(YieldMainController yieldMainController) {
-        this.yieldMainController = yieldMainController;
-    }
-
-    public YieldResultDataController getYieldResultDataController() {
-        return yieldResultDataController;
-    }
-
-    public void setYieldResultDataController(YieldResultDataController yieldResultDataController) {
-        this.yieldResultDataController = yieldResultDataController;
+        return null;
     }
 }

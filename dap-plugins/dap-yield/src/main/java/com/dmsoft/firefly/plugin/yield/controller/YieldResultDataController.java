@@ -74,7 +74,7 @@ public class YieldResultDataController implements Initializable {
 
         List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(selectedItemDto);
         YieldAnalysisConfigDto yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
-        yieldAnalysisConfigDto.setPrimaryKey(yieldItemController.getConfigComboBox().getValue());
+       // yieldAnalysisConfigDto.setPrimaryKey(yieldItemController.getConfigComboBox().getValue());
         List<TestItemWithTypeDto> testItemWithTypeDtoList = yieldItemController.buildSelectTestItemWithTypeData(selectedItemDto);
 
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
@@ -147,10 +147,10 @@ public class YieldResultDataController implements Initializable {
         if (testItemWithTypeDtoList == null) {
             return null;
         }
-        List<String> conditionList = yieldItemController.getSearchTab().getSearch();
+        List<String> conditionList =null;
         List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
         SearchConditionDto searchPrimaryKey = new SearchConditionDto();
-        searchPrimaryKey.setItemName(yieldItemController.getConfigComboBox().getValue());
+      //  searchPrimaryKey.setItemName(yieldItemController.getConfigComboBox().getValue());
         searchConditionDtoList.add(searchPrimaryKey);
         int i = 0;
         for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtoList) {
