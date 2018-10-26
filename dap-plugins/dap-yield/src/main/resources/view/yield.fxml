@@ -35,9 +35,9 @@
                                     <Insets left="10.0" />
                                 </padding>
                             </Label>
-                            <Button fx:id="resetBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-icon" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                            <Button fx:id="printBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-icon" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                            <Button fx:id="exportBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-icon" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                            <Button fx:id="printBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-icon" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <Button fx:id="exportBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-icon" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                            <Button fx:id="resetBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-icon" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                             <Button fx:id="chooseBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="btn-primary" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                         </children>
                     </GridPane>
