@@ -68,7 +68,7 @@ public class YieldItemController implements Initializable {
     private Tab itemTab;
     @FXML
     private Tab configTab;
-//    @FXML
+    //    @FXML
 //    private Tab timeTab;
 //    @FXML
 //    private Label helpLabel;
@@ -102,7 +102,7 @@ public class YieldItemController implements Initializable {
     private SearchDataFrame dataFrame;
 
 
-//
+    //
 //    @FXML
 //    private CheckBox enabledTimerCheckBox;
 //    @FXML
@@ -117,7 +117,7 @@ public class YieldItemController implements Initializable {
     /**
      * init main controller
      *
-//     * @param spcMainController main controller
+     //     * @param spcMainController main controller
      */
     public void init(YieldMainController yieldMainController) {
         this.yieldMainController = yieldMainController;
@@ -481,7 +481,7 @@ public class YieldItemController implements Initializable {
 //        return timer1;
 //    }
 
-//    @SuppressWarnings("unchecked")
+    //    @SuppressWarnings("unchecked")
 //    private void autoRefreshAnalysis() {
 //        List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
 //        spcMainController.clearAnalysisSubShowData();
@@ -763,7 +763,7 @@ public class YieldItemController implements Initializable {
     }
 
     private void initYieldConfig() {
-       YieldAnalysisConfigDto yieldAnalysisConfigDto = this.getYieldConfigPreference();
+        YieldAnalysisConfigDto yieldAnalysisConfigDto = this.getYieldConfigPreference();
         if (yieldAnalysisConfigDto == null) {
             yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
             yieldAnalysisConfigDto.setPrimaryKey("");

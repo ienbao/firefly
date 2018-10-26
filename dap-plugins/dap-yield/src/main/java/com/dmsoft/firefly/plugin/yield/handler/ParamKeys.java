@@ -39,6 +39,7 @@ public class ParamKeys {
     public static final String YIELD_ANALYSIS_JOB_PIPELINE = "yieldAnalysisJobPipeline";
     public static final String YIELD_OVER_VIEW_JOB_PIPELINE = "yieldViewDataJobPipeline";
     public static final String YIELD_VIEW_DATA_JOB_PIPELINE = "yieldViewDataJobPipeline";
+    public static final String YIELD_RESULT_DATA_JOB_PIPELINE = "yieldResultDataJobPipeLine";
     public static final String YIELD_ANALYSIS_EXPORT_JOB_PIPELINE = "yieldAnalysisExportJobPipeline";
     public static final String SPC_REFRESH_ANALYSIS_JOB_PIPELINE = "spcRefreshAnalysisJobPipeline";
     public static final String SPC_REFRESH_CHART_JOB_PIPELINE = "spcRefreshChartJobPipeline";
