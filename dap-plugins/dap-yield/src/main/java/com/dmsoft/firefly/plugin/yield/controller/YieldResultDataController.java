@@ -139,23 +139,23 @@ public class YieldResultDataController implements Initializable {
 
                     if (column.equals("FPY Samples")) {
                         for (int i = 0; i < yieldViewDataResultDto.getFPYlist().size(); i++) {
-                            rowKeyList.add(yieldViewDataResultDto.getFPYlist().get(i).getRowKey());
+                            rowKeyList.add(yieldViewDataResultDto.getFPYlist().get(i));
                         }
                     } else if (column.equals("Pass Samples")) {
                         for (int i = 0; i < yieldViewDataResultDto.getPASSlist().size(); i++) {
-                            rowKeyList.add(yieldViewDataResultDto.getPASSlist().get(i).getRowKey());
+                            rowKeyList.add(yieldViewDataResultDto.getPASSlist().get(i));
                         }
                     } else if (column.equals("NTF Samples")) {
                         for (int i = 0; i < yieldViewDataResultDto.getNtflist().size(); i++) {
-                            rowKeyList.add(yieldViewDataResultDto.getNtflist().get(i).getRowKey());
+                            rowKeyList.add(yieldViewDataResultDto.getNtflist().get(i));
                         }
                     } else if (column.equals("NG Samples")) {
                         for (int i = 0; i < yieldViewDataResultDto.getNglist().size(); i++) {
-                            rowKeyList.add(yieldViewDataResultDto.getNglist().get(i).getRowKey());
+                            rowKeyList.add(yieldViewDataResultDto.getNglist().get(i));
                         }
                     } else if (column.equals("Total Samples")) {
                         for (int i = 0; i < yieldViewDataResultDto.getTotallist().size(); i++) {
-                            rowKeyList.add(yieldViewDataResultDto.getTotallist().get(i).getRowKey());
+                            rowKeyList.add(yieldViewDataResultDto.getTotallist().get(i));
                         }
                     }
 
@@ -182,10 +182,10 @@ public class YieldResultDataController implements Initializable {
             });
                 logger.info("ViewData Yield.");
             RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
-        }else{
+        }
+        else{
             viewDataController.setViewData(null, null, null, false, "-", "-");
         }
-
 
     }
 

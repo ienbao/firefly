@@ -7,12 +7,15 @@ import java.util.List;
 public class YieldViewDataResultDto extends AbstractValueObject {
     private String ItemName;
     private String primary;
-    private List<YieldViewDataDto> resultlist;
-    private List<YieldViewDataDto> FPYlist;
-    private List<YieldViewDataDto> PASSlist;
-    private List<YieldViewDataDto> Ntflist;
-    private List<YieldViewDataDto> Nglist;
-    private List<YieldViewDataDto> Totallist;
+    private List<String> resultlist;
+    private List<String> FPYlist;
+    private List<String> PASSlist;
+    private List<String> Ntflist;
+    private List<String> Nglist;
+    private List<String> Totallist;
+
+
+
 
     public String getItemName() {
         return ItemName;
@@ -30,51 +33,51 @@ public class YieldViewDataResultDto extends AbstractValueObject {
         this.primary = primary;
     }
 
-    public List<YieldViewDataDto> getResultlist() {
+    public List<String> getResultlist() {
         return resultlist;
     }
 
-    public void setResultlist(List<YieldViewDataDto> resultlist) {
+    public void setResultlist(List<String> resultlist) {
         this.resultlist = resultlist;
     }
 
-        public List<YieldViewDataDto> getFPYlist() {
+    public List<String> getFPYlist() {
         return FPYlist;
     }
 
-    public void setFPYlist(List<YieldViewDataDto> FPYlist) {
+    public void setFPYlist(List<String> FPYlist) {
         this.FPYlist = FPYlist;
     }
 
-    public List<YieldViewDataDto> getPASSlist() {
+    public List<String> getPASSlist() {
         return PASSlist;
     }
 
-    public void setPASSlist(List<YieldViewDataDto> PASSlist) {
+    public void setPASSlist(List<String> PASSlist) {
         this.PASSlist = PASSlist;
     }
 
-    public List<YieldViewDataDto> getNtflist() {
+    public List<String> getNtflist() {
         return Ntflist;
     }
 
-    public void setNtflist(List<YieldViewDataDto> ntflist) {
+    public void setNtflist(List<String> ntflist) {
         Ntflist = ntflist;
     }
 
-    public List<YieldViewDataDto> getNglist() {
+    public List<String> getNglist() {
         return Nglist;
     }
 
-    public void setNglist(List<YieldViewDataDto> nglist) {
+    public void setNglist(List<String> nglist) {
         Nglist = nglist;
     }
 
-    public List<YieldViewDataDto> getTotallist() {
+    public List<String> getTotallist() {
         return Totallist;
     }
 
-    public void setTotallist(List<YieldViewDataDto> totallist) {
+    public void setTotallist(List<String> totallist) {
         Totallist = totallist;
     }
 }

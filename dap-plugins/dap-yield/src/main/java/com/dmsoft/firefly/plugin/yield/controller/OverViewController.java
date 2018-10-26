@@ -121,23 +121,23 @@ public class OverViewController implements Initializable {
 
                 if(column.equals("FPY Samples")) {
                     for (int i = 0; i < YieldViewDataResultDto.getFPYlist().size(); i++) {
-                        rowKeyList.add(YieldViewDataResultDto.getFPYlist().get(i).getRowKey());
+                        rowKeyList.add(YieldViewDataResultDto.getFPYlist().get(i));
                     }
                 }else if(column.equals("Pass Samples")){
                     for (int i = 0; i < YieldViewDataResultDto.getPASSlist().size(); i++) {
-                        rowKeyList.add(YieldViewDataResultDto.getPASSlist().get(i).getRowKey());
+                        rowKeyList.add(YieldViewDataResultDto.getPASSlist().get(i));
                     }
                 }else if(column.equals("NTF Samples")){
                     for (int i = 0; i < YieldViewDataResultDto.getNtflist().size(); i++) {
-                        rowKeyList.add(YieldViewDataResultDto.getNtflist().get(i).getRowKey());
+                        rowKeyList.add(YieldViewDataResultDto.getNtflist().get(i));
                     }
                 }else if(column.equals("NG Samples")){
                     for (int i = 0; i <YieldViewDataResultDto.getNglist().size(); i++) {
-                        rowKeyList.add(YieldViewDataResultDto.getNglist().get(i).getRowKey());
+                        rowKeyList.add(YieldViewDataResultDto.getNglist().get(i));
                     }
                 }else if(column.equals("Total Samples")){
                     for (int i = 0; i < YieldViewDataResultDto.getTotallist().size(); i++) {
-                        rowKeyList.add(YieldViewDataResultDto.getTotallist().get(i).getRowKey());
+                        rowKeyList.add(YieldViewDataResultDto.getTotallist().get(i));
                     }
                 }
 
