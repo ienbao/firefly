@@ -44,23 +44,15 @@ public class YieldRefreshJudgeUtil {
     /**
      * is need refresh
      *
-     * @param currentViewDataSelectRowKeyList    current view data select row key
      * @param statisticalModifyRowKeyList        statistical Modify row key
      * @return id need
      */
     public RefreshType refreshJudge(List<String> statisticalModifyRowKeyList) {
-        this.currentViewDataSelectRowKeyList = currentViewDataSelectRowKeyList;
         this.statisticalModifyRowKeyList = statisticalModifyRowKeyList;
-
-
-        if (statisticalModifyRowKeyList.size() == 0 && currentViewDataSelectRowKeyList == null){
+        if (statisticalModifyRowKeyList.size() == 0){
             return RefreshType.NOT_NEED_REFRESH;
-        } else if ( !(statisticalModifyRowKeyList.size()==0)) {
+        } else{
             return RefreshType.REFRESH_STATISTICAL_RESULT;
-        } else if (statisticalModifyRowKeyList.size() == 0 ) {
-            return RefreshType.REFRESH_CHART_RESULT;
-        } else {
-            return RefreshType.REFRESH_ALL_ANALYSIS_RESULT;
         }
     }
 
