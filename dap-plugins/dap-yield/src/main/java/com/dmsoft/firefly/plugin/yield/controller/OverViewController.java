@@ -108,15 +108,19 @@ public class OverViewController implements Initializable {
         List<String> projectNameList = envService.findActivatedProjectName();
 
         List<SearchConditionDto> searchConditionDtoList = yieldMainController.getInitSearchConditionDtoList();
+        YieldAnalysisConfigDto yieldAnalysisConfigDto = yieldMainController.getAnalysisConfigDto();
         List<SearchConditionDto> selectSearchConditionDtoList = Lists.newArrayList();
-        selectSearchConditionDtoList.add(searchConditionDtoList.get(0));
+        for(int i =0; i<searchConditionDtoList.size();i++){
+            if(yieldAnalysisConfigDto.getPrimaryKey().equals(searchConditionDtoList.get(i).getItemName())){
+                selectSearchConditionDtoList.add(searchConditionDtoList.get(i));
+            }
+        }
         for(int i = 1; i<searchConditionDtoList.size();i++) {
             if (rowKey.equals(searchConditionDtoList.get(i).getItemName())) {
                 selectSearchConditionDtoList.add(searchConditionDtoList.get(i));
             }
         }
 
-        YieldAnalysisConfigDto yieldAnalysisConfigDto = yieldMainController.getAnalysisConfigDto();
 //        List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(testItemWithTypeDto);
 //        YieldAnalysisConfigDto yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
 //        yieldAnalysisConfigDto.setPrimaryKey(yieldItemController.getConfigComboBox().getValue());
@@ -147,9 +151,6 @@ public class OverViewController implements Initializable {
 
                 List<YieldViewDataResultDto> YieldViewDataResultDtoList = (List<YieldViewDataResultDto>) context.get(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO_LIST);
                 List<String> rowKeyList = Lists.newArrayList();
-                for (int i = 0; i < YieldViewDataResultDtoList.get(0).getResultlist().size(); i++) {
-                    rowKeyList.add(YieldViewDataResultDtoList.get(0).getResultlist().get(i).getRowKey());
-                }
 
                 if(column.equals("FPY Samples")) {
                     for (int i = 0; i < YieldViewDataResultDtoList.get(0).getFPYlist().size(); i++) {
