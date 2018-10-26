@@ -22,6 +22,7 @@ public class Tianyx extends Application {
     private NumberAxis yAxis;
 
     public Parent createContent() {
+
         String[] years = {"%FPY", "%NTF", "%NG"};
         xAxis = new CategoryAxis();
 
@@ -36,7 +37,7 @@ public class Tianyx extends Application {
                                         new BarChart.Data(years[2], 2559)))
 
                 );
-        chart = new BarChart(xAxis, yAxis, barChartData, 25.0d);
+        chart = new BarChart(xAxis, yAxis, barChartData, 50d);
         return chart;
     }
 

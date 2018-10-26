@@ -9,6 +9,15 @@ public class YieldResultDto extends AbstractValueObject {
     private List<YieldOverviewDto> yieldOverviewDtos;
     private List<YieldNTFChartDto> yieldNTFChartDtos;
     private List<YieldTotalProcessesDto> totalProcessesDtos;
+    private  YieldTotalProcessesDto yieldTotalProcessesDto;
+
+    public YieldTotalProcessesDto getYieldTotalProcessesDto() {
+        return yieldTotalProcessesDto;
+    }
+
+    public void setYieldTotalProcessesDto(YieldTotalProcessesDto yieldTotalProcessesDto) {
+        this.yieldTotalProcessesDto = yieldTotalProcessesDto;
+    }
 
     public List<YieldOverviewDto> getYieldOverviewDtos() {
         return yieldOverviewDtos;

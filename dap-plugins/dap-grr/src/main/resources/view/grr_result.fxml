@@ -152,7 +152,7 @@
                                                                   legendVisible="false" verticalZeroLineVisible="false"
                                                                   VBox.vgrow="ALWAYS">
                                                             <xAxis>
-                                                                <CategoryAxis side="BOTTOM" tickLabelGap="10.0"
+                                                                <CategoryAxis  side="BOTTOM" tickLabelGap="10.0"
                                                                               tickMarkVisible="false"/>
                                                             </xAxis>
                                                             <yAxis>

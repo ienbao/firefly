@@ -23,9 +23,6 @@ public class BuildChartTest extends Application {
             vBox = new VBox();
             BarChart barChart =null; //BuildChart.buildBarChartImage(null,null);
             vBox.getChildren().add(barChart);
-
-
-
         return vBox;
     }
 
