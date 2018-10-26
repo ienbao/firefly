@@ -15,7 +15,7 @@ public interface YieldService {
     YieldResultDto getYieldResult(SearchDataFrame searchDataFrame, List<SearchConditionDto> searchConditions,
                                    YieldAnalysisConfigDto configDto);
 
-    List<YieldViewDataResultDto> getViewData(SearchDataFrame searchDataFrame, List<SearchConditionDto> searchConditions, YieldAnalysisConfigDto configDto);
+    YieldViewDataResultDto getViewData(SearchDataFrame searchDataFrame, List<SearchConditionDto> searchConditions, YieldAnalysisConfigDto configDto);
 
     List<YieldViewDataResultDto> getTotalData(SearchDataFrame searchDataFrame, List<SearchConditionDto> searchConditions, YieldAnalysisConfigDto configDto);
 

@@ -129,28 +129,28 @@ public class OverViewController implements Initializable {
             @Override
             public void doJob(JobContext context) {
 
-                List<YieldViewDataResultDto> YieldViewDataResultDtoList = (List<YieldViewDataResultDto>) context.get(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO_LIST);
+                YieldViewDataResultDto YieldViewDataResultDto = (YieldViewDataResultDto) context.get(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO);
                 List<String> rowKeyList = Lists.newArrayList();
 
                 if(column.equals("FPY Samples")) {
-                    for (int i = 0; i < YieldViewDataResultDtoList.get(0).getFPYlist().size(); i++) {
-                        rowKeyList.add(YieldViewDataResultDtoList.get(0).getFPYlist().get(i).getRowKey());
+                    for (int i = 0; i < YieldViewDataResultDto.getFPYlist().size(); i++) {
+                        rowKeyList.add(YieldViewDataResultDto.getFPYlist().get(i).getRowKey());
                     }
                 }else if(column.equals("Pass Samples")){
-                    for (int i = 0; i < YieldViewDataResultDtoList.get(0).getPASSlist().size(); i++) {
-                        rowKeyList.add(YieldViewDataResultDtoList.get(0).getPASSlist().get(i).getRowKey());
+                    for (int i = 0; i < YieldViewDataResultDto.getPASSlist().size(); i++) {
+                        rowKeyList.add(YieldViewDataResultDto.getPASSlist().get(i).getRowKey());
                     }
                 }else if(column.equals("NTF Samples")){
-                    for (int i = 0; i < YieldViewDataResultDtoList.get(0).getNtflist().size(); i++) {
-                        rowKeyList.add(YieldViewDataResultDtoList.get(0).getNtflist().get(i).getRowKey());
+                    for (int i = 0; i < YieldViewDataResultDto.getNtflist().size(); i++) {
+                        rowKeyList.add(YieldViewDataResultDto.getNtflist().get(i).getRowKey());
                     }
                 }else if(column.equals("NG Samples")){
-                    for (int i = 0; i < YieldViewDataResultDtoList.get(0).getNglist().size(); i++) {
-                        rowKeyList.add(YieldViewDataResultDtoList.get(0).getNglist().get(i).getRowKey());
+                    for (int i = 0; i <YieldViewDataResultDto.getNglist().size(); i++) {
+                        rowKeyList.add(YieldViewDataResultDto.getNglist().get(i).getRowKey());
                     }
                 }else if(column.equals("Total Samples")){
-                    for (int i = 0; i < YieldViewDataResultDtoList.get(0).getTotallist().size(); i++) {
-                        rowKeyList.add(YieldViewDataResultDtoList.get(0).getTotallist().get(i).getRowKey());
+                    for (int i = 0; i < YieldViewDataResultDto.getTotallist().size(); i++) {
+                        rowKeyList.add(YieldViewDataResultDto.getTotallist().get(i).getRowKey());
                     }
                 }
 
