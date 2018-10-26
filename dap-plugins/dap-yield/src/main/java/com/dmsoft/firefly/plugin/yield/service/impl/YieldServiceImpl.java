@@ -28,24 +28,18 @@ public class YieldServiceImpl implements YieldService {
     private static Logger logger = LoggerFactory.getLogger(YieldServiceImpl.class);
 
 
-    private List<YieldOverviewDto> getOverviewResult(SearchDataFrame searchDataFrame, List<SearchConditionDto> searchConditions,
-                                                     YieldAnalysisConfigDto configDto){
-        return null;
-    }
-
     @Override
-    public List<YieldResultDto> getResult(SearchDataFrame searchDataFrame, List<SearchConditionDto> oldSearchConditions, YieldAnalysisConfigDto configDto) {
-
+    public YieldResultDto getYieldResult(SearchDataFrame searchDataFrame, List<SearchConditionDto> oldSearchConditions,
+                                                     YieldAnalysisConfigDto configDto){
         logger.debug("Getting Yield totalProcesses result...");
         if (searchDataFrame == null || oldSearchConditions == null || configDto == null) {
             pushProgress(100);
             throw new ApplicationException();
         }
         //TODO td SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11002)
-        List<YieldResultDto> result = Lists.newArrayList();
+        YieldResultDto result = new YieldResultDto();
         List<YieldOverviewDto> overResult = Lists.newArrayList();
         List<YieldNTFChartDto> ntfChartResult = Lists.newArrayList();
-        List<YieldTotalProcessesDto> yieldTotalProcessesDtos = Lists.newArrayList();
         YieldTotalProcessesDto yieldTotalProcessesDto = new YieldTotalProcessesDto();
 
 
@@ -171,7 +165,7 @@ public class YieldServiceImpl implements YieldService {
                         int ignoreCount = 0;
                         for (int m = 0 ; m < ignoreTestItemValueList.size();m++){
                             if (!(ignoreTestItemValueList.get(m).getRowKey().equals(oldRowKeys.get(n)) && ignoreTestItemValueList.get(m).getSearchConditionDto().equals(searchConditions.get(i)))) {
-                               ignoreCount++;
+                                ignoreCount++;
                             }
                         }
                         if (ignoreCount == ignoreTestItemValueList.size()){
@@ -185,46 +179,46 @@ public class YieldServiceImpl implements YieldService {
                         RowDataDto rowDataDto = searchDataFrame.getDataRow(rowKeys.get(j));
                         int ngFlag = 0;
 
-                            String key = null;
-                            for (Map.Entry<String, String> entry : rowDataDto.getData().entrySet()) {
-                                if (entry.getKey().equals(searchConditions.get(i).getItemName())) {
-                                    key = entry.getKey();
+                        String key = null;
+                        for (Map.Entry<String, String> entry : rowDataDto.getData().entrySet()) {
+                            if (entry.getKey().equals(searchConditions.get(i).getItemName())) {
+                                key = entry.getKey();
+                            }
+                        }
+                        String lslOrFail = searchConditions.get(i).getLslOrFail();
+                        String uslOrPass = searchConditions.get(i).getUslOrPass();
+                        if (searchConditions.get(i).getTestItemType().getCode().equals("Variable")) {
+                            if (validateValue(rowDataDto.getData().get(key), uslOrPass, lslOrFail, searchConditions.get(i).getTestItemType().getCode())) {
+                                ngFlag = ngFlag + 1;
+                                if (j == 0) {
+                                    overFpySamples = overFpySamples + 1;
+                                    overPassSamples = overPassSamples + 1;
+                                    break;
+                                } else if (j > 0 && j <= rowKeys.size() - 1) {
+                                    overNtfSamples = overNtfSamples + j;
+                                    overPassSamples = overPassSamples + 1;
+                                    break;
                                 }
                             }
-                            String lslOrFail = searchConditions.get(i).getLslOrFail();
-                            String uslOrPass = searchConditions.get(i).getUslOrPass();
-                            if (searchConditions.get(i).getTestItemType().getCode().equals("Variable")) {
-                                if (validateValue(rowDataDto.getData().get(key), uslOrPass, lslOrFail, searchConditions.get(i).getTestItemType().getCode())) {
-                                    ngFlag = ngFlag + 1;
-                                    if (j == 0) {
-                                        overFpySamples = overFpySamples + 1;
-                                        overPassSamples = overPassSamples + 1;
-                                        break;
-                                    } else if (j > 0 && j <= rowKeys.size() - 1) {
-                                        overNtfSamples = overNtfSamples + j;
-                                        overPassSamples = overPassSamples + 1;
-                                        break;
-                                    }
-                                }
-                            } else if (searchConditions.get(i).getTestItemType().getCode().equals("Attribute")) {
-                                if (validateValue(rowDataDto.getData().get(key), uslOrPass, lslOrFail, searchConditions.get(i).getTestItemType().getCode())) {
-                                    ngFlag = ngFlag + 1;
-                                    if (j == 0) {
-                                        overFpySamples = overFpySamples + 1;
-                                        overPassSamples = overPassSamples + 1;
-                                        break;
-                                    } else if (j > 0 && j <= rowKeys.size() - 1) {
-                                        overNtfSamples = overNtfSamples + j;
-                                        overPassSamples = overPassSamples + 1;
-                                        break;
-                                    }
+                        } else if (searchConditions.get(i).getTestItemType().getCode().equals("Attribute")) {
+                            if (validateValue(rowDataDto.getData().get(key), uslOrPass, lslOrFail, searchConditions.get(i).getTestItemType().getCode())) {
+                                ngFlag = ngFlag + 1;
+                                if (j == 0) {
+                                    overFpySamples = overFpySamples + 1;
+                                    overPassSamples = overPassSamples + 1;
+                                    break;
+                                } else if (j > 0 && j <= rowKeys.size() - 1) {
+                                    overNtfSamples = overNtfSamples + j;
+                                    overPassSamples = overPassSamples + 1;
+                                    break;
                                 }
                             }
-                            if (j == rowKeys.size() - 1) {
-                                if (ngFlag == 0) {
-                                    overNgSamples = overNgSamples + 1 + j ;
-                                }
+                        }
+                        if (j == rowKeys.size() - 1) {
+                            if (ngFlag == 0) {
+                                overNgSamples = overNgSamples + 1 + j ;
                             }
+                        }
                     }
                 }
                 overTotalSamples = overPassSamples+overNtfSamples+overNgSamples;
@@ -270,22 +264,22 @@ public class YieldServiceImpl implements YieldService {
                     for (int k = 1 ; k < searchConditions.size();k++){
                         IgnoreTestItemValue ignoreTestItemValue = null;
                         for (int m = 0 ; m < ignoreTestItemValueList.size();m++){
-                                if (ignoreTestItemValueList.get(m).getRowKey().equals(rowKeys.get(j)) && ignoreTestItemValueList.get(m).getSearchConditionDto().equals(searchConditions.get(k))) {
-                                    ignoreTestItemValue = ignoreTestItemValueList.get(m);
-                                }
+                            if (ignoreTestItemValueList.get(m).getRowKey().equals(rowKeys.get(j)) && ignoreTestItemValueList.get(m).getSearchConditionDto().equals(searchConditions.get(k))) {
+                                ignoreTestItemValue = ignoreTestItemValueList.get(m);
+                            }
                         }
                         if (ignoreTestItemValue == null){
                             String lslOrFail = searchConditions.get(k).getLslOrFail();
                             String uslOrPass = searchConditions.get(k).getUslOrPass();
-                                if (searchConditions.get(k).getTestItemType().getCode().equals("Variable")) {
-                                    if (validateValue(rowData.get(searchConditions.get(k).getItemName()), uslOrPass, lslOrFail, searchConditions.get(k).getTestItemType().getCode())) {
-                                        count = count + 1;
-                                    }
-                                } else if (searchConditions.get(k).getTestItemType().getCode().equals("Attribute")) {
-                                    if (validateValue(rowData.get(searchConditions.get(k).getItemName()), uslOrPass, lslOrFail, searchConditions.get(k).getTestItemType().getCode())) {
-                                        count = count + 1;
-                                    }
+                            if (searchConditions.get(k).getTestItemType().getCode().equals("Variable")) {
+                                if (validateValue(rowData.get(searchConditions.get(k).getItemName()), uslOrPass, lslOrFail, searchConditions.get(k).getTestItemType().getCode())) {
+                                    count = count + 1;
                                 }
+                            } else if (searchConditions.get(k).getTestItemType().getCode().equals("Attribute")) {
+                                if (validateValue(rowData.get(searchConditions.get(k).getItemName()), uslOrPass, lslOrFail, searchConditions.get(k).getTestItemType().getCode())) {
+                                    count = count + 1;
+                                }
+                            }
                         }else{
                             ignoreCount++;
                         }
@@ -306,14 +300,14 @@ public class YieldServiceImpl implements YieldService {
             totalProTotalSamples = unRepetitionDatas.size();
             totalProNgSamples = totalProTotalSamples - totalProPassSamples;
             totalProNtfSamples = totalProPassSamples - totalProFpySamples;
-                yieldTotalProcessesDto.setFpySamples(totalProFpySamples);
-                yieldTotalProcessesDto.setNgSamples(totalProNgSamples);
-                yieldTotalProcessesDto.setNtfSamples(totalProNtfSamples);
-                yieldTotalProcessesDto.setPassSamples(totalProPassSamples);
-                yieldTotalProcessesDto.setTotalSamples(totalProTotalSamples);
-                yieldTotalProcessesDto.setFpyPercent((double) totalProFpySamples / (double) totalProTotalSamples);
-                yieldTotalProcessesDto.setNgPercent((double) totalProNgSamples / (double) totalProTotalSamples);
-                yieldTotalProcessesDto.setNtfPercent((double) totalProNtfSamples / (double) totalProTotalSamples);
+            yieldTotalProcessesDto.setFpySamples(totalProFpySamples);
+            yieldTotalProcessesDto.setNgSamples(totalProNgSamples);
+            yieldTotalProcessesDto.setNtfSamples(totalProNtfSamples);
+            yieldTotalProcessesDto.setPassSamples(totalProPassSamples);
+            yieldTotalProcessesDto.setTotalSamples(totalProTotalSamples);
+            yieldTotalProcessesDto.setFpyPercent((double) totalProFpySamples / (double) totalProTotalSamples);
+            yieldTotalProcessesDto.setNgPercent((double) totalProNgSamples / (double) totalProTotalSamples);
+            yieldTotalProcessesDto.setNtfPercent((double) totalProNtfSamples / (double) totalProTotalSamples);
         }else {
             YieldOverviewDto yieldOverviewDto = new YieldOverviewDto();
             for (int i = 1 ; i < oldSearchConditions.size();i++){
@@ -374,16 +368,13 @@ public class YieldServiceImpl implements YieldService {
             }
         }
 
-        yieldTotalProcessesDtos.add(yieldTotalProcessesDto);
-        YieldResultDto yieldResultDto = new YieldResultDto();
-        yieldResultDto.setTotalProcessesDtos(yieldTotalProcessesDtos);
-        yieldResultDto.setYieldNTFChartDtos(ntfChartResult);
-        yieldResultDto.setYieldOverviewDtos(overViewResult);
-        result.add(yieldResultDto);
+
+        result.setTotalProcessesDtos(yieldTotalProcessesDto);
+        result.setYieldNTFChartDtos(ntfChartResult);
+        result.setYieldOverviewDtos(overViewResult);
         return result;
     }
-
-
+    
     @Override
     public List<YieldViewDataResultDto> getViewData(SearchDataFrame searchDataFrame,  List<SearchConditionDto> searchConditions, YieldAnalysisConfigDto configDto) {
 

@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface YieldService {
 
-    List<YieldResultDto> getResult(SearchDataFrame searchDataFrame, List<SearchConditionDto> searchConditions,
+    YieldResultDto getYieldResult(SearchDataFrame searchDataFrame, List<SearchConditionDto> searchConditions,
                                    YieldAnalysisConfigDto configDto);
 
     List<YieldViewDataResultDto> getViewData(SearchDataFrame searchDataFrame, List<SearchConditionDto> searchConditions, YieldAnalysisConfigDto configDto);

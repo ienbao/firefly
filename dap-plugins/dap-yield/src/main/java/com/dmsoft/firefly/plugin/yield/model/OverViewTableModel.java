@@ -17,6 +17,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.scene.Cursor;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
@@ -402,16 +403,6 @@ public class OverViewTableModel  implements TableModel{
             tableCell.setEditable(true);
         }
 
-        if (column.equals("Total Samples")||column.equals("FPY Samples")||column.equals("Pass Samples")||column.equals("NTF Samples")||column.equals("NG Samples")){
-            String finalColumn = column;
-            YieldOverviewResultAlarmDto yieldStatsDto = keyToStatsDtoMap.get(rowKey);
-            tableCell.setOnMouseClicked(event -> {
-                if (clickListener != null){
-                    clickListener.executeAnalyzeDetail(yieldStatsDto.getItemName(), finalColumn);
-                }
-            });
-        }
-
         tableCell.setStyle(null);
         tableCell.getStyleClass().remove("error");
         if (DAPStringUtils.isBlank(column)) {
@@ -430,6 +421,16 @@ public class OverViewTableModel  implements TableModel{
             tableCell.setStyle("-fx-border-color: #ea2028;-fx-border-with:1 1 1 1");
         }
 
+        if (column.equals(YIELD_TITLE[3])||column.equals(YIELD_TITLE[4])||column.equals(YIELD_TITLE[5])||column.equals(YIELD_TITLE[6])||column.equals(YIELD_TITLE[7])){
+            String finalColumn = column;
+            YieldOverviewResultAlarmDto yieldStatsDto = keyToStatsDtoMap.get(rowKey);
+            tableCell.setOnMouseClicked(event -> {
+                if (clickListener != null){
+                    clickListener.executeAnalyzeDetail(yieldStatsDto.getItemName(), finalColumn);
+                }
+            });
+            tableCell.setCursor(Cursor.HAND);
+        }
         YieldOverviewResultAlarmDto spcStatsDto = keyToStatsDtoMap.get(rowKey);
         Map<String, OverviewAlarmDto> statisticalAlarmDtoMap = spcStatsDto.getOverviewAlarmDtoMap();
         if (statisticalAlarmDtoMap != null) {
