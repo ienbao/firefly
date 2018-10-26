@@ -37,6 +37,8 @@ import java.util.ResourceBundle;
 public class YieldChartResultController implements Initializable {
     private YieldMainController yieldMainController;
     @FXML
+    private YieldResultDataController yieldResultDataController;
+    @FXML
     private BarChart yieldBarChart;
     @FXML
     private GridPane YieldGridPane;
@@ -63,7 +65,7 @@ public class YieldChartResultController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initI18n();
-
+        this.yieldResultDataController.init(this);
     }
 
     private void initI18n() {
@@ -156,6 +158,18 @@ public class YieldChartResultController implements Initializable {
 
     public YieldMainController getYieldMainController() {
 
-        return null;
+        return yieldMainController;
+    }
+
+    public void setYieldMainController(YieldMainController yieldMainController) {
+        this.yieldMainController = yieldMainController;
+    }
+
+    public YieldResultDataController getYieldResultDataController() {
+        return yieldResultDataController;
+    }
+
+    public void setYieldResultDataController(YieldResultDataController yieldResultDataController) {
+        this.yieldResultDataController = yieldResultDataController;
     }
 }

@@ -1,7 +1,6 @@
 package com.dmsoft.firefly.plugin.yield.controller;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
-import com.dmsoft.firefly.gui.components.searchtab.BasicSearchPane;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.*;
@@ -69,7 +68,7 @@ public class YieldItemController implements Initializable {
     private Tab itemTab;
     @FXML
     private Tab configTab;
-//    @FXML
+    //    @FXML
 //    private Tab timeTab;
 //    @FXML
 //    private Label helpLabel;
@@ -88,6 +87,7 @@ public class YieldItemController implements Initializable {
     private FilteredList<ItemTableModel> filteredList = items.filtered(p -> p.getItem().startsWith(""));
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
     private YieldMainController yieldMainController;
+    private YieldResultDataController yieldResultDataController;
     private ViewDataController viewDataController;
     private ContextMenu pop;
     private boolean isFilterUslOrLsl = false;
@@ -100,7 +100,9 @@ public class YieldItemController implements Initializable {
 
     private List<String> originalItems = Lists.newArrayList();
     private SearchDataFrame dataFrame;
-//
+
+
+    //
 //    @FXML
 //    private CheckBox enabledTimerCheckBox;
 //    @FXML
@@ -115,10 +117,11 @@ public class YieldItemController implements Initializable {
     /**
      * init main controller
      *
-//     * @param spcMainController main controller
+     //     * @param spcMainController main controller
      */
     public void init(YieldMainController yieldMainController) {
         this.yieldMainController = yieldMainController;
+        this.yieldResultDataController=yieldMainController.getYieldResultController().getYieldResultDataController();
     }
 
 
@@ -280,29 +283,7 @@ public class YieldItemController implements Initializable {
         initComponentEvent();
         initItemData();
         initYieldConfig();
-        initSpcTimer();
-    }
-
-    /**
-     * init spc timer tab
-     */
-    public void initSpcTimer() {
-//        isTimer = false;
-//        startTimer = false;
-//        enabledTimerCheckBox.setSelected(false);
-//        List<String> timerList = leftConfigService.findYieldTimerTime();
-//
-//        if (timerList == null) {
-//            return;
-//        }
-//        ObservableList<String> showTimeList = FXCollections.observableArrayList();
-//        for (String time : timerList) {
-//            showTimeList.add(time + YieldFxmlAndLanguageUtils.getString(ResourceMassages.TIMER_MIN));
-//        }
-//        timeComboBox.setItems(showTimeList);
-//        if (showTimeList.size() > 0) {
-//            timeComboBox.setValue(showTimeList.get(0));
-//        }
+//        initYieldTimer();
     }
 
     /**
@@ -363,7 +344,6 @@ public class YieldItemController implements Initializable {
                 filteredList.setPredicate(this::isFilterAndHasUslOrLsl);
                 is.getStyleClass().remove("filter-normal");
                 is.getStyleClass().add("filter-active");
-//                is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
                 isFilterUslOrLsl = true;
             });
             all.setSelected(true);
@@ -501,7 +481,7 @@ public class YieldItemController implements Initializable {
 //        return timer1;
 //    }
 
-//    @SuppressWarnings("unchecked")
+    //    @SuppressWarnings("unchecked")
 //    private void autoRefreshAnalysis() {
 //        List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
 //        spcMainController.clearAnalysisSubShowData();
@@ -646,13 +626,14 @@ public class YieldItemController implements Initializable {
                 YieldRefreshJudgeUtil.newInstance().setOverViewSelectRowKeyListCache(null);
 //                YieldRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
                 List<YieldOverviewResultAlarmDto> YieldOverviewAlarmDtoList = (List<YieldOverviewResultAlarmDto>) context.get(ParamKeys.YIELD_STATISTICAL_RESULT_ALARM_DTO_LIST);
+                List<YieldTotalProcessesDto> yieldTotalProcessesDtoList = (List<YieldTotalProcessesDto>) context.get(ParamKeys.YIELD_TOTAL_PROCESSES_DTO_LIST);
+
                 TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
 //                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
                 yieldMainController.setOverviewResultData(YieldOverviewAlarmDtoList, null, isTimer);
+                yieldResultDataController.setOverviewResultData(yieldTotalProcessesDtoList, configComboBox.getValue(), isTimer);
                 dataFrame=context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
                 yieldMainController.setDataFrame(dataFrame);
-                yieldMainController.setYieldResultData(context.getParam(ParamKeys.YIELD_RESULT_DTO_LIST,YieldResultDto.class));
-                yieldMainController.updateYieldSummaryDetial();
                 windowProgressTipController.closeDialog();
                 yieldMainController.setDisable(false);
                 logger.info("Yield analysis finish.");
@@ -782,7 +763,7 @@ public class YieldItemController implements Initializable {
     }
 
     private void initYieldConfig() {
-       YieldAnalysisConfigDto yieldAnalysisConfigDto = this.getYieldConfigPreference();
+        YieldAnalysisConfigDto yieldAnalysisConfigDto = this.getYieldConfigPreference();
         if (yieldAnalysisConfigDto == null) {
             yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
             yieldAnalysisConfigDto.setPrimaryKey("");
@@ -875,10 +856,10 @@ public class YieldItemController implements Initializable {
         searchTab.clearSearchTab();
     }
 
-    public YieldAnalysisConfigDto buildYieldAnalysisConfigData() {
+    private YieldAnalysisConfigDto buildYieldAnalysisConfigData() {
         YieldAnalysisConfigDto yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
         yieldAnalysisConfigDto.setPrimaryKey(configComboBox.getValue());
-//        yieldAnalysisConfigDto.set;
+//        yieldAnalysisConfigDto.setTopN;
         return yieldAnalysisConfigDto;
     }
 
@@ -1032,9 +1013,11 @@ public class YieldItemController implements Initializable {
         return configComboBox.getValue();
     }
 
-    public OverviewAlarmDto getConfigComboBox() {
-        return null;
+    public ComboBox<String> getConfigComboBox() {
+        return configComboBox;
     }
 
-
+    public SearchTab getSearchTab() {
+        return searchTab;
+    }
 }

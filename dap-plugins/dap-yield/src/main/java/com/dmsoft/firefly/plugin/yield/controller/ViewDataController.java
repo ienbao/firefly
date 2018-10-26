@@ -70,7 +70,7 @@ public class ViewDataController implements Initializable {
     private SearchConditionDto searchConditionDto;
     private List<String> selectStatisticalResultName = Lists.newArrayList();
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
-//    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+    //    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
     private ChooseTestItemDialog chooseTestItemDialog;
     private String rowKey;
@@ -105,7 +105,6 @@ public class ViewDataController implements Initializable {
     }
 
 
-
     private void initBtnIcon() {
         chooseColumnBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
         TooltipUtil.installNormalTooltip(chooseColumnBtn, YieldFxmlAndLanguageUtils.getString(ResourceMassages.CHOOSE_ITEMS_TITLE));
@@ -120,7 +119,7 @@ public class ViewDataController implements Initializable {
      */
     public void clearViewData() {
         filteValueTf.getTextField().setText(null);
-        this.setViewData(null,null, null ,null, null);
+        this.setViewData(null, null, null, null, null);
     }
 
     /**
@@ -130,8 +129,8 @@ public class ViewDataController implements Initializable {
      * @param selectedRowKey                    selected row key
      * @param statisticalSearchConditionDtoList statisticalSearchConditionDtoList
      */
-    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList,String rowKey,String columnLable) {
-        this.setViewData(dataFrame, selectedRowKey,statisticalSearchConditionDtoList, false, rowKey, columnLable);
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList, String rowKey, String columnLable) {
+        this.setViewData(dataFrame, selectedRowKey, statisticalSearchConditionDtoList, false, rowKey, columnLable);
     }
 
     /**
@@ -142,7 +141,7 @@ public class ViewDataController implements Initializable {
      * @param statisticalSearchConditionDtoList statisticalSearchConditionDtoList
      * @param isTimer                           isTimer
      */
-    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList, boolean isTimer, String rowKey,String columnLable) {
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList, boolean isTimer, String rowKey, String columnLable) {
         this.setViewData(dataFrame, selectedRowKey, statisticalSearchConditionDtoList, isTimer, isTimer, rowKey, columnLable);
     }
 
@@ -150,16 +149,16 @@ public class ViewDataController implements Initializable {
     /**
      * set view data table dataList
      *
-     * @param dataFrame                         search data frame
-     * @param selectedRowKey                    selected row key
+     * @param dataFrame                  search data frame
+     * @param selectedRowKey             selected row key
      * @param searchViewDataConditionDto statisticalSearchConditionDtoList
      */
-    private void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> searchViewDataConditionDto, boolean isTimer, boolean isAutoRefresh, String rowKey,String columnLable) {
+    private void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> searchViewDataConditionDto, boolean isTimer, boolean isAutoRefresh, String rowKey, String columnLable) {
         this.searchViewDataConditionDto = searchViewDataConditionDto;
         this.selectedRowKeys = selectedRowKey;
         this.rowKey = rowKey;
         this.columnLabel = columnLable;
-        String row = rowKey != null? rowKey+"::":null;
+        String row = rowKey != null ? rowKey + "::" : null;
         viewDataR.setText(row);
         viewDataC.setText(columnLable);
 
@@ -257,16 +256,22 @@ public class ViewDataController implements Initializable {
             int curIndex = 0;
             for (TestItemWithTypeDto typeDto : typeDtoList) {
                 String testItemName = typeDto.getTestItemName();
+                if (selectedTestItems.contains(testItemName) && dataFrame.isTestItemExist(testItemName)) {
+                    curIndex++;
+                }
+            }
+            for (TestItemWithTypeDto typeDto : typeDtoList) {
+                String testItemName = typeDto.getTestItemName();
                 if (selectedTestItems.contains(testItemName)) {
-                    if (!dataFrame.isTestItemExist(testItemName)) {
+                    if (selectedTestItems.contains(testItemName) && !dataFrame.isTestItemExist(testItemName)) {
                         List<RowDataDto> rowDataDtoList = RuntimeContext.getBean(SourceDataService.class).findTestData(this.selectedProjectNames,
                                 Lists.newArrayList(testItemName));
                         DataColumn dataColumn = RuntimeContext.getBean(DataFrameFactory.class).createDataColumn(Lists.newArrayList(typeDto), rowDataDtoList).get(0);/* 新增表中的列 */
                         dataFrame.appendColumn(curIndex, dataColumn);
+                        curIndex++;
                     }
-
-                    if(!(testItemName.equals(searchViewDataConditionDto.get(0).getItemName()))){
-                        if(!(testItemName.equals(searchViewDataConditionDto.get(1).getItemName()))){
+                    if (!(testItemName.equals(searchViewDataConditionDto.get(0).getItemName()))) {
+                        if (!(testItemName.equals(searchViewDataConditionDto.get(1).getItemName()))) {
                             searchConditionDto = new SearchConditionDto();
                             searchConditionDto.setItemName(testItemName);
                             searchConditionDto.setLslOrFail(typeDto.getLsl());
@@ -274,7 +279,7 @@ public class ViewDataController implements Initializable {
                             searchViewDataConditionDto.add(searchConditionDto);
                         }
                     }
-                    curIndex++;
+
                 } else {
                     dataFrame.removeColumns(Lists.newArrayList(typeDto.getTestItemName()));
                 }
@@ -291,7 +296,7 @@ public class ViewDataController implements Initializable {
 //                }
 //            }
 
-            setViewData(this.dataFrame,getSelectedRowKeys(), searchViewDataConditionDto,false, rowKey, columnLabel);
+            setViewData(this.dataFrame, getSelectedRowKeys(), searchViewDataConditionDto, false, rowKey, columnLabel);
         });
 
     }
@@ -451,7 +456,6 @@ public class ViewDataController implements Initializable {
         }
 
     }
-
 
 
 }
