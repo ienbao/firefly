@@ -674,7 +674,7 @@ public class YieldItemController implements Initializable {
                 yieldMainController.setDataFrame(dataFrame);
 
                 yieldMainController.getYieldResultController().analyzeYieldResult(context.getParam(ParamKeys.YIELD_RESULT_DTO,YieldResultDto.class));
-               // yieldMainController.setYieldResultDto(context.getParam(ParamKeys.YIELD_RESULT_DTO_LIST,YieldResultDto.class));
+                yieldMainController.getYieldResultController().ananlyzeyieldResultItem(context.getParam(ParamKeys.YIELD_RESULT_DTO,YieldResultDto.class));
                 windowProgressTipController.closeDialog();
                 yieldMainController.setDisable(false);
                 logger.info("Yield analysis finish.");
