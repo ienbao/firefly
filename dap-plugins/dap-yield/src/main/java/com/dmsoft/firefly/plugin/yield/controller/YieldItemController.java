@@ -817,7 +817,7 @@ public class YieldItemController implements Initializable {
             primaryKeyList.add(item);
         }
         configComboBox.setItems(primaryKeyList);
-        if (primaryKeyList.size() > 0) {
+        if (primaryKeyList.size() > 0&&primaryKeyList.contains(yieldAnalysisConfigDto.getPrimaryKey())) {
             configComboBox.setValue(yieldAnalysisConfigDto.getPrimaryKey());
 //            set TopN
         }
