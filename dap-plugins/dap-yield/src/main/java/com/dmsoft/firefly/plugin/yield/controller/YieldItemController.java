@@ -626,12 +626,13 @@ public class YieldItemController implements Initializable {
                 YieldRefreshJudgeUtil.newInstance().setOverViewSelectRowKeyListCache(null);
 //                YieldRefreshJudgeUtil.newInstance().setStatisticalSelectRowKeyListCache(null);
                 List<YieldOverviewResultAlarmDto> YieldOverviewAlarmDtoList = (List<YieldOverviewResultAlarmDto>) context.get(ParamKeys.YIELD_STATISTICAL_RESULT_ALARM_DTO_LIST);
-                //List<YieldTotalProcessesDto> yieldTotalProcessesDtoList = (List<YieldTotalProcessesDto>) context.get(ParamKeys.YIELD_TOTAL_PROCESSES_DTO_LIST);
+                YieldResultDto yieldResultDto = (YieldResultDto) context.get(ParamKeys.YIELD_RESULT_DTO);
+                YieldTotalProcessesDto yieldTotalProcessesDto = yieldResultDto.getTotalProcessesDtos();
 
                 TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
 //                DigNumInstance.newInstance().setDigNum(templateSettingDto.getDecimalDigit());
                 yieldMainController.setOverviewResultData(YieldOverviewAlarmDtoList, null, isTimer);
-               // yieldResultDataController.setOverviewResultData(yieldTotalProcessesDtoList, configComboBox.getValue(), isTimer);
+                yieldResultDataController.setOverviewResultData(yieldTotalProcessesDto, configComboBox.getValue(), isTimer);
                 dataFrame=context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
                 yieldMainController.setDataFrame(dataFrame);
 

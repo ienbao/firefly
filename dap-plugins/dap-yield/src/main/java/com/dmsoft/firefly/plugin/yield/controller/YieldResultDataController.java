@@ -64,17 +64,17 @@ public class YieldResultDataController implements Initializable {
 
     }
 
-    public void setOverviewResultData(List<YieldTotalProcessesDto> list, String rowKey, boolean isTimer) {
-        if(list.get(0).getTotalSamples()!=null){
-            totalSamples1.setText(list.get(0).getTotalSamples().toString());
+    public void setOverviewResultData(YieldTotalProcessesDto list, String rowKey, boolean isTimer) {
+        if(list.getTotalSamples()!=null){
+            totalSamples1.setText(list.getTotalSamples().toString());
             totalSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"Total Samples"));
-            fpySamples1.setText(list.get(0).getFpySamples().toString());
+            fpySamples1.setText(list.getFpySamples().toString());
             fpySamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"FPY Samples"));
-            passSamples1.setText(list.get(0).getPassSamples().toString());
+            passSamples1.setText(list.getPassSamples().toString());
             passSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"Pass Samples"));
-            ntfSamples1.setText(list.get(0).getNtfSamples().toString());
+            ntfSamples1.setText(list.getNtfSamples().toString());
             ntfSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"NTF Samples"));
-            ngSamples1.setText(list.get(0).getNgSamples().toString());
+            ngSamples1.setText(list.getNgSamples().toString());
             ngSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"NG Samples"));
             totalSamples1.setUnderline(true);
             totalSamples1.setUnderline(true);
