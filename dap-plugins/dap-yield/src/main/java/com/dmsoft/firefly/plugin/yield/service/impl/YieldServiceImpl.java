@@ -607,7 +607,7 @@ public class YieldServiceImpl implements YieldService {
 
 
     @Override
-    public List<YieldViewDataResultDto> getTotalData(SearchDataFrame searchDataFrame, List<SearchConditionDto> oldSearchConditions, YieldAnalysisConfigDto configDto) {
+    public YieldViewDataResultDto getTotalData(SearchDataFrame searchDataFrame, List<SearchConditionDto> oldSearchConditions, YieldAnalysisConfigDto configDto) {
 
         logger.debug("Getting TotalData...");
         if (searchDataFrame == null || oldSearchConditions == null || configDto == null) {
@@ -615,7 +615,7 @@ public class YieldServiceImpl implements YieldService {
             throw new ApplicationException();
         }
 
-        List<YieldViewDataResultDto> viewDataResultDto = Lists.newArrayList();
+        YieldViewDataResultDto yieldViewDataResultDto = new YieldViewDataResultDto();
 
 
         //分类产品
@@ -788,7 +788,7 @@ public class YieldServiceImpl implements YieldService {
                 totalTotallist.add(yieldViewDataDto);
             }
 
-            YieldViewDataResultDto yieldViewDataResultDto = new YieldViewDataResultDto();
+
             yieldViewDataResultDto.setPrimary(configDto.getPrimaryKey());
 
             yieldViewDataResultDto.setFPYlist(totalFpylist);
@@ -797,12 +797,12 @@ public class YieldServiceImpl implements YieldService {
             yieldViewDataResultDto.setNglist(totalNglist);
             yieldViewDataResultDto.setTotallist(totalTotallist);
 
-            viewDataResultDto.add(yieldViewDataResultDto);
+
 
 
         }
 
-        return viewDataResultDto;
+        return yieldViewDataResultDto;
     }
 
 

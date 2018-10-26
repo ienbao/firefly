@@ -134,28 +134,28 @@ public class YieldResultDataController implements Initializable {
                 @Override
                 public void doJob(JobContext context) {
 
-                    List<YieldViewDataResultDto> YieldViewDataResultDtoList = (List<YieldViewDataResultDto>) context.get(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO);
+                    YieldViewDataResultDto yieldViewDataResultDto = (YieldViewDataResultDto) context.get(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO);
                     List<String> rowKeyList = Lists.newArrayList();
 
                     if (column.equals("FPY Samples")) {
-                        for (int i = 0; i < YieldViewDataResultDtoList.get(0).getFPYlist().size(); i++) {
-                            rowKeyList.add(YieldViewDataResultDtoList.get(0).getFPYlist().get(i).getRowKey());
+                        for (int i = 0; i < yieldViewDataResultDto.getFPYlist().size(); i++) {
+                            rowKeyList.add(yieldViewDataResultDto.getFPYlist().get(i).getRowKey());
                         }
                     } else if (column.equals("Pass Samples")) {
-                        for (int i = 0; i < YieldViewDataResultDtoList.get(0).getPASSlist().size(); i++) {
-                            rowKeyList.add(YieldViewDataResultDtoList.get(0).getPASSlist().get(i).getRowKey());
+                        for (int i = 0; i < yieldViewDataResultDto.getPASSlist().size(); i++) {
+                            rowKeyList.add(yieldViewDataResultDto.getPASSlist().get(i).getRowKey());
                         }
                     } else if (column.equals("NTF Samples")) {
-                        for (int i = 0; i < YieldViewDataResultDtoList.get(0).getNtflist().size(); i++) {
-                            rowKeyList.add(YieldViewDataResultDtoList.get(0).getNtflist().get(i).getRowKey());
+                        for (int i = 0; i < yieldViewDataResultDto.getNtflist().size(); i++) {
+                            rowKeyList.add(yieldViewDataResultDto.getNtflist().get(i).getRowKey());
                         }
                     } else if (column.equals("NG Samples")) {
-                        for (int i = 0; i < YieldViewDataResultDtoList.get(0).getNglist().size(); i++) {
-                            rowKeyList.add(YieldViewDataResultDtoList.get(0).getNglist().get(i).getRowKey());
+                        for (int i = 0; i < yieldViewDataResultDto.getNglist().size(); i++) {
+                            rowKeyList.add(yieldViewDataResultDto.getNglist().get(i).getRowKey());
                         }
                     } else if (column.equals("Total Samples")) {
-                        for (int i = 0; i < YieldViewDataResultDtoList.get(0).getTotallist().size(); i++) {
-                            rowKeyList.add(YieldViewDataResultDtoList.get(0).getTotallist().get(i).getRowKey());
+                        for (int i = 0; i < yieldViewDataResultDto.getTotallist().size(); i++) {
+                            rowKeyList.add(yieldViewDataResultDto.getTotallist().get(i).getRowKey());
                         }
                     }
 
