@@ -55,27 +55,27 @@ public class YieldTotalProcessesDto extends AbstractValueObject {
         this.ngSamples = ngSamples;
     }
 
-    public double getFpyPercent() {
+    public Double getFpyPercent() {
         return fpyPercent;
     }
 
-    public void setFpyPercent(double fpyPercent) {
+    public void setFpyPercent(Double fpyPercent) {
         this.fpyPercent = fpyPercent;
     }
 
-    public double getNtfPercent() {
+    public Double getNtfPercent() {
         return ntfPercent;
     }
 
-    public void setNtfPercent(double ntfPercent) {
+    public void setNtfPercent(Double ntfPercent) {
         this.ntfPercent = ntfPercent;
     }
 
-    public double getNgPercent() {
+    public Double getNgPercent() {
         return ngPercent;
     }
 
-    public void setNgPercent(double ngPercent) {
+    public void setNgPercent(Double ngPercent) {
         this.ngPercent = ngPercent;
     }
 }

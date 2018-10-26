@@ -8,9 +8,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableCell?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -22,24 +19,15 @@
 <AnchorPane style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldChartResultController">
 <children>
     <!--<TabPane style="-fx-background-color: #ffffff;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">-->
-                    <GridPane fx:id="YieldGridPane" style="-fx-border-color: blue; -fx-max-width: 1500;">
-                    <VBox style="-fx-border-color: yellow; -fx-max-width: 1500;" VBox.vgrow="ALWAYS">
-                        <!--<GridPane prefHeight="4.0" prefWidth="435.0" BorderPane.alignment="CENTER">-->
-                            <!--<columnConstraints>-->
-                                <!--<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />-->
-                                <!--<ColumnConstraints hgrow="SOMETIMES" maxWidth="310.0" minWidth="310.0" prefWidth="310.0" />-->
-                                <!--<ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" />-->
-                            <!--</columnConstraints>-->
-                            <!--<rowConstraints>-->
-                                <!--<RowConstraints maxHeight="28.0" minHeight="28.0" prefHeight="28.0" vgrow="SOMETIMES" />-->
-                            <!--</rowConstraints>-->
-                        <!--</GridPane>-->
-                        <GridPane style="-fx-border-color: green; -fx-width: 1500;">
-                            <GridPane style="-fx-border-color: black; -fx-width: 1500; -fx-border-width: 0;">
-                                <GridPane style="-fx-border-color: red; -fx-width: 1500;">
-                                    <TabPane prefHeight="420.0" style="-fx-max-height: 1500" tabClosingPolicy="UNAVAILABLE" tabMaxWidth="100.0" tabMinWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="0">
+                    <GridPane fx:id="YieldGridPane" >
+                    <VBox  VBox.vgrow="ALWAYS">
+
+                        <GridPane>
+                            <GridPane >
+                                <GridPane >
+                                    <TabPane prefHeight="400.0"  tabClosingPolicy="UNAVAILABLE" tabMaxWidth="100.0" tabMinWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="0">
                                         <tabs>
-                                            <Tab fx:id="boxTab" closable="false" style="-fx-max-height: 1500">
+                                            <Tab fx:id="boxTab" closable="false" >
                                                 <graphic>
                                                     <Group>
                                                                 <children>
@@ -48,8 +36,8 @@
                                                     </Group>
                                                 </graphic>
                                                 <content>
-                                                    <GridPane style="-fx-max-width: 1500;">
-                                                        <VBox fx:id="BarChart" style="-fx-border-width: 0px; -fx-border-color: rgb(220,220,220); -fx-width: 750;" GridPane.columnIndex="0" VBox.vgrow="ALWAYS">
+                                                    <GridPane >
+                                                        <VBox fx:id="BarChart" style="-fx-border-width: 0px; -fx-border-color: rgb(220,220,220); " GridPane.columnIndex="0" VBox.vgrow="ALWAYS">
                                                             <BarChart fx:id="yieldBarChart" horizontalZeroLineVisible="false" legendVisible="false" verticalZeroLineVisible="false">
                                                                 <xAxis>
                                                                     <CategoryAxis side="BOTTOM" tickLabelGap="10.0" tickMarkVisible="false" />
@@ -62,13 +50,12 @@
                                                                 </VBox.margin>
                                                             </BarChart>
                                                         </VBox>
-                                                        <VBox style="-fx-border-width: 0px;-fx-background-color: #FAFAFA;  -fx-border-color: rgb(220,220,220); -fx-max-width: 750;" GridPane.columnIndex="1" VBox.vgrow="ALWAYS">
-
+                                                        <VBox style="-fx-border-width: 0px;-fx-background-color: #FAFAFA;  -fx-border-color: rgb(220,220,220);" GridPane.columnIndex="1" VBox.vgrow="ALWAYS">
                                                             <fx:include fx:id="yieldResultData" source="yield_result_data.fxml" />
                                                         </VBox>
                                                         <columnConstraints>
-                                                            <ColumnConstraints maxWidth="300.0" minWidth="298.0" prefWidth="299.0" />
-                                                            <ColumnConstraints maxWidth="300.0" minWidth="226.0" prefWidth="399.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="500.0" minWidth="298.0"  />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="500.0" minWidth="226.0"  />
                                                         </columnConstraints>
                                                         <rowConstraints>
                                                             <RowConstraints />
