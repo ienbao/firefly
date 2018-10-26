@@ -28,6 +28,6 @@ public class YieldResultDataHandler extends AbstractBasicJobHandler {
         YieldAnalysisConfigDto analysisConfigDto = (YieldAnalysisConfigDto) context.get(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO);
         YieldService yieldService = RuntimeContext.getBean(YieldService.class);
         List<YieldViewDataResultDto> yieldViewDataResultDtoList = yieldService.getTotalData(dataFrame, searchConditionDtoList, analysisConfigDto);
-        context.put(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO_LIST, yieldViewDataResultDtoList);
+        context.put(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO, yieldViewDataResultDtoList);
     }
 }

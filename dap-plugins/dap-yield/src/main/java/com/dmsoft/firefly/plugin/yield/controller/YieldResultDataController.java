@@ -17,6 +17,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class YieldResultDataController implements Initializable {
+    private final Logger logger = LoggerFactory.getLogger(YieldResultDataController.class);
     @FXML
     private GridPane gridPane;
     @FXML
@@ -78,15 +81,15 @@ public class YieldResultDataController implements Initializable {
         ngSamples1.setStyle("-fx-text-fill: #222222");
         if(list.getTotalSamples()!=null){
             totalSamples1.setText(list.getTotalSamples().toString());
-            totalSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"Total Samples"));
+            totalSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"Total Samples",list));
             fpySamples1.setText(list.getFpySamples().toString());
-            fpySamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"FPY Samples"));
+            fpySamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"FPY Samples",list));
             passSamples1.setText(list.getPassSamples().toString());
-            passSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"Pass Samples"));
+            passSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"Pass Samples",list));
             ntfSamples1.setText(list.getNtfSamples().toString());
-            ntfSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"NTF Samples"));
+            ntfSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"NTF Samples",list));
             ngSamples1.setText(list.getNgSamples().toString());
-            ngSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"NG Samples"));
+            ngSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"NG Samples",list));
             totalSamples1.setUnderline(true);
             totalSamples1.setUnderline(true);
             fpySamples1.setUnderline(true);
@@ -107,7 +110,8 @@ public class YieldResultDataController implements Initializable {
         }
 
     }
-    private void fireClickEvent(String rowKey,String column) {
+    private void fireClickEvent(String rowKey,String column,YieldTotalProcessesDto list) {
+        if(list.getTotalSamples()!=null){
 //        System.out.println(rowKey + column);
             yieldMainController = yieldChartResultController.getYieldMainController();
             yieldItemController = yieldMainController.getYieldItemController();
@@ -130,11 +134,8 @@ public class YieldResultDataController implements Initializable {
                 @Override
                 public void doJob(JobContext context) {
 
-                    List<YieldViewDataResultDto> YieldViewDataResultDtoList = (List<YieldViewDataResultDto>) context.get(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO_LIST);
+                    List<YieldViewDataResultDto> YieldViewDataResultDtoList = (List<YieldViewDataResultDto>) context.get(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO);
                     List<String> rowKeyList = Lists.newArrayList();
-//                for (int i = 0; i < YieldViewDataResultDtoList.get(0).getResultlist().size(); i++) {
-//                    rowKeyList.add(YieldViewDataResultDtoList.get(0).getResultlist().get(i).getRowKey());
-//                }
 
                     if (column.equals("FPY Samples")) {
                         for (int i = 0; i < YieldViewDataResultDtoList.get(0).getFPYlist().size(); i++) {
@@ -162,7 +163,7 @@ public class YieldResultDataController implements Initializable {
                     for (int i = 0; i < searchConditionDtoList.size(); i++) {
                         testItemNameList.add(searchConditionDtoList.get(0).getItemName());
                     }
-//                testItemNameList.add(searchConditionDtoList.get(1).getItemName());
+
                     SearchDataFrame subDataFrame = dataFrame.subDataFrame(rowKeyList, testItemNameList);
                     viewDataController.setViewData(subDataFrame, rowKeyList, searchConditionDtoList, false, rowKey, column);
 
@@ -171,7 +172,7 @@ public class YieldResultDataController implements Initializable {
             jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
                 @Override
                 public void doJob(JobContext context) {
-//                logger.error(context.getError().getMessage());
+                logger.error(context.getError().getMessage());
                 }
             });
             jobPipeline.setInterruptHandler(new AbstractBasicJobHandler() {
@@ -179,45 +180,13 @@ public class YieldResultDataController implements Initializable {
                 public void doJob(JobContext context) {
                 }
             });
-//        logger.info("ViewData Yield.");
+                logger.info("ViewData Yield.");
             RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
-
-    }
-
-    private List<SearchConditionDto> buildSearchConditionDataList(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
-        if (testItemWithTypeDtoList == null) {
-            return null;
+        }else{
+            viewDataController.setViewData(null, null, null, false, "-", "-");
         }
-        List<String> conditionList = yieldItemController.getSearchTab().getSearch();
-        List<SearchConditionDto> searchConditionDtoList = Lists.newArrayList();
-        SearchConditionDto searchPrimaryKey = new SearchConditionDto();
-        searchPrimaryKey.setItemName(yieldItemController.getConfigComboBox().getValue());
-        searchConditionDtoList.add(searchPrimaryKey);
-        int i = 0;
-        for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtoList) {
-            if (conditionList != null && conditionList.size() != 0) {
-                for (String condition : conditionList) {
-                    SearchConditionDto searchConditionDto = new SearchConditionDto();
-                    searchConditionDto.setKey(ParamKeys.YIELD_ANALYSIS_CONDITION_KEY + i);
-                    searchConditionDto.setItemName(testItemWithTypeDto.getTestItemName());
-                    searchConditionDto.setUslOrPass(testItemWithTypeDto.getUsl());
-                    searchConditionDto.setLslOrFail(testItemWithTypeDto.getLsl());
-                    searchConditionDto.setTestItemType(testItemWithTypeDto.getTestItemType());
-                    searchConditionDto.setCondition(condition);
-                    searchConditionDtoList.add(searchConditionDto);
-                    i++;
-                }
-            } else {
-                SearchConditionDto searchConditionDto = new SearchConditionDto();
-                searchConditionDto.setItemName(testItemWithTypeDto.getTestItemName());
-                searchConditionDto.setUslOrPass(testItemWithTypeDto.getLsl());
-                searchConditionDto.setLslOrFail(testItemWithTypeDto.getUsl());
-                searchConditionDto.setTestItemType(testItemWithTypeDto.getTestItemType());
-                searchConditionDtoList.add(searchConditionDto);
-                i++;
-            }
-        }
-        return searchConditionDtoList;
+
+
     }
 
 }

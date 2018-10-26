@@ -66,12 +66,7 @@ public class ViewDataController implements Initializable {
     private Map<String, FilterSettingAndGraphic> columnFilterSetting = Maps.newHashMap();
     private List<TestItemWithTypeDto> typeDtoList;
     private List<String> selectedProjectNames;
-    private List<SearchConditionDto> statisticalSearchConditionDtoList;
     private SearchConditionDto searchConditionDto;
-    private List<String> selectStatisticalResultName = Lists.newArrayList();
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
-    //    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
-    private JsonMapper mapper = JsonMapper.defaultMapper();
     private ChooseTestItemDialog chooseTestItemDialog;
     private String rowKey;
     private String columnLabel;
@@ -274,17 +269,6 @@ public class ViewDataController implements Initializable {
                     dataFrame.removeColumns(Lists.newArrayList(typeDto.getTestItemName()));
                 }
             }
-//            for(int i=0; i<dataFrame.getAllTestItemName().size();i++){
-//                if(!(dataFrame.getAllTestItemWithTypeDto().get(i).getTestItemName().equals(searchViewDataConditionDto.get(0).getItemName()))){
-//                    if(!(dataFrame.getAllTestItemWithTypeDto().get(i).getTestItemName().equals(searchViewDataConditionDto.get(1).getItemName()))){
-//                        searchConditionDto = new SearchConditionDto();
-//                        searchConditionDto.setItemName(dataFrame.getAllTestItemWithTypeDto().get(i).getTestItemName());
-//                        searchConditionDto.setLslOrFail(dataFrame.getAllTestItemWithTypeDto().get(i).getLsl());
-//                        searchConditionDto.setUslOrPass(dataFrame.getAllTestItemWithTypeDto().get(i).getUsl());
-//                        searchViewDataConditionDto.add(searchConditionDto);
-//                    }
-//                }
-//            }
 
             setViewData(this.dataFrame, getSelectedRowKeys(), searchViewDataConditionDto, false, rowKey, columnLabel);
         });
@@ -409,41 +393,21 @@ public class ViewDataController implements Initializable {
             return withinLowerLimit;
         }
 
-        void setWithinLowerLimit(String withinLowerLimit) {
-            this.withinLowerLimit = withinLowerLimit;
-        }
 
         String getWithinUpperLimit() {
             return withinUpperLimit;
         }
 
-        void setWithinUpperLimit(String withinUpperLimit) {
-            this.withinUpperLimit = withinUpperLimit;
-        }
 
         String getWithoutLowerLimit() {
             return withoutLowerLimit;
         }
 
-        void setWithoutLowerLimit(String withoutLowerLimit) {
-            this.withoutLowerLimit = withoutLowerLimit;
-        }
 
         String getWithoutUpperLimit() {
             return withoutUpperLimit;
         }
 
-        void setWithoutUpperLimit(String withoutUpperLimit) {
-            this.withoutUpperLimit = withoutUpperLimit;
-        }
-
-        Button getFilterBtn() {
-            return filterBtn;
-        }
-
-        void setFilterBtn(Button filterBtn) {
-            this.filterBtn = filterBtn;
-        }
 
     }
 
