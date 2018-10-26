@@ -56,6 +56,7 @@ public class YieldMainController implements Initializable {
     private YieldAnalysisConfigDto analysisConfigDto;
     private List<SearchConditionDto> initSearchConditionDtoList;
     private YieldSettingDto yieldSettingDto;
+    private YieldResultDto yieldResultDto;
 
 
     private YieldSettingService yieldSettingService = RuntimeContext.getBean(YieldSettingService.class);
@@ -911,6 +912,14 @@ public class YieldMainController implements Initializable {
 //        return timerSearchKeyList;
 //    }
 
+
+    public void setYieldResultDto(YieldResultDto yieldResultDto) {
+        this.yieldResultDto = yieldResultDto;
+    }
+
+    public void YieldAnalyseChart(){
+        yieldResultController.analyzeYieldResult(yieldResultDto);
+    }
 
     public YieldChartResultController getYieldResultController() {
         return yieldResultController;

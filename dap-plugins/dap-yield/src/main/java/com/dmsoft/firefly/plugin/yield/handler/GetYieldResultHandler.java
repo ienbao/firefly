@@ -26,11 +26,9 @@ public class GetYieldResultHandler extends AbstractBasicJobHandler {
         YieldAnalysisConfigDto analysisConfigDto = (YieldAnalysisConfigDto) context.get(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO);
         YieldService yieldService = RuntimeContext.getBean(YieldService.class);
         YieldSettingDto yieldSettingDto = (YieldSettingDto) context.get(ParamKeys.YIELD_SETTING_DTO);
-        List<YieldResultDto> yieldResultDtoList = yieldService.getResult(dataFrame, searchConditionDtoList, analysisConfigDto);
-        List<YieldOverviewDto> yieldOverviewDtoList = yieldResultDtoList.get(0).getYieldOverviewDtos();
-        List<YieldOverviewResultAlarmDto> yieldOverviewResultAlarmDtoList = RuntimeContext.getBean(YieldSettingService.class).setStatisticalResultAlarm(yieldOverviewDtoList, yieldSettingDto);
+        YieldResultDto yieldResultDto = yieldService.getYieldResult(dataFrame, searchConditionDtoList, analysisConfigDto);
+        context.put(ParamKeys.YIELD_RESULT_DTO, yieldResultDto);
+        List<YieldOverviewResultAlarmDto> yieldOverviewResultAlarmDtoList = RuntimeContext.getBean(YieldSettingService.class).setStatisticalResultAlarm(yieldResultDto.getYieldOverviewDtos(), yieldSettingDto);
         context.put(ParamKeys.YIELD_STATISTICAL_RESULT_ALARM_DTO_LIST, yieldOverviewResultAlarmDtoList);
-        List<YieldTotalProcessesDto> yieldTotalProcessesDtoList = yieldResultDtoList.get(0).getTotalProcessesDtos();
-        context.put(ParamKeys.YIELD_TOTAL_PROCESSES_DTO_LIST, yieldTotalProcessesDtoList);
     }
 }

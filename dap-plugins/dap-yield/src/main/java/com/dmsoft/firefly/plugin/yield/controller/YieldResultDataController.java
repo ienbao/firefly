@@ -16,22 +16,37 @@ import com.google.common.collect.Lists;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class YieldResultDataController implements Initializable {
     @FXML
-    private Label TotalSamples;
+    private GridPane gridPane;
     @FXML
-    private Label FpySamples;
+    private Label totalSamples0;
     @FXML
-    private Label PassSamples;
+    private Label fpySamples0;
     @FXML
-    private Label NtfSamples;
+    private Label passSamples0;
     @FXML
-    private Label NgSamples;
+    private Label ntfSamples0;
+    @FXML
+    private Label ngSamples0;
+    @FXML
+    private Label totalSamples1;
+    @FXML
+    private Label fpySamples1;
+    @FXML
+    private Label passSamples1;
+    @FXML
+    private Label ntfSamples1;
+    @FXML
+    private Label ngSamples1;
     private YieldChartResultController yieldChartResultController;
     private ViewDataController viewDataController;
     private YieldItemController yieldItemController;
@@ -49,25 +64,55 @@ public class YieldResultDataController implements Initializable {
 
     }
 
-    public void setOverviewResultData(List<YieldTotalProcessesDto> list, String rowKey, boolean isTimer) {
-//        String rowKey="V_Mic_Bias";
-        if(list.get(0).getTotalSamples()!=null){
-            TotalSamples.setText(list.get(0).getTotalSamples().toString());
-            TotalSamples.setOnMouseClicked(event ->fireClickEvent(rowKey,"Total Samples"));
-            FpySamples.setText(list.get(0).getFpySamples().toString());
-            FpySamples.setOnMouseClicked(event ->fireClickEvent(rowKey,"FPY Samples"));
-            PassSamples.setText(list.get(0).getPassSamples().toString());
-            PassSamples.setOnMouseClicked(event ->fireClickEvent(rowKey,"Pass Samples"));
-            NtfSamples.setText(list.get(0).getNtfSamples().toString());
-            NtfSamples.setOnMouseClicked(event ->fireClickEvent(rowKey,"NTF Samples"));
-            NgSamples.setText(list.get(0).getNgSamples().toString());
-            NgSamples.setOnMouseClicked(event ->fireClickEvent(rowKey,"NG Samples"));
+    public void setOverviewResultData(YieldTotalProcessesDto list, String rowKey, boolean isTimer) {
+        if(list.getTotalSamples()!=null){
+            totalSamples1.setText(list.getTotalSamples().toString());
+            totalSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"Total Samples"));
+            fpySamples1.setText(list.getFpySamples().toString());
+            fpySamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"FPY Samples"));
+            passSamples1.setText(list.getPassSamples().toString());
+            passSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"Pass Samples"));
+            ntfSamples1.setText(list.getNtfSamples().toString());
+            ntfSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"NTF Samples"));
+            ngSamples1.setText(list.getNgSamples().toString());
+            ngSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"NG Samples"));
+            totalSamples1.setUnderline(true);
+            totalSamples1.setUnderline(true);
+            fpySamples1.setUnderline(true);
+            passSamples1.setUnderline(true);
+            ntfSamples1.setUnderline(true);
+            ngSamples1.setUnderline(true);
+            totalSamples0.setStyle("-fx-text-fill: #222222");
+            fpySamples0.setStyle("-fx-text-fill: #222222");
+            passSamples0.setStyle("-fx-text-fill: #222222");
+            ntfSamples0.setStyle("-fx-text-fill: #222222");
+            ngSamples0.setStyle("-fx-text-fill: #222222");
+            totalSamples1.setStyle("-fx-text-fill: #222222");
+            fpySamples1.setStyle("-fx-text-fill: #222222");
+            passSamples1.setStyle("-fx-text-fill: #222222");
+            ntfSamples1.setStyle("-fx-text-fill: #222222");
+            ngSamples1.setStyle("-fx-text-fill: #222222");
         }else{
-            TotalSamples.setText("-");
-            FpySamples.setText("-");
-            PassSamples.setText("-");
-            NtfSamples.setText("-");
-            NgSamples.setText("-");
+            totalSamples1.setText("-");
+            fpySamples1.setText("-");
+            passSamples1.setText("-");
+            ntfSamples1.setText("-");
+            ngSamples1.setText("-");
+            totalSamples1.setUnderline(false);
+            fpySamples1.setUnderline(false);
+            passSamples1.setUnderline(false);
+            ntfSamples1.setUnderline(false);
+            ngSamples1.setUnderline(false);
+            totalSamples0.setStyle("-fx-text-fill: #222222");
+            fpySamples0.setStyle("-fx-text-fill: #222222");
+            passSamples0.setStyle("-fx-text-fill: #222222");
+            ntfSamples0.setStyle("-fx-text-fill: #222222");
+            ngSamples0.setStyle("-fx-text-fill: #222222");
+            totalSamples1.setStyle("-fx-text-fill: #222222");
+            fpySamples1.setStyle("-fx-text-fill: #222222");
+            passSamples1.setStyle("-fx-text-fill: #222222");
+            ntfSamples1.setStyle("-fx-text-fill: #222222");
+            ngSamples1.setStyle("-fx-text-fill: #222222");
         }
 
     }
