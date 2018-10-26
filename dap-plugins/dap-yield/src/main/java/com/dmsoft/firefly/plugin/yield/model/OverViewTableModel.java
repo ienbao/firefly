@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class OverViewTableModel  implements TableModel{
+public class OverViewTableModel implements TableModel {
     private static final String[] YIELD_OVERVIEW_FIX_COLUMN = UIConstant.YIELD_OVERVIEW_FIX_COLUMN;
     private static final String[] YIELD_TITLE = UIConstant.YIELD_SR_ALL;
     private ObservableList<String> columnKey = FXCollections.observableArrayList();
@@ -99,34 +99,6 @@ public class OverViewTableModel  implements TableModel{
         }
     }
 
-//    public void setSelect(List<String> selectRowList) {
-//        if (selectRowList == null || overviewResultAlarmDtoList == null) {
-//            return;
-//        }
-//        for (SpcStatisticalResultAlarmDto dto : overviewResultAlarmDtoList) {
-//            SimpleObjectProperty<Boolean> b = new SimpleObjectProperty<>(false);
-//            if (selectRowList.contains(dto.getKey())) {
-//                b.set(true);
-//            } else {
-//                falseSet.add(dto.getKey());
-//                allChecked.setValue(false);
-//            }
-//            checkMap.put(dto.getKey(), b);
-//            b.addListener((ov, b1, b2) -> {
-//                if (!b2) {
-//                    falseSet.add(dto.getKey());
-//                    allChecked.setValue(false);
-//                } else {
-//                    falseSet.remove(dto.getKey());
-//                    if (falseSet.isEmpty()) {
-//                        allChecked.setValue(true);
-//                    }
-//                }
-//            });
-//        }
-//
-//    }
-//
     /**
      * init column
      *
@@ -139,6 +111,7 @@ public class OverViewTableModel  implements TableModel{
         columnKey.addAll(columnList);
     }
 //
+
     /**
      * refresh spc statistical data
      *
@@ -175,7 +148,8 @@ public class OverViewTableModel  implements TableModel{
         }
         tableView.refresh();
     }
-//
+
+    //
     private void refreshValue(YieldOverviewResultAlarmDto spcStatsDto) {
         String value = "";
         if (spcStatsDto != null) {
@@ -184,7 +158,7 @@ public class OverViewTableModel  implements TableModel{
                 String columnName = YIELD_TITLE[i];
                 if (i == 0) {
                     value = spcStatsDto.getItemName();
-                }  else {
+                } else {
                     Map<String, OverviewAlarmDto> statisticalAlarmDtoMap = spcStatsDto.getOverviewAlarmDtoMap();
                     if (statisticalAlarmDtoMap == null) {
                         value = "-";
@@ -192,9 +166,9 @@ public class OverViewTableModel  implements TableModel{
                         String key = columnName;
                         if (i == 8) {
                             key = YieldOverviewKey.FPYPER.getCode();
-                        }else if(i == 9){
+                        } else if (i == 9) {
                             key = YieldOverviewKey.NTFPER.getCode();
-                        }else if(i == 10){
+                        } else if (i == 10) {
                             key = YieldOverviewKey.NGPER.getCode();
                         }
                         value = showValue(key, statisticalAlarmDtoMap.get(key));
@@ -257,42 +231,6 @@ public class OverViewTableModel  implements TableModel{
         });
     }
 
-
-//    /**
-//     * get select data
-//     *
-//     * @return the list of SpcStatsDto
-//     */
-//    public List<SpcStatisticalResultAlarmDto> getSelectData() {
-//        List<SpcStatisticalResultAlarmDto> selectStatsDtoList = Lists.newArrayList();
-//        for (Map.Entry<String, SimpleObjectProperty<Boolean>> entry : checkMap.entrySet()) {
-//            String key = entry.getKey().toString();
-//            boolean isSelect = entry.getValue().getValue();
-//            if (isSelect) {
-//                SpcStatisticalResultAlarmDto spcStatsDto = keyToStatsDtoMap.get(key);
-//                selectStatsDtoList.add(spcStatsDto);
-//            }
-//        }
-//        return selectStatsDtoList;
-//    }
-//
-//    /**
-//     * get select row key
-//     *
-//     * @return row key
-//     */
-//    public List<String> getSelectRowKey() {
-//        List<String> rowList = Lists.newArrayList();
-//        for (Map.Entry<String, SimpleObjectProperty<Boolean>> entry : checkMap.entrySet()) {
-//            String key = entry.getKey().toString();
-//            boolean isSelect = entry.getValue().getValue();
-//            if (isSelect) {
-//                rowList.add(key);
-//            }
-//        }
-//        return rowList;
-//    }
-//
     /**
      * get editor row key
      *
@@ -310,7 +248,7 @@ public class OverViewTableModel  implements TableModel{
         }
         return rowKeyList;
     }
-//
+
     /**
      * get edit row data
      *
@@ -421,11 +359,11 @@ public class OverViewTableModel  implements TableModel{
             tableCell.setStyle("-fx-border-color: #ea2028;-fx-border-with:1 1 1 1");
         }
 
-        if (column.equals(YIELD_TITLE[3])||column.equals(YIELD_TITLE[4])||column.equals(YIELD_TITLE[5])||column.equals(YIELD_TITLE[6])||column.equals(YIELD_TITLE[7])){
+        if (column.equals(YIELD_TITLE[3]) || column.equals(YIELD_TITLE[4]) || column.equals(YIELD_TITLE[5]) || column.equals(YIELD_TITLE[6]) || column.equals(YIELD_TITLE[7])) {
             String finalColumn = column;
             YieldOverviewResultAlarmDto yieldStatsDto = keyToStatsDtoMap.get(rowKey);
             tableCell.setOnMouseClicked(event -> {
-                if (clickListener != null){
+                if (clickListener != null) {
                     clickListener.executeAnalyzeDetail(yieldStatsDto.getItemName(), finalColumn);
                 }
             });
@@ -436,9 +374,9 @@ public class OverViewTableModel  implements TableModel{
         if (statisticalAlarmDtoMap != null) {
             if (column.equals(YIELD_TITLE[8])) {
                 column = YieldOverviewKey.FPYPER.getCode();
-            }else if (column.equals(YIELD_TITLE[9])) {
+            } else if (column.equals(YIELD_TITLE[9])) {
                 column = YieldOverviewKey.NTFPER.getCode();
-            }else if(column.equals(YIELD_TITLE[10])) {
+            } else if (column.equals(YIELD_TITLE[10])) {
                 column = YieldOverviewKey.NGPER.getCode();
             }
             if (statisticalAlarmDtoMap.get(column) == null) {
@@ -488,28 +426,44 @@ public class OverViewTableModel  implements TableModel{
         if (overviewResultAlarmDto != null) {
             if (columnName.equals(YIELD_TITLE[0])) {
                 value = overviewResultAlarmDto.getItemName();
-                if (value == null){value = "-";}
-            }else if(columnName.equals(YIELD_TITLE[1])){
+                if (value == null) {
+                    value = "-";
+                }
+            } else if (columnName.equals(YIELD_TITLE[1])) {
                 value = overviewResultAlarmDto.getLslOrFail();
-                if (value == null){value = "-";}
-            }else if(columnName.equals(YIELD_TITLE[2])){
+                if (value == null) {
+                    value = "-";
+                }
+            } else if (columnName.equals(YIELD_TITLE[2])) {
                 value = overviewResultAlarmDto.getUslOrPass();
-                if (value == null){value = "-";}
-            }else if(columnName.equals(YIELD_TITLE[3])){
-                value = overviewResultAlarmDto.getTotalSamples()+"";
-                if (overviewResultAlarmDto.getTotalSamples() == null){value = "-";}
-            }else if(columnName.equals(YIELD_TITLE[4])){
-                value = overviewResultAlarmDto.getFpySamples()+"";
-                if (overviewResultAlarmDto.getFpySamples() == null){value = "-";}
-            } else if(columnName.equals(YIELD_TITLE[5])){
-                value = overviewResultAlarmDto.getPassSamples()+"";
-                if (overviewResultAlarmDto.getPassSamples() == null){value = "-";}
-            }else if(columnName.equals(YIELD_TITLE[6])){
-                value = overviewResultAlarmDto.getNtfSamples()+"";
-                if (overviewResultAlarmDto.getNtfSamples() == null){value = "-";}
-            }else if(columnName.equals(YIELD_TITLE[7])){
-                value = overviewResultAlarmDto.getNgSamples()+"";
-                if (overviewResultAlarmDto.getNgSamples() == null){value = "-";}
+                if (value == null) {
+                    value = "-";
+                }
+            } else if (columnName.equals(YIELD_TITLE[3])) {
+                value = overviewResultAlarmDto.getTotalSamples() + "";
+                if (overviewResultAlarmDto.getTotalSamples() == null) {
+                    value = "-";
+                }
+            } else if (columnName.equals(YIELD_TITLE[4])) {
+                value = overviewResultAlarmDto.getFpySamples() + "";
+                if (overviewResultAlarmDto.getFpySamples() == null) {
+                    value = "-";
+                }
+            } else if (columnName.equals(YIELD_TITLE[5])) {
+                value = overviewResultAlarmDto.getPassSamples() + "";
+                if (overviewResultAlarmDto.getPassSamples() == null) {
+                    value = "-";
+                }
+            } else if (columnName.equals(YIELD_TITLE[6])) {
+                value = overviewResultAlarmDto.getNtfSamples() + "";
+                if (overviewResultAlarmDto.getNtfSamples() == null) {
+                    value = "-";
+                }
+            } else if (columnName.equals(YIELD_TITLE[7])) {
+                value = overviewResultAlarmDto.getNgSamples() + "";
+                if (overviewResultAlarmDto.getNgSamples() == null) {
+                    value = "-";
+                }
             } else {
                 Map<String, OverviewAlarmDto> overviewAlarmDtoMap = overviewResultAlarmDto.getOverviewAlarmDtoMap();
                 if (overviewAlarmDtoMap == null) {
@@ -518,9 +472,9 @@ public class OverViewTableModel  implements TableModel{
                     String key = columnName;
                     if (columnName.equals(YIELD_TITLE[8])) {
                         key = YieldOverviewKey.FPYPER.getCode();
-                    }else if (columnName.equals(YIELD_TITLE[9])){
+                    } else if (columnName.equals(YIELD_TITLE[9])) {
                         key = YieldOverviewKey.NTFPER.getCode();
-                    }else if (columnName.equals(YIELD_TITLE[10])){
+                    } else if (columnName.equals(YIELD_TITLE[10])) {
                         key = YieldOverviewKey.NGPER.getCode();
                     }
                     value = showValue(key, overviewAlarmDtoMap.get(key));
@@ -546,7 +500,7 @@ public class OverViewTableModel  implements TableModel{
                 }
                 if (columnName.equals("USL/Pass")) {
                     overviewResultAlarmDto.setUslOrPass((String) b2);
-                }else if(columnName.equals("LSL/Fail")){
+                } else if (columnName.equals("LSL/Fail")) {
                     overviewResultAlarmDto.setLslOrFail((String) b2);
                 }
             });
@@ -591,9 +545,9 @@ public class OverViewTableModel  implements TableModel{
             return "-";
         }
         if (key.equals(YIELD_TITLE[8]) || key.equals(YIELD_TITLE[9]) || key.equals(YIELD_TITLE[10])) {
-         String str = DAPStringUtils.formatDouble(overviewAlarmDto.getValue(), DigNumInstance.newInstance().getDigNum());
-         NumberFormat num = NumberFormat.getPercentInstance();
-         return num.format(Double.valueOf(str));
+            String str = DAPStringUtils.formatDouble(overviewAlarmDto.getValue(), DigNumInstance.newInstance().getDigNum());
+            NumberFormat num = NumberFormat.getPercentInstance();
+            return num.format(Double.valueOf(str));
         }
         if (key.equals(YIELD_TITLE[2])) {
             DecimalFormat df = new DecimalFormat("######0");
@@ -602,11 +556,7 @@ public class OverViewTableModel  implements TableModel{
 
         return overviewAlarmDto.getValue().toString();
     }
-//
-//    public Map<String, Color> getColorCache() {
-//        return colorCache;
-//    }
-//
+
     private Color getAlarmBackgroundColor(String level) {
         Color color = Color.WHITE;
         if (level.equals(YieldOverviewKey.EXCELLENT.getCode())) {
@@ -618,11 +568,6 @@ public class OverViewTableModel  implements TableModel{
         } else if (level.equals(YieldOverviewKey.BAD.getCode())) {
             color = Colur.LEVEL_D;
         }
-//        else if (level.equals(YieldOverviewKey.PASS.getCode())) {
-//            color = Colur.GREEN;
-//        } else if (level.equals(YieldOverviewKey.FAIL.getCode())) {
-//            color = Colur.LEVEL_D;
-//        }
         return color;
     }
 
@@ -651,80 +596,6 @@ public class OverViewTableModel  implements TableModel{
     public boolean isMenuEventEnable(String rowKey) {
         return !emptyResultKeys.contains(rowKey);
     }
-
-//    @Override
-//    public boolean isTextInputError(TextField textField, String oldText, String newText, String rowKey, String columnName) {
-//        if (newText.length() > 255) {
-//            textField.setText(oldText);
-//            return true;
-//        }
-//        if (!ValidateUtils.validatePattern(newText, ValidateUtils.DOUBLE_PATTERN)) {
-//            textField.setText(oldText);
-//            return true;
-//        }
-//        if (DAPStringUtils.isBlank(newText)) {
-//            errorEditorCell.add(rowKey + "-" + columnName);
-//            if (!textField.getStyleClass().contains("text-field-error")) {
-//                textField.getStyleClass().add("text-field-error");
-//            }
-//            TooltipUtil.installWarnTooltip(textField, SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_USL_LSL_EMPTY));
-//            return true;
-//        }
-//        SpcStatisticalResultAlarmDto spcStatsDto = keyToStatsDtoMap.get(rowKey);
-//        Map<String, StatisticalAlarmDto> statisticalAlarmDtoMap = spcStatsDto.getStatisticalAlarmDtoMap();
-//        if (columnName.equals(YIELD_TITLE[7])) {
-//            SourceObjectProperty uslProperty = valueMap.get(rowKey + "-" + YIELD_TITLE[8]);
-//            if (!DAPStringUtils.isNumeric((String) uslProperty.getValue())) {
-//                return false;
-//            }
-//            StatisticalAlarmDto statisticalAlarmDto = statisticalAlarmDtoMap.get(SpcStatisticalResultKey.USL.getCode());
-//            Double usl = Double.valueOf((String) uslProperty.getValue());
-//            if (!DAPStringUtils.isNumeric(newText) || Double.valueOf(newText) >= usl) {
-//                errorEditorCell.add(rowKey + "-" + columnName);
-//                if (!textField.getStyleClass().contains("text-field-error")) {
-//                    textField.getStyleClass().add("text-field-error");
-//                }
-//                TooltipUtil.installWarnTooltip(textField, SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_LSL_MORE_THEN_USL));
-//                return true;
-//            } else if (errorEditorCell.contains(rowKey + "-" + YIELD_TITLE[8])) {
-//                errorEditorCell.remove(rowKey + "-" + YIELD_TITLE[8]);
-//                if (uslProperty.isError()) {
-//                    uslProperty.setError(false);
-//                    statisticalAlarmDto.setValue(usl);
-//                }
-//            }
-//        } else if (columnName.equals(YIELD_TITLE[8])) {
-//            SourceObjectProperty lslProperty = valueMap.get(rowKey + "-" + YIELD_TITLE[7]);
-//            if (!DAPStringUtils.isNumeric((String) lslProperty.getValue())) {
-//                return false;
-//            }
-//            StatisticalAlarmDto statisticalAlarmDto = statisticalAlarmDtoMap.get(SpcStatisticalResultKey.LSL.getCode());
-//            Double lsl = Double.valueOf((String) lslProperty.getValue());
-//            if (Double.valueOf(newText) <= lsl) {
-//                errorEditorCell.add(rowKey + "-" + columnName);
-//                if (!textField.getStyleClass().contains("text-field-error")) {
-//                    textField.getStyleClass().add("text-field-error");
-//                }
-//                TooltipUtil.installWarnTooltip(textField, SpcFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_USL_LESS_THEN_LSL));
-//                return true;
-//            } else if (errorEditorCell.contains(rowKey + "-" + YIELD_TITLE[7])) {
-//                errorEditorCell.remove(rowKey + "-" + YIELD_TITLE[7]);
-//                if (lslProperty.isError()) {
-//                    lslProperty.setError(false);
-//                    statisticalAlarmDto.setValue(lsl);
-//                }
-//            }
-//        }
-//        if (errorEditorCell.contains(rowKey + "-" + columnName)) {
-//            errorEditorCell.remove(rowKey + "-" + columnName);
-//            textField.getStyleClass().removeAll("text-field-error");
-//            TooltipUtil.uninstallWarnTooltip(textField);
-//            return false;
-//        }
-//        textField.getStyleClass().removeAll("text-field-error");
-//        TooltipUtil.uninstallWarnTooltip(textField);
-//        return false;
-//    }
 
     public void setClickListener(ClickListener radioClickListener) {
         this.clickListener = radioClickListener;

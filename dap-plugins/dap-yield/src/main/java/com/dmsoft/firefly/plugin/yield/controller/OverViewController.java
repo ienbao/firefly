@@ -61,10 +61,7 @@ public class OverViewController implements Initializable {
 
     private void initStatisticalResultTable() {
         overViewTableModel = new OverViewTableModel();
-//        this.initTableMenuEvent();
         TableViewWrapper.decorate(overViewResultTb, overViewTableModel);
-
-//        List<String> preDisplayResult = this.getSpcStatisticalPreference();
         List<String> displayResult = Arrays.asList(UIConstant.YIELD_CHOOSE_RESULT);
         selectOverViewResultName.addAll(displayResult);
 
@@ -73,34 +70,24 @@ public class OverViewController implements Initializable {
 
     private void initComponentEvent() {
         filterTestItemTf.getTextField().textProperty().addListener((observable, oldValue, newValue) -> getFilterTestItemTfEvent());
-
-//        statisticalTableModel.getAllCheckBox().setOnAction(event -> getAllCheckBoxEvent());
-
         overViewResultTb.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             List<String> statisticalSelectRowKeyListCache = YieldRefreshJudgeUtil.newInstance().getOverViewSelectRowKeyListCache();
-            if(statisticalSelectRowKeyListCache == null || !statisticalSelectRowKeyListCache.contains(newValue)){
+            if (statisticalSelectRowKeyListCache == null || !statisticalSelectRowKeyListCache.contains(newValue)) {
                 return;
             }
-//            overViewTableModel.stickChartLayer((String)newValue);
         });
     }
 
     private void getFilterTestItemTfEvent() {
-//        overViewTableModel.filterTestItem(filterTestItemTf.getTextField().getText());
     }
 
-    private void initTableMenuEvent() {
-//        TableMenuRowEvent selectColor = new ChooseColorMenuEvent();
-//        statisticalTableModel.addTableMenuEvent(selectColor);
-    }
 
 
     private void initComponentEvents() {
-        overViewTableModel.setClickListener((rowKey,column) -> fireClickEvent(rowKey,column));
+        overViewTableModel.setClickListener((rowKey, column) -> fireClickEvent(rowKey, column));
     }
 
-    public void fireClickEvent(String rowKey,String column) {
-//        System.out.println(rowKey + column);
+    public void fireClickEvent(String rowKey, String column) {
         yieldItemController = yieldMainController.getYieldItemController();
         viewDataController = yieldMainController.getViewDataController();
         dataFrame = yieldMainController.getDataFrame();
@@ -111,7 +98,7 @@ public class OverViewController implements Initializable {
         List<SearchConditionDto> selectSearchConditionDtoList = Lists.newArrayList();
         selectSearchConditionDtoList.add(searchConditionDtoList.get(0));
 
-        for(int i = 1; i<searchConditionDtoList.size();i++) {
+        for (int i = 1; i < searchConditionDtoList.size(); i++) {
             if (rowKey.equals(searchConditionDtoList.get(i).getItemName())) {
                 selectSearchConditionDtoList.add(searchConditionDtoList.get(i));
             }
@@ -132,23 +119,23 @@ public class OverViewController implements Initializable {
                 List<YieldViewDataResultDto> YieldViewDataResultDtoList = (List<YieldViewDataResultDto>) context.get(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO_LIST);
                 List<String> rowKeyList = Lists.newArrayList();
 
-                if(column.equals("FPY Samples")) {
+                if (column.equals("FPY Samples")) {
                     for (int i = 0; i < YieldViewDataResultDtoList.get(0).getFPYlist().size(); i++) {
                         rowKeyList.add(YieldViewDataResultDtoList.get(0).getFPYlist().get(i).getRowKey());
                     }
-                }else if(column.equals("Pass Samples")){
+                } else if (column.equals("Pass Samples")) {
                     for (int i = 0; i < YieldViewDataResultDtoList.get(0).getPASSlist().size(); i++) {
                         rowKeyList.add(YieldViewDataResultDtoList.get(0).getPASSlist().get(i).getRowKey());
                     }
-                }else if(column.equals("NTF Samples")){
+                } else if (column.equals("NTF Samples")) {
                     for (int i = 0; i < YieldViewDataResultDtoList.get(0).getNtflist().size(); i++) {
                         rowKeyList.add(YieldViewDataResultDtoList.get(0).getNtflist().get(i).getRowKey());
                     }
-                }else if(column.equals("NG Samples")){
+                } else if (column.equals("NG Samples")) {
                     for (int i = 0; i < YieldViewDataResultDtoList.get(0).getNglist().size(); i++) {
                         rowKeyList.add(YieldViewDataResultDtoList.get(0).getNglist().get(i).getRowKey());
                     }
-                }else if(column.equals("Total Samples")){
+                } else if (column.equals("Total Samples")) {
                     for (int i = 0; i < YieldViewDataResultDtoList.get(0).getTotallist().size(); i++) {
                         rowKeyList.add(YieldViewDataResultDtoList.get(0).getTotallist().get(i).getRowKey());
                     }
@@ -177,46 +164,25 @@ public class OverViewController implements Initializable {
         RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
 
     }
+
     /**
      * set statistical result table data
      *
-     * @param list the data list
-     * @param isTimer isTimer
+     * @param list         the data list
+     * @param isTimer      isTimer
      * @param selectRowKey selectRowKey
      */
     public void setTimerOverviewResultTableData(List<YieldOverviewResultAlarmDto> list, List<String> selectRowKey, boolean isTimer) {
-//        List<String> columnList = statisticalTableModel.getColumnList();
-//        statisticalTableModel = new StatisticalTableModel();
-//        statisticalTableModel.setTimer(isTimer);
-//        statisticalTableModel.initColumn(columnList);
-//        this.initTableMenuEvent();
-//        TableViewWrapper.decorate(statisticalResultTb, statisticalTableModel);
-//
-//        statisticalTableModel.initData(list);
-//        statisticalTableModel.setSelect(selectRowKey);
-//
-//        statisticalTableModel.getAllCheckBox().setOnAction(event -> getAllCheckBoxEvent());
         overViewTableModel.initData(list);
-//        overViewTableModel.setSelect(selectRowKey);
-//        overViewTableModel.setTimer(isTimer);
         overViewTableModel.filterTestItem(filterTestItemTf.getTextField().getText());
     }
 
     /**
      * has error edit cell.
      */
-    public boolean hasErrorEditCell(){
+    public boolean hasErrorEditCell() {
         return overViewTableModel.hasErrorEditValue();
     }
-
-//    /**
-//     * get select row key
-//     *
-//     * @return row key
-//     */
-//    public List<String> getSelectStatisticalRowKey() {
-//        return overViewTableModel.getSelectRowKey();
-//    }
 
     /**
      * get edit row key

@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 
-
 public class YieldServiceImpl implements YieldService {
 
     private YieldViewDataDto yieldViewDataDto;
@@ -30,7 +29,7 @@ public class YieldServiceImpl implements YieldService {
 
     @Override
     public YieldResultDto getYieldResult(SearchDataFrame searchDataFrame, List<SearchConditionDto> oldSearchConditions,
-                                                     YieldAnalysisConfigDto configDto){
+                                         YieldAnalysisConfigDto configDto) {
         logger.debug("Getting Yield totalProcesses result...");
         if (searchDataFrame == null || oldSearchConditions == null || configDto == null) {
             pushProgress(100);
@@ -45,14 +44,14 @@ public class YieldServiceImpl implements YieldService {
 
         //分类产品
 
-        List<String> oldSearchRowKeys =  searchDataFrame.getSearchRowKey(oldSearchConditions.get(1).getCondition());
-        List<String> oldDatas =  searchDataFrame.getDataValue(configDto.getPrimaryKey(), oldSearchRowKeys);
+        List<String> oldSearchRowKeys = searchDataFrame.getSearchRowKey(oldSearchConditions.get(1).getCondition());
+        List<String> oldDatas = searchDataFrame.getDataValue(configDto.getPrimaryKey(), oldSearchRowKeys);
         List<String> noNullProductSearchRowKeys = Lists.newArrayList();
         List<String> noNullProductDatas = Lists.newArrayList();
 
         //过滤产品为空
-        for (int i = 0 ; i<oldDatas.size();i++){
-            if (!DAPStringUtils.isBlank(oldDatas.get(i))){
+        for (int i = 0; i < oldDatas.size(); i++) {
+            if (!DAPStringUtils.isBlank(oldDatas.get(i))) {
                 noNullProductDatas.add(oldDatas.get(i));
                 noNullProductSearchRowKeys.add(oldSearchRowKeys.get(i));
             }
@@ -63,11 +62,11 @@ public class YieldServiceImpl implements YieldService {
         List<Integer> noRangeSearchConditionIndex = Lists.newArrayList();
         List<Integer> rangeSearchConditionIndex = Lists.newArrayList();
         searchConditions.add(oldSearchConditions.get(0));
-        for (int i=1;i<oldSearchConditions.size();i++){
-            if (!(DAPStringUtils.isBlank(oldSearchConditions.get(i).getLslOrFail()) && DAPStringUtils.isBlank(oldSearchConditions.get(i).getUslOrPass()))){
+        for (int i = 1; i < oldSearchConditions.size(); i++) {
+            if (!(DAPStringUtils.isBlank(oldSearchConditions.get(i).getLslOrFail()) && DAPStringUtils.isBlank(oldSearchConditions.get(i).getUslOrPass()))) {
                 searchConditions.add(oldSearchConditions.get(i));
                 rangeSearchConditionIndex.add(i);
-            }else {
+            } else {
                 noRangeSearchConditionIndex.add(i);
             }
         }
@@ -76,37 +75,37 @@ public class YieldServiceImpl implements YieldService {
         List<String> searchRowKeys = Lists.newArrayList();
         List<String> datas = Lists.newArrayList();
         List<IgnoreTestItemValue> ignoreTestItemValueList = Lists.newArrayList();
-        for (int i=0;i<noNullProductSearchRowKeys.size();i++){
+        for (int i = 0; i < noNullProductSearchRowKeys.size(); i++) {
             RowDataDto rowDataDto = searchDataFrame.getDataRow(noNullProductSearchRowKeys.get(i));
-            Map<String,String> map = rowDataDto.getData();
+            Map<String, String> map = rowDataDto.getData();
             int count = 0;
-            for (int j = 1; j < searchConditions.size();j++){
+            for (int j = 1; j < searchConditions.size(); j++) {
                 String testItemValue = map.get(searchConditions.get(j).getItemName());
-                if (!DAPStringUtils.isBlank(testItemValue)){
-                    if (searchConditions.get(j).getTestItemType().getCode().equals("Attribute")){
-                        if (!DAPStringUtils.isBlank(searchConditions.get(j).getUslOrPass()) || !DAPStringUtils.isBlank(searchConditions.get(j).getLslOrFail())){
-                            if (!DAPStringUtils.isBlank(searchConditions.get(j).getUslOrPass()) && !DAPStringUtils.isBlank(searchConditions.get(j).getLslOrFail())){
-                                if (testItemValue.equals(searchConditions.get(j).getUslOrPass()) || testItemValue.equals(searchConditions.get(j).getLslOrFail())){
+                if (!DAPStringUtils.isBlank(testItemValue)) {
+                    if (searchConditions.get(j).getTestItemType().getCode().equals("Attribute")) {
+                        if (!DAPStringUtils.isBlank(searchConditions.get(j).getUslOrPass()) || !DAPStringUtils.isBlank(searchConditions.get(j).getLslOrFail())) {
+                            if (!DAPStringUtils.isBlank(searchConditions.get(j).getUslOrPass()) && !DAPStringUtils.isBlank(searchConditions.get(j).getLslOrFail())) {
+                                if (testItemValue.equals(searchConditions.get(j).getUslOrPass()) || testItemValue.equals(searchConditions.get(j).getLslOrFail())) {
                                     count++;
-                                }else {
+                                } else {
                                     IgnoreTestItemValue ignoreTestItemValue = new IgnoreTestItemValue();
                                     ignoreTestItemValue.setRowKey(noNullProductSearchRowKeys.get(i));
                                     ignoreTestItemValue.setSearchConditionDto(searchConditions.get(j));
                                     ignoreTestItemValueList.add(ignoreTestItemValue);
                                 }
-                            }else{
+                            } else {
                                 count++;
                             }
-                        }else{
+                        } else {
                             IgnoreTestItemValue ignoreTestItemValue = new IgnoreTestItemValue();
                             ignoreTestItemValue.setRowKey(noNullProductSearchRowKeys.get(i));
                             ignoreTestItemValue.setSearchConditionDto(searchConditions.get(j));
                             ignoreTestItemValueList.add(ignoreTestItemValue);
                         }
-                    }else if (searchConditions.get(j).getTestItemType().getCode().equals("Variable")){
-                        if (DAPStringUtils.isNumeric(testItemValue)){
+                    } else if (searchConditions.get(j).getTestItemType().getCode().equals("Variable")) {
+                        if (DAPStringUtils.isNumeric(testItemValue)) {
                             count++;
-                        }else{
+                        } else {
                             IgnoreTestItemValue ignoreTestItemValue = new IgnoreTestItemValue();
                             ignoreTestItemValue.setRowKey(noNullProductSearchRowKeys.get(i));
                             ignoreTestItemValue.setSearchConditionDto(searchConditions.get(j));
@@ -115,7 +114,7 @@ public class YieldServiceImpl implements YieldService {
                     }
                 }
             }
-            if (count <= searchConditions.size()-1 && count > 0) {
+            if (count <= searchConditions.size() - 1 && count > 0) {
                 datas.add(noNullProductDatas.get(i));
                 searchRowKeys.add(noNullProductSearchRowKeys.get(i));
             }
@@ -157,22 +156,22 @@ public class YieldServiceImpl implements YieldService {
             int overNgSamples = 0;
 
             //overView
-            for (int i = 1;i<searchConditions.size();i++) {
+            for (int i = 1; i < searchConditions.size(); i++) {
                 for (int k = 0; k < unRepetitionDatas.size(); k++) {
                     List<String> oldRowKeys = dataAndRowKeyMap.get(unRepetitionDatas.get(k));
                     List<String> rowKeys = Lists.newArrayList();
-                    for (int n=0;n<oldRowKeys.size();n++) {
+                    for (int n = 0; n < oldRowKeys.size(); n++) {
                         int ignoreCount = 0;
-                        for (int m = 0 ; m < ignoreTestItemValueList.size();m++){
+                        for (int m = 0; m < ignoreTestItemValueList.size(); m++) {
                             if (!(ignoreTestItemValueList.get(m).getRowKey().equals(oldRowKeys.get(n)) && ignoreTestItemValueList.get(m).getSearchConditionDto().equals(searchConditions.get(i)))) {
                                 ignoreCount++;
                             }
                         }
-                        if (ignoreCount == ignoreTestItemValueList.size()){
+                        if (ignoreCount == ignoreTestItemValueList.size()) {
                             rowKeys.add(oldRowKeys.get(n));
                         }
                     }
-                    if (rowKeys.size() == oldRowKeys.size()){
+                    if (rowKeys.size() == oldRowKeys.size()) {
                         rowKeys = oldRowKeys;
                     }
                     for (int j = 0; j < rowKeys.size(); j++) {
@@ -216,12 +215,12 @@ public class YieldServiceImpl implements YieldService {
                         }
                         if (j == rowKeys.size() - 1) {
                             if (ngFlag == 0) {
-                                overNgSamples = overNgSamples + 1 + j ;
+                                overNgSamples = overNgSamples + 1 + j;
                             }
                         }
                     }
                 }
-                overTotalSamples = overPassSamples+overNtfSamples+overNgSamples;
+                overTotalSamples = overPassSamples + overNtfSamples + overNgSamples;
 
                 YieldOverviewDto yieldOverviewDto = new YieldOverviewDto();
                 yieldOverviewDto.setItemName(searchConditions.get(i).getItemName());
@@ -260,15 +259,15 @@ public class YieldServiceImpl implements YieldService {
                     int count = 0;
                     int ignoreCount = 0;
                     RowDataDto rowDataDto = searchDataFrame.getDataRow(rowKeys.get(j));
-                    Map<String,String> rowData = rowDataDto.getData();
-                    for (int k = 1 ; k < searchConditions.size();k++){
+                    Map<String, String> rowData = rowDataDto.getData();
+                    for (int k = 1; k < searchConditions.size(); k++) {
                         IgnoreTestItemValue ignoreTestItemValue = null;
-                        for (int m = 0 ; m < ignoreTestItemValueList.size();m++){
+                        for (int m = 0; m < ignoreTestItemValueList.size(); m++) {
                             if (ignoreTestItemValueList.get(m).getRowKey().equals(rowKeys.get(j)) && ignoreTestItemValueList.get(m).getSearchConditionDto().equals(searchConditions.get(k))) {
                                 ignoreTestItemValue = ignoreTestItemValueList.get(m);
                             }
                         }
-                        if (ignoreTestItemValue == null){
+                        if (ignoreTestItemValue == null) {
                             String lslOrFail = searchConditions.get(k).getLslOrFail();
                             String uslOrPass = searchConditions.get(k).getUslOrPass();
                             if (searchConditions.get(k).getTestItemType().getCode().equals("Variable")) {
@@ -280,21 +279,20 @@ public class YieldServiceImpl implements YieldService {
                                     count = count + 1;
                                 }
                             }
-                        }else{
+                        } else {
                             ignoreCount++;
                         }
                     }
-                    if (count == searchConditions.size()-1-ignoreCount && j == 0) {
+                    if (count == searchConditions.size() - 1 - ignoreCount && j == 0) {
                         totalProFpySamples = totalProFpySamples + 1;
                         totalProPassSamples = totalProPassSamples + 1;
                         break;
-                    } else if (count == searchConditions.size()-1-ignoreCount && j > 0 && j <= rowKeys.size() - 1) {
+                    } else if (count == searchConditions.size() - 1 - ignoreCount && j > 0 && j <= rowKeys.size() - 1) {
                         totalProPassSamples = totalProPassSamples + 1;
                         break;
                     }
                 }
             }
-
 
 
             totalProTotalSamples = unRepetitionDatas.size();
@@ -308,9 +306,9 @@ public class YieldServiceImpl implements YieldService {
             yieldTotalProcessesDto.setFpyPercent((double) totalProFpySamples / (double) totalProTotalSamples);
             yieldTotalProcessesDto.setNgPercent((double) totalProNgSamples / (double) totalProTotalSamples);
             yieldTotalProcessesDto.setNtfPercent((double) totalProNtfSamples / (double) totalProTotalSamples);
-        }else {
+        } else {
             YieldOverviewDto yieldOverviewDto = new YieldOverviewDto();
-            for (int i = 1 ; i < oldSearchConditions.size();i++){
+            for (int i = 1; i < oldSearchConditions.size(); i++) {
                 yieldOverviewDto.setKey(oldSearchConditions.get(i).getKey());
                 yieldOverviewDto.setItemName(oldSearchConditions.get(i).getItemName());
                 overResult.add(yieldOverviewDto);
@@ -320,12 +318,12 @@ public class YieldServiceImpl implements YieldService {
         //ntfChart
         configDto.setTopN(5);//
         List<YieldNTFChartDto> ntfChartDtoList = Lists.newArrayList();
-        for (int i = 0; i < searchConditions.size() -1 ; i++) {
+        for (int i = 0; i < searchConditions.size() - 1; i++) {
             YieldNTFChartDto yieldNTFChartDto = new YieldNTFChartDto();
             yieldNTFChartDto.setItemName(overResult.get(i).getItemName());
-            if (overResult.get(i).getNtfPercent() == null){
+            if (overResult.get(i).getNtfPercent() == null) {
                 yieldNTFChartDto.setNtfPercent(0.0);
-            }else {
+            } else {
                 yieldNTFChartDto.setNtfPercent(overResult.get(i).getNtfPercent());
             }
             ntfChartDtoList.add(yieldNTFChartDto);
@@ -335,33 +333,33 @@ public class YieldServiceImpl implements YieldService {
             public int compare(YieldNTFChartDto o1, YieldNTFChartDto o2) {
                 double ntf1 = o1.getNtfPercent();
                 double ntf2 = o2.getNtfPercent();
-                if (ntf1 > ntf2){
+                if (ntf1 > ntf2) {
                     return -1;
-                }else if (ntf1 == ntf2){
+                } else if (ntf1 == ntf2) {
                     return 0;
-                }else {
-                    return  1;
+                } else {
+                    return 1;
                 }
             }
         });
-        for (int i = 0; i < configDto.getTopN() && i < searchConditions.size() -1 ; i++) {
+        for (int i = 0; i < configDto.getTopN() && i < searchConditions.size() - 1; i++) {
             ntfChartResult.add(ntfChartDtoList.get(i));
         }
 
         List<YieldOverviewDto> overViewResult = Lists.newArrayList();
         //组装overViewResult
         int overIndex = 0;
-        for (int i = 1 ; i < oldSearchConditions.size();i++){
-            for (Integer noRangeIndex : noRangeSearchConditionIndex){
-                if (noRangeIndex == i){
+        for (int i = 1; i < oldSearchConditions.size(); i++) {
+            for (Integer noRangeIndex : noRangeSearchConditionIndex) {
+                if (noRangeIndex == i) {
                     YieldOverviewDto yieldOverviewDto = new YieldOverviewDto();
                     yieldOverviewDto.setKey(oldSearchConditions.get(i).getKey());
                     yieldOverviewDto.setItemName(oldSearchConditions.get(i).getItemName());
                     overViewResult.add(yieldOverviewDto);
                 }
             }
-            for (Integer rangeIndex : rangeSearchConditionIndex){
-                if (rangeIndex == i){
+            for (Integer rangeIndex : rangeSearchConditionIndex) {
+                if (rangeIndex == i) {
                     overViewResult.add(overResult.get(overIndex));
                     overIndex++;
                 }
@@ -376,7 +374,7 @@ public class YieldServiceImpl implements YieldService {
     }
 
     @Override
-    public List<YieldViewDataResultDto> getViewData(SearchDataFrame searchDataFrame, List<SearchConditionDto> oldSearchConditions, YieldAnalysisConfigDto configDto){
+    public List<YieldViewDataResultDto> getViewData(SearchDataFrame searchDataFrame, List<SearchConditionDto> oldSearchConditions, YieldAnalysisConfigDto configDto) {
         logger.debug("Getting Yield totalProcesses result...");
         if (searchDataFrame == null || oldSearchConditions == null || configDto == null) {
             pushProgress(100);
@@ -387,14 +385,14 @@ public class YieldServiceImpl implements YieldService {
 
         //分类产品
 
-        List<String> oldSearchRowKeys =  searchDataFrame.getSearchRowKey(oldSearchConditions.get(1).getCondition());
-        List<String> oldDatas =  searchDataFrame.getDataValue(oldSearchConditions.get(0).getItemName(), oldSearchRowKeys);
+        List<String> oldSearchRowKeys = searchDataFrame.getSearchRowKey(oldSearchConditions.get(1).getCondition());
+        List<String> oldDatas = searchDataFrame.getDataValue(oldSearchConditions.get(0).getItemName(), oldSearchRowKeys);
         List<String> noNullProductSearchRowKeys = Lists.newArrayList();
         List<String> noNullProductDatas = Lists.newArrayList();
 
         //过滤产品为空
-        for (int i = 0 ; i<oldDatas.size();i++){
-            if (!DAPStringUtils.isBlank(oldDatas.get(i))){
+        for (int i = 0; i < oldDatas.size(); i++) {
+            if (!DAPStringUtils.isBlank(oldDatas.get(i))) {
                 noNullProductDatas.add(oldDatas.get(i));
                 noNullProductSearchRowKeys.add(oldSearchRowKeys.get(i));
             }
@@ -405,11 +403,11 @@ public class YieldServiceImpl implements YieldService {
         List<Integer> noRangeSearchConditionIndex = Lists.newArrayList();
         List<Integer> rangeSearchConditionIndex = Lists.newArrayList();
         searchConditions.add(oldSearchConditions.get(0));
-        for (int i=1;i<oldSearchConditions.size();i++){
-            if (!(DAPStringUtils.isBlank(oldSearchConditions.get(i).getLslOrFail()) && DAPStringUtils.isBlank(oldSearchConditions.get(i).getUslOrPass()))){
+        for (int i = 1; i < oldSearchConditions.size(); i++) {
+            if (!(DAPStringUtils.isBlank(oldSearchConditions.get(i).getLslOrFail()) && DAPStringUtils.isBlank(oldSearchConditions.get(i).getUslOrPass()))) {
                 searchConditions.add(oldSearchConditions.get(i));
                 rangeSearchConditionIndex.add(i);
-            }else {
+            } else {
                 noRangeSearchConditionIndex.add(i);
             }
         }
@@ -418,37 +416,37 @@ public class YieldServiceImpl implements YieldService {
         List<String> searchRowKeys = Lists.newArrayList();
         List<String> datas = Lists.newArrayList();
         List<IgnoreTestItemValue> ignoreTestItemValueList = Lists.newArrayList();
-        for (int i=0;i<noNullProductSearchRowKeys.size();i++){
+        for (int i = 0; i < noNullProductSearchRowKeys.size(); i++) {
             RowDataDto rowDataDto = searchDataFrame.getDataRow(noNullProductSearchRowKeys.get(i));
-            Map<String,String> map = rowDataDto.getData();
+            Map<String, String> map = rowDataDto.getData();
             int count = 0;
-            for (int j = 1; j < searchConditions.size();j++){
+            for (int j = 1; j < searchConditions.size(); j++) {
                 String testItemValue = map.get(searchConditions.get(j).getItemName());
-                if (!DAPStringUtils.isBlank(testItemValue)){
-                    if (searchConditions.get(j).getTestItemType().getCode().equals("Attribute")){
-                        if (!DAPStringUtils.isBlank(searchConditions.get(j).getUslOrPass()) || !DAPStringUtils.isBlank(searchConditions.get(j).getLslOrFail())){
-                            if (!DAPStringUtils.isBlank(searchConditions.get(j).getUslOrPass()) && !DAPStringUtils.isBlank(searchConditions.get(j).getLslOrFail())){
-                                if (testItemValue.equals(searchConditions.get(j).getUslOrPass()) || testItemValue.equals(searchConditions.get(j).getLslOrFail())){
+                if (!DAPStringUtils.isBlank(testItemValue)) {
+                    if (searchConditions.get(j).getTestItemType().getCode().equals("Attribute")) {
+                        if (!DAPStringUtils.isBlank(searchConditions.get(j).getUslOrPass()) || !DAPStringUtils.isBlank(searchConditions.get(j).getLslOrFail())) {
+                            if (!DAPStringUtils.isBlank(searchConditions.get(j).getUslOrPass()) && !DAPStringUtils.isBlank(searchConditions.get(j).getLslOrFail())) {
+                                if (testItemValue.equals(searchConditions.get(j).getUslOrPass()) || testItemValue.equals(searchConditions.get(j).getLslOrFail())) {
                                     count++;
-                                }else {
+                                } else {
                                     IgnoreTestItemValue ignoreTestItemValue = new IgnoreTestItemValue();
                                     ignoreTestItemValue.setRowKey(noNullProductSearchRowKeys.get(i));
                                     ignoreTestItemValue.setSearchConditionDto(searchConditions.get(j));
                                     ignoreTestItemValueList.add(ignoreTestItemValue);
                                 }
-                            }else{
+                            } else {
                                 count++;
                             }
-                        }else{
+                        } else {
                             IgnoreTestItemValue ignoreTestItemValue = new IgnoreTestItemValue();
                             ignoreTestItemValue.setRowKey(noNullProductSearchRowKeys.get(i));
                             ignoreTestItemValue.setSearchConditionDto(searchConditions.get(j));
                             ignoreTestItemValueList.add(ignoreTestItemValue);
                         }
-                    }else if (searchConditions.get(j).getTestItemType().getCode().equals("Variable")){
-                        if (DAPStringUtils.isNumeric(testItemValue)){
+                    } else if (searchConditions.get(j).getTestItemType().getCode().equals("Variable")) {
+                        if (DAPStringUtils.isNumeric(testItemValue)) {
                             count++;
-                        }else{
+                        } else {
                             IgnoreTestItemValue ignoreTestItemValue = new IgnoreTestItemValue();
                             ignoreTestItemValue.setRowKey(noNullProductSearchRowKeys.get(i));
                             ignoreTestItemValue.setSearchConditionDto(searchConditions.get(j));
@@ -457,7 +455,7 @@ public class YieldServiceImpl implements YieldService {
                     }
                 }
             }
-            if (count <= searchConditions.size()-1 && count > 0) {
+            if (count <= searchConditions.size() - 1 && count > 0) {
                 datas.add(noNullProductDatas.get(i));
                 searchRowKeys.add(noNullProductSearchRowKeys.get(i));
             }
@@ -497,23 +495,23 @@ public class YieldServiceImpl implements YieldService {
             List<YieldViewDataDto> Totallist = Lists.newArrayList();
 
             //ViewData
-            for (int i = 1;i<searchConditions.size();i++) {
+            for (int i = 1; i < searchConditions.size(); i++) {
                 for (int k = 0; k < unRepetitionDatas.size(); k++) {
                     List<String> oldRowKeys = dataAndRowKeyMap.get(unRepetitionDatas.get(k));
                     List<String> rowKeys = Lists.newArrayList();
-                    for (int n=0;n<oldRowKeys.size();n++) {
+                    for (int n = 0; n < oldRowKeys.size(); n++) {
                         int ignoreCount = 0;
-                        for (int m = 0 ; m < ignoreTestItemValueList.size();m++){
+                        for (int m = 0; m < ignoreTestItemValueList.size(); m++) {
                             if (!(ignoreTestItemValueList.get(m).getRowKey().equals(oldRowKeys.get(n)) && ignoreTestItemValueList.get(m).getSearchConditionDto().equals(searchConditions.get(i)))) {
                                 ignoreCount++;
                             }
                         }
-                        if (ignoreCount == ignoreTestItemValueList.size()){
+                        if (ignoreCount == ignoreTestItemValueList.size()) {
                             rowKeys.add(oldRowKeys.get(n));
                         }
                     }
                     boolean ng = false;
-                    if (rowKeys.size() == oldRowKeys.size()){
+                    if (rowKeys.size() == oldRowKeys.size()) {
                         rowKeys = oldRowKeys;
                     }
                     for (int j = 0; j < rowKeys.size(); j++) {
@@ -539,7 +537,7 @@ public class YieldServiceImpl implements YieldService {
                                     Passlist.add(yieldViewDataDto);
                                     break;
                                 } else if (j > 0 && j <= rowKeys.size() - 1) {
-                                    for(int n =0;n<j; n++){
+                                    for (int n = 0; n < j; n++) {
                                         yieldViewDataDto = new YieldViewDataDto();
                                         yieldViewDataDto.setRowKey(rowKeys.get(n));
                                         Ntflist.add(yieldViewDataDto);
@@ -560,7 +558,7 @@ public class YieldServiceImpl implements YieldService {
                                     Passlist.add(yieldViewDataDto);
                                     break;
                                 } else if (j > 0 && j <= rowKeys.size() - 1) {
-                                    for(int n =0;n<j; n++){
+                                    for (int n = 0; n < j; n++) {
                                         yieldViewDataDto = new YieldViewDataDto();
                                         yieldViewDataDto.setRowKey(rowKeys.get(n));
                                         Ntflist.add(yieldViewDataDto);
@@ -576,8 +574,8 @@ public class YieldServiceImpl implements YieldService {
                             ng = true;
                         }
                     }
-                    if(ng == true){
-                        for(int n =0; n<rowKeys.size();n++){
+                    if (ng == true) {
+                        for (int n = 0; n < rowKeys.size(); n++) {
                             yieldViewDataDto = new YieldViewDataDto();
                             yieldViewDataDto.setRowKey(rowKeys.get(n));
                             Nglist.add(yieldViewDataDto);
@@ -585,7 +583,7 @@ public class YieldServiceImpl implements YieldService {
                     }
                 }
 
-                for(int n =0; n< searchRowKeys.size(); n++){
+                for (int n = 0; n < searchRowKeys.size(); n++) {
                     yieldViewDataDto = new YieldViewDataDto();
                     yieldViewDataDto.setRowKey(searchRowKeys.get(n));
                     Totallist.add(yieldViewDataDto);
@@ -610,7 +608,7 @@ public class YieldServiceImpl implements YieldService {
 
 
     @Override
-    public List<YieldViewDataResultDto> getTotalData(SearchDataFrame searchDataFrame,  List<SearchConditionDto> oldSearchConditions, YieldAnalysisConfigDto configDto) {
+    public List<YieldViewDataResultDto> getTotalData(SearchDataFrame searchDataFrame, List<SearchConditionDto> oldSearchConditions, YieldAnalysisConfigDto configDto) {
 
         logger.debug("Getting TotalData...");
         if (searchDataFrame == null || oldSearchConditions == null || configDto == null) {
@@ -622,14 +620,14 @@ public class YieldServiceImpl implements YieldService {
 
 
         //分类产品
-        List<String> oldSearchRowKeys =  searchDataFrame.getSearchRowKey(oldSearchConditions.get(1).getCondition());
-        List<String> oldDatas =  searchDataFrame.getDataValue(oldSearchConditions.get(0).getItemName(), oldSearchRowKeys);
+        List<String> oldSearchRowKeys = searchDataFrame.getSearchRowKey(oldSearchConditions.get(1).getCondition());
+        List<String> oldDatas = searchDataFrame.getDataValue(oldSearchConditions.get(0).getItemName(), oldSearchRowKeys);
         List<String> noNullProductSearchRowKeys = Lists.newArrayList();
         List<String> noNullProductDatas = Lists.newArrayList();
 
         //过滤产品为空
-        for (int i = 0 ; i<oldDatas.size();i++){
-            if (!DAPStringUtils.isBlank(oldDatas.get(i))){
+        for (int i = 0; i < oldDatas.size(); i++) {
+            if (!DAPStringUtils.isBlank(oldDatas.get(i))) {
                 noNullProductDatas.add(oldDatas.get(i));
                 noNullProductSearchRowKeys.add(oldSearchRowKeys.get(i));
             }
@@ -640,11 +638,11 @@ public class YieldServiceImpl implements YieldService {
         List<Integer> noRangeSearchConditionIndex = Lists.newArrayList();
         List<Integer> rangeSearchConditionIndex = Lists.newArrayList();
         searchConditions.add(oldSearchConditions.get(0));
-        for (int i=1;i<oldSearchConditions.size();i++){
-            if (!(DAPStringUtils.isBlank(oldSearchConditions.get(i).getLslOrFail()) && DAPStringUtils.isBlank(oldSearchConditions.get(i).getUslOrPass()))){
+        for (int i = 1; i < oldSearchConditions.size(); i++) {
+            if (!(DAPStringUtils.isBlank(oldSearchConditions.get(i).getLslOrFail()) && DAPStringUtils.isBlank(oldSearchConditions.get(i).getUslOrPass()))) {
                 searchConditions.add(oldSearchConditions.get(i));
                 rangeSearchConditionIndex.add(i);
-            }else {
+            } else {
                 noRangeSearchConditionIndex.add(i);
             }
         }
@@ -653,26 +651,26 @@ public class YieldServiceImpl implements YieldService {
         List<String> searchRowKeys = Lists.newArrayList();
         List<String> datas = Lists.newArrayList();
         List<IgnoreTestItemValue> ignoreTestItemValueList = Lists.newArrayList();
-        for (int i=0;i<noNullProductSearchRowKeys.size();i++){
+        for (int i = 0; i < noNullProductSearchRowKeys.size(); i++) {
             RowDataDto rowDataDto = searchDataFrame.getDataRow(noNullProductSearchRowKeys.get(i));
-            Map<String,String> map = rowDataDto.getData();
+            Map<String, String> map = rowDataDto.getData();
             int count = 0;
-            for (int j = 1; j < searchConditions.size();j++){
+            for (int j = 1; j < searchConditions.size(); j++) {
                 String testItemValue = map.get(searchConditions.get(j).getItemName());
-                if (!DAPStringUtils.isBlank(testItemValue)){
-                    if (searchConditions.get(j).getTestItemType().getCode().equals("Attribute")){
-                        if (testItemValue.equals(searchConditions.get(j).getUslOrPass()) || testItemValue.equals(searchConditions.get(j).getLslOrFail())){
+                if (!DAPStringUtils.isBlank(testItemValue)) {
+                    if (searchConditions.get(j).getTestItemType().getCode().equals("Attribute")) {
+                        if (testItemValue.equals(searchConditions.get(j).getUslOrPass()) || testItemValue.equals(searchConditions.get(j).getLslOrFail())) {
                             count++;
-                        }else{
+                        } else {
                             IgnoreTestItemValue ignoreTestItemValue = new IgnoreTestItemValue();
                             ignoreTestItemValue.setRowKey(noNullProductSearchRowKeys.get(i));
                             ignoreTestItemValue.setSearchConditionDto(searchConditions.get(j));
                             ignoreTestItemValueList.add(ignoreTestItemValue);
                         }
-                    }else if (searchConditions.get(j).getTestItemType().getCode().equals("Variable")){
-                        if (DAPStringUtils.isNumeric(testItemValue)){
+                    } else if (searchConditions.get(j).getTestItemType().getCode().equals("Variable")) {
+                        if (DAPStringUtils.isNumeric(testItemValue)) {
                             count++;
-                        }else{
+                        } else {
                             IgnoreTestItemValue ignoreTestItemValue = new IgnoreTestItemValue();
                             ignoreTestItemValue.setRowKey(noNullProductSearchRowKeys.get(i));
                             ignoreTestItemValue.setSearchConditionDto(searchConditions.get(j));
@@ -681,7 +679,7 @@ public class YieldServiceImpl implements YieldService {
                     }
                 }
             }
-            if (count <= searchConditions.size()-1 && count > 0) {
+            if (count <= searchConditions.size() - 1 && count > 0) {
                 datas.add(noNullProductDatas.get(i));
                 searchRowKeys.add(noNullProductSearchRowKeys.get(i));
             }
@@ -713,7 +711,6 @@ public class YieldServiceImpl implements YieldService {
         }
 
 
-
         if (!dataAndRowKeyMap.isEmpty()) {
 
             List<YieldViewDataDto> totalFpylist = Lists.newArrayList();
@@ -727,20 +724,20 @@ public class YieldServiceImpl implements YieldService {
             for (int i = 0; i < unRepetitionDatas.size(); i++) {
                 List<String> rowKeys = dataAndRowKeyMap.get(unRepetitionDatas.get(i));
                 int j;
-                for ( j = 0; j < rowKeys.size(); j++) {
+                for (j = 0; j < rowKeys.size(); j++) {
 
                     int count = 0;
                     int ignoreCount = 0;
                     RowDataDto rowDataDto = searchDataFrame.getDataRow(rowKeys.get(j));
-                    Map<String,String> rowData = rowDataDto.getData();
-                    for (int k = 1 ; k < searchConditions.size();k++){
+                    Map<String, String> rowData = rowDataDto.getData();
+                    for (int k = 1; k < searchConditions.size(); k++) {
                         IgnoreTestItemValue ignoreTestItemValue = null;
-                        for (int m = 0 ; m < ignoreTestItemValueList.size();m++){
+                        for (int m = 0; m < ignoreTestItemValueList.size(); m++) {
                             if (ignoreTestItemValueList.get(m).getRowKey().equals(rowKeys.get(j)) && ignoreTestItemValueList.get(m).getSearchConditionDto().equals(searchConditions.get(k))) {
                                 ignoreTestItemValue = ignoreTestItemValueList.get(m);
                             }
                         }
-                        if (ignoreTestItemValue == null){
+                        if (ignoreTestItemValue == null) {
                             String lslOrFail = searchConditions.get(k).getLslOrFail();
                             String uslOrPass = searchConditions.get(k).getUslOrPass();
                             if (searchConditions.get(k).getTestItemType().getCode().equals("Variable")) {
@@ -752,18 +749,18 @@ public class YieldServiceImpl implements YieldService {
                                     count = count + 1;
                                 }
                             }
-                        }else{
+                        } else {
                             ignoreCount++;
                         }
                     }
-                    if (count == searchConditions.size()-1-ignoreCount && j == 0) {
+                    if (count == searchConditions.size() - 1 - ignoreCount && j == 0) {
                         yieldViewDataDto = new YieldViewDataDto();
                         yieldViewDataDto.setRowKey(rowKeys.get(j));
                         totalFpylist.add(yieldViewDataDto);
                         totalPasslist.add(yieldViewDataDto);
                         break;
-                    } else if (count == searchConditions.size()-1-ignoreCount && j > 0 && j <= rowKeys.size()-1 ) {
-                        for(int n =0;n<j; n++){
+                    } else if (count == searchConditions.size() - 1 - ignoreCount && j > 0 && j <= rowKeys.size() - 1) {
+                        for (int n = 0; n < j; n++) {
                             yieldViewDataDto = new YieldViewDataDto();
                             yieldViewDataDto.setRowKey(rowKeys.get(n));
                             totalNtflist.add(yieldViewDataDto);
@@ -774,8 +771,8 @@ public class YieldServiceImpl implements YieldService {
                         break;
                     }
                 }
-                if(j == rowKeys.size()){
-                    for(int n =0; n<rowKeys.size(); n++){
+                if (j == rowKeys.size()) {
+                    for (int n = 0; n < rowKeys.size(); n++) {
                         yieldViewDataDto = new YieldViewDataDto();
                         yieldViewDataDto.setRowKey(rowKeys.get(n));
                         totalNglist.add(yieldViewDataDto);
@@ -785,8 +782,7 @@ public class YieldServiceImpl implements YieldService {
             }
 
 
-
-            for(int i =0; i< searchRowKeys.size(); i++){
+            for (int i = 0; i < searchRowKeys.size(); i++) {
                 yieldViewDataDto = new YieldViewDataDto();
                 yieldViewDataDto.setRowKey(searchRowKeys.get(i));
                 totalTotallist.add(yieldViewDataDto);
@@ -810,9 +806,7 @@ public class YieldServiceImpl implements YieldService {
     }
 
 
-
-
-    private Boolean validateValue(String value, String uslOrPass,String lslOrFail,String type) {
+    private Boolean validateValue(String value, String uslOrPass, String lslOrFail, String type) {
 
         if (type.equals("Attribute")) {
             if (value.equals(uslOrPass)) {
@@ -826,7 +820,7 @@ public class YieldServiceImpl implements YieldService {
             }
             if (DAPStringUtils.isBlank(uslOrPass) && !value.equals(lslOrFail)) {
                 return true;
-            }else {
+            } else {
                 return false;
             }
         } else {
@@ -860,7 +854,7 @@ public class YieldServiceImpl implements YieldService {
                 } else {
                     return false;
                 }
-            }else {
+            } else {
                 return false;
             }
         }
