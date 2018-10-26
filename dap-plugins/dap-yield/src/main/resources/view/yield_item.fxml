@@ -23,7 +23,7 @@
     <children>
         <SplitPane fx:id="split" orientation="VERTICAL" prefHeight="600.0" style="-fx-border-width: 0 0 0 0;" VBox.vgrow="ALWAYS">
             <items>
-                <TabPane minHeight="270.0" minWidth="180.0" prefHeight="270.0" prefWidth="180.0" style="-fx-border-width: 0 0 0 0;" tabClosingPolicy="UNAVAILABLE">
+                <TabPane fx:id="rightTabPane" minHeight="270.0" minWidth="180.0" prefHeight="270.0" prefWidth="180.0" style="-fx-border-width: 0 0 0 0;" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
                         <Tab fx:id="itemTab" style="-fx-pref-width: 45;">
                             <content>

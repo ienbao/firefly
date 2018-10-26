@@ -35,6 +35,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
@@ -64,6 +66,8 @@ public class YieldItemController implements Initializable {
     private Button importBtn;
     @FXML
     private Button exportBtn;
+    @FXML
+    private TabPane rightTabPane;
     @FXML
     private Tab itemTab;
     @FXML
@@ -565,22 +569,55 @@ public class YieldItemController implements Initializable {
 //    }
 //
     private boolean validAnalysisCondition() {
-        if (isConfigError()) {
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    YieldFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER),
-                    YieldFxmlAndLanguageUtils.getString(ResourceMassages.YIELD_CONFIG_ERROR_MESSAGE));
-            return false;
-        }
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
         if (selectedItemDto.size() == 0) {
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
-                    YieldFxmlAndLanguageUtils.getString(ResourceMassages.TIP_WARN_HEADER),
-                    YieldFxmlAndLanguageUtils.getString(ResourceMassages.UI_YIELD_ANALYSIS_ITEM_EMPTY));
+            if (itemTab.isSelected()) {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        YieldFxmlAndLanguageUtils.getString("UI_YIELD_ANALYSIS_ITEM_EMPTY"));
+            } else {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        YieldFxmlAndLanguageUtils.getString("UI_YIELD_ANALYSIS_ITEM_EMPTY"),
+                        YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{YieldFxmlAndLanguageUtils.getString("TEST_ITEM_TAB")}), yieldItemEvent());
+            }
+            return false;
+        }
+        if (isConfigError()) {
+            if (configTab.isSelected()) {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        YieldFxmlAndLanguageUtils.getString("UI_YIELD_CONFIGURATION_INVALIDATE"));
+            } else {
+                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
+                        YieldFxmlAndLanguageUtils.getString("UI_YIELD_CONFIGURATION_INVALIDATE"),
+                        YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{YieldFxmlAndLanguageUtils.getString("YIELD_CONFIG_TAB")}), yieldConfigEvent());
+            }
+
             return false;
         }
         return searchTab.verifySearchTextArea();
     }
+    private EventHandler<ActionEvent> yieldConfigEvent() {
+        EventHandler<ActionEvent> eventHandler = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                rightTabPane.getSelectionModel().select(configTab);
+            }
+        };
+        return eventHandler;
+    }
+    private EventHandler<ActionEvent> yieldItemEvent() {
+        EventHandler<ActionEvent> eventHandler = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                rightTabPane.getSelectionModel().select(itemTab);
 
+            }
+        };
+        return eventHandler;
+    }
     @SuppressWarnings("unchecked")
     private void normalAnalysisEvent(boolean isTimer) {
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
@@ -790,7 +827,7 @@ public class YieldItemController implements Initializable {
 
 
     private boolean isConfigError() {
-        if (null==configComboBox.getValue()&&configComboBox.getValue().equals("")) {
+        if (null==configComboBox.getValue()||configComboBox.getValue().equals("")) {
             return true;
         }
         return false;
@@ -904,9 +941,6 @@ public class YieldItemController implements Initializable {
     }
     public List<TestItemWithTypeDto> buildSelectTestItemWithTypeData(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
         List<TestItemWithTypeDto> itemWithTypeDtoList = Lists.newArrayList();
-        TestItemWithTypeDto searchPrimaryKey = new TestItemWithTypeDto();
-        searchPrimaryKey.setTestItemName(configComboBox.getValue());
-        itemWithTypeDtoList.add(searchPrimaryKey);
         itemWithTypeDtoList.addAll(testItemWithTypeDtoList);
         List<String> conditionTestItemList = getConditionTestItem();
         if (conditionTestItemList != null) {
@@ -921,7 +955,6 @@ public class YieldItemController implements Initializable {
     private List<String> getConditionTestItem() {
         List<String> conditionList = searchTab.getSearch();
         List<String> testItemList = getSelectedItem();
-        TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
         List<String> conditionTestItemList = Lists.newArrayList();
         for (String condition : conditionList) {
             Set<String> conditionTestItemSet = FilterUtils.parseItemNameFromConditions(condition);
@@ -930,6 +963,11 @@ public class YieldItemController implements Initializable {
                     conditionTestItemList.add(conditionTestItem);
                 }
             }
+        }
+
+        String primaryKey = configComboBox.getValue();
+        if (!testItemList.contains(primaryKey)  && !conditionTestItemList.contains(primaryKey)) {
+            conditionTestItemList.add(primaryKey);
         }
         return conditionTestItemList;
     }
