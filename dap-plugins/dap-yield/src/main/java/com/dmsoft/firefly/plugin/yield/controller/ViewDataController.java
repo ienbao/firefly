@@ -241,17 +241,7 @@ public class ViewDataController implements Initializable {
                 return;
             }
             List<String> selectedTestItems = chooseTestItemDialog.getSelectedItems();
-//            List<String> orderSelectTestItems = Lists.newArrayList();
-//            for(int i=0; i<searchViewDataConditionDto.size(); i++){
-//                for(int j =0 ;j<selectedTestItems.size(); j++){
-//                    if(searchViewDataConditionDto.get(i).getItemName().equals(selectedTestItems.get(j))){
-//                        orderSelectTestItems.add(selectedTestItems.get(j));
-//                        selectedTestItems.remove(j);
-//                    }
-//                }
-//
-//            }
-//            orderSelectTestItems.addAll(selectedTestItems);
+
 
             int curIndex = 0;
             for (TestItemWithTypeDto typeDto : typeDtoList) {

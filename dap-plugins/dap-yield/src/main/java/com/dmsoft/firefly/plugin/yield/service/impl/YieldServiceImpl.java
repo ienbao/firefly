@@ -52,7 +52,7 @@ public class YieldServiceImpl implements YieldService {
         //分类产品
 
         List<String> oldSearchRowKeys =  searchDataFrame.getSearchRowKey(oldSearchConditions.get(1).getCondition());
-        List<String> oldDatas =  searchDataFrame.getDataValue(oldSearchConditions.get(0).getItemName(), oldSearchRowKeys);
+        List<String> oldDatas =  searchDataFrame.getDataValue(configDto.getPrimaryKey(), oldSearchRowKeys);
         List<String> noNullProductSearchRowKeys = Lists.newArrayList();
         List<String> noNullProductDatas = Lists.newArrayList();
 

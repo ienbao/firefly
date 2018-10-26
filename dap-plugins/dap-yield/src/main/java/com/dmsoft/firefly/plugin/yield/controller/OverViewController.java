@@ -104,38 +104,18 @@ public class OverViewController implements Initializable {
         yieldItemController = yieldMainController.getYieldItemController();
         viewDataController = yieldMainController.getViewDataController();
         dataFrame = yieldMainController.getDataFrame();
-//        List<TestItemWithTypeDto> selectedItemDto = yieldItemController.initSelectedItemDto();
         List<String> projectNameList = envService.findActivatedProjectName();
 
         List<SearchConditionDto> searchConditionDtoList = yieldMainController.getInitSearchConditionDtoList();
         YieldAnalysisConfigDto yieldAnalysisConfigDto = yieldMainController.getAnalysisConfigDto();
         List<SearchConditionDto> selectSearchConditionDtoList = Lists.newArrayList();
-        for(int i =0; i<searchConditionDtoList.size();i++){
-            if(yieldAnalysisConfigDto.getPrimaryKey().equals(searchConditionDtoList.get(i).getItemName())){
-                selectSearchConditionDtoList.add(searchConditionDtoList.get(i));
-            }
-        }
+        selectSearchConditionDtoList.add(searchConditionDtoList.get(0));
+
         for(int i = 1; i<searchConditionDtoList.size();i++) {
             if (rowKey.equals(searchConditionDtoList.get(i).getItemName())) {
                 selectSearchConditionDtoList.add(searchConditionDtoList.get(i));
             }
         }
-
-//        List<SearchConditionDto> searchConditionDtoList = buildSearchConditionDataList(testItemWithTypeDto);
-//        YieldAnalysisConfigDto yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
-//        yieldAnalysisConfigDto.setPrimaryKey(yieldItemController.getConfigComboBox().getValue());
-
-//        if(column.equals("FPY Samples")) {
-//            searchConditionDtoList.get(1).setYieldType(YieldType.FPY);
-//        }else if(column.equals("Pass Samples")){
-//            searchConditionDtoList.get(1).setYieldType(YieldType.PASS);
-//        }else if(column.equals("NTF Samples")){
-//            searchConditionDtoList.get(1).setYieldType(YieldType.NTF);
-//        }else if(column.equals("NG Samples")){
-//            searchConditionDtoList.get(1).setYieldType(YieldType.NG);
-//        }else if(column.equals("Total Samples")){
-//            searchConditionDtoList.get(1).setYieldType(YieldType.TOTAL);
-//        }
 
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
         context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);

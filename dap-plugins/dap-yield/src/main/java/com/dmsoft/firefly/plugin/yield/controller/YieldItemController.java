@@ -900,9 +900,6 @@ public class YieldItemController implements Initializable {
     }
     public List<TestItemWithTypeDto> buildSelectTestItemWithTypeData(List<TestItemWithTypeDto> testItemWithTypeDtoList) {
         List<TestItemWithTypeDto> itemWithTypeDtoList = Lists.newArrayList();
-        TestItemWithTypeDto searchPrimaryKey = new TestItemWithTypeDto();
-        searchPrimaryKey.setTestItemName(configComboBox.getValue());
-        itemWithTypeDtoList.add(searchPrimaryKey);
         itemWithTypeDtoList.addAll(testItemWithTypeDtoList);
         List<String> conditionTestItemList = getConditionTestItem();
         if (conditionTestItemList != null) {
@@ -917,7 +914,6 @@ public class YieldItemController implements Initializable {
     private List<String> getConditionTestItem() {
         List<String> conditionList = searchTab.getSearch();
         List<String> testItemList = getSelectedItem();
-        TimePatternDto timePatternDto = envService.findActivatedTemplate().getTimePatternDto();
         List<String> conditionTestItemList = Lists.newArrayList();
         for (String condition : conditionList) {
             Set<String> conditionTestItemSet = FilterUtils.parseItemNameFromConditions(condition);
@@ -926,6 +922,11 @@ public class YieldItemController implements Initializable {
                     conditionTestItemList.add(conditionTestItem);
                 }
             }
+        }
+
+        String primaryKey = configComboBox.getValue();
+        if (!testItemList.contains(primaryKey)  && !conditionTestItemList.contains(primaryKey)) {
+            conditionTestItemList.add(primaryKey);
         }
         return conditionTestItemList;
     }
