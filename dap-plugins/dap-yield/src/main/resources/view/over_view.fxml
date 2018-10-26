@@ -20,7 +20,8 @@
                 <Tab text="%OVER_VIEW">
                     <content>
                         <VBox minHeight="0.0" minWidth="0.0">
-                            <GridPane BorderPane.alignment="CENTER">
+                            <GridPane AnchorPane.bottomAnchor="242.0" AnchorPane.rightAnchor="0.0"
+                                      AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
                                 <columnConstraints>
                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="800.0" />
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="310.0" minWidth="310.0" prefWidth="310.0" />
