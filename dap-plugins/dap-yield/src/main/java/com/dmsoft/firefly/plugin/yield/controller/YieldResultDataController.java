@@ -74,7 +74,7 @@ public class YieldResultDataController implements Initializable {
     private void fireClickEvent(String rowKey,String column) {
 //        System.out.println(rowKey + column);
         yieldMainController=yieldChartResultController.getYieldMainController();
-        yieldItemController = yieldChartResultController.getYieldMainController().getYieldItemController();
+        yieldItemController = yieldMainController.getYieldItemController();
         viewDataController = yieldMainController.getViewDataController();
         dataFrame = yieldMainController.getDataFrame();
         List<SearchConditionDto> searchConditionDtoList = yieldMainController.getInitSearchConditionDtoList();
