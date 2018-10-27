@@ -109,13 +109,14 @@ public class YieldResultDataController implements Initializable {
         passSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"Pass Samples",list));
         ntfSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"NTF Samples",list));
         ngSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"NG Samples",list));
+
     }
     private void fireClickEvent(String rowKey,String column,YieldTotalProcessesDto list) {
+        yieldMainController = yieldChartResultController.getYieldMainController();
+        viewDataController = yieldMainController.getViewDataController();
         if(list.getTotalSamples()!=null){
 //        System.out.println(rowKey + column);
-            yieldMainController = yieldChartResultController.getYieldMainController();
             yieldItemController = yieldMainController.getYieldItemController();
-            viewDataController = yieldMainController.getViewDataController();
             dataFrame = yieldMainController.getDataFrame();
             List<SearchConditionDto> searchConditionDtoList = yieldMainController.getInitSearchConditionDtoList();
             List<String> projectNameList = envService.findActivatedProjectName();
@@ -184,6 +185,7 @@ public class YieldResultDataController implements Initializable {
             RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
         }
         else{
+
             viewDataController.setViewData(null, null, null, false, "-", "-");
         }
 
