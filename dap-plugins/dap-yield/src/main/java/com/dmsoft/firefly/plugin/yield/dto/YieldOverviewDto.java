@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.yield.dto;
 
 import com.dmsoft.bamboo.common.dto.AbstractValueObject;
+import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 
 /**
  * Created by Tod Dylan on 2018/10/16.
@@ -19,6 +20,7 @@ public class YieldOverviewDto extends AbstractValueObject {
     private Double fpyPercent;
     private Double ntfPercent;
     private Double ngPersent;
+    private TestItemType testItemType;
 
     public String getKey() {
         return key;
@@ -114,5 +116,13 @@ public class YieldOverviewDto extends AbstractValueObject {
 
     public void setNgPersent(Double ngPersent) {
         this.ngPersent = ngPersent;
+    }
+
+    public TestItemType getTestItemType() {
+        return testItemType;
+    }
+
+    public void setTestItemType(TestItemType testItemType) {
+        this.testItemType = testItemType;
     }
 }
