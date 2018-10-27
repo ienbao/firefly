@@ -82,6 +82,7 @@ public class YieldSettingServiceImpl implements YieldSettingService, IConfig {
             yieldOverviewResultAlarmDto.setNtfSamples(yieldOverviewDto.getNtfSamples());
             yieldOverviewResultAlarmDto.setNgSamples(yieldOverviewDto.getNgSamples());
             yieldOverviewResultAlarmDto.setFpySamples(yieldOverviewDto.getFpySamples());
+            yieldOverviewResultAlarmDto.setTestItemType(yieldOverviewDto.getTestItemType());
 
             Map<String, OverviewAlarmDto> statisticalAlarmDtoMap = Maps.newHashMap();
             for (int i = 0; i < overViewKeys.length; i++) {

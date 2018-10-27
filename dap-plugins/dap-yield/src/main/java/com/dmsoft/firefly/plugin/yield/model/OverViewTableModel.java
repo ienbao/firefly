@@ -402,6 +402,13 @@ public class OverViewTableModel implements TableModel {
             }
         }
 
+        if (column.equals(YIELD_TITLE[0])) {
+            YieldOverviewResultAlarmDto yieldOverviewResultAlarmDto = keyToStatsDtoMap.get(rowKey);
+            if (null != yieldOverviewResultAlarmDto.getTestItemType() && yieldOverviewResultAlarmDto.getTestItemType().getCode().equals("Attribute")) {
+                tableCell.setStyle("-fx-text-fill: #009bff;");
+            }
+        }
+
         YieldOverviewResultAlarmDto spcStatsDto = keyToStatsDtoMap.get(rowKey);
         Map<String, OverviewAlarmDto> statisticalAlarmDtoMap = spcStatsDto.getOverviewAlarmDtoMap();
         if (statisticalAlarmDtoMap != null) {

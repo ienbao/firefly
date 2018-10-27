@@ -1,5 +1,7 @@
 package com.dmsoft.firefly.plugin.yield.dto;
 
+import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
+
 import java.util.Map;
 
 public class YieldOverviewResultAlarmDto {
@@ -13,6 +15,7 @@ public class YieldOverviewResultAlarmDto {
     private Integer ntfSamples;
     private Integer ngSamples;
     private String condition;
+    private TestItemType testItemType;
     private Map<String, OverviewAlarmDto> overviewAlarmDtoMap;
 
     public String getKey() {
@@ -101,5 +104,13 @@ public class YieldOverviewResultAlarmDto {
 
     public void setCondition(String condition) {
         this.condition = condition;
+    }
+
+    public TestItemType getTestItemType() {
+        return testItemType;
+    }
+
+    public void setTestItemType(TestItemType testItemType) {
+        this.testItemType = testItemType;
     }
 }

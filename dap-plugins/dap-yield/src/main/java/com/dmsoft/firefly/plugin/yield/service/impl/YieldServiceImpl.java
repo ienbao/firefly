@@ -230,6 +230,7 @@ public class YieldServiceImpl implements YieldService {
                 YieldOverviewDto yieldOverviewDto = new YieldOverviewDto();
                 yieldOverviewDto.setItemName(searchConditions.get(i).getItemName());
                 yieldOverviewDto.setKey(searchConditions.get(i).getKey());
+                yieldOverviewDto.setTestItemType(searchConditions.get(i).getTestItemType());
                 if (overTotalSamples != 0) {
                     yieldOverviewDto.setFpySamples(overFpySamples);
                     yieldOverviewDto.setNtfSamples(overNtfSamples);
