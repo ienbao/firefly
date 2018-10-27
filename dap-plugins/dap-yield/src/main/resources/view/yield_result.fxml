@@ -87,7 +87,7 @@
                                                     </children>
                                                 </Group>
                                             </graphic>
-
+                                            <content>
                                                 <GridPane fx:id="barChartTopPan"  maxHeight="29.0" minHeight="29.0" prefHeight="29.0" style="-fx-border-width: 1; -fx-border-color: red;">
                                                     <padding>
                                                         <Insets bottom="2.0" top="3.0" />
@@ -110,7 +110,7 @@
                                                                          GridPane.valignment="CENTER"/>
                                                     </children>
                                                 </GridPane >
-                                            <content>
+
                                                 <BarChart fx:id="yieldbarChartItem" horizontalZeroLineVisible="false" legendVisible="false" prefHeight="400.0"  verticalZeroLineVisible="false" VBox.vgrow="ALWAYS">
                                                     <xAxis>
                                                         <CategoryAxis side="BOTTOM" tickLabelGap="10.0" tickMarkVisible="false" />
