@@ -79,17 +79,13 @@ public class YieldResultDataController implements Initializable {
         passSamples1.setStyle("-fx-text-fill: #222222");
         ntfSamples1.setStyle("-fx-text-fill: #222222");
         ngSamples1.setStyle("-fx-text-fill: #222222");
+
         if(list.getTotalSamples()!=null){
             totalSamples1.setText(list.getTotalSamples().toString());
-            totalSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"Total Samples",list));
             fpySamples1.setText(list.getFpySamples().toString());
-            fpySamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"FPY Samples",list));
             passSamples1.setText(list.getPassSamples().toString());
-            passSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"Pass Samples",list));
             ntfSamples1.setText(list.getNtfSamples().toString());
-            ntfSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"NTF Samples",list));
             ngSamples1.setText(list.getNgSamples().toString());
-            ngSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"NG Samples",list));
             totalSamples1.setUnderline(true);
             totalSamples1.setUnderline(true);
             fpySamples1.setUnderline(true);
@@ -108,14 +104,19 @@ public class YieldResultDataController implements Initializable {
             ntfSamples1.setUnderline(false);
             ngSamples1.setUnderline(false);
         }
+        totalSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"Total Samples",list));
+        fpySamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"FPY Samples",list));
+        passSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"Pass Samples",list));
+        ntfSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"NTF Samples",list));
+        ngSamples1.setOnMouseClicked(event ->fireClickEvent(rowKey,"NG Samples",list));
 
     }
     private void fireClickEvent(String rowKey,String column,YieldTotalProcessesDto list) {
+        yieldMainController = yieldChartResultController.getYieldMainController();
+        viewDataController = yieldMainController.getViewDataController();
         if(list.getTotalSamples()!=null){
 //        System.out.println(rowKey + column);
-            yieldMainController = yieldChartResultController.getYieldMainController();
             yieldItemController = yieldMainController.getYieldItemController();
-            viewDataController = yieldMainController.getViewDataController();
             dataFrame = yieldMainController.getDataFrame();
             List<SearchConditionDto> searchConditionDtoList = yieldMainController.getInitSearchConditionDtoList();
             List<String> projectNameList = envService.findActivatedProjectName();
@@ -184,6 +185,7 @@ public class YieldResultDataController implements Initializable {
             RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
         }
         else{
+
             viewDataController.setViewData(null, null, null, false, "-", "-");
         }
 

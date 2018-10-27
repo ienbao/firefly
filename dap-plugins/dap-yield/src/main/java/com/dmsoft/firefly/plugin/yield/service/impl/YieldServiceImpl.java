@@ -458,6 +458,11 @@ public class YieldServiceImpl implements YieldService {
                             ignoreTestItemValueList.add(ignoreTestItemValue);
                         }
                     }
+                }else {
+                    IgnoreTestItemValue ignoreTestItemValue = new IgnoreTestItemValue();
+                    ignoreTestItemValue.setRowKey(noNullProductSearchRowKeys.get(i));
+                    ignoreTestItemValue.setSearchConditionDto(searchConditions.get(j));
+                    ignoreTestItemValueList.add(ignoreTestItemValue);
                 }
             }
             if (count <= searchConditions.size() - 1 && count > 0) {
@@ -667,6 +672,11 @@ public class YieldServiceImpl implements YieldService {
                             ignoreTestItemValueList.add(ignoreTestItemValue);
                         }
                     }
+                }else {
+                    IgnoreTestItemValue ignoreTestItemValue = new IgnoreTestItemValue();
+                    ignoreTestItemValue.setRowKey(noNullProductSearchRowKeys.get(i));
+                    ignoreTestItemValue.setSearchConditionDto(searchConditions.get(j));
+                    ignoreTestItemValueList.add(ignoreTestItemValue);
                 }
             }
             if (count <= searchConditions.size() - 1 && count > 0) {
