@@ -740,7 +740,18 @@ public class OverViewTableModel implements TableModel {
                 }
             }
         }else if (spcStatsDto.getTestItemType().getCode().equals("Attribute")){
-            return false;
+            if (DAPStringUtils.isBlank(newText)){
+                errorEditorCell.add(rowKey + "-" + columnName);
+                if (!textField.getStyleClass().contains("text-field-error")) {
+                    textField.getStyleClass().add("text-field-error");
+                }
+                TooltipUtil.installWarnTooltip(textField, YieldFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_USL_LESS_THEN_LSL));
+                return true;
+            }else{
+                errorEditorCell.remove(rowKey + "-" + columnName);
+                return false;
+            }
+
         }
 
         if (errorEditorCell.contains(rowKey + "-" + columnName)) {
