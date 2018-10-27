@@ -16,5 +16,6 @@ public class UIConstant {
     public static final String BARCHART_FPY = "BARCHART_FPY";
     public static final String BARCHART_NTF = "BARCHART_NTF";
     public static final String BARCHART_NG = "BARCHART_NG";
+    public static final String NTF_TOP_N="NTF_TOP_N";
 
 }
