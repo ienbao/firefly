@@ -16,6 +16,7 @@ import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.netty.util.internal.MathUtil;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
@@ -49,6 +50,8 @@ public class YieldChartResultController implements Initializable {
     public void init(YieldMainController yieldMainController) {
     this.yieldMainController = yieldMainController;
         this.initComponentEvents();
+        this.removeBarChartAllResultData();
+        this.removeBarChartResultItemAllResultData();
         yieldBarChart.setAnimated(false);
         yieldbarChartItem.setAnimated(false);
 
@@ -78,20 +81,32 @@ public class YieldChartResultController implements Initializable {
     }
     public void analyzeYieldResult(YieldResultDto yieldResultDto) {
         //清除分析之前的数据
-
+        this.removeBarChartAllResultData();
         while (yieldResultDto == null){
             continue;
         }
-        this.setAnalysisBarChartResultData(yieldResultDto);
+       this.setAnalysisBarChartResultData(yieldResultDto);
     }
+
+    private void removeBarChartAllResultData() {
+        yieldBarChart.getData().setAll(FXCollections.observableArrayList());
+    }
+
+
     public void ananlyzeyieldResultItem(YieldResultDto yieldResultDto){
+        //清除之前的数据
+        this.removeBarChartResultItemAllResultData();
         if(yieldResultDto == null){
             return;
         }
 
         this.setAnalysisBarChartResultItemData(yieldResultDto);
-    }
 
+    }
+    private void removeBarChartResultItemAllResultData() {
+
+        yieldbarChartItem.getData().setAll(FXCollections.observableArrayList());
+    }
     private void setAnalysisBarChartResultItemData(YieldResultDto yieldResultDto) {
         if (yieldResultDto == null){
             enableSubResultOperator(false);
@@ -138,6 +153,8 @@ public class YieldChartResultController implements Initializable {
         final double factor = 0.2;
         double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
+        yAxis.setTickMarkVisible(false);
+        yAxis.setTickLabelsVisible(false);
         yMax += reserve;
         Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, 5);
         double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
@@ -158,9 +175,10 @@ public class YieldChartResultController implements Initializable {
         int digNum = DigNumInstance.newInstance().getDigNum() - 2 >= 0 ? DigNumInstance.newInstance().getDigNum() - 2 : 0;
         ChartUtils.setChartText(yieldBarChart.getData(), s -> {//设置Chart顶部的数据百分比
             if (DAPStringUtils.isNumeric(s)) {
-                Double value = Double.valueOf(s);
+                Double value = Double.valueOf(s)*100;
                 if (!DAPStringUtils.isInfinityAndNaN(value)) {
-                    return DAPStringUtils.formatDouble(value, 2) + "%";
+                    //Integer oo = Integer.parseInt(DAPStringUtils.formatDouble(value, 2))*100;
+                    return DAPStringUtils.formatDouble(value, 2)+ "%";
                 }
             }
             return s + "%";
@@ -200,6 +218,8 @@ public class YieldChartResultController implements Initializable {
         final double factor = 0.2;
         double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
+        yAxis.setTickMarkVisible(false);
+        yAxis.setTickLabelsVisible(false);
         yMax += reserve;
         Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, 5);
         double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
@@ -218,7 +238,7 @@ public class YieldChartResultController implements Initializable {
         //int digNum = DigNumInstance.newInstance().getDigNum() - 2 >= 0 ? DigNumInstance.newInstance().getDigNum() - 2 : 0;
         ChartUtils.setChartText(yieldbarChartItem.getData(), s -> {//设置Chart顶部的数据百分比
             if (DAPStringUtils.isNumeric(s)) {
-                Double value = Double.valueOf(s);
+                Double value = Double.valueOf(s)*100;
                 if (!DAPStringUtils.isInfinityAndNaN(value)) {
                     return DAPStringUtils.formatDouble(value, 0) + "%";
                 }
