@@ -1,1 +1,1 @@
-{"abilityAlarmRule":{"FpyPercent":[95,80,60],"NtfPercent":[5,10,15],"NgPercent":[5,10,15]},"exportTemplateName":"Default Template","primaryKey":"Serial Number"}
+{"abilityAlarmRule":{"FpyPercent":[95,80,60],"NtfPercent":[5,10,15],"NgPercent":[5,10,15]}}

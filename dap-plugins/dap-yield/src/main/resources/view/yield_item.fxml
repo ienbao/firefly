@@ -60,6 +60,9 @@
                                                         <Label text="%PRIMER_KEY" ></Label>
                                                         <Label style="-fx-text-fill: #EA2028;" text="*"/>
                                                     </children>
+                                                    <GridPane.margin>
+                                                        <Insets left="10.0" right="10.0" />
+                                                    </GridPane.margin>
                                                 </HBox>
                                                 <ComboBox fx:id="configComboBox" prefHeight="23.0" prefWidth="160.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
                                                     <GridPane.margin>

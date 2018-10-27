@@ -16,8 +16,8 @@ public class FindYieldSettingDataHandler extends AbstractBasicJobHandler {
 
     @Override
     public void doJob(JobContext context) {
-        YieldSettingService spcSettingService = RuntimeContext.getBean(YieldSettingService.class);
-        YieldSettingDto yieldSettingDto = spcSettingService.findYieldSetting();
+        YieldSettingService yieldSettingService = RuntimeContext.getBean(YieldSettingService.class);
+        YieldSettingDto yieldSettingDto = yieldSettingService.findYieldSetting();
         context.put(ParamKeys.YIELD_SETTING_DTO, yieldSettingDto);
     }
 }
