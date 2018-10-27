@@ -2,6 +2,8 @@ package com.dmsoft.firefly.plugin.yield.model;
 
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableModel;
+import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
+import com.dmsoft.firefly.gui.components.utils.ValidateUtils;
 import com.dmsoft.firefly.plugin.yield.dto.OverviewAlarmDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
 import com.dmsoft.firefly.plugin.yield.service.YieldService;
@@ -22,6 +24,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
 import java.awt.*;
 import java.text.DecimalFormat;
@@ -524,8 +527,14 @@ public class OverViewTableModel implements TableModel {
         SourceObjectProperty valueProperty = new SourceObjectProperty<>(value);
         if (columnName.equals(YIELD_TITLE[1]) || columnName.equals(YIELD_TITLE[2])) {
             valueProperty.addListener((ov, b1, b2) -> {
-                if (DAPStringUtils.isBlank((String) b2) || !DAPStringUtils.isNumeric((String) b2)) {
-                    return;
+                if (overviewResultAlarmDto.getTestItemType().getCode().equals("Attribute")){
+                    if (DAPStringUtils.isBlank((String) b2)) {
+                        return;
+                    }
+                }else if (overviewResultAlarmDto.getTestItemType().getCode().equals("Variable")){
+                    if (DAPStringUtils.isBlank((String) b2) || !DAPStringUtils.isNumeric((String) b2)) {
+                        return;
+                    }
                 }
                 if (!DAPStringUtils.isEqualsString((String) valueProperty.getSourceValue(), (String) b2)) {
                     editorCell.add(rowKey + "-" + columnName);
@@ -667,5 +676,81 @@ public class OverViewTableModel implements TableModel {
             spcStatisticalResultAlarmDtoList.add(entry.getValue());
         }
         return spcStatisticalResultAlarmDtoList;
+    }
+
+    @Override
+    public boolean isTextInputError(TextField textField, String oldText, String newText, String rowKey, String columnName) {
+        if (newText.length() > 255) {
+            textField.setText(oldText);
+            return true;
+        }
+        if (DAPStringUtils.isBlank(newText)) {
+            errorEditorCell.add(rowKey + "-" + columnName);
+            if (!textField.getStyleClass().contains("text-field-error")) {
+                textField.getStyleClass().add("text-field-error");
+            }
+            TooltipUtil.installWarnTooltip(textField, YieldFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_USL_LSL_EMPTY));
+            return true;
+        }
+        YieldOverviewResultAlarmDto spcStatsDto = keyToStatsDtoMap.get(rowKey);
+        if (spcStatsDto.getTestItemType().getCode().equals("Variable")){
+            if (!ValidateUtils.validatePattern(newText, ValidateUtils.DOUBLE_PATTERN)) {
+                textField.setText(oldText);
+                return true;
+            }
+            if (columnName.equals(YIELD_TITLE[1])) {
+                SourceObjectProperty uslProperty = valueMap.get(rowKey + "-" + YIELD_TITLE[2]);
+                if (!DAPStringUtils.isNumeric((String) uslProperty.getValue())) {
+                    return false;
+                }
+                Double usl = Double.valueOf((String) uslProperty.getValue());
+                if (!DAPStringUtils.isNumeric(newText) || Double.valueOf(newText) >= usl) {
+                    errorEditorCell.add(rowKey + "-" + columnName);
+                    if (!textField.getStyleClass().contains("text-field-error")) {
+                        textField.getStyleClass().add("text-field-error");
+                    }
+                    TooltipUtil.installWarnTooltip(textField, YieldFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_LSL_MORE_THEN_USL));
+                    return true;
+                } else if (errorEditorCell.contains(rowKey + "-" + YIELD_TITLE[2])) {
+                    errorEditorCell.remove(rowKey + "-" + YIELD_TITLE[2]);
+                    if (uslProperty.isError()) {
+                        uslProperty.setError(false);
+                        spcStatsDto.setUslOrPass(usl+"");
+                    }
+                }
+            } else if (columnName.equals(YIELD_TITLE[2])) {
+                SourceObjectProperty lslProperty = valueMap.get(rowKey + "-" + YIELD_TITLE[1]);
+                if (!DAPStringUtils.isNumeric((String) lslProperty.getValue())) {
+                    return false;
+                }
+                Double lsl = Double.valueOf((String) lslProperty.getValue());
+                if (Double.valueOf(newText) <= lsl) {
+                    errorEditorCell.add(rowKey + "-" + columnName);
+                    if (!textField.getStyleClass().contains("text-field-error")) {
+                        textField.getStyleClass().add("text-field-error");
+                    }
+                    TooltipUtil.installWarnTooltip(textField, YieldFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_USL_LESS_THEN_LSL));
+                    return true;
+                } else if (errorEditorCell.contains(rowKey + "-" + YIELD_TITLE[1])) {
+                    errorEditorCell.remove(rowKey + "-" + YIELD_TITLE[1]);
+                    if (lslProperty.isError()) {
+                        lslProperty.setError(false);
+                        spcStatsDto.setLslOrFail(lsl+"");
+                    }
+                }
+            }
+        }else if (spcStatsDto.getTestItemType().getCode().equals("Attribute")){
+            return false;
+        }
+
+        if (errorEditorCell.contains(rowKey + "-" + columnName)) {
+            errorEditorCell.remove(rowKey + "-" + columnName);
+            textField.getStyleClass().removeAll("text-field-error");
+            TooltipUtil.uninstallWarnTooltip(textField);
+            return false;
+        }
+        textField.getStyleClass().removeAll("text-field-error");
+        TooltipUtil.uninstallWarnTooltip(textField);
+        return false;
     }
 }
