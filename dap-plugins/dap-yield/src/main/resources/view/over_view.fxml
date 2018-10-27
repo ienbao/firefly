@@ -2,7 +2,6 @@
 
 <?import com.dmsoft.firefly.gui.components.utils.TextFieldFilter?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableView?>
@@ -20,8 +19,7 @@
                 <Tab text="%OVER_VIEW">
                     <content>
                         <VBox minHeight="0.0" minWidth="0.0">
-                            <GridPane AnchorPane.bottomAnchor="242.0" AnchorPane.rightAnchor="0.0"
-                                      AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
+                            <GridPane AnchorPane.bottomAnchor="242.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
                                 <columnConstraints>
                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="800.0" />
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="310.0" minWidth="310.0" prefWidth="310.0" />
@@ -38,10 +36,7 @@
                                     </TextFieldFilter>
                                 </children>
                             </GridPane>
-                            <TableView fx:id="overViewResultTb" editable="true" prefHeight="365.0" prefWidth="435.0" style="-fx-border-width: 1 0 0 0;" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
-                                <!--<columns>-->
-                                <!--<TableColumn fx:id="checkBoxColumn" maxWidth="30.0" minWidth="30.0" prefWidth="30" resizable="false" sortable="false" />-->
-                                <!--</columns>-->
+                            <TableView fx:id="overViewResultTb" editable="true" style="-fx-border-width: 1 1 1 1;" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
                             </TableView>
                         </VBox>
                     </content>
