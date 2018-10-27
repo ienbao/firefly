@@ -166,7 +166,7 @@ public class YieldResultDataController implements Initializable {
                     }
 
                     SearchDataFrame subDataFrame = dataFrame.subDataFrame(rowKeyList, testItemNameList);
-                    viewDataController.setViewData(subDataFrame, rowKeyList, searchConditionDtoList, false, rowKey, column);
+                    viewDataController.setViewData(subDataFrame, rowKeyList, searchConditionDtoList, false, rowKey, column,Yield_PLUGIN_NAME);
 
                 }
             });
@@ -186,7 +186,7 @@ public class YieldResultDataController implements Initializable {
         }
         else{
 
-            viewDataController.setViewData(null, null, null, false, "-", "-");
+            viewDataController.setViewData(null, null, null, false, "-", "-",null);
         }
 
     }

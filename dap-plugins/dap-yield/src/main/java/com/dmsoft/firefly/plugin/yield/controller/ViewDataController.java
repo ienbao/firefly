@@ -70,6 +70,7 @@ public class ViewDataController implements Initializable {
     private ChooseTestItemDialog chooseTestItemDialog;
     private String rowKey;
     private String columnLabel;
+    private String flag;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -106,7 +107,7 @@ public class ViewDataController implements Initializable {
     }
 
     private void buildChooseColumnDialog() {
-        chooseTestItemDialog = new ChooseTestItemDialog(testItemNames, null);
+        chooseTestItemDialog = new ChooseTestItemDialog(Lists.newArrayList(testItemNames), null);
     }
 
     /**
@@ -114,7 +115,7 @@ public class ViewDataController implements Initializable {
      */
     public void clearViewData() {
         filteValueTf.getTextField().setText(null);
-        this.setViewData(null, null, null, null, null);
+        this.setViewData(null, null, null, null, null,null);
     }
 
     /**
@@ -124,8 +125,8 @@ public class ViewDataController implements Initializable {
      * @param selectedRowKey                    selected row key
      * @param statisticalSearchConditionDtoList statisticalSearchConditionDtoList
      */
-    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList, String rowKey, String columnLable) {
-        this.setViewData(dataFrame, selectedRowKey, statisticalSearchConditionDtoList, false, rowKey, columnLable);
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList, String rowKey, String columnLable,String flag) {
+        this.setViewData(dataFrame, selectedRowKey, statisticalSearchConditionDtoList, false, rowKey, columnLable,flag);
     }
 
     /**
@@ -136,8 +137,8 @@ public class ViewDataController implements Initializable {
      * @param statisticalSearchConditionDtoList statisticalSearchConditionDtoList
      * @param isTimer                           isTimer
      */
-    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList, boolean isTimer, String rowKey, String columnLable) {
-        this.setViewData(dataFrame, selectedRowKey, statisticalSearchConditionDtoList, isTimer, isTimer, rowKey, columnLable);
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList, boolean isTimer, String rowKey, String columnLable,String flag) {
+        this.setViewData(dataFrame, selectedRowKey, statisticalSearchConditionDtoList, isTimer, isTimer, rowKey, columnLable,flag);
     }
 
 
@@ -148,21 +149,20 @@ public class ViewDataController implements Initializable {
      * @param selectedRowKey             selected row key
      * @param searchViewDataConditionDto statisticalSearchConditionDtoList
      */
-    private void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> searchViewDataConditionDto, boolean isTimer, boolean isAutoRefresh, String rowKey, String columnLable) {
+    private void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> searchViewDataConditionDto, boolean isTimer, boolean isAutoRefresh, String rowKey, String columnLable,String flag) {
         this.searchViewDataConditionDto = searchViewDataConditionDto;
         this.selectedRowKeys = selectedRowKey;
         this.rowKey = rowKey;
         this.columnLabel = columnLable;
-//        if(rowKey == null){
-//            String row = rowKey != null ? rowKey : null;
-//        }else{
-          String  row = rowKey != null ? rowKey + "::" : null;
-//        }
+        String  row = rowKey != null ? rowKey + "::" : null;
         viewDataR.setText(row);
         viewDataC.setText(columnLable);
+        if(flag != null){
+            this.initialize(null, null);
+        }
 
         this.dataFrame = dataFrame;
-
+        this.flag = flag;
         if (dataFrame == null) {
             filteValueTf.setDisable(true);
             viewDataTable.getColumns().clear();
@@ -201,12 +201,36 @@ public class ViewDataController implements Initializable {
 
         TableViewWrapper.decorate(viewDataTable, model);
 
+        if(flag == null){
+            if(viewDataTable.getColumns().size()>=2){
+                viewDataTable.getColumns().get(1).setText("result");
+            }
+        }
+
+
         String filterTxt = filteValueTf.getTextField().getText();
         if (DAPStringUtils.isNotBlank(filterTxt)) {
             filteValueTf.getTextField().setText("");
             filteValueTf.getTextField().setText(filterTxt);
         }
-        chooseTestItemDialog.resetSelectedItems(dataFrame.getAllTestItemName());
+
+        if(flag == null) {
+            List<String> dataFrameItem = dataFrame.getAllTestItemName();
+            List<String> preItem = Lists.newArrayList();
+            preItem.add(dataFrameItem.get(0));
+            preItem.add(dataFrameItem.get(1));
+            dataFrameItem.removeAll(preItem);
+            chooseTestItemDialog.removeSelectedItems(preItem);
+            chooseTestItemDialog.resetSelectedItems(dataFrameItem);
+        }else if(flag != null){
+            List<String> dataFrameItem = dataFrame.getAllTestItemName();
+            List<String> preItem = Lists.newArrayList();
+            preItem.add(dataFrameItem.get(0));
+            dataFrameItem.removeAll(preItem);
+            chooseTestItemDialog.removeSelectedItems(preItem);
+            chooseTestItemDialog.resetSelectedItems(dataFrame.getAllTestItemName());
+        }
+
         if (sortedColumnList != null && !sortedColumnList.isEmpty()) {
             final TableColumn<String, ?> sortedColumn = sortedColumnList.get(0);
             Platform.runLater(() -> {
@@ -239,8 +263,20 @@ public class ViewDataController implements Initializable {
             if (dataFrame == null) {
                 return;
             }
-            List<String> selectedTestItems = chooseTestItemDialog.getSelectedItems();
 
+            List<String> selectedTestItems = Lists.newArrayList();
+            if(flag == null) {
+                List<String> lastItem = chooseTestItemDialog.getSelectedItems();
+                List<String> dataFrameItem = dataFrame.getAllTestItemName();
+                selectedTestItems.add(dataFrameItem.get(0));
+                selectedTestItems.add(dataFrameItem.get(1));
+                selectedTestItems.addAll(lastItem);
+            }else{
+                List<String> lastItem = chooseTestItemDialog.getSelectedItems();
+                List<String> dataFrameItem = dataFrame.getAllTestItemName();
+                selectedTestItems.add(dataFrameItem.get(0));
+                selectedTestItems.addAll(lastItem);
+            }
 
             int curIndex = 0;
             for (TestItemWithTypeDto typeDto : typeDtoList) {
@@ -249,6 +285,7 @@ public class ViewDataController implements Initializable {
                     curIndex++;
                 }
             }
+
             for (TestItemWithTypeDto typeDto : typeDtoList) {
                 String testItemName = typeDto.getTestItemName();
                 if (selectedTestItems.contains(testItemName)) {
@@ -274,7 +311,11 @@ public class ViewDataController implements Initializable {
                 }
             }
 
-            setViewData(this.dataFrame, getSelectedRowKeys(), searchViewDataConditionDto, false, rowKey, columnLabel);
+            if(flag == null) {
+                setViewData(this.dataFrame, getSelectedRowKeys(), searchViewDataConditionDto, false, rowKey, columnLabel, null);
+            }else{
+                setViewData(this.dataFrame, getSelectedRowKeys(), searchViewDataConditionDto, false, rowKey, columnLabel, flag);
+            }
         });
 
     }

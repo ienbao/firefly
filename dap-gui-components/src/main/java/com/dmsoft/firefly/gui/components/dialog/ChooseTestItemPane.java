@@ -62,7 +62,10 @@ public class ChooseTestItemPane extends GridPane {
                 this.items.add(item);
             }
         }
-        this.filteredList = this.items.filtered(p -> true);
+        this.filteredList = this.items.filtered(p -> {
+
+            return true;
+        });
         this.sortedList = new SortedList<>(filteredList);
 
         init();

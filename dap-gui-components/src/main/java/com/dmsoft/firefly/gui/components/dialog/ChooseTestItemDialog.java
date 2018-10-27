@@ -115,4 +115,20 @@ public class ChooseTestItemDialog extends Stage {
     public List<String> getSelectedItems() {
         return mainPane.getSelectedItems();
     }
+
+    public void removeSelectedItems(List<String> selectedItems) {
+        int j = 0;
+        int max = mainPane.getItems().size();
+        for (int i = max - 1; i >= 0; i--) {
+            if (selectedItems != null && selectedItems.contains(mainPane.getItems().get(i).itemNameProperty().getValue())) {
+                j++;
+                if (j > mainPane.getMaxLength()) {
+                    continue;
+                }
+                mainPane.getItems().remove(i);
+            } else {
+                mainPane.getItems().get(i).selectedProperty().set(false);
+            }
+        }
+    }
 }
