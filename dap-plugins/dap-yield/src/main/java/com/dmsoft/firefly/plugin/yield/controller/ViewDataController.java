@@ -153,7 +153,11 @@ public class ViewDataController implements Initializable {
         this.selectedRowKeys = selectedRowKey;
         this.rowKey = rowKey;
         this.columnLabel = columnLable;
-        String row = rowKey != null ? rowKey + "::" : null;
+//        if(rowKey == null){
+//            String row = rowKey != null ? rowKey : null;
+//        }else{
+          String  row = rowKey != null ? rowKey + "::" : null;
+//        }
         viewDataR.setText(row);
         viewDataC.setText(columnLable);
 

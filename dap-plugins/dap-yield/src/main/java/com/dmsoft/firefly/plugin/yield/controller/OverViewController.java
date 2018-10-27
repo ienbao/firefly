@@ -118,35 +118,39 @@ public class OverViewController implements Initializable {
 
                 YieldViewDataResultDto YieldViewDataResultDto = (YieldViewDataResultDto) context.get(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO);
                 List<String> rowKeyList = Lists.newArrayList();
+                if((YieldViewDataResultDto.getFPYlist() != null)||(YieldViewDataResultDto.getPASSlist() != null)
+                        ||(YieldViewDataResultDto.getNtflist() != null)||(YieldViewDataResultDto.getNglist() != null)||(YieldViewDataResultDto.getTotallist() != null)) {
 
-                if(column.equals("FPY Samples")) {
-                    for (int i = 0; i < YieldViewDataResultDto.getFPYlist().size(); i++) {
-                        rowKeyList.add(YieldViewDataResultDto.getFPYlist().get(i));
+                    if (column.equals("FPY Samples")) {
+                        for (int i = 0; i < YieldViewDataResultDto.getFPYlist().size(); i++) {
+                            rowKeyList.add(YieldViewDataResultDto.getFPYlist().get(i));
+                        }
+                    } else if (column.equals("Pass Samples")) {
+                        for (int i = 0; i < YieldViewDataResultDto.getPASSlist().size(); i++) {
+                            rowKeyList.add(YieldViewDataResultDto.getPASSlist().get(i));
+                        }
+                    } else if (column.equals("NTF Samples")) {
+                        for (int i = 0; i < YieldViewDataResultDto.getNtflist().size(); i++) {
+                            rowKeyList.add(YieldViewDataResultDto.getNtflist().get(i));
+                        }
+                    } else if (column.equals("NG Samples")) {
+                        for (int i = 0; i < YieldViewDataResultDto.getNglist().size(); i++) {
+                            rowKeyList.add(YieldViewDataResultDto.getNglist().get(i));
+                        }
+                    } else if (column.equals("Total Samples")) {
+                        for (int i = 0; i < YieldViewDataResultDto.getTotallist().size(); i++) {
+                            rowKeyList.add(YieldViewDataResultDto.getTotallist().get(i));
+                        }
                     }
-                }else if(column.equals("Pass Samples")){
-                    for (int i = 0; i < YieldViewDataResultDto.getPASSlist().size(); i++) {
-                        rowKeyList.add(YieldViewDataResultDto.getPASSlist().get(i));
-                    }
-                }else if(column.equals("NTF Samples")){
-                    for (int i = 0; i < YieldViewDataResultDto.getNtflist().size(); i++) {
-                        rowKeyList.add(YieldViewDataResultDto.getNtflist().get(i));
-                    }
-                }else if(column.equals("NG Samples")){
-                    for (int i = 0; i <YieldViewDataResultDto.getNglist().size(); i++) {
-                        rowKeyList.add(YieldViewDataResultDto.getNglist().get(i));
-                    }
-                }else if(column.equals("Total Samples")){
-                    for (int i = 0; i < YieldViewDataResultDto.getTotallist().size(); i++) {
-                        rowKeyList.add(YieldViewDataResultDto.getTotallist().get(i));
-                    }
+
+                    List<String> testItemNameList = Lists.newArrayList();
+                    testItemNameList.add(selectSearchConditionDtoList.get(0).getItemName());
+                    testItemNameList.add(selectSearchConditionDtoList.get(1).getItemName());
+                    SearchDataFrame subDataFrame = dataFrame.subDataFrame(rowKeyList, testItemNameList);
+                    viewDataController.setViewData(subDataFrame, rowKeyList, selectSearchConditionDtoList, false, rowKey, column);
+                }else{
+                    viewDataController.setViewData(null, null, null, false, rowKey, column);
                 }
-
-                List<String> testItemNameList = Lists.newArrayList();
-                testItemNameList.add(selectSearchConditionDtoList.get(0).getItemName());
-                testItemNameList.add(selectSearchConditionDtoList.get(1).getItemName());
-                SearchDataFrame subDataFrame = dataFrame.subDataFrame(rowKeyList, testItemNameList);
-                viewDataController.setViewData(subDataFrame, rowKeyList, selectSearchConditionDtoList, false, rowKey, column);
-
             }
         });
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
