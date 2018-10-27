@@ -51,7 +51,7 @@ public class CsvResolverService implements IDataParser {
 
     private String fileName = "AMCSVTemplate";
     private String pluginName = "AM CSV Resolver";
-
+    private final int MAX_LENGTH = 255;
 
     private JsonMapper jsonMapper = JsonMapper.defaultMapper();
 
@@ -113,9 +113,16 @@ public class CsvResolverService implements IDataParser {
                 csvList.set(fileFormat.getUnit() - 1, null);
             }
             List<TestItemDto> testItemDtoList = Lists.newArrayList();
+            String autoItemName = "AUTO GENERATED NAME_",
+                    currentItemName = null;
+            int autoIndex = 0;
             for (int i = 0; i < items.length; i++) {
                 TestItemDto testItemDto = new TestItemDto();
-                testItemDto.setTestItemName(items[i]);
+                currentItemName = items[i];
+                if (currentItemName.isEmpty() || currentItemName.length() > MAX_LENGTH) {
+                    currentItemName = autoItemName + (++autoIndex);
+                }
+                testItemDto.setTestItemName(currentItemName);
                 if (lslRow != null) {
                     testItemDto.setLsl(DAPStringUtils.formatBigDecimal(lslRow[i]));
                 }
@@ -131,6 +138,7 @@ public class CsvResolverService implements IDataParser {
             pushProgress(60);
             int len = csvList.size();
             int row = 0;
+            autoIndex = 0;
             for (int i = dataIndex; i < csvList.size(); i++) {
                 List<String> data = Arrays.asList(csvList.get(i));
                 RowDataDto rowDataDto = new RowDataDto();
@@ -139,7 +147,11 @@ public class CsvResolverService implements IDataParser {
                 for (int j = 0; j < items.length; j++) {
                     String value = "";
                     value = DAPStringUtils.formatBigDecimal(data.get(j));
-                    itemDatas.put(items[j], value);
+                    currentItemName = items[j];
+                    if (currentItemName.isEmpty() || currentItemName.length() > MAX_LENGTH) {
+                        currentItemName = autoItemName + (++autoIndex);
+                    }
+                    itemDatas.put(currentItemName, value);
                 }
                 rowDataDto.setData(itemDatas);
                 sourceDataService.saveTestData(projectName, DoubleIdUtils.combineIds(projectName, i), itemDatas, false);
@@ -248,5 +260,4 @@ public class CsvResolverService implements IDataParser {
         }
         return csvList;
     }
-
 }
