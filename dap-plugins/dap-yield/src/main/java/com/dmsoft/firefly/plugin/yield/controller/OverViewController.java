@@ -79,6 +79,7 @@ public class OverViewController implements Initializable {
     }
 
     private void getFilterTestItemTfEvent() {
+        overViewTableModel.filterTestItem(filterTestItemTf.getTextField().getText());
     }
 
 
