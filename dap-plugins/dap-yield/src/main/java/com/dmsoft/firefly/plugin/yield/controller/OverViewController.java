@@ -129,12 +129,12 @@ public class OverViewController implements Initializable {
             @Override
             public void doJob(JobContext context) {
 
-                YieldViewDataResultDto YieldViewDataResultDto = (YieldViewDataResultDto) context.get(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO);
+                YieldViewDataResultDto yieldViewDataResultDto = (YieldViewDataResultDto) context.get(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO);
                 List<String> rowKeyList = Lists.newArrayList();
-                if((YieldViewDataResultDto.getResultlist() != null)) {
+                if((yieldViewDataResultDto.getResultlist() != null)) {
 
-                    for (int i = 0; i < YieldViewDataResultDto.getResultlist().size(); i++) {
-                        rowKeyList.add(YieldViewDataResultDto.getResultlist().get(i));
+                    for (int i = 0; i < yieldViewDataResultDto.getResultlist().size(); i++) {
+                        rowKeyList.add(yieldViewDataResultDto.getResultlist().get(i));
                     }
 
                     List<String> testItemNameList = Lists.newArrayList();

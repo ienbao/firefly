@@ -724,11 +724,7 @@ public class YieldServiceImpl implements YieldService {
 
         if (!dataAndRowKeyMap.isEmpty()) {
 
-            List<String> totalFpylist = Lists.newArrayList();
-            List<String> totalPasslist = Lists.newArrayList();
-            List<String> totalNtflist = Lists.newArrayList();
-            List<String> totalNglist = Lists.newArrayList();
-            List<String> totalTotallist = Lists.newArrayList();
+            List<String> totalResultlist = Lists.newArrayList();
 
             //TotalData
             for (int i = 0; i < unRepetitionDatas.size(); i++) {
@@ -764,42 +760,40 @@ public class YieldServiceImpl implements YieldService {
                         }
                     }
                     if (count == searchConditions.size() - 1 - ignoreCount && j == 0) {
-                        totalFpylist.add(rowKeys.get(j));
-                        totalPasslist.add(rowKeys.get(j));
+                        if(oldSearchConditions.get(0).getYieldType() == YieldType.FPY || oldSearchConditions.get(0).getYieldType() == YieldType.PASS){
+                            totalResultlist.add(rowKeys.get(j));
+                        }
                         break;
                     } else if (count == searchConditions.size() - 1 - ignoreCount && j > 0 && j <= rowKeys.size() - 1) {
-                        for (int n = 0; n < j; n++) {
-                            totalNtflist.add(rowKeys.get(n));
+                        if(oldSearchConditions.get(0).getYieldType() == YieldType.NTF){
+                            for (int n = 0; n < j; n++) {
+                                totalResultlist.add(rowKeys.get(n));
+                            }
+                        }else if(oldSearchConditions.get(0).getYieldType() == YieldType.PASS){
+                            totalResultlist.add(rowKeys.get(j));
                         }
-                        totalPasslist.add(rowKeys.get(j));
                         break;
                     }
                 }
                 if (j == rowKeys.size()) {
-                    for (int n = 0; n < rowKeys.size(); n++) {
-                        totalNglist.add(rowKeys.get(n));
+                    if(oldSearchConditions.get(0).getYieldType() == YieldType.NG){
+                        for (int n = 0; n < rowKeys.size(); n++) {
+                            totalResultlist.add(rowKeys.get(n));
+                        }
                     }
                 }
 
             }
 
-
-            for (int i = 0; i < searchRowKeys.size(); i++) {
-                totalTotallist.add(searchRowKeys.get(i));
+            if(oldSearchConditions.get(0).getYieldType() == YieldType.TOTAL){
+                for (int i = 0; i < searchRowKeys.size(); i++) {
+                    totalResultlist.add(searchRowKeys.get(i));
+                }
             }
 
-
             yieldViewDataResultDto.setPrimary(configDto.getPrimaryKey());
-
-            yieldViewDataResultDto.setFPYlist(totalFpylist);
-            yieldViewDataResultDto.setPASSlist(totalPasslist);
-            yieldViewDataResultDto.setNtflist(totalNtflist);
-            yieldViewDataResultDto.setNglist(totalNglist);
-            yieldViewDataResultDto.setTotallist(totalTotallist);
-
-
-
-
+            yieldViewDataResultDto.setResultlist(totalResultlist);
+            
         }
 
         return yieldViewDataResultDto;
