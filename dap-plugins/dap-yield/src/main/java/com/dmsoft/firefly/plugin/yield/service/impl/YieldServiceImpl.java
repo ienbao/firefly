@@ -61,8 +61,17 @@ public class YieldServiceImpl implements YieldService {
         searchConditions.add(oldSearchConditions.get(0));
         for (int i = 1; i < oldSearchConditions.size(); i++) {
             if (!(DAPStringUtils.isBlank(oldSearchConditions.get(i).getLslOrFail()) && DAPStringUtils.isBlank(oldSearchConditions.get(i).getUslOrPass()))) {
-                searchConditions.add(oldSearchConditions.get(i));
-                rangeSearchConditionIndex.add(i);
+                if (oldSearchConditions.get(i).getTestItemType().getCode().equals("Attribute")){
+                    searchConditions.add(oldSearchConditions.get(i));
+                    rangeSearchConditionIndex.add(i);
+                }else{
+                    if (DAPStringUtils.isNumeric(oldSearchConditions.get(i).getUslOrPass()) && DAPStringUtils.isNumeric(oldSearchConditions.get(i).getLslOrFail())){
+                        searchConditions.add(oldSearchConditions.get(i));
+                        rangeSearchConditionIndex.add(i);
+                    }else {
+                        noRangeSearchConditionIndex.add(i);
+                    }
+                }
             } else {
                 noRangeSearchConditionIndex.add(i);
             }
@@ -310,10 +319,13 @@ public class YieldServiceImpl implements YieldService {
             yieldTotalProcessesDto.setNgPercent((double) totalProNgSamples / (double) totalProTotalSamples);
             yieldTotalProcessesDto.setNtfPercent((double) totalProNtfSamples / (double) totalProTotalSamples);
         } else {
-            YieldOverviewDto yieldOverviewDto = new YieldOverviewDto();
             for (int i = 1; i < oldSearchConditions.size(); i++) {
+                YieldOverviewDto yieldOverviewDto = new YieldOverviewDto();
                 yieldOverviewDto.setKey(oldSearchConditions.get(i).getKey());
                 yieldOverviewDto.setItemName(oldSearchConditions.get(i).getItemName());
+                yieldOverviewDto.setUslOrPass(oldSearchConditions.get(i).getUslOrPass());
+                yieldOverviewDto.setLslOrPass(oldSearchConditions.get(i).getLslOrFail());
+                yieldOverviewDto.setTestItemType(oldSearchConditions.get(i).getTestItemType());
                 overResult.add(yieldOverviewDto);
             }
         }
@@ -360,6 +372,7 @@ public class YieldServiceImpl implements YieldService {
                     YieldOverviewDto yieldOverviewDto = new YieldOverviewDto();
                     yieldOverviewDto.setKey(oldSearchConditions.get(i).getKey());
                     yieldOverviewDto.setItemName(oldSearchConditions.get(i).getItemName());
+                    yieldOverviewDto.setTestItemType(oldSearchConditions.get(i).getTestItemType());
                     if (!DAPStringUtils.isBlank(oldSearchConditions.get(i).getUslOrPass())) {
                         yieldOverviewDto.setUslOrPass(oldSearchConditions.get(i).getUslOrPass());
                     }else {
