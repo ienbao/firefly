@@ -186,7 +186,7 @@ public class YieldResultDataController implements Initializable {
         }
         else{
 
-            viewDataController.setViewData(null, null, null, false, "-", "-",null);
+            viewDataController.setViewData(null, null, null, false, "-", "-",Yield_PLUGIN_NAME);
         }
 
     }
