@@ -56,7 +56,6 @@ public class ViewDataController implements Initializable {
     @FXML
     private Label viewDataC;
 
-    private YieldItemController yieldItemController;
     private YieldMainController yieldMainController;
     private ViewDataModel model;
     private SearchDataFrame dataFrame;
@@ -70,7 +69,7 @@ public class ViewDataController implements Initializable {
     private ChooseTestItemDialog chooseTestItemDialog;
     private String rowKey;
     private String columnLabel;
-    private String flag;
+    private String flag;//标记点击事件发生的位置，当flag为空时，点击事件发生在OverView表中
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -154,7 +153,12 @@ public class ViewDataController implements Initializable {
         this.selectedRowKeys = selectedRowKey;
         this.rowKey = rowKey;
         this.columnLabel = columnLable;
-        String  row = rowKey != null ? rowKey + "::" : null;
+        String row;
+        if(rowKey == "-" ){
+            row = rowKey != null ? rowKey : null;
+        }else {
+            row = rowKey != null ? rowKey + "::" : null;
+        }
         viewDataR.setText(row);
         viewDataC.setText(columnLable);
         if(flag != null){
@@ -201,6 +205,7 @@ public class ViewDataController implements Initializable {
 
         TableViewWrapper.decorate(viewDataTable, model);
 
+        /* ViewData Table Result列名=TestItem */
         if(flag == null){
             if(viewDataTable.getColumns().size()>=2){
                 viewDataTable.getColumns().get(1).setText("result");
