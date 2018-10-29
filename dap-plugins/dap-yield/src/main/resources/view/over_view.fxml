@@ -23,13 +23,12 @@
                                 <columnConstraints>
                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="800.0" />
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="310.0" minWidth="310.0" prefWidth="310.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" />
                                 </columnConstraints>
                                 <rowConstraints>
                                     <RowConstraints maxHeight="28.0" minHeight="28.0" prefHeight="28.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                 <children>
-                                    <TextFieldFilter fx:id="filterTestItemTf" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" GridPane.columnIndex="1">
+                                    <TextFieldFilter fx:id="filterTestItemTf" maxWidth="307.0" minWidth="220.0" prefHeight="28.0" prefWidth="307.0" GridPane.columnIndex="1">
                                         <GridPane.margin>
                                             <Insets bottom="3.0" top="3.0" />
                                         </GridPane.margin>
