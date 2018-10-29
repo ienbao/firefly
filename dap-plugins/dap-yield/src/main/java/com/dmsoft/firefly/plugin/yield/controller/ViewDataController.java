@@ -161,9 +161,7 @@ public class ViewDataController implements Initializable {
         }
         viewDataR.setText(row);
         viewDataC.setText(columnLable);
-        if(flag != null){
-            this.initialize(null, null);
-        }
+        this.initialize(null, null);
 
         this.dataFrame = dataFrame;
         this.flag = flag;
@@ -208,7 +206,7 @@ public class ViewDataController implements Initializable {
         /* ViewData Table Result列名=TestItem */
         if(flag == null){
             if(viewDataTable.getColumns().size()>=2){
-                viewDataTable.getColumns().get(1).setText("result");
+                viewDataTable.getColumns().get(1).setText("Result");
             }
         }
 
