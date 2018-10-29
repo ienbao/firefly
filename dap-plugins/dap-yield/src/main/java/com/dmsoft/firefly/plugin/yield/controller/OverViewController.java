@@ -105,6 +105,18 @@ public class OverViewController implements Initializable {
             }
         }
 
+        if(column.equals("FPY Samples")) {
+            selectSearchConditionDtoList.get(0).setYieldType(YieldType.FPY);
+        }else if(column.equals("Pass Samples")){
+            selectSearchConditionDtoList.get(0).setYieldType(YieldType.PASS);
+        }else if(column.equals("NTF Samples")){
+            selectSearchConditionDtoList.get(0).setYieldType(YieldType.NTF);
+        }else if(column.equals("NG Samples")){
+            selectSearchConditionDtoList.get(0).setYieldType(YieldType.NG);
+        }else if(column.equals("Total Samples")){
+            selectSearchConditionDtoList.get(0).setYieldType(YieldType.TOTAL);
+        }
+
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
         context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
         context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
@@ -119,29 +131,10 @@ public class OverViewController implements Initializable {
 
                 YieldViewDataResultDto YieldViewDataResultDto = (YieldViewDataResultDto) context.get(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO);
                 List<String> rowKeyList = Lists.newArrayList();
-                if((YieldViewDataResultDto.getFPYlist() != null)||(YieldViewDataResultDto.getPASSlist() != null)
-                        ||(YieldViewDataResultDto.getNtflist() != null)||(YieldViewDataResultDto.getNglist() != null)||(YieldViewDataResultDto.getTotallist() != null)) {
+                if((YieldViewDataResultDto.getResultlist() != null)) {
 
-                    if (column.equals("FPY Samples")) {
-                        for (int i = 0; i < YieldViewDataResultDto.getFPYlist().size(); i++) {
-                            rowKeyList.add(YieldViewDataResultDto.getFPYlist().get(i));
-                        }
-                    } else if (column.equals("Pass Samples")) {
-                        for (int i = 0; i < YieldViewDataResultDto.getPASSlist().size(); i++) {
-                            rowKeyList.add(YieldViewDataResultDto.getPASSlist().get(i));
-                        }
-                    } else if (column.equals("NTF Samples")) {
-                        for (int i = 0; i < YieldViewDataResultDto.getNtflist().size(); i++) {
-                            rowKeyList.add(YieldViewDataResultDto.getNtflist().get(i));
-                        }
-                    } else if (column.equals("NG Samples")) {
-                        for (int i = 0; i < YieldViewDataResultDto.getNglist().size(); i++) {
-                            rowKeyList.add(YieldViewDataResultDto.getNglist().get(i));
-                        }
-                    } else if (column.equals("Total Samples")) {
-                        for (int i = 0; i < YieldViewDataResultDto.getTotallist().size(); i++) {
-                            rowKeyList.add(YieldViewDataResultDto.getTotallist().get(i));
-                        }
+                    for (int i = 0; i < YieldViewDataResultDto.getResultlist().size(); i++) {
+                        rowKeyList.add(YieldViewDataResultDto.getResultlist().get(i));
                     }
 
                     List<String> testItemNameList = Lists.newArrayList();
