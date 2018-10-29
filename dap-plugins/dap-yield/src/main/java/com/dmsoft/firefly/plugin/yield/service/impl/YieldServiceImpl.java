@@ -231,6 +231,8 @@ public class YieldServiceImpl implements YieldService {
                 yieldOverviewDto.setItemName(searchConditions.get(i).getItemName());
                 yieldOverviewDto.setKey(searchConditions.get(i).getKey());
                 yieldOverviewDto.setTestItemType(searchConditions.get(i).getTestItemType());
+                yieldOverviewDto.setLslOrPass(searchConditions.get(i).getLslOrFail());
+                yieldOverviewDto.setUslOrPass(searchConditions.get(i).getUslOrPass());
                 if (overTotalSamples != 0) {
                     yieldOverviewDto.setFpySamples(overFpySamples);
                     yieldOverviewDto.setNtfSamples(overNtfSamples);
@@ -239,8 +241,6 @@ public class YieldServiceImpl implements YieldService {
                     yieldOverviewDto.setFpyPercent((double) overFpySamples / (double) overTotalSamples);
                     yieldOverviewDto.setNtfPercent((double) overNtfSamples / (double) overTotalSamples);
                     yieldOverviewDto.setNgPersent((double) overNgSamples / (double) overTotalSamples);
-                    yieldOverviewDto.setLslOrPass(searchConditions.get(i).getLslOrFail());
-                    yieldOverviewDto.setUslOrPass(searchConditions.get(i).getUslOrPass());
                     yieldOverviewDto.setTotalSamples(overTotalSamples);
                 }
                 overResult.add(yieldOverviewDto);
@@ -322,7 +322,7 @@ public class YieldServiceImpl implements YieldService {
         }
 
         //ntfChart
-        if (DAPStringUtils.isBlank(configDto.getTopN()+"")){
+        if (null == configDto.getTopN()){
             configDto.setTopN(5);
         }
         List<YieldNTFChartDto> ntfChartDtoList = Lists.newArrayList();
@@ -363,6 +363,16 @@ public class YieldServiceImpl implements YieldService {
                     YieldOverviewDto yieldOverviewDto = new YieldOverviewDto();
                     yieldOverviewDto.setKey(oldSearchConditions.get(i).getKey());
                     yieldOverviewDto.setItemName(oldSearchConditions.get(i).getItemName());
+                    if (!DAPStringUtils.isBlank(oldSearchConditions.get(i).getUslOrPass())) {
+                        yieldOverviewDto.setUslOrPass(oldSearchConditions.get(i).getUslOrPass());
+                    }else {
+                        yieldOverviewDto.setUslOrPass("");
+                    }
+                    if (!DAPStringUtils.isBlank(oldSearchConditions.get(i).getLslOrFail())) {
+                        yieldOverviewDto.setLslOrPass(oldSearchConditions.get(i).getLslOrFail());
+                    }else {
+                        yieldOverviewDto.setLslOrPass("");
+                    }
                     overViewResult.add(yieldOverviewDto);
                 }
             }
