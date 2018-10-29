@@ -433,8 +433,17 @@ public class YieldServiceImpl implements YieldService {
         searchConditions.add(oldSearchConditions.get(0));
         for (int i = 1; i < oldSearchConditions.size(); i++) {
             if (!(DAPStringUtils.isBlank(oldSearchConditions.get(i).getLslOrFail()) && DAPStringUtils.isBlank(oldSearchConditions.get(i).getUslOrPass()))) {
-                searchConditions.add(oldSearchConditions.get(i));
-                rangeSearchConditionIndex.add(i);
+                if (oldSearchConditions.get(i).getTestItemType().getCode().equals("Attribute")){
+                    searchConditions.add(oldSearchConditions.get(i));
+                    rangeSearchConditionIndex.add(i);
+                }else{
+                    if (DAPStringUtils.isNumeric(oldSearchConditions.get(i).getUslOrPass()) && DAPStringUtils.isNumeric(oldSearchConditions.get(i).getLslOrFail())){
+                        searchConditions.add(oldSearchConditions.get(i));
+                        rangeSearchConditionIndex.add(i);
+                    }else {
+                        noRangeSearchConditionIndex.add(i);
+                    }
+                }
             } else {
                 noRangeSearchConditionIndex.add(i);
             }
@@ -658,8 +667,17 @@ public class YieldServiceImpl implements YieldService {
         searchConditions.add(oldSearchConditions.get(0));
         for (int i = 1; i < oldSearchConditions.size(); i++) {
             if (!(DAPStringUtils.isBlank(oldSearchConditions.get(i).getLslOrFail()) && DAPStringUtils.isBlank(oldSearchConditions.get(i).getUslOrPass()))) {
-                searchConditions.add(oldSearchConditions.get(i));
-                rangeSearchConditionIndex.add(i);
+                if (oldSearchConditions.get(i).getTestItemType().getCode().equals("Attribute")){
+                    searchConditions.add(oldSearchConditions.get(i));
+                    rangeSearchConditionIndex.add(i);
+                }else{
+                    if (DAPStringUtils.isNumeric(oldSearchConditions.get(i).getUslOrPass()) && DAPStringUtils.isNumeric(oldSearchConditions.get(i).getLslOrFail())){
+                        searchConditions.add(oldSearchConditions.get(i));
+                        rangeSearchConditionIndex.add(i);
+                    }else {
+                        noRangeSearchConditionIndex.add(i);
+                    }
+                }
             } else {
                 noRangeSearchConditionIndex.add(i);
             }
