@@ -22,6 +22,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,8 @@ public class YieldChartResultController implements Initializable {
     private BarChart yieldbarChartItem;
     @FXML
     private GridPane YieldGridPane;
+    @FXML
+    private ComboBox resultNTFNum;
 
     private String[] yieldBarChartCategory;
     private String[] yieldBarChartLabel;
@@ -54,6 +57,8 @@ public class YieldChartResultController implements Initializable {
         this.removeBarChartResultItemAllResultData();
         yieldBarChart.setAnimated(false);
         yieldbarChartItem.setAnimated(false);
+
+
 
     }
 
@@ -202,7 +207,14 @@ public class YieldChartResultController implements Initializable {
         if (yieldNTFChartDtos.size() == 0 ) {
             return ;
         }
-
+        resultNTFNum.getItems().addAll(
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_1),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_2),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_3),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_4),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_5)
+                );
+        resultNTFNum.setValue(YieldFxmlAndLanguageUtils.getString(UIConstant.Number_5));
         Double[]  yChartArrayData = null;
         for (int i = 0 ; i < yieldNTFChartDtos.size() ; i++){
               yChartArrayData= new Double[yieldNTFChartDtos.size()];

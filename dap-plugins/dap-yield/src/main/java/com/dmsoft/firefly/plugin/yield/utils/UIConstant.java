@@ -17,5 +17,10 @@ public class UIConstant {
     public static final String BARCHART_NTF = "BARCHART_NTF";
     public static final String BARCHART_NG = "BARCHART_NG";
     public static final String NTF_TOP_N="NTF_TOP_N";
+    public static final String Number_1="Number_1";
+    public static final String Number_2="Number_2";
+    public static final String Number_3="Number_3";
+    public static final String Number_4="Number_4";
+    public static final String Number_5="Number_5";
 
 }
