@@ -782,7 +782,6 @@ public class YieldServiceImpl implements YieldService {
                         }
                     }
                 }
-
             }
 
             if(oldSearchConditions.get(0).getYieldType() == YieldType.TOTAL){
