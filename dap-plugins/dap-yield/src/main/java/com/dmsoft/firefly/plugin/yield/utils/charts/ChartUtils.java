@@ -50,7 +50,7 @@ public class ChartUtils {
             });
         });
     }
-    
+
     public static void setChartTextAndColor(ObservableList<XYChart.Series> series, Function<String, String> formatTextFunc, Map<String, YieldChartAlermDto> yieldChartResultAlermDtoMap) {
         series.forEach(oneSeries -> {
             ObservableList<XYChart.Data> data = oneSeries.getData();
@@ -68,13 +68,13 @@ public class ChartUtils {
                     } else if ("%NG".equals(xName)) {
                         xName = YieldOverviewKey.NGPER.getCode();
                     }
-                    if (YieldOverviewKey.EXCELLENT.getCode().equals(yieldChartResultAlermDtoMap.get(xName))) {
+                    if (YieldOverviewKey.EXCELLENT.getCode().equals(yieldChartResultAlermDtoMap.get(xName).getLevel())) {
                         colorIndex.set(0);
-                    } else if (YieldOverviewKey.ADEQUATE.getCode().equals(yieldChartResultAlermDtoMap.get(xName))) {
+                    } else if (YieldOverviewKey.ADEQUATE.getCode().equals(yieldChartResultAlermDtoMap.get(xName).getLevel())) {
                         colorIndex.set(1);
-                    } else if (YieldOverviewKey.MARGINAL.getCode().equals(yieldChartResultAlermDtoMap.get(xName))) {
+                    } else if (YieldOverviewKey.MARGINAL.getCode().equals(yieldChartResultAlermDtoMap.get(xName).getLevel())) {
                         colorIndex.set(2);
-                    } else if (YieldOverviewKey.BAD.getCode().equals(yieldChartResultAlermDtoMap.get(xName))) {
+                    } else if (YieldOverviewKey.BAD.getCode().equals(yieldChartResultAlermDtoMap.get(xName).getLevel())) {
                         colorIndex.set(3);
                     }
                     stackPane.getStyleClass().add("default-color" + colorIndex.get());

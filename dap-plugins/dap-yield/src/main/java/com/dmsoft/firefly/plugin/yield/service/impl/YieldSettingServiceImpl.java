@@ -125,24 +125,26 @@ public class YieldSettingServiceImpl implements YieldSettingService, IConfig {
        Map<String,YieldChartAlermDto> yieldChartAlermDtoMap = Maps.newHashMap();
 
        for (int i = 0 ; i < overViewKeys.length ; i++){
-
            String overviewName = overViewKeys[i].getCode();
-           double value = 0;
-           if(overviewName.equals(YieldOverviewKey.FPYPER.getCode())){
-               value = totalProcessesDtos.getFpyPercent();
-           }else if(overViewKeys.equals(YieldOverviewKey.NTFPER.getCode())){
-               value = totalProcessesDtos.getNtfPercent();
-           }else if (overViewKeys.equals(YieldOverviewKey.NGPER.getCode())){
-               value = totalProcessesDtos.getNgPercent();
-           }
-           YieldChartAlermDto yieldChartAlermDto = new YieldChartAlermDto();
-           yieldChartAlermDto.setValue(value);
-           String leval = null;
            if (YieldOverviewKey.isAbilityAlarmResultName(overviewName)){
-               leval = this.getAbilityAlarmLevel(overviewName,value,abilityAlarmRule);
-               yieldChartAlermDto.setLevel(leval);
-               yieldChartAlermDtoMap.put(overviewName,yieldChartAlermDto);
-           }
+               Double value = null;
+               if(YieldOverviewKey.FPYPER.getCode().equals(overviewName)){
+                   value = totalProcessesDtos.getFpyPercent();
+               }else if(YieldOverviewKey.NTFPER.getCode().equals(overviewName)){
+                   value = totalProcessesDtos.getNtfPercent();
+               }else if (YieldOverviewKey.NGPER.getCode().equals(overviewName)){
+                   value = totalProcessesDtos.getNgPercent();
+               }
+               if (value == null) {
+                   value = 0D;
+               }
+               YieldChartAlermDto yieldChartAlermDto = new YieldChartAlermDto();
+               yieldChartAlermDto.setValue(value);
+               String leval = null;
+                   leval = this.getAbilityAlarmLevel(overviewName,value,abilityAlarmRule);
+                   yieldChartAlermDto.setLevel(leval);
+                   yieldChartAlermDtoMap.put(overviewName,yieldChartAlermDto);
+               }
        }
 
        yieldChartResultAlermDto.setYieldChartResultAlermDtoMap(yieldChartAlermDtoMap);

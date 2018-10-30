@@ -673,7 +673,7 @@ public class YieldItemController implements Initializable {
                 dataFrame=context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
                 yieldMainController.setDataFrame(dataFrame);
 
-                yieldMainController.getYieldResultController().analyzeYieldResult(context.getParam(ParamKeys.YIELD_DETAILCHART_ALARM_DTO,YieldChartResultAlermDto.class));
+                yieldMainController.getYieldResultController().analyzeYieldResult(context.getParam(ParamKeys.YIELD_DETAILCHART_ALARM_DTO,YieldChartResultAlermDto.class), searchConditionDtoList);
                 yieldMainController.getYieldResultController().ananlyzeyieldResultItem(context.getParam(ParamKeys.YIELD_RESULT_DTO,YieldResultDto.class));
                 windowProgressTipController.closeDialog();
                 yieldMainController.setDisable(false);

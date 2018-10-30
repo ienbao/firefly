@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.yield.controller;
 
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
 import com.dmsoft.firefly.plugin.yield.charts.ChartTooltip;
 import com.dmsoft.firefly.plugin.yield.charts.NDChart;
@@ -110,7 +111,6 @@ public class YieldChartResultController implements Initializable {
         while (yieldChartResultAlermDto == null){
             continue;
         }
-       this.setAnalysisBarChartResultData(yieldChartResultAlermDto);
         resultNTFNum.setDisable(false);
         if(searchConditionDtoList.size()-1<Integer.parseInt(resultNTFNum.getValue().toString())){
             resultNTFNum.setValue(searchConditionDtoList.size()-1);
@@ -131,7 +131,7 @@ public class YieldChartResultController implements Initializable {
             ntfNumList.add(numberList.get(i));
         }
         resultNTFNum.setItems(ntfNumList);
-       this.setAnalysisBarChartResultData(yieldResultDto);
+       this.setAnalysisBarChartResultData(yieldChartResultAlermDto);
     }
 
     private void removeBarChartAllResultData() {
