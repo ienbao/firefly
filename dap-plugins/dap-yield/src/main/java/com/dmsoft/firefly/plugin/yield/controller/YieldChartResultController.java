@@ -22,6 +22,7 @@ import com.google.common.collect.Maps;
 import io.netty.util.internal.MathUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
@@ -83,18 +84,8 @@ public class YieldChartResultController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.initI18n();
         this.yieldResultDataController.init(this);
-        resultNTFNum.getItems().addAll(
-                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_1),
-                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_2),
-                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_3),
-                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_4),
-                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_5),
-                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_6),
-                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_7),
-                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_8),
-                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_9),
-                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_10)
-        );
+
+
         YieldAnalysisConfigDto yieldAnalysisConfigDto = this.getYieldConfigPreference();
         if (yieldAnalysisConfigDto == null) {
             yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
@@ -114,12 +105,32 @@ public class YieldChartResultController implements Initializable {
                 YieldFxmlAndLanguageUtils.getString((UIConstant.BARCHART_NG))
         };
     }
-    public void analyzeYieldResult(YieldResultDto yieldResultDto) {
+    public void analyzeYieldResult(YieldResultDto yieldResultDto, List<SearchConditionDto> searchConditionDtoList) {
         //清除分析之前的数据
         this.removeBarChartAllResultData();
         while (yieldResultDto == null){
             continue;
         }
+        resultNTFNum.setDisable(false);
+        if(searchConditionDtoList.size()-1<Integer.parseInt(resultNTFNum.getValue().toString())){
+            resultNTFNum.setValue(searchConditionDtoList.size()-1);
+        }
+        ObservableList<String> numberList = FXCollections.observableArrayList();
+        numberList.addAll(YieldFxmlAndLanguageUtils.getString(UIConstant.Number_1),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_2),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_3),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_4),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_5),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_6),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_7),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_8),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_9),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_10));
+        ObservableList<String> ntfNumList = FXCollections.observableArrayList();
+        for(int i=0;i<searchConditionDtoList.size()-1&&i<10;i++){
+            ntfNumList.add(numberList.get(i));
+        }
+        resultNTFNum.setItems(ntfNumList);
        this.setAnalysisBarChartResultData(yieldResultDto);
     }
 
@@ -178,7 +189,7 @@ public class YieldChartResultController implements Initializable {
         if(yieldTotalProcessesDto == null){//判断yiyieldChartResult是否为空
             return;
         }
-        resultNTFNum.setDisable(false);
+
         Double[] yieldChartArray = getYieldChartArrayValue(yieldTotalProcessesDto);
         Double yMax = MathUtils.getNaNToZoreMax(yieldChartArray);
         Double yMin = MathUtils.getNaNToZoreMin(yieldChartArray);

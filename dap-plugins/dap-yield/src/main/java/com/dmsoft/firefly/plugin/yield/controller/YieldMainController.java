@@ -412,9 +412,7 @@ public class YieldMainController implements Initializable {
         this.yieldResultDto = yieldResultDto;
     }
 
-    public void YieldAnalyseChart(){
-        yieldResultController.analyzeYieldResult(yieldResultDto);
-    }
+
 
     public YieldChartResultController getYieldResultController() {
         return yieldResultController;
