@@ -112,6 +112,7 @@ public class YieldResultDataController implements Initializable {
 
     }
     private void fireClickEvent(String rowKey,String column,YieldTotalProcessesDto list) {
+
         yieldMainController = yieldChartResultController.getYieldMainController();
         viewDataController = yieldMainController.getViewDataController();
         if(list.getTotalSamples()!=null){

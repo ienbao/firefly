@@ -92,7 +92,6 @@ public class YieldItemController implements Initializable {
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
     private YieldMainController yieldMainController;
     private YieldResultDataController yieldResultDataController;
-    private ViewDataController viewDataController;
     private ContextMenu pop;
     private boolean isFilterUslOrLsl = false;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
