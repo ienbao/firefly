@@ -83,12 +83,17 @@ public class YieldChartResultController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.initI18n();
         this.yieldResultDataController.init(this);
-        resultNTFNum.getItems().addAll(1,2,3,4,5
-//                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_1),
-//                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_2),
-//                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_3),
-//                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_4),
-//                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_5)
+        resultNTFNum.getItems().addAll(
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_1),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_2),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_3),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_4),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_5),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_6),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_7),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_8),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_9),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_10)
         );
         YieldAnalysisConfigDto yieldAnalysisConfigDto = this.getYieldConfigPreference();
         if (yieldAnalysisConfigDto == null) {
@@ -296,7 +301,7 @@ public class YieldChartResultController implements Initializable {
 
 
     public Integer getResultNTFNum() {
-        return  (Integer) resultNTFNum.getValue();
+        return  Integer.parseInt(resultNTFNum.getValue().toString());
     }
 
     public YieldMainController getYieldMainController() {
