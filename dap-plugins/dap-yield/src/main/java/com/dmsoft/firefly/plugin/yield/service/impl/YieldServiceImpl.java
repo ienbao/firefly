@@ -331,9 +331,9 @@ public class YieldServiceImpl implements YieldService {
         }
 
         //ntfChart
-        if (null == configDto.getTopN()){
-            configDto.setTopN(5);
-        }
+        //if (null == configDto.getTopN()){
+            configDto.setTopN(10);
+       // }
         List<YieldNTFChartDto> ntfChartDtoList = Lists.newArrayList();
         for (int i = 0; i < searchConditions.size() - 1; i++) {
             YieldNTFChartDto yieldNTFChartDto = new YieldNTFChartDto();
