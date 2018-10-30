@@ -122,6 +122,17 @@ public class YieldResultDataController implements Initializable {
             List<String> projectNameList = envService.findActivatedProjectName();
             YieldAnalysisConfigDto yieldAnalysisConfigDto = yieldMainController.getAnalysisConfigDto();
 
+            if(column.equals("FPY Samples")) {
+                searchConditionDtoList.get(0).setYieldType(YieldType.FPY);
+            }else if(column.equals("Pass Samples")){
+                searchConditionDtoList.get(0).setYieldType(YieldType.PASS);
+            }else if(column.equals("NTF Samples")){
+                searchConditionDtoList.get(0).setYieldType(YieldType.NTF);
+            }else if(column.equals("NG Samples")){
+                searchConditionDtoList.get(0).setYieldType(YieldType.NG);
+            }else if(column.equals("Total Samples")){
+                searchConditionDtoList.get(0).setYieldType(YieldType.TOTAL);
+            }
 
             JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
             context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
@@ -138,27 +149,10 @@ public class YieldResultDataController implements Initializable {
                     YieldViewDataResultDto yieldViewDataResultDto = (YieldViewDataResultDto) context.get(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO);
                     List<String> rowKeyList = Lists.newArrayList();
 
-                    if (column.equals("FPY Samples")) {
-                        for (int i = 0; i < yieldViewDataResultDto.getFPYlist().size(); i++) {
-                            rowKeyList.add(yieldViewDataResultDto.getFPYlist().get(i));
+                    if ((yieldViewDataResultDto.getResultlist() != null)){
+                        for (int i = 0; i < yieldViewDataResultDto.getResultlist().size(); i++) {
+                            rowKeyList.add(yieldViewDataResultDto.getResultlist().get(i));
                         }
-                    } else if (column.equals("Pass Samples")) {
-                        for (int i = 0; i < yieldViewDataResultDto.getPASSlist().size(); i++) {
-                            rowKeyList.add(yieldViewDataResultDto.getPASSlist().get(i));
-                        }
-                    } else if (column.equals("NTF Samples")) {
-                        for (int i = 0; i < yieldViewDataResultDto.getNtflist().size(); i++) {
-                            rowKeyList.add(yieldViewDataResultDto.getNtflist().get(i));
-                        }
-                    } else if (column.equals("NG Samples")) {
-                        for (int i = 0; i < yieldViewDataResultDto.getNglist().size(); i++) {
-                            rowKeyList.add(yieldViewDataResultDto.getNglist().get(i));
-                        }
-                    } else if (column.equals("Total Samples")) {
-                        for (int i = 0; i < yieldViewDataResultDto.getTotallist().size(); i++) {
-                            rowKeyList.add(yieldViewDataResultDto.getTotallist().get(i));
-                        }
-                    }
 
                     List<String> testItemNameList = Lists.newArrayList();
                     for (int i = 0; i < searchConditionDtoList.size(); i++) {
@@ -166,8 +160,10 @@ public class YieldResultDataController implements Initializable {
                     }
 
                     SearchDataFrame subDataFrame = dataFrame.subDataFrame(rowKeyList, testItemNameList);
-                    viewDataController.setViewData(subDataFrame, rowKeyList, searchConditionDtoList, false, rowKey, column,Yield_PLUGIN_NAME);
-
+                    viewDataController.setViewData(subDataFrame, rowKeyList, searchConditionDtoList, false, rowKey, column, Yield_PLUGIN_NAME);
+                     }else{
+                        viewDataController.setViewData(null, null, null, false, rowKey, column,Yield_PLUGIN_NAME);
+                    }
                 }
             });
             jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {

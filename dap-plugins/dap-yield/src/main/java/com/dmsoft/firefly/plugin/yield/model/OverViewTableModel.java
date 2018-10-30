@@ -388,7 +388,7 @@ public class OverViewTableModel implements TableModel {
         }
         if (column.equals(YIELD_TITLE[5])) {
             YieldOverviewResultAlarmDto yieldOverviewResultAlarmDto = keyToStatsDtoMap.get(rowKey);
-            if (null != yieldOverviewResultAlarmDto.getUslOrPass()) {
+            if (null != yieldOverviewResultAlarmDto.getPassSamples()) {
                 tableCell.setStyle("-fx-underline: true");
             }
         }
@@ -474,11 +474,17 @@ public class OverViewTableModel implements TableModel {
                 }
             } else if (columnName.equals(YIELD_TITLE[1])) {
                 value = overviewResultAlarmDto.getLslOrFail();
+                if (overviewResultAlarmDto.getTestItemType().getCode().equals("Variable") && !DAPStringUtils.isNumeric(overviewResultAlarmDto.getLslOrFail())){
+                    value = "";
+                }
                 if (value == null) {
                     value = "-";
                 }
             } else if (columnName.equals(YIELD_TITLE[2])) {
                 value = overviewResultAlarmDto.getUslOrPass();
+                if (overviewResultAlarmDto.getTestItemType().getCode().equals("Variable") && !DAPStringUtils.isNumeric(overviewResultAlarmDto.getUslOrPass())){
+                    value = "";
+                }
                 if (value == null) {
                     value = "-";
                 }
