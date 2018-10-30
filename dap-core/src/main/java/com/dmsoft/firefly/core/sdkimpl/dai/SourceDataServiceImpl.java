@@ -8,6 +8,7 @@ import com.dmsoft.firefly.core.utils.CoreExceptionParser;
 import com.dmsoft.firefly.core.utils.DoubleIdUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDataset;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
@@ -17,12 +18,18 @@ import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.mongodb.MongoException;
 import com.mongodb.MongoNamespace;
 import com.mongodb.client.MongoDatabase;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.mongodb.core.DocumentCallbackHandler;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -350,20 +357,27 @@ public class SourceDataServiceImpl implements SourceDataService {
     @Override
     public List<RowDataDto> findTestData(List<String> projectNameList, List<String> testItemNameList, Boolean inUsedFlag) {
         List<RowDataDto> rowDataDtoList = Lists.newArrayList();
-        try {
-            Criteria criteria = new Criteria();
-            if (inUsedFlag != null) {
-                criteria = where(IN_USED_FIELD).is(inUsedFlag);
-            }
-            Query query = new Query(criteria);
-            query.fields().include(ROW_KEY_FIELD);
-            query.fields().include(IN_USED_FIELD);
-            if (testItemNameList != null) {
-                for (String testItemName : testItemNameList) {
-                    query.fields().include(DATA_FIELD + "." + testItemName);
-                }
-            }
-            int len = projectNameList.size(), i = 0;
+
+        //查询条件组装
+        Criteria criteria = new Criteria();
+        if (inUsedFlag != null) {
+          criteria = where(IN_USED_FIELD).is(inUsedFlag);
+        }
+
+        //查询列组装
+        Query query = new Query(criteria);
+        query.fields().include(ROW_KEY_FIELD);
+        query.fields().include(IN_USED_FIELD);
+
+        //查询数据内容列
+        if (testItemNameList != null) {
+          for (String testItemName : testItemNameList) {
+            query.fields().include(DATA_FIELD + "." + testItemName);
+          }
+        }
+
+
+      try {
             for (String projectName : projectNameList) {
                 logger.debug("Finding Test Data for project name = {}...", projectName);
                 List<RowData> rowDataList = getMongoTemplate().find(query, RowData.class, projectName);
@@ -373,18 +387,85 @@ public class SourceDataServiceImpl implements SourceDataService {
                     rowDataDtoList.add(rowDataDto);
                 }
                 logger.info("Find Test Data for project name = {} done.", projectName);
-                i++;
-                pushProgress((int) ((i + 0.0) / len * 100));
             }
+
             logger.info("Find Test Data done.");
         } catch (Exception e) {
             logger.error("Find Test Data error! Exception = {}", e.getMessage());
             throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_20001), e);
         }
+
+
         return rowDataDtoList;
     }
 
-    @Override
+  /**
+   * 查询多个数据集，指定列的数据集合
+   */
+  @Override
+  public TestItemDataset findTestDataset(List<String> projectNameList, List<String> testItemNameList, Boolean inUsedFlag) {
+
+    //查询条件组装
+    Criteria criteria = new Criteria();
+    if (inUsedFlag != null) {
+      criteria = where(IN_USED_FIELD).is(inUsedFlag);
+    }
+
+    //查询列组装
+    Query query = new Query(criteria);
+    query.fields().include(ROW_KEY_FIELD);
+    query.fields().include(IN_USED_FIELD);
+
+    //查询数据内容列
+    if (testItemNameList != null) {
+      for (String testItemName : testItemNameList) {
+        query.fields().include(DATA_FIELD + "." + testItemName);
+      }
+    }
+
+    //统计总行数
+
+
+
+      logger.info("从数据库中查询记录行数开始....");
+    int rows = 0;
+    for(String projectName : projectNameList){
+      rows += this.getMongoTemplate().count(query, projectName);
+    }
+    logger.info("从数据库中查询记录行数为[{}]", rows);
+
+    
+    //读取每行内容
+    TestItemDataset testItemDataset = new TestItemDataset(testItemNameList, rows);
+    for (String projectName : projectNameList) {
+        logger.info("Finding Test Data for project name[{}]...", projectName);
+
+
+        //读取数据明细资料
+        getMongoTemplate().executeQuery(query, projectName, new DocumentCallbackHandler() {
+            @Override
+            public void processDocument(Document document)
+                throws MongoException, DataAccessException {
+                String rowKey = document.getString("rowKey");
+
+                //读取数据项的内容
+                Document dataDocument = document.get("data", Document.class);
+                Iterator<Entry<String, Object>> iterator = dataDocument.entrySet().iterator();
+                while(iterator.hasNext()) {
+                    Entry<String, Object> entry = iterator.next();
+                    testItemDataset.setCellValue(rowKey, entry.getKey(), (String)entry.getValue());
+                }
+            }
+        });
+
+        logger.info("Find Test Data for project name[{}] done.", projectName);
+    }
+
+    return testItemDataset;
+  }
+
+
+  @Override
     public Map<String, String> findTestData(List<String> projectNameList, String testItemName) {
         Map<String, String> result = Maps.newHashMap();
         try {
@@ -394,6 +475,7 @@ public class SourceDataServiceImpl implements SourceDataService {
             query.fields().include(DATA_FIELD + "." + testItemName);
             for (String projectName : projectNameList) {
                 logger.debug("Finding Test Data for project name = {}...", projectName);
+
                 List<RowData> rowDataList = getMongoTemplate().find(query, RowData.class, projectName);
                 for (RowData rowData : rowDataList) {
                     result.put(rowData.getRowKey(), rowData.getData().get(testItemName));
@@ -458,6 +540,7 @@ public class SourceDataServiceImpl implements SourceDataService {
         }
     }
 
+
     private void pushProgress(int progress) {
         JobContext context = RuntimeContext.getBean(JobManager.class).findJobContext(Thread.currentThread());
         if (context != null) {
@@ -471,7 +554,7 @@ public class SourceDataServiceImpl implements SourceDataService {
 
     // private method without check project exist or not
     private void privateSaveTestData(String projectName, String rowKey, Map<String, String> rowDataMap, boolean appendFlag) {
-        if (isRowKeyExist(rowKey) && appendFlag) {
+        if (appendFlag && isRowKeyExist(rowKey)) {
             RowData rowData = getMongoTemplate().find(new Query(where(ROW_KEY_FIELD).is(rowKey)), RowData.class, projectName).get(0);
             if (appendFlag && rowData.getData() != null) {
                 rowData.getData().putAll(rowDataMap);
@@ -487,4 +570,16 @@ public class SourceDataServiceImpl implements SourceDataService {
             getMongoTemplate().save(rowData, projectName);
         }
     }
+
+
+    @Override
+    public void insertAllTestData(String projectName, List<RowDataDto> rowDataDtoList) {
+
+        for(RowDataDto rowDataDto : rowDataDtoList){
+
+            getMongoTemplate().save(rowDataDto, projectName);
+        }
+//        getMongoTemplate().insertAll(rowDataDtoList, projectName);
+    }
+
 }

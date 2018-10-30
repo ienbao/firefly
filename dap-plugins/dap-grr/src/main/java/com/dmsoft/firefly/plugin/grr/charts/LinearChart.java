@@ -1,9 +1,14 @@
 package com.dmsoft.firefly.plugin.grr.charts;
 
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
 import com.dmsoft.firefly.plugin.grr.charts.data.ILineData;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Maps;
+
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,10 +21,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 /**
  * Created by cherry on 2018/3/14.

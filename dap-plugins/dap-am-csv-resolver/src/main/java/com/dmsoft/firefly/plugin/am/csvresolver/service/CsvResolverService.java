@@ -93,7 +93,7 @@ public class CsvResolverService implements IDataParser {
             pushProgress(40);
             String[] items = csvList.get(fileFormat.getItem() - 1);
             for (int i = 0; i < items.length; i++) {
-                items[i] = DAPStringUtils.specificToNormal(items[i]);
+                items[i] = DAPStringUtils.mongodbItemFormat(items[i]);
             }
             String[] lslRow = null, uslRow = null, unitRow = null;
 

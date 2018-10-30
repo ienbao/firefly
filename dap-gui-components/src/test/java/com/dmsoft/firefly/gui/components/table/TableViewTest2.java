@@ -143,7 +143,7 @@ public class TableViewTest2 extends Application {
             }
 
             @Override
-            public void setTableView(TableView<String> tableView) {
+            public void setTableViewWidth(TableView<String> tableView) {
 
             }
         };

@@ -18,14 +18,14 @@ import java.util.List;
 public interface TableModel {
 
     /**
-     * method to get header array
+     * 获取表头列表
      *
      * @return observable string list
      */
     ObservableList<String> getHeaderArray();
 
     /**
-     * method to get cell data by row and column name
+     * 根据rowKey获取单元格数据
      *
      * @param rowKey     row key
      * @param columnName column name
@@ -34,14 +34,14 @@ public interface TableModel {
     ObservableValue<String> getCellData(String rowKey, String columnName);
 
     /**
-     * method to get row key string list
+     * 获取所有行key列数据
      *
      * @return observable string list
      */
     ObservableList<String> getRowKeyArray();
 
     /**
-     * method to get column is editable or not
+     * 检查某列是否可以编辑
      *
      * @param columnName column name
      * @return true : editable, false : uneditable
@@ -49,7 +49,7 @@ public interface TableModel {
     boolean isEditableTextField(String columnName);
 
     /**
-     * method to get is check box or not
+     * 获取此列是否复选框
      *
      * @param columnName column name
      * @return true : is check box; false : is not check box
@@ -57,7 +57,7 @@ public interface TableModel {
     boolean isCheckBox(String columnName);
 
     /**
-     * method to get check value
+     * 获取某列的checkbox的选择值
      *
      * @param rowKey     row key
      * @param columnName column name
@@ -66,7 +66,7 @@ public interface TableModel {
     ObjectProperty<Boolean> getCheckValue(String rowKey, String columnName);
 
     /**
-     * method to get all check value
+     * 获取全选的选择值
      *
      * @param columnName column name
      * @return selected value
@@ -74,14 +74,14 @@ public interface TableModel {
     ObjectProperty<Boolean> getAllCheckValue(String columnName);
 
     /**
-     * method to get list of menu event
+     * 获取表格行菜单事件列表
      *
      * @return list of menu event
      */
     List<TableMenuRowEvent> getMenuEventList();
 
     /**
-     * method to decorate table cell
+     * 封装表格单元格
      *
      * @param <T>       any type
      * @param rowKey    row key
@@ -92,21 +92,21 @@ public interface TableModel {
     <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell);
 
     /**
-     * method to set all check box
+     * 设置全选按钮状态
      *
      * @param checkBox check box
      */
     void setAllCheckBox(CheckBox checkBox);
 
     /**
-     * method to set table view
+     * 设置tableview
      *
      * @param tableView table view
      */
-    void setTableView(TableView<String> tableView);
+    void setTableViewWidth(TableView<String> tableView);
 
     /**
-     * method to judege menu event enable or not
+     * 检查是否开启行级菜单
      *
      * @param rowKey row key
      * @return is enable or not

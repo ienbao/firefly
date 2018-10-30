@@ -36,36 +36,39 @@ public class TableViewWrapper {
         if (model == null) {
             return;
         }
+
+        //创建表格行头信息
         List<TableColumn<String, ?>> columns = Lists.newArrayList();
         for (String s : model.getHeaderArray()) {
             columns.add(initColumn(s, model));
         }
         tableView.getColumns().addAll(columns);
-        model.getHeaderArray().addListener((ListChangeListener<String>) c -> {
-            while (c.next()) {
-                if (c.wasPermutated()) {
+
+        model.getHeaderArray().addListener((ListChangeListener<String>) listChangeListener -> {
+            while (listChangeListener.next()) {
+                if (listChangeListener.wasPermutated()) {
                     try {
                         TableColumn<String, ?>[] columnArray = new TableColumn[tableView.getColumns().size()];
                         for (int i = 0; i < tableView.getColumns().size(); i++) {
-                            columnArray[c.getList().indexOf(tableView.getColumns().get(i).getText())] = tableView.getColumns().get(i);
+                            columnArray[listChangeListener.getList().indexOf(tableView.getColumns().get(i).getText())] = tableView.getColumns().get(i);
                         }
                         tableView.getColumns().setAll(columnArray);
                     } catch (Exception ignored) {
 
                     }
-                } else if (c.wasAdded()) {
+                } else if (listChangeListener.wasAdded()) {
                     try {
                         List<TableColumn<String, ?>> addedColumn = Lists.newArrayList();
-                        for (String s : c.getAddedSubList()) {
+                        for (String s : listChangeListener.getAddedSubList()) {
                             addedColumn.add(initColumn(s, model));
                         }
-                        tableView.getColumns().addAll(c.getFrom(), addedColumn);
+                        tableView.getColumns().addAll(listChangeListener.getFrom(), addedColumn);
                     } catch (Exception ignored) {
 
                     }
-                } else if (c.wasRemoved()) {
+                } else if (listChangeListener.wasRemoved()) {
                     try {
-                        List<? extends String> removedHeaders = c.getRemoved();
+                        List<? extends String> removedHeaders = listChangeListener.getRemoved();
                         List<TableColumn> tableColumnList = Lists.newArrayList(tableView.getColumns());
                         List<TableColumn> existedColumnList = Lists.newArrayList();
                         for (TableColumn aTableColumnList : tableColumnList) {
@@ -79,6 +82,8 @@ public class TableViewWrapper {
                 }
             }
         });
+
+
         SortedList<String> list = model.getRowKeyArray() instanceof SortedList ? (SortedList) model.getRowKeyArray() : new SortedList<>(model.getRowKeyArray());
         list.comparatorProperty().bind(tableView.comparatorProperty());
         tableView.setItems(list);
@@ -98,6 +103,9 @@ public class TableViewWrapper {
             }
             menu.setAutoHide(true);
         }
+
+
+
         if (menu != null) {
             final ContextMenu menu1 = menu;
             tableView.setRowFactory(tv -> {
@@ -112,7 +120,9 @@ public class TableViewWrapper {
                 return row;
             });
         }
-        model.setTableView(tableView);
+
+
+        model.setTableViewWidth(tableView);
         if (tableView.getSkin() != null) {
             decorateSkinForSortHeader((TableViewSkin) tableView.getSkin(), tableView);
         } else {
@@ -122,18 +132,22 @@ public class TableViewWrapper {
         }
     }
 
-    private static TableColumn<String, ?> initColumn(String s, TableModel model) {
-        if (model.isEditableTextField(s)) {
-            TableColumn<String, String> column = new TableColumn<>(s);
+
+
+
+    private static TableColumn<String, ?> initColumn(String columnName, TableModel model) {
+        if (model.isEditableTextField(columnName)) {
+            TableColumn<String, String> column = new TableColumn<>(columnName);
             column.getStyleClass().add("editable-header");
-            column.setCellValueFactory(cell -> model.getCellData(cell.getValue(), s));
+            column.setCellValueFactory(cell -> model.getCellData(cell.getValue(), columnName));
+
             column.setCellFactory(tableColumn ->
                     new CustomTextFieldTableCell<String, String>(new DefaultStringConverter()) {
                         @Override
                         public void updateItem(String item, boolean empty) {
                             super.updateItem(item, empty);
                             if (this.getIndex() > -1 && this.getIndex() < this.getTableView().getItems().size()) {
-                                model.decorate(this.getTableView().getItems().get(this.getIndex()), s, this);
+                                model.decorate(this.getTableView().getItems().get(this.getIndex()), columnName, this);
                             } else {
                                 this.setStyle(null);
                             }
@@ -143,7 +157,7 @@ public class TableViewWrapper {
                         public <T> TextField createTextField(Cell<T> cell, StringConverter<T> converter) {
                             TextField tf = super.createTextField(cell, converter);
                             tf.textProperty().addListener((ov, s1, s2) -> {
-                                model.isTextInputError(tf, s1, s2, this.getTableView().getItems().get(this.getIndex()), s);
+                                model.isTextInputError(tf, s1, s2, this.getTableView().getItems().get(this.getIndex()), columnName);
                             });
                             return tf;
                         }
@@ -151,7 +165,7 @@ public class TableViewWrapper {
                         @Override
                         public void startEdit() {
                             if (getTextField() != null) {
-                                model.isTextInputError(getTextField(), getText(), getText(), this.getTableView().getItems().get(this.getIndex()), s);
+                                model.isTextInputError(getTextField(), getText(), getText(), this.getTableView().getItems().get(this.getIndex()), columnName);
                             }
                             super.startEdit();
                         }
@@ -179,12 +193,12 @@ public class TableViewWrapper {
                     });
             column.setComparator(getComparator());
             return column;
-        } else if (model.isCheckBox(s)) {
-            TableColumn<String, CheckBox> column = new TableColumn<>(s);
-            if (model.getAllCheckValue(s) != null) {
+        } else if (model.isCheckBox(columnName)) {
+            TableColumn<String, CheckBox> column = new TableColumn<>(columnName);
+            if (model.getAllCheckValue(columnName) != null) {
                 CheckBox allCheckBox = new CheckBox();
-                allCheckBox.selectedProperty().set(model.getAllCheckValue(s).getValue());
-                model.getAllCheckValue(s).addListener((ov, b1, b2) -> allCheckBox.selectedProperty().set(b2));
+                allCheckBox.selectedProperty().set(model.getAllCheckValue(columnName).getValue());
+                model.getAllCheckValue(columnName).addListener((ov, b1, b2) -> allCheckBox.selectedProperty().set(b2));
                 model.setAllCheckBox(allCheckBox);
                 column.setGraphic(allCheckBox);
                 column.setSortable(false);
@@ -192,7 +206,7 @@ public class TableViewWrapper {
                 column.setPrefWidth(32);
             }
             column.setCellValueFactory(cell -> {
-                ObjectProperty<Boolean> b = model.getCheckValue(cell.getValue(), s);
+                ObjectProperty<Boolean> b = model.getCheckValue(cell.getValue(), columnName);
                 CheckBox checkBox = new CheckBox();
                 checkBox.selectedProperty().setValue(b.getValue());
                 checkBox.selectedProperty().addListener((ov, b1, b2) -> {
@@ -219,7 +233,7 @@ public class TableViewWrapper {
                         super.setGraphic(item);
                     }
                     if (this.getIndex() > -1 && this.getIndex() < this.getTableView().getItems().size()) {
-                        model.decorate(this.getTableView().getItems().get(this.getIndex()), s, this);
+                        model.decorate(this.getTableView().getItems().get(this.getIndex()), columnName, this);
                     } else {
                         this.setStyle(null);
                     }
@@ -227,8 +241,10 @@ public class TableViewWrapper {
             });
             return column;
         }
-        TableColumn<String, String> column = new TableColumn<>(s);
-        column.setCellValueFactory(cell -> model.getCellData(cell.getValue(), s));
+
+
+        TableColumn<String, String> column = new TableColumn<>(columnName);
+        column.setCellValueFactory(cell -> model.getCellData(cell.getValue(), columnName));
         column.setCellFactory(tableColumn -> new TableCell<String, String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -241,7 +257,7 @@ public class TableViewWrapper {
                     super.setGraphic(null);
                 }
                 if (this.getIndex() > -1 && this.getIndex() < this.getTableView().getItems().size()) {
-                    model.decorate(this.getTableView().getItems().get(this.getIndex()), s, this);
+                    model.decorate(this.getTableView().getItems().get(this.getIndex()), columnName, this);
                 } else {
                     this.setStyle(null);
                 }

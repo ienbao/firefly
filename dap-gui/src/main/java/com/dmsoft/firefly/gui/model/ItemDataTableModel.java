@@ -7,6 +7,7 @@ package com.dmsoft.firefly.gui.model;
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDataset;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
@@ -20,20 +21,40 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
 
 import java.util.*;
+import org.apache.commons.lang.StringUtils;
 
 /**
- * Created by Alice on 2018/3/14.
+ *
+ *
  */
 public class ItemDataTableModel implements TableModel {
     private ObservableList<String> columnKey = FXCollections.observableArrayList();
     private ObservableList<String> rowKey = FXCollections.observableArrayList();
-    private Map<String, SimpleObjectProperty<String>> valueMap;
     private List<RowDataDto> rowDataDtoList = new ArrayList<>();
     private Map<String, SimpleObjectProperty<Boolean>> checkMap = new HashMap<>();
     private ObjectProperty<Boolean> allChecked = new SimpleObjectProperty<>(false);
     private List<String> trueSet = new ArrayList<>();
     private List<String> falseSet = new ArrayList<>();
     private CheckBox allCheckBox = new CheckBox();
+    private SearchDataFrame searchDataFrame;
+
+
+    public ItemDataTableModel(SearchDataFrame searchDataFrame){
+        this.searchDataFrame = searchDataFrame;
+        columnKey.clear();
+
+        //TODO yuanwen 2018-10-27 控制表格只显示10以内的数据，原来逻辑没有做调整和验证
+        if(this.searchDataFrame.getAllTestItemName().size() > 10){
+            for (int i = 0; i < 10; i++) {
+                columnKey.add(this.searchDataFrame.getAllTestItemName().get(i));
+            }
+        }else {
+            columnKey.addAll(this.searchDataFrame.getAllTestItemName());
+        }
+
+
+        this.rowKey.addAll(this.searchDataFrame.getAllRowKeys());
+    }
 
     /**
      * constructor.
@@ -44,14 +65,11 @@ public class ItemDataTableModel implements TableModel {
     public ItemDataTableModel(SearchDataFrame dataFrame, List<RowDataDto> rowDataDtos) {
         rowKey.clear();
         columnKey.clear();
-        valueMap = Maps.newHashMap();
+
         List<String> headers = new LinkedList<>();
         if (dataFrame != null) {
             headers = dataFrame.getAllTestItemName();
         }
-
-        List<RowDataDto> rowDataDtoListContext = dataFrame == null ? Lists.newArrayList() : dataFrame.getAllDataRow();
-        rowDataDtos.addAll(rowDataDtoListContext);
         if (headers != null && !headers.isEmpty()) {
             columnKey.add(0, "");
             if (headers.size() > 10) {
@@ -63,13 +81,17 @@ public class ItemDataTableModel implements TableModel {
             }
         }
 
+
+        List<RowDataDto> rowDataDtoListContext = dataFrame == null ? Lists.newArrayList() : dataFrame.getAllDataRow();
+        rowDataDtos.addAll(rowDataDtoListContext);
+
         int i = 0;
         int k = 3;
         if (rowDataDtos != null && !rowDataDtos.isEmpty()) {
             for (RowDataDto rowDataDto : rowDataDtos) {
                 rowKey.add(String.valueOf(i));
                 checkMap.put(String.valueOf(i), new SimpleObjectProperty<>(rowDataDto.getInUsed()));
-                if (i > 2 && rowDataDto.getInUsed()) {
+                if (i > 2 && (rowDataDto.getInUsed() == null || rowDataDto.getInUsed())) {
                     k++;
                 } else {
                     falseSet.add(String.valueOf(i));
@@ -92,12 +114,11 @@ public class ItemDataTableModel implements TableModel {
 
     @Override
     public ObjectProperty<String> getCellData(String rowKey, String columnName) {
-        if (columnName.equals("")) {
+        if(StringUtils.isEmpty(columnName)){
             return null;
-        } else {
-            valueMap.put(rowKey, new SimpleObjectProperty<String>(rowDataDtoList.get(Integer.parseInt(rowKey)).getData().get(columnName)));
-            return valueMap.get(rowKey);
         }
+
+        return new SimpleObjectProperty(this.searchDataFrame.getCellValue(rowKey, columnName));
     }
 
     @Override
@@ -112,28 +133,29 @@ public class ItemDataTableModel implements TableModel {
 
     @Override
     public boolean isCheckBox(String columnName) {
-        if (columnName.equals("")) {
+        if(StringUtils.isEmpty(columnName)){
             return true;
+        }else {
+            return false;
         }
-        return false;
     }
 
     @Override
     public ObjectProperty<Boolean> getCheckValue(String rowKey, String columnName) {
-        SimpleObjectProperty<Boolean> b = checkMap.get(rowKey);
-        b.addListener((ov, b1, b2) -> {
+        SimpleObjectProperty<Boolean> objectProperty = checkMap.get(rowKey);
+
+        objectProperty.addListener((ov, b1, b2) -> {
             if (!b2) {
                 falseSet.add(rowKey);
                 allChecked.setValue(false);
-                checkMap.put(rowKey, b);
+                checkMap.put(rowKey, objectProperty);
             } else {
                 if (falseSet.contains(rowKey)) {
                     falseSet.remove(rowKey);
-                    checkMap.put(rowKey, b);
+                    checkMap.put(rowKey, objectProperty);
                 }
                 allChecked.setValue(true);
             }
-//            this.tableView.refresh();
         });
 
         return checkMap.get(rowKey);
@@ -151,47 +173,48 @@ public class ItemDataTableModel implements TableModel {
 
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
-        Double dataValue = null;
-        Double usl = null;
-        Double lsl = null;
+//        Double dataValue = null;
+//        Double usl = null;
+//        Double lsl = null;
 
 //        if (Integer.parseInt(rowKey) > 2 && falseSet.contains(rowKey)) {
 //            tableCell.setStyle("-fx-text-fill: #dcdcdc");
 //            return tableCell;
 //        }
+//
+//        if (column.isEmpty() && (Integer.parseInt(rowKey) == 0 || Integer.parseInt(rowKey) == 1 || Integer.parseInt(rowKey) == 2)) {
+//            tableCell.setGraphic(null);
+//            return tableCell;
+//        }
+//
+        //TODO yuanwen 暂时取消代码
+//        if (DAPStringUtils.isNumeric(rowDataDtoList.get(0).getData().get(column))) {
+//            usl = Double.valueOf(rowDataDtoList.get(0).getData().get(column));
+//        }
+//
+//        if (DAPStringUtils.isNumeric(rowDataDtoList.get(1).getData().get(column))) {
+//            lsl = Double.valueOf(rowDataDtoList.get(1).getData().get(column));
+//        }
 
-        if (column.isEmpty() && (Integer.parseInt(rowKey) == 0 || Integer.parseInt(rowKey) == 1 || Integer.parseInt(rowKey) == 2)) {
-            tableCell.setGraphic(null);
-            return tableCell;
-        }
-
-        if (DAPStringUtils.isNumeric(rowDataDtoList.get(0).getData().get(column))) {
-            usl = Double.valueOf(rowDataDtoList.get(0).getData().get(column));
-        }
-
-        if (DAPStringUtils.isNumeric(rowDataDtoList.get(1).getData().get(column))) {
-            lsl = Double.valueOf(rowDataDtoList.get(1).getData().get(column));
-        }
-
-        if (Integer.parseInt(rowKey) > 2) {
-            String data = rowDataDtoList.get(Integer.parseInt(rowKey)).getData().get(column);
-            if (DAPStringUtils.isNumeric(data)) {
-                dataValue = Double.valueOf(data);
-            }
-            if (null != usl && null != dataValue && dataValue > usl) {
-                tableCell.setStyle("-fx-background-color:red");
-                return tableCell;
-            }
-            if (null != lsl && null != dataValue && dataValue < lsl) {
-                tableCell.setStyle("-fx-background-color:red");
-                return tableCell;
-            }
-        }
+//        if (Integer.parseInt(rowKey) > 2) {
+//            String data = rowDataDtoList.get(Integer.parseInt(rowKey)).getData().get(column);
+//            if (DAPStringUtils.isNumeric(data)) {
+//                dataValue = Double.valueOf(data);
+//            }
+//            if (null != usl && null != dataValue && dataValue > usl) {
+//                tableCell.setStyle("-fx-background-color:red");
+//                return tableCell;
+//            }
+//            if (null != lsl && null != dataValue && dataValue < lsl) {
+//                tableCell.setStyle("-fx-background-color:red");
+//                return tableCell;
+//            }
+//        }
         return null;
     }
 
     @Override
-    public void setTableView(TableView<String> tableView) {
+    public void setTableViewWidth(TableView<String> tableView) {
         if (tableView.getColumns() != null && !tableView.getColumns().isEmpty()) {
             for (int i = 0; i < tableView.getColumns().size(); i++) {
                 if (i == 0) {
@@ -203,9 +226,6 @@ public class ItemDataTableModel implements TableModel {
             }
 
         }
-
-//        this.tableView = tableView;
-
     }
 
     /**

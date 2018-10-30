@@ -1,7 +1,7 @@
 package com.dmsoft.firefly.gui.handler.importcsv;
 
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDataset;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
@@ -26,10 +26,10 @@ public class DataFrameHandler extends AbstractBasicJobHandler {
     @Override
     @SuppressWarnings("unchecked")
     public void doJob(JobContext context) {
-        List<RowDataDto> rowDataDtoList = context.getParam(ParamKeys.ROW_DATA_DTO_LIST, List.class);
+        TestItemDataset testItemDataset = context.getParam(ParamKeys.ROW_DATA_DTO_LIST, TestItemDataset.class);
         context.remove(ParamKeys.ROW_DATA_DTO_LIST);
         DataFrameFactory dataFrameFactory = RuntimeContext.getBean(DataFrameFactory.class);
-        SearchDataFrame dataFrame = dataFrameFactory.createSearchDataFrame((List<TestItemWithTypeDto>) context.get(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST), rowDataDtoList);
+        SearchDataFrame dataFrame = dataFrameFactory.createSearchDataFrame((List<TestItemWithTypeDto>) context.get(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST), testItemDataset);
         context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
     }
 }

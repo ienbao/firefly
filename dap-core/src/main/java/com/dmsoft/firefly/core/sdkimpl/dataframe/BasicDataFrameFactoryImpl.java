@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.core.sdkimpl.dataframe;
 
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDataset;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.DataFrame;
@@ -24,6 +25,11 @@ public class BasicDataFrameFactoryImpl implements DataFrameFactory {
     @Override
     public SearchDataFrame createSearchDataFrame(List<TestItemWithTypeDto> testItemWithTypeDtoList, List<RowDataDto> rowDataDtoList) {
         return new BasicSearchDataFrame(testItemWithTypeDtoList, rowDataDtoList);
+    }
+
+    @Override
+    public SearchDataFrame createSearchDataFrame(List<TestItemWithTypeDto> testItemWithTypeDtoList, TestItemDataset testItemDataset){
+        return new BasicSearchDataFrame(testItemWithTypeDtoList, testItemDataset);
     }
 
     @Override

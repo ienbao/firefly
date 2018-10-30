@@ -261,7 +261,7 @@ public class DAPStringUtils extends StringUtils {
      * @param value value
      * @return string
      */
-    public static String specificToNormal(String value) {
+    public static String mongodbItemFormat(String value) {
         if (value.contains(".")) {
             value = value.replace(".", "_");
         }

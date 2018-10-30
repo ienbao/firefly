@@ -27,6 +27,7 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.dmsoft.firefly.plugin.tm.csvresolver.utils.DapAssert;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,6 +36,9 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+
+
 
 /**
  * csv resolver service
@@ -46,77 +50,80 @@ import java.util.Map;
 public class CsvResolverService implements IDataParser {
     private final Logger logger = LoggerFactory.getLogger(CsvResolverService.class);
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
-
     private PluginContext pluginContext = RuntimeContext.getBean(PluginContext.class);
-
     private String fileName = "TMCSVTemplate";
     private String pluginName = "TM CSV Resolver";
-
     private JsonMapper jsonMapper = JsonMapper.defaultMapper();
+    private static int INSERT_PARTION = 100;
 
     @Override
     public void importFile(String csvPath) {
-        logger.info("Start csv importing.");
-        CsvReader csvReader;
+        logger.info("开发导入CSV文档.");
+
         File csvFile = new File(csvPath);
         Boolean importSucc = false;
-        String logStr = null;
         String projectName = DAPStringUtils.filterSpeChars4Mongo(csvFile.getName());
 
         try {
-            logStr = "Start to import <" + csvPath + ">.";
-            logger.debug(logStr);
-            pushProgress(10);
-
-            List<String[]> csvList = Lists.newArrayList();
-            csvReader = new CsvReader(csvPath, ',', Charset.forName("UTF-8"));
-            pushProgress(20);
-            logger.debug("Parsing <" + csvPath + ">.");
             CsvTemplateDto fileFormat = findCsvTemplate();
-            if (fileFormat == null) {
-                return;
-            }
+            DapAssert.isNotNull(fileFormat, "Tm 导入模板不能为空。");
 
+            CsvReader csvReader = new CsvReader(csvPath, ',', Charset.forName("UTF-8"));
+            logger.info("创建CSV解释器，CSV文件名[{}]", csvPath);
+            pushProgress(20);
+
+            ///读取行信息,csv文件的内容；
+            List<String[]> csvList = Lists.newArrayListWithCapacity(INSERT_PARTION);
             while (csvReader.readRecord()) {
                 csvList.add(csvReader.getValues());
             }
-            logger.debug("Parsing <" + csvPath + "> done.");
+            csvReader.close();
+            logger.info("读取CSV文档内容，CSV文件名[{}]，文件行数[{}].", csvPath, csvList.size());
             pushProgress(30);
-            final int rowSize = csvList.size();
+
+
+            //保存project信息
             int dataIndex = fileFormat.getData() - 1;
-            if (dataIndex > rowSize) {
-                logStr = "Import <" + csvPath + "> failed. Csv data missing. ";
-                logger.debug(logStr);
+            if (dataIndex > csvList.size()) {
+                logger.error("解释CSV文档数据行，内容起始行[{}],实际文档长度[{}]", dataIndex, csvList.size());
             }
             sourceDataService.saveProject(projectName);
+            logger.info("保存项目到数据库，projectNo[{}]", projectName);
             pushProgress(40);
-            String[] items = csvList.get(fileFormat.getItem() - 1);
-            for (int i = 0; i < items.length; i++) {
-                items[i] = DAPStringUtils.specificToNormal(items[i]);
-            }
-            String[] lslRow = null, uslRow = null, unitRow = null;
 
-            if (fileFormat.getHeader() != null && fileFormat.getHeader() > 0) {
-                csvList.set(fileFormat.getHeader() - 1, null);
+
+            //过滤测试项特殊字符
+            String[] testItemNames = csvList.get(fileFormat.getItem() - 1);
+            for (int i = 0; i < testItemNames.length; i++) {
+              testItemNames[i] = DAPStringUtils.mongodbItemFormat(testItemNames[i]);
             }
+
+
+
+            //创建project结构性数据
+            String[] lslRow = null;
             if (fileFormat.getLsl() != null && fileFormat.getLsl() > 0) {
-                lslRow = csvList.get(fileFormat.getLsl() - 1);
-                csvList.set(fileFormat.getLsl() - 1, null);
+              lslRow = csvList.get(fileFormat.getLsl() - 1);
             }
+
+            String[] uslRow = null;
             if (fileFormat.getUsl() != null && fileFormat.getUsl() > 0) {
-                uslRow = csvList.get(fileFormat.getUsl() - 1);
-                csvList.set(fileFormat.getUsl() - 1, null);
+              uslRow = csvList.get(fileFormat.getUsl() - 1);
             }
+
+            String[] unitRow = null;
             if (fileFormat.getUnit() != null && fileFormat.getUnit() > 0) {
-                unitRow = csvList.get(fileFormat.getUnit() - 1);
-                csvList.set(fileFormat.getUnit() - 1, null);
+              unitRow = csvList.get(fileFormat.getUnit() - 1);
             }
-            List<TestItemDto> testItemDtoList = Lists.newArrayList();
-            for (int i = 0; i < items.length; i++) {
+
+
+            List<TestItemDto> testItemDtoList = Lists.newArrayListWithCapacity(testItemNames.length);
+            for (int i = 0; i < testItemNames.length; i++) {
                 TestItemDto testItemDto = new TestItemDto();
-                testItemDto.setTestItemName(items[i]);
+                testItemDto.setTestItemName(testItemNames[i]);
                 if (lslRow != null) {
                     testItemDto.setLsl(DAPStringUtils.formatBigDecimal(lslRow[i]));
+
                 }
                 if (uslRow != null) {
                     testItemDto.setUsl(DAPStringUtils.formatBigDecimal(uslRow[i]));
@@ -128,31 +135,37 @@ public class CsvResolverService implements IDataParser {
             }
             sourceDataService.saveTestItem(projectName, testItemDtoList);
             pushProgress(60);
+            
+            
             int len = csvList.size();
-            int row = 0;
-            //TODO yuanwen  这里面要批量数据写入逻辑，这样子写入性能太低；
-            for (int i = dataIndex; i < csvList.size(); i++) {
-                List<String> data = Arrays.asList(csvList.get(i));
+            List<RowDataDto> rowDataDtoList = Lists.newArrayListWithCapacity(INSERT_PARTION);
+            for (int index = fileFormat.getData() - 1; index < len; index++) {
+                String[] rows = csvList.get(index);
                 RowDataDto rowDataDto = new RowDataDto();
-                rowDataDto.setRowKey(DoubleIdUtils.combineIds(projectName, i));
-                Map<String, String> itemDatas = Maps.newLinkedHashMap();
-                for (int j = 0; j < items.length; j++) {
-                    String value = "";
-                    value = DAPStringUtils.formatBigDecimal(data.get(j));
-                    itemDatas.put(items[j], value);
+                rowDataDto.setRowKey(DoubleIdUtils.combineIds(projectName, index));
+                Map<String, String> itemDatas = Maps.newHashMapWithExpectedSize(testItemNames.length);
+                for (int j = 0; j < testItemNames.length; j++) {
+                    itemDatas.put(testItemNames[j], DAPStringUtils.formatBigDecimal(rows[j]));
                 }
                 rowDataDto.setData(itemDatas);
-                sourceDataService.saveTestData(projectName, DoubleIdUtils.combineIds(projectName, i), itemDatas, false);
-                row++;
-                pushProgress(60 + 30 * row / len);
-                logger.debug("Imported Line No = {}", row);
+                rowDataDto.setInUsed(true);
+                rowDataDtoList.add(rowDataDto);
+
+                pushProgress(60 + 30 * index / len);
+                logger.debug("Imported Line No = {}", index);
+
+                if(rowDataDtoList.size() % 100 == 0){
+                  sourceDataService.insertAllTestData(projectName, rowDataDtoList);
+                  rowDataDtoList = Lists.newArrayListWithCapacity(INSERT_PARTION);
+                }
             }
+
+            sourceDataService.insertAllTestData(projectName, rowDataDtoList);
             pushProgress(90);
 
             importSucc = true;
-            csvReader.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
 
         } finally {
             if (!importSucc) {

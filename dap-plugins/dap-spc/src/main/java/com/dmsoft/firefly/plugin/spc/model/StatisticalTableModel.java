@@ -447,7 +447,7 @@ public class StatisticalTableModel implements TableModel {
     }
 
     @Override
-    public void setTableView(TableView<String> tableView) {
+    public void setTableViewWidth(TableView<String> tableView) {
         this.tableView = tableView;
     }
 

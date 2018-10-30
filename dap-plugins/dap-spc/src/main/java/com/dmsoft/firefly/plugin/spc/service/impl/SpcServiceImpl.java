@@ -63,6 +63,7 @@ public class SpcServiceImpl implements SpcService {
                     doubleList.add(Double.valueOf(s));
                 }
             }
+
             spcAnalysisDataDto.setLsl(searchConditionDto.getCusLsl());
             spcAnalysisDataDto.setUsl(searchConditionDto.getCusUsl());
             spcAnalysisDataDto.setDataList(doubleList);

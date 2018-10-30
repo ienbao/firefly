@@ -176,7 +176,7 @@ public class GrrViewDataDFBackupModel implements TableModel, GrrViewDataListener
     }
 
     @Override
-    public void setTableView(TableView<String> tableView) {
+    public void setTableViewWidth(TableView<String> tableView) {
         this.tableView = tableView;
     }
 
