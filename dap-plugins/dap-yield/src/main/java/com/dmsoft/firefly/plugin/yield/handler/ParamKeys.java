@@ -15,6 +15,7 @@ public class ParamKeys {
     public static final String YIELD_VIEW_DATA_RESULT_DTO = "yieldViewDataResultDto";
     public static final String ANALYSIS_RESULT_MAP = "analysisResultMap";
     public static final String EXPORT_PATH = "exportPath";
+    public static final String YIELD_DETAILCHART_ALARM_DTO="yieldDetailChartAlarmDtos";
 
     public static final String STATISTICAL_SEARCH_CONDITION_DTO_LIST = "statisticSearchConditionDtoList";
     public static final String CHART_SEARCH_CONDITION_DTO_LIST = "chartSearchConditionDtoList";

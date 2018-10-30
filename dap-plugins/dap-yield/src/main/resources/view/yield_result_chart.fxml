@@ -18,7 +18,7 @@
 <!--AnchorPane 布局面板允许你将控件停靠在窗口的上下左右位置-->
 
 <?import javafx.scene.control.ComboBox?>
-<AnchorPane minHeight="200.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldChartResultController">
+<AnchorPane style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldChartResultController">
     <children>
         <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <SplitPane>
@@ -34,8 +34,8 @@
                             </graphic>
                             <content>
                                 <GridPane>
-                                    <VBox fx:id="BarChart" style="-fx-border-width: 0px; -fx-border-color: rgb(220,220,220); " GridPane.columnIndex="0" VBox.vgrow="ALWAYS">
-                                        <BarChart fx:id="yieldBarChart" horizontalGridLinesVisible="false"  horizontalZeroLineVisible="false" legendVisible="false" style="-fx-background-color: #ffffff;" verticalZeroLineVisible="false">
+                                    <VBox fx:id="BarChart"  style="-fx-border-width: 0px; -fx-border-color: rgb(220,220,220); " GridPane.columnIndex="0" VBox.vgrow="ALWAYS">
+                                        <BarChart fx:id="yieldBarChart" minWidth="100.0"  horizontalGridLinesVisible="false" verticalGridLinesVisible="false"  horizontalZeroLineVisible="false" legendVisible="false" style="-fx-background-color: #ffffff;" verticalZeroLineVisible="false">
                                             <xAxis>
                                                 <CategoryAxis side="BOTTOM" tickLabelGap="10.0" tickMarkVisible="false" />
                                             </xAxis>
@@ -43,16 +43,16 @@
                                                 <NumberAxis autoRanging="false" minorTickVisible="false" side="LEFT" tickLabelsVisible="false" tickMarkVisible="false" />
                                             </yAxis>
                                             <VBox.margin>
-                                                <Insets bottom="-10.0" right="-10.0" top="-5.0" />
+                                                <Insets bottom="0" right="0" top="0" />
                                             </VBox.margin>
                                         </BarChart>
                                     </VBox>
-                                    <VBox style="-fx-border-width: 0 1 0 1; -fx-border-color: #DCDCDC; -fx-background-color: #FAFAFA;" GridPane.columnIndex="1" VBox.vgrow="ALWAYS">
+                                    <VBox  style="-fx-border-width: 0 1 0 1; -fx-border-color: #DCDCDC; -fx-background-color: #FAFAFA;" GridPane.columnIndex="1" VBox.vgrow="ALWAYS">
                                         <fx:include fx:id="yieldResultData" source="yield_result_data.fxml" />
                                     </VBox>
                                     <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="500.0" minWidth="298.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="500.0" minWidth="226.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="500.0" minWidth="150.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="500.0" minWidth="200.0" />
                                     </columnConstraints>
                                     <rowConstraints>
                                         <RowConstraints />
@@ -83,19 +83,19 @@
                                     <GridPane maxHeight="32" minHeight="32" style="-fx-border-width:0 0 1 0;-fx-border-color:#f0f0f0" GridPane.rowIndex="0">
                                         <children>
                                             <!--prefHeight="17.0" -->
-                                            <Label maxHeight="22" maxWidth="120.0" minHeight="22" minWidth="120.0" prefWidth="120.0" text="%NTF_TOP_N" GridPane.ColumnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                            <Label maxHeight="22" maxWidth="90.0" minHeight="22" minWidth="90.0" prefWidth="90.0" text="%NTF_TOP_N" GridPane.ColumnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                                                 <GridPane.margin>
                                                     <Insets left="10.0" right="10.0" />
                                                 </GridPane.margin>
                                             </Label>
                                             <!--maxHeight="22.0"  minHeight="22.0" prefHeight="22.0" -->
-                                            <ComboBox fx:id="resultNTFNum" maxHeight="22" maxWidth="120.0" minHeight="22" minWidth="120.0" prefWidth="120.0" GridPane.ColumnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                                            <ComboBox fx:id="resultNTFNum" maxHeight="22" maxWidth="200.0" minHeight="22" minWidth="120.0" prefWidth="200.0" GridPane.ColumnIndex="2" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
                                         </children>
                                         <columnConstraints>
-                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" />
-                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="70.0" />
-                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="70.0" />
-                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="632.0" minWidth="632.0" />
+                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" />
+                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0" />
+                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0" />
+                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="680.0" minWidth="680.0" />
                                         </columnConstraints>
                                         <rowConstraints>
                                             <RowConstraints maxHeight="32" minHeight="32" />
@@ -103,7 +103,7 @@
 
                                     </GridPane>
                                     <GridPane GridPane.rowIndex="1">
-                                        <BarChart fx:id="yieldbarChartItem" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" legendVisible="false" minWidth="226.0" prefHeight="400.0" prefWidth="900.0" verticalZeroLineVisible="false" GridPane.rowIndex="1" VBox.vgrow="ALWAYS">
+                                        <BarChart fx:id="yieldbarChartItem" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" legendVisible="false" minWidth="226.0" prefHeight="400.0" prefWidth="900.0" verticalGridLinesVisible="false"  verticalZeroLineVisible="false" GridPane.rowIndex="1" VBox.vgrow="ALWAYS">
                                             <xAxis>
                                                 <CategoryAxis side="BOTTOM" tickLabelGap="10.0" tickMarkVisible="false" />
                                             </xAxis>
@@ -136,7 +136,7 @@
                 </TabPane>
             </VBox>
             <columnConstraints>
-                <ColumnConstraints minWidth="200.0" prefWidth="600.0" />
+                <ColumnConstraints minWidth="350.0" prefWidth="600.0" />
                 <ColumnConstraints minWidth="200.0" prefWidth="1000.0" />
             </columnConstraints>
             <rowConstraints>

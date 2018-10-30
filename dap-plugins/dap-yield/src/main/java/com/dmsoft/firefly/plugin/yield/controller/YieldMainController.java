@@ -408,6 +408,47 @@ public class YieldMainController implements Initializable {
     }
 
 
+//
+//    /**
+//     * method to set is timer or not
+//     *
+//     * @param isTimer is timer
+//     */
+//    public void setMainAnalysisTimerState(boolean isTimer) {
+//        resetBtn.setDisable(isTimer);
+//        printBtn.setDisable(isTimer);
+//        exportBtn.setDisable(isTimer);
+//        if (!isTimer) {
+//            this.setTimerSearchConditionDtoList(null);
+//        }
+//
+//    }
+//
+//    public List<SearchConditionDto> getTimerSearchConditionDtoList() {
+//        return timerSearchConditionDtoList;
+//    }
+//
+//    public void setTimerSearchConditionDtoList(List<SearchConditionDto> timerSearchConditionDtoList) {
+//        this.timerSearchConditionDtoList = timerSearchConditionDtoList;
+//    }
+//
+//    /**
+//     * method to get search key in timer
+//     *
+//     * @return list of search key
+//     */
+//    public List<String> getTimerSearchKeyList() {
+//        if (timerSearchConditionDtoList == null) {
+//            return null;
+//        }
+//        List<String> timerSearchKeyList = Lists.newArrayList();
+//        for (SearchConditionDto searchConditionDto : timerSearchConditionDtoList) {
+//            timerSearchKeyList.add(searchConditionDto.getKey());
+//        }
+//        return timerSearchKeyList;
+//    }
+
+
     public void setYieldResultDto(YieldResultDto yieldResultDto) {
         this.yieldResultDto = yieldResultDto;
     }
@@ -418,23 +459,12 @@ public class YieldMainController implements Initializable {
         return yieldResultController;
     }
 
-    public void setYieldResultController(YieldChartResultController yieldResultController) {
-        this.yieldResultController = yieldResultController;
-    }
 
     public ViewDataController getViewDataController() {
         return viewDataController;
     }
 
-    public void setViewDataController(ViewDataController viewDataController) {
-        this.viewDataController = viewDataController;
-    }
-
     public YieldItemController getYieldItemController() {
         return yieldItemController;
-    }
-
-    public void setYieldItemController(YieldItemController yieldItemController) {
-        this.yieldItemController = yieldItemController;
     }
 }

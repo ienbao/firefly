@@ -105,10 +105,10 @@ public class YieldChartResultController implements Initializable {
                 YieldFxmlAndLanguageUtils.getString((UIConstant.BARCHART_NG))
         };
     }
-    public void analyzeYieldResult(YieldResultDto yieldResultDto, List<SearchConditionDto> searchConditionDtoList) {
+    public void analyzeYieldResult(YieldChartResultAlermDto yieldChartResultAlermDto,List<SearchConditionDto> searchConditionDtoList) {
         //清除分析之前的数据
         this.removeBarChartAllResultData();
-        while (yieldResultDto == null){
+        while (yieldChartResultAlermDto == null){
             continue;
         }
         resultNTFNum.setDisable(false);
@@ -131,7 +131,7 @@ public class YieldChartResultController implements Initializable {
             ntfNumList.add(numberList.get(i));
         }
         resultNTFNum.setItems(ntfNumList);
-       this.setAnalysisBarChartResultData(yieldResultDto);
+       this.setAnalysisBarChartResultData(yieldChartResultAlermDto);
     }
 
     private void removeBarChartAllResultData() {
@@ -167,15 +167,15 @@ public class YieldChartResultController implements Initializable {
 
 
 
-    private void setAnalysisBarChartResultData(YieldResultDto yieldResultDto){
-        if (yieldResultDto == null){
+    private void setAnalysisBarChartResultData(YieldChartResultAlermDto yieldChartResultAlermDto){
+        if (yieldChartResultAlermDto == null){
             enableSubResultOperator(false);
             RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
                     YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                     YieldFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
             return;
         }
-        setBarChart(yieldResultDto.getTotalProcessesDtos());
+        setBarChart(yieldChartResultAlermDto);
     }
 
     private void enableSubResultOperator(boolean b) {
@@ -185,12 +185,11 @@ public class YieldChartResultController implements Initializable {
 
 
     //移除统计过后的数据
-    private void setBarChart(YieldTotalProcessesDto yieldTotalProcessesDto) {
-        if(yieldTotalProcessesDto == null){//判断yiyieldChartResult是否为空
+    private void setBarChart(YieldChartResultAlermDto yieldChartResultAlermDto) {
+        if(yieldChartResultAlermDto == null){//判断yiyieldChartResult是否为空
             return;
         }
-
-        Double[] yieldChartArray = getYieldChartArrayValue(yieldTotalProcessesDto);
+        Double[] yieldChartArray = getYieldChartArrayValue(yieldChartResultAlermDto);
         Double yMax = MathUtils.getNaNToZoreMax(yieldChartArray);
         Double yMin = MathUtils.getNaNToZoreMin(yieldChartArray);
         if(yMax == null || yMin == null){
@@ -210,9 +209,9 @@ public class YieldChartResultController implements Initializable {
         yAxis.setUpperBound(newYMax);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
         XYChart.Series series1 = new XYChart.Series();
-            series1.getData().add(new XYChart.Data(yieldBarChartLabel[0],(yieldTotalProcessesDto.getFpyPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldTotalProcessesDto.getFpyPercent()) ? 0 : yieldTotalProcessesDto.getFpyPercent())));
-            series1.getData().add(new XYChart.Data(yieldBarChartLabel[1], (yieldTotalProcessesDto.getNtfPercent()== null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldTotalProcessesDto.getNtfPercent()) ? 0 : yieldTotalProcessesDto.getNtfPercent())));
-            series1.getData().add(new XYChart.Data(yieldBarChartLabel[2], (yieldTotalProcessesDto.getNgPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldTotalProcessesDto.getNgPercent() ) ? 0 : yieldTotalProcessesDto.getNgPercent())));
+            series1.getData().add(new XYChart.Data(yieldBarChartLabel[0],(yieldChartResultAlermDto.getFpyPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldChartResultAlermDto.getFpyPercent()) ? 0 : yieldChartResultAlermDto.getFpyPercent())));
+            series1.getData().add(new XYChart.Data(yieldBarChartLabel[1], (yieldChartResultAlermDto.getNtfPercent()== null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldChartResultAlermDto.getNtfPercent()) ? 0 : yieldChartResultAlermDto.getNtfPercent())));
+            series1.getData().add(new XYChart.Data(yieldBarChartLabel[2], (yieldChartResultAlermDto.getNgPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldChartResultAlermDto.getNgPercent() ) ? 0 : yieldChartResultAlermDto.getNgPercent())));
             yieldBarChart.getData().addAll(series1);//barChart中添加元素
 
 //        for (int i = 0 ; i < yieldBarChartCategory.length ;i++){
@@ -220,7 +219,8 @@ public class YieldChartResultController implements Initializable {
 //            series.setName("%"+yieldBarChartCategory[i]);
 //        }
         int digNum = DigNumInstance.newInstance().getDigNum() - 2 >= 0 ? DigNumInstance.newInstance().getDigNum() - 2 : 0;
-        ChartUtils.setChartText(yieldBarChart.getData(), s -> {//设置Chart顶部的数据百分比
+        //YieldChartResultAlermDto yieldChartResultAlermDto = new YieldChartResultAlermDto();
+        ChartUtils.setChartTextAndColor(yieldBarChart.getData(), s -> {//设置Chart顶部的数据百分比
             if (DAPStringUtils.isNumeric(s)) {
                 Double value = Double.valueOf(s)*100;
                 if (!DAPStringUtils.isInfinityAndNaN(value)) {
@@ -229,17 +229,17 @@ public class YieldChartResultController implements Initializable {
                 }
             }
             return s + "%";
-        });
+        }, yieldChartResultAlermDto.getYieldChartResultAlermDtoMap());
 
 
     }
 
-    private Double[] getYieldChartArrayValue(YieldTotalProcessesDto yieldTotalProcessesDto) {
+    private Double[] getYieldChartArrayValue(YieldChartResultAlermDto yieldChartResultAlermDto) {
 
         Double[] value = new Double[3];
-        value[0] = yieldTotalProcessesDto.getFpyPercent();
-        value[1] = yieldTotalProcessesDto.getNtfPercent();
-        value[2] = yieldTotalProcessesDto.getNgPercent();
+        value[0] = yieldChartResultAlermDto.getFpyPercent();
+        value[1] = yieldChartResultAlermDto.getNtfPercent();
+        value[2] = yieldChartResultAlermDto.getNgPercent();
 
         return value;
 
@@ -278,10 +278,9 @@ public class YieldChartResultController implements Initializable {
         XYChart.Series series2 =new XYChart.Series();
         for (int i = 0 ; i < yieldNTFChartDtos.size() ; i++){
             series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getItemName(),(yieldNTFChartDtos.get(i).getNtfPercent()==null ? 0 :DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
-           if(yieldNTFChartDtos.get(i).getNtfPercent() == null) ;
+            if(yieldNTFChartDtos.get(i).getNtfPercent() == null) ;
         }
         yieldbarChartItem.getData().addAll(series2);
-
         //int digNum = DigNumInstance.newInstance().getDigNum() - 2 >= 0 ? DigNumInstance.newInstance().getDigNum() - 2 : 0;
         ChartUtils.setChartText(yieldbarChartItem.getData(), s -> {//设置Chart顶部的数据百分比
             if (DAPStringUtils.isNumeric(s)) {
