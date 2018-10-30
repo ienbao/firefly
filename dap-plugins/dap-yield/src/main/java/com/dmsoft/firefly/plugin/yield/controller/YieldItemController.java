@@ -808,7 +808,7 @@ public class YieldItemController implements Initializable {
         if (yieldAnalysisConfigDto == null) {
             yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
             yieldAnalysisConfigDto.setPrimaryKey("");
-//            yieldAnalysisConfigDto.setTopN(null);
+            yieldAnalysisConfigDto.setTopN(2);
             this.updateYieldConfigPreference(yieldAnalysisConfigDto);
         }
         ObservableList<String> primaryKeyList = FXCollections.observableArrayList();
@@ -819,7 +819,7 @@ public class YieldItemController implements Initializable {
         configComboBox.setItems(primaryKeyList);
         if (primaryKeyList.size() > 0&&primaryKeyList.contains(yieldAnalysisConfigDto.getPrimaryKey())) {
             configComboBox.setValue(yieldAnalysisConfigDto.getPrimaryKey());
-//            set TopN
+
         }
 
 
@@ -900,7 +900,7 @@ public class YieldItemController implements Initializable {
     private YieldAnalysisConfigDto buildYieldAnalysisConfigData() {
         YieldAnalysisConfigDto yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
         yieldAnalysisConfigDto.setPrimaryKey(configComboBox.getValue());
-//        yieldAnalysisConfigDto.setTopN;
+        yieldAnalysisConfigDto.setTopN(yieldMainController.getYieldResultController().getResultNTFNum());
         return yieldAnalysisConfigDto;
     }
 

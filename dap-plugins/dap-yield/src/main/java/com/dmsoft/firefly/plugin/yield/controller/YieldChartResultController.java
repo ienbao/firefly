@@ -10,13 +10,18 @@ import com.dmsoft.firefly.plugin.yield.dto.chart.view.ChartPanel;
 import com.dmsoft.firefly.plugin.yield.utils.*;
 import com.dmsoft.firefly.plugin.yield.utils.charts.ChartUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
+import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.ColorUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.netty.util.internal.MathUtil;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
@@ -24,6 +29,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +51,9 @@ public class YieldChartResultController implements Initializable {
     private GridPane YieldGridPane;
     @FXML
     private ComboBox resultNTFNum;
-
+    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+    private JsonMapper mapper = JsonMapper.defaultMapper();
     private String[] yieldBarChartCategory;
     private String[] yieldBarChartLabel;
     private Logger logger = LoggerFactory.getLogger(YieldChartResultController.class);
@@ -75,6 +83,18 @@ public class YieldChartResultController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.initI18n();
         this.yieldResultDataController.init(this);
+
+
+        YieldAnalysisConfigDto yieldAnalysisConfigDto = this.getYieldConfigPreference();
+        if (yieldAnalysisConfigDto == null) {
+            yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
+            yieldAnalysisConfigDto.setPrimaryKey("");
+            yieldAnalysisConfigDto.setTopN(5);
+            this.updateYieldConfigPreference(yieldAnalysisConfigDto);
+        }
+        resultNTFNum.setValue(yieldAnalysisConfigDto.getTopN());
+        resultNTFNum.setDisable(true);
+
     }
 
     private void initI18n() {
@@ -84,13 +104,34 @@ public class YieldChartResultController implements Initializable {
                 YieldFxmlAndLanguageUtils.getString((UIConstant.BARCHART_NG))
         };
     }
-    public void analyzeYieldResult(YieldChartResultAlermDto yieldChartResultAlermDto) {
+    public void analyzeYieldResult(YieldChartResultAlermDto yieldChartResultAlermDto,List<SearchConditionDto> searchConditionDtoList) {
         //清除分析之前的数据
         this.removeBarChartAllResultData();
         while (yieldChartResultAlermDto == null){
             continue;
         }
        this.setAnalysisBarChartResultData(yieldChartResultAlermDto);
+        resultNTFNum.setDisable(false);
+        if(searchConditionDtoList.size()-1<Integer.parseInt(resultNTFNum.getValue().toString())){
+            resultNTFNum.setValue(searchConditionDtoList.size()-1);
+        }
+        ObservableList<String> numberList = FXCollections.observableArrayList();
+        numberList.addAll(YieldFxmlAndLanguageUtils.getString(UIConstant.Number_1),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_2),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_3),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_4),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_5),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_6),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_7),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_8),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_9),
+                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_10));
+        ObservableList<String> ntfNumList = FXCollections.observableArrayList();
+        for(int i=0;i<searchConditionDtoList.size()-1&&i<10;i++){
+            ntfNumList.add(numberList.get(i));
+        }
+        resultNTFNum.setItems(ntfNumList);
+       this.setAnalysisBarChartResultData(yieldResultDto);
     }
 
     private void removeBarChartAllResultData() {
@@ -208,14 +249,7 @@ public class YieldChartResultController implements Initializable {
         if (yieldNTFChartDtos.size() == 0 ) {
             return ;
         }
-        resultNTFNum.getItems().addAll(
-                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_1),
-                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_2),
-                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_3),
-                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_4),
-                YieldFxmlAndLanguageUtils.getString(UIConstant.Number_5)
-                );
-        resultNTFNum.setValue(YieldFxmlAndLanguageUtils.getString(UIConstant.Number_5));
+
         Double[]  yChartArrayData = null;
         for (int i = 0 ; i < yieldNTFChartDtos.size() ; i++){
               yChartArrayData= new Double[yieldNTFChartDtos.size()];
@@ -259,7 +293,26 @@ public class YieldChartResultController implements Initializable {
         });
 
     }
+    private void updateYieldConfigPreference(YieldAnalysisConfigDto configDto) {
+        UserPreferenceDto<YieldAnalysisConfigDto> userPreferenceDto = new UserPreferenceDto<>();
+        userPreferenceDto.setUserName(envService.getUserName());
+        userPreferenceDto.setCode("yield_config_preference");
+        userPreferenceDto.setValue(configDto);
+        userPreferenceService.updatePreference(userPreferenceDto);
+    }
+    private YieldAnalysisConfigDto getYieldConfigPreference() {
+        String value = userPreferenceService.findPreferenceByUserId("yield_config_preference", envService.getUserName());
+        if (StringUtils.isNotBlank(value)) {
+            return mapper.fromJson(value, YieldAnalysisConfigDto.class);
+        } else {
+            return null;
+        }
+    }
 
+
+    public Integer getResultNTFNum() {
+        return  Integer.parseInt(resultNTFNum.getValue().toString());
+    }
 
     public YieldMainController getYieldMainController() {
 
