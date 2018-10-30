@@ -1,8 +1,6 @@
 package com.dmsoft.firefly.plugin.yield.service;
 
-import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldSettingDto;
+import com.dmsoft.firefly.plugin.yield.dto.*;
 
 import java.util.List;
 
@@ -28,5 +26,8 @@ public interface YieldSettingService {
      * @param yieldSettingDto spc setting
      */
     void saveYieldSetting(YieldSettingDto yieldSettingDto);
+
+    YieldChartResultAlermDto setChartResultAlarm(YieldTotalProcessesDto totalProcessesDtos, YieldSettingDto yieldSettingDto);
+
 }
 

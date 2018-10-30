@@ -2,6 +2,8 @@ package com.dmsoft.firefly.plugin.yield.dto;
 
 import com.dmsoft.bamboo.common.dto.AbstractValueObject;
 
+import java.util.Map;
+
 public class YieldChartResultDto extends AbstractValueObject {
     private Double FPY;
     private Double NTF;
@@ -30,4 +32,5 @@ public class YieldChartResultDto extends AbstractValueObject {
     public void setNG(Double NG) {
         this.NG = NG;
     }
+
 }

@@ -92,7 +92,6 @@ public class YieldItemController implements Initializable {
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
     private YieldMainController yieldMainController;
     private YieldResultDataController yieldResultDataController;
-    private ViewDataController viewDataController;
     private ContextMenu pop;
     private boolean isFilterUslOrLsl = false;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
@@ -673,7 +672,7 @@ public class YieldItemController implements Initializable {
                 dataFrame=context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
                 yieldMainController.setDataFrame(dataFrame);
 
-                yieldMainController.getYieldResultController().analyzeYieldResult(context.getParam(ParamKeys.YIELD_RESULT_DTO,YieldResultDto.class),searchConditionDtoList);
+                yieldMainController.getYieldResultController().analyzeYieldResult(context.getParam(ParamKeys.YIELD_DETAILCHART_ALARM_DTO,YieldChartResultAlermDto.class), searchConditionDtoList);
                 yieldMainController.getYieldResultController().ananlyzeyieldResultItem(context.getParam(ParamKeys.YIELD_RESULT_DTO,YieldResultDto.class));
                 windowProgressTipController.closeDialog();
                 yieldMainController.setDisable(false);
