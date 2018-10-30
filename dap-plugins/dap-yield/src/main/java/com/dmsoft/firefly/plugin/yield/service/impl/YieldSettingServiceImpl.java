@@ -2,10 +2,7 @@ package com.dmsoft.firefly.plugin.yield.service.impl;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.utils.JsonFileUtil;
-import com.dmsoft.firefly.plugin.yield.dto.OverviewAlarmDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldSettingDto;
+import com.dmsoft.firefly.plugin.yield.dto.*;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.yield.utils.YieldOverviewKey;
 import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
@@ -109,8 +106,48 @@ public class YieldSettingServiceImpl implements YieldSettingService, IConfig {
             yieldOverviewResultAlarmDto.setOverviewAlarmDtoMap(statisticalAlarmDtoMap);
             yieldOverviewResultAlarmDtoList.add(yieldOverviewResultAlarmDto);
         });
-
         return yieldOverviewResultAlarmDtoList;
+    }
+    @Override
+    public YieldChartResultAlermDto setChartResultAlarm(YieldTotalProcessesDto totalProcessesDtos, YieldSettingDto yieldSettingDto) {
+        if (totalProcessesDtos == null || yieldSettingDto == null){
+            return null;
+        }
+        Map<String, Double[]> abilityAlarmRule = yieldSettingDto.getAbilityAlarmRule();
+        YieldOverviewKey[] overViewKeys = YieldOverviewKey.values();
+        if (overViewKeys == null) {
+            return null;
+        }
+        YieldChartResultAlermDto yieldChartResultAlermDto = new YieldChartResultAlermDto();
+        yieldChartResultAlermDto.setFpyPercent(totalProcessesDtos.getFpyPercent());
+        yieldChartResultAlermDto.setNtfPercent(totalProcessesDtos.getNtfPercent());
+        yieldChartResultAlermDto.setNgPercent(totalProcessesDtos.getNgPercent());
+       Map<String,YieldChartAlermDto> yieldChartAlermDtoMap = Maps.newHashMap();
+
+       for (int i = 0 ; i < overViewKeys.length ; i++){
+
+           String overviewName = overViewKeys[i].getCode();
+           double value = 0;
+           if(overviewName.equals(YieldOverviewKey.FPYPER.getCode())){
+               value = totalProcessesDtos.getFpyPercent();
+           }else if(overViewKeys.equals(YieldOverviewKey.NTFPER.getCode())){
+               value = totalProcessesDtos.getNtfPercent();
+           }else if (overViewKeys.equals(YieldOverviewKey.NGPER.getCode())){
+               value = totalProcessesDtos.getNgPercent();
+           }
+           YieldChartAlermDto yieldChartAlermDto = new YieldChartAlermDto();
+           yieldChartAlermDto.setValue(value);
+           String leval = null;
+           if (YieldOverviewKey.isAbilityAlarmResultName(overviewName)){
+               leval = this.getAbilityAlarmLevel(overviewName,value,abilityAlarmRule);
+               yieldChartAlermDto.setLevel(leval);
+               yieldChartAlermDtoMap.put(overviewName,yieldChartAlermDto);
+           }
+       }
+
+       yieldChartResultAlermDto.setYieldChartResultAlermDtoMap(yieldChartAlermDtoMap);
+
+        return yieldChartResultAlermDto;
     }
 
     private String getAbilityAlarmLevel(String name, Double value, Map<String, Double[]> abilityAlarmRule) {
@@ -171,5 +208,7 @@ public class YieldSettingServiceImpl implements YieldSettingService, IConfig {
 
         JsonFileUtil.writeJsonFile(yieldSettingDto, path, ParamKeys.YIELD_SETTING_FILE_NAME);
     }
+
+
 
 }

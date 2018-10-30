@@ -1,0 +1,354 @@
+
+.table-no-header .column-header-background {
+    -fx-max-height: 0px;
+    -fx-pref-height: 0px;
+    -fx-min-height: 0px;
+}
+
+.chart {
+    -fx-font-family: Tahoma;
+    -fx-font-size: 0.9em;
+    -fx-padding: 10 10 10 10;
+}
+
+/*.chart-content {*/
+    /*-fx-padding: 0 10px 10px 10px;*/
+/*}*/
+
+.chart-vertical-grid-lines {
+    -fx-stroke-width: 1px;
+}
+
+/*.chart-horizontal-grid-lines {*/
+/*-fx-stroke-width: 0px;*/
+/*-fx-stroke: transparent;*/
+/*}*/
+
+/*chart style*/
+.chart-plot-background {
+    -fx-background-color: white;
+    -fx-border-color: #dcdcdc #dcdcdc transparent transparent;
+}
+
+.axis {
+    -fx-font-size: 1.4em;
+    -fx-font-family: Tahoma;
+    -fx-tick-length: 5;
+    -fx-minor-tick-length: 0;
+}
+
+.axis:bottom {
+    -fx-border-color: #dcdcdc transparent transparent transparent;
+}
+
+.axis:left {
+    -fx-border-color: transparent #dcdcdc transparent transparent;
+}
+
+.axis-label {
+    -fx-text-fill: #462300;
+}
+
+/*line*/
+.line {
+    -fx-cursor: hand;
+    -fx-stroke: #6fc1be;
+}
+
+.line:hover {
+    -fx-stroke-width: 2px;
+}
+
+.dashed-line {
+    -fx-stroke-dash-array: 4px;
+}
+
+.dashed-line:hover {
+    -fx-stroke-width: 2px;
+    -fx-stroke-dash-array: 1px;
+}
+
+.solid-line {
+
+}
+
+.solid-line:hover {
+    -fx-stroke-width: 2px;
+}
+
+.hidden-line {
+    -fx-stroke-width: 0px;
+}
+
+/* ====== LINE CHART =========================================================== */
+
+/*chart line style*/
+.chart-series-line {
+    -fx-cursor: hand;
+    -fx-stroke-width: 1px;
+}
+
+.chart-series-hidden-line {
+    -fx-stroke-width: 0px;
+}
+
+.chart-broken-line {
+    -fx-stroke-width: 2px;
+    -fx-stroke-dash-array: 5px;
+}
+
+.chart-point-cursor-default {
+    -fx-cursor: default;
+}
+
+.chart-broken-hidden-line {
+    -fx-stroke-width: 0px;
+}
+
+/*chart symbol */
+.chart-line-symbol {
+    -fx-padding: 4px;
+    -fx-cursor: hand;
+    -fx-background-insets: 1px;
+    -fx-scale-shape: false;
+    -fx-min-width: 8px;
+    -fx-pref-width: 8px;
+    -fx-max-width: 8px;
+    -fx-pref-height: 8px;
+    -fx-min-height: 8px;
+    -fx-max-height: 8px;
+}
+
+.chart-line-symbol-hover {
+
+}
+
+.chart-line-symbol-hover:hover {
+    -fx-background-insets: 0px;
+}
+
+.chart-line-hidden-symbol {
+    -fx-background-insets: 4px;
+}
+
+.chart-path-symbol {
+    -fx-padding: 3px;
+    -fx-cursor: hand;
+    -fx-background-insets: 3px;
+}
+
+.chart-path-symbol-hover {
+
+}
+
+.chart-path-symbol-hover:hover {
+    -fx-background-insets: 1px;
+}
+
+.chart-path-hidden-symbol {
+    -fx-background-insets: 3px;
+}
+
+/* solid triangle */
+.chart-symbol-triangle {
+    -fx-cursor: hand;
+    -fx-background-insets: -2;
+    -fx-shape: "M5,3 L10,8 L0,8 Z";
+    -fx-scale-shape: false;
+}
+
+.chart-symbol-hide-triangle {
+    -fx-background-insets: 2;
+}
+
+.chart-symbol-triangle:hover {
+    -fx-background-insets: -2;
+}
+
+/* ====== AREA CHART =========================================================== */
+.chart-area-symbol {
+    -fx-background-color: transparent;
+    -fx-background-radius: 6px;
+    -fx-padding: 0px;
+}
+
+.chart-series-area-line {
+    -fx-stroke-width: 1px;
+}
+
+.chart-fill-area-line {
+    /*-fx-stroke: transparent;*/
+    -fx-opacity: 0.5;
+}
+
+/*Bar Chart*/
+.chart-bar {
+    -fx-cursor: hand;
+    -fx-stroke-width: 1px;
+}
+
+.chart-bar:hover {
+    -fx-border-width: 1 1 0 1;
+    -fx-border-color: #e92822;
+}
+
+.chart-hidden-bar {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-stroke-width: 0px;
+}
+
+/* ====== CANDLE STICK CHART =========================================================== */
+.candlestick-tooltip {
+    -fx-font-size: 12px;
+    -fx-text-fill: #222222;
+    -fx-background-color: white;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 5 10 5 10;
+    -fx-border-width: 1px;
+    -fx-border-color: #DDDDDD;
+}
+
+.candlestick-tooltip-box {
+    -fx-min-width: 80px;
+    -fx-max-width: 80px;
+    -fx-pref-width: 80px;
+}
+
+.candlestick-series {
+    -fx-opacity: 0.7;
+}
+
+.candlestick-tooltip-box > .label {
+    -fx-padding: 0 0 10 0;
+}
+
+.candlestick-bar {
+    -fx-cursor: hand;
+}
+
+.list-cell {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-base-color;
+    -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em;
+    -fx-pref-height: 22;
+}
+
+.list-view {
+    -fx-background-color: #ffffff;
+    -fx-background-insets: 0, 1;
+    -fx-effect: null;
+    -fx-border-color: #dcdcdc;
+    -fx-padding: 1, 1, 1, 1;
+    -fx-translate-y: 3;
+}
+
+.list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
+    -fx-padding: 4 0 4 5;
+    -fx-background: -fx-control-inner-background;
+}
+
+.list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: #0096ff;
+}
+
+.list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
+.list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: #0096ff;
+    -fx-background-insets: 0, 1, 2;
+}
+
+.menu-button {
+    -fx-min-width: 20px;
+    -fx-max-width: 20px;
+    -fx-pref-width: 20px;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+}
+
+.menu-icon {
+}
+
+.menu-icon > .container > .menu-button {
+    -fx-padding: 0em 0em 0em -0.63em;
+}
+
+.legend {
+    -fx-background-color: white;
+    -fx-border-width: 0;
+}
+
+.chart-legend-tooltip {
+    -fx-text-fill: rgb(34, 34, 34);
+    -fx-font-size: 12px;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+}
+
+.chart-legend-tooltip .chart-legend-item {
+    -fx-text-fill: rgb(34, 34, 34);
+}
+
+.vertical-text {
+    -fx-background-color: #f0f0f0;
+}
+
+.vertical-text .tab-header-area .tab {
+    -fx-pref-height: 100px;
+    -fx-pref-width: 22px;
+}
+
+.vertical-text .tab-header-area .tab .tab-graphic-label {
+    -fx-pref-height: 22px;
+    -fx-pref-width: 100px;
+    -fx-rotate: 90;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab {
+    -fx-border-width: 0px 0px 1px 0px;
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #e7e7e7;
+    -fx-alignment: center-left;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:selected {
+    -fx-border-width: 0px 1px 0px 1px;
+    -fx-border-color: #e7e7e7;
+    -fx-background-color: white;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:hover {
+    -fx-background-color: white;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:pressed {
+    -fx-border-color: white;
+    -fx-background-color: white;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:focused {
+    -fx-border-color: #e7e7e7;
+    -fx-border-style: solid;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:focused:hover {
+    -fx-border-color: #f0f0f0;
+    -fx-border-style: solid;
+}
+
+/*.vertical-text > .tab-header-area > .headers-region > .tab .tab-label {*/
+/*-fx-background-color: red;*/
+/*}*/
+
+
+
+
+
+
+
+
+

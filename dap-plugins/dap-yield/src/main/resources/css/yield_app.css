@@ -221,3 +221,7 @@ table
     -fx-border-style: dotted;
     -fx-border-insets: 1;
 }
+.default-color0.chart-bar { -fx-bar-fill: #7DAE14; }
+.default-color1.chart-bar { -fx-bar-fill: #487CF4; }
+.default-color2.chart-bar { -fx-bar-fill: #F38400; }
+.default-color3.chart-bar { -fx-bar-fill: RED; }

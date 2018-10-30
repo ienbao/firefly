@@ -913,35 +913,16 @@ public class YieldMainController implements Initializable {
 //    }
 
 
-    public void setYieldResultDto(YieldResultDto yieldResultDto) {
-        this.yieldResultDto = yieldResultDto;
-    }
-
-    public void YieldAnalyseChart(){
-        yieldResultController.analyzeYieldResult(yieldResultDto);
-    }
-
     public YieldChartResultController getYieldResultController() {
         return yieldResultController;
     }
 
-    public void setYieldResultController(YieldChartResultController yieldResultController) {
-        this.yieldResultController = yieldResultController;
-    }
 
     public ViewDataController getViewDataController() {
         return viewDataController;
     }
 
-    public void setViewDataController(ViewDataController viewDataController) {
-        this.viewDataController = viewDataController;
-    }
-
     public YieldItemController getYieldItemController() {
         return yieldItemController;
-    }
-
-    public void setYieldItemController(YieldItemController yieldItemController) {
-        this.yieldItemController = yieldItemController;
     }
 }
