@@ -92,7 +92,6 @@ public class YieldItemController implements Initializable {
     private SortedList<ItemTableModel> personSortedList = new SortedList<>(filteredList);
     private YieldMainController yieldMainController;
     private YieldResultDataController yieldResultDataController;
-    private ViewDataController viewDataController;
     private ContextMenu pop;
     private boolean isFilterUslOrLsl = false;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
@@ -846,7 +845,15 @@ public class YieldItemController implements Initializable {
 
         if (file != null) {
             YieldLeftConfigDto yieldLeftConfigDto = leftConfigService.importSpcConfig(file);
-            if (yieldLeftConfigDto != null) {
+            ObservableList<String> primaryKeyList = FXCollections.observableArrayList();
+            primaryKeyList.add("");
+            for (String item : originalItems) {
+                primaryKeyList.add(item);
+            }
+            if (yieldLeftConfigDto != null&&primaryKeyList.size() > 0&&primaryKeyList.contains(yieldLeftConfigDto.getPrimaryKey())) {
+
+                configComboBox.setItems(primaryKeyList);
+                configComboBox.setValue(yieldLeftConfigDto.getPrimaryKey());
                 clearLeftConfig();
                 if (yieldLeftConfigDto.getItems() != null && yieldLeftConfigDto.getItems().size() > 0) {
                     items.forEach(testItem -> {
@@ -858,8 +865,6 @@ public class YieldItemController implements Initializable {
                 if (yieldLeftConfigDto.getBasicSearchs() != null && yieldLeftConfigDto.getBasicSearchs().size() > 0) {
                     searchTab.setBasicSearch(yieldLeftConfigDto.getBasicSearchs());
                 }
-                configComboBox.setValue(yieldLeftConfigDto.getPrimaryKey());
-//TODO set topN
                 searchTab.getAdvanceText().setText(yieldLeftConfigDto.getAdvanceSearch());
                 searchTab.getGroup1().setValue(yieldLeftConfigDto.getAutoGroup1());
                 searchTab.getGroup2().setValue(yieldLeftConfigDto.getAutoGroup2());

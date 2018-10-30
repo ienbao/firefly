@@ -571,17 +571,19 @@ public class YieldServiceImpl implements YieldService {
                             if (validateValue(rowDataDto.getData().get(key), uslOrPass, lslOrFail, searchConditions.get(i).getTestItemType().getCode())) {
                                 ngFlag = ngFlag + 1;
                                 if (j == 0) {
-                                    if(oldSearchConditions.get(0).getYieldType() == YieldType.FPY || oldSearchConditions.get(0).getYieldType() == YieldType.PASS){
+                                    if(oldSearchConditions.get(0).getYieldType() == YieldType.FPY || oldSearchConditions.get(0).getYieldType() == YieldType.PASS || oldSearchConditions.get(0).getYieldType() == YieldType.TOTAL){
                                         Resultlist.add(rowKeys.get(j));
                                     }
                                     break;
 
                                 } else if (j > 0 && j <= rowKeys.size() - 1) {
-                                    if(oldSearchConditions.get(0).getYieldType() == YieldType.NTF){
+                                    if(oldSearchConditions.get(0).getYieldType() == YieldType.NTF || oldSearchConditions.get(0).getYieldType() == YieldType.TOTAL){
                                         for (int n = 0; n < j; n++) {
                                             Resultlist.add(rowKeys.get(n));
                                         }
-                                    }else if(oldSearchConditions.get(0).getYieldType() == YieldType.PASS){
+                                    }
+
+                                    if(oldSearchConditions.get(0).getYieldType() == YieldType.PASS || oldSearchConditions.get(0).getYieldType() == YieldType.TOTAL){
                                         Resultlist.add(rowKeys.get(j));
                                     }
                                     break;
@@ -591,16 +593,17 @@ public class YieldServiceImpl implements YieldService {
                             if (validateValue(rowDataDto.getData().get(key), uslOrPass, lslOrFail, searchConditions.get(i).getTestItemType().getCode())) {
                                 ngFlag = ngFlag + 1;
                                 if (j == 0) {
-                                    if(oldSearchConditions.get(0).getYieldType() == YieldType.FPY || oldSearchConditions.get(0).getYieldType() == YieldType.PASS){
+                                    if(oldSearchConditions.get(0).getYieldType() == YieldType.FPY || oldSearchConditions.get(0).getYieldType() == YieldType.PASS || oldSearchConditions.get(0).getYieldType() == YieldType.TOTAL){
                                         Resultlist.add(rowKeys.get(j));
                                     }
                                     break;
                                 } else if (j > 0 && j <= rowKeys.size() - 1) {
-                                    if(oldSearchConditions.get(0).getYieldType() == YieldType.NTF){
+                                    if(oldSearchConditions.get(0).getYieldType() == YieldType.NTF || oldSearchConditions.get(0).getYieldType() == YieldType.TOTAL){
                                         for (int n = 0; n < j; n++) {
                                             Resultlist.add(rowKeys.get(n));
                                         }
-                                    }else if(oldSearchConditions.get(0).getYieldType() == YieldType.PASS){
+                                    }
+                                    if(oldSearchConditions.get(0).getYieldType() == YieldType.PASS || oldSearchConditions.get(0).getYieldType() == YieldType.TOTAL){
                                         Resultlist.add(rowKeys.get(j));
                                     }
                                     break;
@@ -610,7 +613,7 @@ public class YieldServiceImpl implements YieldService {
                     }
 
                     if(j == rowKeys.size()) {
-                        if (oldSearchConditions.get(0).getYieldType() == YieldType.NG) {
+                        if (oldSearchConditions.get(0).getYieldType() == YieldType.NG || oldSearchConditions.get(0).getYieldType() == YieldType.TOTAL) {
                             for (int n = 0; n < rowKeys.size(); n++) {
                                 Resultlist.add(rowKeys.get(n));
                             }
@@ -619,11 +622,6 @@ public class YieldServiceImpl implements YieldService {
 
                 }
 
-                if(oldSearchConditions.get(0).getYieldType() == YieldType.TOTAL){
-                    for (int n = 0; n < searchRowKeys.size(); n++) {
-                        Resultlist.add(searchRowKeys.get(n));
-                    }
-                }
                 yieldViewDataResultDto.setItemName(searchConditions.get(i).getItemName());
                 yieldViewDataResultDto.setPrimary(configDto.getPrimaryKey());
                 yieldViewDataResultDto.setResultlist(Resultlist);

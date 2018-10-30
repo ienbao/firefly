@@ -57,7 +57,6 @@ public class ViewDataModel implements TableModel {
     private List<String> initSelectedRowKeys;
     private Set<String> highLightRowKeys;
     private String initSelectedColumnKeys;
-    private List<SearchConditionDto> searchViewDataConditionDtoList;
     private Map<String, TestItemWithTypeDto> testItemDtoMap;
     private Map<String, ReadOnlyStringProperty> cellMap;
     private boolean isTimer = false;
@@ -149,8 +148,7 @@ public class ViewDataModel implements TableModel {
         this.cellMap = Maps.newHashMap();
     }
 
-    public void setSearchViewDataConditionDto(List<SearchConditionDto> searchViewDataConditionDtoList) {
-        this.searchViewDataConditionDtoList = searchViewDataConditionDtoList;
+    public void setTestItemDtoMap(List<SearchConditionDto> searchViewDataConditionDtoList) {
         if (searchViewDataConditionDtoList == null) {
             testItemDtoMap = null;
             return;

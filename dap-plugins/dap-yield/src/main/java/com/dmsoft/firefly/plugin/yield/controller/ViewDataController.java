@@ -1,6 +1,5 @@
 package com.dmsoft.firefly.plugin.yield.controller;
 
-import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.dialog.ChooseTestItemDialog;
 import com.dmsoft.firefly.gui.components.skin.ExpandableTableViewSkin;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
@@ -59,7 +58,7 @@ public class ViewDataController implements Initializable {
     private YieldMainController yieldMainController;
     private ViewDataModel model;
     private SearchDataFrame dataFrame;
-    private List<SearchConditionDto> searchViewDataConditionDto;
+    private List<SearchConditionDto> searchViewDataConditionDto = Lists.newArrayList();
     private List<String> selectedRowKeys;
     private List<String> testItemNames;
     private Map<String, FilterSettingAndGraphic> columnFilterSetting = Maps.newHashMap();
@@ -122,10 +121,10 @@ public class ViewDataController implements Initializable {
      *
      * @param dataFrame                         search data frame
      * @param selectedRowKey                    selected row key
-     * @param statisticalSearchConditionDtoList statisticalSearchConditionDtoList
+     * @param searchViewDataConditionDto searchViewDataConditionDto
      */
-    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList, String rowKey, String columnLable,String flag) {
-        this.setViewData(dataFrame, selectedRowKey, statisticalSearchConditionDtoList, false, rowKey, columnLable,flag);
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> searchViewDataConditionDto, String rowKey, String columnLable,String flag) {
+        this.setViewData(dataFrame, selectedRowKey, searchViewDataConditionDto, false, rowKey, columnLable,flag);
     }
 
     /**
@@ -133,11 +132,11 @@ public class ViewDataController implements Initializable {
      *
      * @param dataFrame                         search data frame
      * @param selectedRowKey                    selected row key
-     * @param statisticalSearchConditionDtoList statisticalSearchConditionDtoList
+     * @param searchViewDataConditionDto searchViewDataConditionDto
      * @param isTimer                           isTimer
      */
-    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> statisticalSearchConditionDtoList, boolean isTimer, String rowKey, String columnLable,String flag) {
-        this.setViewData(dataFrame, selectedRowKey, statisticalSearchConditionDtoList, isTimer, isTimer, rowKey, columnLable,flag);
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> searchViewDataConditionDto, boolean isTimer, String rowKey, String columnLable,String flag) {
+        this.setViewData(dataFrame, selectedRowKey, searchViewDataConditionDto, isTimer, isTimer, rowKey, columnLable,flag);
     }
 
 
@@ -149,7 +148,9 @@ public class ViewDataController implements Initializable {
      * @param searchViewDataConditionDto statisticalSearchConditionDtoList
      */
     private void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> searchViewDataConditionDto, boolean isTimer, boolean isAutoRefresh, String rowKey, String columnLable,String flag) {
-        this.searchViewDataConditionDto = searchViewDataConditionDto;
+        if (searchViewDataConditionDto != null) {
+            this.searchViewDataConditionDto.addAll(searchViewDataConditionDto);
+        }
         this.selectedRowKeys = selectedRowKey;
         this.rowKey = rowKey;
         this.columnLabel = columnLable;
@@ -198,7 +199,7 @@ public class ViewDataController implements Initializable {
         this.vbox.setAlignment(Pos.CENTER);
         this.vbox.getChildren().add(viewDataTable);
         this.model = new ViewDataModel(dataFrame, selectedRowKey);
-        this.model.setSearchViewDataConditionDto(searchViewDataConditionDto);
+        this.model.setTestItemDtoMap(searchViewDataConditionDto);
         this.model.setMainController(yieldMainController);
 
         TableViewWrapper.decorate(viewDataTable, model);
