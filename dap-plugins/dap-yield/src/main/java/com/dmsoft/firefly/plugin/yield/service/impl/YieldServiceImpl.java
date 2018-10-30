@@ -581,7 +581,9 @@ public class YieldServiceImpl implements YieldService {
                                         for (int n = 0; n < j; n++) {
                                             Resultlist.add(rowKeys.get(n));
                                         }
-                                    }else if(oldSearchConditions.get(0).getYieldType() == YieldType.PASS || oldSearchConditions.get(0).getYieldType() == YieldType.TOTAL){
+                                    }
+
+                                    if(oldSearchConditions.get(0).getYieldType() == YieldType.PASS || oldSearchConditions.get(0).getYieldType() == YieldType.TOTAL){
                                         Resultlist.add(rowKeys.get(j));
                                     }
                                     break;
@@ -600,7 +602,8 @@ public class YieldServiceImpl implements YieldService {
                                         for (int n = 0; n < j; n++) {
                                             Resultlist.add(rowKeys.get(n));
                                         }
-                                    }else if(oldSearchConditions.get(0).getYieldType() == YieldType.PASS || oldSearchConditions.get(0).getYieldType() == YieldType.TOTAL){
+                                    }
+                                    if(oldSearchConditions.get(0).getYieldType() == YieldType.PASS || oldSearchConditions.get(0).getYieldType() == YieldType.TOTAL){
                                         Resultlist.add(rowKeys.get(j));
                                     }
                                     break;
