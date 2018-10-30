@@ -22,5 +22,10 @@ public class UIConstant {
     public static final String Number_3="Number_3";
     public static final String Number_4="Number_4";
     public static final String Number_5="Number_5";
+    public static final String Number_6="Number_6";
+    public static final String Number_7="Number_7";
+    public static final String Number_8="Number_8";
+    public static final String Number_9="Number_9";
+    public static final String Number_10="Number_10";
 
 }
