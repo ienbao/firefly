@@ -30,7 +30,7 @@
       then
       chmod 777 installmongo.sh
       ./installmongo.sh start
-      exec java -Djava.library.path=${R_HOME}/library/rJava/jri -jar dap-gui-2.5.0-SNAPSHOT.jar
+      exec java -Djava.library.path=${R_HOME}/library/rJava/jri -jar dap-gui-2.5.1-SNAPSHOT.jar
     else
         echo “DAP has been running.”
     fi

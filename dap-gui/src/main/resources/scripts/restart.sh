@@ -24,5 +24,5 @@
         shift
     done
     echo  ${new[@]}
-    exec java -jar dap-restart-2.5.0-SNAPSHOT.jar ${new[@]} >> log/dap_restart_"$now".log &
+    exec java -jar dap-restart-2.5.1-SNAPSHOT.jar ${new[@]} >> log/dap_restart_"$now".log &
 
