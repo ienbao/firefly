@@ -59,7 +59,7 @@ public class YieldChartResultController implements Initializable {
         resultNTFNum.getItems().addAll(
                 YieldFxmlAndLanguageUtils.getString(UIConstant.Number_5),
                 YieldFxmlAndLanguageUtils.getString(UIConstant.Number_10));
-        resultNTFNum.setValue(YieldFxmlAndLanguageUtils.getString(UIConstant.Number_10));
+        resultNTFNum.setValue(YieldFxmlAndLanguageUtils.getString(UIConstant.Number_5));
         resultNTFNum.setOnAction(event -> fireResultBasedCmbChangeEvent());
 
     }
