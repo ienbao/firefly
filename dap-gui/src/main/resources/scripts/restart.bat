@@ -3,7 +3,7 @@ set JRE_HOME=%~dp0jre
 set PATH=%JRE_HOME%\bin;%JRE_HOME%\bin\server;%PATH%;%HOME%\bin
 set CLASSPATH=%CLASSPATH%;%JRE_HOME%\lib;
 set PARAMS=%*%
-set APP_JAR=dap-restart-2.5.0-SNAPSHOT.jar
+set APP_JAR=dap-restart-2.5.1-SNAPSHOT.jar
 set LOG=log
 
 set ID=
