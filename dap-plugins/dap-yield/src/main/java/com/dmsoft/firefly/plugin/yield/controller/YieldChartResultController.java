@@ -55,21 +55,16 @@ public class YieldChartResultController implements Initializable {
         this.removeBarChartResultItemAllResultData();
         yieldBarChart.setAnimated(false);
         yieldbarChartItem.setAnimated(false);
-        resultNTFNum.setDisable(false);
         resultNTFNum.getItems().addAll(
                 YieldFxmlAndLanguageUtils.getString(UIConstant.Number_5),
                 YieldFxmlAndLanguageUtils.getString(UIConstant.Number_10));
-        resultNTFNum.setValue(YieldFxmlAndLanguageUtils.getString(UIConstant.Number_5));
         resultNTFNum.setOnAction(event -> fireResultBasedCmbChangeEvent());
-
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initI18n();
         this.yieldResultDataController.init(this);
-
-
         YieldAnalysisConfigDto yieldAnalysisConfigDto = this.getYieldConfigPreference();
         if (yieldAnalysisConfigDto == null) {
             yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
@@ -91,12 +86,14 @@ public class YieldChartResultController implements Initializable {
     }
 
     public void analyzeYieldResult(YieldChartResultAlermDto yieldChartResultAlermDto) {
+        resultNTFNum.setDisable(false);
         //清除分析之前的数据
         this.removeBarChartAllResultData();
         while (yieldChartResultAlermDto == null) {
             continue;
         }
         this.setAnalysisBarChartResultData(yieldChartResultAlermDto);
+
     }
 
     private void removeBarChartAllResultData() {
