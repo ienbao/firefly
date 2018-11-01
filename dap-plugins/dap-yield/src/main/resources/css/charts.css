@@ -79,108 +79,6 @@
 .hidden-line {
     -fx-stroke-width: 0px;
 }
-
-/* ====== LINE CHART =========================================================== */
-
-/*chart line style*/
-.chart-series-line {
-    -fx-cursor: hand;
-    -fx-stroke-width: 1px;
-}
-
-.chart-series-hidden-line {
-    -fx-stroke-width: 0px;
-}
-
-.chart-broken-line {
-    -fx-stroke-width: 2px;
-    -fx-stroke-dash-array: 5px;
-}
-
-.chart-point-cursor-default {
-    -fx-cursor: default;
-}
-
-.chart-broken-hidden-line {
-    -fx-stroke-width: 0px;
-}
-
-/*chart symbol */
-.chart-line-symbol {
-    -fx-padding: 4px;
-    -fx-cursor: hand;
-    -fx-background-insets: 1px;
-    -fx-scale-shape: false;
-    -fx-min-width: 8px;
-    -fx-pref-width: 8px;
-    -fx-max-width: 8px;
-    -fx-pref-height: 8px;
-    -fx-min-height: 8px;
-    -fx-max-height: 8px;
-}
-
-.chart-line-symbol-hover {
-
-}
-
-.chart-line-symbol-hover:hover {
-    -fx-background-insets: 0px;
-}
-
-.chart-line-hidden-symbol {
-    -fx-background-insets: 4px;
-}
-
-.chart-path-symbol {
-    -fx-padding: 3px;
-    -fx-cursor: hand;
-    -fx-background-insets: 3px;
-}
-
-.chart-path-symbol-hover {
-
-}
-
-.chart-path-symbol-hover:hover {
-    -fx-background-insets: 1px;
-}
-
-.chart-path-hidden-symbol {
-    -fx-background-insets: 3px;
-}
-
-/* solid triangle */
-.chart-symbol-triangle {
-    -fx-cursor: hand;
-    -fx-background-insets: -2;
-    -fx-shape: "M5,3 L10,8 L0,8 Z";
-    -fx-scale-shape: false;
-}
-
-.chart-symbol-hide-triangle {
-    -fx-background-insets: 2;
-}
-
-.chart-symbol-triangle:hover {
-    -fx-background-insets: -2;
-}
-
-/* ====== AREA CHART =========================================================== */
-.chart-area-symbol {
-    -fx-background-color: transparent;
-    -fx-background-radius: 6px;
-    -fx-padding: 0px;
-}
-
-.chart-series-area-line {
-    -fx-stroke-width: 1px;
-}
-
-.chart-fill-area-line {
-    /*-fx-stroke: transparent;*/
-    -fx-opacity: 0.5;
-}
-
 /*Bar Chart*/
 .chart-bar {
     -fx-cursor: hand;
@@ -189,7 +87,7 @@
 
 .chart-bar:hover {
     -fx-border-width: 1 1 0 1;
-    -fx-border-color: #e92822;
+    /*-fx-border-color: #e92822;*/
 }
 
 .chart-hidden-bar {
