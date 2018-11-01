@@ -39,20 +39,13 @@ public class YieldPlugin extends Plugin {
     @Override
     public void initialize(InitModel model) {
         YieldServiceImpl yieldService = new YieldServiceImpl();
-//        SpcAnalysisServiceImpl spcAnalysisService = new SpcAnalysisServiceImpl();
         YieldSettingService yieldSettingService = new YieldSettingServiceImpl();
-//        yieldService.setAnalysisService(spcAnalysisService);
         RuntimeContext.registerBean(YieldService.class, yieldService);
-//        RuntimeContext.registerBean(SpcAnalysisService.class, spcAnalysisService);
         RuntimeContext.registerBean(YieldSettingService.class, yieldSettingService);
         RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(Yield_PLUGIN_NAME,
-                "YieldServiceImpl", yieldService);
-
-//        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(Yield_PLUGIN_NAME,
-//                "com.dmsoft.firefly.plugin.yield.service.impl.SpcAnalysisServiceImpl", spcAnalysisService);
-//
-//        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(Yield_PLUGIN_NAME,
-//                "com.dmsoft.firefly.plugin.yield.service.impl.SpcSettingServiceImpl", spcSettingService);
+                "com.dmsoft.firefly.plugin.yield.service.impl.YieldServiceImpl", yieldService);
+        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(Yield_PLUGIN_NAME,
+                "com.dmsoft.firefly.plugin.yield.service.impl.YieldSettingServiceImpl", yieldSettingService);
         LOGGER.info("Plugin-Yield Initialized.");
     }
 
@@ -81,7 +74,7 @@ public class YieldPlugin extends Plugin {
         LOGGER.info("Plugin-Yield started.");
 
         //register spc setting menu
-        MenuItem menuItem = new MenuItem(YieldFxmlAndLanguageUtils.getString("MENU_Yield_SETTING"));
+        MenuItem menuItem = new MenuItem(YieldFxmlAndLanguageUtils.getString("MENU_YIELD_SETTING"));
         menuItem.setId("yieldSetting");
         menuItem.setMnemonicParsing(true);
         menuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));

@@ -33,11 +33,15 @@ public class YieldSettingServiceImpl implements YieldSettingService, IConfig {
 
     @Override
     public String getConfigName(){
-        return "MENU_Yield_SETTING";
+        return "MENU_YIELD_SETTING";
     }
 
     @Override
     public byte[] exportConfig() {
+        YieldSettingDto yieldSettingDto=findYieldSetting();
+        if (yieldSettingDto != null ) {
+            return jsonMapper.toJson(yieldSettingDto).getBytes();
+        }
         return new byte[0];
     }
 
@@ -46,6 +50,8 @@ public class YieldSettingServiceImpl implements YieldSettingService, IConfig {
         if (config == null) {
             return;
         }
+        YieldSettingDto yieldSettingDto = jsonMapper.fromJson(new String(config), YieldSettingDto.class);
+        saveYieldSetting(yieldSettingDto);
     }
 
     @Override
@@ -210,7 +216,6 @@ public class YieldSettingServiceImpl implements YieldSettingService, IConfig {
 
         JsonFileUtil.writeJsonFile(yieldSettingDto, path, ParamKeys.YIELD_SETTING_FILE_NAME);
     }
-
 
 
 }
