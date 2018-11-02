@@ -71,7 +71,7 @@ public class RangeUtils {
      */
     public static boolean isPass(String value, TestItemWithTypeDto typeDto) {
         if (value != null && typeDto != null && DAPStringUtils.isNumeric(value) && TestItemType.VARIABLE.equals(typeDto.getTestItemType())) {
-            Double valueD = Double.valueOf(value);
+                Double valueD = Double.valueOf(value);
             if (DAPStringUtils.isNumeric(typeDto.getUsl())) {
                 Double ul = Double.valueOf(typeDto.getUsl());
                 if (valueD > ul) {
@@ -85,4 +85,61 @@ public class RangeUtils {
         }
         return true;
     }
+
+    public static boolean validateValue(String value, TestItemWithTypeDto typeDto){
+        if (value != null && typeDto != null && DAPStringUtils.isNumeric(value) && TestItemType.VARIABLE.equals(typeDto.getTestItemType())) {
+            Double upperLimited = null;
+            Double lowerLimited = null;
+            Double testItemValue = null;
+            if (DAPStringUtils.isNumeric(typeDto.getUsl())) {
+                upperLimited = Double.parseDouble(typeDto.getUsl());
+            }
+            if (DAPStringUtils.isNumeric(typeDto.getLsl())) {
+                lowerLimited = Double.parseDouble(typeDto.getLsl());
+            }
+            if (DAPStringUtils.isNumeric(value)) {
+                testItemValue = Double.parseDouble(value);
+            }
+            if (upperLimited != null && lowerLimited != null) {
+                if (testItemValue <= upperLimited && testItemValue >= lowerLimited) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else if (upperLimited != null) {
+                if (testItemValue <= upperLimited) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else if (lowerLimited != null) {
+                if (testItemValue >= lowerLimited) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }else if(value != null && typeDto != null && TestItemType.ATTRIBUTE.equals(typeDto.getTestItemType())){
+            if (value.equals(typeDto.getUsl())) {
+                return true;
+            }
+            if (value.equals(typeDto.getLsl())) {
+                return false;
+            }
+            if (DAPStringUtils.isBlank(typeDto.getLsl()) && !value.equals(typeDto.getUsl())) {
+                return false;
+            }
+            if (DAPStringUtils.isBlank(typeDto.getUsl()) && !value.equals(typeDto.getLsl())) {
+                return true;
+            } else {
+                return false;
+            }
+        }else{
+            return true;
+        }
+    }
 }
+
+
