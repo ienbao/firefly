@@ -52,6 +52,7 @@ public class YieldMainController implements Initializable {
 
     @FXML
     private YieldChartResultController yieldResultController;
+
     private SearchDataFrame dataFrame;
     private YieldAnalysisConfigDto analysisConfigDto;
     private List<SearchConditionDto> initSearchConditionDtoList;
@@ -170,6 +171,12 @@ public class YieldMainController implements Initializable {
                 YieldRefreshJudgeUtil.newInstance().setOverViewSelectRowKeyListCache(null);
                 List<YieldOverviewResultAlarmDto> YieldOverviewAlarmDtoList = (List<YieldOverviewResultAlarmDto>) context.get(ParamKeys.YIELD_STATISTICAL_RESULT_ALARM_DTO_LIST);
                 setOverviewResultData(YieldOverviewAlarmDtoList, null, false);
+                YieldResultDto yieldResultDto = (YieldResultDto) context.get(ParamKeys.YIELD_RESULT_DTO);
+                YieldAnalysisConfigDto yieldAnalysisConfigDto = (YieldAnalysisConfigDto) context.get(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO);
+                yieldResultController.getYieldResultDataController().setOverviewResultData(yieldResultDto.getTotalProcessesDtos(),yieldAnalysisConfigDto.getPrimaryKey(),false);
+                getYieldResultController().analyzeYieldResult(context.getParam(ParamKeys.YIELD_DETAILCHART_ALARM_DTO,YieldChartResultAlermDto.class));
+                getYieldResultController().ananlyzeyieldResultItem(context.getParam(ParamKeys.YIELD_RESULT_DTO,YieldResultDto.class));
+                viewDataController.clearViewData();
                 windowProgressTipController.closeDialog();
                 clearAnalysisSubShowData();
             }
@@ -376,7 +383,13 @@ public class YieldMainController implements Initializable {
             @Override
             public void doJob(JobContext context) {
                 List<YieldOverviewResultAlarmDto> spcStatisticalResultAlarmDtoList = (List<YieldOverviewResultAlarmDto>) context.get(ParamKeys.YIELD_STATISTICAL_RESULT_ALARM_DTO_LIST);
+                YieldResultDto yieldResultDto = (YieldResultDto) context.get(ParamKeys.YIELD_RESULT_DTO);
                 overViewController.setTimerOverviewResultTableData(spcStatisticalResultAlarmDtoList,null,false);
+                YieldAnalysisConfigDto yieldAnalysisConfigDto = (YieldAnalysisConfigDto) context.get(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO);
+                yieldResultController.getYieldResultDataController().setOverviewResultData(yieldResultDto.getTotalProcessesDtos(),yieldAnalysisConfigDto.getPrimaryKey(),false);
+                getYieldResultController().analyzeYieldResult(context.getParam(ParamKeys.YIELD_DETAILCHART_ALARM_DTO,YieldChartResultAlermDto.class));
+                getYieldResultController().ananlyzeyieldResultItem(context.getParam(ParamKeys.YIELD_RESULT_DTO,YieldResultDto.class));
+                viewDataController.clearViewData();
                 windowProgressTipController.closeDialog();
                 logger.info("Refresh Spc statistical data finish.");
             }

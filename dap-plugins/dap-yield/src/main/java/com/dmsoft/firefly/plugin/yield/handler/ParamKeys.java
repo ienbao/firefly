@@ -6,6 +6,7 @@ public class ParamKeys {
     public static final String ROW_DATA_DTO_LIST = "rowDataDtoList";
     public static final String SEARCH_DATA_FRAME = "searchDataFrame";
     public static final String SEARCH_CONDITION_DTO_LIST = "searchConditionDtoList";
+    public static final String VIEW_SEARCH_CONDITION_DTO_LIST = "viewSearchConditionDtoList";
     public static final String YIELD_ANALYSIS_CONFIG_DTO = "yieldAnalysisConfigDto";
     public static final String YIELD_SETTING_DTO = "yieldSettingDto";
     public static final String SPC_CHART_DTO_LIST = "spcChartDtoList";
