@@ -93,7 +93,7 @@ public class OverViewController implements Initializable {
         dataFrame = yieldMainController.getDataFrame();
         List<String> projectNameList = envService.findActivatedProjectName();
 
-        List<SearchConditionDto> searchConditionDtoList = yieldMainController.getInitSearchConditionDtoList();
+        List<SearchConditionDto> searchConditionDtoList = yieldItemController.buildSearchConditionDataList(yieldItemController.initSelectedItemDto());
         YieldAnalysisConfigDto yieldAnalysisConfigDto = yieldMainController.getAnalysisConfigDto();
         List<SearchConditionDto> selectSearchConditionDtoList = Lists.newArrayList();
         selectSearchConditionDtoList.add(searchConditionDtoList.get(0));
@@ -122,7 +122,8 @@ public class OverViewController implements Initializable {
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
         context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
         context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
-        context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, selectSearchConditionDtoList);
+        context.put(ParamKeys.VIEW_SEARCH_CONDITION_DTO_LIST, selectSearchConditionDtoList);
+        context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, yieldAnalysisConfigDto);
 
 
