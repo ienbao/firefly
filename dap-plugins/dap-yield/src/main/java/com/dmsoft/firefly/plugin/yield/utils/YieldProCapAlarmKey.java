@@ -7,9 +7,9 @@ package com.dmsoft.firefly.plugin.yield.utils;
  * Created by Ethan.Yang on 2018/3/14.
  */
 public enum YieldProCapAlarmKey {
-    NTFPER("NtfPercent"),
-    FPYPER("FpyPercent"),
-    NGPER("NgPercent");
+    NTFPER("%FPY"),
+    FPYPER("%NTF"),
+    NGPER("%NG");
 
     private String code;
 

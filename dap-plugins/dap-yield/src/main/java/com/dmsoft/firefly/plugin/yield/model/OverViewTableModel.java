@@ -5,6 +5,7 @@ import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.utils.ValidateUtils;
 import com.dmsoft.firefly.plugin.yield.dto.OverviewAlarmDto;
+import com.dmsoft.firefly.plugin.yield.dto.ViewDataParamDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
 import com.dmsoft.firefly.plugin.yield.service.YieldService;
 import com.dmsoft.firefly.plugin.yield.utils.*;
@@ -368,7 +369,12 @@ public class OverViewTableModel implements TableModel {
             YieldOverviewResultAlarmDto yieldStatsDto = keyToStatsDtoMap.get(rowKey);
             tableCell.setOnMouseClicked(event -> {
                 if (clickListener != null) {
-                    clickListener.executeAnalyzeDetail(yieldStatsDto.getItemName(), finalColumn);
+                    ViewDataParamDto viewDataParamDto = new ViewDataParamDto();
+                    viewDataParamDto.setColumn(finalColumn);
+                    viewDataParamDto.setItemName(yieldStatsDto.getItemName());
+                    viewDataParamDto.setLsl(yieldStatsDto.getLslOrFail());
+                    viewDataParamDto.setUsl(yieldStatsDto.getUslOrPass());
+                    clickListener.executeAnalyzeDetail(viewDataParamDto);
                 }
             });
             tableCell.setCursor(Cursor.HAND);
@@ -690,83 +696,72 @@ public class OverViewTableModel implements TableModel {
             textField.setText(oldText);
             return true;
         }
-        if (DAPStringUtils.isBlank(newText)) {
-            errorEditorCell.add(rowKey + "-" + columnName);
-            if (!textField.getStyleClass().contains("text-field-error")) {
-                textField.getStyleClass().add("text-field-error");
-            }
-            TooltipUtil.installWarnTooltip(textField, YieldFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_USL_LSL_EMPTY));
-            return true;
-        }
-        YieldOverviewResultAlarmDto spcStatsDto = keyToStatsDtoMap.get(rowKey);
-        if (spcStatsDto.getTestItemType().getCode().equals("Variable")){
+        YieldOverviewResultAlarmDto yieldOverviewResultAlarmDto = keyToStatsDtoMap.get(rowKey);
+        if (yieldOverviewResultAlarmDto.getTestItemType().getCode().equals("Variable")) {
             if (!ValidateUtils.validatePattern(newText, ValidateUtils.DOUBLE_PATTERN)) {
                 textField.setText(oldText);
                 return true;
             }
+
             if (columnName.equals(YIELD_TITLE[1])) {
-                SourceObjectProperty uslProperty = valueMap.get(rowKey + "-" + YIELD_TITLE[2]);
-                if (!DAPStringUtils.isNumeric((String) uslProperty.getValue())) {
-                    return false;
-                }
-                Double usl = Double.valueOf((String) uslProperty.getValue());
-                if (!DAPStringUtils.isNumeric(newText) || Double.valueOf(newText) >= usl) {
-                    errorEditorCell.add(rowKey + "-" + columnName);
-                    if (!textField.getStyleClass().contains("text-field-error")) {
-                        textField.getStyleClass().add("text-field-error");
-                    }
-                    TooltipUtil.installWarnTooltip(textField, YieldFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_LSL_MORE_THEN_USL));
-                    return true;
-                } else if (errorEditorCell.contains(rowKey + "-" + YIELD_TITLE[2])) {
-                    errorEditorCell.remove(rowKey + "-" + YIELD_TITLE[2]);
-                    if (uslProperty.isError()) {
-                        uslProperty.setError(false);
-                        spcStatsDto.setUslOrPass(usl+"");
+                SourceObjectProperty uslProperty = valueMap.get(rowKey + "-" +  YIELD_TITLE[2]);
+
+                if (!DAPStringUtils.isBlank((String) uslProperty.getValue())) {
+                    Double usl = Double.valueOf((String) uslProperty.getValue());
+                    if (DAPStringUtils.isBlank(newText)) {
+                        if (errorEditorCell.contains(rowKey + "-" +YIELD_TITLE[2]) && uslProperty.isError()) {
+                            uslProperty.setError(false);
+                            yieldOverviewResultAlarmDto.setUslOrPass(usl.toString());
+                        }
+                    } else {
+                        if (Double.valueOf(newText) >= usl) {
+                            errorEditorCell.add(rowKey + "-" + columnName);
+                            if (!textField.getStyleClass().contains("text-field-error")) {
+                                textField.getStyleClass().add("text-field-error");
+                            }
+                            TooltipUtil.installWarnTooltip(textField, YieldFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_LSL_MORE_THEN_USL));
+                            return true;
+                        } else if (errorEditorCell.contains(rowKey + "-" + YIELD_TITLE[2])) {
+                            errorEditorCell.remove(rowKey + "-" + YIELD_TITLE[2]);
+                            if (uslProperty.isError()) {
+                                uslProperty.setError(false);
+                                yieldOverviewResultAlarmDto.setUslOrPass(usl.toString());
+                            }
+                        }
                     }
                 }
             } else if (columnName.equals(YIELD_TITLE[2])) {
                 SourceObjectProperty lslProperty = valueMap.get(rowKey + "-" + YIELD_TITLE[1]);
-                if (!DAPStringUtils.isNumeric((String) lslProperty.getValue())) {
-                    return false;
-                }
-                Double lsl = Double.valueOf((String) lslProperty.getValue());
-                if (Double.valueOf(newText) <= lsl) {
-                    errorEditorCell.add(rowKey + "-" + columnName);
-                    if (!textField.getStyleClass().contains("text-field-error")) {
-                        textField.getStyleClass().add("text-field-error");
-                    }
-                    TooltipUtil.installWarnTooltip(textField, YieldFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_USL_LESS_THEN_LSL));
-                    return true;
-                } else if (errorEditorCell.contains(rowKey + "-" + YIELD_TITLE[1])) {
-                    errorEditorCell.remove(rowKey + "-" + YIELD_TITLE[1]);
-                    if (lslProperty.isError()) {
-                        lslProperty.setError(false);
-                        spcStatsDto.setLslOrFail(lsl+"");
+                if (!DAPStringUtils.isBlank((String) lslProperty.getValue())) {
+                    Double lsl = Double.valueOf((String) lslProperty.getValue());
+                    if (DAPStringUtils.isBlank(newText)) {
+                        if (lslProperty.isError() && errorEditorCell.contains(rowKey + "-" + YIELD_TITLE[1])) {
+                            lslProperty.setError(false);
+                            yieldOverviewResultAlarmDto.setLslOrFail(lsl.toString());
+                        }
+                    } else {
+                        if (Double.valueOf(newText) <= lsl) {
+                            errorEditorCell.add(rowKey + "-" + columnName);
+                            if (!textField.getStyleClass().contains("text-field-error")) {
+                                textField.getStyleClass().add("text-field-error");
+                            }
+                            TooltipUtil.installWarnTooltip(textField, YieldFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_USL_LESS_THEN_LSL));
+                            return true;
+                        } else if (errorEditorCell.contains(rowKey + "-" + YIELD_TITLE[1])) {
+                            errorEditorCell.remove(rowKey + "-" + YIELD_TITLE[1]);
+                            if (lslProperty.isError()) {
+                                lslProperty.setError(false);
+                                yieldOverviewResultAlarmDto.setLslOrFail(lsl.toString());
+                            }
+                        }
                     }
                 }
             }
-        }else if (spcStatsDto.getTestItemType().getCode().equals("Attribute")){
-            if (DAPStringUtils.isBlank(newText)){
-                errorEditorCell.add(rowKey + "-" + columnName);
-                if (!textField.getStyleClass().contains("text-field-error")) {
-                    textField.getStyleClass().add("text-field-error");
-                }
-                TooltipUtil.installWarnTooltip(textField, YieldFxmlAndLanguageUtils.getString(ResourceMassages.SPC_STATISTICAL_USL_LESS_THEN_LSL));
-                return true;
-            }else{
-                errorEditorCell.remove(rowKey + "-" + columnName);
-                return false;
-            }
-
         }
-
-        if (errorEditorCell.contains(rowKey + "-" + columnName)) {
-            errorEditorCell.remove(rowKey + "-" + columnName);
+        if (textField.getStyleClass().contains("text-field-error")) {
             textField.getStyleClass().removeAll("text-field-error");
-            TooltipUtil.uninstallWarnTooltip(textField);
-            return false;
         }
-        textField.getStyleClass().removeAll("text-field-error");
+        errorEditorCell.remove(rowKey + "-" + columnName);
         TooltipUtil.uninstallWarnTooltip(textField);
         return false;
     }

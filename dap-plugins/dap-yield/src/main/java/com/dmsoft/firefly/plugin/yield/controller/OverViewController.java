@@ -2,13 +2,10 @@ package com.dmsoft.firefly.plugin.yield.controller;
 
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
-import com.dmsoft.firefly.plugin.yield.dto.YieldAnalysisConfigDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
-import com.dmsoft.firefly.plugin.yield.dto.YieldViewDataResultDto;
+import com.dmsoft.firefly.plugin.yield.dto.*;
 import com.dmsoft.firefly.plugin.yield.handler.ParamKeys;
 import com.dmsoft.firefly.plugin.yield.service.YieldService;
 import com.dmsoft.firefly.plugin.yield.utils.*;
-import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
 import com.dmsoft.firefly.plugin.yield.model.OverViewTableModel;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -85,16 +82,18 @@ public class OverViewController implements Initializable {
 
 
     private void initComponentEvents() {
-        overViewTableModel.setClickListener((rowKey, column) -> fireClickEvent(rowKey, column));
+        overViewTableModel.setClickListener((ViewDataParamDto) -> fireClickEvent(ViewDataParamDto));
     }
 
-    public void fireClickEvent(String rowKey, String column) {
+    public void fireClickEvent(ViewDataParamDto viewDataParamDto) {
+        String rowKey = viewDataParamDto.getItemName();
+        String column = viewDataParamDto.getColumn();
         yieldItemController = yieldMainController.getYieldItemController();
         viewDataController = yieldMainController.getViewDataController();
         dataFrame = yieldMainController.getDataFrame();
         List<String> projectNameList = envService.findActivatedProjectName();
 
-        List<SearchConditionDto> searchConditionDtoList = yieldMainController.getInitSearchConditionDtoList();
+        List<SearchConditionDto> searchConditionDtoList = yieldItemController.buildSearchConditionDataList(yieldItemController.initSelectedItemDto());
         YieldAnalysisConfigDto yieldAnalysisConfigDto = yieldMainController.getAnalysisConfigDto();
         List<SearchConditionDto> selectSearchConditionDtoList = Lists.newArrayList();
         selectSearchConditionDtoList.add(searchConditionDtoList.get(0));
@@ -104,6 +103,9 @@ public class OverViewController implements Initializable {
                 selectSearchConditionDtoList.add(searchConditionDtoList.get(i));
             }
         }
+
+        selectSearchConditionDtoList.get(1).setUslOrPass(viewDataParamDto.getUsl());
+        selectSearchConditionDtoList.get(1).setLslOrFail(viewDataParamDto.getLsl());
 
         if(column.equals("FPY Samples")) {
             selectSearchConditionDtoList.get(0).setYieldType(YieldType.FPY);
@@ -120,7 +122,8 @@ public class OverViewController implements Initializable {
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
         context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
         context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
-        context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, selectSearchConditionDtoList);
+        context.put(ParamKeys.VIEW_SEARCH_CONDITION_DTO_LIST, selectSearchConditionDtoList);
+        context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, yieldAnalysisConfigDto);
 
 

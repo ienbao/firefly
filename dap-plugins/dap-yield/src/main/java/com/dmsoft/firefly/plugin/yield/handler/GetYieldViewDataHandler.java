@@ -22,7 +22,7 @@ public class GetYieldViewDataHandler extends AbstractBasicJobHandler {
     @SuppressWarnings("unchecked")
     public void doJob(JobContext context) {
         SearchDataFrame dataFrame = context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
-        List<SearchConditionDto> searchConditionDtoList = (List<SearchConditionDto>) context.get(ParamKeys.SEARCH_CONDITION_DTO_LIST);
+        List<SearchConditionDto> searchConditionDtoList = (List<SearchConditionDto>) context.get(ParamKeys.VIEW_SEARCH_CONDITION_DTO_LIST);
         YieldAnalysisConfigDto analysisConfigDto = (YieldAnalysisConfigDto) context.get(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO);
         YieldService yieldService = RuntimeContext.getBean(YieldService.class);
         YieldViewDataResultDto yieldViewDataResultDto = yieldService.getViewData(dataFrame, searchConditionDtoList, analysisConfigDto);

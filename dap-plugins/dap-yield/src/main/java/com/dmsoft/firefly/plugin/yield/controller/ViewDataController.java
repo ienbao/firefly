@@ -66,6 +66,7 @@ public class ViewDataController implements Initializable {
     private List<String> selectedProjectNames;
     private SearchConditionDto searchConditionDto;
     private ChooseTestItemDialog chooseTestItemDialog;
+    private  List<String> lastItem;
     private String rowKey;
     private String columnLabel;
     private String flag;//标记点击事件发生的位置，当flag为空时，点击事件发生在OverView表中
@@ -149,7 +150,7 @@ public class ViewDataController implements Initializable {
      */
     private void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> searchViewDataConditionDto, boolean isTimer, boolean isAutoRefresh, String rowKey, String columnLable,String flag) {
         if (searchViewDataConditionDto != null) {
-            this.searchViewDataConditionDto.addAll(searchViewDataConditionDto);
+            this.searchViewDataConditionDto = searchViewDataConditionDto;
         }
         this.selectedRowKeys = selectedRowKey;
         this.rowKey = rowKey;
@@ -181,6 +182,21 @@ public class ViewDataController implements Initializable {
             this.model = null;
             return;
         }
+//        if(flag == null && lastItem != null) {
+//            for (TestItemWithTypeDto typeDto : typeDtoList) {
+//                for (int i = 0; i < lastItem.size(); i++) {
+//                    if ((lastItem.get(i).equals(typeDto.getTestItemName()))) {
+//                            searchConditionDto = new SearchConditionDto();
+//                            searchConditionDto.setItemName(lastItem.get(i));
+//                            searchConditionDto.setLslOrFail(typeDto.getLsl());
+//                            searchConditionDto.setUslOrPass(typeDto.getUsl());
+//                            searchViewDataConditionDto.add(searchConditionDto);
+//                    }
+//
+//                }
+//            }
+//        }
+
         filteValueTf.setDisable(false);
         chooseColumnBtn.setDisable(false);
         List<TableColumn<String, ?>> sortedColumnList = null;
@@ -270,7 +286,7 @@ public class ViewDataController implements Initializable {
 
             List<String> selectedTestItems = Lists.newArrayList();
             if(flag == null) {
-                List<String> lastItem = chooseTestItemDialog.getSelectedItems();
+                 lastItem = chooseTestItemDialog.getSelectedItems();
                 List<String> dataFrameItem = dataFrame.getAllTestItemName();
                 selectedTestItems.add(dataFrameItem.get(0));
                 selectedTestItems.add(dataFrameItem.get(1));

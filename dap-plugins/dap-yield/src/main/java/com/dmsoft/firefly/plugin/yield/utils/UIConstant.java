@@ -9,11 +9,11 @@ public class UIConstant {
     public static final String[] YIELD_OVERVIEW_FIX_COLUMN = new String[]{"Test Item"};
 
     public static final String[] YIELD_CHOOSE_RESULT = new String[]{
-            "LSL/Fail", "USL/Pass", "Total Samples", "FPY Samples", "Pass Samples", "NTF Samples", "NG Samples", "FpyPercent", "NtfPercent", "NgPercent"
+            "LSL/Fail", "USL/Pass", "Total Samples", "FPY Samples", "Pass Samples", "NTF Samples", "NG Samples", "%FPY", "%NTF", "%NG"
     };
 
     public static final String[] YIELD_SR_ALL = new String[]{
-            "Test Item",  "LSL/Fail", "USL/Pass", "Total Samples", "FPY Samples","Pass Samples", "NTF Samples", "NG Samples", "FpyPercent", "NtfPercent", "NgPercent"};
+            "Test Item",  "LSL/Fail", "USL/Pass", "Total Samples", "FPY Samples","Pass Samples", "NTF Samples", "NG Samples", "%FPY", "%NTF", "%NG"};
 
     public static final String CHART_1 = "CHART_1";
     public static final String BARCHART_FPY = "BARCHART_FPY";
