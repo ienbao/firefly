@@ -5,6 +5,7 @@ import com.dmsoft.firefly.gui.components.table.TableModel;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.utils.ValidateUtils;
 import com.dmsoft.firefly.plugin.yield.dto.OverviewAlarmDto;
+import com.dmsoft.firefly.plugin.yield.dto.ViewDataParamDto;
 import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
 import com.dmsoft.firefly.plugin.yield.service.YieldService;
 import com.dmsoft.firefly.plugin.yield.utils.*;
@@ -368,7 +369,12 @@ public class OverViewTableModel implements TableModel {
             YieldOverviewResultAlarmDto yieldStatsDto = keyToStatsDtoMap.get(rowKey);
             tableCell.setOnMouseClicked(event -> {
                 if (clickListener != null) {
-                    clickListener.executeAnalyzeDetail(yieldStatsDto.getItemName(), finalColumn);
+                    ViewDataParamDto viewDataParamDto = new ViewDataParamDto();
+                    viewDataParamDto.setColumn(finalColumn);
+                    viewDataParamDto.setItemName(yieldStatsDto.getItemName());
+                    viewDataParamDto.setLsl(yieldStatsDto.getLslOrFail());
+                    viewDataParamDto.setUsl(yieldStatsDto.getUslOrPass());
+                    clickListener.executeAnalyzeDetail(viewDataParamDto);
                 }
             });
             tableCell.setCursor(Cursor.HAND);
