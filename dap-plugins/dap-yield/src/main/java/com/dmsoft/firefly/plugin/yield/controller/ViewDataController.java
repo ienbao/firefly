@@ -150,7 +150,7 @@ public class ViewDataController implements Initializable {
      */
     private void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> searchViewDataConditionDto, boolean isTimer, boolean isAutoRefresh, String rowKey, String columnLable,String flag) {
         if (searchViewDataConditionDto != null) {
-            this.searchViewDataConditionDto.addAll(searchViewDataConditionDto);
+            this.searchViewDataConditionDto = searchViewDataConditionDto;
         }
         this.selectedRowKeys = selectedRowKey;
         this.rowKey = rowKey;
