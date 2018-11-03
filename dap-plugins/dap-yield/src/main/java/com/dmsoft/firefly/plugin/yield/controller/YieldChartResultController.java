@@ -65,14 +65,15 @@ public class YieldChartResultController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.initI18n();
         this.yieldResultDataController.init(this);
-        YieldAnalysisConfigDto yieldAnalysisConfigDto = this.getYieldConfigPreference();
-        if (yieldAnalysisConfigDto == null) {
-            yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
-            yieldAnalysisConfigDto.setPrimaryKey("");
-            yieldAnalysisConfigDto.setTopN(5);
-            this.updateYieldConfigPreference(yieldAnalysisConfigDto);
-        }
-        resultNTFNum.setValue(yieldAnalysisConfigDto.getTopN());
+//        YieldAnalysisConfigDto yieldAnalysisConfigDto = this.getYieldConfigPreference();
+//        if (yieldAnalysisConfigDto == null) {
+//            yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
+//            yieldAnalysisConfigDto.setPrimaryKey("");
+//            yieldAnalysisConfigDto.setTopN(5);
+//            this.updateYieldConfigPreference(yieldAnalysisConfigDto);
+//        }
+//        resultNTFNum.setValue(yieldAnalysisConfigDto.getTopN());
+        resultNTFNum.setValue(YieldFxmlAndLanguageUtils.getString(UIConstant.Number_5));
         resultNTFNum.setDisable(true);
 
     }

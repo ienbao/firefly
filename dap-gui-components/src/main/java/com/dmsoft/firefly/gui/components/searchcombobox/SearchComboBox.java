@@ -214,7 +214,7 @@ public class SearchComboBox extends GridPane {
             ObservableList<String> list = FXCollections.observableArrayList();
             list.add("");
             for (String s : this.valueDatas) {
-                if (s.toLowerCase().contains(this.valueBox.getEditor().getText().toLowerCase())) {
+                if (null!=s&&s.toLowerCase().contains(this.valueBox.getEditor().getText().toLowerCase())) {
                     list.add(s);
                 }
             }

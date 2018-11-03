@@ -905,7 +905,7 @@ public class YieldItemController implements Initializable {
     private YieldAnalysisConfigDto buildYieldAnalysisConfigData() {
         YieldAnalysisConfigDto yieldAnalysisConfigDto = new YieldAnalysisConfigDto();
         yieldAnalysisConfigDto.setPrimaryKey(configComboBox.getValue());
-        yieldAnalysisConfigDto.setTopN(yieldMainController.getYieldResultController().getResultNTFNum());
+//        yieldAnalysisConfigDto.setTopN(yieldMainController.getYieldResultController().getResultNTFNum());
         return yieldAnalysisConfigDto;
     }
 
