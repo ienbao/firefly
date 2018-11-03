@@ -15,6 +15,7 @@ import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.RangeUtils;
+import com.dmsoft.firefly.sdk.utils.enums.TestItemType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -70,8 +71,8 @@ public class ViewDataModel implements TableModel {
     public ViewDataModel(SearchDataFrame dataFrame, List<String>  selectedRowKeys) {
         this.dataFrame = dataFrame;
         this.initSelectedRowKeys = selectedRowKeys;
-
         this.headerArray = FXCollections.observableArrayList(dataFrame.getAllTestItemName());
+//        this.headerArray.add(1, "Result");
         this.rowKeyArray = FXCollections.observableArrayList(dataFrame.getAllRowKeys());
         this.checkValueMap = Maps.newLinkedHashMap();
         for (String rowKey : rowKeyArray) {
@@ -158,6 +159,7 @@ public class ViewDataModel implements TableModel {
             String testName = searchConditionDto.getItemName();
             String lsl = searchConditionDto.getLslOrFail();
             String usl = searchConditionDto.getUslOrPass();
+            TestItemType testItemType = searchConditionDto.getTestItemType();
             if (testItemDtoMap.containsKey(testName)) {
                 TestItemWithTypeDto testItemDto = testItemDtoMap.get(testName);
                 if (DAPStringUtils.isNumeric(lsl)) {
@@ -174,6 +176,7 @@ public class ViewDataModel implements TableModel {
                 TestItemWithTypeDto testItemDto = new TestItemWithTypeDto();
                 testItemDto.setUsl(usl);
                 testItemDto.setLsl(lsl);
+                testItemDto.setTestItemType(testItemType);
                 testItemDto.setTestItemName(testName);
                 testItemDtoMap.put(testName, testItemDto);
             }
@@ -258,7 +261,7 @@ public class ViewDataModel implements TableModel {
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
         tableCell.setStyle(null);
-        if (testItemDtoMap != null && !RangeUtils.isPass(dataFrame.getCellValue(rowKey, column), testItemDtoMap.get(column))) {
+        if (testItemDtoMap != null && !RangeUtils.validateValue(dataFrame.getCellValue(rowKey, column), testItemDtoMap.get(column))) {
             tableCell.setStyle("-fx-background-color: #ea2028; -fx-text-fill: white");
         } else if (dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column)) && this.highLightRowKeys.contains(rowKey)) {
             tableCell.setStyle("-fx-background-color: #f8d251; -fx-text-fill: #aaaaaa");
