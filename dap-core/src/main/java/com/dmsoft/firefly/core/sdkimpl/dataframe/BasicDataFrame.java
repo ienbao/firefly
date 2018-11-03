@@ -240,7 +240,12 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
             List<String> data = Lists.newArrayList();
             int targetRowIndex = this.rowKeys.indexOf(rowKey);
             for (int i = 0; i < this.testItemNames.size(); i++) {
-                data.add(this.cellValues.get(targetRowIndex).get(i));
+                if(this.cellValues.get(targetRowIndex).get(i) != null){
+                    data.add(this.cellValues.get(targetRowIndex).get(i));
+                }else if(this.cellValues.get(targetRowIndex).get(i) == null){
+                    data.add("");
+                }
+
             }
             return data;
         }
