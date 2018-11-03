@@ -226,8 +226,12 @@ public class ViewDataController implements Initializable {
         if(flag == null) {
             List<String> dataFrameItem = dataFrame.getAllTestItemName();
             List<String> preItem = Lists.newArrayList();
-            preItem.add(dataFrameItem.get(0));
-            preItem.add(dataFrameItem.get(1));
+            if(dataFrameItem.size()>1){
+                preItem.add(dataFrameItem.get(0));
+                preItem.add(dataFrameItem.get(1));
+            }else {
+                preItem.add(dataFrameItem.get(0));
+            }
             dataFrameItem.removeAll(preItem);
             chooseTestItemDialog.removeSelectedItems(preItem);
             chooseTestItemDialog.resetSelectedItems(dataFrameItem);
