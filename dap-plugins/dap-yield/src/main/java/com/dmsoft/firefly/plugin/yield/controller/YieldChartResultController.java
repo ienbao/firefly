@@ -15,6 +15,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
@@ -175,6 +176,8 @@ public class YieldChartResultController implements Initializable {
         series1.getData().add(new XYChart.Data(yieldBarChartLabel[1], (yieldChartResultAlermDto.getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldChartResultAlermDto.getNtfPercent()) ? 0 : yieldChartResultAlermDto.getNtfPercent())));
         series1.getData().add(new XYChart.Data(yieldBarChartLabel[2], (yieldChartResultAlermDto.getNgPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldChartResultAlermDto.getNgPercent()) ? 0 : yieldChartResultAlermDto.getNgPercent())));
         yieldBarChart.getData().addAll(series1);//barChart中添加元素
+        //yieldBarChart.setBarGap(10);
+        yieldBarChart.setCategoryGap(10);
         ChartUtils.setChartTextAndColor(yieldBarChart.getData(), s -> {//设置Chart顶部的数据百分比
             if (DAPStringUtils.isNumeric(s)) {
                 Double value = Double.valueOf(s) * 100;
@@ -184,8 +187,6 @@ public class YieldChartResultController implements Initializable {
             }
             return s + "%";
         }, yieldChartResultAlermDto.getYieldChartResultAlermDtoMap());
-
-
     }
 
     private Double[] getYieldChartArrayValue(YieldChartResultAlermDto yieldChartResultAlermDto) {
@@ -238,24 +239,35 @@ public class YieldChartResultController implements Initializable {
         yAxis.setAutoRanging(false);
         XYChart.Series series2 = new XYChart.Series();
         Integer barChartNTFNum = Integer.parseInt(resultNTFNum.getValue().toString());
+        CategoryAxis xAxis =new CategoryAxis();
         if (yieldNTFChartDtos.size() >= barChartNTFNum) {
             for (int i = 0; i < barChartNTFNum; i++) {
-                series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getItemName(), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
+                String key = " ";
+                for(int n=0;n<i;n++){
+                    key += " ";
+                }
+               // new XYChart.Data(yieldNTFChartDtos.get(i).getItemName(), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())).XValueProperty();
+                series2.getData().add(new XYChart.Data( yieldNTFChartDtos.get(i).getNtfPercent() == null ? key :( yieldNTFChartDtos.get(i).getItemName()), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
                 if (yieldNTFChartDtos.get(i).getNtfPercent() == null) ;
             }
-
         } else if (yieldNTFChartDtos.size() < barChartNTFNum) {
             for (int i = 0; i < yieldNTFChartDtos.size(); i++) {
-                series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getItemName(), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
+                String key = " ";
+                for(int n=0;n<i;n++){
+                    key += " ";
+                }
+                series2.getData().add(new XYChart.Data( yieldNTFChartDtos.get(i).getNtfPercent() == null ? key :( yieldNTFChartDtos.get(i).getItemName()), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
                 if (yieldNTFChartDtos.get(i).getNtfPercent() == null) ;
             }
         }
-
         yieldbarChartItem.getData().addAll(series2);
+        yieldbarChartItem.setCategoryGap(30);
+        yieldbarChartItem.setLayoutX(20);
         ChartUtils.setChartText(yieldbarChartItem.getData(), s -> {//设置Chart顶部的数据百分比
             if (DAPStringUtils.isNumeric(s)) {
                 Double value = Double.valueOf(s) * 100;
                 if (!DAPStringUtils.isInfinityAndNaN(value)) {
+
                     return DAPStringUtils.formatDouble(value, 0) + "%";
                 }
             }

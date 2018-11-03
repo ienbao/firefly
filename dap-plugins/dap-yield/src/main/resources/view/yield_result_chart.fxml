@@ -131,10 +131,11 @@
                                                   horizontalZeroLineVisible="false" legendVisible="false"
                                                   minWidth="226.0" prefHeight="400.0" prefWidth="900.0"
                                                   verticalGridLinesVisible="false" verticalZeroLineVisible="false"
-                                                  GridPane.rowIndex="1" VBox.vgrow="ALWAYS">
+                                                  GridPane.rowIndex="1" VBox.vgrow="ALWAYS"
+                                                  style="-fx-stroke-width: 10px">
                                             <xAxis>
                                                 <CategoryAxis side="BOTTOM" tickLabelGap="10.0"
-                                                              tickMarkVisible="false"/>
+                                                              tickMarkVisible="false" />
                                             </xAxis>
                                             <yAxis>
                                                 <NumberAxis autoRanging="false" minorTickVisible="false" side="LEFT"

@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.chart.Axis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -27,10 +28,12 @@ public class ChartUtils {
     public static void setChartText(ObservableList<XYChart.Series> series, Function<String, String> formatTextFunc) {
         series.forEach(oneSeries -> {
             ObservableList<XYChart.Data> data = oneSeries.getData();
+            AtomicInteger colorIndex = new AtomicInteger(3);
             data.forEach(dataItem -> {
                 if (dataItem.getNode() instanceof StackPane) {
                     StackPane stackPane = (StackPane) dataItem.getNode();
                     stackPane.setAlignment(Pos.TOP_CENTER);
+                    stackPane.getStyleClass().add("default-color" + colorIndex.get());
                     if (!stackPane.getChildren().isEmpty()) {
                         for (int i = 0; i < stackPane.getChildren().size(); i++) {
                             Node node = stackPane.getChildren().get(i);
@@ -78,6 +81,8 @@ public class ChartUtils {
                         colorIndex.set(3);
                     }
                     stackPane.getStyleClass().add("default-color" + colorIndex.get());
+                    stackPane.setMaxWidth(15);
+                    stackPane.setMinWidth(15);
                     if (!stackPane.getChildren().isEmpty()) {
                         for (int i = 0; i < stackPane.getChildren().size(); i++) {
                             Node node = stackPane.getChildren().get(i);
