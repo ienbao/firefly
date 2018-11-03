@@ -70,4 +70,8 @@ public class TestDataCacheFactory {
         }
         return null;
     }
+
+    public void clean(){
+        testDataCache.invalidateAll();
+    }
 }
