@@ -964,12 +964,11 @@ public class YieldItemController implements Initializable {
         for (String condition : conditionList) {
             Set<String> conditionTestItemSet = FilterUtils.parseItemNameFromConditions(condition);
             for (String conditionTestItem : conditionTestItemSet) {
-                if (!testItemList.contains(conditionTestItem) && !conditionTestItemList.contains(conditionTestItem)) {
+                if (!testItemList.contains(conditionTestItem) && !conditionTestItemList.contains(conditionTestItem)&&originalItems.contains(conditionTestItem)) {
                     conditionTestItemList.add(conditionTestItem);
                 }
             }
         }
-
         String primaryKey = configComboBox.getValue();
         if (!testItemList.contains(primaryKey)  && !conditionTestItemList.contains(primaryKey)) {
             conditionTestItemList.add(primaryKey);

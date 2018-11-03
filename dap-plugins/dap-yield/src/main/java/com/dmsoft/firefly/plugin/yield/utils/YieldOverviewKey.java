@@ -8,9 +8,9 @@ public enum YieldOverviewKey {
     PASSSAMPLES("PassSamples"),
     NTFSAMPLES("NtfSamples"),
     NGSAMPLES("NgSamples"),
-    FPYPER("FpyPercent"),
-    NTFPER("NtfPercent"),
-    NGPER("NgPercent"),
+    FPYPER("%FPY"),
+    NTFPER("%NTF"),
+    NGPER("%NG"),
 
 
     EXCELLENT("Excellent"),
@@ -30,11 +30,11 @@ public enum YieldOverviewKey {
 
     public static boolean isAbilityAlarmResultName(String resultName){
         switch (resultName) {
-            case "FpyPercent":
+            case "%FPY":
                 return true;
-            case "NtfPercent":
+            case "%NTF":
                 return true;
-            case "NgPercent":
+            case "%NG":
                 return true;
             default:
                 return false;
