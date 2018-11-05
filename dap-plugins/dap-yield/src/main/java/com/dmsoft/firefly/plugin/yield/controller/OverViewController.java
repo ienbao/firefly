@@ -144,6 +144,7 @@ public class OverViewController implements Initializable {
                     testItemNameList.add(selectSearchConditionDtoList.get(0).getItemName());
                     testItemNameList.add(selectSearchConditionDtoList.get(1).getItemName());
                     SearchDataFrame subDataFrame = dataFrame.subDataFrame(rowKeyList, testItemNameList);
+
                     viewDataController.setViewData(subDataFrame, rowKeyList, selectSearchConditionDtoList, false, rowKey, column,null);
                 }else{
                     viewDataController.setViewData(null, null, null, false, rowKey, column,null);

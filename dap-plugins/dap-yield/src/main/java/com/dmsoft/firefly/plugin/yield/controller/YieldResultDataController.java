@@ -119,7 +119,7 @@ public class YieldResultDataController implements Initializable {
 //        System.out.println(rowKey + column);
             yieldItemController = yieldMainController.getYieldItemController();
             dataFrame = yieldMainController.getDataFrame();
-            List<SearchConditionDto> searchConditionDtoList = yieldMainController.getInitSearchConditionDtoList();
+            List<SearchConditionDto> searchConditionDtoList =  yieldItemController.buildSearchConditionDataList(yieldItemController.initSelectedItemDto());
             List<String> projectNameList = envService.findActivatedProjectName();
             YieldAnalysisConfigDto yieldAnalysisConfigDto = yieldMainController.getAnalysisConfigDto();
 
@@ -156,9 +156,9 @@ public class YieldResultDataController implements Initializable {
                         }
 
                     List<String> testItemNameList = Lists.newArrayList();
-                    for (int i = 0; i < searchConditionDtoList.size(); i++) {
+//                    for (int i = 0; i < searchConditionDtoList.size(); i++) {
                         testItemNameList.add(searchConditionDtoList.get(0).getItemName());
-                    }
+//                    }
 
                     SearchDataFrame subDataFrame = dataFrame.subDataFrame(rowKeyList, testItemNameList);
                     viewDataController.setViewData(subDataFrame, rowKeyList, searchConditionDtoList, false, rowKey, column, Yield_PLUGIN_NAME);
