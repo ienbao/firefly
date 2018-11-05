@@ -609,7 +609,7 @@ public class OverViewTableModel implements TableModel {
             if (DAPStringUtils.isNumeric(overviewAlarmDto.getValue()+"")) {
                 Double value = Double.valueOf(overviewAlarmDto.getValue()) * 100;
                 if (!DAPStringUtils.isInfinityAndNaN(value)) {
-                    return DAPStringUtils.formatDouble(value, 0) + "%";
+                    return DAPStringUtils.formatDouble(value, 2) + "%";
                 }
             }
             return overviewAlarmDto.getValue() + "%";
