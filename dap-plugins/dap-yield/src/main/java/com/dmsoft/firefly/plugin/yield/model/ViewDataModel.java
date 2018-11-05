@@ -60,7 +60,10 @@ public class ViewDataModel implements TableModel {
     private String initSelectedColumnKeys;
     private Map<String, TestItemWithTypeDto> testItemDtoMap;
     private Map<String, ReadOnlyStringProperty> cellMap;
+    private String flag;
     private boolean isTimer = false;
+    private int i = 0;
+    private String primKey;
 
     /**
      * constructor
@@ -68,11 +71,24 @@ public class ViewDataModel implements TableModel {
      * @param dataFrame       search data frame
      * @param selectedRowKeys selected row keys
      */
-    public ViewDataModel(SearchDataFrame dataFrame, List<String>  selectedRowKeys) {
+    public ViewDataModel(SearchDataFrame dataFrame, List<String>  selectedRowKeys ,String flag, List<String> cacheSelectTestItemNames) {
         this.dataFrame = dataFrame;
         this.initSelectedRowKeys = selectedRowKeys;
+        this.flag = flag;
         this.headerArray = FXCollections.observableArrayList(dataFrame.getAllTestItemName());
-//        this.headerArray.add(1, "Result");
+
+        if((dataFrame.getAllTestItemName().size() != dataFrame.getAllTestItemWithTypeDto().size())&&flag == null){
+                   this.headerArray.add(1, dataFrame.getAllTestItemName().get(0));
+        }
+
+        if (!cacheSelectTestItemNames.isEmpty()) {
+            cacheSelectTestItemNames.forEach(cacheSelectTestItemName ->{
+                if (!headerArray.contains(cacheSelectTestItemName)) {
+                    this.headerArray.add(cacheSelectTestItemName);
+                }
+            });
+        }
+
         this.rowKeyArray = FXCollections.observableArrayList(dataFrame.getAllRowKeys());
         this.checkValueMap = Maps.newLinkedHashMap();
         for (String rowKey : rowKeyArray) {
@@ -154,6 +170,7 @@ public class ViewDataModel implements TableModel {
             testItemDtoMap = null;
             return;
         }
+        primKey = searchViewDataConditionDtoList.get(0).getItemName();
         testItemDtoMap = Maps.newHashMap();
         for (SearchConditionDto searchConditionDto : searchViewDataConditionDtoList) {
             String testName = searchConditionDto.getItemName();
@@ -161,17 +178,18 @@ public class ViewDataModel implements TableModel {
             String usl = searchConditionDto.getUslOrPass();
             TestItemType testItemType = searchConditionDto.getTestItemType();
             if (testItemDtoMap.containsKey(testName)) {
-                TestItemWithTypeDto testItemDto = testItemDtoMap.get(testName);
-                if (DAPStringUtils.isNumeric(lsl)) {
-                    if (!DAPStringUtils.isNumeric(testItemDto.getLsl()) || Double.valueOf(lsl) < Double.valueOf(testItemDto.getLsl())) {
-                        testItemDto.setLsl(lsl);
+                    TestItemWithTypeDto testItemDto = testItemDtoMap.get(testName);
+                    if (DAPStringUtils.isNumeric(lsl)) {
+                        if (!DAPStringUtils.isNumeric(testItemDto.getLsl()) || Double.valueOf(lsl) < Double.valueOf(testItemDto.getLsl())) {
+                            testItemDto.setLsl(lsl);
+                        }
                     }
-                }
-                if (DAPStringUtils.isNumeric(usl)) {
-                    if (!DAPStringUtils.isNumeric(testItemDto.getUsl()) || Double.valueOf(usl) > Double.valueOf(testItemDto.getUsl())) {
-                        testItemDto.setUsl(usl);
+                    if (DAPStringUtils.isNumeric(usl)) {
+                        if (!DAPStringUtils.isNumeric(testItemDto.getUsl()) || Double.valueOf(usl) > Double.valueOf(testItemDto.getUsl())) {
+                            testItemDto.setUsl(usl);
+                        }
                     }
-                }
+                testItemDto.setTestItemType(testItemType);
             } else {
                 TestItemWithTypeDto testItemDto = new TestItemWithTypeDto();
                 testItemDto.setUsl(usl);
@@ -261,15 +279,35 @@ public class ViewDataModel implements TableModel {
     @Override
     public <T> TableCell<String, T> decorate(String rowKey, String column, TableCell<String, T> tableCell) {
         tableCell.setStyle(null);
-        if (testItemDtoMap != null && !RangeUtils.validateValue(dataFrame.getCellValue(rowKey, column), testItemDtoMap.get(column))) {
-            tableCell.setStyle("-fx-background-color: #ea2028; -fx-text-fill: white");
-        } else if (dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column)) && this.highLightRowKeys.contains(rowKey)) {
-            tableCell.setStyle("-fx-background-color: #f8d251; -fx-text-fill: #aaaaaa");
-        } else if (this.highLightRowKeys.contains(rowKey)) {
-            tableCell.setStyle("-fx-background-color: #f8d251");
-        } else if ((dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column))) || (testItemDtoMap != null && !testItemDtoMap.containsKey(column))) {
-            tableCell.setStyle("-fx-text-fill: #aaaaaa");
-        }
+         if(flag != null) {//Total Processes点击
+             if(!column.equals(primKey)) {
+                 if (testItemDtoMap != null && !RangeUtils.validateValue(dataFrame.getCellValue(rowKey, column), testItemDtoMap.get(column))) {
+                     tableCell.setStyle("-fx-background-color: #ea2028; -fx-text-fill: white");
+                 } else if (dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column)) && this.highLightRowKeys.contains(rowKey)) {
+                     tableCell.setStyle("-fx-background-color: #f8d251; -fx-text-fill: #aaaaaa");
+                 } else if (this.highLightRowKeys.contains(rowKey)) {
+                     tableCell.setStyle("-fx-background-color: #f8d251");
+                 } else if ((dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column))) || (testItemDtoMap != null && !testItemDtoMap.containsKey(column))) {
+                     tableCell.setStyle("-fx-text-fill: #aaaaaa");
+                 }
+             }
+         }else { //OverView表格点击
+             if (column.equals(primKey)) {
+                 i = i + 1;
+             }
+             if (i % 2 == 0 ) {
+                 if (testItemDtoMap != null && !RangeUtils.validateValue(dataFrame.getCellValue(rowKey, column), testItemDtoMap.get(column))) {
+                     tableCell.setStyle("-fx-background-color: #ea2028; -fx-text-fill: white");
+                 } else if (dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column)) && this.highLightRowKeys.contains(rowKey)) {
+                     tableCell.setStyle("-fx-background-color: #f8d251; -fx-text-fill: #aaaaaa");
+                 } else if (this.highLightRowKeys.contains(rowKey)) {
+                     tableCell.setStyle("-fx-background-color: #f8d251");
+                 } else if ((dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column))) || (testItemDtoMap != null && !testItemDtoMap.containsKey(column))) {
+                     tableCell.setStyle("-fx-text-fill: #aaaaaa");
+                 }
+             }
+         }
+
         return tableCell;
     }
 
