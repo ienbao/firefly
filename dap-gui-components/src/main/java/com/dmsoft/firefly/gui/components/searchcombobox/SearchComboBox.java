@@ -181,6 +181,12 @@ public class SearchComboBox extends GridPane {
                 this.valueBox.setStyle("-fx-border-color: #ccc");
             }
         });
+        this.valueBox.setOnMouseClicked((e)->{
+            this.valueDatas = searchComboBoxController.getValueForTestItem(testItemBox.getValue());
+            values.clear();
+            values.add("");
+            values.addAll(this.valueDatas);
+        });
         this.valueBox.hoverProperty().addListener((ov, b1, b2) -> {
             if (b2) {
                 this.operatorBox.setStyle("-fx-border-color: #ccc #7fcaff #ccc #ccc");
@@ -214,7 +220,7 @@ public class SearchComboBox extends GridPane {
             ObservableList<String> list = FXCollections.observableArrayList();
             list.add("");
             for (String s : this.valueDatas) {
-                if (s.toLowerCase().contains(this.valueBox.getEditor().getText().toLowerCase())) {
+                if (null!=s&&s.toLowerCase().contains(this.valueBox.getEditor().getText().toLowerCase())) {
                     list.add(s);
                 }
             }
