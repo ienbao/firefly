@@ -7,8 +7,8 @@ package com.dmsoft.firefly.plugin.yield.utils;
  * Created by Ethan.Yang on 2018/3/14.
  */
 public enum YieldProCapAlarmKey {
-    NTFPER("%FPY"),
-    FPYPER("%NTF"),
+    NTFPER("%NTF"),
+    FPYPER("%FPY"),
     NGPER("%NG");
 
     private String code;
