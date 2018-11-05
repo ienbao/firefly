@@ -358,7 +358,7 @@ public class YieldMainController implements Initializable {
         yieldOverviewResultAlarmDto.setItemName(primaryKey);
         List<YieldOverviewResultAlarmDto> editRowDataList = Lists.newArrayList();
         editRowDataList.add(yieldOverviewResultAlarmDto);
-        List<YieldOverviewResultAlarmDto> RowDataList = overViewController.getEditRowStatsData();
+        List<YieldOverviewResultAlarmDto> RowDataList = overViewController.getAllRowStatsData();
         for (YieldOverviewResultAlarmDto yieldOverviewResultAlarmDto1 : RowDataList){
             editRowDataList.add(yieldOverviewResultAlarmDto1);
         }
