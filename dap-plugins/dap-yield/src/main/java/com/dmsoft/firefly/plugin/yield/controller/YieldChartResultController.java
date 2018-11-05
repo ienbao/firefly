@@ -47,6 +47,7 @@ public class YieldChartResultController implements Initializable {
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
+    private String[] yieldBarChartCategory;
     private String[] yieldBarChartLabel;
     private Logger logger = LoggerFactory.getLogger(YieldChartResultController.class);
     private List<YieldNTFChartDto> yieldNTFChartDtos;

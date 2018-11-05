@@ -66,10 +66,11 @@ public class ViewDataController implements Initializable {
     private List<String> selectedProjectNames;
     private SearchConditionDto searchConditionDto;
     private ChooseTestItemDialog chooseTestItemDialog;
-    private  List<String> lastItem;
+    private  List<String> cacheSelectTestItemName = Lists.newArrayList();
     private String rowKey;
     private String columnLabel;
     private String flag;//标记点击事件发生的位置，当flag为空时，点击事件发生在OverView表中
+    private boolean dataFrameFlag ;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -114,6 +115,7 @@ public class ViewDataController implements Initializable {
      */
     public void clearViewData() {
         filteValueTf.getTextField().setText(null);
+        cacheSelectTestItemName.clear();
         this.setViewData(null, null, null, null, null,null);
     }
 
@@ -164,7 +166,6 @@ public class ViewDataController implements Initializable {
         viewDataR.setText(row);
         viewDataC.setText(columnLable);
         this.initialize(null, null);
-
         this.dataFrame = dataFrame;
         this.flag = flag;
         if (dataFrame == null) {
@@ -181,10 +182,52 @@ public class ViewDataController implements Initializable {
             }
             this.model = null;
             return;
+        } else {
+            List<String> resultTestItemName = Lists.newArrayList();
+            if(flag == null) {
+                resultTestItemName.add(searchViewDataConditionDto.get(0).getItemName());
+                resultTestItemName.add(searchViewDataConditionDto.get(1).getItemName());
+            } else {
+                resultTestItemName.add(searchViewDataConditionDto.get(0).getItemName());
+            }
+
+            if (!cacheSelectTestItemName.isEmpty()) {
+                resultTestItemName.addAll(cacheSelectTestItemName);
+                int curIndex = 0;
+                for (TestItemWithTypeDto typeDto : typeDtoList) {
+                    String testItemName = typeDto.getTestItemName();
+                    if (resultTestItemName.contains(testItemName) && dataFrame.isTestItemExist(testItemName)) {
+                        curIndex++;
+                    }
+                }
+
+                for (TestItemWithTypeDto typeDto : typeDtoList) {
+                    String testItemName = typeDto.getTestItemName();
+                    if (resultTestItemName.contains(testItemName)) {
+                        if (resultTestItemName.contains(testItemName) && !dataFrame.isTestItemExist(testItemName)) {
+                            List<RowDataDto> rowDataDtoList = RuntimeContext.getBean(SourceDataService.class).findTestData(this.selectedProjectNames,
+                                    Lists.newArrayList(testItemName));
+                            DataColumn dataColumn = RuntimeContext.getBean(DataFrameFactory.class).createDataColumn(Lists.newArrayList(typeDto), rowDataDtoList).get(0);/* 新增表中的列 */
+                            this.dataFrame.appendColumn(curIndex, dataColumn);
+                            curIndex++;
+                        }
+                        if (!(testItemName.equals(searchViewDataConditionDto.get(0).getItemName()))) {
+                            if (!(testItemName.equals(searchViewDataConditionDto.get(1).getItemName()))) {
+                                searchConditionDto = new SearchConditionDto();
+                                searchConditionDto.setItemName(testItemName);
+                                searchConditionDto.setLslOrFail(typeDto.getLsl());
+                                searchConditionDto.setUslOrPass(typeDto.getUsl());
+                                searchConditionDto.setTestItemType(typeDto.getTestItemType());
+                                searchViewDataConditionDto.add(searchConditionDto);
+                            }
+                        }
+                    } else {
+
+                        this.dataFrame.removeColumns(Lists.newArrayList(typeDto.getTestItemName()));
+                    }
+                }
+            }
         }
-//        if(flag == null && dataFrame.getAllTestItemName().size()==1) {
-//            dataFrame.getAllTestItemWithTypeDto().get(1).setTestItemName("Result");
-//        }
 
         filteValueTf.setDisable(false);
         chooseColumnBtn.setDisable(false);
@@ -203,7 +246,7 @@ public class ViewDataController implements Initializable {
         VBox.setVgrow(viewDataTable, Priority.ALWAYS);
         this.vbox.setAlignment(Pos.CENTER);
         this.vbox.getChildren().add(viewDataTable);
-        this.model = new ViewDataModel(dataFrame, selectedRowKey);
+        this.model = new ViewDataModel(this.dataFrame, selectedRowKey, flag, cacheSelectTestItemName);
         this.model.setTestItemDtoMap(searchViewDataConditionDto);
         this.model.setMainController(yieldMainController);
 
@@ -216,7 +259,6 @@ public class ViewDataController implements Initializable {
             }
         }
 
-
         String filterTxt = filteValueTf.getTextField().getText();
         if (DAPStringUtils.isNotBlank(filterTxt)) {
             filteValueTf.getTextField().setText("");
@@ -226,11 +268,13 @@ public class ViewDataController implements Initializable {
         if(flag == null) {
             List<String> dataFrameItem = dataFrame.getAllTestItemName();
             List<String> preItem = Lists.newArrayList();
-            if(dataFrameItem.size()>1){
+            String primaryKey = searchViewDataConditionDto.get(0).getItemName();
+            String selectTestItemName = searchViewDataConditionDto.get(1).getItemName();
+            if (dataFrameItem.contains(primaryKey)) {
                 preItem.add(dataFrameItem.get(0));
+            }
+            if (dataFrameItem.contains(selectTestItemName) && !primaryKey.equals(selectTestItemName)) {
                 preItem.add(dataFrameItem.get(1));
-            }else {
-                preItem.add(dataFrameItem.get(0));
             }
             dataFrameItem.removeAll(preItem);
             chooseTestItemDialog.removeSelectedItems(preItem);
@@ -278,12 +322,18 @@ public class ViewDataController implements Initializable {
             }
 
             List<String> selectedTestItems = Lists.newArrayList();
+            cacheSelectTestItemName = chooseTestItemDialog.getSelectedItems();
             if(flag == null) {
-                 lastItem = chooseTestItemDialog.getSelectedItems();
                 List<String> dataFrameItem = dataFrame.getAllTestItemName();
-                selectedTestItems.add(dataFrameItem.get(0));
-                selectedTestItems.add(dataFrameItem.get(1));
-                selectedTestItems.addAll(lastItem);
+                String primaryKey = searchViewDataConditionDto.get(0).getItemName();
+                String selectTestItemName = searchViewDataConditionDto.get(1).getItemName();
+                if (dataFrameItem.contains(primaryKey)) {
+                    selectedTestItems.add(dataFrameItem.get(0));
+                }
+                if (dataFrameItem.contains(selectTestItemName) && !primaryKey.equals(selectTestItemName)) {
+                    selectedTestItems.add(dataFrameItem.get(1));
+                }
+                selectedTestItems.addAll(cacheSelectTestItemName);
             }else{
                 List<String> lastItem = chooseTestItemDialog.getSelectedItems();
                 List<String> dataFrameItem = dataFrame.getAllTestItemName();
@@ -315,6 +365,7 @@ public class ViewDataController implements Initializable {
                             searchConditionDto.setItemName(testItemName);
                             searchConditionDto.setLslOrFail(typeDto.getLsl());
                             searchConditionDto.setUslOrPass(typeDto.getUsl());
+                            searchConditionDto.setTestItemType(typeDto.getTestItemType());
                             searchViewDataConditionDto.add(searchConditionDto);
                         }
                     }
@@ -465,8 +516,6 @@ public class ViewDataController implements Initializable {
         String getWithoutUpperLimit() {
             return withoutUpperLimit;
         }
-
-
     }
 
 

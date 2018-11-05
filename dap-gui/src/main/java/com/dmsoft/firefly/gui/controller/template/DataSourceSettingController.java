@@ -3,6 +3,7 @@
  */
 package com.dmsoft.firefly.gui.controller.template;
 
+import com.dmsoft.firefly.core.sdkimpl.dai.TestDataCacheFactory;
 import com.dmsoft.firefly.gui.components.dialog.ChooseTestItemDialog;
 import com.dmsoft.firefly.gui.components.searchtab.SearchTab;
 import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
@@ -94,6 +95,9 @@ public class DataSourceSettingController {
         oK.setOnAction(event -> {
             List<String> trueSet = new ArrayList<>();
             List<String> falseSet = new ArrayList<>();
+            //清空测试项过滤缓存
+            TestDataCacheFactory factory =  RuntimeContext.getBean(TestDataCacheFactory.class);
+            factory.clean();
             //get change List
             List<RowDataDto> rowDataDtos = itemDataTableModel.getRowDataDtoList();
             if (rowDataDtos != null && !rowDataDtos.isEmpty()) {
@@ -120,6 +124,9 @@ public class DataSourceSettingController {
         apply.setOnAction(event -> {
             List<String> trueSet = new ArrayList<>();
             List<String> falseSet = new ArrayList<>();
+            //清空测试项过滤缓存
+            TestDataCacheFactory factory =  RuntimeContext.getBean(TestDataCacheFactory.class);
+            factory.clean();
             //get change List
             List<RowDataDto> rowDataDtos = itemDataTableModel.getRowDataDtoList();
             if (rowDataDtos != null && !rowDataDtos.isEmpty()) {

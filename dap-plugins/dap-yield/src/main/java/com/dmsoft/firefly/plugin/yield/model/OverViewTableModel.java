@@ -606,9 +606,13 @@ public class OverViewTableModel implements TableModel {
             return "-";
         }
         if (key.equals(YIELD_TITLE[8]) || key.equals(YIELD_TITLE[9]) || key.equals(YIELD_TITLE[10])) {
-            String str = DAPStringUtils.formatDouble(overviewAlarmDto.getValue(), DigNumInstance.newInstance().getDigNum());
-            NumberFormat num = NumberFormat.getPercentInstance();
-            return num.format(Double.valueOf(str));
+            if (DAPStringUtils.isNumeric(overviewAlarmDto.getValue()+"")) {
+                Double value = Double.valueOf(overviewAlarmDto.getValue()) * 100;
+                if (!DAPStringUtils.isInfinityAndNaN(value)) {
+                    return DAPStringUtils.formatDouble(value, 2) + "%";
+                }
+            }
+            return overviewAlarmDto.getValue() + "%";
         }
         if (key.equals(YIELD_TITLE[2])) {
             DecimalFormat df = new DecimalFormat("######0");
