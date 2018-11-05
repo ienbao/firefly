@@ -3,12 +3,12 @@
 }
 
 #viewDataTable,
-#overViewResultTb{
+#overViewResultTb {
     -fx-skin: "com.dmsoft.firefly.gui.components.skin.ExpandableTableViewSkin";
 }
 
 #viewDataTable .column-header.filter-header .button,
-#overViewResultTb .column-header.filter-header .button{
+#overViewResultTb .column-header.filter-header .button {
     -fx-min-width: 17;
     -fx-min-height: 21;
     -fx-border-width: 0 0 0 1;
@@ -17,12 +17,12 @@
 }
 
 #viewDataTable .column-header.filter-header:hover .filter-normal,
-#overViewResultTb .column-header.filter-header:hover .filter-normal{
+#overViewResultTb .column-header.filter-header:hover .filter-normal {
     -fx-background-image: url('/images/btn_arrow_down.png');
 }
 
 #viewDataTable .column-header.filter-header .filter-active,
-#overViewResultTb .column-header.filter-header .filter-active{
+#overViewResultTb .column-header.filter-header .filter-active {
     -fx-background-image: url('/images/btn_filter_normal.png');
     -fx-background-size: 16;
     -fx-background-repeat: no-repeat;
@@ -38,18 +38,18 @@
     -fx-border-color: #dcdcdc;
 }
 
-#viewDataTable .column-header.filter-header:hover .button:hover ,
+#viewDataTable .column-header.filter-header:hover .button:hover,
 #overViewResultTb .column-header.filter-header:hover .button:hover {
     -fx-background-color: #ceeaff;
 }
 
-#viewDataTable .column-header.filter-header .button:armed ,
+#viewDataTable .column-header.filter-header .button:armed,
 #overViewResultTb .column-header.filter-header .button:armed {
     -fx-background-color: #c3d0d9;
 }
 
 #viewDataTable .filter-header .label,
-#overViewResultTb .filter-header .label{
+#overViewResultTb .filter-header .label {
     -fx-content-display: right;
     -fx-padding: 0 -4 0 10;
     -fx-skin: "com.dmsoft.firefly.gui.components.skin.FilterTableHeaderLabel";
@@ -186,8 +186,6 @@ table
     -fx-min-height: 0;
 }
 
-
-
 .btn-timer {
     -fx-text-fill: COLOR_LIGHT_FF;
     -fx-highlight-fill: #5eb511;
@@ -221,7 +219,20 @@ table
     -fx-border-style: dotted;
     -fx-border-insets: 1;
 }
-.default-color0.chart-bar { -fx-bar-fill: #7DAE14; }
-.default-color1.chart-bar { -fx-bar-fill: #487CF4; }
-.default-color2.chart-bar { -fx-bar-fill: #F38400; }
-.default-color3.chart-bar { -fx-bar-fill: RED; }
+
+.default-color0.chart-bar {
+    -fx-bar-fill: #7DAE14;
+}
+
+.default-color1.chart-bar {
+    -fx-bar-fill: #487CF4;
+}
+
+.default-color2.chart-bar {
+    -fx-bar-fill: #F38400;
+}
+
+.default-color3.chart-bar {
+    -fx-bar-fill: RED;
+}
+

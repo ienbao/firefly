@@ -182,19 +182,8 @@ public class ViewDataController implements Initializable {
             this.model = null;
             return;
         }
-//        if(flag == null && lastItem != null) {
-//            for (TestItemWithTypeDto typeDto : typeDtoList) {
-//                for (int i = 0; i < lastItem.size(); i++) {
-//                    if ((lastItem.get(i).equals(typeDto.getTestItemName()))) {
-//                            searchConditionDto = new SearchConditionDto();
-//                            searchConditionDto.setItemName(lastItem.get(i));
-//                            searchConditionDto.setLslOrFail(typeDto.getLsl());
-//                            searchConditionDto.setUslOrPass(typeDto.getUsl());
-//                            searchViewDataConditionDto.add(searchConditionDto);
-//                    }
-//
-//                }
-//            }
+//        if(flag == null && dataFrame.getAllTestItemName().size()==1) {
+//            dataFrame.getAllTestItemWithTypeDto().get(1).setTestItemName("Result");
 //        }
 
         filteValueTf.setDisable(false);
@@ -237,8 +226,12 @@ public class ViewDataController implements Initializable {
         if(flag == null) {
             List<String> dataFrameItem = dataFrame.getAllTestItemName();
             List<String> preItem = Lists.newArrayList();
-            preItem.add(dataFrameItem.get(0));
-            preItem.add(dataFrameItem.get(1));
+            if(dataFrameItem.size()>1){
+                preItem.add(dataFrameItem.get(0));
+                preItem.add(dataFrameItem.get(1));
+            }else {
+                preItem.add(dataFrameItem.get(0));
+            }
             dataFrameItem.removeAll(preItem);
             chooseTestItemDialog.removeSelectedItems(preItem);
             chooseTestItemDialog.resetSelectedItems(dataFrameItem);

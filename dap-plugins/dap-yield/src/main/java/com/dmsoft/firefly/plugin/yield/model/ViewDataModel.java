@@ -71,8 +71,8 @@ public class ViewDataModel implements TableModel {
     public ViewDataModel(SearchDataFrame dataFrame, List<String>  selectedRowKeys) {
         this.dataFrame = dataFrame;
         this.initSelectedRowKeys = selectedRowKeys;
-
         this.headerArray = FXCollections.observableArrayList(dataFrame.getAllTestItemName());
+//        this.headerArray.add(1, "Result");
         this.rowKeyArray = FXCollections.observableArrayList(dataFrame.getAllRowKeys());
         this.checkValueMap = Maps.newLinkedHashMap();
         for (String rowKey : rowKeyArray) {
