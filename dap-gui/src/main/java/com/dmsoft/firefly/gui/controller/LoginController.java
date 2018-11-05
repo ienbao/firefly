@@ -26,11 +26,15 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 
 /**
@@ -39,13 +43,12 @@ import java.util.Map;
  * @author Julia
  */
 public class LoginController {
-    private UserService userService = RuntimeContext.getBean(UserService.class);
+
+    @FXML
+    public VBox loginPane;
 
     @FXML
     private HBox loginFailHbox;
-
-    @FXML
-    private ImageView loginImageView;
 
     @FXML
     private TextFieldUser userNameTxt;
@@ -56,18 +59,22 @@ public class LoginController {
     @FXML
     private Button loginBtn;
 
+
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
+    private UserService userService = RuntimeContext.getBean(UserService.class);
 
 
     @FXML
     private void initialize() {
         DecoratorTextFiledUtils.decoratorFixedLengthTextFiled(userNameTxt.getTextField(), 20);
         DecoratorTextFiledUtils.decoratorFixedLengthTextFiled(passwordField.getTextField(), 20);
-        loginBtn.setStyle("-fx-font-weight: bold;");
-        loginImageView.setImage(new Image("/images/login_logo.png"));
         resetLoginBtn();
+        initLoginEvent();
+    }
+
+    private void initLoginEvent(){
         loginBtn.setOnAction(event -> {
             loginingBtn();
             loginFailHbox.getChildren().clear();
@@ -82,9 +89,13 @@ public class LoginController {
     }
 
     private void loginingBtn() {
-        ImageView imageReset = new ImageView(new Image("/images/small_loading.gif"));
+
+        ImageView imageReset = new ImageView();
+        imageReset.getStyleClass().add("gui-logining-image");
+        // TODO: 2018/11/5 重新切图 
         imageReset.setFitHeight(16);
         imageReset.setFitWidth(16);
+
         loginBtn.setText(GuiFxmlAndLanguageUtils.getString("LOGINING_BTN"));
         loginBtn.setGraphic(imageReset);
         loginBtn.getStyleClass().add("btn-primary-loading");
@@ -96,6 +107,7 @@ public class LoginController {
             if (userDto != null) {
                 this.initEnvData(userDto);
                 Platform.runLater(() -> {
+                    // TODO: 2018/11/5 事件解耦 
                     MenuFactory.getAppController().resetMenu();
                     MenuFactory.getMainController().resetMain();
                     StageMap.getStage(GuiConst.PLARTFORM_STAGE_LOGIN).close();
@@ -120,8 +132,9 @@ public class LoginController {
             envService.setLanguageType(LanguageType.EN);
         }
 
+        // TODO: 2018/11/5 业务代码分层不清晰
         TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
-        String activeTemplateName = null;
+        String activeTemplateName;
         if (templateSettingDto == null || DAPStringUtils.isBlank(templateSettingDto.getName())) {
             envService.setActivatedTemplate(GuiConst.DEFAULT_TEMPLATE_NAME);
             activeTemplateName = GuiConst.DEFAULT_TEMPLATE_NAME;
@@ -129,6 +142,7 @@ public class LoginController {
             activeTemplateName = templateSettingDto.getName();
         }
 
+        // TODO: 2018/11/5 业务代码分层不清晰
         List<String> projectName = envService.findActivatedProjectName();
         if (projectName != null && !projectName.isEmpty()) {
             Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
@@ -142,24 +156,18 @@ public class LoginController {
     private void addErrorTip() {
         Stage loginStage = StageMap.getStage(GuiConst.PLARTFORM_STAGE_LOGIN);
         loginStage.setResizable(true);
-        Label warnLbl = new Label();
-        warnLbl.getStyleClass().add("icon-warn-svg");
-        warnLbl.setPadding(new Insets(0, 10, 0, 10));
 
-        Label warnLbl1 = new Label();
-        warnLbl1.setPrefWidth(350);
-        warnLbl1.setPrefHeight(30);
-        warnLbl1.setMinHeight(30);
-        warnLbl1.setMaxHeight(30);
-        warnLbl1.getStyleClass().add("tooltip-warn");
-        warnLbl1.setStyle("-fx-border-color: #dcdcdc transparent; -fx-border-width: 1 0 0 0");
-        warnLbl1.setText(GuiFxmlAndLanguageUtils.getString("LOGIN_FAIL"));
-        warnLbl1.setGraphic(warnLbl);
-        warnLbl1.setContentDisplay(ContentDisplay.LEFT);
-        loginFailHbox.setPrefHeight(30);
-        loginFailHbox.setMinHeight(30);
-        loginFailHbox.setMaxHeight(30);
-        loginFailHbox.getChildren().add(warnLbl1);
+        Label warnIconLbl = new Label();
+        warnIconLbl.getStyleClass().addAll("icon-warn-svg","gui-login-warm-icon");
+
+        Label warnTipLbl = new Label();
+        warnTipLbl.getStyleClass().addAll("tooltip-warn","gui-login-warm-tip");
+        warnTipLbl.setText(GuiFxmlAndLanguageUtils.getString("LOGIN_FAIL"));
+        warnTipLbl.setGraphic(warnIconLbl);
+        warnTipLbl.setContentDisplay(ContentDisplay.LEFT);
+
+        loginFailHbox.getChildren().add(warnTipLbl);
+
         loginStage.setHeight(288);
         loginStage.setMaxHeight(288);
         loginStage.setMinHeight(288);
