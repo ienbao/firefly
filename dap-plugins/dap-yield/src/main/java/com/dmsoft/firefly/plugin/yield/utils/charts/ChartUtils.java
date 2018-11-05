@@ -30,6 +30,7 @@ public class ChartUtils {
             ObservableList<XYChart.Data> data = oneSeries.getData();
             AtomicInteger colorIndex = new AtomicInteger(3);
             data.forEach(dataItem -> {
+                dataItem.XValueProperty();
                 if (dataItem.getNode() instanceof StackPane) {
                     StackPane stackPane = (StackPane) dataItem.getNode();
                     stackPane.setAlignment(Pos.TOP_CENTER);
@@ -51,14 +52,12 @@ public class ChartUtils {
                         Text text = new Text(textVal);
                         stackPane.getChildren().add(text);
                         stackPane.setMargin(text, new Insets(-15, 0, 0, 0));
-
                     }else {
                         String textVal = formatTextFunc.apply(dataItem.getYValue().toString());
                         Text text = new Text(textVal);
                         stackPane.getChildren().add(text);
                         stackPane.setMargin(text, new Insets(-15, 0, 0, 0));
                     }
-
                 }
             });
         });

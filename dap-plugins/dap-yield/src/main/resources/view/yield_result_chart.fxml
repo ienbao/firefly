@@ -43,17 +43,17 @@
                                     <VBox fx:id="BarChart"
                                           style="-fx-border-width: 0px; -fx-border-color: rgb(220,220,220); "
                                           GridPane.columnIndex="0" VBox.vgrow="ALWAYS">
-                                        <BarChart fx:id="yieldBarChart" minWidth="100.0"
+                                        <BarChart fx:id="yieldBarChart" minWidth="180.0"
                                                   horizontalGridLinesVisible="false" verticalGridLinesVisible="false"
                                                   horizontalZeroLineVisible="false" legendVisible="false"
-                                                  style="-fx-background-color: #ffffff;"
+                                                  style="-fx-background-color: #ffffff; -fx-column-halignment: 1px;-fx-row-valignment: 1px"
                                                   verticalZeroLineVisible="false">
                                             <xAxis>
                                                 <CategoryAxis side="BOTTOM" tickLabelGap="10.0"
                                                               tickMarkVisible="false"/>
                                             </xAxis>
                                             <yAxis>
-                                                <NumberAxis autoRanging="false" minorTickVisible="false" side="LEFT"
+                                                <NumberAxis tickUnit="33.33" autoRanging="false" minorTickVisible="false" side="LEFT"
                                                             tickLabelsVisible="false" tickMarkVisible="false"/>
                                             </yAxis>
                                             <VBox.margin>
@@ -127,18 +127,18 @@
 
                                     </GridPane>
                                     <GridPane GridPane.rowIndex="1">
-                                        <BarChart fx:id="yieldbarChartItem" horizontalGridLinesVisible="false"
-                                                  horizontalZeroLineVisible="false" legendVisible="false"
-                                                  minWidth="226.0" prefHeight="400.0" prefWidth="900.0"
-                                                  verticalZeroLineVisible="false"
+                                        <BarChart fx:id="yieldbarChartItem" horizontalZeroLineVisible="false"
+                                                  horizontalGridLinesVisible="false" legendVisible="false"
+                                                  minWidth="800.0" prefHeight="400.0" prefWidth="900.0"
+                                                  verticalZeroLineVisible="false" verticalGridLinesVisible="true"
                                                   GridPane.rowIndex="1" VBox.vgrow="ALWAYS"
-                                                  style="-fx-stroke-width: 10px">
+                                                  style="-fx-stroke-width: 10px" >
                                             <xAxis>
                                                 <CategoryAxis side="BOTTOM" tickLabelGap="10.0"
                                                               tickMarkVisible="false" />
                                             </xAxis>
                                             <yAxis>
-                                                <NumberAxis autoRanging="false" minorTickVisible="false" side="LEFT"
+                                                <NumberAxis tickUnit="33.33" autoRanging="false" minorTickVisible="false" side="LEFT"
                                                             tickLabelsVisible="false" tickMarkVisible="false"/>
                                             </yAxis>
                                             <VBox.margin>
