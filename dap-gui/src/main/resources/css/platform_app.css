@@ -165,6 +165,7 @@
 
 .gui-logining-image{
     -fx-image: url("/images/small_loading.gif");
+    -fx-content-display: null;
 }
 
 .gui-login-warm-icon{
@@ -176,6 +177,7 @@
     -fx-min-width: 350.0;
     -fx-pref-width: 350.0;
     -fx-alignment: center-left;
+    -fx-content-display: left;
 }
 
 .gui-login-warm-tip{

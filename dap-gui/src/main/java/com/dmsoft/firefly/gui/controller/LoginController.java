@@ -48,7 +48,10 @@ public class LoginController {
     public VBox loginPane;
 
     @FXML
-    private HBox loginFailHbox;
+    private Label loginFailLbl;
+
+    @FXML
+    private ImageView loginingImageView;
 
     @FXML
     private TextFieldUser userNameTxt;
@@ -77,7 +80,7 @@ public class LoginController {
     private void initLoginEvent(){
         loginBtn.setOnAction(event -> {
             loginingBtn();
-            loginFailHbox.getChildren().clear();
+            loginFailLbl.setVisible(false);
             this.doLogin();
         });
     }
@@ -86,22 +89,18 @@ public class LoginController {
         loginBtn.setText(GuiFxmlAndLanguageUtils.getString("LOGIN_BTN"));
         loginBtn.getStyleClass().removeAll("btn-primary-loading");
         loginBtn.setGraphic(null);
+        loginingImageView.setVisible(false);
     }
 
     private void loginingBtn() {
-
-        ImageView imageReset = new ImageView();
-        imageReset.getStyleClass().add("gui-logining-image");
-        // TODO: 2018/11/5 重新切图 
-        imageReset.setFitHeight(16);
-        imageReset.setFitWidth(16);
-
+        loginingImageView.setVisible(true);
+        loginBtn.setGraphic(loginingImageView);
         loginBtn.setText(GuiFxmlAndLanguageUtils.getString("LOGINING_BTN"));
-        loginBtn.setGraphic(imageReset);
         loginBtn.getStyleClass().add("btn-primary-loading");
     }
 
     private void doLogin() {
+        // TODO: 2018/11/6 使用线程池
         Thread thread = new Thread(() -> {
             UserDto userDto = userService.validateUser(userNameTxt.getTextField().getText(), passwordField.getTextField().getText());
             if (userDto != null) {
@@ -127,6 +126,7 @@ public class LoginController {
         userModel.setUser(userDto);
         envService.setUserName(userDto.getUserName());
 
+        // TODO: 2018/11/6
         LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
         if (languageType == null) {
             envService.setLanguageType(LanguageType.EN);
@@ -154,24 +154,7 @@ public class LoginController {
 
 
     private void addErrorTip() {
-        Stage loginStage = StageMap.getStage(GuiConst.PLARTFORM_STAGE_LOGIN);
-        loginStage.setResizable(true);
-
-        Label warnIconLbl = new Label();
-        warnIconLbl.getStyleClass().addAll("icon-warn-svg","gui-login-warm-icon");
-
-        Label warnTipLbl = new Label();
-        warnTipLbl.getStyleClass().addAll("tooltip-warn","gui-login-warm-tip");
-        warnTipLbl.setText(GuiFxmlAndLanguageUtils.getString("LOGIN_FAIL"));
-        warnTipLbl.setGraphic(warnIconLbl);
-        warnTipLbl.setContentDisplay(ContentDisplay.LEFT);
-
-        loginFailHbox.getChildren().add(warnTipLbl);
-
-        loginStage.setHeight(288);
-        loginStage.setMaxHeight(288);
-        loginStage.setMinHeight(288);
-        loginStage.setResizable(false);
+        loginFailLbl.setVisible(true);
     }
 
 }

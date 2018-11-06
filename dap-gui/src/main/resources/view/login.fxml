@@ -4,9 +4,9 @@
 <?import com.dmsoft.firefly.gui.components.utils.TextFieldPassword?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.Label?>
 <VBox xmlns="http://javafx.com/javafx/8.0.76-ea"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:id="loginPane"
@@ -20,8 +20,18 @@
 
     <TextFieldPassword fx:id="passwordField" styleClass="gui-login-text-field"/>
 
-    <Button fx:id="loginBtn" styleClass="btn-primary,gui-login-btn" mnemonicParsing="false" text="%LOGIN_BTN"/>
+    <Button fx:id="loginBtn" styleClass="btn-primary,gui-login-btn" mnemonicParsing="false" text="%LOGIN_BTN">
+        <graphic>
+            <ImageView fx:id="loginingImageView" styleClass="gui-logining-image"
+                       fitWidth="16.0" fitHeight="16.0" visible="false"/>
+        </graphic>
+    </Button>
 
-    <HBox fx:id="loginFailHbox" styleClass="gui-login-error-h-box"/>
+    <Label fx:id="loginFailLbl" styleClass="tooltip-warn,gui-login-warm-tip"
+           text="%LOGIN_FAIL" visible="false">
+        <graphic>
+            <Label styleClass="icon-warn-svg,gui-login-warm-icon"/>
+        </graphic>
+    </Label>
 
 </VBox>
