@@ -92,13 +92,13 @@ public class RangeUtils {
             Double lowerLimited = null;
             Double testItemValue = null;
             if (DAPStringUtils.isNumeric(typeDto.getUsl())) {
-                upperLimited = Double.parseDouble(typeDto.getUsl());
+                upperLimited = Double.parseDouble(typeDto.getUsl());//上限
             }
             if (DAPStringUtils.isNumeric(typeDto.getLsl())) {
-                lowerLimited = Double.parseDouble(typeDto.getLsl());
+                lowerLimited = Double.parseDouble(typeDto.getLsl());//下限
             }
             if (DAPStringUtils.isNumeric(value)) {
-                testItemValue = Double.parseDouble(value);
+                testItemValue = Double.parseDouble(value);//测试值
             }
             if (upperLimited != null && lowerLimited != null) {
                 if (testItemValue <= upperLimited && testItemValue >= lowerLimited) {
@@ -118,13 +118,22 @@ public class RangeUtils {
                 } else {
                     return false;
                 }
-            } else {
+            } else if(upperLimited == null && lowerLimited == null){
+                return true;
+            }else{
                 return false;
             }
         }else if(value != null && typeDto != null && TestItemType.ATTRIBUTE.equals(typeDto.getTestItemType())){
             if (value.equals(typeDto.getUsl())) {
                 return true;
             }
+            if(value.equals("")){
+                return true;
+            }
+            if(!(value.equals(typeDto.getUsl()))&&!(value.equals(typeDto.getLsl()))){
+                return true;
+            }
+
             if (value.equals(typeDto.getLsl())) {
                 return false;
             }
