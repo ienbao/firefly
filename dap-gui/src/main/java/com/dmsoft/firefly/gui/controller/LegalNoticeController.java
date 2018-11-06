@@ -32,7 +32,6 @@ public class LegalNoticeController {
     @FXML
     private void initialize() {
         legalNoticeTextArea.setText(GuiFxmlAndLanguageUtils.getString("LEGAL_NOTICE_CONTENT"));
-        legalNoticeTextArea.setMaxWidth(390);
         legalNoticeTextArea.setWrapText(true);
         legalNoticeTextArea.setMouseTransparent(false);
         legalNoticeTextArea.setFocusTraversable(false);
@@ -40,7 +39,7 @@ public class LegalNoticeController {
         legalOkBtn.setFocusTraversable(false);
         legalOkBtn.setDisable(true);
         if (userService.findLegal()) {
-            acceptCkb.setVisible(false);
+            acceptCkb.setVisible(true);
             acceptCkb.setSelected(true);
             legalOkBtn.setDisable(false);
         }

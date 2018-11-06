@@ -4,30 +4,20 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.LegalNoticeController">
-    <children>
-        <VBox AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-            <children>
-            <Label text="%GLOBAL_LBL_LEGAL" />
-            <TextArea fx:id="legalNoticeTextArea" editable="false" prefHeight="200.0" prefWidth="390.0" text="">
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </TextArea>
-            <CheckBox fx:id="acceptCkb" mnemonicParsing="false" text="%GLOBAL_BTN_AGREE">
-               <VBox.margin>
-                  <Insets bottom="30.0" top="10.0" />
-               </VBox.margin>
-            </CheckBox>
-                <HBox alignment="CENTER_RIGHT">
-                    <children>
-                        <Button fx:id="legalOkBtn" alignment="CENTER" mnemonicParsing="false" prefHeight="22.0" prefWidth="80.0" text="%GLOBAL_BTN_OK" />
-                    </children>
-                    <padding>
-                        <Insets top="10.0" />
-                    </padding>
-                </HBox>
-            </children>
-        </VBox>
-    </children>
-</AnchorPane>
+<VBox xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.dmsoft.firefly.gui.controller.LegalNoticeController"
+        styleClass="gui-legal-vbox">
+    <Label text="%GLOBAL_LBL_LEGAL" />
+    <TextArea fx:id="legalNoticeTextArea" editable="false" styleClass="gui-legal-text-field" text="">
+    </TextArea>
+    <CheckBox fx:id="acceptCkb" mnemonicParsing="false" text="%GLOBAL_BTN_AGREE">
+        <VBox.margin>
+            <Insets top="10.0" />
+        </VBox.margin>
+    </CheckBox>
+    <HBox styleClass="gui-legal-hbox">
+            <Button fx:id="legalOkBtn" styleClass="gui-legal-btn" mnemonicParsing="false" text="%GLOBAL_BTN_OK" />
+    </HBox>
+</VBox>
+
