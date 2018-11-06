@@ -196,6 +196,10 @@ public class DataSourceController implements Initializable {
 
                                     NewNameController finalRenameTemplateController = renameTemplateController;
                                     renameTemplateController.getOk().setOnAction(renameEvent -> {
+                                        if (finalRenameTemplateController.isError()) {
+                                            //WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
+                                            return;
+                                        }
                                         TextField n = finalRenameTemplateController.getName();
                                         if (StringUtils.isNotEmpty(n.getText()) && !n.getText().equals(item.getValue().toString())) {
                                             String newString = DAPStringUtils.filterSpeChars4Mongo(n.getText());

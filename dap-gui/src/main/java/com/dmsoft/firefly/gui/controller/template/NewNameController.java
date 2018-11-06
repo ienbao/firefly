@@ -26,6 +26,7 @@ public class NewNameController {
         ValidateRule rule = new ValidateRule();
         rule.setMaxLength(255);
         rule.setErrorStyle("text-field-error");
+        rule.setAllowEmpty(false);
         rule.setValidateFunc(s -> !DAPStringUtils.isSpeChars4Mongo(s));
         rule.setEmptyErrorMsg(FxmlAndLanguageUtils.getString(ValidationAnno.GLOBAL_VALIDATE_NOT_BE_EMPTY));
         TextFieldWrapper.decorate(name, rule);
