@@ -2,6 +2,8 @@ package com.dmsoft.firefly.plugin.yield.controller;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.gui.components.chart.ChartOperatorUtils;
+import com.dmsoft.firefly.plugin.yield.charts.data.ILineData;
+import com.dmsoft.firefly.plugin.yield.charts.data.VerticalCutLine;
 import com.dmsoft.firefly.plugin.yield.dto.*;
 import com.dmsoft.firefly.plugin.yield.utils.*;
 import com.dmsoft.firefly.plugin.yield.utils.charts.ChartUtils;
@@ -11,17 +13,21 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Line;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +57,11 @@ public class YieldChartResultController implements Initializable {
     private String[] yieldBarChartLabel;
     private Logger logger = LoggerFactory.getLogger(YieldChartResultController.class);
     private List<YieldNTFChartDto> yieldNTFChartDtos;
+    public static final Orientation HORIZONTALTYPE = Orientation.HORIZONTAL;
+    public static final Orientation VERTICALTYPE = Orientation.VERTICAL;
+    private Map<String, Line> lineMap = Maps.newHashMap();
+    private ObservableList<XYChart.Data> horizontalMarkers;
+    private ObservableList<XYChart.Data> verticalMarkers;
 
     public void init(YieldMainController yieldMainController) {
         this.yieldMainController = yieldMainController;
@@ -109,9 +120,6 @@ public class YieldChartResultController implements Initializable {
         resultNTFNum.setDisable(false);
         //清除分析之前的数据
         this.removeBarChartAllResultData();
-        while (yieldChartResultAlermDto == null) {
-            continue;
-        }
         this.setAnalysisBarChartResultData(yieldChartResultAlermDto);
 
     }
@@ -189,8 +197,8 @@ public class YieldChartResultController implements Initializable {
         Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, 5);
         double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
         double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
-        yAxis.setLowerBound((newYMin < 0 && yMin >= 0) ? 0 : newYMin);
-        yAxis.setUpperBound(newYMax);
+        yAxis.setLowerBound(0);
+        yAxis.setUpperBound(1.2D);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
         XYChart.Series series1 = new XYChart.Series();
         series1.getData().add(new XYChart.Data(yieldBarChartLabel[0], (yieldChartResultAlermDto.getFpyPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldChartResultAlermDto.getFpyPercent()) ? 0 : yieldChartResultAlermDto.getFpyPercent())));
@@ -198,7 +206,7 @@ public class YieldChartResultController implements Initializable {
         series1.getData().add(new XYChart.Data(yieldBarChartLabel[2], (yieldChartResultAlermDto.getNgPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldChartResultAlermDto.getNgPercent()) ? 0 : yieldChartResultAlermDto.getNgPercent())));
         yieldBarChart.getData().addAll(series1);//barChart中添加元素
         //yieldBarChart.setBarGap(10);
-        yieldBarChart.setCategoryGap(10);
+        //yieldBarChart.setCategoryGap(10);
         ChartUtils.setChartTextAndColor(yieldBarChart.getData(), s -> {//设置Chart顶部的数据百分比
             if (DAPStringUtils.isNumeric(s)) {
                 Double value = Double.valueOf(s) * 100;
@@ -225,14 +233,13 @@ public class YieldChartResultController implements Initializable {
     private void fireResultBasedCmbChangeEvent() {
         removeBarChartResultItemAllResultData();
         setBarChartItem(yieldNTFChartDtos);
+
     }
 
-    private void setBarChartItem(List<YieldNTFChartDto> yieldNTFChartDtos) {
+    private  void setBarChartItem(List<YieldNTFChartDto> yieldNTFChartDtos) {
         if (yieldNTFChartDtos.size() == 0) {
             return;
         }
-
-
         Double[] yChartArrayData = null;
         for (int i = 0; i < yieldNTFChartDtos.size(); i++) {
             yChartArrayData = new Double[yieldNTFChartDtos.size()];
@@ -246,13 +253,16 @@ public class YieldChartResultController implements Initializable {
         //设置y轴
         NumberAxis yAxis = (NumberAxis) yieldbarChartItem.getYAxis();
         CategoryAxis xAis = (CategoryAxis) yieldbarChartItem.getXAxis();
+        Double[] x = {10D,20D,30D,40D,50D,60D,70D,80D,90D};
+        List<ILineData> verticalLineData = Lists.newArrayList();
         Double  xAisLength = xAis.getEndMargin();
         Double avgxAisLength = xAisLength/10;
+
         System.out.println(avgxAisLength);
         CategoryAxis categoryAxis = new CategoryAxis();
         yieldbarChartItem.setHorizontalGridLinesVisible(false);
         yieldbarChartItem.setVerticalGridLinesVisible(false);
-        final double factor = 0.2;
+        final double factor = 50;
         double reserve = (yMax - yMin) * factor;
         yAxis.setAutoRanging(false);
         yAxis.setTickMarkVisible(false);
@@ -261,12 +271,21 @@ public class YieldChartResultController implements Initializable {
         Map<String, Object> yAxisRangeData = ChartOperatorUtils.getAdjustAxisRangeData(yMax, yMin, 5);
         double newYMin = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MIN);
         double newYMax = (Double) yAxisRangeData.get(ChartOperatorUtils.KEY_MAX);
-        yAxis.setLowerBound((newYMin < 0 && yMin >= 0) ? 0 : newYMin);
-        yAxis.setUpperBound(newYMax);
+        yAxis.setLowerBound(0);
+        yAxis.setUpperBound(1.2D);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
         yAxis.setAutoRanging(false);
         XYChart.Series series2 = new XYChart.Series();
         Integer barChartNTFNum = Integer.parseInt(resultNTFNum.getValue().toString());
+
+        //buildValueMarkerWithoutTooltip(verticalLineData);
+
+        for (int i = 0; i < x.length; i++) {
+            if ((i + 1) % 10 == 0 && i != x.length - 1) {
+                double value = (x[i] + x[i + 1]) / 2;
+                verticalLineData.add(new VerticalCutLine(value));
+            }
+        }
         if (yieldNTFChartDtos.size() >= barChartNTFNum) {
             for (int i = 0; i < barChartNTFNum; i++) {
                 String key = " ";
@@ -323,9 +342,7 @@ public class YieldChartResultController implements Initializable {
             }
             return s + "%";
         });
-
     }
-
     private void updateYieldConfigPreference(YieldAnalysisConfigDto configDto) {
         UserPreferenceDto<YieldAnalysisConfigDto> userPreferenceDto = new UserPreferenceDto<>();
         userPreferenceDto.setUserName(envService.getUserName());
@@ -357,5 +374,7 @@ public class YieldChartResultController implements Initializable {
     public YieldResultDataController getYieldResultDataController() {
         return yieldResultDataController;
     }
+
+
 
 }
