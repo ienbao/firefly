@@ -126,6 +126,12 @@
     -fx-font-size: 22.0;
 }
 
+/*******************************************************************************
+ *                                                                             *
+ * gui additem page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+
 .gui-additem-root{
     -fx-alignment: center-right;
     -fx-max-height: -Infinity;
@@ -136,12 +142,12 @@
     -fx-pref-width: 410.0;
 }
 
-.gui-additem-label-choose{
+.gui-additem-lbl-choose{
     -fx-pref-height: 30.0;
     -fx-pref-width: 190.0;
 }
 
-.gui-additem-label-customize{
+.gui-additem-lbl-customize{
     -fx-padding: 0 0 0 10.0;
     -fx-pref-height: 30.0;
     -fx-pref-width: 170.0;
@@ -154,7 +160,7 @@
     -fx-pref-width: 200.0;
 }
 
-.gui-additem-h-box-button{
+.gui-additem-h-box-btn{
     -fx-max-width: 22.0;
     -fx-min-width: 22.0;
     -fx-pref-width: 22.0;
@@ -195,7 +201,7 @@
 }
 
 .gui-additem-h-box-second-columns-second{
-    -fx-pref-width: 75.0;
+    -fx-pref-width: 185.0;
 }
 
 .gui-additem-h-box-text-area{
@@ -208,7 +214,7 @@
     -fx-alignment: center_right;
 }
 
-.gui-additem-button{
+.gui-additem-btn{
     -fx-pref-width: 80.0;
 }
 /*******************************************************************************
