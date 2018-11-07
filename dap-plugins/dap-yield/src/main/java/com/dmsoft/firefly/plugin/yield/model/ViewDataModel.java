@@ -178,17 +178,9 @@ public class ViewDataModel implements TableModel {
             String usl = searchConditionDto.getUslOrPass();
             TestItemType testItemType = searchConditionDto.getTestItemType();
             if (testItemDtoMap.containsKey(testName)) {
-                    TestItemWithTypeDto testItemDto = testItemDtoMap.get(testName);
-                    if (DAPStringUtils.isNumeric(lsl)) {
-                        if (!DAPStringUtils.isNumeric(testItemDto.getLsl()) || Double.valueOf(lsl) < Double.valueOf(testItemDto.getLsl())) {
-                            testItemDto.setLsl(lsl);
-                        }
-                    }
-                    if (DAPStringUtils.isNumeric(usl)) {
-                        if (!DAPStringUtils.isNumeric(testItemDto.getUsl()) || Double.valueOf(usl) > Double.valueOf(testItemDto.getUsl())) {
-                            testItemDto.setUsl(usl);
-                        }
-                    }
+                TestItemWithTypeDto testItemDto = testItemDtoMap.get(testName);
+                testItemDto.setLsl(lsl);
+                testItemDto.setUsl(usl);
                 testItemDto.setTestItemType(testItemType);
             } else {
                 TestItemWithTypeDto testItemDto = new TestItemWithTypeDto();
@@ -290,6 +282,10 @@ public class ViewDataModel implements TableModel {
                  } else if ((dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column))) || (testItemDtoMap != null && !testItemDtoMap.containsKey(column))) {
                      tableCell.setStyle("-fx-text-fill: #aaaaaa");
                  }
+             } else {
+                 if ((dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column))) || (testItemDtoMap != null && !testItemDtoMap.containsKey(column))) {
+                     tableCell.setStyle("-fx-text-fill: #aaaaaa");
+                 }
              }
          }else { //OverView表格点击
              if (column.equals(primKey)) {
@@ -303,6 +299,10 @@ public class ViewDataModel implements TableModel {
                  } else if (this.highLightRowKeys.contains(rowKey)) {
                      tableCell.setStyle("-fx-background-color: #f8d251");
                  } else if ((dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column))) || (testItemDtoMap != null && !testItemDtoMap.containsKey(column))) {
+                     tableCell.setStyle("-fx-text-fill: #aaaaaa");
+                 }
+             } else if (i % 2 != 0 && column.equals(primKey)){
+                 if ((dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column))) || (testItemDtoMap != null && !testItemDtoMap.containsKey(column))) {
                      tableCell.setStyle("-fx-text-fill: #aaaaaa");
                  }
              }
