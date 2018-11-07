@@ -53,9 +53,7 @@ public class YieldChartResultController implements Initializable {
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
-    private String[] yieldBarChartCategory;
     private String[] yieldBarChartLabel;
-    private Logger logger = LoggerFactory.getLogger(YieldChartResultController.class);
     private List<YieldNTFChartDto> yieldNTFChartDtos;
     public static final Orientation HORIZONTALTYPE = Orientation.HORIZONTAL;
     public static final Orientation VERTICALTYPE = Orientation.VERTICAL;
@@ -64,6 +62,7 @@ public class YieldChartResultController implements Initializable {
     private ObservableList<XYChart.Data> verticalMarkers;
 
     public void init(YieldMainController yieldMainController) {
+
         this.yieldMainController = yieldMainController;
         this.removeBarChartAllResultData();
         this.removeBarChartResultItemAllResultData();
@@ -85,13 +84,13 @@ public class YieldChartResultController implements Initializable {
         series.getData().add(new XYChart.Data("     ", 0));
         yieldbarChartItem.getData().addAll(series);
         yieldBarChart.getData().addAll(series);//barChart中添加元素
-        //yieldBarChart.getData().addAll(yAxisValue);
         yieldBarChart.getData();
         yieldBarChart.setHorizontalGridLinesVisible(true);
         yieldBarChart.setVerticalGridLinesVisible(true);
         yieldbarChartItem.setHorizontalGridLinesVisible(true);
         yieldbarChartItem.setVerticalGridLinesVisible(true);
     }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initI18n();
@@ -105,6 +104,8 @@ public class YieldChartResultController implements Initializable {
         }
         resultNTFNum.setValue(10);
         resultNTFNum.setDisable(true);
+        yieldbarChartItem.setHorizontalGridLinesVisible(false);
+        yieldbarChartItem.setVerticalGridLinesVisible(false);
 
     }
 
@@ -201,12 +202,17 @@ public class YieldChartResultController implements Initializable {
         yAxis.setUpperBound(1.2D);
         ChartOperatorUtils.updateAxisTickUnit(yAxis);
         XYChart.Series series1 = new XYChart.Series();
-        series1.getData().add(new XYChart.Data(yieldBarChartLabel[0], (yieldChartResultAlermDto.getFpyPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldChartResultAlermDto.getFpyPercent()) ? 0 : yieldChartResultAlermDto.getFpyPercent())));
-        series1.getData().add(new XYChart.Data(yieldBarChartLabel[1], (yieldChartResultAlermDto.getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldChartResultAlermDto.getNtfPercent()) ? 0 : yieldChartResultAlermDto.getNtfPercent())));
-        series1.getData().add(new XYChart.Data(yieldBarChartLabel[2], (yieldChartResultAlermDto.getNgPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldChartResultAlermDto.getNgPercent()) ? 0 : yieldChartResultAlermDto.getNgPercent())));
-        yieldBarChart.getData().addAll(series1);//barChart中添加元素
-        //yieldBarChart.setBarGap(10);
-        //yieldBarChart.setCategoryGap(10);
+        if (yieldChartResultAlermDto.getFpyPercent() == null) {
+            series1.getData().add(new XYChart.Data(" ", 0D));
+            series1.getData().add(new XYChart.Data("  ", 0D));
+            series1.getData().add(new XYChart.Data("   ", 0D));
+            yieldBarChart.getData().addAll(series1);//barChart中添加元素
+        } else {
+            series1.getData().add(new XYChart.Data(yieldBarChartLabel[0], (yieldChartResultAlermDto.getFpyPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldChartResultAlermDto.getFpyPercent()) ? 0 : yieldChartResultAlermDto.getFpyPercent())));
+            series1.getData().add(new XYChart.Data(yieldBarChartLabel[1], (yieldChartResultAlermDto.getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldChartResultAlermDto.getNtfPercent()) ? 0 : yieldChartResultAlermDto.getNtfPercent())));
+            series1.getData().add(new XYChart.Data(yieldBarChartLabel[2], (yieldChartResultAlermDto.getNgPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldChartResultAlermDto.getNgPercent()) ? 0 : yieldChartResultAlermDto.getNgPercent())));
+            yieldBarChart.getData().addAll(series1);//barChart中添加元素
+        }
         ChartUtils.setChartTextAndColor(yieldBarChart.getData(), s -> {//设置Chart顶部的数据百分比
             if (DAPStringUtils.isNumeric(s)) {
                 Double value = Double.valueOf(s) * 100;
@@ -224,19 +230,15 @@ public class YieldChartResultController implements Initializable {
         value[0] = yieldChartResultAlermDto.getFpyPercent();
         value[1] = yieldChartResultAlermDto.getNtfPercent();
         value[2] = yieldChartResultAlermDto.getNgPercent();
-
         return value;
-
-
     }
 
     private void fireResultBasedCmbChangeEvent() {
         removeBarChartResultItemAllResultData();
         setBarChartItem(yieldNTFChartDtos);
-
     }
 
-    private  void setBarChartItem(List<YieldNTFChartDto> yieldNTFChartDtos) {
+    private void setBarChartItem(List<YieldNTFChartDto> yieldNTFChartDtos) {
         if (yieldNTFChartDtos.size() == 0) {
             return;
         }
@@ -253,13 +255,14 @@ public class YieldChartResultController implements Initializable {
         //设置y轴
         NumberAxis yAxis = (NumberAxis) yieldbarChartItem.getYAxis();
         CategoryAxis xAis = (CategoryAxis) yieldbarChartItem.getXAxis();
-        Double[] x = {10D,20D,30D,40D,50D,60D,70D,80D,90D};
+        Double[] x = {10D, 20D, 30D, 40D, 50D, 60D, 70D, 80D, 90D};
         List<ILineData> verticalLineData = Lists.newArrayList();
-        Double  xAisLength = xAis.getEndMargin();
-        Double avgxAisLength = xAisLength/10;
+        Double xAisLength = xAis.getEndMargin();
+        Double avgxAisLength = xAisLength / 10;
 
         System.out.println(avgxAisLength);
         CategoryAxis categoryAxis = new CategoryAxis();
+        yieldbarChartItem.setHorizontalGridLinesVisible(false);
         yieldbarChartItem.setHorizontalGridLinesVisible(false);
         yieldbarChartItem.setVerticalGridLinesVisible(false);
         final double factor = 50;
@@ -289,50 +292,61 @@ public class YieldChartResultController implements Initializable {
         if (yieldNTFChartDtos.size() >= barChartNTFNum) {
             for (int i = 0; i < barChartNTFNum; i++) {
                 String key = " ";
-                for(int n=0;n<i;n++){
+                for (int n = 0; n < i; n++) {
                     key += " ";
                 }
                 String xValue = yieldNTFChartDtos.get(i).getItemName();
                 int index = xValue.length();
-                if (index < 10){
-                    String xValueIndex =  xValue.substring(0,index);
-                    series2.getData().add(new XYChart.Data( yieldNTFChartDtos.get(i).getNtfPercent() == null ? key :( xValueIndex), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
-                }else{
-                    String xValue1 =  xValue.substring(0,10);
-                    String xValue2 = xValue.substring(10,index);
-                    xValue = xValue1+ "\n"+ xValue2;
-                    series2.getData().add(new XYChart.Data( yieldNTFChartDtos.get(i).getNtfPercent() == null ? key :( xValue), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
+                if (index < 10) {
+                    String xValueIndex = xValue.substring(0, index);
+                    series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValueIndex), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
+                } else if (index < 19) {
+
+                    String xValue1 = xValue.substring(0, 10);
+                    String xValue2 = xValue.substring(10, index);
+                    xValue = xValue1 + "\n" + xValue2;
+                    series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValue), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
+                } else {
+                    String xValue1 = xValue.substring(0, 10);
+                    String xValue2 = xValue.substring(10, 18) + "...";
+                    xValue = xValue1 + "\n" + xValue2;
+                    series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValue), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
                 }
             }
         } else if (yieldNTFChartDtos.size() < barChartNTFNum) {
             for (int i = 0; i < yieldNTFChartDtos.size(); i++) {
                 String key = " ";
-                for(int n=0;n<i;n++){
+                for (int n = 0; n < i; n++) {
                     key += " ";
                 }
                 String xValue = yieldNTFChartDtos.get(i).getItemName();
                 int index = xValue.length();
-                if (index < 10){
-                    String xValueIndex =  xValue.substring(0,index);
-                    series2.getData().add(new XYChart.Data( yieldNTFChartDtos.get(i).getNtfPercent() == null ? key :( xValueIndex), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
-                }else{
-                    String xValue1 =  xValue.substring(0,10);
-                    String xValue2 = xValue.substring(10,index);
-                    xValue = xValue1+ "\n"+ xValue2;
-                    series2.getData().add(new XYChart.Data( yieldNTFChartDtos.get(i).getNtfPercent() == null ? key :( xValue), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
-                }
+                if (index < 10) {
+                    String xValueIndex = xValue.substring(0, index);
+                    series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValueIndex), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
+                } else if (index < 20) {
 
+                    String xValue1 = xValue.substring(0, 10);
+                    String xValue2 = xValue.substring(10, index);
+                    xValue = xValue1 + "\n" + xValue2;
+                    series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValue), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
+                } else {
+                    String xValue1 = xValue.substring(0, 10);
+                    String xValue2 = xValue.substring(10, 18) + "...";
+                    xValue = xValue1 + "\n" + xValue2;
+                    series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValue), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
+                }
             }
-            for (int i = 0 ; i < barChartNTFNum - yieldNTFChartDtos.size() ; i++){
+            for (int i = 0; i < barChartNTFNum - yieldNTFChartDtos.size(); i++) {
                 String key = " ";
-                for(int n=0;n<i;n++){
+                for (int n = 0; n < i; n++) {
                     key += " ";
                 }
-                series2.getData().add(new XYChart.Data(   key , 0));
+                series2.getData().add(new XYChart.Data(key, 0));
             }
         }
         yieldbarChartItem.getData().addAll(series2);
-        yieldbarChartItem.setCategoryGap(30);
+        //yieldbarChartItem.setCategoryGap(30);
         ChartUtils.setChartText(yieldbarChartItem.getData(), s -> {//设置Chart顶部的数据百分比
             if (DAPStringUtils.isNumeric(s)) {
                 Double value = Double.valueOf(s) * 100;
@@ -342,7 +356,9 @@ public class YieldChartResultController implements Initializable {
             }
             return s + "%";
         });
+
     }
+
     private void updateYieldConfigPreference(YieldAnalysisConfigDto configDto) {
         UserPreferenceDto<YieldAnalysisConfigDto> userPreferenceDto = new UserPreferenceDto<>();
         userPreferenceDto.setUserName(envService.getUserName());
@@ -374,7 +390,6 @@ public class YieldChartResultController implements Initializable {
     public YieldResultDataController getYieldResultDataController() {
         return yieldResultDataController;
     }
-
 
 
 }

@@ -73,22 +73,29 @@ public class ChartUtils {
                     StackPane stackPane = (StackPane) dataItem.getNode();
                     stackPane.setAlignment(Pos.TOP_CENTER);
                     String xName = dataItem.getXValue().toString();
-                    if ("%FPY".equals(xName)) {
-                        xName = YieldOverviewKey.FPYPER.getCode();
-                    } else if ("%NTF".equals(xName)) {
-                        xName = YieldOverviewKey.NTFPER.getCode();
-                    } else if ("%NG".equals(xName)) {
-                        xName = YieldOverviewKey.NGPER.getCode();
-                    }
-                    if (YieldOverviewKey.EXCELLENT.getCode().equals(yieldChartResultAlermDtoMap.get(xName).getLevel())) {
-                        colorIndex.set(0);
-                    } else if (YieldOverviewKey.ADEQUATE.getCode().equals(yieldChartResultAlermDtoMap.get(xName).getLevel())) {
-                        colorIndex.set(1);
-                    } else if (YieldOverviewKey.MARGINAL.getCode().equals(yieldChartResultAlermDtoMap.get(xName).getLevel())) {
-                        colorIndex.set(2);
-                    } else if (YieldOverviewKey.BAD.getCode().equals(yieldChartResultAlermDtoMap.get(xName).getLevel())) {
-                        colorIndex.set(3);
-                    }
+                    String key = " ";
+                    if (xName.substring(0, 1).equals(key.substring(0, 1))) {
+                        String textXValue = null;
+                        Text text = new Text(textXValue);
+                        stackPane.getChildren().add(text);
+                        stackPane.setMargin(text, new Insets(-15, 0, 0, 0));
+                    } else {
+                        if ("%FPY".equals(xName)) {
+                            xName = YieldOverviewKey.FPYPER.getCode();
+                        } else if ("%NTF".equals(xName)) {
+                            xName = YieldOverviewKey.NTFPER.getCode();
+                        } else if ("%NG".equals(xName)) {
+                            xName = YieldOverviewKey.NGPER.getCode();
+                        }
+                        if (YieldOverviewKey.EXCELLENT.getCode().equals(yieldChartResultAlermDtoMap.get(xName).getLevel())) {
+                            colorIndex.set(0);
+                        } else if (YieldOverviewKey.ADEQUATE.getCode().equals(yieldChartResultAlermDtoMap.get(xName).getLevel())) {
+                            colorIndex.set(1);
+                        } else if (YieldOverviewKey.MARGINAL.getCode().equals(yieldChartResultAlermDtoMap.get(xName).getLevel())) {
+                            colorIndex.set(2);
+                        } else if (YieldOverviewKey.BAD.getCode().equals(yieldChartResultAlermDtoMap.get(xName).getLevel())) {
+                            colorIndex.set(3);
+                        }
                     stackPane.getStyleClass().add("default-color" + colorIndex.get());
                     stackPane.setMaxWidth(15);
                     stackPane.setMinWidth(15);
@@ -107,6 +114,7 @@ public class ChartUtils {
                     Text text = new Text(textVal);
                     stackPane.getChildren().add(text);
                     stackPane.setMargin(text, new Insets(-15, 0, 0, 0));
+                }
                 }
             });
         });
