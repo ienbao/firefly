@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
 <VBox styleClass="gui-export-vbox" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.ExportSettingController">
@@ -15,7 +13,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-       <HBox styleClass="gui-export-hbox" GridPane.columnSpan="4" GridPane.rowIndex="4">
+       <HBox styleClass="gui-export-hbox">
                <Button fx:id="exportBtn" styleClass="gui-export-btn" mnemonicParsing="false" text="%EXPORT_BTN" />
                <Button fx:id="cancelBtn" styleClass="gui-export-btn" mnemonicParsing="false" text="%CANCEL_BTN"/>
        </HBox>

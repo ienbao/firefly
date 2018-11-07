@@ -571,10 +571,6 @@
     -fx-max-width: 390;
 }
 
-.gui-legal-checkbox{
-    -fx-spacing: 10.0,0.0,30.0,0.0;
-}
-
 .gui-legal-btn{
     -fx-pref-height: 22.0;
     -fx-pref-width: 80.0;
@@ -584,6 +580,10 @@
 .gui-legal-hbox{
     -fx-alignment: bottom-right;
     -fx-pref-height: 60;
+}
+
+.gui-legal-inside-vbox{
+    -fx-spacing: 20.0;
 }
 
 /*******************************************************************************
