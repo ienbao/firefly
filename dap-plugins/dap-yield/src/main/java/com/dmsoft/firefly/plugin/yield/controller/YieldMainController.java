@@ -480,4 +480,12 @@ public class YieldMainController implements Initializable {
     public YieldItemController getYieldItemController() {
         return yieldItemController;
     }
+
+    public OverViewController getOverViewController() {
+        return overViewController;
+    }
+
+    public void setOverViewController(OverViewController overViewController) {
+        this.overViewController = overViewController;
+    }
 }

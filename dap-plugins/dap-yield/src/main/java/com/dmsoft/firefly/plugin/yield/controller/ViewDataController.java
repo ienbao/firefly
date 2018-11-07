@@ -6,6 +6,7 @@ import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
+import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
 import com.dmsoft.firefly.plugin.yield.model.ViewDataModel;
 import com.dmsoft.firefly.plugin.yield.utils.*;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -71,6 +72,7 @@ public class ViewDataController implements Initializable {
     private String columnLabel;
     private String flag;//标记点击事件发生的位置，当flag为空时，点击事件发生在OverView表中
     private boolean dataFrameFlag ;
+    private List<YieldOverviewResultAlarmDto> RowDataList =  Lists.newArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -157,6 +159,7 @@ public class ViewDataController implements Initializable {
         this.selectedRowKeys = selectedRowKey;
         this.rowKey = rowKey;
         this.columnLabel = columnLable;
+        this.RowDataList = yieldMainController.getOverViewController().getAllRowStatsData();
         String row;
         if(rowKey == "-" ){
             row = rowKey != null ? rowKey : null;
@@ -215,8 +218,20 @@ public class ViewDataController implements Initializable {
                             if (!(testItemName.equals(searchViewDataConditionDto.get(1).getItemName()))) {
                                 searchConditionDto = new SearchConditionDto();
                                 searchConditionDto.setItemName(testItemName);
-                                searchConditionDto.setLslOrFail(typeDto.getLsl());
-                                searchConditionDto.setUslOrPass(typeDto.getUsl());
+                                for(int i = 0 ; i<RowDataList.size();i++){
+                                    if(RowDataList.get(i).getItemName().equals(testItemName)){
+                                        if(typeDto.getLsl().equals(RowDataList.get(i).getLslOrFail())){
+                                            searchConditionDto.setLslOrFail(typeDto.getLsl());
+                                        }else{
+                                            searchConditionDto.setLslOrFail(RowDataList.get(i).getLslOrFail());
+                                        }
+                                        if(typeDto.getUsl().equals(RowDataList.get(i).getUslOrPass())){
+                                            searchConditionDto.setUslOrPass(typeDto.getUsl());
+                                        }else{
+                                            searchConditionDto.setUslOrPass(RowDataList.get(i).getUslOrPass());
+                                        }
+                                    }
+                                }
                                 searchConditionDto.setTestItemType(typeDto.getTestItemType());
                                 searchViewDataConditionDto.add(searchConditionDto);
                             }
@@ -363,8 +378,20 @@ public class ViewDataController implements Initializable {
                         if (!(testItemName.equals(searchViewDataConditionDto.get(1).getItemName()))) {
                             searchConditionDto = new SearchConditionDto();
                             searchConditionDto.setItemName(testItemName);
-                            searchConditionDto.setLslOrFail(typeDto.getLsl());
-                            searchConditionDto.setUslOrPass(typeDto.getUsl());
+                            for(int i = 0 ; i<RowDataList.size();i++){
+                                if(RowDataList.get(i).getItemName().equals(testItemName)){
+                                    if(typeDto.getLsl().equals(RowDataList.get(i).getLslOrFail())){
+                                        searchConditionDto.setLslOrFail(typeDto.getLsl());
+                                    }else{
+                                        searchConditionDto.setLslOrFail(RowDataList.get(i).getLslOrFail());
+                                    }
+                                    if(typeDto.getUsl().equals(RowDataList.get(i).getUslOrPass())){
+                                        searchConditionDto.setUslOrPass(typeDto.getUsl());
+                                    }else{
+                                        searchConditionDto.setUslOrPass(RowDataList.get(i).getUslOrPass());
+                                    }
+                                }
+                            }
                             searchConditionDto.setTestItemType(typeDto.getTestItemType());
                             searchViewDataConditionDto.add(searchConditionDto);
                         }

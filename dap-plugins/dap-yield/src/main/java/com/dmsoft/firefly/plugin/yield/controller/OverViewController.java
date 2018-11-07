@@ -86,6 +86,10 @@ public class OverViewController implements Initializable {
     }
 
     public void fireClickEvent(ViewDataParamDto viewDataParamDto) {
+
+        List<YieldOverviewResultAlarmDto> RowDataList = getAllRowStatsData();
+
+
         String rowKey = viewDataParamDto.getItemName();
         String column = viewDataParamDto.getColumn();
         yieldItemController = yieldMainController.getYieldItemController();
