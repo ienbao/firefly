@@ -278,7 +278,7 @@
  *                                                                             *
  ******************************************************************************/
 
-.datasource-root{
+.gui-datasource-root{
     -fx-padding: 10 ;
     -fx-alignment: center;
     -fx-max-height: 420.0;
@@ -289,58 +289,92 @@
     -fx-pref-width: 600.0;
     -fx-background-color: #ffffff;
 }
-.datasource-head-borderPane{
-    -fx-padding: 5 0 5 5 ;
+.gui-datasource-head-borderPane{
+    -fx-padding: 5 5 5 5 ;
     -fx-border-width: 1 1 0 1;
     -fx-border-color: #DCDCDC;
 
 }
-.datasource-textfield-filter{
+.gui-datasource-textfield-filter{
      -fx-pref-height: 22.0;
      -fx-pref-width: 200.0;
 
  }
-.datasource-delete-button{
-    -fx-border-width: 1 1 0 1;
-    -fx-border-color: #DCDCDC;
+.gui-datasource-delete-btn{
     -fx-pref-height: 22.0;
     -fx-pref-width: 22.0;
+
 }
 
-.datasource-errorinfo-lable{
+.gui-datasource-errorinfo-lbl{
     -fx-pref-height: 22.0;
     -fx-pref-width: 24.0;
     -fx-margin: 10px 0px 0px 0px;
+    -fx-background-color: #F38400
 }
-.datasource-button{
+.gui-datasource-btn{
     -fx-pref-height: 22.0;
     -fx-pref-width: 80.0;
 
 }
-.datasource-foot-borderPane{
+.gui-datasource-foot-borderPane{
     -fx-padding: 10 0 0 0;
 
 
 }
-.datasource-h-box{
-    -fx-spacing: 20.0
+.gui-datasource-foot-h-box{
+    -fx-spacing: 10.0
 
 }
-.datasource-table-view{
+.gui-datasource-table-view{
     -fx-pref-height: 200.0;
-    -fx-pref-width: 200.0;
+    -fx-max-width: 580.0;
+    -fx-min-width: 580.0;
+    -fx-pref-width: 580.0;
 
 }
-.datasource-table-check-box-column{
+.gui-datasource-table-check-box-column{
     -fx-pref-width: 33.0;
     -fx-max-width: 33.0;
     -fx-min-width: 33.0;
 
 }
-.datasource-table-value-column{
-    -fx-pref-width: 75.0;
-    -fx-max-width: 75.0;
-    -fx-min-width: 75.0;
+.gui-datasource-table-value-column{
+    -fx-pref-width: 545.0;
+    -fx-max-width: 545.0;
+    -fx-min-width: 545.0;
 
 }
+.gui-datasource-delete-btn-image{
+    -fx-image: url("/images/btn_del_normal.png");
 
+}
+.gui-datasource-progressBar{
+    -fx-pref-width: 70.0;
+    -fx-max-width: 70.0;
+    -fx-min-width: 70.0;
+    -fx-pref-height: 3.0;
+    -fx-max-height: 3.0;
+    -fx-min-height: 3.0;
+}
+.gui-datasource-rename-btn{
+     -fx-padding: 0 4 0 4;
+     -fx-border-insets: -3 0 0 0;
+     -fx-background-insets: -3 0 0 0
+ }
+.gui-datasource-delete-one-btn{
+    -fx-padding: 0 4 0 4;
+    -fx-border-insets: -3 0 0 0;
+    -fx-background-insets: -3 0 0 0
+}
+.gui-datasource-text-filed{
+    -fx-border-width: 0 0 0 0;
+    -fx-pref-width: 400.0;
+}
+.gui-datasource-table-h-box{
+    -fx-background-insets: -1 0 0 0;
+    -fx-border-insets: -1 0 0 0;
+    -fx-spacing:5;
+    -fx-alignment: center;
+
+}

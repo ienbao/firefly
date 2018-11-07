@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import com.dmsoft.firefly.gui.components.utils.TextFieldFilter?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.layout.BorderPane?>
-<VBox styleClass="datasource-root" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.DataSourceController">
-    <BorderPane styleClass="datasource-head-borderPane">
+<?import javafx.scene.image.ImageView?>
+<VBox styleClass="gui-datasource-root" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.DataSourceController">
+    <BorderPane styleClass="gui-datasource-head-borderPane">
         <left>
-            <TextFieldFilter fx:id="filterTf" styleClass="datasource-textfield-filter" />
+            <TextFieldFilter fx:id="filterTf" styleClass="gui-datasource-textfield-filter" />
         </left>
-        <right>
-            <Button fx:id="delete"  mnemonicParsing="false"  styleClass="btn-icon" />
+        <right >
+            <Button fx:id="delete"  styleClass="btn-icon,gui-datasource-delete-btn" >
+                <graphic>
+                    <ImageView styleClass="gui-datasource-delete-btn-image" fitWidth="16.0" fitHeight="16.0" />
+                </graphic>
+            </Button>
         </right>
     </BorderPane>
-
-    <TableView fx:id="dataSourceTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+    <TableView fx:id="dataSourceTable"  styleClass="gui-datasource-table-view" VBox.vgrow="ALWAYS" >
         <columns>
-            <TableColumn fx:id="chooseCheckBoxColumn" maxWidth="33.0" minWidth="33.0" prefWidth="33.0" resizable="false" text="C1" />
-            <TableColumn fx:id="chooseValueColumn" prefWidth="75.0" text="%DATA_SOURCE_NAME" />
+            <TableColumn fx:id="chooseCheckBoxColumn" styleClass="gui-datasource-table-check-box-column" resizable="false" text="C1" />
+            <TableColumn fx:id="chooseValueColumn" styleClass="gui-datasource-table-value-column" resizable="false" text="%DATA_SOURCE_NAME" />
         </columns>
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
         </columnResizePolicy>
     </TableView>
-    <BorderPane styleClass="datasource-foot-borderPane">
+    <BorderPane styleClass="gui-datasource-foot-borderPane">
         <left>
-            <Button fx:id="addFile"  mnemonicParsing="false" styleClass="datasource-button" text="%ADD_FILE" />
+            <Button fx:id="addFile"  styleClass="gui-datasource-btn" text="%ADD_FILE" />
         </left>
         <right>
-            <HBox styleClass="datasource-h-box">
-                <Label fx:id="errorInfo"  mnemonicParsing="false"  styleClass="btn-icon,datasource-errorinfo-lable" />
-                <Button fx:id="ok" styleClass="datasource-button" mnemonicParsing="false" text="%OK_DATA" />
-                <Button fx:id="cancel" mnemonicParsing="false" styleClass="datasource-button" text="%CANCEL_DATA" />
+            <HBox styleClass="gui-datasource-foot-h-box">
+                <Label fx:id="errorInfo"  styleClass="btn-icon,message-tip-warn-mark,gui-datasource-errorinfo-lbl" />
+                <Button fx:id="ok" styleClass="gui-datasource-btn" text="%OK_DATA" />
+                <Button fx:id="cancel" styleClass="gui-datasource-btn" text="%CANCEL_DATA" />
             </HBox>
-
         </right>
     </BorderPane>
 </VBox>
