@@ -2,6 +2,7 @@ package com.dmsoft.firefly.plugin.yield.model;
 
 import com.dmsoft.firefly.gui.components.table.TableMenuRowEvent;
 import com.dmsoft.firefly.gui.components.table.TableModel;
+import com.dmsoft.firefly.gui.components.utils.TableComparatorUtils;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.utils.ValidateUtils;
 import com.dmsoft.firefly.plugin.yield.dto.OverviewAlarmDto;
@@ -30,10 +31,8 @@ import javafx.scene.control.TextField;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class OverViewTableModel implements TableModel {
     private static final String[] YIELD_OVERVIEW_FIX_COLUMN = UIConstant.YIELD_OVERVIEW_FIX_COLUMN;
@@ -440,6 +439,10 @@ public class OverViewTableModel implements TableModel {
                 }
                 tableCell.setStyle("-fx-background-color:" + ColorUtils.toHexFromColor(bgColor) + ";-fx-text-fill:" + ColorUtils.toHexFromColor(fgColor));
             }
+        }
+
+        if (column.equals(YIELD_TITLE[8]) || column.equals(YIELD_TITLE[9]) || column.equals(YIELD_TITLE[10]) ){
+            tableCell.getTableColumn().setComparator((Comparator<T>) TableComparatorUtils.getContainsPercentColumnComparator());
         }
 
 
