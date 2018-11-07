@@ -126,6 +126,12 @@
     -fx-font-size: 22.0;
 }
 
+/*******************************************************************************
+ *                                                                             *
+ * gui additem page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+
 .gui-additem-root{
     -fx-alignment: center-right;
     -fx-max-height: -Infinity;
@@ -136,12 +142,12 @@
     -fx-pref-width: 410.0;
 }
 
-.gui-additem-label-choose{
+.gui-additem-lbl-choose{
     -fx-pref-height: 30.0;
     -fx-pref-width: 190.0;
 }
 
-.gui-additem-label-customize{
+.gui-additem-lbl-customize{
     -fx-padding: 0 0 0 10.0;
     -fx-pref-height: 30.0;
     -fx-pref-width: 170.0;
@@ -154,10 +160,11 @@
     -fx-pref-width: 200.0;
 }
 
-.gui-additem-h-box-button{
+.gui-additem-h-box-btn{
     -fx-max-width: 22.0;
     -fx-min-width: 22.0;
     -fx-pref-width: 22.0;
+    -fx-background-color: #0096ff;
 }
 
 .gui-additem-h-box-second{
@@ -194,7 +201,7 @@
 }
 
 .gui-additem-h-box-second-columns-second{
-    -fx-pref-width: 75.0;
+    -fx-pref-width: 185.0;
 }
 
 .gui-additem-h-box-text-area{
@@ -207,7 +214,7 @@
     -fx-alignment: center_right;
 }
 
-.gui-additem-button{
+.gui-additem-btn{
     -fx-pref-width: 80.0;
 }
 /*******************************************************************************
@@ -378,3 +385,78 @@
     -fx-alignment: center;
 
 }
+
+/*******************************************************************************
+ *                                                                             *
+ * legal page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+
+.gui-legal-vbox{
+    -fx-padding: 10.0,10.0,10.0,10.0;
+    -fx-spacing: 10.0;
+}
+
+.gui-legal-text-field{
+    -fx-pref-height: 200.0;
+    -fx-pref-width: 390.0;
+    -fx-max-width: 390;
+}
+
+.gui-legal-btn{
+    -fx-pref-height: 22.0;
+    -fx-pref-width: 80.0;
+    -fx-alignment: center;
+}
+
+.gui-legal-hbox{
+    -fx-alignment: bottom-right;
+    -fx-pref-height: 60;
+}
+
+.gui-legal-inside-vbox{
+    -fx-spacing: 20.0;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * export setting page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+
+.gui-export-vbox{
+    -fx-pref-height: 330.0;
+    -fx-pref-width: 410.0;
+    -fx-padding: 10.0,10.0,10.0,0.0;
+}
+
+.gui-export-table{
+    -fx-pref-width: 200.0;
+    -fx-pref-height: 200.0;
+}
+.gui-export-selector{
+    -fx-max-width: 30.0;
+    -fx-min-width: 30.0;
+    -fx-pref-width: 30.0;
+
+}
+
+.gui-export-setting{
+    -fx-pref-width: 360.0;
+
+}
+
+.gui-export-hbox{
+    -fx-alignment: center-right;
+    -fx-pref-height: 45.0;
+    -fx-pref-width: 200.0;
+    -fx-spacing: 10.0;
+}
+
+.gui-export-btn{
+    -fx-alignment: center;
+    -fx-pref-width: 80;
+}
+
+
+
