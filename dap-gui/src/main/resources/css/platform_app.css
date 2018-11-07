@@ -158,6 +158,7 @@
     -fx-max-width: 22.0;
     -fx-min-width: 22.0;
     -fx-pref-width: 22.0;
+    -fx-background-color: #0096ff;
 }
 
 .gui-additem-h-box-second{
