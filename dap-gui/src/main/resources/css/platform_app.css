@@ -126,7 +126,90 @@
     -fx-font-size: 22.0;
 }
 
+.gui-additem-root{
+    -fx-alignment: center-right;
+    -fx-max-height: -Infinity;
+    -fx-max-width: -Infinity;
+    -fx-min-height: -Infinity;
+    -fx-min-width: -Infinity;
+    -fx-pref-height: 330.0;
+    -fx-pref-width: 410.0;
+}
 
+.gui-additem-label-choose{
+    -fx-pref-height: 30.0;
+    -fx-pref-width: 190.0;
+}
+
+.gui-additem-label-customize{
+    -fx-padding: 0 0 0 10.0;
+    -fx-pref-height: 30.0;
+    -fx-pref-width: 170.0;
+}
+
+.gui-additem-h-box-first{
+    -fx-padding: 0 10.0 0 10.0;
+    -fx-alignment: center-left;
+    -fx-pref-height: 30.0;
+    -fx-pref-width: 200.0;
+}
+
+.gui-additem-h-box-button{
+    -fx-max-width: 22.0;
+    -fx-min-width: 22.0;
+    -fx-pref-width: 22.0;
+}
+
+.gui-additem-h-box-second{
+    -fx-spacing: 10.0;
+    -fx-padding: 0 10.0 0 10.0;
+    -fx-pref-height: 255.0;
+    -fx-pref-width: 410.0;
+    -fx-border-width: 0 0 0 0;
+}
+
+.gui-additem-h-box-second-vbox{
+    -fx-alignment: center;
+    -fx-spacing: 5.0;
+    -fx-padding: 5.0 0 0 0;
+    -fx-pref-height: 200.0;
+    -fx-pref-width: 190.0;
+    -fx-border-width: 1 1 1 1;
+    -fx-border-color: #DCDCDC;
+}
+
+.gui-additem-h-box-second-textfiled{
+    -fx-max-width: 180.0;
+}
+
+.gui-additem-h-box-second-table{
+    -fx-pref-height: 200.0;
+    -fx-pref-width: 200.0;
+}
+
+.gui-additem-h-box-second-columns-first{
+    -fx-max-width: 30.0;
+    -fx-min-width: 30.0;
+    -fx-pref-width: 30.0;
+}
+
+.gui-additem-h-box-second-columns-second{
+    -fx-pref-width: 75.0;
+}
+
+.gui-additem-h-box-text-area{
+    -fx-pref-height: 200.0;
+    -fx-pref-width: 190.0;
+}
+
+.gui-additem-h-box-third{
+    -fx-padding: 10.0;
+    -fx-alignment: center_right;
+}
+
+.gui-additem-button{
+    -fx-pref-width: 80.0;
+}
 /*******************************************************************************
  *                                                                             *
  * login page css                                                              *
@@ -396,3 +479,76 @@
     -fx-padding:80 0 0 0;
 
 }
+
+/*******************************************************************************
+ *                                                                             *
+ * datasource page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+
+.datasource-root{
+    -fx-padding: 10 ;
+    -fx-alignment: center;
+    -fx-max-height: 420.0;
+    -fx-min-height: 420.0;
+    -fx-pref-height: 420.0;
+    -fx-max-width: 600.0;
+    -fx-min-width: 600.0;
+    -fx-pref-width: 600.0;
+    -fx-background-color: #ffffff;
+}
+.datasource-head-borderPane{
+    -fx-padding: 5 0 5 5 ;
+    -fx-border-width: 1 1 0 1;
+    -fx-border-color: #DCDCDC;
+
+}
+.datasource-textfield-filter{
+     -fx-pref-height: 22.0;
+     -fx-pref-width: 200.0;
+
+ }
+.datasource-delete-button{
+    -fx-border-width: 1 1 0 1;
+    -fx-border-color: #DCDCDC;
+    -fx-pref-height: 22.0;
+    -fx-pref-width: 22.0;
+}
+
+.datasource-errorinfo-lable{
+    -fx-pref-height: 22.0;
+    -fx-pref-width: 24.0;
+    -fx-margin: 10px 0px 0px 0px;
+}
+.datasource-button{
+    -fx-pref-height: 22.0;
+    -fx-pref-width: 80.0;
+
+}
+.datasource-foot-borderPane{
+    -fx-padding: 10 0 0 0;
+
+
+}
+.datasource-h-box{
+    -fx-spacing: 20.0
+
+}
+.datasource-table-view{
+    -fx-pref-height: 200.0;
+    -fx-pref-width: 200.0;
+
+}
+.datasource-table-check-box-column{
+    -fx-pref-width: 33.0;
+    -fx-max-width: 33.0;
+    -fx-min-width: 33.0;
+
+}
+.datasource-table-value-column{
+    -fx-pref-width: 75.0;
+    -fx-max-width: 75.0;
+    -fx-min-width: 75.0;
+
+}
+
