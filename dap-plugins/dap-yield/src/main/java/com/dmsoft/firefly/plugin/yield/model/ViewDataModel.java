@@ -295,7 +295,18 @@ public class ViewDataModel implements TableModel {
              if (column.equals(primKey)) {
                  i = i + 1;
              }
-             if (i % 2 == 0 ) {
+             if (i % 2 == 0 && column.equals(primKey)) {
+                 if (testItemDtoMap != null && !RangeUtils.validateValue(dataFrame.getCellValue(rowKey, column), testItemDtoMap.get(column))) {
+                     tableCell.setStyle("-fx-background-color: #ea2028; -fx-text-fill: white");
+                 } else if (dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column)) && this.highLightRowKeys.contains(rowKey)) {
+                     tableCell.setStyle("-fx-background-color: #f8d251; -fx-text-fill: #aaaaaa");
+                 } else if (this.highLightRowKeys.contains(rowKey)) {
+                     tableCell.setStyle("-fx-background-color: #f8d251");
+                 } else if ((dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column))) || (testItemDtoMap != null && !testItemDtoMap.containsKey(column))) {
+                     tableCell.setStyle("-fx-text-fill: #aaaaaa");
+                 }
+             }
+             if (!column.equals(primKey)) {
                  if (testItemDtoMap != null && !RangeUtils.validateValue(dataFrame.getCellValue(rowKey, column), testItemDtoMap.get(column))) {
                      tableCell.setStyle("-fx-background-color: #ea2028; -fx-text-fill: white");
                  } else if (dataFrame.getCellValue(rowKey, column) != null && !DAPStringUtils.isNumeric(dataFrame.getCellValue(rowKey, column)) && this.highLightRowKeys.contains(rowKey)) {

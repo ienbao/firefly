@@ -342,7 +342,7 @@ public class TemplateController {
             root = fxmlLoader.load();
             newNameController.getOk().setOnAction(event -> {
                 if (newNameController.isError()) {
-                    WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
+                    //WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
                     return;
                 }
                 String newTemplateName = newNameController.getName().getText();
@@ -384,7 +384,7 @@ public class TemplateController {
             root = fxmlLoader.load();
             renameTemplateController.getOk().setOnAction(event -> {
                 if (renameTemplateController.isError()) {
-                    WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
+                    //WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
                     return;
                 }
                 String newTemplateName = renameTemplateController.getName().getText();
@@ -443,7 +443,7 @@ public class TemplateController {
             root = fxmlLoader.load();
             copyTemplateController.getOk().setOnAction(event -> {
                 if (copyTemplateController.isError()) {
-                    WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
+                    //WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
                     return;
                 }
                 String newTemplateName = copyTemplateController.getName().getText();
