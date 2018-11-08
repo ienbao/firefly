@@ -336,12 +336,12 @@ public class YieldServiceImpl implements YieldService {
        // }
         List<YieldNTFChartDto> ntfChartDtoList = Lists.newArrayList();
         for (int i = 0; i < searchConditions.size() - 1; i++) {
-            YieldNTFChartDto yieldNTFChartDto = new YieldNTFChartDto();
-            yieldNTFChartDto.setItemName(overResult.get(i).getItemName());
             if (null != overResult.get(i).getNtfPercent()) {
+                YieldNTFChartDto yieldNTFChartDto = new YieldNTFChartDto();
+                yieldNTFChartDto.setItemName(overResult.get(i).getItemName());
                 yieldNTFChartDto.setNtfPercent(overResult.get(i).getNtfPercent());
+                ntfChartDtoList.add(yieldNTFChartDto);
             }
-            ntfChartDtoList.add(yieldNTFChartDto);
         }
         Collections.sort(ntfChartDtoList, new Comparator<YieldNTFChartDto>() {
             @Override
@@ -357,7 +357,7 @@ public class YieldServiceImpl implements YieldService {
                 }
             }
         });
-        for (int i = 0; i < configDto.getTopN() && i < searchConditions.size() - 1; i++) {
+        for (int i = 0; i < configDto.getTopN() && i < searchConditions.size() - 1 && i < ntfChartDtoList.size() ; i++) {
             ntfChartResult.add(ntfChartDtoList.get(i));
         }
 
