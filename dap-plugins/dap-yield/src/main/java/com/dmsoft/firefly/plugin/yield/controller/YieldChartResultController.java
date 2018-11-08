@@ -240,6 +240,8 @@ public class YieldChartResultController implements Initializable {
 
     private void setBarChartItem(List<YieldNTFChartDto> yieldNTFChartDtos) {
         if (yieldNTFChartDtos.size() == 0) {
+            yieldbarChartItem.setHorizontalGridLinesVisible(false);
+            yieldbarChartItem.setVerticalGridLinesVisible(false);
             return;
         }
         Double[] yChartArrayData = null;
@@ -262,7 +264,6 @@ public class YieldChartResultController implements Initializable {
 
         System.out.println(avgxAisLength);
         CategoryAxis categoryAxis = new CategoryAxis();
-        yieldbarChartItem.setHorizontalGridLinesVisible(false);
         yieldbarChartItem.setHorizontalGridLinesVisible(false);
         yieldbarChartItem.setVerticalGridLinesVisible(false);
         final double factor = 50;
@@ -289,60 +290,72 @@ public class YieldChartResultController implements Initializable {
                 verticalLineData.add(new VerticalCutLine(value));
             }
         }
-        if (yieldNTFChartDtos.size() >= barChartNTFNum) {
-            for (int i = 0; i < barChartNTFNum; i++) {
-                String key = " ";
-                for (int n = 0; n < i; n++) {
-                    key += " ";
-                }
-                String xValue = yieldNTFChartDtos.get(i).getItemName();
-                int index = xValue.length();
-                if (index < 10) {
-                    String xValueIndex = xValue.substring(0, index);
-                    series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValueIndex), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
-                } else if (index < 19) {
+        for (int k = 0 ; k < yieldNTFChartDtos.size() ; k++){
+            if (yieldNTFChartDtos.get(k).getNtfPercent() != null){
+                if (yieldNTFChartDtos.size() >= barChartNTFNum) {
+                    for (int i = 0; i < barChartNTFNum; i++) {
+                        String key = " ";
+                        for (int n = 0; n < i; n++) {
+                            key += " ";
+                        }
+                        String xValue = yieldNTFChartDtos.get(i).getItemName();
+                        int index = xValue.length();
+                        if (index < 10) {
+                            String xValueIndex = xValue.substring(0, index);
+                            series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValueIndex), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
+                        } else if (index < 19) {
+                            String xValue1 = xValue.substring(0, 10);
+                            String xValue2 = xValue.substring(10, index);
+                            xValue = xValue1 + "\n" + xValue2;
+                            series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValue), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
+                        } else {
+                            String xValue1 = xValue.substring(0, 10);
+                            String xValue2 = xValue.substring(10, 18) + "...";
+                            xValue = xValue1 + "\n" + xValue2;
+                            series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValue), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
+                        }
+                    }
+                } else if (yieldNTFChartDtos.size() < barChartNTFNum) {
+                    for (int i = 0; i < yieldNTFChartDtos.size(); i++) {
+                        String key = " ";
+                        for (int n = 0; n < i; n++) {
+                            key += " ";
+                        }
+                        String xValue = yieldNTFChartDtos.get(i).getItemName();
+                        int index = xValue.length();
+                        if (index < 10) {
+                            String xValueIndex = xValue.substring(0, index);
+                            series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValueIndex), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
+                        } else if (index < 20) {
 
-                    String xValue1 = xValue.substring(0, 10);
-                    String xValue2 = xValue.substring(10, index);
-                    xValue = xValue1 + "\n" + xValue2;
-                    series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValue), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
-                } else {
-                    String xValue1 = xValue.substring(0, 10);
-                    String xValue2 = xValue.substring(10, 18) + "...";
-                    xValue = xValue1 + "\n" + xValue2;
-                    series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValue), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
+                            String xValue1 = xValue.substring(0, 10);
+                            String xValue2 = xValue.substring(10, index);
+                            xValue = xValue1 + "\n" + xValue2;
+                            series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValue), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
+                        } else {
+                            String xValue1 = xValue.substring(0, 10);
+                            String xValue2 = xValue.substring(10, 18) + "...";
+                            xValue = xValue1 + "\n" + xValue2;
+                            series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValue), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
+                        }
+                    }
+                    for (int i = 0; i < barChartNTFNum - yieldNTFChartDtos.size(); i++) {
+                        String key = " ";
+                        for (int n = 0; n < i; n++) {
+                            key += " ";
+                        }
+                        series2.getData().add(new XYChart.Data(key, 0));
+                    }
                 }
-            }
-        } else if (yieldNTFChartDtos.size() < barChartNTFNum) {
-            for (int i = 0; i < yieldNTFChartDtos.size(); i++) {
-                String key = " ";
-                for (int n = 0; n < i; n++) {
-                    key += " ";
-                }
-                String xValue = yieldNTFChartDtos.get(i).getItemName();
-                int index = xValue.length();
-                if (index < 10) {
-                    String xValueIndex = xValue.substring(0, index);
-                    series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValueIndex), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
-                } else if (index < 20) {
 
-                    String xValue1 = xValue.substring(0, 10);
-                    String xValue2 = xValue.substring(10, index);
-                    xValue = xValue1 + "\n" + xValue2;
-                    series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValue), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
-                } else {
-                    String xValue1 = xValue.substring(0, 10);
-                    String xValue2 = xValue.substring(10, 18) + "...";
-                    xValue = xValue1 + "\n" + xValue2;
-                    series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValue), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
+            }else if (yieldNTFChartDtos.get(k).getNtfPercent() == null){
+                for (int i = 0 ; i < barChartNTFNum ; i++){
+                    String key = " ";
+                    for (int n = 0; n < i; n++) {
+                        key += " ";
+                    }
+                    series2.getData().add(new XYChart.Data(key, 0));
                 }
-            }
-            for (int i = 0; i < barChartNTFNum - yieldNTFChartDtos.size(); i++) {
-                String key = " ";
-                for (int n = 0; n < i; n++) {
-                    key += " ";
-                }
-                series2.getData().add(new XYChart.Data(key, 0));
             }
         }
         yieldbarChartItem.getData().addAll(series2);
