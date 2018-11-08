@@ -74,3 +74,480 @@
 .table-text-field {
     -fx-text-fill: #222222 !important;
 }
+
+
+
+
+
+/*******************************************************************************
+ *                                                                             *
+ * gui about page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+
+.gui-about-root{
+    -fx-max-height: 158.0;
+    -fx-min-height: 158.0;
+    -fx-pref-height: 158.0;
+    -fx-padding: 18.0 50.0;
+    -fx-spacing: 40.0;
+    -fx-background-color: transparent;
+}
+
+.gui-about-logo{
+
+    -fx-image: url("/images/Initialize_logo.png");
+}
+.gui-about-v-box{
+    -fx-max-height: 90.0;
+    -fx-spacing: 10.0
+}
+
+.gui-about-info-h-box{
+    -fx-spacing: 5.0;
+}
+
+.gui-about-text-color{
+    -fx-text-fill: #aaaaaa;
+}
+
+.gui-about-version-font{
+    -fx-font-family: Arial;
+    -fx-font-size: 12.0;
+}
+
+.gui-about-system-title{
+    -fx-font-family: Arial;
+    -fx-font-size: 28.0;
+}
+
+.gui-about-system-name{
+    -fx-font-family: Arial;
+    -fx-font-size: 22.0;
+}
+
+.gui-additem-root{
+    -fx-alignment: center-right;
+    -fx-max-height: -Infinity;
+    -fx-max-width: -Infinity;
+    -fx-min-height: -Infinity;
+    -fx-min-width: -Infinity;
+    -fx-pref-height: 330.0;
+    -fx-pref-width: 410.0;
+}
+
+.gui-additem-label-choose{
+    -fx-pref-height: 30.0;
+    -fx-pref-width: 190.0;
+}
+
+.gui-additem-label-customize{
+    -fx-padding: 0 0 0 10.0;
+    -fx-pref-height: 30.0;
+    -fx-pref-width: 170.0;
+}
+
+.gui-additem-h-box-first{
+    -fx-padding: 0 10.0 0 10.0;
+    -fx-alignment: center-left;
+    -fx-pref-height: 30.0;
+    -fx-pref-width: 200.0;
+}
+
+.gui-additem-h-box-button{
+    -fx-max-width: 22.0;
+    -fx-min-width: 22.0;
+    -fx-pref-width: 22.0;
+}
+
+.gui-additem-h-box-second{
+    -fx-spacing: 10.0;
+    -fx-padding: 0 10.0 0 10.0;
+    -fx-pref-height: 255.0;
+    -fx-pref-width: 410.0;
+    -fx-border-width: 0 0 0 0;
+}
+
+.gui-additem-h-box-second-vbox{
+    -fx-alignment: center;
+    -fx-spacing: 5.0;
+    -fx-padding: 5.0 0 0 0;
+    -fx-pref-height: 200.0;
+    -fx-pref-width: 190.0;
+    -fx-border-width: 1 1 1 1;
+    -fx-border-color: #DCDCDC;
+}
+
+.gui-additem-h-box-second-textfiled{
+    -fx-max-width: 180.0;
+}
+
+.gui-additem-h-box-second-table{
+    -fx-pref-height: 200.0;
+    -fx-pref-width: 200.0;
+}
+
+.gui-additem-h-box-second-columns-first{
+    -fx-max-width: 30.0;
+    -fx-min-width: 30.0;
+    -fx-pref-width: 30.0;
+}
+
+.gui-additem-h-box-second-columns-second{
+    -fx-pref-width: 75.0;
+}
+
+.gui-additem-h-box-text-area{
+    -fx-pref-height: 200.0;
+    -fx-pref-width: 190.0;
+}
+
+.gui-additem-h-box-third{
+    -fx-padding: 10.0;
+    -fx-alignment: center_right;
+}
+
+.gui-additem-button{
+    -fx-pref-width: 80.0;
+}
+/*******************************************************************************
+ *                                                                             *
+ * login page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+
+.gui-login-root{
+    -fx-alignment: center;
+    -fx-spacing: 20.0;
+    -fx-background-color: #ffffff;
+}
+.gui-login-root-resize{
+    -fx-pref-height: 288.0;
+    -fx-min-height: 288.0;
+    -fx-max-height: 288.0;
+}
+
+.gui-login-logo{
+    -fx-spacing: 15.0;
+    -fx-image: url("/images/login_logo.png");
+}
+
+.gui-login-text-field{
+    -fx-max-width: 230.0;
+    -fx-spacing: 10.0;
+    -fx-border-width: 1.0;
+    -fx-border-color: #dcdcdc
+}
+
+.gui-login-btn{
+    -fx-pref-height: 26.0;
+    -fx-pref-width: 230.0;
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+}
+
+.gui-logining-image{
+    -fx-image: url("/images/small_loading.gif");
+    -fx-content-display: null;
+}
+
+.gui-login-warm-icon{
+    -fx-padding: 10.0;
+}
+
+.gui-login-error-h-box{
+    -fx-max-width: 350.0;
+    -fx-min-width: 350.0;
+    -fx-pref-width: 350.0;
+    -fx-alignment: center-left;
+    -fx-content-display: left;
+}
+
+.gui-login-warm-tip{
+    -fx-pref-width: 350.0;
+    -fx-pref-height: 30.0;
+    -fx-min-height: 30.0;
+    -fx-max-height: 30.0;
+    -fx-border-width: 1 0 0 0;
+    -fx-border-color: #dcdcdc transparent;
+}
+
+
+
+/*******************************************************************************
+ *                                                                             *
+ * gui about page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+
+.gui-about-root{
+    -fx-max-height: 158.0;
+    -fx-min-height: 158.0;
+    -fx-pref-height: 158.0;
+    -fx-padding: 18.0 50.0;
+    -fx-spacing: 40.0;
+    -fx-background-color: transparent;
+}
+
+.gui-about-logo{
+
+    -fx-image: url("/images/Initialize_logo.png");
+}
+.gui-about-v-box{
+    -fx-max-height: 90.0;
+    -fx-spacing: 10.0;
+}
+
+.gui-about-info-h-box{
+    -fx-spacing: 5.0;
+}
+
+.gui-about-text-color{
+    -fx-text-fill: #aaaaaa;
+}
+
+.gui-about-version-font{
+    -fx-font-family: Arial;
+    -fx-font-size: 12.0;
+}
+
+.gui-about-system-title{
+    -fx-font-family: Arial;
+    -fx-font-size: 28.0;
+}
+
+.gui-about-system-name{
+    -fx-font-family: Arial;
+    -fx-font-size: 22.0;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * login page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+
+.gui-login-root{
+    -fx-alignment: center;
+    -fx-spacing: 20.0;
+    -fx-background-color: #ffffff;
+}
+.gui-login-root-resize{
+    -fx-pref-height: 288.0;
+    -fx-min-height: 288.0;
+    -fx-max-height: 288.0;
+}
+
+.gui-login-logo{
+    -fx-spacing: 15.0;
+    -fx-image: url("/images/login_logo.png");
+}
+
+.gui-login-text-field{
+    -fx-max-width: 230.0;
+    -fx-spacing: 10.0;
+    -fx-border-width: 1.0;
+    -fx-border-color: #dcdcdc
+}
+
+.gui-login-btn{
+    -fx-pref-height: 26.0;
+    -fx-pref-width: 230.0;
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+}
+
+.gui-logining-image{
+    -fx-image: url("/images/small_loading.gif");
+    -fx-content-display: null;
+}
+
+.gui-login-warm-icon{
+    -fx-padding: 10.0;
+}
+
+.gui-login-error-h-box{
+    -fx-max-width: 350.0;
+    -fx-min-width: 350.0;
+    -fx-pref-width: 350.0;
+    -fx-alignment: center-left;
+    -fx-content-display: left;
+}
+
+.gui-login-warm-tip{
+    -fx-pref-width: 350.0;
+    -fx-pref-height: 30.0;
+    -fx-min-height: 30.0;
+    -fx-max-height: 30.0;
+    -fx-border-width: 1 0 0 0;
+    -fx-border-color: #dcdcdc transparent;
+}
+/*******************************************************************************
+ *                                                                              *
+ * gui about Change Password page css                                           *
+ *                                                                              *
+ *******************************************************************************/
+.gui-chang-password-root{
+    -fx-max-height: 160;
+    -fx-min-height: 160;
+    -fx-pref-height: 160;
+    -fx-max-width: 330;
+    -fx-min-width: 330;
+    -fx-pref-width: 330;
+    -fx-padding: 18.0 0;
+}
+.gui-chang-password-v-box-left{
+     -fx-max-height: 160;
+     -fx-min-height: 160;
+     -fx-pref-height: 160;
+     -fx-max-width: 165;
+     -fx-min-width: 165;
+     -fx-pref-width: 165;
+     -fx-padding: 18.0 0 18 20;
+     -fx-spacing: 10;
+ }
+.gui-chang-password-v-box-right{
+    -fx-max-height: 170;
+    -fx-min-height: 170;
+    -fx-pref-height: 170;
+    -fx-max-width: 165;
+    -fx-min-width: 165;
+    -fx-pref-width: 165;
+    -fx-padding: 20.0 20.0 20 0;
+    -fx-spacing: 10.0;
+}
+.gui-change-password-label1{
+     -fx-max-width: 120;
+     -fx-min-width: 120;
+     -fx-pref-width: 120;
+     -fx-padding:4 0 4 40;
+ }
+.gui-change-password-label2{
+    -fx-max-width: 120;
+    -fx-min-width: 120;
+    -fx-pref-width: 120;
+    -fx-padding:4 0 4 35;
+}
+.gui-change-password-label3{
+    -fx-max-width: 120;
+    -fx-min-width: 120;
+    -fx-pref-width: 120;
+    -fx-padding:4 0 4 20;
+}
+
+.gui-change-password-back-root{
+    -fx-max-height: 192;
+    -fx-min-height: 192;
+    -fx-pref-height: 192;
+    -fx-max-width: 330;
+    -fx-min-width: 330;
+    -fx-pref-width: 330;
+    -fx-padding: 0 0 10 30;
+    -fx-alignment: center;
+
+}
+.gui-change-password-back-iconlb{
+}
+
+.gui-change-password-back-label{
+    -fx-pref-height: 50.0;
+    -fx-pref-width: 262.0;
+    -fx-alignment: LEFT;
+    -fx-padding: 30 0 0 0;
+}
+
+.gui-change-password-back-link{
+    -fx-pref-height: 20.0;
+    -fx-pref-width: 262.0;
+    -fx-alignment: LEFT;
+}
+
+.gui-change-password-back-btn{
+    -fx-max-height: 20;
+    -fx-min-height: 20;
+    -fx-pref-height: 20;
+    -fx-max-width: 80;
+    -fx-min-width: 80;
+    -fx-pref-width: 80;
+}
+.gui-change-password-back-btn-h-box{
+    -fx-max-height:80;
+    -fx-min-height: 80;
+    -fx-pref-height: 80;
+    -fx-padding:80 0 0 0;
+
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * datasource page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+
+.datasource-root{
+    -fx-padding: 10 ;
+    -fx-alignment: center;
+    -fx-max-height: 420.0;
+    -fx-min-height: 420.0;
+    -fx-pref-height: 420.0;
+    -fx-max-width: 600.0;
+    -fx-min-width: 600.0;
+    -fx-pref-width: 600.0;
+    -fx-background-color: #ffffff;
+}
+.datasource-head-borderPane{
+    -fx-padding: 5 0 5 5 ;
+    -fx-border-width: 1 1 0 1;
+    -fx-border-color: #DCDCDC;
+
+}
+.datasource-textfield-filter{
+     -fx-pref-height: 22.0;
+     -fx-pref-width: 200.0;
+
+ }
+.datasource-delete-button{
+    -fx-border-width: 1 1 0 1;
+    -fx-border-color: #DCDCDC;
+    -fx-pref-height: 22.0;
+    -fx-pref-width: 22.0;
+}
+
+.datasource-errorinfo-lable{
+    -fx-pref-height: 22.0;
+    -fx-pref-width: 24.0;
+    -fx-margin: 10px 0px 0px 0px;
+}
+.datasource-button{
+    -fx-pref-height: 22.0;
+    -fx-pref-width: 80.0;
+
+}
+.datasource-foot-borderPane{
+    -fx-padding: 10 0 0 0;
+
+
+}
+.datasource-h-box{
+    -fx-spacing: 20.0
+
+}
+.datasource-table-view{
+    -fx-pref-height: 200.0;
+    -fx-pref-width: 200.0;
+
+}
+.datasource-table-check-box-column{
+    -fx-pref-width: 33.0;
+    -fx-max-width: 33.0;
+    -fx-min-width: 33.0;
+
+}
+.datasource-table-value-column{
+    -fx-pref-width: 75.0;
+    -fx-max-width: 75.0;
+    -fx-min-width: 75.0;
+
+}
+

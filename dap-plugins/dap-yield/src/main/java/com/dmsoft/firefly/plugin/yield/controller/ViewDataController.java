@@ -6,8 +6,12 @@ import com.dmsoft.firefly.gui.components.table.TableViewWrapper;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.plugin.yield.dto.SearchConditionDto;
+import com.dmsoft.firefly.plugin.yield.dto.YieldOverviewResultAlarmDto;
 import com.dmsoft.firefly.plugin.yield.model.ViewDataModel;
-import com.dmsoft.firefly.plugin.yield.utils.*;
+import com.dmsoft.firefly.plugin.yield.utils.FilterType;
+import com.dmsoft.firefly.plugin.yield.utils.ImageUtils;
+import com.dmsoft.firefly.plugin.yield.utils.ResourceMassages;
+import com.dmsoft.firefly.plugin.yield.utils.YieldFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -24,13 +28,12 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-
-import javafx.scene.control.TableView;
-import javafx.scene.control.Button;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,11 +69,12 @@ public class ViewDataController implements Initializable {
     private List<String> selectedProjectNames;
     private SearchConditionDto searchConditionDto;
     private ChooseTestItemDialog chooseTestItemDialog;
-    private  List<String> cacheSelectTestItemName = Lists.newArrayList();
+    private List<String> cacheSelectTestItemName = Lists.newArrayList();
     private String rowKey;
     private String columnLabel;
     private String flag;//标记点击事件发生的位置，当flag为空时，点击事件发生在OverView表中
-    private boolean dataFrameFlag ;
+    private boolean dataFrameFlag;
+    private List<YieldOverviewResultAlarmDto> RowDataList = Lists.newArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -116,30 +120,30 @@ public class ViewDataController implements Initializable {
     public void clearViewData() {
         filteValueTf.getTextField().setText(null);
         cacheSelectTestItemName.clear();
-        this.setViewData(null, null, null, null, null,null);
+        this.setViewData(null, null, null, null, null, null);
     }
 
     /**
      * set view data table dataList
      *
-     * @param dataFrame                         search data frame
-     * @param selectedRowKey                    selected row key
+     * @param dataFrame                  search data frame
+     * @param selectedRowKey             selected row key
      * @param searchViewDataConditionDto searchViewDataConditionDto
      */
-    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> searchViewDataConditionDto, String rowKey, String columnLable,String flag) {
-        this.setViewData(dataFrame, selectedRowKey, searchViewDataConditionDto, false, rowKey, columnLable,flag);
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> searchViewDataConditionDto, String rowKey, String columnLable, String flag) {
+        this.setViewData(dataFrame, selectedRowKey, searchViewDataConditionDto, false, rowKey, columnLable, flag);
     }
 
     /**
      * set view data table dataList
      *
-     * @param dataFrame                         search data frame
-     * @param selectedRowKey                    selected row key
+     * @param dataFrame                  search data frame
+     * @param selectedRowKey             selected row key
      * @param searchViewDataConditionDto searchViewDataConditionDto
-     * @param isTimer                           isTimer
+     * @param isTimer                    isTimer
      */
-    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> searchViewDataConditionDto, boolean isTimer, String rowKey, String columnLable,String flag) {
-        this.setViewData(dataFrame, selectedRowKey, searchViewDataConditionDto, isTimer, isTimer, rowKey, columnLable,flag);
+    public void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> searchViewDataConditionDto, boolean isTimer, String rowKey, String columnLable, String flag) {
+        this.setViewData(dataFrame, selectedRowKey, searchViewDataConditionDto, isTimer, isTimer, rowKey, columnLable, flag);
     }
 
 
@@ -150,17 +154,18 @@ public class ViewDataController implements Initializable {
      * @param selectedRowKey             selected row key
      * @param searchViewDataConditionDto statisticalSearchConditionDtoList
      */
-    private void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> searchViewDataConditionDto, boolean isTimer, boolean isAutoRefresh, String rowKey, String columnLable,String flag) {
+    private void setViewData(SearchDataFrame dataFrame, List<String> selectedRowKey, List<SearchConditionDto> searchViewDataConditionDto, boolean isTimer, boolean isAutoRefresh, String rowKey, String columnLable, String flag) {
         if (searchViewDataConditionDto != null) {
             this.searchViewDataConditionDto = searchViewDataConditionDto;
         }
         this.selectedRowKeys = selectedRowKey;
         this.rowKey = rowKey;
         this.columnLabel = columnLable;
+        this.RowDataList = yieldMainController.getOverViewController().getAllRowStatsData();
         String row;
-        if(rowKey == "-" ){
+        if ("-".equals(rowKey)) {
             row = rowKey != null ? rowKey : null;
-        }else {
+        } else {
             row = rowKey != null ? rowKey + "::" : null;
         }
         viewDataR.setText(row);
@@ -184,7 +189,7 @@ public class ViewDataController implements Initializable {
             return;
         } else {
             List<String> resultTestItemName = Lists.newArrayList();
-            if(flag == null) {
+            if (flag == null) {
                 resultTestItemName.add(searchViewDataConditionDto.get(0).getItemName());
                 resultTestItemName.add(searchViewDataConditionDto.get(1).getItemName());
             } else {
@@ -215,8 +220,20 @@ public class ViewDataController implements Initializable {
                             if (!(testItemName.equals(searchViewDataConditionDto.get(1).getItemName()))) {
                                 searchConditionDto = new SearchConditionDto();
                                 searchConditionDto.setItemName(testItemName);
-                                searchConditionDto.setLslOrFail(typeDto.getLsl());
-                                searchConditionDto.setUslOrPass(typeDto.getUsl());
+                                for (int i = 0; i < RowDataList.size(); i++) {
+                                    if (RowDataList.get(i).getItemName().equals(testItemName)) {
+                                        if (typeDto.getLsl().equals(RowDataList.get(i).getLslOrFail())) {
+                                            searchConditionDto.setLslOrFail(typeDto.getLsl());
+                                        } else {
+                                            searchConditionDto.setLslOrFail(RowDataList.get(i).getLslOrFail());
+                                        }
+                                        if (typeDto.getUsl().equals(RowDataList.get(i).getUslOrPass())) {
+                                            searchConditionDto.setUslOrPass(typeDto.getUsl());
+                                        } else {
+                                            searchConditionDto.setUslOrPass(RowDataList.get(i).getUslOrPass());
+                                        }
+                                    }
+                                }
                                 searchConditionDto.setTestItemType(typeDto.getTestItemType());
                                 searchViewDataConditionDto.add(searchConditionDto);
                             }
@@ -248,13 +265,11 @@ public class ViewDataController implements Initializable {
         this.vbox.getChildren().add(viewDataTable);
         this.model = new ViewDataModel(this.dataFrame, selectedRowKey, flag, cacheSelectTestItemName);
         this.model.setTestItemDtoMap(searchViewDataConditionDto);
-        this.model.setMainController(yieldMainController);
-
         TableViewWrapper.decorate(viewDataTable, model);
 
         /* ViewData Table Result列名=TestItem */
-        if(flag == null){
-            if(viewDataTable.getColumns().size()>=2){
+        if (flag == null) {
+            if (viewDataTable.getColumns().size() >= 2) {
                 viewDataTable.getColumns().get(1).setText("Result");
             }
         }
@@ -265,7 +280,7 @@ public class ViewDataController implements Initializable {
             filteValueTf.getTextField().setText(filterTxt);
         }
 
-        if(flag == null) {
+        if (flag == null) {
             List<String> dataFrameItem = dataFrame.getAllTestItemName();
             List<String> preItem = Lists.newArrayList();
             String primaryKey = searchViewDataConditionDto.get(0).getItemName();
@@ -279,7 +294,7 @@ public class ViewDataController implements Initializable {
             dataFrameItem.removeAll(preItem);
             chooseTestItemDialog.removeSelectedItems(preItem);
             chooseTestItemDialog.resetSelectedItems(dataFrameItem);
-        }else if(flag != null){
+        } else if (flag != null) {
             List<String> dataFrameItem = dataFrame.getAllTestItemName();
             List<String> preItem = Lists.newArrayList();
             preItem.add(dataFrameItem.get(0));
@@ -323,7 +338,7 @@ public class ViewDataController implements Initializable {
 
             List<String> selectedTestItems = Lists.newArrayList();
             cacheSelectTestItemName = chooseTestItemDialog.getSelectedItems();
-            if(flag == null) {
+            if (flag == null) {
                 List<String> dataFrameItem = dataFrame.getAllTestItemName();
                 String primaryKey = searchViewDataConditionDto.get(0).getItemName();
                 String selectTestItemName = searchViewDataConditionDto.get(1).getItemName();
@@ -334,7 +349,7 @@ public class ViewDataController implements Initializable {
                     selectedTestItems.add(dataFrameItem.get(1));
                 }
                 selectedTestItems.addAll(cacheSelectTestItemName);
-            }else{
+            } else {
                 List<String> lastItem = chooseTestItemDialog.getSelectedItems();
                 List<String> dataFrameItem = dataFrame.getAllTestItemName();
                 selectedTestItems.add(dataFrameItem.get(0));
@@ -363,8 +378,20 @@ public class ViewDataController implements Initializable {
                         if (!(testItemName.equals(searchViewDataConditionDto.get(1).getItemName()))) {
                             searchConditionDto = new SearchConditionDto();
                             searchConditionDto.setItemName(testItemName);
-                            searchConditionDto.setLslOrFail(typeDto.getLsl());
-                            searchConditionDto.setUslOrPass(typeDto.getUsl());
+                            for (int i = 0; i < RowDataList.size(); i++) {
+                                if (RowDataList.get(i).getItemName().equals(testItemName)) {
+                                    if (typeDto.getLsl().equals(RowDataList.get(i).getLslOrFail())) {
+                                        searchConditionDto.setLslOrFail(typeDto.getLsl());
+                                    } else {
+                                        searchConditionDto.setLslOrFail(RowDataList.get(i).getLslOrFail());
+                                    }
+                                    if (typeDto.getUsl().equals(RowDataList.get(i).getUslOrPass())) {
+                                        searchConditionDto.setUslOrPass(typeDto.getUsl());
+                                    } else {
+                                        searchConditionDto.setUslOrPass(RowDataList.get(i).getUslOrPass());
+                                    }
+                                }
+                            }
                             searchConditionDto.setTestItemType(typeDto.getTestItemType());
                             searchViewDataConditionDto.add(searchConditionDto);
                         }
@@ -375,9 +402,9 @@ public class ViewDataController implements Initializable {
                 }
             }
 
-            if(flag == null) {
+            if (flag == null) {
                 setViewData(this.dataFrame, getSelectedRowKeys(), searchViewDataConditionDto, false, rowKey, columnLabel, null);
-            }else{
+            } else {
                 setViewData(this.dataFrame, getSelectedRowKeys(), searchViewDataConditionDto, false, rowKey, columnLabel, flag);
             }
         });

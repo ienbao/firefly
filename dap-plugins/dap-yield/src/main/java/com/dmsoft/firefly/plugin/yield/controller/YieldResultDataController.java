@@ -112,14 +112,26 @@ public class YieldResultDataController implements Initializable {
 
     }
     private void fireClickEvent(String rowKey,String column,YieldTotalProcessesDto list) {
-
         yieldMainController = yieldChartResultController.getYieldMainController();
+        List<YieldOverviewResultAlarmDto> RowDataList = yieldMainController.getOverViewController().getAllRowStatsData();
         viewDataController = yieldMainController.getViewDataController();
         if(list.getTotalSamples()!=null){
-//        System.out.println(rowKey + column);
             yieldItemController = yieldMainController.getYieldItemController();
             dataFrame = yieldMainController.getDataFrame();
             List<SearchConditionDto> searchConditionDtoList =  yieldItemController.buildSearchConditionDataList(yieldItemController.initSelectedItemDto());
+            for(int i = 1; i<searchConditionDtoList.size();i++){
+                for(int j = 0; j<RowDataList.size();j++){
+                    if(searchConditionDtoList.get(i).getItemName().equals(RowDataList.get(j).getItemName())){
+                        if(!(searchConditionDtoList.get(i).getUslOrPass().equals(RowDataList.get(j).getUslOrPass()))){
+                            searchConditionDtoList.get(i).setUslOrPass(RowDataList.get(j).getUslOrPass());
+                        }
+                        if(!(searchConditionDtoList.get(i).getLslOrFail().equals(RowDataList.get(j).getLslOrFail()))){
+                            searchConditionDtoList.get(i).setLslOrFail(RowDataList.get(j).getLslOrFail());
+                        }
+                    }
+                }
+            }
+
             List<String> projectNameList = envService.findActivatedProjectName();
             YieldAnalysisConfigDto yieldAnalysisConfigDto = yieldMainController.getAnalysisConfigDto();
 
