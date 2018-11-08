@@ -5,11 +5,25 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+
+<?import javafx.scene.image.ImageView?>
 <AnchorPane xmlns="http://javafx.com/javafx"
-  xmlns:fx="http://javafx.com/fxml"
-  prefHeight="400.0" prefWidth="600.0">
+            xmlns:fx="http://javafx.com/fxml"
+            prefHeight="400.0" prefWidth="600.0">
 
   <VBox>
+
+    <Button styleClass="green-btn">
+      <!--<graphic>-->
+        <!--<ImageView styleClass="green-btn-play-image" fitWidth="16.0" fitHeight="16.0" />-->
+      <!--</graphic>-->
+    </Button>
+    <Button styleClass="green-btn-loading">
+      <graphic>
+        <ImageView styleClass="green-btn-loading-image" fitWidth="16.0" fitHeight="16.0" />
+      </graphic>
+    </Button>
+    <Button styleClass="green-btn" disable="true"/>
     <Button text="测试按钮"></Button>
     <Button text="测试按钮" disable="true"></Button>
   </VBox>

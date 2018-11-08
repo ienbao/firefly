@@ -110,3 +110,54 @@
   -fx-border-color:COLOR_GRAY_DC;
   -fx-text-fill:COLOR_GRAY_CC
 }
+.green-btn{
+  -fx-pref-width:30;
+  -fx-max-width:30;
+  -fx-min-width:30;
+  -fx-pref-height:20;
+  -fx-max-height:20;
+  -fx-min-height:20;
+  -fx-background-color:COLORFUL_DARK_GREEN;
+  -fx-border:0;
+  -fx-border-color:COLORFUL_DARK_GREEN;
+  -fx-graphic:url("/images/btn_play.png");
+
+
+}
+
+.green-btn:hover{
+  -fx-background-color:COLORFUL_LIGHT1_GREEN;
+  -fx-border-color:COLORFUL_LIGHT1_GREEN;
+}
+.green-btn:pressed{
+  -fx-background-color:COLORFUL_DARK2_GREEN;
+  -fx-border-color:COLORFUL_DARK2_GREEN;
+}
+
+.green-btn:disabled{
+  -fx-background-color:COLOR_GRAY_FA;
+  -fx-border-color:COLOR_GRAY_DC;
+  -fx-text-fill:COLOR_GRAY_CC
+}
+
+.green-btn-play-image{
+  -fx-image: url("/images/btn_play.png");
+
+}
+
+
+.green-btn-loading{
+  -fx-pref-width:30;
+  -fx-max-width:30;
+  -fx-min-width:30;
+  -fx-pref-height:20;
+  -fx-max-height:20;
+  -fx-min-height:20;
+  -fx-background-color:COLORFUL_MIDDLE_GREEN;
+  -fx-border:0 0 0 0;
+  -fx-border-color:COLORFUL_MIDDLE_GREEN;
+}
+.green-btn-loading-image{
+  -fx-image: url("/images/icon_loading_gray.png");
+
+}
