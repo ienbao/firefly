@@ -158,7 +158,7 @@ public class YieldServiceImpl implements YieldService {
         }
 
 
-        if (!dataAndRowKeyMap.isEmpty()) {
+       if (!dataAndRowKeyMap.isEmpty()) {
 
             int overTotalSamples = 0;
             int overFpySamples = 0;
@@ -388,8 +388,12 @@ public class YieldServiceImpl implements YieldService {
             }
             for (Integer rangeIndex : rangeSearchConditionIndex) {
                 if (rangeIndex == i) {
-                    overViewResult.add(overResult.get(overIndex));
-                    overIndex++;
+                    if (dataAndRowKeyMap.isEmpty()) {
+                        overViewResult.add(overResult.get(rangeIndex - 1));
+                    }else{
+                        overViewResult.add(overResult.get(overIndex));
+                        overIndex++;
+                    }
                 }
             }
         }
