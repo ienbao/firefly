@@ -338,9 +338,7 @@ public class YieldServiceImpl implements YieldService {
         for (int i = 0; i < searchConditions.size() - 1; i++) {
             YieldNTFChartDto yieldNTFChartDto = new YieldNTFChartDto();
             yieldNTFChartDto.setItemName(overResult.get(i).getItemName());
-            if (overResult.get(i).getNtfPercent() == null) {
-                yieldNTFChartDto.setNtfPercent(0.0);
-            } else {
+            if (null != overResult.get(i).getNtfPercent()) {
                 yieldNTFChartDto.setNtfPercent(overResult.get(i).getNtfPercent());
             }
             ntfChartDtoList.add(yieldNTFChartDto);
@@ -348,8 +346,8 @@ public class YieldServiceImpl implements YieldService {
         Collections.sort(ntfChartDtoList, new Comparator<YieldNTFChartDto>() {
             @Override
             public int compare(YieldNTFChartDto o1, YieldNTFChartDto o2) {
-                double ntf1 = o1.getNtfPercent();
-                double ntf2 = o2.getNtfPercent();
+                double ntf1 = o1.getNtfPercent() == null ? 0.0 : o1.getNtfPercent();
+                double ntf2 = o2.getNtfPercent() == null ? 0.0 : o2.getNtfPercent();
                 if (ntf1 > ntf2) {
                     return -1;
                 } else if (ntf1 == ntf2) {
