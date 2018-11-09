@@ -13,7 +13,7 @@
       fx:controller="com.dmsoft.firefly.gui.controller.LoginController"
       styleClass="gui-login-root">
 
-    <ImageView fx:id="loginImageView" styleClass="gui-login-logo" fitHeight="48.0"
+    <ImageView styleClass="gui-login-logo" fitHeight="48.0"
                pickOnBounds="true" preserveRatio="true"/>
 
     <TextFieldUser fx:id="userNameTxt" styleClass="gui-login-text-field"/>
