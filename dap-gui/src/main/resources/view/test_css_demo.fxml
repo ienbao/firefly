@@ -4,15 +4,31 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollBar?>
 <AnchorPane xmlns="http://javafx.com/javafx"
-  xmlns:fx="http://javafx.com/fxml"
-  prefHeight="400.0" prefWidth="600.0">
+            xmlns:fx="http://javafx.com/fxml"
+            prefHeight="400.0" prefWidth="600.0">
 
-  <VBox>
+  <VBox >
     <Button text="测试按钮"></Button>
     <Button text="测试按钮" disable="true"></Button>
+    <CheckBox text="测试复选框"/>
+    <CheckBox text="测试复选框" disable="true" selected="true"/>
+    <CheckBox text="测试复选框" disable="true" selected="false"/>
+    <RadioButton text="测试单选按钮"/>
+    <RadioButton text="测试单选按钮" disable="true" selected="true"/>
+    <RadioButton text="测试单选按钮" disable="true" selected="false"/>
+    <ProgressBar/>
+    <ProgressBar styleClass="progress-bar-sm-green"/>
+    <ProgressBar styleClass="progress-bar-sm-red"/>
+    <ProgressBar styleClass="progress-bar-md-green"/>
+    <ProgressBar styleClass="progress-bar-md-red"/>
+    <ProgressBar styleClass="progress-bar-lg-green"/>
+    <ProgressBar styleClass="progress-bar-lg-red"/>
+    <ScrollBar/>
   </VBox>
-
 
 </AnchorPane>
