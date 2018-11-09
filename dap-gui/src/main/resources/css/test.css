@@ -343,6 +343,9 @@
  * CheckBox                                                                     *
  *                                                                             *
  ******************************************************************************/
+.check-box{
+    -fx-cursor: hand;
+}
 
 .check-box > .box{
     -fx-pref-width: 12;
@@ -370,6 +373,10 @@
  * RadioButton                                                                 *
  *                                                                             *
  ******************************************************************************/
+
+.radio-button{
+    -fx-cursor: hand;
+}
 
 .radio-button > .radio{
     -fx-pref-width: 12;
