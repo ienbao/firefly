@@ -7,23 +7,40 @@
 <?import javafx.scene.control.Label?>
 
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             prefHeight="400.0" prefWidth="600.0">
 
-  <VBox>
+  <VBox  style="-fx-spacing: 10;">
 
-    <Button styleClass="green-btn">
-      <!--<graphic>-->
-        <!--<ImageView styleClass="green-btn-play-image" fitWidth="16.0" fitHeight="16.0" />-->
-      <!--</graphic>-->
-    </Button>
-    <Button styleClass="green-btn-loading">
-      <graphic>
-        <ImageView styleClass="green-btn-loading-image" fitWidth="16.0" fitHeight="16.0" />
-      </graphic>
-    </Button>
+    <Button styleClass="green-btn"/>
+    <Button styleClass="green-btn-loading"/>
     <Button styleClass="green-btn" disable="true"/>
+    <ComboBox styleClass="normal-combo-box">
+      <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="Item 1dddddddddddddddd" />
+          <String fx:value="Item 2" />
+          <String fx:value="Item 3" />
+        </FXCollections>
+      </items>
+    </ComboBox>
+    <ComboBox styleClass="normal-combo-box" disable="true">
+
+    </ComboBox>
+    <ComboBox styleClass="error-combo-box" >
+      <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="Item 1dddddddddddddddd" />
+          <String fx:value="Item 2" />
+          <String fx:value="Item 3" />
+        </FXCollections>
+      </items>
+
+    </ComboBox>
     <Button text="测试按钮"></Button>
     <Button text="测试按钮" disable="true"></Button>
   </VBox>
