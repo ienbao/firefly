@@ -1,15 +1,17 @@
 package com.dmsoft.firefly.gui.components.utils;
 
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 
 /**
@@ -17,35 +19,26 @@ import java.io.IOException;
  * Date: 2018/11/9 09:45
  * Description:
  */
-public class TextFieldFilterDemo extends Region {
+public class TextFieldFilterDemo extends HBox implements Initializable {
 
+    @FXML
     private TextField textField;
+    @FXML
     private ImageView imageView;
+    @FXML
     private Label label;
 
     public TextFieldFilterDemo() throws IOException {
-
         initView();
-        initEvent();
-
     }
 
     private void initView() throws IOException {
-        HBox hBox = FXMLLoader.load(getClass().getClassLoader().getResource(
-                "view/text_field_filter.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass()
+                .getClassLoader().getResource("view/text_field_filter.fxml"));
         getStylesheets().add("css/redfall/main.css");
-        getChildren().add(hBox);
-
-        for(Node node : hBox.getChildren()){
-            if(node instanceof TextField){
-                textField = (TextField) node;
-                continue;
-            }
-            if(node instanceof Label){
-                label = (Label) node;
-                imageView = (ImageView) label.getGraphic();
-            }
-        }
+        loader.setRoot(this);
+        loader.setController(this);
+        loader.load();
     }
 
     private void initEvent(){
@@ -68,10 +61,14 @@ public class TextFieldFilterDemo extends Region {
     }
 
     @Override
-    public void setPrefSize(double prefWidth, double prefHeight) {
-        super.setPrefSize(prefWidth, prefHeight);
-        label.setPrefSize(label.getPrefWidth(), prefHeight);
-        textField.setPrefSize(prefWidth - label.getPrefWidth(), prefHeight);
+    protected void setWidth(double prefWidth) {
+        super.setWidth(prefWidth);
+        label.setPrefWidth(label.getPrefWidth());
+        textField.setPrefWidth(prefWidth - label.getPrefWidth());
     }
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        initEvent();
+    }
 }

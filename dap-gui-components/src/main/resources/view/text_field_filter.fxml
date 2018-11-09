@@ -4,14 +4,14 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.image.ImageView?>
-<HBox xmlns="http://javafx.com/javafx"
-      styleClass="text-field-filter-demo-hbox">
-    <TextField promptText="Filter" styleClass="text-field-filter-demo"/>
-    <Label styleClass="text-field-filter-lbl">
+<fx:root xmlns="http://javafx.com/javafx" xmlns:fx="http://java.sun.com/JSP/Page"
+         type="HBox" styleClass="text-field-filter-demo-hbox" >
+    <TextField fx:id="textField" promptText="Filter" styleClass="text-field-filter-demo"/>
+    <Label fx:id="label" styleClass="text-field-filter-lbl">
         <graphic>
-            <ImageView styleClass="text-field-filter-search"
+            <ImageView fx:id="imageView" styleClass="text-field-filter-search"
                        fitWidth="16.0" fitHeight="16.0"/>
         </graphic>
     </Label>
 
-</HBox>
+</fx:root>
