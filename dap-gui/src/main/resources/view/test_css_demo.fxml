@@ -27,15 +27,14 @@
             <Button styleClass="green-btn"/>
             <Button styleClass="green-btn,green-btn-loading"/>
             <Button styleClass="green-btn" disable="true"/>
-            <Button styleClass="button-file,button-file-hover,button-file-pressed"  text="File" />
-            <Button styleClass="button-icon,button-delete,button-delete-pressed"></Button>
-            <Button styleClass="button-narrow,button-icon-narrow,button-narrow-pressed"></Button>
+            <Button styleClass="button-file"  text="File" />
+            <Button styleClass="button-icon"></Button>
+            <Button styleClass="button-narrow"></Button>
         </VBox>
         <VBox style="-fx-spacing: 20.0;-fx-padding: 30.0">
             <TextField text = "文本"></TextField>
             <TextField text = "文本" disable="true"></TextField>
             <TextField styleClass="text-field-error"></TextField>
-            <TextField styleClass="text-field-search"></TextField>
         </VBox>
         <VBox style="-fx-spacing: 20.0;-fx-padding: 30.0">
             <CheckBox text="测试复选框"/>
@@ -58,7 +57,7 @@
             <ScrollBar/>
         </VBox>
         <VBox style="-fx-spacing: 20.0;-fx-padding: 30.0">
-            <ComboBox styleClass="normal-combo-box">
+            <ComboBox >
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="Item 1" />
@@ -67,7 +66,8 @@
                     </FXCollections>
                 </items>
             </ComboBox>
-            <ComboBox styleClass="normal-combo-box" disable="true">
+            <ComboBox  disable="true">
+
             </ComboBox>
             <ComboBox styleClass="error-combo-box" >
                 <items>
