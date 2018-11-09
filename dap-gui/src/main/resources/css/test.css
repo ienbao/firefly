@@ -537,8 +537,8 @@
 
 .scroll-bar:hover > .increment-button,
 .scroll-bar:hover > .decrement-button{
-    -fx-background-color: rgba(0, 0, 0, 0.05);
-    -fx-border-color: rgba(0, 0, 0, 0.15);
+    -fx-background-color: COLOR_BLACK_Fill_5;
+    -fx-border-color: COLOR_BLACK_Fill_15;
 }
 
 .scroll-bar:pressed > .thumb{
@@ -547,8 +547,8 @@
 
 .scroll-bar:pressed > .increment-button,
 .scroll-bar:pressed > .decrement-button{
-    -fx-background-color: rgba(0, 0, 0, 0.1);
-    -fx-border-color: rgba(0, 0, 0, 0.2);
+    -fx-background-color: COLOR_BLACK_Fill_10;
+    -fx-border-color: COLOR_BLACK_Fill_20;
 }
 
 /*******************************************************************************
