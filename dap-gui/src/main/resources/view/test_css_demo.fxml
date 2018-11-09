@@ -54,7 +54,7 @@
             <Button text="测试按钮"></Button>
             <Button text="测试按钮" disable="true"></Button>
             <Button styleClass="button-file"  text="File" />
-            <Button styleClass="button-icon"></Button>
+            <Button styleClass="button-delete"></Button>
             <Button styleClass="button-narrow"></Button>
         </VBox>
         <VBox  style="-fx-spacing: 10;">
