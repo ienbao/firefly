@@ -69,7 +69,7 @@
     COLORFUL_LIGHT1_GREEN: #7ec441;
     COLORFUL_DARK1_GREEN: #509A0E;
     COLORFUL_DARK2_GREEN: #4B910E;
-
+    COLORFUL_MIDDLE1_GREEN: #59ac10;
     COLORFUL_DARK_CYAN: #27b5b3;
 
     COLORFUL_CHECKBOX_BORDER: #33abff;
@@ -577,8 +577,8 @@
     -fx-border-color:COLORFUL_DARK2_GREEN;
 }
 
-.button:pressed:hover{
-    -fx-background-color: #59ac10;
+.green-btn:pressed:hover{
+    -fx-background-color: COLORFUL_MIDDLE1_GREEN;
 }
 
 .green-btn:disabled{
