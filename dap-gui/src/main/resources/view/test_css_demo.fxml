@@ -60,7 +60,7 @@
         <VBox  style="-fx-spacing: 10;">
 
             <Button styleClass="green-btn"/>
-            <Button styleClass="green-btn-loading"/>
+            <Button styleClass="green-btn,green-btn-loading"/>
             <Button styleClass="green-btn" disable="true"/>
             <ComboBox styleClass="normal-combo-box">
                 <items>
