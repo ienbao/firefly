@@ -576,6 +576,10 @@
     -fx-border-color:COLORFUL_DARK2_GREEN;
 }
 
+.button:pressed:hover{
+    -fx-background-color: #59ac10;
+}
+
 .green-btn:disabled{
     -fx-opacity:1;
     -fx-background-color:COLOR_GRAY_FA;
@@ -585,40 +589,32 @@
 }
 
 .green-btn-loading{
-    -fx-pref-width:30;
-    -fx-max-width:30;
-    -fx-min-width:30;
-    -fx-pref-height:20;
-    -fx-max-height:20;
-    -fx-min-height:20;
     -fx-background-color:COLORFUL_MIDDLE_GREEN;
-    -fx-background-radius:0;
     -fx-border-color:COLORFUL_MIDDLE_GREEN;
-    -fx-border-radius: 0;
     -fx-background-image: url("/images/icon_loading_gray.png");
-    -fx-background-size: 16;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
-
 }
-
-.normal-combo-box{
+/*******************************************************************************
+ *                                                                             *
+ * combo-box  css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+.combo-box{
     -fx-pref-height: 22;
     -fx-border-color: COLOR_GRAY_CC ;
     -fx-background-color:COLOR_GRAY_F5 ;
 
 }
-.normal-combo-box:hover{
+.combo-box:hover{
 
     -fx-background-color:COLOR_LIGHT_FF ;
 
 }
-.normal-combo-box:showing{
+.combo-box:showing{
 
     -fx-background-color:COLOR_GRAY_DC ;
 
 }
-.normal-combo-box:disabled{
+.combo-box:disabled{
     -fx-opacity:1;
     -fx-border-color: COLOR_GRAY_DC ;
     -fx-background-color:COLOR_GRAY_FA ;
@@ -626,6 +622,36 @@
 
 
 }
+
+.combo-box-popup > .list-view {
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-background-insets: 0, 1;
+    -fx-effect: null;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-padding: 1, 1, 1, 1;
+    -fx-translate-y: 3;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
+    -fx-padding: 4 10 4 10;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: COLORFUL_AUXILIARY_BLUE;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: COLORFUL_AUXILIARY_BLUE;
+    -fx-background-insets: 0, 1, 2;
+}
+/*******************************************************************************
+ *                                                                             *
+ * error-combo-box  css                                                        *
+ *                                                                             *
+ ******************************************************************************/
 .error-combo-box{
     -fx-pref-height: 22;
     -fx-border-color: COLORFUL_PRIMARY_RED ;
@@ -643,6 +669,10 @@
     -fx-border-color: COLORFUL_LIGHT_BLUE ;
     -fx-background-color: COLORFUL_LIGHT_RED;
 }
+.error-combo-box:focused:pressed{
+    -fx-border-color: COLORFUL_LIGHT_BLUE ;
+    -fx-background-color: COMBOBOX_ERROR_BG_PRESSED;
+}
 .error-combo-box:focused:showing{
     -fx-background-color: COMBOBOX_ERROR_BG_PRESSED;
 
@@ -653,30 +683,7 @@
 
 }
 
-.combo-box-popup > .list-view {
-    -fx-background-color: #ffffff;
-    -fx-background-insets: 0, 1;
-    -fx-effect: null;
-    -fx-border-color: #dcdcdc;
-    -fx-padding: 1, 1, 1, 1;
-    -fx-translate-y: 3;
-}
 
-.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
-    -fx-padding: 4 10 4 10;
-}
-
-.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover {
-    -fx-background: -fx-accent;
-    -fx-background-color: #0096ff;
-}
-
-.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
-.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
-    -fx-background: -fx-accent;
-    -fx-background-color: #0096ff;
-    -fx-background-insets: 0, 1, 2;
-}
 
 
 
