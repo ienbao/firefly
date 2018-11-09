@@ -310,7 +310,7 @@ public class YieldChartResultController implements Initializable {
                             series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValue), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
                         } else {
                             String xValue1 = xValue.substring(0, 10);
-                            String xValue2 = xValue.substring(10, 18) + "...";
+                            String xValue2 = xValue.substring(10, 18) + "_"+i + "...";
                             xValue = xValue1 + "\n" + xValue2;
                             series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValue), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
                         }
@@ -326,7 +326,7 @@ public class YieldChartResultController implements Initializable {
                         if (index < 10) {
                             String xValueIndex = xValue.substring(0, index);
                             series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValueIndex), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
-                        } else if (index < 20) {
+                        } else if (index < 19) {
 
                             String xValue1 = xValue.substring(0, 10);
                             String xValue2 = xValue.substring(10, index);
@@ -334,7 +334,7 @@ public class YieldChartResultController implements Initializable {
                             series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValue), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
                         } else {
                             String xValue1 = xValue.substring(0, 10);
-                            String xValue2 = xValue.substring(10, 18) + "...";
+                            String xValue2 = xValue.substring(10, 18) + "_"+i + "...";
                             xValue = xValue1 + "\n" + xValue2;
                             series2.getData().add(new XYChart.Data(yieldNTFChartDtos.get(i).getNtfPercent() == null ? key : (xValue), (yieldNTFChartDtos.get(i).getNtfPercent() == null ? 0 : DAPStringUtils.isInfinityAndNaN(yieldNTFChartDtos.get(i).getNtfPercent()) ? 0 : yieldNTFChartDtos.get(i).getNtfPercent())));
                         }
