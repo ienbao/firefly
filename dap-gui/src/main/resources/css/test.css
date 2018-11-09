@@ -8,6 +8,7 @@
   COLORFUL_PRIMARY_RED_LIGHT: #ff5960;
   COLORFUL_PRIMARY_RED_MID: #c71b22;
   COLORFUL_PRIMARY_RED_DARK: #bb1a20;
+  COLORFUL_PRIMARY_RED_DARK_LIGHT: #de1e26;
 
   /*辅助颜色*/
   COLORFUL_AUXILIARY_BLUE: #0096ff;
@@ -93,6 +94,7 @@
   -fx-background-radius: 0;
   -fx-text-alignment: center;
   -fx-opacity:1;
+  -fx-background-radius: 0;
   -fx-border-color: COLOR_GRAY_CC;
   -fx-background-color: COLOR_GRAY_F5;
   -fx-cursor: hand;
@@ -107,9 +109,195 @@
 }
 
 .button:disabled{
+  -fx-opacity:1;
   -fx-background-color:COLOR_GRAY_FA;
   -fx-border-color:COLOR_GRAY_DC;
   -fx-text-fill:COLOR_GRAY_CC
+}
+.green-btn{
+  /*-fx-pref-width:16;*/
+  /*-fx-max-width:16;*/
+  /*-fx-min-width:16;*/
+  /*-fx-pref-height:16;*/
+  /*-fx-max-height:16;*/
+  /*-fx-min-height:16;*/
+  /*-fx-background-color:COLORFUL_DARK_GREEN;*/
+  /*-fx-border:0;*/
+    /*-fx-background-size: 16;*/
+    /*-fx-background-repeat: no-repeat;*/
+    /*-fx-background-position: center;*/
+    /*-fx-background-image:url("/images/btn_play.png");*/
+    -fx-border-width: 1 1 1 0;
+    -fx-background-image: url('/images/btn_edit_unable.png');
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+
+}
+
+.green-btn:hover{
+  -fx-background-color:COLORFUL_LIGHT1_GREEN;
+  -fx-border-color:COLORFUL_LIGHT1_GREEN;
+}
+.green-btn:pressed{
+  -fx-background-color:COLORFUL_DARK2_GREEN;
+  -fx-border-color:COLORFUL_DARK2_GREEN;
+}
+
+.green-btn:disabled{
+  -fx-background-color:COLOR_GRAY_FA;
+  -fx-border-color:COLOR_GRAY_DC;
+  -fx-text-fill:COLOR_GRAY_CC
+}
+
+.green-btn-play-image{
+  -fx-image: url("/images/btn_play.png");
+
+}
+
+
+.green-btn-loading{
+  -fx-pref-width:30;
+  -fx-max-width:30;
+  -fx-min-width:30;
+  -fx-pref-height:20;
+  -fx-max-height:20;
+  -fx-min-height:20;
+  -fx-background-color:COLORFUL_MIDDLE_GREEN;
+  -fx-border:0 0 0 0;
+  -fx-border-color:COLORFUL_MIDDLE_GREEN;
+}
+.green-btn-loading-image{
+  -fx-image: url("/images/icon_loading_gray.png");
+
+}
+/*******************************************************************************
+ *                                                                             *
+ * Button                                                                      *
+ *                                                                             *
+ ******************************************************************************/
+.button-file{
+  -fx-max-height: 22;
+  -fx-min-height: 22;
+  -fx-pref-height: 22;
+  -fx-max-width: 45;
+  -fx-padding: 0 10 0 10;
+  -fx-text-alignment: center;
+  -fx-text-fill: #222222;
+  -fx-font-family:"Microsoft YaHei";
+  -fx-font-size: 12;
+  -fx-opacity: 1;
+  -fx-border-width: 0;
+  -fx-background-radius: 0;
+  -fx-highlight-fill: COLOR_GRAY_CC;
+  -fx-background-color: #FFFFFF;
+  -fx-background-insets: 0;
+  -fx-cursor: hand;
+}
+.button-delete{
+  -fx-max-height: 20;
+  -fx-min-height: 20;
+  -fx-pref-height: 20;
+  -fx-min-width: 20;
+  -fx-max-width: 20;
+  -fx-min-width: 20;
+  -fx-text-alignment: center;
+  -fx-text-fill: FONT_DARK;
+  -fx-opacity: 1;
+  -fx-border-width: 0;
+  -fx-border-color: COLOR_GRAY_CC;
+  -fx-background-radius: 0;
+  -fx-highlight-fill: COLOR_GRAY_CC;
+  -fx-background-color: #FFFFFF;
+  -fx-background-insets: 0;
+  -fx-cursor: hand;
+  -fx-background-image: url('/images/btn_delete_normal.png');
+  -fx-background-size: 20;
+  -fx-background-position: center;
+}
+.button-narrow{
+  -fx-max-height: 22;
+  -fx-min-height: 22;
+  -fx-pref-height: 22;
+  -fx-min-width: 22;
+  -fx-max-width: 22;
+  -fx-min-width: 22;
+  -fx-border-width: 0;
+  -fx-border-color: COLOR_GRAY_CC;
+  -fx-padding: 10 10 10 10;
+  -fx-background-radius: 0;
+  -fx-highlight-fill: COLOR_GRAY_CC;
+  -fx-background-color: #FFFFFF;
+  -fx-background-insets: 0;
+  -fx-cursor: hand;
+  -fx-opacity: 1;
+  -fx-background-image: url('/images/btn_export_normal.png');
+  -fx-background-size: 16;
+  -fx-background-repeat: no-repeat;
+  -fx-background-position: center;
+}
+.button-file-hover:hover{
+  -fx-border-width: 1;
+  -fx-border-color: #D9D9D9;
+  -fx-background-color: #F2F2F2;
+}
+.button-file-pressed:pressed{
+  -fx-border-width: 1;
+  -fx-border-color: #CCCCCC;
+  -fx-background-color: #E5E5E5;
+}
+
+.button-icon-narrow:hover{
+  -fx-border-width: 1;
+  -fx-border-color:#D9D9D9;
+  -fx-background-color: #F2F2F2;
+}
+.button-narrow-pressed:pressed{
+  -fx-border-width: 1;
+  -fx-border-color: #CCCCCC;
+  -fx-background-color: #E5E5E5;
+}
+.button-delete:hover{
+  -fx-border-width: 0;
+  -fx-background-color: #E5E5E5;
+}
+.button-delete-pressed:pressed{
+  -fx-background-color: #DDDDDD;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Primary Button                                                                      *
+ *                                                                             *
+ ******************************************************************************/
+.btn-primary{
+    -fx-pref-height:22px;
+    -fx-min-width: 70px;
+    -fx-padding:0 10 2 10;
+    -fx-text-alignment: center;
+    -fx-text-fill: COLOR_LIGHT_FF;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-border-color: COLORFUL_PRIMARY_RED;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover{
+    -fx-border-color: COLORFUL_PRIMARY_RED_LIGHT;
+    -fx-background-color: COLORFUL_PRIMARY_RED_LIGHT;
+}
+
+.btn-primary:pressed{
+    -fx-border-color: COLORFUL_PRIMARY_RED_DARK_LIGHT;
+    -fx-background-color:COLORFUL_PRIMARY_RED_DARK_LIGHT;
+}
+
+.btn-primary:disabled{
+    -fx-opacity:1;
+    -fx-background-color:COLOR_GRAY_FA;
+    -fx-border-color:COLOR_GRAY_DC;
+    -fx-text-fill:COLOR_GRAY_CC
 }
 
 
@@ -200,3 +388,91 @@
   -fx-padding: 0.25em;
   -fx-background-color: COLOR_GRAY_66;
 }
+
+
+
+.btn-primary-loading {
+  -fx-cursor: null;
+  -fx-border-color: COLORFUL_MIDDLE_RED;
+  -fx-background-color: COLORFUL_MIDDLE_RED;
+  -fx-background-size: 16;
+  -fx-background-image: url('/images/small_loading.gif');
+  -fx-background-repeat: no-repeat;
+  -fx-background-position: center;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * TextField                                                                     *
+ *                                                                             *
+ ******************************************************************************/
+
+.text-field{
+  -fx-border-color: COLOR_GRAY_CC;
+  -fx-background-color: COLOR_LIGHT_FF;
+  -fx-text-alignment: center;
+  -fx-min-height: 22;
+  -fx-max-height: 22;
+  -fx-padding: 0 10 1 10;
+}
+
+.text-field:hover{
+  -fx-border-color:COLORFUL_CHECKBOX_BORDER ;
+  -fx-background-color:COLOR_LIGHT_FF ;
+  -fx-text-fill: COLOR_BLACK_22;
+}
+
+.text-field:focused{
+  -fx-border-color: COLORFUL_CHECKBOX_BORDER;
+  -fx-background-color:COLOR_LIGHT_FF ;
+  -fx-highlight-fill:  COLORFUL_AUXILIARY_BLUE;
+  -fx-text-fill: COLOR_BLACK_22;
+  -fx-highlight-text-fill: COLOR_LIGHT_FF;
+}
+
+.text-field:disabled{
+  -fx-opacity:1;
+  -fx-border-color:COLOR_GRAY_DC;
+  -fx-background-color:COLOR_GRAY_FA ;
+  -fx-text-fill:COLOR_GRAY_CC;
+}
+
+.text-field:focused:hover{
+  -fx-border-color:COLORFUL_CHECKBOX_BORDER;
+  -fx-background-color:COLOR_LIGHT_FF ;
+}
+
+.text-field:focused:pressed{
+  -fx-border-color:COLORFUL_CHECKBOX_BORDER;
+  -fx-background-color:COLOR_LIGHT_FF ;
+}
+
+
+
+.text-field-error{
+  -fx-border-color:COLORFUL_PRIMARY_RED;
+  -fx-background-color:COMBOBOX_ERROR_BG;
+  -fx-text-fill: COLOR_BLACK_22;
+}
+
+.text-field-error:hover{
+  -fx-border-color:COLORFUL_PRIMARY_RED;
+  -fx-background-color:COMBOBOX_ERROR_BG_HOVER;
+}
+
+.text-field-error:focused{
+  -fx-border-color:COLORFUL_CHECKBOX_BORDER;
+  -fx-background-color:COMBOBOX_ERROR_BG;
+}
+
+.text-field-error:focused:hover{
+  -fx-border-color:COLORFUL_CHECKBOX_BORDER;
+  -fx-background-color:COMBOBOX_ERROR_BG_HOVER;
+}
+
+.text-field-error:focused:pressed{
+  -fx-border-color:COLORFUL_CHECKBOX_BORDER;
+  -fx-background-color:COMBOBOX_ERROR_BG_HOVER;
+}
+
