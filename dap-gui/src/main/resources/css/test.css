@@ -528,7 +528,6 @@
  ******************************************************************************/
 .progress-bar-lg-red > .bar{
   -fx-pref-height: 2;
-  -fx-pref-width: 340;
 }
 
 .progress-bar-lg-red > .track{
@@ -542,7 +541,6 @@
  ******************************************************************************/
 .progress-bar-lg-green > .bar{
   -fx-pref-height: 2;
-  -fx-pref-width: 340;
   -fx-background-color: COLORFUL_DARK_GREEN;
 }
 
