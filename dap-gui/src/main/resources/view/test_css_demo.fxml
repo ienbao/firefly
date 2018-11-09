@@ -14,46 +14,31 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             prefHeight="400.0" prefWidth="600.0">
-    <HBox style="-fx-spacing: 10.0">
-  <VBox style="-fx-spacing: 10.0">
-    <Button text="测试按钮"></Button>
-    <Button text="测试按钮" disable="true"></Button>
-      <Button text="特殊按钮" styleClass="btn-primary"></Button>
-      <Button text="特殊按钮" disable="true" styleClass="btn-primary"></Button>
-      <Button styleClass="btn-primary-loading"></Button>
-  </VBox>
-
-  <VBox style="-fx-spacing: 10.0">
-    <TextField text = "文本"></TextField>
-    <TextField text = "文本" disable="true"></TextField>
-    <TextField styleClass="text-field-error"></TextField>
-    <TextField styleClass="text-field-search"></TextField>
-  </VBox>
-
-  <VBox style="-fx-spacing: 5px">
-<VBox>
-    <Button styleClass="green-btn">
-    </Button>
-    <Button styleClass="green-btn-loading">
+  <HBox>
+    <VBox style="-fx-spacing: 10.0">
+      <Button text="测试按钮"></Button>
+      <Button text="测试按钮" disable="true"></Button>
+      <Button text="测试按钮" styleClass="btn-primary"></Button>
+      <Button text="测试按钮" disable="true" styleClass="btn-primary"></Button>
+      <CheckBox text="复选按钮" ></CheckBox>
+      <CheckBox text="复选按钮" selected="true" disable="true" ></CheckBox>
+      <RadioButton text="单选按钮"></RadioButton>
+      <RadioButton text="单选按钮" selected="true" disable="true"></RadioButton>
+      <Button styleClass="green-btn">
+      </Button>
+      <Button styleClass="green-btn-loading">
         <graphic>
-            <ImageView styleClass="green-btn-loading-image" fitWidth="16.0" fitHeight="16.0" />
+          <ImageView styleClass="green-btn-loading-image" fitWidth="16.0" fitHeight="16.0" />
         </graphic>
-    </Button>
-    <Button styleClass="green-btn" disable="true"/>
-    <Button text="测试按钮"></Button>
-    <Button text="测试按钮" disable="true"></Button>
-    <Button text="测试按钮" styleClass="btn-primary"></Button>
-    <Button text="测试按钮" disable="true" styleClass="btn-primary"></Button>
-    <CheckBox text="复选按钮" ></CheckBox>
-    <CheckBox text="复选按钮" selected="true" disable="true" ></CheckBox>
-    <RadioButton text="单选按钮"></RadioButton>
-    <RadioButton text="单选按钮" selected="true" disable="true"></RadioButton>
+      </Button>
+      <Button styleClass="green-btn" disable="true"/>
+    </VBox>
 
-  </VBox>
-    <Button styleClass="button-file,button-file-hover,button-file-pressed"  text="File" />
-    <Button styleClass="button-icon,button-delete,button-delete-pressed"></Button>
-    <Button styleClass="button-narrow,button-icon-narrow,button-narrow-pressed"></Button>
-</VBox>
-
-
+    <VBox style="-fx-spacing: 10.0">
+      <TextField text = "文本"></TextField>
+      <TextField text = "文本" disable="true"></TextField>
+      <TextField styleClass="text-field-error"></TextField>
+      <TextField styleClass="text-field-search"></TextField>
+    </VBox>
+  </HBox>
 </AnchorPane>
