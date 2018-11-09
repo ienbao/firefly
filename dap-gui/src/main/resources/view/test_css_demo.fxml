@@ -16,17 +16,37 @@
 <?import java.lang.String?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            prefHeight="400.0" prefWidth="600.0">
-    <HBox style="-fx-spacing: 10.0">
-        <VBox >
+            prefHeight="400.0" prefWidth="1000.0">
+    <HBox style="-fx-spacing: 10.0;-fx-padding: 30.0" >
+        <VBox style="-fx-spacing: 20.0;-fx-padding: 30.0">
             <Button text="测试按钮"></Button>
             <Button text="测试按钮" disable="true"></Button>
+            <Button text="特殊按钮" styleClass="btn-primary"></Button>
+            <Button text="特殊按钮" disable="true" styleClass="btn-primary"></Button>
+            <Button styleClass="btn-primary-loading"></Button>
+            <Button styleClass="green-btn"/>
+            <Button styleClass="green-btn,green-btn-loading"/>
+            <Button styleClass="green-btn" disable="true"/>
+            <Button styleClass="button-file"  text="File" />
+            <Button styleClass="button-delete"></Button>
+            <Button styleClass="button-narrow"></Button>
+        </VBox>
+        <VBox style="-fx-spacing: 20.0;-fx-padding: 30.0">
+            <TextField text = "文本"></TextField>
+            <TextField text = "文本" disable="true"></TextField>
+            <TextField styleClass="text-field-error"></TextField>
+        </VBox>
+        <VBox style="-fx-spacing: 20.0;-fx-padding: 30.0">
             <CheckBox text="测试复选框"/>
             <CheckBox text="测试复选框" disable="true" selected="true"/>
             <CheckBox text="测试复选框" disable="true" selected="false"/>
+        </VBox>
+        <VBox style="-fx-spacing: 20.0;-fx-padding: 30.0">
             <RadioButton text="测试单选按钮"/>
             <RadioButton text="测试单选按钮" disable="true" selected="true"/>
             <RadioButton text="测试单选按钮" disable="true" selected="false"/>
+        </VBox>
+        <VBox style="-fx-spacing: 20.0;-fx-padding: 30.0">
             <ProgressBar/>
             <ProgressBar styleClass="progress-bar-sm-green"/>
             <ProgressBar styleClass="progress-bar-sm-red"/>
@@ -36,48 +56,23 @@
             <ProgressBar styleClass="progress-bar-lg-red"/>
             <ScrollBar/>
         </VBox>
-        <VBox style="-fx-spacing: 10.0">
-            <Button text="测试按钮"></Button>
-            <Button text="测试按钮" disable="true"></Button>
-            <Button text="特殊按钮" styleClass="btn-primary"></Button>
-            <Button text="特殊按钮" disable="true" styleClass="btn-primary"></Button>
-            <Button styleClass="btn-primary-loading"></Button>
-        </VBox>
-        <VBox style="-fx-spacing: 10.0">
-            <TextField text = "文本"></TextField>
-            <TextField text = "文本" disable="true"></TextField>
-            <TextField styleClass="text-field-error"></TextField>
-            <TextField styleClass="text-field-search"></TextField>
-        </VBox>
-        <VBox>
-
-            <Button text="测试按钮"></Button>
-            <Button text="测试按钮" disable="true"></Button>
-            <Button styleClass="button-file"  text="File" />
-            <Button styleClass="button-delete"></Button>
-            <Button styleClass="button-narrow"></Button>
-        </VBox>
-        <VBox  style="-fx-spacing: 10;">
-
-            <Button styleClass="green-btn"/>
-            <Button styleClass="green-btn,green-btn-loading"/>
-            <Button styleClass="green-btn" disable="true"/>
-            <ComboBox styleClass="normal-combo-box">
+        <VBox style="-fx-spacing: 20.0;-fx-padding: 30.0">
+            <ComboBox >
                 <items>
                     <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="Item 1dddddddddddddddd" />
+                        <String fx:value="Item 1" />
                         <String fx:value="Item 2" />
                         <String fx:value="Item 3" />
                     </FXCollections>
                 </items>
             </ComboBox>
-            <ComboBox styleClass="normal-combo-box" disable="true">
+            <ComboBox  disable="true">
 
             </ComboBox>
             <ComboBox styleClass="error-combo-box" >
                 <items>
                     <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="Item 1dddddddddddddddd" />
+                        <String fx:value="Item 1" />
                         <String fx:value="Item 2" />
                         <String fx:value="Item 3" />
                     </FXCollections>
