@@ -8,6 +8,7 @@
   COLORFUL_PRIMARY_RED_LIGHT: #ff5960;
   COLORFUL_PRIMARY_RED_MID: #c71b22;
   COLORFUL_PRIMARY_RED_DARK: #bb1a20;
+  COLORFUL_PRIMARY_RED_DARK_LIGHT: #de1e26;
 
   /*辅助颜色*/
   COLORFUL_AUXILIARY_BLUE: #0096ff;
@@ -89,8 +90,9 @@
 .button {
   -fx-pref-height: 22px;
   -fx-min-width: 70px;
-  -fx-padding:0 10;
+  -fx-padding:0 10 2 10;
   -fx-text-alignment: center;
+  -fx-background-radius: 0;
   -fx-border-color: COLOR_GRAY_CC;
   -fx-background-color: COLOR_GRAY_F5;
   -fx-cursor: hand;
@@ -101,6 +103,10 @@
 }
 
 .button:pressed{
+  -fx-background-color: COLOR_GRAY_ED;
+}
+
+.button:pressed:hover{
   -fx-background-color: COLOR_GRAY_DC;
 }
 
@@ -110,3 +116,144 @@
   -fx-border-color:COLOR_GRAY_DC;
   -fx-text-fill:COLOR_GRAY_CC
 }
+
+.btn-primary{
+  -fx-pref-height:22px;
+  -fx-min-width: 70px;
+  -fx-padding:0 10 2 10;
+  -fx-text-alignment: center;
+  -fx-text-fill: COLOR_LIGHT_FF;
+  -fx-border-radius: 0;
+  -fx-background-radius: 0;
+  -fx-border-color: COLORFUL_PRIMARY_RED;
+  -fx-background-color: COLORFUL_PRIMARY_RED;
+  -fx-cursor: hand;
+}
+
+.btn-primary:hover{
+  -fx-border-color: COLORFUL_PRIMARY_RED_LIGHT;
+  -fx-background-color: COLORFUL_PRIMARY_RED_LIGHT;
+}
+
+.btn-primary:pressed{
+  -fx-border-color: COLORFUL_PRIMARY_RED_DARK_LIGHT;
+  -fx-background-color:COLORFUL_PRIMARY_RED_DARK_LIGHT;
+}
+
+.btn-primary:disabled{
+  -fx-opacity:1;
+  -fx-background-color:COLOR_GRAY_FA;
+  -fx-border-color:COLOR_GRAY_DC;
+  -fx-text-fill:COLOR_GRAY_CC
+}
+
+.btn-primary:pressed:hover{
+  -fx-border-color: COLORFUL_PRIMARY_RED_DARK;
+  -fx-background-color:COLORFUL_PRIMARY_RED_DARK;
+}
+
+
+.btn-primary-loading {
+  -fx-cursor: null;
+  -fx-border-color: COLORFUL_MIDDLE_RED;
+  -fx-background-color: COLORFUL_MIDDLE_RED;
+  -fx-background-size: 16;
+  -fx-background-image: url('/images/small_loading.gif');
+  -fx-background-repeat: no-repeat;
+  -fx-background-position: center;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * TextField                                                                     *
+ *                                                                             *
+ ******************************************************************************/
+
+.text-field{
+  -fx-border-color: COLOR_GRAY_CC;
+  -fx-background-color: COLOR_LIGHT_FF;
+  -fx-text-alignment: center;
+  -fx-min-height: 22;
+  -fx-max-height: 22;
+  -fx-padding: 0 10 1 10;
+}
+
+.text-field:hover{
+  -fx-border-color:COLORFUL_CHECKBOX_BORDER ;
+  -fx-background-color:COLOR_LIGHT_FF ;
+  -fx-text-fill: COLOR_BLACK_22;
+}
+
+.text-field:focused{
+  -fx-border-color: COLORFUL_CHECKBOX_BORDER;
+  -fx-background-color:COLOR_LIGHT_FF ;
+  -fx-highlight-fill:  COLORFUL_AUXILIARY_BLUE;
+  -fx-text-fill: COLOR_BLACK_22;
+  -fx-highlight-text-fill: COLOR_LIGHT_FF;
+}
+
+.text-field:disabled{
+  -fx-opacity:1;
+  -fx-border-color:COLOR_GRAY_DC;
+  -fx-background-color:COLOR_GRAY_FA ;
+  -fx-text-fill:COLOR_GRAY_CC;
+}
+
+.text-field:focused:hover{
+  -fx-border-color:COLORFUL_CHECKBOX_BORDER;
+  -fx-background-color:COLOR_LIGHT_FF ;
+}
+
+.text-field:focused:pressed{
+  -fx-border-color:COLORFUL_CHECKBOX_BORDER;
+  -fx-background-color:COLOR_LIGHT_FF ;
+}
+
+
+
+.text-field-error{
+  -fx-border-color:COLORFUL_PRIMARY_RED;
+  -fx-background-color:COMBOBOX_ERROR_BG;
+  -fx-text-fill: COLOR_BLACK_22;
+}
+
+.text-field-error:hover{
+  -fx-border-color:COLORFUL_PRIMARY_RED;
+  -fx-background-color:COMBOBOX_ERROR_BG_HOVER;
+}
+
+.text-field-error:focused{
+  -fx-border-color:COLORFUL_CHECKBOX_BORDER;
+  -fx-background-color:COMBOBOX_ERROR_BG;
+}
+
+.text-field-error:focused:hover{
+  -fx-border-color:COLORFUL_CHECKBOX_BORDER;
+  -fx-background-color:COMBOBOX_ERROR_BG_HOVER;
+}
+
+.text-field-error:focused:pressed{
+  -fx-border-color:COLORFUL_CHECKBOX_BORDER;
+  -fx-background-color:COMBOBOX_ERROR_BG_HOVER;
+}
+
+.text-field-search{
+  -fx-border-color: COLOR_GRAY_CC;
+  -fx-background-color: COLOR_LIGHT_FF;
+  -fx-min-height: 22;
+  -fx-max-height: 22;
+  -fx-padding: 0 5 0 5;
+  -fx-graphic:url('/images/btn_basic_search_normal.png');
+  /*-fx-background-image: url('/images/btn_clear_click.png');*/
+}
+
+
+.text-area{
+  -fx-pref-width: 250px;
+  -fx-border-color:COLORFUL_LIGHT_ORANGE;
+  -fx-background-color:COLORFUL_LIGHT_YELLOW;
+}
+
+
+
