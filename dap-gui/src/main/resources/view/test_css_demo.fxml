@@ -5,13 +5,23 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.RadioButton?>
 <AnchorPane xmlns="http://javafx.com/javafx"
   xmlns:fx="http://javafx.com/fxml"
   prefHeight="400.0" prefWidth="600.0">
 
-  <VBox>
+  <VBox style="-fx-spacing: 5px">
     <Button text="测试按钮"></Button>
     <Button text="测试按钮" disable="true"></Button>
+    <Button text="测试按钮" styleClass="btn-primary"></Button>
+    <Button text="测试按钮" disable="true" styleClass="btn-primary"></Button>
+    <CheckBox text="复选按钮" ></CheckBox>
+    <CheckBox text="复选按钮" selected="true" disable="true" ></CheckBox>
+    <RadioButton text="单选按钮"></RadioButton>
+    <RadioButton text="单选按钮" selected="true" disable="true"></RadioButton>
+
   </VBox>
 
 
