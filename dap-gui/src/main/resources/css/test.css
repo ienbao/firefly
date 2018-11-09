@@ -20,6 +20,7 @@
   COLOR_LIGHT_FF: #ffffff;
 
   COLOR_GRAY_66: #666666;
+  COLOR_GRAY_88: #888888;
   COLOR_GRAY_AA: #aaaaaa;
   COLOR_GRAY_BB: #bbbbbb;
   COLOR_GRAY_CC: #cccccc;
@@ -300,20 +301,9 @@
     -fx-text-fill:COLOR_GRAY_CC
 }
 
-
-
-.btn-primary {
-  -fx-border-width: 0;
-  -fx-text-fill: COLOR_LIGHT_FF;
-  -fx-background-color: COLORFUL_PRIMARY_RED;
-}
-
-.btn-primary:hover {
-  -fx-background-color: COLORFUL_PRIMARY_RED_LIGHT;
-}
-
-.btn-primary:pressed {
-  -fx-background-color: COLORFUL_PRIMARY_RED_DARK;
+.btn-primary:pressed:hover{
+    -fx-border-color: COLORFUL_PRIMARY_RED_DARK;
+    -fx-background-color:COLORFUL_PRIMARY_RED_DARK;
 }
 
 .btn-primary:disabled {
@@ -474,5 +464,145 @@
 .text-field-error:focused:pressed{
   -fx-border-color:COLORFUL_CHECKBOX_BORDER;
   -fx-background-color:COMBOBOX_ERROR_BG_HOVER;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * ProgressBar                                                                 *
+ *                                                                             *
+ ******************************************************************************/
+
+.progress-bar > .track{
+  -fx-background-insets: 0;
+  -fx-background-radius: 0;
+  -fx-background-color: COLOR_GRAY_ED;
+}
+
+.progress-bar > .bar{
+  -fx-background-insets: 0;
+  -fx-background-radius: 0;
+  -fx-border-radius: 0;
+  -fx-border-insets: 0;
+  -fx-padding: 1;
+  -fx-shape: null;
+  -fx-background-color: COLORFUL_PRIMARY_RED;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * ProgressBar small red                                                       *
+ *                                                                             *
+ ******************************************************************************/
+.progress-bar-sm-red > .bar{
+  -fx-pref-height: 4;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * ProgressBar small green                                                     *
+ *                                                                             *
+ ******************************************************************************/
+
+.progress-bar-sm-green > .bar{
+  -fx-pref-height: 4;
+  -fx-background-color: COLORFUL_DARK_GREEN;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * ProgressBar md red                                                          *
+ *                                                                             *
+ ******************************************************************************/
+
+.progress-bar-md-red > .bar{
+  -fx-pref-height: 8;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * ProgressBar md green                                                        *
+ *                                                                             *
+ ******************************************************************************/
+.progress-bar-md-green > .bar{
+  -fx-pref-height: 8;
+  -fx-background-color: COLORFUL_DARK_GREEN;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * ProgressBar large red                                                       *
+ *                                                                             *
+ ******************************************************************************/
+.progress-bar-lg-red > .bar{
+  -fx-pref-height: 2;
+}
+
+.progress-bar-lg-red > .track{
+  -fx-background-color: COLOR_GRAY_DC;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * ProgressBar large green                                                     *
+ *                                                                             *
+ ******************************************************************************/
+.progress-bar-lg-green > .bar{
+  -fx-pref-height: 2;
+  -fx-background-color: COLORFUL_DARK_GREEN;
+}
+
+.progress-bar-lg-red > .track{
+  -fx-background-color: COLOR_GRAY_DC;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * scroll-bar                                                                  *
+ *                                                                             *
+ ******************************************************************************/
+
+.scroll-bar{
+  /*-fx-pref-height: 10;*/
+  -fx-background-insets: 0;
+  -fx-border-width: 0;
+  -fx-background-color: COLOR_LIGHT_FF;
+}
+
+.scroll-bar > .thumb{
+  -fx-background-radius: 0;
+  -fx-background-insets: 0;
+  -fx-background-color: COLOR_GRAY_CC;
+}
+
+
+.scroll-bar > .increment-button,
+.scroll-bar > .decrement-button{
+  -fx-background-insets: 0;
+  -fx-border-insets: -1;
+  -fx-border-color: transparent;
+  -fx-background-color: transparent;
+  -fx-color: transparent;
+  -fx-pref-width: 8;
+  -fx-pref-height: 8;
+}
+
+.scroll-bar:hover > .thumb{
+  -fx-background-color: COLOR_GRAY_88;
+}
+
+.scroll-bar:hover > .increment-button,
+.scroll-bar:hover > .decrement-button{
+  -fx-background-color: rgba(0, 0, 0, 0.05);
+  -fx-border-color: rgba(0, 0, 0, 0.15);
+}
+
+.scroll-bar:pressed > .thumb{
+  -fx-background-color: COLOR_GRAY_66;
+}
+
+.scroll-bar:pressed > .increment-button,
+.scroll-bar:pressed > .decrement-button{
+  -fx-background-color: rgba(0, 0, 0, 0.1);
+  -fx-border-color: rgba(0, 0, 0, 0.2);
 }
 
