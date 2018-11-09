@@ -24,9 +24,13 @@
   COLOR_GRAY_AA: #aaaaaa;
   COLOR_GRAY_BB: #bbbbbb;
   COLOR_GRAY_CC: #cccccc;
+  COLOR_GRAY_DD: #DDDDDD;
   COLOR_GRAY_DC: #dcdcdc;
+  COLOR_GRAY_D9: #D9D9D9;
   COLOR_GRAY_ED: #ededed;
+  COLOR_GRAY_E5: #E5E5E5;
   COLOR_GRAY_F0: #f0f0f0;
+  COLOR_GRAY_F2: #F2F2F2;
   COLOR_GRAY_F5: #f5f5f5;
   COLOR_GRAY_F8: #f8f8f8;
   COLOR_GRAY_FA: #fafafa;
@@ -184,14 +188,13 @@
   -fx-max-width: 45;
   -fx-padding: 0 10 0 10;
   -fx-text-alignment: center;
-  -fx-text-fill: #222222;
+  -fx-text-fill: COLOR_BLACK_22;
   -fx-font-family:"Microsoft YaHei";
   -fx-font-size: 12;
   -fx-opacity: 1;
   -fx-border-width: 0;
   -fx-background-radius: 0;
   -fx-highlight-fill: COLOR_GRAY_CC;
-  -fx-background-color: #FFFFFF;
   -fx-background-insets: 0;
   -fx-cursor: hand;
 }
@@ -209,7 +212,6 @@
   -fx-border-color: COLOR_GRAY_CC;
   -fx-background-radius: 0;
   -fx-highlight-fill: COLOR_GRAY_CC;
-  -fx-background-color: #FFFFFF;
   -fx-background-insets: 0;
   -fx-cursor: hand;
   -fx-background-image: url('/images/btn_delete_normal.png');
@@ -228,7 +230,6 @@
   -fx-padding: 10 10 10 10;
   -fx-background-radius: 0;
   -fx-highlight-fill: COLOR_GRAY_CC;
-  -fx-background-color: #FFFFFF;
   -fx-background-insets: 0;
   -fx-cursor: hand;
   -fx-opacity: 1;
@@ -237,33 +238,33 @@
   -fx-background-repeat: no-repeat;
   -fx-background-position: center;
 }
-.button-file-hover:hover{
+.button-file:hover{
   -fx-border-width: 1;
-  -fx-border-color: #D9D9D9;
-  -fx-background-color: #F2F2F2;
+  -fx-border-color: COLOR_GRAY_D9;
+  -fx-background-color: COLOR_GRAY_F2;
 }
-.button-file-pressed:pressed{
+.button-file:pressed{
   -fx-border-width: 1;
-  -fx-border-color: #CCCCCC;
-  -fx-background-color: #E5E5E5;
+  -fx-border-color: COLOR_GRAY_CC;
+  -fx-background-color: COLOR_GRAY_E5;
 }
 
-.button-icon-narrow:hover{
+.button-narrow:hover{
   -fx-border-width: 1;
-  -fx-border-color:#D9D9D9;
-  -fx-background-color: #F2F2F2;
+  -fx-border-color:COLOR_GRAY_D9;
+  -fx-background-color: COLOR_GRAY_F2;
 }
-.button-narrow-pressed:pressed{
+.button-narrow:pressed{
   -fx-border-width: 1;
-  -fx-border-color: #CCCCCC;
-  -fx-background-color: #E5E5E5;
+  -fx-border-color: COLOR_GRAY_CC;
+  -fx-background-color: COLOR_GRAY_E5;
 }
 .button-delete:hover{
   -fx-border-width: 0;
-  -fx-background-color: #E5E5E5;
+  -fx-background-color: COLOR_GRAY_E5;
 }
-.button-delete-pressed:pressed{
-  -fx-background-color: #DDDDDD;
+.button-delete:pressed{
+  -fx-background-color: COLOR_GRAY_DD;
 }
 
 /*******************************************************************************

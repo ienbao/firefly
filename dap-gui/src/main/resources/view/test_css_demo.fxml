@@ -57,9 +57,9 @@
         <Button styleClass="green-btn" disable="true"/>
         <Button text="测试按钮"></Button>
         <Button text="测试按钮" disable="true"></Button>
-        <Button styleClass="button-file,button-file-hover,button-file-pressed"  text="File" />
-        <Button styleClass="button-icon,button-delete,button-delete-pressed"></Button>
-        <Button styleClass="button-narrow,button-icon-narrow,button-narrow-pressed"></Button>
+        <Button styleClass="button-file"  text="File" />
+        <Button styleClass="button-delete"></Button>
+        <Button styleClass="button-narrow"></Button>
     </VBox>
 </HBox>
 </AnchorPane>
