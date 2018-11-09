@@ -9,13 +9,13 @@
       fx:controller="com.dmsoft.firefly.gui.controller.AboutController"
       styleClass="gui-about-root">
     <ImageView styleClass="gui-about-logo" fitWidth="100.0" pickOnBounds="true" preserveRatio="true"/>
-    <VBox styleClass="gui-about-v-box">
-        <Label styleClass="login-label-lg,gui-about-system-title" text="%GLOBAL_SYSTEM_PROCESS_TITLE"/>
-        <Label styleClass="login-label-md,gui-about-system-name" text="%GLOBAL_SYSTEM_PROCESS_NAME"/>
-        <HBox styleClass="gui-about-info-h-box">
-            <Label fx:id="versionLabel" styleClass="gui-about-text-color,gui-about-version-font"/>
-            <Label styleClass="gui-about-text-color" text="|"/>
-            <Label fx:id="osLabel" styleClass="gui-about-text-color"/>
+    <VBox styleClass="gui-about-spacing">
+        <Label styleClass="login-label-lg" text="%GLOBAL_SYSTEM_PROCESS_TITLE"/>
+        <Label styleClass="login-label-md" text="%GLOBAL_SYSTEM_PROCESS_NAME"/>
+        <HBox styleClass="spacing-md">
+            <Label fx:id="versionLabel" styleClass="login-label-sm"/>
+            <Label styleClass="login-label-sm" text="|"/>
+            <Label fx:id="osLabel" styleClass="login-label-sm"/>
         </HBox>
     </VBox>
 </HBox>

@@ -108,11 +108,11 @@
 }
 
 .button:pressed{
-    -fx-background-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_ED;
 }
 
 .button:pressed:hover{
-    -fx-background-color: COLOR_GRAY_ED;
+    -fx-background-color: COLOR_GRAY_DC;
 }
 
 .button:disabled{

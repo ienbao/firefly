@@ -28,7 +28,7 @@
             <Button styleClass="green-btn,green-btn-loading"/>
             <Button styleClass="green-btn" disable="true"/>
             <Button styleClass="button-file"  text="File" />
-            <Button styleClass="button-icon"></Button>
+            <Button styleClass="button-delete"></Button>
             <Button styleClass="button-narrow"></Button>
         </VBox>
         <VBox style="-fx-spacing: 20.0;-fx-padding: 30.0">
