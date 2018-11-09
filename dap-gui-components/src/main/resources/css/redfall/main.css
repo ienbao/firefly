@@ -585,6 +585,8 @@
 }
 
 .radio-button > .radio {
+    -fx-pref-width: 12;
+    -fx-pref-height: 12;
     -fx-border-color: #bbbbbb;
     -fx-background-color: #ffffff;
     -fx-border-radius: 10;
