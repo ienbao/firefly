@@ -79,6 +79,7 @@ public class LinearChart<X, Y> extends LineChart<X, Y> {
 
 //        Draw vertical markers
         for (XYChart.Data<X, Y> verticalMarker : verticalMarkers) {
+            String str = null;
             double lower = ((ValueAxis) this.getYAxis()).getLowerBound();
             double upper = ((ValueAxis) this.getYAxis()).getUpperBound();
             Y lowerY = this.getYAxis().toRealValue(lower);
