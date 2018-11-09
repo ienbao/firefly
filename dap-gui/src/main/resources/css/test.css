@@ -1,23 +1,23 @@
 .root {
-  -fx-font: 12 arial;
-  -fx-text-fill: #222222;
-  -fx-background-color: #ffffff;
+    -fx-font: 12 arial;
+    -fx-text-fill: #222222;
+    -fx-background-color: #ffffff;
 
-  /*主题颜色*/
-  COLORFUL_PRIMARY_RED: #ea2028;
-  COLORFUL_PRIMARY_RED_LIGHT: #ff5960;
-  COLORFUL_PRIMARY_RED_MID: #c71b22;
-  COLORFUL_PRIMARY_RED_DARK: #bb1a20;
-  COLORFUL_PRIMARY_RED_DARK_LIGHT: #de1e26;
+    /*主题颜色*/
+    COLORFUL_PRIMARY_RED: #ea2028;
+    COLORFUL_PRIMARY_RED_LIGHT: #ff5960;
+    COLORFUL_PRIMARY_RED_MID: #c71b22;
+    COLORFUL_PRIMARY_RED_DARK: #bb1a20;
+    COLORFUL_PRIMARY_RED_DARK_LIGHT: #de1e26;
 
-  /*辅助颜色*/
-  COLORFUL_AUXILIARY_BLUE: #0096ff;
-  COLORFUL_LIGHT_BLUE: #33abff;
-  COLORFUL_DARK_BLUE: #487CF4;
+    /*辅助颜色*/
+    COLORFUL_AUXILIARY_BLUE: #0096ff;
+    COLORFUL_LIGHT_BLUE: #33abff;
+    COLORFUL_DARK_BLUE: #487CF4;
 
 
-  COLOR_BLACK_22: #222222;
-  COLOR_LIGHT_FF: #ffffff;
+    COLOR_BLACK_22: #222222;
+    COLOR_LIGHT_FF: #ffffff;
 
   COLOR_GRAY_66: #666666;
   COLOR_GRAY_88: #888888;
@@ -35,53 +35,53 @@
   COLOR_GRAY_F8: #f8f8f8;
   COLOR_GRAY_FA: #fafafa;
 
-  COLOR_GRAY_E9: #e9e9e9;
-  COLOR_GRAY_D0: #d0d0d0;
+    COLOR_GRAY_E9: #e9e9e9;
+    COLOR_GRAY_D0: #d0d0d0;
 
-  COLOR_BLACK_Fill_5: rgba(0, 0, 0, 0.05);
-  COLOR_BLACK_Fill_10: rgba(0, 0, 0, 0.1);
-  COLOR_BLACK_Fill_15: rgba(0, 0, 0, 0.15);
-  COLOR_BLACK_Fill_20: rgba(0, 0, 0, 0.2);
-
-
-  COLORFUL_LIGHT_RED: #fde8e9;
-  COLORFUL_MIDDLE_RED: #fac8ca;
-  COLORFUL_DARK_RED: #F48F93;
+    COLOR_BLACK_Fill_5: rgba(0, 0, 0, 0.05);
+    COLOR_BLACK_Fill_10: rgba(0, 0, 0, 0.1);
+    COLOR_BLACK_Fill_15: rgba(0, 0, 0, 0.15);
+    COLOR_BLACK_Fill_20: rgba(0, 0, 0, 0.2);
 
 
+    COLORFUL_LIGHT_RED: #fde8e9;
+    COLORFUL_MIDDLE_RED: #fac8ca;
+    COLORFUL_DARK_RED: #F48F93;
 
-  COLORFUL_BLUE_Fill_10: rgba(0, 150, 255, 0.2);
-  COLORFUL_BLUE_Fill_20: rgba(0, 150, 255, 0.2);
-  COLORFUL_BLUE_Fill_50: rgba(0, 150, 255, 0.5);
 
-  COLORFUL_LIGHT_ORANGE: #ffd57f;
-  COLORFUL_MIDDLE_ORANGE: #ffab00;
-  COLORFUL_DARK_ORANGE: #F38400;
 
-  COLORFUL_LIGHT_YELLOW: #fff7d0;
-  COLORFUL_MIDDLE_YELLOW: #fee465;
-  COLORFUL_DARK_YELLOW: #f8d251;
+    COLORFUL_BLUE_Fill_10: rgba(0, 150, 255, 0.2);
+    COLORFUL_BLUE_Fill_20: rgba(0, 150, 255, 0.2);
+    COLORFUL_BLUE_Fill_50: rgba(0, 150, 255, 0.5);
 
-  COLORFUL_LIGHT_GREEN: #dff0cf;
-  COLORFUL_MIDDLE_GREEN: #aeda88;
-  COLORFUL_DARK_GREEN: #5EB511;
+    COLORFUL_LIGHT_ORANGE: #ffd57f;
+    COLORFUL_MIDDLE_ORANGE: #ffab00;
+    COLORFUL_DARK_ORANGE: #F38400;
 
-  COLORFUL_LIGHT1_GREEN: #7ec441;
-  COLORFUL_DARK1_GREEN: #509A0E;
-  COLORFUL_DARK2_GREEN: #4B910E;
+    COLORFUL_LIGHT_YELLOW: #fff7d0;
+    COLORFUL_MIDDLE_YELLOW: #fee465;
+    COLORFUL_DARK_YELLOW: #f8d251;
 
-  COLORFUL_DARK_CYAN: #27b5b3;
+    COLORFUL_LIGHT_GREEN: #dff0cf;
+    COLORFUL_MIDDLE_GREEN: #aeda88;
+    COLORFUL_DARK_GREEN: #5EB511;
 
-  COLORFUL_CHECKBOX_BORDER: #33abff;
+    COLORFUL_LIGHT1_GREEN: #7ec441;
+    COLORFUL_DARK1_GREEN: #509A0E;
+    COLORFUL_DARK2_GREEN: #4B910E;
 
-  COMBOBOX_ERROR_BG_HOVER: #fef4f4;
-  COMBOBOX_ERROR_BG: #fde8e9;
-  COMBOBOX_ERROR_BG_PRESSED_HOVER: #fbd2d4;
-  COMBOBOX_ERROR_BG_PRESSED: #f8b1b4;
+    COLORFUL_DARK_CYAN: #27b5b3;
 
-  FONT_DARK: COLOR_BLACK_22;
-  FONT_LIGHT: COLOR_LIGHT_FF;
-  FONT_MID: COLOR_GRAY_CC;
+    COLORFUL_CHECKBOX_BORDER: #33abff;
+
+    COMBOBOX_ERROR_BG_HOVER: #fef4f4;
+    COMBOBOX_ERROR_BG: #fde8e9;
+    COMBOBOX_ERROR_BG_PRESSED_HOVER: #fbd2d4;
+    COMBOBOX_ERROR_BG_PRESSED: #f8b1b4;
+
+    FONT_DARK: COLOR_BLACK_22;
+    FONT_LIGHT: COLOR_LIGHT_FF;
+    FONT_MID: COLOR_GRAY_CC;
 }
 
 
@@ -93,89 +93,35 @@
  *                                                                             *
  ******************************************************************************/
 .button {
-  -fx-pref-height: 22;
-  -fx-min-width: 70;
-  -fx-padding:0 10;
-  -fx-background-radius: 0;
-  -fx-text-alignment: center;
-  -fx-opacity:1;
-  -fx-background-radius: 0;
-  -fx-border-color: COLOR_GRAY_CC;
-  -fx-background-color: COLOR_GRAY_F5;
-  -fx-cursor: hand;
+    -fx-pref-height: 22px;
+    -fx-min-width: 70px;
+    -fx-padding:0 10 2 10;
+    -fx-text-alignment: center;
+    -fx-background-radius: 0;
+    -fx-border-color: COLOR_GRAY_CC;
+    -fx-background-color: COLOR_GRAY_F5;
+    -fx-cursor: hand;
 }
 
 .button:hover{
-  -fx-background-color: COLOR_LIGHT_FF;
+    -fx-background-color: COLOR_LIGHT_FF;
 }
 
 .button:pressed{
-  -fx-background-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_DC;
+}
+
+.button:pressed:hover{
+    -fx-background-color: COLOR_GRAY_ED;
 }
 
 .button:disabled{
-  -fx-opacity:1;
-  -fx-background-color:COLOR_GRAY_FA;
-  -fx-border-color:COLOR_GRAY_DC;
-  -fx-text-fill:COLOR_GRAY_CC
-}
-.green-btn{
-  /*-fx-pref-width:16;*/
-  /*-fx-max-width:16;*/
-  /*-fx-min-width:16;*/
-  /*-fx-pref-height:16;*/
-  /*-fx-max-height:16;*/
-  /*-fx-min-height:16;*/
-  /*-fx-background-color:COLORFUL_DARK_GREEN;*/
-  /*-fx-border:0;*/
-    /*-fx-background-size: 16;*/
-    /*-fx-background-repeat: no-repeat;*/
-    /*-fx-background-position: center;*/
-    /*-fx-background-image:url("/images/btn_play.png");*/
-    -fx-border-width: 1 1 1 0;
-    -fx-background-image: url('/images/btn_edit_unable.png');
-    -fx-background-size: 16;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
-
+    -fx-opacity:1;
+    -fx-background-color:COLOR_GRAY_FA;
+    -fx-border-color:COLOR_GRAY_DC;
+    -fx-text-fill:COLOR_GRAY_CC
 }
 
-.green-btn:hover{
-  -fx-background-color:COLORFUL_LIGHT1_GREEN;
-  -fx-border-color:COLORFUL_LIGHT1_GREEN;
-}
-.green-btn:pressed{
-  -fx-background-color:COLORFUL_DARK2_GREEN;
-  -fx-border-color:COLORFUL_DARK2_GREEN;
-}
-
-.green-btn:disabled{
-  -fx-background-color:COLOR_GRAY_FA;
-  -fx-border-color:COLOR_GRAY_DC;
-  -fx-text-fill:COLOR_GRAY_CC
-}
-
-.green-btn-play-image{
-  -fx-image: url("/images/btn_play.png");
-
-}
-
-
-.green-btn-loading{
-  -fx-pref-width:30;
-  -fx-max-width:30;
-  -fx-min-width:30;
-  -fx-pref-height:20;
-  -fx-max-height:20;
-  -fx-min-height:20;
-  -fx-background-color:COLORFUL_MIDDLE_GREEN;
-  -fx-border:0 0 0 0;
-  -fx-border-color:COLORFUL_MIDDLE_GREEN;
-}
-.green-btn-loading-image{
-  -fx-image: url("/images/icon_loading_gray.png");
-
-}
 /*******************************************************************************
  *                                                                             *
  * Button                                                                      *
@@ -307,91 +253,16 @@
     -fx-background-color:COLORFUL_PRIMARY_RED_DARK;
 }
 
-.btn-primary:disabled {
-  -fx-border-width: 1;
-}
-
-
-/*******************************************************************************
- *                                                                             *
- * Checkbox                                                                  *
- *                                                                             *
- ******************************************************************************/
-
-.check-box{
-  -fx-cursor: hand;
-}
-
-.check-box> .box{
-  -fx-pref-height: 12;
-  -fx-pref-width: 12;
-  -fx-padding: 0;
-  -fx-border-color: COLOR_GRAY_BB;
-  -fx-background-color: COLOR_LIGHT_FF;
-}
-
-.check-box > .box > .mark {
-  -fx-padding: 5;
-  -fx-scale-shape: false;
-  -fx-shape: "M 0 -3 L 1 -3 L 1 -2 L 2 -2 L 2 -1 L 3 -1 L 3 0 L 4 0 L 4 -1 L 5 -1 L 5 -2 L 6 -2 L 6 -3 L 7 -3 L 7 -4 L 8 -4 L 8 -6 L 7 -6 L 7 -5 L 6 -5 L 6 -4 L 5 -4 L 5 -3 L 4 -3 L 4 -2 L 3 -2 L 3 -3 L 2 -3 L 2 -4 L 0 -4 Z";
-}
-
-.check-box:hover> .box{
-  -fx-border-color: COLORFUL_CHECKBOX_BORDER;
-}
-
-.check-box:disabled> .box{
-  -fx-border-color: COLOR_GRAY_DC;
-  -fx-background-color: COLOR_GRAY_FA;
-}
-
-
-/*******************************************************************************
- *                                                                             *
- * Radio-Button                                                                *
- *                                                                             *
- ******************************************************************************/
-.radio-button {
-  -fx-cursor: hand;
-}
-
-.radio-button > .radio {
-  -fx-pref-width: 12;
-  -fx-pref-height: 12;
-  -fx-border-radius: 10;
-  -fx-background-radius: 10;
-  -fx-border-width: 1;
-  -fx-padding: 2;
-  -fx-border-color: COLOR_GRAY_BB;
-  -fx-background-color: COLOR_LIGHT_FF;
-}
-
-.radio-button > .radio > .dot {
-  -fx-padding: 0.25em;
-}
-
-
-.radio-button:hover > .radio{
-  -fx-border-color: COLORFUL_CHECKBOX_BORDER;
-}
-
-.radio-button:selected > .radio:selected > .dot {
-  -fx-padding: 0.25em;
-  -fx-background-color: COLOR_GRAY_66;
-}
-
-
 
 .btn-primary-loading {
-  -fx-cursor: null;
-  -fx-border-color: COLORFUL_MIDDLE_RED;
-  -fx-background-color: COLORFUL_MIDDLE_RED;
-  -fx-background-size: 16;
-  -fx-background-image: url('/images/small_loading.gif');
-  -fx-background-repeat: no-repeat;
-  -fx-background-position: center;
+    -fx-cursor: null;
+    -fx-border-color: COLORFUL_MIDDLE_RED;
+    -fx-background-color: COLORFUL_MIDDLE_RED;
+    -fx-background-size: 16;
+    -fx-background-image: url('/images/small_loading.gif');
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
 }
-
 
 /*******************************************************************************
  *                                                                             *
@@ -400,73 +271,139 @@
  ******************************************************************************/
 
 .text-field{
-  -fx-border-color: COLOR_GRAY_CC;
-  -fx-background-color: COLOR_LIGHT_FF;
-  -fx-text-alignment: center;
-  -fx-min-height: 22;
-  -fx-max-height: 22;
-  -fx-padding: 0 10 1 10;
+    -fx-border-color: COLOR_GRAY_CC;
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-text-alignment: center;
+    -fx-min-height: 22;
+    -fx-max-height: 22;
+    -fx-padding: 0 10 1 10;
 }
 
 .text-field:hover{
-  -fx-border-color:COLORFUL_CHECKBOX_BORDER ;
-  -fx-background-color:COLOR_LIGHT_FF ;
-  -fx-text-fill: COLOR_BLACK_22;
+    -fx-border-color:COLORFUL_CHECKBOX_BORDER ;
+    -fx-background-color:COLOR_LIGHT_FF ;
+    -fx-text-fill: COLOR_BLACK_22;
 }
 
 .text-field:focused{
-  -fx-border-color: COLORFUL_CHECKBOX_BORDER;
-  -fx-background-color:COLOR_LIGHT_FF ;
-  -fx-highlight-fill:  COLORFUL_AUXILIARY_BLUE;
-  -fx-text-fill: COLOR_BLACK_22;
-  -fx-highlight-text-fill: COLOR_LIGHT_FF;
+    -fx-border-color: COLORFUL_CHECKBOX_BORDER;
+    -fx-background-color:COLOR_LIGHT_FF ;
+    -fx-highlight-fill:  COLORFUL_AUXILIARY_BLUE;
+    -fx-text-fill: COLOR_BLACK_22;
+    -fx-highlight-text-fill: COLOR_LIGHT_FF;
 }
 
 .text-field:disabled{
-  -fx-opacity:1;
-  -fx-border-color:COLOR_GRAY_DC;
-  -fx-background-color:COLOR_GRAY_FA ;
-  -fx-text-fill:COLOR_GRAY_CC;
+    -fx-opacity:1;
+    -fx-border-color:COLOR_GRAY_DC;
+    -fx-background-color:COLOR_GRAY_FA ;
+    -fx-text-fill:COLOR_GRAY_CC;
 }
 
 .text-field:focused:hover{
-  -fx-border-color:COLORFUL_CHECKBOX_BORDER;
-  -fx-background-color:COLOR_LIGHT_FF ;
+    -fx-border-color:COLORFUL_CHECKBOX_BORDER;
+    -fx-background-color:COLOR_LIGHT_FF ;
 }
 
 .text-field:focused:pressed{
-  -fx-border-color:COLORFUL_CHECKBOX_BORDER;
-  -fx-background-color:COLOR_LIGHT_FF ;
+    -fx-border-color:COLORFUL_CHECKBOX_BORDER;
+    -fx-background-color:COLOR_LIGHT_FF ;
 }
 
 
 
 .text-field-error{
-  -fx-border-color:COLORFUL_PRIMARY_RED;
-  -fx-background-color:COMBOBOX_ERROR_BG;
-  -fx-text-fill: COLOR_BLACK_22;
+    -fx-border-color:COLORFUL_PRIMARY_RED;
+    -fx-background-color:COMBOBOX_ERROR_BG;
+    -fx-text-fill: COLOR_BLACK_22;
 }
 
 .text-field-error:hover{
-  -fx-border-color:COLORFUL_PRIMARY_RED;
-  -fx-background-color:COMBOBOX_ERROR_BG_HOVER;
+    -fx-border-color:COLORFUL_PRIMARY_RED;
+    -fx-background-color:COMBOBOX_ERROR_BG_HOVER;
 }
 
 .text-field-error:focused{
-  -fx-border-color:COLORFUL_CHECKBOX_BORDER;
-  -fx-background-color:COMBOBOX_ERROR_BG;
+    -fx-border-color:COLORFUL_CHECKBOX_BORDER;
+    -fx-background-color:COMBOBOX_ERROR_BG;
 }
 
 .text-field-error:focused:hover{
-  -fx-border-color:COLORFUL_CHECKBOX_BORDER;
-  -fx-background-color:COMBOBOX_ERROR_BG_HOVER;
+    -fx-border-color:COLORFUL_CHECKBOX_BORDER;
+    -fx-background-color:COMBOBOX_ERROR_BG_HOVER;
 }
 
 .text-field-error:focused:pressed{
-  -fx-border-color:COLORFUL_CHECKBOX_BORDER;
-  -fx-background-color:COMBOBOX_ERROR_BG_HOVER;
+    -fx-border-color:COLORFUL_CHECKBOX_BORDER;
+    -fx-background-color:COMBOBOX_ERROR_BG_HOVER;
 }
 
+/*******************************************************************************
+ *                                                                             *
+ * CheckBox                                                                     *
+ *                                                                             *
+ ******************************************************************************/
+
+.check-box > .box{
+    -fx-pref-width: 12;
+    -fx-pref-height: 12;
+    -fx-border-color: COLOR_GRAY_BB;
+    -fx-background-color: COLOR_LIGHT_FF;
+}
+
+.check-box > .box:hover{
+    -fx-border-color: COLORFUL_LIGHT_BLUE;
+}
+
+.check-box > .box > .mark {
+    -fx-scale-shape: false;
+    -fx-shape: "M 0 -3 L 1 -3 L 1 -2 L 2 -2 L 2 -1 L 3 -1 L 3 0 L 4 0 L 4 -1 L 5 -1 L 5 -2 L 6 -2 L 6 -3 L 7 -3 L 7 -4 L 8 -4 L 8 -6 L 7 -6 L 7 -5 L 6 -5 L 6 -4 L 5 -4 L 5 -3 L 4 -3 L 4 -2 L 3 -2 L 3 -3 L 2 -3 L 2 -4 L 0 -4 Z";
+}
+
+.check-box:disabled > .box:disabled{
+    -fx-opacity: 1;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_FA;
+}
+/*******************************************************************************
+ *                                                                             *
+ * RadioButton                                                                 *
+ *                                                                             *
+ ******************************************************************************/
+
+.radio-button > .radio{
+    -fx-pref-width: 12;
+    -fx-pref-height: 12;
+    -fx-border-radius: 10;
+    -fx-padding: 2;
+    -fx-border-color: COLOR_GRAY_BB;
+    -fx-background-color: COLOR_LIGHT_FF;
+}
+
+.radio-button > .radio:hover{
+    -fx-border-color: COLORFUL_LIGHT_BLUE;
+}
+
+.radio-button:focused > .radio:focused{
+    -fx-padding: 0.25em;
+    -fx-background-color:  white;
+}
+
+.radio-button > .radio > .dot{
+    -fx-padding: 0.25em;
+}
+
+.radio-button:selected > .radio:selected > .dot{
+    -fx-padding: 0.25em;
+    -fx-background-color: COLOR_GRAY_66;
+}
+
+
+.radio-button:disabled > .radio:disabled{
+    -fx-opacity: 1;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_FA;
+}
 /*******************************************************************************
  *                                                                             *
  * ProgressBar                                                                 *
@@ -474,19 +411,19 @@
  ******************************************************************************/
 
 .progress-bar > .track{
-  -fx-background-insets: 0;
-  -fx-background-radius: 0;
-  -fx-background-color: COLOR_GRAY_ED;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: COLOR_GRAY_ED;
 }
 
 .progress-bar > .bar{
-  -fx-background-insets: 0;
-  -fx-background-radius: 0;
-  -fx-border-radius: 0;
-  -fx-border-insets: 0;
-  -fx-padding: 1;
-  -fx-shape: null;
-  -fx-background-color: COLORFUL_PRIMARY_RED;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-insets: 0;
+    -fx-padding: 1;
+    -fx-shape: null;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
 }
 
 /*******************************************************************************
@@ -495,7 +432,7 @@
  *                                                                             *
  ******************************************************************************/
 .progress-bar-sm-red > .bar{
-  -fx-pref-height: 4;
+    -fx-pref-height: 4;
 }
 
 /*******************************************************************************
@@ -505,8 +442,8 @@
  ******************************************************************************/
 
 .progress-bar-sm-green > .bar{
-  -fx-pref-height: 4;
-  -fx-background-color: COLORFUL_DARK_GREEN;
+    -fx-pref-height: 4;
+    -fx-background-color: COLORFUL_DARK_GREEN;
 }
 
 /*******************************************************************************
@@ -516,7 +453,7 @@
  ******************************************************************************/
 
 .progress-bar-md-red > .bar{
-  -fx-pref-height: 8;
+    -fx-pref-height: 8;
 }
 
 /*******************************************************************************
@@ -525,8 +462,8 @@
  *                                                                             *
  ******************************************************************************/
 .progress-bar-md-green > .bar{
-  -fx-pref-height: 8;
-  -fx-background-color: COLORFUL_DARK_GREEN;
+    -fx-pref-height: 8;
+    -fx-background-color: COLORFUL_DARK_GREEN;
 }
 
 /*******************************************************************************
@@ -535,11 +472,11 @@
  *                                                                             *
  ******************************************************************************/
 .progress-bar-lg-red > .bar{
-  -fx-pref-height: 2;
+    -fx-pref-height: 2;
 }
 
 .progress-bar-lg-red > .track{
-  -fx-background-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_DC;
 }
 
 /*******************************************************************************
@@ -548,12 +485,12 @@
  *                                                                             *
  ******************************************************************************/
 .progress-bar-lg-green > .bar{
-  -fx-pref-height: 2;
-  -fx-background-color: COLORFUL_DARK_GREEN;
+    -fx-pref-height: 2;
+    -fx-background-color: COLORFUL_DARK_GREEN;
 }
 
 .progress-bar-lg-red > .track{
-  -fx-background-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_DC;
 }
 
 /*******************************************************************************
@@ -563,47 +500,185 @@
  ******************************************************************************/
 
 .scroll-bar{
-  /*-fx-pref-height: 10;*/
-  -fx-background-insets: 0;
-  -fx-border-width: 0;
-  -fx-background-color: COLOR_LIGHT_FF;
+    /*-fx-pref-height: 10;*/
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
+    -fx-background-color: COLOR_LIGHT_FF;
 }
 
 .scroll-bar > .thumb{
-  -fx-background-radius: 0;
-  -fx-background-insets: 0;
-  -fx-background-color: COLOR_GRAY_CC;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-background-color: COLOR_GRAY_CC;
 }
 
 
 .scroll-bar > .increment-button,
 .scroll-bar > .decrement-button{
-  -fx-background-insets: 0;
-  -fx-border-insets: -1;
-  -fx-border-color: transparent;
-  -fx-background-color: transparent;
-  -fx-color: transparent;
-  -fx-pref-width: 8;
-  -fx-pref-height: 8;
+    -fx-background-insets: 0;
+    -fx-border-insets: -1;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+    -fx-color: transparent;
+    -fx-pref-width: 8;
+    -fx-pref-height: 8;
 }
 
 .scroll-bar:hover > .thumb{
-  -fx-background-color: COLOR_GRAY_88;
+    -fx-background-color: COLOR_GRAY_88;
 }
 
 .scroll-bar:hover > .increment-button,
 .scroll-bar:hover > .decrement-button{
-  -fx-background-color: rgba(0, 0, 0, 0.05);
-  -fx-border-color: rgba(0, 0, 0, 0.15);
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+    -fx-border-color: rgba(0, 0, 0, 0.15);
 }
 
 .scroll-bar:pressed > .thumb{
-  -fx-background-color: COLOR_GRAY_66;
+    -fx-background-color: COLOR_GRAY_66;
 }
 
 .scroll-bar:pressed > .increment-button,
 .scroll-bar:pressed > .decrement-button{
-  -fx-background-color: rgba(0, 0, 0, 0.1);
-  -fx-border-color: rgba(0, 0, 0, 0.2);
+    -fx-background-color: rgba(0, 0, 0, 0.1);
+    -fx-border-color: rgba(0, 0, 0, 0.2);
 }
+
+/*******************************************************************************
+ *                                                                             *
+ * green-btn  css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+.green-btn{
+    -fx-pref-width:30;
+    -fx-max-width:30;
+    -fx-min-width:30;
+    -fx-pref-height:20;
+    -fx-max-height:20;
+    -fx-min-height:20;
+    -fx-background-color:COLORFUL_DARK_GREEN;
+    -fx-background-radius:0;
+    -fx-border-color:COLORFUL_DARK_GREEN;
+    -fx-border-radius: 0;
+    -fx-background-image: url("/images/btn_play.png");
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+
+}
+
+.green-btn:hover{
+    -fx-background-color:COLORFUL_LIGHT1_GREEN;
+    -fx-border-color:COLORFUL_LIGHT1_GREEN;
+}
+
+.green-btn:pressed{
+    -fx-background-color:COLORFUL_DARK2_GREEN;
+    -fx-border-color:COLORFUL_DARK2_GREEN;
+}
+
+.green-btn:disabled{
+    -fx-opacity:1;
+    -fx-background-color:COLOR_GRAY_FA;
+    -fx-border-color:COLOR_GRAY_DC;
+    -fx-text-fill:COLOR_GRAY_CC;
+    -fx-background-image: url("/images/btn_play_gray.png");
+}
+
+.green-btn-loading{
+    -fx-pref-width:30;
+    -fx-max-width:30;
+    -fx-min-width:30;
+    -fx-pref-height:20;
+    -fx-max-height:20;
+    -fx-min-height:20;
+    -fx-background-color:COLORFUL_MIDDLE_GREEN;
+    -fx-background-radius:0;
+    -fx-border-color:COLORFUL_MIDDLE_GREEN;
+    -fx-border-radius: 0;
+    -fx-background-image: url("/images/icon_loading_gray.png");
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+
+}
+
+.normal-combo-box{
+    -fx-pref-height: 22;
+    -fx-border-color: COLOR_GRAY_CC ;
+    -fx-background-color:COLOR_GRAY_F5 ;
+
+}
+.normal-combo-box:hover{
+
+    -fx-background-color:COLOR_LIGHT_FF ;
+
+}
+.normal-combo-box:showing{
+
+    -fx-background-color:COLOR_GRAY_DC ;
+
+}
+.normal-combo-box:disabled{
+    -fx-opacity:1;
+    -fx-border-color: COLOR_GRAY_DC ;
+    -fx-background-color:COLOR_GRAY_FA ;
+    -fx-text-fill: COLOR_GRAY_CC;
+
+
+}
+.error-combo-box{
+    -fx-pref-height: 22;
+    -fx-border-color: COLORFUL_PRIMARY_RED ;
+    -fx-background-color: COLORFUL_LIGHT_RED;
+}
+.error-combo-box:hover{
+    -fx-background-color: COLOR_LIGHT_FF;
+}
+
+.error-combo-box:focused:hover{
+    -fx-background-color: COMBOBOX_ERROR_BG_HOVER;
+
+}
+.error-combo-box:focused{
+    -fx-border-color: COLORFUL_LIGHT_BLUE ;
+    -fx-background-color: COLORFUL_LIGHT_RED;
+}
+.error-combo-box:focused:showing{
+    -fx-background-color: COMBOBOX_ERROR_BG_PRESSED;
+
+}
+
+.error-combo-box:focused:showing:hover{
+    -fx-background-color: COMBOBOX_ERROR_BG_PRESSED_HOVER;
+
+}
+
+.combo-box-popup > .list-view {
+    -fx-background-color: #ffffff;
+    -fx-background-insets: 0, 1;
+    -fx-effect: null;
+    -fx-border-color: #dcdcdc;
+    -fx-padding: 1, 1, 1, 1;
+    -fx-translate-y: 3;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
+    -fx-padding: 4 10 4 10;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: #0096ff;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: #0096ff;
+    -fx-background-insets: 0, 1, 2;
+}
+
+
+
 
