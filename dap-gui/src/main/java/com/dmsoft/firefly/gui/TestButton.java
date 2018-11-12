@@ -1,6 +1,8 @@
 package com.dmsoft.firefly.gui;
 
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class TestButton extends Button {
 
@@ -10,11 +12,9 @@ public class TestButton extends Button {
 
     public void change(Boolean loading){
         if (loading){
-            this.getStyleClass().removeAll("btn-primary");
-            this.getStyleClass().add("btn-primary-loading");
+            this.setGraphic(new RotatePic(new Image("/images/icon_loading_gray.png")));
         }else{
-            this.getStyleClass().removeAll("btn-primary-loading");
-            this.getStyleClass().add("btn-primary");
+            this.setGraphic(null);
         }
     }
 }
