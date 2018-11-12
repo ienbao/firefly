@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root xmlns="http://javafx.com/javafx" xmlns:fx="http://java.sun.com/JSP/Page" type="VBox" >
+    <BorderPane >
+        <left>
+            <HBox styleClass="tipMessage-h-box">
+                <Label fx:id="iconLabel" />
+                <Label fx:id="titleLabel" />
+            </HBox>
+        </left>
+        <right>
+            <Button fx:id="closeButton" styleClass="tipMessage-close-button"/>
+        </right>
+    </BorderPane>
+    <Label fx:id="contentLabel" />
+    <Label fx:id="eventLabel" styleClass="tipMessage-event-label" />
+</fx:root>
