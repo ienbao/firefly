@@ -37,33 +37,31 @@ public class TipMessage extends VBox implements Initializable {
         });
     }
 
-    public void showSuccessMsg(String title, String msg) {
+    public void setType(String title) {
         this.clear();
         this.setVisible(true);
-        this.getStyleClass().add("tipMessage-success");
-        iconLabel.getStyleClass().add("tipMessage-success-mark");
+        if(title.equals("Success")){
+            this.getStyleClass().add("tipMessage-success");
+            iconLabel.getStyleClass().add("tipMessage-success-mark");
+        }else{
+            this.getStyleClass().add("tipMessage-warn");
+            iconLabel.getStyleClass().add("tipMessage-warn-mark");
+        }
         titleLabel.setText(title);
+    }
+
+    public void setMessage(String msg) {
         contentLabel.setText(msg);
     }
 
-    public void showWarnMsg(String title, String msg, String linkMsg, EventHandler<MouseEvent> linkEvent) {
-        this.clear();
-        this.setVisible(true);
-        this.getStyleClass().add("tipMessage-warn");
-        iconLabel.getStyleClass().add("tipMessage-warn-mark");
-        titleLabel.setText(title);
-        contentLabel.setText(msg);
+    public void setLinkMessage(String linkMsg) {
         eventLabel.setText(linkMsg);
+    }
+
+    public void setMouseEvent(EventHandler<MouseEvent> linkEvent) {
         eventLabel.setOnMouseClicked(linkEvent);
     }
-    public void showWarnMsg(String title, String msg) {
-        this.clear();
-        this.setVisible(true);
-        this.getStyleClass().add("tipMessage-warn");
-        iconLabel.getStyleClass().add("tipMessage-warn-mark");
-        titleLabel.setText(title);
-        contentLabel.setText(msg);
-    }
+
     private void clear() {
         this.getStyleClass().clear();
         iconLabel.getStyleClass().clear();

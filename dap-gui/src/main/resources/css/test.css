@@ -764,6 +764,7 @@
 .tipMessage-event-label{
     -fx-underline: true;
     -fx-text-fill: COLORFUL_AUXILIARY_BLUE;
+    -fx-cursor: hand;
 }
 
 .tipMessage-event-h-box{

@@ -10,19 +10,33 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class TipMessageTest extends Application {
-    Label label=new Label("success");
+    Label label=new Label("Event");
     int i=1;
     @Override
     public void start(Stage stage) throws IOException {
         VBox root = new VBox();
         root.getStylesheets().add("css/test.css");
         TipMessage tipMessage=new TipMessage();
-        Button button1=new Button("success");
-        Button button2=new Button("warn");
-        Button button3=new Button("warn event");
-        button1.setOnAction(event ->{tipMessage.showSuccessMsg("Success", "Success message");} );
-        button2.setOnAction(event ->{tipMessage.showWarnMsg("Warn", "Warn message");} );
-        button3.setOnAction(event ->{tipMessage.showWarnMsg("Warn", "Warn message","Event",gotoEvent());} );
+        Button button1=new Button("Success");
+        Button button2=new Button("Warn");
+        Button button3=new Button("Warn Event");
+        button1.setOnAction(event ->{
+            tipMessage.setType("Success");
+            tipMessage.setMessage("Success message");
+
+        } );
+        button2.setOnAction(event ->{
+            tipMessage.setType("Warn");
+            tipMessage.setMessage("Warn message");
+        } );
+
+        button3.setOnAction(event ->{
+            tipMessage.setType("Warn");
+            tipMessage.setMessage("Warn message");
+            tipMessage.setLinkMessage("Event");
+            tipMessage.setMouseEvent(gotoEvent());
+        } );
+
         root.getChildren().addAll(tipMessage,button1,button2,button3,label);
         Scene scene = new Scene(root,500,500);
         stage.setScene(scene);
