@@ -14,6 +14,9 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.Group?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             prefHeight="400.0" prefWidth="1000.0">
@@ -78,6 +81,60 @@
                     </FXCollections>
                 </items>
             </ComboBox>
+        </VBox>
+        <VBox style="-fx-spacing: 20.0;-fx-padding: 30.0">
+
+            <TabPane  minHeight="270.0" minWidth="180.0" prefHeight="270.0" prefWidth="180.0" style="-fx-border-width: 0 0 0 0;" tabClosingPolicy="UNAVAILABLE">
+                <tabs>
+                    <Tab closable="false" text="Statistical Result" ></Tab>
+                    <Tab closable="false" text="Data" ></Tab>
+                    <Tab closable="false" text="View" ></Tab>
+                </tabs>
+            </TabPane>
+        </VBox>
+
+
+        <VBox style="-fx-spacing: 20.0;-fx-padding: 30.0">
+            <TabPane rotateGraphic="true" side="LEFT" style="-fx-border-width: 0 0 0 0;" styleClass="vertical-text" tabClosingPolicy="UNAVAILABLE">
+                <tabs>
+                    <Tab closable="false">
+                        <graphic>
+                            <Group>
+                                <children>
+                                    <Label styleClass="tab-graphic-label" text="Analysis Setting" textAlignment="CENTER" />
+                                </children>
+                            </Group>
+                        </graphic>
+                    </Tab>
+                    <Tab closable="false">
+                        <graphic>
+                            <Group>
+                                <children>
+                                    <Label styleClass="tab-graphic-label" text="Alarm Setting" textAlignment="CENTER" />
+                                </children>
+                            </Group>
+                        </graphic>
+                    </Tab>
+                    <Tab closable="false" >
+                        <graphic>
+                            <Group>
+                                <children>
+                                    <Label styleClass="tab-graphic-label" text="Control Alarm Rule" textAlignment="CENTER" />
+                                </children>
+                            </Group>
+                        </graphic>
+                    </Tab>
+                    <Tab closable="false">
+                        <graphic>
+                            <Group>
+                                <children>
+                                    <Label styleClass="tab-graphic-label" text="ExportSetting" textAlignment="CENTER" />
+                                </children>
+                            </Group>
+                        </graphic>
+                    </Tab>
+                </tabs>
+            </TabPane>
         </VBox>
     </HBox>
 </AnchorPane>

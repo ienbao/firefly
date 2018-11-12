@@ -254,12 +254,13 @@
 }
 
 
-.btn-primary-loading {
+.btn-primary-loading ,.spinner{
     -fx-cursor: null;
     -fx-border-color: COLORFUL_MIDDLE_RED;
     -fx-background-color: COLORFUL_MIDDLE_RED;
     -fx-background-size: 16;
     -fx-background-image: url('/images/small_loading.gif');
+    /*-fx-shape: "M 0.000 20.000 L 23.511 32.361 L 19.021 6.180 L 38.042 -12.361 L 11.756 -16.180 L 0.000 -40.000 L -11.756 -16.180 L -38.042 -12.361 L -19.021 6.180 L -23.511 32.361 L 0.000 20.000";*/
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
@@ -682,6 +683,271 @@
 .error-combo-box:focused:showing:hover{
     -fx-background-color: COMBOBOX_ERROR_BG_PRESSED_HOVER;
 
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * tab                                                        *
+ *                                                                             *
+ ******************************************************************************/
+.tab{
+    /*-fx-pref-width: 65;*/
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-padding: 0 10 0 10;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * tabPane                                                        *
+ *                                                                             *
+ ******************************************************************************/
+
+.tab-pane {
+    -fx-tab-min-height: 20; /* 22 */
+    -fx-tab-max-height: 20; /* 22 */
+    -fx-pref-width: 218;
+    -fx-border-width: 0 0 0 0;
+    -fx-border-color: #dcdcdc;
+}
+
+.tab-pane > .tab-header-area > .tab-header-background {
+    -fx-background-color: #f0f0f0;
+    -fx-border-width: 0 0 1 1;
+    -fx-border-color: #dcdcdc;
+    -fx-padding: 0;
+    -fx-max-height: 20;
+    -fx-min-height: 19;
+    -fx-tab-min-height: 19; /* 22 */
+    -fx-tab-max-height: 20; /* 22 */
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area {
+    -fx-background-color: null;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-content-area {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 0;
+    -fx-border-width: 0 0 0 0;
+    -fx-border-color: #dcdcdc;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region {
+    -fx-background-color: #f0f0f0;
+    -fx-padding: 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab {
+    /*
+    -fx-padding: 0 0 0 0;
+    */
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 0 1 1 0;
+    -fx-border-color: #dcdcdc #dcdcdc #dcdcdc #dcdcdc;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:hover > {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-color: #dcdcdc #dcdcdc #dcdcdc #dcdcdc;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:selected {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dcdcdc #dcdcdc #ffffff #dcdcdc;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-width: 0;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container {
+    -fx-background-color: null;
+    -fx-border-image-insets: 0;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-label {
+    -fx-padding: 0 10 0 10;
+    -fx-border-image-insets: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-spacing: 0;
+}
+
+/*.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-close-button {*/
+    /*-fx-background-color: null;*/
+    /*-fx-shape: null;*/
+    /*-fx-scale-shape: false;*/
+    /*-fx-background-image: url('/images/btn_del_gray.png');*/
+    /*-fx-background-repeat: no-repeat;*/
+    /*-fx-background-position: center;*/
+    /*-fx-pref-height: 20;*/
+    /*-fx-pref-width: 20;*/
+    /*-fx-max-width: 20;*/
+    /*-fx-min-height: 20;*/
+    /*-fx-max-height: 20;*/
+    /*-fx-min-width: 20;*/
+    /*-fx-padding: 0;*/
+    /*-fx-border-insets: 0;*/
+    /*-fx-background-insets: 0;*/
+    /*-fx-border-image-insets: 0;*/
+    /*-fx-border-color: transparent;*/
+    /*-fx-spacing: 0;*/
+/*}*/
+
+/*.tab-pane > .tab-header-area > .headers-region > .tab:selected > .tab-container > .tab-close-button {*/
+    /*-fx-background-color: null;*/
+
+/*}*/
+
+/*.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-close-button:hover {*/
+    /*-fx-background-color: #f2f2f2;*/
+    /*-fx-spacing: 0;*/
+    /*-fx-border-insets: 0;*/
+    /*-fx-background-insets: 0;*/
+    /*-fx-border-image-insets: 0;*/
+    /*-fx-padding: 0;*/
+/*}*/
+
+.tab-pane > .tab-header-area > .control-buttons-tab {
+    -fx-padding: 0 0 0 0;
+    -fx-background-color: #f2f2f2;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+    -fx-background-insets: 0 0 2 0;
+    -fx-border-insets: 0 0 2 0;
+}
+
+.tab-pane > .tab-header-area > .control-buttons-tab > .container {
+    -fx-padding: 0 0 0 0;
+    -fx-background-color: transparent;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+    -fx-border-color: #f2f2f2;
+    -fx-background-insets: 0 0 2 0;
+    -fx-border-insets: 0 0 2 0;
+}
+
+.tab-pane > .tab-header-area > .control-buttons-tab > .container > .tab-down-button {
+    -fx-background-size: 20;
+    -fx-pref-height: 20;
+    -fx-pref-width: 20;
+    -fx-max-width: 20;
+    -fx-min-height: 20;
+    -fx-max-height: 20;
+    -fx-min-width: 20;
+    -fx-background-color: transparent;
+    -fx-background-position: top;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * vertical-text                                                       *
+ *                                                                             *
+ ******************************************************************************/
+
+.vertical-text {
+    -fx-background-color: #f0f0f0;
+    /*-fx-tab-max-height: 100;*/
+    /*-fx-tab-max-width: 150;*/
+}
+
+.vertical-text .tab-header-area .tab {
+    -fx-pref-height: 200px;
+    -fx-pref-width: 42px;
+}
+
+.vertical-text .tab-header-area .tab .tab-graphic-label {
+    -fx-pref-height: 22px;
+    -fx-pref-width: 100px;
+    -fx-rotate: 90;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab {
+    -fx-border-width: 0px 0px 1px 0px;
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #e7e7e7;
+    -fx-alignment: center-left;
+    -fx-padding: 0 10;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:selected {
+    -fx-border-width: 0px 1px 0px 1px;
+    -fx-border-color: #e7e7e7;
+    -fx-background-color: white;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:hover {
+    -fx-background-color: white;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:pressed {
+    -fx-border-color: white;
+    -fx-background-color: white;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:focused {
+    -fx-border-color: #e7e7e7;
+    -fx-border-style: solid;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:focused:hover {
+    -fx-border-color: #f0f0f0;
+    -fx-border-style: solid;
 }
 
 
