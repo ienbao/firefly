@@ -749,9 +749,16 @@
 .tipMessage-close-button:hover{
     -fx-background-color:COLOR_BLACK_Fill_5 ;
 }
-
+.tipMessage-close-button:pressed:hover,
 .tipMessage-close-button:pressed{
     -fx-background-color:COLOR_BLACK_Fill_15 ;
+}
+
+.tipMessage-content-label{
+    -fx-pref-width: 230;
+    -fx-min-width: 230;
+    -fx-max-width: 230;
+    -fx-wrap-text:true;
 }
 
 .tipMessage-event-label{
