@@ -15,5 +15,8 @@
         </right>
     </BorderPane>
     <Label fx:id="contentLabel" styleClass="tipMessage-content-label"/>
-    <Label fx:id="eventLabel" styleClass="tipMessage-event-label" />
+    <HBox styleClass="tipMessage-event-h-box">
+        <Label fx:id="eventLabel" styleClass="tipMessage-event-label" />
+    </HBox>
+
 </fx:root>
