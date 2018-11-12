@@ -17,11 +17,9 @@ public class RotatePic extends ImageView {
         this.setFitHeight(16);
         RotateTransition rotateTransition = new RotateTransition(Duration.millis(1000),this);
         rotateTransition.setByAngle(360);
-        rotateTransition.setCycleCount(2);
+        rotateTransition.setCycleCount(Timeline.INDEFINITE);
         rotateTransition.setAutoReverse(false);
-        ParallelTransition parallelTransition = new ParallelTransition(rotateTransition);
-        parallelTransition.setCycleCount(Timeline.INDEFINITE);
-        parallelTransition.play();
+        rotateTransition.play();
     }
 
 }
