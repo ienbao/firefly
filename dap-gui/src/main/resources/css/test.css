@@ -940,7 +940,7 @@
 
 .vertical-tab-pane > .tab-header-area {
     -fx-background-color: COLOR_GRAY_F0;
-    -fx-border-width: 1 1 1 1;
+    -fx-border-width: 0;
     -fx-padding: 0;
     -fx-border-insets: 0;
     -fx-background-insets: 0;
@@ -949,9 +949,10 @@
 }
 
 .vertical-tab-pane .tab-header-area .tab {
-    -fx-background-color: COLOR_GRAY_F0;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
     -fx-border-color: COLOR_GRAY_DC;
-    -fx-border-width: 1 1 1 1;
+    -fx-border-width: 0;
+    -fx-padding: 1 0 0 0;
     -fx-pref-height: 200;
     -fx-pref-width: 22;
 }
@@ -970,7 +971,6 @@
     -fx-border-radius: 0;
     -fx-border-width: 1 0 1 0;
     -fx-background-repeat: no-repeat;
-    -fx-background-position: center-left;
     -fx-cursor: hand;
     -fx-padding: 20 0 0 0;
     -fx-spacing: 0;
@@ -979,13 +979,13 @@
 .vertical-tab-pane > .tab-header-area > .headers-region > .tab:selected {
     -fx-border-color: COLOR_GRAY_DC;
     -fx-background-color: COLOR_LIGHT_FF;
-    -fx-padding: 20 0 0 0;
+    -fx-padding: 19 0 0 0;
     -fx-border-width: 1 1 0 1;
 }
 
 .vertical-tab-pane > .tab-header-area > .headers-region > .tab:hover {
     -fx-background-color: COLOR_LIGHT_FF;
-    -fx-padding: 20 0 0 0;
+    -fx-padding: 19 0 0 0;
     -fx-border-width: 1 1 1 1;
 }
 
