@@ -24,8 +24,6 @@ public class TextFieldFilterDemo extends HBox implements Initializable {
     @FXML
     private TextField textField;
     @FXML
-    private ImageView imageView;
-    @FXML
     private Label label;
 
     public TextFieldFilterDemo() throws IOException {
@@ -35,6 +33,7 @@ public class TextFieldFilterDemo extends HBox implements Initializable {
     private void initView() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass()
                 .getClassLoader().getResource("view/text_field_filter.fxml"));
+        getStylesheets().add("css/redfall/main.css");
         loader.setRoot(this);
         loader.setController(this);
         loader.load();
@@ -45,12 +44,11 @@ public class TextFieldFilterDemo extends HBox implements Initializable {
             textField.setText("");
         });
 
-        textField.textProperty().addListener((ov, s1, s2) -> {
-            imageView.getStyleClass().clear();
-            if (DAPStringUtils.isNotBlank(s2)) {
-                imageView.getStyleClass().add("text-field-filter-clear");
-            } else if (DAPStringUtils.isBlank(s2)) {
-                imageView.getStyleClass().add("text-field-filter-search");
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (DAPStringUtils.isNotBlank(newValue)) {
+                label.getStyleClass().setAll("label");
+            } else if (DAPStringUtils.isBlank(newValue)) {
+                label.getStyleClass().add("label-search");
             }
         });
     }
