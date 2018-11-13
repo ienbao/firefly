@@ -37,25 +37,25 @@ public class TipMessage extends VBox implements Initializable {
         });
     }
 
-    public void setType(String title) {
+    public void setType(TipMessageType type) {
         this.clear();
         this.setVisible(true);
-        if(title.equals("Success")){
+        titleLabel.setText(type.toString());
+        if(type.equals(TipMessageType.Success)){
             this.getStyleClass().add("tipMessage-success");
             iconLabel.getStyleClass().add("tipMessage-success-mark");
         }else{
             this.getStyleClass().add("tipMessage-warn");
             iconLabel.getStyleClass().add("tipMessage-warn-mark");
         }
-        titleLabel.setText(title);
     }
 
-    public void setMessage(String msg) {
-        contentLabel.setText(msg);
+    public void setMessage(String message) {
+        contentLabel.setText(message);
     }
 
-    public void setLinkMessage(String linkMsg) {
-        eventLabel.setText(linkMsg);
+    public void setLinkText(String linkText) {
+        eventLabel.setText(linkText);
     }
 
     public void setMouseEvent(EventHandler<MouseEvent> linkEvent) {
@@ -75,4 +75,7 @@ public class TipMessage extends VBox implements Initializable {
         this.setVisible(false);
     }
 
+    public enum TipMessageType {
+        Success, Warn, WarnEvent
+    }
 }

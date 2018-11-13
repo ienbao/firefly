@@ -21,19 +21,19 @@ public class TipMessageTest extends Application {
         Button button2=new Button("Warn");
         Button button3=new Button("Warn Event");
         button1.setOnAction(event ->{
-            tipMessage.setType("Success");
+            tipMessage.setType(TipMessage.TipMessageType.Success);
             tipMessage.setMessage("Success message");
 
         } );
         button2.setOnAction(event ->{
-            tipMessage.setType("Warn");
+            tipMessage.setType(TipMessage.TipMessageType.Warn);
             tipMessage.setMessage("Warn message");
         } );
 
         button3.setOnAction(event ->{
-            tipMessage.setType("Warn");
+            tipMessage.setType(TipMessage.TipMessageType.WarnEvent);
             tipMessage.setMessage("Warn message");
-            tipMessage.setLinkMessage("Event");
+            tipMessage.setLinkText("Event");
             tipMessage.setMouseEvent(gotoEvent());
         } );
 
@@ -42,16 +42,14 @@ public class TipMessageTest extends Application {
         stage.setScene(scene);
         stage.show();
     }
+
     private EventHandler<MouseEvent> gotoEvent() {
-        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                label.setText("event"+i);
-                i=i+1;
-            }
+        return event-> {
+            label.setText("event"+i);
+            i=i+1;
         };
-        return eventHandler;
     }
+
     /**
      * @param args the command line arguments
      */
