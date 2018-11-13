@@ -90,6 +90,7 @@
     -fx-padding: 18.0 40.0;
     -fx-spacing: 40.0;
 }
+
 .gui-about-spacing{
     -fx-spacing: 10.0;
 }
@@ -193,42 +194,36 @@
  * login page css                                                              *
  *                                                                             *
  ******************************************************************************/
-
-.gui-login-root{
+#loginPane{
     -fx-alignment: center;
     -fx-spacing: 20.0;
 }
-
-.gui-login-logo{
-    -fx-image: url("/images/login_logo.png");
-}
-
-.gui-login-text-field{
+#userNameTxt,#passwordField{
     -fx-max-width: 230.0;
     -fx-border-width: 1.0;
-    -fx-border-color: COLOR_GRAY_DC
 }
-
-.gui-login-btn{
+#loginPane > .button{
     -fx-pref-height: 26.0;
     -fx-pref-width: 230.0;
     -fx-alignment: center;
     -fx-font-weight: bold;
 }
-
-.gui-logining-image{
+#loginingImageView{
     -fx-image: url("/images/small_loading.gif");
     -fx-content-display: null;
+}
+#loginFailLbl{
+    -fx-border-width: 1 0;
+    -fx-border-color: COLOR_GRAY_DC;
+}
+.gui-login-logo{
+    -fx-image: url("/images/login_logo.png");
 }
 
 .gui-login-warm-icon{
     -fx-padding: 10.0;
 }
 
-.gui-login-warm-tip{
-    -fx-border-width: 1 0;
-    -fx-border-color: COLOR_GRAY_DC;
-}
 
 /*******************************************************************************
  *                                                                             *

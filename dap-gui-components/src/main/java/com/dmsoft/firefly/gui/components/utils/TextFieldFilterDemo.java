@@ -35,7 +35,6 @@ public class TextFieldFilterDemo extends HBox implements Initializable {
     private void initView() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass()
                 .getClassLoader().getResource("view/text_field_filter.fxml"));
-        getStylesheets().add("css/redfall/main.css");
         loader.setRoot(this);
         loader.setController(this);
         loader.load();
@@ -61,10 +60,9 @@ public class TextFieldFilterDemo extends HBox implements Initializable {
     }
 
     @Override
-    protected void setWidth(double prefWidth) {
-        super.setWidth(prefWidth);
-        label.setPrefWidth(label.getPrefWidth());
-        textField.setPrefWidth(prefWidth - label.getPrefWidth());
+    protected void setWidth(double width) {
+        super.setWidth(width);
+        textField.setPrefWidth(width - label.getPrefWidth());
     }
 
     @Override

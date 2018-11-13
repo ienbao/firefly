@@ -2510,7 +2510,7 @@
     -fx-border-width: 1.0;
     -fx-border-color: #dcdcdc
 }
-.text-field-filter-lbl{
+.text-field-filter-demo-hbox > #label{
     -fx-alignment: center;
     -fx-pref-width: 20.0;
     -fx-pref-height: 20.0;

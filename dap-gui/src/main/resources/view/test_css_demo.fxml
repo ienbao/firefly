@@ -14,7 +14,9 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
-<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.Group?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             prefHeight="400.0" prefWidth="1000.0">
@@ -79,6 +81,88 @@
                     </FXCollections>
                 </items>
             </ComboBox>
+        </VBox>
+
+        <VBox style="-fx-spacing: 20.0;-fx-padding: 30.0">
+            <VBox>
+                <TabPane tabClosingPolicy="UNAVAILABLE" >
+                    <tabs>
+                        <Tab closable="false" text="Statical Result" ></Tab>
+                        <Tab closable="false" text="Data" ></Tab>
+                        <Tab closable="false" text="View" ></Tab>
+                    </tabs>
+                </TabPane>
+            </VBox>
+
+            <VBox >
+                <TabPane rotateGraphic="true" side="LEFT"  styleClass="vertical-text" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                        <Tab closable="false">
+                            <graphic>
+                                <Group>
+                                    <Label  styleClass="tab-graphic-label" text="Analysis Setting" />
+                                </Group>
+                            </graphic>
+                        </Tab>
+                        <Tab  closable="false" >
+                            <graphic>
+                                <Group >
+                                    <Label styleClass="tab-graphic-label" text="Alarm Setting" />
+                                </Group>
+                            </graphic>
+                        </Tab>
+                        <Tab  closable="false">
+                            <graphic>
+                                <Group>
+                                    <Label styleClass="tab-graphic-label" text="Control Alarm Rule" />
+                                </Group>
+                            </graphic>
+                        </Tab>
+                        <Tab  closable="false">
+                            <graphic>
+                                <Group>
+                                    <Label styleClass="tab-graphic-label" text="Export Setting" />
+                                </Group>
+                            </graphic>
+                        </Tab>
+                    </tabs>
+                </TabPane>
+            </VBox>
+
+            <VBox >
+                <TabPane rotateGraphic="true" side="LEFT" styleClass="vertical-tab-pane" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                        <Tab closable="false">
+                            <graphic>
+                                <Group>
+                                    <Label styleClass="tab-graphic-label" text="Analysis Setting" />
+                                </Group>
+                            </graphic>
+                        </Tab>
+                        <Tab closable="false">
+                            <graphic>
+                                <Group>
+                                    <Label styleClass="tab-graphic-label" text="Alarm Setting" />
+                                </Group>
+                            </graphic>
+                        </Tab>
+                        <Tab closable="false" >
+                            <graphic>
+                                <Group>
+                                    <Label styleClass="tab-graphic-label" text="Control Alarm Rule"/>
+                                </Group>
+                            </graphic>
+                        </Tab>
+                        <Tab closable="false">
+                            <graphic>
+                                <Group>
+                                    <Label styleClass="tab-graphic-label" text="ExportSetting"/>
+                                </Group>
+                            </graphic>
+                        </Tab>
+                    </tabs>
+                </TabPane>
+            </VBox>
         </VBox>
     </HBox>
 </AnchorPane>
