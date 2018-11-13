@@ -281,8 +281,8 @@ public class GrrFilterServiceImpl implements GrrFilterService {
                                 }
                                 index.getAndIncrement();
                             });
-                            if (count.getAndIncrement() < trialInt) {
-                                errorParams = new String[]{partValue + " * " + appraiserValue, String.valueOf(trialInt), String.valueOf(count.getAndIncrement())};
+                            if (count.get() < trialInt) {
+                                errorParams = new String[]{partValue + " * " + appraiserValue, String.valueOf(trialInt), String.valueOf(count.get())};
                                 errorMap.put(partValue + UIConstant.SPLIT_FLAG + appraiserValue, GrrFxmlAndLanguageUtils.getString(UIConstant.EXCEPTION_GRR_MODEL, errorParams));
                             } else {
                                 rightParts.add(partValue);
@@ -342,8 +342,8 @@ public class GrrFilterServiceImpl implements GrrFilterService {
                     }
                     index.getAndIncrement();
                 });
-                if (count.getAndIncrement() < (appraiserInt * trialInt)) {
-                    errorParams = new String[]{partValue, String.valueOf(appraiserInt * trialInt), String.valueOf(count.getAndIncrement())};
+                if (count.get() < (appraiserInt * trialInt)) {
+                    errorParams = new String[]{partValue, String.valueOf(appraiserInt * trialInt), String.valueOf(count.get())};
                     errorMap.put(partValue, GrrFxmlAndLanguageUtils.getString(UIConstant.EXCEPTION_GRR_MODEL, errorParams));
 
                 } else {
