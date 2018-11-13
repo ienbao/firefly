@@ -19,21 +19,21 @@
     COLOR_BLACK_22: #222222;
     COLOR_LIGHT_FF: #ffffff;
 
-    COLOR_GRAY_66: #666666;
-    COLOR_GRAY_88: #888888;
-    COLOR_GRAY_AA: #aaaaaa;
-    COLOR_GRAY_BB: #bbbbbb;
-    COLOR_GRAY_CC: #cccccc;
-    COLOR_GRAY_DD: #DDDDDD;
-    COLOR_GRAY_DC: #dcdcdc;
-    COLOR_GRAY_D9: #D9D9D9;
-    COLOR_GRAY_ED: #ededed;
-    COLOR_GRAY_E5: #E5E5E5;
-    COLOR_GRAY_F0: #f0f0f0;
-    COLOR_GRAY_F2: #F2F2F2;
-    COLOR_GRAY_F5: #f5f5f5;
-    COLOR_GRAY_F8: #f8f8f8;
-    COLOR_GRAY_FA: #fafafa;
+  COLOR_GRAY_66: #666666;
+  COLOR_GRAY_88: #888888;
+  COLOR_GRAY_AA: #aaaaaa;
+  COLOR_GRAY_BB: #bbbbbb;
+  COLOR_GRAY_CC: #cccccc;
+  COLOR_GRAY_DD: #DDDDDD;
+  COLOR_GRAY_DC: #dcdcdc;
+  COLOR_GRAY_D9: #D9D9D9;
+  COLOR_GRAY_ED: #ededed;
+  COLOR_GRAY_E5: #E5E5E5;
+  COLOR_GRAY_F0: #f0f0f0;
+  COLOR_GRAY_F2: #F2F2F2;
+  COLOR_GRAY_F5: #f5f5f5;
+  COLOR_GRAY_F8: #f8f8f8;
+  COLOR_GRAY_FA: #fafafa;
 
     COLOR_GRAY_E9: #e9e9e9;
     COLOR_GRAY_D0: #d0d0d0;
@@ -128,89 +128,89 @@
  *                                                                             *
  ******************************************************************************/
 .button-file{
-    -fx-max-height: 22;
-    -fx-min-height: 22;
-    -fx-pref-height: 22;
-    -fx-max-width: 45;
-    -fx-padding: 0 10 0 10;
-    -fx-text-alignment: center;
-    -fx-text-fill: COLOR_BLACK_22;
-    -fx-font-family:"Microsoft YaHei";
-    -fx-font-size: 12;
-    -fx-opacity: 1;
-    -fx-border-width: 0;
-    -fx-background-radius: 0;
-    -fx-highlight-fill: COLOR_GRAY_CC;
-    -fx-background-insets: 0;
-    -fx-cursor: hand;
+  -fx-max-height: 22;
+  -fx-min-height: 22;
+  -fx-pref-height: 22;
+  -fx-max-width: 45;
+  -fx-padding: 0 10 0 10;
+  -fx-text-alignment: center;
+  -fx-text-fill: COLOR_BLACK_22;
+  -fx-font-family:"Microsoft YaHei";
+  -fx-font-size: 12;
+  -fx-opacity: 1;
+  -fx-border-width: 0;
+  -fx-background-radius: 0;
+  -fx-highlight-fill: COLOR_GRAY_CC;
+  -fx-background-insets: 0;
+  -fx-cursor: hand;
 }
 .button-delete{
-    -fx-max-height: 20;
-    -fx-min-height: 20;
-    -fx-pref-height: 20;
-    -fx-min-width: 20;
-    -fx-max-width: 20;
-    -fx-min-width: 20;
-    -fx-text-alignment: center;
-    -fx-text-fill: FONT_DARK;
-    -fx-opacity: 1;
-    -fx-border-width: 0;
-    -fx-border-color: COLOR_GRAY_CC;
-    -fx-background-radius: 0;
-    -fx-highlight-fill: COLOR_GRAY_CC;
-    -fx-background-insets: 0;
-    -fx-cursor: hand;
-    -fx-background-image: url('/images/btn_delete_normal.png');
-    -fx-background-size: 20;
-    -fx-background-position: center;
+  -fx-max-height: 20;
+  -fx-min-height: 20;
+  -fx-pref-height: 20;
+  -fx-min-width: 20;
+  -fx-max-width: 20;
+  -fx-min-width: 20;
+  -fx-text-alignment: center;
+  -fx-text-fill: FONT_DARK;
+  -fx-opacity: 1;
+  -fx-border-width: 0;
+  -fx-border-color: COLOR_GRAY_CC;
+  -fx-background-radius: 0;
+  -fx-highlight-fill: COLOR_GRAY_CC;
+  -fx-background-insets: 0;
+  -fx-cursor: hand;
+  -fx-background-image: url('/images/btn_delete_normal.png');
+  -fx-background-size: 20;
+  -fx-background-position: center;
 }
 .button-narrow{
-    -fx-max-height: 22;
-    -fx-min-height: 22;
-    -fx-pref-height: 22;
-    -fx-min-width: 22;
-    -fx-max-width: 22;
-    -fx-min-width: 22;
-    -fx-border-width: 0;
-    -fx-border-color: COLOR_GRAY_CC;
-    -fx-padding: 10 10 10 10;
-    -fx-background-radius: 0;
-    -fx-highlight-fill: COLOR_GRAY_CC;
-    -fx-background-insets: 0;
-    -fx-cursor: hand;
-    -fx-opacity: 1;
-    -fx-background-image: url('/images/btn_export_normal.png');
-    -fx-background-size: 16;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
+  -fx-max-height: 22;
+  -fx-min-height: 22;
+  -fx-pref-height: 22;
+  -fx-min-width: 22;
+  -fx-max-width: 22;
+  -fx-min-width: 22;
+  -fx-border-width: 0;
+  -fx-border-color: COLOR_GRAY_CC;
+  -fx-padding: 10 10 10 10;
+  -fx-background-radius: 0;
+  -fx-highlight-fill: COLOR_GRAY_CC;
+  -fx-background-insets: 0;
+  -fx-cursor: hand;
+  -fx-opacity: 1;
+  -fx-background-image: url('/images/btn_export_normal.png');
+  -fx-background-size: 16;
+  -fx-background-repeat: no-repeat;
+  -fx-background-position: center;
 }
 .button-file:hover{
-    -fx-border-width: 1;
-    -fx-border-color: COLOR_GRAY_D9;
-    -fx-background-color: COLOR_GRAY_F2;
+  -fx-border-width: 1;
+  -fx-border-color: COLOR_GRAY_D9;
+  -fx-background-color: COLOR_GRAY_F2;
 }
 .button-file:pressed{
-    -fx-border-width: 1;
-    -fx-border-color: COLOR_GRAY_CC;
-    -fx-background-color: COLOR_GRAY_E5;
+  -fx-border-width: 1;
+  -fx-border-color: COLOR_GRAY_CC;
+  -fx-background-color: COLOR_GRAY_E5;
 }
 
 .button-narrow:hover{
-    -fx-border-width: 1;
-    -fx-border-color:COLOR_GRAY_D9;
-    -fx-background-color: COLOR_GRAY_F2;
+  -fx-border-width: 1;
+  -fx-border-color:COLOR_GRAY_D9;
+  -fx-background-color: COLOR_GRAY_F2;
 }
 .button-narrow:pressed{
-    -fx-border-width: 1;
-    -fx-border-color: COLOR_GRAY_CC;
-    -fx-background-color: COLOR_GRAY_E5;
+  -fx-border-width: 1;
+  -fx-border-color: COLOR_GRAY_CC;
+  -fx-background-color: COLOR_GRAY_E5;
 }
 .button-delete:hover{
-    -fx-border-width: 0;
-    -fx-background-color: COLOR_GRAY_E5;
+  -fx-border-width: 0;
+  -fx-background-color: COLOR_GRAY_E5;
 }
 .button-delete:pressed{
-    -fx-background-color: COLOR_GRAY_DD;
+  -fx-background-color: COLOR_GRAY_DD;
 }
 
 /*******************************************************************************
@@ -254,13 +254,12 @@
 }
 
 
-.btn-primary-loading ,.spinner{
+.btn-primary-loading {
     -fx-cursor: null;
     -fx-border-color: COLORFUL_MIDDLE_RED;
     -fx-background-color: COLORFUL_MIDDLE_RED;
     -fx-background-size: 16;
     -fx-background-image: url('/images/small_loading.gif');
-    /*-fx-shape: "M 0.000 20.000 L 23.511 32.361 L 19.021 6.180 L 38.042 -12.361 L 11.756 -16.180 L 0.000 -40.000 L -11.756 -16.180 L -38.042 -12.361 L -19.021 6.180 L -23.511 32.361 L 0.000 20.000";*/
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
@@ -344,6 +343,9 @@
  * CheckBox                                                                     *
  *                                                                             *
  ******************************************************************************/
+.check-box{
+    -fx-cursor: hand;
+}
 
 .check-box > .box{
     -fx-pref-width: 12;
@@ -371,6 +373,10 @@
  * RadioButton                                                                 *
  *                                                                             *
  ******************************************************************************/
+
+.radio-button{
+    -fx-cursor: hand;
+}
 
 .radio-button > .radio{
     -fx-pref-width: 12;
@@ -531,8 +537,8 @@
 
 .scroll-bar:hover > .increment-button,
 .scroll-bar:hover > .decrement-button{
-    -fx-background-color: rgba(0, 0, 0, 0.05);
-    -fx-border-color: rgba(0, 0, 0, 0.15);
+    -fx-background-color: COLOR_BLACK_Fill_5;
+    -fx-border-color: COLOR_BLACK_Fill_15;
 }
 
 .scroll-bar:pressed > .thumb{
@@ -541,8 +547,8 @@
 
 .scroll-bar:pressed > .increment-button,
 .scroll-bar:pressed > .decrement-button{
-    -fx-background-color: rgba(0, 0, 0, 0.1);
-    -fx-border-color: rgba(0, 0, 0, 0.2);
+    -fx-background-color: COLOR_BLACK_Fill_10;
+    -fx-border-color: COLOR_BLACK_Fill_20;
 }
 
 /*******************************************************************************
@@ -685,6 +691,90 @@
 
 }
 
+/*******************************************************************************
+ *                                                                             *
+ * TipMessage  css                                                             *
+ *                                                                             *
+ ******************************************************************************/
+
+.tipMessage-success{
+    -fx-pref-width: 250;
+    -fx-min-width: 250;
+    -fx-max-width: 250;
+    -fx-padding: 0 0 0 10;
+    -fx-border-color:COLORFUL_MIDDLE_GREEN;
+    -fx-background-color: COLORFUL_LIGHT_GREEN;
+}
+.tipMessage-warn{
+    -fx-pref-width: 250;
+    -fx-min-width: 250;
+    -fx-max-width: 250;
+    -fx-padding: 0 0 0 10;
+    -fx-border-color:COLORFUL_LIGHT_ORANGE;
+    -fx-background-color: COLORFUL_LIGHT_YELLOW;
+}
+.tipMessage-h-box{
+    -fx-spacing: 10;
+    -fx-alignment: center;
+}
+
+.tipMessage-success-mark {
+    -fx-background-color: COLORFUL_DARK_GREEN;
+    -fx-scale-shape: false;
+    -fx-padding: 5;
+    -fx-shape: "M8,2C4.7,2,2,4.7,2,8s2.7,6,6,6s6-2.7,6-6S11.3,2,8,2z M11,6v1h-1v1H9v1H8v1H7v1H6v-1H5V9H4V8V7h1v1h1v1h1V8h1V7h1V6h1V5h1V6z";
+}
+
+.tipMessage-warn-mark {
+    -fx-background-color: COLORFUL_DARK_ORANGE;
+    -fx-scale-shape: false;
+    -fx-padding: 5;
+    -fx-shape: "M8,2C4.7,2,2,4.7,2,8s2.7,6,6,6s6-2.7,6-6S11.3,2,8,2z M9,12H8H7v-2h1h1V12z M9,9H8H7V4h1h1V9z";
+}
+
+.tipMessage-close-button{
+    -fx-pref-width: 22;
+    -fx-max-width: 22;
+    -fx-min-width: 22;
+    -fx-pref-height: 22;
+    -fx-max-height: 22;
+    -fx-min-height: 22;
+    -fx-border-width: 0;
+    -fx-background-color:transparent ;
+    -fx-background-image: url('/images/btn_delete_normal.png');
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.tipMessage-close-button:hover{
+    -fx-background-color:COLOR_BLACK_Fill_5 ;
+}
+.tipMessage-close-button:pressed:hover,
+.tipMessage-close-button:pressed{
+    -fx-background-color:COLOR_BLACK_Fill_15 ;
+}
+
+.tipMessage-content-label{
+    -fx-pref-width: 230;
+    -fx-min-width: 230;
+    -fx-max-width: 230;
+    -fx-wrap-text:true;
+}
+
+.tipMessage-event-label{
+    -fx-underline: true;
+    -fx-text-fill: COLORFUL_AUXILIARY_BLUE;
+    -fx-cursor: hand;
+}
+
+.tipMessage-event-h-box{
+    -fx-pref-width: 240;
+    -fx-min-width: 240;
+    -fx-max-width: 240;
+    -fx-underline: true;
+    -fx-alignment:CENTER_RIGHT;
+    -fx-padding:0 10 10 0;
+}
 
 /*******************************************************************************
  *                                                                             *
@@ -1007,8 +1097,6 @@
     -fx-background-insets: 0;
     -fx-spacing: 0;
 }
-
-
 
 
 

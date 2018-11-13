@@ -86,44 +86,16 @@
  ******************************************************************************/
 
 .gui-about-root{
-    -fx-max-height: 158.0;
-    -fx-min-height: 158.0;
-    -fx-pref-height: 158.0;
-    -fx-padding: 18.0 50.0;
+    -fx-pref-height: 162.0;
+    -fx-padding: 18.0 40.0;
     -fx-spacing: 40.0;
-    -fx-background-color: transparent;
 }
 
+.gui-about-spacing{
+    -fx-spacing: 10.0;
+}
 .gui-about-logo{
-
     -fx-image: url("/images/Initialize_logo.png");
-}
-.gui-about-v-box{
-    -fx-max-height: 90.0;
-    -fx-spacing: 10.0
-}
-
-.gui-about-info-h-box{
-    -fx-spacing: 5.0;
-}
-
-.gui-about-text-color{
-    -fx-text-fill: #aaaaaa;
-}
-
-.gui-about-version-font{
-    -fx-font-family: Arial;
-    -fx-font-size: 12.0;
-}
-
-.gui-about-system-title{
-    -fx-font-family: Arial;
-    -fx-font-size: 28.0;
-}
-
-.gui-about-system-name{
-    -fx-font-family: Arial;
-    -fx-font-size: 22.0;
 }
 
 /*******************************************************************************
@@ -222,62 +194,36 @@
  * login page css                                                              *
  *                                                                             *
  ******************************************************************************/
-
-.gui-login-root{
+#loginPane{
     -fx-alignment: center;
     -fx-spacing: 20.0;
-    -fx-background-color: #ffffff;
 }
-.gui-login-root-resize{
-    -fx-pref-height: 288.0;
-    -fx-min-height: 288.0;
-    -fx-max-height: 288.0;
-}
-
-.gui-login-logo{
-    -fx-spacing: 15.0;
-    -fx-image: url("/images/login_logo.png");
-}
-
-.gui-login-text-field{
+#userNameTxt,#passwordField{
     -fx-max-width: 230.0;
-    -fx-spacing: 10.0;
     -fx-border-width: 1.0;
-    -fx-border-color: #dcdcdc
 }
-
-.gui-login-btn{
+#loginPane > .button{
     -fx-pref-height: 26.0;
     -fx-pref-width: 230.0;
     -fx-alignment: center;
     -fx-font-weight: bold;
 }
-
-.gui-logining-image{
+#loginingImageView{
     -fx-image: url("/images/small_loading.gif");
     -fx-content-display: null;
+}
+#loginFailLbl{
+    -fx-border-width: 1 0;
+    -fx-border-color: COLOR_GRAY_DC;
+}
+.gui-login-logo{
+    -fx-image: url("/images/login_logo.png");
 }
 
 .gui-login-warm-icon{
     -fx-padding: 10.0;
 }
 
-.gui-login-error-h-box{
-    -fx-max-width: 350.0;
-    -fx-min-width: 350.0;
-    -fx-pref-width: 350.0;
-    -fx-alignment: center-left;
-    -fx-content-display: left;
-}
-
-.gui-login-warm-tip{
-    -fx-pref-width: 350.0;
-    -fx-pref-height: 30.0;
-    -fx-min-height: 30.0;
-    -fx-max-height: 30.0;
-    -fx-border-width: 1 0 0 0;
-    -fx-border-color: #dcdcdc transparent;
-}
 
 /*******************************************************************************
  *                                                                             *
@@ -364,12 +310,7 @@
     -fx-max-height: 3.0;
     -fx-min-height: 3.0;
 }
-.gui-datasource-rename-btn{
-     -fx-padding: 0 4 0 4;
-     -fx-border-insets: -3 0 0 0;
-     -fx-background-insets: -3 0 0 0
- }
-.gui-datasource-delete-one-btn{
+.gui-datasource-column-btn{
     -fx-padding: 0 4 0 4;
     -fx-border-insets: -3 0 0 0;
     -fx-background-insets: -3 0 0 0
@@ -393,7 +334,7 @@
  ******************************************************************************/
 
 .gui-legal-vbox{
-    -fx-padding: 10.0,10.0,10.0,10.0;
+    -fx-padding: 10.0;
     -fx-spacing: 10.0;
 }
 
@@ -443,7 +384,6 @@
 
 .gui-export-setting{
     -fx-pref-width: 360.0;
-
 }
 
 .gui-export-hbox{
