@@ -10,17 +10,25 @@
 .root {
     -fx-font: 12 arial;
     -fx-text-fill: #222222;
+    -fx-background-color: #ffffff;
+
+
 
     COLOR_BLACK_22: #222222;
     COLOR_LIGHT_FF: #ffffff;
 
     COLOR_GRAY_66: #666666;
+    COLOR_GRAY_88: #888888;
     COLOR_GRAY_AA: #aaaaaa;
     COLOR_GRAY_BB: #bbbbbb;
     COLOR_GRAY_CC: #cccccc;
     COLOR_GRAY_DC: #dcdcdc;
+    COLOR_GRAY_DD: #DDDDDD;
+    COLOR_GRAY_D9: #D9D9D9;
     COLOR_GRAY_ED: #ededed;
+    COLOR_GRAY_E5: #E5E5E5;
     COLOR_GRAY_F0: #f0f0f0;
+    COLOR_GRAY_F2: #F2F2F2;
     COLOR_GRAY_F5: #f5f5f5;
     COLOR_GRAY_F8: #f8f8f8;
     COLOR_GRAY_FA: #fafafa;
@@ -38,6 +46,7 @@
     COLORFUL_PRIMARY_RED_LIGHT: #ff5960;
     COLORFUL_PRIMARY_RED_MID: #c71b22;
     COLORFUL_PRIMARY_RED_DARK: #bb1a20;
+    COLORFUL_PRIMARY_RED_DARK_LIGHT: #de1e26;
 
     COLORFUL_LIGHT_RED: #fde8e9;
     COLORFUL_MIDDLE_RED: #fac8ca;
@@ -68,10 +77,9 @@
     COLORFUL_LIGHT1_GREEN: #7ec441;
     COLORFUL_DARK1_GREEN: #509A0E;
     COLORFUL_DARK2_GREEN: #4B910E;
-
+    COLORFUL_MIDDLE1_GREEN: #59ac10;
     COLORFUL_DARK_CYAN: #27b5b3;
 
-    COLORFUL_CHECKBOX_BORDER: #33abff;
 
     COMBOBOX_ERROR_BG_HOVER: #fef4f4;
     COMBOBOX_ERROR_BG: #fde8e9;
@@ -199,6 +207,10 @@
  * Message tip                                                                 *
  *                                                                             *
  ******************************************************************************/
+.message-tip-base{
+    -fx-pref-width: 250;
+    -fx-padding: 0 0 0 10;
+}
 .message-tip-info {
     -fx-background-color: COLORFUL_LIGHT_GREEN;
     -fx-border-color: COLORFUL_MIDDLE_GREEN;
@@ -217,14 +229,14 @@
 .message-tip-info-mark {
     -fx-background-color: COLORFUL_DARK_GREEN;
     -fx-scale-shape: false;
-    -fx-padding: 5px;
+    -fx-padding: 5;
     -fx-shape: "M8,2C4.7,2,2,4.7,2,8s2.7,6,6,6s6-2.7,6-6S11.3,2,8,2z M11,6v1h-1v1H9v1H8v1H7v1H6v-1H5V9H4V8V7h1v1h1v1h1V8h1V7h1V6h1V5h1V6z";
 }
 
 .message-tip-warn-mark {
     -fx-background-color: COLORFUL_DARK_ORANGE;
     -fx-scale-shape: false;
-    -fx-padding: 5px;
+    -fx-padding: 5;
     -fx-shape: "M8,2C4.7,2,2,4.7,2,8s2.7,6,6,6s6-2.7,6-6S11.3,2,8,2z M9,12H8H7v-2h1h1V12z M9,9H8H7V4h1h1V9z";
 }
 
@@ -238,8 +250,57 @@
 .message-tip-normal-mark {
     -fx-background-color: COLORFUL_AUXILIARY_BLUE;
     -fx-scale-shape: false;
-    -fx-padding: 5px;
+    -fx-padding: 5;
     -fx-shape: "M8,2C4.7,2,2,4.7,2,8s2.7,6,6,6s6-2.7,6-6S11.3,2,8,2z M9,12H8H7v-2h1h1V12z M9,9H8H7V4h1h1V9z";
+}
+
+.tipMessage-h-box{
+    -fx-spacing: 10;
+    -fx-alignment: center;
+}
+
+.tipMessage-close-button{
+    -fx-pref-width: 22;
+    -fx-max-width: 22;
+    -fx-min-width: 22;
+    -fx-pref-height: 22;
+    -fx-max-height: 22;
+    -fx-min-height: 22;
+    -fx-border-width: 0;
+    -fx-background-color:transparent ;
+    -fx-background-image: url('/images/btn_delete_normal.png');
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.tipMessage-close-button:hover{
+    -fx-background-color:COLOR_BLACK_Fill_5 ;
+}
+.tipMessage-close-button:pressed:hover,
+.tipMessage-close-button:pressed{
+    -fx-background-color:COLOR_BLACK_Fill_15 ;
+}
+
+.tipMessage-content-label{
+    -fx-pref-width: 230;
+    -fx-min-width: 230;
+    -fx-max-width: 230;
+    -fx-wrap-text:true;
+}
+
+.tipMessage-event-label{
+    -fx-underline: true;
+    -fx-text-fill: COLORFUL_AUXILIARY_BLUE;
+    -fx-cursor: hand;
+}
+
+.tipMessage-event-h-box{
+    -fx-pref-width: 240;
+    -fx-min-width: 240;
+    -fx-max-width: 240;
+    -fx-underline: true;
+    -fx-alignment:CENTER_RIGHT;
+    -fx-padding:0 10 10 0;
 }
 
 /*******************************************************************************
@@ -248,8 +309,8 @@
  *                                                                             *
  ******************************************************************************/
 .button, .btn-default, .toggle-button {
-    -fx-font: 12 arial;
     -fx-min-height: 22;
+    /*-fx-pref-width: 80;*/
     -fx-text-alignment: center;
     -fx-padding: 0 10;
     -fx-opacity: 1;
@@ -269,6 +330,10 @@
 
 .button:pressed, .btn-default:pressed, .toggle-button:pressed {
     -fx-border-color: COLOR_GRAY_CC;
+    -fx-background-color: COLOR_GRAY_ED;
+}
+
+.button:pressed:hover,.btn-default:pressed:hover, .toggle-button:pressed:hover {
     -fx-background-color: COLOR_GRAY_DC;
 }
 
@@ -282,6 +347,13 @@
     -fx-border-style: solid;
 }
 
+.button:disabled{
+    -fx-opacity:1;
+    -fx-background-color:COLOR_GRAY_FA;
+    -fx-border-color:COLOR_GRAY_DC;
+    -fx-text-fill:COLOR_GRAY_CC
+}
+
 .toggle-button:selected, .toggle-button:focused:selected {
     -fx-background-color: COLOR_GRAY_DC;
 }
@@ -293,6 +365,105 @@
 .center-pill {
     -fx-border-color: COLOR_GRAY_CC transparent COLOR_GRAY_CC transparent;
 }
+
+/*******************************************************************************
+ *                                                                             *
+ * button-file                                                                      *
+ *                                                                             *
+ ******************************************************************************/
+.button-file{
+    -fx-max-height: 22;
+    -fx-min-height: 22;
+    -fx-pref-height: 22;
+    -fx-max-width: 45;
+    -fx-padding: 0 10 0 10;
+    -fx-text-alignment: center;
+    -fx-text-fill: COLOR_BLACK_22;
+    -fx-font-family:"Microsoft YaHei";
+    -fx-font-size: 12;
+    -fx-opacity: 1;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-highlight-fill: COLOR_GRAY_CC;
+    -fx-background-insets: 0;
+    -fx-cursor: hand;
+}
+
+.button-file:hover{
+    -fx-border-width: 1;
+    -fx-border-color: COLOR_GRAY_D9;
+    -fx-background-color: COLOR_GRAY_F2;
+}
+.button-file:pressed{
+    -fx-border-width: 1;
+    -fx-border-color: COLOR_GRAY_CC;
+    -fx-background-color: COLOR_GRAY_E5;
+}
+
+.button-delete{
+    -fx-max-height: 20;
+    -fx-min-height: 20;
+    -fx-pref-height: 20;
+    -fx-min-width: 20;
+    -fx-max-width: 20;
+    -fx-min-width: 20;
+    -fx-text-alignment: center;
+    -fx-text-fill: FONT_DARK;
+    -fx-opacity: 1;
+    -fx-border-width: 0;
+    -fx-border-color: COLOR_GRAY_CC;
+    -fx-background-radius: 0;
+    -fx-highlight-fill: COLOR_GRAY_CC;
+    -fx-background-insets: 0;
+    -fx-cursor: hand;
+    -fx-background-image: url('/images/btn_delete_normal.png');
+    -fx-background-size: 20;
+    -fx-background-position: center;
+}
+.button-narrow{
+    -fx-max-height: 22;
+    -fx-min-height: 22;
+    -fx-pref-height: 22;
+    -fx-min-width: 22;
+    -fx-max-width: 22;
+    -fx-min-width: 22;
+    -fx-border-width: 0;
+    -fx-border-color: COLOR_GRAY_CC;
+    -fx-padding: 10 10 10 10;
+    -fx-background-radius: 0;
+    -fx-highlight-fill: COLOR_GRAY_CC;
+    -fx-background-insets: 0;
+    -fx-cursor: hand;
+    -fx-opacity: 1;
+    -fx-background-image: url('/images/btn_export_normal.png');
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.button-narrow:hover{
+    -fx-border-width: 1;
+    -fx-border-color:COLOR_GRAY_D9;
+    -fx-background-color: COLOR_GRAY_F2;
+}
+.button-narrow:pressed{
+    -fx-border-width: 1;
+    -fx-border-color: COLOR_GRAY_CC;
+    -fx-background-color: COLOR_GRAY_E5;
+}
+.button-delete:hover{
+    -fx-border-width: 0;
+    -fx-background-color: COLOR_GRAY_E5;
+}
+.button-delete:pressed{
+    -fx-background-color: COLOR_GRAY_DD;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Primary Button                                                                      *
+ *                                                                             *
+ ******************************************************************************/
 
 .btn-primary {
     -fx-text-fill: COLOR_LIGHT_FF;
@@ -311,9 +482,22 @@
 }
 
 .btn-primary:pressed {
+    -fx-highlight-fill: COLORFUL_PRIMARY_RED_DARK_LIGHT;
+    -fx-border-color: COLORFUL_PRIMARY_RED_DARK_LIGHT;
+    -fx-background-color: COLORFUL_PRIMARY_RED_DARK_LIGHT;
+}
+
+.btn-primary:pressed:hover{
     -fx-highlight-fill: COLORFUL_PRIMARY_RED_DARK;
     -fx-border-color: COLORFUL_PRIMARY_RED_DARK;
-    -fx-background-color: COLORFUL_PRIMARY_RED_DARK;
+    -fx-background-color:COLORFUL_PRIMARY_RED_DARK;
+}
+
+.btn-primary:disabled{
+    -fx-opacity:1;
+    -fx-background-color:COLOR_GRAY_FA;
+    -fx-border-color:COLOR_GRAY_DC;
+    -fx-text-fill:COLOR_GRAY_CC
 }
 
 .btn-primary:focused {
@@ -327,16 +511,20 @@
     -fx-border-style: dotted;
     -fx-border-insets: 1;
 }
-.btn-primary:disabled {
-    -fx-border-color: COLOR_GRAY_BB;
-    -fx-background-color: COLOR_GRAY_F5;
-}
 
+/*******************************************************************************
+ *                                                                             *
+ * Primary-loading Button                                                                      *
+ *                                                                             *
+ ******************************************************************************/
 .btn-primary-loading {
-    -fx-text-fill: FONT_LIGHT;
-    -fx-highlight-fill: COLORFUL_DARK_RED;
-    -fx-border-color: COLORFUL_DARK_RED;
-    -fx-background-color: COLORFUL_DARK_RED;
+    -fx-text-fill: COLOR_LIGHT_FF;
+    -fx-highlight-fill: COLORFUL_MIDDLE_RED;
+    -fx-border-color: COLORFUL_MIDDLE_RED;
+    -fx-background-color: COLORFUL_MIDDLE_RED;
+    -fx-background-image: url('/images/small_loading.gif');
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
 }
 
 .btn-primary-loading:hover, .btn-primary-loading:pressed {
@@ -346,6 +534,62 @@
     -fx-background-color: COLORFUL_DARK_RED;
 }
 
+/*******************************************************************************
+ *                                                                             *
+ * green-btn  css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+.green-btn{
+    -fx-pref-width:30;
+    -fx-max-width:30;
+    -fx-min-width:30;
+    -fx-pref-height:20;
+    -fx-max-height:20;
+    -fx-min-height:20;
+    -fx-background-color:COLORFUL_DARK_GREEN;
+    -fx-background-radius:0;
+    -fx-border-color:COLORFUL_DARK_GREEN;
+    -fx-border-radius: 0;
+    -fx-background-image: url("/images/btn_play.png");
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+
+}
+
+.green-btn:hover{
+    -fx-background-color:COLORFUL_LIGHT1_GREEN;
+    -fx-border-color:COLORFUL_LIGHT1_GREEN;
+}
+
+.green-btn:pressed{
+    -fx-background-color:COLORFUL_DARK2_GREEN;
+    -fx-border-color:COLORFUL_DARK2_GREEN;
+}
+
+.green-btn:pressed:hover{
+    -fx-background-color: COLORFUL_MIDDLE1_GREEN;
+}
+
+.green-btn:disabled{
+    -fx-opacity:1;
+    -fx-background-color:COLOR_GRAY_FA;
+    -fx-border-color:COLOR_GRAY_DC;
+    -fx-text-fill:COLOR_GRAY_CC;
+    -fx-background-image: url("/images/btn_play_gray.png");
+}
+
+.green-btn-loading{
+    -fx-background-color:COLORFUL_MIDDLE_GREEN;
+    -fx-border-color:COLORFUL_MIDDLE_GREEN;
+    -fx-background-image: url("/images/icon_loading_gray.png");
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Button Success                                                                     *
+ *                                                                             *
+ ******************************************************************************/
 .btn-success {
     -fx-text-fill: COLOR_LIGHT_FF;
     -fx-highlight-fill: COLORFUL_DARK_GREEN;
@@ -478,6 +722,8 @@
     -fx-border-style: dotted;
 }
 
+
+
 /*******************************************************************************
  *                                                                             *
  * CheckBox                                                                    *
@@ -488,6 +734,8 @@
 }
 
 .check-box > .box {
+    -fx-pref-width: 12;
+    -fx-pref-height: 12;
     -fx-border-color: COLOR_GRAY_BB;
     -fx-background-color: COLOR_LIGHT_FF;
     -fx-background-insets: 0;
@@ -498,7 +746,7 @@
 .check-box > .box > .mark {
     -fx-background-insets: 0;
     -fx-scale-shape: false;
-    -fx-padding: 5px;
+    -fx-padding: 5;
     -fx-shape: "M 0 -3 L 1 -3 L 1 -2 L 2 -2 L 2 -1 L 3 -1 L 3 0 L 4 0 L 4 -1 L 5 -1 L 5 -2 L 6 -2 L 6 -3 L 7 -3 L 7 -4 L 8 -4 L 8 -6 L 7 -6 L 7 -5 L 6 -5 L 6 -4 L 5 -4 L 5 -3 L 4 -3 L 4 -2 L 3 -2 L 3 -3 L 2 -3 L 2 -4 L 0 -4 Z";
 }
 
@@ -507,26 +755,32 @@
     -fx-shape: "M -3 -3 L 3 -3 L 3 3 L -3 3 Z";
 }
 
+
 .check-box:hover > .box, .check-box:focused > .box, .check-box:indeterminate:focused > .box {
 
-    -fx-border-color: COLORFUL_CHECKBOX_BORDER;
+    -fx-border-color: COLORFUL_DARK_BLUE;
 }
+
+/*.check-box > .box:hover{*/
+/*-fx-border-color: COLORFUL_LIGHT_BLUE;*/
+/*}*/
 
 .check-box:selected > .box, .check-box:indeterminate:selected > .box {
     -fx-border-color: COLOR_GRAY_BB;
 }
 
 .check-box:selected:hover > .box, .check-box:indeterminate:hover > .box {
-    -fx-border-color: COLORFUL_CHECKBOX_BORDER;
+    -fx-border-color: COLORFUL_DARK_BLUE;
 }
 
 .check-box:selected:focused > .box, .check-box:indeterminate:focused > .box {
-    -fx-border-color: COLORFUL_CHECKBOX_BORDER;
+    -fx-border-color: COLORFUL_DARK_BLUE;
 }
 .check-box:disabled {
     -fx-text-fill: FONT_MID;
 }
 .check-box:disabled > .box {
+    -fx-opacity: 1;
     -fx-border-color: COLOR_GRAY_DC;
     -fx-background-color: COLOR_GRAY_FA;
 }
@@ -587,8 +841,8 @@
 .radio-button > .radio {
     -fx-pref-width: 12;
     -fx-pref-height: 12;
-    -fx-border-color: #bbbbbb;
-    -fx-background-color: #ffffff;
+    -fx-border-color: COLOR_GRAY_BB;
+    -fx-background-color: COLOR_LIGHT_FF;
     -fx-border-radius: 10;
     -fx-border-width: 1;
     -fx-background-radius: 10;
@@ -600,22 +854,37 @@
     -fx-padding: 0.25em;
 }
 
-.radio-button:hover > .radio,
-.radio-button:focused > .radio {
-    -fx-border-color: COLORFUL_CHECKBOX_BORDER;
+.radio-button > .radio:hover{
+    -fx-border-color: COLORFUL_LIGHT_BLUE;
 }
+
+.radio-button:focused > .radio:focused{
+    -fx-padding: 0.25em;
+    -fx-background-color:  white;
+}
+
+/*.radio-button:hover > .radio,*/
+/*.radio-button:focused > .radio {*/
+    /*-fx-border-color: COLORFUL_DARK_BLUE;*/
+/*}*/
 
 .radio-button:selected > .radio:selected > .dot,
 .radio-button:focused > .radio:focused > .dot,
 .radio-button:focused:selected > .radio:focused:selected > .dot {
     -fx-padding: 0.25em;
-    -fx-background-color: #666666;
+    -fx-background-color: COLOR_GRAY_66;
 }
 
-.check-box:disabled > .radio {
+.radio-button:disabled > .radio:disabled{
+    -fx-opacity: 1;
     -fx-border-color: COLOR_GRAY_DC;
-    -fx-background-color: #f5f5f5;
+    -fx-background-color: COLOR_GRAY_FA;
 }
+
+/*.check-box:disabled > .radio {*/
+    /*-fx-border-color: COLOR_GRAY_DC;*/
+    /*-fx-background-color: COLOR_GRAY_F5;*/
+/*}*/
 
 .radio-button:selected:disabled > .radio > .dot {
     -fx-padding: 0.25em; /* 4 -- radius of the inner black dot when selected */
@@ -628,22 +897,51 @@
  *                                                                             *
  ******************************************************************************/
 .text-field {
-    -fx-border-color: #cccccc;
-    -fx-background-color: #ffffff;
+    /*-fx-pref-width: 160;*/
+    -fx-border-color: COLOR_GRAY_CC;
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-text-alignment: center;
     -fx-min-height: 22;
     -fx-max-height: 22;
-    -fx-font: 12 arial;
     -fx-padding: 0 10 1 10;
 }
 
-.text-field:focused {
-    -fx-border-color: #33abff;
-    -fx-background-color: #fff;
-    -fx-text-fill: #222;
-    -fx-highlight-fill: #0096ff;
-    -fx-highlight-text-fill: #fff;
+.text-field:hover{
+    -fx-border-color:COLORFUL_LIGHT_BLUE ;
+    -fx-background-color:COLOR_LIGHT_FF ;
+    -fx-text-fill: COLOR_BLACK_22;
 }
 
+.text-field:focused {
+    -fx-border-color: COLORFUL_LIGHT_BLUE;
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-text-fill: COLOR_BLACK_22;
+    -fx-highlight-fill: COLORFUL_AUXILIARY_BLUE;
+    -fx-highlight-text-fill: COLOR_LIGHT_FF;
+}
+
+.text-field:disabled{
+    -fx-opacity:1;
+    -fx-border-color:COLOR_GRAY_DC;
+    -fx-background-color:COLOR_GRAY_FA ;
+    -fx-text-fill:COLOR_GRAY_CC;
+}
+
+.text-field:focused:hover{
+    -fx-border-color:COLORFUL_LIGHT_BLUE;
+    -fx-background-color:COLOR_LIGHT_FF ;
+}
+
+.text-field:focused:pressed{
+    -fx-border-color:COLORFUL_LIGHT_BLUE;
+    -fx-background-color:COLOR_LIGHT_FF ;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * text-field-filter                                                                  *
+ *                                                                             *
+ ******************************************************************************/
 .text-field-filter {
     -fx-border-color: #ffffff;
     -fx-background-color: #ffffff;
@@ -683,34 +981,35 @@
     -fx-text-fill: #cccccc;
 }
 
+/*******************************************************************************
+ *                                                                             *
+ * text-field-error                                                                *
+ *                                                                             *
+ ******************************************************************************/
 .text-field-error {
     -fx-border-color: COLORFUL_PRIMARY_RED;
-    -fx-background-color: #fde8e9;
-    -fx-text-fill: #222;
+    -fx-background-color: COMBOBOX_ERROR_BG;
+    -fx-text-fill: COLOR_BLACK_22;
 }
 
 .text-field-error:hover {
     -fx-border-color: COLORFUL_PRIMARY_RED;
-    -fx-background-color: #fef4f4;
-    -fx-text-fill: #222;
+    -fx-background-color: COMBOBOX_ERROR_BG_HOVER;
 }
 
 .text-field-error:focused {
     -fx-border-color: COLORFUL_LIGHT_BLUE;
-    -fx-background-color: #fde8e9;
-    -fx-text-fill: #222;
+    -fx-background-color: COMBOBOX_ERROR_BG;
 }
 
 .text-field-error:focused:hover {
     -fx-border-color: COLORFUL_LIGHT_BLUE;
-    -fx-background-color: #fef4f4;
-    -fx-text-fill: #222;
+    -fx-background-color: COMBOBOX_ERROR_BG_HOVER;
 }
 
 .text-field-error:focused:pressed {
     -fx-border-color: COLORFUL_LIGHT_BLUE;
-    -fx-background-color: #fef4f4;
-    -fx-text-fill: #222;
+    -fx-background-color: COMBOBOX_ERROR_BG_HOVER;
 }
 
 /*******************************************************************************
@@ -773,17 +1072,15 @@
 
 /*******************************************************************************
  *                                                                             *
- * Combo box                                                                   *
+ * Combo box      不可编辑                                                             *
  *                                                                             *
  ******************************************************************************/
 
 .combo-box-base {
     -fx-pref-height: 22;
-    -fx-min-height: 22;
-    -fx-max-height: 22;
     -fx-background-color: COLOR_GRAY_F5;
     -fx-border-color: COLOR_GRAY_CC;
-    -fx-text-fill: FONT_DARK;
+    -fx-text-fill: COLOR_BLACK_22;
     -fx-padding: -1 0 -2 0;
     -fx-cursor: hand;
     -fx-background-insets: 0 0 1 0;
@@ -805,7 +1102,7 @@
 
 .combo-box-base:hover {
     -fx-border-color: COLOR_GRAY_CC;
-    -fx-background-color: #ffffff;
+    -fx-background-color: COLOR_LIGHT_FF;
     -fx-cursor: hand;
 }
 
@@ -835,20 +1132,28 @@
 }
 
 .combo-box-base:disabled {
-    -fx-background-color: #fafafa;
+    -fx-background-color: COLOR_GRAY_FA;
     -fx-border-color: COLOR_GRAY_DC;
     -fx-text-fill: COLOR_GRAY_CC;
     -fx-opacity: 1;
 }
 
+/*******************************************************************************
+ *                                                                             *
+ * Combo box  error  不可编辑                                                                 *
+ *                                                                             *
+ ******************************************************************************/
+
+
 .combo-box-error {
+    /*-fx-pref-height: 22;*/
     -fx-cursor: hand;
-    -fx-background-color: COMBOBOX_ERROR_BG;
+    -fx-background-color: COLORFUL_LIGHT_RED;
     -fx-border-color: COLORFUL_PRIMARY_RED;
 }
 
 .combo-box-error:hover {
-    -fx-background-color: COMBOBOX_ERROR_BG_HOVER;
+    -fx-background-color: COLOR_LIGHT_FF;
     -fx-border-color: COLORFUL_PRIMARY_RED;
 }
 
@@ -857,11 +1162,20 @@
 }
 
 .combo-box-error:focused {
-    -fx-border-color: COLORFUL_AUXILIARY_BLUE;
+    -fx-border-color: COLORFUL_LIGHT_BLUE ;
+    -fx-background-color: COLORFUL_LIGHT_RED;
 }
 
 .combo-box-error:focused:hover {
-    -fx-border-color: COLORFUL_AUXILIARY_BLUE;
+    -fx-border-color: COMBOBOX_ERROR_BG_HOVER;
+}
+
+.error-combo-box:focused:showing{
+    -fx-background-color: COMBOBOX_ERROR_BG_PRESSED;
+}
+
+.error-combo-box:focused:showing:hover{
+    -fx-background-color: COMBOBOX_ERROR_BG_PRESSED_HOVER;
 }
 
 .combo-box-error:showing {
@@ -872,14 +1186,18 @@
     -fx-background-color: COMBOBOX_ERROR_BG_PRESSED_HOVER;
 }
 
-.combo-box-error:hover:pressed,
+.error-combo-box:focused:pressed{
+    -fx-border-color: COLORFUL_LIGHT_BLUE ;
+    -fx-background-color: COMBOBOX_ERROR_BG_PRESSED;
+}
+
 .combo-box-error:focused:hover:pressed {
     -fx-background-color: COMBOBOX_ERROR_BG_PRESSED;
 }
 
 /*******************************************************************************
  *                                                                             *
- * Combo box  edit                                                             *
+ * Combo box  editable                                                             *
  *                                                                             *
  ******************************************************************************/
 
@@ -1042,8 +1360,13 @@
     -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em;
 }
 
+/*******************************************************************************
+ *                                                                             *
+ * Combo box  editable                                                             *
+ *                                                                             *
+ ******************************************************************************/
 .combo-box-popup > .list-view {
-    -fx-background-color: #ffffff;
+    -fx-background-color: COLOR_LIGHT_FF;
     -fx-background-insets: 0, 1;
     -fx-effect: null;
     -fx-border-color: COLOR_GRAY_DC;
@@ -1053,45 +1376,41 @@
 
 .combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
     -fx-padding: 4 0 4 5;
+    /*-fx-padding: 4 10 4 10;*/
     /* No alternate highlighting */
     -fx-background: -fx-control-inner-background;
 }
 
 .combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover {
     -fx-background: -fx-accent;
-    -fx-background-color: #0096ff;
+    -fx-background-color: COLORFUL_AUXILIARY_BLUE;
 }
 
 .combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
 .combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
     -fx-background: -fx-accent;
-    -fx-background-color: #0096ff;
+    -fx-background-color: COLORFUL_AUXILIARY_BLUE;
     -fx-background-insets: 0, 1, 2;
 }
 
-/*******************************************************************************
- *                                                                             *
- * Tab                                                                         *
- *                                                                             *
- ******************************************************************************/
 /*******************************************************************************
  *                                                                             *
  * TabPane                                                                     *
  *                                                                             *
  ******************************************************************************/
 
-/* FLOATING TABS CUSTOMISATION */
 .tab-pane {
-    -fx-tab-min-height: 20; /* 22 */
-    -fx-tab-max-height: 20; /* 22 */
+    -fx-tab-min-height: 20;/*22*/
+    -fx-tab-max-height: 20;/*22*/
     -fx-border-width: 1 0 0 0;
     -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_F0;
 }
 
 .tab-pane > .tab-header-area > .tab-header-background {
-    -fx-background-color: #f0f0f0;
-    -fx-border-width: 0 0 1 1;
+    -fx-background-color: COLOR_GRAY_F0;
     -fx-border-color: COLOR_GRAY_DC;
+    -fx-border-width: 0 0 1 1;
     -fx-padding: 0;
     -fx-max-height: 20;
     -fx-min-height: 19;
@@ -1104,7 +1423,7 @@
 }
 
 .tab-pane > .tab-header-area {
-    -fx-background-color: null;
+    -fx-background-color: COLOR_GRAY_F0;
     -fx-padding: 0;
     -fx-border-insets: 0;
     -fx-background-insets: 0;
@@ -1113,10 +1432,10 @@
 }
 
 .tab-pane > .tab-content-area {
-    -fx-background-color: #ffffff;
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-border-color: COLOR_GRAY_DC;
     -fx-background-radius: 0;
     -fx-border-width: 0 0 0 0;
-    -fx-border-color: COLOR_GRAY_DC;
     -fx-padding: 0;
     -fx-border-insets: 0;
     -fx-background-insets: 0;
@@ -1125,7 +1444,7 @@
 }
 
 .tab-pane > .tab-header-area > .headers-region {
-    -fx-background-color: #f0f0f0;
+    -fx-background-color: COLOR_GRAY_F0;
     -fx-padding: 0;
     -fx-background-radius: 0;
     -fx-border-radius: 0;
@@ -1137,18 +1456,16 @@
 }
 
 .tab-pane > .tab-header-area > .headers-region > .tab {
-    /*
-    -fx-padding: 0 0 0 0;
-    */
-    -fx-background-color: #f0f0f0;
+    -fx-background-color: COLOR_GRAY_F0;
     -fx-background-radius: 0;
     -fx-border-radius: 0;
     -fx-border-width: 0 1 1 0;
-    -fx-border-color: COLOR_GRAY_DC COLOR_GRAY_DC COLOR_GRAY_DC COLOR_GRAY_DC;
+    -fx-border-color: COLOR_GRAY_DC;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
     -fx-cursor: hand;
     -fx-padding: 0;
+    /*-fx-padding: 0 10 0 10;*/
     -fx-border-insets: 0;
     -fx-background-insets: 0;
     -fx-border-image-insets: 0;
@@ -1156,11 +1473,12 @@
 }
 
 .tab-pane > .tab-header-area > .headers-region > .tab:hover > {
-    -fx-background-color: #ffffff;
+    -fx-background-color: COLOR_LIGHT_FF;
     -fx-background-radius: 0;
     -fx-border-radius: 0;
-    -fx-border-color: COLOR_GRAY_DC COLOR_GRAY_DC COLOR_GRAY_DC COLOR_GRAY_DC;
+    -fx-border-color: COLOR_GRAY_DC;
     -fx-padding: 0;
+    /*-fx-padding: 0 10 0 10;*/
     -fx-border-insets: 0;
     -fx-background-insets: 0;
     -fx-border-image-insets: 0;
@@ -1168,9 +1486,10 @@
 }
 
 .tab-pane > .tab-header-area > .headers-region > .tab:selected {
-    -fx-background-color: #ffffff;
-    -fx-border-color: COLOR_GRAY_DC COLOR_GRAY_DC #ffffff COLOR_GRAY_DC;
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-border-color: COLOR_GRAY_DC COLOR_GRAY_DC COLOR_LIGHT_FF COLOR_GRAY_DC;
     -fx-padding: 0;
+    /*-fx-padding: 0 10 0 10;*/
     -fx-border-insets: 0;
     -fx-background-insets: 0;
     -fx-border-image-insets: 0;
@@ -1179,6 +1498,7 @@
 
 .tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
     -fx-border-width: 0;
+    /*-fx-padding: 0 10 0 10;*/
     -fx-padding: 0;
     -fx-border-insets: 0;
     -fx-background-insets: 0;
@@ -1240,7 +1560,7 @@
 
 .tab-pane > .tab-header-area > .control-buttons-tab {
     -fx-padding: 0 0 0 0;
-    -fx-background-color: #f2f2f2;
+    -fx-background-color: COLOR_GRAY_F2;
     -fx-border-image-insets: 0;
     -fx-spacing: 0;
     -fx-background-insets: 0 0 2 0;
@@ -1276,6 +1596,194 @@
         -fx-shape: null;
         -fx-effect: null;*/
 }
+
+/*!********************************************************************************/
+ /**                                                                             **/
+ /** vertical-text    无边框垂直Tab                                                   **/
+ /**                                                                             **/
+ /*******************************************************************************!*/
+
+/*.vertical-text {*/
+    /*-fx-background-color: COLOR_GRAY_F0;*/
+    /*-fx-border-width: 0;*/
+    /*-fx-pref-height: 200;*/
+    /*-fx-max-width: 200;*/
+/*}*/
+
+/*.vertical-text > .tab-header-area > .tab-header-background {*/
+    /*-fx-background-color: COLOR_GRAY_F0;*/
+    /*-fx-border-color: COLOR_GRAY_DC;*/
+    /*-fx-border-width: 0;*/
+    /*-fx-padding: 0;*/
+    /*-fx-border-insets: 0;*/
+    /*-fx-background-insets: 0;*/
+    /*-fx-border-image-insets: 0;*/
+    /*-fx-spacing: 0;*/
+/*}*/
+
+
+
+/*.vertical-text .tab-header-area .tab {*/
+    /*-fx-pref-height: 200;*/
+    /*-fx-pref-width: 22;*/
+/*}*/
+
+/*.vertical-text .tab-header-area .tab .tab-graphic-label {*/
+    /*-fx-padding: 0;*/
+    /*-fx-pref-height: 22;*/
+    /*-fx-pref-width: 200;*/
+    /*-fx-rotate: 90;*/
+/*}*/
+
+
+/*.vertical-text > .tab-header-area > .headers-region > .tab {*/
+    /*-fx-background-color: COLOR_GRAY_F0;*/
+    /*-fx-border-color: COLOR_LIGHT_FF;*/
+    /*-fx-padding: 20 0 0 0;*/
+    /*-fx-border-width: 0 0 0 0;*/
+    /*-fx-alignment: center-left;*/
+/*}*/
+
+/*.vertical-text > .tab-header-area > .headers-region > .tab:selected {*/
+    /*-fx-background-color: COLOR_LIGHT_FF;*/
+    /*-fx-padding: 20 0 0 0;*/
+/*}*/
+
+/*.vertical-text > .tab-header-area > .headers-region > .tab:hover {*/
+    /*-fx-background-color: COLOR_LIGHT_FF;*/
+    /*-fx-padding: 20 0 0 0;*/
+/*}*/
+
+/*.vertical-text > .tab-header-area > .headers-region > .tab:pressed {*/
+    /*-fx-background-color: COLOR_LIGHT_FF;*/
+    /*-fx-padding: 20 0 0 0;*/
+/*}*/
+
+/*.vertical-text > .tab-header-area > .headers-region > .tab:focused {*/
+    /*-fx-border-color: COLOR_LIGHT_FF;*/
+    /*-fx-padding: 20 0 0 0;*/
+    /*-fx-border-style: solid;*/
+/*}*/
+
+/*.vertical-text > .tab-header-area > .headers-region > .tab:focused:hover {*/
+    /*-fx-border-color: COLOR_GRAY_F0;*/
+    /*-fx-border-style: solid;*/
+/*}*/
+
+/*.vertical-text > .tab-header-area > .headers-region > .tab > .tab-container > .tab-label {*/
+    /*-fx-padding: 0;*/
+    /*-fx-border-image-insets: 0;*/
+    /*-fx-border-insets: 0;*/
+    /*-fx-background-insets: 0;*/
+    /*-fx-spacing: 0;*/
+/*}*/
+
+/*!********************************************************************************/
+ /**                                                                             **/
+ /** vertical-tab-pane     有边框                                                  **/
+ /**                                                                             **/
+ /*******************************************************************************!*/
+
+/*.vertical-tab-pane {*/
+    /*-fx-background-color: COLOR_GRAY_F0;*/
+    /*-fx-border-color: COLOR_GRAY_DC;*/
+    /*-fx-border-width: 1 0 0 0;*/
+    /*-fx-padding: 0;*/
+    /*-fx-pref-height: 200;*/
+    /*-fx-max-width: 200;*/
+/*}*/
+
+/*.vertical-tab-pane > .tab-header-area > .tab-header-background {*/
+    /*-fx-background-color: COLOR_GRAY_F0;*/
+    /*-fx-border-color: COLOR_GRAY_DC;*/
+    /*-fx-border-width: 1 1 1 1;*/
+    /*-fx-padding: 0;*/
+    /*-fx-border-insets: 0;*/
+    /*-fx-background-insets: 0;*/
+    /*-fx-border-image-insets: 0;*/
+    /*-fx-spacing: 0;*/
+/*}*/
+
+/*.vertical-tab-pane > .tab-header-area {*/
+    /*-fx-background-color: COLOR_GRAY_F0;*/
+    /*-fx-border-color: COLOR_GRAY_DC;*/
+    /*-fx-border-width: 1 0 0 0;*/
+    /*-fx-padding: 0;*/
+    /*-fx-border-insets: 0;*/
+    /*-fx-background-insets: 0;*/
+    /*-fx-border-image-insets: 0;*/
+    /*-fx-spacing: 0;*/
+/*}*/
+
+/*.vertical-tab-pane .tab-header-area .tab {*/
+    /*-fx-background-color: COLORFUL_PRIMARY_RED;*/
+    /*-fx-border-color: COLOR_GRAY_DC;*/
+    /*-fx-border-width: 0;*/
+    /*-fx-padding: 1 0 0 0;*/
+    /*-fx-pref-height: 200;*/
+    /*-fx-pref-width: 22;*/
+/*}*/
+
+/*.vertical-tab-pane .tab-header-area .tab .tab-graphic-label {*/
+    /*-fx-padding: 0;*/
+    /*-fx-pref-height: 22;*/
+    /*-fx-pref-width: 200;*/
+    /*-fx-rotate: 90;*/
+/*}*/
+
+/*.vertical-tab-pane > .tab-header-area > .headers-region > .tab {*/
+    /*-fx-background-color: COLOR_GRAY_F0;*/
+    /*-fx-border-color: COLOR_GRAY_DC;*/
+    /*-fx-background-radius: 0;*/
+    /*-fx-border-radius: 0;*/
+    /*-fx-border-width: 1 0 1 0;*/
+    /*-fx-background-repeat: no-repeat;*/
+    /*-fx-cursor: hand;*/
+    /*-fx-padding: 20 0 0 0;*/
+    /*-fx-spacing: 0;*/
+/*}*/
+
+/*.vertical-tab-pane > .tab-header-area > .headers-region > .tab:selected {*/
+    /*-fx-border-color: COLOR_GRAY_DC;*/
+    /*-fx-background-color: COLOR_LIGHT_FF;*/
+    /*-fx-padding: 19 0 0 0;*/
+    /*-fx-border-width: 1 1 0 1;*/
+/*}*/
+
+/*.vertical-tab-pane > .tab-header-area > .headers-region > .tab:hover {*/
+    /*-fx-background-color: COLOR_LIGHT_FF;*/
+    /*-fx-padding: 19 0 0 0;*/
+    /*-fx-border-width: 1 1 1 1;*/
+/*}*/
+
+/*.vertical-tab-pane > .tab-header-area > .headers-region > .tab:pressed {*/
+    /*-fx-border-color: COLOR_GRAY_DC;*/
+    /*-fx-background-color: COLOR_LIGHT_FF;*/
+    /*-fx-padding: 19 0 0 0;*/
+    /*-fx-border-width: 1 1 0 1;*/
+/*}*/
+
+/*.vertical-tab-pane > .tab-header-area > .headers-region > .tab:focused {*/
+    /*-fx-border-color: COLOR_GRAY_DC;*/
+    /*-fx-border-width: 0;*/
+    /*-fx-padding: 20 0 0 0;*/
+    /*-fx-border-style: solid;*/
+/*}*/
+
+/*.vertical-tab-pane > .tab-header-area > .headers-region > .tab:focused:hover {*/
+    /*-fx-border-color: COLOR_GRAY_DC;*/
+    /*-fx-border-width: 0;*/
+    /*-fx-padding: 20 0 0 0;*/
+    /*-fx-border-style: solid;*/
+/*}*/
+
+/*.vertical-tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-label {*/
+    /*-fx-padding: 0;*/
+    /*-fx-border-image-insets: 0;*/
+    /*-fx-border-insets: 0;*/
+    /*-fx-background-insets: 0;*/
+    /*-fx-spacing: 0;*/
+/*}*/
 
 /*******************************************************************************
  *                                                                             *
@@ -1465,27 +1973,35 @@
  *                                                                             *
  ******************************************************************************/
 .scroll-bar {
-    -fx-background-color: #ffffff;
+    -fx-background-color: COLOR_LIGHT_FF;
     -fx-background-insets: 0;
-    -fx-border-width: 1px;
-    -fx-border-color: #ffffff;
+    -fx-border-width: 0;
 }
 
 .scroll-bar > .thumb {
-    -fx-background-color: #cccccc;
+    -fx-background-color: COLOR_GRAY_CC;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
 }
 
-.scroll-bar > .thumb:hover {
-    -fx-background-color: #888888;
+.scroll-bar:hover > .thumb{
+    -fx-background-color: COLOR_GRAY_88;
     -fx-background-insets: 0;
 }
 
-.scroll-bar > .thumb:pressed {
-    -fx-background-color: #666666;
-    -fx-background-insets: 0;
+/*.scroll-bar > .thumb:hover {*/
+    /*-fx-background-color: #888888;*/
+    /*-fx-background-insets: 0;*/
+/*}*/
+
+.scroll-bar:pressed > .thumb{
+    -fx-background-color: COLOR_GRAY_66;
 }
+
+/*.scroll-bar > .thumb:pressed {*/
+    /*-fx-background-color: COLOR_GRAY_66;*/
+    /*-fx-background-insets: 0;*/
+/*}*/
 
 .scroll-bar > .increment-button,
 .scroll-bar > .decrement-button {
@@ -1494,8 +2010,20 @@
     -fx-border-color: transparent;
     -fx-background-color: transparent;
     -fx-color: transparent;
-    -fx-pref-width: 8px;
-    -fx-pref-height: 8px;
+    -fx-pref-width: 8;
+    -fx-pref-height: 8;
+}
+
+.scroll-bar:hover > .increment-button,
+.scroll-bar:hover > .decrement-button{
+    -fx-background-color: COLOR_BLACK_Fill_5;
+    -fx-border-color: COLOR_BLACK_Fill_15;
+}
+
+.scroll-bar:pressed > .increment-button,
+.scroll-bar:pressed > .decrement-button{
+    -fx-background-color: COLOR_BLACK_Fill_10;
+    -fx-border-color: COLOR_BLACK_Fill_20;
 }
 
 .scroll-bar:horizontal > .increment-button,
@@ -2339,7 +2867,7 @@
     -fx-border-insets: 0;
     -fx-padding: 1;
     -fx-shape: null;
-    -fx-background-color: #ea2028;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
 }
 
 .progress-bar:indeterminate > .bar {
@@ -2351,7 +2879,7 @@
 .progress-bar > .track {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
-    -fx-background-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_ED;
 }
 
 /*******************************************************************************
@@ -2360,25 +2888,26 @@
  *                                                                             *
  ******************************************************************************/
 .progress-bar-sm-red > .bar {
+    -fx-pref-height: 4;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
     -fx-border-radius: 0;
     -fx-border-insets: 0;
     -fx-padding: 1;
     -fx-shape: null;
-    -fx-background-color: #ea2028;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
 }
 
 .progress-bar-sm-red:indeterminate > .bar {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
-    -fx-background-color: #ea2028;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
 }
 
 .progress-bar-sm-red > .track {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
-    -fx-background-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_ED;
 }
 
 /*******************************************************************************
@@ -2388,25 +2917,37 @@
  ******************************************************************************/
 
 .progress-bar-md-red > .bar {
+    -fx-pref-height: 8;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
     -fx-border-radius: 0;
     -fx-border-insets: 0;
     -fx-padding: 2;
     -fx-shape: null;
-    -fx-background-color: #ea2028;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
 }
 
 .progress-bar-md-red:indeterminate > .bar {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
-    -fx-background-color: #ea2028;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
 }
 
 .progress-bar-md-red > .track {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
-    -fx-background-color: #ededed;
+    -fx-background-color: COLOR_GRAY_ED;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * ProgressBar small  green                                                       *
+ *                                                                             *
+ ******************************************************************************/
+
+.progress-bar-sm-green > .bar{
+    -fx-pref-height: 4;
+    -fx-background-color: COLORFUL_DARK_GREEN;
 }
 
 /*******************************************************************************
@@ -2416,25 +2957,26 @@
  ******************************************************************************/
 
 .progress-bar-md-green > .bar {
+    -fx-pref-height: 8;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
     -fx-border-radius: 0;
     -fx-border-insets: 0;
     -fx-padding: 2;
     -fx-shape: null;
-    -fx-background-color: #5eb511;
+    -fx-background-color: COLORFUL_DARK_GREEN;
 }
 
 .progress-bar-md-green:indeterminate > .bar {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
-    -fx-background-color: #5eb511;
+    -fx-background-color: COLORFUL_DARK_GREEN;
 }
 
 .progress-bar-md-green > .track {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
-    -fx-background-color: #ededed;
+    -fx-background-color: COLOR_GRAY_ED;
 }
 
 /*******************************************************************************
@@ -2444,25 +2986,26 @@
  ******************************************************************************/
 
 .progress-bar-lg-red > .bar {
+    -fx-pref-height: 2;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
     -fx-border-radius: 0;
     -fx-border-insets: 0;
     -fx-padding: 4;
     -fx-shape: null;
-    -fx-background-color: #ea2028;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
 }
 
 .progress-bar-lg-red:indeterminate > .bar {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
-    -fx-background-color: #ea2028;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
 }
 
 .progress-bar-lg-red > .track {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
-    -fx-background-color: #ededed;
+    -fx-background-color: COLOR_GRAY_DC;
 }
 
 /*******************************************************************************
@@ -2471,25 +3014,26 @@
  *                                                                             *
  ******************************************************************************/
 .progress-bar-lg-green > .bar {
+    -fx-pref-height: 2;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
     -fx-border-radius: 0;
     -fx-border-insets: 0;
     -fx-padding: 4;
     -fx-shape: null;
-    -fx-background-color: #5eb511;
+    -fx-background-color: COLORFUL_DARK_GREEN;
 }
 
 .progress-bar-lg-green:indeterminate > .bar {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
-    -fx-background-color: #5eb511;
+    -fx-background-color: COLORFUL_DARK_GREEN;
 }
 
 .progress-bar-lg-green > .track {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
-    -fx-background-color: #ededed;
+    -fx-background-color: COLOR_GRAY_DC;
 }
 
 /*******************************************************************************
@@ -2510,17 +3054,46 @@
     -fx-border-width: 1.0;
     -fx-border-color: #dcdcdc
 }
-.text-field-filter-demo-hbox > #label{
+.text-field-filter-demo-hbox > .label{
     -fx-alignment: center;
     -fx-pref-width: 20.0;
     -fx-pref-height: 20.0;
+    -fx-background-image: url("/images/btn_clear_normal.png");
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
 }
-.text-field-filter-search{
-    -fx-image: url("/images/btn_basic_search_normal.png");
+
+.text-field-filter-demo-hbox > .label:hover{
+    -fx-background-image: url("/images/btn_clear_over.png");
 }
-.text-field-filter-clear{
-    -fx-image: url("/images/btn_clear_click.png");
+.text-field-filter-demo-hbox > .label:pressed{
+    -fx-background-image: url("/images/btn_clear_click.png");
 }
+.text-field-filter-demo-hbox > .label-search{
+    -fx-background-image: url("/images/btn_basic_search_normal.png");
+}
+
+
+
+
+
+
+/*.text-field-filter-search{*/
+    /*-fx-image: url("/images/btn_basic_search_normal.png");*/
+/*}*/
+/*.text-field-filter-clear{*/
+    /*-fx-image: url("/images/btn_clear_normal.png");*/
+/*}*/
+
+/*.text-field-filter-clear:hover{*/
+    /*-fx-image: url("/images/btn_clear_over.png");*/
+/*}*/
+
+/*.text-field-filter-clear:pressed{*/
+    /*-fx-image: url("/images/btn_clear_click.png");*/
+/*}*/
+
 
 
 
