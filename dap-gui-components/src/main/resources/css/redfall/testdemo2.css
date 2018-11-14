@@ -1,0 +1,328 @@
+
+.root {
+    -fx-font: 12 arial;
+    -fx-text-fill: #222222;
+
+    COLOR_BLACK_22: #222222;
+    COLOR_LIGHT_FF: #ffffff;
+
+    COLOR_GRAY_66: #666666;
+    COLOR_GRAY_AA: #aaaaaa;
+    COLOR_GRAY_BB: #bbbbbb;
+    COLOR_GRAY_CC: #cccccc;
+    COLOR_GRAY_DC: #dcdcdc;
+    COLOR_GRAY_ED: #ededed;
+    COLOR_GRAY_F0: #f0f0f0;
+    COLOR_GRAY_F2: #f2f2f2;
+    COLOR_GRAY_F5: #f5f5f5;
+    COLOR_GRAY_F8: #f8f8f8;
+    COLOR_GRAY_FA: #fafafa;
+
+    COLOR_GRAY_E9: #e9e9e9;
+    COLOR_GRAY_D0: #d0d0d0;
+
+    COLOR_BLACK_Fill_5: rgba(0, 0, 0, 0.05);
+    COLOR_BLACK_Fill_10: rgba(0, 0, 0, 0.1);
+    COLOR_BLACK_Fill_15: rgba(0, 0, 0, 0.15);
+    COLOR_BLACK_Fill_20: rgba(0, 0, 0, 0.2);
+
+    /*primary color*/
+    COLORFUL_PRIMARY_RED: #ea2028;
+    COLORFUL_PRIMARY_RED_LIGHT: #ff5960;
+    COLORFUL_PRIMARY_RED_MID: #c71b22;
+    COLORFUL_PRIMARY_RED_DARK: #bb1a20;
+
+    COLORFUL_LIGHT_RED: #fde8e9;
+    COLORFUL_MIDDLE_RED: #fac8ca;
+    COLORFUL_DARK_RED: #F48F93;
+
+
+    /*auxiliary color*/
+    COLORFUL_AUXILIARY_BLUE: #0096ff;
+    COLORFUL_LIGHT_BLUE: #33abff;
+    COLORFUL_DARK_BLUE: #487CF4;
+
+    COLORFUL_BLUE_Fill_10: rgba(0, 150, 255, 0.2);
+    COLORFUL_BLUE_Fill_20: rgba(0, 150, 255, 0.2);
+    COLORFUL_BLUE_Fill_50: rgba(0, 150, 255, 0.5);
+
+    COLORFUL_LIGHT_ORANGE: #ffd57f;
+    COLORFUL_MIDDLE_ORANGE: #ffab00;
+    COLORFUL_DARK_ORANGE: #F38400;
+
+    COLORFUL_LIGHT_YELLOW: #fff7d0;
+    COLORFUL_MIDDLE_YELLOW: #fee465;
+    COLORFUL_DARK_YELLOW: #f8d251;
+
+    COLORFUL_LIGHT_GREEN: #dff0cf;
+    COLORFUL_MIDDLE_GREEN: #aeda88;
+    COLORFUL_DARK_GREEN: #5EB511;
+
+    COLORFUL_LIGHT1_GREEN: #7ec441;
+    COLORFUL_DARK1_GREEN: #509A0E;
+    COLORFUL_DARK2_GREEN: #4B910E;
+
+    COLORFUL_DARK_CYAN: #27b5b3;
+
+    COLORFUL_CHECKBOX_BORDER: #33abff;
+
+    COMBOBOX_ERROR_BG_HOVER: #fef4f4;
+    COMBOBOX_ERROR_BG: #fde8e9;
+    COMBOBOX_ERROR_BG_PRESSED_HOVER: #fbd2d4;
+    COMBOBOX_ERROR_BG_PRESSED: #f8b1b4;
+
+    FONT_DARK: COLOR_BLACK_22;
+    FONT_LIGHT: COLOR_LIGHT_FF;
+    FONT_MID: COLOR_GRAY_CC;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * TabPane                                                                     *
+ *                                                                             *
+ ******************************************************************************/
+
+/* FLOATING TABS CUSTOMISATION */
+.tab-pane {
+    -fx-tab-min-height: 20; /* 22 */
+    -fx-tab-max-height: 20; /* 22 */
+    -fx-border-width: 1 0 0 0;
+    -fx-max-width: 1500;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-color: red;
+}
+
+.tab-pane > .tab-header-area > .tab-header-background {
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-border-width: 0 0 1 1;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-padding: 0;
+    -fx-max-height: 20;
+    -fx-min-height: 19;
+    -fx-tab-min-height: 19; /* 22 */
+    -fx-tab-max-height: 20; /* 22 */
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area {
+    -fx-background-color: null;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-content-area {
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-background-radius: 0;
+    -fx-border-width: 0 0 0 0;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region {
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-padding: 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab {
+    /*
+    -fx-padding: 0 0 0 0;
+    */
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 0 1 1 0;
+    -fx-border-color: COLOR_GRAY_DC COLOR_GRAY_DC COLOR_GRAY_DC COLOR_GRAY_DC;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:hover > {
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-color: COLOR_GRAY_DC COLOR_GRAY_DC COLOR_GRAY_DC COLOR_GRAY_DC;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:selected {
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-border-color: COLOR_GRAY_DC COLOR_GRAY_DC COLOR_LIGHT_FF COLOR_GRAY_DC;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-width: 0;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container {
+    -fx-background-color: null;
+    -fx-border-image-insets: 0;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-label {
+    -fx-padding: 0 10 0 10;
+    -fx-border-image-insets: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-close-button {
+    -fx-background-color: null;
+    -fx-shape: null;
+    -fx-scale-shape: false;
+    -fx-background-image: url('/images/btn_del_gray.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-pref-height: 20;
+    -fx-pref-width: 20;
+    -fx-max-width: 20;
+    -fx-min-height: 20;
+    -fx-max-height: 20;
+    -fx-min-width: 20;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:selected > .tab-container > .tab-close-button {
+    -fx-background-color: null;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-close-button:hover {
+    -fx-background-color: COLOR_GRAY_F2;
+    -fx-spacing: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-padding: 0;
+}
+
+.tab-pane > .tab-header-area > .control-buttons-tab {
+    -fx-padding: 0 0 0 0;
+    -fx-background-color: COLOR_GRAY_F2;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+    -fx-background-insets: 0 0 2 0;
+    -fx-border-insets: 0 0 2 0;
+}
+
+.tab-pane > .tab-header-area > .control-buttons-tab > .container {
+    -fx-padding: 0 0 0 0;
+    -fx-background-color: transparent;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+    -fx-border-color: COLOR_GRAY_F2;
+    -fx-background-insets: 0 0 2 0;
+    -fx-border-insets: 0 0 2 0;
+}
+
+.tab-pane > .tab-header-area > .control-buttons-tab > .container > .tab-down-button {
+    -fx-background-image: url('/images/btn_unfold_normal.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 20;
+    -fx-pref-height: 20;
+    -fx-pref-width: 20;
+    -fx-max-width: 20;
+    -fx-min-height: 20;
+    -fx-max-height: 20;
+    -fx-min-width: 20;
+    -fx-background-color: transparent;
+    -fx-background-position: top;
+}
+
+.tab-pane > .tab-header-area > .control-buttons-tab > .container > .tab-down-button > .arrow {
+    /*    -fx-background-image: null;
+        -fx-shape: null;
+        -fx-effect: null;*/
+}
+
+.btn-icon {
+    -fx-min-height: 10;
+    -fx-min-width: 10;
+    -fx-border-width: 1;
+    -fx-border-color: transparent;
+    -fx-background-position: center;
+    -fx-background-color: null;
+    -fx-background-repeat: no-repeat;
+}
+
+.btn-icon:hover {
+    -fx-border-color: transparent;
+    -fx-background-color: COLOR_BLACK_Fill_5;
+}
+
+.btn-icon:pressed {
+    -fx-border-color: transparent;
+    -fx-background-color: COLOR_BLACK_Fill_15;
+}
+
+.btn-icon:focused, .btn-icon:focused:hover {
+    -fx-border-color: COLOR_GRAY_66;
+    -fx-border-style: dotted;
+}
+.btn-icon-b {
+    -fx-border-width: 1;
+    -fx-border-color: transparent;
+    -fx-background-position: center;
+    -fx-background-color: null;
+    -fx-background-repeat: no-repeat;
+}
+
+.btn-icon-b:hover, .btn-icon-b:focused:hover {
+    -fx-border-color: COLOR_BLACK_Fill_15;
+    -fx-background-color: COLOR_BLACK_Fill_5;
+}
+
+.btn-icon-b:pressed, .btn-icon-b:focused:pressed {
+    -fx-border-color: COLOR_BLACK_Fill_20;
+    -fx-background-color: COLOR_BLACK_Fill_10;
+}
+
+.btn-icon-b:focused {
+    -fx-border-color: COLOR_GRAY_66;
+    -fx-border-style: dotted;
+}
