@@ -37,33 +37,31 @@ public class TipMessage extends VBox implements Initializable {
         });
     }
 
-    public void showSuccessMsg(String title, String msg) {
+    public void setType(TipMessageType type) {
         this.clear();
         this.setVisible(true);
-        this.getStyleClass().add("tipMessage-success");
-        iconLabel.getStyleClass().add("tipMessage-success-mark");
-        titleLabel.setText(title);
-        contentLabel.setText(msg);
+        titleLabel.setText(type.toString());
+        if(type.equals(TipMessageType.Success)){
+            this.getStyleClass().add("tipMessage-success");
+            iconLabel.getStyleClass().add("tipMessage-success-mark");
+        }else{
+            this.getStyleClass().add("tipMessage-warn");
+            iconLabel.getStyleClass().add("tipMessage-warn-mark");
+        }
     }
 
-    public void showWarnMsg(String title, String msg, String linkMsg, EventHandler<MouseEvent> linkEvent) {
-        this.clear();
-        this.setVisible(true);
-        this.getStyleClass().add("tipMessage-warn");
-        iconLabel.getStyleClass().add("tipMessage-warn-mark");
-        titleLabel.setText(title);
-        contentLabel.setText(msg);
-        eventLabel.setText(linkMsg);
+    public void setMessage(String message) {
+        contentLabel.setText(message);
+    }
+
+    public void setLinkText(String linkText) {
+        eventLabel.setText(linkText);
+    }
+
+    public void setMouseEvent(EventHandler<MouseEvent> linkEvent) {
         eventLabel.setOnMouseClicked(linkEvent);
     }
-    public void showWarnMsg(String title, String msg) {
-        this.clear();
-        this.setVisible(true);
-        this.getStyleClass().add("tipMessage-warn");
-        iconLabel.getStyleClass().add("tipMessage-warn-mark");
-        titleLabel.setText(title);
-        contentLabel.setText(msg);
-    }
+
     private void clear() {
         this.getStyleClass().clear();
         iconLabel.getStyleClass().clear();
@@ -77,4 +75,7 @@ public class TipMessage extends VBox implements Initializable {
         this.setVisible(false);
     }
 
+    public enum TipMessageType {
+        Success, Warn, WarnEvent
+    }
 }

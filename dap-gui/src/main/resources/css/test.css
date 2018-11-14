@@ -764,6 +764,7 @@
 .tipMessage-event-label{
     -fx-underline: true;
     -fx-text-fill: COLORFUL_AUXILIARY_BLUE;
+    -fx-cursor: hand;
 }
 
 .tipMessage-event-h-box{
@@ -774,4 +775,332 @@
     -fx-alignment:CENTER_RIGHT;
     -fx-padding:0 10 10 0;
 }
+
+/*******************************************************************************
+ *                                                                             *
+ * tabPane                                                        *
+ *                                                                             *
+ ******************************************************************************/
+
+.tab-pane {
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-tab-min-height: 22;
+    -fx-tab-max-height: 22;
+    -fx-pref-width: 308;
+    -fx-border-width: 0;
+    -fx-padding: 0 ;
+}
+
+.tab-pane > .tab-header-area > .tab-header-background {
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-border-width: 1 1 1 1;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area {
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-content-area {
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-radius: 0;
+    -fx-border-width: 0 0 0 0;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region {
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-padding: 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab {
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 1 0 1 1;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-cursor: hand;
+    -fx-padding: 0 10 0 10;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:hover > {
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-padding: 0 10 0 10;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:selected {
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-border-color: COLOR_GRAY_DC COLOR_GRAY_DC COLOR_LIGHT_FF COLOR_GRAY_DC;
+    -fx-padding: 0 10 0 10;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-width: 0;
+    -fx-padding: 0 10 0 10;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container {
+    -fx-background-color: null;
+    -fx-border-image-insets: 0;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-spacing: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-label {
+    -fx-padding: 0 10 0 10;
+    -fx-border-image-insets: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-spacing: 0;
+}
+
+
+.tab-pane > .tab-header-area > .control-buttons-tab {
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-padding: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+    -fx-background-insets: 0 0 2 0;
+    -fx-border-insets: 0 0 2 0;
+}
+
+
+
+/*******************************************************************************
+ *                                                                             *
+ * vertical-tab-pane                                                       *
+ *                                                                             *
+ ******************************************************************************/
+
+.vertical-tab-pane {
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-border-width: 1 0 0 0;
+    -fx-padding: 0;
+    -fx-pref-height: 200;
+    -fx-max-width: 200;
+}
+
+.vertical-tab-pane > .tab-header-area > .tab-header-background {
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-border-width: 1 1 1 1;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.vertical-tab-pane > .tab-header-area {
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-border-width: 1 0 0 0;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+.vertical-tab-pane .tab-header-area .tab {
+    -fx-background-color: COLORFUL_PRIMARY_RED;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-border-width: 0;
+    -fx-padding: 1 0 0 0;
+    -fx-pref-height: 200;
+    -fx-pref-width: 22;
+}
+
+.vertical-tab-pane .tab-header-area .tab .tab-graphic-label {
+    -fx-padding: 0;
+    -fx-pref-height: 22;
+    -fx-pref-width: 200;
+    -fx-rotate: 90;
+}
+
+.vertical-tab-pane > .tab-header-area > .headers-region > .tab {
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 1 0 1 0;
+    -fx-background-repeat: no-repeat;
+    -fx-cursor: hand;
+    -fx-padding: 20 0 0 0;
+    -fx-spacing: 0;
+}
+
+.vertical-tab-pane > .tab-header-area > .headers-region > .tab:selected {
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-padding: 19 0 0 0;
+    -fx-border-width: 1 1 0 1;
+}
+
+.vertical-tab-pane > .tab-header-area > .headers-region > .tab:hover {
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-padding: 19 0 0 0;
+    -fx-border-width: 1 1 1 1;
+}
+
+.vertical-tab-pane > .tab-header-area > .headers-region > .tab:pressed {
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-padding: 19 0 0 0;
+    -fx-border-width: 1 1 0 1;
+}
+
+.vertical-tab-pane > .tab-header-area > .headers-region > .tab:focused {
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-border-width: 0;
+    -fx-padding: 20 0 0 0;
+    -fx-border-style: solid;
+}
+
+.vertical-tab-pane > .tab-header-area > .headers-region > .tab:focused:hover {
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-border-width: 0;
+    -fx-padding: 20 0 0 0;
+    -fx-border-style: solid;
+}
+
+.vertical-tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-label {
+    -fx-padding: 0;
+    -fx-border-image-insets: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-spacing: 0;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * vertical-text                                                       *
+ *                                                                             *
+ ******************************************************************************/
+
+.vertical-text {
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-border-width: 0;
+    -fx-pref-height: 200;
+    -fx-max-width: 200;
+}
+
+.vertical-text > .tab-header-area > .tab-header-background {
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-border-width: 0;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-border-image-insets: 0;
+    -fx-spacing: 0;
+}
+
+
+
+.vertical-text .tab-header-area .tab {
+    -fx-pref-height: 200;
+    -fx-pref-width: 22;
+}
+
+.vertical-text .tab-header-area .tab .tab-graphic-label {
+    -fx-padding: 0;
+    -fx-pref-height: 22;
+    -fx-pref-width: 200;
+    -fx-rotate: 90;
+}
+
+
+.vertical-text > .tab-header-area > .headers-region > .tab {
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-border-color: COLOR_LIGHT_FF;
+    -fx-padding: 20 0 0 0;
+    -fx-border-width: 0 0 0 0;
+    -fx-alignment: center-left;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:selected {
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-padding: 20 0 0 0;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:hover {
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-padding: 20 0 0 0;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:pressed {
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-padding: 20 0 0 0;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:focused {
+    -fx-border-color: COLOR_LIGHT_FF;
+    -fx-padding: 20 0 0 0;
+    -fx-border-style: solid;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:focused:hover {
+    -fx-border-color: COLOR_GRAY_F0;
+    -fx-border-style: solid;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab > .tab-container > .tab-label {
+    -fx-padding: 0;
+    -fx-border-image-insets: 0;
+    -fx-border-insets: 0;
+    -fx-background-insets: 0;
+    -fx-spacing: 0;
+}
+
+
+
 
