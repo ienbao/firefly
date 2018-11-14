@@ -9,15 +9,13 @@
     <HBox styleClass="gui-additem-h-box-first">
         <Label styleClass="gui-additem-lbl-choose" text="%CHOOSE_ITEM"/>
         <Label styleClass="gui-additem-lbl-customize" text="%CUSTOMIZE_ITEM"/>
-        <Button fx:id="message" styleClass="gui-additem-h-box-btn,btn-txt" text="Button"/>
+        <Button fx:id="message" styleClass="btn-txt" text="Button"/>
     </HBox>
     <HBox styleClass="gui-additem-h-box-second" VBox.vgrow="ALWAYS">
         <VBox styleClass="gui-additem-h-box-second-vbox">
-            <TextField fx:id="filter" styleClass="gui-additem-h-box-second-textfiled" promptText="%TEMPLATE_TEST_ITEM"/>
-            <TableView fx:id="itemTable" styleClass="gui-additem-h-box-second-table" VBox.vgrow="ALWAYS">
+            <TextField fx:id="filter" promptText="%TEMPLATE_TEST_ITEM"/>
+            <TableView fx:id="itemTable" VBox.vgrow="ALWAYS">
                 <columns>
-                        <!--<TableColumn fx:id="select" style="-fx-max-width: 30.0" minWidth="30.0" prefWidth="30.0" sortable="false" />-->
-                        <!--<TableColumn fx:id="testItem" prefWidth="75.0" sortable="false" text="%TEST_ITEM" />-->
                     <TableColumn fx:id="select" styleClass="gui-additem-h-box-second-columns-first" sortable="false" />
                     <TableColumn fx:id="testItem" styleClass="gui-additem-h-box-second-columns-second" text="%TEST_ITEM" />
                 </columns>
@@ -26,9 +24,9 @@
                 </columnResizePolicy>
             </TableView>
         </VBox>
-        <TextArea fx:id="customizeItem" styleClass="gui-additem-h-box-text-area" promptText="%PLEASE_INPUT_TEST_ITEM"/>
+        <TextArea fx:id="customizeItem" promptText="%PLEASE_INPUT_TEST_ITEM"/>
     </HBox>
     <HBox styleClass="gui-additem-h-box-third">
-        <Button fx:id="addItemOk" styleClass="gui-additem-btn" text="%OK_BTN"/>
+        <Button fx:id="addItemOk" text="%OK_BTN"/>
     </HBox>
 </VBox>
