@@ -18,5 +18,4 @@
     <HBox styleClass="tipMessage-event-h-box">
         <Label fx:id="eventLabel" styleClass="tipMessage-event-label" />
     </HBox>
-
 </fx:root>

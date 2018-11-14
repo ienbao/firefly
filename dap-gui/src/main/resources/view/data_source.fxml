@@ -7,21 +7,17 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.image.ImageView?>
+
 <VBox styleClass="gui-datasource-root" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.DataSourceController">
     <BorderPane styleClass="gui-datasource-head-borderPane">
         <left>
-            <TextFieldFilter fx:id="filterTf" styleClass="gui-datasource-textfield-filter" />
+            <TextFieldFilter fx:id="filterTf" />
         </left>
         <right >
-            <Button fx:id="delete"  styleClass="btn-icon,gui-datasource-delete-btn" >
-                <graphic>
-                    <ImageView styleClass="gui-datasource-delete-btn-image" fitWidth="16.0" fitHeight="16.0" />
-                </graphic>
-            </Button>
+            <Button fx:id="delete"  styleClass="btn-icon" />
         </right>
     </BorderPane>
-    <TableView fx:id="dataSourceTable"  styleClass="gui-datasource-table-view" VBox.vgrow="ALWAYS" >
+    <TableView fx:id="dataSourceTable" VBox.vgrow="ALWAYS" >
         <columns>
             <TableColumn fx:id="chooseCheckBoxColumn" styleClass="gui-datasource-table-check-box-column" resizable="false" text="C1" />
             <TableColumn fx:id="chooseValueColumn" styleClass="gui-datasource-table-value-column" resizable="false" text="%DATA_SOURCE_NAME" />
@@ -32,13 +28,13 @@
     </TableView>
     <BorderPane styleClass="gui-datasource-foot-borderPane">
         <left>
-            <Button fx:id="addFile"  styleClass="gui-datasource-btn" text="%ADD_FILE" />
+            <Button fx:id="addFile" text="%ADD_FILE" />
         </left>
         <right>
             <HBox styleClass="gui-datasource-foot-h-box">
-                <Label fx:id="errorInfo"  styleClass="btn-icon,message-tip-warn-mark,gui-datasource-errorinfo-lbl" />
-                <Button fx:id="ok" styleClass="gui-datasource-btn" text="%OK_DATA" />
-                <Button fx:id="cancel" styleClass="gui-datasource-btn" text="%CANCEL_DATA" />
+                <Label fx:id="errorInfo"  styleClass="btn-icon,message-tip-warn-mark" />
+                <Button fx:id="ok" text="%OK_DATA" />
+                <Button fx:id="cancel" text="%CANCEL_DATA" />
             </HBox>
         </right>
     </BorderPane>
