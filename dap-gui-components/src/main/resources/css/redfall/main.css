@@ -10,17 +10,25 @@
 .root {
     -fx-font: 12 arial;
     -fx-text-fill: #222222;
+    -fx-background-color: #ffffff;
+
+
 
     COLOR_BLACK_22: #222222;
     COLOR_LIGHT_FF: #ffffff;
 
     COLOR_GRAY_66: #666666;
+    COLOR_GRAY_88: #888888;
     COLOR_GRAY_AA: #aaaaaa;
     COLOR_GRAY_BB: #bbbbbb;
     COLOR_GRAY_CC: #cccccc;
     COLOR_GRAY_DC: #dcdcdc;
+    COLOR_GRAY_DD: #DDDDDD;
+    COLOR_GRAY_D9: #D9D9D9;
     COLOR_GRAY_ED: #ededed;
+    COLOR_GRAY_E5: #E5E5E5;
     COLOR_GRAY_F0: #f0f0f0;
+    COLOR_GRAY_F2: #F2F2F2;
     COLOR_GRAY_F5: #f5f5f5;
     COLOR_GRAY_F8: #f8f8f8;
     COLOR_GRAY_FA: #fafafa;
@@ -38,6 +46,7 @@
     COLORFUL_PRIMARY_RED_LIGHT: #ff5960;
     COLORFUL_PRIMARY_RED_MID: #c71b22;
     COLORFUL_PRIMARY_RED_DARK: #bb1a20;
+    COLORFUL_PRIMARY_RED_DARK_LIGHT: #de1e26;
 
     COLORFUL_LIGHT_RED: #fde8e9;
     COLORFUL_MIDDLE_RED: #fac8ca;
@@ -68,10 +77,9 @@
     COLORFUL_LIGHT1_GREEN: #7ec441;
     COLORFUL_DARK1_GREEN: #509A0E;
     COLORFUL_DARK2_GREEN: #4B910E;
-
+    COLORFUL_MIDDLE1_GREEN: #59ac10;
     COLORFUL_DARK_CYAN: #27b5b3;
 
-    COLORFUL_CHECKBOX_BORDER: #33abff;
 
     COMBOBOX_ERROR_BG_HOVER: #fef4f4;
     COMBOBOX_ERROR_BG: #fde8e9;
@@ -509,7 +517,7 @@
 
 .check-box:hover > .box, .check-box:focused > .box, .check-box:indeterminate:focused > .box {
 
-    -fx-border-color: COLORFUL_CHECKBOX_BORDER;
+    -fx-border-color: COLORFUL_DARK_BLUE;
 }
 
 .check-box:selected > .box, .check-box:indeterminate:selected > .box {
@@ -517,11 +525,11 @@
 }
 
 .check-box:selected:hover > .box, .check-box:indeterminate:hover > .box {
-    -fx-border-color: COLORFUL_CHECKBOX_BORDER;
+    -fx-border-color: COLORFUL_DARK_BLUE;
 }
 
 .check-box:selected:focused > .box, .check-box:indeterminate:focused > .box {
-    -fx-border-color: COLORFUL_CHECKBOX_BORDER;
+    -fx-border-color: COLORFUL_DARK_BLUE;
 }
 .check-box:disabled {
     -fx-text-fill: FONT_MID;
@@ -602,7 +610,7 @@
 
 .radio-button:hover > .radio,
 .radio-button:focused > .radio {
-    -fx-border-color: COLORFUL_CHECKBOX_BORDER;
+    -fx-border-color: COLORFUL_DARK_BLUE;
 }
 
 .radio-button:selected > .radio:selected > .dot,
