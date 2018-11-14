@@ -42,6 +42,7 @@ public class TestCssDemo2 extends Application {
         contentStackPane.setMaxWidth(1400);
         contentStackPane.setMinWidth(1400);
         TabPane tabPane = new TabPane();
+        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
         tabPane.setTabMinWidth(70);
         Tab tab = null;
         tabPane.setId(name);
