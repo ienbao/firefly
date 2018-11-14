@@ -93,6 +93,9 @@
  *                                                                             *
  ******************************************************************************/
 .button {
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 16;
     -fx-pref-height: 22px;
     -fx-min-width: 70px;
     -fx-padding:0 10 2 10;

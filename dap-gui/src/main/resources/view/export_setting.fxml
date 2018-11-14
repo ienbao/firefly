@@ -14,7 +14,7 @@
          </columnResizePolicy>
       </TableView>
        <HBox styleClass="gui-export-hbox">
-               <Button fx:id="exportBtn" styleClass="gui-export-btn" mnemonicParsing="false" text="%EXPORT_BTN" />
-               <Button fx:id="cancelBtn" styleClass="gui-export-btn" mnemonicParsing="false" text="%CANCEL_BTN"/>
+               <Button fx:id="exportBtn"  mnemonicParsing="false" text="%EXPORT_BTN" />
+               <Button fx:id="cancelBtn"  mnemonicParsing="false" text="%CANCEL_BTN"/>
        </HBox>
 </VBox>
