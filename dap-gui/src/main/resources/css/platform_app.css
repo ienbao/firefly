@@ -105,46 +105,37 @@
  ******************************************************************************/
 
 .gui-additem-root{
-    -fx-alignment: center-right;
-    -fx-max-height: -Infinity;
-    -fx-max-width: -Infinity;
-    -fx-min-height: -Infinity;
-    -fx-min-width: -Infinity;
-    -fx-pref-height: 330.0;
-    -fx-pref-width: 410.0;
+    /*-fx-alignment: center-right;*/
+    /*-fx-pref-height: 330.0;*/
+    /*-fx-pref-width: 410.0;*/
+}
+
+.gui-additem-h-box-first{
+    -fx-padding: 0 10.0 0 10.0;
+    -fx-pref-height: 30.0;
+    -fx-alignment: center-left;
 }
 
 .gui-additem-lbl-choose{
-    -fx-pref-height: 30.0;
     -fx-pref-width: 190.0;
 }
 
 .gui-additem-lbl-customize{
     -fx-padding: 0 0 0 10.0;
-    -fx-pref-height: 30.0;
     -fx-pref-width: 170.0;
 }
 
-.gui-additem-h-box-first{
-    -fx-padding: 0 10.0 0 10.0;
-    -fx-alignment: center-left;
-    -fx-pref-height: 30.0;
-    -fx-pref-width: 200.0;
-}
-
-.gui-additem-h-box-btn{
+.gui-additem-h-box-first > .button{
     -fx-max-width: 22.0;
     -fx-min-width: 22.0;
     -fx-pref-width: 22.0;
-    -fx-background-color: #0096ff;
+    -fx-background-color: COLORFUL_AUXILIARY_BLUE;
 }
 
 .gui-additem-h-box-second{
     -fx-spacing: 10.0;
     -fx-padding: 0 10.0 0 10.0;
     -fx-pref-height: 255.0;
-    -fx-pref-width: 410.0;
-    -fx-border-width: 0 0 0 0;
 }
 
 .gui-additem-h-box-second-vbox{
@@ -154,11 +145,16 @@
     -fx-pref-height: 200.0;
     -fx-pref-width: 190.0;
     -fx-border-width: 1 1 1 1;
-    -fx-border-color: #DCDCDC;
+    -fx-border-color: COLOR_GRAY_DC;
 }
 
-.gui-additem-h-box-second-textfiled{
+.gui-additem-h-box-second-vbox > .text-field{
     -fx-max-width: 180.0;
+}
+
+.gui-additem-h-box-second > .text-area{
+    -fx-pref-height: 200.0;
+    -fx-pref-width: 190.0;
 }
 
 .gui-additem-h-box-second-table{
@@ -173,12 +169,9 @@
 }
 
 .gui-additem-h-box-second-columns-second{
-    -fx-pref-width: 185.0;
-}
-
-.gui-additem-h-box-text-area{
-    -fx-pref-height: 200.0;
-    -fx-pref-width: 190.0;
+    -fx-pref-width: 156;
+    -fx-max-width: 156;
+    -fx-min-width: 156;
 }
 
 .gui-additem-h-box-third{
@@ -186,7 +179,7 @@
     -fx-alignment: center_right;
 }
 
-.gui-additem-btn{
+.gui-additem-h-box-third > .button{
     -fx-pref-width: 80.0;
 }
 /*******************************************************************************
