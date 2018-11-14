@@ -317,25 +317,25 @@
     -fx-spacing: 10.0;
 }
 
-.gui-legal-text-field{
-    -fx-pref-height: 200.0;
-    -fx-pref-width: 390.0;
-    -fx-max-width: 390;
+.gui-legal-hbox{
+-fx-alignment: bottom-right;
+    -fx-pref-height: 60;
 }
 
-.gui-legal-btn{
+.gui-legal-hbox>.button{
     -fx-pref-height: 22.0;
     -fx-pref-width: 80.0;
     -fx-alignment: center;
 }
 
-.gui-legal-hbox{
-    -fx-alignment: bottom-right;
-    -fx-pref-height: 60;
-}
-
 .gui-legal-inside-vbox{
     -fx-spacing: 20.0;
+}
+
+.gui-legal-inside-vbox>.text-area{
+    -fx-pref-height: 200.0;
+    -fx-pref-width: 390.0;
+    -fx-max-width: 390;
 }
 
 /*******************************************************************************
@@ -372,7 +372,7 @@
     -fx-spacing: 10.0;
 }
 
-.gui-export-btn{
+.gui-export-hbox>.button{
     -fx-alignment: center;
     -fx-pref-width: 80;
 }

@@ -311,6 +311,9 @@
 .button, .btn-default, .toggle-button {
     -fx-min-height: 22;
     /*-fx-pref-width: 80;*/
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 16;
     -fx-text-alignment: center;
     -fx-padding: 0 10;
     -fx-opacity: 1;
