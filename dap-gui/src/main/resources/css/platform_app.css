@@ -227,12 +227,7 @@
 .gui-datasource-root{
     -fx-padding: 10 ;
     -fx-alignment: center;
-    -fx-max-height: 420.0;
-    -fx-min-height: 420.0;
-    -fx-pref-height: 420.0;
-    -fx-max-width: 600.0;
-    -fx-min-width: 600.0;
-    -fx-pref-width: 600.0;
+
     -fx-background-color: COLOR_LIGHT_FF;
 }
 
