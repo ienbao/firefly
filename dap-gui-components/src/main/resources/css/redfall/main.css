@@ -92,24 +92,6 @@
     FONT_MID: COLOR_GRAY_CC;
 }
 
-.vbox-base{
-    -fx-padding: 0 10;
-    -fx-spacing: 10;
-}
-
-.hbox-base{
-    -fx-padding: 0 10;
-    -fx-spacing: 10;
-}
-
-.borderPane-base{
-    -fx-padding: 10 0 0 0;
-}
-
-.state-bar-lbl {
-    -fx-padding: 0 0 0 10;
-}
-
 .top-title-logo {
     -fx-background-image: url('/images/top_title_logo.png');
 }
@@ -3196,8 +3178,21 @@
     -fx-padding: 10.0;
 }
 
+.padding-h{
+    -fx-padding: 0 10;
+}
+
 .padding-sm{
     -fx-padding: 3.0;
+}
+
+
+.padding-top{
+    -fx-padding: 10 0 0 0;
+}
+
+.state-bar-lbl {
+    -fx-padding: 0 0 0 10;
 }
 
 /*******************************************************************************
