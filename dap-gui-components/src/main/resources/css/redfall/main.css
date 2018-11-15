@@ -91,6 +91,7 @@
     FONT_MID: COLOR_GRAY_CC;
 }
 
+
 .state-bar-lbl {
     -fx-padding: 0 0 0 10;
 }
@@ -195,7 +196,7 @@
 
 .icon-ok-white {
     -fx-background-color: transparent;
-    -fx-background-image: url('/images/icon_choose_one_white.png.png');
+    -fx-background-image: url('/images/icon_choose_one_white.png');
     -fx-background-size: 16;
     -fx-pref-height: 16;
     -fx-pref-width: 16;
@@ -263,15 +264,10 @@
     -fx-pref-width: 22;
     -fx-max-width: 22;
     -fx-min-width: 22;
-    -fx-pref-height: 22;
-    -fx-max-height: 22;
-    -fx-min-height: 22;
     -fx-border-width: 0;
     -fx-background-color:transparent ;
     -fx-background-image: url('/images/btn_delete_normal.png');
     -fx-background-size: 16;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
 }
 .tipMessage-close-button:hover{
     -fx-background-color:COLOR_BLACK_Fill_5 ;
@@ -310,17 +306,15 @@
  ******************************************************************************/
 .button, .btn-default, .toggle-button {
     -fx-min-height: 22;
-    /*-fx-pref-width: 80;*/
+    -fx-pref-width: 80;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
-    -fx-background-size: 16;
     -fx-text-alignment: center;
     -fx-padding: 0 10;
     -fx-opacity: 1;
-    -fx-text-fill: FONT_DARK;
     -fx-background-insets: 0;
-    -fx-border-radius: 0;
     -fx-background-radius: 0;
+    -fx-border-radius: 0;
     -fx-highlight-fill: COLOR_GRAY_CC;
     -fx-border-color: COLOR_GRAY_CC;
     -fx-background-color: COLOR_GRAY_F5;
@@ -375,20 +369,12 @@
  *                                                                             *
  ******************************************************************************/
 .button-file{
-    -fx-max-height: 22;
-    -fx-min-height: 22;
-    -fx-pref-height: 22;
     -fx-max-width: 45;
     -fx-padding: 0 10 0 10;
-    -fx-text-alignment: center;
-    -fx-text-fill: COLOR_BLACK_22;
     -fx-font-family:"Microsoft YaHei";
     -fx-font-size: 12;
     -fx-opacity: 1;
     -fx-border-width: 0;
-    -fx-background-radius: 0;
-    -fx-highlight-fill: COLOR_GRAY_CC;
-    -fx-background-insets: 0;
     -fx-cursor: hand;
 }
 
@@ -403,6 +389,12 @@
     -fx-background-color: COLOR_GRAY_E5;
 }
 
+/*******************************************************************************
+ *                                                                             *
+ * button-delete                                                                      *
+ *                                                                             *
+ ******************************************************************************/
+
 .button-delete{
     -fx-max-height: 20;
     -fx-min-height: 20;
@@ -410,38 +402,33 @@
     -fx-min-width: 20;
     -fx-max-width: 20;
     -fx-min-width: 20;
-    -fx-text-alignment: center;
-    -fx-text-fill: FONT_DARK;
-    -fx-opacity: 1;
     -fx-border-width: 0;
-    -fx-border-color: COLOR_GRAY_CC;
-    -fx-background-radius: 0;
-    -fx-highlight-fill: COLOR_GRAY_CC;
-    -fx-background-insets: 0;
-    -fx-cursor: hand;
     -fx-background-image: url('/images/btn_delete_normal.png');
     -fx-background-size: 20;
-    -fx-background-position: center;
 }
+
+.button-delete:hover{
+    -fx-border-width: 0;
+    -fx-background-color: COLOR_GRAY_E5;
+}
+.button-delete:pressed{
+    -fx-background-color: COLOR_GRAY_DD;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * button-narrow                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+
 .button-narrow{
-    -fx-max-height: 22;
-    -fx-min-height: 22;
-    -fx-pref-height: 22;
     -fx-min-width: 22;
     -fx-max-width: 22;
     -fx-min-width: 22;
     -fx-border-width: 0;
-    -fx-border-color: COLOR_GRAY_CC;
-    -fx-padding: 10 10 10 10;
-    -fx-background-radius: 0;
-    -fx-highlight-fill: COLOR_GRAY_CC;
-    -fx-background-insets: 0;
-    -fx-cursor: hand;
-    -fx-opacity: 1;
+    -fx-padding: 10 ;
     -fx-background-image: url('/images/btn_export_normal.png');
     -fx-background-size: 16;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
 }
 
 .button-narrow:hover{
@@ -453,13 +440,6 @@
     -fx-border-width: 1;
     -fx-border-color: COLOR_GRAY_CC;
     -fx-background-color: COLOR_GRAY_E5;
-}
-.button-delete:hover{
-    -fx-border-width: 0;
-    -fx-background-color: COLOR_GRAY_E5;
-}
-.button-delete:pressed{
-    -fx-background-color: COLOR_GRAY_DD;
 }
 
 /*******************************************************************************
@@ -474,8 +454,6 @@
     -fx-border-color: COLORFUL_PRIMARY_RED;
     -fx-background-color: COLORFUL_PRIMARY_RED;
     -fx-border-insets: 1;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
 }
 
 .btn-primary:hover {
@@ -522,12 +500,13 @@
  ******************************************************************************/
 .btn-primary-loading {
     -fx-text-fill: COLOR_LIGHT_FF;
-    -fx-highlight-fill: COLORFUL_MIDDLE_RED;
-    -fx-border-color: COLORFUL_MIDDLE_RED;
-    -fx-background-color: COLORFUL_MIDDLE_RED;
-    -fx-background-image: url('/images/small_loading.gif');
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
+    -fx-highlight-fill: COLORFUL_DARK_RED;
+    -fx-border-color: COLORFUL_DARK_RED;
+    -fx-background-color: COLORFUL_DARK_RED;
+    /*-fx-highlight-fill: COLORFUL_MIDDLE_RED;*/
+    /*-fx-border-color: COLORFUL_MIDDLE_RED;*/
+    /*-fx-background-color: COLORFUL_MIDDLE_RED;*/
+    /*-fx-background-image: url('/images/small_loading.gif');*/
 }
 
 .btn-primary-loading:hover, .btn-primary-loading:pressed {
@@ -550,14 +529,9 @@
     -fx-max-height:20;
     -fx-min-height:20;
     -fx-background-color:COLORFUL_DARK_GREEN;
-    -fx-background-radius:0;
     -fx-border-color:COLORFUL_DARK_GREEN;
-    -fx-border-radius: 0;
     -fx-background-image: url("/images/btn_play.png");
     -fx-background-size: 16;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
-
 }
 
 .green-btn:hover{
@@ -645,9 +619,7 @@
     -fx-min-width: 10;
     -fx-border-width: 1;
     -fx-border-color: transparent;
-    -fx-background-position: center;
     -fx-background-color: null;
-    -fx-background-repeat: no-repeat;
 }
 
 .btn-icon {
@@ -655,9 +627,7 @@
     -fx-min-width: 10;
     -fx-border-width: 1;
     -fx-border-color: transparent;
-    -fx-background-position: center;
     -fx-background-color: null;
-    -fx-background-repeat: no-repeat;
 }
 
 .btn-icon:hover {
@@ -675,12 +645,17 @@
     -fx-border-style: dotted;
 }
 
+/*******************************************************************************
+ *                                                                             *
+ * Button : Chart Result                                                                    *
+ *                                                                             *
+ ******************************************************************************/
+
+
 .btn-icon-b {
-    -fx-border-width: 1;
+    -fx-border-width: 0;
     -fx-border-color: transparent;
-    -fx-background-position: center;
     -fx-background-color: null;
-    -fx-background-repeat: no-repeat;
 }
 
 .btn-icon-b:hover, .btn-icon-b:focused:hover {
@@ -698,14 +673,20 @@
     -fx-border-style: dotted;
 }
 
+/*******************************************************************************
+ *                                                                             *
+ * Button  Please login                                                                     *
+ *                                                                             *
+ ******************************************************************************/
+
 .btn-txt {
+    -fx-pref-width: 90;
     -fx-border-width: 1;
     -fx-border-color: transparent;
     -fx-background-color: null;
 }
 
 .btn-txt:hover {
-    -fx-text-fill: FONT_DARK;
     -fx-border-color: COLOR_BLACK_Fill_15;
     -fx-background-color: COLOR_BLACK_Fill_5;
 }
@@ -903,7 +884,6 @@
     /*-fx-pref-width: 160;*/
     -fx-border-color: COLOR_GRAY_CC;
     -fx-background-color: COLOR_LIGHT_FF;
-    -fx-text-alignment: center;
     -fx-min-height: 22;
     -fx-max-height: 22;
     -fx-padding: 0 10 1 10;
@@ -942,7 +922,7 @@
 
 /*******************************************************************************
  *                                                                             *
- * text-field-filter                                                                  *
+ * text-field-filter        搜索框                                                          *
  *                                                                             *
  ******************************************************************************/
 .text-field-filter {
@@ -950,7 +930,6 @@
     -fx-background-color: #ffffff;
     -fx-min-height: 20;
     -fx-max-height: 20;
-    -fx-font: 12 arial;
     -fx-padding: 0 10 1 10;
 }
 
@@ -2418,22 +2397,27 @@
 }
 
 .window-button-minimize {
+    -fx-pref-width: 30;
     -fx-background-image: url('/images/top_minimize_normal.png');
 }
 
 .window-button-maximize {
+    -fx-pref-width: 30;
     -fx-background-image: url('/images/top_full_screen_normal.png');
 }
 
 .window-button-restore {
+    -fx-pref-width: 30;
     -fx-background-image: url('/images/top_adaptive_normal.png');
 }
 
 .window-button-close {
+    -fx-pref-width: 30;
     -fx-background-image: url('/images/top_close_normal.png');
 }
 
 .window-button-close:hover {
+    -fx-pref-width: 30;
     -fx-background-image: url('/images/top_close_over.png');
 }
 
@@ -3041,7 +3025,7 @@
 
 /*******************************************************************************
  *                                                                             *
- * text-field-filter  demo                                                     *
+ * text-field-filter  demo          搜索框                                           *
  *                                                                             *
  ******************************************************************************/
 

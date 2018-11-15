@@ -3,10 +3,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox styleClass="gui-export-vbox" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.ExportSettingController">
+<VBox styleClass="gui-export-vbox,sm-pop-window" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.ExportSettingController">
       <TableView fx:id="settingTable" styleClass="gui-export-table" VBox.vgrow="ALWAYS">
         <columns>
-          <TableColumn fx:id="selector" editable="false" resizable="false" styleClass="gui-export-selector" sortable="false" />
+          <TableColumn fx:id="selector" editable="false" resizable="false" prefWidth="30" sortable="false" />
           <TableColumn fx:id="settings" editable="false"  resizable="false" styleClass="gui-export-setting" sortable="false" text="%EXPORT_SETTINGS" />
         </columns>
          <columnResizePolicy>

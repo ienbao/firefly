@@ -318,14 +318,8 @@
 }
 
 .gui-legal-hbox{
--fx-alignment: bottom-right;
+    -fx-alignment: bottom-right;
     -fx-pref-height: 60;
-}
-
-.gui-legal-hbox>.button{
-    -fx-pref-height: 22.0;
-    -fx-pref-width: 80.0;
-    -fx-alignment: center;
 }
 
 .gui-legal-inside-vbox{
@@ -345,20 +339,8 @@
  ******************************************************************************/
 
 .gui-export-vbox{
-    -fx-pref-height: 330.0;
-    -fx-pref-width: 410.0;
     -fx-padding: 10.0,10.0,10.0,0.0;
-}
-
-.gui-export-table{
-    -fx-pref-width: 200.0;
-    -fx-pref-height: 200.0;
-}
-.gui-export-selector{
-    -fx-max-width: 30.0;
-    -fx-min-width: 30.0;
-    -fx-pref-width: 30.0;
-
+    -fx-spacing: 10;
 }
 
 .gui-export-setting{
@@ -367,14 +349,8 @@
 
 .gui-export-hbox{
     -fx-alignment: center-right;
-    -fx-pref-height: 45.0;
-    -fx-pref-width: 200.0;
+    -fx-pref-height: 22.0;
     -fx-spacing: 10.0;
-}
-
-.gui-export-hbox>.button{
-    -fx-alignment: center;
-    -fx-pref-width: 80;
 }
 
 /*******************************************************************************
