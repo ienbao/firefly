@@ -60,27 +60,38 @@
             <ScrollBar/>
         </VBox>
         <VBox style="-fx-spacing: 20.0;-fx-padding: 30.0">
-            <ComboBox >
-                <items>
-                    <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="Item 1" />
-                        <String fx:value="Item 2" />
-                        <String fx:value="Item 3" />
-                    </FXCollections>
-                </items>
-            </ComboBox>
-            <ComboBox  value="Item 1" disable="true">
+            <VBox style="-fx-spacing: 20.0">
+                <ComboBox >
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Item 1" />
+                            <String fx:value="Item 2" />
+                            <String fx:value="Item 3" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+                <ComboBox  value="Item 1" disable="true">
 
-            </ComboBox>
-            <ComboBox styleClass="error-combo-box" >
-                <items>
-                    <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="Item 1" />
-                        <String fx:value="Item 2" />
-                        <String fx:value="Item 3" />
-                    </FXCollections>
-                </items>
-            </ComboBox>
+                </ComboBox>
+                <ComboBox styleClass="error-combo-box" >
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Item 1" />
+                            <String fx:value="Item 2" />
+                            <String fx:value="Item 3" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+            </VBox>
+            <VBox style="-fx-spacing: 20.0">
+                <TabPane tabClosingPolicy="UNAVAILABLE" >
+                    <tabs>
+                        <Tab closable="false" text="Statical Result" ></Tab>
+                        <Tab closable="false" text="Data" ></Tab>
+                        <Tab closable="false" text="View" ></Tab>
+                    </tabs>
+                </TabPane>
+            </VBox>
         </VBox>
 
         <VBox style="-fx-spacing: 20.0;-fx-padding: 30.0">
