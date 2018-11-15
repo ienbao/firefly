@@ -104,29 +104,13 @@
  *                                                                             *
  ******************************************************************************/
 
-.gui-additem-root{
-    /*-fx-alignment: center-right;*/
-    /*-fx-pref-height: 330.0;*/
-    /*-fx-pref-width: 410.0;*/
-}
-
 .gui-additem-h-box-first{
     -fx-padding: 0 10.0 0 10.0;
     -fx-pref-height: 30.0;
     -fx-alignment: center-left;
 }
 
-.gui-additem-lbl-choose{
-    -fx-pref-width: 190.0;
-}
-
-.gui-additem-lbl-customize{
-    -fx-padding: 0 0 0 10.0;
-    -fx-pref-width: 170.0;
-}
-
 .gui-additem-h-box-first > .button{
-    -fx-max-width: 22.0;
     -fx-min-width: 22.0;
     -fx-pref-width: 22.0;
     -fx-background-color: COLORFUL_AUXILIARY_BLUE;
@@ -148,13 +132,9 @@
     -fx-border-color: COLOR_GRAY_DC;
 }
 
-.gui-additem-h-box-second-vbox > .text-field{
-    -fx-max-width: 180.0;
-}
-
-.gui-additem-h-box-second > .text-area{
-    -fx-pref-height: 200.0;
-    -fx-pref-width: 190.0;
+.gui-additem-h-box-third{
+    -fx-padding: 10.0;
+    -fx-alignment: center_right;
 }
 
 .gui-additem-h-box-second-table{
@@ -174,14 +154,6 @@
     -fx-min-width: 156;
 }
 
-.gui-additem-h-box-third{
-    -fx-padding: 10.0;
-    -fx-alignment: center_right;
-}
-
-.gui-additem-h-box-third > .button{
-    -fx-pref-width: 80.0;
-}
 /*******************************************************************************
  *                                                                             *
  * login page css                                                              *
@@ -438,90 +410,6 @@
     -fx-font-size: 22.0;
 }
 
-.gui-additem-root{
-    -fx-alignment: center-right;
-    -fx-max-height: -Infinity;
-    -fx-max-width: -Infinity;
-    -fx-min-height: -Infinity;
-    -fx-min-width: -Infinity;
-    -fx-pref-height: 330.0;
-    -fx-pref-width: 410.0;
-}
-
-.gui-additem-label-choose{
-    -fx-pref-height: 30.0;
-    -fx-pref-width: 190.0;
-}
-
-.gui-additem-label-customize{
-    -fx-padding: 0 0 0 10.0;
-    -fx-pref-height: 30.0;
-    -fx-pref-width: 170.0;
-}
-
-.gui-additem-h-box-first{
-    -fx-padding: 0 10.0 0 10.0;
-    -fx-alignment: center-left;
-    -fx-pref-height: 30.0;
-    -fx-pref-width: 200.0;
-}
-
-.gui-additem-h-box-button{
-    -fx-max-width: 22.0;
-    -fx-min-width: 22.0;
-    -fx-pref-width: 22.0;
-}
-
-.gui-additem-h-box-second{
-    -fx-spacing: 10.0;
-    -fx-padding: 0 10.0 0 10.0;
-    -fx-pref-height: 255.0;
-    -fx-pref-width: 410.0;
-    -fx-border-width: 0 0 0 0;
-}
-
-.gui-additem-h-box-second-vbox{
-    -fx-alignment: center;
-    -fx-spacing: 5.0;
-    -fx-padding: 5.0 0 0 0;
-    -fx-pref-height: 200.0;
-    -fx-pref-width: 190.0;
-    -fx-border-width: 1 1 1 1;
-    -fx-border-color: #DCDCDC;
-}
-
-.gui-additem-h-box-second-textfiled{
-    -fx-max-width: 180.0;
-}
-
-.gui-additem-h-box-second-table{
-    -fx-pref-height: 200.0;
-    -fx-pref-width: 200.0;
-}
-
-.gui-additem-h-box-second-columns-first{
-    -fx-max-width: 30.0;
-    -fx-min-width: 30.0;
-    -fx-pref-width: 30.0;
-}
-
-.gui-additem-h-box-second-columns-second{
-    -fx-pref-width: 75.0;
-}
-
-.gui-additem-h-box-text-area{
-    -fx-pref-height: 200.0;
-    -fx-pref-width: 190.0;
-}
-
-.gui-additem-h-box-third{
-    -fx-padding: 10.0;
-    -fx-alignment: center_right;
-}
-
-.gui-additem-button{
-    -fx-pref-width: 80.0;
-}
 /*******************************************************************************
  *                                                                             *
  * login page css                                                              *
