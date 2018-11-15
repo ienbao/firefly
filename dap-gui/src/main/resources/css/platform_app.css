@@ -226,9 +226,6 @@
 
 .gui-datasource-root{
     -fx-padding: 10 ;
-    -fx-alignment: center;
-
-    -fx-background-color: COLOR_LIGHT_FF;
 }
 
 .gui-datasource-head-borderPane{
@@ -237,12 +234,9 @@
     -fx-border-color: COLOR_GRAY_DC;
 }
 
-#filterTf{
-     -fx-pref-width: 200.0;
- }
-
 .gui-datasource-head-borderPane>.button{
     -fx-pref-width: 22.0;
+    -fx-background-size: 16;
     -fx-background-image: url("/images/btn_del_normal.png");
 }
 
@@ -250,17 +244,6 @@
     -fx-pref-height: 22.0;
     -fx-pref-width: 24.0;
     -fx-background-color: COLORFUL_DARK_ORANGE;
-}
-
-.gui-datasource-foot-h-box>.button,
- #addFile{
-    -fx-pref-width: 80.0;
-}
-.gui-datasource-foot-borderPane{
-    -fx-padding: 10 0 0 0;
-}
-.gui-datasource-foot-h-box{
-    -fx-spacing: 10.0
 }
 
 .gui-datasource-table-check-box-column{

@@ -11,7 +11,7 @@
 <VBox styleClass="gui-datasource-root,md-window-size" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.DataSourceController">
     <BorderPane styleClass="gui-datasource-head-borderPane">
         <left>
-            <TextFieldFilter fx:id="filterTf" />
+            <TextFieldFilter fx:id="filterTf" prefWidth="200" />
         </left>
         <right >
             <Button fx:id="delete"  styleClass="btn-icon" />
