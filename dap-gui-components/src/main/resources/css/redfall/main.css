@@ -92,6 +92,13 @@
     FONT_MID: COLOR_GRAY_CC;
 }
 
+.vbox-base{
+    -fx-padding: 0 10;
+}
+
+.hbox-base{
+    -fx-padding: 0 10;
+}
 
 .state-bar-lbl {
     -fx-padding: 0 0 0 10;
@@ -882,24 +889,22 @@
  *                                                                             *
  ******************************************************************************/
 .text-field {
-    /*-fx-pref-width: 160;*/
+    -fx-pref-width: 160;
     -fx-border-color: COLOR_GRAY_CC;
     -fx-background-color: COLOR_LIGHT_FF;
     -fx-min-height: 22;
     -fx-max-height: 22;
-    -fx-padding: 0 10 1 10;
+    -fx-padding: 0 10;
 }
 
 .text-field:hover{
     -fx-border-color:COLORFUL_LIGHT_BLUE ;
     -fx-background-color:COLOR_LIGHT_FF ;
-    -fx-text-fill: COLOR_BLACK_22;
 }
 
 .text-field:focused {
     -fx-border-color: COLORFUL_LIGHT_BLUE;
     -fx-background-color: COLOR_LIGHT_FF;
-    -fx-text-fill: COLOR_BLACK_22;
     -fx-highlight-fill: COLORFUL_AUXILIARY_BLUE;
     -fx-highlight-text-fill: COLOR_LIGHT_FF;
 }
@@ -972,7 +977,6 @@
 .text-field-error {
     -fx-border-color: COLORFUL_PRIMARY_RED;
     -fx-background-color: COMBOBOX_ERROR_BG;
-    -fx-text-fill: COLOR_BLACK_22;
 }
 
 .text-field-error:hover {
@@ -1186,9 +1190,9 @@
 
 .combo-box-base:editable {
     -fx-border-width: 1;
-    -fx-background-color: #ffffff;
-    -fx-border-color: #cccccc;
-    -fx-text-fill: #222;
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-border-color: COLOR_GRAY_CC;
+    -fx-text-fill: COLOR_BLACK_22;
 }
 
 .combo-box-base:editable > .arrow-button {
@@ -1264,6 +1268,12 @@
     -fx-text-fill: #cccccc;
     -fx-opacity: 1;
 }
+
+/*******************************************************************************
+ *                                                                             *
+ *  editable combo-box  error                                                             *
+ *                                                                             *
+ ******************************************************************************/
 
 .combo-box-error:editable {
     -fx-border-width: 1;
