@@ -94,10 +94,12 @@
 
 .vbox-base{
     -fx-padding: 0 10;
+    -fx-spacing: 10;
 }
 
 .hbox-base{
     -fx-padding: 0 10;
+    -fx-spacing: 10;
 }
 
 .borderPane-base{
