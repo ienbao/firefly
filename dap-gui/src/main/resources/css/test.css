@@ -14,7 +14,7 @@
     COLORFUL_AUXILIARY_BLUE: #0096ff;
     COLORFUL_LIGHT_BLUE: #33abff;
     COLORFUL_DARK_BLUE: #487CF4;
-
+    COLORFUL_MIDDLE_BLUE: #7fcaff;
 
     COLOR_BLACK_22: #222222;
     COLOR_LIGHT_FF: #ffffff;
@@ -93,6 +93,9 @@
  *                                                                             *
  ******************************************************************************/
 .button {
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 16;
     -fx-pref-height: 22px;
     -fx-min-width: 70px;
     -fx-padding:0 10 2 10;
@@ -613,9 +616,7 @@
 
 }
 .combo-box:hover{
-
     -fx-background-color:COLOR_LIGHT_FF ;
-
 }
 .combo-box:showing{
 
@@ -655,6 +656,60 @@
     -fx-background-color: COLORFUL_AUXILIARY_BLUE;
     -fx-background-insets: 0, 1, 2;
 }
+
+/*******************************************************************************
+ *                                                                             *
+ *  editable combo-box  css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+.combo-box:editable>.text-input{
+    -fx-border-width: 0;
+    -fx-background-color: COLOR_LIGHT_FF;
+}
+
+.combo-box:editable>.arrow-button{
+    -fx-background-color: COLOR_LIGHT_FF;
+}
+
+.combo-box:editable:hover{
+    -fx-border-color: COLORFUL_MIDDLE_BLUE;
+}
+
+.combo-box:editable:hover>.arrow-button{
+    -fx-background-color: COLOR_BLACK_Fill_5;
+}
+.combo-box:editable:focused{
+    -fx-border-color: COLORFUL_LIGHT_BLUE;
+    -fx-background-color:transparent ;
+}
+.combo-box:editable:showing{
+    -fx-background-color:transparent ;
+}
+
+.combo-box:editable > .arrow-button:pressed,
+
+.combo-box:editable:focused > .arrow-button
+{
+    -fx-background-color: COLOR_BLACK_Fill_15;
+}
+.combo-box:editable:disabled
+{
+    -fx-opacity:1;
+    -fx-border-color:COLOR_GRAY_DC;
+    -fx-background-color:COLOR_GRAY_FA ;
+    -fx-text-fill:COLOR_GRAY_CC;
+}
+.combo-box:disabled:editable > .arrow-button>,
+.combo-box:disabled:editable > .text-input
+{
+    -fx-opacity:1;
+    -fx-background-color:COLOR_GRAY_FA ;
+    -fx-text-fill:COLOR_GRAY_CC;
+}
+.combo-box:disabled:editable > .arrow-button>.arrow{
+    -fx-background-color:COLOR_GRAY_CC;
+}
+
 /*******************************************************************************
  *                                                                             *
  * error-combo-box  css                                                        *
@@ -688,6 +743,32 @@
 
 .error-combo-box:focused:showing:hover{
     -fx-background-color: COMBOBOX_ERROR_BG_PRESSED_HOVER;
+
+}
+.error-combo-box:editable>.arrow-button,
+.error-combo-box:editable>.text-input{
+    -fx-background-color: COLORFUL_LIGHT_RED;
+}
+
+.error-combo-box:editable:hover>.text-input{
+    -fx-background-color: COMBOBOX_ERROR_BG_HOVER;
+}
+
+.error-combo-box:editable:hover{
+    -fx-border-color: COLORFUL_PRIMARY_RED ;
+    -fx-background-color: COMBOBOX_ERROR_BG_HOVER;
+}
+
+
+.error-combo-box:editable:pressed,
+.error-combo-box:editable:showing:hover,
+.error-combo-box:editable:focused{
+    -fx-border-color: COLORFUL_LIGHT_BLUE ;
+    -fx-background-color: COMBOBOX_ERROR_BG_HOVER;
+}
+.error-combo-box:editable:showing>.text-input,
+.error-combo-box:editable:focused>.text-input{
+    -fx-background-color: COMBOBOX_ERROR_BG_HOVER;
 
 }
 
