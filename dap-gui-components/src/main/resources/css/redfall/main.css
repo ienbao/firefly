@@ -3243,3 +3243,6 @@
     -fx-spacing: 10.0;
     -fx-alignment: BOTTOM_RIGHT;
 }
+.h-box-center{
+    -fx-alignment:center;
+}
