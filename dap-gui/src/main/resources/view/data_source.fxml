@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.BorderPane?>
 
-<VBox styleClass="padding-lg,md-window-size" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.DataSourceController">
+<VBox styleClass="md-window-size" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.DataSourceController">
     <BorderPane styleClass="h-box-top">
         <left>
             <TextFieldFilter fx:id="filterTf" prefWidth="200" />

@@ -12,7 +12,7 @@
   ~ Copyright (c) 2017. For Intelligent Group.
   -->
 
-<VBox styleClass="tip-pop-window,padding-lg" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<VBox styleClass="tip-pop-window" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
       <HBox  styleClass="spacing-lg,h-box-center" prefHeight="45.0" prefWidth="310.0">
          <Label text="%RESOLVER"/>
          <ComboBox fx:id="resolver" prefWidth="210.0" HBox.hgrow="ALWAYS"/>

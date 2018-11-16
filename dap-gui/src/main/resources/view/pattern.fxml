@@ -5,7 +5,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox  styleClass="sm-pop-window,padding-lg" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.PatternDiaController">
+<VBox  styleClass="sm-pop-window" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.PatternDiaController">
       <TableView fx:id="patternHelp" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn fx:id="character" maxWidth="115.0" minWidth="115.0" prefWidth="115.0" sortable="false" text="%CHARACTER" />
