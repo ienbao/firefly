@@ -181,14 +181,14 @@
 }
 
 .icon-ok-gray {
-     -fx-background-color: transparent;
-     -fx-background-image: url('/images/icon_choose_one_gray.png');
-     -fx-background-size: 16;
-     -fx-pref-height: 16;
-     -fx-pref-width: 16;
-     -fx-shape: null;
-     -fx-padding: 0 20 0 0;
- }
+    -fx-background-color: transparent;
+    -fx-background-image: url('/images/icon_choose_one_gray.png');
+    -fx-background-size: 16;
+    -fx-pref-height: 16;
+    -fx-pref-width: 16;
+    -fx-shape: null;
+    -fx-padding: 0 20 0 0;
+}
 
 .icon-ok-white {
     -fx-background-color: transparent;
@@ -223,6 +223,11 @@
     -fx-border-color: COLOR_GRAY_DC;
 }
 
+.tipMessage-h-box{
+    -fx-spacing: 10;
+    -fx-alignment: center;
+}
+
 .message-tip-info-mark {
     -fx-background-color: COLORFUL_DARK_GREEN;
     -fx-scale-shape: false;
@@ -249,11 +254,6 @@
     -fx-scale-shape: false;
     -fx-padding: 5;
     -fx-shape: "M8,2C4.7,2,2,4.7,2,8s2.7,6,6,6s6-2.7,6-6S11.3,2,8,2z M9,12H8H7v-2h1h1V12z M9,9H8H7V4h1h1V9z";
-}
-
-.tipMessage-h-box{
-    -fx-spacing: 10;
-    -fx-alignment: center;
 }
 
 .tipMessage-close-button{
@@ -302,7 +302,7 @@
  ******************************************************************************/
 .button, .btn-default, .toggle-button {
     -fx-min-height: 22;
-    -fx-pref-width: 80;
+    /*-fx-pref-width: 80;*/
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
     -fx-text-alignment: center;
@@ -330,6 +330,13 @@
     -fx-background-color: COLOR_GRAY_DC;
 }
 
+.button:disabled{
+    -fx-opacity:1;
+    -fx-background-color:COLOR_GRAY_FA;
+    -fx-border-color:COLOR_GRAY_DC;
+    -fx-text-fill:COLOR_GRAY_CC
+}
+
 .button:focused, .btn-default:focused, .toggle-button:focused {
     -fx-border-color: COLORFUL_AUXILIARY_BLUE;
     -fx-border-style: solid;
@@ -338,13 +345,6 @@
 .button:focused:hover, .btn-default:focused:hover, .toggle-button:focused:hover {
     -fx-border-color: COLORFUL_AUXILIARY_BLUE;
     -fx-border-style: solid;
-}
-
-.button:disabled{
-    -fx-opacity:1;
-    -fx-background-color:COLOR_GRAY_FA;
-    -fx-border-color:COLOR_GRAY_DC;
-    -fx-text-fill:COLOR_GRAY_CC
 }
 
 .toggle-button:selected, .toggle-button:focused:selected {
@@ -366,12 +366,9 @@
  ******************************************************************************/
 .button-file{
     -fx-max-width: 45;
-    -fx-padding: 0 10 0 10;
+    -fx-padding: 0 10;
     -fx-font-family:"Microsoft YaHei";
-    -fx-font-size: 12;
-    -fx-opacity: 1;
     -fx-border-width: 0;
-    -fx-cursor: hand;
 }
 
 .button-file:hover{
@@ -392,15 +389,9 @@
  ******************************************************************************/
 
 .button-delete{
-    -fx-max-height: 20;
-    -fx-min-height: 20;
-    -fx-pref-height: 20;
-    -fx-min-width: 20;
-    -fx-max-width: 20;
-    -fx-min-width: 20;
+    -fx-pref-width: 22;
     -fx-border-width: 0;
     -fx-background-image: url('/images/btn_delete_normal.png');
-    -fx-background-size: 20;
 }
 
 .button-delete:hover{
@@ -418,9 +409,7 @@
  ******************************************************************************/
 
 .button-narrow{
-    -fx-min-width: 22;
-    -fx-max-width: 22;
-    -fx-min-width: 22;
+    -fx-pref-width: 22;
     -fx-border-width: 0;
     -fx-padding: 10 ;
     -fx-background-image: url('/images/btn_export_normal.png');
@@ -446,26 +435,22 @@
 
 .btn-primary {
     -fx-text-fill: COLOR_LIGHT_FF;
-    -fx-highlight-fill: COLORFUL_PRIMARY_RED;
     -fx-border-color: COLORFUL_PRIMARY_RED;
     -fx-background-color: COLORFUL_PRIMARY_RED;
     -fx-border-insets: 1;
 }
 
 .btn-primary:hover {
-    -fx-highlight-fill: COLORFUL_PRIMARY_RED_LIGHT;
     -fx-border-color: COLORFUL_PRIMARY_RED_LIGHT;
     -fx-background-color: COLORFUL_PRIMARY_RED_LIGHT;
 }
 
 .btn-primary:pressed {
-    -fx-highlight-fill: COLORFUL_PRIMARY_RED_DARK_LIGHT;
     -fx-border-color: COLORFUL_PRIMARY_RED_DARK_LIGHT;
     -fx-background-color: COLORFUL_PRIMARY_RED_DARK_LIGHT;
 }
 
 .btn-primary:pressed:hover{
-    -fx-highlight-fill: COLORFUL_PRIMARY_RED_DARK;
     -fx-border-color: COLORFUL_PRIMARY_RED_DARK;
     -fx-background-color:COLORFUL_PRIMARY_RED_DARK;
 }
@@ -496,20 +481,17 @@
  ******************************************************************************/
 .btn-primary-loading {
     -fx-text-fill: COLOR_LIGHT_FF;
-    -fx-highlight-fill: COLORFUL_DARK_RED;
-    -fx-border-color: COLORFUL_DARK_RED;
-    -fx-background-color: COLORFUL_DARK_RED;
-    /*-fx-highlight-fill: COLORFUL_MIDDLE_RED;*/
-    /*-fx-border-color: COLORFUL_MIDDLE_RED;*/
-    /*-fx-background-color: COLORFUL_MIDDLE_RED;*/
-    /*-fx-background-image: url('/images/small_loading.gif');*/
+    -fx-highlight-fill: COLORFUL_MIDDLE_RED;
+    -fx-border-color: COLORFUL_MIDDLE_RED;
+    -fx-background-color: COLORFUL_MIDDLE_RED;
+    -fx-background-image: url('/images/small_loading.gif');
 }
 
 .btn-primary-loading:hover, .btn-primary-loading:pressed {
     -fx-text-fill: FONT_LIGHT;
-    -fx-highlight-fill: COLORFUL_DARK_RED;
-    -fx-border-color: COLORFUL_DARK_RED;
-    -fx-background-color: COLORFUL_DARK_RED;
+    -fx-highlight-fill: COLORFUL_MIDDLE_RED;
+    -fx-border-color: COLORFUL_MIDDLE_RED;
+    -fx-background-color: COLORFUL_MIDDLE_RED;
 }
 
 /*******************************************************************************
@@ -621,7 +603,7 @@
 .btn-icon {
     -fx-min-height: 10;
     -fx-min-width: 10;
-    -fx-border-width: 1;
+    -fx-border-width: 0;
     -fx-border-color: transparent;
     -fx-background-color: null;
 }
@@ -632,6 +614,7 @@
 }
 
 .btn-icon:pressed {
+    -fx-border-width: 1;
     -fx-border-color: transparent;
     -fx-background-color: COLOR_BLACK_Fill_15;
 }
@@ -655,16 +638,19 @@
 }
 
 .btn-icon-b:hover, .btn-icon-b:focused:hover {
+    -fx-border-width: 1;
     -fx-border-color: COLOR_BLACK_Fill_15;
     -fx-background-color: COLOR_BLACK_Fill_5;
 }
 
 .btn-icon-b:pressed, .btn-icon-b:focused:pressed {
+    -fx-border-width: 1;
     -fx-border-color: COLOR_BLACK_Fill_20;
     -fx-background-color: COLOR_BLACK_Fill_10;
 }
 
 .btn-icon-b:focused {
+    -fx-border-width: 1;
     -fx-border-color: COLOR_GRAY_66;
     -fx-border-style: dotted;
 }
@@ -724,7 +710,6 @@
 }
 
 .check-box > .box > .mark {
-    -fx-background-insets: 0;
     -fx-scale-shape: false;
     -fx-padding: 5;
     -fx-shape: "M 0 -3 L 1 -3 L 1 -2 L 2 -2 L 2 -1 L 3 -1 L 3 0 L 4 0 L 4 -1 L 5 -1 L 5 -2 L 6 -2 L 6 -3 L 7 -3 L 7 -4 L 8 -4 L 8 -6 L 7 -6 L 7 -5 L 6 -5 L 6 -4 L 5 -4 L 5 -3 L 4 -3 L 4 -2 L 3 -2 L 3 -3 L 2 -3 L 2 -4 L 0 -4 Z";
@@ -735,27 +720,20 @@
     -fx-shape: "M -3 -3 L 3 -3 L 3 3 L -3 3 Z";
 }
 
-
 .check-box:hover > .box, .check-box:focused > .box, .check-box:indeterminate:focused > .box {
 
     -fx-border-color: COLORFUL_DARK_BLUE;
 }
 
-/*.check-box > .box:hover{*/
-/*-fx-border-color: COLORFUL_LIGHT_BLUE;*/
-/*}*/
-
 .check-box:selected > .box, .check-box:indeterminate:selected > .box {
     -fx-border-color: COLOR_GRAY_BB;
 }
 
-.check-box:selected:hover > .box, .check-box:indeterminate:hover > .box {
-    -fx-border-color: COLORFUL_DARK_BLUE;
-}
-
+.check-box:selected:hover > .box, .check-box:indeterminate:hover > .box,
 .check-box:selected:focused > .box, .check-box:indeterminate:focused > .box {
     -fx-border-color: COLORFUL_DARK_BLUE;
 }
+
 .check-box:disabled {
     -fx-text-fill: FONT_MID;
 }
@@ -767,6 +745,7 @@
 .check-box:selected:disabled > .box > .mark {
     -fx-background-color: COLOR_GRAY_CC;
 }
+
 
 /*******************************************************************************
  *                                                                             *
@@ -821,12 +800,11 @@
 .radio-button > .radio {
     -fx-pref-width: 12;
     -fx-pref-height: 12;
+    -fx-border-radius: 10;
     -fx-border-color: COLOR_GRAY_BB;
     -fx-background-color: COLOR_LIGHT_FF;
-    -fx-border-radius: 10;
-    -fx-border-width: 1;
-    -fx-background-radius: 10;
     -fx-padding: 2;
+
 
 }
 
@@ -843,14 +821,8 @@
     -fx-background-color:  white;
 }
 
-/*.radio-button:hover > .radio,*/
-/*.radio-button:focused > .radio {*/
-    /*-fx-border-color: COLORFUL_DARK_BLUE;*/
-/*}*/
 
-.radio-button:selected > .radio:selected > .dot,
-.radio-button:focused > .radio:focused > .dot,
-.radio-button:focused:selected > .radio:focused:selected > .dot {
+.radio-button:selected > .radio:selected > .dot {
     -fx-padding: 0.25em;
     -fx-background-color: COLOR_GRAY_66;
 }
@@ -861,14 +833,9 @@
     -fx-background-color: COLOR_GRAY_FA;
 }
 
-/*.check-box:disabled > .radio {*/
-    /*-fx-border-color: COLOR_GRAY_DC;*/
-    /*-fx-background-color: COLOR_GRAY_F5;*/
-/*}*/
-
 .radio-button:selected:disabled > .radio > .dot {
     -fx-padding: 0.25em; /* 4 -- radius of the inner black dot when selected */
-    -fx-background-color: #cccccc;
+    -fx-background-color: COLOR_GRAY_CC;
 }
 
 /*******************************************************************************
@@ -877,7 +844,6 @@
  *                                                                             *
  ******************************************************************************/
 .text-field {
-    -fx-pref-width: 160;
     -fx-border-color: COLOR_GRAY_CC;
     -fx-background-color: COLOR_LIGHT_FF;
     -fx-min-height: 22;
@@ -888,30 +854,28 @@
 .text-field:hover{
     -fx-border-color:COLORFUL_LIGHT_BLUE ;
     -fx-background-color:COLOR_LIGHT_FF ;
+    -fx-text-fill: COLOR_BLACK_22;
 }
 
 .text-field:focused {
     -fx-border-color: COLORFUL_LIGHT_BLUE;
-    -fx-background-color: COLOR_LIGHT_FF;
-    -fx-highlight-fill: COLORFUL_AUXILIARY_BLUE;
+    -fx-highlight-fill:  COLORFUL_AUXILIARY_BLUE;
+    -fx-text-fill: COLOR_BLACK_22;
     -fx-highlight-text-fill: COLOR_LIGHT_FF;
 }
 
 .text-field:disabled{
     -fx-opacity:1;
-    -fx-border-color:COLOR_GRAY_DC;
     -fx-background-color:COLOR_GRAY_FA ;
     -fx-text-fill:COLOR_GRAY_CC;
 }
 
 .text-field:focused:hover{
     -fx-border-color:COLORFUL_LIGHT_BLUE;
-    -fx-background-color:COLOR_LIGHT_FF ;
 }
 
 .text-field:focused:pressed{
     -fx-border-color:COLORFUL_LIGHT_BLUE;
-    -fx-background-color:COLOR_LIGHT_FF ;
 }
 
 /*******************************************************************************
@@ -934,6 +898,12 @@
     -fx-highlight-text-fill: #fff;
     -fx-border-style: dashed;
 }
+
+/*******************************************************************************
+ *                                                                             *
+ * text-field-login       登录框                                                       *
+ *                                                                             *
+ ******************************************************************************/
 
 .text-field-login {
     -fx-border-color: #ffffff;
@@ -965,6 +935,7 @@
 .text-field-error {
     -fx-border-color: COLORFUL_PRIMARY_RED;
     -fx-background-color: COMBOBOX_ERROR_BG;
+    -fx-text-fill: COLOR_BLACK_22;
 }
 
 .text-field-error:hover {
@@ -1051,66 +1022,53 @@
  *                                                                             *
  ******************************************************************************/
 
-.combo-box-base {
+.combo-box-base{
     -fx-pref-height: 22;
-    -fx-background-color: COLOR_GRAY_F5;
-    -fx-border-color: COLOR_GRAY_CC;
-    -fx-text-fill: COLOR_BLACK_22;
-    -fx-padding: -1 0 -2 0;
+    -fx-border-color: COLOR_GRAY_CC ;
+    -fx-background-color:COLOR_GRAY_F5 ;
     -fx-cursor: hand;
-    -fx-background-insets: 0 0 1 0;
-}
 
-.combo-box-base .arrow-button {
-    -fx-pref-width: 22;
-    -fx-min-width: 22;
-    -fx-max-width: 22;
-    -fx-pref-height: 22;
-    -fx-min-height: 22;
-    -fx-max-height: 22;
-    -fx-border-insets: 0;
-    -fx-border-radius: 0;
-    -fx-background-insets: 1 0 0 0;
-    -fx-background-radius: 0;
-    -fx-padding: 0 7 0 7;
 }
-
-.combo-box-base:hover {
-    -fx-border-color: COLOR_GRAY_CC;
-    -fx-background-color: COLOR_LIGHT_FF;
-    -fx-cursor: hand;
+.combo-box-base:hover{
+    -fx-background-color:COLOR_LIGHT_FF ;
 }
+.combo-box-base:showing{
 
-.combo-box-base:pressed {
-    -fx-border-color: COLOR_GRAY_CC;
-    -fx-background-color: COLOR_GRAY_DC;
+    -fx-background-color:COLOR_GRAY_DC ;
+
 }
-
-.combo-box-base:focused {
-    -fx-border-color: COLORFUL_AUXILIARY_BLUE;
-}
-
-.combo-box-base:focused:hover {
-    -fx-border-color: COLORFUL_AUXILIARY_BLUE;
-}
-
-.combo-box-base:showing {
-    -fx-background-color: COLOR_GRAY_DC;
-}
-
-.combo-box-base:showing:hover {
-    -fx-background-color: COLOR_GRAY_ED;
-}
-
-.combo-box-base:hover:pressed, .combo-box-base:focused:hover:pressed {
-    -fx-background-color: COLOR_GRAY_DC;
-}
-
-.combo-box-base:disabled {
-    -fx-background-color: COLOR_GRAY_FA;
-    -fx-border-color: COLOR_GRAY_DC;
+.combo-box-base:disabled{
+    -fx-opacity:1;
+    -fx-border-color: COLOR_GRAY_DC ;
+    -fx-background-color:COLOR_GRAY_FA ;
     -fx-text-fill: COLOR_GRAY_CC;
-    -fx-opacity: 1;
+
+
+}
+
+.combo-box-popup > .list-view {
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-background-insets: 0, 1;
+    -fx-effect: null;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-padding: 1, 1, 1, 1;
+    -fx-translate-y: 3;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
+    -fx-padding: 4 10 4 10;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: COLORFUL_AUXILIARY_BLUE;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: COLORFUL_AUXILIARY_BLUE;
+    -fx-background-insets: 0, 1, 2;
 }
 
 /*******************************************************************************
@@ -1118,56 +1076,35 @@
  * Combo box  error  不可编辑                                                                 *
  *                                                                             *
  ******************************************************************************/
-
-
-.combo-box-error {
-    /*-fx-pref-height: 22;*/
-    -fx-cursor: hand;
+.combo-box-error{
+    -fx-pref-height: 22;
+    -fx-border-color: COLORFUL_PRIMARY_RED ;
     -fx-background-color: COLORFUL_LIGHT_RED;
-    -fx-border-color: COLORFUL_PRIMARY_RED;
 }
-
-.combo-box-error:hover {
+.combo-box-error:hover{
     -fx-background-color: COLOR_LIGHT_FF;
-    -fx-border-color: COLORFUL_PRIMARY_RED;
 }
 
-.combo-box-error:pressed {
-    -fx-background-color: COMBOBOX_ERROR_BG_PRESSED;
-}
+.combo-box-error:focused:hover{
+    -fx-background-color: COMBOBOX_ERROR_BG_HOVER;
 
-.combo-box-error:focused {
+}
+.combo-box-error:focused{
     -fx-border-color: COLORFUL_LIGHT_BLUE ;
     -fx-background-color: COLORFUL_LIGHT_RED;
 }
-
-.combo-box-error:focused:hover {
-    -fx-border-color: COMBOBOX_ERROR_BG_HOVER;
-}
-
-.error-combo-box:focused:showing{
-    -fx-background-color: COMBOBOX_ERROR_BG_PRESSED;
-}
-
-.error-combo-box:focused:showing:hover{
-    -fx-background-color: COMBOBOX_ERROR_BG_PRESSED_HOVER;
-}
-
-.combo-box-error:showing {
-    -fx-background-color: COMBOBOX_ERROR_BG_PRESSED;
-}
-
-.combo-box-error:showing:hover {
-    -fx-background-color: COMBOBOX_ERROR_BG_PRESSED_HOVER;
-}
-
-.error-combo-box:focused:pressed{
+.combo-box-error:focused:pressed{
     -fx-border-color: COLORFUL_LIGHT_BLUE ;
     -fx-background-color: COMBOBOX_ERROR_BG_PRESSED;
 }
-
-.combo-box-error:focused:hover:pressed {
+.combo-box-error:focused:showing{
     -fx-background-color: COMBOBOX_ERROR_BG_PRESSED;
+
+}
+
+.combo-box-error:focused:showing:hover{
+    -fx-background-color: COMBOBOX_ERROR_BG_PRESSED_HOVER;
+
 }
 
 /*******************************************************************************
@@ -1177,84 +1114,59 @@
  ******************************************************************************/
 
 .combo-box-base:editable {
-    -fx-border-width: 1;
+    -fx-border-width: 0;
     -fx-background-color: COLOR_LIGHT_FF;
-    -fx-border-color: COLOR_GRAY_CC;
-    -fx-text-fill: COLOR_BLACK_22;
+}
+
+.combo-box-base:editable > .text-input {
+    -fx-border-width: 0;
+    -fx-background-color: COLOR_LIGHT_FF;
 }
 
 .combo-box-base:editable > .arrow-button {
-    -fx-border-width: 0;
-    -fx-background-color: #ffffff;
-    -fx-padding: 8 6 8 7;
-}
-
-.combo-box-base:editable > .text-field {
-    -fx-border-width: 0;
-    -fx-background-color: #ffffff;
+    -fx-background-color: COLOR_LIGHT_FF;
 }
 
 .combo-box-base:editable:hover {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #66c0ff;
+    -fx-border-color: COLORFUL_MIDDLE_BLUE;
 }
 
-.combo-box-base:editable > .arrow-button:hover {
-    -fx-background-radius: 0;
-    -fx-background-insets: 0;
-    -fx-border-width: 0;
-    -fx-background-color: rgba(0, 0, 0, 0.05);
-    -fx-min-height: 20;
-    -fx-min-width: 20;
-    -fx-pref-height: 20;
-    -fx-pref-width: 20;
-    -fx-padding: 8 6 8 7;
+.combo-box-base:editable:hover>.arrow-button{
+    -fx-background-color: COLOR_BLACK_Fill_5;
 }
 
-.combo-box-base:editable:focused {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #33abff;
+.combo-box-base:editable:focused{
+    -fx-border-color: COLORFUL_LIGHT_BLUE;
+    -fx-background-color:transparent ;
 }
 
-.combo-box-base:editable > .arrow-button:focused,
+.combo-box-base:editable:showing{
+    -fx-background-color:transparent ;
+}
+
+.combo-box-base:editable > .arrow-button:pressed,
 .combo-box-base:editable:focused > .arrow-button {
-    -fx-background-radius: 0;
-    -fx-background-insets: 0;
-    -fx-border-width: 0;
-    -fx-background-color: rgba(0, 0, 0, 0.15);
-    -fx-min-height: 20;
-    -fx-min-width: 20;
-    -fx-pref-height: 20;
-    -fx-pref-width: 20;
-    -fx-padding: 8 6 8 7;
-}
-
-.combo-box-base:editable:focused:pressed > .arrow-button {
-    -fx-background-radius: 0;
-    -fx-background-insets: 0;
-    -fx-border-width: 0;
-    -fx-background-color: rgba(0, 0, 0, 0.1);
-    -fx-min-height: 20;
-    -fx-min-width: 20;
-    -fx-pref-height: 20;
-    -fx-pref-width: 20;
-    -fx-padding: 8 6 8 7;
+    -fx-background-color: COLOR_BLACK_Fill_15;
 }
 
 .combo-box-base:editable:disabled,
 .combo-box-base:disabled:editable {
-    -fx-background-color: #fafafa;
+    -fx-background-color: COLOR_GRAY_FA;
     -fx-border-color: COLOR_GRAY_DC;
-    -fx-text-fill: #cccccc;
+    -fx-text-fill: COLOR_GRAY_CC;
     -fx-opacity: 1;
 }
 
 .combo-box-base:disabled:editable > .arrow-button,
-.combo-box-base:disabled:editable > .text-field {
-    -fx-background-color: #fafafa;
+.combo-box-base:disabled:editable > .text-input {
+    -fx-background-color: COLOR_GRAY_FA;
     -fx-border-color: COLOR_GRAY_DC;
-    -fx-text-fill: #cccccc;
+    -fx-text-fill: COLOR_GRAY_CC;
     -fx-opacity: 1;
+}
+
+.combo-box-base:disabled:editable > .arrow-button>.arrow{
+    -fx-background-color:COLOR_GRAY_CC;
 }
 
 /*******************************************************************************
@@ -1262,34 +1174,34 @@
  *  editable combo-box  error                                                             *
  *                                                                             *
  ******************************************************************************/
+.combo-box-error:editable:hover > .text-input,
+.combo-box-error:editable > .text-input:hover {
+    -fx-background-color: COMBOBOX_ERROR_BG_HOVER;
+}
+
+.combo-box-error:editable>.arrow-button,
+.combo-box-error:editable>.text-input{
+    -fx-background-color: COLORFUL_LIGHT_RED;
+}
 
 .combo-box-error:editable {
     -fx-border-width: 1;
-    -fx-background-color: #fde8e9;
-    -fx-border-color: #ea2028;
-    -fx-padding: 0 0 0 0;
+    -fx-background-color: COLORFUL_LIGHT_RED;
+    -fx-border-color: COLORFUL_PRIMARY_RED;
+    -fx-padding: 0;
 }
 
-.combo-box-error:editable > .text-field {
-    -fx-background-insets: 0;
-    -fx-background-color: #fde8e9;
-}
-
-.combo-box-error:editable > .arrow-button {
-    -fx-background-color: #fde8e9;
-    -fx-padding: 8 6 8 7;
-}
 
 .combo-box-error:editable:hover {
-    -fx-background-color: #fde8e9;
-    -fx-border-color: #ea2028;
+    -fx-background-color: COLORFUL_LIGHT_RED;
+    -fx-border-color: COLORFUL_PRIMARY_RED;
 }
 
 .combo-box-error:editable > .arrow-button:hover {
     -fx-background-radius: 0;
     -fx-background-insets: 0;
     -fx-border-width: 0;
-    -fx-background-color: rgba(0, 0, 0, 0.05);
+    -fx-background-color: COLOR_BLACK_Fill_5;
     -fx-min-height: 20;
     -fx-min-width: 20;
     -fx-pref-height: 20;
@@ -1297,20 +1209,13 @@
     -fx-padding: 8 6 8 7;
 }
 
-.combo-box-error:editable:hover > .text-field,
-.combo-box-error:editable > .text-field:hover {
-    -fx-background-color: #fde8e9;
+.combo-box-error:editable:focused,
+.combo-box-error:editable:pressed,
+.error-combo-box:editable:showing:hover{
+    -fx-background-color: COMBOBOX_ERROR_BG_HOVER;
+    -fx-border-color: COLORFUL_LIGHT_BLUE;
 }
 
-.combo-box-error:editable:focused {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #ea2028;
-}
-
-.combo-box-error:editable:pressed {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #ea2028;
-}
 
 .combo-box-error:editable:focused > .arrow-button,
 .combo-box-error:editable > .arrow-button:focused,
@@ -1319,7 +1224,7 @@
     -fx-background-radius: 0;
     -fx-background-insets: 0;
     -fx-border-width: 0;
-    -fx-background-color: rgba(0, 0, 0, 0.15);
+    -fx-background-color: COLOR_BLACK_Fill_15;
     -fx-min-height: 20;
     -fx-min-width: 20;
     -fx-pref-height: 20;
@@ -1327,11 +1232,12 @@
     -fx-padding: 8 6 8 7;
 }
 
-.combo-box-error:editable:focused > .text-field,
-.combo-box-error:editable > .text-field:focused,
-.combo-box-error:editable:pressed > .text-field,
-.combo-box-error:editable > .text-field:pressed {
-    -fx-background-color: #ffffff;
+.combo-box-error:editable:focused > .text-input,
+.combo-box-error:editable > .text-input:focused,
+.combo-box-error:editable:pressed > .text-input,
+.combo-box-error:editable > .text-input:pressed,
+.error-combo-box:editable:showing>.text-input{
+    -fx-background-color: COMBOBOX_ERROR_BG_HOVER;
 }
 
 .combo-box > .list-cell {
@@ -1406,9 +1312,6 @@
 .tab-pane > .tab-header-area {
     -fx-background-color: COLOR_GRAY_F0;
     -fx-padding: 0;
-    -fx-border-insets: 0;
-    -fx-background-insets: 0;
-    -fx-border-image-insets: 0;
     -fx-spacing: 0;
 }
 
@@ -1418,9 +1321,6 @@
     -fx-background-radius: 0;
     -fx-border-width: 0 0 0 0;
     -fx-padding: 0;
-    -fx-border-insets: 0;
-    -fx-background-insets: 0;
-    -fx-border-image-insets: 0;
     -fx-spacing: 0;
 }
 
@@ -1430,9 +1330,6 @@
     -fx-background-radius: 0;
     -fx-border-radius: 0;
     -fx-border-width: 0;
-    -fx-border-insets: 0;
-    -fx-background-insets: 0;
-    -fx-border-image-insets: 0;
     -fx-spacing: 0;
 }
 
@@ -1446,10 +1343,6 @@
     -fx-background-position: center;
     -fx-cursor: hand;
     -fx-padding: 0;
-    /*-fx-padding: 0 10 0 10;*/
-    -fx-border-insets: 0;
-    -fx-background-insets: 0;
-    -fx-border-image-insets: 0;
     -fx-spacing: 0;
 }
 
@@ -1459,10 +1352,6 @@
     -fx-border-radius: 0;
     -fx-border-color: COLOR_GRAY_DC;
     -fx-padding: 0;
-    /*-fx-padding: 0 10 0 10;*/
-    -fx-border-insets: 0;
-    -fx-background-insets: 0;
-    -fx-border-image-insets: 0;
     -fx-spacing: 0;
 }
 
@@ -1470,7 +1359,6 @@
     -fx-background-color: COLOR_LIGHT_FF;
     -fx-border-color: COLOR_GRAY_DC COLOR_GRAY_DC COLOR_LIGHT_FF COLOR_GRAY_DC;
     -fx-padding: 0;
-    /*-fx-padding: 0 10 0 10;*/
     -fx-border-insets: 0;
     -fx-background-insets: 0;
     -fx-border-image-insets: 0;
@@ -1479,7 +1367,6 @@
 
 .tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
     -fx-border-width: 0;
-    /*-fx-padding: 0 10 0 10;*/
     -fx-padding: 0;
     -fx-border-insets: 0;
     -fx-background-insets: 0;
@@ -1497,274 +1384,22 @@
 }
 
 .tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-label {
-    -fx-padding: 0 10 0 10;
+    -fx-padding: 0 10;
     -fx-border-image-insets: 0;
     -fx-border-insets: 0;
     -fx-background-insets: 0;
     -fx-spacing: 0;
-}
-
-.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-close-button {
-    -fx-background-color: null;
-    -fx-shape: null;
-    -fx-scale-shape: false;
-    -fx-background-image: url('/images/btn_del_gray.png');
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
-    -fx-pref-height: 20;
-    -fx-pref-width: 20;
-    -fx-max-width: 20;
-    -fx-min-height: 20;
-    -fx-max-height: 20;
-    -fx-min-width: 20;
-    -fx-padding: 0;
-    -fx-border-insets: 0;
-    -fx-background-insets: 0;
-    -fx-border-image-insets: 0;
-    -fx-border-color: transparent;
-    -fx-spacing: 0;
-}
-
-.tab-pane > .tab-header-area > .headers-region > .tab:selected > .tab-container > .tab-close-button {
-    -fx-background-color: null;
-
-}
-
-.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-close-button:hover {
-    -fx-background-color: #f2f2f2;
-    -fx-spacing: 0;
-    -fx-border-insets: 0;
-    -fx-background-insets: 0;
-    -fx-border-image-insets: 0;
-    -fx-padding: 0;
 }
 
 .tab-pane > .tab-header-area > .control-buttons-tab {
     -fx-padding: 0 0 0 0;
-    -fx-background-color: COLOR_GRAY_F2;
-    -fx-border-image-insets: 0;
-    -fx-spacing: 0;
-    -fx-background-insets: 0 0 2 0;
-    -fx-border-insets: 0 0 2 0;
-}
-
-.tab-pane > .tab-header-area > .control-buttons-tab > .container {
-    -fx-padding: 0 0 0 0;
     -fx-background-color: transparent;
     -fx-border-image-insets: 0;
     -fx-spacing: 0;
-    -fx-border-color: #f2f2f2;
+    -fx-border-color: COLOR_GRAY_F2;
     -fx-background-insets: 0 0 2 0;
     -fx-border-insets: 0 0 2 0;
 }
-
-.tab-pane > .tab-header-area > .control-buttons-tab > .container > .tab-down-button {
-    -fx-background-image: url('/images/btn_unfold_normal.png');
-    -fx-background-repeat: no-repeat;
-    -fx-background-size: 20;
-    -fx-pref-height: 20;
-    -fx-pref-width: 20;
-    -fx-max-width: 20;
-    -fx-min-height: 20;
-    -fx-max-height: 20;
-    -fx-min-width: 20;
-    -fx-background-color: transparent;
-    -fx-background-position: top;
-}
-
-.tab-pane > .tab-header-area > .control-buttons-tab > .container > .tab-down-button > .arrow {
-    /*    -fx-background-image: null;
-        -fx-shape: null;
-        -fx-effect: null;*/
-}
-
-/*!********************************************************************************/
- /**                                                                             **/
- /** vertical-text    无边框垂直Tab                                                   **/
- /**                                                                             **/
- /*******************************************************************************!*/
-
-/*.vertical-text {*/
-    /*-fx-background-color: COLOR_GRAY_F0;*/
-    /*-fx-border-width: 0;*/
-    /*-fx-pref-height: 200;*/
-    /*-fx-max-width: 200;*/
-/*}*/
-
-/*.vertical-text > .tab-header-area > .tab-header-background {*/
-    /*-fx-background-color: COLOR_GRAY_F0;*/
-    /*-fx-border-color: COLOR_GRAY_DC;*/
-    /*-fx-border-width: 0;*/
-    /*-fx-padding: 0;*/
-    /*-fx-border-insets: 0;*/
-    /*-fx-background-insets: 0;*/
-    /*-fx-border-image-insets: 0;*/
-    /*-fx-spacing: 0;*/
-/*}*/
-
-
-
-/*.vertical-text .tab-header-area .tab {*/
-    /*-fx-pref-height: 200;*/
-    /*-fx-pref-width: 22;*/
-/*}*/
-
-/*.vertical-text .tab-header-area .tab .tab-graphic-label {*/
-    /*-fx-padding: 0;*/
-    /*-fx-pref-height: 22;*/
-    /*-fx-pref-width: 200;*/
-    /*-fx-rotate: 90;*/
-/*}*/
-
-
-/*.vertical-text > .tab-header-area > .headers-region > .tab {*/
-    /*-fx-background-color: COLOR_GRAY_F0;*/
-    /*-fx-border-color: COLOR_LIGHT_FF;*/
-    /*-fx-padding: 20 0 0 0;*/
-    /*-fx-border-width: 0 0 0 0;*/
-    /*-fx-alignment: center-left;*/
-/*}*/
-
-/*.vertical-text > .tab-header-area > .headers-region > .tab:selected {*/
-    /*-fx-background-color: COLOR_LIGHT_FF;*/
-    /*-fx-padding: 20 0 0 0;*/
-/*}*/
-
-/*.vertical-text > .tab-header-area > .headers-region > .tab:hover {*/
-    /*-fx-background-color: COLOR_LIGHT_FF;*/
-    /*-fx-padding: 20 0 0 0;*/
-/*}*/
-
-/*.vertical-text > .tab-header-area > .headers-region > .tab:pressed {*/
-    /*-fx-background-color: COLOR_LIGHT_FF;*/
-    /*-fx-padding: 20 0 0 0;*/
-/*}*/
-
-/*.vertical-text > .tab-header-area > .headers-region > .tab:focused {*/
-    /*-fx-border-color: COLOR_LIGHT_FF;*/
-    /*-fx-padding: 20 0 0 0;*/
-    /*-fx-border-style: solid;*/
-/*}*/
-
-/*.vertical-text > .tab-header-area > .headers-region > .tab:focused:hover {*/
-    /*-fx-border-color: COLOR_GRAY_F0;*/
-    /*-fx-border-style: solid;*/
-/*}*/
-
-/*.vertical-text > .tab-header-area > .headers-region > .tab > .tab-container > .tab-label {*/
-    /*-fx-padding: 0;*/
-    /*-fx-border-image-insets: 0;*/
-    /*-fx-border-insets: 0;*/
-    /*-fx-background-insets: 0;*/
-    /*-fx-spacing: 0;*/
-/*}*/
-
-/*!********************************************************************************/
- /**                                                                             **/
- /** vertical-tab-pane     有边框                                                  **/
- /**                                                                             **/
- /*******************************************************************************!*/
-
-/*.vertical-tab-pane {*/
-    /*-fx-background-color: COLOR_GRAY_F0;*/
-    /*-fx-border-color: COLOR_GRAY_DC;*/
-    /*-fx-border-width: 1 0 0 0;*/
-    /*-fx-padding: 0;*/
-    /*-fx-pref-height: 200;*/
-    /*-fx-max-width: 200;*/
-/*}*/
-
-/*.vertical-tab-pane > .tab-header-area > .tab-header-background {*/
-    /*-fx-background-color: COLOR_GRAY_F0;*/
-    /*-fx-border-color: COLOR_GRAY_DC;*/
-    /*-fx-border-width: 1 1 1 1;*/
-    /*-fx-padding: 0;*/
-    /*-fx-border-insets: 0;*/
-    /*-fx-background-insets: 0;*/
-    /*-fx-border-image-insets: 0;*/
-    /*-fx-spacing: 0;*/
-/*}*/
-
-/*.vertical-tab-pane > .tab-header-area {*/
-    /*-fx-background-color: COLOR_GRAY_F0;*/
-    /*-fx-border-color: COLOR_GRAY_DC;*/
-    /*-fx-border-width: 1 0 0 0;*/
-    /*-fx-padding: 0;*/
-    /*-fx-border-insets: 0;*/
-    /*-fx-background-insets: 0;*/
-    /*-fx-border-image-insets: 0;*/
-    /*-fx-spacing: 0;*/
-/*}*/
-
-/*.vertical-tab-pane .tab-header-area .tab {*/
-    /*-fx-background-color: COLORFUL_PRIMARY_RED;*/
-    /*-fx-border-color: COLOR_GRAY_DC;*/
-    /*-fx-border-width: 0;*/
-    /*-fx-padding: 1 0 0 0;*/
-    /*-fx-pref-height: 200;*/
-    /*-fx-pref-width: 22;*/
-/*}*/
-
-/*.vertical-tab-pane .tab-header-area .tab .tab-graphic-label {*/
-    /*-fx-padding: 0;*/
-    /*-fx-pref-height: 22;*/
-    /*-fx-pref-width: 200;*/
-    /*-fx-rotate: 90;*/
-/*}*/
-
-/*.vertical-tab-pane > .tab-header-area > .headers-region > .tab {*/
-    /*-fx-background-color: COLOR_GRAY_F0;*/
-    /*-fx-border-color: COLOR_GRAY_DC;*/
-    /*-fx-background-radius: 0;*/
-    /*-fx-border-radius: 0;*/
-    /*-fx-border-width: 1 0 1 0;*/
-    /*-fx-background-repeat: no-repeat;*/
-    /*-fx-cursor: hand;*/
-    /*-fx-padding: 20 0 0 0;*/
-    /*-fx-spacing: 0;*/
-/*}*/
-
-/*.vertical-tab-pane > .tab-header-area > .headers-region > .tab:selected {*/
-    /*-fx-border-color: COLOR_GRAY_DC;*/
-    /*-fx-background-color: COLOR_LIGHT_FF;*/
-    /*-fx-padding: 19 0 0 0;*/
-    /*-fx-border-width: 1 1 0 1;*/
-/*}*/
-
-/*.vertical-tab-pane > .tab-header-area > .headers-region > .tab:hover {*/
-    /*-fx-background-color: COLOR_LIGHT_FF;*/
-    /*-fx-padding: 19 0 0 0;*/
-    /*-fx-border-width: 1 1 1 1;*/
-/*}*/
-
-/*.vertical-tab-pane > .tab-header-area > .headers-region > .tab:pressed {*/
-    /*-fx-border-color: COLOR_GRAY_DC;*/
-    /*-fx-background-color: COLOR_LIGHT_FF;*/
-    /*-fx-padding: 19 0 0 0;*/
-    /*-fx-border-width: 1 1 0 1;*/
-/*}*/
-
-/*.vertical-tab-pane > .tab-header-area > .headers-region > .tab:focused {*/
-    /*-fx-border-color: COLOR_GRAY_DC;*/
-    /*-fx-border-width: 0;*/
-    /*-fx-padding: 20 0 0 0;*/
-    /*-fx-border-style: solid;*/
-/*}*/
-
-/*.vertical-tab-pane > .tab-header-area > .headers-region > .tab:focused:hover {*/
-    /*-fx-border-color: COLOR_GRAY_DC;*/
-    /*-fx-border-width: 0;*/
-    /*-fx-padding: 20 0 0 0;*/
-    /*-fx-border-style: solid;*/
-/*}*/
-
-/*.vertical-tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-label {*/
-    /*-fx-padding: 0;*/
-    /*-fx-border-image-insets: 0;*/
-    /*-fx-border-insets: 0;*/
-    /*-fx-background-insets: 0;*/
-    /*-fx-spacing: 0;*/
-/*}*/
 
 /*******************************************************************************
  *                                                                             *
@@ -1954,9 +1589,9 @@
  *                                                                             *
  ******************************************************************************/
 .scroll-bar {
-    -fx-background-color: COLOR_LIGHT_FF;
     -fx-background-insets: 0;
     -fx-border-width: 0;
+    -fx-background-color: COLOR_LIGHT_FF;
 }
 
 .scroll-bar > .thumb {
@@ -1967,22 +1602,7 @@
 
 .scroll-bar:hover > .thumb{
     -fx-background-color: COLOR_GRAY_88;
-    -fx-background-insets: 0;
 }
-
-/*.scroll-bar > .thumb:hover {*/
-    /*-fx-background-color: #888888;*/
-    /*-fx-background-insets: 0;*/
-/*}*/
-
-.scroll-bar:pressed > .thumb{
-    -fx-background-color: COLOR_GRAY_66;
-}
-
-/*.scroll-bar > .thumb:pressed {*/
-    /*-fx-background-color: COLOR_GRAY_66;*/
-    /*-fx-background-insets: 0;*/
-/*}*/
 
 .scroll-bar > .increment-button,
 .scroll-bar > .decrement-button {
@@ -2001,40 +1621,32 @@
     -fx-border-color: COLOR_BLACK_Fill_15;
 }
 
+.scroll-bar:pressed > .thumb{
+    -fx-background-color: COLOR_GRAY_66;
+}
+
 .scroll-bar:pressed > .increment-button,
 .scroll-bar:pressed > .decrement-button{
     -fx-background-color: COLOR_BLACK_Fill_10;
     -fx-border-color: COLOR_BLACK_Fill_20;
 }
 
-.scroll-bar:horizontal > .increment-button,
-.scroll-bar:horizontal > .decrement-button {
-
-    /*-fx-padding: -1 3 -1 3;*/
-}
-
-.scroll-bar:vertical > .increment-button,
-.scroll-bar:vertical > .decrement-button {
-
-    /*-fx-padding: 3 -1 3 -1;*/
-}
-
 .scroll-bar > .increment-button > .increment-arrow,
 .scroll-bar > .decrement-button > .decrement-arrow {
-    -fx-background-color: #666666;
+    -fx-background-color: COLOR_GRAY_66;
 
 }
 
 .scroll-bar > .increment-button:hover,
 .scroll-bar > .decrement-button:hover {
-    -fx-background-color: rgba(0, 0, 0, 0.05);
-    -fx-border-color: rgba(0, 0, 0, 0.15);
+    -fx-background-color: COLOR_BLACK_Fill_5;
+    -fx-border-color:COLOR_BLACK_Fill_15;
 }
 
 .scroll-bar > .increment-button:pressed,
 .scroll-bar > .decrement-button:pressed {
-    -fx-background-color: rgba(0, 0, 0, 0.1);
-    -fx-border-color: rgba(0, 0, 0, 0.2);
+    -fx-background-color: COLOR_BLACK_Fill_10;
+    -fx-border-color: COLOR_BLACK_Fill_20;
 }
 
 .scroll-bar:horizontal > .decrement-button > .decrement-arrow {
@@ -2859,7 +2471,7 @@
 .progress-bar:indeterminate > .bar {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
-    -fx-background-color: #ea2028;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
 }
 
 .progress-bar > .track {
@@ -2875,25 +2487,6 @@
  ******************************************************************************/
 .progress-bar-sm-red > .bar {
     -fx-pref-height: 4;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
-    -fx-border-insets: 0;
-    -fx-padding: 1;
-    -fx-shape: null;
-    -fx-background-color: COLORFUL_PRIMARY_RED;
-}
-
-.progress-bar-sm-red:indeterminate > .bar {
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-background-color: COLORFUL_PRIMARY_RED;
-}
-
-.progress-bar-sm-red > .track {
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-background-color: COLOR_GRAY_ED;
 }
 
 /*******************************************************************************
@@ -2904,26 +2497,8 @@
 
 .progress-bar-md-red > .bar {
     -fx-pref-height: 8;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
-    -fx-border-insets: 0;
-    -fx-padding: 2;
-    -fx-shape: null;
-    -fx-background-color: COLORFUL_PRIMARY_RED;
 }
 
-.progress-bar-md-red:indeterminate > .bar {
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-background-color: COLORFUL_PRIMARY_RED;
-}
-
-.progress-bar-md-red > .track {
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-background-color: COLOR_GRAY_ED;
-}
 
 /*******************************************************************************
  *                                                                             *
@@ -2944,25 +2519,7 @@
 
 .progress-bar-md-green > .bar {
     -fx-pref-height: 8;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
-    -fx-border-insets: 0;
-    -fx-padding: 2;
-    -fx-shape: null;
     -fx-background-color: COLORFUL_DARK_GREEN;
-}
-
-.progress-bar-md-green:indeterminate > .bar {
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-background-color: COLORFUL_DARK_GREEN;
-}
-
-.progress-bar-md-green > .track {
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-background-color: COLOR_GRAY_ED;
 }
 
 /*******************************************************************************
@@ -2973,24 +2530,9 @@
 
 .progress-bar-lg-red > .bar {
     -fx-pref-height: 2;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
-    -fx-border-insets: 0;
-    -fx-padding: 4;
-    -fx-shape: null;
-    -fx-background-color: COLORFUL_PRIMARY_RED;
-}
-
-.progress-bar-lg-red:indeterminate > .bar {
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-background-color: COLORFUL_PRIMARY_RED;
 }
 
 .progress-bar-lg-red > .track {
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
     -fx-background-color: COLOR_GRAY_DC;
 }
 
@@ -3001,24 +2543,10 @@
  ******************************************************************************/
 .progress-bar-lg-green > .bar {
     -fx-pref-height: 2;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
-    -fx-border-insets: 0;
-    -fx-padding: 4;
-    -fx-shape: null;
-    -fx-background-color: COLORFUL_DARK_GREEN;
-}
-
-.progress-bar-lg-green:indeterminate > .bar {
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
     -fx-background-color: COLORFUL_DARK_GREEN;
 }
 
 .progress-bar-lg-green > .track {
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
     -fx-background-color: COLOR_GRAY_DC;
 }
 
@@ -3066,18 +2594,18 @@
 
 
 /*.text-field-filter-search{*/
-    /*-fx-image: url("/images/btn_basic_search_normal.png");*/
+/*-fx-image: url("/images/btn_basic_search_normal.png");*/
 /*}*/
 /*.text-field-filter-clear{*/
-    /*-fx-image: url("/images/btn_clear_normal.png");*/
+/*-fx-image: url("/images/btn_clear_normal.png");*/
 /*}*/
 
 /*.text-field-filter-clear:hover{*/
-    /*-fx-image: url("/images/btn_clear_over.png");*/
+/*-fx-image: url("/images/btn_clear_over.png");*/
 /*}*/
 
 /*.text-field-filter-clear:pressed{*/
-    /*-fx-image: url("/images/btn_clear_click.png");*/
+/*-fx-image: url("/images/btn_clear_click.png");*/
 /*}*/
 
 
@@ -3112,18 +2640,18 @@
 .button:disabled,
 .toggle-button:disabled,
 .radio-button:disabled,
-/*.check-box:disabled*/
+    /*.check-box:disabled*/
 .hyperlink:disabled,
 .menu-button:disabled,
 .split-menu-button:disabled,
 .slider:disabled,
 .scroll-bar:disabled,
-/*.scroll-pane:disabled,*/
+    /*.scroll-pane:disabled,*/
 .progress-bar:disabled,
 .progress-indicator:disabled,
-/*.text-input:disabled,*/
+    /*.text-input:disabled,*/
 .choice-box:disabled,
-/*.combo-box-base:disabled,*/
+    /*.combo-box-base:disabled,*/
 .date-cell:disabled > *, /* This is set on children so border is not affected. */
 .list-view:disabled,
 .tree-view:disabled,
@@ -3170,6 +2698,13 @@
 .spacing-lg{
     -fx-spacing: 10.0;
 }
+
+.h-box-right{
+    -fx-padding: 10.0 0 0 0;
+    -fx-spacing: 10.0;
+    -fx-alignment: BOTTOM_RIGHT;
+}
+
 .spacing-md{
     -fx-spacing: 5.0;
 }
@@ -3185,7 +2720,6 @@
 .padding-sm{
     -fx-padding: 3.0;
 }
-
 
 .padding-top{
     -fx-padding: 10 0 0 0;

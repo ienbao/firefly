@@ -6,7 +6,7 @@
 <VBox xmlns="http://javafx.com/javafx/8"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.dmsoft.firefly.gui.controller.LegalNoticeController"
-        styleClass="gui-legal-vbox">
+        styleClass="spacing-lg,padding-lg">
     <Label text="%GLOBAL_LBL_LEGAL" />
     <VBox styleClass="gui-legal-inside-vbox">
         <TextArea fx:id="legalNoticeTextArea" editable="false" text=""/>

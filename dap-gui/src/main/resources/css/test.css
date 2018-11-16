@@ -72,8 +72,6 @@
     COLORFUL_MIDDLE1_GREEN: #59ac10;
     COLORFUL_DARK_CYAN: #27b5b3;
 
-    COLORFUL_CHECKBOX_BORDER: #33abff;
-
     COMBOBOX_ERROR_BG_HOVER: #fef4f4;
     COMBOBOX_ERROR_BG: #fde8e9;
     COMBOBOX_ERROR_BG_PRESSED_HOVER: #fbd2d4;
@@ -101,6 +99,7 @@
     -fx-padding:0 10 2 10;
     -fx-text-alignment: center;
     -fx-background-radius: 0;
+    -fx-border-width: 1;
     -fx-border-color: COLOR_GRAY_CC;
     -fx-background-color: COLOR_GRAY_F5;
     -fx-cursor: hand;
@@ -148,12 +147,12 @@
   -fx-cursor: hand;
 }
 .button-delete{
-  -fx-max-height: 20;
-  -fx-min-height: 20;
-  -fx-pref-height: 20;
-  -fx-min-width: 20;
-  -fx-max-width: 20;
-  -fx-min-width: 20;
+  /*-fx-max-height: 20;*/
+  /*-fx-min-height: 20;*/
+  /*-fx-pref-height: 20;*/
+  /*-fx-min-width: 20;*/
+  /*-fx-max-width: 20;*/
+  -fx-pref-width: 22;
   -fx-text-alignment: center;
   -fx-text-fill: FONT_DARK;
   -fx-opacity: 1;
@@ -164,7 +163,7 @@
   -fx-background-insets: 0;
   -fx-cursor: hand;
   -fx-background-image: url('/images/btn_delete_normal.png');
-  -fx-background-size: 20;
+  /*-fx-background-size: 20;*/
   -fx-background-position: center;
 }
 .button-narrow{
@@ -283,14 +282,13 @@
 }
 
 .text-field:hover{
-    -fx-border-color:COLORFUL_CHECKBOX_BORDER ;
+    -fx-border-color:COLORFUL_LIGHT_BLUE ;
     -fx-background-color:COLOR_LIGHT_FF ;
     -fx-text-fill: COLOR_BLACK_22;
 }
 
 .text-field:focused{
-    -fx-border-color: COLORFUL_CHECKBOX_BORDER;
-    -fx-background-color:COLOR_LIGHT_FF ;
+    -fx-border-color: COLORFUL_LIGHT_BLUE;
     -fx-highlight-fill:  COLORFUL_AUXILIARY_BLUE;
     -fx-text-fill: COLOR_BLACK_22;
     -fx-highlight-text-fill: COLOR_LIGHT_FF;
@@ -298,22 +296,17 @@
 
 .text-field:disabled{
     -fx-opacity:1;
-    -fx-border-color:COLOR_GRAY_DC;
     -fx-background-color:COLOR_GRAY_FA ;
     -fx-text-fill:COLOR_GRAY_CC;
 }
 
 .text-field:focused:hover{
-    -fx-border-color:COLORFUL_CHECKBOX_BORDER;
-    -fx-background-color:COLOR_LIGHT_FF ;
+    -fx-border-color:COLORFUL_LIGHT_BLUE;
 }
 
 .text-field:focused:pressed{
-    -fx-border-color:COLORFUL_CHECKBOX_BORDER;
-    -fx-background-color:COLOR_LIGHT_FF ;
+    -fx-border-color:COLORFUL_LIGHT_BLUE;
 }
-
-
 
 .text-field-error{
     -fx-border-color:COLORFUL_PRIMARY_RED;
@@ -327,17 +320,17 @@
 }
 
 .text-field-error:focused{
-    -fx-border-color:COLORFUL_CHECKBOX_BORDER;
+    -fx-border-color:COLORFUL_LIGHT_BLUE;
     -fx-background-color:COMBOBOX_ERROR_BG;
 }
 
 .text-field-error:focused:hover{
-    -fx-border-color:COLORFUL_CHECKBOX_BORDER;
+    -fx-border-color:COLORFUL_LIGHT_BLUE;
     -fx-background-color:COMBOBOX_ERROR_BG_HOVER;
 }
 
 .text-field-error:focused:pressed{
-    -fx-border-color:COLORFUL_CHECKBOX_BORDER;
+    -fx-border-color:COLORFUL_LIGHT_BLUE;
     -fx-background-color:COMBOBOX_ERROR_BG_HOVER;
 }
 
@@ -922,7 +915,7 @@
     -fx-border-color: COLOR_GRAY_DC;
     -fx-background-radius: 0;
     -fx-border-radius: 0;
-    -fx-border-width: 1 0 1 1;
+    -fx-border-width: 1 1 1 0;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
     -fx-cursor: hand;
@@ -1068,7 +1061,7 @@
 .vertical-tab-pane > .tab-header-area > .headers-region > .tab:hover {
     -fx-background-color: COLOR_LIGHT_FF;
     -fx-padding: 19 0 0 0;
-    -fx-border-width: 1 1 1 1;
+    -fx-border-width: 0 0 1 0;
 }
 
 .vertical-tab-pane > .tab-header-area > .headers-region > .tab:pressed {
@@ -1154,7 +1147,7 @@
 }
 
 .vertical-text > .tab-header-area > .headers-region > .tab:hover {
-    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-background-color: COLOR_GRAY_E5;
     -fx-padding: 20 0 0 0;
 }
 
