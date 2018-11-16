@@ -8,13 +8,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.BorderPane?>
 
-<VBox styleClass="gui-datasource-root" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.DataSourceController">
-    <BorderPane styleClass="gui-datasource-head-borderPane">
+<VBox styleClass="padding-lg,md-window-size" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.DataSourceController">
+    <BorderPane styleClass="h-box-top">
         <left>
-            <TextFieldFilter fx:id="filterTf" />
+            <TextFieldFilter fx:id="filterTf" prefWidth="200" />
         </left>
         <right >
-            <Button fx:id="delete"  styleClass="btn-icon" />
+            <Button fx:id="delete"  styleClass="btn-icon,delete-button" />
         </right>
     </BorderPane>
     <TableView fx:id="dataSourceTable" VBox.vgrow="ALWAYS" >
@@ -26,13 +26,13 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
         </columnResizePolicy>
     </TableView>
-    <BorderPane styleClass="gui-datasource-foot-borderPane">
+    <BorderPane styleClass="padding-top">
         <left>
             <Button fx:id="addFile" text="%ADD_FILE" />
         </left>
         <right>
-            <HBox styleClass="gui-datasource-foot-h-box">
-                <Label fx:id="errorInfo"  styleClass="btn-icon,message-tip-warn-mark" />
+            <HBox styleClass="spacing-lg">
+                <Label fx:id="errorInfo"  styleClass="btn-icon,message-tip-warn-mark,errorInfo-label" />
                 <Button fx:id="ok" text="%OK_DATA" />
                 <Button fx:id="cancel" text="%CANCEL_DATA" />
             </HBox>

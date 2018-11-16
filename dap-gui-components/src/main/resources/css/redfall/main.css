@@ -3226,5 +3226,23 @@
     -fx-pref-height: 512.0;
 }
 
+/*******************************************************************************
+ *                                                                             *
+ * h-box                                                                       *
+ *                                                                             *
+ ******************************************************************************/
+.h-box-top{
+    -fx-border-width: 1 1 0 1;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-spacing: 10.0;
+    -fx-padding: 3.0;
+}
 
-
+.h-box-right{
+    -fx-padding: 10 0 0 0;
+    -fx-spacing: 10.0;
+    -fx-alignment: BOTTOM_RIGHT;
+}
+.h-box-center{
+    -fx-alignment:center;
+}

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="410.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.PatternDiaController">
-   <children>
+<VBox  styleClass="sm-pop-window,padding-lg" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.PatternDiaController">
       <TableView fx:id="patternHelp" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn fx:id="character" maxWidth="115.0" minWidth="115.0" prefWidth="115.0" sortable="false" text="%CHARACTER" />
@@ -16,22 +14,7 @@
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
-         <VBox.margin>
-            <Insets left="10.0" right="10.0" top="-1.0" />
-         </VBox.margin>
       </TableView>
-      <Label prefHeight="60.0" prefWidth="410.0" text="%TIME_PATTERN_PS">
-         <VBox.margin>
-            <Insets left="10.0" right="10.0" />
-         </VBox.margin>
-      </Label>
-      <Label prefHeight="100.0" prefWidth="410.0" text="%TIME_PATTERN_EG">
-         <VBox.margin>
-            <Insets left="10.0" right="10.0" />
-         </VBox.margin>
-      </Label>
-   </children>
-   <padding>
-      <Insets top="10.0" />
-   </padding>
+      <Label prefHeight="60.0" prefWidth="410.0" text="%TIME_PATTERN_PS"/>
+      <Label prefHeight="100.0" prefWidth="410.0" text="%TIME_PATTERN_EG"/>
 </VBox>

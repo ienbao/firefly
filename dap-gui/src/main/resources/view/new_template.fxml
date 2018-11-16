@@ -1,36 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
+<VBox styleClass="tip-pop-window,padding-lg" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <HBox styleClass="spacing-lg,h-box-center" prefWidth="290.0" prefHeight="100.0" VBox.vgrow="ALWAYS">
+         <Label text="%TEMPLATE_NAME"/>
+         <TextField fx:id="name" prefWidth="200.0" />
+   </HBox>
+   <HBox styleClass="h-box-right" prefWidth="310.0">
+         <Button fx:id="ok"  text="%OK_BTN"/>
+         <Button fx:id="cancel" text="%CANCEL_BTN"/>
+   </HBox>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="115.0" prefWidth="310.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="310.0" VBox.vgrow="ALWAYS">
-         <children>
-            <Label alignment="CENTER_RIGHT" prefWidth="65.0" text="%TEMPLATE_NAME">
-               <HBox.margin>
-                  <Insets right="10.0" />
-               </HBox.margin>
-            </Label>
-            <TextField fx:id="name" prefWidth="200.0" />
-         </children>
-      </HBox>
-      <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="310.0">
-         <children>
-            <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="%OK_BTN">
-               <HBox.margin>
-                  <Insets right="10.0" />
-               </HBox.margin>
-            </Button>
-            <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="%CANCEL_BTN">
-               <HBox.margin>
-                  <Insets right="10.0" />
-               </HBox.margin>
-            </Button>
-         </children>
-      </HBox>
-   </children>
 </VBox>
