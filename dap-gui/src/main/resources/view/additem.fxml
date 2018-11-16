@@ -4,16 +4,15 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/8.0.121"
-        xmlns:fx="http://javafx.com/fxml/1"
-        styleClass="gui-additem-root">
+        xmlns:fx="http://javafx.com/fxml/1">
     <HBox styleClass="gui-additem-h-box-first">
-        <Label styleClass="gui-additem-lbl-choose" text="%CHOOSE_ITEM"/>
-        <Label styleClass="gui-additem-lbl-customize" text="%CUSTOMIZE_ITEM"/>
+        <Label prefWidth="200" text="%CHOOSE_ITEM"/>
+        <Label prefWidth="170" text="%CUSTOMIZE_ITEM"/>
         <Button fx:id="message" styleClass="btn-txt" text="Button"/>
     </HBox>
     <HBox styleClass="gui-additem-h-box-second" VBox.vgrow="ALWAYS">
         <VBox styleClass="gui-additem-h-box-second-vbox">
-            <TextField fx:id="filter" promptText="%TEMPLATE_TEST_ITEM"/>
+            <TextField fx:id="filter" maxWidth="180" promptText="%TEMPLATE_TEST_ITEM"/>
             <TableView fx:id="itemTable" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="select" styleClass="gui-additem-h-box-second-columns-first" sortable="false" />
@@ -24,9 +23,9 @@
                 </columnResizePolicy>
             </TableView>
         </VBox>
-        <TextArea fx:id="customizeItem" promptText="%PLEASE_INPUT_TEST_ITEM"/>
+        <TextArea fx:id="customizeItem" prefWidth="190" promptText="%PLEASE_INPUT_TEST_ITEM"/>
     </HBox>
     <HBox styleClass="gui-additem-h-box-third">
-        <Button fx:id="addItemOk" text="%OK_BTN"/>
+        <Button fx:id="addItemOk" prefWidth="80" text="%OK_BTN"/>
     </HBox>
 </VBox>

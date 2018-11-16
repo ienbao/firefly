@@ -22,18 +22,15 @@ import com.google.common.collect.Lists;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import static com.dmsoft.firefly.sdk.ui.MenuBuilder.MenuType;
 
 /**
@@ -48,10 +45,11 @@ public class AppController {
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
 
     @FXML
-    private GridPane menuPane;
-    @FXML
     private MenuBar menuSystem;
-
+    @FXML
+    private Button loginMenuBtn;
+    @FXML
+    private MenuButton menuBtn;
     private MenuItem menuLoginOut;
     private MenuItem menuChangePassword;
 
@@ -63,25 +61,24 @@ public class AppController {
     }
 
     private void initMainMenuButton() {
-        menuPane.getChildren().clear();
-        MenuButton loginMenuBtn = new MenuButton();
+        menuBtn.setVisible(true);
+        loginMenuBtn.setVisible(false);
+        menuBtn.getItems().clear();
         UserModel userModel = UserModel.getInstance();
         if (userModel != null && userModel.getUser() != null) {
-            loginMenuBtn.setText(userModel.getUser().getUserName());
+            menuBtn.setText(userModel.getUser().getUserName());
             menuLoginOut = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_LOGIN_OUT"));
             menuChangePassword = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_CHANGE_PASSWORD"));
-            loginMenuBtn.getItems().addAll(menuChangePassword, menuLoginOut);
-            menuPane.addColumn(1, loginMenuBtn);
+            menuBtn.getItems().addAll(menuChangePassword, menuLoginOut);
             initEvent();
         }
     }
 
     private void initLoginMenuButton() {
-        menuPane.getChildren().clear();
-        Button loginMenuBtn = new Button();
-        loginMenuBtn.getStyleClass().add("btn-txt");
+        menuBtn.setVisible(false);
+        menuBtn.getItems().clear();
+        loginMenuBtn.setVisible(true);
         loginMenuBtn.setText(GuiFxmlAndLanguageUtils.getString("MENU_PLEASE_LOGIN"));
-        menuPane.addColumn(1, loginMenuBtn);
         loginMenuBtn.setOnMouseClicked(event -> {
             GuiFxmlAndLanguageUtils.buildLoginDialog();
         });
@@ -199,7 +196,6 @@ public class AppController {
                 }
             }
         });
-        menuPane.addColumn(0, menuSystem);
     }
 
 

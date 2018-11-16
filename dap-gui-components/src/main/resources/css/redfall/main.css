@@ -2738,27 +2738,50 @@
 .progress-pop-window{
     -fx-pref-width: 410.0;
     -fx-pref-height: 92.0;
+    -fx-padding: 10.0;
 }
 
 .tip-pop-window{
     -fx-pref-width: 310.0;
     -fx-pref-height: 116.0;
+    -fx-padding: 10.0;
 }
 
 .sm-pop-window{
     -fx-pref-width: 410.0;
     -fx-pref-height: 332.0;
+    -fx-padding: 10.0;
 }
 
 .md-window-size{
     -fx-pref-width: 600.0;
     -fx-pref-height: 422.0;
+    -fx-padding: 10.0;
 }
 
 .lg-window-size{
     -fx-pref-width: 800.0;
     -fx-pref-height: 512.0;
+    -fx-padding: 10.0;
 }
 
+/*******************************************************************************
+ *                                                                             *
+ * h-box                                                                       *
+ *                                                                             *
+ ******************************************************************************/
+.h-box-top{
+    -fx-border-width: 1 1 0 1;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-spacing: 10.0;
+    -fx-padding: 3.0;
+}
 
-
+.h-box-right{
+    -fx-padding: 10 0 0 0;
+    -fx-spacing: 10.0;
+    -fx-alignment: BOTTOM_RIGHT;
+}
+.h-box-center{
+    -fx-alignment:center;
+}
