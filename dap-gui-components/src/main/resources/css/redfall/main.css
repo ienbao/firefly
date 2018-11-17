@@ -620,6 +620,7 @@
 }
 
 .btn-icon:focused, .btn-icon:focused:hover {
+    -fx-border-width: 1;
     -fx-border-color: COLOR_GRAY_66;
     -fx-border-style: dotted;
 }
