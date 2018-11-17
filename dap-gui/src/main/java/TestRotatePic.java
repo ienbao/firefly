@@ -1,8 +1,7 @@
 import com.dmsoft.firefly.gui.RotatePic;
-import com.dmsoft.firefly.gui.TestButton;
+import com.dmsoft.firefly.gui.LodingButton;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -15,7 +14,7 @@ public class TestRotatePic extends Application {
     AnchorPane anchorPane = new AnchorPane();
     Image image = new Image(getClass().getResourceAsStream("/images/icon_loading_gray.png"));
     RotatePic rotatePic = new RotatePic(image);
-    TestButton button = new TestButton();
+    LodingButton button = new LodingButton();
     anchorPane.getStylesheets().add("css/test.css");
     button.setGraphic(rotatePic);
     anchorPane.getChildren().add(button);

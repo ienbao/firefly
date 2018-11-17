@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.gui.controller;
 
+import com.dmsoft.firefly.gui.LodingButton;
 import com.dmsoft.firefly.gui.components.utils.DecoratorTextFiledUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldPassword;
@@ -21,20 +22,13 @@ import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 
 /**
@@ -60,7 +54,7 @@ public class LoginController {
     private TextFieldPassword passwordField;
 
     @FXML
-    private Button loginBtn;
+    private LodingButton loginBtn;
 
 
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
@@ -86,17 +80,13 @@ public class LoginController {
     }
 
     private void resetLoginBtn() {
+        loginBtn.change(false);
         loginBtn.setText(GuiFxmlAndLanguageUtils.getString("LOGIN_BTN"));
-        loginBtn.getStyleClass().removeAll("btn-primary-loading");
-        loginBtn.setGraphic(null);
-        loginingImageView.setVisible(false);
     }
 
     private void loginingBtn() {
-        loginingImageView.setVisible(true);
-        loginBtn.setGraphic(loginingImageView);
+        loginBtn.change(true);
         loginBtn.setText(GuiFxmlAndLanguageUtils.getString("LOGINING_BTN"));
-        loginBtn.getStyleClass().add("btn-primary-loading");
     }
 
     private void doLogin() {
