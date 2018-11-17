@@ -2486,7 +2486,7 @@
  *                                                                             *
  ******************************************************************************/
 .progress-bar-sm-red > .bar {
-    -fx-pref-height: 4;
+    -fx-pref-height: 2;
 }
 
 /*******************************************************************************
@@ -2496,7 +2496,7 @@
  ******************************************************************************/
 
 .progress-bar-md-red > .bar {
-    -fx-pref-height: 8;
+    -fx-pref-height: 4;
 }
 
 
@@ -2507,7 +2507,7 @@
  ******************************************************************************/
 
 .progress-bar-sm-green > .bar{
-    -fx-pref-height: 4;
+    -fx-pref-height: 2;
     -fx-background-color: COLORFUL_DARK_GREEN;
 }
 
@@ -2518,7 +2518,7 @@
  ******************************************************************************/
 
 .progress-bar-md-green > .bar {
-    -fx-pref-height: 8;
+    -fx-pref-height: 4;
     -fx-background-color: COLORFUL_DARK_GREEN;
 }
 
@@ -2529,7 +2529,7 @@
  ******************************************************************************/
 
 .progress-bar-lg-red > .bar {
-    -fx-pref-height: 2;
+    -fx-pref-height: 8;
 }
 
 .progress-bar-lg-red > .track {
@@ -2542,7 +2542,7 @@
  *                                                                             *
  ******************************************************************************/
 .progress-bar-lg-green > .bar {
-    -fx-pref-height: 2;
+    -fx-pref-height: 8;
     -fx-background-color: COLORFUL_DARK_GREEN;
 }
 
@@ -2620,7 +2620,7 @@
 .login-label-lg {
     -fx-text-fill: COLORFUL_PRIMARY_RED;
     -fx-font-weight: 800;
-    -fx-font: 28 arial;
+    -fx-font: 28 arial ;
 }
 
 .login-label-md {

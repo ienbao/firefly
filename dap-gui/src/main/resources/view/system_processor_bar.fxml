@@ -13,7 +13,7 @@
         <VBox styleClass="spacing-lg">
             <Label styleClass="initialize-login-label-lg" text="%GLOBAL_SYSTEM_PROCESS_TITLE" />
             <Label styleClass="login-label-md" text="%GLOBAL_SYSTEM_PROCESS_NAME" />
-            <ProgressBar fx:id="progressBar" maxHeight="2.0" maxWidth="340.0" minHeight="2.0" minWidth="340.0" prefHeight="2.0" prefWidth="340.0" progress="0.45" />
+            <ProgressBar fx:id="progressBar" prefWidth="340.0" progress="0.45" />
             <Label styleClass="login-label-sm" prefHeight="16.0" prefWidth="360.0" text="%GLOBAL_SYSTEM_PROCESS_INIT" />
            <HBox styleClass="initialize-r-h-box" >
                <Label styleClass="initialize-login-label-sm" text="%STATE_BAR_VERSION" />
