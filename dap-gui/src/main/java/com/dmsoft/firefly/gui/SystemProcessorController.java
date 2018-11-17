@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 public class SystemProcessorController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemProcessorController.class);
-
     private static final String LOGOPATH = "Initialize_logo.png";
 
     @FXML
