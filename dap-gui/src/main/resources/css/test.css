@@ -1218,7 +1218,6 @@
 .table-view .column-header:cell-selection,
 .table-view .column-header:pressed {
     -fx-background-color: COLORFUL_AUXILIARY_BLUE_20;
-    -fx-border-color: COLORFUL_AUXILIARY_BLUE_50;
 }
 
 .table-view .column-header .label.ascending-label {
@@ -1242,10 +1241,11 @@
 .table-view .filler {
     -fx-background-color: COLOR_LIGHT_FF;
     -fx-border-color: COLOR_GRAY_DC;
+    -fx-border-width: 0;
 }
 
 .table-view .column-header .label {
-    -fx-padding: 0 10 0 10;
+    -fx-padding: 0 8 0 8;
     -fx-font-weight: normal;
     -fx-alignment: center-left;
 }
@@ -1284,16 +1284,16 @@
 }
 
 .table-view .table-row-cell .cell .text-field-error {
--fx-border-color: COLORFUL_PRIMARY_RED;
+    -fx-border-color: COLORFUL_PRIMARY_RED;
 }
 
 .table-row-cell:hover {
--fx-background-color: COLORFUL_AUXILIARY_BLUE_10;
+    -fx-background-color: COLORFUL_AUXILIARY_BLUE_10;
 }
 
 .table-row-cell:selected,
 .table-row-cell:focused {
--fx-background-color: COLOR_BLACK_Fill_15;
+    -fx-background-color: COLOR_BLACK_Fill_15;
 }
 
 .table-view:focused:row-selection > .virtual-flow > .clipped-container > .sheet > .table-row-cell:focused {
@@ -1304,17 +1304,17 @@
 }
 
 .table-view .column-header.table-column {
--fx-column-halignment: center;
--fx-background-position: center;
--fx-alignment: top-center;
+    -fx-column-halignment: center;
+    -fx-background-position: center;
+    -fx-alignment: top-center;
 }
 
 .table-view:focused {
--fx-border-width: 1;
--fx-background-color: transparent;
--fx-background-insets: 0;
--fx-background-radius: 0;
--fx-padding: 0;
+    -fx-border-width: 1;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
 }
 
 .table-view .placeholder .label, .table-view .placeholder {
@@ -1337,8 +1337,8 @@
 }
 
 .table-view .combo-box {
--fx-pref-height: 14;
--fx-background-insets: 0 -11 -2 -10;
--fx-border-insets: 0 -11 -2 -10;
--fx-padding: -5 -8 -3 -8;
+    -fx-pref-height: 14;
+    -fx-background-insets: 0 -11 -2 -10;
+    -fx-border-insets: 0 -11 -2 -10;
+    -fx-padding: -5 -8 -3 -8;
 }
