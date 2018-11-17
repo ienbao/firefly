@@ -63,14 +63,6 @@
     -fx-border-color: #DDDDDD;
 }
 
-#systemProcessBar {
-    -fx-background-color: rgba(255, 255, 255, 0.2);
-    -fx-background-image: url('/images/Initialize_bg.png');
-    -fx-border-color: transparent;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
-}
-
 .table-text-field {
     -fx-text-fill: #222222 !important;
 }
@@ -611,73 +603,46 @@
 
 /*******************************************************************************
  *                                                                             *
- * datasource page css                                                              *
+ * Initialize page css                                                              *
  *                                                                             *
  ******************************************************************************/
 
-.datasource-root{
-    -fx-padding: 10 ;
+.login-label-lg {
+    -fx-text-fill: COLORFUL_PRIMARY_RED;
+    -fx-font-weight: 800;
+    -fx-font: 28 arial;
+}
+
+.login-label-md {
+    -fx-text-fill: COLOR_BLACK_22;
+    -fx-font-weight: 400;
+    -fx-font: 22 arial;
+}
+.login-label-sm{
+    -fx-text-fill: COLOR_GRAY_AA;
+    -fx-font-family: Arial;
+    -fx-font-size: 12.0;
+}
+
+.initialize-padding{
+    -fx-padding: 10;
+}
+
+.initialize-h-box{
+    -fx-padding: 0 0 0 40;
     -fx-alignment: center;
-    -fx-max-height: 420.0;
-    -fx-min-height: 420.0;
-    -fx-pref-height: 420.0;
-    -fx-max-width: 600.0;
-    -fx-min-width: 600.0;
-    -fx-pref-width: 600.0;
-    -fx-background-color: #ffffff;
-}
-.datasource-head-borderPane{
-    -fx-padding: 5 0 5 5 ;
-    -fx-border-width: 1 1 0 1;
-    -fx-border-color: #DCDCDC;
-
-}
-.datasource-textfield-filter{
-    -fx-pref-height: 22.0;
-    -fx-pref-width: 200.0;
-
-}
-.datasource-delete-button{
-    -fx-border-width: 1 1 0 1;
-    -fx-border-color: #DCDCDC;
-    -fx-pref-height: 22.0;
-    -fx-pref-width: 22.0;
-}
-
-.datasource-errorinfo-lable{
-    -fx-pref-height: 22.0;
-    -fx-pref-width: 24.0;
-    -fx-margin: 10px 0px 0px 0px;
-}
-.datasource-button{
-    -fx-pref-height: 22.0;
-    -fx-pref-width: 80.0;
-
-}
-.datasource-foot-borderPane{
-    -fx-padding: 10 0 0 0;
-
-
-}
-.datasource-h-box{
-    -fx-spacing: 20.0
-
-}
-.datasource-table-view{
-    -fx-pref-height: 200.0;
-    -fx-pref-width: 200.0;
-
-}
-.datasource-table-check-box-column{
-    -fx-pref-width: 33.0;
-    -fx-max-width: 33.0;
-    -fx-min-width: 33.0;
-
-}
-.datasource-table-value-column{
-    -fx-pref-width: 75.0;
-    -fx-max-width: 75.0;
-    -fx-min-width: 75.0;
+    -fx-pref-width: 520;
+    -fx-max-width: 520;
+    -fx-min-width: 520;
+    -fx-pref-height: 170;
+    -fx-spacing: 40;
 
 }
 
+.systemProcessBar {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-background-image: url('/images/Initialize_bg.png');
+    -fx-alignment: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
