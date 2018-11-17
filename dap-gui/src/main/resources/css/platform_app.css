@@ -244,11 +244,6 @@
  *                                                                             *
  ******************************************************************************/
 
-.gui-legal-vbox{
-    -fx-padding: 10.0;
-    -fx-spacing: 10.0;
-}
-
 .gui-legal-hbox{
     -fx-alignment: bottom-right;
     -fx-pref-height: 60;
@@ -262,27 +257,6 @@
     -fx-pref-height: 200.0;
     -fx-pref-width: 390.0;
     -fx-max-width: 390;
-}
-
-/*******************************************************************************
- *                                                                             *
- * export setting page css                                                              *
- *                                                                             *
- ******************************************************************************/
-
-.gui-export-vbox{
-    -fx-padding: 10;
-    -fx-spacing: 10;
-}
-
-.gui-export-setting{
-    -fx-pref-width: 360.0;
-}
-
-.gui-export-hbox{
-    -fx-alignment: center-right;
-    -fx-pref-height: 22.0;
-    -fx-spacing: 10.0;
 }
 
 /*******************************************************************************
