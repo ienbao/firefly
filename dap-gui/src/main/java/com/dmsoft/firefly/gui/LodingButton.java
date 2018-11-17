@@ -4,9 +4,9 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class TestButton extends Button {
+public class LodingButton extends Button {
 
-    public TestButton() {
+    public LodingButton() {
         getStyleClass().add("btn-primary");
     }
 
