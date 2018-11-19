@@ -228,27 +228,6 @@
 
 /*******************************************************************************
  *                                                                             *
- * legal page css                                                              *
- *                                                                             *
- ******************************************************************************/
-
-.gui-legal-hbox{
-    -fx-alignment: bottom-right;
-    -fx-pref-height: 60;
-}
-
-.gui-legal-inside-vbox{
-    -fx-spacing: 20.0;
-}
-
-.gui-legal-inside-vbox>.text-area{
-    -fx-pref-height: 200.0;
-    -fx-pref-width: 390.0;
-    -fx-max-width: 390;
-}
-
-/*******************************************************************************
- *                                                                             *
  * gui about page css                                                              *
  *                                                                             *
  ******************************************************************************/
@@ -569,39 +548,38 @@
  *                                                                             *
  ******************************************************************************/
 
-.login-label-lg {
-    -fx-text-fill: COLORFUL_PRIMARY_RED;
-    -fx-font-weight: 800;
-    -fx-font: 28 arial;
-}
-
-.login-label-md {
+.initialize-login-label-sm{
     -fx-text-fill: COLOR_BLACK_22;
-    -fx-font-weight: 400;
-    -fx-font: 22 arial;
-}
-.login-label-sm{
-    -fx-text-fill: COLOR_GRAY_AA;
     -fx-font-family: Arial;
     -fx-font-size: 12.0;
 }
-
-.initialize-padding{
-    -fx-padding: 10;
+.initialize-login-label-lg {
+    -fx-text-fill: COLORFUL_PRIMARY_RED;
+    -fx-font-weight: bold;
+    -fx-font: 28 arial;
 }
-
+.initialize-r-h-box{
+    -fx-alignment:CENTER_RIGHT;
+    -fx-pref-width: 340;
+    -fx-pref-height: 30;
+    -fx-padding: 0 10 0 0;
+}
 .initialize-h-box{
-    -fx-padding: 0 0 0 40;
-    -fx-alignment: center;
+    -fx-padding: 30 0 10 0;
     -fx-pref-width: 520;
     -fx-max-width: 520;
     -fx-min-width: 520;
     -fx-pref-height: 170;
-    -fx-spacing: 40;
-
 }
 
-.systemProcessBar {
+.initialize-image{
+    -fx-padding: 10 40 30 40;
+}
+
+#imageViewLogo{
+    -fx-image: url("/images/Initialize_logo.png");
+}
+#systemProcessBar {
     -fx-background-color: rgba(255, 255, 255, 0.2);
     -fx-background-image: url('/images/Initialize_bg.png');
     -fx-alignment: center;
