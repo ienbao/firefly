@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <VBox styleClass="lg-window-size" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.template.PluginManageController">
     <HBox prefHeight="29.0" styleClass="h-box-top">
-        <TextFieldFilter fx:id="filterTf" prefHeight="22.0" prefWidth="200.0" />
+        <TextFieldFilter fx:id="filterTf" prefWidth="200.0" />
     </HBox>
     <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
         <TableView fx:id="pluginTable" prefHeight="200.0" prefWidth="438.0">
