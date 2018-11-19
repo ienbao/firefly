@@ -129,21 +129,9 @@
     -fx-alignment: center_right;
 }
 
-.gui-additem-h-box-second-table{
+.gui-additem-h-box-second-table {
     -fx-pref-height: 200.0;
     -fx-pref-width: 200.0;
-}
-
-.gui-additem-h-box-second-columns-first{
-    -fx-max-width: 30.0;
-    -fx-min-width: 30.0;
-    -fx-pref-width: 30.0;
-}
-
-.gui-additem-h-box-second-columns-second{
-    -fx-pref-width: 156;
-    -fx-max-width: 156;
-    -fx-min-width: 156;
 }
 
 /*******************************************************************************
