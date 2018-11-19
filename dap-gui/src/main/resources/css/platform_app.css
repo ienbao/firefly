@@ -191,7 +191,9 @@
 .delete-button{
     -fx-pref-width: 22.0;
     -fx-background-size: 16;
-    -fx-background-image: url("/images/btn_del_normal.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url("/images/del.svg");
+    /*-fx-background-image: url("/images/btn_del_normal.png");*/
 }
 
 .errorInfo-label{

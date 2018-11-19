@@ -21,6 +21,7 @@ import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import com.google.common.collect.Lists;
+import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
@@ -71,7 +72,7 @@ public class GuiApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
+        SvgImageLoaderFactory.install();
         String os = System.getProperty("os.name");
         if (!os.toLowerCase().startsWith("win")) {
             Class cla = Class.forName("com.apple.eawt.Application");
