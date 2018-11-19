@@ -129,21 +129,9 @@
     -fx-alignment: center_right;
 }
 
-.gui-additem-h-box-second-table{
+.gui-additem-h-box-second-table {
     -fx-pref-height: 200.0;
     -fx-pref-width: 200.0;
-}
-
-.gui-additem-h-box-second-columns-first{
-    -fx-max-width: 30.0;
-    -fx-min-width: 30.0;
-    -fx-pref-width: 30.0;
-}
-
-.gui-additem-h-box-second-columns-second{
-    -fx-pref-width: 156;
-    -fx-max-width: 156;
-    -fx-min-width: 156;
 }
 
 /*******************************************************************************
@@ -599,4 +587,48 @@
     -fx-alignment: center;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * datasource setting page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+.datasource-setting-h-box-left{
+    -fx-padding: 10 0 0 0;
+    -fx-spacing: 10.0;
+    -fx-content-display: CENTER;
+}
+.datasource-setting-label{
+    -fx-min-height: 12.0;
+    -fx-min-width: 12.0;
+    -fx-max-height: 12.0;
+    -fx-max-width: 12.0;
+    -fx-pref-height: 12.0;
+    -fx-pref-width: 12.0;
+    -fx-background-color: red;
+}
+.datasource-setting-v-box{
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-border-width: 0 1 0 0;
+}
+.datasource-setting-split-pane{
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-border-width: 1 0 0 0;
+    -fx-pref-height: 435;
+}
+
+.datasource-setting-pane{
+    -fx-border-color: COLOR_GRAY_DC;
+}
+
+.datasource-setting-h-box-top{
+    -fx-pref-width: 619.0;
+    -fx-pref-height: 30.0;
+    -fx-min-height: 30.0;
+    -fx-alignment: center;
+    -fx-border-width: 1 1 0 1;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-padding:0 5 0 10;
 }
