@@ -2010,27 +2010,27 @@
 
 .window-button-minimize {
     -fx-pref-width: 30;
-    -fx-background-image: url('/images/top_minimize_normal.png');
+    -fx-background-image: url('/images/top_minimize_normal.png');/*窗口最小化*/
 }
 
 .window-button-maximize {
     -fx-pref-width: 30;
-    -fx-background-image: url('/images/top_full_screen_normal.png');
+    -fx-background-image: url('/images/top_full_screen_normal.png');/*窗口放小*/
 }
 
 .window-button-restore {
     -fx-pref-width: 30;
-    -fx-background-image: url('/images/top_adaptive_normal.png');
+    -fx-background-image: url('/images/top_adaptive_normal.png');/*窗口最大*/
 }
 
 .window-button-close {
     -fx-pref-width: 30;
-    -fx-background-image: url('/images/top_close_normal.png');
+    -fx-background-image: url('/images/top_close_normal.png');/*关闭窗口*/
 }
 
 .window-button-close:hover {
     -fx-pref-width: 30;
-    -fx-background-image: url('/images/top_close_over.png');
+    -fx-background-image: url('/images/top_close_over.png');/*滑过关闭窗口*/
 }
 
 /*******************************************************************************
@@ -2698,12 +2698,6 @@
 
 .spacing-lg{
     -fx-spacing: 10.0;
-}
-
-.h-box-right{
-    -fx-padding: 10.0 0 0 0;
-    -fx-spacing: 10.0;
-    -fx-alignment: BOTTOM_RIGHT;
 }
 
 .spacing-md{
