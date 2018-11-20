@@ -12,7 +12,7 @@ public class LodingButton extends Button {
 
     public void change(Boolean loading){
         if (loading){
-            this.setGraphic(new RotatePic(new Image("/images/icon_loading_gray.png")));
+            this.setGraphic(new RotatePic(new Image("/images/loading.svg")));
         }else{
             this.setGraphic(null);
         }
