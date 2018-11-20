@@ -46,11 +46,11 @@
                                               GridPane.columnIndex="2"/>
                                     <Button fx:id="clearFilterBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0"
                                             mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0"
-                                            style="-fx-background-image: url('images/btn_clear_filter_normal.png'); -fx-background-size: 16;"
+                                            style="-fx-background-size: 16;"
                                             styleClass="btn-icon" GridPane.columnIndex="3"/>
                                     <Button fx:id="chooseItemBtn" maxHeight="22.0" maxWidth="22.0" minWidth="22.0"
                                             mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0"
-                                            style="-fx-background-image: url('images/btn_choose_test_items_normal.png'); -fx-background-size: 16;"
+                                            style="-fx-background-size: 16;"
                                             styleClass="btn-icon" GridPane.columnIndex="4"/>
                                 </children>
                             </GridPane>

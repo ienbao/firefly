@@ -225,7 +225,7 @@ public class MainController {
         }
 
 
-        ImageView imageView = new ImageView("/images/btn_edit_unable.png");
+        ImageView imageView = new ImageView("/images/DS-files.svg");
         imageView.setFitHeight(16);
         imageView.setFitWidth(16);
         dataSourceBtn = new Button("--", imageView);
@@ -245,7 +245,7 @@ public class MainController {
             stateBar.getColumnConstraints().get(2).setMaxWidth(70);
         }
 
-        ImageView imageView1 = new ImageView("/images/btn_template_unable.png");
+        ImageView imageView1 = new ImageView("/images/template.svg");
         imageView1.setFitHeight(16);
         imageView1.setFitWidth(16);
         templateBtn = new Button("--", imageView1);
@@ -322,11 +322,11 @@ public class MainController {
      * method to update stats bar icon
      */
     public void updateStateBarIcon() {
-        ImageView imageView = new ImageView("/images/btn_edit_normal.png");
+        ImageView imageView = new ImageView("/images/DS-files.svg");
         imageView.setFitHeight(16);
         imageView.setFitWidth(16);
         dataSourceBtn.setGraphic(imageView);
-        ImageView imageView1 = new ImageView("/images/btn_template_normal.png");
+        ImageView imageView1 = new ImageView("/images/template.svg");
         imageView1.setFitHeight(16);
         imageView1.setFitWidth(16);
         templateBtn.setGraphic(imageView1);
@@ -428,10 +428,10 @@ public class MainController {
 
     private void initTemplatePopup() {
         templateView = new ListView<>();
-        ImageView imageReset = new ImageView(new Image("/images/icon_choose_one_gray.png"));
+        ImageView imageReset = new ImageView(new Image("/images/check-gray.svg"));
         imageReset.setFitHeight(16);
         imageReset.setFitWidth(16);
-        ImageView imageResetWhite = new ImageView(new Image("/images/icon_choose_one_white.png"));
+        ImageView imageResetWhite = new ImageView(new Image("/images/check-white.svg"));
         imageResetWhite.setFitHeight(16);
         imageResetWhite.setFitWidth(16);
         templateView.setItems(templateList);

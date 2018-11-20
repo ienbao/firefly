@@ -171,6 +171,8 @@
  *                                                                             *
  ******************************************************************************/
 
+
+
 .delete-button{
     -fx-pref-width: 22.0;
     -fx-pref-height: 22.0;
@@ -465,6 +467,29 @@
  * datasource setting page css                                                 *
  *                                                                             *
  ******************************************************************************/
+.choose-button{
+    -fx-min-height: 22;
+    -fx-min-width: 22;
+    -fx-pref-width: 22.0;
+    -fx-pref-height: 22.0;
+    -fx-border-width: 1;
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-image: url("/images/choose-test-items.svg");
+}
+
+.search-button{
+    -fx-min-height: 22;
+    -fx-min-width: 22;
+    -fx-pref-width: 22.0;
+    -fx-pref-height: 22.0;
+    -fx-border-width: 1;
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-image: url("/images/check-white.svg");
+}
 
 .datasource-setting-label{
     -fx-min-height: 12.0;
