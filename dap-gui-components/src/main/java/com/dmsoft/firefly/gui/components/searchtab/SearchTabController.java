@@ -75,15 +75,15 @@ public class SearchTabController {
     }
 
     private void initBtnIcon() {
-        basicTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png")));
+        basicTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/basic-search.svg")));
         basicTab.setStyle("-fx-padding: 0 5 0 5");
         basicTab.setTooltip(new Tooltip(FxmlAndLanguageUtils.getString("BASIC_SEARCH")));
 
-        advanceTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_advance_search_normal.png")));
+        advanceTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/advance-search.svg")));
         advanceTab.setStyle("-fx-padding: 0 5 0 5");
         advanceTab.setTooltip(new Tooltip(FxmlAndLanguageUtils.getString("ADVANCE_SEARCH")));
 
-        groupAdd.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_new_template_normal.png")));
+        groupAdd.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/add-search-group.svg")));
         TooltipUtil.installNormalTooltip(groupAdd, FxmlAndLanguageUtils.getString("ADD_GROUP"));
         groupRemove.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_clear_all_normal.png")));
         TooltipUtil.installNormalTooltip(groupRemove, FxmlAndLanguageUtils.getString("CLEAR_GROUP"));

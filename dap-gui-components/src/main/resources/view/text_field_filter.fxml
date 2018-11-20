@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root xmlns="http://javafx.com/javafx" xmlns:fx="http://java.sun.com/JSP/Page"
+         type="HBox" styleClass="text-field-filter-demo-hbox" >
+    <TextField fx:id="textField" promptText="Filter" styleClass="text-field-filter-demo"/>
+    <Label fx:id="label" styleClass="label-search"/>
+</fx:root>

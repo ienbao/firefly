@@ -520,7 +520,7 @@ public class ViewDataController implements Initializable {
     }
 
     /**
-     * method to update stats search condition
+     * method to update stats search conditions
      *
      * @param statisticalSearchConditionDtoList list of stats search condition dto
      */

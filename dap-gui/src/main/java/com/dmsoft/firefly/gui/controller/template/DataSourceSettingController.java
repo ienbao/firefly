@@ -37,11 +37,14 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Alice on 2018/2/10.
  */
 public class DataSourceSettingController {
+    private static Logger logger = LoggerFactory.getLogger(DataSourceSettingController.class);
     private static final Double D100 = 100.0;
     @FXML
     private Button chooseItem, searchBtn, oK, cancel, apply;
@@ -49,20 +52,23 @@ public class DataSourceSettingController {
     private TableView itemDataTable;
     @FXML
     private SplitPane split;
+
     private SearchTab searchTab;
-    private ItemDataTableModel itemDataTableModel;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
     private List<String> testItems = new ArrayList<>();
     private List<String> selectTestItemName = Lists.newArrayList();
     private List<String> projectNames = new ArrayList<>();
-    private List<TestItemWithTypeDto> testItemWithTypeDtos = Lists.newArrayList();
+    private List<TestItemWithTypeDto> testItemWithTypeDtoList = Lists.newArrayList();
     private ChooseTestItemDialog chooseTestItemDialog;
+
+    private ItemDataTableModel itemDataTableModel;
 
     @FXML
     private void initialize() {
         initButton();
         this.initTableData();
+
         searchTab = new SearchTab(false);
         searchTab.hiddenGroupAdd();
         searchTab.getGroup1().setVisible(false);
@@ -76,6 +82,7 @@ public class DataSourceSettingController {
      * init Button
      */
     private void initButton() {
+        logger.info("初始化界面按钮。");
         chooseItem.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
         TooltipUtil.installNormalTooltip(chooseItem, GuiFxmlAndLanguageUtils.getString(ResourceMassages.CHOOSE_ITEMS_TITLE));
         searchBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
@@ -170,8 +177,9 @@ public class DataSourceSettingController {
      * init Table Data
      */
     private void initTableData() {
-        projectNames = envService.findActivatedProjectName();
-        testItemWithTypeDtos = envService.findTestItems();
+        logger.info("初始化数据...");
+        this.projectNames = envService.findActivatedProjectName();
+        this.testItemWithTypeDtoList = envService.findTestItems();
 
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         windowProgressTipController.setAutoHide(false);
@@ -189,28 +197,26 @@ public class DataSourceSettingController {
             });
 
         }
+
+
         JobManager jobManager = RuntimeContext.getBean(JobManager.class);
 
-        context.put(ParamKeys.PROJECT_NAME_LIST, projectNames);
-        context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtos);
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
 
         windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
+
+        context.put(ParamKeys.PROJECT_NAME_LIST, projectNames);
+        context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
         JobPipeline jobPipeline = RuntimeContext.getBean(JobFactory.class).createJobPipeLine()
                 .addLast(new FindTestDataHandler())
                 .addLast(new DataFrameHandler().setWeight(D100));
+
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
                 SearchDataFrame dataFrame = context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
-                if (testItemWithTypeDtos != null && !testItemWithTypeDtos.isEmpty()) {
-                    for (TestItemWithTypeDto dto : testItemWithTypeDtos) {
-                        testItems.add(dto.getTestItemName());
-                    }
-                }
-                List<RowDataDto> rowDataDtoList;
-                rowDataDtoList = addRowData(testItems);
-                itemDataTableModel = new ItemDataTableModel(dataFrame, rowDataDtoList);
+
+                itemDataTableModel = new ItemDataTableModel(dataFrame);
                 TableViewWrapper.decorate(itemDataTable, itemDataTableModel);
                 buildChooseColumnDialog();
                 initComponentEvent();
@@ -245,7 +251,6 @@ public class DataSourceSettingController {
                     itemDataTableModel.getFalseSet().add(key);
                     itemDataTableModel.getTrueSet().remove(key);
                 }
-
             }
         }
     }
@@ -257,7 +262,7 @@ public class DataSourceSettingController {
         selectTestItemName = chooseTestItemDialog.getSelectedItems();
         itemDataTable.getColumns().remove(0, itemDataTable.getColumns().size());
         itemDataTableModel.updateTestItemColumn(selectTestItemName);
-        itemDataTableModel.setTableView(itemDataTable);
+        itemDataTableModel.setTableViewWidth(itemDataTable);
 
         List<TestItemWithTypeDto> testItemWithTypeDtoList = new LinkedList<>();
         if (selectTestItemName != null && !selectTestItemName.isEmpty()) {
@@ -274,8 +279,6 @@ public class DataSourceSettingController {
         windowProgressTipController.setAutoHide(false);
         JobManager jobManager = RuntimeContext.getBean(JobManager.class);
         JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
-        context.put(ParamKeys.PROJECT_NAME_LIST, projectNames);
-        context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
         Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
         WindowPane windowPane = null;
         if (stage1.getScene().getRoot() instanceof WindowPane) {
@@ -288,8 +291,13 @@ public class DataSourceSettingController {
             });
         }
         context.addJobEventListener(event -> windowProgressTipController.getTaskProgress().setProgress(event.getProgress()));
-
         windowProgressTipController.getCancelBtn().setOnAction(event -> context.interruptBeforeNextJobHandler());
+
+
+
+
+        context.put(ParamKeys.PROJECT_NAME_LIST, projectNames);
+        context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
         JobPipeline jobPipeline = RuntimeContext.getBean(JobFactory.class).createJobPipeLine()
                 .addLast(new FindTestDataHandler().setWeight(D100))
                 .addLast(new DataFrameHandler());
@@ -415,10 +423,11 @@ public class DataSourceSettingController {
         Map<String, String> uslDataMap = new HashMap<>();
         Map<String, String> lslDataMap = new HashMap<>();
         Map<String, String> unitDataMap = new HashMap<>();
+
         if (columKey != null && !columKey.isEmpty()) {
             for (String selectTestItem : columKey) {
-                if (testItemWithTypeDtos != null && !testItemWithTypeDtos.isEmpty()) {
-                    for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtos) {
+                if (testItemWithTypeDtoList != null && !testItemWithTypeDtoList.isEmpty()) {
+                    for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtoList) {
                         if (testItemWithTypeDto.getTestItemName().equals(selectTestItem)) {
                             if (DAPStringUtils.isNotBlank(testItemWithTypeDto.getUsl())) {
                                 uslDataMap.put(testItemWithTypeDto.getTestItemName(), testItemWithTypeDto.getUsl());

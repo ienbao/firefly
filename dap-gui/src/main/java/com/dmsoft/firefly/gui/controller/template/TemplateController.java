@@ -20,7 +20,9 @@ import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.*;
+import com.dmsoft.firefly.sdk.dai.dto.SpecificationDataDto;
+import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
+import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
@@ -328,7 +330,7 @@ public class TemplateController {
         title.setText(GuiConst.DEFAULT_TEMPLATE_NAME);
         decimal.setValue(6);
         timeKeys.getChildren().clear();
-        patternText.setText("yyy/MM/dd HH:mm:ss SSS");
+        patternText.setText("yyy/MM/dd HH:mm:ss.SSS");
 //        items.clear();
     }
 

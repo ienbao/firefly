@@ -378,7 +378,7 @@ public class SpcMainController implements Initializable {
 
     private void initBtnIcon() {
         resetBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_reset_normal.png")));
-        printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_print_normal.png")));
+        printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/print.svg")));
         exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_export_normal.png")));
         chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
         TooltipUtil.installNormalTooltip(resetBtn, SpcFxmlAndLanguageUtils.getString("SPC_RESET_BTN_TOOLTIP"));

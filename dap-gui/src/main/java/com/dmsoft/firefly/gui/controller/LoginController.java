@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.gui.controller;
 
+import com.dmsoft.firefly.gui.LodingButton;
 import com.dmsoft.firefly.gui.components.utils.DecoratorTextFiledUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldPassword;
@@ -21,12 +22,9 @@ import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
+import javafx.scene.layout.VBox;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -39,13 +37,15 @@ import java.util.Map;
  * @author Julia
  */
 public class LoginController {
-    private UserService userService = RuntimeContext.getBean(UserService.class);
 
     @FXML
-    private HBox loginFailHbox;
+    public VBox loginPane;
 
     @FXML
-    private ImageView loginImageView;
+    private Label loginFailLbl;
+
+    @FXML
+    private ImageView loginingImageView;
 
     @FXML
     private TextFieldUser userNameTxt;
@@ -54,48 +54,49 @@ public class LoginController {
     private TextFieldPassword passwordField;
 
     @FXML
-    private Button loginBtn;
+    private LodingButton loginBtn;
+
 
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
+    private UserService userService = RuntimeContext.getBean(UserService.class);
 
 
     @FXML
     private void initialize() {
         DecoratorTextFiledUtils.decoratorFixedLengthTextFiled(userNameTxt.getTextField(), 20);
         DecoratorTextFiledUtils.decoratorFixedLengthTextFiled(passwordField.getTextField(), 20);
-        loginBtn.setStyle("-fx-font-weight: bold;");
-        loginImageView.setImage(new Image("/images/login_logo.png"));
         resetLoginBtn();
+        initLoginEvent();
+    }
+
+    private void initLoginEvent(){
         loginBtn.setOnAction(event -> {
             loginingBtn();
-            loginFailHbox.getChildren().clear();
+            loginFailLbl.setVisible(false);
             this.doLogin();
         });
     }
 
     private void resetLoginBtn() {
+        loginBtn.change(false);
         loginBtn.setText(GuiFxmlAndLanguageUtils.getString("LOGIN_BTN"));
-        loginBtn.getStyleClass().removeAll("btn-primary-loading");
-        loginBtn.setGraphic(null);
     }
 
     private void loginingBtn() {
-        ImageView imageReset = new ImageView(new Image("/images/small_loading.gif"));
-        imageReset.setFitHeight(16);
-        imageReset.setFitWidth(16);
+        loginBtn.change(true);
         loginBtn.setText(GuiFxmlAndLanguageUtils.getString("LOGINING_BTN"));
-        loginBtn.setGraphic(imageReset);
-        loginBtn.getStyleClass().add("btn-primary-loading");
     }
 
     private void doLogin() {
+        // TODO: 2018/11/6 使用线程池
         Thread thread = new Thread(() -> {
             UserDto userDto = userService.validateUser(userNameTxt.getTextField().getText(), passwordField.getTextField().getText());
             if (userDto != null) {
                 this.initEnvData(userDto);
                 Platform.runLater(() -> {
+                    // TODO: 2018/11/5 事件解耦 
                     MenuFactory.getAppController().resetMenu();
                     MenuFactory.getMainController().resetMain();
                     StageMap.getStage(GuiConst.PLARTFORM_STAGE_LOGIN).close();
@@ -115,13 +116,15 @@ public class LoginController {
         userModel.setUser(userDto);
         envService.setUserName(userDto.getUserName());
 
+        // TODO: 2018/11/6
         LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
         if (languageType == null) {
             envService.setLanguageType(LanguageType.EN);
         }
 
+        // TODO: 2018/11/5 业务代码分层不清晰
         TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
-        String activeTemplateName = null;
+        String activeTemplateName;
         if (templateSettingDto == null || DAPStringUtils.isBlank(templateSettingDto.getName())) {
             envService.setActivatedTemplate(GuiConst.DEFAULT_TEMPLATE_NAME);
             activeTemplateName = GuiConst.DEFAULT_TEMPLATE_NAME;
@@ -129,6 +132,7 @@ public class LoginController {
             activeTemplateName = templateSettingDto.getName();
         }
 
+        // TODO: 2018/11/5 业务代码分层不清晰
         List<String> projectName = envService.findActivatedProjectName();
         if (projectName != null && !projectName.isEmpty()) {
             Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
@@ -140,30 +144,7 @@ public class LoginController {
 
 
     private void addErrorTip() {
-        Stage loginStage = StageMap.getStage(GuiConst.PLARTFORM_STAGE_LOGIN);
-        loginStage.setResizable(true);
-        Label warnLbl = new Label();
-        warnLbl.getStyleClass().add("icon-warn-svg");
-        warnLbl.setPadding(new Insets(0, 10, 0, 10));
-
-        Label warnLbl1 = new Label();
-        warnLbl1.setPrefWidth(350);
-        warnLbl1.setPrefHeight(30);
-        warnLbl1.setMinHeight(30);
-        warnLbl1.setMaxHeight(30);
-        warnLbl1.getStyleClass().add("tooltip-warn");
-        warnLbl1.setStyle("-fx-border-color: #dcdcdc transparent; -fx-border-width: 1 0 0 0");
-        warnLbl1.setText(GuiFxmlAndLanguageUtils.getString("LOGIN_FAIL"));
-        warnLbl1.setGraphic(warnLbl);
-        warnLbl1.setContentDisplay(ContentDisplay.LEFT);
-        loginFailHbox.setPrefHeight(30);
-        loginFailHbox.setMinHeight(30);
-        loginFailHbox.setMaxHeight(30);
-        loginFailHbox.getChildren().add(warnLbl1);
-        loginStage.setHeight(288);
-        loginStage.setMaxHeight(288);
-        loginStage.setMinHeight(288);
-        loginStage.setResizable(false);
+        loginFailLbl.setVisible(true);
     }
 
 }

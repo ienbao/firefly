@@ -21,6 +21,7 @@ import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import com.google.common.collect.Lists;
+import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
@@ -71,7 +72,7 @@ public class GuiApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
+        SvgImageLoaderFactory.install();
         String os = System.getProperty("os.name");
         if (!os.toLowerCase().startsWith("win")) {
             Class cla = Class.forName("com.apple.eawt.Application");
@@ -197,7 +198,7 @@ public class GuiApplication extends Application {
                     10, 0, 0, 0);
             root.setEffect(shadowEffect);
             Scene tempScene = new Scene(root);
-            tempScene.getStylesheets().add(getResource("css/platform_app.css").toExternalForm());
+            tempScene.getStylesheets().addAll(getResource("css/platform_app.css").toExternalForm(),getResource("css/redfall/main.css").toExternalForm());
             tempScene.setFill(Color.TRANSPARENT);
             Stage stage = new Stage();
             javafx.scene.image.Image image = new javafx.scene.image.Image("/images/desktop_mac_logo.png");

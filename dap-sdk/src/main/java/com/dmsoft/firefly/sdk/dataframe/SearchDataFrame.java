@@ -105,4 +105,5 @@ public interface SearchDataFrame extends DataFrame {
      * method to shrink, remove redundant rows (which do not belong to any search condition)
      */
     void shrink();
+
 }

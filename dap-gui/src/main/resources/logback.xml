@@ -28,20 +28,10 @@
     </appender>
 
     <logger name="com.netflix.discovery" level="info"/>
+    <logger name="com.dmsoft.firefly" level="info" />
+    <logger name="org" level="info" />
 
-    <!-- project default level -->
-    <logger name="com.dmsoft.firefly" level="debug">
-        <!--<appender-ref ref="console"/>-->
-        <!--<appender-ref ref="console"/>-->
-        <!--<appender-ref ref="FILE"/>-->
-    </logger>
-
-    <logger name="org" level="info">
-        <!--<appender-ref ref="console"/>-->
-        <!--<appender-ref ref="FILE"/>-->
-    </logger>
-
-    <root level="debug">
+    <root level="info">
         <appender-ref ref="console"/>
         <appender-ref ref="file"/>
     </root>

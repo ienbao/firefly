@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.sdk.dai.service;
 
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDataset;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 
 import java.util.List;
@@ -159,6 +160,19 @@ public interface SourceDataService {
      */
     List<RowDataDto> findTestData(List<String> projectNameList, List<String> testItemNameList, Boolean inUsedFlag);
 
+
+    /**
+     * 查询多个数据集，指定列的数据集合
+     *
+     *
+     * @param projectNameList
+     * @param testItemNameList
+     * @param inUsedFlag
+     * @return
+     */
+    TestItemDataset findTestDataset(List<String> projectNameList, List<String> testItemNameList, Boolean inUsedFlag);
+
+
     /**
      * method to find test data by single test data
      *
@@ -190,4 +204,14 @@ public interface SourceDataService {
      * @param projectNameList project name list
      */
     void deleteProject(List<String> projectNameList);
+
+
+    /**
+     * 批量插入数据集到mongodb数据集合中
+     *
+     * @param projectName project name
+     * @param rowDataDtoList     row data
+     */
+    void insertAllTestData(String projectName, List<RowDataDto> rowDataDtoList);
+
 }

@@ -47,7 +47,6 @@ public class AddItemController {
     @FXML
     private void initialize() {
         message.getStyleClass().add("message-tip-question");
-        message.setStyle("-fx-background-color: #0096ff");
         TooltipUtil.installNormalTooltip(message, GuiFxmlAndLanguageUtils.getString(ResourceMassages.INPUT_ITEM_HELP));
         CheckBox box = new CheckBox();
         box.setOnAction(event -> {
