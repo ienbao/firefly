@@ -85,7 +85,7 @@ public class SearchTabController {
 
         groupAdd.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/add-search-group.svg")));
         TooltipUtil.installNormalTooltip(groupAdd, FxmlAndLanguageUtils.getString("ADD_GROUP"));
-        groupRemove.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_clear_all_normal.png")));
+        groupRemove.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/clear-all.svg")));
         TooltipUtil.installNormalTooltip(groupRemove, FxmlAndLanguageUtils.getString("CLEAR_GROUP"));
         help.getStyleClass().add("message-tip-question");
         help.setStyle("-fx-background-color: #0096ff");

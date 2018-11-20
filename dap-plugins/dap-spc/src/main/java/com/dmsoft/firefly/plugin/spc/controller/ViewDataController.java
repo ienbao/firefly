@@ -509,9 +509,9 @@ public class ViewDataController implements Initializable {
     }
 
     private void initBtnIcon() {
-        clearFilterBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_clear_filter_normal.png")));
+        clearFilterBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/filter-clear.svg")));
         TooltipUtil.installNormalTooltip(clearFilterBtn, SpcFxmlAndLanguageUtils.getString(ResourceMassages.CLEAR_SEARCH));
-        chooseItemBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
+        chooseItemBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/choose-test-items.svg")));
         TooltipUtil.installNormalTooltip(chooseItemBtn, SpcFxmlAndLanguageUtils.getString(ResourceMassages.CHOOSE_ITEMS_TITLE));
     }
 

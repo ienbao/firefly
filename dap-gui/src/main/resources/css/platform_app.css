@@ -165,25 +165,21 @@
     -fx-image: url("/images/login_logo.png");
 }
 
-.gui-login-warm-icon{
-    -fx-padding: 10.0;
-}
-
-
 /*******************************************************************************
  *                                                                             *
  * datasource page css                                                              *
  *                                                                             *
  ******************************************************************************/
 
+
+
 .delete-button{
     -fx-pref-width: 22.0;
     -fx-pref-height: 22.0;
-    -fx-background-size: 22;
+    -fx-background-size: 16;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
     -fx-background-image: url("/images/del.svg");
-    /*-fx-background-image: url("/images/btn_del_normal.png");*/
 }
 
 .errorInfo-label{
@@ -289,70 +285,6 @@
 
 /*******************************************************************************
  *                                                                             *
- * login page css                                                              *
- *                                                                             *
- ******************************************************************************/
-
-.gui-login-root{
-    -fx-alignment: center;
-    -fx-spacing: 20.0;
-    -fx-background-color: #ffffff;
-}
-.gui-login-root-resize{
-    -fx-pref-height: 288.0;
-    -fx-min-height: 288.0;
-    -fx-max-height: 288.0;
-}
-
-.gui-login-logo{
-    -fx-spacing: 15.0;
-    -fx-image: url("/images/login_logo.png");
-}
-
-.gui-login-text-field{
-    -fx-max-width: 230.0;
-    -fx-spacing: 10.0;
-    -fx-border-width: 1.0;
-    -fx-border-color: #dcdcdc
-}
-
-.gui-login-btn{
-    -fx-pref-height: 26.0;
-    -fx-pref-width: 230.0;
-    -fx-alignment: center;
-    -fx-font-weight: bold;
-}
-
-.gui-logining-image{
-    -fx-image: url("/images/small_loading.gif");
-    -fx-content-display: null;
-}
-
-.gui-login-warm-icon{
-    -fx-padding: 10.0;
-}
-
-.gui-login-error-h-box{
-    -fx-max-width: 350.0;
-    -fx-min-width: 350.0;
-    -fx-pref-width: 350.0;
-    -fx-alignment: center-left;
-    -fx-content-display: left;
-}
-
-.gui-login-warm-tip{
-    -fx-pref-width: 350.0;
-    -fx-pref-height: 30.0;
-    -fx-min-height: 30.0;
-    -fx-max-height: 30.0;
-    -fx-border-width: 1 0 0 0;
-    -fx-border-color: #dcdcdc transparent;
-}
-
-
-
-/*******************************************************************************
- *                                                                             *
  * gui about page css                                                              *
  *                                                                             *
  ******************************************************************************/
@@ -398,68 +330,6 @@
     -fx-font-size: 22.0;
 }
 
-
-/*******************************************************************************
- *                                                                             *
- * login page css                                                              *
- *                                                                             *
- ******************************************************************************/
-
-.gui-login-root{
-    -fx-alignment: center;
-    -fx-spacing: 20.0;
-    -fx-background-color: #ffffff;
-}
-.gui-login-root-resize{
-    -fx-pref-height: 288.0;
-    -fx-min-height: 288.0;
-    -fx-max-height: 288.0;
-}
-
-.gui-login-logo{
-    -fx-spacing: 15.0;
-    -fx-image: url("/images/login_logo.png");
-}
-
-.gui-login-text-field{
-    -fx-max-width: 230.0;
-    -fx-spacing: 10.0;
-    -fx-border-width: 1.0;
-    -fx-border-color: #dcdcdc
-}
-
-.gui-login-btn{
-    -fx-pref-height: 26.0;
-    -fx-pref-width: 230.0;
-    -fx-alignment: center;
-    -fx-font-weight: bold;
-}
-
-.gui-logining-image{
-    -fx-image: url("/images/small_loading.gif");
-    -fx-content-display: null;
-}
-
-.gui-login-warm-icon{
-    -fx-padding: 10.0;
-}
-
-.gui-login-error-h-box{
-    -fx-max-width: 350.0;
-    -fx-min-width: 350.0;
-    -fx-pref-width: 350.0;
-    -fx-alignment: center-left;
-    -fx-content-display: left;
-}
-
-.gui-login-warm-tip{
-    -fx-pref-width: 350.0;
-    -fx-pref-height: 30.0;
-    -fx-min-height: 30.0;
-    -fx-max-height: 30.0;
-    -fx-border-width: 1 0 0 0;
-    -fx-border-color: #dcdcdc transparent;
-}
 /*******************************************************************************
  *                                                                              *
  * gui about Change Password page css                                           *
@@ -607,6 +477,29 @@
  * datasource setting page css                                                 *
  *                                                                             *
  ******************************************************************************/
+.choose-button{
+    -fx-min-height: 22;
+    -fx-min-width: 22;
+    -fx-pref-width: 22.0;
+    -fx-pref-height: 22.0;
+    -fx-border-width: 1;
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-image: url("/images/choose-test-items.svg");
+}
+
+.search-button{
+    -fx-min-height: 22;
+    -fx-min-width: 22;
+    -fx-pref-width: 22.0;
+    -fx-pref-height: 22.0;
+    -fx-border-width: 1;
+    -fx-background-size: 16;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-image: url("/images/check-white.svg");
+}
 
 .datasource-setting-label{
     -fx-min-height: 12.0;
@@ -858,69 +751,6 @@
 .gui-additem-button{
     -fx-pref-width: 80.0;
 }
-/*******************************************************************************
- *                                                                             *
- * login page css                                                              *
- *                                                                             *
- ******************************************************************************/
-
-.gui-login-root{
-    -fx-alignment: center;
-    -fx-spacing: 20.0;
-    -fx-background-color: #ffffff;
-}
-.gui-login-root-resize{
-    -fx-pref-height: 288.0;
-    -fx-min-height: 288.0;
-    -fx-max-height: 288.0;
-}
-
-.gui-login-logo{
-    -fx-spacing: 15.0;
-    -fx-image: url("/images/login_logo.png");
-}
-
-.gui-login-text-field{
-    -fx-max-width: 230.0;
-    -fx-spacing: 10.0;
-    -fx-border-width: 1.0;
-    -fx-border-color: #dcdcdc
-}
-
-.gui-login-btn{
-    -fx-pref-height: 26.0;
-    -fx-pref-width: 230.0;
-    -fx-alignment: center;
-    -fx-font-weight: bold;
-}
-
-.gui-logining-image{
-    -fx-image: url("/images/small_loading.gif");
-    -fx-content-display: null;
-}
-
-.gui-login-warm-icon{
-    -fx-padding: 10.0;
-}
-
-.gui-login-error-h-box{
-    -fx-max-width: 350.0;
-    -fx-min-width: 350.0;
-    -fx-pref-width: 350.0;
-    -fx-alignment: center-left;
-    -fx-content-display: left;
-}
-
-.gui-login-warm-tip{
-    -fx-pref-width: 350.0;
-    -fx-pref-height: 30.0;
-    -fx-min-height: 30.0;
-    -fx-max-height: 30.0;
-    -fx-border-width: 1 0 0 0;
-    -fx-border-color: #dcdcdc transparent;
-}
-
-
 
 /*******************************************************************************
  *                                                                             *
@@ -969,68 +799,6 @@
     -fx-font-size: 22.0;
 }
 
-
-/*******************************************************************************
- *                                                                             *
- * login page css                                                              *
- *                                                                             *
- ******************************************************************************/
-
-.gui-login-root{
-    -fx-alignment: center;
-    -fx-spacing: 20.0;
-    -fx-background-color: #ffffff;
-}
-.gui-login-root-resize{
-    -fx-pref-height: 288.0;
-    -fx-min-height: 288.0;
-    -fx-max-height: 288.0;
-}
-
-.gui-login-logo{
-    -fx-spacing: 15.0;
-    -fx-image: url("/images/login_logo.png");
-}
-
-.gui-login-text-field{
-    -fx-max-width: 230.0;
-    -fx-spacing: 10.0;
-    -fx-border-width: 1.0;
-    -fx-border-color: #dcdcdc
-}
-
-.gui-login-btn{
-    -fx-pref-height: 26.0;
-    -fx-pref-width: 230.0;
-    -fx-alignment: center;
-    -fx-font-weight: bold;
-}
-
-.gui-logining-image{
-    -fx-image: url("/images/small_loading.gif");
-    -fx-content-display: null;
-}
-
-.gui-login-warm-icon{
-    -fx-padding: 10.0;
-}
-
-.gui-login-error-h-box{
-    -fx-max-width: 350.0;
-    -fx-min-width: 350.0;
-    -fx-pref-width: 350.0;
-    -fx-alignment: center-left;
-    -fx-content-display: left;
-}
-
-.gui-login-warm-tip{
-    -fx-pref-width: 350.0;
-    -fx-pref-height: 30.0;
-    -fx-min-height: 30.0;
-    -fx-max-height: 30.0;
-    -fx-border-width: 1 0 0 0;
-    -fx-border-color: #dcdcdc transparent;
-}
 /*******************************************************************************
  *                                                                              *
  * gui about Change Password page css                                           *
@@ -1124,78 +892,6 @@
     -fx-min-height: 80;
     -fx-pref-height: 80;
     -fx-padding:80 0 0 0;
-
-}
-
-/*******************************************************************************
- *                                                                             *
- * datasource page css                                                              *
- *                                                                             *
- ******************************************************************************/
-
-.datasource-root{
-    -fx-padding: 10 ;
-    -fx-alignment: center;
-    -fx-max-height: 420.0;
-    -fx-min-height: 420.0;
-    -fx-pref-height: 420.0;
-    -fx-max-width: 600.0;
-    -fx-min-width: 600.0;
-    -fx-pref-width: 600.0;
-    -fx-background-color: #ffffff;
-}
-.datasource-head-borderPane{
-    -fx-padding: 5 0 5 5 ;
-    -fx-border-width: 1 1 0 1;
-    -fx-border-color: #DCDCDC;
-
-}
-.datasource-textfield-filter{
-     -fx-pref-height: 22.0;
-     -fx-pref-width: 200.0;
-
- }
-.datasource-delete-button{
-    -fx-border-width: 1 1 0 1;
-    -fx-border-color: #DCDCDC;
-    -fx-pref-height: 22.0;
-    -fx-pref-width: 22.0;
-}
-
-.datasource-errorinfo-lable{
-    -fx-pref-height: 22.0;
-    -fx-pref-width: 24.0;
-    -fx-margin: 10px 0px 0px 0px;
-}
-.datasource-button{
-    -fx-pref-height: 22.0;
-    -fx-pref-width: 80.0;
-
-}
-.datasource-foot-borderPane{
-    -fx-padding: 10 0 0 0;
-
-
-}
-.datasource-h-box{
-    -fx-spacing: 20.0
-
-}
-.datasource-table-view{
-    -fx-pref-height: 200.0;
-    -fx-pref-width: 200.0;
-
-}
-.datasource-table-check-box-column{
-    -fx-pref-width: 33.0;
-    -fx-max-width: 33.0;
-    -fx-min-width: 33.0;
-
-}
-.datasource-table-value-column{
-    -fx-pref-width: 75.0;
-    -fx-max-width: 75.0;
-    -fx-min-width: 75.0;
 
 }
 

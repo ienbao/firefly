@@ -83,9 +83,7 @@ public class DataSourceSettingController {
      */
     private void initButton() {
         logger.info("初始化界面按钮。");
-        chooseItem.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
         TooltipUtil.installNormalTooltip(chooseItem, GuiFxmlAndLanguageUtils.getString(ResourceMassages.CHOOSE_ITEMS_TITLE));
-        searchBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
         TooltipUtil.installNormalTooltip(searchBtn, GuiFxmlAndLanguageUtils.getString(ResourceMassages.SEARCH));
     }
 

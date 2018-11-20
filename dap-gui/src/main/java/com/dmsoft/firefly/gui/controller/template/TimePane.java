@@ -46,7 +46,7 @@ public class TimePane extends HBox {
         delete.setMaxWidth(22);
         delete.setMinWidth(22);
         delete.setPrefSize(22, 22);
-        delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_delete_normal.png")));
+        delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/delete.svg")));
         delete.setOnAction(event -> ((VBox) this.getParent()).getChildren().remove(this));
         this.getChildren().add(item);
         this.getChildren().add(delete);

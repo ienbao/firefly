@@ -6,8 +6,8 @@
 <VBox styleClass="padding-lg,sm-pop-window" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.ExportSettingController">
       <TableView fx:id="settingTable" VBox.vgrow="ALWAYS">
         <columns>
-          <TableColumn fx:id="selector" editable="false" resizable="false" prefWidth="30" sortable="false" />
-          <TableColumn fx:id="settings" editable="false"  resizable="false" prefWidth="358.0" sortable="false" text="%EXPORT_SETTINGS" />
+          <TableColumn fx:id="selector" editable="false" resizable="false" minWidth="30" prefWidth="30" maxWidth="30" sortable="false" />
+          <TableColumn fx:id="settings" editable="false"  resizable="false" prefWidth="358" sortable="false" text="%EXPORT_SETTINGS" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
