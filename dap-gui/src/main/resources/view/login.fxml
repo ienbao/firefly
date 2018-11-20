@@ -4,24 +4,16 @@
 <?import com.dmsoft.firefly.gui.components.utils.TextFieldPassword?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Label?>
 <?import com.dmsoft.firefly.gui.LodingButton?>
-<VBox xmlns="http://javafx.com/javafx/8.0.76-ea"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:id="loginPane"
-      fx:controller="com.dmsoft.firefly.gui.controller.LoginController">
-
-    <ImageView styleClass="gui-login-logo" fitHeight="48.0"
-               pickOnBounds="true" preserveRatio="true"/>
+<VBox xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:id="loginPane" fx:controller="com.dmsoft.firefly.gui.controller.LoginController">
+    <ImageView styleClass="gui-login-logo" fitHeight="48.0" pickOnBounds="true" preserveRatio="true"/>
     <TextFieldUser fx:id="userNameTxt"/>
     <TextFieldPassword fx:id="passwordField"/>
-    <LodingButton fx:id="loginBtn" text="%LOGIN_BTN"></LodingButton>
-    <Label fx:id="loginFailLbl" styleClass="tooltip-warn"
-           text="%LOGIN_FAIL" visible="false">
+    <LodingButton fx:id="loginBtn" text="%LOGIN_BTN"/>
+    <Label fx:id="loginFailLbl" styleClass="tooltip-warn" text="%LOGIN_FAIL" visible="false">
         <graphic>
-            <Label styleClass="icon-warn-svg,gui-login-warm-icon"/>
+            <Label styleClass="icon-warn-svg,padding-lg"/>
         </graphic>
     </Label>
-
 </VBox>
