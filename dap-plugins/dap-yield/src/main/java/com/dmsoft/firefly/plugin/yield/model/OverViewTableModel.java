@@ -449,7 +449,6 @@ public class OverViewTableModel implements TableModel {
         return tableCell;
     }
 
-    @Override
     public void setTableView(TableView<String> tableView) {
         this.tableView = tableView;
     }
@@ -461,6 +460,11 @@ public class OverViewTableModel implements TableModel {
     @Override
     public void setAllCheckBox(CheckBox checkBox) {
         this.allCheckBox = checkBox;
+    }
+
+    @Override
+    public void setTableViewWidth(TableView<String> tableView) {
+
     }
 
     /**
