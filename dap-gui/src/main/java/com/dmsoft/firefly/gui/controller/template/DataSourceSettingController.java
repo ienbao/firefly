@@ -51,8 +51,8 @@ public class DataSourceSettingController {
     private TableView itemDataTable;
     @FXML
     private SplitPane split;
+
     private SearchTab searchTab;
-    private ItemDataTableModel itemDataTableModel;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
     private List<String> testItems = new ArrayList<>();
@@ -61,10 +61,13 @@ public class DataSourceSettingController {
     private List<TestItemWithTypeDto> testItemWithTypeDtoList = Lists.newArrayList();
     private ChooseTestItemDialog chooseTestItemDialog;
 
+    private ItemDataTableModel itemDataTableModel;
+
     @FXML
     private void initialize() {
         initButton();
         this.initTableData();
+
         searchTab = new SearchTab(false);
         searchTab.hiddenGroupAdd();
         searchTab.getGroup1().setVisible(false);

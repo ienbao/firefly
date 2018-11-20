@@ -45,13 +45,10 @@ public class ItemDataTableModel implements TableModel {
 
         //TODO yuanwen 2018-10-27 控制表格只显示10以内的数据，原来逻辑没有做调整和验证
         if(this.searchDataFrame.getAllTestItemName().size() > 10){
-            for (int i = 0; i < 10; i++) {
-                columnKey.add(this.searchDataFrame.getAllTestItemName().get(i));
-            }
+            columnKey.addAll(this.searchDataFrame.getAllTestItemName().subList(0, 10));
         }else {
             columnKey.addAll(this.searchDataFrame.getAllTestItemName());
         }
-
 
         this.rowKey.addAll(this.searchDataFrame.getAllRowKeys());
     }

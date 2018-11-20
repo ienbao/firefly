@@ -594,14 +594,10 @@
 
 /*******************************************************************************
  *                                                                             *
- * datasource setting page css                                                              *
+ * datasource setting page css                                                 *
  *                                                                             *
  ******************************************************************************/
-.datasource-setting-h-box-left{
-    -fx-padding: 10 0 0 0;
-    -fx-spacing: 10.0;
-    -fx-content-display: CENTER;
-}
+
 .datasource-setting-label{
     -fx-min-height: 12.0;
     -fx-min-width: 12.0;
@@ -633,4 +629,86 @@
     -fx-border-width: 1 1 0 1;
     -fx-border-color: COLOR_GRAY_DC;
     -fx-padding:0 5 0 10;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * plugin page css                                                             *
+ *                                                                             *
+ ******************************************************************************/
+#explain{
+    -fx-padding: 10.0;
+    -fx-pref-width: 200;
+    -fx-border-width: 1 1 1 0;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_FA;
+}
+/*******************************************************************************
+ *                                                                             *
+ * template page css                                                             *
+ *                                                                             *
+ ******************************************************************************/
+.template-lg-h-box{
+     -fx-pref-height: 488.0;
+     -fx-max-height: 488.0;
+     -fx-min-height: 488.0;
+     -fx-pref-width: 800.0;
+     -fx-border-color: COLOR_GRAY_DC;
+     -fx-border-width: 1 1 1 1;
+ }
+.template-left-v-box{
+    -fx-pref-height: 485.0;
+    -fx-pref-width: 160.0;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-border-width: 0 1 0 0;
+}
+
+.template-name-filter{
+    -fx-padding:3 3 0 3;
+}
+
+#templateName{
+    -fx-pref-height: 463.0;
+    -fx-pref-width: 160.0;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-border-width: 1 0 0 0;
+}
+.template-h-box-btn{
+    -fx-alignment: center;
+    -fx-pref-height: 21.0;
+    -fx-min-height: 21.0;
+    -fx-max-height: 21.0;
+    -fx-pref-width: 160.0;
+    -fx-padding:0 16 0 16;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-border-width: 1 0 0 0;
+}
+
+.template-title-h-box{
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-padding:0 20 0 20;
+}
+#title{
+    -fx-pref-height: 28.0;
+    -fx-min-height: 28.0;
+    -fx-pref-width: 620.0;
+    -fx-font-weight: bold;
+}
+.template-right-v-box{
+    -fx-padding:0 20 10 20;
+}
+
+.add-time-h-box{
+    -fx-alignment: BOTTOM_LEFT;
+    -fx-padding:0 0 10 0;
+}
+.template-item-filter{
+    -fx-alignment: CENTER_RIGHT;
+    -fx-pref-height: 29;
+    -fx-pref-width: 200;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-border-width: 1 1 0 1;
+    -fx-padding: 3 10 3 3;
+    -fx-spacing: 13;
 }
