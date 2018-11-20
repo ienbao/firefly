@@ -10,7 +10,7 @@ import javafx.util.Duration;
 public class RotatePic extends ImageView {
     public RotatePic(){
     }
-
+    //TODO td loading按钮动画停顿
     public RotatePic(Image image){
         this.setImage(image);
         this.setFitWidth(16);

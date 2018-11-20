@@ -230,6 +230,16 @@
 
 }
 
+.gui-datasource-rename-btn{
+    -fx-background-image: url('/images/rename.svg');
+    -fx-background-size: 16;
+}
+
+.gui-datasource-delete-one-btn{
+    -fx-background-image: url('/images/del.svg');
+    -fx-background-size: 16;
+}
+
 /*******************************************************************************
  *                                                                             *
  * gui about page css                                                              *
