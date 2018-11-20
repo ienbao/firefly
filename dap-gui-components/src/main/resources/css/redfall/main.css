@@ -15,6 +15,7 @@
 
 
     COLOR_BLACK_22: #222222;
+    COLOR_BLACK_00: #000000;
     COLOR_LIGHT_FF: #ffffff;
 
     COLOR_GRAY_66: #666666;
@@ -58,8 +59,12 @@
     COLORFUL_LIGHT_BLUE: #33abff;
     COLORFUL_DARK_BLUE: #487CF4;
     COLORFUL_MIDDLE_BLUE: #7fcaff;
+    COLORFUL_HOVER_HEADER_BOARDER_BLUE: #c6d5e0;
+    COLORFUL_HOVER_HEADER_BLUE: #e5f4ff;
+    COLORFUL_PRESSED_HEADER_BOARDER_BLUE: #b0cee3;
+    COLORFUL_PRESSED_HEADER_BLUE:#cceaff;
 
-    COLORFUL_BLUE_Fill_10: rgba(0, 150, 255, 0.2);
+    COLORFUL_BLUE_Fill_10: rgba(0, 150, 255, 0.1);
     COLORFUL_BLUE_Fill_20: rgba(0, 150, 255, 0.2);
     COLORFUL_BLUE_Fill_50: rgba(0, 150, 255, 0.5);
 
@@ -390,6 +395,7 @@
 
 .button-delete{
     -fx-pref-width: 22;
+    -fx-pref-height: 22;
     -fx-border-width: 0;
     -fx-background-image: url('/images/btn_delete_normal.png');
 }
@@ -1410,7 +1416,7 @@
 .table-view {
     -fx-font: 12 arial;
     -fx-border-color: COLOR_GRAY_DC;
-    -fx-text-fill: #222222;
+    -fx-text-fill: COLOR_BLACK_22;
     -fx-padding: 0;
 }
 
@@ -1418,14 +1424,14 @@
 .table-view > .column-header-background {
     -fx-pref-height: 21;
     -fx-min-height: 21;
-    -fx-background-color: #ffffff;
-    -fx-border-color: #dcdcdc;
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-border-color: COLOR_GRAY_DC;
     -fx-border-width: 0 0 1 0;
 
 }
 
 .table-view .column-header {
-    -fx-background-color: #ffffff;
+    -fx-background-color: COLOR_LIGHT_FF;
     -fx-border-width: 0 1 0 0;
     -fx-border-color: COLOR_GRAY_DC;
     -fx-background-insets: 0;
@@ -1436,13 +1442,13 @@
 }
 
 .table-view .column-header:hover {
-    -fx-background-color: rgba(0, 150, 255, 0.1); /*#0096ff*/
+    -fx-background-color: COLORFUL_AUXILIARY_BLUE_10;
 }
 
 .table-view .column-header:focused,
 .table-view .column-header:cell-selection,
 .table-view .column-header:pressed {
-    -fx-background-color: rgba(0, 150, 255, 0.2); /*#0096ff*/
+    -fx-background-color: COLORFUL_AUXILIARY_BLUE_20;
 }
 
 .table-view .column-header .label.ascending-label {
@@ -1464,7 +1470,7 @@
 }
 
 .table-view .filler {
-    -fx-background-color: #ffffff;
+    -fx-background-color: COLOR_LIGHT_FF;
     -fx-border-color: COLOR_GRAY_DC;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
@@ -1483,25 +1489,23 @@
 
 /* Header Sort Arrows */
 .table-view .column-header .arrow {
-    -fx-background-color: #000000;
-    -fx-padding: 3 3.75 3 3.75; /* 3 3.75 3 3.75 */
+    -fx-background-color: COLOR_BLACK_00;
+    -fx-padding: 3 3.75 3 3.75;
     -fx-shape: "M 0 0 h 7 l -3.5 4 z";
     -fx-alignment: center;
 }
 
 .table-row-cell {
-    -fx-min-height: 18;
     -fx-pref-height: 18;
-    -fx-max-height: 18;
-    -fx-background-color: #ffffff;
-    -fx-text-fill: #222222;
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-text-fill: COLOR_BLACK_22;
     -fx-border-width: 0 0 0 0;
     -fx-border-color: transparent;
 }
 
 .table-cell {
     -fx-background-color: null;
-    -fx-text-fill: #222222;
+    -fx-text-fill: COLOR_BLACK_22;
     -fx-alignment: center-left;
     -fx-padding: 0 10 1 9;
     -fx-border-insets: 0;
@@ -1511,14 +1515,12 @@
 
 .table-cell .text-field {
     -fx-border-insets: -1 -11 -1 -10;
-    -fx-min-height: 16;
     -fx-pref-height: 16;
-    -fx-max-height: 16;
-    -fx-padding: 0 0 0 0;
+    -fx-padding: 0;
     -fx-background-insets: 0 -10 0 -10;
-    -fx-border-color: black;
+    -fx-border-color: COLOR_BLACK_00;
     -fx-border-width: 1;
-    -fx-background-color: white;
+    -fx-background-color: COLOR_LIGHT_FF;
 }
 
 .table-view .table-row-cell .cell .text-field-error {
@@ -1526,23 +1528,22 @@
 }
 
 .table-row-cell:hover {
-    -fx-background-color: rgba(0, 150, 255, 0.1); /*#0096ff*/
+    -fx-background-color:COLORFUL_AUXILIARY_BLUE_10;
 }
 
 .table-row-cell:selected,
 .table-row-cell:focused {
-    -fx-background-color: rgba(0, 0, 0, 0.15);
+    -fx-background-color: COLOR_BLACK_Fill_15;
 }
 
 .table-view:focused:row-selection > .virtual-flow > .clipped-container > .sheet > .table-row-cell:focused {
-    -fx-background-color: rgba(0, 150, 255, 0.2); /*#0096ff*/
+    -fx-background-color: COLORFUL_AUXILIARY_BLUE_20;
     -fx-border-width: 1 0 1 0;
     -fx-padding: -1 0 -1 0;
-    -fx-border-color: rgba(0, 150, 255, 0.5) transparent;
+    -fx-border-color: COLORFUL_AUXILIARY_BLUE_50 transparent;
 }
 
 .table-view .column-header.table-column {
-    /*-fx-alignment: top-center;*/
     -fx-column-halignment: center;
     -fx-background-position: center;
     -fx-alignment: top-center;
@@ -1560,7 +1561,7 @@
     -fx-border-color: transparent;
     -fx-text-fill: transparent;
     -fx-border-width: 0;
-    -fx-background-color: #ffffff;
+    -fx-background-color: COLOR_LIGHT_FF;
 }
 
 .table-view .placeholder .label:focused,
@@ -1577,8 +1578,6 @@
 
 .table-view .combo-box {
     -fx-pref-height: 14;
-    -fx-min-height: 14;
-    -fx-max-height: 14;
     -fx-background-insets: 0 -11 -2 -10;
     -fx-border-insets: 0 -11 -2 -10;
     -fx-padding: -5 -8 -3 -8;
@@ -2010,27 +2009,27 @@
 
 .window-button-minimize {
     -fx-pref-width: 30;
-    -fx-background-image: url('/images/top_minimize_normal.png');/*窗口最小化*/
+    -fx-background-image: url('/images/top_minimize_normal.png');
 }
 
 .window-button-maximize {
     -fx-pref-width: 30;
-    -fx-background-image: url('/images/top_full_screen_normal.png');/*窗口放小*/
+    -fx-background-image: url('/images/top_full_screen_normal.png');
 }
 
 .window-button-restore {
     -fx-pref-width: 30;
-    -fx-background-image: url('/images/top_adaptive_normal.png');/*窗口最大*/
+    -fx-background-image: url('/images/top_adaptive_normal.png');
 }
 
 .window-button-close {
     -fx-pref-width: 30;
-    -fx-background-image: url('/images/top_close_normal.png');/*关闭窗口*/
+    -fx-background-image: url('/images/top_close_normal.png');
 }
 
 .window-button-close:hover {
     -fx-pref-width: 30;
-    -fx-background-image: url('/images/top_close_over.png');/*滑过关闭窗口*/
+    -fx-background-image: url('/images/top_close_over.png');
 }
 
 /*******************************************************************************

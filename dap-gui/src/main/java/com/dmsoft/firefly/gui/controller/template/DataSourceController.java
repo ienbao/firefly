@@ -136,7 +136,7 @@ public class DataSourceController implements Initializable {
                             rename.getStyleClass().addAll("btn-icon","gui-datasource-rename-btn");
                             TooltipUtil.installNormalTooltip(rename, renameStr);
                             //TODO 给按钮设置图片
-                            rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rename_normal.png")));
+                            rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/rename.svg")));
                             Button deleteOne = new Button();
                             deleteOne.getStyleClass().addAll("btn-icon","gui-datasource-delete-one-btn");
                             TooltipUtil.installNormalTooltip(deleteOne, delStr);
@@ -151,7 +151,7 @@ public class DataSourceController implements Initializable {
                                 progressBar.setProgress(item.getProgress());
                             }
                             //TODO 给按钮设置图片
-                            deleteOne.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
+                            deleteOne.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/del.svg")));
                             hBox.getChildren().add(textField);
                             hBox.getChildren().add(progressBar);
                             hBox.getChildren().add(rename);

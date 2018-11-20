@@ -59,6 +59,10 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>de.codecentric.centerdevice</groupId>
+            <artifactId>javafxsvg</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.github.lucarosellini.rJava</groupId>
             <artifactId>REngine</artifactId>
             <version>0.9-7</version>

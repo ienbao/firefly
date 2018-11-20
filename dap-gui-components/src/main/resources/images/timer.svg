@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        stroke: #707070;
+        opacity: 0;
+      }
+
+      .cls-2 {
+        stroke: none;
+      }
+
+      .cls-3 {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <g id="timer" transform="translate(-1498 -664)">
+    <g id="矩形_371" data-name="矩形 371" class="cls-1" transform="translate(1498 664)">
+      <rect class="cls-2" width="16" height="16"/>
+      <rect class="cls-3" x="0.5" y="0.5" width="15" height="15"/>
+    </g>
+    <path id="矩形_164" data-name="矩形 164" d="M1242,85.5a6.509,6.509,0,0,1,6-6.481V77h1v2.019a6.458,6.458,0,0,1,2.96.981h.04v.025a6.5,6.5,0,1,1-10,5.475Zm1,0a5.5,5.5,0,1,0,8.659-4.5H1251v-.4a5.5,5.5,0,0,0-8,4.9Zm5,1.5V86h-1V85h1V82h1v3h1v1h-1v1Zm4-7V79h1v1Z" transform="translate(257 586.999)"/>
+  </g>
+</svg>

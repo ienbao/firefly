@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        stroke: #707070;
+        opacity: 0;
+      }
+
+      .cls-2 {
+        stroke: none;
+      }
+
+      .cls-3 {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <g id="basic-search" transform="translate(-977 -131)">
+    <g id="矩形_345" data-name="矩形 345" class="cls-1" transform="translate(977 131)">
+      <rect class="cls-2" width="16" height="16"/>
+      <rect class="cls-3" x="0.5" y="0.5" width="15" height="15"/>
+    </g>
+    <path id="椭圆_12_副本_5" data-name="椭圆 12 副本 5" d="M1076.043,144.824l-1.9-1.9a.547.547,0,0,1-.126-.195,5.506,5.506,0,1,1,.711-.711.55.55,0,0,1,.195.126l1.9,1.9a.552.552,0,0,1-.78.78ZM1066,138.5a4.5,4.5,0,1,0,4.5-4.5A4.505,4.505,0,0,0,1066,138.5Z" transform="translate(-86)"/>
+  </g>
+</svg>
