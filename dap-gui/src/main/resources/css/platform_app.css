@@ -179,7 +179,9 @@
 .delete-button{
     -fx-pref-width: 22.0;
     -fx-background-size: 16;
-    -fx-background-image: url("/images/btn_del_normal.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url("/images/del.svg");
+    /*-fx-background-image: url("/images/btn_del_normal.png");*/
 }
 
 .errorInfo-label{
@@ -585,4 +587,57 @@
     -fx-alignment: center;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * datasource setting page css                                                 *
+ *                                                                             *
+ ******************************************************************************/
+
+.datasource-setting-label{
+    -fx-min-height: 12.0;
+    -fx-min-width: 12.0;
+    -fx-max-height: 12.0;
+    -fx-max-width: 12.0;
+    -fx-pref-height: 12.0;
+    -fx-pref-width: 12.0;
+    -fx-background-color: red;
+}
+.datasource-setting-v-box{
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-border-width: 0 1 0 0;
+}
+.datasource-setting-split-pane{
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-border-width: 1 0 0 0;
+    -fx-pref-height: 435;
+}
+
+.datasource-setting-pane{
+    -fx-border-color: COLOR_GRAY_DC;
+}
+
+.datasource-setting-h-box-top{
+    -fx-pref-width: 619.0;
+    -fx-pref-height: 30.0;
+    -fx-min-height: 30.0;
+    -fx-alignment: center;
+    -fx-border-width: 1 1 0 1;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-padding:0 5 0 10;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * plugin page css                                                             *
+ *                                                                             *
+ ******************************************************************************/
+#explain{
+    -fx-padding: 10.0;
+    -fx-pref-width: 200;
+    -fx-border-width: 1 1 1 0;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_FA;
 }
