@@ -59,33 +59,26 @@ import static com.google.common.io.Resources.getResource;
  * @author Julia
  */
 public class MainController {
-
     public static final Double MAX_HEIGHT = 250.0;
     public static final Double MAX_WIDTH = 250.0;
     public static final Double MIN_WIDTH = 160.0;
     private final Logger logger = LoggerFactory.getLogger(MainController.class);
     @FXML
     private GridPane grpContent;
-
     @FXML
     private ToolBar tbaSystem;
-
     @FXML
     private GridPane stateBar;
     private ProgressBar progressBar;
-
     private Button dataSourceBtn;
     private Button templateBtn;
-
     private ScrollPane scrollPaneTooltip;
     private CustomerTooltip dataSourceTooltip;
     private ObservableList<String> dataSourceList = FXCollections.observableArrayList();
-
     private Popup templatePopup;
     private ListView<StateBarTemplateModel> templateView;
     private ObservableList<StateBarTemplateModel> templateList = FXCollections.observableArrayList();
     private AtomicBoolean isShow = new AtomicBoolean(false);
-
     private StackPane contentStackPane;
     private Map<String, TabPane> tabPaneMap = new LinkedHashMap<>();
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
