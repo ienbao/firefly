@@ -223,7 +223,7 @@ public interface DataFrame {
     //Cell Operation
 
     /**
-     * method to get cell value
+     * 获取数据集单元格的值
      *
      * @param rowKey       row key
      * @param testItemName test item name

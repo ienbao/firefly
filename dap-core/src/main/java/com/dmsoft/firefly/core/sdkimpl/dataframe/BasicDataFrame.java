@@ -1,6 +1,8 @@
 package com.dmsoft.firefly.core.sdkimpl.dataframe;
 
+import com.dmsoft.bamboo.common.utils.collection.CollectionUtil;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDataset;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
 import com.dmsoft.firefly.sdk.dataframe.DataFrame;
@@ -8,6 +10,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,15 +23,15 @@ import java.util.function.Function;
  * @author Can Guan
  */
 public class BasicDataFrame extends AbstractBasicDataFrame {
-    //Column
-    private List<String> testItemNames;
+    //所有列名称
+    private List<String> testItemNameList;
+    //数据列相关上下限集合对象
     private List<TestItemWithTypeDto> testItemDtoList;
-    //Row
-    private List<String> rowKeys;
+
     private List<Boolean> inUsedList;
-    //Column & Row
-    //outside list index is same with the rowKeys index, inside list index is same with the testItemNames index
-    private List<List<String>> cellValues;
+
+    //查询数据集对象
+    private TestItemDataset testItemDataset;
 
     /**
      * constructor
@@ -36,42 +40,51 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
      * @param rowDataDtoList  row data dto list
      */
     BasicDataFrame(List<TestItemWithTypeDto> testItemDtoList, List<RowDataDto> rowDataDtoList) {
-        this.testItemNames = Lists.newArrayList();
-        this.rowKeys = Lists.newArrayList();
+        this.testItemNameList = Lists.newArrayList();
         this.testItemDtoList = Lists.newArrayList(testItemDtoList);
-        this.inUsedList = Lists.newArrayList();
-        this.cellValues = Lists.newArrayList();
+//        this.rowKeys = Lists.newArrayList();
+//        this.inUsedList = Lists.newArrayList();
+//        this.cellValues = Lists.newArrayList();
         for (TestItemWithTypeDto testItemDto : this.testItemDtoList) {
-            if (!this.testItemNames.contains(testItemDto.getTestItemName()) && testItemDto.getTestItemName() != null) {
-                this.testItemNames.add(testItemDto.getTestItemName());
+            if (!this.testItemNameList.contains(testItemDto.getTestItemName()) && testItemDto.getTestItemName() != null) {
+                this.testItemNameList.add(testItemDto.getTestItemName());
             }
         }
-        for (RowDataDto rowDataDto : rowDataDtoList) {
-            if (!this.rowKeys.contains(rowDataDto.getRowKey()) && rowDataDto.getRowKey() != null && rowDataDto.getData() != null) {
-                this.rowKeys.add(rowDataDto.getRowKey());
-                this.inUsedList.add(rowDataDto.getInUsed());
-                List<String> values = Lists.newArrayList();
-                for (String testItemName : testItemNames) {
-                    values.add(rowDataDto.getData().get(testItemName));
-                }
-                this.cellValues.add(values);
-            }
-        }
+//        for (RowDataDto rowDataDto : rowDataDtoList) {
+//            if (!this.rowKeys.contains(rowDataDto.getRowKey()) && rowDataDto.getRowKey() != null && rowDataDto.getData() != null) {
+//                this.rowKeys.add(rowDataDto.getRowKey());
+//                this.inUsedList.add(rowDataDto.getInUsed());
+//                List<String> values = Lists.newArrayList();
+//                for (String testItemName : testItemNameList) {
+//                    values.add(rowDataDto.getData().get(testItemName));
+//                }
+//                this.cellValues.add(values);
+//            }
+//        }
+    }
+
+
+    BasicDataFrame(List<TestItemWithTypeDto> testItemDtoList, TestItemDataset testItemDataset){
+        this.testItemDtoList = testItemDtoList;
+        this.testItemDataset = testItemDataset;
+
+        this.testItemNameList = Lists.newArrayListWithCapacity(this.testItemDataset.getColumnLen());
+        this.testItemNameList.addAll(this.testItemDataset.getColumnNameList());
     }
 
     @Override
     public List<String> getAllTestItemName() {
-        return Lists.newArrayList(this.testItemNames);
+        return this.testItemNameList;
     }
 
     @Override
     public List<TestItemWithTypeDto> getAllTestItemWithTypeDto() {
-        return Lists.newArrayList(this.testItemDtoList);
+        return this.testItemDtoList;
     }
 
     @Override
     public TestItemWithTypeDto getTestItemWithTypeDto(String testItemName) {
-        int targetIndex = this.testItemNames.indexOf(testItemName);
+        int targetIndex = this.testItemNameList.indexOf(testItemName);
         if (targetIndex > -1) {
             return this.testItemDtoList.get(targetIndex);
         }
@@ -96,10 +109,10 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
     @Override
     public void updateTestItem(TestItemWithTypeDto testItemWithTypeDto) {
         String targetTestItemName = testItemWithTypeDto.getTestItemName();
-        int targetIndex = this.testItemNames.indexOf(targetTestItemName);
+        int targetIndex = this.testItemNameList.indexOf(targetTestItemName);
         if (targetIndex > -1) {
-            this.testItemNames.remove(targetIndex);
-            this.testItemNames.add(targetIndex, targetTestItemName);
+            this.testItemNameList.remove(targetIndex);
+            this.testItemNameList.add(targetIndex, targetTestItemName);
             this.testItemDtoList.remove(targetIndex);
             this.testItemDtoList.add(targetIndex, testItemWithTypeDto);
         }
@@ -107,7 +120,7 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
 
     @Override
     public boolean isTestItemExist(String testItemName) {
-        return testItemName != null && this.testItemNames.contains(testItemName);
+        return testItemName != null && this.testItemNameList.contains(testItemName);
     }
 
     @Override
@@ -120,7 +133,7 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
         if (valueList == null) {
             return null;
         }
-        return new BasicDataColumn(testItemDto, this.rowKeys, valueList, this.inUsedList);
+        return new BasicDataColumn(testItemDto, this.testItemDataset.getRowKeyList(), valueList, this.inUsedList);
     }
 
     @Override
@@ -134,22 +147,23 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
 
     @Override
     public List<String> getDataValue(String testItemName) {
-        if (isTestItemExist(testItemName)) {
-            List<String> result = Lists.newArrayList();
-            int targetIndex = this.testItemNames.indexOf(testItemName);
-            for (int i = 0; i < this.rowKeys.size(); i++) {
-                result.add(this.cellValues.get(i).get(targetIndex));
-            }
-            return result;
+        if (!isTestItemExist(testItemName)) {
+            return null;
         }
-        return null;
+
+        String[] rowData = (String[]) this.testItemDataset.getColumn(testItemName);
+        if(rowData == null){
+            return null;
+        }
+
+        return Arrays.asList(rowData);
     }
 
     @Override
     public List<String> getDataValue(String testItemName, List<String> rowKeyList) {
         if (isTestItemExist(testItemName)) {
-            List<String> result = Lists.newArrayList();
-            int targetIndex = this.testItemNames.indexOf(testItemName);
+            List<String> result = new ArrayList<String>(rowKeyList.size());
+            int targetIndex = this.testItemNameList.indexOf(testItemName);
             for (String rowKey : rowKeyList) {
                 result.add(privateGetCellValue(rowKey, targetIndex));
             }
@@ -161,101 +175,104 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
     @Override
     public List<DataColumn> getAllDataColumn() {
         List<DataColumn> result = Lists.newArrayList();
-        for (String testItemName : this.testItemNames) {
+        for (String testItemName : this.testItemNameList) {
             result.add(getDataColumn(testItemName));
         }
         return result;
     }
 
+
     @Override
     public void removeColumns(List<String> testItemNameList) {
+        if(CollectionUtil.isEmpty(testItemNameList)){
+            return;
+        }
+
         for (String testItemName : testItemNameList) {
-            if (isTestItemExist(testItemName)) {
-                int targetColumnIndex = this.testItemNames.indexOf(testItemName);
-                this.testItemNames.remove(targetColumnIndex);
-                this.testItemDtoList.remove(targetColumnIndex);
-                for (int i = 0; i < this.rowKeys.size(); i++) {
-                    this.cellValues.get(i).remove(targetColumnIndex);
-                }
+            if (!isTestItemExist(testItemName)) {
+                continue;
             }
+
+            this.testItemNameList.remove(testItemName);
         }
     }
 
     @Override
     public void appendColumns(List<DataColumn> dataColumnList) {
-        for (DataColumn dataColumn : dataColumnList) {
-            if (dataColumn != null && dataColumn.getTestItemWithTypeDto() != null
-                    && dataColumn.getTestItemWithTypeDto().getTestItemName() != null
-                    && !this.testItemNames.contains(dataColumn.getTestItemWithTypeDto().getTestItemName())) {
-                this.testItemNames.add(dataColumn.getTestItemWithTypeDto().getTestItemName());
-                this.testItemDtoList.add(dataColumn.getTestItemWithTypeDto());
-                for (int i = 0; i < this.rowKeys.size(); i++) {
-                    String rowKey = this.rowKeys.get(i);
-                    this.cellValues.get(i).add(dataColumn.getData(rowKey));
-                }
-            }
-        }
+        //TODO YUANWEN 后面更新
+//        for (DataColumn dataColumn : dataColumnList) {
+//
+//            if (dataColumn != null && dataColumn.getTestItemWithTypeDto() != null
+//                    && dataColumn.getTestItemWithTypeDto().getTestItemName() != null
+//                    && !this.testItemNameList.contains(dataColumn.getTestItemWithTypeDto().getTestItemName())) {
+//                this.testItemNameList.add(dataColumn.getTestItemWithTypeDto().getTestItemName());
+//                this.testItemDtoList.add(dataColumn.getTestItemWithTypeDto());
+//                for (int i = 0; i < this.rowKeys.size(); i++) {
+//                    String rowKey = this.rowKeys.get(i);
+//                    this.cellValues.get(i).add(dataColumn.getData(rowKey));
+//                }
+//            }
+//        }
     }
 
     @Override
     public void appendColumn(int index, DataColumn dataColumn) {
-        if (dataColumn != null && dataColumn.getTestItemWithTypeDto() != null
-                && dataColumn.getTestItemWithTypeDto().getTestItemName() != null
-                && !this.testItemNames.contains(dataColumn.getTestItemWithTypeDto().getTestItemName())) {
-            this.testItemNames.add(index, dataColumn.getTestItemWithTypeDto().getTestItemName());
-            this.testItemDtoList.add(index, dataColumn.getTestItemWithTypeDto());
-            for (int i = 0; i < this.rowKeys.size(); i++) {
-                String rowKey = this.rowKeys.get(i);
-                this.cellValues.get(i).add(index, dataColumn.getData(rowKey));
-            }
-        }
+        //TODO YUANWEN 后面更新
+//        if (dataColumn != null && dataColumn.getTestItemWithTypeDto() != null
+//                && dataColumn.getTestItemWithTypeDto().getTestItemName() != null
+//                && !this.testItemNameList.contains(dataColumn.getTestItemWithTypeDto().getTestItemName())) {
+//            this.testItemNameList.add(index, dataColumn.getTestItemWithTypeDto().getTestItemName());
+//            this.testItemDtoList.add(index, dataColumn.getTestItemWithTypeDto());
+//            for (int i = 0; i < this.rowKeys.size(); i++) {
+//                String rowKey = this.rowKeys.get(i);
+//                this.cellValues.get(i).add(index, dataColumn.getData(rowKey));
+//            }
+//        }
     }
 
     @Override
     public boolean isRowKeyExist(String rowKey) {
-        return rowKey != null && this.rowKeys.contains(rowKey);
+        return rowKey != null && this.testItemDataset.getRowKeyList().contains(rowKey);
     }
 
     @Override
     public RowDataDto getDataRow(String rowKey) {
-        if (isRowKeyExist(rowKey)) {
-            Boolean inUsed = isInUsed(rowKey);
-            Map<String, String> data = Maps.newHashMap();
-            int targetRowIndex = this.rowKeys.indexOf(rowKey);
-            for (int i = 0; i < this.testItemNames.size(); i++) {
-                data.put(this.testItemNames.get(i), this.cellValues.get(targetRowIndex).get(i));
-            }
-            RowDataDto rowDataDto = new RowDataDto();
-            rowDataDto.setInUsed(inUsed);
-            rowDataDto.setRowKey(rowKey);
-            rowDataDto.setData(data);
-            return rowDataDto;
-        }
+        //TODO YUANWEN 后面更新
+//        if (isRowKeyExist(rowKey)) {
+//            Boolean inUsed = isInUsed(rowKey);
+//            Map<String, String> data = Maps.newHashMap();
+//            int targetRowIndex = this.rowKeys.indexOf(rowKey);
+//            for (int i = 0; i < this.testItemNameList.size(); i++) {
+//                data.put(this.testItemNameList.get(i), this.cellValues.get(targetRowIndex).get(i));
+//            }
+//            RowDataDto rowDataDto = new RowDataDto();
+//            rowDataDto.setInUsed(inUsed);
+//            rowDataDto.setRowKey(rowKey);
+//            rowDataDto.setData(data);
+//            return rowDataDto;
+//        }
         return null;
     }
 
     @Override
     public List<String> getDataRowList(String rowKey) {
-        if (isRowKeyExist(rowKey)) {
-            List<String> data = Lists.newArrayList();
-            int targetRowIndex = this.rowKeys.indexOf(rowKey);
-            for (int i = 0; i < this.testItemNames.size(); i++) {
-                if(this.cellValues.get(targetRowIndex).get(i) != null){
-                    data.add(this.cellValues.get(targetRowIndex).get(i));
-                }else if(this.cellValues.get(targetRowIndex).get(i) == null){
-                    data.add("");
-                }
 
-            }
-            return data;
-        }
+        //TODO YUANWEN 后面更新
+//        if (isRowKeyExist(rowKey)) {
+//            List<String> data = Lists.newArrayList();
+//            int targetRowIndex = this.rowKeys.indexOf(rowKey);
+//            for (int i = 0; i < this.testItemNameList.size(); i++) {
+//                data.add(this.cellValues.get(targetRowIndex).get(i));
+//            }
+//            return data;
+//        }
         return null;
     }
 
     @Override
     public Map<String, String> getDataMap(String rowKey) {
         Map<String, String> result = Maps.newHashMap();
-        for (String testItemName : this.testItemNames) {
+        for (String testItemName : this.testItemNameList) {
             result.put(testItemName, getCellValue(rowKey, testItemName));
         }
         return result;
@@ -276,7 +293,7 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
     @Override
     public List<RowDataDto> getAllDataRow() {
         List<RowDataDto> result = Lists.newArrayList();
-        for (String rowKey : this.rowKeys) {
+        for (String rowKey : this.testItemDataset.getRowKeyList()) {
             result.add(getDataRow(rowKey));
         }
         return result;
@@ -284,42 +301,45 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
 
     @Override
     public List<String> getAllRowKeys() {
-        return Lists.newArrayList(rowKeys);
+        return Lists.newArrayList(this.testItemDataset.getRowKeyList());
     }
 
     @Override
     public void removeRows(List<String> rowKeyList) {
-        for (String rowKey : rowKeyList) {
-            if (isRowKeyExist(rowKey)) {
-                int targetRowIndex = this.rowKeys.indexOf(rowKey);
-                this.rowKeys.remove(targetRowIndex);
-                this.inUsedList.remove(targetRowIndex);
-                this.cellValues.remove(targetRowIndex);
-            }
-        }
+        //TODO YUANWEN 后面更新
+//        for (String rowKey : rowKeyList) {
+//            if (isRowKeyExist(rowKey)) {
+//                int targetRowIndex = this.rowKeys.indexOf(rowKey);
+//                this.rowKeys.remove(targetRowIndex);
+//                this.inUsedList.remove(targetRowIndex);
+//                this.cellValues.remove(targetRowIndex);
+//            }
+//        }
     }
 
     @Override
     public void replaceRow(String targetRowKey, RowDataDto rowDataDto) {
-        if (rowDataDto != null && rowDataDto.getData() != null && rowDataDto.getRowKey() != null && isRowKeyExist(targetRowKey)) {
-            int targetRowIndex = this.rowKeys.indexOf(targetRowKey);
-            this.rowKeys.remove(targetRowIndex);
-            this.rowKeys.add(targetRowIndex, rowDataDto.getRowKey());
-            this.inUsedList.remove(targetRowIndex);
-            this.inUsedList.add(targetRowIndex, rowDataDto.getInUsed());
-            this.cellValues.remove(targetRowIndex);
-            List<String> data = Lists.newArrayList();
-            for (String testItemName : this.testItemNames) {
-                data.add(rowDataDto.getData().get(testItemName));
-            }
-            this.cellValues.add(targetRowIndex, data);
-        }
+
+        //TODO YUANWEN 后面更新
+//        if (rowDataDto != null && rowDataDto.getData() != null && rowDataDto.getRowKey() != null && isRowKeyExist(targetRowKey)) {
+//            int targetRowIndex = this.rowKeys.indexOf(targetRowKey);
+//            this.rowKeys.remove(targetRowIndex);
+//            this.rowKeys.add(targetRowIndex, rowDataDto.getRowKey());
+//            this.inUsedList.remove(targetRowIndex);
+//            this.inUsedList.add(targetRowIndex, rowDataDto.getInUsed());
+//            this.cellValues.remove(targetRowIndex);
+//            List<String> data = Lists.newArrayList();
+//            for (String testItemName : this.testItemNameList) {
+//                data.add(rowDataDto.getData().get(testItemName));
+//            }
+//            this.cellValues.add(targetRowIndex, data);
+//        }
     }
 
     @Override
     public List<String> filterRowKey(Function<Map<String, String>, Boolean> filterFunction) {
         List<String> result = Lists.newArrayList();
-        for (String rowKey : this.rowKeys) {
+        for (String rowKey : this.testItemDataset.getRowKeyList()) {
             if (filterFunction.apply(getDataMap(rowKey))) {
                 result.add(rowKey);
             }
@@ -338,17 +358,17 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
     @Override
     public Boolean isInUsed(String rowKey) {
         if (isRowKeyExist(rowKey)) {
-            return this.inUsedList.get(rowKeys.indexOf(rowKey));
+            return this.inUsedList.get(this.testItemDataset.getRowKeyList().indexOf(rowKey));
         }
         return Boolean.FALSE;
     }
 
     @Override
     public String getCellValue(String rowKey, String testItemName) {
+
         if (isRowKeyExist(rowKey) && isTestItemExist(testItemName)) {
-            int targetRowIndex = this.rowKeys.indexOf(rowKey);
-            int targetColumnIndex = this.testItemNames.indexOf(testItemName);
-            return this.cellValues.get(targetRowIndex).get(targetColumnIndex);
+
+            return this.testItemDataset.getCellValue(rowKey, testItemName);
         }
         return null;
     }
@@ -362,27 +382,29 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
 
     @Override
     public int getRowSize() {
-        return this.rowKeys == null ? 0 : this.rowKeys.size();
+        return this.testItemDataset.getRowKeyList() == null ? 0 : this.testItemDataset.getRowKeyList().size();
     }
 
     @Override
     public int getColumnSize() {
-        return this.testItemNames == null ? 0 : this.testItemNames.size();
+        return this.testItemNameList == null ? 0 : this.testItemNameList.size();
     }
 
     private String privateGetCellValue(String rowKey, int targetColumnIndex) {
-        if (targetColumnIndex < 0) {
-            return null;
-        }
-        int targetRowIndex = this.rowKeys.indexOf(rowKey);
-        if (targetRowIndex > -1) {
-            return this.cellValues.get(targetRowIndex).get(targetColumnIndex);
-        }
+
+        //TODO YUANWEN 后面更新
+//        if (targetColumnIndex < 0) {
+//            return null;
+//        }
+//        int targetRowIndex = this.rowKeys.indexOf(rowKey);
+//        if (targetRowIndex > -1) {
+//            return this.cellValues.get(targetRowIndex).get(targetColumnIndex);
+//        }
         return null;
     }
 
-    protected List<String> getTestItemNames() {
-        return testItemNames;
+    protected List<String> getTestItemNameList() {
+        return testItemNameList;
     }
 
     protected List<TestItemWithTypeDto> getTestItemDtoList() {
@@ -390,7 +412,7 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
     }
 
     protected List<String> getRowKeys() {
-        return rowKeys;
+        return this.testItemDataset.getRowKeyList();
     }
 
     protected List<Boolean> getInUsedList() {
@@ -398,6 +420,9 @@ public class BasicDataFrame extends AbstractBasicDataFrame {
     }
 
     protected List<List<String>> getCellValues() {
-        return cellValues;
+        //TODO YUANWEN 后面更新
+//        return cellValues;
+
+        return null;
     }
 }

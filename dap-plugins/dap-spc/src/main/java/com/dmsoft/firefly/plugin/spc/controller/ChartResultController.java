@@ -31,6 +31,7 @@ import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -341,7 +342,7 @@ public class ChartResultController implements Initializable {
         button.setListViewData(chartOperateNameMap.get(charName));
         button.setButtonTooltipContent(SpcFxmlAndLanguageUtils.getString(UIConstant.BTN_CHART_CHOOSE_LINES));
         button.setSelectCallBack(chartOperateSelectCallBackMap.get(charName));
-        button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
+        button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/choose-lines.svg")));
         button.setListViewSize(chartOperatePaneSizeMap.get(charName).getWidth(), chartOperatePaneSizeMap.get(charName).getHeight());
         return button;
     }
@@ -561,11 +562,10 @@ public class ChartResultController implements Initializable {
     }
 
     private void initRunChartPane(ControlChart chart) {
-
         runOperateBtn = this.buildChartOperateButton(UIConstant.SPC_CHART_NAME[1]);
 
         rRuleBtn = new ChartOperateButton(false, com.dmsoft.firefly.plugin.spc.charts.utils.enums.Orientation.BOTTOMLEFT);
-        rRuleBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rule_normal.png")));
+        rRuleBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/rule.svg")));
         rRuleBtn.setListViewData(Arrays.asList(spcRuleR));
         rRuleBtn.setListViewSize(140, 211);
         rRuleBtn.setButtonTooltipContent(SpcFxmlAndLanguageUtils.getString(UIConstant.BTN_RUN_CHART_CHOOSE_RULES));
@@ -575,7 +575,7 @@ public class ChartResultController implements Initializable {
         itemNames.addAll(envService.findTestItemNames());
         editBtn = new ChartAnnotationButton();
         editBtn.setButtonTooltipContent(SpcFxmlAndLanguageUtils.getString(UIConstant.BTN_RUN_CHART_CHOOSE_ANNOTATION_ITEM));
-        editBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_tracing_point_normal.png")));
+        editBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/tracing-point.svg")));
         editBtn.setData(itemNames.size() < 2 ? Lists.newArrayList("") : itemNames);
         editBtn.setCallBack(() -> chart.clearAnnotation(annotationData));
         editBtn.setSelectCallBack(this.buildRunChartAnnotationEditSelectCallBack());

@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.sdk.dataframe;
 
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDataset;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 
 import java.util.List;
@@ -29,6 +30,16 @@ public interface DataFrameFactory {
      * @return search data frame
      */
     SearchDataFrame createSearchDataFrame(List<TestItemWithTypeDto> testItemWithTypeDtoList, List<RowDataDto> rowDataDtoList);
+
+
+    /**
+     * 创建数据查询对象
+     *
+     * @param testItemWithTypeDtoList
+     * @param testItemDataset
+     * @return
+     */
+    SearchDataFrame createSearchDataFrame(List<TestItemWithTypeDto> testItemWithTypeDtoList, TestItemDataset testItemDataset);
 
     /**
      * method to create search data frame from data frame

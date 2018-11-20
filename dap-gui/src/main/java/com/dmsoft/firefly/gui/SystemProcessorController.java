@@ -14,19 +14,12 @@ import org.slf4j.LoggerFactory;
 
 public class SystemProcessorController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemProcessorController.class);
-
-    private static final String LOGOPATH = "Initialize_logo.png";
-
     @FXML
     private ProgressBar progressBar;
 
     @FXML
-    private ImageView imageViewLogo;
-
-    @FXML
     private void initialize() {
         LOGGER.debug("The processor bar is start.");
-        imageViewLogo.setImage(new Image("/images/" + LOGOPATH));
         progressBar.setProgress(0);
     }
 

@@ -26,6 +26,7 @@ import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -301,6 +302,21 @@ public class ViewDataModel implements TableModel {
 
     public void setAllCheckBox(CheckBox checkBox) {
         this.allCheckBox = checkBox;
+    }
+
+    @Override
+    public void setTableViewWidth(TableView<String> tableView) {
+
+    }
+
+    @Override
+    public boolean isMenuEventEnable(String rowKey) {
+        return false;
+    }
+
+    @Override
+    public boolean isTextInputError(TextField textField, String oldText, String newText, String rowKey, String columnName) {
+        return false;
     }
 
 

@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.AppController">
-   <children>
-      <GridPane fx:id="menuPane" layoutX="-39.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="ALWAYS" />
-            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="1.7976931348623157E308" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints maxHeight="48.0" minHeight="28.0" prefHeight="28.0" valignment="CENTER" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <MenuBar fx:id="menuSystem" maxWidth="1.7976931348623157E308" style="-fx-background-color: transparent;" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER" />
-         </children>
-      </GridPane>
-   </children>
-</AnchorPane>
+<BorderPane fx:id="menuPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.AppController">
+    <left >
+        <MenuBar fx:id="menuSystem" />
+    </left>
+    <right>
+        <StackPane>
+            <MenuButton fx:id="menuBtn" styleClass="btn-txt" />
+            <Button fx:id="loginMenuBtn" styleClass="btn-txt" />
+        </StackPane>
+    </right>
+</BorderPane>
+
+
+

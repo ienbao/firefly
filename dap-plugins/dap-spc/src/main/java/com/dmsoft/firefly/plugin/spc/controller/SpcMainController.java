@@ -88,9 +88,9 @@ public class SpcMainController implements Initializable {
         resetBtn.setDisable(disable);
         chooseBtn.setDisable(disable);
         if (disable) {
-            chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_gray.png")));
+            chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/check-gray.svg")));
         } else {
-            chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
+            chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/check-white.svg")));
         }
     }
 
@@ -377,10 +377,10 @@ public class SpcMainController implements Initializable {
     }
 
     private void initBtnIcon() {
-        resetBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_reset_normal.png")));
-        printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_print_normal.png")));
-        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_export_normal.png")));
-        chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
+        resetBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/reset.svg")));
+        printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/print.svg")));
+        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/export.svg")));
+        chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/check-white.svg")));
         TooltipUtil.installNormalTooltip(resetBtn, SpcFxmlAndLanguageUtils.getString("SPC_RESET_BTN_TOOLTIP"));
         TooltipUtil.installNormalTooltip(printBtn, SpcFxmlAndLanguageUtils.getString("SPC_PRINT_BTN_TOOLTIP"));
         TooltipUtil.installNormalTooltip(exportBtn, SpcFxmlAndLanguageUtils.getString("SPC_EXPORT_BTN_TOOLTIP"));

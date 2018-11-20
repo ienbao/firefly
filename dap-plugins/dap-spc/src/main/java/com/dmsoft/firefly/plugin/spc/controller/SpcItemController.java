@@ -131,7 +131,7 @@ public class SpcItemController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initBtnIcon();
-        searchTab = new SearchTab();//查询表格
+        searchTab = new SearchTab();
         split.getItems().add(searchTab);
         itemFilter.getTextField().setPromptText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_TEST_ITEM_PROMPT));
         itemFilter.getTextField().textProperty().addListener((observable, oldValue, newValue) -> {
@@ -331,22 +331,22 @@ public class SpcItemController implements Initializable {
         return leftConfigDto;
     }
 
-    private void initBtnIcon() {//初始化按钮图标
-        analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));//分析按钮图标
-        TooltipUtil.installNormalTooltip(analysisBtn, SpcFxmlAndLanguageUtils.getString(ResourceMassages.ANALYSIS));//建立正常提示
-        importBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_load_script_normal.png")));//导入按钮图标
-        TooltipUtil.installNormalTooltip(importBtn, SpcFxmlAndLanguageUtils.getString(ResourceMassages.IMPORT_CONFIG));//
-        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_save_normal.png")));//导出按钮图标
+    private void initBtnIcon() {
+        analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/analysis-white.svg")));
+        TooltipUtil.installNormalTooltip(analysisBtn, SpcFxmlAndLanguageUtils.getString(ResourceMassages.ANALYSIS));
+        importBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/load-script.svg")));
+        TooltipUtil.installNormalTooltip(importBtn, SpcFxmlAndLanguageUtils.getString(ResourceMassages.IMPORT_CONFIG));
+        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/save.svg")));
         TooltipUtil.installNormalTooltip(exportBtn, SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_CONFIG));
-        itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_datasource_normal.png")));//设置图标
+        itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/datasource.svg")));
         itemTab.setStyle("-fx-padding: 0 5 0 5");
         itemTab.setTooltip(new Tooltip(SpcFxmlAndLanguageUtils.getString("SPC_TEST_ITEM")));
 
-        configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_config_normal.png")));
+        configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/config.svg")));
         configTab.setStyle("-fx-padding: 0 5 0 5");
         configTab.setTooltip(new Tooltip(SpcFxmlAndLanguageUtils.getString("SPC_CONFIG")));
 
-        timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
+        timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/timer.svg")));
         timeTab.setStyle("-fx-padding: 0 5 0 5");
         timeTab.setTooltip(new Tooltip(SpcFxmlAndLanguageUtils.getString("SPC_TIMER_SETTING")));
 
@@ -445,7 +445,7 @@ public class SpcItemController implements Initializable {
     }
 
     @SuppressWarnings("unchecked")
-    private void initItemData() {//初始化项目数据
+    private void initItemData() {
         items.clear();
         stickyOnTopItems.clear();
         String s = userPreferenceService.findPreferenceByUserId(STICKY_ON_TOP_CODE, envService.getUserName());
@@ -483,7 +483,7 @@ public class SpcItemController implements Initializable {
     }
 
     @SuppressWarnings("unchecked")
-    private void getAnalysisBtnEvent() {//点击按钮事件进行分析
+    private void getAnalysisBtnEvent() {
         if (isTimer) {
             if (startTimer) {
                 startTimer = false;
@@ -509,7 +509,7 @@ public class SpcItemController implements Initializable {
         }
     }
 
-    private Timer startTimerAnalysis() {//定时进行分析
+    private Timer startTimerAnalysis() {
 
         String currentRefreshTime = (String) timeComboBox.getValue();
         String time = currentRefreshTime.replace(SpcFxmlAndLanguageUtils.getString(ResourceMassages.TIMER_MIN), "");
@@ -986,7 +986,7 @@ public class SpcItemController implements Initializable {
                 analysisBtn.getStyleClass().add("btn-primary");
             }
         } else {
-            analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
+            analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/analysis-white.svg")));
             analysisBtn.getStyleClass().remove("btn-timer");
             analysisBtn.getStyleClass().add("btn-primary");
         }
@@ -1025,6 +1025,4 @@ public class SpcItemController implements Initializable {
         ControlMap.getControl(CommonResourceMassages.PLATFORM_CONTROL_DATASOURCE_BTN).setDisable(isTimer);
         ControlMap.getControl(CommonResourceMassages.PLATFORM_CONTROL_TEMPLATE_BTN).setDisable(isTimer);
     }
-
-
 }

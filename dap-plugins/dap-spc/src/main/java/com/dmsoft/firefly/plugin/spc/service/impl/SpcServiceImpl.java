@@ -43,14 +43,17 @@ public class SpcServiceImpl implements SpcService {
         2.Get analysis statistical result from R
          */
         logger.debug("Getting SPC stats result...");
+        //TODO yuanwen 优化此处逻辑，特别关注内存使用情况
         if (searchDataFrame == null || searchConditions == null || configDto == null) {
             pushProgress(100);
             throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11002));
         }
         List<SpcStatsDto> result = Lists.newArrayList();
-        List<SpcAnalysisDataDto> spcAnalysisDataDtoList = Lists.newArrayList();
         int n = 0;
         double len = searchConditions.size();
+        //TODO yuanwen 第一步：这里对数据处理占用太多内存，需要抽取公共资管理类；第二步：分级分析对象
+        Long start = System.currentTimeMillis();
+        logger.debug("开始分析每个测试项的数据。。");
         for (SearchConditionDto searchConditionDto : searchConditions) {
             SpcAnalysisDataDto spcAnalysisDataDto = new SpcAnalysisDataDto();
             List<String> searchRowKeys = searchDataFrame.getSearchRowKey(searchConditionDto.getCondition());
@@ -61,24 +64,29 @@ public class SpcServiceImpl implements SpcService {
                     doubleList.add(Double.valueOf(s));
                 }
             }
+
             spcAnalysisDataDto.setLsl(searchConditionDto.getCusLsl());
             spcAnalysisDataDto.setUsl(searchConditionDto.getCusUsl());
             spcAnalysisDataDto.setDataList(doubleList);
-            spcAnalysisDataDtoList.add(spcAnalysisDataDto);
-            n++;
-            pushProgress((int) (n / len * 40));
-        }
-        for (int i = 0; i < spcAnalysisDataDtoList.size(); i++) {
-            SpcStatsResultDto resultDto = getAnalysisService().analyzeStatsResult(spcAnalysisDataDtoList.get(i), configDto);
+
+            SpcStatsResultDto resultDto = getAnalysisService().analyzeStatsResult(spcAnalysisDataDto, configDto);
             SpcStatsDto statsDto = new SpcStatsDto();
             statsDto.setStatsResultDto(resultDto);
-            statsDto.setKey(searchConditions.get(i).getKey());
-            statsDto.setItemName(searchConditions.get(i).getItemName());
-            statsDto.setCondition(searchConditions.get(i).getCondition());
+            statsDto.setKey(searchConditionDto.getKey());
+            statsDto.setItemName(searchConditionDto.getItemName());
+            statsDto.setCondition(searchConditionDto.getCondition());
             result.add(statsDto);
-            pushProgress((int) (40 + ((i + 1) / (double) (spcAnalysisDataDtoList.size())) * 60));
+
+            spcAnalysisDataDto = null;
+            resultDto = null;
+            statsDto = null;
+
+            n++;
+            pushProgress((int) (n / len * 100));
         }
+
         logger.info("Get SPC stats result done.");
+        System.out.println(System.currentTimeMillis() - start);
         return result;
     }
 
@@ -94,12 +102,11 @@ public class SpcServiceImpl implements SpcService {
             throw new ApplicationException(SpcFxmlAndLanguageUtils.getString(SpcExceptionCode.ERR_11002));
         }
         List<SpcChartDto> result = Lists.newArrayList();
-        List<SpcAnalysisDataDto> spcAnalysisDataDtoList = Lists.newArrayList();
-        List<List<String>> analyzedRowKeys = Lists.newArrayList();
         Double ndcMax = Double.NEGATIVE_INFINITY;
         Double ndcMin = Double.POSITIVE_INFINITY;
         int n = 0;
         double len = searchConditions.size();
+        Long start = System.currentTimeMillis();
         for (SearchConditionDto searchConditionDto : searchConditions) {
             SpcAnalysisDataDto spcAnalysisDataDto = new SpcAnalysisDataDto();
             List<String> searchRowKeys = searchDataFrame.getSearchRowKey(searchConditionDto.getCondition());
@@ -121,36 +128,38 @@ public class SpcServiceImpl implements SpcService {
                     doubleList.add(value);
                 }
             }
-            spcAnalysisDataDto.setCalculable(flag);
-            analyzedRowKeys.add(rowKeys);
-            spcAnalysisDataDto.setLsl(searchConditionDto.getCusLsl());
-            spcAnalysisDataDto.setUsl(searchConditionDto.getCusUsl());
-            spcAnalysisDataDto.setDataList(doubleList);
-            spcAnalysisDataDtoList.add(spcAnalysisDataDto);
-            n++;
-            pushProgress((int) (n / len * 40));
-        }
-        for (int i = 0; i < spcAnalysisDataDtoList.size(); i++) {
-            SpcAnalysisDataDto spcAnalysisDataDto = spcAnalysisDataDtoList.get(i);
-            if (!spcAnalysisDataDto.isCalculable()) {
+            if (!flag) {
                 continue;
             }
+
             if (ndcMax != Double.NEGATIVE_INFINITY) {
                 spcAnalysisDataDto.setNdcMax(ndcMax);
             }
             if (ndcMin != Double.POSITIVE_INFINITY) {
                 spcAnalysisDataDto.setNdcMin(ndcMin);
             }
+
+            spcAnalysisDataDto.setLsl(searchConditionDto.getCusLsl());
+            spcAnalysisDataDto.setUsl(searchConditionDto.getCusUsl());
+            spcAnalysisDataDto.setDataList(doubleList);
+
             SpcChartResultDto chartResultDto = getAnalysisService().analyzeSpcChartResult(spcAnalysisDataDto, configDto);
             SpcChartDto chartDto = new SpcChartDto();
             chartDto.setResultDto(chartResultDto);
-            chartDto.setKey(searchConditions.get(i).getKey());
-            chartDto.setItemName(searchConditions.get(i).getItemName());
-            chartDto.setCondition(searchConditions.get(i).getCondition());
-            chartDto.setAnalyzedRowKeys(analyzedRowKeys.get(i));
+            chartDto.setKey(searchConditionDto.getKey());
+            chartDto.setItemName(searchConditionDto.getItemName());
+            chartDto.setCondition(searchConditionDto.getCondition());
+            chartDto.setAnalyzedRowKeys(rowKeys);
             result.add(chartDto);
-            pushProgress((int) (40 + ((i + 1) / (double) (spcAnalysisDataDtoList.size())) * 60));
+
+            spcAnalysisDataDto = null;
+            chartResultDto = null;
+            chartDto = null;
+
+            n++;
+            pushProgress((int) (n / len * 100));
         }
+        System.out.println(System.currentTimeMillis() - start);
         logger.info("Get SPC chart result done.");
         return result;
     }

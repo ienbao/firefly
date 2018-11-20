@@ -93,14 +93,10 @@ public class DataSourceController implements Initializable {
 
     private void initTable() {
         filterTf.getTextField().setPromptText(GuiFxmlAndLanguageUtils.getString(ResourceMassages.FILTER));
-        delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
         TooltipUtil.installNormalTooltip(delete, GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_SOURCE));
-        errorInfo.getStyleClass().add("message-tip-warn-mark");
-        errorInfo.setStyle("-fx-background-color: #F38400");
         errorInfo.setVisible(false);
         allCheckBox = new CheckBox();
         chooseCheckBoxColumn.setGraphic(allCheckBox);
-
         chooseCheckBoxColumn.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
         chooseValueColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue()));
         chooseValueColumn.setCellFactory(new Callback<TableColumn<ChooseTableRowData, ChooseTableRowData>, TableCell<ChooseTableRowData, ChooseTableRowData>>() {
@@ -118,12 +114,9 @@ public class DataSourceController implements Initializable {
                             super.setGraphic(null);
                         } else {
                             HBox hBox = new HBox();
-                            hBox.setSpacing(5);
-                            hBox.setAlignment(Pos.CENTER);
+                            hBox.getStyleClass().add("gui-datasource-table-h-box");
                             Label textField = new Label(item.getValue());
-                            textField.setStyle("-fx-border-width: 0 0 0 0");
-                            textField.setPrefWidth(400);
-                            textField.getStyleClass().add("table-text-field");
+                            textField.getStyleClass().addAll("table-text-field","gui-datasource-text-filed");
                             if (item.isImport() || item.isError()) {
                                 textField.setDisable(true);
                                 item.getSelector().getCheckbox().setSelected(false);
@@ -138,21 +131,15 @@ public class DataSourceController implements Initializable {
                             } else {
                                 progressBar.getStyleClass().setAll("progress-bar-lg-green");
                             }
-                            progressBar.setPrefWidth(70);
-                            progressBar.setMinWidth(70);
-                            progressBar.setMaxHeight(3);
-                            progressBar.setPrefHeight(3);
-                            progressBar.setMinHeight(3);
+                            progressBar.getStyleClass().add("gui-datasource-progressBar");
                             Button rename = new Button();
-                            rename.getStyleClass().add("btn-icon");
-                            rename.setStyle("-fx-padding: 0 4 0 4; -fx-border-insets: -3 0 0 0; -fx-background-insets: -3 0 0 0");
+                            rename.getStyleClass().addAll("btn-icon","gui-datasource-rename-btn");
                             TooltipUtil.installNormalTooltip(rename, renameStr);
-                            rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rename_normal.png")));
+                            //TODO 给按钮设置图片
+                            rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/rename.svg")));
                             Button deleteOne = new Button();
-                            deleteOne.getStyleClass().add("btn-icon");
+                            deleteOne.getStyleClass().addAll("btn-icon","gui-datasource-delete-one-btn");
                             TooltipUtil.installNormalTooltip(deleteOne, delStr);
-                            deleteOne.setStyle("-fx-padding: 0 4 0 4; -fx-background-insets: -3 0 0 0; -fx-border-insets: -3 0 0 0");
-
                             rename.setVisible(false);
                             deleteOne.setVisible(false);
                             if (!item.isError()) {
@@ -163,12 +150,12 @@ public class DataSourceController implements Initializable {
                             if (item.getProgress() != 0) {
                                 progressBar.setProgress(item.getProgress());
                             }
-                            deleteOne.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
+                            //TODO 给按钮设置图片
+                            deleteOne.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/del.svg")));
                             hBox.getChildren().add(textField);
                             hBox.getChildren().add(progressBar);
                             hBox.getChildren().add(rename);
                             hBox.getChildren().add(deleteOne);
-                            hBox.setStyle("-fx-background-insets: -1 0 0 0; -fx-border-insets: -1 0 0 0");
                             HBox.setHgrow(textField, Priority.ALWAYS);
                             HBox.setHgrow(progressBar, Priority.NEVER);
                             HBox.setHgrow(rename, Priority.NEVER);

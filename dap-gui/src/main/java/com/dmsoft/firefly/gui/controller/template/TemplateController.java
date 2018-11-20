@@ -20,7 +20,9 @@ import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.*;
+import com.dmsoft.firefly.sdk.dai.dto.SpecificationDataDto;
+import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
+import com.dmsoft.firefly.sdk.dai.dto.TimePatternDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
@@ -125,18 +127,18 @@ public class TemplateController {
     }
 
     private void initButton() {
-        rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_rename_normal.png")));
+        rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/rename.svg")));
         TooltipUtil.installNormalTooltip(rename, GuiFxmlAndLanguageUtils.getString(ResourceMassages.RENAME_TEMPLATE));
-        add.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
+        add.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/add.svg")));
         TooltipUtil.installNormalTooltip(add, GuiFxmlAndLanguageUtils.getString(ResourceMassages.ADD_TEMPLATE));
-        copy.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_copy_normal.png")));
+        copy.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/copy.svg")));
         TooltipUtil.installNormalTooltip(copy, GuiFxmlAndLanguageUtils.getString(ResourceMassages.COPY_TEMPLATE));
-        delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_del_normal.png")));
+        delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/del.svg")));
         TooltipUtil.installNormalTooltip(delete, GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_TEMPLATE));
-        addTime.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
+        addTime.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/add.svg")));
         TooltipUtil.installNormalTooltip(addTime, GuiFxmlAndLanguageUtils.getString(ResourceMassages.ADD_TIME_KEYS));
 
-        addRow.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
+        addRow.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/add.svg")));
         TooltipUtil.installNormalTooltip(addRow, GuiFxmlAndLanguageUtils.getString(ResourceMassages.ADD_ITEM));
         pattern.getStyleClass().add("message-tip-question");
         pattern.setStyle("-fx-background-color: #0096ff");
@@ -328,7 +330,7 @@ public class TemplateController {
         title.setText(GuiConst.DEFAULT_TEMPLATE_NAME);
         decimal.setValue(6);
         timeKeys.getChildren().clear();
-        patternText.setText("yyy/MM/dd HH:mm:ss SSS");
+        patternText.setText("yyy/MM/dd HH:mm:ss.SSS");
 //        items.clear();
     }
 

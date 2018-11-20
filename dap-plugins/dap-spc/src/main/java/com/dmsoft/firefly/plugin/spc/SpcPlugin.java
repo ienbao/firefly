@@ -26,6 +26,7 @@ import com.dmsoft.firefly.sdk.ui.IMainBodyPane;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
+import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
@@ -70,6 +71,7 @@ public class SpcPlugin extends Plugin {
         RuntimeContext.getBean(PluginUIContext.class).registerMainBody("SPC", new IMainBodyPane() {
             @Override
             public Pane getNewPane() {
+                SvgImageLoaderFactory.install();
                 FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML(ViewResource.SPC_VIEW_RES);
                 //FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getInstance().getLoaderFXML("view/spc.fxml");
                 Pane root = null;

@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.sdk.dai.dto;
 
 import java.util.Map;
+import org.bson.types.ObjectId;
 
 /**
  * dto class for row data
@@ -11,6 +12,7 @@ public class RowDataDto {
     private String rowKey;
     private Boolean inUsed;
     private Map<String, String> data;
+
 
     public String getRowKey() {
         return rowKey;

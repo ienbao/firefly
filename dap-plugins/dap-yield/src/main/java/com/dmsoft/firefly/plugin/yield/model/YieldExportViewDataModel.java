@@ -17,6 +17,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
 import java.util.List;
 import java.util.Map;
@@ -129,6 +130,20 @@ public class YieldExportViewDataModel implements TableModel {
     }
 
     @Override
+    public void setTableViewWidth(TableView<String> tableView) {
+
+    }
+
+    @Override
+    public boolean isMenuEventEnable(String rowKey) {
+        return false;
+    }
+
+    @Override
+    public boolean isTextInputError(TextField textField, String oldText, String newText, String rowKey, String columnName) {
+        return false;
+    }
+
     public void setTableView(TableView<String> tableView) {
 
     }
