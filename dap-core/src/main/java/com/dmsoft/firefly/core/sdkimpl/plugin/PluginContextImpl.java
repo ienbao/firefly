@@ -40,7 +40,13 @@ public class PluginContextImpl implements PluginContext, PluginContextListener {
                 PluginClassLoader pcl = super.put(key, value);
                 PluginInfo pluginInfo = value.getPluginInfo();
                 try {
-                    Class<?> pluginClass = value.loadClass(pluginInfo.getPluginClassName());
+                    //TODO YUANWEN  临时解决加载问题
+                    Class<?> pluginClass = null;
+                    try {
+                       pluginClass = value.loadClass(pluginInfo.getPluginClassName());
+                    }catch (Exception e){
+                        pluginClass = this.getClass().getClassLoader().loadClass(pluginInfo.getPluginClassName());
+                    }
                     if (pluginClass != null && Plugin.class.isAssignableFrom(pluginClass)) {
                         pluginInfo.setPluginObject((Plugin) pluginClass.newInstance());
                         pluginInfo.getPluginObject().initialize(initModel);

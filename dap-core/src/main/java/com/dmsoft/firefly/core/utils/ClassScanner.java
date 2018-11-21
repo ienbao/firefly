@@ -58,6 +58,11 @@ public class ClassScanner {
             URL url = dirs.nextElement();
             String protocol = url.getProtocol();
             if ("file".equals(protocol)) {
+              //TODO YUANWEN 添加插件测试代码
+                if(!url.getFile().endsWith("class")){
+                    continue;
+                }
+
                 String filePath = null;
                 try {
                     filePath = URLDecoder.decode(url.getFile(), "UTF-8");
