@@ -5,7 +5,12 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.ProgressBar?>
+<?import com.dmsoft.firefly.gui.component.ContentStackPane?>
+<?import javafx.scene.layout.HBox?>
 <AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.gui.controller.MainController">
     <GridPane fx:id="grpContent" layoutX="68.0" layoutY="14.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -17,6 +22,7 @@
         <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="NEVER" />
         </rowConstraints>
         <ToolBar fx:id="tbaSystem" maxHeight="25.0" minHeight="25.0" prefHeight="25.0" />
+        <ContentStackPane fx:id="contentStackPane" GridPane.rowIndex="1"/>
         <GridPane fx:id="stateBar" styleClass="app-status-bar" GridPane.rowIndex="2">
             <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS" maxWidth="45.0" minWidth="45.0" prefWidth="45.0" />
@@ -29,6 +35,23 @@
             <rowConstraints>
             <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
             </rowConstraints>
+            <Label styleClass="state-bar-lbl" text="%STATE_BAR_FILE"/>
+            <Button  fx:id="dataSourceBtn" text="--" styleClass="btn-icon-b,main-dataSourceBtn" GridPane.columnIndex="1">
+                <graphic>
+                    <ImageView fitHeight="16" fitWidth="16" styleClass="main-dataSourceBtn-image" />
+                </graphic>
+            </Button>
+            <Label styleClass="state-bar-lbl" text="%STATE_BAR_ANALYZE" GridPane.columnIndex="2"/>
+            <Button  fx:id="templateBtn" text="--" styleClass="btn-icon-b,main-templateBtn" GridPane.columnIndex="3">
+                <graphic>
+                    <ImageView fitHeight="16" fitWidth="16" styleClass="main-templateBtn-image" />
+                </graphic>
+            </Button>
+            <HBox styleClass="state-bar-lbl,main-memory" GridPane.columnIndex="4">
+                <Label text="%STATE_BAR_MEMORY" />
+                <ProgressBar fx:id="progressBar" minWidth="110.0" maxWidth="110.0" prefWidth="110.0" styleClass="progress-bar-lg-green"/>
+            </HBox>
+            <Label styleClass="state-bar-lbl" text="%STATE_BAR_VERSION" GridPane.columnIndex="5"/>
         </GridPane>
     </GridPane>
 </AnchorPane>

@@ -2485,6 +2485,7 @@
 
 .progress-bar-lg-red > .bar {
     -fx-pref-height: 8;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
 }
 
 .progress-bar-lg-red > .track {

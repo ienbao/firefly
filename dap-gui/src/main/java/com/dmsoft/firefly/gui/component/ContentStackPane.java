@@ -18,6 +18,10 @@ public class ContentStackPane extends StackPane {
     private ObservableList<Node> pages = FXCollections.observableArrayList();
     private Stack<Integer> history = new Stack<>();
 
+    public ContentStackPane() {
+
+    }
+
     /**
      * constructor
      *

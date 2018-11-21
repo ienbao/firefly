@@ -505,7 +505,7 @@ public class SpcItemController implements Initializable {
         } else {
 
             //TODO YUANWEN 添加插件测试代码
-            int aa = 990;
+            int aa = 9901;
             System.out.println("sdfsdfsdfsdf===========");
             if (validAnalysisCondition()) {
                 this.normalAnalysisEvent(isTimer);
