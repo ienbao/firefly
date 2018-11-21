@@ -888,10 +888,54 @@
  * main page css                                                               *
  *                                                                             *
  ******************************************************************************/
-.main-active-btn{
+#tbaSystem .main-active-btn{
     -fx-text-fill: COLOR_LIGHT_FF;
-    -fx-background-color: COLORFUL_PRIMARY_RED;
+    -fx-background-color: COLORFUL_PRIMARY_RED ;
 }
 .main-mutily-tab{
     -fx-skin: 'com.dmsoft.firefly.gui.component.TabPaneSkin';
 }
+
+.tool-bar .button {
+-fx-max-height: 25;
+-fx-min-height: 25;
+-fx-pref-height: 25;
+-fx-padding: 0 12 3 16;
+-fx-background-insets: 0 -4 3 0;
+-fx-border-width: 0;
+-fx-border-color: transparent;
+-fx-background-color: transparent;
+}
+
+.tool-bar .button:hover {
+-fx-text-fill: COLOR_LIGHT_FF;
+-fx-highlight-fill: COLORFUL_PRIMARY_RED;
+-fx-border-color: COLORFUL_PRIMARY_RED;
+-fx-background-color: COLORFUL_PRIMARY_RED;
+-fx-background-repeat: no-repeat;
+-fx-background-position: center;
+}
+
+.tool-bar .button:focused {
+    -fx-text-fill: COLOR_LIGHT_FF;
+    -fx-highlight-fill: COLORFUL_PRIMARY_RED;
+    -fx-border-color: COLORFUL_PRIMARY_RED;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
+}
+.tool-bar .button:hover:focused {
+-fx-highlight-fill: COLORFUL_PRIMARY_RED_LIGHT;
+-fx-border-color: COLORFUL_PRIMARY_RED_LIGHT;
+-fx-background-color: COLORFUL_PRIMARY_RED_LIGHT;
+}
+
+.tool-bar .button:pressed {
+-fx-highlight-fill: COLORFUL_PRIMARY_RED_DARK;
+-fx-border-color: COLORFUL_PRIMARY_RED_DARK;
+-fx-background-color: COLORFUL_PRIMARY_RED_DARK;
+}
+.tool-bar .button:pressed:focused {
+    -fx-highlight-fill: COLORFUL_PRIMARY_RED_DARK;
+    -fx-border-color: COLORFUL_PRIMARY_RED_DARK;
+    -fx-background-color: COLORFUL_PRIMARY_RED_DARK;
+}
+

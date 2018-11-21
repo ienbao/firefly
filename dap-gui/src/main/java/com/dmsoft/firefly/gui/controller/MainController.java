@@ -134,10 +134,10 @@ public class MainController {
     }
 
     private void setActiveBtnStyle(Button btn) {
-        btn.setStyle(" -fx-text-fill: #ffffff;-fx-background-color: #ea2028");
+       btn.getStyleClass().add("main-active-btn");
         for (Node node : tbaSystem.getItems()) {
             if (!node.getId().equals(btn.getId())) {
-                node.setStyle(null);
+                node.getStyleClass().setAll("button");
             }
         }
     }
