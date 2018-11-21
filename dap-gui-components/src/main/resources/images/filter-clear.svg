@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        stroke: #707070;
+        opacity: 0;
+      }
+
+      .cls-2 {
+        stroke: none;
+      }
+
+      .cls-3 {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <g id="filter-clear" transform="translate(-276 -814)">
+    <g id="矩形_395" data-name="矩形 395" class="cls-1" transform="translate(276 814)">
+      <rect class="cls-2" width="16" height="16"/>
+      <rect class="cls-3" x="0.5" y="0.5" width="15" height="15"/>
+    </g>
+    <path id="联合_31" data-name="联合 31" d="M-5394,3008v-7h1v7Zm-3-2v-1h-2v-2h2v2h1v1Zm-3,0v-1h1v1Zm3-3v-1h1v1Zm-3,0v-1h1v1Zm7-2v-1h1v1Zm-3,0v-1h1v1Zm4-1v-1h1v1Zm-5,0v-1h1v1Zm6-1v-1h1v1Zm-7,0v-1h1v1Zm8-1v-1h1v1Zm-9,0v-1h1v1Zm-1-1v-1h12v1Z" transform="translate(5678 -2180)"/>
+  </g>
+</svg>

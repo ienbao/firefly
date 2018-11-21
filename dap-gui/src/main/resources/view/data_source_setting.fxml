@@ -11,15 +11,15 @@
     <HBox VBox.vgrow="ALWAYS">
         <VBox>
             <HBox styleClass="datasource-setting-h-box-top">
-                <Label  prefWidth="591.0" text="%ALL_DATA"/>
-                <Button fx:id="chooseItem" prefWidth="22.0" styleClass="btn-icon"/>
+                <Label  prefWidth="581.0" text="%ALL_DATA"/>
+                <Button fx:id="chooseItem" styleClass="btn-icon,choose-button"/>
             </HBox>
             <TableView fx:id="itemDataTable" prefHeight="461.0" prefWidth="619.0" />
         </VBox>
         <VBox styleClass="datasource-setting-v-box">
             <SplitPane fx:id="split" orientation="VERTICAL" styleClass="datasource-setting-split-pane" />
             <Pane styleClass="datasource-setting-pane" >
-                <Button fx:id="searchBtn" layoutX="29.0" layoutY="2.0" maxWidth="22" minWidth="22" prefWidth="22.0" styleClass="btn-primary" />
+                <Button fx:id="searchBtn" layoutX="29.0" layoutY="2.0" maxWidth="22" minWidth="22" prefWidth="22.0" styleClass="btn-primary,search-button" />
             </Pane>
         </VBox>
     </HBox>

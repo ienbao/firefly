@@ -986,7 +986,7 @@ public class SpcItemController implements Initializable {
                 analysisBtn.getStyleClass().add("btn-primary");
             }
         } else {
-            analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
+            analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/analysis-white.svg")));
             analysisBtn.getStyleClass().remove("btn-timer");
             analysisBtn.getStyleClass().add("btn-primary");
         }

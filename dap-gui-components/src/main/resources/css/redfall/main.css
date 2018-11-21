@@ -1442,13 +1442,13 @@
 }
 
 .table-view .column-header:hover {
-    -fx-background-color: COLORFUL_AUXILIARY_BLUE_10;
+    -fx-background-color: COLORFUL_BLUE_Fill_10;
 }
 
 .table-view .column-header:focused,
 .table-view .column-header:cell-selection,
 .table-view .column-header:pressed {
-    -fx-background-color: COLORFUL_AUXILIARY_BLUE_20;
+    -fx-background-color: COLORFUL_BLUE_Fill_20;
 }
 
 .table-view .column-header .label.ascending-label {
@@ -1528,7 +1528,7 @@
 }
 
 .table-row-cell:hover {
-    -fx-background-color:COLORFUL_AUXILIARY_BLUE_10;
+    -fx-background-color:COLORFUL_BLUE_Fill_10;
 }
 
 .table-row-cell:selected,
@@ -1537,10 +1537,10 @@
 }
 
 .table-view:focused:row-selection > .virtual-flow > .clipped-container > .sheet > .table-row-cell:focused {
-    -fx-background-color: COLORFUL_AUXILIARY_BLUE_20;
+    -fx-background-color: COLORFUL_BLUE_Fill_20;
     -fx-border-width: 1 0 1 0;
     -fx-padding: -1 0 -1 0;
-    -fx-border-color: COLORFUL_AUXILIARY_BLUE_50 transparent;
+    -fx-border-color: COLORFUL_BLUE_Fill_50 transparent;
 }
 
 .table-view .column-header.table-column {
