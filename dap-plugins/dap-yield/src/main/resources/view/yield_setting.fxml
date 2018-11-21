@@ -4,12 +4,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldSettingController">
     <children>
         <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-border-color: #DCDCDC;">
@@ -34,102 +31,60 @@
                                                 <Insets bottom="10.0" top="10.0" />
                                             </VBox.margin>
                                         </Label>
-
-                                        <GridPane hgap="10.0" vgap="2.0">
-                                            <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="22.0" prefWidth="60.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="8.0" prefWidth="8.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="8.0" prefWidth="8.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="22.0" prefWidth="60.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="8.0" prefWidth="8.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="8.0" prefWidth="8.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="22.0" prefWidth="60.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="8.0" prefWidth="8.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="55.0" prefWidth="55.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="8.0" prefWidth="8.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="22.0" prefWidth="60.0" />
-                                            </columnConstraints>
-                                            <rowConstraints>
-                                                <RowConstraints minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
-                                            </rowConstraints>
-                                            <children>
-                                                <Label text="\%FPY" />
-                                                <Label text="\%NTF" GridPane.rowIndex="2" />
-                                                <Label text="\%NG" GridPane.rowIndex="4" />
-                                                <Label styleClass="alarm-excellent" text="Excellent" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                                                <Label styleClass="alarm-excellent" text="Excellent" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                                                <Label styleClass="alarm-excellent" text="Excellent" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-
-
-                                                <Label text="≥" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <Label text="&lt;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                <Label text="&lt;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-
-
-                                                <TextField fx:id="FPYExcellentTf" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                <TextField fx:id="NTFExcellentTf" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                                                <TextField fx:id="NGExcellentTf" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-
-                                                <Label text="&gt;" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                <Label text="≤" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                                                <Label text="≤" GridPane.columnIndex="3" GridPane.rowIndex="5" />
-
-
-                                                <Label styleClass="alarm-acceptable" text="Adequate" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                                <Label styleClass="alarm-acceptable" text="Adequate" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                                                <Label styleClass="alarm-acceptable" text="Adequate" GridPane.columnIndex="4" GridPane.rowIndex="5" />
-
-                                                <Label text="≥" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                                                <Label text="&lt;" GridPane.columnIndex="5" GridPane.rowIndex="3" />
-                                                <Label text="&lt;" GridPane.columnIndex="5" GridPane.rowIndex="5" />
-
-
-                                                <TextField fx:id="FPYGoodTf" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                                                <TextField fx:id="NTFGoodTf" GridPane.columnIndex="6" GridPane.rowIndex="3" />
-                                                <TextField fx:id="NGGoodTf" GridPane.columnIndex="6" GridPane.rowIndex="5" />
-
-
-                                                <Label text="&gt;" GridPane.columnIndex="7" GridPane.rowIndex="1" />
-                                                <Label text="≤" GridPane.columnIndex="7" GridPane.rowIndex="3" />
-                                                <Label text="≤" GridPane.columnIndex="7" GridPane.rowIndex="5" />
-
-
-                                                <Label styleClass="alarm-rectification" text="Marginal" GridPane.columnIndex="8" GridPane.rowIndex="1" />
-                                                <Label styleClass="alarm-rectification" text="Marginal" GridPane.columnIndex="8" GridPane.rowIndex="3" />
-                                                <Label styleClass="alarm-rectification" text="Marginal" GridPane.columnIndex="8" GridPane.rowIndex="5" />
-
-                                                <Label text="≥" GridPane.columnIndex="9" GridPane.rowIndex="1" />
-                                                <Label text="&lt;" GridPane.columnIndex="9" GridPane.rowIndex="3" />
-                                                <Label text="&lt;" GridPane.columnIndex="9" GridPane.rowIndex="5" />
-
-
-                                                <TextField fx:id="FPYAcceptableTf" GridPane.columnIndex="10" GridPane.rowIndex="1" />
-                                                <TextField fx:id="NTFAcceptableTf" GridPane.columnIndex="10" GridPane.rowIndex="3" />
-                                                <TextField fx:id="NGAcceptableTf" GridPane.columnIndex="10" GridPane.rowIndex="5" />
-
-                                                <Label text="&gt;" GridPane.columnIndex="11" GridPane.rowIndex="1" />
-                                                <Label text="≤" GridPane.columnIndex="11" GridPane.rowIndex="3" />
-                                                <Label text="≤" GridPane.columnIndex="11" GridPane.rowIndex="5" />
-
-                                                <Label styleClass="alarm-bad" text="Bad" GridPane.columnIndex="12" GridPane.rowIndex="1" />
-                                                <Label styleClass="alarm-bad" text="Bad" GridPane.columnIndex="12" GridPane.rowIndex="3" />
-                                                <Label styleClass="alarm-bad" text="Bad" GridPane.columnIndex="12" GridPane.rowIndex="5" />
-
-                                            </children>
-                                            <VBox.margin>
-                                                <Insets bottom="10.0" />
-                                            </VBox.margin>
-                                            <padding>
-                                                <Insets bottom="10.0" />
-                                            </padding>
-                                        </GridPane>
+                                        <HBox minHeight="22.0" prefHeight="22.0" VBox.vgrow="ALWAYS" >
+                                            <Label text="\%FPY" alignment="CENTER" style="-fx-padding: 5 0"/>
+                                        </HBox>
+                                        <HBox minHeight="22.0" prefHeight="22.0" VBox.vgrow="ALWAYS"  style="-fx-spacing: 14">
+                                            <Label styleClass="alarm-excellent" text="Excellent"   />
+                                            <Label text="≥"  minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"/>
+                                            <TextField fx:id="FPYExcellentTf" minWidth="50" maxWidth="50" prefWidth="55" alignment="CENTER" />
+                                            <Label text="&gt;" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
+                                            <Label styleClass="alarm-acceptable" text="Adequate"  />
+                                            <Label text="≥" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER" />
+                                            <TextField fx:id="FPYGoodTf"  minWidth="50" maxWidth="50" prefWidth="55" alignment="CENTER"  />
+                                            <Label text="&gt;" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
+                                            <Label styleClass="alarm-rectification" text="Marginal"  />
+                                            <Label text="≥" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
+                                            <TextField fx:id="FPYAcceptableTf" minWidth="50" maxWidth="50" prefWidth="55" alignment="CENTER"  />
+                                            <Label text="&gt;"  minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"/>
+                                            <Label styleClass="alarm-bad" text="Bad"  />
+                                        </HBox>
+                                        <HBox minHeight="22.0" prefHeight="22.0" VBox.vgrow="ALWAYS" >
+                                            <Label text="\%NTF"  alignment="CENTER" style="-fx-padding: 5 0" />
+                                        </HBox>
+                                        <HBox minHeight="22.0" prefHeight="22.0" VBox.vgrow="ALWAYS" style="-fx-spacing: 14" >
+                                            <Label styleClass="alarm-excellent" text="Excellent" />
+                                            <Label text="&lt;" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER" />
+                                            <TextField fx:id="NTFExcellentTf" minWidth="50" maxWidth="50" prefWidth="55" alignment="CENTER"   />
+                                            <Label text="≤" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
+                                            <Label styleClass="alarm-acceptable" text="Adequate" />
+                                            <Label text="&lt;"  minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER" />
+                                            <TextField fx:id="NTFGoodTf" minWidth="50" maxWidth="50" prefWidth="55" alignment="CENTER"   />
+                                            <Label text="≤" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"/>
+                                            <Label styleClass="alarm-rectification" text="Marginal"  />
+                                            <Label text="&lt;" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER" />
+                                            <TextField fx:id="NTFAcceptableTf" minWidth="50" maxWidth="50" prefWidth="55" alignment="CENTER"  />
+                                            <Label text="≤" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
+                                            <Label styleClass="alarm-bad" text="Bad"  />
+                                        </HBox>
+                                        <HBox minHeight="22.0" prefHeight="22.0" VBox.vgrow="ALWAYS" >
+                                            <Label text="\%NG" alignment="CENTER" style="-fx-padding: 5 0"/>
+                                        </HBox>
+                                        <HBox minHeight="22.0" prefHeight="22.0" VBox.vgrow="ALWAYS" style="-fx-spacing: 14" >
+                                            <Label styleClass="alarm-excellent" text="Excellent" />
+                                            <Label text="&lt;" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
+                                            <TextField fx:id="NGExcellentTf" minWidth="50" maxWidth="50" prefWidth="55" alignment="CENTER"  />
+                                            <Label text="≤" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
+                                            <Label styleClass="alarm-acceptable" text="Adequate"  />
+                                            <Label text="&lt;" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
+                                            <TextField fx:id="NGGoodTf" minWidth="50" maxWidth="50" prefWidth="55" alignment="CENTER"  />
+                                            <Label text="≤" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
+                                            <Label styleClass="alarm-rectification" text="Marginal"  />
+                                            <Label text="&lt;" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
+                                            <TextField fx:id="NGAcceptableTf" minWidth="50" maxWidth="50" prefWidth="55" alignment="CENTER"  />
+                                            <Label text="≤" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER" />
+                                            <Label styleClass="alarm-bad" text="Bad"  />
+                                        </HBox>
                                     </children>
                                     <VBox.margin>
                                         <Insets bottom="10.0" />
@@ -147,22 +102,11 @@
                 <Insets left="10.0" right="10.0" top="10.0" />
             </VBox.margin>
         </HBox>
-        <GridPane prefHeight="45.0">
-            <columnConstraints>
-                <ColumnConstraints hgrow="ALWAYS" />
-                <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
-                <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
-                <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="45.0" prefHeight="45.0" vgrow="SOMETIMES" />
-            </rowConstraints>
-            <children>
-                <Button fx:id="apply" mnemonicParsing="false" prefWidth="80.0" text="%APPLY" GridPane.columnIndex="3" />
-                <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="%CANCEL" GridPane.columnIndex="2" />
-                <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="%OK" GridPane.columnIndex="1" />
-            </children>
-        </GridPane>
+        <HBox prefHeight=" 45.0" style="-fx-spacing: 10;-fx-padding: 0 10" alignment="CENTER_RIGHT">
+            <Button fx:id="apply" mnemonicParsing="false" prefWidth="80.0" text="%APPLY" GridPane.columnIndex="3" />
+            <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="%CANCEL" GridPane.columnIndex="2" />
+            <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="%OK" GridPane.columnIndex="1" />
+        </HBox>
     </children>
 </VBox>
 
