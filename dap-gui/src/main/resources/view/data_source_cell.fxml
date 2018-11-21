@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox fx:id="hBox" styleClass="gui-datasource-table-h-box" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" >
+    <Label fx:id="textField" styleClass="table-text-field,gui-datasource-text-filed"/>
+    <ProgressBar fx:id="progressBar" styleClass="gui-datasource-progressBar"/>
+    <Button fx:id="rename" styleClass="btn-icon,gui-datasource-rename-btn"/>
+    <Button fx:id="deleteOne" styleClass="btn-icon,gui-datasource-delete-one-btn"/>
+</HBox>

@@ -243,8 +243,100 @@
 /*}*/
 
 
+/******************************************************************************
+*             yield-item.fxml                                                                 *
+*           yield-split-pane                                                   *
+*                                                                              *
+ ******************************************************************************/
 
 
+/*orientation="VERTICAL" prefHeight="600.0" style="-fx-border-width: 0 0 0 0;"*/
+
+
+.yield-split-pane{
+    -fx-pref-height: 600.0;
+    -fx-border-width: 0;
+    -fx-orientation: vertical;
+}
+/*minHeight="270.0" minWidth="180.0" prefHeight="270.0" prefWidth="180.0" style="-fx-border-width: 0 0 0 0;"*/
+.yield-right-tab-pane{
+    -fx-min-height: 270.0;
+    -fx-pref-height: 270.0;
+    -fx-min-width: 180.0;
+    -fx-pref-width: 180.0;
+    -fx-border-width: 0;
+}
+/*minHeight="250.0" minWidth="180.0" prefHeight="250.0" prefWidth="180.0"*/
+.yield-right-border-pane{
+    -fx-min-height: 250.0;
+    -fx-pref-height: 250.0;
+    -fx-min-width: 180.0;
+    -fx-pref-width: 180.0;
+}
+.yield-item-tab{
+   -fx-pref-width: 45;
+    -fx-padding: 0 5 0 5;
+}
+/*minHeight="200.0" minWidth="180.0" prefHeight="200.0" prefWidth="180.0" style="-fx-border-width: 1 0 0 0;" BorderPane.alignment="CENTER"*/
+.yield-right-table-view{
+    -fx-min-height: 200.0;
+    -fx-pref-height: 200.0;
+    -fx-min-width: 180.0;
+    -fx-pref-width: 180.0;
+    -fx-border-width: 1 0 0 0;
+}
+/*maxWidth="32.0" minWidth="32.0" prefWidth="32.0" sortType="DESCENDING" sortable="false"*/
+.yield-table-column-select{
+    -fx-max-width: 32.0;
+    -fx-min-width: 32.0;
+    -fx-pref-width: 32.0;
+}
+/*maxWidth="1.7976931348623157E308" minWidth="148.0" prefWidth="148.0"*/
+.yield-table-column-item{
+    -fx-max-width:1.7976931348623157E308 ;
+    -fx-min-width: 148.0;
+    -fx-pref-width: 148.0;
+}
+.yield-text-field-filter{
+    -fx-max-width: 20000.0;
+}
+.yield-tab-config-tab{
+    -fx-pref-width: 45;
+    -fx-padding: 0 5 0 5;
+}
+.yield-config-tab-border-pane{
+    /*minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0";*/
+    -fx-min-height: 0.0;
+    -fx-min-width: 0.0;
+    -fx-pref-height: 180.0;
+    -fx-pref-width: 200.0;
+}
+.yield-label-text{
+    -fx-text-fill: #EA2028;
+}
+.yield-config-combo-box{
+    /*prefHeight="23.0" prefWidth="160.0";*/
+    -fx-pref-height: 23.0;
+    -fx-pref-width: 160.0;
+}
+.yield-grid-pane-bottom{
+    -fx-background-color: #ffffff;
+    -fx-border-width: 1 0 0 0;
+    -fx-border-color: #DCDCDC;
+}
+
+/*alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0"*/
+.export-btn{
+    -fx-alignment: center;
+    -fx-content-display: center;
+    -fx-max-height: 20.0;
+    -fx-min-height: 20.0;
+    -fx-pref-height: 20.0;
+    -fx-max-width: 30.0;
+    -fx-min-width: 30.0;
+    -fx-pref-width: 30.0;
+    -fx-text-fill: Button;
+}
 
 
 

@@ -21,18 +21,18 @@
 <?import javafx.scene.layout.HBox?>
 <VBox fx:id="testItemPane" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldItemController">
     <children>
-        <SplitPane fx:id="split" orientation="VERTICAL" prefHeight="600.0" style="-fx-border-width: 0 0 0 0;" VBox.vgrow="ALWAYS">
+        <SplitPane fx:id="split" styleClass="yield-split-pane" VBox.vgrow="ALWAYS">
             <items>
-                <TabPane fx:id="rightTabPane" minHeight="270.0" minWidth="180.0" prefHeight="270.0" prefWidth="180.0" style="-fx-border-width: 0 0 0 0;" tabClosingPolicy="UNAVAILABLE">
+                <TabPane fx:id="rightTabPane" styleClass="yield-right-tab-pane"  tabClosingPolicy="UNAVAILABLE">
                     <tabs>
-                        <Tab fx:id="itemTab" style="-fx-pref-width: 45;">
+                        <Tab fx:id="itemTab" styleClass="yield-item-tab" >
                             <content>
-                                <BorderPane minHeight="250.0" minWidth="180.0" prefHeight="250.0" prefWidth="180.0">
+                                <BorderPane styleClass="yield-right-border-pane" >
                                     <center>
-                                        <TableView fx:id="itemTable" minHeight="200.0" minWidth="180.0" prefHeight="200.0" prefWidth="180.0" style="-fx-border-width: 1 0 0 0;" BorderPane.alignment="CENTER">
+                                        <TableView fx:id="itemTable" styleClass="yield-right-table-view" BorderPane.alignment="CENTER">
                                             <columns>
-                                                <TableColumn fx:id="select" maxWidth="32.0" minWidth="32.0" prefWidth="32.0" sortType="DESCENDING" sortable="false" />
-                                                <TableColumn fx:id="item" maxWidth="1.7976931348623157E308" minWidth="148.0" prefWidth="148.0" />
+                                                <TableColumn fx:id="select" styleClass="yield-table-column-select"  sortType="DESCENDING" sortable="false" />
+                                                <TableColumn fx:id="item" styleClass="yield-table-column-item" />
                                             </columns>
                                             <columnResizePolicy>
                                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -40,7 +40,7 @@
                                         </TableView>
                                     </center>
                                     <top>
-                                        <TextFieldFilter fx:id="itemFilter" maxWidth="20000.0" BorderPane.alignment="CENTER">
+                                        <TextFieldFilter fx:id="itemFilter" styleClass="yield-text-field-filter"  BorderPane.alignment="CENTER">
                                             <BorderPane.margin>
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                             </BorderPane.margin>
@@ -49,22 +49,22 @@
                                 </BorderPane>
                             </content>
                         </Tab>
-                        <Tab fx:id="configTab" style="-fx-pref-width: 45;">
+                        <Tab fx:id="configTab" styleClass="yield-tab-config-tab" >
                             <content>
-                                <BorderPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                <BorderPane styleClass="yield-config-tab-border-pane">
                                     <center>
                                         <GridPane BorderPane.alignment="CENTER">
                                             <children>
                                                 <HBox alignment="CENTER_LEFT" GridPane.columnIndex="0">
                                                     <children>
                                                         <Label text="%PRIMER_KEY" ></Label>
-                                                        <Label style="-fx-text-fill: #EA2028;" text="*"/>
+                                                        <Label  styleClass="yield-label-text" text="*"/>
                                                     </children>
                                                     <GridPane.margin>
                                                         <Insets left="10.0" right="10.0" />
                                                     </GridPane.margin>
                                                 </HBox>
-                                                <ComboBox fx:id="configComboBox" prefHeight="23.0" prefWidth="160.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+                                                <ComboBox fx:id="configComboBox" styleClass="yield-config-combo-box"  GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
                                                     <GridPane.margin>
                                                         <Insets left="10.0" right="10.0" />
                                                     </GridPane.margin>
@@ -83,51 +83,16 @@
                                 </BorderPane>
                             </content>
                         </Tab>
-                        <!--<Tab fx:id="timeTab" style="-fx-pref-width: 45;">-->
-                            <!--<content>-->
-                                <!--<BorderPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">-->
-                                    <!--<center>-->
-                                        <!--<GridPane BorderPane.alignment="CENTER">-->
-                                            <!--<children>-->
-                                                <!--<CheckBox fx:id="enabledTimerCheckBox" mnemonicParsing="false" text="%ENABLED_TIMER">-->
-                                                    <!--<GridPane.margin>-->
-                                                        <!--<Insets left="10.0" right="10.0" />-->
-                                                    <!--</GridPane.margin>-->
-                                                <!--</CheckBox>-->
-                                                <!--<Label text="%REFRESH_CURRENT_TASK_EVERY" GridPane.rowIndex="1">-->
-                                                    <!--<GridPane.margin>-->
-                                                        <!--<Insets left="10.0" right="10.0" />-->
-                                                    <!--</GridPane.margin>-->
-                                                <!--</Label>-->
-                                                <!--<ComboBox fx:id="timeComboBox" prefHeight="23.0" prefWidth="160.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">-->
-                                                    <!--<GridPane.margin>-->
-                                                        <!--<Insets left="10.0" right="10.0" />-->
-                                                    <!--</GridPane.margin>-->
-                                                <!--</ComboBox>-->
-                                            <!--</children>-->
-                                            <!--<columnConstraints>-->
-                                                <!--<ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />-->
-                                            <!--</columnConstraints>-->
-                                            <!--<rowConstraints>-->
-                                                <!--<RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />-->
-                                                <!--<RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />-->
-                                                <!--<RowConstraints maxHeight="22.0" minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />-->
-                                                <!--<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />-->
-                                            <!--</rowConstraints>-->
-                                        <!--</GridPane>-->
-                                    <!--</center>-->
-                                <!--</BorderPane>-->
-                            <!--</content>-->
-                        <!--</Tab>-->
+
                     </tabs>
                 </TabPane>
             </items>
         </SplitPane>
-        <GridPane style="-fx-background-color: #ffffff; -fx-border-width: 1 0 0 0; -fx-border-color: #DCDCDC;">
+        <GridPane styleClass="yield-grid-pane-bottom" >
             <children>
-                <Button fx:id="exportBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-txt" text="Button" GridPane.columnIndex="3" GridPane.halignment="LEFT" />
-                <Button fx:id="importBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-txt" text="Button" GridPane.columnIndex="2" />
-                <Button fx:id="analysisBtn" alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0" styleClass="btn-primary" text="Button" GridPane.halignment="RIGHT" />
+                <Button fx:id="exportBtn" styleClass="btn-txt,export-btn"  GridPane.columnIndex="3" GridPane.halignment="LEFT" />
+                <Button fx:id="importBtn" styleClass="btn-txt,export-btn"  GridPane.columnIndex="2" />
+                <Button fx:id="analysisBtn" styleClass="btn-primary,export-btn" GridPane.halignment="RIGHT" />
             </children>
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />

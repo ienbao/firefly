@@ -49,6 +49,7 @@ import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -113,10 +114,21 @@ public class DataSourceController implements Initializable {
                             super.setText(null);
                             super.setGraphic(null);
                         } else {
-                            HBox hBox = new HBox();
-                            hBox.getStyleClass().add("gui-datasource-table-h-box");
-                            Label textField = new Label(item.getValue());
-                            textField.getStyleClass().addAll("table-text-field","gui-datasource-text-filed");
+                            HBox hBox = null;
+                            Label textField = null;
+                            ProgressBar progressBar = null;
+                            Button rename = null;
+                            Button deleteOne = null;
+                            try {
+                                hBox = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source_cell.fxml").load();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            textField = (Label) hBox.getChildren().get(0);
+                            progressBar = (ProgressBar) hBox.getChildren().get(1);
+                            rename = (Button) hBox.getChildren().get(2);
+                            deleteOne = (Button) hBox.getChildren().get(3);
+                            textField.setText(item.getValue());
                             if (item.isImport() || item.isError()) {
                                 textField.setDisable(true);
                                 item.getSelector().getCheckbox().setSelected(false);
@@ -125,20 +137,13 @@ public class DataSourceController implements Initializable {
                                 textField.setDisable(false);
                                 item.getSelector().getCheckbox().setDisable(false);
                             }
-                            ProgressBar progressBar = new ProgressBar(0);
+                            progressBar.setProgress(0);
                             if (item.isError()) {
                                 progressBar.getStyleClass().setAll("progress-bar-lg-red");
                             } else {
                                 progressBar.getStyleClass().setAll("progress-bar-lg-green");
                             }
-                            progressBar.getStyleClass().add("gui-datasource-progressBar");
-                            Button rename = new Button();
-                            rename.getStyleClass().addAll("btn-icon","gui-datasource-rename-btn");
                             TooltipUtil.installNormalTooltip(rename, renameStr);
-                            //TODO 给按钮设置图片
-                            rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/rename.svg")));
-                            Button deleteOne = new Button();
-                            deleteOne.getStyleClass().addAll("btn-icon","gui-datasource-delete-one-btn");
                             TooltipUtil.installNormalTooltip(deleteOne, delStr);
                             rename.setVisible(false);
                             deleteOne.setVisible(false);
@@ -150,23 +155,21 @@ public class DataSourceController implements Initializable {
                             if (item.getProgress() != 0) {
                                 progressBar.setProgress(item.getProgress());
                             }
-                            //TODO 给按钮设置图片
-                            deleteOne.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/del.svg")));
-                            hBox.getChildren().add(textField);
-                            hBox.getChildren().add(progressBar);
-                            hBox.getChildren().add(rename);
-                            hBox.getChildren().add(deleteOne);
                             HBox.setHgrow(textField, Priority.ALWAYS);
                             HBox.setHgrow(progressBar, Priority.NEVER);
                             HBox.setHgrow(rename, Priority.NEVER);
                             HBox.setHgrow(deleteOne, Priority.NEVER);
+                            Button finalRename = rename;
+                            Button finalDeleteOne = deleteOne;
                             hBox.setOnMouseEntered(event -> {
-                                rename.setVisible(true);
-                                deleteOne.setVisible(true);
+                                finalRename.setVisible(true);
+                                finalDeleteOne.setVisible(true);
                             });
+                            Button finalRename1 = rename;
+                            Button finalDeleteOne1 = deleteOne;
                             hBox.setOnMouseExited(event -> {
-                                rename.setVisible(false);
-                                deleteOne.setVisible(false);
+                                finalRename1.setVisible(false);
+                                finalDeleteOne1.setVisible(false);
                             });
                             rename.setOnAction(event -> {
                                 Pane root = null;
