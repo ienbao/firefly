@@ -29,6 +29,26 @@
 
         <dependency>
             <groupId>com.dmsoft</groupId>
+            <artifactId>dap-spc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.dmsoft</groupId>
+            <artifactId>dap-grr</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.dmsoft</groupId>
+            <artifactId>dap-yield</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.dmsoft</groupId>
+            <artifactId>dap-tm-csv-resolver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.dmsoft</groupId>
+            <artifactId>dap-am-csv-resolver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.dmsoft</groupId>
             <artifactId>dap-gui-components</artifactId>
         </dependency>
 

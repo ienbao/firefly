@@ -52,7 +52,27 @@
 
             <dependency>
                 <groupId>com.dmsoft</groupId>
-                <artifactId>dap-gui-components</artifactId>
+                <artifactId>dap-spc</artifactId>
+                <version>${dap.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.dmsoft</groupId>
+                <artifactId>dap-grr</artifactId>
+                <version>${dap.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.dmsoft</groupId>
+                <artifactId>dap-yield</artifactId>
+                <version>${dap.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.dmsoft</groupId>
+                <artifactId>dap-tm-csv-resolver</artifactId>
+                <version>${dap.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.dmsoft</groupId>
+                <artifactId>dap-am-csv-resolver</artifactId>
                 <version>${dap.version}</version>
             </dependency>
 

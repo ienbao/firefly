@@ -75,6 +75,13 @@ public class PluginClassLoader extends URLClassLoader {
         }
         for (File f : files) {
             if (f.isFile()) {
+
+                //TODO 添加热编译功能正式环境再修改
+                if(f.getName().startsWith("dap")){
+                    System.out.println("skip=======" + f.getName());
+                    continue;
+                }
+
                 try {
                     result.add(f.toURI().toURL());
                 } catch (Exception e) {
