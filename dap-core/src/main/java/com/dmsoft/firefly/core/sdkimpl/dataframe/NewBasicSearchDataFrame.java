@@ -2,6 +2,7 @@ package com.dmsoft.firefly.core.sdkimpl.dataframe;
 
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDataset;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dataframe.DataColumn;
@@ -10,7 +11,6 @@ import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.utils.FilterUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +20,7 @@ import java.util.Set;
  *
  * @author Can Guan
  */
-public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFrame {
+public class NewBasicSearchDataFrame extends NewBasicDataFrame implements SearchDataFrame {
     //outside list index is same with the rowKeys index
     private List<Set<String>> rowSearchConditionResultList;
     //Additional
@@ -33,8 +33,23 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
      * @param testItemDtoList test item dto list
      * @param rowDataDtoList  row data dto list
      */
-    BasicSearchDataFrame(List<TestItemWithTypeDto> testItemDtoList, List<RowDataDto> rowDataDtoList) {
+    NewBasicSearchDataFrame(List<TestItemWithTypeDto> testItemDtoList, List<RowDataDto> rowDataDtoList) {
         super(testItemDtoList, rowDataDtoList);
+
+        this.rowSearchConditionResultList = Lists.newArrayList();
+        this.searchConditions = Sets.newLinkedHashSet();
+        List<String> timeKeys = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getTimePatternDto().getTimeKeys();
+        String timePattern = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getTimePatternDto().getPattern();
+        this.filterUtils = new FilterUtils(timeKeys, timePattern);
+        for (int i = 0; i < this.getRowSize(); i++) {
+            this.rowSearchConditionResultList.add(Sets.newHashSet());
+        }
+    }
+
+
+    NewBasicSearchDataFrame(List<TestItemWithTypeDto> testItemWithTypeDtoList, TestItemDataset testItemDataset){
+        super(testItemWithTypeDtoList, testItemDataset);
+
         this.rowSearchConditionResultList = Lists.newArrayList();
         this.searchConditions = Sets.newLinkedHashSet();
         List<String> timeKeys = RuntimeContext.getBean(EnvService.class).findActivatedTemplate().getTimePatternDto().getTimeKeys();
@@ -51,7 +66,7 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
             TestItemWithTypeDto testItemDto = getTestItemWithTypeDto(testItemName);
             List<String> rowKeyList = getSearchRowKey(searchCondition);
             List<String> valueList = getDataValue(testItemName, rowKeyList);
-            List<Boolean> inUsed = Lists.newArrayList();
+            List<Boolean> inUsed = Lists.newArrayListWithCapacity(rowKeyList.size());
             for (String rowKey : rowKeyList) {
                 inUsed.add(isInUsed(rowKey));
             }
@@ -75,7 +90,7 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
 
     @Override
     public List<DataColumn> getDataColumn(List<String> testItemNames, String searchCondition) {
-        List<DataColumn> dataColumns = Lists.newArrayList();
+        List<DataColumn> dataColumns = Lists.newArrayListWithCapacity(testItemNames.size());
         for (String testItemName : testItemNames) {
             dataColumns.add(getDataColumn(testItemName, searchCondition));
         }
@@ -87,7 +102,7 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
         if (!this.searchConditions.contains(searchCondition) && FilterUtils.isLegal(searchCondition)) {
             search(searchCondition);
         }
-        List<RowDataDto> result = Lists.newArrayList();
+        List<RowDataDto> result = Lists.newArrayListWithCapacity(this.getRowSize());
         for (int i = 0; i < this.getRowSize(); i++) {
             if (this.rowSearchConditionResultList.get(i).contains(searchCondition)) {
                 result.add(getDataRow(this.getRowKeys().get(i)));
@@ -131,7 +146,7 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
 
     @Override
     public List<String> getSearchedRowKey() {
-        List<String> result = Lists.newArrayList();
+        List<String> result = Lists.newArrayListWithCapacity(rowSearchConditionResultList.size());
         for (int i = 0; i < this.rowSearchConditionResultList.size(); i++) {
             if (!this.rowSearchConditionResultList.get(i).isEmpty()) {
                 result.add(this.getRowKeys().get(i));
@@ -145,7 +160,7 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
         if (!this.searchConditions.contains(searchCondition)) {
             search(searchCondition);
         }
-        List<String> result = Lists.newArrayList();
+        List<String> result = Lists.newArrayListWithCapacity(rowSearchConditionResultList.size());
         for (int i = 0; i < this.rowSearchConditionResultList.size(); i++) {
             if (this.rowSearchConditionResultList.get(i).contains(searchCondition)) {
                 result.add(this.getRowKeys().get(i));
@@ -161,7 +176,7 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
                 search(condition);
             }
         }
-        List<String> result = Lists.newArrayList();
+        List<String> result = Lists.newArrayListWithCapacity(rowSearchConditionResultList.size());
         for (int i = 0; i < this.rowSearchConditionResultList.size(); i++) {
             Set<String> eachRowSearchConditionSet = this.rowSearchConditionResultList.get(i);
             for (String condition : searchConditionList) {
@@ -186,7 +201,7 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
 
     @Override
     public void shrink() {
-        List<String> rowKeyToBeRemoved = Lists.newArrayList();
+        List<String> rowKeyToBeRemoved = Lists.newArrayListWithCapacity(rowSearchConditionResultList.size());
         for (int i = 0; i < this.rowSearchConditionResultList.size(); i++) {
             if (this.rowSearchConditionResultList.get(i).isEmpty()) {
                 rowKeyToBeRemoved.add(this.getRowKeys().get(i));
@@ -200,15 +215,15 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
     @Override
     public SearchDataFrame subDataFrame(List<String> rowKeyList, List<String> testItemNameList) {
         SearchDataFrame dataFrame = RuntimeContext.getBean(DataFrameFactory.class).createSearchDataFrame(super.subDataFrame(rowKeyList, testItemNameList));
-        if (dataFrame instanceof BasicSearchDataFrame) {
-            ((BasicSearchDataFrame) dataFrame).setFilterUtils(filterUtils);
-            ((BasicSearchDataFrame) dataFrame).setSearchConditions(searchConditions);
-            List<Set<String>> searchConditionRowList = Lists.newArrayList();
+        if (dataFrame instanceof NewBasicSearchDataFrame) {
+            ((NewBasicSearchDataFrame) dataFrame).setFilterUtils(filterUtils);
+            ((NewBasicSearchDataFrame) dataFrame).setSearchConditions(searchConditions);
+            List<Set<String>> searchConditionRowList = Lists.newArrayListWithCapacity(rowSearchConditionResultList.size());
             for (String rowKey : rowKeyList) {
                 Set<String> searchCondition = this.rowSearchConditionResultList.get(getRowKeys().indexOf(rowKey));
                 searchConditionRowList.add(searchCondition);
             }
-            ((BasicSearchDataFrame) dataFrame).setRowSearchConditionResultList(searchConditionRowList);
+            ((NewBasicSearchDataFrame) dataFrame).setRowSearchConditionResultList(searchConditionRowList);
         }
         return dataFrame;
     }
@@ -223,7 +238,7 @@ public class BasicSearchDataFrame extends BasicDataFrame implements SearchDataFr
     }
 
     private Set<String> getSearchConditions(Map<String, String> data) {
-        Set<String> result = Sets.newLinkedHashSet();
+        Set<String> result = Sets.newLinkedHashSetWithExpectedSize(this.searchConditions.size());
         for (String searchCondition : this.searchConditions) {
             if (filterUtils.filterData(searchCondition, data)) {
                 result.add(searchCondition);
