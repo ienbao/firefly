@@ -29,7 +29,7 @@ public class BasicDataFrameFactoryImpl implements DataFrameFactory {
 
     @Override
     public SearchDataFrame createSearchDataFrame(List<TestItemWithTypeDto> testItemWithTypeDtoList, TestItemDataset testItemDataset){
-        return new BasicSearchDataFrame(testItemWithTypeDtoList, testItemDataset);
+        return new NewBasicSearchDataFrame(testItemWithTypeDtoList, testItemDataset);
     }
 
     @Override
