@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import com.dmsoft.firefly.gui.components.utils.TextFieldFilter?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
@@ -11,17 +9,14 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.layout.HBox?>
+
 <VBox fx:id="testItemPane" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldItemController">
     <children>
-        <SplitPane fx:id="split" styleClass="yield-split-pane" VBox.vgrow="ALWAYS">
+        <SplitPane fx:id="split"  styleClass="yield-split-pane" VBox.vgrow="ALWAYS">
             <items>
                 <TabPane fx:id="rightTabPane" styleClass="yield-right-tab-pane"  tabClosingPolicy="UNAVAILABLE">
                     <tabs>
@@ -53,57 +48,34 @@
                             <content>
                                 <BorderPane styleClass="yield-config-tab-border-pane">
                                     <center>
-                                        <GridPane BorderPane.alignment="CENTER">
-                                            <children>
-                                                <HBox alignment="CENTER_LEFT" GridPane.columnIndex="0">
-                                                    <children>
-                                                        <Label text="%PRIMER_KEY" ></Label>
-                                                        <Label  styleClass="yield-label-text" text="*"/>
-                                                    </children>
-                                                    <GridPane.margin>
-                                                        <Insets left="10.0" right="10.0" />
-                                                    </GridPane.margin>
-                                                </HBox>
-                                                <ComboBox fx:id="configComboBox" styleClass="yield-config-combo-box"  GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
-                                                    <GridPane.margin>
-                                                        <Insets left="10.0" right="10.0" />
-                                                    </GridPane.margin>
+                                        <VBox style="-fx-padding: 0 10 0 10 ;">
+                                            <HBox minHeight="32.0" alignment="CENTER_LEFT"  >
+                                                <children>
+                                                    <Label text="%PRIMER_KEY" ></Label>
+                                                    <Label  styleClass="yield-label-text" text="*"/>
+                                                </children>
+                                            </HBox>
+                                            <HBox minHeight="32" alignment="CENTER">
+                                                <ComboBox fx:id="configComboBox" styleClass="yield-config-combo-box">
                                                 </ComboBox>
-                                            </children>
-                                            <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                                            </columnConstraints>
-                                            <rowConstraints>
-                                                <RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                                            </rowConstraints>
-                                        </GridPane>
+                                            </HBox>
+                                        </VBox>
                                     </center>
                                 </BorderPane>
                             </content>
                         </Tab>
-
                     </tabs>
                 </TabPane>
             </items>
         </SplitPane>
-        <GridPane styleClass="yield-grid-pane-bottom" >
-            <children>
-                <Button fx:id="exportBtn" styleClass="btn-txt,export-btn"  GridPane.columnIndex="3" GridPane.halignment="LEFT" />
-                <Button fx:id="importBtn" styleClass="btn-txt,export-btn"  GridPane.columnIndex="2" />
-                <Button fx:id="analysisBtn" styleClass="btn-primary,export-btn" GridPane.halignment="RIGHT" />
-            </children>
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints maxHeight="22.0" minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
-            </rowConstraints>
-        </GridPane>
+        <HBox styleClass="yield-grid-pane-bottom" alignment="CENTER">
+            <HBox minWidth="100" style="-fx-padding: 1 0 1 20" >
+                <Button fx:id="analysisBtn" styleClass="btn-primary,export-btn" />
+            </HBox>
+            <HBox minWidth="80" alignment="CENTER_LEFT" style="-fx-padding: 1 20 1 0">
+                <Button fx:id="importBtn" styleClass="btn-txt,export-btn" />
+                <Button fx:id="exportBtn" styleClass="btn-txt,export-btn" />
+            </HBox>
+        </HBox>
     </children>
 </VBox>

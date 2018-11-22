@@ -146,7 +146,7 @@ public class PluginManageController implements Initializable {
                     Text version = new Text("Version: " + pluginTableRowData.getInfo().getVersion() + "\n");
                     Text description = new Text((DAPStringUtils.isEmpty(pluginTableRowData.getInfo().getDescription()) ? "" : pluginTableRowData.getInfo().getDescription()));
                     Text name = new Text(pluginTableRowData.getInfo().getName() + "\n");
-                    name.setStyle("-fx-font-weight: bold");
+                    name.getStyleClass().add("plugin-name-font");
                     explain.getChildren().addAll(name, version, description);
                     explain.setLineSpacing(5);
                 }
