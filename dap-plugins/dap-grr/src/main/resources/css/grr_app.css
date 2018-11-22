@@ -250,3 +250,26 @@ table
     -fx-border-width: 1;
     -fx-border-color: COLORFUL_AUXILIARY_BLUE;
 }
+
+/*******************************************************************************
+ *                                                                             *
+ *grr  page css                                                                *
+ *                                                                             *
+ ******************************************************************************/
+.grr-btn-h-box{
+    -fx-alignment: CENTER;
+    -fx-spacing: 3;
+    -fx-padding: 0 3 0 0;
+}
+.grr-border-pane{
+    -fx-pref-height: 28;
+    -fx-max-height: 28;
+    -fx-min-height: 28;
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-padding: 0 0 0 10;
+
+}
+.grr-border-pane>.label{
+    -fx-pref-height: 28;
+    -fx-alignment:center;
+}

@@ -983,7 +983,7 @@
     -fx-spacing: 5;
     -fx-alignment: BASELINE_LEFT;
     -fx-border-width: 0 1 0 1;
-    -fx-border-color: #dcdcdc;
+    -fx-border-color: COLOR_GRAY_DC;
 }
 .main-dataSourceList-lbl{
     -fx-padding: 5 10 0 10;
