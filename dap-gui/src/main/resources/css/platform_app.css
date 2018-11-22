@@ -544,6 +544,9 @@
     -fx-border-color: COLOR_GRAY_DC;
     -fx-background-color: COLOR_GRAY_FA;
 }
+.plugin-name-font{
+    -fx-font-weight: bold
+}
 /*******************************************************************************
  *                                                                             *
  * template page css                                                             *
@@ -614,10 +617,24 @@
     -fx-spacing: 13;
 }
 
+.template-pattern{
+    -fx-background-color: COLORFUL_AUXILIARY_BLUE;
+}
 
+.template-rename-image{
+    -fx-image: url("/images/rename.svg");
+}
 
+.template-add-image{
+    -fx-image: url("/images/add.svg");
+}
+.template-copy-image{
+    -fx-image: url("/images/copy.svg");
+}
 
-
+.template-delete-image{
+    -fx-image: url("/images/del.svg");
+}
 /*******************************************************************************
  *                                                                             *
  * gui about page css                                                              *
