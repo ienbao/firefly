@@ -178,28 +178,23 @@ public class ChooseDialogController implements Initializable {
     }
 
     private TableView<ChooseTestItemModel> getTableView() {
-//        if (chooseColumnTable == null) {
-            chooseColumnTable = new TableView<>(sortedList);
-            chooseColumnTable.setSkin(new ExpandableTableViewSkin(chooseColumnTable));
             chooseColumnTable.setItems(sortedList);
+            chooseColumnTable.setSkin(new ExpandableTableViewSkin(chooseColumnTable));
             sortedList.comparatorProperty().bind(chooseColumnTable.comparatorProperty());
-
             chooseColumnTable.setEditable(true);
             allCheck = new CheckBox();
             allCheck.selectedProperty().addListener((ov, b1, b2) -> this.handleAllCheckBoxEvent(b2));
-//            TableColumn<ChooseTestItemModel, ?> checkCol = new TableColumn<>();
             checkCol.setGraphic(allCheck);
             checkCol.setSortable(false);
             checkCol.setResizable(false);
             checkCol.setPrefWidth(32);
             checkCol.setCellFactory(CheckBoxTableCell.forTableColumn((i) -> {
-                if (i >= 0 && i < getTableView().getItems().size()) {
-                    return getTableView().getItems().get(i).selectedProperty();
+                if (i >= 0 && i < chooseColumnTable.getItems().size()) {
+                    return chooseColumnTable.getItems().get(i).selectedProperty();
                 } else {
                     return new SimpleBooleanProperty(false);
                 }
             }));
-//            TableColumn<ChooseTestItemModel, String> itemCol = new TableColumn<>();
             itemCol.setCellValueFactory(cell -> cell.getValue().itemNameProperty());
             itemCol.setResizable(false);
             itemCol.setComparator(Comparator.naturalOrder());
@@ -213,9 +208,6 @@ public class ChooseDialogController implements Initializable {
             errorLabel.setVisible(false);
             itemHeader.getChildren().addAll(testItemLabel, errorLabel);
             itemCol.setGraphic(itemHeader);
-
-            chooseColumnTable.getColumns().add(checkCol);
-            chooseColumnTable.getColumns().add(itemCol);
             if (chooseColumnTable.getSkin() != null) {
                 TableViewWrapper.decorateSkinForSortHeader((TableViewSkin) chooseColumnTable.getSkin(), chooseColumnTable);
             } else {
