@@ -127,21 +127,13 @@ public class TemplateController {
     }
 
     private void initButton() {
-        rename.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/rename.svg")));
         TooltipUtil.installNormalTooltip(rename, GuiFxmlAndLanguageUtils.getString(ResourceMassages.RENAME_TEMPLATE));
-        add.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/add.svg")));
         TooltipUtil.installNormalTooltip(add, GuiFxmlAndLanguageUtils.getString(ResourceMassages.ADD_TEMPLATE));
-        copy.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/copy.svg")));
         TooltipUtil.installNormalTooltip(copy, GuiFxmlAndLanguageUtils.getString(ResourceMassages.COPY_TEMPLATE));
-        delete.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/del.svg")));
         TooltipUtil.installNormalTooltip(delete, GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_TEMPLATE));
-        addTime.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/add.svg")));
         TooltipUtil.installNormalTooltip(addTime, GuiFxmlAndLanguageUtils.getString(ResourceMassages.ADD_TIME_KEYS));
-
-        addRow.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/add.svg")));
         TooltipUtil.installNormalTooltip(addRow, GuiFxmlAndLanguageUtils.getString(ResourceMassages.ADD_ITEM));
-        pattern.getStyleClass().add("message-tip-question");
-        pattern.setStyle("-fx-background-color: #0096ff");
+        pattern.getStyleClass().setAll("message-tip-question","template-pattern");
         TooltipUtil.installNormalTooltip(pattern, GuiFxmlAndLanguageUtils.getString(ResourceMassages.HELP));
     }
 
