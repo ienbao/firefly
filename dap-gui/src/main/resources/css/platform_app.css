@@ -544,7 +544,7 @@
     -fx-border-color: COLOR_GRAY_DC;
     -fx-background-color: COLOR_GRAY_FA;
 }
-.plugin-name-font{
+#explain .plugin-name-font{
     -fx-font-weight: bold
 }
 /*******************************************************************************
