@@ -213,3 +213,172 @@ table
     -fx-border-style: dotted;
     -fx-border-insets: 1;
 }
+
+
+/*******************************************************************************
+ *                                                                             *
+ * spc additem page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+
+.spc-additem-h-box-first{
+    -fx-padding: 0 10.0 0 10.0;
+    -fx-pref-height: 30.0;
+    -fx-alignment: center-left;
+}
+
+.spc-additem-h-box-first > .button{
+    -fx-min-width: 22.0;
+    -fx-pref-width: 22.0;
+    -fx-background-color: COLORFUL_AUXILIARY_BLUE;
+}
+
+.spc-additem-h-box-second{
+    -fx-spacing: 10.0;
+    -fx-padding: 0 10.0 0 10.0;
+    -fx-pref-height: 255.0;
+}
+
+.spc-additem-h-box-second-vbox{
+    -fx-alignment: center;
+    -fx-spacing: 3.0;
+    -fx-padding: 3.0 0 0 0;
+    -fx-pref-height: 228.0;
+    -fx-pref-width: 190.0;
+    -fx-border-width: 1 1 1 1;
+    -fx-border-color: COLOR_GRAY_DC;
+}
+
+.spc-additem-h-box-third{
+    -fx-padding: 10.0;
+    -fx-alignment: center_right;
+}
+
+.spc-additem-h-box-second-table {
+    -fx-min-height: 228.0;
+    -fx-min-width: 190.0;
+    -fx-pref-height: 228.0;
+    -fx-pref-width: 190.0;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * spc choose page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+.spc-choose-root{
+    -fx-padding: 10 10 0 10;
+}
+
+.spc-choose-header{
+    -fx-spacing: 10.0;
+    -fx-padding: 3.0 0 3.0 3.0;
+    -fx-border-width: 1 1 0 1;
+    -fx-border-color: COLOR_GRAY_DC;
+}
+
+.spc-choose-header-check{
+    -fx-pref-height: 22;
+    -fx-pref-width: 100;
+    -fx-label-padding: 0 0 0 10;
+}
+
+.spc-choose-footer{
+    -fx-padding: 10.0;
+    -fx-alignment: center_right;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * spc quick_search page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+.spc-hbox-search{
+    -fx-alignment: bottom_right;
+    -fx-pref-height: 224.0;
+    -fx-spacing: 10;
+}
+
+.spc-vbox-search{
+    -fx-spacing: 18;
+    -fx-alignment: bottom_left;
+}
+
+.spc-hbox-whole{
+    -fx-spacing: 43;
+    -fx-pref-height: 90;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * spc detail page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+.spc-detail-window{
+    -fx-padding: 10;
+    -fx-pref-height: 330;
+    -fx-pref-width: 410;
+}
+
+.spc-detail-header{
+    -fx-spacing: 10.0;
+    -fx-padding: 5.0 0 5.0 5.0;
+    -fx-border-width: 1 1 0 1;
+    -fx-border-color: COLOR_GRAY_DC;
+}
+
+.spc-detail-table{
+    -fx-pref-height: 296;
+    -fx-pref-width: 388;
+    -fx-border-width: 1;
+    -fx-border-color: COLOR_GRAY_DC;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * spc export setting page css                                                 *
+ *                                                                             *
+ ******************************************************************************/
+.spc-export-setting-scroll,.spc-export-setting-scroll:hover{
+    -fx-border-width: 1;
+    -fx-border-color: COLOR_GRAY_DC;
+}
+
+.spc-export-setting-grid{
+    -fx-padding: 20;
+    -fx-vgap: 5;
+}
+
+.spc-export-setting-lbl{
+    -fx-text-fill: COLOR_GRAY_AA;
+}
+
+.spc-export-setting-check{
+    -fx-label-padding: 0 0 0 10;
+}
+
+.spc-export-setting-far-check{
+    -fx-label-padding: 15 0 0 0;
+}
+
+
+
+/*.spc-export-setting-all-check{*/
+    /*-fx-padding: 20;*/
+    /*-fx-spacing: 20;*/
+    /*-fx-border-width: 1;*/
+    /*-fx-border-color: COLOR_GRAY_DC;*/
+/*}*/
+
+/*.spc-export-setting-main-check{*/
+    /*-fx-spacing: 5;*/
+/*}*/
+
+/*.spc-export-setting-result-check{*/
+    /*-fx-spacing: 5;*/
+/*}*/
+
+/*.spc-export-setting-detail-check{*/
+    /*-fx-padding: 0 0 0 24;*/
+    /*-fx-spacing: 50;*/
+/*}*/

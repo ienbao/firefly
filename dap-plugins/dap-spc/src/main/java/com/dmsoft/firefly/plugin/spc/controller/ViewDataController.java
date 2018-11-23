@@ -45,6 +45,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import static com.google.common.io.Resources.getResource;
+
 /**
  * Created by Ethan.Yang on 2018/2/2.
  */
@@ -294,7 +296,7 @@ public class ViewDataController implements Initializable {
             Stage stage = null;
             try {
                 root = fxmlLoader.load();
-                stage = WindowFactory.createOrUpdateSimpleWindowAsModel("spcQuickSearch", SpcFxmlAndLanguageUtils.getString(ResourceMassages.QUICK_SEARCH), root);
+                stage = WindowFactory.createOrUpdateSimpleWindowAsModel("spcQuickSearch", SpcFxmlAndLanguageUtils.getString(ResourceMassages.QUICK_SEARCH), root,getResource("css/spc_app.css").toExternalForm());
                 stage.setResizable(false);
             } catch (IOException e) {
                 e.printStackTrace();
