@@ -646,8 +646,8 @@ public class SpcSettingController implements Initializable {
     }
 
     private void initBtnIcon() {
-        addTestItemBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
-        exportTemplateSettingBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_setting_normal.png")));
+        addTestItemBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/add.svg")));
+        exportTemplateSettingBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/setting.svg")));
         exportTemplateSettingBtn.setPrefSize(22, 22);
     }
 

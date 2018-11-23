@@ -130,7 +130,7 @@ public class AddItemController implements Initializable {
         tipLabel.getStyleClass().add("message-tip-question");
         tipLabel.setStyle("-fx-background-color: #0096ff");
         TooltipUtil.installNormalTooltip(tipLabel, SpcFxmlAndLanguageUtils.getString("CUSTOM_TEST_ITEM_TIP"));
-//        tipLabel.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
+//        tipLabel.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/add.svg")));
     }
 
     public void setSpcSettingController(SpcSettingController spcSettingController) {

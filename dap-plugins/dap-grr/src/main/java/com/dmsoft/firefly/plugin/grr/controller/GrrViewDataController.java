@@ -86,7 +86,7 @@ public class GrrViewDataController implements Initializable {
                 this.backupModel.searchTestItem(t2);
             }
         });
-        chooseItemBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
+        chooseItemBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/choose-test-items.svg")));
         this.exchangeBtn.setOnAction(event -> {
             if (this.backupModel != null && this.includeModel != null && this.backupModel.getSelectedViewDataDto() != null && this.includeModel.getSelectedViewDataDto() != null) {
                 int analsysisTBIndex = analysisDataTB.getSelectionModel().getSelectedIndex();

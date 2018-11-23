@@ -783,7 +783,7 @@ public class TabPaneSkinDemo extends BehaviorSkinBase<TabPane, TabPaneBehavior> 
             if (controlButtons.isVisible()) {
                 controlButtons.setVisible(true);
             }
-            ImageView imageView = new ImageView("/images/btn_add_normal.png");
+            ImageView imageView = new ImageView("/images/add.svg");
             imageView.setFitHeight(16);
             imageView.setFitWidth(16);
             addTabBtn = new Button();
