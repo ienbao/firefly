@@ -158,9 +158,9 @@ public class GrrMainController implements Initializable {
         resetBtn.setDisable(disable);
         refreshBtn.setDisable(disable);
         if (disable) {
-            refreshBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_gray.png")));
+            refreshBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/check-gray.svg")));
         } else {
-            refreshBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
+            refreshBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/check-white.svg")));
         }
     }
 
