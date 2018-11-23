@@ -188,8 +188,8 @@ public class ChartAnnotationButton extends Button {
     private void toggleEditAnnotationBtnIcon(boolean flag) {
         showAnnotation = flag;
         ImageView imageView = showAnnotation
-                ? ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_tracing_point_normal.png"))
-                : ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_cancel_tracing_point_normal.png"));
+                ? ImageUtils.getImageView(getClass().getResourceAsStream("/images/tracing-point.svg"))
+                : ImageUtils.getImageView(getClass().getResourceAsStream("/images/cancel-tracing-point.svg"));
         editBtn.setGraphic(imageView);
         String tooltipContent = showAnnotation
                 ? SpcFxmlAndLanguageUtils.getString(UIConstant.BTN_ANNOTATION_OPEN)
@@ -205,7 +205,7 @@ public class ChartAnnotationButton extends Button {
 
         vBox.setStyle("-fx-border-width: 1px; -fx-border-color: #cccccc; -fx-background-color: white;");
         clearBtn.setGraphic(ImageUtils.getImageView(getClass()
-                .getResourceAsStream("/images/btn_remove_tracing_point_normal.png")));
+                .getResourceAsStream("/images/remove-tracing-point.svg")));
         Tooltip.install(clearBtn, new Tooltip(SpcFxmlAndLanguageUtils.getString(UIConstant.BTN_ANNOTATION_CLEAR)));
         toggleEditAnnotationBtnIcon(showAnnotation);
 

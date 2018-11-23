@@ -11,57 +11,32 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="320.0" prefWidth="410.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="140.0" minWidth="140.0" prefWidth="140.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.0" minWidth="10.0" prefWidth="130.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" />
-            <ColumnConstraints />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
-            <RowConstraints minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
-         </rowConstraints>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-         <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </padding>
-         <children>
-            <RadioButton fx:id="allDataRadioBtn" mnemonicParsing="false" selected="true" style="-fx-label-padding: 0 0 0 10;" text="%ALL_DATA_RADIO_TEXT" textAlignment="CENTER">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <toggleGroup>
-                  <ToggleGroup fx:id="toggle" />
-               </toggleGroup></RadioButton>
-            <RadioButton fx:id="withinRangeRadioBtn" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%WITHIN_RANGE_RADIO_TEXT" toggleGroup="$toggle" GridPane.rowIndex="1" />
-            <RadioButton fx:id="withoutRangeRadioBtn" mnemonicParsing="false" style="-fx-label-padding: 0 0 0 10;" text="%WITHOUT_RANGE_RADIO_TEXT" toggleGroup="$toggle" GridPane.rowIndex="2" />
-            <TextField fx:id="withinLowerTf" disable="true" promptText="%LOWER_LIMIT_PROMPT_TEXT" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets right="10.0" />
-               </GridPane.margin>
-            </TextField>
-            <TextField fx:id="withoutLowerTf" disable="true" promptText="%LOWER_LIMIT_PROMPT_TEXT" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <GridPane.margin>
-                  <Insets right="10.0" />
-               </GridPane.margin>
-            </TextField>
-            <TextField fx:id="withinUpperTf" disable="true" promptText="%UPPER_LIMIT_PROMPT_TEXT" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <TextField fx:id="withoutUpperTf" disable="true" promptText="%UPPER_LIMIT_PROMPT_TEXT" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnSpan="4" GridPane.rowIndex="4">
-               <children>
-                  <Button fx:id="searchBtn" alignment="CENTER" mnemonicParsing="false" prefWidth="80.0" text="%SEARCH_BTN" />
-                  <Button fx:id="cancelBtn" alignment="CENTER" mnemonicParsing="false" prefWidth="80.0" text="%CANCEL_BTN" />
-               </children>
-            </HBox>
-         </children>
-      </GridPane>
-   </children>
-</AnchorPane>
+<?import javafx.scene.layout.VBox?>
+<VBox styleClass="sm-pop-window" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1">
+   <HBox styleClass="spc-hbox-whole" >
+      <VBox styleClass="spc-vbox-search">
+         <RadioButton fx:id="allDataRadioBtn" selected="true" text="%ALL_DATA_RADIO_TEXT" textAlignment="CENTER">
+            <toggleGroup>
+               <ToggleGroup fx:id="toggle" />
+            </toggleGroup></RadioButton>
+         <RadioButton fx:id="withinRangeRadioBtn" text="%WITHIN_RANGE_RADIO_TEXT" toggleGroup="$toggle" />
+         <RadioButton fx:id="withoutRangeRadioBtn" text="%WITHOUT_RANGE_RADIO_TEXT" toggleGroup="$toggle" />
+      </VBox>
+      <VBox alignment="BOTTOM_RIGHT">
+         <HBox styleClass="spacing-lg">
+            <VBox styleClass="spacing-lg">
+               <TextField fx:id="withinLowerTf" prefWidth="120" disable="true" promptText="%LOWER_LIMIT_PROMPT_TEXT" ></TextField>
+               <TextField fx:id="withoutLowerTf" prefWidth="120" disable="true" promptText="%LOWER_LIMIT_PROMPT_TEXT" ></TextField>
+            </VBox>
+            <VBox styleClass="spacing-lg">
+               <TextField fx:id="withinUpperTf" prefWidth="120" disable="true" promptText="%UPPER_LIMIT_PROMPT_TEXT"  />
+               <TextField fx:id="withoutUpperTf" prefWidth="120" disable="true" promptText="%UPPER_LIMIT_PROMPT_TEXT"  />
+            </VBox>
+         </HBox>
+      </VBox>
+   </HBox>
+   <HBox styleClass="spc-hbox-search">
+      <Button fx:id="searchBtn" alignment="CENTER" mnemonicParsing="false" prefWidth="80.0" text="%SEARCH_BTN" />
+      <Button fx:id="cancelBtn" alignment="CENTER" mnemonicParsing="false" prefWidth="80.0" text="%CANCEL_BTN" />
+   </HBox>
+</VBox>

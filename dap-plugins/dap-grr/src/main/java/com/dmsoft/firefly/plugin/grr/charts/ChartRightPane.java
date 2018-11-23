@@ -117,9 +117,9 @@ public class ChartRightPane extends HBox {
         this.setMargin(zoomInBtn, new Insets(0, 0, 0, 5));
         this.setMargin(zoomOutBtn, new Insets(0, 0, 0, 5));
         this.setMargin(menuBar, new Insets(-3, 7, 0, 5));
-        extensionMenu.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_more_normal.png")));
-        zoomInBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_zoom_normal.png")));
-        zoomOutBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_narrow_normal.png")));
+        extensionMenu.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/more.svg")));
+        zoomInBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/zoom.svg")));
+        zoomOutBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/narrow.svg")));
     }
 
     /**
