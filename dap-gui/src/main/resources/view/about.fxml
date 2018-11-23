@@ -9,7 +9,7 @@
       fx:controller="com.dmsoft.firefly.gui.controller.AboutController"
       styleClass="gui-about-root">
     <ImageView styleClass="gui-about-logo" fitWidth="100.0" pickOnBounds="true" preserveRatio="true"/>
-    <VBox styleClass="gui-about-spacing">
+    <VBox styleClass="spacing-lg">
         <Label styleClass="login-label-lg" text="%GLOBAL_SYSTEM_PROCESS_TITLE"/>
         <Label styleClass="login-label-md" text="%GLOBAL_SYSTEM_PROCESS_NAME"/>
         <HBox styleClass="spacing-md">

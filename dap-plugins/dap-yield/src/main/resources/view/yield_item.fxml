@@ -10,7 +10,6 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 
@@ -48,8 +47,8 @@
                             <content>
                                 <BorderPane styleClass="yield-config-tab-border-pane">
                                     <center>
-                                        <VBox style="-fx-padding: 0 10 0 10 ;">
-                                            <HBox minHeight="32.0" alignment="CENTER_LEFT"  >
+                                        <VBox styleClass="yield-item-v-box">
+                                            <HBox styleClass="yield-item-h-box">
                                                 <children>
                                                     <Label text="%PRIMER_KEY" ></Label>
                                                     <Label  styleClass="yield-label-text" text="*"/>
@@ -69,10 +68,10 @@
             </items>
         </SplitPane>
         <HBox styleClass="yield-grid-pane-bottom" alignment="CENTER">
-            <HBox minWidth="100" style="-fx-padding: 1 0 1 20" >
+            <HBox styleClass="yield-item-btn-h-box" >
                 <Button fx:id="analysisBtn" styleClass="btn-primary,export-btn" />
             </HBox>
-            <HBox minWidth="80" alignment="CENTER_LEFT" style="-fx-padding: 1 20 1 0">
+            <HBox styleClass="yield-item0=btn-h-box2" >
                 <Button fx:id="importBtn" styleClass="btn-txt,export-btn" />
                 <Button fx:id="exportBtn" styleClass="btn-txt,export-btn" />
             </HBox>

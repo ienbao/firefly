@@ -1,41 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.dmsoft.firefly.gui.components.utils.TextFieldFilter?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane minHeight="200.0" minWidth="180.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.OverViewController">
+<?import javafx.scene.layout.HBox?>
+<AnchorPane styleClass="yield-over-view-anchor-pane"  xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.OverViewController">
     <children>
-        <TabPane style="-fx-background-color: #ffffff;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <TabPane styleClass="yield-over-view-tab-pane"  tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
                 <Tab text="%OVER_VIEW">
                     <content>
-                        <VBox minHeight="0.0" minWidth="0.0">
-                            <GridPane AnchorPane.bottomAnchor="242.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
-                                <columnConstraints>
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="800.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="310.0" minWidth="310.0" prefWidth="310.0" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                    <RowConstraints maxHeight="28.0" minHeight="28.0" prefHeight="28.0" vgrow="SOMETIMES" />
-                                </rowConstraints>
-                                <children>
-                                    <TextFieldFilter fx:id="filterTestItemTf" maxWidth="307.0" minWidth="220.0" prefHeight="28.0" prefWidth="307.0" GridPane.columnIndex="1">
-                                        <GridPane.margin>
-                                            <Insets bottom="3.0" top="3.0" />
-                                        </GridPane.margin>
-                                    </TextFieldFilter>
-                                </children>
-                            </GridPane>
-                            <TableView fx:id="overViewResultTb" editable="true" style="-fx-border-width: 1 1 1 1;" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
+                        <VBox >
+                            <HBox styleClass="yield-over-view-h-box" >
+                                <TextFieldFilter styleClass="yield-over-view-text-field-filter" fx:id="filterTestItemTf" >
+                                </TextFieldFilter>
+                            </HBox>
+                            <TableView styleClass="yield-view-table-view" fx:id="overViewResultTb" editable="true" style="-fx-border-width: 1 0 0 1;"  VBox.vgrow="ALWAYS">
                             </TableView>
                         </VBox>
                     </content>
