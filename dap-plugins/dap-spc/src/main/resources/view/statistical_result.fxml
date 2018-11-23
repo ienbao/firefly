@@ -9,11 +9,12 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.layout.HBox?>
-<VBox xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.StatisticalResultController">
-    <TabPane tabClosingPolicy="UNAVAILABLE">
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane minHeight="110.0" minWidth="180.0" prefHeight="424.0" prefWidth="435.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.StatisticalResultController">
+    <TabPane tabClosingPolicy="UNAVAILABLE"  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
             <Tab text="%STATISTICAL_RESULT">
-                <VBox>
+                <VBox minHeight="0.0" minWidth="0.0">
                     <HBox styleClass="spc-result-filter">
                         <TextFieldFilter fx:id="filterTestItemTf" styleClass="spc-result-filter-text"/>
                         <Button fx:id="chooseColumnBtn" styleClass="btn-icon" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" prefHeight="22.0" prefWidth="22.0" />
@@ -23,4 +24,4 @@
             </Tab>
         </tabs>
     </TabPane>
-</VBox>
+</AnchorPane>
