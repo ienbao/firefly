@@ -275,20 +275,20 @@ table
 }
 /*******************************************************************************
  *                                                                             *
- *grr export page css                                                                *
+ *grr export/item page css                                                                *
  *                                                                             *
  ******************************************************************************/
 .grr-export-h-box{
     -fx-pref-height: 100.0;
     -fx-pref-width: 200.0;
-    -fx-border-color: #DCDCDC;
+    -fx-border-color: COLOR_GRAY_DC;
 }
 .grr-export-v-box-left{
     -fx-pref-height:200.0 ;
     -fx-pref-width: 100.0;
     -fx-padding:10 0 0 20;
     -fx-border-width: 0 1 0 0;
-    -fx-border-color: #DCDCDC;
+    -fx-border-color:COLOR_GRAY_DC;
 }
 .grr-export-location-path{
     -fx-pref-width: 250.0;
@@ -296,22 +296,38 @@ table
 }
 .grr-export-split{
     -fx-border-width: 0 0 1 0;
-    -fx-border-color: #DCDCDC;
+    -fx-border-color: COLOR_GRAY_DC;
 }
-.grr-export-tab{
+.grr-item-tab{
     -fx-pref-width: 180.0;
     -fx-min-width: 180.0;
     -fx-pref-height: 270.0;
+    -fx-min-height: 270.0;
     -fx-border-width: 0 0 0 0;
 }
-.grr-export-item-table{
+.grr-item-table{
     -fx-border-width: 1 0 0 0;
 }
-.grr-export-config{
-    -fx-padding: 10 0 0 10;
+.grr-config{
+    -fx-padding: 10 10 0 10;
+    -fx-min-width: 160.0;
+    -fx-pref-width: 160.0;
+    -fx-pref-height: 350.0;
 }
 .grr-import-btn{
     -fx-alignment: center_right;
     -fx-pref-width: 180.0;
     -fx-padding: 0 20 0 0;
 }
+
+.grr-item-split{
+    -fx-min-width: 180;
+    -fx-pref-height: 600;
+    -fx-border-width: 0 0 0 0;
+}
+.grr-item-btn{
+    -fx-padding: 0 20;
+    -fx-border-color:COLOR_GRAY_DC;
+    -fx-border-width: 1 0 0 0;
+}
+

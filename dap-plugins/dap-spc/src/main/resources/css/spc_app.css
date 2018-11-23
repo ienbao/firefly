@@ -361,24 +361,76 @@ table
     -fx-label-padding: 15 0 0 0;
 }
 
+/*******************************************************************************
+ *                                                                             *
+ *spc export page css                                                          *
+ *                                                                             *
+ ******************************************************************************/
+.spc-export-h-box{
+    -fx-pref-height: 100.0;
+    -fx-pref-width: 200.0;
+    -fx-border-color: #DCDCDC;
+}
+.spc-export-v-box-left{
+    -fx-pref-height:200.0 ;
+    -fx-pref-width: 100.0;
+    -fx-padding:10 0 0 20;
+    -fx-border-width: 0 1 0 0;
+    -fx-border-color: #DCDCDC;
+}
+.spc-export-location-path{
+    -fx-pref-width: 250.0;
+    -fx-border-width: 1 0 1 1;
+}
+.spc-export-split{
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #DCDCDC;
+}
+.spc-export-tab{
+    -fx-pref-width: 180.0;
+    -fx-min-width: 180.0;
+    -fx-pref-height: 270.0;
+    -fx-border-width: 0 0 0 0;
+}
+.spc-export-item-table{
+    -fx-border-width: 1 0 0 0;
+}
+.spc-export-config{
+    -fx-padding: 10 10 0 10;
+}
+.spc-import-btn{
+    -fx-alignment: center_right;
+    -fx-pref-width: 180.0;
+    -fx-padding: 0 20 0 0;
+}
 
+.spc-export-left-right{
+    -fx-label-padding: 0 10 0 10;
+}
 
-/*.spc-export-setting-all-check{*/
-    /*-fx-padding: 20;*/
-    /*-fx-spacing: 20;*/
-    /*-fx-border-width: 1;*/
-    /*-fx-border-color: COLOR_GRAY_DC;*/
-/*}*/
+/*******************************************************************************
+ *                                                                             *
+ *spc statistical result page css                                              *
+ *                                                                             *
+ ******************************************************************************/
 
-/*.spc-export-setting-main-check{*/
-    /*-fx-spacing: 5;*/
-/*}*/
+.spc-result-filter{
+    -fx-padding: 3 3 3 0;
+    -fx-spacing: 10.0;
+    -fx-alignment: CENTER_RIGHT;
+}
 
-/*.spc-export-setting-result-check{*/
-    /*-fx-spacing: 5;*/
-/*}*/
+.spc-result-filter-text{
+    -fx-max-width: 300;
+    -fx-min-width: 300;
+    -fx-pref-width: 300;
+    -fx-label-padding: 3 0 3 0;
+    -fx-border-width: 1;
+    -fx-border-color: COLOR_GRAY_DC;
+}
 
-/*.spc-export-setting-detail-check{*/
-    /*-fx-padding: 0 0 0 24;*/
-    /*-fx-spacing: 50;*/
-/*}*/
+.spc-result-table,.spc-result-table:selected,.spc-result-table:focused,.spc-result-table:hover{
+    -fx-pref-height: 416;
+    -fx-pref-width: 435;
+    -fx-border-width: 1 0 0 0;
+}
