@@ -7,10 +7,10 @@
 }
 
 .list-view {
-    -fx-background-color: #ffffff;
+    -fx-background-color: COLOR_LIGHT_FF;
     -fx-background-insets: 0, 1;
     -fx-effect: null;
-    -fx-border-color: #dcdcdc;
+    -fx-border-color: COLOR_GRAY_DC;
     -fx-padding: 1, 1, 1, 1;
     -fx-translate-y: 3;
 }
@@ -22,7 +22,7 @@
 
 .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover {
     -fx-background: -fx-accent;
-    -fx-background-color: #0096ff;
+    -fx-background-color: COLORFUL_AUXILIARY_BLUE;
 }
 
 /*******************************************************************************
@@ -37,34 +37,34 @@
     -fx-border-insets: 0;
     -fx-padding: 1;
     -fx-shape: null;
-    -fx-background-color: #ea2028;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
 }
 
 .progress-bar:indeterminate > .bar {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
-    -fx-background-color: #ea2028;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
 }
 
 .progress-bar > .track {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
-    -fx-background-color: #dcdcdc;
+    -fx-background-color: COLOR_GRAY_DC;
 }
 
 .candlestick-tooltip {
-    -fx-font-size: 12px;
-    -fx-text-fill: #222222;
+    -fx-font-size: 12;
+    -fx-text-fill: COLOR_BLACK_22;
     -fx-background-color: white;
     -fx-background-radius: 0;
     -fx-background-insets: 0;
     -fx-padding: 0;
-    -fx-border-width: 1px;
-    -fx-border-color: #DDDDDD;
+    -fx-border-width: 1;
+    -fx-border-color: COLOR_GRAY_DD;
 }
 
 .table-text-field {
-    -fx-text-fill: #222222 !important;
+    -fx-text-fill: COLOR_BLACK_22 !important;
 }
 
 
