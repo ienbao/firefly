@@ -106,7 +106,7 @@ public class ViewDataController implements Initializable {
 
 
     private void initBtnIcon() {
-        chooseColumnBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_test_items_normal.png")));
+        chooseColumnBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/choose-test-items.svg")));
         TooltipUtil.installNormalTooltip(chooseColumnBtn, YieldFxmlAndLanguageUtils.getString(ResourceMassages.CHOOSE_ITEMS_TITLE));
     }
 

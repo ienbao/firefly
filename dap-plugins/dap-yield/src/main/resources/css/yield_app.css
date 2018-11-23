@@ -142,6 +142,7 @@ table
 */
 .alarm-excellent {
     -fx-alignment: center;
+    -fx-min-width: 60;
     -fx-pref-width: 60;
     -fx-pref-height: 22;
     -fx-text-fill: white;
@@ -158,6 +159,7 @@ table
 
 .alarm-acceptable {
     -fx-alignment: center;
+    -fx-min-width: 60;
     -fx-pref-width: 60;
     -fx-pref-height: 22;
     -fx-text-fill: white;
@@ -166,6 +168,7 @@ table
 
 .alarm-rectification {
     -fx-alignment: center;
+    -fx-min-width: 60;
     -fx-pref-width: 60;
     -fx-pref-height: 22;
     -fx-text-fill: white;
@@ -174,6 +177,7 @@ table
 
 .alarm-bad {
     -fx-alignment: center;
+    -fx-min-width: 60;
     -fx-pref-width: 60;
     -fx-pref-height: 22;
     -fx-text-fill: white;
@@ -235,4 +239,359 @@ table
 .default-color3.chart-bar {
     -fx-bar-fill: RED;
 }
+
+
+/*****************************************************************
+
+add all charts.css into yield_app.css
+
+******************************************************************/
+
+.table-no-header .column-header-background {
+    -fx-max-height: 0px;
+    -fx-pref-height: 0px;
+    -fx-min-height: 0px;
+}
+
+.chart {
+    -fx-font-family: Tahoma;
+    -fx-font-size: 0.9em;
+    -fx-padding: 10 10 10 10;
+}
+
+/*.chart-content {*/
+/*-fx-padding: 0 10px 10px 10px;*/
+/*}*/
+
+.chart-vertical-grid-lines {
+    -fx-stroke-width: 1px;
+}
+
+/*.chart-horizontal-grid-lines {*/
+/*-fx-stroke-width: 0px;*/
+/*-fx-stroke: transparent;*/
+/*}*/
+
+/*chart style*/
+.chart-plot-background {
+    -fx-background-color: white;
+    -fx-border-color: #dcdcdc #dcdcdc transparent transparent;
+}
+
+.axis {
+    -fx-font-size: 1.4em;
+    -fx-font-family: Tahoma;
+    -fx-tick-length: 5;
+    -fx-minor-tick-length: 0;
+}
+
+.axis:bottom {
+    -fx-border-color: #dcdcdc transparent transparent transparent;
+}
+
+.axis:left {
+    -fx-border-color: transparent #dcdcdc transparent transparent;
+}
+
+.axis-label {
+    -fx-text-fill: #462300;
+}
+
+/*line*/
+.line {
+    -fx-cursor: hand;
+    -fx-stroke: #6fc1be;
+}
+
+.line:hover {
+    -fx-stroke-width: 2px;
+}
+
+.dashed-line {
+    -fx-stroke-dash-array: 4px;
+}
+
+.dashed-line:hover {
+    -fx-stroke-width: 2px;
+    -fx-stroke-dash-array: 1px;
+}
+
+.solid-line {
+
+}
+
+.solid-line:hover {
+    -fx-stroke-width: 2px;
+}
+
+.hidden-line {
+    -fx-stroke-width: 0px;
+}
+/*Bar Chart*/
+.chart-bar {
+    -fx-cursor: hand;
+    -fx-stroke-width: 1px;
+}
+
+.chart-bar:hover {
+    -fx-border-width: 1 1 0 1;
+    /*-fx-border-color: #e92822;*/
+}
+
+.chart-hidden-bar {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-stroke-width: 0px;
+}
+
+/* ====== CANDLE STICK CHART =========================================================== */
+.candlestick-tooltip {
+    -fx-font-size: 12px;
+    -fx-text-fill: #222222;
+    -fx-background-color: white;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 5 10 5 10;
+    -fx-border-width: 1px;
+    -fx-border-color: #DDDDDD;
+}
+
+.candlestick-tooltip-box {
+    -fx-min-width: 80px;
+    -fx-max-width: 80px;
+    -fx-pref-width: 80px;
+}
+
+.candlestick-series {
+    -fx-opacity: 0.7;
+}
+
+.candlestick-tooltip-box > .label {
+    -fx-padding: 0 0 10 0;
+}
+
+.candlestick-bar {
+    -fx-cursor: hand;
+}
+
+.list-cell {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-base-color;
+    -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em;
+    -fx-pref-height: 22;
+}
+
+.list-view {
+    -fx-background-color: #ffffff;
+    -fx-background-insets: 0, 1;
+    -fx-effect: null;
+    -fx-border-color: #dcdcdc;
+    -fx-padding: 1, 1, 1, 1;
+    -fx-translate-y: 3;
+}
+
+.list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
+    -fx-padding: 4 0 4 5;
+    -fx-background: -fx-control-inner-background;
+}
+
+.list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: #0096ff;
+}
+
+.list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
+.list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: #0096ff;
+    -fx-background-insets: 0, 1, 2;
+}
+
+.menu-button {
+    -fx-min-width: 20px;
+    -fx-max-width: 20px;
+    -fx-pref-width: 20px;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+}
+
+.menu-icon {
+}
+
+.menu-icon > .container > .menu-button {
+    -fx-padding: 0em 0em 0em -0.63em;
+}
+
+.legend {
+    -fx-background-color: white;
+    -fx-border-width: 0;
+}
+
+.chart-legend-tooltip {
+    -fx-text-fill: rgb(34, 34, 34);
+    -fx-font-size: 12px;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+}
+
+.chart-legend-tooltip .chart-legend-item {
+    -fx-text-fill: rgb(34, 34, 34);
+}
+
+.vertical-text {
+    -fx-background-color: #f0f0f0;
+}
+
+.vertical-text .tab-header-area .tab {
+    -fx-pref-height: 100px;
+    -fx-pref-width: 22px;
+}
+
+.vertical-text .tab-header-area .tab .tab-graphic-label {
+    -fx-pref-height: 22px;
+    -fx-pref-width: 100px;
+    -fx-rotate: 90;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab {
+    -fx-border-width: 0px 0px 1px 0px;
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #e7e7e7;
+    -fx-alignment: center-left;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:selected {
+    -fx-border-width: 0px 1px 0px 1px;
+    -fx-border-color: #e7e7e7;
+    -fx-background-color: white;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:hover {
+    -fx-background-color: white;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:pressed {
+    -fx-border-color: white;
+    -fx-background-color: white;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:focused {
+    -fx-border-color: #e7e7e7;
+    -fx-border-style: solid;
+}
+
+.vertical-text > .tab-header-area > .headers-region > .tab:focused:hover {
+    -fx-border-color: #f0f0f0;
+    -fx-border-style: solid;
+}
+
+/*.vertical-text > .tab-header-area > .headers-region > .tab .tab-label {*/
+/*-fx-background-color: red;*/
+/*}*/
+
+
+/******************************************************************************
+*             yield-item.fxml                                                                 *
+*           yield-split-pane                                                   *
+*                                                                              *
+ ******************************************************************************/
+
+
+/*orientation="VERTICAL" prefHeight="600.0" style="-fx-border-width: 0 0 0 0;"*/
+
+
+.yield-split-pane{
+    -fx-pref-height: 600.0;
+    -fx-border-width: 0 0 0 0;
+    -fx-border-color: red;
+    -fx-orientation: vertical;
+}
+/*minHeight="270.0" minWidth="180.0" prefHeight="270.0" prefWidth="180.0" style="-fx-border-width: 0 0 0 0;"*/
+.yield-right-tab-pane{
+    -fx-min-height: 270.0;
+    -fx-pref-height: 270.0;
+    -fx-min-width: 180.0;
+    -fx-pref-width: 180.0;
+    -fx-border-width: 0;
+}
+/*minHeight="250.0" minWidth="180.0" prefHeight="250.0" prefWidth="180.0"*/
+.yield-right-border-pane{
+    -fx-min-height: 250.0;
+    -fx-pref-height: 250.0;
+    -fx-min-width: 180.0;
+    -fx-pref-width: 180.0;
+    -fx-border-width: 0 0 0 0;
+}
+.yield-item-tab{
+    -fx-pref-width: 45;
+    -fx-padding: 0 5 0 5;
+}
+/*minHeight="200.0" minWidth="180.0" prefHeight="200.0" prefWidth="180.0" style="-fx-border-width: 1 0 0 0;" BorderPane.alignment="CENTER"*/
+.yield-right-table-view{
+    -fx-min-height: 200.0;
+    -fx-pref-height: 200.0;
+    -fx-min-width: 180.0;
+    -fx-pref-width: 180.0;
+    -fx-border-width: 0 0 0 0;
+}
+/*maxWidth="32.0" minWidth="32.0" prefWidth="32.0" sortType="DESCENDING" sortable="false"*/
+.yield-table-column-select{
+    -fx-max-width: 32.0;
+    -fx-min-width: 32.0;
+    -fx-pref-width: 32.0;
+}
+/*maxWidth="1.7976931348623157E308" minWidth="148.0" prefWidth="148.0"*/
+.yield-table-column-item{
+    -fx-max-width:1.7976931348623157E308 ;
+    -fx-min-width: 148.0;
+    -fx-pref-width: 148.0;
+}
+.yield-text-field-filter{
+    -fx-max-width: 20000.0;
+    -fx-border-color: red;
+    -fx-border-width: 1;
+}
+.yield-tab-config-tab{
+    -fx-pref-width: 45;
+    -fx-padding: 0 5 0 5;
+}
+.yield-config-tab-border-pane{
+    /*minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0";*/
+    -fx-min-height: 0.0;
+    -fx-min-width: 0.0;
+    -fx-pref-height: 180.0;
+    -fx-pref-width: 200.0;
+}
+.yield-label-text{
+    -fx-text-fill: #EA2028;
+}
+.yield-config-combo-box{
+    /*prefHeight="23.0" prefWidth="160.0";*/
+    -fx-pref-height: 23.0;
+    -fx-pref-width: 160.0;
+}
+.yield-grid-pane-bottom{
+    -fx-background-color: #ffffff;
+    -fx-border-width: 1 0 0 0;
+    -fx-border-color: #DCDCDC;
+}
+
+/*alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0"*/
+.export-btn{
+    -fx-alignment: center;
+    -fx-content-display: center;
+    -fx-max-height: 20.0;
+    -fx-min-height: 20.0;
+    -fx-pref-height: 20.0;
+    -fx-max-width: 30.0;
+    -fx-min-width: 30.0;
+    -fx-pref-width: 30.0;
+    -fx-text-fill: Button;
+}
+
+
+
+
+
 

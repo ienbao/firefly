@@ -33,8 +33,6 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -44,13 +42,11 @@ import javafx.stage.Popup;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import static com.google.common.io.Resources.getResource;
 
 /**
@@ -69,8 +65,13 @@ public class MainController {
     private ToolBar tbaSystem;
     @FXML
     private GridPane stateBar;
+    @FXML
+    private ContentStackPane contentStackPane;
+    @FXML
     private ProgressBar progressBar;
+    @FXML
     private Button dataSourceBtn;
+    @FXML
     private Button templateBtn;
     private ScrollPane scrollPaneTooltip;
     private CustomerTooltip dataSourceTooltip;
@@ -79,7 +80,6 @@ public class MainController {
     private ListView<StateBarTemplateModel> templateView;
     private ObservableList<StateBarTemplateModel> templateList = FXCollections.observableArrayList();
     private AtomicBoolean isShow = new AtomicBoolean(false);
-    private StackPane contentStackPane;
     private Map<String, TabPane> tabPaneMap = new LinkedHashMap<>();
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
@@ -98,7 +98,6 @@ public class MainController {
         this.updateMemoryState();
         if (isLogin()) {
             grpContent.setDisable(false);
-            this.updateStateBarIcon();
             this.initTemplate();
             this.initTemplatePopup();
             this.initDataSource();
@@ -167,11 +166,11 @@ public class MainController {
      * method to reset main
      */
     public void resetMain() {
-        grpContent.getChildren().remove(contentStackPane);
+//        grpContent.getChildren().remove(contentStackPane);
         contentStackPane.getChildren().clear();
         tabPaneMap.clear();
         tbaSystem.getItems().clear();
-        stateBar.getChildren().clear();
+//        stateBar.getChildren().clear();
         initialize();
     }
 
@@ -206,74 +205,18 @@ public class MainController {
 
     private void initStateBar() {
         LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
-
-        Label lblFile = new Label(GuiFxmlAndLanguageUtils.getString("STATE_BAR_FILE"));
-        lblFile.getStyleClass().add("state-bar-lbl");
-        Double length = Double.valueOf(lblFile.getText().getBytes().length);
-        stateBar.addColumn(0, lblFile);
         if (LanguageType.EN.equals(languageType)) {
             stateBar.getColumnConstraints().get(0).setMaxWidth(85);
         } else {
             stateBar.getColumnConstraints().get(0).setMaxWidth(55);
         }
-
-
-        ImageView imageView = new ImageView("/images/DS-files.svg");
-        imageView.setFitHeight(16);
-        imageView.setFitWidth(16);
-        dataSourceBtn = new Button("--", imageView);
-        dataSourceBtn.setContentDisplay(ContentDisplay.RIGHT);
-        dataSourceBtn.getStyleClass().add("btn-icon-b");
-        dataSourceBtn.setStyle("-fx-padding: 0 3 0 5");
-        stateBar.addColumn(1, dataSourceBtn);
         ControlMap.addControl(CommonResourceMassages.PLATFORM_CONTROL_DATASOURCE_BTN, dataSourceBtn);
-
-        Label lblAnalyze = new Label(GuiFxmlAndLanguageUtils.getString("STATE_BAR_ANALYZE"));
-        lblAnalyze.getStyleClass().add("state-bar-lbl");
-        Double length1 = Double.valueOf(lblAnalyze.getText().getBytes().length);
-        stateBar.addColumn(2, lblAnalyze);
         if (LanguageType.EN.equals(languageType)) {
             stateBar.getColumnConstraints().get(2).setMaxWidth(120);
         } else {
             stateBar.getColumnConstraints().get(2).setMaxWidth(70);
         }
-
-        ImageView imageView1 = new ImageView("/images/template.svg");
-        imageView1.setFitHeight(16);
-        imageView1.setFitWidth(16);
-        templateBtn = new Button("--", imageView1);
-        templateBtn.setContentDisplay(ContentDisplay.RIGHT);
-        templateBtn.getStyleClass().add("btn-icon-b");
-        templateBtn.setStyle("-fx-padding: 0 3 0 5");
-        stateBar.addColumn(3, templateBtn);
         ControlMap.addControl(CommonResourceMassages.PLATFORM_CONTROL_TEMPLATE_BTN, templateBtn);
-
-        progressBar = new ProgressBar();
-        progressBar.setPrefHeight(10);
-        progressBar.setMaxHeight(10);
-        progressBar.setMinHeight(10);
-        progressBar.setPrefWidth(110);
-        progressBar.setMaxWidth(110);
-        progressBar.setMinWidth(110);
-        progressBar.getStyleClass().setAll("progress-bar-lg-green");
-        progressBar.setProgress(0);
-
-        Label lblMemory = new Label(GuiFxmlAndLanguageUtils.getString("STATE_BAR_MEMORY"), progressBar);
-        lblMemory.setPrefHeight(20);
-        lblMemory.setMaxHeight(20);
-        lblMemory.setMinHeight(20);
-        lblMemory.setPrefWidth(179);
-        lblMemory.setMaxWidth(179);
-        lblMemory.setMinWidth(179);
-        lblMemory.getStyleClass().add("state-bar-lbl");
-        lblMemory.setStyle("-fx-border-width: 0 1 0 1; -fx-border-color: #dcdcdc;");
-        lblMemory.setAlignment(Pos.BASELINE_LEFT);
-        lblMemory.setContentDisplay(ContentDisplay.RIGHT);
-        stateBar.addColumn(4, lblMemory);
-
-        Label lblVersion = new Label(GuiFxmlAndLanguageUtils.getString("STATE_BAR_VERSION"));
-        lblVersion.getStyleClass().add("state-bar-lbl");
-        stateBar.addColumn(5, lblVersion);
     }
 
     private void initStateBarText(List<String> activeProjectNames, String activeTemplateName) {
@@ -309,20 +252,6 @@ public class MainController {
      */
     public void updateTemplateText(String selectedTemplateName) {
         templateBtn.setText(selectedTemplateName);
-    }
-
-    /**
-     * method to update stats bar icon
-     */
-    public void updateStateBarIcon() {
-        ImageView imageView = new ImageView("/images/DS-files.svg");
-        imageView.setFitHeight(16);
-        imageView.setFitWidth(16);
-        dataSourceBtn.setGraphic(imageView);
-        ImageView imageView1 = new ImageView("/images/template.svg");
-        imageView1.setFitHeight(16);
-        imageView1.setFitWidth(16);
-        templateBtn.setGraphic(imageView1);
     }
 
     private void initComponentEvent() {
@@ -371,20 +300,15 @@ public class MainController {
         getHidePopupEvent();
     }
 
-
     private void initDataSourceTooltip() {
         if (dataSourceList == null || dataSourceList.isEmpty()) {
-            dataSourceTooltip.setMinHeight(0);
-            dataSourceTooltip.setMinWidth(0);
-            dataSourceTooltip.setPrefWidth(0);
-            dataSourceTooltip.setPrefHeight(0);
+            dataSourceTooltip.getStyleClass().add("main-dataSource-null");
         } else {
             VBox vBox = new VBox();
             dataSourceList.forEach(value -> {
                 Label label = new Label();
-                label.setStyle("-fx-padding: 5 10 0 10");
+                label.getStyleClass().add("main-dataSourceList-lbl");
                 label.setText(value);
-                label.setContentDisplay(ContentDisplay.CENTER);
                 vBox.getChildren().add(label);
             });
             scrollPaneTooltip.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -438,14 +362,12 @@ public class MainController {
                 } else {
                     HBox cell;
                     Label label = new Label(item.getTemplateName());
-                    label.setPadding(new Insets(0, 0, 0, 5));
                     if (item.isIsChecked()) {
                         cell = new HBox(imageReset, label);
+                        cell.getStyleClass().add("spacing-md");
                     } else {
-                        Label label1 = new Label("");
-                        label1.setPrefWidth(16);
-                        label1.setPrefHeight(16);
-                        cell = new HBox(label1, label);
+                        cell = new HBox(label);
+                        cell.getStyleClass().add("main-templateView-label");
                     }
                     setGraphic(cell);
                     cell.setOnMouseEntered(event -> {
@@ -516,15 +438,11 @@ public class MainController {
     }
 
     private void setListViewSize(ListView listView, ObservableList dataList) {
-        listView.setMaxWidth(MAX_WIDTH);
-        listView.setPrefWidth(MAX_WIDTH);
-        listView.setMaxHeight(MAX_HEIGHT);
+        listView.getStyleClass().add("main-list-view");
         if (dataList != null && !dataList.isEmpty()) {
             listView.setPrefHeight((26 * dataList.size()) + 10);
         } else {
-            listView.setPrefHeight(0);
-            listView.setPrefWidth(0);
-            listView.setMinWidth(0);
+            listView.getStyleClass().add("main-list-view-null");
         }
     }
 
@@ -663,9 +581,9 @@ public class MainController {
                                     try {
                                         progressBar.setProgress(progress / 100.0);
                                         if (progress < warningPercent) {
-                                            progressBar.getStyleClass().setAll("progress-bar-md-green");
+                                            progressBar.getStyleClass().setAll("progress-bar-lg-green");
                                         } else {
-                                            progressBar.getStyleClass().setAll("progress-bar-md-red");
+                                            progressBar.getStyleClass().setAll("progress-bar-lg-red");
                                         }
                                         TooltipUtil.installNormalTooltip(progressBar, progress + "%");
                                     } catch (Exception e) {

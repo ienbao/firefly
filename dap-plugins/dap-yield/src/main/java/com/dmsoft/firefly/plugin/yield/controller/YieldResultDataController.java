@@ -17,6 +17,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +31,7 @@ import java.util.ResourceBundle;
 public class YieldResultDataController implements Initializable {
     private final Logger logger = LoggerFactory.getLogger(YieldResultDataController.class);
     @FXML
-    private GridPane gridPane;
+    private HBox hBox;
     @FXML
     private Label totalSamples0;
     @FXML
@@ -68,7 +70,7 @@ public class YieldResultDataController implements Initializable {
     }
 
     public void setOverviewResultData(YieldTotalProcessesDto list, String rowKey, boolean isTimer) {
-        gridPane.setStyle("-fx-background-color: #F5F5F5");
+        hBox.setStyle("-fx-background-color: #F5F5F5");
         totalSamples0.setStyle("-fx-text-fill: #222222");
         fpySamples0.setStyle("-fx-text-fill: #222222");
         passSamples0.setStyle("-fx-text-fill: #222222");

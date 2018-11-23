@@ -544,6 +544,9 @@
     -fx-border-color: COLOR_GRAY_DC;
     -fx-background-color: COLOR_GRAY_FA;
 }
+#explain .plugin-name-font{
+    -fx-font-weight: bold
+}
 /*******************************************************************************
  *                                                                             *
  * template page css                                                             *
@@ -614,10 +617,24 @@
     -fx-spacing: 13;
 }
 
+.template-pattern{
+    -fx-background-color: COLORFUL_AUXILIARY_BLUE;
+}
 
+.template-rename-image{
+    -fx-image: url("/images/rename.svg");
+}
 
+.template-add-image{
+    -fx-image: url("/images/add.svg");
+}
+.template-copy-image{
+    -fx-image: url("/images/copy.svg");
+}
 
-
+.template-delete-image{
+    -fx-image: url("/images/del.svg");
+}
 /*******************************************************************************
  *                                                                             *
  * gui about page css                                                              *
@@ -938,14 +955,58 @@
 -fx-background-color: COLORFUL_PRIMARY_RED_LIGHT;
 }
 
-.tool-bar .button:pressed {
+.tool-bar .button:pressed,
+.tool-bar .button:pressed:focused{
 -fx-highlight-fill: COLORFUL_PRIMARY_RED_DARK;
 -fx-border-color: COLORFUL_PRIMARY_RED_DARK;
 -fx-background-color: COLORFUL_PRIMARY_RED_DARK;
 }
-.tool-bar .button:pressed:focused {
-    -fx-highlight-fill: COLORFUL_PRIMARY_RED_DARK;
-    -fx-border-color: COLORFUL_PRIMARY_RED_DARK;
-    -fx-background-color: COLORFUL_PRIMARY_RED_DARK;
+
+.main-dataSourceBtn{
+    -fx-content-display: right;
+    -fx-padding: 0 3 0 5;
+}
+.main-dataSourceBtn-image{
+    -fx-image: url("/images/DS-files.svg");
+}
+.main-templateBtn{
+    -fx-content-display: right;
+    -fx-padding: 0 3 0 5;
+}
+.main-templateBtn-image{
+    -fx-image: url("/images/template.svg");
+}
+.main-memory{
+    -fx-pref-width: 179.0;
+    -fx-pref-height: 20.0;
+    -fx-padding: 0 0 0 10;
+    -fx-spacing: 5;
+    -fx-alignment: BASELINE_LEFT;
+    -fx-border-width: 0 1 0 1;
+    -fx-border-color: COLOR_GRAY_DC;
+}
+.main-dataSourceList-lbl{
+    -fx-padding: 5 10 0 10;
+    -fx-content-display: CENTER;
 }
 
+.main-templateView-label{
+    -fx-padding: 0 0 0 21;
+}
+.main-list-view{
+    -fx-max-height: 250.0;
+    -fx-max-width: 250.0;
+    -fx-pref-width: 250.0;
+}
+.main-list-view-null{
+    -fx-pref-height: 0.0;
+    -fx-min-width: 0.0;
+    -fx-pref-width: 0.0;
+}
+.main-dataSource-null{
+    -fx-min-height: 0;
+    -fx-min-width: 0;
+    -fx-pref-height:0 ;
+    -fx-pref-width: 0;
+
+}

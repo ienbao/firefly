@@ -81,8 +81,7 @@ public class AddItemController implements Initializable {
     private void initComponent() {
         addItemTableModel = new AddItemTableModel();
         TableViewWrapper.decorate(testItemTable, addItemTableModel);
-//        ((TableColumn) testItemTable.getColumns().get(0)).setPrefWidth(30);
-//        ((TableColumn) testItemTable.getColumns().get(1)).setPrefWidth(145);
+        ((TableColumn) testItemTable.getColumns().get(1)).setPrefWidth(145);
         this.setFilterTFPrompt(SpcFxmlAndLanguageUtils.getString("FILTER_TEST_ITEM_PROMPT"));
     }
 
