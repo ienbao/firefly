@@ -981,11 +981,11 @@ public class SpcItemController implements Initializable {
     private void updateAnalysisBtnTimer() {
         if (isTimer) {
             if (!startTimer) {
-                analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_play.png")));
+                analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/start.svg")));
                 analysisBtn.getStyleClass().remove("btn-primary");
                 analysisBtn.getStyleClass().add("btn-timer");
             } else {
-                analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_stop.png")));
+                analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/stop.svg")));
                 analysisBtn.getStyleClass().remove("btn-timer");
                 analysisBtn.getStyleClass().add("btn-primary");
             }
