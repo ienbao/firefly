@@ -52,7 +52,7 @@ public class BasicSearchPane extends VBox {
         addSearch.setPrefSize(160, 22);
         addSearch.setMaxWidth(Double.MAX_VALUE);
 
-        addSearch.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
+        addSearch.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/add.svg")));
         addSearch.setOnAction(event -> addBasicSearch());
     }
 
@@ -81,7 +81,7 @@ public class BasicSearchPane extends VBox {
         addSearch.setPrefSize(160, 22);
         addSearch.setMaxWidth(Double.MAX_VALUE);
 
-        addSearch.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
+        addSearch.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/add.svg")));
         addSearch.setOnAction(event -> addBasicSearch());
 
     }

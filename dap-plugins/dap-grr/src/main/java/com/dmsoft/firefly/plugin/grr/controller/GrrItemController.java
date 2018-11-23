@@ -201,7 +201,7 @@ public class GrrItemController implements Initializable {
         is.setOnMousePressed(event -> createPopMenu(is, event));
         is.getStyleClass().add("filter-normal");
 
-//        is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
+//        is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/analysis-white.svg")));
 
         item.setText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
         item.setGraphic(is);
@@ -568,16 +568,16 @@ public class GrrItemController implements Initializable {
     }
 
     private void initBtnIcon() {
-        analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
+        analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/analysis-white.svg")));
         TooltipUtil.installNormalTooltip(analysisBtn, GrrFxmlAndLanguageUtils.getString(ResourceMassages.ANALYSIS));
-        importBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_load_script_normal.png")));
+        importBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/load-script.svg")));
         TooltipUtil.installNormalTooltip(importBtn, GrrFxmlAndLanguageUtils.getString(ResourceMassages.IMPORT_CONFIG));
-        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_save_normal.png")));
+        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/save.svg")));
         TooltipUtil.installNormalTooltip(exportBtn, GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_CONFIG));
-        itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_datasource_normal.png")));
+        itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/datasource.svg")));
         itemTab.setStyle("-fx-padding: 0 5 0 5");
         itemTab.setTooltip(new Tooltip(GrrFxmlAndLanguageUtils.getString("GRR_TEST_ITEM")));
-        configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_config_normal.png")));
+        configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/config.svg")));
         configTab.setStyle("-fx-padding: 0 5 0 5");
         configTab.setTooltip(new Tooltip(GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")));
     }
