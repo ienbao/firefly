@@ -261,10 +261,10 @@ public class YieldMainController implements Initializable {
     }
 
     private void initBtnIcon() {
-        resetBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_reset_normal.png")));
-        printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_print_normal.png")));
-        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_export_normal.png")));
-        chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
+        resetBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/reset.svg")));
+        printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/print.svg")));
+        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/export.svg")));
+        chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/check-white.svg")));
         TooltipUtil.installNormalTooltip(resetBtn, YieldFxmlAndLanguageUtils.getString("YIELD_RESET_BTN_TOOLTIP"));
         TooltipUtil.installNormalTooltip(printBtn, YieldFxmlAndLanguageUtils.getString("YIELD_PRINT_BTN_TOOLTIP"));
         TooltipUtil.installNormalTooltip(exportBtn, YieldFxmlAndLanguageUtils.getString("YIELD_EXPORT_BTN_TOOLTIP"));

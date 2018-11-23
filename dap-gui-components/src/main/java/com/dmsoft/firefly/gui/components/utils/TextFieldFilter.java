@@ -15,8 +15,8 @@ import javafx.scene.layout.Priority;
 public class TextFieldFilter extends HBox {
     private TextField textField;
     private Label label;
-    private ImageView searchIcon = ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_basic_search_normal.png"));
-    private ImageView clearIcon = ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_clear_click.png"));
+    private ImageView searchIcon = ImageUtils.getImageView(getClass().getResourceAsStream("/images/basic-search.svg"));
+    private ImageView clearIcon = ImageUtils.getImageView(getClass().getResourceAsStream("/images/clear.svg"));
 
     /**
      * constructor

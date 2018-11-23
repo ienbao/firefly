@@ -313,21 +313,21 @@ public class YieldItemController implements Initializable {
     }
 
     private void initBtnIcon() {
-        analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
+        analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/analysis-white.svg")));
         TooltipUtil.installNormalTooltip(analysisBtn, YieldFxmlAndLanguageUtils.getString(ResourceMassages.ANALYSIS));
-        importBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_load_script_normal.png")));
+        importBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/load-script.svg")));
         TooltipUtil.installNormalTooltip(importBtn, YieldFxmlAndLanguageUtils.getString(ResourceMassages.IMPORT_CONFIG));
-        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_save_normal.png")));
+        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/save.svg")));
         TooltipUtil.installNormalTooltip(exportBtn, YieldFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_CONFIG));
-        itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_datasource_normal.png")));
+        itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/datasource.svg")));
         //itemTab.setStyle("-fx-padding: 0 5 0 5");
         itemTab.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("YIELD_TEST_ITEM")));
 
-        configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_config_normal.png")));
+        configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/config.svg")));
        // configTab.setStyle("-fx-padding: 0 5 0 5");
         configTab.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("YIELD_CONFIG")));
 
-//        timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_timer_normal.png")));
+//        timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/timer.svg")));
 //        timeTab.setStyle("-fx-padding: 0 5 0 5");
 //        timeTab.setTooltip(new Tooltip(YieldFxmlAndLanguageUtils.getString("YIELD_TIMER_SETTING")));
     }
@@ -1007,16 +1007,16 @@ public class YieldItemController implements Initializable {
     private void updateAnalysisBtnTimer() {
         if (isTimer) {
             if (!startTimer) {
-                analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_play.png")));
+                analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/start.svg")));
                 analysisBtn.getStyleClass().remove("btn-primary");
                 analysisBtn.getStyleClass().add("btn-timer");
             } else {
-                analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_stop.png")));
+                analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/stop.svg")));
                 analysisBtn.getStyleClass().remove("btn-timer");
                 analysisBtn.getStyleClass().add("btn-primary");
             }
         } else {
-            analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_analysis_white_normal.png")));
+            analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/analysis-white.svg")));
             analysisBtn.getStyleClass().remove("btn-timer");
             analysisBtn.getStyleClass().add("btn-primary");
         }

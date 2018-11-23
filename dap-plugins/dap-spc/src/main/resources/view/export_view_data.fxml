@@ -7,30 +7,15 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
+<VBox styleClass="md-window-size" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1">
       <TableView fx:id="viewData" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn prefWidth="75.0" text="C1" />
           <TableColumn prefWidth="75.0" text="C2" />
         </columns>
       </TableView>
-      <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="200.0">
-         <children>
-            <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="%OK_BTN">
-               <HBox.margin>
-                  <Insets right="10.0" />
-               </HBox.margin>
-            </Button>
-            <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="%CANCEL_BTN">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </Button>
-         </children>
+      <HBox styleClass="h-box-right">
+            <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="%OK_BTN"></Button>
+            <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="%CANCEL_BTN"></Button>
       </HBox>
-   </children>
-   <padding>
-      <Insets left="10.0" right="10.0" top="10.0" />
-   </padding>
 </VBox>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        stroke: #707070;
+        opacity: 0;
+      }
+
+      .cls-2 {
+        stroke: rgba(0,0,0,0);
+      }
+
+      .cls-3 {
+        stroke: none;
+      }
+
+      .cls-4 {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <g id="clear" transform="translate(-1340 -265)">
+    <g id="矩形_4796" data-name="矩形 4796" class="cls-1" transform="translate(1340 265)">
+      <rect class="cls-3" width="16" height="16"/>
+      <rect class="cls-4" x="0.5" y="0.5" width="15" height="15"/>
+    </g>
+    <path id="减去_2" data-name="减去 2" class="cls-2" d="M-5394,3008a6.007,6.007,0,0,1-6-6,6.006,6.006,0,0,1,6-6,6.007,6.007,0,0,1,6,6A6.008,6.008,0,0,1-5394,3008Zm2-4v1h1v-1Zm-4,0h-1v1h1v-1Zm3-1v1h1v-1Zm-2,0h-1v1h1v-1Zm0,0h2v-2h-2Zm-1-3v1h1v-1Zm4,0h-1v1h1v-1Zm-4-1h-1v1h1Zm5,0h-1v1h1Z" transform="translate(6742 -2729)"/>
+  </g>
+</svg>
