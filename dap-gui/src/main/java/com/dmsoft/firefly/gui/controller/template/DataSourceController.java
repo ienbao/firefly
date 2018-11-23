@@ -91,7 +91,7 @@ public class DataSourceController implements Initializable {
     private JsonMapper mapper = JsonMapper.defaultMapper();
     private String renameStr = GuiFxmlAndLanguageUtils.getString(ResourceMassages.RENAME_DATA_SOURCE);
     private String delStr = GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_SOURCE);
-
+    //TODO td svg图片模糊
     private void initTable() {
         filterTf.getTextField().setPromptText(GuiFxmlAndLanguageUtils.getString(ResourceMassages.FILTER));
         TooltipUtil.installNormalTooltip(delete, GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_SOURCE));

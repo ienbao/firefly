@@ -8,6 +8,7 @@ import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldFilter;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.plugin.spc.model.AddItemTableModel;
+import com.dmsoft.firefly.plugin.spc.utils.ResourceMassages;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -35,7 +36,7 @@ public class AddItemController implements Initializable {
     @FXML
     private TextFieldFilter filterTf;
     @FXML
-    private Label tipLabel;
+    private Button message;
     @FXML
     private Button chooseOkButton;
     @FXML
@@ -76,11 +77,12 @@ public class AddItemController implements Initializable {
     public void setFilterTFPrompt(String promptText){
         filterTf.getTextField().setPromptText(promptText);
     }
-
+    //TODO td 表格列宽度
     private void initComponent() {
         addItemTableModel = new AddItemTableModel();
         TableViewWrapper.decorate(testItemTable, addItemTableModel);
-        ((TableColumn) testItemTable.getColumns().get(1)).setPrefWidth(145);
+//        ((TableColumn) testItemTable.getColumns().get(0)).setPrefWidth(30);
+//        ((TableColumn) testItemTable.getColumns().get(1)).setPrefWidth(145);
         this.setFilterTFPrompt(SpcFxmlAndLanguageUtils.getString("FILTER_TEST_ITEM_PROMPT"));
     }
 
@@ -127,9 +129,10 @@ public class AddItemController implements Initializable {
     }
 
     private void initBtnIcon() {
-        tipLabel.getStyleClass().add("message-tip-question");
-        tipLabel.setStyle("-fx-background-color: #0096ff");
-        TooltipUtil.installNormalTooltip(tipLabel, SpcFxmlAndLanguageUtils.getString("CUSTOM_TEST_ITEM_TIP"));
+        message.getStyleClass().add("message-tip-question");
+//        tipLabel.getStyleClass().add("message-tip-question");
+//        tipLabel.setStyle("-fx-background-color: #0096ff");
+        TooltipUtil.installNormalTooltip(message, SpcFxmlAndLanguageUtils.getString("CUSTOM_TEST_ITEM_TIP"));
 //        tipLabel.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
     }
 
