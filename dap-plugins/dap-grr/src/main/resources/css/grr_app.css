@@ -275,20 +275,20 @@ table
 }
 /*******************************************************************************
  *                                                                             *
- *grr export page css                                                                *
+ *grr export/item page css                                                                *
  *                                                                             *
  ******************************************************************************/
 .grr-export-h-box{
     -fx-pref-height: 100.0;
     -fx-pref-width: 200.0;
-    -fx-border-color: #DCDCDC;
+    -fx-border-color: COLOR_GRAY_DC;
 }
 .grr-export-v-box-left{
     -fx-pref-height:200.0 ;
     -fx-pref-width: 100.0;
     -fx-padding:10 0 0 20;
     -fx-border-width: 0 1 0 0;
-    -fx-border-color: #DCDCDC;
+    -fx-border-color:COLOR_GRAY_DC;
 }
 .grr-export-location-path{
     -fx-pref-width: 250.0;
@@ -296,7 +296,7 @@ table
 }
 .grr-export-split{
     -fx-border-width: 0 0 1 0;
-    -fx-border-color: #DCDCDC;
+    -fx-border-color: COLOR_GRAY_DC;
 }
 .grr-item-tab{
     -fx-pref-width: 180.0;
@@ -327,7 +327,7 @@ table
 }
 .grr-item-btn{
     -fx-padding: 0 20;
-    -fx-border-color:#dcdcdc;
+    -fx-border-color:COLOR_GRAY_DC;
     -fx-border-width: 1 0 0 0;
 }
 
