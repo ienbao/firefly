@@ -19,7 +19,7 @@
         <VBox styleClass="datasource-setting-v-box">
             <SplitPane fx:id="split" orientation="VERTICAL" styleClass="datasource-setting-split-pane" />
             <Pane styleClass="datasource-setting-pane" >
-                <Button fx:id="searchBtn" layoutX="29.0" layoutY="2.0" maxWidth="22" minWidth="22" prefWidth="22.0" styleClass="btn-primary,search-button" />
+                <Button fx:id="searchBtn" layoutX="29.0" layoutY="2.0" styleClass="btn-primary,search-button" />
             </Pane>
         </VBox>
     </HBox>
@@ -32,9 +32,9 @@
         </left>
         <right>
             <HBox styleClass="spacing-lg">
-                <Button fx:id="oK" prefHeight="20.0" text="%OK_DATA"  />
-                <Button fx:id="cancel"  prefHeight="20.0" text="%CANCEL_DATA" />
-                <Button fx:id="apply"  prefHeight="20.0" text="%APPLY_DATA" />
+                <Button fx:id="oK" text="%OK_DATA"  />
+                <Button fx:id="cancel"  text="%CANCEL_DATA" />
+                <Button fx:id="apply"  text="%APPLY_DATA" />
             </HBox>
         </right>
     </BorderPane>
