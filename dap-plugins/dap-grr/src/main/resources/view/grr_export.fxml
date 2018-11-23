@@ -35,14 +35,14 @@
             </VBox>
         </VBox>
         <VBox>
-            <SplitPane fx:id="split" orientation="VERTICAL" VBox.vgrow="ALWAYS" styleClass="grr-export-split">
-                <TabPane styleClass="grr-export-tab" tabClosingPolicy="UNAVAILABLE">
+            <SplitPane fx:id="split" orientation="VERTICAL" VBox.vgrow="ALWAYS" styleClass="grr-item-split">
+                <TabPane styleClass="grr-item-tab" tabClosingPolicy="UNAVAILABLE">
                     <Tab fx:id="itemTab" >
                         <VBox >
                             <HBox styleClass="padding-lg">
                                 <TextFieldFilter fx:id="itemFilter"/>
                             </HBox>
-                            <TableView fx:id="itemTable" styleClass="grr-export-item-table">
+                            <TableView fx:id="itemTable" styleClass="grr-item-table">
                                 <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                 </columnResizePolicy>
@@ -55,7 +55,7 @@
                     </Tab>
                     <Tab fx:id="configTab" >
                         <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="330.0">
-                            <GridPane fx:id="grrConfigPane" minWidth="160.0" prefHeight="350.0" prefWidth="160.0" styleClass="grr-export-config">
+                            <GridPane fx:id="grrConfigPane" minWidth="160.0" prefHeight="350.0" prefWidth="160.0" styleClass="grr-config">
                                 <columnConstraints>
                                     <ColumnConstraints prefWidth="160.0" />
                                 </columnConstraints>
