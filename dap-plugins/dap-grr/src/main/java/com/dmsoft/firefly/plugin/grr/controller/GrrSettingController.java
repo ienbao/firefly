@@ -80,7 +80,7 @@ public class GrrSettingController {
         rule.setEmptyErrorMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SETTING_RULE_NO_EMPTY));
         rule.setRangErrorMsg(GrrFxmlAndLanguageUtils.getString(UIConstant.GRR_SETTING_RULE_INVALID_RANGE));
         TextFieldWrapper.decorate(sign, rule);
-        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_setting_normal.png")));
+        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/setting.svg")));
         exportTemplate.setItems(FXCollections.observableArrayList(GrrFxmlAndLanguageUtils.getString(ResourceMassages.GEE_EXPORT_TEMPLATE)));
         exportTemplate.setValue(GrrFxmlAndLanguageUtils.getString(ResourceMassages.GEE_EXPORT_TEMPLATE));
         anova.setToggleGroup(group);

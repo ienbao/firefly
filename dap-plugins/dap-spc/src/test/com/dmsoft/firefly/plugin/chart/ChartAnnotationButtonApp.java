@@ -18,7 +18,7 @@ public class ChartAnnotationButtonApp extends Application {
 
         ChartAnnotationButton button = new ChartAnnotationButton();
         button.setGraphic(ImageUtils.getImageView(getClass()
-                .getResourceAsStream("/images/btn_tracing_point_normal.png")));
+                .getResourceAsStream("/images/tracing-point.svg")));
         button.setData(Arrays.asList("", "item0", "item1", "item2"));
         Scene scene = new Scene(button, 1280, 704);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());

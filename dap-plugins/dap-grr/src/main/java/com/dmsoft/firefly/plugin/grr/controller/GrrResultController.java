@@ -936,8 +936,8 @@ public class GrrResultController implements Initializable {
         summaryTbColumns.get(5).prefWidthProperty().bind(summaryTb.widthProperty().divide(7));
         summaryTbColumns.get(6).prefWidthProperty().bind(summaryTb.widthProperty().divide(7));
         summaryTbColumns.get(7).prefWidthProperty().bind(summaryTb.widthProperty().divide(7));
-        xBarAppraiserChartBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
-        rangeAppraiserChartBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
+        xBarAppraiserChartBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/choose-lines.svg")));
+        rangeAppraiserChartBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/choose-lines.svg")));
         xBarAppraiserChartBtn.setListViewSize(80, 80);
         rangeAppraiserChartBtn.setListViewSize(80, 80);
         xBarAppraiserChartBtn.getStyleClass().add("btn-icon-b");
