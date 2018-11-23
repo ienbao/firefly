@@ -97,6 +97,10 @@
     FONT_MID: COLOR_GRAY_CC;
 }
 
+.text-fill-red{
+    -fx-text-fill: COLORFUL_PRIMARY_RED;
+}
+
 .top-title-logo {
     -fx-background-image: url('/images/top_title_logo.png');
 }

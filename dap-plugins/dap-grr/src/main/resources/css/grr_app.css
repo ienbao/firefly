@@ -273,3 +273,45 @@ table
     -fx-pref-height: 28;
     -fx-alignment:center;
 }
+/*******************************************************************************
+ *                                                                             *
+ *grr export page css                                                                *
+ *                                                                             *
+ ******************************************************************************/
+.grr-export-h-box{
+    -fx-pref-height: 100.0;
+    -fx-pref-width: 200.0;
+    -fx-border-color: #DCDCDC;
+}
+.grr-export-v-box-left{
+    -fx-pref-height:200.0 ;
+    -fx-pref-width: 100.0;
+    -fx-padding:10 0 0 20;
+    -fx-border-width: 0 1 0 0;
+    -fx-border-color: #DCDCDC;
+}
+.grr-export-location-path{
+    -fx-pref-width: 250.0;
+    -fx-border-width: 1 0 1 1;
+}
+.grr-export-split{
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #DCDCDC;
+}
+.grr-export-tab{
+    -fx-pref-width: 180.0;
+    -fx-min-width: 180.0;
+    -fx-pref-height: 270.0;
+    -fx-border-width: 0 0 0 0;
+}
+.grr-export-item-table{
+    -fx-border-width: 1 0 0 0;
+}
+.grr-export-config{
+    -fx-padding: 10 0 0 10;
+}
+.grr-import-btn{
+    -fx-alignment: center_right;
+    -fx-pref-width: 180.0;
+    -fx-padding: 0 20 0 0;
+}
