@@ -25,7 +25,7 @@ public class ChartOperateButtonApp extends Application {
         gridPane.addRow(0, button);
         button.setPrefSize(20, 20);
         button.getStyleClass().add("btn-icon-b");
-        button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_choose_lines_normal.png")));
+        button.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/choose-lines.svg")));
 
         Scene scene = new Scene(gridPane, 200, 100);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
