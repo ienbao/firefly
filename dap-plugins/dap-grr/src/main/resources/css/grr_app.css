@@ -275,7 +275,7 @@ table
 }
 /*******************************************************************************
  *                                                                             *
- *grr export/item page css                                                                *
+ *grr export/item page css                                                     *
  *                                                                             *
  ******************************************************************************/
 .grr-export-h-box{
@@ -330,4 +330,75 @@ table
     -fx-border-color:COLOR_GRAY_DC;
     -fx-border-width: 1 0 0 0;
 }
+/*******************************************************************************
+ *                                                                             *
+ *grr setting page css                                                         *
+ *                                                                             *
+ ******************************************************************************/
+.grr-setting-label-white{
+    -fx-pref-height: 22.0;
+    -fx-pref-width: 160.0;
+    -fx-padding: 0 0 0 10;
+    -fx-background-color: COLOR_LIGHT_FF;
+}
+.grr-setting-label{
+    -fx-pref-height: 22.0;
+    -fx-pref-width: 160.0;
+    -fx-padding: 0 0 0 10;
+    -fx-background-color: COLOR_GRAY_F0;
+}
 
+.grr-setting-label-right{
+    -fx-padding:10 0 0 0 ;
+    -fx-font-weight: bold;
+}
+
+.grr-setting-h-box-lg{
+    -fx-pref-height: 450.0;
+    -fx-pref-width: 780.0;
+    -fx-border-color: COLOR_GRAY_DC;
+}
+.grr-setting-V-box-left{
+    -fx-pref-height: 200.0;
+    -fx-pref-width: 160.0;
+    -fx-background-color: COLOR_GRAY_F0;
+}
+
+.grr-setting-V-box-right{
+    -fx-pref-height: 200.0;
+    -fx-pref-width: 100.0;
+    -fx-padding: 10 0 0 20;
+    -fx-spacing: 10;
+}
+.grr-setting-h-box-right{
+    -fx-alignment: center_left;
+    -fx-pref-height: 30.0;
+    -fx-pref-width: 200.0;
+    -fx-spacing: 10.0;
+}
+.radio-button-h-box{
+    -fx-alignment: center_left;
+    -fx-spacing: 20.0;
+}
+.grr-setting-excellent-label{
+    -fx-padding: 0 0 0 10;
+    -fx-pref-height: 22.0;
+    -fx-pref-width: 70.0;
+    -fx-background-color: COLORFUL_DARK3_GREEN;
+    -fx-text-fill: COLOR_LIGHT_FF;
+}
+
+.grr-setting-adequate-label{
+    -fx-padding: 0 0 0 10;
+    -fx-pref-height: 22.0;
+    -fx-pref-width: 70.0;
+    -fx-background-color: COLORFUL_DARK_BLUE;
+    -fx-text-fill: COLOR_LIGHT_FF;
+}
+.grr-setting-bad-label{
+    -fx-padding: 0 0 0 10;
+    -fx-pref-height: 22.0;
+    -fx-pref-width: 70.0;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
+    -fx-text-fill: COLOR_LIGHT_FF;
+}
