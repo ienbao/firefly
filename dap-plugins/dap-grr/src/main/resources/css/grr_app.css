@@ -421,4 +421,33 @@ table
 .grr-export-grid-pane{
     -fx-padding: 0 0 10 40;
 }
-
+/*******************************************************************************
+ *                                                                             *
+ *grr  view data page css                                                      *
+ *                                                                             *
+ ******************************************************************************/
+.grr-view-data-h-box1{
+    -fx-pref-height: 100;
+    -fx-pref-width: 200;
+    -fx-padding: 3;
+    -fx-spacing: 10;
+    -fx-alignment: center_right;
+}
+.grr-view-data-h-box2{
+    -fx-pref-height: 100;
+    -fx-pref-width: 200;
+    -fx-padding: 0 0 0 10;
+    -fx-spacing: 10;
+    -fx-alignment: center_left;
+}
+.grr-view-data-h-box3{
+    -fx-padding: 3;
+    -fx-alignment: center_right;
+}
+.grr-view-data-h-box4{
+    -fx-padding: 0 0 0 10;
+    -fx-alignment: center_left;
+}
+.grr-choose-item-btn{
+    -fx-image: url('images/choose-test-items.svg');
+}

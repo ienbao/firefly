@@ -2676,7 +2676,7 @@
     -fx-padding: 10 0 0 0;
 }
 
-.state-bar-lbl {
+.padding-left {
     -fx-padding: 0 0 0 10;
 }
 
