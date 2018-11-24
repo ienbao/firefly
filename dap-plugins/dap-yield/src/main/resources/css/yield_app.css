@@ -787,3 +787,63 @@ add all charts.css into yield_app.css
 .yield-result-data-label{
     -fx-text-fill: #AAAAAA;
 }
+
+/******************************************************************************
+*                                                                              *
+*                           yield_setting.fxml  所有的css                       *
+*                                                                              *
+ ******************************************************************************/
+.yield-setting-background{
+    -fx-background-color: #FFFFFF;
+}
+.yield-setting-border-clolr{
+    -fx-border-color: #DCDCDC;
+}
+.yield-setting-v-box-background-color{
+    -fx-background-color: #f0f0f0;
+}
+.yield-setting-label{
+    -fx-pref-height: 22.0;
+    -fx-pref-width: 160.0;
+    -fx-padding:  0 0 0 10;
+}
+.yield-setting-scroll-pane{
+    -fx-pref-width: 625.0;
+    -fx-pref-height: 450.0;
+}
+.yield-setting-label-font{
+    -fx-font-weight: bold;
+}
+.yield-setting-H-box{
+    -fx-pref-height: 22.0;
+    -fx-min-height: 22.0;
+}
+.yield-setting-label-padding{
+    -fx-padding: 5 0;
+    -fx-alignment: center;
+}
+.yield-setting-h-box1{
+    -fx-min-height: 22.0;
+    -fx-pref-height: 22.0;
+    -fx-spacing: 14;
+}
+.yield-setting-label-style{
+    -fx-min-width: 8.0;
+    -fx-padding: 5 0;
+    -fx-alignment: center;
+}
+.yield-setting-text-field{
+    -fx-min-width: 50;
+    -fx-max-width: 50;
+    -fx-pref-width: 55;
+    -fx-alignment: center;
+}
+.yield-setting-h-box2{
+    -fx-pref-height: 45.0;
+    -fx-spacing: 10;
+    -fx-padding: 0 10;
+    -fx-alignment:CENTER_RIGHT ;
+}
+.yield-setting-btn{
+ -fx-pref-width: 80.0;
+}
