@@ -2668,6 +2668,10 @@
     -fx-padding: 0 10;
 }
 
+.padding-v{
+    -fx-padding: 10 0;
+}
+
 .padding-sm{
     -fx-padding: 3.0;
 }
