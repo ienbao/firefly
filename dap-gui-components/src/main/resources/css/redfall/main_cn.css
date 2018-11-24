@@ -82,7 +82,7 @@
     FONT_MID: COLOR_GRAY_CC;
 }
 
-.state-bar-lbl {
+.padding-left {
     -fx-padding: 0 0 0 10;
 }
 

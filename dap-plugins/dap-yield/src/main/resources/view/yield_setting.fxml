@@ -4,85 +4,81 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldSettingController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="yield-setting-background"  xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldSettingController">
     <children>
-        <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-border-color: #DCDCDC;">
+        <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="yield-setting-border-clolr" >
             <children>
-                <VBox style="-fx-background-color: #F0F0F0;">
+                <VBox styleClass="yield-setting-v-box-background-color" >
                     <children>
-                        <Label fx:id="alarmSetting" prefHeight="22.0" prefWidth="160.0" text="%ALARM_SETTING">
-                            <padding>
-                                <Insets left="10.0" />
-                            </padding>
+                        <Label fx:id="alarmSetting" styleClass="yield-setting-label"  text="%ALARM_SETTING">
                         </Label>
                     </children>
                 </VBox>
-                <ScrollPane fx:id="settingScrollPane" fitToWidth="true" hbarPolicy="NEVER" prefHeight="450.0" prefWidth="625.0" HBox.hgrow="ALWAYS">
+                <ScrollPane fx:id="settingScrollPane" fitToWidth="true" hbarPolicy="NEVER" styleClass="yield-setting-scroll-pane" HBox.hgrow="ALWAYS">
                     <content>
                         <VBox>
                             <children>
                                 <VBox fx:id="alarmSettingVBox">
                                     <children>
-                                        <Label style="-fx-font-weight: bold" text="%ALARM_SETTING">
+                                        <Label styleClass="yield-setting-label-font"  text="%ALARM_SETTING">
                                             <VBox.margin>
                                                 <Insets bottom="10.0" top="10.0" />
                                             </VBox.margin>
                                         </Label>
-                                        <HBox minHeight="22.0" prefHeight="22.0" VBox.vgrow="ALWAYS" >
-                                            <Label text="\%FPY" alignment="CENTER" style="-fx-padding: 5 0"/>
+                                        <HBox styleClass="yield-setting-H-box"  VBox.vgrow="ALWAYS" >
+                                            <Label text="\%FPY" alignment="CENTER" styleClass="yield-setting-label-padding" />
                                         </HBox>
-                                        <HBox minHeight="22.0" prefHeight="22.0" VBox.vgrow="ALWAYS"  style="-fx-spacing: 14">
+                                        <HBox styleClass="yield-setting-h-box1" >
                                             <Label styleClass="alarm-excellent" text="Excellent"   />
-                                            <Label text="≥"  minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"/>
-                                            <TextField fx:id="FPYExcellentTf" minWidth="50" maxWidth="50" prefWidth="55" alignment="CENTER" />
-                                            <Label text="&gt;" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
+                                            <Label text="≥" styleClass="yield-setting-label-style"  />
+                                            <TextField fx:id="FPYExcellentTf" styleClass="yield-setting-text-field"  />
+                                            <Label text="&gt;" styleClass="yield-setting-label-style"  />
                                             <Label styleClass="alarm-acceptable" text="Adequate"  />
-                                            <Label text="≥" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER" />
-                                            <TextField fx:id="FPYGoodTf"  minWidth="50" maxWidth="50" prefWidth="55" alignment="CENTER"  />
-                                            <Label text="&gt;" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
+                                            <Label text="≥" styleClass="yield-setting-label-style" />
+                                            <TextField fx:id="FPYGoodTf" styleClass="yield-setting-text-field"  />
+                                            <Label text="&gt;" styleClass="yield-setting-label-style"  />
                                             <Label styleClass="alarm-rectification" text="Marginal"  />
-                                            <Label text="≥" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
-                                            <TextField fx:id="FPYAcceptableTf" minWidth="50" maxWidth="50" prefWidth="55" alignment="CENTER"  />
-                                            <Label text="&gt;"  minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"/>
+                                            <Label text="≥" styleClass="yield-setting-label-style"  />
+                                            <TextField fx:id="FPYAcceptableTf" styleClass="yield-setting-text-field"  />
+                                            <Label text="&gt;"  styleClass="yield-setting-label-style"/>
                                             <Label styleClass="alarm-bad" text="Bad"  />
                                         </HBox>
-                                        <HBox minHeight="22.0" prefHeight="22.0" VBox.vgrow="ALWAYS" >
-                                            <Label text="\%NTF"  alignment="CENTER" style="-fx-padding: 5 0" />
+                                        <HBox styleClass="yield-setting-H-box" >
+                                            <Label styleClass="yield-setting-label-padding" text="\%NTF" />
                                         </HBox>
-                                        <HBox minHeight="22.0" prefHeight="22.0" VBox.vgrow="ALWAYS" style="-fx-spacing: 14" >
+                                        <HBox styleClass="yield-setting-h-box1" >
                                             <Label styleClass="alarm-excellent" text="Excellent" />
-                                            <Label text="&lt;" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER" />
-                                            <TextField fx:id="NTFExcellentTf" minWidth="50" maxWidth="50" prefWidth="55" alignment="CENTER"   />
-                                            <Label text="≤" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
+                                            <Label text="&lt;" styleClass="yield-setting-label-style" />
+                                            <TextField fx:id="NTFExcellentTf" styleClass="yield-setting-text-field"   />
+                                            <Label text="≤" styleClass="yield-setting-label-style"  />
                                             <Label styleClass="alarm-acceptable" text="Adequate" />
-                                            <Label text="&lt;"  minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER" />
-                                            <TextField fx:id="NTFGoodTf" minWidth="50" maxWidth="50" prefWidth="55" alignment="CENTER"   />
-                                            <Label text="≤" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"/>
+                                            <Label text="&lt;"  styleClass="yield-setting-label-style" />
+                                            <TextField fx:id="NTFGoodTf" styleClass="yield-setting-text-field"   />
+                                            <Label text="≤" styleClass="yield-setting-label-style"/>
                                             <Label styleClass="alarm-rectification" text="Marginal"  />
-                                            <Label text="&lt;" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER" />
-                                            <TextField fx:id="NTFAcceptableTf" minWidth="50" maxWidth="50" prefWidth="55" alignment="CENTER"  />
-                                            <Label text="≤" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
+                                            <Label text="&lt;" styleClass="yield-setting-label-style" />
+                                            <TextField fx:id="NTFAcceptableTf" styleClass="yield-setting-text-field"  />
+                                            <Label text="≤" styleClass="yield-setting-label-style"  />
                                             <Label styleClass="alarm-bad" text="Bad"  />
                                         </HBox>
-                                        <HBox minHeight="22.0" prefHeight="22.0" VBox.vgrow="ALWAYS" >
-                                            <Label text="\%NG" alignment="CENTER" style="-fx-padding: 5 0"/>
+                                        <HBox styleClass="yield-setting-H-box" >
+                                            <Label text="\%NG" styleClass="yield-setting-label-padding" />
                                         </HBox>
-                                        <HBox minHeight="22.0" prefHeight="22.0" VBox.vgrow="ALWAYS" style="-fx-spacing: 14" >
+                                        <HBox styleClass="yield-setting-h-box1">
                                             <Label styleClass="alarm-excellent" text="Excellent" />
-                                            <Label text="&lt;" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
-                                            <TextField fx:id="NGExcellentTf" minWidth="50" maxWidth="50" prefWidth="55" alignment="CENTER"  />
-                                            <Label text="≤" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
+                                            <Label text="&lt;" styleClass="yield-setting-label-style"  />
+                                            <TextField fx:id="NGExcellentTf" styleClass="yield-setting-text-field"  />
+                                            <Label text="≤" styleClass="yield-setting-label-style"  />
                                             <Label styleClass="alarm-acceptable" text="Adequate"  />
-                                            <Label text="&lt;" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
-                                            <TextField fx:id="NGGoodTf" minWidth="50" maxWidth="50" prefWidth="55" alignment="CENTER"  />
-                                            <Label text="≤" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
+                                            <Label text="&lt;" styleClass="yield-setting-label-style"  />
+                                            <TextField fx:id="NGGoodTf" styleClass="yield-setting-text-field"  />
+                                            <Label text="≤" styleClass="yield-setting-label-style"  />
                                             <Label styleClass="alarm-rectification" text="Marginal"  />
-                                            <Label text="&lt;" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER"  />
-                                            <TextField fx:id="NGAcceptableTf" minWidth="50" maxWidth="50" prefWidth="55" alignment="CENTER"  />
-                                            <Label text="≤" minWidth="8.0" style="-fx-padding: 5 0" alignment="CENTER" />
+                                            <Label text="&lt;" styleClass="yield-setting-label-style"  />
+                                            <TextField fx:id="NGAcceptableTf" styleClass="yield-setting-text-field"  />
+                                            <Label text="≤" styleClass="yield-setting-label-style" />
                                             <Label styleClass="alarm-bad" text="Bad"  />
                                         </HBox>
                                     </children>
@@ -102,10 +98,10 @@
                 <Insets left="10.0" right="10.0" top="10.0" />
             </VBox.margin>
         </HBox>
-        <HBox prefHeight=" 45.0" style="-fx-spacing: 10;-fx-padding: 0 10" alignment="CENTER_RIGHT">
-            <Button fx:id="apply" mnemonicParsing="false" prefWidth="80.0" text="%APPLY" GridPane.columnIndex="3" />
-            <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="%CANCEL" GridPane.columnIndex="2" />
-            <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="%OK" GridPane.columnIndex="1" />
+        <HBox styleClass="yield-setting-h-box2" >
+            <Button fx:id="apply" mnemonicParsing="false" styleClass="yield-setting-btn"  text="%APPLY"  />
+            <Button fx:id="cancel" mnemonicParsing="false" styleClass="yield-setting-btn"  text="%CANCEL"  />
+            <Button fx:id="ok" mnemonicParsing="false" styleClass="yield-setting-btn"  text="%OK"  />
         </HBox>
     </children>
 </VBox>

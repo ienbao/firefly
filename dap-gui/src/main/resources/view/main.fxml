@@ -35,23 +35,23 @@
             <rowConstraints>
             <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
             </rowConstraints>
-            <Label styleClass="state-bar-lbl" text="%STATE_BAR_FILE"/>
+            <Label styleClass="padding-left" text="%STATE_BAR_FILE"/>
             <Button  fx:id="dataSourceBtn" text="--" styleClass="btn-icon-b,main-dataSourceBtn" GridPane.columnIndex="1">
                 <graphic>
                     <ImageView fitHeight="16" fitWidth="16" styleClass="main-dataSourceBtn-image" />
                 </graphic>
             </Button>
-            <Label styleClass="state-bar-lbl" text="%STATE_BAR_ANALYZE" GridPane.columnIndex="2"/>
+            <Label styleClass="padding-left" text="%STATE_BAR_ANALYZE" GridPane.columnIndex="2"/>
             <Button  fx:id="templateBtn" text="--" styleClass="btn-icon-b,main-templateBtn" GridPane.columnIndex="3">
                 <graphic>
                     <ImageView fitHeight="16" fitWidth="16" styleClass="main-templateBtn-image" />
                 </graphic>
             </Button>
-            <HBox styleClass="state-bar-lbl,main-memory" GridPane.columnIndex="4">
+            <HBox styleClass="padding-left,main-memory" GridPane.columnIndex="4">
                 <Label text="%STATE_BAR_MEMORY" />
                 <ProgressBar fx:id="progressBar" minWidth="110.0" maxWidth="110.0" prefWidth="110.0" styleClass="progress-bar-lg-green"/>
             </HBox>
-            <Label styleClass="state-bar-lbl" text="%STATE_BAR_VERSION" GridPane.columnIndex="5"/>
+            <Label styleClass="padding-left" text="%STATE_BAR_VERSION" GridPane.columnIndex="5"/>
         </GridPane>
     </GridPane>
 </AnchorPane>

@@ -19,6 +19,7 @@ import com.dmsoft.firefly.sdk.ui.IMainBodyPane;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
+import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
@@ -69,6 +70,7 @@ public class GrrPlugin extends Plugin {
         RuntimeContext.getBean(PluginUIContext.class).registerMainBody("GRR", new IMainBodyPane() {
             @Override
             public Pane getNewPane() {
+                SvgImageLoaderFactory.install();
                 Pane root = null;
                 try {
                     FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr.fxml");

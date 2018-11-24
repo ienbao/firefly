@@ -386,6 +386,63 @@ table
 
 /*******************************************************************************
  *                                                                             *
+ *spc item page css                                                            *
+ *                                                                             *
+ ******************************************************************************/
+
+.spc-item-tab{
+    -fx-pref-width: 180.0;
+    -fx-min-width: 180.0;
+    -fx-pref-height: 270.0;
+    -fx-min-height: 270.0;
+    -fx-border-width: 0 0 0 0;
+}
+.spc-item-table{
+    -fx-border-width: 1 0 0 0;
+}
+.spc-config{
+    -fx-padding: 10 10 0 10;
+    -fx-min-width: 160.0;
+    -fx-pref-width: 160.0;
+    -fx-pref-height: 350.0;
+}
+.spc-import-btn{
+    -fx-alignment: center_right;
+    -fx-pref-width: 180.0;
+    -fx-padding: 0 20 0 0;
+}
+
+.spc-item-split{
+    -fx-min-width: 180;
+    -fx-pref-height: 600;
+    -fx-border-width: 0 0 0 0;
+}
+.spc-item-btn{
+    -fx-padding: 0 20;
+    -fx-border-color:COLOR_GRAY_DC;
+    -fx-border-width: 1 0 0 0;
+}
+
+.spc-item-config-root{
+    -fx-padding: 10;
+    -fx-spacing: 15;
+}
+
+.spc-item-config-v{
+    -fx-spacing: 5;
+}
+
+.spc-item-config-sub{
+    -fx-spacing: 60;
+    -fx-alignment: CENTER_RIGHT;
+}
+
+.spc-item-config-nd{
+    -fx-spacing: 8;
+}
+
+/*******************************************************************************
+ *                                                                             *
  * spc setting page css                                                              *
  *                                                                             *
  ******************************************************************************/

@@ -492,7 +492,7 @@ add all charts.css into yield_app.css
 
 
 /******************************************************************************
-*             yield-item.fxml                                                                 *
+*             yield-item.fxml                                                  *
 *           yield-split-pane                                                   *
 *                                                                              *
  ******************************************************************************/
@@ -533,7 +533,7 @@ add all charts.css into yield_app.css
     -fx-pref-height: 200.0;
     -fx-min-width: 180.0;
     -fx-pref-width: 180.0;
-    -fx-border-width: 0 0 0 0;
+    -fx-border-width: 1 0 1 0;
 }
 /*maxWidth="32.0" minWidth="32.0" prefWidth="32.0" sortType="DESCENDING" sortable="false"*/
 .yield-table-column-select{
@@ -576,22 +576,274 @@ add all charts.css into yield_app.css
     -fx-border-width: 1 0 0 0;
     -fx-border-color: #DCDCDC;
 }
+.yield-item-btn-h-box{
+    -fx-min-width: 100.0;
+    -fx-padding: 1 0 1 20;
+}
 
+.yield-item-btn-h-box2{
+    -fx-min-width: 80.0;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 1 20 1 0;
+}
 /*alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="30.0" minHeight="20.0" minWidth="30.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="30.0"*/
 .export-btn{
     -fx-alignment: center;
     -fx-content-display: center;
-    -fx-max-height: 20.0;
-    -fx-min-height: 20.0;
-    -fx-pref-height: 20.0;
+    -fx-max-height: 22.0;
+    -fx-min-height: 22.0;
+    -fx-pref-height: 22.0;
     -fx-max-width: 30.0;
     -fx-min-width: 30.0;
     -fx-pref-width: 30.0;
     -fx-text-fill: Button;
 }
+.yield-item-v-box{
+    -fx-padding: 0 10 0 10;
+}
+.yield-item-h-box{
+    -fx-min-width: 32.0;
+    -fx-alignment: CENTER_LEFT;
+}
+/******************************************************************************
+*                                                                              *
+*                           yield.fxml  所有的css                               *
+*                                                                              *
+ ******************************************************************************/
+.yield-h-box{
+    -fx-max-height: 28.0;
+    -fx-min-height: 28.0;
+    -fx-pref-height: 28.0;
+    -fx-alignment:CENTER_LEFT ;
+    -fx-background-color: #ffffff;
+    -fx-padding: 3 3 3 10 ;
+    -fx-spacing:5;
+}
+.yield-print-btn{
+    -fx-min-width: 22.0;
+    -fx-max-width: 22.0;
+    -fx-max-height: 22.0;
+    -fx-pref-width: 22.0;
+    -fx-pref-height: 22.0;
 
+}
+.yield-export-btn{
+    -fx-min-width: 22.0;
+    -fx-max-width: 22.0;
+    -fx-max-height: 22.0;
+    -fx-pref-width: 22.0;
+    -fx-pref-height: 22.0;
+}
+.yield-reset-btn{
+    -fx-min-width: 22.0;
+    -fx-max-width: 22.0;
+    -fx-max-height: 22.0;
+    -fx-pref-width: 22.0;
+    -fx-pref-height: 22.0;
+}
+.yield-choose-btn{
+    -fx-min-width: 22.0;
+    -fx-max-width: 22.0;
+    -fx-max-height: 22.0;
+    -fx-pref-width: 22.0;
+    -fx-pref-height: 22.0;
 
+}
 
+.yield-anaylise-label{
+    -fx-pref-height: 15.0;
+    -fx-pref-width: 174.0;
+}
+.yield-h-box-btn{
+    -fx-alignment:CENTER_RIGHT ;
+    -fx-pref-width: 1150.0;
+    -fx-padding: 3 3 3 0 ;
+    -fx-spacing:5;
+}
 
+.yield-split-pane{
+    -fx-orientation: VERTICAL;
+    -fx-pref-width: 1210.0;
+}
+.yield-split-pane-v-box{
+    -fx-min-width: 180.0;
+    -fx-pref-width: 180.0;
 
+}
 
+/******************************************************************************
+*                                                                              *
+*                           over-view.fxml  所有的css                           *
+*                                                                              *
+ ******************************************************************************/
+
+.yield-over-view-anchor-pane{
+    -fx-min-height: 200.0;
+    -fx-min-width: 180.0;
+    -fx-background-color: #ffffff;
+}
+.yield-over-view-tab-pane{
+    -fx-background-color: #ffffff;
+}
+.yield-over-view-h-box{
+    -fx-border-width: 0;
+    -fx-padding: 3 3 3 0;
+    -fx-max-height: 28.0;
+    -fx-min-height: 28.0;
+    -fx-pref-height: 28.0;
+    -fx-alignment:CENTER_RIGHT;
+}
+.yield-over-view-text-field-filter{
+    -fx-max-width: 307.0;
+    -fx-min-width: 220.0;
+    -fx-pref-height: 28.0;
+    -fx-pref-width: 307.0;
+
+}
+.yield-view-table-view{
+    -fx-border-width:1 0 0 1 ;
+}
+
+/******************************************************************************
+*                                                                              *
+*                           view_data.fxml  所有的css                           *
+*                                                                              *
+ ******************************************************************************/
+
+.yield-view-data-anchor-pane{
+    -fx-min-height: 110.0;
+    -fx-min-width: 180.0;
+    -fx-background-color: #ffffff;
+}
+.yield-view-data-tab-pane{
+    -fx-border-width: 0 0 0 0;
+}
+
+.yield-view-data-h-box{
+    -fx-pref-height: 30;
+    -fx-alignment: center;
+    -fx-pref-width: 390.0;
+}
+
+.yield-view-data-h-box-label{
+    -fx-min-width: 10.0;
+    -fx-pref-width: 386.0;
+    -fx-padding: 3 0 3 0;
+}
+
+.yield-view-text-h-box{
+    -fx-pref-height: 30.0;
+    -fx-min-width: 700.0;
+    -fx-pref-width: 880.0;
+    -fx-alignment: CENTER_RIGHT;
+    -fx-spacing:5;
+    -fx-padding: 3 3 3 0
+}
+.yield-view-data-text-field-filter{
+    -fx-max-width: 200.0;
+    -fx-pref-height: 24.0;
+    -fx-pref-width: 170.0;
+}
+.yield-view-data-btn{
+    /*mnemonicParsing="false"  style="-fx-background-image: url('images/btn_choose_test_items_normal.png'); -fx-background-size: 16; ";*/
+    -fx-min-width: 22.0;
+    -fx-min-width: 22.0;
+    -fx-pref-width: 22.0;
+    -fx-max-height: 22.0;
+    -fx-min-height: 22.0;
+    -fx-pref-height: 22.0;
+    -fx-background-image: url('images/btn_choose_test_items_normal.png');
+    -fx-background-size: 16;
+
+}
+.yield-view-data-table-view{
+    -fx-border-width: 1 0 0 0;
+}
+
+/******************************************************************************
+*                                                                              *
+*                           yield_result_data.fxml  所有的css                   *
+*                                                                              *
+ ******************************************************************************/
+
+.yield-result-data-box{
+    -fx-pref-height: 200.0;
+    -fx-pref-width: 200.0;
+    -fx-background-color: #FAFAFA;
+}
+.yield-result-data-v-box1{
+    -fx-pref-width: 150;
+    -fx-alignment: TOP_CENTER;
+    -fx-spacing: 17;
+    -fx-padding: 20 60 0 5;
+
+}
+.yield-result-data-v-box2{
+    -fx-pref-width: 50;
+    -fx-alignment: TOP_CENTER;
+    -fx-spacing: 17;
+    -fx-padding: 20 10 0 30;
+}
+.yield-result-data-label{
+    -fx-text-fill: #AAAAAA;
+}
+
+/******************************************************************************
+*                                                                              *
+*                           yield_setting.fxml  所有的css                       *
+*                                                                              *
+ ******************************************************************************/
+.yield-setting-background{
+    -fx-background-color: #FFFFFF;
+}
+.yield-setting-border-clolr{
+    -fx-border-color: #DCDCDC;
+}
+.yield-setting-v-box-background-color{
+    -fx-background-color: #f0f0f0;
+}
+.yield-setting-label{
+    -fx-pref-height: 22.0;
+    -fx-pref-width: 160.0;
+    -fx-padding:  0 0 0 10;
+}
+.yield-setting-scroll-pane{
+    -fx-pref-width: 625.0;
+    -fx-pref-height: 450.0;
+}
+.yield-setting-label-font{
+    -fx-font-weight: bold;
+}
+.yield-setting-H-box{
+    -fx-pref-height: 22.0;
+    -fx-min-height: 22.0;
+}
+.yield-setting-label-padding{
+    -fx-padding: 5 0;
+    -fx-alignment: center;
+}
+.yield-setting-h-box1{
+    -fx-min-height: 22.0;
+    -fx-pref-height: 22.0;
+    -fx-spacing: 14;
+}
+.yield-setting-label-style{
+    -fx-min-width: 8.0;
+    -fx-padding: 5 0;
+    -fx-alignment: center;
+}
+.yield-setting-text-field{
+    -fx-min-width: 50;
+    -fx-max-width: 50;
+    -fx-pref-width: 55;
+    -fx-alignment: center;
+}
+.yield-setting-h-box2{
+    -fx-pref-height: 45.0;
+    -fx-spacing: 10;
+    -fx-padding: 0 10;
+    -fx-alignment:CENTER_RIGHT ;
+}
+.yield-setting-btn{
+ -fx-pref-width: 80.0;
+}

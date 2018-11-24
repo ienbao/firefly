@@ -3,20 +3,20 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 
-    <HBox fx:id="hBox" style="-fx-background-color: #FAFAFA;" prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldResultDataController">
-        <VBox style="-fx-spacing:17;-fx-padding: 20 60 0 5" alignment="TOP_CENTER" prefWidth="150">
-            <Label fx:id="totalSamples0" style="-fx-text-fill: #AAAAAA;" text="Total Samples"  />
-            <Label fx:id="fpySamples0"  style="-fx-text-fill: #AAAAAA;" text="FPY Samples"/>
-            <Label fx:id="passSamples0"  style="-fx-text-fill: #AAAAAA;" text="Pass Samples"  />
-            <Label fx:id="ntfSamples0"  style="-fx-text-fill: #AAAAAA;" text="NTF Samples"  />
-            <Label fx:id="ngSamples0" style="-fx-text-fill: #AAAAAA;" text="NG Samples"  />
+    <HBox fx:id="hBox" styleClass="yield-result-data-box"  xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldResultDataController">
+        <VBox styleClass="yield-result-data-v-box1" >
+            <Label fx:id="totalSamples0" styleClass="yield-result-data-label"   text="Total Samples"  />
+            <Label fx:id="fpySamples0"   styleClass="yield-result-data-label"   text="FPY Samples"/>
+            <Label fx:id="passSamples0"  styleClass="yield-result-data-label"   text="Pass Samples"  />
+            <Label fx:id="ntfSamples0"   styleClass="yield-result-data-label"   text="NTF Samples"  />
+            <Label fx:id="ngSamples0"    styleClass="yield-result-data-label"   text="NG Samples"  />
         </VBox>
-        <VBox style="-fx-spacing:17; -fx-padding: 20 10 0 30" alignment="TOP_CENTER" prefWidth="50">
-            <Label fx:id="totalSamples1"  style="-fx-text-fill: #AAAAAA;" text="-" />
-            <Label fx:id="fpySamples1" style="-fx-text-fill: #AAAAAA;" text="-"  />
-            <Label fx:id="passSamples1"  style="-fx-text-fill: #AAAAAA;" text="-"  />
-            <Label fx:id="ntfSamples1"  style="-fx-text-fill: #AAAAAA;" text="-"  />
-            <Label fx:id="ngSamples1"  style="-fx-text-fill: #AAAAAA;" text="-"  />
+        <VBox styleClass="yield-result-data-v-box2" >
+            <Label fx:id="totalSamples1" styleClass="yield-result-data-label"   text="-" />
+            <Label fx:id="fpySamples1"   styleClass="yield-result-data-label"   text="-"  />
+            <Label fx:id="passSamples1"  styleClass="yield-result-data-label"   text="-"  />
+            <Label fx:id="ntfSamples1"   styleClass="yield-result-data-label"   text="-"  />
+            <Label fx:id="ngSamples1"    styleClass="yield-result-data-label"   text="-"  />
         </VBox>
     </HBox>
 
