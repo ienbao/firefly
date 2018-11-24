@@ -1,85 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
-<?import javafx.geometry.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="415.0"
-      prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.dmsoft.firefly.plugin.grr.controller.GrrExportSettingController">
-    <children>
-        <VBox fx:id="pane" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #DCDCDC;" VBox.vgrow="ALWAYS">
-            <VBox.margin>
-                <Insets left="10.0" right="10.0" top="10.0"/>
-            </VBox.margin>
-            <children>
-                <CheckBox fx:id="exportDetailCbx" mnemonicParsing="false" text="%EXPORT_DETIAL">
-                    <VBox.margin>
-                        <Insets top="20.0"/>
-                    </VBox.margin>
-                </CheckBox>
-                <CheckBox fx:id="sourceCbx" mnemonicParsing="false" text="%EXPORT_SOURCE">
-                    <VBox.margin>
-                        <Insets left="30.0" top="10.0"/>
-                    </VBox.margin>
-                </CheckBox>
-                <CheckBox fx:id="chartCbx" mnemonicParsing="false" text="%EXPORT_CHARTS">
-                    <VBox.margin>
-                        <Insets bottom="10.0" left="30.0" top="10.0"/>
-                    </VBox.margin>
-                </CheckBox>
-                <GridPane fx:id="chartPane">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0"/>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="200.0" prefWidth="200.0"/>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                    </rowConstraints>
-                    <children>
-                        <CheckBox fx:id="rrPartCbx" mnemonicParsing="false" text="%CHART_1" GridPane.columnIndex="1"/>
-                        <CheckBox fx:id="rrAppraiserCbx" mnemonicParsing="false" text="%CHART_2"
-                                  GridPane.columnIndex="2"/>
-                        <CheckBox fx:id="rangeCbx" mnemonicParsing="false" text="%CHART_3" GridPane.columnIndex="1"
-                                  GridPane.rowIndex="1"/>
-                        <CheckBox fx:id="xBarCbx" mnemonicParsing="false" text="%CHART_4" GridPane.columnIndex="2"
-                                  GridPane.rowIndex="1"/>
-                        <CheckBox fx:id="partAppraiserCbx" mnemonicParsing="false" text="%CHART_5"
-                                  GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                        <CheckBox fx:id="componentCbx" mnemonicParsing="false" text="%CHART_6" GridPane.columnIndex="2"
-                                  GridPane.rowIndex="2"/>
-                    </children>
-                </GridPane>
-                <RadioButton fx:id="toleranceRBtn" mnemonicParsing="false" text="%EXPORT_TOLERANCE">
-                    <VBox.margin>
-                        <Insets top="10.0"/>
-                    </VBox.margin>
-                </RadioButton>
-                <RadioButton fx:id="contributeRBtn" mnemonicParsing="false" text="%EXPORT_SYSTEM">
-                    <VBox.margin>
-                        <Insets top="10.0"/>
-                    </VBox.margin>
-                </RadioButton>
-            </children>
-            <padding>
-                <Insets left="20.0"/>
-            </padding>
+<VBox styleClass="md-window-size" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.grr.controller.GrrExportSettingController">
+    <VBox fx:id="pane" styleClass="grr-export-setting-pane" VBox.vgrow="ALWAYS">
+        <CheckBox fx:id="exportDetailCbx" text="%EXPORT_DETIAL"/>
+        <VBox styleClass="grr-export-detail">
+            <CheckBox fx:id="sourceCbx" text="%EXPORT_SOURCE"/>
+            <CheckBox fx:id="chartCbx" text="%EXPORT_CHARTS"/>
         </VBox>
-        <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="200.0">
-            <children>
-                <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="%GRR_SETTING_BTN_OK">
-                    <HBox.margin>
-                        <Insets right="10.0"/>
-                    </HBox.margin>
-                </Button>
-                <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="%GRR_SETTING_BTN_CANCEL"/>
-            </children>
-            <VBox.margin>
-                <Insets right="10.0"/>
-            </VBox.margin>
-        </HBox>
-    </children>
+        <GridPane fx:id="chartPane" styleClass="grr-export-grid-pane" >
+        <columnConstraints>
+            <ColumnConstraints  maxWidth="200.0" minWidth="200.0" prefWidth="200.0"/>
+            <ColumnConstraints  maxWidth="200.0" minWidth="200.0" prefWidth="200.0"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="22.0" />
+            <RowConstraints minHeight="10.0" prefHeight="22.0" />
+            <RowConstraints minHeight="10.0" prefHeight="22.0" />
+        </rowConstraints>
+        <CheckBox fx:id="rrPartCbx" text="%CHART_1" />
+        <CheckBox fx:id="rrAppraiserCbx" text="%CHART_2" GridPane.columnIndex="1" />
+        <CheckBox fx:id="rangeCbx" text="%CHART_3" GridPane.rowIndex="1"/>
+        <CheckBox fx:id="xBarCbx" text="%CHART_4" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <CheckBox fx:id="partAppraiserCbx" text="%CHART_5" GridPane.rowIndex="2"/>
+        <CheckBox fx:id="componentCbx" text="%CHART_6" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        </GridPane>
+        <VBox styleClass="spacing-lg">
+            <RadioButton fx:id="toleranceRBtn" text="%EXPORT_TOLERANCE"/>
+            <RadioButton fx:id="contributeRBtn" text="%EXPORT_SYSTEM"/>
+        </VBox>
+    </VBox>
+    <HBox styleClass="h-box-right">
+        <Button fx:id="ok" text="%GRR_SETTING_BTN_OK"/>
+        <Button fx:id="cancel" text="%GRR_SETTING_BTN_CANCEL"/>
+    </HBox>
 </VBox>

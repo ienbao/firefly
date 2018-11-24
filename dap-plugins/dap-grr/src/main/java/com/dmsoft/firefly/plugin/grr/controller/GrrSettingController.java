@@ -243,25 +243,25 @@ public class GrrSettingController {
         defaultSetting.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                defaultSetting.setStyle("-fx-background-color: #FFFFFF");
-                alarmSetting.setStyle("-fx-background-color: #F0F0F0");
-                exportSetting.setStyle("-fx-background-color: #F0F0F0");
+                defaultSetting.getStyleClass().setAll("grr-setting-label-white");
+                alarmSetting.getStyleClass().setAll("grr-setting-label");
+                exportSetting.getStyleClass().setAll("grr-setting-label");
             }
         });
         alarmSetting.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                defaultSetting.setStyle("-fx-background-color: #F0F0F0");
-                alarmSetting.setStyle("-fx-background-color: #FFFFFF");
-                exportSetting.setStyle("-fx-background-color: #F0F0F0");
+                defaultSetting.getStyleClass().setAll("grr-setting-label");
+                alarmSetting.getStyleClass().setAll("grr-setting-label-white");
+                exportSetting.getStyleClass().setAll("grr-setting-label");
             }
         });
         exportSetting.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                defaultSetting.setStyle("-fx-background-color: #F0F0F0");
-                alarmSetting.setStyle("-fx-background-color: #F0F0F0");
-                exportSetting.setStyle("-fx-background-color: #FFFFFF");
+                defaultSetting.getStyleClass().setAll("grr-setting-label");
+                alarmSetting.getStyleClass().setAll("grr-setting-label");
+                exportSetting.getStyleClass().setAll("grr-setting-label-white");
             }
         });
     }
