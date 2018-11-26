@@ -1034,6 +1034,8 @@
 
 .combo-box-base{
     -fx-pref-height: 22;
+    -fx-min-height: 22;
+    -fx-max-height: 22;
     -fx-border-color: COLOR_GRAY_CC ;
     -fx-background-color:COLOR_GRAY_F5 ;
     -fx-cursor: hand;
