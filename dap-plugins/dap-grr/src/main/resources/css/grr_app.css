@@ -599,6 +599,7 @@ table
     -fx-max-width: 22;
     -fx-min-width: 22;
     -fx-pref-width: 22;
+    -fx-padding: 0;
     -fx-background-color: COLORFUL_PRIMARY_RED;
     -fx-text-fill: COLOR_LIGHT_FF;
     -fx-border-width: 0px;
