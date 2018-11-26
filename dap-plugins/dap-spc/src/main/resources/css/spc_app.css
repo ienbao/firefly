@@ -210,6 +210,11 @@ table
     -fx-pref-width: 190.0;
 }
 
+.spc-additem-table-second-column{
+    -fx-pref-width: 160;
+}
+
+
 /*******************************************************************************
  *                                                                             *
  * spc choose page css                                                              *
