@@ -79,10 +79,6 @@ public class GrrMainController implements Initializable {
     }
 
     private void initBtnIcon() {
-        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/export.svg")));
-        resetBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/reset.svg")));
-        printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/print.svg")));
-        refreshBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/check-white.svg")));
         TooltipUtil.installNormalTooltip(resetBtn, GrrFxmlAndLanguageUtils.getString("GRR_RESET_BTN_TOOLTIP"));
         TooltipUtil.installNormalTooltip(printBtn, GrrFxmlAndLanguageUtils.getString("GRR_PRINT_BTN_TOOLTIP"));
         TooltipUtil.installNormalTooltip(exportBtn, GrrFxmlAndLanguageUtils.getString("GRR_EXPORT_BTN_TOOLTIP"));
@@ -158,9 +154,9 @@ public class GrrMainController implements Initializable {
         resetBtn.setDisable(disable);
         refreshBtn.setDisable(disable);
         if (disable) {
-            refreshBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/check-gray.svg")));
+            refreshBtn.getStyleClass().setAll("btn-primary","grr-refresh-disable-btn");
         } else {
-            refreshBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/check-white.svg")));
+            refreshBtn.getStyleClass().setAll("btn-primary","grr-refresh-able-btn");
         }
     }
 

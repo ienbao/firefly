@@ -436,9 +436,9 @@ public class SpcSettingController implements Initializable {
     private void getDefaultSettingMousePressedEvent() {
         ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, defaultSettingVBox);
 //        defaultSetting.setStyle("-fx-background-color: #FFFFFF");
-        alarmSetting.setStyle("-fx-background-color: #F0F0F0;-fx-padding: 0 0 0 10");
-        controlAlarmRule.setStyle("-fx-background-color: #F0F0F0;-fx-padding: 0 0 0 10");
-        exportSetting.setStyle("-fx-background-color: #F0F0F0;-fx-padding: 0 0 0 10");
+        alarmSetting.getStyleClass().setAll("spc-setting-color-btn");
+        controlAlarmRule.getStyleClass().setAll("spc-setting-color-btn");
+        exportSetting.getStyleClass().setAll("spc-setting-color-btn");
     }
 
     private void getAlarmSettingMousePressedEvent() {
