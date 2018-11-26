@@ -84,9 +84,9 @@ public class YieldMainController implements Initializable {
         resetBtn.setDisable(disable);
         chooseBtn.setDisable(disable);
         if (disable) {
-            chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_gray.png")));
+            chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/check-gray.svg")));
         } else {
-            chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_choose_one_white.png")));
+            chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/check-white.svg")));
         }
     }
 
