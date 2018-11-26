@@ -6,22 +6,23 @@
 <AnchorPane minHeight="110.0" minWidth="180.0" style="-fx-background-color: #ffffff;"
             xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.dmsoft.firefly.plugin.spc.controller.ViewDataController">
-        <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0"
-                 AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <tabs>
-                <Tab text="%VIEW_DATA">
-                        <VBox fx:id="vbox" minHeight="0.0" minWidth="0.0">
-                            <HBox styleClass="spc-view-data-header">
-                                <TextFieldFilter fx:id="filterTf" styleClass="spc-view-data-filter" />
-                                <CheckBox fx:id="unSelectedCheckBox" text="%UNSELECTED_CHECKBOX"/>
-                                <Button fx:id="clearFilterBtn" styleClass="btn-icon,spc-view-data-btn"/>
-                                <Button fx:id="chooseItemBtn" styleClass="btn-icon,spc-view-data-btn"/>
-                            </HBox>
-                            <TableView fx:id="viewDataTable" styleClass="spc-view-data-table"
-                                       BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
-                            </TableView>
-                        </VBox>
-                </Tab>
-            </tabs>
-        </TabPane>
+    <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0"
+             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+             styleClass="spc-chart-tab">
+        <tabs>
+            <Tab text="%VIEW_DATA">
+                <VBox fx:id="vbox" minHeight="0.0" minWidth="0.0">
+                    <HBox styleClass="spc-view-data-header">
+                        <TextFieldFilter fx:id="filterTf" styleClass="spc-view-data-filter"/>
+                        <CheckBox fx:id="unSelectedCheckBox" text="%UNSELECTED_CHECKBOX"/>
+                        <Button fx:id="clearFilterBtn" styleClass="btn-icon,spc-view-data-btn"/>
+                        <Button fx:id="chooseItemBtn" styleClass="btn-icon,spc-view-data-btn"/>
+                    </HBox>
+                    <TableView fx:id="viewDataTable" styleClass="spc-view-data-table"
+                               BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
+                    </TableView>
+                </VBox>
+            </Tab>
+        </tabs>
+    </TabPane>
 </AnchorPane>
