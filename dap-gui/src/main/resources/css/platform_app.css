@@ -222,13 +222,11 @@
 }
 
 .gui-datasource-rename-btn{
-    -fx-background-image: url('/images/rename.svg');
-    -fx-background-size: 16;
+    -fx-image: url('/images/rename.svg');
 }
 
 .gui-datasource-delete-one-btn{
-    -fx-background-image: url('/images/del.svg');
-    -fx-background-size: 16;
+    -fx-image: url('/images/del.svg');
 }
 
 /*******************************************************************************

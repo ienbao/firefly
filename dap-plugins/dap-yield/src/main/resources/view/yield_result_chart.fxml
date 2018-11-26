@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.chart.BarChart?>
@@ -15,11 +14,11 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane minHeight="200.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldChartResultController">
+<AnchorPane styleClass="yield-result-chart-anchor-pane"  xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.yield.controller.YieldChartResultController">
     <children>
-        <HBox minHeight="245.0" maxHeight="245.0"  style="-fx-border-color: #f0f0f0;-fx-border-width: 0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"  SplitPane.resizableWithParent="true">
-            <SplitPane minWidth="400" prefWidth="425">
-                <TabPane prefHeight="245.0" tabClosingPolicy="UNAVAILABLE" tabMaxWidth="100.0" tabMinWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" SplitPane.resizableWithParent="true">
+        <HBox  styleClass="yield-result-chart-h-box"  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"  SplitPane.resizableWithParent="true">
+            <SplitPane styleClass="yield-result-split-pane">
+                <TabPane styleClass="yield-result-tab-pane"  tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" SplitPane.resizableWithParent="true">
                     <tabs>
                         <Tab fx:id="boxTab" closable="false">
                                 <graphic>
@@ -31,11 +30,10 @@
                                 </graphic>
                             <content>
                                 <HBox >
-                                    <VBox fx:id="BarChart" style="-fx-padding: 20 0 0 0 " VBox.vgrow="ALWAYS" minHeight="187.0" minWidth="200" maxWidth="200" alignment="CENTER">
-                                        <BarChart fx:id="yieldBarChart" minWidth="180.0" minHeight="187.0" maxWidth="200"
+                                    <VBox fx:id="BarChart" styleClass="yield-result-v-box-bar-chart"  VBox.vgrow="ALWAYS" >
+                                        <BarChart fx:id="yieldBarChart" styleClass="yield-result-bar-chart1" minWidth="180.0" minHeight="187.0" maxWidth="200"
                                                   horizontalGridLinesVisible="false" verticalGridLinesVisible="false"
                                                   horizontalZeroLineVisible="false" legendVisible="false"
-                                                  style="-fx-background-color: #ffffff; -fx-column-halignment: 1px;-fx-row-valignment: 1px"
                                                   verticalZeroLineVisible="false">
                                             <xAxis>
                                                 <CategoryAxis side="BOTTOM" tickLabelGap="10.0" tickMarkVisible="false"/>
@@ -48,7 +46,7 @@
                                             </VBox.margin>
                                         </BarChart>
                                     </VBox>
-                                    <VBox style="-fx-background-color: #FAFAFA;"  VBox.vgrow="ALWAYS" minHeight="220" maxHeight="220" alignment="CENTER">
+                                    <VBox styleClass="yield-result-v-box3" style="-fx-background-color: #FAFAFA;"  VBox.vgrow="ALWAYS" minHeight="220" maxHeight="220" alignment="CENTER">
                                         <fx:include fx:id="yieldResultData" source="yield_result_data.fxml"/>
                                     </VBox>
                                 </HBox>
@@ -58,8 +56,8 @@
                 </TabPane>
             </SplitPane>
 
-            <VBox maxHeight="244.0" minHeight="244.0" alignment="CENTER_LEFT" style="-fx-spacing: 20 " AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"  SplitPane.resizableWithParent="true">
-                <TabPane maxHeight="244.0" minHeight="244.0" tabClosingPolicy="UNAVAILABLE"  prefWidth="880.0" maxWidth="1000" >
+            <VBox styleClass="yield-result-chart-v-box3" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"  SplitPane.resizableWithParent="true">
+                <TabPane styleClass="yield-result-chart-tab-pane" >
                     <tabs>
                         <Tab fx:id="ndTab" closable="false">
                             <graphic>
@@ -70,18 +68,18 @@
                                 </Group>
                             </graphic>
                             <content>
-                                <VBox maxHeight="244.0" minHeight="244.0" alignment="TOP_CENTER" style="-fx-spacing:20;">
-                                    <HBox maxHeight="27" minHeight="27" style="-fx-border-width:0 0 1 0;-fx-border-color:#F0F0F0;-fx-spacing: 20;-fx-padding: 2 0 2 15" alignment="CENTER_LEFT" >
-                                        <Label maxHeight="22" maxWidth="90.0" minHeight="22" minWidth="90.0" prefWidth="90.0"
+                                <VBox styleClass="yield-result-v-box4" >
+                                    <HBox styleClass="yield-result-chart-h-box2" >
+                                        <Label styleClass="yield-result-chart-label"
                                                text="%NTF_TOP_N">
                                         </Label>
-                                        <ComboBox fx:id="resultNTFNum" maxHeight="22" maxWidth="120.0" minHeight="22" minWidth="80.0" prefWidth="120.0" />
+                                        <ComboBox fx:id="resultNTFNum" styleClass="yield-result-chart-com-box" />
                                     </HBox>
-                                    <VBox maxHeight="165" minHeight="165" alignment="CENTER" style="-fx-padding:0 5 0 0;-fx-border-width: 0">
+                                    <VBox styleClass="yield-result-chart-v-box4" >
                                         <BarChart fx:id="yieldbarChartItem" horizontalZeroLineVisible="false" horizontalGridLinesVisible="false"
-                                                  legendVisible="false" prefHeight="400.0" prefWidth="850.0" maxWidth="850" VBox.vgrow="ALWAYS"
+                                                  legendVisible="false" styleClass="yield-result-bar-chart2" VBox.vgrow="ALWAYS"
                                                   verticalZeroLineVisible="false" verticalGridLinesVisible="false"
-                                                  style="-fx-stroke-width: 10px" >
+                                                   >
                                             <xAxis>
                                                 <CategoryAxis side="BOTTOM" tickLabelGap="10.0" tickMarkVisible="false" />
                                             </xAxis>
