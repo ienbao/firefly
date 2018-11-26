@@ -456,40 +456,40 @@ table
     -fx-alignment: center;
     -fx-pref-width: 22;
     -fx-pref-height: 22;
-    -fx-text-fill: white;
-    -fx-background-color: #4ebe11;
+    -fx-text-fill: COLOR_LIGHT_FF;
+    -fx-background-color: COLORFUL_DARK4_GREEN;
 }
 
 .alarm-good {
     -fx-alignment: center;
     -fx-pref-width: 22;
     -fx-pref-height: 22;
-    -fx-text-fill: white;
-    -fx-background-color: #27b5b3;
+    -fx-text-fill: COLOR_LIGHT_FF;
+    -fx-background-color: COLORFUL_DARK_CYAN;
 }
 
 .alarm-acceptable {
     -fx-alignment: center;
     -fx-pref-width: 22;
     -fx-pref-height: 22;
-    -fx-text-fill: white;
-    -fx-background-color: #487cf4;
+    -fx-text-fill: COLOR_LIGHT_FF;
+    -fx-background-color: COLORFUL_DARK_BLUE;
 }
 
 .alarm-rectification {
     -fx-alignment: center;
     -fx-pref-width: 22;
     -fx-pref-height: 22;
-    -fx-text-fill: white;
-    -fx-background-color: #f38400;
+    -fx-text-fill: COLOR_LIGHT_FF;
+    -fx-background-color: COLORFUL_DARK_ORANGE;
 }
 
 .alarm-bad {
     -fx-alignment: center;
     -fx-pref-width: 22;
     -fx-pref-height: 22;
-    -fx-text-fill: white;
-    -fx-background-color: #ea2028;
+    -fx-text-fill: COLOR_LIGHT_FF;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
 }
 
 .spc-setting-hbox{
@@ -537,14 +537,14 @@ table
     -fx-spacing: 10;
     -fx-padding: 3 0;
     -fx-border-width: 1 0 0 1;
-    -fx-border-color: #DCDCDC;
+    -fx-border-color: COLOR_GRAY_DC;
 }
 .spc-setting-custom-hbox-right{
     -fx-alignment: center_left;
     -fx-min-height: 29.0;
     -fx-pref-width: 29.0;
     -fx-border-width: 1 1 0 1;
-    -fx-border-color: #DCDCDC;
+    -fx-border-color: COLOR_GRAY_DC;
 }
 
 .spc-setting-custom-label{
@@ -578,17 +578,60 @@ table
 }
 
 .spc-setting-color-btn{
-    -fx-background-color: #F0F0F0;
+    -fx-background-color: COLOR_GRAY_F0;
     -fx-padding: 0 0 0 10;
     -fx-pref-height: 22;
     -fx-pref-width: 160;
 }
 
 .spc-setting-focus-color-btn{
-    -fx-background-color: #FFFFFF;
+    -fx-background-color: COLOR_LIGHT_FF;
     -fx-padding: 0 0 0 10;
     -fx-pref-height: 22;
     -fx-pref-width: 160;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * spc chart page css                                                          *
+ *                                                                             *
+ ******************************************************************************/
+.spc-chart-tab{
+    -fx-border-width: 0;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * spc view data page css                                                      *
+ *                                                                             *
+ ******************************************************************************/
+.spc-view-data-tab{
+    -fx-border-width: 0;
+}
+
+.spc-view-data-header{
+    -fx-alignment: CENTER_RIGHT;
+    -fx-spacing: 10;
+    -fx-padding: 3 3 3 0;
+}
+
+.spc-view-data-filter{
+    -fx-max-width: 200;
+    -fx-pref-width: 200;
+    -fx-border-width: 1;
+    -fx-border-color: COLOR_GRAY_DC;
+}
+
+.spc-view-data-btn{
+    -fx-max-height: 22;
+    -fx-pref-width: 22;
+    -fx-max-width: 22;
+    -fx-pref-width: 22;
+    -fx-background-size: 16;
+}
+
+.spc-view-data-table{
+    -fx-border-width: 1 0 0 0;
 }
 
 /*******************************************************************************
