@@ -4,11 +4,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.ImageView?>
 <VBox fx:id="testItemPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcItemController">
    <SplitPane fx:id="split" orientation="VERTICAL" styleClass="spc-item-split" VBox.vgrow="ALWAYS">
       <TabPane fx:id="rightTabPane" styleClass="spc-item-tab" tabClosingPolicy="UNAVAILABLE">
          <tabs>
             <Tab fx:id="itemTab">
+               <graphic><ImageView fitHeight="16" fitWidth="16" styleClass="spc-export-item"/></graphic>
                <VBox  minWidth="180.0" prefWidth="180.0">
                   <HBox styleClass="padding-lg">
                      <TextFieldFilter fx:id="itemFilter"/>
@@ -25,11 +27,12 @@
                </VBox>
             </Tab>
             <Tab fx:id="configTab">
+               <graphic><ImageView fitHeight="16" fitWidth="16" styleClass="spc-export-config"/></graphic>
                <VBox styleClass="spc-item-config-root">
                   <VBox styleClass="spc-item-config-v">
                      <HBox styleClass="spc-item-config-sub">
                         <Label text="%SUBGROUPS_SIZE"/>
-                        <Label fx:id="helpLabel"/>
+                        <Label fx:id="helpLabel" styleClass="message-tip-question,spc-item-lbl"/>
                      </HBox>
                      <TextField fx:id="subGroup"/>
                   </VBox>
@@ -40,6 +43,7 @@
                </VBox>
             </Tab>
             <Tab fx:id="timeTab">
+               <graphic><ImageView fitHeight="16" fitWidth="16" styleClass="spc-export-timer"/></graphic>
                <VBox styleClass="spc-item-config-root">
                   <CheckBox fx:id="enabledTimerCheckBox" text="%ENABLED_TIMER"/>
                   <VBox styleClass="spc-item-config-nd">
@@ -53,12 +57,18 @@
    </SplitPane>
    <BorderPane styleClass="spc-item-btn">
       <left>
-         <Button fx:id="analysisBtn"  maxWidth="30.0" minWidth="30.0" prefWidth="30.0" styleClass="btn-primary"  />
+         <Button fx:id="analysisBtn"  maxWidth="30.0" minWidth="30.0" prefWidth="30.0" styleClass="btn-primary"  >
+            <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="spc-item-analysis-btn"/></graphic>
+         </Button>
       </left>
       <right>
          <HBox >
-            <Button fx:id="importBtn"  maxWidth="30.0" minWidth="30.0" prefWidth="30.0" styleClass="btn-txt"  />
-            <Button fx:id="exportBtn"  maxWidth="30.0" minWidth="30.0" prefWidth="30.0" styleClass="btn-txt" />
+            <Button fx:id="importBtn"  maxWidth="30.0" minWidth="30.0" prefWidth="30.0" styleClass="btn-txt" >
+               <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="spc-export-import-btn-image"/></graphic>
+            </Button>
+            <Button fx:id="exportBtn"  maxWidth="30.0" minWidth="30.0" prefWidth="30.0" styleClass="btn-txt">
+               <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="spc-export-export-btn-image"/></graphic>
+            </Button>
          </HBox>
       </right>
    </BorderPane>

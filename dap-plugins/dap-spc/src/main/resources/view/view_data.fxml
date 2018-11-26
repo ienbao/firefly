@@ -3,6 +3,7 @@
 <?import com.dmsoft.firefly.gui.components.utils.TextFieldFilter?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
 <AnchorPane minHeight="110.0" minWidth="180.0" style="-fx-background-color: #ffffff;"
             xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.dmsoft.firefly.plugin.spc.controller.ViewDataController">
@@ -15,8 +16,12 @@
                     <HBox styleClass="spc-view-data-header">
                         <TextFieldFilter fx:id="filterTf" styleClass="spc-view-data-filter"/>
                         <CheckBox fx:id="unSelectedCheckBox" text="%UNSELECTED_CHECKBOX"/>
-                        <Button fx:id="clearFilterBtn" styleClass="btn-icon,spc-view-data-btn"/>
-                        <Button fx:id="chooseItemBtn" styleClass="btn-icon,spc-view-data-btn"/>
+                        <Button fx:id="clearFilterBtn" styleClass="btn-icon,spc-view-data-btn">
+                            <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="spc-view-data-clear-Image"/></graphic>
+                        </Button>
+                        <Button fx:id="chooseItemBtn" styleClass="btn-icon,spc-view-data-btn">
+                            <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="spc-view-data-choose-Image"/></graphic>
+                        </Button>
                     </HBox>
                     <TableView fx:id="viewDataTable" styleClass="spc-view-data-table"
                                BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">

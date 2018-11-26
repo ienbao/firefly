@@ -305,12 +305,7 @@ public class SpcExportController {
     }
 
     private void initBtnIcon() {
-        importBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/load-script.svg")));
         TooltipUtil.installNormalTooltip(importBtn, SpcFxmlAndLanguageUtils.getString(ResourceMassages.IMPORT_CONFIG));
-//        itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/datasource.svg")));
-//        itemTab.setStyle("-fx-padding: 0 5 0 5");
-        configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/config.svg")));
-        configTab.setStyle("-fx-padding: 0 5 0 5");
     }
 
 
