@@ -15,7 +15,7 @@
 }
 
 #viewDataTable .column-header.filter-header:hover .filter-normal {
-    -fx-background-image: url('/images/btn_arrow_down.png');
+    -fx-background-image: url('/images/arrow-down-small.svg');
 }
 
 #viewDataTable .column-header.filter-header .filter-active {
@@ -57,7 +57,7 @@
 }
 
 .column-header.filter-header:hover .filter-normal {
-    -fx-background-image: url('/images/btn_arrow_down.png');
+    -fx-background-image: url('/images/arrow-down-small.svg');
 }
 
 .column-header.filter-header .filter-active {
@@ -128,57 +128,6 @@ table
     -fx-background-color: yellow;
     -fx-font-weight: bold;
 }
-
-/*
-*Spc setting
-*/
-.alarm-excellent {
-    -fx-alignment: center;
-    -fx-pref-width: 22;
-    -fx-pref-height: 22;
-    -fx-text-fill: white;
-    -fx-background-color: #4ebe11;
-}
-
-.alarm-good {
-    -fx-alignment: center;
-    -fx-pref-width: 22;
-    -fx-pref-height: 22;
-    -fx-text-fill: white;
-    -fx-background-color: #27b5b3;
-}
-
-.alarm-acceptable {
-    -fx-alignment: center;
-    -fx-pref-width: 22;
-    -fx-pref-height: 22;
-    -fx-text-fill: white;
-    -fx-background-color: #487cf4;
-}
-
-.alarm-rectification {
-    -fx-alignment: center;
-    -fx-pref-width: 22;
-    -fx-pref-height: 22;
-    -fx-text-fill: white;
-    -fx-background-color: #f38400;
-}
-
-.alarm-bad {
-    -fx-alignment: center;
-    -fx-pref-width: 22;
-    -fx-pref-height: 22;
-    -fx-text-fill: white;
-    -fx-background-color: #ea2028;
-}
-
-#customAlarmTable .column-header-background {
-    -fx-max-height: 0;
-    -fx-pref-height: 0;
-    -fx-min-height: 0;
-}
-
-
 
 .btn-timer {
     -fx-text-fill: COLOR_LIGHT_FF;
@@ -260,6 +209,11 @@ table
     -fx-pref-height: 228.0;
     -fx-pref-width: 190.0;
 }
+
+.spc-additem-table-second-column{
+    -fx-pref-width: 160;
+}
+
 
 /*******************************************************************************
  *                                                                             *
@@ -369,14 +323,14 @@ table
 .spc-export-h-box{
     -fx-pref-height: 100.0;
     -fx-pref-width: 200.0;
-    -fx-border-color: #DCDCDC;
+    -fx-border-color: COLOR_GRAY_DC;
 }
 .spc-export-v-box-left{
     -fx-pref-height:200.0 ;
     -fx-pref-width: 100.0;
     -fx-padding:10 0 0 20;
     -fx-border-width: 0 1 0 0;
-    -fx-border-color: #DCDCDC;
+    -fx-border-color: COLOR_GRAY_DC;
 }
 .spc-export-location-path{
     -fx-pref-width: 250.0;
@@ -384,7 +338,7 @@ table
 }
 .spc-export-split{
     -fx-border-width: 0 0 1 0;
-    -fx-border-color: #DCDCDC;
+    -fx-border-color: COLOR_GRAY_DC;
 }
 .spc-export-tab{
     -fx-pref-width: 180.0;
@@ -392,12 +346,11 @@ table
     -fx-pref-height: 270.0;
     -fx-border-width: 0 0 0 0;
 }
-.spc-export-item-table{
+.spc-export-item-table,
+.spc-export-item-table:focused{
     -fx-border-width: 1 0 0 0;
 }
-.spc-export-config{
-    -fx-padding: 10 10 0 10;
-}
+
 .spc-import-btn{
     -fx-alignment: center_right;
     -fx-pref-width: 180.0;
@@ -408,6 +361,27 @@ table
     -fx-label-padding: 0 10 0 10;
 }
 
+.spc-export-item{
+    -fx-padding: 0 5 0 5;
+    -fx-image: url('/images/datasource.svg');
+}
+.spc-export-config{
+    -fx-padding: 0 5 0 5;
+    -fx-image: url('/images/config.svg');
+}
+
+.spc-export-timer{
+    -fx-padding: 0 5 0 5;
+    -fx-image: url('/images/timer.svg');
+}
+
+.spc-export-import-btn-image{
+    -fx-image: url('/images/load-script.svg')
+}
+
+.spc-export-export-btn-image{
+    -fx-image: url('/images/save.svg')
+}
 /*******************************************************************************
  *                                                                             *
  *spc statistical result page css                                              *
@@ -435,6 +409,10 @@ table
     -fx-border-width: 1 0 0 0;
 }
 
+.spc-result-btn{
+    -fx-image: url('/images/choose-test-items.svg');
+}
+
 /*******************************************************************************
  *                                                                             *
  *spc item page css                                                            *
@@ -448,7 +426,8 @@ table
     -fx-min-height: 270.0;
     -fx-border-width: 0 0 0 0;
 }
-.spc-item-table{
+.spc-item-table,
+.spc-item-table:focused{
     -fx-border-width: 1 0 0 0;
 }
 .spc-config{
@@ -490,4 +469,241 @@ table
 
 .spc-item-config-nd{
     -fx-spacing: 8;
+}
+
+.spc-item-attribute-top{
+    -fx-text-fill: COLORFUL_ATRRIBUTE_BLUE;
+    -fx-background-color: COLORFUL_LIGHT_GREEN
+}
+
+.spc-item-attribute{
+    -fx-text-fill: COLORFUL_ATRRIBUTE_BLUE;
+}
+
+.spc-item-top{
+    -fx-background-color: COLORFUL_LIGHT_GREEN
+}
+
+.spc-item-analysis-btn{
+    -fx-image: url('/images/analysis-white.svg');
+}
+
+.spc-item-lbl{
+    -fx-background-color: COLORFUL_ATRRIBUTE_BLUE;
+}
+/*******************************************************************************
+ *                                                                             *
+ * spc setting page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+#customAlarmTable .column-header-background {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+}
+
+.alarm-root{
+    -fx-alignment: center;
+    -fx-pref-width: 22;
+    -fx-pref-height: 22;
+    -fx-text-fill: COLOR_LIGHT_FF;
+}
+
+.alarm-excellent {
+    -fx-background-color: COLORFUL_DARK4_GREEN;
+}
+
+.alarm-good {
+    -fx-background-color: COLORFUL_DARK_CYAN;
+}
+
+.alarm-acceptable {
+    -fx-background-color: COLORFUL_DARK_BLUE;
+}
+
+.alarm-rectification {
+    -fx-background-color: COLORFUL_DARK_ORANGE;
+}
+
+.alarm-bad {
+    -fx-background-color: COLORFUL_PRIMARY_RED;
+}
+
+.spc-setting-hbox{
+    -fx-border-color: COLOR_GRAY_DC;
+}
+
+.spc-setting-left-vbox{
+    -fx-background-color: COLOR_GRAY_F0;
+}
+
+.spc-setting-left-label{
+    -fx-padding: 0 0 0 10;
+    -fx-pref-height: 22;
+    -fx-pref-width: 160;
+}
+
+.spc-setting-label-font{
+    -fx-font-weight: bold;
+}
+
+.spc-setting-bottom-label{
+    -fx-padding: 0 0 10 0;
+}
+
+.spc-setting-box-right{
+    -fx-padding: 10 10 0 10;
+    -fx-spacing: 10.0;
+    -fx-alignment: BOTTOM_RIGHT;
+}
+
+.spc-setting-rule-vbox{
+    -fx-pref-width: 100;
+    -fx-pref-height: 200;
+    -fx-spacing: 10;
+    -fx-padding: 10;
+    -fx-border-width: 1;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_F8;
+}
+
+.spc-setting-custom-hbox-left{
+    -fx-alignment: center_right;
+    -fx-min-height: 29.0;
+    -fx-pref-height: 29.0;
+    -fx-spacing: 10;
+    -fx-padding: 3 0;
+    -fx-border-width: 1 0 0 1;
+    -fx-border-color: COLOR_GRAY_DC;
+}
+.spc-setting-custom-hbox-right{
+    -fx-alignment: center_left;
+    -fx-min-height: 29.0;
+    -fx-pref-width: 29.0;
+    -fx-border-width: 1 1 0 1;
+    -fx-border-color: COLOR_GRAY_DC;
+}
+
+.spc-setting-custom-label{
+    -fx-padding: 20 0 10 0;
+}
+
+.spc-setting-hbox-right{
+    -fx-padding: 0 3 0 0;
+}
+
+.spc-setting-table-border{
+    -fx-border-width: 1 0 1 1;
+}
+
+.spc-setting-right-header{
+    -fx-spacing: 20;
+}
+
+.spc-setting-add-btn{
+    -fx-pref-height: 22.0;
+    -fx-pref-width: 22.0;
+    -fx-background-size: 16;
+    -fx-background-image:  url('/images/add.svg');
+}
+
+.spc-setting-export-btn{
+    -fx-pref-width: 22.0;
+    -fx-pref-height: 22.0;
+    -fx-background-size: 16;
+    -fx-background-image:  url('/images/setting.svg');
+}
+
+.spc-setting-color-btn{
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-padding: 0 0 0 10;
+    -fx-pref-height: 22;
+    -fx-pref-width: 160;
+}
+
+.spc-setting-focus-color-btn{
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-padding: 0 0 0 10;
+    -fx-pref-height: 22;
+    -fx-pref-width: 160;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * spc chart page css                                                          *
+ *                                                                             *
+ ******************************************************************************/
+.spc-chart-tab{
+    -fx-border-width: 0;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * spc view data page css                                                      *
+ *                                                                             *
+ ******************************************************************************/
+.spc-view-data-tab{
+    -fx-border-width: 0;
+}
+
+.spc-view-data-header{
+    -fx-alignment: CENTER_RIGHT;
+    -fx-spacing: 10;
+    -fx-padding: 3 3 3 0;
+}
+
+.spc-view-data-filter{
+    -fx-max-width: 200;
+    -fx-pref-width: 200;
+    -fx-border-width: 1;
+    -fx-border-color: COLOR_GRAY_DC;
+}
+
+.spc-view-data-btn{
+    -fx-max-height: 22;
+    -fx-pref-width: 22;
+    -fx-max-width: 22;
+    -fx-pref-width: 22;
+    -fx-background-size: 16;
+}
+
+.spc-view-data-table{
+    -fx-border-width: 1 0 0 0;
+}
+
+.spc-view-data-clear-Image{
+    -fx-image: url('/images/filter-clear.svg');
+}
+
+.spc-view-data-choose-Image{
+    -fx-image: url('/images/choose-test-items.svg');
+}
+/*******************************************************************************
+ *                                                                             *
+ * spc page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+.spc-btn-size{
+    -fx-pref-width: 22.0;
+    -fx-pref-height: 22.0;
+    -fx-background-size: 16;
+}
+.spc-reset-btn {
+    -fx-background-image: url('/images/reset.svg');
+}
+.spc-print-btn {
+    -fx-background-image: url('/images/print.svg');
+}
+.spc-export-btn {
+    -fx-background-image: url('/images/export.svg');
+}
+.spc-choose-btn {
+    -fx-max-width: 22.0;
+    -fx-min-width: 22.0;
+    -fx-background-image: url('/images/check-white.svg');
+}
+
+.spc-border{
+    -fx-padding: 0 5 0 10;
+    -fx-pref-height: 28.0;
 }

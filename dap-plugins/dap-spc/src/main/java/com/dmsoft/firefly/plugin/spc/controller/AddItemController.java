@@ -81,7 +81,7 @@ public class AddItemController implements Initializable {
     private void initComponent() {
         addItemTableModel = new AddItemTableModel();
         TableViewWrapper.decorate(testItemTable, addItemTableModel);
-        ((TableColumn) testItemTable.getColumns().get(1)).setPrefWidth(145);
+        ((TableColumn) testItemTable.getColumns().get(1)).getStyleClass().add("spc-additem-table-second-column");
         this.setFilterTFPrompt(SpcFxmlAndLanguageUtils.getString("FILTER_TEST_ITEM_PROMPT"));
     }
 
@@ -129,10 +129,7 @@ public class AddItemController implements Initializable {
 
     private void initBtnIcon() {
         message.getStyleClass().add("message-tip-question");
-//        tipLabel.getStyleClass().add("message-tip-question");
-//        tipLabel.setStyle("-fx-background-color: #0096ff");
         TooltipUtil.installNormalTooltip(message, SpcFxmlAndLanguageUtils.getString("CUSTOM_TEST_ITEM_TIP"));
-//        tipLabel.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_add_normal.png")));
     }
 
     public void setSpcSettingController(SpcSettingController spcSettingController) {

@@ -281,7 +281,6 @@ public class StatisticalResultController implements Initializable {
     }
 
     private void initBtnIcon() {
-        chooseColumnBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/choose-test-items.svg")));
         TooltipUtil.installNormalTooltip(chooseColumnBtn, SpcFxmlAndLanguageUtils.getString("CHOOSE_STATISTICAL_RESULT"));
     }
 

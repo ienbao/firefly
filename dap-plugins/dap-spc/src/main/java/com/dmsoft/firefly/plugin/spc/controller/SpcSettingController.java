@@ -203,7 +203,6 @@ public class SpcSettingController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.searchTestItemTf.getTextField().setPromptText(SpcFxmlAndLanguageUtils.getString(ResourceMassages.FILTER_TEXTFIELD_PROMPT));
-        this.initBtnIcon();
         this.initComponent();
         this.initData();
         this.initComponentEvent();
@@ -434,36 +433,39 @@ public class SpcSettingController implements Initializable {
         exportSetting.setOnMousePressed(defaultSetting -> getExportSettingMousePressedEvent());
     }
 
-    private void getDefaultSettingMousePressedEvent() {
-        ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, defaultSettingVBox);
-//        defaultSetting.setStyle("-fx-background-color: #FFFFFF");
-        alarmSetting.setStyle("-fx-background-color: #F0F0F0");
-        controlAlarmRule.setStyle("-fx-background-color: #F0F0F0");
-        exportSetting.setStyle("-fx-background-color: #F0F0F0");
-    }
+//    private void getDefaultSettingMousePressedEvent() {
+//        ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, defaultSettingVBox);
+////        defaultSetting.setStyle("-fx-background-color: #FFFFFF");
+//        alarmSetting.setStyle("-fx-background-color: #F0F0F0;-fx-padding: 0 0 0 10");
+//        controlAlarmRule.setStyle("-fx-background-color: #F0F0F0;-fx-padding: 0 0 0 10");
+//        exportSetting.setStyle("-fx-background-color: #F0F0F0;-fx-padding: 0 0 0 10");
+//    }
 
     private void getAlarmSettingMousePressedEvent() {
         ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, alarmSettingVBox);
 //        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
-        alarmSetting.setStyle("-fx-background-color: #FFFFFF");
-        controlAlarmRule.setStyle("-fx-background-color: #F0F0F0");
-        exportSetting.setStyle("-fx-background-color: #F0F0F0");
+
+        alarmSetting.getStyleClass().setAll("spc-setting-focus-color-btn");
+        controlAlarmRule.getStyleClass().setAll("spc-setting-color-btn");
+        exportSetting.getStyleClass().setAll("spc-setting-color-btn");
     }
 
     private void getControlAlarmRuleMousePressedEvent() {
         ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, controlAlarmRuleVBox);
 //        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
-        alarmSetting.setStyle("-fx-background-color: #F0F0F0");
-        controlAlarmRule.setStyle("-fx-background-color: #FFFFFF");
-        exportSetting.setStyle("-fx-background-color: #F0F0F0");
+//        alarmSetting.getStyleClass().add();
+        alarmSetting.getStyleClass().setAll("spc-setting-color-btn");
+        controlAlarmRule.getStyleClass().setAll("spc-setting-focus-color-btn");
+        exportSetting.getStyleClass().setAll("spc-setting-color-btn");
     }
 
     private void getExportSettingMousePressedEvent() {
         ScrollPaneValueUtils.setScrollVerticalValue(settingScrollPane, exportSettingVBox);
 //        defaultSetting.setStyle("-fx-background-color: #F0F0F0");
-        alarmSetting.setStyle("-fx-background-color: #F0F0F0");
-        controlAlarmRule.setStyle("-fx-background-color: #F0F0F0");
-        exportSetting.setStyle("-fx-background-color: #FFFFFF");
+
+        alarmSetting.getStyleClass().setAll("spc-setting-color-btn");
+        controlAlarmRule.getStyleClass().setAll("spc-setting-color-btn");
+        exportSetting.getStyleClass().setAll("spc-setting-focus-color-btn");
     }
 
     private void getCustomAlarmTableChangeEvent(CustomAlarmTestItemRowData customAlarmTestItemRowData) {
@@ -643,12 +645,6 @@ public class SpcSettingController implements Initializable {
             }
         }
         return statisticalAlarmSetting;
-    }
-
-    private void initBtnIcon() {
-        addTestItemBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/add.svg")));
-        exportTemplateSettingBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/setting.svg")));
-        exportTemplateSettingBtn.setPrefSize(22, 22);
     }
 
     private String alarmDataToText(Double value) {

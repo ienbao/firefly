@@ -15,7 +15,7 @@ import javafx.scene.layout.Priority;
 public class TextFieldUser extends HBox {
     private TextField textField;
     private Label label;
-    private ImageView searchIcon = ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_username.png"));
+    private ImageView searchIcon = ImageUtils.getImageView(getClass().getResourceAsStream("/images/user.svg"));
 
     /**
      * constructor
