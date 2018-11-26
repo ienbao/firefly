@@ -34,6 +34,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.image.ImageView?>
 <VBox styleClass="lg-window-size" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcExportController">
     <HBox styleClass="spc-export-h-box" VBox.vgrow="ALWAYS">
@@ -55,6 +56,7 @@
             <SplitPane fx:id="split" orientation="VERTICAL" VBox.vgrow="ALWAYS" styleClass="spc-export-split">
                 <TabPane styleClass="spc-export-tab" tabClosingPolicy="UNAVAILABLE">
                     <Tab fx:id="itemTab">
+                        <graphic><ImageView fitHeight="16" fitWidth="16" styleClass="spc-export-item"/></graphic>
                         <VBox>
                             <HBox styleClass="padding-lg">
                                 <TextFieldFilter fx:id="itemFilter"/>
@@ -72,6 +74,7 @@
                         </VBox>
                     </Tab>
                     <Tab fx:id="configTab">
+                        <graphic><ImageView fitHeight="16" fitWidth="16" styleClass="spc-export-config"/></graphic>
                         <GridPane>
                             <Label text="%SUBGROUPS_SIZE" styleClass="spc-export-left-right"/>
                             <TextField fx:id="subGroup" GridPane.rowIndex="1"
@@ -101,7 +104,9 @@
                 </TabPane>
             </SplitPane>
             <HBox styleClass="spc-import-btn">
-                <Button fx:id="importBtn" minWidth="30" maxWidth="30.0" prefWidth="30.0" styleClass="btn-txt"/>
+                <Button fx:id="importBtn" minWidth="30" maxWidth="30.0" prefWidth="30.0" styleClass="btn-txt">
+                    <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="spc-export-import-btn-image"/></graphic>
+                </Button>
             </HBox>
         </VBox>
     </HBox>

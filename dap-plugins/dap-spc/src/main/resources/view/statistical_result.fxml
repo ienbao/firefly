@@ -10,6 +10,7 @@
 
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.image.ImageView?>
 <AnchorPane minHeight="110.0" minWidth="180.0" prefHeight="424.0" prefWidth="435.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.spc.controller.StatisticalResultController">
     <TabPane tabClosingPolicy="UNAVAILABLE"  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
@@ -17,7 +18,9 @@
                 <VBox minHeight="0.0" minWidth="0.0">
                     <HBox styleClass="spc-result-filter">
                         <TextFieldFilter fx:id="filterTestItemTf" styleClass="spc-result-filter-text"/>
-                        <Button fx:id="chooseColumnBtn" styleClass="btn-icon" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" prefHeight="22.0" prefWidth="22.0" />
+                        <Button fx:id="chooseColumnBtn" styleClass="btn-icon" maxHeight="22.0" maxWidth="22.0" minWidth="22.0" prefHeight="22.0" prefWidth="22.0" >
+                            <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="spc-result-btn"/></graphic>
+                        </Button>
                     </HBox>
                     <TableView fx:id="statisticalResultTb" editable="true" styleClass="spc-result-table" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS"/>
                 </VBox>
