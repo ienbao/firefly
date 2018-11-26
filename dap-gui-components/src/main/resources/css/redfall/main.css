@@ -122,22 +122,6 @@
     -fx-background-position: center;
 }
 
-.btn_template_normal {
-    -fx-border-width: 1 1 1 0;
-    -fx-background-image: url('/images/btn_template_normal.png');
-    -fx-background-size: 16;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
-}
-
-.btn_template_unable {
-    -fx-border-width: 1 1 1 0;
-    -fx-background-image: url('/images/btn_template_unable.png');
-    -fx-background-size: 16;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
-}
-
 .btn_delete_normal {
     -fx-border-width: 1 1 1 0;
     -fx-background-image: url('/images/btn_delete_normal.png');
@@ -187,26 +171,6 @@
     -fx-background-color: COLORFUL_DARK_GREEN;
     -fx-scale-shape: false;
     -fx-shape: "M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M25.7,11.7l-12,12C13.5,23.9,13.3,24,13,24s-0.5-0.1-0.7-0.3l-7-7c-0.4-0.4-0.4-1,0-1.4s1-0.4,1.4,0l6.3,6.3l11.3-11.3c0.4-0.4,1-0.4,1.4,0S26.1,11.3,25.7,11.7z";
-}
-
-.icon-ok-gray {
-    -fx-background-color: transparent;
-    -fx-background-image: url('/images/icon_choose_one_gray.png');
-    -fx-background-size: 16;
-    -fx-pref-height: 16;
-    -fx-pref-width: 16;
-    -fx-shape: null;
-    -fx-padding: 0 20 0 0;
-}
-
-.icon-ok-white {
-    -fx-background-color: transparent;
-    -fx-background-image: url('/images/icon_choose_one_white.png');
-    -fx-background-size: 16;
-    -fx-pref-height: 16;
-    -fx-pref-width: 16;
-    -fx-shape: null;
-    -fx-padding: 0 20 0 0;
 }
 /*******************************************************************************
  *                                                                             *
@@ -2545,29 +2509,6 @@
 .text-field-filter-demo-hbox > .label-search{
     -fx-background-image: url("/images/btn_basic_search_normal.png");
 }
-
-
-
-
-
-
-/*.text-field-filter-search{*/
-/*-fx-image: url("/images/btn_basic_search_normal.png");*/
-/*}*/
-/*.text-field-filter-clear{*/
-/*-fx-image: url("/images/btn_clear_normal.png");*/
-/*}*/
-
-/*.text-field-filter-clear:hover{*/
-/*-fx-image: url("/images/btn_clear_over.png");*/
-/*}*/
-
-/*.text-field-filter-clear:pressed{*/
-/*-fx-image: url("/images/btn_clear_click.png");*/
-/*}*/
-
-
-
 
 /*******************************************************************************
  *                                                                             *

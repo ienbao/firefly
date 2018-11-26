@@ -261,7 +261,7 @@
 }
 
 .tab-pane > .tab-header-area > .control-buttons-tab > .container > .tab-down-button {
-    -fx-background-image: url('/images/btn_unfold_normal.png');
+    -fx-background-image: url('/images/unfold.svg');
     -fx-background-repeat: no-repeat;
     -fx-background-size: 20;
     -fx-pref-height: 20;
