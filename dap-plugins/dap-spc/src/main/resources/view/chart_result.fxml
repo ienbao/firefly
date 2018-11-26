@@ -7,12 +7,12 @@
 <AnchorPane minHeight="110.0" minWidth="309.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.dmsoft.firefly.plugin.spc.controller.ChartResultController">
     <TabPane  tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0"
-             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" styleClass="spc-chart-tab" style="-fx-border-width: 0;">
         <tabs>
-            <Tab text="%ANALYSIS_RESULT">
+            <Tab text="%ANALYSIS_RESULT" >
                 <TabPane fx:id="analysisChartTabPane" rotateGraphic="true" side="LEFT"
-                         styleClass="vertical-text"
-                         tabClosingPolicy="UNAVAILABLE">
+                         styleClass="vertical-text,spc-chart-tab"
+                         tabClosingPolicy="UNAVAILABLE" style="-fx-border-width: 0;">
                     <tabs>
                         <Tab fx:id="ndTab" closable="false">
                             <graphic>

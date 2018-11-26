@@ -129,57 +129,6 @@ table
     -fx-font-weight: bold;
 }
 
-/*
-*Spc setting
-*/
-.alarm-excellent {
-    -fx-alignment: center;
-    -fx-pref-width: 22;
-    -fx-pref-height: 22;
-    -fx-text-fill: white;
-    -fx-background-color: #4ebe11;
-}
-
-.alarm-good {
-    -fx-alignment: center;
-    -fx-pref-width: 22;
-    -fx-pref-height: 22;
-    -fx-text-fill: white;
-    -fx-background-color: #27b5b3;
-}
-
-.alarm-acceptable {
-    -fx-alignment: center;
-    -fx-pref-width: 22;
-    -fx-pref-height: 22;
-    -fx-text-fill: white;
-    -fx-background-color: #487cf4;
-}
-
-.alarm-rectification {
-    -fx-alignment: center;
-    -fx-pref-width: 22;
-    -fx-pref-height: 22;
-    -fx-text-fill: white;
-    -fx-background-color: #f38400;
-}
-
-.alarm-bad {
-    -fx-alignment: center;
-    -fx-pref-width: 22;
-    -fx-pref-height: 22;
-    -fx-text-fill: white;
-    -fx-background-color: #ea2028;
-}
-
-#customAlarmTable .column-header-background {
-    -fx-max-height: 0;
-    -fx-pref-height: 0;
-    -fx-min-height: 0;
-}
-
-
-
 .btn-timer {
     -fx-text-fill: COLOR_LIGHT_FF;
     -fx-highlight-fill: #5eb511;
@@ -490,4 +439,227 @@ table
 
 .spc-item-config-nd{
     -fx-spacing: 8;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * spc setting page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+#customAlarmTable .column-header-background {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+}
+
+.alarm-excellent {
+    -fx-alignment: center;
+    -fx-pref-width: 22;
+    -fx-pref-height: 22;
+    -fx-text-fill: COLOR_LIGHT_FF;
+    -fx-background-color: COLORFUL_DARK4_GREEN;
+}
+
+.alarm-good {
+    -fx-alignment: center;
+    -fx-pref-width: 22;
+    -fx-pref-height: 22;
+    -fx-text-fill: COLOR_LIGHT_FF;
+    -fx-background-color: COLORFUL_DARK_CYAN;
+}
+
+.alarm-acceptable {
+    -fx-alignment: center;
+    -fx-pref-width: 22;
+    -fx-pref-height: 22;
+    -fx-text-fill: COLOR_LIGHT_FF;
+    -fx-background-color: COLORFUL_DARK_BLUE;
+}
+
+.alarm-rectification {
+    -fx-alignment: center;
+    -fx-pref-width: 22;
+    -fx-pref-height: 22;
+    -fx-text-fill: COLOR_LIGHT_FF;
+    -fx-background-color: COLORFUL_DARK_ORANGE;
+}
+
+.alarm-bad {
+    -fx-alignment: center;
+    -fx-pref-width: 22;
+    -fx-pref-height: 22;
+    -fx-text-fill: COLOR_LIGHT_FF;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
+}
+
+.spc-setting-hbox{
+    -fx-border-color: COLOR_GRAY_DC;
+}
+
+.spc-setting-left-vbox{
+    -fx-background-color: COLOR_GRAY_F0;
+}
+
+.spc-setting-left-label{
+    -fx-padding: 0 0 0 10;
+    -fx-pref-height: 22;
+    -fx-pref-width: 160;
+}
+
+.spc-setting-label-font{
+    -fx-font-weight: bold;
+}
+
+.spc-setting-bottom-label{
+    -fx-padding: 0 0 10 0;
+}
+
+.spc-setting-box-right{
+    -fx-padding: 10 10 0 10;
+    -fx-spacing: 10.0;
+    -fx-alignment: BOTTOM_RIGHT;
+}
+
+.spc-setting-rule-vbox{
+    -fx-pref-width: 100;
+    -fx-pref-height: 200;
+    -fx-spacing: 10;
+    -fx-padding: 10;
+    -fx-border-width: 1;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_F8;
+}
+
+.spc-setting-custom-hbox-left{
+    -fx-alignment: center_right;
+    -fx-min-height: 29.0;
+    -fx-pref-height: 29.0;
+    -fx-spacing: 10;
+    -fx-padding: 3 0;
+    -fx-border-width: 1 0 0 1;
+    -fx-border-color: COLOR_GRAY_DC;
+}
+.spc-setting-custom-hbox-right{
+    -fx-alignment: center_left;
+    -fx-min-height: 29.0;
+    -fx-pref-width: 29.0;
+    -fx-border-width: 1 1 0 1;
+    -fx-border-color: COLOR_GRAY_DC;
+}
+
+.spc-setting-custom-label{
+    -fx-padding: 20 0 10 0;
+}
+
+.spc-setting-hbox-right{
+    -fx-padding: 0 3 0 0;
+}
+
+.spc-setting-table-border{
+    -fx-border-width: 1 0 1 1;
+}
+
+.spc-setting-right-header{
+    -fx-spacing: 20;
+}
+
+.spc-setting-add-btn{
+    -fx-pref-height: 22.0;
+    -fx-pref-width: 22.0;
+    -fx-background-size: 16;
+    -fx-background-image:  url('/images/add.svg');
+}
+
+.spc-setting-export-btn{
+    -fx-pref-width: 22.0;
+    -fx-pref-height: 22.0;
+    -fx-background-size: 16;
+    -fx-background-image:  url('/images/setting.svg');
+}
+
+.spc-setting-color-btn{
+    -fx-background-color: COLOR_GRAY_F0;
+    -fx-padding: 0 0 0 10;
+    -fx-pref-height: 22;
+    -fx-pref-width: 160;
+}
+
+.spc-setting-focus-color-btn{
+    -fx-background-color: COLOR_LIGHT_FF;
+    -fx-padding: 0 0 0 10;
+    -fx-pref-height: 22;
+    -fx-pref-width: 160;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * spc chart page css                                                          *
+ *                                                                             *
+ ******************************************************************************/
+.spc-chart-tab{
+    -fx-border-width: 0;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * spc view data page css                                                      *
+ *                                                                             *
+ ******************************************************************************/
+.spc-view-data-tab{
+    -fx-border-width: 0;
+}
+
+.spc-view-data-header{
+    -fx-alignment: CENTER_RIGHT;
+    -fx-spacing: 10;
+    -fx-padding: 3 3 3 0;
+}
+
+.spc-view-data-filter{
+    -fx-max-width: 200;
+    -fx-pref-width: 200;
+    -fx-border-width: 1;
+    -fx-border-color: COLOR_GRAY_DC;
+}
+
+.spc-view-data-btn{
+    -fx-max-height: 22;
+    -fx-pref-width: 22;
+    -fx-max-width: 22;
+    -fx-pref-width: 22;
+    -fx-background-size: 16;
+}
+
+.spc-view-data-table{
+    -fx-border-width: 1 0 0 0;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * spc page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+.spc-btn-size{
+    -fx-pref-width: 22.0;
+    -fx-pref-height: 22.0;
+    -fx-background-size: 16;
+}
+.spc-reset-btn {
+    -fx-background-image: url('/images/reset.svg');
+}
+.spc-print-btn {
+    -fx-background-image: url('/images/print.svg');
+}
+.spc-export-btn {
+    -fx-background-image: url('/images/export.svg');
+}
+.spc-choose-btn {
+    -fx-max-width: 22.0;
+    -fx-min-width: 22.0;
+    -fx-background-image: url('/images/check-white.svg');
+}
+
+.spc-border{
+    -fx-padding: 0 5 0 10;
+    -fx-pref-height: 28.0;
 }

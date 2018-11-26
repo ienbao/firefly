@@ -83,6 +83,7 @@
     COLORFUL_DARK1_GREEN: #509A0E;
     COLORFUL_DARK2_GREEN: #4B910E;
     COLORFUL_DARK3_GREEN: #5FB411;
+    COLORFUL_DARK4_GREEN: #4ebe11;
     COLORFUL_MIDDLE1_GREEN: #59ac10;
     COLORFUL_DARK_CYAN: #27b5b3;
 
@@ -2668,6 +2669,10 @@
     -fx-padding: 0 10;
 }
 
+.padding-v{
+    -fx-padding: 10 0;
+}
+
 .padding-sm{
     -fx-padding: 3.0;
 }
@@ -2676,7 +2681,7 @@
     -fx-padding: 10 0 0 0;
 }
 
-.state-bar-lbl {
+.padding-left {
     -fx-padding: 0 0 0 10;
 }
 

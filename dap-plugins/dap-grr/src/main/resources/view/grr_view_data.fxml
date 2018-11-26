@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.dmsoft.firefly.gui.components.utils.TextFieldFilter?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
@@ -10,10 +9,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.grr.controller.GrrViewDataController">
+<?import javafx.scene.image.ImageView?>
+<GridPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.grr.controller.GrrViewDataController">
     <columnConstraints>
-        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="255.0" minWidth="255.0" prefWidth="255.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="255.0" minWidth="255.0" prefWidth="255.0" />
     </columnConstraints>
     <rowConstraints>
         <RowConstraints maxHeight="28.0" minHeight="28.0" prefHeight="28.0" valignment="CENTER" vgrow="NEVER" />
@@ -22,54 +22,23 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         <RowConstraints maxHeight="42.0" minHeight="42.0" prefHeight="42.0" vgrow="NEVER" />
     </rowConstraints>
-    <children>
-        <Button fx:id="exchangeBtn" mnemonicParsing="false" styleClass="btn-primary" text="%EXCHANGE" GridPane.rowIndex="4">
-            <opaqueInsets>
-                <Insets />
-            </opaqueInsets>
-            <GridPane.margin>
-                <Insets left="10.0" />
-            </GridPane.margin>
+    <Label text="%ANALYSIS_DATA" styleClass="padding-left"/>
+    <HBox styleClass="grr-view-data-h-box1" GridPane.columnIndex="1">
+        <TextFieldFilter fx:id="analysisFilterLB"  maxWidth="220.0" minWidth="220.0" prefWidth="220.0"/>
+        <Button fx:id="chooseItemBtn" prefWidth="22" styleClass="btn-icon">
+            <graphic><ImageView fitHeight="16" fitWidth="16" styleClass="grr-choose-item-btn"/></graphic>
         </Button>
-        <Label text="%ANALYSIS_DATA">
-            <padding>
-                <Insets left="10.0" />
-            </padding>
-        </Label>
-        <TableView fx:id="analysisDataTB" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-        <TableView fx:id="exchangeDataTB" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-        <TextFieldFilter fx:id="exchangeFilterLB" maxWidth="220.0" minWidth="220.0" prefHeight="22.0" prefWidth="220.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-            <GridPane.margin>
-                <Insets bottom="3.0" right="3.0" top="3.0" />
-            </GridPane.margin>
-        </TextFieldFilter>
-        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
-            <children>
-                <Label text="%EXCHANGEABLE_DATA">
-                    <HBox.margin>
-                        <Insets left="10.0" />
-                    </HBox.margin>
-                </Label>
-                <Label fx:id="exchangeableLB">
-                    <HBox.margin>
-                        <Insets left="10.0" />
-                    </HBox.margin>
-                </Label>
-            </children>
-        </HBox>
-        <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
-            <children>
-                <TextFieldFilter fx:id="analysisFilterLB" maxWidth="220.0" minWidth="220.0" prefHeight="22.0" prefWidth="220.0">
-                    <HBox.margin>
-                        <Insets bottom="3.0" right="10.0" top="3.0" />
-                    </HBox.margin>
-                </TextFieldFilter>
-                <Button fx:id="chooseItemBtn" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" style="-fx-background-image: url('images/btn_choose_test_items_normal.png'); -fx-background-size: 16;" styleClass="btn-icon">
-                    <HBox.margin>
-                        <Insets right="3.0" top="3.0" />
-                    </HBox.margin>
-                </Button>
-            </children>
-        </HBox>
-    </children>
+    </HBox>
+    <TableView fx:id="analysisDataTB" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+    <HBox styleClass="grr-view-data-h-box2" GridPane.rowIndex="2">
+        <Label text="%EXCHANGEABLE_DATA"/>
+        <Label fx:id="exchangeableLB"/>
+    </HBox>
+    <HBox styleClass="grr-view-data-h-box3" GridPane.columnIndex="1" GridPane.rowIndex="2" >
+        <TextFieldFilter fx:id="exchangeFilterLB" maxWidth="220.0" minWidth="220.0"  prefWidth="220.0" />
+    </HBox>
+    <TableView fx:id="exchangeDataTB" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+    <HBox styleClass="grr-view-data-h-box4" GridPane.rowIndex="4">
+        <Button fx:id="exchangeBtn" styleClass="btn-primary" text="%EXCHANGE" />
+    </HBox>
 </GridPane>
