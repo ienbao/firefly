@@ -847,3 +847,116 @@ add all charts.css into yield_app.css
 .yield-setting-btn{
  -fx-pref-width: 80.0;
 }
+
+/******************************************************************************
+*                                                                              *
+*                           yield_setting.fxml  所有的css                       *
+*                                                                              *
+ ******************************************************************************/
+
+.yield-result-chart-anchor-pane{
+    -fx-min-height: 200.0;
+    -fx-border-color: #ffffff;
+}
+.yield-result-chart-h-box{
+    -fx-min-height: 245.0;
+    -fx-max-height: 245.0;
+    -fx-border-color: #f0f0f0;
+    -fx-border-width: 0;
+}
+.yield-result-split-pane{
+    -fx-min-width: 400;
+    -fx-pref-width: 425;
+}
+.yield-result-tab-pane{
+    -fx-pref-height: 245.0;
+    -fx-tab-max-width: 100.0;
+    -fx-tab-min-width: 100.0;
+}
+.yield-result-v-box-bar-chart{
+    -fx-padding: 20 0 0 0;
+    -fx-min-height: 187.0;
+    -fx-min-width: 200;
+    -fx-max-width: 200;
+    -fx-alignment: center;
+}
+.yield-result-bar-chart1{
+    -fx-min-width: 180.0;
+    -fx-min-height: 187.0;
+    -fx-tab-max-width: 200;
+    -fx-background-color: #ffffff;
+    -fx-column-halignment: 1px;
+    -fx-row-valignment: 1px
+}
+
+.yield-result-v-box3{
+    -fx-background-color:#FAFAFA ;
+    -fx-min-height: 220.0;
+    -fx-max-height: 220.0;
+    -fx-alignment: center;
+}
+.yield-result-chart-v-box3{
+    -fx-max-height: 244.0;
+    -fx-min-height: 244.0;
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 20;
+}
+.yield-result-chart-tab-pane{
+    -fx-max-height: 244.0;
+    -fx-min-height: 244.0;
+    -fx-pref-width: 880.0;
+    -fx-max-width: 1000;
+
+}
+.yield-result-v-box4{
+    -fx-max-height: 244.0;
+    -fx-min-height: 244.0;
+    -fx-alignment:TOP_CENTER ;
+    -fx-spacing: 20;
+}
+.yield-result-chart-h-box2{
+    -fx-max-height: 27;
+    -fx-min-height: 27;
+    -fx-border-color: #F0F0F0;
+    -fx-border-width: 0 0 1 0;
+    -fx-spacing: 20;
+    -fx-padding: 2 0 2 15;
+    -fx-alignment: CENTER_LEFT;
+}
+.yield-result-chart-label{
+    -fx-max-height: 22.0;
+    -fx-max-width: 90.0;
+    -fx-min-height: 22.0;
+    -fx-min-width: 90.0;
+    -fx-pref-width: 90.0;
+}
+.yield-result-chart-com-box{
+    -fx-max-height: 22.0;
+    -fx-max-width: 22.0;
+    -fx-min-height: 22.0;
+    -fx-min-width: 80.0;
+    -fx-pref-width: 120.0;
+}
+.yield-result-chart-v-box4{
+    -fx-max-height: 165;
+    -fx-min-height: 165;
+    -fx-alignment: center;
+    -fx-padding:  0 5 0 0;
+    -fx-border-width: 0;
+}
+.yield-result-bar-chart2{
+    -fx-stroke-width: 10px;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
