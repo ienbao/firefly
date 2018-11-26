@@ -273,6 +273,58 @@ table
     -fx-pref-height: 28;
     -fx-alignment:center;
 }
+
+.grr-reset-btn{
+    -fx-pref-width: 22.0;
+    -fx-pref-height:22.0;
+    -fx-background-size: 16;
+    -fx-background-image: url('/images/reset.svg');
+}
+
+.grr-print-btn{
+    -fx-pref-width: 22.0;
+    -fx-pref-height:22.0;
+    -fx-background-size: 16;
+    -fx-background-image: url('/images/print.svg');
+}
+
+.grr-export-btn{
+    -fx-pref-width: 22.0;
+    -fx-pref-height:22.0;
+    -fx-background-size: 16;
+    -fx-background-image: url('/images/export.svg');
+}
+
+.grr-refresh-btn{
+    -fx-pref-width: 22.0;
+    -fx-max-width: 22.0;
+    -fx-min-width: 22.0;
+    -fx-pref-height:22.0;
+    -fx-background-size: 16;
+    -fx-background-image: url('/images/check-white.svg');
+}
+
+.grr-refresh-able-btn{
+    -fx-pref-width: 22.0;
+    -fx-max-width: 22.0;
+    -fx-min-width: 22.0;
+    -fx-pref-height:22.0;
+    -fx-background-size: 16;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url('/images/check-white.svg');
+}
+
+.grr-refresh-disable-btn{
+    -fx-pref-width: 22.0;
+    -fx-max-width: 22.0;
+    -fx-min-width: 22.0;
+    -fx-pref-height:22.0;
+    -fx-background-size: 16;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url('/images/check-gray.svg');
+}
 /*******************************************************************************
  *                                                                             *
  *grr export/item page css                                                     *
@@ -298,7 +350,18 @@ table
     -fx-border-width: 0 0 1 0;
     -fx-border-color: COLOR_GRAY_DC;
 }
+.grr-import-config-btn{
+    -fx-image: url('/images/load-script.svg');
+}
+.grr-datasource-btn{
+    -fx-image: url('/images/datasource.svg');
+}
+.grr-config-btn{
+    -fx-image: url('/images/config.svg');
+}
 .grr-item-tab{
+    -fx-tab-min-width:45;
+    -fx-tab-max-width: 45;
     -fx-pref-width: 180.0;
     -fx-min-width: 180.0;
     -fx-pref-height: 270.0;
@@ -330,6 +393,7 @@ table
     -fx-border-color:COLOR_GRAY_DC;
     -fx-border-width: 1 0 0 0;
 }
+
 /*******************************************************************************
  *                                                                             *
  *grr setting page css                                                         *
