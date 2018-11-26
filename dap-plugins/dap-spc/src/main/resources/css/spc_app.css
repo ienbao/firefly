@@ -590,3 +590,33 @@ table
     -fx-pref-height: 22;
     -fx-pref-width: 160;
 }
+
+/*******************************************************************************
+ *                                                                             *
+ * spc page css                                                              *
+ *                                                                             *
+ ******************************************************************************/
+.spc-btn-size{
+    -fx-pref-width: 22.0;
+    -fx-pref-height: 22.0;
+    -fx-background-size: 16;
+}
+.spc-reset-btn {
+    -fx-background-image: url('/images/reset.svg');
+}
+.spc-print-btn {
+    -fx-background-image: url('/images/print.svg');
+}
+.spc-export-btn {
+    -fx-background-image: url('/images/export.svg');
+}
+.spc-choose-btn {
+    -fx-max-width: 22.0;
+    -fx-min-width: 22.0;
+    -fx-background-image: url('/images/check-white.svg');
+}
+
+.spc-border{
+    -fx-padding: 0 5 0 10;
+    -fx-pref-height: 28.0;
+}
