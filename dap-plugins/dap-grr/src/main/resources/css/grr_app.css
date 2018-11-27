@@ -651,3 +651,9 @@ table
     -fx-border-width: 0px;
 }
 
+.grr-xBarAppraiserChartBtn{
+    -fx-background-size: 16;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url("/images/choose-lines.svg");
+}
