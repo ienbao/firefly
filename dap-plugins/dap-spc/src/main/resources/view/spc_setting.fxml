@@ -224,7 +224,7 @@
                                     <VBox HBox.hgrow="ALWAYS">
                                             <HBox styleClass="spc-setting-custom-hbox-left">
                                                 <TextFieldFilter fx:id="searchTestItemTf" prefHeight="22.0" prefWidth="200.0"/>
-                                                <Button fx:id="addTestItemBtn" mnemonicParsing="false" styleClass="btn-icon,spc-setting-add-btn"/>
+                                                <Button fx:id="addTestItemBtn"   styleClass="btn-icon,spc-setting-add-btn"/>
                                             </HBox>
                                             <TableView fx:id="customAlarmTable" styleClass="spc-setting-table-border">
                                                 <columns>
@@ -277,7 +277,7 @@
                                 <HBox alignment="CENTER_LEFT" styleClass="spacing-lg">
                                     <Label text="%ACTIVE_TEMPLATE" />
                                     <ComboBox fx:id="exportTemplateCb" prefWidth="150.0" prefHeight="22.0" minHeight="22.0" maxHeight="22.0"/>
-                                    <Button fx:id="exportTemplateSettingBtn" mnemonicParsing="false" styleClass="spc-setting-export-btn" />
+                                    <Button fx:id="exportTemplateSettingBtn"   styleClass="spc-setting-export-btn" />
                                 </HBox>
                             </VBox>
                     </VBox>
@@ -285,8 +285,8 @@
             </ScrollPane>
     </HBox>
     <HBox styleClass="spc-setting-box-right">
-        <Button fx:id="apply" mnemonicParsing="false" prefWidth="80.0" text="%APPLY" />
-        <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="%CANCEL" />
-        <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="%OK" />
+        <Button fx:id="apply"   prefWidth="80.0" text="%APPLY" />
+        <Button fx:id="cancel"   prefWidth="80.0" text="%CANCEL" />
+        <Button fx:id="ok"   prefWidth="80.0" text="%OK" />
     </HBox>
 </VBox>

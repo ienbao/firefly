@@ -557,7 +557,7 @@ table
 }
 
 .spc-setting-box-right{
-    -fx-padding: 10 10 0 10;
+    -fx-padding: 10 0 0 10;
     -fx-spacing: 10.0;
     -fx-alignment: BOTTOM_RIGHT;
 }
