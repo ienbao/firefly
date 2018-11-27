@@ -228,7 +228,6 @@ public class SpcSettingController implements Initializable {
 
         controlAlarmRuleTableModel = new ControlAlarmRuleTableModel();
         TableViewWrapper.decorate(controlAlarmRuleTable, controlAlarmRuleTableModel);
-        ((TableColumn) controlAlarmRuleTable.getColumns().get(0)).setPrefWidth(72);
     }
 
     /**
