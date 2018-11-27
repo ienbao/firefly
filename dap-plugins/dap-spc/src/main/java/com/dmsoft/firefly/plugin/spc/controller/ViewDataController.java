@@ -164,7 +164,6 @@ public class ViewDataController implements Initializable {
         vbox.getChildren().remove(viewDataTable);
         this.viewDataTable = new TableView<>();
         this.viewDataTable.setSkin(new ExpandableTableViewSkin(this.viewDataTable));
-        this.viewDataTable.setStyle("-fx-border-width: 1 0 0 0");
         VBox.setVgrow(viewDataTable, Priority.ALWAYS);
         this.vbox.setAlignment(Pos.CENTER);
         this.vbox.getChildren().add(viewDataTable);
