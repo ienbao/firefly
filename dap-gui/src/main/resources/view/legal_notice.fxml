@@ -9,11 +9,11 @@
         styleClass="sm-pop-window,spacing-lg,padding-lg">
     <Label text="%GLOBAL_LBL_LEGAL" />
     <VBox styleClass="spacing-lg">
-        <TextArea fx:id="legalNoticeTextArea" prefHeight="208" editable="false" text=""/>
+        <TextArea fx:id="legalNoticeTextArea" prefHeight="208" editable="false"/>
         <CheckBox fx:id="acceptCkb" mnemonicParsing="false" text="%GLOBAL_BTN_AGREE" />
     </VBox>
     <HBox styleClass="h-box-right" prefHeight="42">
-        <Button fx:id="legalOkBtn" mnemonicParsing="false" text="%GLOBAL_BTN_OK" />
+        <Button fx:id="legalOkBtn" text="%GLOBAL_BTN_OK" />
     </HBox>
 </VBox>
 
