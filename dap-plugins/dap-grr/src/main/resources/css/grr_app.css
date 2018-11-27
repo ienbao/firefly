@@ -380,17 +380,15 @@ table
     -fx-image: url("/images/analysis-white.svg");
 }
 
-.grr-item-tab{
-    -fx-pref-width: 45;
-    -fx-min-width:45;
-    -fx-max-width: 45;
-    -fx-padding: 0 5 0 5
-}
+
 .grr-item-tabs{
     -fx-pref-width: 180.0;
     -fx-min-width: 180.0;
     -fx-pref-height: 270.0;
     -fx-min-height: 270.0;
+    -fx-tab-pref-width:45;
+    -fx-tab-min-width:45;
+    -fx-tab-max-width: 45;
     -fx-border-width: 0 0 0 0;
 }
 .grr-item-table,
@@ -615,7 +613,7 @@ table
     -fx-pref-height: 29.0;
     -fx-padding: 3 0 2 0;
     -fx-border-width: 0 0 1 0;
-    -fx-border-color: COLOR_GRAY_F8;
+    -fx-border-color: COLOR_GRAY_DC;
 }
 
 .grr-result-h-box{

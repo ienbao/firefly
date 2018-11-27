@@ -9,7 +9,7 @@
    <SplitPane fx:id="split" orientation="VERTICAL" styleClass="grr-item-split" VBox.vgrow="ALWAYS">
       <TabPane fx:id="rightTabPane" styleClass="grr-item-tabs" tabClosingPolicy="UNAVAILABLE">
          <tabs>
-            <Tab fx:id="itemTab" styleClass="grr-item-tab" >
+            <Tab fx:id="itemTab" >
                <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="grr-datasource-btn"/></graphic>
                <VBox  minWidth="180.0" prefWidth="180.0">
                   <HBox styleClass="padding-lg">
@@ -26,7 +26,7 @@
                   </TableView>
                </VBox>
             </Tab>
-            <Tab fx:id="configTab" styleClass="grr-item-tab" >
+            <Tab fx:id="configTab" >
                <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="grr-config-btn"/></graphic>
                <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="445.0">
                   <GridPane fx:id="grrConfigPane" styleClass="grr-config" >
