@@ -325,6 +325,19 @@ table
     -fx-background-repeat: no-repeat;
     -fx-background-image: url('/images/check-gray.svg');
 }
+.grr-is{
+    -fx-pref-height: 22;
+    -fx-max-height: 22;
+    -fx-min-height: 22;
+    -fx-pref-width: 22;
+    -fx-max-width: 22;
+    -fx-min-width: 22;
+}
+.grr-config-warn{
+    -fx-padding: 0 26 0 0;
+}
+
+
 /*******************************************************************************
  *                                                                             *
  *grr export/item page css                                                     *
@@ -359,9 +372,21 @@ table
 .grr-config-btn{
     -fx-image: url('/images/config.svg');
 }
+
+.grr-save-btn{
+    -fx-image: url("/images/save.svg");
+}
+.grr-analysis-btn{
+    -fx-image: url("/images/analysis-white.svg");
+}
+
 .grr-item-tab{
-    -fx-tab-min-width:45;
-    -fx-tab-max-width: 45;
+    -fx-pref-width: 45;
+    -fx-min-width:45;
+    -fx-max-width: 45;
+    -fx-padding: 0 5 0 5
+}
+.grr-item-tabs{
     -fx-pref-width: 180.0;
     -fx-min-width: 180.0;
     -fx-pref-height: 270.0;
@@ -394,6 +419,17 @@ table
     -fx-padding: 0 20;
     -fx-border-color:COLOR_GRAY_DC;
     -fx-border-width: 1 0 0 0;
+}
+
+.grr-item-background1{
+    -fx-text-fill: COLORFUL_ATRRIBUTE_BLUE;
+    -fx-background-color: COLORFUL_LIGHT_GREEN
+}
+.grr-item-background2{
+    -fx-text-fill: COLORFUL_ATRRIBUTE_BLUE;
+}
+.grr-item-background3{
+    -fx-background-color: COLORFUL_LIGHT_GREEN
 }
 
 /*******************************************************************************

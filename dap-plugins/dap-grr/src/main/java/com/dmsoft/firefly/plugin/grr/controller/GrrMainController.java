@@ -1,6 +1,5 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
-import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -28,9 +27,7 @@ import java.util.ResourceBundle;
  * Created by cherry on 2018/3/11.
  */
 public class GrrMainController implements Initializable {
-
     private Logger logger = LoggerFactory.getLogger(GrrMainController.class);
-
     private GrrDataFrameDto grrDataFrame;
     private GrrDataFrameDto backGrrDataFrame;
     private List<GrrSummaryDto> summaryDtos;
@@ -46,8 +43,6 @@ public class GrrMainController implements Initializable {
     private GrrViewDataController grrViewDataController;
     @FXML
     private Tab grrResultTab;
-
-
     @FXML
     private Button exportBtn;
     @FXML
