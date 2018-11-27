@@ -344,6 +344,7 @@ table
     -fx-pref-width: 180.0;
     -fx-min-width: 180.0;
     -fx-pref-height: 270.0;
+    -fx-min-height: 270.0;
     -fx-border-width: 0 0 0 0;
 }
 .spc-export-item-table,
@@ -420,12 +421,16 @@ table
  ******************************************************************************/
 
 .spc-item-tab{
+    -fx-tab-pref-width: 45;
+    -fx-tab-min-width:45;
+    -fx-tab-max-width: 45;
     -fx-pref-width: 180.0;
     -fx-min-width: 180.0;
     -fx-pref-height: 270.0;
     -fx-min-height: 270.0;
     -fx-border-width: 0 0 0 0;
 }
+
 .spc-item-table,
 .spc-item-table:focused{
     -fx-border-width: 1 0 0 0;
@@ -572,7 +577,7 @@ table
     -fx-min-height: 29.0;
     -fx-pref-height: 29.0;
     -fx-spacing: 10;
-    -fx-padding: 3 0;
+    -fx-padding: 3 3 3 0;
     -fx-border-width: 1 0 0 1;
     -fx-border-color: COLOR_GRAY_DC;
 }
@@ -706,6 +711,12 @@ table
 .spc-border{
     -fx-padding: 0 5 0 10;
     -fx-pref-height: 28.0;
+}
+
+.spc-btn-h-box{
+    -fx-spacing: 5;
+    -fx-padding: 3 0 3 0;
+    -fx-alignment: CENTER;
 }
 
 .btn-size{

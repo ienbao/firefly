@@ -45,7 +45,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="180.0">
                            <children>
-                              <Label prefHeight="30.0" prefWidth="140.0" text="%ADVANCE_SEARCH">
+                              <Label prefHeight="30.0" prefWidth="138.0" minWidth="138.0" maxWidth="138" text="%ADVANCE_SEARCH">
                                  <HBox.margin>
                                     <Insets left="10.0" />
                                  </HBox.margin>
